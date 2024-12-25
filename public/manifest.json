@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Scout",
+  "version": "1.0",
+  "description": "Quickly search and save bookmarks to specific folders.",
+  "action": {
+    "default_popup": "index.html"
+  }
+}
