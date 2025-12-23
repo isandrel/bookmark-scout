@@ -19,14 +19,17 @@
   <a href="https://github.com/isandrel/bookmark-scout/stargazers"><img src="https://img.shields.io/github/stars/isandrel/bookmark-scout?style=flat-square" alt="Stars"></a>
   <a href="https://github.com/isandrel/bookmark-scout/issues"><img src="https://img.shields.io/github/issues/isandrel/bookmark-scout?style=flat-square" alt="Issues"></a>
   <a href="https://github.com/isandrel/bookmark-scout/pulls"><img src="https://img.shields.io/github/issues-pr/isandrel/bookmark-scout?style=flat-square" alt="PRs"></a>
+  <a href="https://github.com/sponsors/isandrel"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
 </p>
 
 <p align="center">
-  <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/release-extension.yml?style=flat-square&label=build" alt="Build Status"></a>
+  <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
+  <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/repomix.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/repomix.yml?style=flat-square&label=repomix" alt="Repomix CI"></a>
   <a href="https://github.com/isandrel/bookmark-scout/releases"><img src="https://img.shields.io/github/v/release/isandrel/bookmark-scout?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/github/last-commit/isandrel/bookmark-scout?style=flat-square" alt="Last Commit">
   <img src="https://img.shields.io/github/repo-size/isandrel/bookmark-scout?style=flat-square" alt="Repo Size">
+  <a href="https://depfu.com/github/isandrel/bookmark-scout"><img src="https://img.shields.io/depfu/dependencies/github/isandrel/bookmark-scout?style=flat-square" alt="Depfu"></a>
   <a href="https://bookmark-scout.vercel.app"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
 </p>
 
