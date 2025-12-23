@@ -47,9 +47,6 @@ The content is organized as follows:
   workflows/
     deploy-website.yml
     repomix.yml
-public/
-  manifest.json
-  vite.svg
 src/
   assets/
     react.svg
@@ -100,6 +97,19 @@ src/
       tooltip.tsx
     error-boundary.tsx
     theme-provider.tsx
+  entrypoints/
+    bookmarks/
+      index.html
+      main.tsx
+    options/
+      index.html
+      main.tsx
+    popup/
+      index.html
+      main.tsx
+    sidepanel/
+      index.html
+      main.tsx
   hooks/
     use-bookmark-drag-drop.ts
     use-bookmark-filter.ts
@@ -124,17 +134,8 @@ src/
     index.ts
   App.css
   App.tsx
-  bookmarks.html
-  bookmarks.tsx
   globals.css
   index.css
-  index.html
-  main.tsx
-  options.html
-  options.tsx
-  popup.html
-  popup.tsx
-  sidepanel.html
   vite-env.d.ts
 website/
   app/
@@ -170,14 +171,13 @@ components.json
 dist.crx
 dist.pem
 LICENSE
-nx.json
 package.json
 postcss.config.ts
 README.md
 tailwind.config.ts
 tsconfig.json
 tsconfig.tsbuildinfo
-vite.config.ts
+wxt.config.ts
 </directory_structure>
 
 <files>
@@ -267,10 +267,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-</file>
-
-<file path="public/vite.svg">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
 </file>
 
 <file path="src/assets/react.svg">
@@ -861,6 +857,184 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
     </div>
   );
 }
+</file>
+
+<file path="src/entrypoints/bookmarks/index.html">
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmarks</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+</body>
+
+</html>
+</file>
+
+<file path="src/entrypoints/bookmarks/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import BookmarksPage from '@/components/page/BookmarksPage';
+import '@/globals.css';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { ThemeProvider } from '@/components/theme-provider';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+    throw new Error('Failed to find the root element');
+}
+
+createRoot(rootElement).render(
+    <StrictMode>
+        <ErrorBoundary>
+            <ThemeProvider defaultTheme="system" storageKey="bookmark-scout-theme">
+                <BookmarksPage />
+            </ThemeProvider>
+        </ErrorBoundary>
+    </StrictMode>,
+);
+</file>
+
+<file path="src/entrypoints/options/index.html">
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Scout - Options</title>
+    <meta name="manifest.open_in_tab" content="true" />
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+</body>
+
+</html>
+</file>
+
+<file path="src/entrypoints/options/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import OptionsPage from '@/components/page/OptionsPage';
+
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+        <OptionsPage />
+    </StrictMode>,
+);
+</file>
+
+<file path="src/entrypoints/popup/index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Scout</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      #root {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      /* Popup dimensions */
+      body {
+        width: 400px;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="src/entrypoints/popup/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import PopupPage from '@/components/page/PopupPage';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import '@/index.css';
+
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+        <SidebarProvider>
+            <PopupPage />
+        </SidebarProvider>
+    </StrictMode>,
+);
+</file>
+
+<file path="src/entrypoints/sidepanel/index.html">
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Scout - Side Panel</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #root {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+</body>
+
+</html>
+</file>
+
+<file path="src/entrypoints/sidepanel/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import PopupPage from '@/components/page/PopupPage';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import '@/index.css';
+
+// Sidepanel reuses the same PopupPage component
+createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+        <SidebarProvider>
+            <PopupPage />
+        </SidebarProvider>
+    </StrictMode>,
+);
 </file>
 
 <file path="src/hooks/use-bookmark-drag-drop.ts">
@@ -2332,123 +2506,6 @@ export * from './bookmark';
 }
 </file>
 
-<file path="src/bookmarks.html">
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bookmarks</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/bookmarks.tsx"></script>
-  </body>
-</html>
-</file>
-
-<file path="src/index.html">
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
-</file>
-
-<file path="src/options.html">
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/options.tsx"></script>
-  </body>
-</html>
-</file>
-
-<file path="src/popup.html">
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bookmark Scout</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-      }
-      #root {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-      /* Popup dimensions */
-      body {
-        width: 400px;
-        height: 600px;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/popup.tsx"></script>
-  </body>
-</html>
-</file>
-
-<file path="src/sidepanel.html">
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bookmark Scout - Sidepanel</title>
-    <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-      }
-      #root {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/popup.tsx"></script>
-  </body>
-</html>
-</file>
-
 <file path="src/vite-env.d.ts">
 /// <reference types="vite/client" />
 </file>
@@ -3043,283 +3100,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
-  );
-}
-</file>
-
-<file path="website/app/page.tsx">
-import Link from "next/link";
-
-// Feature data
-const features = [
-  {
-    icon: "🔍",
-    title: "Instant Search",
-    description: "Find bookmarks instantly with debounced search and folder filtering",
-  },
-  {
-    icon: "📂",
-    title: "Drag & Drop",
-    description: "Organize bookmarks and folders with intuitive drag-and-drop",
-  },
-  {
-    icon: "⚡",
-    title: "Quick Add",
-    description: "Save the current tab to any folder with one click",
-  },
-  {
-    icon: "📱",
-    title: "Side Panel",
-    description: "Access your bookmarks from Chrome's side panel",
-  },
-  {
-    icon: "🌙",
-    title: "Dark Mode",
-    description: "Beautiful dark theme with smooth transitions",
-  },
-  {
-    icon: "🎯",
-    title: "Expand/Collapse",
-    description: "Quickly expand or collapse all nested folders",
-  },
-];
-
-// Tech stack badges
-const techStack = [
-  { name: "React 19", color: "#61DAFB", logo: "react" },
-  { name: "TypeScript", color: "#3178C6", logo: "typescript" },
-  { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
-  { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
-  { name: "Nx", color: "#143055", logo: "nx" },
-  { name: "Bun", color: "#000000", logo: "bun" },
-];
-
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🔖</span>
-            <span className="font-bold text-lg">Bookmark Scout</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link
-              href="/docs"
-              className="text-muted hover:text-foreground transition-colors"
-            >
-              Docs
-            </Link>
-            <a
-              href="https://github.com/isandrel/bookmark-scout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-              GitHub
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
-
-        <div className="relative mx-auto max-w-6xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
-            <span className="text-sm text-muted">Chrome Extension</span>
-            <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
-              Manifest V3
-            </span>
-          </div>
-
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
-            <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
-              Bookmark Scout
-            </span>
-          </h1>
-
-          <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
-            A modern Chrome extension to quickly search, organize, and save
-            bookmarks to specific folders. Features drag-and-drop, instant
-            search, and beautiful dark mode.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://github.com/isandrel/bookmark-scout"
-              className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-              View on GitHub
-              <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-            <Link
-              href="/docs"
-              className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
-            >
-              Documentation
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Features</h2>
-            <p className="text-muted text-lg">
-              Everything you need to manage your bookmarks efficiently
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Tech Stack</h2>
-          <p className="text-muted text-lg mb-12">
-            Built with modern technologies for the best developer experience
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {techStack.map((tech) => (
-              <div
-                key={tech.name}
-                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
-              >
-                <img
-                  src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
-                  alt={tech.name}
-                  className="h-5"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Installation Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-4xl px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Installation
-            </h2>
-            <p className="text-muted text-lg">Get started in minutes</p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  1
-                </span>
-                Clone the repository
-              </h3>
-              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                <code className="text-sm text-green-400">
-                  git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
-                  cd bookmark-scout
-                </code>
-              </pre>
-            </div>
-
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  2
-                </span>
-                Install dependencies & build
-              </h3>
-              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                <code className="text-sm text-green-400">
-                  bun install{"\n"}
-                  bun run build
-                </code>
-              </pre>
-            </div>
-
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  3
-                </span>
-                Load in Chrome
-              </h3>
-              <ol className="text-muted space-y-2 ml-10">
-                <li>
-                  1. Open <code className="text-foreground">chrome://extensions/</code>
-                </li>
-                <li>2. Enable Developer mode (top right)</li>
-                <li>3. Click Load unpacked</li>
-                <li>
-                  4. Select the <code className="text-foreground">dist</code> folder
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <p className="text-muted">
-            Made with ❤️ by{" "}
-            <a
-              href="https://github.com/isandrel"
-              className="text-foreground hover:text-primary-light transition-colors"
-            >
-              isandrel
-            </a>
-          </p>
-          <p className="text-sm text-muted/60 mt-2">
-            Licensed under AGPL-3.0
-          </p>
-        </div>
-      </footer>
-    </div>
   );
 }
 </file>
@@ -4292,46 +4072,6 @@ For more information on this, and how to apply and follow the GNU AGPL, see
 <https://www.gnu.org/licenses/>.
 </file>
 
-<file path="nx.json">
-{
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "targetDefaults": {
-    "dev": {
-      "continuous": true
-    },
-    "build": {
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
-      "cache": true
-    },
-    "lint": {
-      "cache": true
-    },
-    "preview": {
-      "continuous": true
-    }
-  },
-  "plugins": [
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "eslint:lint"
-      }
-    },
-    {
-      "plugin": "@nx/vite/plugin",
-      "options": {
-        "buildTargetName": "vite:build",
-        "devTargetName": "vite:dev",
-        "previewTargetName": "vite:preview"
-      }
-    }
-  ],
-  "nxCloudId": "6949e5ebb5fd4a628a823a90"
-}
-</file>
-
 <file path="postcss.config.ts">
 export default {
     plugins: {
@@ -4499,39 +4239,39 @@ export default config;
 }
 </file>
 
-<file path="public/manifest.json">
-{
-    "manifest_version": 3,
-    "name": "Bookmark Scout",
-    "version": "1.0",
-    "description": "Quickly search and save bookmarks to specific folders.",
-    "permissions": [
-        "bookmarks",
-        "tabs",
-        "favicon",
-        "storage",
-        "sidePanel"
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "_favicon/*"
-            ],
-            "matches": [
-                "<all_urls>"
-            ],
-            "extension_ids": [
-                "*"
-            ]
-        }
-    ],
-    "action": {
-        "default_popup": "src/popup.html"
+<file path="wxt.config.ts">
+import { defineConfig } from 'wxt';
+import react from '@vitejs/plugin-react-swc';
+import path from 'node:path';
+
+// See https://wxt.dev/api/config.html
+export default defineConfig({
+    srcDir: 'src',
+    outDir: 'dist',
+
+    manifest: {
+        name: 'Bookmark Scout',
+        version: '1.0.0',
+        description: 'Quickly search and save bookmarks to specific folders.',
+        permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel'],
+        web_accessible_resources: [
+            {
+                resources: ['_favicon/*'],
+                matches: ['<all_urls>'],
+                extension_ids: ['*'],
+            },
+        ],
     },
-    "side_panel": {
-        "default_path": "src/sidepanel.html"
-    }
-}
+
+    vite: () => ({
+        plugins: [react()],
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, './src'),
+            },
+        },
+    }),
+});
 </file>
 
 <file path="src/components/page/BookmarksPage.tsx">
@@ -8428,30 +8168,6 @@ function App() {
 export default App;
 </file>
 
-<file path="src/bookmarks.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import BookmarksPage from './components/page/BookmarksPage';
-import './globals.css';
-import { ErrorBoundary } from './components/error-boundary';
-import { ThemeProvider } from './components/theme-provider';
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error('Failed to find the root element');
-}
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="system" storageKey="bookmark-scout-theme">
-        <BookmarksPage />
-      </ThemeProvider>
-    </ErrorBoundary>
-  </StrictMode>,
-);
-</file>
-
 <file path="src/globals.css">
 @import "tailwindcss";
 
@@ -8777,84 +8493,283 @@ body {
 }
 </file>
 
-<file path="src/main.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import { SidebarProvider } from './components/ui/sidebar';
-import './index.css';
+<file path="website/app/page.tsx">
+import Link from "next/link";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SidebarProvider>
-      <App />
-    </SidebarProvider>
-  </StrictMode>,
-);
-</file>
-
-<file path="src/options.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import OptionsPage from './components/page/OptionsPage';
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <OptionsPage />
-  </StrictMode>,
-);
-</file>
-
-<file path="src/popup.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import PopupPage from './components/page/PopupPage';
-import { SidebarProvider } from './components/ui/sidebar';
-import './index.css';
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SidebarProvider>
-      <PopupPage />
-    </SidebarProvider>
-  </StrictMode>,
-);
-</file>
-
-<file path="vite.config.ts">
-import { defineConfig } from 'rolldown-vite';
-import react from '@vitejs/plugin-react-swc';
-import path from 'path';
-
-export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src') // Ensure '@' points to './src'
-    }
+// Feature data
+const features = [
+  {
+    icon: "🔍",
+    title: "Instant Search",
+    description: "Find bookmarks instantly with debounced search and folder filtering",
   },
-  build: {
-    outDir: 'dist',
-    rollupOptions: {
-      external: [],
-      input: {
-        main: path.resolve(__dirname, 'src/index.html'),
-        options: path.resolve(__dirname, 'src/options.html'),
-        popup: path.resolve(__dirname, 'src/popup.html'),
-        bookmarks: path.resolve(__dirname, 'src/bookmarks.html'),
-        sidepanel: path.resolve(__dirname, 'src/sidepanel.html'),
-      },
-      output: {
-        entryFileNames: 'assets/[name]-[hash].js',
-        chunkFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
-      }
-    }
+  {
+    icon: "📂",
+    title: "Drag & Drop",
+    description: "Organize bookmarks and folders with intuitive drag-and-drop",
   },
-  css: {
-    postcss: './postcss.config.js',
+  {
+    icon: "⚡",
+    title: "Quick Add",
+    description: "Save the current tab to any folder with one click",
   },
-});
+  {
+    icon: "📱",
+    title: "Side Panel",
+    description: "Access your bookmarks from Chrome's side panel",
+  },
+  {
+    icon: "🌙",
+    title: "Dark Mode",
+    description: "Beautiful dark theme with smooth transitions",
+  },
+  {
+    icon: "🎯",
+    title: "Expand/Collapse",
+    description: "Quickly expand or collapse all nested folders",
+  },
+];
+
+// Tech stack badges
+const techStack = [
+  { name: "React 19", color: "#61DAFB", logo: "react" },
+  { name: "TypeScript", color: "#3178C6", logo: "typescript" },
+  { name: "WXT", color: "#646CFF", logo: "vite" },
+  { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
+  { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
+  { name: "Zustand", color: "#764ABC", logo: "redux" },
+  { name: "Nx", color: "#143055", logo: "nx" },
+  { name: "Bun", color: "#000000", logo: "bun" },
+];
+
+export default function Home() {
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 glass">
+        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🔖</span>
+            <span className="font-bold text-lg">Bookmark Scout</span>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link
+              href="/docs"
+              className="text-muted hover:text-foreground transition-colors"
+            >
+              Docs
+            </Link>
+            <a
+              href="https://github.com/isandrel/bookmark-scout"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-24 overflow-hidden">
+        {/* Background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+
+        <div className="relative mx-auto max-w-6xl px-6 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
+            <span className="text-sm text-muted">Chrome Extension</span>
+            <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
+              Manifest V3
+            </span>
+          </div>
+
+          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
+            <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
+              Bookmark Scout
+            </span>
+          </h1>
+
+          <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
+            A modern Chrome extension to quickly search, organize, and save
+            bookmarks to specific folders. Features drag-and-drop, instant
+            search, and beautiful dark mode.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a
+              href="https://github.com/isandrel/bookmark-scout"
+              className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+              </svg>
+              View on GitHub
+              <svg
+                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </a>
+            <Link
+              href="/docs"
+              className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
+            >
+              Documentation
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-24 border-t border-white/5">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Features</h2>
+            <p className="text-muted text-lg">
+              Everything you need to manage your bookmarks efficiently
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
+              >
+                <div className="text-4xl mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-muted">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-24 border-t border-white/5">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Tech Stack</h2>
+          <p className="text-muted text-lg mb-12">
+            Built with modern technologies for the best developer experience
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {techStack.map((tech) => (
+              <div
+                key={tech.name}
+                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
+              >
+                <img
+                  src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
+                  alt={tech.name}
+                  className="h-5"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Installation Section */}
+      <section className="py-24 border-t border-white/5">
+        <div className="mx-auto max-w-4xl px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              Installation
+            </h2>
+            <p className="text-muted text-lg">Get started in minutes</p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                  1
+                </span>
+                Clone the repository
+              </h3>
+              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                <code className="text-sm text-green-400">
+                  git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
+                  cd bookmark-scout
+                </code>
+              </pre>
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                  2
+                </span>
+                Install dependencies & build
+              </h3>
+              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                <code className="text-sm text-green-400">
+                  bun install{"\n"}
+                  bun run build
+                </code>
+              </pre>
+            </div>
+
+            <div className="glass rounded-2xl p-6">
+              <h3 className="font-semibold mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                  3
+                </span>
+                Load in Chrome
+              </h3>
+              <ol className="text-muted space-y-2 ml-10">
+                <li>
+                  1. Open <code className="text-foreground">chrome://extensions/</code>
+                </li>
+                <li>2. Enable Developer mode (top right)</li>
+                <li>3. Click Load unpacked</li>
+                <li>
+                  4. Select the <code className="text-foreground">dist</code> folder
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 border-t border-white/5">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <p className="text-muted">
+            Made with ❤️ by{" "}
+            <a
+              href="https://github.com/isandrel"
+              className="text-foreground hover:text-primary-light transition-colors"
+            >
+              isandrel
+            </a>
+          </p>
+          <p className="text-sm text-muted/60 mt-2">
+            Licensed under AGPL-3.0
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+}
 </file>
 
 <file path=".github/workflows/repomix.yml">
@@ -9389,10 +9304,9 @@ dist-ssr
 # Repomix
 repomix-output.*
 
-
-
-.nx/cache
-.nx/workspace-data
+# WXT
+.wxt
+.output
 </file>
 
 <file path="package.json">
@@ -9402,15 +9316,19 @@ repomix-output.*
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "bun --bun vite",
-    "build": "bun run tsc -b && bun --bun vite build",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
     "lint": "biome lint ./src",
     "format": "biome format --write ./src",
     "check": "biome check --write ./src",
-    "preview": "bun --bun vite preview",
     "changeset": "changeset",
     "version": "changeset version",
-    "release": "bun run build && changeset publish"
+    "release": "bun run build && changeset publish",
+    "postinstall": "wxt prepare"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
@@ -9445,7 +9363,6 @@ repomix-output.*
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
     "@changesets/cli": "^2.29.8",
-    "@nx/vite": "22.3.3",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/chrome": "^0.1.32",
@@ -9455,15 +9372,12 @@ repomix-output.*
     "@vitejs/plugin-react-swc": "^4.2.2",
     "autoprefixer": "^10.4.22",
     "class-variance-authority": "^0.7.1",
-    "nx": "22.3.3",
     "postcss": "^8.5.6",
-    "rolldown-vite": "^7.3.0",
     "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
-    "vite": "^7.2.6"
-  },
-  "nx": {}
+    "wxt": "^0.20.13"
+  }
 }
 </file>
 
@@ -9494,8 +9408,10 @@ repomix-output.*
 <p align="center">
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
   <img src="https://img.shields.io/badge/Rolldown--Vite-7.3-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Rolldown-Vite">
   <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square&logo=redux&logoColor=white" alt="Zustand">
   <img src="https://img.shields.io/badge/Nx-22-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
 </p>
@@ -9535,8 +9451,9 @@ repomix-output.*
 | Layer             | Technology                                                                                       |
 | ----------------- | ------------------------------------------------------------------------------------------------ |
 | **Framework**     | React 19 + TypeScript                                                                            |
-| **Build**         | Rolldown-Vite 7.3 + Nx 22 (monorepo with caching)                                                |
+| **Build**         | [WXT](https://wxt.dev) + Rolldown-Vite + Nx (monorepo with caching)                              |
 | **Runtime**       | Bun 1.3                                                                                          |
+| **State**         | [Zustand](https://zustand-demo.pmnd.rs/) (lightweight state management)                          |
 | **Styling**       | TailwindCSS 4 + CSS Variables                                                                    |
 | **UI Components** | [shadcn/ui](https://ui.shadcn.com) (Radix primitives)                                            |
 | **Drag & Drop**   | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
