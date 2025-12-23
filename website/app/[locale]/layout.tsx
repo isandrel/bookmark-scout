@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { JsonLd } from "@/components/JsonLd";
 import "../globals.css";
 
 const inter = Inter({
@@ -32,11 +33,38 @@ export async function generateMetadata({
             "bookmark manager",
             "productivity",
             "browser extension",
+            "bookmark search",
+            "bookmark organizer",
+            "drag and drop",
         ],
+        alternates: {
+            canonical: `https://bookmark-scout.vercel.app/${locale}`,
+            languages: {
+                en: "https://bookmark-scout.vercel.app/en",
+                ja: "https://bookmark-scout.vercel.app/ja",
+                ko: "https://bookmark-scout.vercel.app/ko",
+            },
+        },
         openGraph: {
             title: "Bookmark Scout",
             description: metadata.description,
             type: "website",
+            locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
+            url: `https://bookmark-scout.vercel.app/${locale}`,
+            images: [
+                {
+                    url: "/icon.png",
+                    width: 128,
+                    height: 128,
+                    alt: "Bookmark Scout",
+                },
+            ],
+        },
+        twitter: {
+            card: "summary",
+            title: "Bookmark Scout",
+            description: metadata.description,
+            images: ["/icon.png"],
         },
     };
 }
@@ -55,6 +83,9 @@ export default async function LocaleLayout({
 
     return (
         <html lang={locale} className="dark">
+            <head>
+                <JsonLd />
+            </head>
             <body className={`${inter.variable} font-sans antialiased`}>
                 <NextIntlClientProvider messages={messages}>
                     {children}

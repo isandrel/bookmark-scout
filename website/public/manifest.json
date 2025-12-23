@@ -1,0 +1,16 @@
+{
+    "name": "Bookmark Scout",
+    "short_name": "Bookmark Scout",
+    "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#6366f1",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        }
+    ]
+}
