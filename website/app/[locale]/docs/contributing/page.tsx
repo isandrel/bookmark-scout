@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default async function ContributingPage({
     params,
@@ -19,7 +20,7 @@ export default async function ContributingPage({
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         <Link
                             href={`/${locale}/docs`}
                             className="text-muted hover:text-foreground transition-colors"
@@ -34,6 +35,7 @@ export default async function ContributingPage({
                         >
                             {t("nav.github")}
                         </a>
+                        <LanguageSwitcher currentLocale={locale} />
                     </div>
                 </div>
             </nav>

@@ -66,8 +66,7 @@ export default async function Home({
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </div>
-                    <div className="flex items-center gap-6">
-                        <LanguageSwitcher currentLocale={locale} />
+                    <div className="flex items-center gap-4">
                         <Link
                             href={`/${locale}/docs`}
                             className="text-muted hover:text-foreground transition-colors"
@@ -85,6 +84,7 @@ export default async function Home({
                             </svg>
                             {t("nav.github")}
                         </a>
+                        <LanguageSwitcher currentLocale={locale} />
                     </div>
                 </div>
             </nav>

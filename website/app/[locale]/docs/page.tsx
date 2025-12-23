@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 export default async function DocsPage({
     params,
@@ -37,7 +38,7 @@ export default async function DocsPage({
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         <Link href={`/${locale}/docs`} className="text-foreground font-medium">
                             {t("nav.docs")}
                         </Link>
@@ -49,6 +50,7 @@ export default async function DocsPage({
                         >
                             {t("nav.github")}
                         </a>
+                        <LanguageSwitcher currentLocale={locale} />
                     </div>
                 </div>
             </nav>
