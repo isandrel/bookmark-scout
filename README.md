@@ -10,7 +10,7 @@
 
 <p align="center">
   <a href="https://github.com/isandrel/bookmark-scout/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/isandrel/bookmark-scout?style=flat-square" alt="License">
+    <img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square" alt="License">
   </a>
   <a href="https://github.com/isandrel/bookmark-scout/stargazers">
     <img src="https://img.shields.io/github/stars/isandrel/bookmark-scout?style=flat-square" alt="Stars">
@@ -157,7 +157,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
 
 ---
 
