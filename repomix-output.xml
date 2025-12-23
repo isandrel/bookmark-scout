@@ -9942,374 +9942,6 @@ const OptionsPage: React.FC = () => {
 export default OptionsPage;
 </file>
 
-<file path="translations/README.ja.md">
-<p align="center">
-  <a href="../README.md">English</a> ·
-  <strong>日本語</strong> ·
-  <a href="./README.ko.md">한국어</a>
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
-</p>
-
-<h1 align="center">🔖 Bookmark Scout</h1>
-
-<p align="center">
-  <strong>ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Chrome-対応-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
-  <img src="https://img.shields.io/badge/Firefox-対応-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
-  <img src="https://img.shields.io/badge/Edge-対応-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
-  <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
-</p>
-
----
-
-## 🌐 ブラウザサポート
-
-| ブラウザ | 状態     | 備考                                        |
-| -------- | -------- | ------------------------------------------- |
-| Chrome   | ✅ 対応   | Manifest V3でフルサポート                   |
-| Firefox  | ✅ 対応   | Manifest V2でフルサポート                   |
-| Edge     | ✅ 対応   | Manifest V3でフルサポート（Chromiumベース） |
-| Safari   | ❌ 非対応 | Appleが`bookmarks` APIを実装していません    |
-
-### なぜSafariは非対応なのか
-
-Safari Web Extensionsはこの拡張機能のコア機能に不可欠な`browser.bookmarks` APIをサポートしていません。AppleはSafari 14（2020年）でWeb Extensionサポートを発表しましたが、bookmarks APIは実装されませんでした。これはAppleプラットフォームの制限であり、WXTや拡張機能フレームワークの問題ではありません。
-
-Safari APIサポートの更新については、[WebKit Bug Tracker](https://bugs.webkit.org/)をご覧ください。
-
----
-
-## ✨ 機能
-
-### ✅ 現在の重点：ポップアップ＆サイドパネル
-
-- [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングでブックマークを素早く検索
-- [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップでブックマークとフォルダを整理
-- [x] ⚡ **クイック追加** — ワンクリックで現在のタブを任意のフォルダに保存
-- [x] 📱 **サイドパネル** — Chromeのサイドパネルからブックマークにアクセス
-- [x] 🌙 **ダークモード** — スムーズなトランジションを持つ美しいダークテーマ
-- [x] 🎯 **すべて展開/折りたたみ** — ネストされたフォルダを素早く展開または折りたたみ
-- [x] 📁 **フォルダ作成** — ポップアップから直接新しいフォルダを作成
-- [x] 🗑️ **アイテム削除** — 確認後にブックマークとフォルダを削除
-
-### 🚧 ロードマップ
-
-- [ ] 🗂️ **フルブックマークマネージャー** — Chromeのデフォルトブックマークページをモダンなテーブルビューに置き換え
-- [ ] ⚙️ **オプションページ** — 拡張機能の設定とプリファレンスをカスタマイズ
-- [ ] 🏷️ **タグ** — ブックマークにカスタムタグを追加してより良い整理を実現
-- [ ] 🔄 **同期** — クラウドバックアップによるクロスデバイスブックマーク同期
-- [ ] 📊 **分析** — ブックマーク使用統計を表示
-- [ ] 🔗 **重複検出** — 重複したブックマークを検出して削除
-- [ ] 💀 **デッドリンクチェッカー** — 壊れたリンクを検出してクリーンアップ
-- [ ] 📤 **インポート/エクスポート** — JSONとしてブックマークをバックアップおよび復元
-- [ ] ⌨️ **キーボードショートカット** — ホットキーでブックマークをナビゲートおよび管理
-- [ ] 🔒 **プライベートブックマーク** — パスワード保護されたブックマークフォルダ
-
----
-
-## 🛠️ 技術スタック
-
-| レイヤー               | テクノロジー                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------ |
-| **フレームワーク**     | React 19 + TypeScript                                                                            |
-| **ビルド**             | [WXT](https://wxt.dev) + Rolldown-Vite + Nx（キャッシュ付きmonorepo）                            |
-| **ランタイム**         | Bun 1.3                                                                                          |
-| **状態管理**           | [Zustand](https://zustand-demo.pmnd.rs/)（軽量状態管理）                                         |
-| **スタイリング**       | TailwindCSS 4 + CSS変数                                                                          |
-| **UIコンポーネント**   | [shadcn/ui](https://ui.shadcn.com)（Radixプリミティブ）                                          |
-| **ドラッグ＆ドロップ** | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
-| **アニメーション**     | Framer Motion                                                                                    |
-| **テーブル**           | TanStack React Table                                                                             |
-
-> **📍 現在の重点：** ポップアップ開発。オプションページとブックマークオーバーライドは一時的に無効化されています。
-
----
-
-## 📦 インストール
-
-### ソースから
-
-```bash
-# リポジトリをクローン
-git clone https://github.com/isandrel/bookmark-scout.git
-cd bookmark-scout
-
-# 依存関係をインストール
-bun install
-
-# 拡張機能をビルド
-bun run build
-```
-
-### Chromeにロード
-
-1. `chrome://extensions/` を開く
-2. **デベロッパーモード**を有効化（右上）
-3. **パッケージ化されていない拡張機能を読み込む**をクリック
-4. `dist` フォルダを選択
-
----
-
-## 🚀 開発
-
-```bash
-# 開発サーバーを起動
-bun run dev
-
-# 本番用にビルド
-bun run build
-
-# コードをリント
-bun run lint
-```
-
----
-
-## 📁 プロジェクト構造
-
-```
-src/
-├── components/
-│   ├── page/
-│   │   ├── BookmarksPage.tsx    # フルブックマークマネージャー
-│   │   ├── OptionsPage.tsx      # 拡張機能設定
-│   │   └── PopupPage.tsx        # メインポップアップ（検索＆DnD）
-│   └── ui/                      # shadcnコンポーネント
-├── hooks/                       # カスタムReact Hooks
-├── lib/                         # ユーティリティ関数
-├── popup.html                   # ポップアップエントリ
-├── bookmarks.html               # ブックマークページオーバーライド
-├── options.html                 # オプションページ
-└── sidepanel.html               # サイドパネル
-```
-
----
-
-## 🔐 権限
-
-| 権限        | 目的                               |
-| ----------- | ---------------------------------- |
-| `bookmarks` | ブックマークの読み取りと書き込み   |
-| `tabs`      | クイック追加用の現在のタブ情報取得 |
-| `favicon`   | ウェブサイトファビコンを表示       |
-| `storage`   | ユーザー設定を保存                 |
-| `sidePanel` | Chromeサイドパネルを有効化         |
-
----
-
-## 🤝 コントリビューション
-
-コントリビューションを歓迎します！お気軽にPull Requestを提出してください。
-
-1. リポジトリをフォーク
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. 変更をコミット (`git commit -m 'feat: 素晴らしい機能を追加'`)
-4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-5. Pull Requestを作成
-
----
-
-## 📄 ライセンス
-
-このプロジェクトはGNU Affero General Public License v3.0の下でライセンスされています - 詳細は[LICENSE](../LICENSE)ファイルをご覧ください。
-
----
-
-<p align="center">
-  <a href="https://github.com/isandrel">isandrel</a> が ❤️ を込めて作成
-</p>
-</file>
-
-<file path="translations/README.ko.md">
-<p align="center">
-  <a href="../README.md">English</a> ·
-  <a href="./README.ja.md">日本語</a> ·
-  <strong>한국어</strong>
-</p>
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
-</p>
-
-<h1 align="center">🔖 Bookmark Scout</h1>
-
-<p align="center">
-  <strong>북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Chrome-지원-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
-  <img src="https://img.shields.io/badge/Firefox-지원-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
-  <img src="https://img.shields.io/badge/Edge-지원-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
-  <img src="https://img.shields.io/badge/Safari-미지원-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
-</p>
-
----
-
-## 🌐 브라우저 지원
-
-| 브라우저 | 상태     | 비고                                    |
-| -------- | -------- | --------------------------------------- |
-| Chrome   | ✅ 지원   | Manifest V3 완전 지원                   |
-| Firefox  | ✅ 지원   | Manifest V2 완전 지원                   |
-| Edge     | ✅ 지원   | Manifest V3 완전 지원 (Chromium 기반)   |
-| Safari   | ❌ 미지원 | Apple이 `bookmarks` API를 구현하지 않음 |
-
-### Safari가 지원되지 않는 이유
-
-Safari Web Extensions는 이 확장 프로그램의 핵심 기능에 필수적인 `browser.bookmarks` API를 지원하지 않습니다. Apple은 Safari 14(2020년)에서 Web Extension 지원을 발표했지만, bookmarks API는 구현되지 않았습니다. 이것은 Apple 플랫폼의 제한이며, WXT나 확장 프로그램 프레임워크의 문제가 아닙니다.
-
-Safari API 지원 업데이트에 대해서는 [WebKit Bug Tracker](https://bugs.webkit.org/)를 참조하세요.
-
----
-
-## ✨ 기능
-
-### ✅ 현재 중점: 팝업 & 사이드 패널
-
-- [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 북마크를 빠르게 검색
-- [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 북마크와 폴더 정리
-- [x] ⚡ **빠른 추가** — 한 번의 클릭으로 현재 탭을 원하는 폴더에 저장
-- [x] 📱 **사이드 패널** — Chrome 사이드 패널에서 북마크에 접근
-- [x] 🌙 **다크 모드** — 부드러운 전환 효과가 있는 아름다운 다크 테마
-- [x] 🎯 **모두 펼치기/접기** — 중첩된 폴더를 빠르게 펼치거나 접기
-- [x] 📁 **폴더 생성** — 팝업에서 직접 새 폴더 생성
-- [x] 🗑️ **항목 삭제** — 확인 후 북마크와 폴더 삭제
-
-### 🚧 로드맵
-
-- [ ] 🗂️ **전체 북마크 관리자** — Chrome 기본 북마크 페이지를 모던한 테이블 뷰로 대체
-- [ ] ⚙️ **옵션 페이지** — 확장 프로그램 설정 및 환경설정 커스터마이즈
-- [ ] 🏷️ **태그** — 더 나은 정리를 위해 북마크에 커스텀 태그 추가
-- [ ] 🔄 **동기화** — 클라우드 백업을 통한 크로스 디바이스 북마크 동기화
-- [ ] 📊 **분석** — 북마크 사용 통계 보기
-- [ ] 🔗 **중복 감지** — 중복된 북마크 찾기 및 제거
-- [ ] 💀 **데드 링크 체커** — 깨진 링크 감지 및 정리
-- [ ] 📤 **가져오기/내보내기** — JSON으로 북마크 백업 및 복원
-- [ ] ⌨️ **키보드 단축키** — 단축키로 북마크 탐색 및 관리
-- [ ] 🔒 **비공개 북마크** — 비밀번호로 보호된 북마크 폴더
-
----
-
-## 🛠️ 기술 스택
-
-| 레이어             | 기술                                                                                             |
-| ------------------ | ------------------------------------------------------------------------------------------------ |
-| **프레임워크**     | React 19 + TypeScript                                                                            |
-| **빌드**           | [WXT](https://wxt.dev) + Rolldown-Vite + Nx (캐싱이 있는 monorepo)                               |
-| **런타임**         | Bun 1.3                                                                                          |
-| **상태 관리**      | [Zustand](https://zustand-demo.pmnd.rs/) (경량 상태 관리)                                        |
-| **스타일링**       | TailwindCSS 4 + CSS 변수                                                                         |
-| **UI 컴포넌트**    | [shadcn/ui](https://ui.shadcn.com) (Radix 프리미티브)                                            |
-| **드래그 앤 드롭** | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
-| **애니메이션**     | Framer Motion                                                                                    |
-| **테이블**         | TanStack React Table                                                                             |
-
-> **📍 현재 중점:** 팝업 개발. 옵션 페이지와 북마크 오버라이드는 일시적으로 비활성화됨.
-
----
-
-## 📦 설치
-
-### 소스에서 설치
-
-```bash
-# 리포지토리 클론
-git clone https://github.com/isandrel/bookmark-scout.git
-cd bookmark-scout
-
-# 의존성 설치
-bun install
-
-# 확장 프로그램 빌드
-bun run build
-```
-
-### Chrome에 로드
-
-1. `chrome://extensions/` 열기
-2. **개발자 모드** 활성화 (오른쪽 상단)
-3. **압축해제된 확장 프로그램을 로드합니다** 클릭
-4. `dist` 폴더 선택
-
----
-
-## 🚀 개발
-
-```bash
-# 개발 서버 시작
-bun run dev
-
-# 프로덕션용 빌드
-bun run build
-
-# 코드 린트
-bun run lint
-```
-
----
-
-## 📁 프로젝트 구조
-
-```
-src/
-├── components/
-│   ├── page/
-│   │   ├── BookmarksPage.tsx    # 전체 북마크 관리자
-│   │   ├── OptionsPage.tsx      # 확장 프로그램 설정
-│   │   └── PopupPage.tsx        # 메인 팝업 (검색 & DnD)
-│   └── ui/                      # shadcn 컴포넌트
-├── hooks/                       # 커스텀 React Hooks
-├── lib/                         # 유틸리티 함수
-├── popup.html                   # 팝업 엔트리
-├── bookmarks.html               # 북마크 페이지 오버라이드
-├── options.html                 # 옵션 페이지
-└── sidepanel.html               # 사이드 패널
-```
-
----
-
-## 🔐 권한
-
-| 권한        | 용도                          |
-| ----------- | ----------------------------- |
-| `bookmarks` | 북마크 읽기 및 쓰기           |
-| `tabs`      | 빠른 추가를 위한 현재 탭 정보 |
-| `favicon`   | 웹사이트 파비콘 표시          |
-| `storage`   | 사용자 환경설정 저장          |
-| `sidePanel` | Chrome 사이드 패널 활성화     |
-
----
-
-## 🤝 기여
-
-기여를 환영합니다! Pull Request를 자유롭게 제출해 주세요.
-
-1. 리포지토리 포크
-2. 기능 브랜치 생성 (`git checkout -b feature/amazing-feature`)
-3. 변경사항 커밋 (`git commit -m 'feat: 멋진 기능 추가'`)
-4. 브랜치에 푸시 (`git push origin feature/amazing-feature`)
-5. Pull Request 생성
-
----
-
-## 📄 라이선스
-
-이 프로젝트는 GNU Affero General Public License v3.0에 따라 라이선스가 부여됩니다 - 자세한 내용은 [LICENSE](../LICENSE) 파일을 참조하세요.
-
----
-
-<p align="center">
-  <a href="https://github.com/isandrel">isandrel</a>이 ❤️로 만들었습니다
-</p>
-</file>
-
 <file path="website/app/[locale]/layout.tsx">
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -10795,6 +10427,458 @@ function PopupPage() {
 }
 
 export default PopupPage;
+</file>
+
+<file path="translations/README.ja.md">
+<p align="center">
+  <a href="../README.md">English</a> ·
+  <strong>日本語</strong> ·
+  <a href="./README.ko.md">한국어</a>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
+</p>
+
+<h1 align="center">🔖 Bookmark Scout</h1>
+
+<p align="center">
+  <strong>ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-対応-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Firefox-対応-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Edge-対応-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+</p>
+
+---
+
+## 🌐 ブラウザサポート
+
+| ブラウザ | 状態     | 備考                                        |
+| -------- | -------- | ------------------------------------------- |
+| Chrome   | ✅ 対応   | Manifest V3でフルサポート                   |
+| Firefox  | ✅ 対応   | Manifest V2でフルサポート                   |
+| Edge     | ✅ 対応   | Manifest V3でフルサポート（Chromiumベース） |
+| Safari   | ❌ 非対応 | Appleが`bookmarks` APIを実装していません    |
+
+### なぜSafariは非対応なのか
+
+Safari Web Extensionsはこの拡張機能のコア機能に不可欠な`browser.bookmarks` APIをサポートしていません。AppleはSafari 14（2020年）でWeb Extensionサポートを発表しましたが、bookmarks APIは実装されませんでした。これはAppleプラットフォームの制限であり、WXTや拡張機能フレームワークの問題ではありません。
+
+Safari APIサポートの更新については、[WebKit Bug Tracker](https://bugs.webkit.org/)をご覧ください。
+
+---
+
+## ✨ 機能
+
+### ✅ 現在の重点：ポップアップ＆サイドパネル
+
+- [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングでブックマークを素早く検索
+- [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップでブックマークとフォルダを整理
+- [x] ⚡ **クイック追加** — ワンクリックで現在のタブを任意のフォルダに保存
+- [x] 📱 **サイドパネル** — Chromeのサイドパネルからブックマークにアクセス
+- [x] 🌙 **ダークモード** — スムーズなトランジションを持つ美しいダークテーマ
+- [x] 🎯 **すべて展開/折りたたみ** — ネストされたフォルダを素早く展開または折りたたみ
+- [x] 📁 **フォルダ作成** — ポップアップから直接新しいフォルダを作成
+- [x] 🗑️ **アイテム削除** — 確認後にブックマークとフォルダを削除
+
+### 🚧 ロードマップ
+
+- [ ] 🗂️ **フルブックマークマネージャー** — Chromeのデフォルトブックマークページをモダンなテーブルビューに置き換え
+- [ ] ⚙️ **オプションページ** — 拡張機能の設定とプリファレンスをカスタマイズ
+- [ ] 🏷️ **タグ** — ブックマークにカスタムタグを追加してより良い整理を実現
+- [ ] 🔄 **同期** — クラウドバックアップによるクロスデバイスブックマーク同期
+- [ ] 📊 **分析** — ブックマーク使用統計を表示
+- [ ] 🔗 **重複検出** — 重複したブックマークを検出して削除
+- [ ] 💀 **デッドリンクチェッカー** — 壊れたリンクを検出してクリーンアップ
+- [ ] 📤 **インポート/エクスポート** — JSONとしてブックマークをバックアップおよび復元
+- [ ] ⌨️ **キーボードショートカット** — ホットキーでブックマークをナビゲートおよび管理
+- [ ] 🔒 **プライベートブックマーク** — パスワード保護されたブックマークフォルダ
+
+---
+
+## 📊 他の拡張機能との比較
+
+|                              | [Bookmark Scout](https://bookmark-scout.vercel.app) | [Raindrop.io](https://raindrop.io/) | [Pocket](https://getpocket.com/) | [Diigo](https://www.diigo.com/) | [Toby](https://www.gettoby.com/) | [Workona](https://workona.com/) | [Qlearly](https://qlearly.com/) | [Booky.io](https://booky.io/) | [Pinboard](https://pinboard.in/) |      [Linkwarden](https://linkwarden.app/)       |        [Hoarder](https://hoarder.app/)         |
+| ---------------------------- | :-------------------------------------------------: | :---------------------------------: | :------------------------------: | :-----------------------------: | :------------------------------: | :-----------------------------: | :-----------------------------: | :---------------------------: | :------------------------------: | :----------------------------------------------: | :--------------------------------------------: |
+| **無料**                     |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **価格**                     |                        無料                         |               $28/年                |              $45/年              |            $40-59/年            |              $4/月               |            $7.50/月             |             $29/年              |            €19/年             |              $22/年              |                       無料                       |                      無料                      |
+| **オープンソース**           |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **GitHub**                   | [Link](https://github.com/isandrel/bookmark-scout)  |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 | [Link](https://github.com/linkwarden/linkwarden) | [Link](https://github.com/hoarder-app/hoarder) |
+| **検索**                     |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **全文検索**                 |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **ドラッグ＆ドロップ**       |                          ✅                          |                  ✅                  |                ❌                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **フォルダ整理**             |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **ネストフォルダ**           |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **タグ/ラベル**              |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ✅                         |                      ✅ AI                      |
+| **ワンクリック保存**         |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **サイドパネル**             |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **ダークモード**             |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **ビジュアルプレビュー**     |                          ❌                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ❌                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **注釈/メモ**                |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **ハイライト**               |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **クラウド同期**             |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **オフラインアクセス**       |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **ページアーカイブ**         |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **重複検出**                 |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **デッドリンクチェック**     |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **インポート/エクスポート**  |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **キーボードショートカット** |                          🚧                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **チームコラボレーション**   |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **モバイルアプリ**           |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Chrome**                   |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Firefox**                  |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Edge**                     |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Manifest V3**              |                          ✅                          |                  ✅                  |                ✅                 |                ⚠️                |                ⚠️                 |                ✅                |                ⚠️                |               ⚠️               |                ❌                 |                       N/A                        |                      N/A                       |
+| **i18n**                     |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ✅                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **プライバシー重視**         |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ⚠️               |                ✅                 |                        ✅                         |                       ✅                        |
+| **セルフホスト可能**         |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **AI機能**                   |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ✅                        |
+
+**凡例:** ✅ 対応 | ❌ 非対応 | ⚠️ 制限あり | 🚧 ロードマップ | N/A 該当なし
+
+---
+
+## 🛠️ 技術スタック
+
+| レイヤー               | テクノロジー                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| **フレームワーク**     | React 19 + TypeScript                                                                            |
+| **ビルド**             | [WXT](https://wxt.dev) + Rolldown-Vite + Nx（キャッシュ付きmonorepo）                            |
+| **ランタイム**         | Bun 1.3                                                                                          |
+| **状態管理**           | [Zustand](https://zustand-demo.pmnd.rs/)（軽量状態管理）                                         |
+| **スタイリング**       | TailwindCSS 4 + CSS変数                                                                          |
+| **UIコンポーネント**   | [shadcn/ui](https://ui.shadcn.com)（Radixプリミティブ）                                          |
+| **ドラッグ＆ドロップ** | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
+| **アニメーション**     | Framer Motion                                                                                    |
+| **テーブル**           | TanStack React Table                                                                             |
+
+> **📍 現在の重点：** ポップアップ開発。オプションページとブックマークオーバーライドは一時的に無効化されています。
+
+---
+
+## 📦 インストール
+
+### ソースから
+
+```bash
+# リポジトリをクローン
+git clone https://github.com/isandrel/bookmark-scout.git
+cd bookmark-scout
+
+# 依存関係をインストール
+bun install
+
+# 拡張機能をビルド
+bun run build
+```
+
+### Chromeにロード
+
+1. `chrome://extensions/` を開く
+2. **デベロッパーモード**を有効化（右上）
+3. **パッケージ化されていない拡張機能を読み込む**をクリック
+4. `dist` フォルダを選択
+
+---
+
+## 🚀 開発
+
+```bash
+# 開発サーバーを起動
+bun run dev
+
+# 本番用にビルド
+bun run build
+
+# コードをリント
+bun run lint
+```
+
+---
+
+## 📁 プロジェクト構造
+
+```
+src/
+├── components/
+│   ├── page/
+│   │   ├── BookmarksPage.tsx    # フルブックマークマネージャー
+│   │   ├── OptionsPage.tsx      # 拡張機能設定
+│   │   └── PopupPage.tsx        # メインポップアップ（検索＆DnD）
+│   └── ui/                      # shadcnコンポーネント
+├── hooks/                       # カスタムReact Hooks
+├── lib/                         # ユーティリティ関数
+├── popup.html                   # ポップアップエントリ
+├── bookmarks.html               # ブックマークページオーバーライド
+├── options.html                 # オプションページ
+└── sidepanel.html               # サイドパネル
+```
+
+---
+
+## 🔐 権限
+
+| 権限        | 目的                               |
+| ----------- | ---------------------------------- |
+| `bookmarks` | ブックマークの読み取りと書き込み   |
+| `tabs`      | クイック追加用の現在のタブ情報取得 |
+| `favicon`   | ウェブサイトファビコンを表示       |
+| `storage`   | ユーザー設定を保存                 |
+| `sidePanel` | Chromeサイドパネルを有効化         |
+
+---
+
+## 🤝 コントリビューション
+
+コントリビューションを歓迎します！お気軽にPull Requestを提出してください。
+
+1. リポジトリをフォーク
+2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
+3. 変更をコミット (`git commit -m 'feat: 素晴らしい機能を追加'`)
+4. ブランチにプッシュ (`git push origin feature/amazing-feature`)
+5. Pull Requestを作成
+
+---
+
+## 📄 ライセンス
+
+このプロジェクトはGNU Affero General Public License v3.0の下でライセンスされています - 詳細は[LICENSE](../LICENSE)ファイルをご覧ください。
+
+---
+
+<p align="center">
+  <a href="https://github.com/isandrel">isandrel</a> が ❤️ を込めて作成
+</p>
+</file>
+
+<file path="translations/README.ko.md">
+<p align="center">
+  <a href="../README.md">English</a> ·
+  <a href="./README.ja.md">日本語</a> ·
+  <strong>한국어</strong>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
+</p>
+
+<h1 align="center">🔖 Bookmark Scout</h1>
+
+<p align="center">
+  <strong>북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-지원-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Firefox-지원-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Edge-지원-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Safari-미지원-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+</p>
+
+---
+
+## 🌐 브라우저 지원
+
+| 브라우저 | 상태     | 비고                                    |
+| -------- | -------- | --------------------------------------- |
+| Chrome   | ✅ 지원   | Manifest V3 완전 지원                   |
+| Firefox  | ✅ 지원   | Manifest V2 완전 지원                   |
+| Edge     | ✅ 지원   | Manifest V3 완전 지원 (Chromium 기반)   |
+| Safari   | ❌ 미지원 | Apple이 `bookmarks` API를 구현하지 않음 |
+
+### Safari가 지원되지 않는 이유
+
+Safari Web Extensions는 이 확장 프로그램의 핵심 기능에 필수적인 `browser.bookmarks` API를 지원하지 않습니다. Apple은 Safari 14(2020년)에서 Web Extension 지원을 발표했지만, bookmarks API는 구현되지 않았습니다. 이것은 Apple 플랫폼의 제한이며, WXT나 확장 프로그램 프레임워크의 문제가 아닙니다.
+
+Safari API 지원 업데이트에 대해서는 [WebKit Bug Tracker](https://bugs.webkit.org/)를 참조하세요.
+
+---
+
+## ✨ 기능
+
+### ✅ 현재 중점: 팝업 & 사이드 패널
+
+- [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 북마크를 빠르게 검색
+- [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 북마크와 폴더 정리
+- [x] ⚡ **빠른 추가** — 한 번의 클릭으로 현재 탭을 원하는 폴더에 저장
+- [x] 📱 **사이드 패널** — Chrome 사이드 패널에서 북마크에 접근
+- [x] 🌙 **다크 모드** — 부드러운 전환 효과가 있는 아름다운 다크 테마
+- [x] 🎯 **모두 펼치기/접기** — 중첩된 폴더를 빠르게 펼치거나 접기
+- [x] 📁 **폴더 생성** — 팝업에서 직접 새 폴더 생성
+- [x] 🗑️ **항목 삭제** — 확인 후 북마크와 폴더 삭제
+
+### 🚧 로드맵
+
+- [ ] 🗂️ **전체 북마크 관리자** — Chrome 기본 북마크 페이지를 모던한 테이블 뷰로 대체
+- [ ] ⚙️ **옵션 페이지** — 확장 프로그램 설정 및 환경설정 커스터마이즈
+- [ ] 🏷️ **태그** — 더 나은 정리를 위해 북마크에 커스텀 태그 추가
+- [ ] 🔄 **동기화** — 클라우드 백업을 통한 크로스 디바이스 북마크 동기화
+- [ ] 📊 **분석** — 북마크 사용 통계 보기
+- [ ] 🔗 **중복 감지** — 중복된 북마크 찾기 및 제거
+- [ ] 💀 **데드 링크 체커** — 깨진 링크 감지 및 정리
+- [ ] 📤 **가져오기/내보내기** — JSON으로 북마크 백업 및 복원
+- [ ] ⌨️ **키보드 단축키** — 단축키로 북마크 탐색 및 관리
+- [ ] 🔒 **비공개 북마크** — 비밀번호로 보호된 북마크 폴더
+
+---
+
+## 📊 다른 확장 프로그램과의 비교
+
+|                       | [Bookmark Scout](https://bookmark-scout.vercel.app) | [Raindrop.io](https://raindrop.io/) | [Pocket](https://getpocket.com/) | [Diigo](https://www.diigo.com/) | [Toby](https://www.gettoby.com/) | [Workona](https://workona.com/) | [Qlearly](https://qlearly.com/) | [Booky.io](https://booky.io/) | [Pinboard](https://pinboard.in/) |      [Linkwarden](https://linkwarden.app/)       |        [Hoarder](https://hoarder.app/)         |
+| --------------------- | :-------------------------------------------------: | :---------------------------------: | :------------------------------: | :-----------------------------: | :------------------------------: | :-----------------------------: | :-----------------------------: | :---------------------------: | :------------------------------: | :----------------------------------------------: | :--------------------------------------------: |
+| **무료**              |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **가격**              |                        무료                         |               $28/년                |              $45/년              |            $40-59/년            |              $4/월               |            $7.50/월             |             $29/년              |            €19/년             |              $22/년              |                       무료                       |                      무료                      |
+| **오픈소스**          |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **GitHub**            | [Link](https://github.com/isandrel/bookmark-scout)  |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 | [Link](https://github.com/linkwarden/linkwarden) | [Link](https://github.com/hoarder-app/hoarder) |
+| **검색**              |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **전체 텍스트 검색**  |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **드래그 앤 드롭**    |                          ✅                          |                  ✅                  |                ❌                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **폴더 정리**         |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **중첩 폴더**         |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **태그/라벨**         |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ✅                         |                      ✅ AI                      |
+| **원클릭 저장**       |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **사이드 패널**       |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **다크 모드**         |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **비주얼 프리뷰**     |                          ❌                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ❌                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **주석/메모**         |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **하이라이트**        |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **클라우드 동기화**   |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **오프라인 접근**     |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **페이지 아카이브**   |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **중복 감지**         |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **데드 링크 체크**    |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **가져오기/내보내기** |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **키보드 단축키**     |                          🚧                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **팀 협업**           |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **모바일 앱**         |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Chrome**            |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Firefox**           |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Edge**              |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Manifest V3**       |                          ✅                          |                  ✅                  |                ✅                 |                ⚠️                |                ⚠️                 |                ✅                |                ⚠️                |               ⚠️               |                ❌                 |                       N/A                        |                      N/A                       |
+| **i18n**              |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ✅                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **프라이버시 중심**   |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ⚠️               |                ✅                 |                        ✅                         |                       ✅                        |
+| **셀프 호스팅 가능**  |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **AI 기능**           |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ✅                        |
+
+**범례:** ✅ 지원 | ❌ 미지원 | ⚠️ 제한적 | 🚧 로드맵 | N/A 해당 없음
+
+---
+
+## 🛠️ 기술 스택
+
+| 레이어             | 기술                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| **프레임워크**     | React 19 + TypeScript                                                                            |
+| **빌드**           | [WXT](https://wxt.dev) + Rolldown-Vite + Nx (캐싱이 있는 monorepo)                               |
+| **런타임**         | Bun 1.3                                                                                          |
+| **상태 관리**      | [Zustand](https://zustand-demo.pmnd.rs/) (경량 상태 관리)                                        |
+| **스타일링**       | TailwindCSS 4 + CSS 변수                                                                         |
+| **UI 컴포넌트**    | [shadcn/ui](https://ui.shadcn.com) (Radix 프리미티브)                                            |
+| **드래그 앤 드롭** | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
+| **애니메이션**     | Framer Motion                                                                                    |
+| **테이블**         | TanStack React Table                                                                             |
+
+> **📍 현재 중점:** 팝업 개발. 옵션 페이지와 북마크 오버라이드는 일시적으로 비활성화됨.
+
+---
+
+## 📦 설치
+
+### 소스에서 설치
+
+```bash
+# 리포지토리 클론
+git clone https://github.com/isandrel/bookmark-scout.git
+cd bookmark-scout
+
+# 의존성 설치
+bun install
+
+# 확장 프로그램 빌드
+bun run build
+```
+
+### Chrome에 로드
+
+1. `chrome://extensions/` 열기
+2. **개발자 모드** 활성화 (오른쪽 상단)
+3. **압축해제된 확장 프로그램을 로드합니다** 클릭
+4. `dist` 폴더 선택
+
+---
+
+## 🚀 개발
+
+```bash
+# 개발 서버 시작
+bun run dev
+
+# 프로덕션용 빌드
+bun run build
+
+# 코드 린트
+bun run lint
+```
+
+---
+
+## 📁 프로젝트 구조
+
+```
+src/
+├── components/
+│   ├── page/
+│   │   ├── BookmarksPage.tsx    # 전체 북마크 관리자
+│   │   ├── OptionsPage.tsx      # 확장 프로그램 설정
+│   │   └── PopupPage.tsx        # 메인 팝업 (검색 & DnD)
+│   └── ui/                      # shadcn 컴포넌트
+├── hooks/                       # 커스텀 React Hooks
+├── lib/                         # 유틸리티 함수
+├── popup.html                   # 팝업 엔트리
+├── bookmarks.html               # 북마크 페이지 오버라이드
+├── options.html                 # 옵션 페이지
+└── sidepanel.html               # 사이드 패널
+```
+
+---
+
+## 🔐 권한
+
+| 권한        | 용도                          |
+| ----------- | ----------------------------- |
+| `bookmarks` | 북마크 읽기 및 쓰기           |
+| `tabs`      | 빠른 추가를 위한 현재 탭 정보 |
+| `favicon`   | 웹사이트 파비콘 표시          |
+| `storage`   | 사용자 환경설정 저장          |
+| `sidePanel` | Chrome 사이드 패널 활성화     |
+
+---
+
+## 🤝 기여
+
+기여를 환영합니다! Pull Request를 자유롭게 제출해 주세요.
+
+1. 리포지토리 포크
+2. 기능 브랜치 생성 (`git checkout -b feature/amazing-feature`)
+3. 변경사항 커밋 (`git commit -m 'feat: 멋진 기능 추가'`)
+4. 브랜치에 푸시 (`git push origin feature/amazing-feature`)
+5. Pull Request 생성
+
+---
+
+## 📄 라이선스
+
+이 프로젝트는 GNU Affero General Public License v3.0에 따라 라이선스가 부여됩니다 - 자세한 내용은 [LICENSE](../LICENSE) 파일을 참조하세요.
+
+---
+
+<p align="center">
+  <a href="https://github.com/isandrel">isandrel</a>이 ❤️로 만들었습니다
+</p>
 </file>
 
 <file path="website/app/[locale]/page.tsx">
@@ -11478,8 +11562,50 @@ For updates on Safari API support, see [WebKit Bug Tracker](https://bugs.webkit.
 - [ ] 📤 **Import/Export** — Backup and restore bookmarks as JSON
 - [ ] ⌨️ **Keyboard Shortcuts** — Navigate and manage bookmarks with hotkeys
 - [ ] 🔒 **Private Bookmarks** — Password-protected bookmark folders
+---
+
+## 📊 Comparison with Other Extensions
+
+|                         | [Bookmark Scout](https://bookmark-scout.vercel.app) | [Raindrop.io](https://raindrop.io/) | [Pocket](https://getpocket.com/) | [Diigo](https://www.diigo.com/) | [Toby](https://www.gettoby.com/) | [Workona](https://workona.com/) | [Qlearly](https://qlearly.com/) | [Booky.io](https://booky.io/) | [Pinboard](https://pinboard.in/) |      [Linkwarden](https://linkwarden.app/)       |        [Hoarder](https://hoarder.app/)         |
+| ----------------------- | :-------------------------------------------------: | :---------------------------------: | :------------------------------: | :-----------------------------: | :------------------------------: | :-----------------------------: | :-----------------------------: | :---------------------------: | :------------------------------: | :----------------------------------------------: | :--------------------------------------------: |
+| **Free**                |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Price**               |                        Free                         |               $28/yr                |              $45/yr              |            $40-59/yr            |              $4/mo               |            $7.50/mo             |             $29/yr              |            €19/yr             |              $22/yr              |                       Free                       |                      Free                      |
+| **Open Source**         |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **GitHub**              | [Link](https://github.com/isandrel/bookmark-scout)  |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 | [Link](https://github.com/linkwarden/linkwarden) | [Link](https://github.com/hoarder-app/hoarder) |
+| **Search**              |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Full-text Search**    |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Drag & Drop**         |                          ✅                          |                  ✅                  |                ❌                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **Folder Organization** |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Nested Folders**      |                          ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Tags/Labels**         |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ✅                         |                      ✅ AI                      |
+| **One-Click Save**      |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Side Panel**          |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **Dark Mode**           |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Visual Previews**     |                          ❌                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ❌                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Annotations/Notes**   |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Highlights**          |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
+| **Cloud Sync**          |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Offline Access**      |                          ✅                          |                  ✅                  |                ✅                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **Page Archiving**      |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Duplicate Detection** |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **Dead Link Checker**   |                          🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
+| **Import/Export**       |                          🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Keyboard Shortcuts**  |                          🚧                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
+| **Team Collaboration**  |                          ❌                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Mobile App**          |                          ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Chrome**              |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Firefox**             |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Edge**                |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Manifest V3**         |                          ✅                          |                  ✅                  |                ✅                 |                ⚠️                |                ⚠️                 |                ✅                |                ⚠️                |               ⚠️               |                ❌                 |                       N/A                        |                      N/A                       |
+| **i18n**                |                          ✅                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ✅                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **Privacy-Focused**     |                          ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ⚠️               |                ✅                 |                        ✅                         |                       ✅                        |
+| **Self-Hostable**       |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
+| **AI Features**         |                          ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ✅                        |
+
+**Legend:** ✅ Supported | ❌ Not Supported | ⚠️ Limited | 🚧 Roadmap | N/A Not Applicable
 
 ---
+
 
 ## 🛠️ Tech Stack
 
