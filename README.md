@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/vite.svg" alt="Bookmark Scout Logo" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
 </p>
 
 <h1 align="center">🔖 Bookmark Scout</h1>
