@@ -1,0 +1,126 @@
+/* Popup page styles for drag and drop */
+
+.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  background-color: hsl(var(--accent));
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.drop-target {
+  background-color: hsl(var(--accent));
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Drop indicator styles */
+.drop-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgb(37, 99, 235);
+  pointer-events: none;
+  z-index: 1000;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 1px white;
+}
+
+.drop-indicator::before,
+.drop-indicator::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: rgb(37, 99, 235);
+  border-radius: 50%;
+  top: -2px;
+}
+
+.drop-indicator::before {
+  left: -1px;
+}
+
+.drop-indicator::after {
+  right: -1px;
+}
+
+/* Accordion styles */
+.accordion-content {
+  overflow: hidden !important;
+  position: relative;
+}
+
+.accordion-item {
+  overflow: visible !important;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.accordion-content .accordion-content {
+  overflow: hidden;
+}
+
+.accordion-container {
+  max-height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Bookmark content area */
+.bookmark-content {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Hover effects */
+.bookmark-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.bookmark-item:hover {
+  background-color: hsl(var(--accent));
+}
+
+.folder-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.folder-item:hover {
+  background-color: hsl(var(--accent));
+}
+
+/* Action button styles */
+.action-button {
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.bookmark-item:hover .action-button,
+.folder-item:hover .action-button {
+  opacity: 1;
+}
+
+.action-button:hover {
+  transform: scale(1.1);
+}
+
+/* Search input styles */
+.search-input {
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
