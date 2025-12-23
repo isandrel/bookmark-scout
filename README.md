@@ -32,13 +32,28 @@
 
 ## ✨ Features
 
-- 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
-- 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
-- ⚡ **Quick Add** — Save the current tab to any folder with one click
-- 🗂️ **Full Manager** — Replaces Chrome's default bookmarks page with a modern table view
-- 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
-- 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
-- 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
+### ✅ Supported
+
+- [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
+- [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
+- [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
+- [x] 🗂️ **Full Manager** — Replaces Chrome's default bookmarks page with a modern table view
+- [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
+- [x] 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
+- [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
+- [x] 📁 **Create Folders** — Create new folders directly from the popup
+- [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
+
+### 🚧 Roadmap
+
+- [ ] 🏷️ **Tags** — Add custom tags to bookmarks for better organization
+- [ ] 🔄 **Sync** — Cross-device bookmark sync with cloud backup
+- [ ] 📊 **Analytics** — View bookmark usage statistics
+- [ ] 🔗 **Duplicate Detection** — Find and remove duplicate bookmarks
+- [ ] 💀 **Dead Link Checker** — Detect and clean up broken links
+- [ ] 📤 **Import/Export** — Backup and restore bookmarks as JSON
+- [ ] ⌨️ **Keyboard Shortcuts** — Navigate and manage bookmarks with hotkeys
+- [ ] 🔒 **Private Bookmarks** — Password-protected bookmark folders
 
 ---
 
