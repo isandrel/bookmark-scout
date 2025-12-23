@@ -1,0 +1,193 @@
+{
+    "metadata": {
+        "title": "Bookmark Scout - 모던 Chrome 북마크 관리자",
+        "description": "북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램"
+    },
+    "nav": {
+        "docs": "문서",
+        "github": "GitHub",
+        "backToDocs": "← 문서로 돌아가기"
+    },
+    "hero": {
+        "badge": "Chrome 확장 프로그램",
+        "manifestV3": "Manifest V3",
+        "title": "Bookmark Scout",
+        "description": "북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램. 드래그 앤 드롭, 즉시 검색, 아름다운 다크 모드를 지원합니다.",
+        "viewOnGitHub": "GitHub에서 보기",
+        "documentation": "문서"
+    },
+    "features": {
+        "title": "기능",
+        "subtitle": "북마크를 효율적으로 관리하는 데 필요한 모든 것",
+        "instantSearch": {
+            "title": "즉시 검색",
+            "description": "디바운스 검색과 폴더 필터링으로 북마크를 즉시 검색"
+        },
+        "dragAndDrop": {
+            "title": "드래그 앤 드롭",
+            "description": "직관적인 드래그 앤 드롭으로 북마크와 폴더 정리"
+        },
+        "quickAdd": {
+            "title": "빠른 추가",
+            "description": "한 번의 클릭으로 현재 탭을 원하는 폴더에 저장"
+        },
+        "sidePanel": {
+            "title": "사이드 패널",
+            "description": "Chrome 사이드 패널에서 북마크에 접근"
+        },
+        "darkMode": {
+            "title": "다크 모드",
+            "description": "부드러운 전환 효과가 있는 아름다운 다크 테마"
+        },
+        "expandCollapse": {
+            "title": "펼치기/접기",
+            "description": "중첩된 폴더를 빠르게 펼치거나 접기"
+        }
+    },
+    "techStack": {
+        "title": "기술 스택",
+        "subtitle": "최고의 개발자 경험을 위해 최신 기술로 구축"
+    },
+    "installation": {
+        "title": "설치",
+        "subtitle": "몇 분 안에 시작하세요",
+        "step1": {
+            "title": "리포지토리 클론"
+        },
+        "step2": {
+            "title": "의존성 설치 및 빌드"
+        },
+        "step3": {
+            "title": "Chrome에 로드",
+            "instructions": {
+                "1": "chrome://extensions/ 열기",
+                "2": "개발자 모드 활성화 (오른쪽 상단)",
+                "3": "압축해제된 확장 프로그램을 로드합니다 클릭",
+                "4": "dist 폴더 선택"
+            }
+        }
+    },
+    "footer": {
+        "madeWith": "❤️로 만들었습니다",
+        "license": "AGPL-3.0 라이선스"
+    },
+    "docs": {
+        "title": "문서",
+        "subtitle": "Bookmark Scout에 대해 알아야 할 모든 것",
+        "gettingStarted": {
+            "title": "시작하기",
+            "description": "Bookmark Scout 설치 및 설정 방법 배우기"
+        },
+        "features": {
+            "title": "기능",
+            "description": "모든 기능과 가능성 탐색"
+        },
+        "contributing": {
+            "title": "기여하기",
+            "description": "프로젝트에 기여하는 방법"
+        }
+    },
+    "gettingStarted": {
+        "title": "시작하기",
+        "prerequisites": {
+            "title": "사전 요구사항",
+            "bun": "Bun 1.3 이상",
+            "chrome": "Google Chrome 또는 Chromium 기반 브라우저",
+            "git": "Git"
+        },
+        "installation": {
+            "title": "설치",
+            "step1": "리포지토리 클론",
+            "step2": "의존성 설치",
+            "step3": "확장 프로그램 빌드",
+            "step4": {
+                "title": "Chrome에 로드",
+                "1": "chrome://extensions/ 열기",
+                "2": "개발자 모드 활성화 (오른쪽 상단 토글)",
+                "3": "\"압축해제된 확장 프로그램을 로드합니다\" 클릭",
+                "4": "dist 폴더 선택"
+            }
+        },
+        "development": {
+            "title": "개발",
+            "description": "핫 리로드가 있는 개발 서버 시작:"
+        }
+    },
+    "featuresPage": {
+        "title": "기능",
+        "subtitle": "Bookmark Scout가 제공하는 모든 것을 발견하세요",
+        "instantSearch": {
+            "title": "즉시 검색",
+            "description": "초고속 검색으로 북마크를 빠르게 찾으세요. 성능을 위한 디바운스 입력과 결과를 좁히는 폴더 필터링을 지원합니다."
+        },
+        "dragAndDrop": {
+            "title": "드래그 앤 드롭 정리",
+            "description": "직관적인 드래그 앤 드롭으로 북마크를 재정리하세요. 폴더 간 이동이나 폴더 내 재정렬이 쉽습니다."
+        },
+        "quickAdd": {
+            "title": "빠른 추가",
+            "description": "한 번의 클릭으로 현재 탭을 원하는 폴더에 저장하세요. 더 이상 중첩된 메뉴를 탐색할 필요가 없습니다."
+        },
+        "sidePanel": {
+            "title": "사이드 패널",
+            "description": "현재 페이지를 떠나지 않고 Chrome의 사이드 패널에서 북마크에 직접 접근하세요. 리서치와 참조 작업에 완벽합니다."
+        },
+        "darkMode": {
+            "title": "아름다운 다크 모드",
+            "description": "눈이 편한 멋진 다크 테마. 부드러운 전환과 최적의 가독성을 위해 신중하게 선택된 색상을 지원합니다."
+        },
+        "expandCollapse": {
+            "title": "모두 펼치기/접기",
+            "description": "한 번의 클릭으로 모든 중첩된 폴더를 펼치거나 접으세요. 개요 보기나 특정 섹션에 집중하기에 좋습니다."
+        },
+        "createFolders": {
+            "title": "폴더 생성",
+            "description": "팝업에서 직접 새 북마크 폴더를 생성하세요. 북마크 관리자를 열지 않고도 북마크를 정리할 수 있습니다."
+        },
+        "deleteItems": {
+            "title": "항목 삭제",
+            "description": "확인 대화상자와 함께 원치 않는 북마크와 폴더를 삭제하세요. 실수로 삭제하는 것을 방지합니다."
+        },
+        "roadmap": {
+            "title": "로드맵",
+            "fullManager": "전체 북마크 관리자 — Chrome의 기본 북마크 페이지 대체",
+            "options": "옵션 페이지 — 확장 프로그램 설정 커스터마이즈",
+            "tags": "태그 — 더 나은 정리를 위한 커스텀 태그 추가",
+            "duplicates": "중복 감지 — 중복 찾기 및 제거",
+            "deadLinks": "데드 링크 체커 — 깨진 링크 감지",
+            "shortcuts": "키보드 단축키 — 핫키로 탐색"
+        }
+    },
+    "contributingPage": {
+        "title": "기여하기",
+        "subtitle": "기여를 환영합니다! 시작하는 방법은 다음과 같습니다.",
+        "howTo": {
+            "title": "기여 방법",
+            "step1": "리포지토리 포크",
+            "step2": "기능 브랜치 생성:",
+            "step3": "변경사항 커밋:",
+            "step4": "브랜치에 푸시:",
+            "step5": "Pull Request 열기"
+        },
+        "commits": {
+            "title": "커밋 규칙",
+            "description": "Conventional Commits를 사용합니다. 커밋 형식:",
+            "feat": "새 기능",
+            "fix": "버그 수정",
+            "docs": "문서",
+            "refactor": "코드 리팩토링",
+            "test": "테스트",
+            "chore": "유지보수"
+        },
+        "setup": {
+            "title": "개발 설정"
+        },
+        "codeStyle": {
+            "title": "코드 스타일",
+            "biome": "린팅과 포맷팅에 Biome 사용",
+            "check": "커밋 전에 bun run check 실행",
+            "strict": "TypeScript strict 모드 활성화",
+            "functional": "컴포넌트는 hooks를 사용한 함수형 스타일"
+        }
+    }
+}

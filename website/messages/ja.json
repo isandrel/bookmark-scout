@@ -1,0 +1,193 @@
+{
+    "metadata": {
+        "title": "Bookmark Scout - モダンなChromeブックマークマネージャー",
+        "description": "ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能"
+    },
+    "nav": {
+        "docs": "ドキュメント",
+        "github": "GitHub",
+        "backToDocs": "← ドキュメントに戻る"
+    },
+    "hero": {
+        "badge": "Chrome拡張機能",
+        "manifestV3": "Manifest V3",
+        "title": "Bookmark Scout",
+        "description": "ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能。ドラッグ＆ドロップ、インスタント検索、美しいダークモードを搭載。",
+        "viewOnGitHub": "GitHubで見る",
+        "documentation": "ドキュメント"
+    },
+    "features": {
+        "title": "機能",
+        "subtitle": "ブックマークを効率的に管理するために必要なすべて",
+        "instantSearch": {
+            "title": "インスタント検索",
+            "description": "デバウンス検索とフォルダフィルタリングでブックマークを瞬時に検索"
+        },
+        "dragAndDrop": {
+            "title": "ドラッグ＆ドロップ",
+            "description": "直感的なドラッグ＆ドロップでブックマークとフォルダを整理"
+        },
+        "quickAdd": {
+            "title": "クイック追加",
+            "description": "ワンクリックで現在のタブを任意のフォルダに保存"
+        },
+        "sidePanel": {
+            "title": "サイドパネル",
+            "description": "Chromeのサイドパネルからブックマークにアクセス"
+        },
+        "darkMode": {
+            "title": "ダークモード",
+            "description": "スムーズなトランジションを持つ美しいダークテーマ"
+        },
+        "expandCollapse": {
+            "title": "展開/折りたたみ",
+            "description": "ネストされたフォルダをすばやく展開または折りたたみ"
+        }
+    },
+    "techStack": {
+        "title": "技術スタック",
+        "subtitle": "最高の開発者体験のためにモダンな技術で構築"
+    },
+    "installation": {
+        "title": "インストール",
+        "subtitle": "数分で始められます",
+        "step1": {
+            "title": "リポジトリをクローン"
+        },
+        "step2": {
+            "title": "依存関係をインストール＆ビルド"
+        },
+        "step3": {
+            "title": "Chromeにロード",
+            "instructions": {
+                "1": "chrome://extensions/ を開く",
+                "2": "デベロッパーモードを有効化（右上）",
+                "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
+                "4": "dist フォルダを選択"
+            }
+        }
+    },
+    "footer": {
+        "madeWith": "❤️を込めて作成",
+        "license": "AGPL-3.0ライセンス"
+    },
+    "docs": {
+        "title": "ドキュメント",
+        "subtitle": "Bookmark Scoutについて知っておくべきすべて",
+        "gettingStarted": {
+            "title": "はじめに",
+            "description": "Bookmark Scoutのインストールとセットアップ方法を学ぶ"
+        },
+        "features": {
+            "title": "機能",
+            "description": "すべての機能と機能を探索する"
+        },
+        "contributing": {
+            "title": "コントリビューション",
+            "description": "プロジェクトへの貢献方法"
+        }
+    },
+    "gettingStarted": {
+        "title": "はじめに",
+        "prerequisites": {
+            "title": "前提条件",
+            "bun": "Bun 1.3以降",
+            "chrome": "Google ChromeまたはChromiumベースのブラウザ",
+            "git": "Git"
+        },
+        "installation": {
+            "title": "インストール",
+            "step1": "リポジトリをクローン",
+            "step2": "依存関係をインストール",
+            "step3": "拡張機能をビルド",
+            "step4": {
+                "title": "Chromeにロード",
+                "1": "chrome://extensions/ を開く",
+                "2": "デベロッパーモードを有効化（右上のトグル）",
+                "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
+                "4": "dist フォルダを選択"
+            }
+        },
+        "development": {
+            "title": "開発",
+            "description": "ホットリロード付きの開発サーバーを起動:"
+        }
+    },
+    "featuresPage": {
+        "title": "機能",
+        "subtitle": "Bookmark Scoutが提供するすべてを発見",
+        "instantSearch": {
+            "title": "インスタント検索",
+            "description": "高速検索でブックマークを素早く見つけます。パフォーマンスのためのデバウンス入力と結果を絞り込むフォルダフィルタリングを搭載。"
+        },
+        "dragAndDrop": {
+            "title": "ドラッグ＆ドロップ整理",
+            "description": "直感的なドラッグ＆ドロップでブックマークを再整理。フォルダ間の移動やフォルダ内の並べ替えが簡単に。"
+        },
+        "quickAdd": {
+            "title": "クイック追加",
+            "description": "ワンクリックで現在のタブを任意のフォルダに保存。ネストされたメニューをナビゲートする必要はありません。"
+        },
+        "sidePanel": {
+            "title": "サイドパネル",
+            "description": "現在のページを離れることなくChromeのサイドパネルからブックマークに直接アクセス。リサーチや参照作業に最適。"
+        },
+        "darkMode": {
+            "title": "美しいダークモード",
+            "description": "目に優しい美しいダークテーマ。スムーズなトランジションと最適な読みやすさのために慎重に選択された色を搭載。"
+        },
+        "expandCollapse": {
+            "title": "すべて展開/折りたたみ",
+            "description": "ワンクリックですべてのネストされたフォルダを展開または折りたたみ。概要把握や特定のセクションへの集中に最適。"
+        },
+        "createFolders": {
+            "title": "フォルダ作成",
+            "description": "ポップアップから直接新しいブックマークフォルダを作成。ブックマークマネージャーを開かずにブックマークを整理。"
+        },
+        "deleteItems": {
+            "title": "アイテム削除",
+            "description": "確認ダイアログ付きで不要なブックマークやフォルダを削除。誤削除を防止。"
+        },
+        "roadmap": {
+            "title": "ロードマップ",
+            "fullManager": "フルブックマークマネージャー — Chromeのデフォルトブックマークページを置き換え",
+            "options": "オプションページ — 拡張機能設定をカスタマイズ",
+            "tags": "タグ — より良い整理のためのカスタムタグを追加",
+            "duplicates": "重複検出 — 重複を見つけて削除",
+            "deadLinks": "デッドリンクチェッカー — 壊れたリンクを検出",
+            "shortcuts": "キーボードショートカット — ホットキーでナビゲート"
+        }
+    },
+    "contributingPage": {
+        "title": "コントリビューション",
+        "subtitle": "コントリビューションを歓迎します！始め方はこちら。",
+        "howTo": {
+            "title": "コントリビューション方法",
+            "step1": "リポジトリをフォーク",
+            "step2": "フィーチャーブランチを作成:",
+            "step3": "変更をコミット:",
+            "step4": "ブランチにプッシュ:",
+            "step5": "Pull Requestを作成"
+        },
+        "commits": {
+            "title": "コミット規約",
+            "description": "Conventional Commitsを使用しています。コミットのフォーマット:",
+            "feat": "新機能",
+            "fix": "バグ修正",
+            "docs": "ドキュメント",
+            "refactor": "コードリファクタリング",
+            "test": "テスト",
+            "chore": "メンテナンス"
+        },
+        "setup": {
+            "title": "開発セットアップ"
+        },
+        "codeStyle": {
+            "title": "コードスタイル",
+            "biome": "リンティングとフォーマッティングにBiomeを使用",
+            "check": "コミット前にbun run checkを実行",
+            "strict": "TypeScript strictモードが有効",
+            "functional": "コンポーネントはhooksを使用した関数型スタイル"
+        }
+    }
+}
