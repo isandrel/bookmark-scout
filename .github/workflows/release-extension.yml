@@ -33,6 +33,9 @@ jobs:
       - name: Build extension for Firefox
         run: bun run build:firefox
 
+      - name: Build extension for Edge
+        run: bun run build:edge
+
       - name: Create Chrome zip
         run: |
           cd dist/chrome-mv3
@@ -42,6 +45,11 @@ jobs:
         run: |
           cd dist/firefox-mv2
           zip -r ../../bookmark-scout-firefox.zip .
+
+      - name: Create Edge zip
+        run: |
+          cd dist/edge-mv3
+          zip -r ../../bookmark-scout-edge.zip .
 
       - name: Build Chrome CRX
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
@@ -72,6 +80,7 @@ jobs:
             | Chrome | `bookmark-scout-chrome.crx` | Signed extension (sideload) |
             | Chrome | `bookmark-scout-chrome.zip` | For Chrome Web Store |
             | Firefox | `bookmark-scout-firefox.zip` | For Firefox Add-ons |
+            | Edge | `bookmark-scout-edge.zip` | For Edge Add-ons |
 
             ## Installation
 
@@ -86,10 +95,17 @@ jobs:
             2. Open `about:debugging#/runtime/this-firefox`
             3. Click "Load Temporary Add-on"
             4. Select the zip file
+
+            ### Edge
+            1. Download `bookmark-scout-edge.zip`
+            2. Open `edge://extensions/`
+            3. Enable "Developer mode"
+            4. Click "Load unpacked" and select the extracted folder
           files: |
             bookmark-scout-chrome.crx
             bookmark-scout-chrome.zip
             bookmark-scout-firefox.zip
+            bookmark-scout-edge.zip
           generate_release_notes: true
           draft: false
           prerelease: false
