@@ -38,11 +38,11 @@ export async function generateMetadata({
             "drag and drop",
         ],
         alternates: {
-            canonical: `https://bookmark-scout.vercel.app/${locale}`,
+            canonical: `https://isandrel.github.io/bookmark-scout/${locale}`,
             languages: {
-                en: "https://bookmark-scout.vercel.app/en",
-                ja: "https://bookmark-scout.vercel.app/ja",
-                ko: "https://bookmark-scout.vercel.app/ko",
+                en: "https://isandrel.github.io/bookmark-scout/en",
+                ja: "https://isandrel.github.io/bookmark-scout/ja",
+                ko: "https://isandrel.github.io/bookmark-scout/ko",
             },
         },
         openGraph: {
@@ -50,10 +50,10 @@ export async function generateMetadata({
             description: metadata.description,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
-            url: `https://bookmark-scout.vercel.app/${locale}`,
+            url: `https://isandrel.github.io/bookmark-scout/${locale}`,
             images: [
                 {
-                    url: "/icon.png",
+                    url: "/bookmark-scout/icon.png",
                     width: 128,
                     height: 128,
                     alt: "Bookmark Scout",
@@ -64,7 +64,7 @@ export async function generateMetadata({
             card: "summary",
             title: "Bookmark Scout",
             description: metadata.description,
-            images: ["/icon.png"],
+            images: ["/bookmark-scout/icon.png"],
         },
     };
 }
