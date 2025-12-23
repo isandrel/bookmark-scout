@@ -7,6 +7,9 @@ on:
     branches: [main]
   workflow_dispatch: # Allow manual trigger
 
+permissions:
+  contents: write
+
 jobs:
   repomix:
     runs-on: ubuntu-latest
