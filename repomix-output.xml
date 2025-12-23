@@ -209,67 +209,6 @@ We have a quick list of common questions to get you started engaging with this p
 [our documentation](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
 </file>
 
-<file path=".github/workflows/deploy-website.yml">
-name: Deploy Website to GitHub Pages
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'website/**'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Install dependencies
-        run: bun install
-        working-directory: ./website
-
-      - name: Build with Next.js
-        run: bun run build
-        working-directory: ./website
-        env:
-          NODE_ENV: production
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./website/out
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-</file>
-
 <file path=".github/dependabot.yml">
 # Dependabot configuration for automated dependency updates
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
@@ -8824,52 +8763,65 @@ export default function Home() {
 }
 </file>
 
-<file path=".github/workflows/repomix.yml">
-name: Generate Repomix Output
+<file path=".github/workflows/deploy-website.yml">
+name: Deploy Website to GitHub Pages
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch: # Allow manual trigger
+    paths:
+      - 'website/**'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  repomix:
+  build:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Generate Repomix Output
-        run: bunx repomix --output repomix-output.xml
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - name: Upload Repomix Output
-        uses: actions/upload-artifact@v4
+      - name: Install dependencies
+        run: bun install
+        working-directory: ./website
+
+      - name: Build with Next.js
+        run: bun run build
+        working-directory: ./website
+        env:
+          NODE_ENV: production
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: repomix-output
-          path: repomix-output.xml
-          retention-days: 30
+          path: ./website/out
 
-      - name: Commit Repomix Output (on push to main only)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -f repomix-output.xml
-          git diff --staged --quiet || git commit -m "chore: update repomix-output.xml"
-          git push
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 </file>
 
 <file path="src/components/page/OptionsPage.tsx">
@@ -9359,6 +9311,54 @@ repomix-output.*
 # WXT
 .wxt
 .output
+</file>
+
+<file path=".github/workflows/repomix.yml">
+name: Generate Repomix Output
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  repomix:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Generate Repomix Output
+        run: bunx repomix --output repomix-output.xml
+
+      - name: Upload Repomix Output
+        uses: actions/upload-artifact@v6
+        with:
+          name: repomix-output
+          path: repomix-output.xml
+          retention-days: 30
+
+      - name: Commit Repomix Output (on push to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -f repomix-output.xml
+          git diff --staged --quiet || git commit -m "chore: update repomix-output.xml"
+          git push
 </file>
 
 <file path="package.json">
