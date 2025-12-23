@@ -38,8 +38,10 @@ const features = [
 const techStack = [
   { name: "React 19", color: "#61DAFB", logo: "react" },
   { name: "TypeScript", color: "#3178C6", logo: "typescript" },
+  { name: "WXT", color: "#646CFF", logo: "vite" },
   { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
   { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
+  { name: "Zustand", color: "#764ABC", logo: "redux" },
   { name: "Nx", color: "#143055", logo: "nx" },
   { name: "Bun", color: "#000000", logo: "bun" },
 ];

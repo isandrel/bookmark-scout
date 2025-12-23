@@ -24,8 +24,10 @@
 <p align="center">
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
   <img src="https://img.shields.io/badge/Rolldown--Vite-7.3-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Rolldown-Vite">
   <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square&logo=redux&logoColor=white" alt="Zustand">
   <img src="https://img.shields.io/badge/Nx-22-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
 </p>
@@ -65,8 +67,9 @@
 | Layer             | Technology                                                                                       |
 | ----------------- | ------------------------------------------------------------------------------------------------ |
 | **Framework**     | React 19 + TypeScript                                                                            |
-| **Build**         | Rolldown-Vite 7.3 + Nx 22 (monorepo with caching)                                                |
+| **Build**         | [WXT](https://wxt.dev) + Rolldown-Vite + Nx (monorepo with caching)                              |
 | **Runtime**       | Bun 1.3                                                                                          |
+| **State**         | [Zustand](https://zustand-demo.pmnd.rs/) (lightweight state management)                          |
 | **Styling**       | TailwindCSS 4 + CSS Variables                                                                    |
 | **UI Components** | [shadcn/ui](https://ui.shadcn.com) (Radix primitives)                                            |
 | **Drag & Drop**   | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
