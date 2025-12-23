@@ -9418,7 +9418,7 @@ repomix-output.*
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/chrome": "^0.1.32",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react-swc": "^4.2.2",
