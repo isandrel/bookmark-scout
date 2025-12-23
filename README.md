@@ -1,50 +1,151 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/vite.svg" alt="Bookmark Scout Logo" width="80" height="80">
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h1 align="center">🔖 Bookmark Scout</h1>
 
-Currently, two official plugins are available:
+<p align="center">
+  <strong>A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.</strong>
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<p align="center">
+  <a href="https://github.com/isandrel/bookmark-scout/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/isandrel/bookmark-scout?style=flat-square" alt="License">
+  </a>
+  <a href="https://github.com/isandrel/bookmark-scout/stargazers">
+    <img src="https://img.shields.io/github/stars/isandrel/bookmark-scout?style=flat-square" alt="Stars">
+  </a>
+  <a href="https://github.com/isandrel/bookmark-scout/issues">
+    <img src="https://img.shields.io/github/issues/isandrel/bookmark-scout?style=flat-square" alt="Issues">
+  </a>
+  <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
+</p>
 
-## Expanding the ESLint configuration
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+</p>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## ✨ Features
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
+- 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
+- ⚡ **Quick Add** — Save the current tab to any folder with one click
+- 🗂️ **Full Manager** — Replaces Chrome's default bookmarks page with a modern table view
+- 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
+- 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
+- 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer             | Technology                                                                                       |
+| ----------------- | ------------------------------------------------------------------------------------------------ |
+| **Framework**     | React 19 + TypeScript                                                                            |
+| **Build**         | Vite 7                                                                                           |
+| **Styling**       | TailwindCSS 4 + CSS Variables                                                                    |
+| **UI Components** | [shadcn/ui](https://ui.shadcn.com) (Radix primitives)                                            |
+| **Drag & Drop**   | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
+| **Animations**    | Framer Motion                                                                                    |
+| **Table**         | TanStack React Table                                                                             |
+
+---
+
+## 📦 Installation
+
+### From Source
+
+```bash
+# Clone the repository
+git clone https://github.com/isandrel/bookmark-scout.git
+cd bookmark-scout
+
+# Install dependencies
+bun install
+
+# Build the extension
+bun run build
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Load in Chrome
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (top right)
+3. Click **Load unpacked**
+4. Select the `dist` folder
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+---
+
+## 🚀 Development
+
+```bash
+# Start development server
+bun run dev
+
+# Build for production
+bun run build
+
+# Lint code
+bun run lint
 ```
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── components/
+│   ├── page/
+│   │   ├── BookmarksPage.tsx    # Full bookmarks manager
+│   │   ├── OptionsPage.tsx      # Extension settings
+│   │   └── PopupPage.tsx        # Main popup with search & DnD
+│   └── ui/                      # shadcn components
+├── hooks/                       # Custom React hooks
+├── lib/                         # Utility functions
+├── popup.html                   # Popup entry
+├── bookmarks.html               # Bookmarks page override
+├── options.html                 # Options page
+└── sidepanel.html               # Side panel
+```
+
+---
+
+## 🔐 Permissions
+
+| Permission  | Purpose                            |
+| ----------- | ---------------------------------- |
+| `bookmarks` | Read and write bookmarks           |
+| `tabs`      | Get current tab info for quick-add |
+| `favicon`   | Display website favicons           |
+| `storage`   | Save user preferences              |
+| `sidePanel` | Enable Chrome side panel           |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/isandrel">isandrel</a>
+</p>
