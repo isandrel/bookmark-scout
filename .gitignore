@@ -29,3 +29,7 @@ repomix-output.*
 # WXT
 .wxt
 .output
+
+# Extension signing (keep locally, add to GitHub Secrets)
+dist.pem
+dist.crx
