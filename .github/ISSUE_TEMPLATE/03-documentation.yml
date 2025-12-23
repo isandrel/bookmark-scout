@@ -1,0 +1,60 @@
+name: 📝 Documentation
+description: Suggest improvements to documentation
+title: "📝 [Docs]: "
+labels: ["documentation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve our documentation!
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation change?
+      options:
+        - Fix typo/error
+        - Add missing information
+        - Improve clarity
+        - Add example
+        - Update outdated content
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Where is the documentation issue? (file path or URL)
+      placeholder: e.g., README.md or docs/installation.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Documentation
+      description: What does the current documentation say?
+      placeholder: Copy the current text or describe the issue...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested Change
+      description: What should it say instead?
+      placeholder: Your suggested improvement...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to submit a PR for this change

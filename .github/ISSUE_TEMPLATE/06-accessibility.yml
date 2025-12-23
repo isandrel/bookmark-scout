@@ -1,0 +1,84 @@
+name: ♿ Accessibility Issue
+description: Report an accessibility problem
+title: "♿ [A11y]: "
+labels: ["accessibility", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We want Bookmark Scout to be accessible to everyone. Please help us improve!
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues for similar accessibility reports
+          required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Accessibility Issue Type
+      options:
+        - Screen reader compatibility
+        - Keyboard navigation
+        - Color contrast
+        - Focus management
+        - Missing labels/ARIA
+        - Motion/animation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the accessibility barrier
+      placeholder: What is preventing accessible use?
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: User Impact
+      description: How does this affect users?
+      placeholder: e.g., "Users cannot navigate to X using keyboard only"
+    validations:
+      required: true
+
+  - type: input
+    id: assistive-tech
+    attributes:
+      label: Assistive Technology
+      description: What assistive technology are you using (if applicable)?
+      placeholder: e.g., NVDA, VoiceOver, JAWS
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: If you have ideas for how to fix this, please share
+      placeholder: Optional suggestions...
+
+  - type: dropdown
+    id: wcag
+    attributes:
+      label: WCAG Guideline
+      description: If known, which WCAG guideline does this relate to?
+      options:
+        - Perceivable
+        - Operable
+        - Understandable
+        - Robust
+        - Unknown
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Screenshots, screen recordings, or other context
