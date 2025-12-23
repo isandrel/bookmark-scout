@@ -150,18 +150,30 @@ translations/
   README.ko.md
 website/
   app/
-    docs/
-      contributing/
+    [locale]/
+      docs/
+        contributing/
+          page.tsx
+        features/
+          page.tsx
+        getting-started/
+          page.tsx
         page.tsx
-      features/
-        page.tsx
-      getting-started/
-        page.tsx
+      layout.tsx
       page.tsx
     favicon.ico
     globals.css
     layout.tsx
     page.tsx
+  components/
+    LanguageSwitcher.tsx
+  i18n/
+    request.ts
+    routing.ts
+  messages/
+    en.json
+    ja.json
+    ko.json
   public/
     file.svg
     globe.svg
@@ -2859,22 +2871,34 @@ src/
 </p>
 </file>
 
-<file path="website/app/docs/contributing/page.tsx">
+<file path="website/app/[locale]/docs/contributing/page.tsx">
 import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default function ContributingPage() {
+export default async function ContributingPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 glass">
                 <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
                     <div className="flex items-center gap-6">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors">
-                            Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
                         </Link>
                         <a
                             href="https://github.com/isandrel/bookmark-scout"
@@ -2882,7 +2906,7 @@ export default function ContributingPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
                         >
-                            GitHub
+                            {t("nav.github")}
                         </a>
                     </div>
                 </div>
@@ -2891,56 +2915,48 @@ export default function ContributingPage() {
             <main className="pt-32 pb-24">
                 <div className="mx-auto max-w-4xl px-6">
                     <div className="mb-8">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors text-sm">
-                            ← Back to Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
                         </Link>
                     </div>
 
-                    <h1 className="text-4xl font-bold mb-4">Contributing</h1>
-                    <p className="text-muted text-lg mb-12">
-                        We welcome contributions! Here&apos;s how to get started.
-                    </p>
+                    <h1 className="text-4xl font-bold mb-4">{t("contributingPage.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("contributingPage.subtitle")}</p>
 
                     <div className="space-y-8">
                         <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">How to Contribute</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.howTo.title")}</h2>
                             <ol className="list-decimal list-inside text-muted space-y-3">
-                                <li>Fork the repository</li>
+                                <li>{t("contributingPage.howTo.step1")}</li>
                                 <li>
-                                    Create your feature branch:{" "}
+                                    {t("contributingPage.howTo.step2")}{" "}
                                     <code className="bg-black/50 px-2 py-1 rounded text-green-400">
                                         git checkout -b feature/amazing-feature
                                     </code>
                                 </li>
                                 <li>
-                                    Commit your changes:{" "}
+                                    {t("contributingPage.howTo.step3")}{" "}
                                     <code className="bg-black/50 px-2 py-1 rounded text-green-400">
                                         git commit -m &apos;feat: add amazing feature&apos;
                                     </code>
                                 </li>
                                 <li>
-                                    Push to the branch:{" "}
+                                    {t("contributingPage.howTo.step4")}{" "}
                                     <code className="bg-black/50 px-2 py-1 rounded text-green-400">
                                         git push origin feature/amazing-feature
                                     </code>
                                 </li>
-                                <li>Open a Pull Request</li>
+                                <li>{t("contributingPage.howTo.step5")}</li>
                             </ol>
                         </section>
 
                         <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">Commit Convention</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.commits.title")}</h2>
                             <p className="text-muted mb-4">
-                                We use{" "}
-                                <a
-                                    href="https://www.conventionalcommits.org/"
-                                    className="text-primary-light hover:underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Conventional Commits
-                                </a>
-                                . Format your commits as:
+                                {t("contributingPage.commits.description")}
                             </p>
                             <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                 <code className="text-sm text-green-400">
@@ -2950,37 +2966,38 @@ export default function ContributingPage() {
                             <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                                 <div>
                                     <span className="text-foreground font-medium">feat</span>
-                                    <span className="text-muted"> - New feature</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.feat")}</span>
                                 </div>
                                 <div>
                                     <span className="text-foreground font-medium">fix</span>
-                                    <span className="text-muted"> - Bug fix</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.fix")}</span>
                                 </div>
                                 <div>
                                     <span className="text-foreground font-medium">docs</span>
-                                    <span className="text-muted"> - Documentation</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.docs")}</span>
                                 </div>
                                 <div>
                                     <span className="text-foreground font-medium">refactor</span>
-                                    <span className="text-muted"> - Code refactoring</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.refactor")}</span>
                                 </div>
                                 <div>
                                     <span className="text-foreground font-medium">test</span>
-                                    <span className="text-muted"> - Tests</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.test")}</span>
                                 </div>
                                 <div>
                                     <span className="text-foreground font-medium">chore</span>
-                                    <span className="text-muted"> - Maintenance</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.chore")}</span>
                                 </div>
                             </div>
                         </section>
 
                         <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">Development Setup</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.setup.title")}</h2>
                             <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                 <code className="text-sm text-green-400">
                                     # Clone your fork{"\n"}
-                                    git clone https://github.com/YOUR_USERNAME/bookmark-scout.git{"\n"}
+                                    git clone https://github.com/YOUR_USERNAME/bookmark-scout.git
+                                    {"\n"}
                                     cd bookmark-scout{"\n\n"}
                                     # Install dependencies{"\n"}
                                     bun install{"\n\n"}
@@ -2995,12 +3012,12 @@ export default function ContributingPage() {
                         </section>
 
                         <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">Code Style</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.codeStyle.title")}</h2>
                             <ul className="list-disc list-inside text-muted space-y-2">
-                                <li>We use Biome for linting and formatting</li>
-                                <li>Run <code className="bg-black/50 px-2 py-1 rounded text-foreground">bun run check</code> before committing</li>
-                                <li>TypeScript strict mode is enabled</li>
-                                <li>Components use functional style with hooks</li>
+                                <li>{t("contributingPage.codeStyle.biome")}</li>
+                                <li>{t("contributingPage.codeStyle.check")}</li>
+                                <li>{t("contributingPage.codeStyle.strict")}</li>
+                                <li>{t("contributingPage.codeStyle.functional")}</li>
                             </ul>
                         </section>
                     </div>
@@ -3011,73 +3028,77 @@ export default function ContributingPage() {
 }
 </file>
 
-<file path="website/app/docs/features/page.tsx">
+<file path="website/app/[locale]/docs/features/page.tsx">
 import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-const features = [
-    {
-        icon: "🔍",
-        title: "Instant Search",
-        description:
-            "Quickly find any bookmark with our lightning-fast search. Features debounced input for performance and folder filtering to narrow down results.",
-    },
-    {
-        icon: "📂",
-        title: "Drag & Drop Organization",
-        description:
-            "Reorganize your bookmarks with intuitive drag-and-drop. Move bookmarks between folders or reorder within a folder with ease.",
-    },
-    {
-        icon: "⚡",
-        title: "Quick Add",
-        description:
-            "Save the current tab to any folder with just one click. No more navigating through nested menus - just pick a folder and done!",
-    },
-    {
-        icon: "📱",
-        title: "Side Panel",
-        description:
-            "Access your bookmarks directly from Chrome's side panel without leaving your current page. Perfect for research and reference work.",
-    },
-    {
-        icon: "🌙",
-        title: "Beautiful Dark Mode",
-        description:
-            "A stunning dark theme that's easy on the eyes. Features smooth transitions and carefully chosen colors for optimal readability.",
-    },
-    {
-        icon: "🎯",
-        title: "Expand/Collapse All",
-        description:
-            "Quickly expand or collapse all nested folders with a single click. Great for getting an overview or focusing on specific sections.",
-    },
-    {
-        icon: "📁",
-        title: "Create Folders",
-        description:
-            "Create new bookmark folders directly from the popup. Keep your bookmarks organized without opening the bookmark manager.",
-    },
-    {
-        icon: "🗑️",
-        title: "Delete Items",
-        description:
-            "Remove unwanted bookmarks and folders with confirmation dialogs to prevent accidental deletions.",
-    },
-];
+export default async function FeaturesPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
 
-export default function FeaturesPage() {
+    const features = [
+        {
+            icon: "🔍",
+            title: t("featuresPage.instantSearch.title"),
+            description: t("featuresPage.instantSearch.description"),
+        },
+        {
+            icon: "📂",
+            title: t("featuresPage.dragAndDrop.title"),
+            description: t("featuresPage.dragAndDrop.description"),
+        },
+        {
+            icon: "⚡",
+            title: t("featuresPage.quickAdd.title"),
+            description: t("featuresPage.quickAdd.description"),
+        },
+        {
+            icon: "📱",
+            title: t("featuresPage.sidePanel.title"),
+            description: t("featuresPage.sidePanel.description"),
+        },
+        {
+            icon: "🌙",
+            title: t("featuresPage.darkMode.title"),
+            description: t("featuresPage.darkMode.description"),
+        },
+        {
+            icon: "🎯",
+            title: t("featuresPage.expandCollapse.title"),
+            description: t("featuresPage.expandCollapse.description"),
+        },
+        {
+            icon: "📁",
+            title: t("featuresPage.createFolders.title"),
+            description: t("featuresPage.createFolders.description"),
+        },
+        {
+            icon: "🗑️",
+            title: t("featuresPage.deleteItems.title"),
+            description: t("featuresPage.deleteItems.description"),
+        },
+    ];
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 glass">
                 <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
                     <div className="flex items-center gap-6">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors">
-                            Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
                         </Link>
                         <a
                             href="https://github.com/isandrel/bookmark-scout"
@@ -3085,7 +3106,7 @@ export default function FeaturesPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
                         >
-                            GitHub
+                            {t("nav.github")}
                         </a>
                     </div>
                 </div>
@@ -3094,26 +3115,26 @@ export default function FeaturesPage() {
             <main className="pt-32 pb-24">
                 <div className="mx-auto max-w-4xl px-6">
                     <div className="mb-8">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors text-sm">
-                            ← Back to Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
                         </Link>
                     </div>
 
-                    <h1 className="text-4xl font-bold mb-4">Features</h1>
-                    <p className="text-muted text-lg mb-12">
-                        Discover everything Bookmark Scout has to offer
-                    </p>
+                    <h1 className="text-4xl font-bold mb-4">{t("featuresPage.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("featuresPage.subtitle")}</p>
 
                     <div className="space-y-8">
                         {features.map((feature) => (
-                            <div
-                                key={feature.title}
-                                className="glass rounded-2xl p-6"
-                            >
+                            <div key={feature.title} className="glass rounded-2xl p-6">
                                 <div className="flex items-start gap-4">
                                     <span className="text-3xl">{feature.icon}</span>
                                     <div>
-                                        <h2 className="text-xl font-semibold mb-2">{feature.title}</h2>
+                                        <h2 className="text-xl font-semibold mb-2">
+                                            {feature.title}
+                                        </h2>
                                         <p className="text-muted">{feature.description}</p>
                                     </div>
                                 </div>
@@ -3122,32 +3143,32 @@ export default function FeaturesPage() {
                     </div>
 
                     <section className="mt-16">
-                        <h2 className="text-2xl font-bold mb-6">Roadmap</h2>
+                        <h2 className="text-2xl font-bold mb-6">{t("featuresPage.roadmap.title")}</h2>
                         <div className="glass rounded-2xl p-6">
                             <ul className="space-y-3 text-muted">
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Full Bookmarks Manager — Replace Chrome&apos;s default bookmarks page
+                                    {t("featuresPage.roadmap.fullManager")}
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Options Page — Customize extension settings
+                                    {t("featuresPage.roadmap.options")}
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Tags — Add custom tags for better organization
+                                    {t("featuresPage.roadmap.tags")}
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Duplicate Detection — Find and remove duplicates
+                                    {t("featuresPage.roadmap.duplicates")}
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Dead Link Checker — Detect broken links
+                                    {t("featuresPage.roadmap.deadLinks")}
                                 </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    Keyboard Shortcuts — Navigate with hotkeys
+                                    {t("featuresPage.roadmap.shortcuts")}
                                 </li>
                             </ul>
                         </div>
@@ -3159,22 +3180,34 @@ export default function FeaturesPage() {
 }
 </file>
 
-<file path="website/app/docs/getting-started/page.tsx">
+<file path="website/app/[locale]/docs/getting-started/page.tsx">
 import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-export default function GettingStartedPage() {
+export default async function GettingStartedPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 glass">
                 <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
                     <div className="flex items-center gap-6">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors">
-                            Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
                         </Link>
                         <a
                             href="https://github.com/isandrel/bookmark-scout"
@@ -3182,7 +3215,7 @@ export default function GettingStartedPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
                         >
-                            GitHub
+                            {t("nav.github")}
                         </a>
                     </div>
                 </div>
@@ -3191,77 +3224,80 @@ export default function GettingStartedPage() {
             <main className="pt-32 pb-24">
                 <div className="mx-auto max-w-4xl px-6">
                     <div className="mb-8">
-                        <Link href="/docs" className="text-muted hover:text-foreground transition-colors text-sm">
-                            ← Back to Docs
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
                         </Link>
                     </div>
 
-                    <h1 className="text-4xl font-bold mb-8">Getting Started</h1>
+                    <h1 className="text-4xl font-bold mb-8">{t("gettingStarted.title")}</h1>
 
                     <div className="prose prose-invert max-w-none">
                         <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">Prerequisites</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.prerequisites.title")}</h2>
                             <ul className="list-disc list-inside text-muted space-y-2">
                                 <li>
-                                    <a href="https://bun.sh" className="text-primary-light hover:underline">
+                                    <a
+                                        href="https://bun.sh"
+                                        className="text-primary-light hover:underline"
+                                    >
                                         Bun
                                     </a>{" "}
-                                    1.3 or later
+                                    {t("gettingStarted.prerequisites.bun")}
                                 </li>
-                                <li>Google Chrome or Chromium-based browser</li>
-                                <li>Git</li>
+                                <li>{t("gettingStarted.prerequisites.chrome")}</li>
+                                <li>{t("gettingStarted.prerequisites.git")}</li>
                             </ul>
                         </section>
 
                         <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">Installation</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.installation.title")}</h2>
 
                             <div className="space-y-6">
                                 <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">1. Clone the repository</h3>
+                                    <h3 className="font-medium mb-3">1. {t("gettingStarted.installation.step1")}</h3>
                                     <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                         <code className="text-sm text-green-400">
-                                            git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
+                                            git clone https://github.com/isandrel/bookmark-scout.git
+                                            {"\n"}
                                             cd bookmark-scout
                                         </code>
                                     </pre>
                                 </div>
 
                                 <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">2. Install dependencies</h3>
+                                    <h3 className="font-medium mb-3">2. {t("gettingStarted.installation.step2")}</h3>
                                     <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                         <code className="text-sm text-green-400">bun install</code>
                                     </pre>
                                 </div>
 
                                 <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">3. Build the extension</h3>
+                                    <h3 className="font-medium mb-3">3. {t("gettingStarted.installation.step3")}</h3>
                                     <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                         <code className="text-sm text-green-400">bun run build</code>
                                     </pre>
                                 </div>
 
                                 <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">4. Load in Chrome</h3>
+                                    <h3 className="font-medium mb-3">4. {t("gettingStarted.installation.step4.title")}</h3>
                                     <ol className="text-muted space-y-2 list-decimal list-inside">
-                                        <li>
-                                            Open <code className="bg-black/50 px-2 py-1 rounded text-foreground">chrome://extensions/</code>
-                                        </li>
-                                        <li>Enable Developer mode (top right toggle)</li>
-                                        <li>Click &quot;Load unpacked&quot;</li>
-                                        <li>
-                                            Select the <code className="bg-black/50 px-2 py-1 rounded text-foreground">dist</code> folder
-                                        </li>
+                                        <li>{t("gettingStarted.installation.step4.1")}</li>
+                                        <li>{t("gettingStarted.installation.step4.2")}</li>
+                                        <li>{t("gettingStarted.installation.step4.3")}</li>
+                                        <li>{t("gettingStarted.installation.step4.4")}</li>
                                     </ol>
                                 </div>
                             </div>
                         </section>
 
                         <section>
-                            <h2 className="text-2xl font-semibold mb-4">Development</h2>
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.development.title")}</h2>
                             <div className="glass rounded-xl p-6">
                                 <p className="text-muted mb-4">
-                                    Start the development server with hot reload:
+                                    {t("gettingStarted.development.description")}
                                 </p>
                                 <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                     <code className="text-sm text-green-400">bun run dev</code>
@@ -3276,43 +3312,49 @@ export default function GettingStartedPage() {
 }
 </file>
 
-<file path="website/app/docs/page.tsx">
+<file path="website/app/[locale]/docs/page.tsx">
 import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 
-const docs = [
-    {
-        title: "Getting Started",
-        description: "Learn how to install and set up Bookmark Scout",
-        href: "/docs/getting-started",
-    },
-    {
-        title: "Features",
-        description: "Explore all the features and capabilities",
-        href: "/docs/features",
-    },
-    {
-        title: "Contributing",
-        description: "How to contribute to the project",
-        href: "/docs/contributing",
-    },
-];
+export default async function DocsPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
 
-export default function DocsPage() {
+    const docs = [
+        {
+            title: t("docs.gettingStarted.title"),
+            description: t("docs.gettingStarted.description"),
+            href: "getting-started",
+        },
+        {
+            title: t("docs.features.title"),
+            description: t("docs.features.description"),
+            href: "features",
+        },
+        {
+            title: t("docs.contributing.title"),
+            description: t("docs.contributing.description"),
+            href: "contributing",
+        },
+    ];
+
     return (
         <div className="min-h-screen bg-background">
             {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 z-50 glass">
                 <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href="/" className="flex items-center gap-3">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
                         <span className="text-2xl">🔖</span>
                         <span className="font-bold text-lg">Bookmark Scout</span>
                     </Link>
                     <div className="flex items-center gap-6">
-                        <Link
-                            href="/docs"
-                            className="text-foreground font-medium"
-                        >
-                            Docs
+                        <Link href={`/${locale}/docs`} className="text-foreground font-medium">
+                            {t("nav.docs")}
                         </Link>
                         <a
                             href="https://github.com/isandrel/bookmark-scout"
@@ -3320,7 +3362,7 @@ export default function DocsPage() {
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
                         >
-                            GitHub
+                            {t("nav.github")}
                         </a>
                     </div>
                 </div>
@@ -3328,16 +3370,14 @@ export default function DocsPage() {
 
             <main className="pt-32 pb-24">
                 <div className="mx-auto max-w-4xl px-6">
-                    <h1 className="text-4xl font-bold mb-4">Documentation</h1>
-                    <p className="text-muted text-lg mb-12">
-                        Everything you need to know about Bookmark Scout
-                    </p>
+                    <h1 className="text-4xl font-bold mb-4">{t("docs.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("docs.subtitle")}</p>
 
                     <div className="grid gap-6">
                         {docs.map((doc) => (
                             <Link
                                 key={doc.href}
-                                href={doc.href}
+                                href={`/${locale}/docs/${doc.href}`}
                                 className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 transition-all"
                             >
                                 <h2 className="text-xl font-semibold mb-2 group-hover:text-primary-light transition-colors">
@@ -3349,6 +3389,360 @@ export default function DocsPage() {
                     </div>
                 </div>
             </main>
+        </div>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/layout.tsx">
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import "../globals.css";
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+});
+
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const messages = await getMessages();
+    const metadata = messages.metadata as { title: string; description: string };
+
+    return {
+        title: metadata.title,
+        description: metadata.description,
+        keywords: [
+            "chrome extension",
+            "bookmarks",
+            "bookmark manager",
+            "productivity",
+            "browser extension",
+        ],
+        openGraph: {
+            title: "Bookmark Scout",
+            description: metadata.description,
+            type: "website",
+        },
+    };
+}
+
+export default async function LocaleLayout({
+    children,
+    params,
+}: {
+    children: React.ReactNode;
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+
+    const messages = await getMessages();
+
+    return (
+        <html lang={locale} className="dark">
+            <body className={`${inter.variable} font-sans antialiased`}>
+                <NextIntlClientProvider messages={messages}>
+                    {children}
+                </NextIntlClientProvider>
+            </body>
+        </html>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+// Tech stack badges
+const techStack = [
+    { name: "React 19", color: "#61DAFB", logo: "react" },
+    { name: "TypeScript", color: "#3178C6", logo: "typescript" },
+    { name: "WXT", color: "#646CFF", logo: "vite" },
+    { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
+    { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
+    { name: "Zustand", color: "#764ABC", logo: "redux" },
+    { name: "Nx", color: "#143055", logo: "nx" },
+    { name: "Bun", color: "#000000", logo: "bun" },
+];
+
+export default async function Home({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+
+    const t = await getTranslations();
+
+    const features = [
+        {
+            icon: "🔍",
+            title: t("features.instantSearch.title"),
+            description: t("features.instantSearch.description"),
+        },
+        {
+            icon: "📂",
+            title: t("features.dragAndDrop.title"),
+            description: t("features.dragAndDrop.description"),
+        },
+        {
+            icon: "⚡",
+            title: t("features.quickAdd.title"),
+            description: t("features.quickAdd.description"),
+        },
+        {
+            icon: "📱",
+            title: t("features.sidePanel.title"),
+            description: t("features.sidePanel.description"),
+        },
+        {
+            icon: "🌙",
+            title: t("features.darkMode.title"),
+            description: t("features.darkMode.description"),
+        },
+        {
+            icon: "🎯",
+            title: t("features.expandCollapse.title"),
+            description: t("features.expandCollapse.description"),
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </div>
+                    <div className="flex items-center gap-6">
+                        <LanguageSwitcher currentLocale={locale} />
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            {t("nav.github")}
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Hero Section */}
+            <section className="relative pt-32 pb-24 overflow-hidden">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+
+                <div className="relative mx-auto max-w-6xl px-6 text-center">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
+                        <span className="text-sm text-muted">{t("hero.badge")}</span>
+                        <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
+                            {t("hero.manifestV3")}
+                        </span>
+                    </div>
+
+                    <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
+                        <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
+                            {t("hero.title")}
+                        </span>
+                    </h1>
+
+                    <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
+                        {t("hero.description")}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            {t("hero.viewOnGitHub")}
+                            <svg
+                                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </a>
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
+                        >
+                            {t("hero.documentation")}
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                            {t("features.title")}
+                        </h2>
+                        <p className="text-muted text-lg">{t("features.subtitle")}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {features.map((feature) => (
+                            <div
+                                key={feature.title}
+                                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
+                            >
+                                <div className="text-4xl mb-4">{feature.icon}</div>
+                                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                                <p className="text-muted">{feature.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Tech Stack Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6 text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                        {t("techStack.title")}
+                    </h2>
+                    <p className="text-muted text-lg mb-12">{t("techStack.subtitle")}</p>
+
+                    <div className="flex flex-wrap items-center justify-center gap-4">
+                        {techStack.map((tech) => (
+                            <div
+                                key={tech.name}
+                                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
+                            >
+                                <img
+                                    src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
+                                    alt={tech.name}
+                                    className="h-5"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Installation Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-4xl px-6">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                            {t("installation.title")}
+                        </h2>
+                        <p className="text-muted text-lg">{t("installation.subtitle")}</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    1
+                                </span>
+                                {t("installation.step1.title")}
+                            </h3>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
+                                    cd bookmark-scout
+                                </code>
+                            </pre>
+                        </div>
+
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    2
+                                </span>
+                                {t("installation.step2.title")}
+                            </h3>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    bun install{"\n"}
+                                    bun run build
+                                </code>
+                            </pre>
+                        </div>
+
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    3
+                                </span>
+                                {t("installation.step3.title")}
+                            </h3>
+                            <ol className="text-muted space-y-2 ml-10">
+                                <li>
+                                    1. <code className="text-foreground">{t("installation.step3.instructions.1")}</code>
+                                </li>
+                                <li>2. {t("installation.step3.instructions.2")}</li>
+                                <li>3. {t("installation.step3.instructions.3")}</li>
+                                <li>
+                                    4. <code className="text-foreground">{t("installation.step3.instructions.4")}</code>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="py-12 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6 text-center">
+                    <p className="text-muted">
+                        {t("footer.madeWith")}{" "}
+                        <a
+                            href="https://github.com/isandrel"
+                            className="text-foreground hover:text-primary-light transition-colors"
+                        >
+                            isandrel
+                        </a>
+                    </p>
+                    <p className="text-sm text-muted/60 mt-2">{t("footer.license")}</p>
+                </div>
+            </footer>
         </div>
     );
 }
@@ -3410,46 +3804,672 @@ body {
 }
 </file>
 
-<file path="website/app/layout.tsx">
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+<file path="website/components/LanguageSwitcher.tsx">
+"use client";
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { routing, type Locale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-  description:
-    "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
-  keywords: [
-    "chrome extension",
-    "bookmarks",
-    "bookmark manager",
-    "productivity",
-    "browser extension",
-  ],
-  openGraph: {
-    title: "Bookmark Scout",
-    description: "Modern Chrome Bookmark Manager",
-    type: "website",
-  },
+const localeNames: Record<Locale, string> = {
+    en: "English",
+    ja: "日本語",
+    ko: "한국어",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
-      </body>
-    </html>
-  );
+export function LanguageSwitcher({ currentLocale }: { currentLocale: string }) {
+    const pathname = usePathname();
+
+    // Get the path without the basePath and locale prefix
+    const getPathWithoutLocale = () => {
+        // pathname already excludes basePath when using Next.js Link
+        // e.g., pathname = "/en/docs" (not "/bookmark-scout/en/docs")
+        const segments = pathname.split("/");
+        // Remove locale segment (first segment after base)
+        const pathWithoutLocale = segments.slice(2).join("/");
+        return pathWithoutLocale ? `/${pathWithoutLocale}` : "";
+    };
+
+    return (
+        <div className="flex items-center gap-2">
+            {routing.locales.map((locale) => {
+                const isActive = locale === currentLocale;
+                // Don't include basePath - Next.js Link handles it automatically
+                const newPath = `/${locale}${getPathWithoutLocale()}`;
+
+                return (
+                    <Link
+                        key={locale}
+                        href={newPath}
+                        className={`text-sm px-2 py-1 rounded transition-colors ${isActive
+                                ? "bg-white/20 font-medium"
+                                : "text-muted hover:text-foreground hover:bg-white/10"
+                            }`}
+                    >
+                        {localeNames[locale]}
+                    </Link>
+                );
+            })}
+        </div>
+    );
+}
+</file>
+
+<file path="website/i18n/request.ts">
+import { getRequestConfig } from 'next-intl/server';
+import { hasLocale } from 'next-intl';
+import { routing } from './routing';
+
+export default getRequestConfig(async ({ requestLocale }) => {
+    // Typically corresponds to the `[locale]` segment
+    const requested = await requestLocale;
+    const locale = hasLocale(routing.locales, requested)
+        ? requested
+        : routing.defaultLocale;
+
+    return {
+        locale,
+        messages: (await import(`../messages/${locale}.json`)).default,
+    };
+});
+</file>
+
+<file path="website/i18n/routing.ts">
+import { defineRouting } from 'next-intl/routing';
+
+export const routing = defineRouting({
+    locales: ['en', 'ja', 'ko'],
+    defaultLocale: 'en',
+});
+
+export type Locale = (typeof routing.locales)[number];
+</file>
+
+<file path="website/messages/en.json">
+{
+    "metadata": {
+        "title": "Bookmark Scout - Modern Chrome Bookmark Manager",
+        "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders."
+    },
+    "nav": {
+        "docs": "Docs",
+        "github": "GitHub",
+        "backToDocs": "← Back to Docs"
+    },
+    "hero": {
+        "badge": "Chrome Extension",
+        "manifestV3": "Manifest V3",
+        "title": "Bookmark Scout",
+        "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and beautiful dark mode.",
+        "viewOnGitHub": "View on GitHub",
+        "documentation": "Documentation"
+    },
+    "features": {
+        "title": "Features",
+        "subtitle": "Everything you need to manage your bookmarks efficiently",
+        "instantSearch": {
+            "title": "Instant Search",
+            "description": "Find bookmarks instantly with debounced search and folder filtering"
+        },
+        "dragAndDrop": {
+            "title": "Drag & Drop",
+            "description": "Organize bookmarks and folders with intuitive drag-and-drop"
+        },
+        "quickAdd": {
+            "title": "Quick Add",
+            "description": "Save the current tab to any folder with one click"
+        },
+        "sidePanel": {
+            "title": "Side Panel",
+            "description": "Access your bookmarks from Chrome's side panel"
+        },
+        "darkMode": {
+            "title": "Dark Mode",
+            "description": "Beautiful dark theme with smooth transitions"
+        },
+        "expandCollapse": {
+            "title": "Expand/Collapse",
+            "description": "Quickly expand or collapse all nested folders"
+        }
+    },
+    "techStack": {
+        "title": "Tech Stack",
+        "subtitle": "Built with modern technologies for the best developer experience"
+    },
+    "installation": {
+        "title": "Installation",
+        "subtitle": "Get started in minutes",
+        "step1": {
+            "title": "Clone the repository"
+        },
+        "step2": {
+            "title": "Install dependencies & build"
+        },
+        "step3": {
+            "title": "Load in Chrome",
+            "instructions": {
+                "1": "Open chrome://extensions/",
+                "2": "Enable Developer mode (top right)",
+                "3": "Click Load unpacked",
+                "4": "Select the dist folder"
+            }
+        }
+    },
+    "footer": {
+        "madeWith": "Made with ❤️ by",
+        "license": "Licensed under AGPL-3.0"
+    },
+    "docs": {
+        "title": "Documentation",
+        "subtitle": "Everything you need to know about Bookmark Scout",
+        "gettingStarted": {
+            "title": "Getting Started",
+            "description": "Learn how to install and set up Bookmark Scout"
+        },
+        "features": {
+            "title": "Features",
+            "description": "Explore all the features and capabilities"
+        },
+        "contributing": {
+            "title": "Contributing",
+            "description": "How to contribute to the project"
+        }
+    },
+    "gettingStarted": {
+        "title": "Getting Started",
+        "prerequisites": {
+            "title": "Prerequisites",
+            "bun": "Bun 1.3 or later",
+            "chrome": "Google Chrome or Chromium-based browser",
+            "git": "Git"
+        },
+        "installation": {
+            "title": "Installation",
+            "step1": "Clone the repository",
+            "step2": "Install dependencies",
+            "step3": "Build the extension",
+            "step4": {
+                "title": "Load in Chrome",
+                "1": "Open chrome://extensions/",
+                "2": "Enable Developer mode (top right toggle)",
+                "3": "Click \"Load unpacked\"",
+                "4": "Select the dist folder"
+            }
+        },
+        "development": {
+            "title": "Development",
+            "description": "Start the development server with hot reload:"
+        }
+    },
+    "featuresPage": {
+        "title": "Features",
+        "subtitle": "Discover everything Bookmark Scout has to offer",
+        "instantSearch": {
+            "title": "Instant Search",
+            "description": "Quickly find any bookmark with our lightning-fast search. Features debounced input for performance and folder filtering to narrow down results."
+        },
+        "dragAndDrop": {
+            "title": "Drag & Drop Organization",
+            "description": "Reorganize your bookmarks with intuitive drag-and-drop. Move bookmarks between folders or reorder within a folder with ease."
+        },
+        "quickAdd": {
+            "title": "Quick Add",
+            "description": "Save the current tab to any folder with just one click. No more navigating through nested menus - just pick a folder and done!"
+        },
+        "sidePanel": {
+            "title": "Side Panel",
+            "description": "Access your bookmarks directly from Chrome's side panel without leaving your current page. Perfect for research and reference work."
+        },
+        "darkMode": {
+            "title": "Beautiful Dark Mode",
+            "description": "A stunning dark theme that's easy on the eyes. Features smooth transitions and carefully chosen colors for optimal readability."
+        },
+        "expandCollapse": {
+            "title": "Expand/Collapse All",
+            "description": "Quickly expand or collapse all nested folders with a single click. Great for getting an overview or focusing on specific sections."
+        },
+        "createFolders": {
+            "title": "Create Folders",
+            "description": "Create new bookmark folders directly from the popup. Keep your bookmarks organized without opening the bookmark manager."
+        },
+        "deleteItems": {
+            "title": "Delete Items",
+            "description": "Remove unwanted bookmarks and folders with confirmation dialogs to prevent accidental deletions."
+        },
+        "roadmap": {
+            "title": "Roadmap",
+            "fullManager": "Full Bookmarks Manager — Replace Chrome's default bookmarks page",
+            "options": "Options Page — Customize extension settings",
+            "tags": "Tags — Add custom tags for better organization",
+            "duplicates": "Duplicate Detection — Find and remove duplicates",
+            "deadLinks": "Dead Link Checker — Detect broken links",
+            "shortcuts": "Keyboard Shortcuts — Navigate with hotkeys"
+        }
+    },
+    "contributingPage": {
+        "title": "Contributing",
+        "subtitle": "We welcome contributions! Here's how to get started.",
+        "howTo": {
+            "title": "How to Contribute",
+            "step1": "Fork the repository",
+            "step2": "Create your feature branch:",
+            "step3": "Commit your changes:",
+            "step4": "Push to the branch:",
+            "step5": "Open a Pull Request"
+        },
+        "commits": {
+            "title": "Commit Convention",
+            "description": "We use Conventional Commits. Format your commits as:",
+            "feat": "New feature",
+            "fix": "Bug fix",
+            "docs": "Documentation",
+            "refactor": "Code refactoring",
+            "test": "Tests",
+            "chore": "Maintenance"
+        },
+        "setup": {
+            "title": "Development Setup"
+        },
+        "codeStyle": {
+            "title": "Code Style",
+            "biome": "We use Biome for linting and formatting",
+            "check": "Run bun run check before committing",
+            "strict": "TypeScript strict mode is enabled",
+            "functional": "Components use functional style with hooks"
+        }
+    }
+}
+</file>
+
+<file path="website/messages/ja.json">
+{
+    "metadata": {
+        "title": "Bookmark Scout - モダンなChromeブックマークマネージャー",
+        "description": "ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能"
+    },
+    "nav": {
+        "docs": "ドキュメント",
+        "github": "GitHub",
+        "backToDocs": "← ドキュメントに戻る"
+    },
+    "hero": {
+        "badge": "Chrome拡張機能",
+        "manifestV3": "Manifest V3",
+        "title": "Bookmark Scout",
+        "description": "ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能。ドラッグ＆ドロップ、インスタント検索、美しいダークモードを搭載。",
+        "viewOnGitHub": "GitHubで見る",
+        "documentation": "ドキュメント"
+    },
+    "features": {
+        "title": "機能",
+        "subtitle": "ブックマークを効率的に管理するために必要なすべて",
+        "instantSearch": {
+            "title": "インスタント検索",
+            "description": "デバウンス検索とフォルダフィルタリングでブックマークを瞬時に検索"
+        },
+        "dragAndDrop": {
+            "title": "ドラッグ＆ドロップ",
+            "description": "直感的なドラッグ＆ドロップでブックマークとフォルダを整理"
+        },
+        "quickAdd": {
+            "title": "クイック追加",
+            "description": "ワンクリックで現在のタブを任意のフォルダに保存"
+        },
+        "sidePanel": {
+            "title": "サイドパネル",
+            "description": "Chromeのサイドパネルからブックマークにアクセス"
+        },
+        "darkMode": {
+            "title": "ダークモード",
+            "description": "スムーズなトランジションを持つ美しいダークテーマ"
+        },
+        "expandCollapse": {
+            "title": "展開/折りたたみ",
+            "description": "ネストされたフォルダをすばやく展開または折りたたみ"
+        }
+    },
+    "techStack": {
+        "title": "技術スタック",
+        "subtitle": "最高の開発者体験のためにモダンな技術で構築"
+    },
+    "installation": {
+        "title": "インストール",
+        "subtitle": "数分で始められます",
+        "step1": {
+            "title": "リポジトリをクローン"
+        },
+        "step2": {
+            "title": "依存関係をインストール＆ビルド"
+        },
+        "step3": {
+            "title": "Chromeにロード",
+            "instructions": {
+                "1": "chrome://extensions/ を開く",
+                "2": "デベロッパーモードを有効化（右上）",
+                "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
+                "4": "dist フォルダを選択"
+            }
+        }
+    },
+    "footer": {
+        "madeWith": "❤️を込めて作成",
+        "license": "AGPL-3.0ライセンス"
+    },
+    "docs": {
+        "title": "ドキュメント",
+        "subtitle": "Bookmark Scoutについて知っておくべきすべて",
+        "gettingStarted": {
+            "title": "はじめに",
+            "description": "Bookmark Scoutのインストールとセットアップ方法を学ぶ"
+        },
+        "features": {
+            "title": "機能",
+            "description": "すべての機能と機能を探索する"
+        },
+        "contributing": {
+            "title": "コントリビューション",
+            "description": "プロジェクトへの貢献方法"
+        }
+    },
+    "gettingStarted": {
+        "title": "はじめに",
+        "prerequisites": {
+            "title": "前提条件",
+            "bun": "Bun 1.3以降",
+            "chrome": "Google ChromeまたはChromiumベースのブラウザ",
+            "git": "Git"
+        },
+        "installation": {
+            "title": "インストール",
+            "step1": "リポジトリをクローン",
+            "step2": "依存関係をインストール",
+            "step3": "拡張機能をビルド",
+            "step4": {
+                "title": "Chromeにロード",
+                "1": "chrome://extensions/ を開く",
+                "2": "デベロッパーモードを有効化（右上のトグル）",
+                "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
+                "4": "dist フォルダを選択"
+            }
+        },
+        "development": {
+            "title": "開発",
+            "description": "ホットリロード付きの開発サーバーを起動:"
+        }
+    },
+    "featuresPage": {
+        "title": "機能",
+        "subtitle": "Bookmark Scoutが提供するすべてを発見",
+        "instantSearch": {
+            "title": "インスタント検索",
+            "description": "高速検索でブックマークを素早く見つけます。パフォーマンスのためのデバウンス入力と結果を絞り込むフォルダフィルタリングを搭載。"
+        },
+        "dragAndDrop": {
+            "title": "ドラッグ＆ドロップ整理",
+            "description": "直感的なドラッグ＆ドロップでブックマークを再整理。フォルダ間の移動やフォルダ内の並べ替えが簡単に。"
+        },
+        "quickAdd": {
+            "title": "クイック追加",
+            "description": "ワンクリックで現在のタブを任意のフォルダに保存。ネストされたメニューをナビゲートする必要はありません。"
+        },
+        "sidePanel": {
+            "title": "サイドパネル",
+            "description": "現在のページを離れることなくChromeのサイドパネルからブックマークに直接アクセス。リサーチや参照作業に最適。"
+        },
+        "darkMode": {
+            "title": "美しいダークモード",
+            "description": "目に優しい美しいダークテーマ。スムーズなトランジションと最適な読みやすさのために慎重に選択された色を搭載。"
+        },
+        "expandCollapse": {
+            "title": "すべて展開/折りたたみ",
+            "description": "ワンクリックですべてのネストされたフォルダを展開または折りたたみ。概要把握や特定のセクションへの集中に最適。"
+        },
+        "createFolders": {
+            "title": "フォルダ作成",
+            "description": "ポップアップから直接新しいブックマークフォルダを作成。ブックマークマネージャーを開かずにブックマークを整理。"
+        },
+        "deleteItems": {
+            "title": "アイテム削除",
+            "description": "確認ダイアログ付きで不要なブックマークやフォルダを削除。誤削除を防止。"
+        },
+        "roadmap": {
+            "title": "ロードマップ",
+            "fullManager": "フルブックマークマネージャー — Chromeのデフォルトブックマークページを置き換え",
+            "options": "オプションページ — 拡張機能設定をカスタマイズ",
+            "tags": "タグ — より良い整理のためのカスタムタグを追加",
+            "duplicates": "重複検出 — 重複を見つけて削除",
+            "deadLinks": "デッドリンクチェッカー — 壊れたリンクを検出",
+            "shortcuts": "キーボードショートカット — ホットキーでナビゲート"
+        }
+    },
+    "contributingPage": {
+        "title": "コントリビューション",
+        "subtitle": "コントリビューションを歓迎します！始め方はこちら。",
+        "howTo": {
+            "title": "コントリビューション方法",
+            "step1": "リポジトリをフォーク",
+            "step2": "フィーチャーブランチを作成:",
+            "step3": "変更をコミット:",
+            "step4": "ブランチにプッシュ:",
+            "step5": "Pull Requestを作成"
+        },
+        "commits": {
+            "title": "コミット規約",
+            "description": "Conventional Commitsを使用しています。コミットのフォーマット:",
+            "feat": "新機能",
+            "fix": "バグ修正",
+            "docs": "ドキュメント",
+            "refactor": "コードリファクタリング",
+            "test": "テスト",
+            "chore": "メンテナンス"
+        },
+        "setup": {
+            "title": "開発セットアップ"
+        },
+        "codeStyle": {
+            "title": "コードスタイル",
+            "biome": "リンティングとフォーマッティングにBiomeを使用",
+            "check": "コミット前にbun run checkを実行",
+            "strict": "TypeScript strictモードが有効",
+            "functional": "コンポーネントはhooksを使用した関数型スタイル"
+        }
+    }
+}
+</file>
+
+<file path="website/messages/ko.json">
+{
+    "metadata": {
+        "title": "Bookmark Scout - 모던 Chrome 북마크 관리자",
+        "description": "북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램"
+    },
+    "nav": {
+        "docs": "문서",
+        "github": "GitHub",
+        "backToDocs": "← 문서로 돌아가기"
+    },
+    "hero": {
+        "badge": "Chrome 확장 프로그램",
+        "manifestV3": "Manifest V3",
+        "title": "Bookmark Scout",
+        "description": "북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램. 드래그 앤 드롭, 즉시 검색, 아름다운 다크 모드를 지원합니다.",
+        "viewOnGitHub": "GitHub에서 보기",
+        "documentation": "문서"
+    },
+    "features": {
+        "title": "기능",
+        "subtitle": "북마크를 효율적으로 관리하는 데 필요한 모든 것",
+        "instantSearch": {
+            "title": "즉시 검색",
+            "description": "디바운스 검색과 폴더 필터링으로 북마크를 즉시 검색"
+        },
+        "dragAndDrop": {
+            "title": "드래그 앤 드롭",
+            "description": "직관적인 드래그 앤 드롭으로 북마크와 폴더 정리"
+        },
+        "quickAdd": {
+            "title": "빠른 추가",
+            "description": "한 번의 클릭으로 현재 탭을 원하는 폴더에 저장"
+        },
+        "sidePanel": {
+            "title": "사이드 패널",
+            "description": "Chrome 사이드 패널에서 북마크에 접근"
+        },
+        "darkMode": {
+            "title": "다크 모드",
+            "description": "부드러운 전환 효과가 있는 아름다운 다크 테마"
+        },
+        "expandCollapse": {
+            "title": "펼치기/접기",
+            "description": "중첩된 폴더를 빠르게 펼치거나 접기"
+        }
+    },
+    "techStack": {
+        "title": "기술 스택",
+        "subtitle": "최고의 개발자 경험을 위해 최신 기술로 구축"
+    },
+    "installation": {
+        "title": "설치",
+        "subtitle": "몇 분 안에 시작하세요",
+        "step1": {
+            "title": "리포지토리 클론"
+        },
+        "step2": {
+            "title": "의존성 설치 및 빌드"
+        },
+        "step3": {
+            "title": "Chrome에 로드",
+            "instructions": {
+                "1": "chrome://extensions/ 열기",
+                "2": "개발자 모드 활성화 (오른쪽 상단)",
+                "3": "압축해제된 확장 프로그램을 로드합니다 클릭",
+                "4": "dist 폴더 선택"
+            }
+        }
+    },
+    "footer": {
+        "madeWith": "❤️로 만들었습니다",
+        "license": "AGPL-3.0 라이선스"
+    },
+    "docs": {
+        "title": "문서",
+        "subtitle": "Bookmark Scout에 대해 알아야 할 모든 것",
+        "gettingStarted": {
+            "title": "시작하기",
+            "description": "Bookmark Scout 설치 및 설정 방법 배우기"
+        },
+        "features": {
+            "title": "기능",
+            "description": "모든 기능과 가능성 탐색"
+        },
+        "contributing": {
+            "title": "기여하기",
+            "description": "프로젝트에 기여하는 방법"
+        }
+    },
+    "gettingStarted": {
+        "title": "시작하기",
+        "prerequisites": {
+            "title": "사전 요구사항",
+            "bun": "Bun 1.3 이상",
+            "chrome": "Google Chrome 또는 Chromium 기반 브라우저",
+            "git": "Git"
+        },
+        "installation": {
+            "title": "설치",
+            "step1": "리포지토리 클론",
+            "step2": "의존성 설치",
+            "step3": "확장 프로그램 빌드",
+            "step4": {
+                "title": "Chrome에 로드",
+                "1": "chrome://extensions/ 열기",
+                "2": "개발자 모드 활성화 (오른쪽 상단 토글)",
+                "3": "\"압축해제된 확장 프로그램을 로드합니다\" 클릭",
+                "4": "dist 폴더 선택"
+            }
+        },
+        "development": {
+            "title": "개발",
+            "description": "핫 리로드가 있는 개발 서버 시작:"
+        }
+    },
+    "featuresPage": {
+        "title": "기능",
+        "subtitle": "Bookmark Scout가 제공하는 모든 것을 발견하세요",
+        "instantSearch": {
+            "title": "즉시 검색",
+            "description": "초고속 검색으로 북마크를 빠르게 찾으세요. 성능을 위한 디바운스 입력과 결과를 좁히는 폴더 필터링을 지원합니다."
+        },
+        "dragAndDrop": {
+            "title": "드래그 앤 드롭 정리",
+            "description": "직관적인 드래그 앤 드롭으로 북마크를 재정리하세요. 폴더 간 이동이나 폴더 내 재정렬이 쉽습니다."
+        },
+        "quickAdd": {
+            "title": "빠른 추가",
+            "description": "한 번의 클릭으로 현재 탭을 원하는 폴더에 저장하세요. 더 이상 중첩된 메뉴를 탐색할 필요가 없습니다."
+        },
+        "sidePanel": {
+            "title": "사이드 패널",
+            "description": "현재 페이지를 떠나지 않고 Chrome의 사이드 패널에서 북마크에 직접 접근하세요. 리서치와 참조 작업에 완벽합니다."
+        },
+        "darkMode": {
+            "title": "아름다운 다크 모드",
+            "description": "눈이 편한 멋진 다크 테마. 부드러운 전환과 최적의 가독성을 위해 신중하게 선택된 색상을 지원합니다."
+        },
+        "expandCollapse": {
+            "title": "모두 펼치기/접기",
+            "description": "한 번의 클릭으로 모든 중첩된 폴더를 펼치거나 접으세요. 개요 보기나 특정 섹션에 집중하기에 좋습니다."
+        },
+        "createFolders": {
+            "title": "폴더 생성",
+            "description": "팝업에서 직접 새 북마크 폴더를 생성하세요. 북마크 관리자를 열지 않고도 북마크를 정리할 수 있습니다."
+        },
+        "deleteItems": {
+            "title": "항목 삭제",
+            "description": "확인 대화상자와 함께 원치 않는 북마크와 폴더를 삭제하세요. 실수로 삭제하는 것을 방지합니다."
+        },
+        "roadmap": {
+            "title": "로드맵",
+            "fullManager": "전체 북마크 관리자 — Chrome의 기본 북마크 페이지 대체",
+            "options": "옵션 페이지 — 확장 프로그램 설정 커스터마이즈",
+            "tags": "태그 — 더 나은 정리를 위한 커스텀 태그 추가",
+            "duplicates": "중복 감지 — 중복 찾기 및 제거",
+            "deadLinks": "데드 링크 체커 — 깨진 링크 감지",
+            "shortcuts": "키보드 단축키 — 핫키로 탐색"
+        }
+    },
+    "contributingPage": {
+        "title": "기여하기",
+        "subtitle": "기여를 환영합니다! 시작하는 방법은 다음과 같습니다.",
+        "howTo": {
+            "title": "기여 방법",
+            "step1": "리포지토리 포크",
+            "step2": "기능 브랜치 생성:",
+            "step3": "변경사항 커밋:",
+            "step4": "브랜치에 푸시:",
+            "step5": "Pull Request 열기"
+        },
+        "commits": {
+            "title": "커밋 규칙",
+            "description": "Conventional Commits를 사용합니다. 커밋 형식:",
+            "feat": "새 기능",
+            "fix": "버그 수정",
+            "docs": "문서",
+            "refactor": "코드 리팩토링",
+            "test": "테스트",
+            "chore": "유지보수"
+        },
+        "setup": {
+            "title": "개발 설정"
+        },
+        "codeStyle": {
+            "title": "코드 스타일",
+            "biome": "린팅과 포맷팅에 Biome 사용",
+            "check": "커밋 전에 bun run check 실행",
+            "strict": "TypeScript strict 모드 활성화",
+            "functional": "컴포넌트는 hooks를 사용한 함수형 스타일"
+        }
+    }
 }
 </file>
 
@@ -3536,19 +4556,6 @@ const eslintConfig = defineConfig([
 ]);
 
 export default eslintConfig;
-</file>
-
-<file path="website/next.config.ts">
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  output: "export",
-  basePath: "/bookmark-scout",
-  images: { unoptimized: true },
-  trailingSlash: true,
-};
-
-export default nextConfig;
 </file>
 
 <file path="website/postcss.config.mjs">
@@ -8770,320 +9777,54 @@ body {
 }
 </file>
 
-<file path="website/app/page.tsx">
-import Link from "next/link";
+<file path="website/app/layout.tsx">
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-// Feature data
-const features = [
-  {
-    icon: "🔍",
-    title: "Instant Search",
-    description: "Find bookmarks instantly with debounced search and folder filtering",
-  },
-  {
-    icon: "📂",
-    title: "Drag & Drop",
-    description: "Organize bookmarks and folders with intuitive drag-and-drop",
-  },
-  {
-    icon: "⚡",
-    title: "Quick Add",
-    description: "Save the current tab to any folder with one click",
-  },
-  {
-    icon: "📱",
-    title: "Side Panel",
-    description: "Access your bookmarks from Chrome's side panel",
-  },
-  {
-    icon: "🌙",
-    title: "Dark Mode",
-    description: "Beautiful dark theme with smooth transitions",
-  },
-  {
-    icon: "🎯",
-    title: "Expand/Collapse",
-    description: "Quickly expand or collapse all nested folders",
-  },
-];
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+});
 
-// Tech stack badges
-const techStack = [
-  { name: "React 19", color: "#61DAFB", logo: "react" },
-  { name: "TypeScript", color: "#3178C6", logo: "typescript" },
-  { name: "WXT", color: "#646CFF", logo: "vite" },
-  { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
-  { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
-  { name: "Zustand", color: "#764ABC", logo: "redux" },
-  { name: "Nx", color: "#143055", logo: "nx" },
-  { name: "Bun", color: "#000000", logo: "bun" },
-];
+export const metadata: Metadata = {
+    title: "Bookmark Scout - Modern Chrome Bookmark Manager",
+    description:
+        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+};
 
-export default function Home() {
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🔖</span>
-            <span className="font-bold text-lg">Bookmark Scout</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <Link
-              href="/docs"
-              className="text-muted hover:text-foreground transition-colors"
-            >
-              Docs
-            </Link>
-            <a
-              href="https://github.com/isandrel/bookmark-scout"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-              GitHub
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-24 overflow-hidden">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
-
-        <div className="relative mx-auto max-w-6xl px-6 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
-            <span className="text-sm text-muted">Chrome Extension</span>
-            <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
-              Manifest V3
-            </span>
-          </div>
-
-          <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
-            <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
-              Bookmark Scout
-            </span>
-          </h1>
-
-          <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
-            A modern Chrome extension to quickly search, organize, and save
-            bookmarks to specific folders. Features drag-and-drop, instant
-            search, and beautiful dark mode.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a
-              href="https://github.com/isandrel/bookmark-scout"
-              className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-              View on GitHub
-              <svg
-                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-            <Link
-              href="/docs"
-              className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
-            >
-              Documentation
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Features</h2>
-            <p className="text-muted text-lg">
-              Everything you need to manage your bookmarks efficiently
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
-              >
-                <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Tech Stack</h2>
-          <p className="text-muted text-lg mb-12">
-            Built with modern technologies for the best developer experience
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {techStack.map((tech) => (
-              <div
-                key={tech.name}
-                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
-              >
-                <img
-                  src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
-                  alt={tech.name}
-                  className="h-5"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Installation Section */}
-      <section className="py-24 border-t border-white/5">
-        <div className="mx-auto max-w-4xl px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Installation
-            </h2>
-            <p className="text-muted text-lg">Get started in minutes</p>
-          </div>
-
-          <div className="space-y-6">
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  1
-                </span>
-                Clone the repository
-              </h3>
-              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                <code className="text-sm text-green-400">
-                  git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
-                  cd bookmark-scout
-                </code>
-              </pre>
-            </div>
-
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  2
-                </span>
-                Install dependencies & build
-              </h3>
-              <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                <code className="text-sm text-green-400">
-                  bun install{"\n"}
-                  bun run build
-                </code>
-              </pre>
-            </div>
-
-            <div className="glass rounded-2xl p-6">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                  3
-                </span>
-                Load in Chrome
-              </h3>
-              <ol className="text-muted space-y-2 ml-10">
-                <li>
-                  1. Open <code className="text-foreground">chrome://extensions/</code>
-                </li>
-                <li>2. Enable Developer mode (top right)</li>
-                <li>3. Click Load unpacked</li>
-                <li>
-                  4. Select the <code className="text-foreground">dist</code> folder
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/5">
-        <div className="mx-auto max-w-6xl px-6 text-center">
-          <p className="text-muted">
-            Made with ❤️ by{" "}
-            <a
-              href="https://github.com/isandrel"
-              className="text-foreground hover:text-primary-light transition-colors"
-            >
-              isandrel
-            </a>
-          </p>
-          <p className="text-sm text-muted/60 mt-2">
-            Licensed under AGPL-3.0
-          </p>
-        </div>
-      </footer>
-    </div>
-  );
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <html lang="en" className="dark">
+            <body className={`${inter.variable} font-sans antialiased`}>
+                {children}
+            </body>
+        </html>
+    );
 }
 </file>
 
-<file path="website/package.json">
-{
-  "name": "website",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+<file path="website/next.config.ts">
+import createNextIntlPlugin from 'next-intl/plugin';
+import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig: NextConfig = {
+  output: "export",
+  basePath: "/bookmark-scout",
+  images: { unoptimized: true },
+  trailingSlash: true,
+  turbopack: {
+    root: ".",
   },
-  "dependencies": {
-    "next": "16.1.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
-  },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.1",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  },
-  "ignoreScripts": [
-    "sharp",
-    "unrs-resolver"
-  ],
-  "trustedDependencies": [
-    "sharp",
-    "unrs-resolver"
-  ]
-}
+};
+
+export default withNextIntl(nextConfig);
 </file>
 
 <file path=".github/workflows/deploy-website.yml">
@@ -9600,6 +10341,53 @@ function PopupPage() {
 }
 
 export default PopupPage;
+</file>
+
+<file path="website/app/page.tsx">
+import { redirect } from 'next/navigation';
+import { routing } from '@/i18n/routing';
+
+export default function RootPage() {
+    redirect(`/${routing.defaultLocale}`);
+}
+</file>
+
+<file path="website/package.json">
+{
+  "name": "website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "next": "16.1.1",
+    "next-intl": "^4.6.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "ignoreScripts": [
+    "sharp",
+    "unrs-resolver"
+  ],
+  "trustedDependencies": [
+    "sharp",
+    "unrs-resolver"
+  ]
+}
 </file>
 
 <file path="wxt.config.ts">
