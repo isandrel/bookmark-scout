@@ -26,18 +26,19 @@
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Nx-22-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
 </p>
 
 ---
 
 ## ✨ Features
 
-### ✅ Supported
+### ✅ Current Focus: Popup & Side Panel
 
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
-- [x] 🗂️ **Full Manager** — Replaces Chrome's default bookmarks page with a modern table view
 - [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
 - [x] 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
@@ -46,6 +47,8 @@
 
 ### 🚧 Roadmap
 
+- [ ] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page with modern table view
+- [ ] ⚙️ **Options Page** — Customize extension settings and preferences
 - [ ] 🏷️ **Tags** — Add custom tags to bookmarks for better organization
 - [ ] 🔄 **Sync** — Cross-device bookmark sync with cloud backup
 - [ ] 📊 **Analytics** — View bookmark usage statistics
@@ -62,12 +65,15 @@
 | Layer             | Technology                                                                                       |
 | ----------------- | ------------------------------------------------------------------------------------------------ |
 | **Framework**     | React 19 + TypeScript                                                                            |
-| **Build**         | Vite 7                                                                                           |
+| **Build**         | Vite 7 + Nx 22 (monorepo with caching)                                                           |
+| **Runtime**       | Bun 1.3                                                                                          |
 | **Styling**       | TailwindCSS 4 + CSS Variables                                                                    |
 | **UI Components** | [shadcn/ui](https://ui.shadcn.com) (Radix primitives)                                            |
 | **Drag & Drop**   | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
 | **Animations**    | Framer Motion                                                                                    |
 | **Table**         | TanStack React Table                                                                             |
+
+> **📍 Current Focus:** Popup development. Options page and bookmarks override temporarily disabled.
 
 ---
 
