@@ -167,6 +167,18 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ---
 
+## ⭐ Star History
+
+<a href="https://star-history.com/#isandrel/bookmark-scout&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=isandrel/bookmark-scout&type=Date" />
+ </picture>
+</a>
+
+---
+
 <p align="center">
   Made with ❤️ by <a href="https://github.com/isandrel">isandrel</a>
 </p>
