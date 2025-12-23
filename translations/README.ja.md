@@ -14,6 +14,30 @@
   <strong>ブックマークを素早く検索、整理、特定のフォルダに保存できるモダンなChrome拡張機能</strong>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-対応-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Firefox-対応-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Edge-対応-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+</p>
+
+---
+
+## 🌐 ブラウザサポート
+
+| ブラウザ | 状態     | 備考                                        |
+| -------- | -------- | ------------------------------------------- |
+| Chrome   | ✅ 対応   | Manifest V3でフルサポート                   |
+| Firefox  | ✅ 対応   | Manifest V2でフルサポート                   |
+| Edge     | ✅ 対応   | Manifest V3でフルサポート（Chromiumベース） |
+| Safari   | ❌ 非対応 | Appleが`bookmarks` APIを実装していません    |
+
+### なぜSafariは非対応なのか
+
+Safari Web Extensionsはこの拡張機能のコア機能に不可欠な`browser.bookmarks` APIをサポートしていません。AppleはSafari 14（2020年）でWeb Extensionサポートを発表しましたが、bookmarks APIは実装されませんでした。これはAppleプラットフォームの制限であり、WXTや拡張機能フレームワークの問題ではありません。
+
+Safari APIサポートの更新については、[WebKit Bug Tracker](https://bugs.webkit.org/)をご覧ください。
+
 ---
 
 ## ✨ 機能

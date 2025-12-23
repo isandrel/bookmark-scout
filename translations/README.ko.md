@@ -14,6 +14,30 @@
   <strong>북마크를 빠르게 검색하고, 정리하고, 특정 폴더에 저장할 수 있는 모던 Chrome 확장 프로그램</strong>
 </p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-지원-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Firefox-지원-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Edge-지원-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Safari-미지원-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
+</p>
+
+---
+
+## 🌐 브라우저 지원
+
+| 브라우저 | 상태     | 비고                                    |
+| -------- | -------- | --------------------------------------- |
+| Chrome   | ✅ 지원   | Manifest V3 완전 지원                   |
+| Firefox  | ✅ 지원   | Manifest V2 완전 지원                   |
+| Edge     | ✅ 지원   | Manifest V3 완전 지원 (Chromium 기반)   |
+| Safari   | ❌ 미지원 | Apple이 `bookmarks` API를 구현하지 않음 |
+
+### Safari가 지원되지 않는 이유
+
+Safari Web Extensions는 이 확장 프로그램의 핵심 기능에 필수적인 `browser.bookmarks` API를 지원하지 않습니다. Apple은 Safari 14(2020년)에서 Web Extension 지원을 발표했지만, bookmarks API는 구현되지 않았습니다. 이것은 Apple 플랫폼의 제한이며, WXT나 확장 프로그램 프레임워크의 문제가 아닙니다.
+
+Safari API 지원 업데이트에 대해서는 [WebKit Bug Tracker](https://bugs.webkit.org/)를 참조하세요.
+
 ---
 
 ## ✨ 기능

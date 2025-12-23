@@ -36,7 +36,29 @@
   <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square&logo=redux&logoColor=white" alt="Zustand">
   <img src="https://img.shields.io/badge/Nx-22-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+<p align="center">
+  <img src="https://img.shields.io/badge/Chrome-Supported-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
+  <img src="https://img.shields.io/badge/Firefox-Supported-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
+  <img src="https://img.shields.io/badge/Edge-Supported-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+  <img src="https://img.shields.io/badge/Safari-Not%20Supported-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>
+
+---
+
+## 🌐 Browser Support
+
+| Browser | Status          | Notes                                          |
+| ------- | --------------- | ---------------------------------------------- |
+| Chrome  | ✅ Supported     | Full support with Manifest V3                  |
+| Firefox | ✅ Supported     | Full support with Manifest V2                  |
+| Edge    | ✅ Supported     | Full support with Manifest V3 (Chromium-based) |
+| Safari  | ❌ Not Supported | Apple has not implemented the `bookmarks` API  |
+
+### Why Safari is Not Supported
+
+Safari Web Extensions do not support the `browser.bookmarks` API, which is essential for this extension's core functionality. Despite Apple announcing Web Extension support in Safari 14 (2020), the bookmarks API was never implemented. This is an Apple platform limitation, not a WXT or extension framework issue.
+
+For updates on Safari API support, see [WebKit Bug Tracker](https://bugs.webkit.org/).
 
 ---
 
