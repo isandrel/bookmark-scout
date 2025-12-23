@@ -1,12 +1,12 @@
 import { Folder } from 'lucide-react';
-import { ComponentType, useEffect, useState, useCallback } from 'react';
-import { Bookmark, columns, ItemTypeEnum } from '../ui/table/columns';
+import { type ComponentType, useCallback, useEffect, useState } from 'react';
+import { type Bookmark, columns, ItemTypeEnum } from '../ui/table/columns';
 import { DataTable } from '../ui/table/data-table';
 
 function getFaviconUrl(pageUrl: string) {
-  const url = new URL(chrome.runtime.getURL("/_favicon/"));
-  url.searchParams.set("pageUrl", pageUrl);
-  url.searchParams.set("size", "16"); // You can adjust the size as needed
+  const url = new URL(chrome.runtime.getURL('/_favicon/'));
+  url.searchParams.set('pageUrl', pageUrl);
+  url.searchParams.set('size', '16'); // You can adjust the size as needed
   return url.toString();
 }
 
@@ -28,7 +28,7 @@ const truncate = (text?: string, length = 50) => {
 const processNode = (node: chrome.bookmarks.BookmarkTreeNode, parentId = 'Root'): Bookmark => {
   // A node is a folder if it has children, regardless of whether it has a URL
   const isFolder = node.children !== undefined;
-  
+
   return {
     type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
     id: node.id,
@@ -38,7 +38,7 @@ const processNode = (node: chrome.bookmarks.BookmarkTreeNode, parentId = 'Root')
     url: truncate(node.url, 50),
     dateAdded: formatDate(node.dateAdded),
     dateGroupModified: formatDate(node.dateGroupModified),
-    unmodifiable: node.unmodifiable as "managed",
+    unmodifiable: node.unmodifiable as 'managed',
   };
 };
 
@@ -47,7 +47,7 @@ async function getTopLevelFolders(): Promise<Bookmark[]> {
     if (chrome && chrome.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         // Filter out the root node and only process the actual top-level folders
-        const topLevelFolders = nodes[0].children?.map(node => processNode(node)) || [];
+        const topLevelFolders = nodes[0].children?.map((node) => processNode(node)) || [];
         resolve(topLevelFolders);
       });
     } else {
@@ -61,7 +61,9 @@ async function getFolderContents(folderId: string): Promise<Bookmark[]> {
     if (chrome && chrome.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         // Find the target folder in the tree
-        const findFolder = (nodes: chrome.bookmarks.BookmarkTreeNode[]): chrome.bookmarks.BookmarkTreeNode | null => {
+        const findFolder = (
+          nodes: chrome.bookmarks.BookmarkTreeNode[],
+        ): chrome.bookmarks.BookmarkTreeNode | null => {
           for (const node of nodes) {
             if (node.id === folderId) {
               return node;
@@ -76,7 +78,7 @@ async function getFolderContents(folderId: string): Promise<Bookmark[]> {
 
         const targetFolder = findFolder(nodes);
         if (targetFolder && targetFolder.children) {
-          const contents = targetFolder.children.map(node => processNode(node, folderId));
+          const contents = targetFolder.children.map((node) => processNode(node, folderId));
           resolve(contents);
         } else {
           resolve([]);
@@ -88,7 +90,10 @@ async function getFolderContents(folderId: string): Promise<Bookmark[]> {
   });
 }
 
-export const parentIdMap: Record<string, { value: string; label: string; icon: ComponentType<{ className?: string }> }> = {};
+export const parentIdMap: Record<
+  string,
+  { value: string; label: string; icon: ComponentType<{ className?: string }> }
+> = {};
 
 export const useParentIdMap = () => {
   const [parentIdMapState, setParentIdMap] = useState(parentIdMap);
@@ -96,7 +101,10 @@ export const useParentIdMap = () => {
   useEffect(() => {
     if (chrome && chrome.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
-        const map: Record<string, { value: string; label: string; icon: ComponentType<{ className?: string }> }> = {};
+        const map: Record<
+          string,
+          { value: string; label: string; icon: ComponentType<{ className?: string }> }
+        > = {};
 
         const processNode = (node: chrome.bookmarks.BookmarkTreeNode, _parentId = 'Root') => {
           map[node.id] = {
@@ -119,7 +127,10 @@ export const useParentIdMap = () => {
   return parentIdMapState;
 };
 
-export const urlMap: Record<string, { value: string; label: string; icon: ComponentType<{ className?: string }> }> = {};
+export const urlMap: Record<
+  string,
+  { value: string; label: string; icon: ComponentType<{ className?: string }> }
+> = {};
 
 export const useUrlMap = () => {
   const [urlMapState, setUrlMap] = useState(urlMap);
@@ -127,7 +138,10 @@ export const useUrlMap = () => {
   useEffect(() => {
     if (chrome && chrome.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
-        const map: Record<string, { value: string; label: string; icon: ComponentType<{ className?: string }> }> = {};
+        const map: Record<
+          string,
+          { value: string; label: string; icon: ComponentType<{ className?: string }> }
+        > = {};
 
         const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
           if (node.children) {
@@ -233,12 +247,13 @@ export default function BookmarksPage() {
 
   return (
     <div className="container mx-auto py-10">
-      <DataTable 
-        columns={columns} 
-        data={data} 
+      <DataTable
+        columns={columns}
+        data={data}
         rowClassName={(row: Bookmark) => {
-          const baseClass = "cursor-pointer hover:bg-muted/50";
-          const folderClass = row.type === ItemTypeEnum.Folder ? "bg-muted/50 hover:bg-muted/70" : "";
+          const baseClass = 'cursor-pointer hover:bg-muted/50';
+          const folderClass =
+            row.type === ItemTypeEnum.Folder ? 'bg-muted/50 hover:bg-muted/70' : '';
           return `${baseClass} ${folderClass}`;
         }}
         onRowClick={(row: Bookmark) => {

@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ChevronUp, ChevronDown, ChevronsUp, ChevronsDown } from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import { ChevronDown, ChevronsDown, ChevronsUp, ChevronUp, type LucideIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface MoveBookmarkButtonsProps {
   onMove: (direction: 'up' | 'down' | 'top' | 'bottom') => void;
@@ -37,4 +36,4 @@ export function MoveBookmarkButtons({ onMove }: MoveBookmarkButtonsProps) {
       ))}
     </div>
   );
-} 
+}

@@ -1,10 +1,10 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Folder, Link, MoreHorizontal } from "lucide-react";
-import { DateRange } from "react-day-picker";
-import { useState, useEffect } from "react";
-
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import type { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, Folder, Link, MoreHorizontal } from 'lucide-react';
+import { type ComponentType, useEffect, useState } from 'react';
+import type { DateRange } from 'react-day-picker';
+import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,21 +12,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ComponentType } from "react";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableDateFilter } from "./data-table-date-filter";
-import { useParentIdMap, useUrlMap } from "@/components/page/BookmarksPage";
-import { MoveBookmarkButtons } from "./move-bookmark-buttons";
+} from '@/components/ui/dropdown-menu';
+import { DataTableColumnHeader } from './data-table-column-header';
+import { DataTableDateFilter } from './data-table-date-filter';
+import { MoveBookmarkButtons } from './move-bookmark-buttons';
 
 export enum ItemTypeEnum {
-  Folder = "folder",
-  Link = "link",
+  Folder = 'folder',
+  Link = 'link',
 }
 
 export const typeMap: Record<ItemTypeEnum, ItemType> = {
-  [ItemTypeEnum.Folder]: { value: "folder", label: "Folder", icon: Folder },
-  [ItemTypeEnum.Link]: { value: "link", label: "Link", icon: Link },
+  [ItemTypeEnum.Folder]: { value: 'folder', label: 'Folder', icon: Folder },
+  [ItemTypeEnum.Link]: { value: 'link', label: 'Link', icon: Link },
 };
 
 type ItemType = {
@@ -44,17 +42,16 @@ export type Bookmark = {
   url?: string;
   dateAdded?: string;
   dateGroupModified?: string;
-  unmodifiable?: "managed";
+  unmodifiable?: 'managed';
 };
 
 export const columns: ColumnDef<Bookmark>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -71,110 +68,88 @@ export const columns: ColumnDef<Bookmark>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "type",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
-    ),
+    accessorKey: 'type',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
     cell: ({ row }) => {
       const types = Object.values(typeMap);
-      const type = types.find(
-        (type) => type.value === row.getValue("type")
-      )
+      const type = types.find((type) => type.value === row.getValue('type'));
 
       if (!type) {
-        return null
+        return null;
       }
 
       return (
         <div className="flex items-center">
-          {type.icon && (
-            <type.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {type.icon && <type.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
           <span>{type.label}</span>
         </div>
-      )
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
-    }
+    },
   },
   {
-    accessorKey: "id",
+    accessorKey: 'id',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         ID
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
-    accessorKey: "parentId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Parent ID" />
-    ),
+    accessorKey: 'parentId',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Parent ID" />,
     cell: ({ row }) => {
       const parentIdMap = useParentIdMap();
       const parentIds = Object.values(parentIdMap);
-      const parentId = parentIds.find(
-        (parentId) => parentId.value === row.getValue("parentId")
-      )
+      const parentId = parentIds.find((parentId) => parentId.value === row.getValue('parentId'));
 
       if (!parentId) {
-        return null
+        return null;
       }
 
       return (
         <div className="flex items-center">
-          {parentId.icon && (
-            <parentId.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {parentId.icon && <parentId.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
           <span>{parentId.label}</span>
         </div>
-      )
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
   },
   {
-    accessorKey: "url",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="URL" />
-    ),
+    accessorKey: 'url',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="URL" />,
     cell: ({ row }) => {
       const urlMap = useUrlMap();
       const urls = Object.values(urlMap);
 
-      const rowUrl = row.getValue("url") as string;
+      const rowUrl = row.getValue('url') as string;
       const matchedUrl = urls.find(({ value }) => rowUrl.includes(value));
 
       if (!matchedUrl) {
-        return null
+        return null;
       }
 
       return (
         <div className="flex items-center">
-          {matchedUrl.icon && (
-            <matchedUrl.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
+          {matchedUrl.icon && <matchedUrl.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
           <span>{rowUrl}</span>
         </div>
-      )
+      );
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
   },
   {
-    accessorKey: "title",
+    accessorKey: 'title',
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
+      <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
         Title
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
@@ -185,7 +160,7 @@ export const columns: ColumnDef<Bookmark>[] = [
     },
   },
   {
-    accessorKey: "dateAdded",
+    accessorKey: 'dateAdded',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date Added">
         <DataTableDateFilter
@@ -204,20 +179,20 @@ export const columns: ColumnDef<Bookmark>[] = [
       return true;
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("dateAdded"));
+      const date = new Date(row.getValue('dateAdded'));
       return date.toLocaleString();
     },
   },
   {
-    accessorKey: "dateGroupModified",
-    header: "Date Group Modified",
+    accessorKey: 'dateGroupModified',
+    header: 'Date Group Modified',
   },
   {
-    accessorKey: "unmodifiable",
-    header: "Unmodifiable",
+    accessorKey: 'unmodifiable',
+    header: 'Unmodifiable',
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const bookmark = row.original;
       const [, setSiblingCount] = useState<number | null>(null);
@@ -230,15 +205,17 @@ export const columns: ColumnDef<Bookmark>[] = [
           }
 
           try {
-            const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>((resolve, reject) => {
-              chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
-                if (chrome.runtime.lastError) {
-                  reject(chrome.runtime.lastError);
-                  return;
-                }
-                resolve(result);
-              });
-            });
+            const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>(
+              (resolve, reject) => {
+                chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
+                  if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                    return;
+                  }
+                  resolve(result);
+                });
+              },
+            );
             setSiblingCount(parent.length);
           } catch (error) {
             console.error('Failed to get sibling count:', error);
@@ -257,23 +234,28 @@ export const columns: ColumnDef<Bookmark>[] = [
 
         try {
           if (!bookmark.parentId || typeof bookmark.index !== 'number') {
-            console.error('Missing parentId or index:', { parentId: bookmark.parentId, index: bookmark.index });
+            console.error('Missing parentId or index:', {
+              parentId: bookmark.parentId,
+              index: bookmark.index,
+            });
             return;
           }
 
           // First, get the parent node to verify the operation and get current state
-          const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>((resolve, reject) => {
-            chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
-              if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-                return;
-              }
-              resolve(result);
-            });
-          });
+          const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>(
+            (resolve, reject) => {
+              chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
+                if (chrome.runtime.lastError) {
+                  reject(chrome.runtime.lastError);
+                  return;
+                }
+                resolve(result);
+              });
+            },
+          );
 
           // Find the current bookmark in the parent's children to get its actual index
-          const currentBookmark = parent.find(b => b.id === bookmark.id);
+          const currentBookmark = parent.find((b) => b.id === bookmark.id);
           if (!currentBookmark || typeof currentBookmark.index !== 'number') {
             console.error('Bookmark not found in parent or missing index:', bookmark.id);
             return;
@@ -303,7 +285,7 @@ export const columns: ColumnDef<Bookmark>[] = [
             newIndex,
             parentId: bookmark.parentId,
             direction,
-            totalItems: parent.length
+            totalItems: parent.length,
           });
 
           // Verify the move is valid
@@ -318,7 +300,7 @@ export const columns: ColumnDef<Bookmark>[] = [
               bookmark.id,
               {
                 parentId: bookmark.parentId,
-                index: direction === 'down' ? newIndex + 1 : newIndex
+                index: direction === 'down' ? newIndex + 1 : newIndex,
               },
               (result) => {
                 if (chrome.runtime.lastError) {
@@ -328,16 +310,15 @@ export const columns: ColumnDef<Bookmark>[] = [
                 }
                 console.log('Move operation completed:', result);
                 resolve(result);
-              }
+              },
             );
           });
 
           // Trigger a refresh of the current folder's contents
           const event = new CustomEvent('bookmarkMoved', {
-            detail: { parentId: bookmark.parentId }
+            detail: { parentId: bookmark.parentId },
           });
           window.dispatchEvent(event);
-
         } catch (error) {
           console.error('Failed to move bookmark:', error);
         }
