@@ -54,6 +54,12 @@ src/
   assets/
     react.svg
   components/
+    bookmark/
+      BookmarkItem.tsx
+      BookmarkSearch.tsx
+      FolderItem.tsx
+      index.ts
+      NewFolderInput.tsx
     page/
       BookmarksPage.tsx
       OptionsPage.tsx
@@ -95,11 +101,27 @@ src/
     error-boundary.tsx
     theme-provider.tsx
   hooks/
+    use-bookmark-drag-drop.ts
+    use-bookmark-filter.ts
+    use-bookmark-operations.ts
+    use-bookmarks.ts
     use-debounce.ts
+    use-folder-expansion.ts
     use-mobile.tsx
     use-toast.ts
   lib/
     utils.ts
+  services/
+    bookmarks.ts
+    index.ts
+  stores/
+    bookmark-store.ts
+    index.ts
+  styles/
+    popup.css
+  types/
+    bookmark.ts
+    index.ts
   App.css
   App.tsx
   bookmarks.html
@@ -253,6 +275,2011 @@ jobs:
 
 <file path="src/assets/react.svg">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="35.93" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 228"><path fill="#00D8FF" d="M210.483 73.824a171.49 171.49 0 0 0-8.24-2.597c.465-1.9.893-3.777 1.273-5.621c6.238-30.281 2.16-54.676-11.769-62.708c-13.355-7.7-35.196.329-57.254 19.526a171.23 171.23 0 0 0-6.375 5.848a155.866 155.866 0 0 0-4.241-3.917C100.759 3.829 77.587-4.822 63.673 3.233C50.33 10.957 46.379 33.89 51.995 62.588a170.974 170.974 0 0 0 1.892 8.48c-3.28.932-6.445 1.924-9.474 2.98C17.309 83.498 0 98.307 0 113.668c0 15.865 18.582 31.778 46.812 41.427a145.52 145.52 0 0 0 6.921 2.165a167.467 167.467 0 0 0-2.01 9.138c-5.354 28.2-1.173 50.591 12.134 58.266c13.744 7.926 36.812-.22 59.273-19.855a145.567 145.567 0 0 0 5.342-4.923a168.064 168.064 0 0 0 6.92 6.314c21.758 18.722 43.246 26.282 56.54 18.586c13.731-7.949 18.194-32.003 12.4-61.268a145.016 145.016 0 0 0-1.535-6.842c1.62-.48 3.21-.974 4.76-1.488c29.348-9.723 48.443-25.443 48.443-41.52c0-15.417-17.868-30.326-45.517-39.844Zm-6.365 70.984c-1.4.463-2.836.91-4.3 1.345c-3.24-10.257-7.612-21.163-12.963-32.432c5.106-11 9.31-21.767 12.459-31.957c2.619.758 5.16 1.557 7.61 2.4c23.69 8.156 38.14 20.213 38.14 29.504c0 9.896-15.606 22.743-40.946 31.14Zm-10.514 20.834c2.562 12.94 2.927 24.64 1.23 33.787c-1.524 8.219-4.59 13.698-8.382 15.893c-8.067 4.67-25.32-1.4-43.927-17.412a156.726 156.726 0 0 1-6.437-5.87c7.214-7.889 14.423-17.06 21.459-27.246c12.376-1.098 24.068-2.894 34.671-5.345a134.17 134.17 0 0 1 1.386 6.193ZM87.276 214.515c-7.882 2.783-14.16 2.863-17.955.675c-8.075-4.657-11.432-22.636-6.853-46.752a156.923 156.923 0 0 1 1.869-8.499c10.486 2.32 22.093 3.988 34.498 4.994c7.084 9.967 14.501 19.128 21.976 27.15a134.668 134.668 0 0 1-4.877 4.492c-9.933 8.682-19.886 14.842-28.658 17.94ZM50.35 144.747c-12.483-4.267-22.792-9.812-29.858-15.863c-6.35-5.437-9.555-10.836-9.555-15.216c0-9.322 13.897-21.212 37.076-29.293c2.813-.98 5.757-1.905 8.812-2.773c3.204 10.42 7.406 21.315 12.477 32.332c-5.137 11.18-9.399 22.249-12.634 32.792a134.718 134.718 0 0 1-6.318-1.979Zm12.378-84.26c-4.811-24.587-1.616-43.134 6.425-47.789c8.564-4.958 27.502 2.111 47.463 19.835a144.318 144.318 0 0 1 3.841 3.545c-7.438 7.987-14.787 17.08-21.808 26.988c-12.04 1.116-23.565 2.908-34.161 5.309a160.342 160.342 0 0 1-1.76-7.887Zm110.427 27.268a347.8 347.8 0 0 0-7.785-12.803c8.168 1.033 15.994 2.404 23.343 4.08c-2.206 7.072-4.956 14.465-8.193 22.045a381.151 381.151 0 0 0-7.365-13.322Zm-45.032-43.861c5.044 5.465 10.096 11.566 15.065 18.186a322.04 322.04 0 0 0-30.257-.006c4.974-6.559 10.069-12.652 15.192-18.18ZM82.802 87.83a323.167 323.167 0 0 0-7.227 13.238c-3.184-7.553-5.909-14.98-8.134-22.152c7.304-1.634 15.093-2.97 23.209-3.984a321.524 321.524 0 0 0-7.848 12.897Zm8.081 65.352c-8.385-.936-16.291-2.203-23.593-3.793c2.26-7.3 5.045-14.885 8.298-22.6a321.187 321.187 0 0 0 7.257 13.246c2.594 4.48 5.28 8.868 8.038 13.147Zm37.542 31.03c-5.184-5.592-10.354-11.779-15.403-18.433c4.902.192 9.899.29 14.978.29c5.218 0 10.376-.117 15.453-.343c-4.985 6.774-10.018 12.97-15.028 18.486Zm52.198-57.817c3.422 7.8 6.306 15.345 8.596 22.52c-7.422 1.694-15.436 3.058-23.88 4.071a382.417 382.417 0 0 0 7.859-13.026a347.403 347.403 0 0 0 7.425-13.565Zm-16.898 8.101a358.557 358.557 0 0 1-12.281 19.815a329.4 329.4 0 0 1-23.444.823c-7.967 0-15.716-.248-23.178-.732a310.202 310.202 0 0 1-12.513-19.846h.001a307.41 307.41 0 0 1-10.923-20.627a310.278 310.278 0 0 1 10.89-20.637l-.001.001a307.318 307.318 0 0 1 12.413-19.761c7.613-.576 15.42-.876 23.31-.876H128c7.926 0 15.743.303 23.354.883a329.357 329.357 0 0 1 12.335 19.695a358.489 358.489 0 0 1 11.036 20.54a329.472 329.472 0 0 1-11 20.722Zm22.56-122.124c8.572 4.944 11.906 24.881 6.52 51.026c-.344 1.668-.73 3.367-1.15 5.09c-10.622-2.452-22.155-4.275-34.23-5.408c-7.034-10.017-14.323-19.124-21.64-27.008a160.789 160.789 0 0 1 5.888-5.4c18.9-16.447 36.564-22.941 44.612-18.3ZM128 90.808c12.625 0 22.86 10.235 22.86 22.86s-10.235 22.86-22.86 22.86s-22.86-10.235-22.86-22.86s10.235-22.86 22.86-22.86Z"></path></svg>
+</file>
+
+<file path="src/components/bookmark/BookmarkItem.tsx">
+/**
+ * BookmarkItem component.
+ * Renders a single bookmark with drag-and-drop and delete functionality.
+ */
+
+import {
+  draggable,
+  dropTargetForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { Trash2 } from 'lucide-react';
+import { useRef } from 'react';
+import { Button } from '@/components/ui/button';
+import { getFaviconUrl } from '@/services';
+import type { BookmarkTreeNode, DragOperation } from '@/types';
+
+interface BookmarkItemProps {
+  node: BookmarkTreeNode;
+  instanceId: symbol;
+  isDragging: boolean;
+  onDelete: (id: string) => void;
+  onDragStart: (node: BookmarkTreeNode) => void;
+  onDragEnd: () => void;
+  onDrop: (operation: DragOperation) => void;
+}
+
+export function BookmarkItem({
+  node,
+  instanceId,
+  isDragging,
+  onDelete,
+  onDragStart,
+  onDragEnd,
+  onDrop,
+}: BookmarkItemProps) {
+  const elementRef = useRef<HTMLAnchorElement>(null);
+
+  const setupDragDrop = (element: HTMLAnchorElement | null) => {
+    if (!element) return;
+
+    const cleanup = draggable({
+      element,
+      onDragStart: () => {
+        onDragStart(node);
+        element.classList.add('dragging');
+      },
+      onDrag: () => {
+        onDragEnd();
+        element.classList.remove('dragging');
+      },
+      getInitialData: () => ({
+        type: 'bookmark',
+        node,
+        instanceId,
+      }),
+    });
+
+    const dropTargetCleanup = dropTargetForElements({
+      element,
+      onDrag: ({ source, location }) => {
+        const sourceData = source.data as { node: BookmarkTreeNode };
+        if (sourceData.node.id !== node.id) {
+          element.classList.add('drop-target');
+
+          const existingIndicator = element.parentElement?.querySelector('.drop-indicator');
+          if (existingIndicator) existingIndicator.remove();
+
+          const indicator = document.createElement('div');
+          indicator.className = 'drop-indicator';
+
+          const rect = element.getBoundingClientRect();
+          const mouseY = location.current.input.clientY;
+          const relativeY = mouseY - rect.top;
+          const closestEdge = relativeY < rect.height / 2 ? 'top' : 'bottom';
+
+          if (closestEdge === 'top') {
+            indicator.style.top = '-1px';
+          } else {
+            indicator.style.bottom = '-1px';
+          }
+
+          element.dataset.closestEdge = closestEdge;
+          element.parentElement?.appendChild(indicator);
+        }
+      },
+      onDragLeave: () => {
+        element.classList.remove('drop-target');
+        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        delete element.dataset.closestEdge;
+      },
+      onDrop: ({ source }) => {
+        const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
+        if (sourceData.node.id !== node.id) {
+          const closestEdge = element.dataset.closestEdge as 'top' | 'bottom' | undefined;
+          const isDroppingIntoFolder = node.children !== undefined;
+
+          let operationType: DragOperation['type'];
+          if (sourceData.type === 'folder') {
+            operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
+          } else {
+            operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
+          }
+
+          onDrop({
+            type: operationType,
+            sourceId: sourceData.node.id,
+            sourceParentId: sourceData.node.parentId || 'root',
+            sourceIndex: sourceData.node.index || 0,
+            targetId: node.id,
+            targetParentId: node.parentId || 'root',
+            targetIndex: closestEdge === 'bottom' ? (node.index || 0) + 1 : node.index || 0,
+          });
+        }
+
+        element.classList.remove('drop-target');
+        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        delete element.dataset.closestEdge;
+      },
+      getData: () => ({
+        type: 'bookmark',
+        node,
+        instanceId,
+      }),
+    });
+
+    return () => {
+      cleanup();
+      dropTargetCleanup();
+    };
+  };
+
+  return (
+    <div
+      className={`flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md group bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+    >
+      <a
+        ref={(el) => {
+          elementRef.current = el;
+          setupDragDrop(el);
+        }}
+        href={node.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
+      >
+        <img src={getFaviconUrl(node.url ?? '')} alt="favicon" className="w-4 h-4 mr-2 shrink-0" />
+        <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
+      </a>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-5 w-5 ml-2 shrink-0 action-button text-destructive hover:text-destructive"
+        onClick={() => onDelete(node.id)}
+      >
+        <Trash2 className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+}
+</file>
+
+<file path="src/components/bookmark/BookmarkSearch.tsx">
+/**
+ * BookmarkSearch component.
+ * Search input with expand/collapse toggle for bookmark filtering.
+ */
+
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+interface BookmarkSearchProps {
+  query: string;
+  onQueryChange: (query: string) => void;
+  forceExpandAll: boolean;
+  onToggleExpandAll: () => void;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
+}
+
+export function BookmarkSearch({
+  query,
+  onQueryChange,
+  forceExpandAll,
+  onToggleExpandAll,
+  inputRef,
+}: BookmarkSearchProps) {
+  return (
+    <div className="p-4 border-b shrink-0">
+      <div className="flex items-center gap-2">
+        <Input
+          ref={inputRef}
+          type="text"
+          placeholder="Search bookmarks..."
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          className="w-full search-input"
+        />
+        {query && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="shrink-0"
+            onClick={onToggleExpandAll}
+            title={forceExpandAll ? 'Collapse non-matching folders' : 'Expand all folders'}
+          >
+            {forceExpandAll ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/components/bookmark/FolderItem.tsx">
+/**
+ * FolderItem component.
+ * Renders a folder with drag-and-drop, accordion, and action buttons.
+ */
+
+import {
+  draggable,
+  dropTargetForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { BookmarkPlus, ChevronsDown, ChevronsUp, Folder, FolderPlus, Trash2 } from 'lucide-react';
+import { useRef } from 'react';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import type { BookmarkTreeNode, DragOperation } from '@/types';
+import { BookmarkItem } from './BookmarkItem';
+import { NewFolderInput } from './NewFolderInput';
+
+interface FolderItemProps {
+  node: BookmarkTreeNode;
+  instanceId: symbol;
+  isDragging: boolean;
+  isAllChildrenExpanded: boolean;
+  creatingFolderId: string | null;
+  newFolderName: string;
+  folders: BookmarkTreeNode[];
+  onDragStart: (node: BookmarkTreeNode) => void;
+  onDragEnd: () => void;
+  onDrop: (operation: DragOperation) => void;
+  onAddBookmark: (folderId: string) => void;
+  onAddFolder: (folderId: string) => void;
+  onDeleteFolder: (folderId: string) => void;
+  onDeleteBookmark: (bookmarkId: string) => void;
+  onCreateFolder: () => void;
+  onCancelCreateFolder: () => void;
+  onNewFolderNameChange: (name: string) => void;
+  onToggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
+}
+
+export function FolderItem({
+  node,
+  instanceId,
+  isDragging,
+  isAllChildrenExpanded,
+  creatingFolderId,
+  newFolderName,
+  folders,
+  onDragStart,
+  onDragEnd,
+  onDrop,
+  onAddBookmark,
+  onAddFolder,
+  onDeleteFolder,
+  onDeleteBookmark,
+  onCreateFolder,
+  onCancelCreateFolder,
+  onNewFolderNameChange,
+  onToggleExpandAllChildren,
+}: FolderItemProps) {
+  const elementRef = useRef<HTMLDivElement>(null);
+  const hasChildren = node.children && node.children.length > 0;
+
+  // Handle temporary folder (new folder being created)
+  if (node.isTemporary) {
+    return (
+      <NewFolderInput
+        value={newFolderName}
+        onChange={onNewFolderNameChange}
+        onSubmit={onCreateFolder}
+        onCancel={onCancelCreateFolder}
+      />
+    );
+  }
+
+  const setupDragDrop = (element: HTMLDivElement | null) => {
+    if (!element) return;
+
+    const cleanup = draggable({
+      element,
+      onDragStart: () => {
+        onDragStart(node);
+        element.classList.add('dragging');
+      },
+      onDrag: () => {
+        onDragEnd();
+        element.classList.remove('dragging');
+      },
+      getInitialData: () => ({
+        type: 'folder',
+        node,
+        instanceId,
+      }),
+    });
+
+    const dropTargetCleanup = dropTargetForElements({
+      element,
+      onDrag: ({ source, location }) => {
+        const sourceData = source.data as { node: BookmarkTreeNode };
+        if (sourceData.node.id !== node.id) {
+          element.classList.add('drop-target');
+
+          const existingIndicator = element.parentElement?.querySelector('.drop-indicator');
+          if (existingIndicator) existingIndicator.remove();
+
+          const indicator = document.createElement('div');
+          indicator.className = 'drop-indicator';
+
+          const rect = element.getBoundingClientRect();
+          const mouseY = location.current.input.clientY;
+          const relativeY = mouseY - rect.top;
+          const closestEdge = relativeY < rect.height / 2 ? 'top' : 'bottom';
+
+          if (closestEdge === 'top') {
+            indicator.style.top = '-1px';
+          } else {
+            indicator.style.bottom = '-1px';
+          }
+
+          element.dataset.closestEdge = closestEdge;
+          element.parentElement?.appendChild(indicator);
+        }
+      },
+      onDragLeave: () => {
+        element.classList.remove('drop-target');
+        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        delete element.dataset.closestEdge;
+      },
+      onDrop: ({ source }) => {
+        const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
+        if (sourceData.node.id !== node.id) {
+          const closestEdge = element.dataset.closestEdge as 'top' | 'bottom' | undefined;
+          const isDroppingIntoFolder = node.children !== undefined;
+
+          let operationType: DragOperation['type'];
+          if (sourceData.type === 'folder') {
+            operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
+          } else {
+            operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
+          }
+
+          onDrop({
+            type: operationType,
+            sourceId: sourceData.node.id,
+            sourceParentId: sourceData.node.parentId || 'root',
+            sourceIndex: sourceData.node.index || 0,
+            targetId: node.id,
+            targetParentId: node.parentId || 'root',
+            targetIndex: closestEdge === 'bottom' ? (node.index || 0) + 1 : node.index || 0,
+          });
+        }
+
+        element.classList.remove('drop-target');
+        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        delete element.dataset.closestEdge;
+      },
+      getData: () => ({
+        type: 'folder',
+        node,
+        instanceId,
+      }),
+    });
+
+    return () => {
+      cleanup();
+      dropTargetCleanup();
+    };
+  };
+
+  return (
+    <AccordionItem
+      key={node.id}
+      value={node.id}
+      className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
+    >
+      <AccordionTrigger className="hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item">
+        <div className="flex items-center w-full">
+          <div
+            ref={(el) => {
+              elementRef.current = el;
+              setupDragDrop(el);
+            }}
+            className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
+          >
+            <Folder className="w-4 h-4 mr-2 shrink-0 text-muted-foreground" />
+            <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
+          </div>
+          <div className="flex items-center gap-1 ml-2 shrink-0 action-button">
+            {hasChildren && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-5 w-5"
+                onClick={(e) => onToggleExpandAllChildren(node, e)}
+                title={isAllChildrenExpanded ? 'Collapse all subfolders' : 'Expand all subfolders'}
+              >
+                {isAllChildrenExpanded ? (
+                  <ChevronsUp className="h-3 w-3" />
+                ) : (
+                  <ChevronsDown className="h-3 w-3" />
+                )}
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-5 w-5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddBookmark(node.id);
+              }}
+            >
+              <BookmarkPlus className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-5 w-5"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddFolder(node.id);
+              }}
+            >
+              <FolderPlus className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-5 w-5 text-destructive hover:text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteFolder(node.id);
+              }}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+      </AccordionTrigger>
+      <AccordionContent className="pl-6 py-0 accordion-content">
+        {node.children?.map((child) =>
+          child.isTemporary ? (
+            <NewFolderInput
+              key={child.id}
+              value={newFolderName}
+              onChange={onNewFolderNameChange}
+              onSubmit={onCreateFolder}
+              onCancel={onCancelCreateFolder}
+            />
+          ) : child.children ? (
+            <FolderItem
+              key={child.id}
+              node={child}
+              instanceId={instanceId}
+              isDragging={false}
+              isAllChildrenExpanded={false}
+              creatingFolderId={creatingFolderId}
+              newFolderName={newFolderName}
+              folders={folders}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onDrop={onDrop}
+              onAddBookmark={onAddBookmark}
+              onAddFolder={onAddFolder}
+              onDeleteFolder={onDeleteFolder}
+              onDeleteBookmark={onDeleteBookmark}
+              onCreateFolder={onCreateFolder}
+              onCancelCreateFolder={onCancelCreateFolder}
+              onNewFolderNameChange={onNewFolderNameChange}
+              onToggleExpandAllChildren={onToggleExpandAllChildren}
+            />
+          ) : (
+            <BookmarkItem
+              key={child.id}
+              node={child}
+              instanceId={instanceId}
+              isDragging={false}
+              onDelete={onDeleteBookmark}
+              onDragStart={onDragStart}
+              onDragEnd={onDragEnd}
+              onDrop={onDrop}
+            />
+          ),
+        )}
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+</file>
+
+<file path="src/components/bookmark/index.ts">
+/**
+ * Bookmark components barrel export.
+ */
+
+export { BookmarkItem } from './BookmarkItem';
+export { BookmarkSearch } from './BookmarkSearch';
+export { FolderItem } from './FolderItem';
+export { NewFolderInput } from './NewFolderInput';
+</file>
+
+<file path="src/components/bookmark/NewFolderInput.tsx">
+/**
+ * NewFolderInput component.
+ * Inline input for creating a new folder.
+ */
+
+import { Folder } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { Input } from '@/components/ui/input';
+
+interface NewFolderInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+}
+
+export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolderInputProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        if (!value.trim()) {
+          onCancel();
+        } else {
+          onSubmit();
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [value, onSubmit, onCancel]);
+
+  return (
+    <div
+      className="flex items-center gap-2 py-1 px-2 hover:bg-accent rounded-md folder-item"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <Folder className="w-4 h-4 shrink-0 text-muted-foreground" />
+      <div className="flex-1">
+        <Input
+          ref={inputRef}
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="New folder name"
+          className="h-7 text-sm w-full search-input"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              onCancel();
+            }
+            if (e.key === 'Enter') {
+              onSubmit();
+            }
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/hooks/use-bookmark-drag-drop.ts">
+/**
+ * Hook for bookmark drag-and-drop functionality.
+ */
+
+import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
+import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
+import * as liveRegion from '@atlaskit/pragmatic-drag-and-drop-live-region';
+import { useCallback, useEffect, useState } from 'react';
+import type { BookmarkTreeNode, DragData, DragOperation } from '@/types';
+
+interface UseBookmarkDragDropReturn {
+  /** Currently dragged item */
+  draggedItem: BookmarkTreeNode | null;
+  /** Unique instance ID for this drag session */
+  instanceId: symbol;
+  /** Handle drag start */
+  handleDragStart: (node: BookmarkTreeNode) => void;
+  /** Handle drag end */
+  handleDragEnd: () => void;
+}
+
+export function useBookmarkDragDrop(
+  onDrop: (operation: DragOperation) => Promise<boolean>,
+): UseBookmarkDragDropReturn {
+  const [draggedItem, setDraggedItem] = useState<BookmarkTreeNode | null>(null);
+  const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
+
+  const handleDragStart = useCallback((node: BookmarkTreeNode) => {
+    setDraggedItem(node);
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setDraggedItem(null);
+  }, []);
+
+  // Setup drag and drop monitoring
+  useEffect(() => {
+    return combine(
+      monitorForElements({
+        canMonitor({ source }) {
+          return source.data.instanceId === instanceId;
+        },
+        onDrop(args) {
+          const { location, source } = args;
+          if (!location.current.dropTargets.length) {
+            return;
+          }
+
+          const sourceData = source.data as unknown as DragData;
+          const sourceNode = sourceData.node;
+          const target = location.current.dropTargets[0];
+          const targetData = target.data as unknown as DragData;
+          const targetNode = targetData.node;
+
+          const closestEdge = extractClosestEdge(target.data);
+
+          const targetIndex = getReorderDestinationIndex({
+            startIndex: sourceNode.index || 0,
+            indexOfTarget: targetNode.index || 0,
+            closestEdgeOfTarget: closestEdge,
+            axis: 'vertical',
+          });
+
+          const isDroppingIntoFolder = targetNode.children !== undefined;
+
+          let operationType: DragOperation['type'];
+          if (sourceData.type === 'folder') {
+            operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
+          } else {
+            operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
+          }
+
+          const operation: DragOperation = {
+            type: operationType,
+            sourceId: sourceNode.id,
+            sourceParentId: sourceNode.parentId || 'root',
+            sourceIndex: sourceNode.index || 0,
+            targetId: targetNode.id,
+            targetParentId: targetNode.parentId || 'root',
+            targetIndex,
+          };
+
+          onDrop(operation);
+        },
+      }),
+    );
+  }, [instanceId, onDrop]);
+
+  // Cleanup live region on unmount
+  useEffect(() => {
+    return liveRegion.cleanup();
+  }, []);
+
+  return {
+    draggedItem,
+    instanceId,
+    handleDragStart,
+    handleDragEnd,
+  };
+}
+</file>
+
+<file path="src/hooks/use-bookmark-filter.ts">
+/**
+ * Hook for filtering bookmarks based on search query.
+ */
+
+import { useCallback, useEffect, useState } from 'react';
+import type { BookmarkTreeNode } from '@/types';
+import { useDebounce } from './use-debounce';
+
+interface UseBookmarkFilterReturn {
+  /** Current search query */
+  query: string;
+  /** Set search query */
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  /** Debounced search query */
+  debouncedQuery: string;
+  /** Filtered bookmark folders */
+  filteredFolders: BookmarkTreeNode[];
+  /** Whether to force expand all folders */
+  forceExpandAll: boolean;
+  /** Set force expand all */
+  setForceExpandAll: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function useBookmarkFilter(
+  folders: BookmarkTreeNode[],
+  onExpandedChange: (ids: string[]) => void,
+): UseBookmarkFilterReturn {
+  const [query, setQuery] = useState('');
+  const [filteredFolders, setFilteredFolders] = useState<BookmarkTreeNode[]>([]);
+  const [forceExpandAll, setForceExpandAll] = useState(false);
+  const debouncedQuery = useDebounce(query, 300);
+
+  const handleForceExpandAll = useCallback((nodes: BookmarkTreeNode[]): BookmarkTreeNode[] => {
+    const deepCopy = (node: BookmarkTreeNode): BookmarkTreeNode => ({
+      ...node,
+      children: node.children ? node.children.map(deepCopy) : undefined,
+      isOpen: true,
+    });
+    return nodes.map(deepCopy);
+  }, []);
+
+  const filterFolders = useCallback(
+    (nodes: BookmarkTreeNode[], searchQuery: string): BookmarkTreeNode[] => {
+      if (!searchQuery) return nodes;
+
+      if (forceExpandAll) {
+        return handleForceExpandAll(nodes);
+      }
+
+      const filtered: BookmarkTreeNode[] = [];
+      nodes.forEach((node) => {
+        const nodeMatches = node.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+        if (node.children) {
+          const filteredChildren = filterFolders(node.children, searchQuery);
+
+          if (nodeMatches || filteredChildren.length > 0) {
+            let childrenToInclude;
+            if (nodeMatches) {
+              childrenToInclude = node.children.map((child) => {
+                if (
+                  child.children &&
+                  child.title.toLowerCase().includes(searchQuery.toLowerCase())
+                ) {
+                  return {
+                    ...child,
+                    title: child.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>'),
+                    isOpen: true,
+                  };
+                }
+                return child;
+              });
+            } else {
+              childrenToInclude = filteredChildren;
+            }
+
+            const shouldExpand =
+              !nodeMatches ||
+              (nodeMatches &&
+                node.children?.some(
+                  (child) =>
+                    child.children && child.title.toLowerCase().includes(searchQuery.toLowerCase()),
+                ));
+
+            filtered.push({
+              ...node,
+              title: nodeMatches
+                ? node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>')
+                : node.title,
+              children: childrenToInclude,
+              isOpen: shouldExpand,
+            });
+          }
+        } else if (nodeMatches) {
+          filtered.push({
+            ...node,
+            title: node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>'),
+          });
+        }
+      });
+      return filtered;
+    },
+    [forceExpandAll, handleForceExpandAll],
+  );
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      const filtered = filterFolders(folders, debouncedQuery);
+      setFilteredFolders(filtered);
+
+      const getExpandableFolderIds = (nodes: BookmarkTreeNode[]): string[] => {
+        return nodes.reduce((acc: string[], node) => {
+          if (node.children && (node.isOpen || forceExpandAll)) {
+            return [...acc, node.id, ...getExpandableFolderIds(node.children)];
+          }
+          return acc;
+        }, []);
+      };
+
+      onExpandedChange(getExpandableFolderIds(filtered));
+    } else {
+      setFilteredFolders(folders);
+      onExpandedChange([]);
+      setForceExpandAll(false);
+    }
+  }, [debouncedQuery, folders, filterFolders, forceExpandAll, onExpandedChange]);
+
+  return {
+    query,
+    setQuery,
+    debouncedQuery,
+    filteredFolders,
+    forceExpandAll,
+    setForceExpandAll,
+  };
+}
+</file>
+
+<file path="src/hooks/use-bookmark-operations.ts">
+/**
+ * Hook for bookmark CRUD operations with toast feedback.
+ */
+
+import { useCallback } from 'react';
+import {
+  createBookmark,
+  deleteBookmark,
+  getBookmark,
+  getCurrentTab,
+  moveBookmark,
+} from '@/services';
+import type { DragOperation } from '@/types';
+import { useToast } from './use-toast';
+
+interface UseBookmarkOperationsReturn {
+  /** Add the current tab as a bookmark to a folder */
+  addBookmarkToFolder: (folderId: string) => Promise<boolean>;
+  /** Create a new folder */
+  createFolder: (parentId: string, name: string) => Promise<boolean>;
+  /** Delete a bookmark */
+  removeBookmark: (bookmarkId: string) => Promise<boolean>;
+  /** Delete a folder and its contents */
+  removeFolder: (folderId: string) => Promise<boolean>;
+  /** Handle a drag-drop operation */
+  handleDrop: (operation: DragOperation) => Promise<boolean>;
+}
+
+export function useBookmarkOperations(onRefresh: () => Promise<void>): UseBookmarkOperationsReturn {
+  const { toast } = useToast();
+
+  const addBookmarkToFolder = useCallback(
+    async (folderId: string): Promise<boolean> => {
+      try {
+        const tab = await getCurrentTab();
+        const parentFolder = await getBookmark(folderId);
+        await createBookmark({
+          parentId: folderId,
+          title: tab.title || 'New Bookmark',
+          url: tab.url || '',
+        });
+        await onRefresh();
+
+        const truncatedTitle = tab.title
+          ? tab.title.length > 30
+            ? tab.title.slice(0, 30) + '...'
+            : tab.title
+          : 'New Bookmark';
+
+        toast({
+          title: '✓ Bookmark Added',
+          description: `"${truncatedTitle}" added to "${parentFolder.title}"`,
+          variant: 'success',
+        });
+        return true;
+      } catch (error) {
+        console.error('Failed to add bookmark:', error);
+        toast({
+          title: '× Error Adding Bookmark',
+          description: 'Failed to add bookmark. Please try again.',
+          variant: 'destructive',
+        });
+        return false;
+      }
+    },
+    [onRefresh, toast],
+  );
+
+  const createFolder = useCallback(
+    async (parentId: string, name: string): Promise<boolean> => {
+      try {
+        const parentFolder = await getBookmark(parentId);
+        await createBookmark({
+          parentId,
+          title: name.trim(),
+        });
+        await onRefresh();
+
+        toast({
+          title: '✓ Folder Created',
+          description: `New folder "${name.trim()}" added in "${parentFolder.title}"`,
+          variant: 'success',
+        });
+        return true;
+      } catch (error) {
+        console.error('Failed to create folder:', error);
+        toast({
+          title: '× Error Creating Folder',
+          description: 'Failed to create new folder. Please try again.',
+          variant: 'destructive',
+        });
+        return false;
+      }
+    },
+    [onRefresh, toast],
+  );
+
+  const removeBookmark = useCallback(
+    async (bookmarkId: string): Promise<boolean> => {
+      try {
+        const bookmark = await getBookmark(bookmarkId);
+        await deleteBookmark(bookmarkId);
+        await onRefresh();
+
+        const truncatedTitle = bookmark.title
+          ? bookmark.title.length > 30
+            ? bookmark.title.slice(0, 30) + '...'
+            : bookmark.title
+          : 'Bookmark';
+
+        toast({
+          title: '✓ Bookmark Deleted',
+          description: `"${truncatedTitle}" has been removed`,
+          variant: 'success',
+        });
+        return true;
+      } catch (error) {
+        console.error('Failed to delete bookmark:', error);
+        toast({
+          title: '× Error Deleting Bookmark',
+          description: 'Failed to delete bookmark. Please try again.',
+          variant: 'destructive',
+        });
+        return false;
+      }
+    },
+    [onRefresh, toast],
+  );
+
+  const removeFolder = useCallback(
+    async (folderId: string): Promise<boolean> => {
+      try {
+        const folder = await getBookmark(folderId);
+        await deleteBookmark(folderId);
+        await onRefresh();
+
+        const truncatedTitle = folder.title
+          ? folder.title.length > 30
+            ? folder.title.slice(0, 30) + '...'
+            : folder.title
+          : 'Folder';
+
+        toast({
+          title: '✓ Folder Deleted',
+          description: `"${truncatedTitle}" has been removed`,
+          variant: 'success',
+        });
+        return true;
+      } catch (error) {
+        console.error('Failed to delete folder:', error);
+        toast({
+          title: '× Error Deleting Folder',
+          description: 'Failed to delete folder. Please try again.',
+          variant: 'destructive',
+        });
+        return false;
+      }
+    },
+    [onRefresh, toast],
+  );
+
+  const handleDrop = useCallback(
+    async (operation: DragOperation): Promise<boolean> => {
+      try {
+        if (operation.type === 'folder-move' || operation.type === 'bookmark-move') {
+          await moveBookmark(operation.sourceId, {
+            parentId: operation.targetParentId,
+            index: operation.targetIndex,
+          });
+        } else if (operation.type === 'folder-reorder' || operation.type === 'bookmark-reorder') {
+          await moveBookmark(operation.sourceId, {
+            index: operation.targetIndex,
+          });
+        }
+
+        await onRefresh();
+
+        const sourceItem = await getBookmark(operation.sourceId);
+        const targetFolder = operation.targetParentId
+          ? await getBookmark(operation.targetParentId)
+          : null;
+
+        toast({
+          title: '✓ Item Moved',
+          description: operation.type.includes('move')
+            ? `"${sourceItem.title}" moved to "${targetFolder?.title || 'root'}"`
+            : `"${sourceItem.title}" reordered to position ${operation.targetIndex + 1}`,
+          variant: 'success',
+        });
+        return true;
+      } catch (error) {
+        console.error('Failed to move item:', error);
+        toast({
+          title: '× Error Moving Item',
+          description: 'Failed to move item. Please try again.',
+          variant: 'destructive',
+        });
+        return false;
+      }
+    },
+    [onRefresh, toast],
+  );
+
+  return {
+    addBookmarkToFolder,
+    createFolder,
+    removeBookmark,
+    removeFolder,
+    handleDrop,
+  };
+}
+</file>
+
+<file path="src/hooks/use-bookmarks.ts">
+/**
+ * Hook for managing bookmark tree state.
+ * Handles fetching, caching, and error/loading states.
+ */
+
+import { useCallback, useEffect, useState } from 'react';
+import { fetchBookmarkTree } from '@/services';
+import type { BookmarkTreeNode } from '@/types';
+
+interface UseBookmarksReturn {
+  /** The full bookmark tree */
+  folders: BookmarkTreeNode[];
+  /** Whether bookmarks are loading */
+  isLoading: boolean;
+  /** Error message if any */
+  error: string | null;
+  /** Refresh the bookmark tree */
+  refresh: () => Promise<void>;
+  /** Update folders directly (for filtered views) */
+  setFolders: React.Dispatch<React.SetStateAction<BookmarkTreeNode[]>>;
+}
+
+export function useBookmarks(): UseBookmarksReturn {
+  const [folders, setFolders] = useState<BookmarkTreeNode[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await fetchBookmarkTree();
+      setFolders(data);
+    } catch (err) {
+      console.error('Error fetching bookmarks:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch bookmarks');
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  return {
+    folders,
+    isLoading,
+    error,
+    refresh,
+    setFolders,
+  };
+}
+</file>
+
+<file path="src/hooks/use-folder-expansion.ts">
+/**
+ * Hook for managing folder expansion state.
+ * Handles expand/collapse of bookmark folders.
+ */
+
+import { useCallback, useState } from 'react';
+import type { BookmarkTreeNode } from '@/types';
+
+interface UseFolderExpansionReturn {
+  /** Currently expanded folder IDs */
+  expandedFolders: string[];
+  /** Set expanded folders */
+  setExpandedFolders: React.Dispatch<React.SetStateAction<string[]>>;
+  /** Get all child folder IDs recursively */
+  getAllChildFolderIds: (node: BookmarkTreeNode) => string[];
+  /** Get all folder IDs from a tree */
+  getAllFolderIds: (nodes: BookmarkTreeNode[]) => string[];
+  /** Toggle expand/collapse all children of a folder */
+  toggleExpandAllChildren: (
+    node: BookmarkTreeNode,
+    folders: BookmarkTreeNode[],
+    e: React.MouseEvent,
+  ) => void;
+  /** Check if all children are expanded */
+  areAllChildrenExpanded: (node: BookmarkTreeNode, folders: BookmarkTreeNode[]) => boolean;
+}
+
+export function useFolderExpansion(): UseFolderExpansionReturn {
+  const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
+
+  const getAllChildFolderIds = useCallback((node: BookmarkTreeNode): string[] => {
+    if (!node.children) return [];
+
+    return node.children.reduce((acc: string[], child) => {
+      if (child.children) {
+        return [...acc, child.id, ...getAllChildFolderIds(child)];
+      }
+      return acc;
+    }, []);
+  }, []);
+
+  const getAllFolderIds = useCallback((nodes: BookmarkTreeNode[]): string[] => {
+    return nodes.reduce((acc: string[], node) => {
+      if (node.children) {
+        return [...acc, node.id, ...getAllFolderIds(node.children)];
+      }
+      return acc;
+    }, []);
+  }, []);
+
+  const findNodeInTree = useCallback(
+    (nodes: BookmarkTreeNode[], targetId: string): BookmarkTreeNode | null => {
+      for (const node of nodes) {
+        if (node.id === targetId) return node;
+        if (node.children) {
+          const found = findNodeInTree(node.children, targetId);
+          if (found) return found;
+        }
+      }
+      return null;
+    },
+    [],
+  );
+
+  const toggleExpandAllChildren = useCallback(
+    (node: BookmarkTreeNode, folders: BookmarkTreeNode[], e: React.MouseEvent) => {
+      e.stopPropagation();
+
+      const originalNode = findNodeInTree(folders, node.id);
+      if (!originalNode) return;
+
+      const childFolderIds = getAllChildFolderIds(originalNode);
+      const isCurrentlyExpanded = childFolderIds.every((id) => expandedFolders.includes(id));
+
+      if (isCurrentlyExpanded) {
+        setExpandedFolders((prev) => prev.filter((id) => !childFolderIds.includes(id)));
+      } else {
+        setExpandedFolders((prev) => [...new Set([...prev, ...childFolderIds])]);
+      }
+    },
+    [expandedFolders, getAllChildFolderIds, findNodeInTree],
+  );
+
+  const areAllChildrenExpanded = useCallback(
+    (node: BookmarkTreeNode, folders: BookmarkTreeNode[]): boolean => {
+      const originalNode = findNodeInTree(folders, node.id);
+      if (!originalNode) return false;
+
+      const childFolderIds = getAllChildFolderIds(originalNode);
+      return (
+        childFolderIds.length > 0 && childFolderIds.every((id) => expandedFolders.includes(id))
+      );
+    },
+    [expandedFolders, getAllChildFolderIds, findNodeInTree],
+  );
+
+  return {
+    expandedFolders,
+    setExpandedFolders,
+    getAllChildFolderIds,
+    getAllFolderIds,
+    toggleExpandAllChildren,
+    areAllChildrenExpanded,
+  };
+}
+</file>
+
+<file path="src/services/bookmarks.ts">
+/**
+ * Chrome Bookmarks API service layer.
+ * Centralizes all Chrome bookmarks API interactions.
+ */
+
+import type { BookmarkTreeNode } from '@/types';
+
+/**
+ * Gets the favicon URL for a given page URL using Chrome's favicon API.
+ * @param pageUrl - The URL of the page to get the favicon for
+ * @param size - The size of the favicon (default: 16)
+ */
+export function getFaviconUrl(pageUrl: string, size = 16): string {
+  const url = new URL(chrome.runtime.getURL('/_favicon/'));
+  url.searchParams.set('pageUrl', pageUrl);
+  url.searchParams.set('size', size.toString());
+  return url.toString();
+}
+
+/**
+ * Converts a Chrome bookmark node to our BookmarkTreeNode type.
+ */
+function processNode(node: chrome.bookmarks.BookmarkTreeNode): BookmarkTreeNode {
+  return {
+    id: node.id,
+    parentId: node.parentId,
+    index: node.index,
+    title: node.title,
+    url: node.url,
+    dateAdded: node.dateAdded,
+    dateGroupModified: node.dateGroupModified,
+    children: node.children ? node.children.map(processNode) : undefined,
+    isOpen: false,
+  };
+}
+
+/**
+ * Fetches the entire bookmark tree.
+ * @returns Promise resolving to the bookmark tree
+ */
+export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.getTree((tree) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(tree.map(processNode));
+    });
+  });
+}
+
+/**
+ * Gets a single bookmark by ID.
+ * @param id - The bookmark ID
+ */
+export async function getBookmark(id: string): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.get(id, (results) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(results[0]);
+    });
+  });
+}
+
+/**
+ * Creates a new bookmark or folder.
+ * @param details - The bookmark creation details
+ */
+export async function createBookmark(details: {
+  parentId?: string;
+  index?: number;
+  title?: string;
+  url?: string;
+}): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.create(details, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(result);
+    });
+  });
+}
+
+/**
+ * Moves a bookmark to a new location.
+ * @param id - The bookmark ID
+ * @param destination - The new parent folder ID and/or index
+ */
+export async function moveBookmark(
+  id: string,
+  destination: { parentId?: string; index?: number },
+): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.move(id, destination, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(result);
+    });
+  });
+}
+
+/**
+ * Deletes a bookmark or folder (and all its contents).
+ * @param id - The bookmark/folder ID
+ */
+export async function deleteBookmark(id: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.removeTree(id, () => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+/**
+ * Gets the current active tab information.
+ */
+export async function getCurrentTab(): Promise<chrome.tabs.Tab> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.tabs) {
+      reject(new Error('Chrome tabs API not available.'));
+      return;
+    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      if (tabs.length === 0) {
+        reject(new Error('No active tab found.'));
+        return;
+      }
+      resolve(tabs[0]);
+    });
+  });
+}
+
+/**
+ * Truncates a string to a specified length.
+ * @param text - The text to truncate
+ * @param length - Maximum length (default: 50)
+ */
+export function truncate(text?: string, length = 50): string {
+  if (!text) return '';
+  return text.length > length ? text.slice(0, length) + '...' : text;
+}
+
+/**
+ * Formats a timestamp to a locale string.
+ * @param timestamp - The timestamp in milliseconds
+ */
+export function formatDate(timestamp?: number): string {
+  if (!timestamp) return '';
+  return new Date(timestamp).toLocaleString();
+}
+</file>
+
+<file path="src/services/index.ts">
+/**
+ * Services barrel export.
+ */
+
+export * from './bookmarks';
+</file>
+
+<file path="src/stores/bookmark-store.ts">
+/**
+ * Zustand store for bookmark state management.
+ * Centralizes all bookmark-related state and actions.
+ */
+
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
+import {
+  createBookmark,
+  deleteBookmark,
+  fetchBookmarkTree,
+  getBookmark,
+  getCurrentTab,
+  moveBookmark,
+} from '@/services';
+import type { BookmarkTreeNode, DragOperation } from '@/types';
+
+interface BookmarkState {
+  // State
+  folders: BookmarkTreeNode[];
+  filteredFolders: BookmarkTreeNode[];
+  isLoading: boolean;
+  error: string | null;
+  query: string;
+  debouncedQuery: string;
+  expandedFolders: string[];
+  forceExpandAll: boolean;
+  draggedItem: BookmarkTreeNode | null;
+  creatingFolderId: string | null;
+  newFolderName: string;
+
+  // Actions
+  fetchFolders: () => Promise<void>;
+  setQuery: (query: string) => void;
+  setDebouncedQuery: (query: string) => void;
+  setExpandedFolders: (folders: string[] | ((prev: string[]) => string[])) => void;
+  setForceExpandAll: (expand: boolean) => void;
+  setDraggedItem: (item: BookmarkTreeNode | null) => void;
+  setCreatingFolderId: (id: string | null) => void;
+  setNewFolderName: (name: string) => void;
+
+  // Bookmark operations
+  addBookmarkToFolder: (folderId: string) => Promise<{ success: boolean; message: string }>;
+  createFolder: (parentId: string, name: string) => Promise<{ success: boolean; message: string }>;
+  removeBookmark: (bookmarkId: string) => Promise<{ success: boolean; message: string }>;
+  removeFolder: (folderId: string) => Promise<{ success: boolean; message: string }>;
+  handleDrop: (operation: DragOperation) => Promise<{ success: boolean; message: string }>;
+
+  // Folder expansion helpers
+  getAllChildFolderIds: (node: BookmarkTreeNode) => string[];
+  toggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
+  areAllChildrenExpanded: (node: BookmarkTreeNode) => boolean;
+
+  // Filter helpers
+  filterFolders: (nodes: BookmarkTreeNode[], searchQuery: string) => BookmarkTreeNode[];
+  applyFilter: () => void;
+}
+
+export const useBookmarkStore = create<BookmarkState>()(
+  devtools(
+    (set, get) => ({
+      // Initial state
+      folders: [],
+      filteredFolders: [],
+      isLoading: true,
+      error: null,
+      query: '',
+      debouncedQuery: '',
+      expandedFolders: [],
+      forceExpandAll: false,
+      draggedItem: null,
+      creatingFolderId: null,
+      newFolderName: '',
+
+      // Fetch folders from Chrome API
+      fetchFolders: async () => {
+        set({ isLoading: true, error: null });
+        try {
+          const data = await fetchBookmarkTree();
+          set({ folders: data, filteredFolders: data, isLoading: false });
+        } catch (err) {
+          set({
+            error: err instanceof Error ? err.message : 'Failed to fetch bookmarks',
+            isLoading: false,
+          });
+        }
+      },
+
+      // Setters
+      setQuery: (query) => set({ query }),
+      setDebouncedQuery: (debouncedQuery) => {
+        set({ debouncedQuery });
+        get().applyFilter();
+      },
+      setExpandedFolders: (folders) => {
+        if (typeof folders === 'function') {
+          set((state) => ({ expandedFolders: folders(state.expandedFolders) }));
+        } else {
+          set({ expandedFolders: folders });
+        }
+      },
+      setForceExpandAll: (forceExpandAll) => {
+        set({ forceExpandAll });
+        get().applyFilter();
+      },
+      setDraggedItem: (draggedItem) => set({ draggedItem }),
+      setCreatingFolderId: (creatingFolderId) => set({ creatingFolderId }),
+      setNewFolderName: (newFolderName) => set({ newFolderName }),
+
+      // Bookmark operations
+      addBookmarkToFolder: async (folderId) => {
+        try {
+          const tab = await getCurrentTab();
+          const parentFolder = await getBookmark(folderId);
+          await createBookmark({
+            parentId: folderId,
+            title: tab.title || 'New Bookmark',
+            url: tab.url || '',
+          });
+          await get().fetchFolders();
+
+          const truncatedTitle = tab.title
+            ? tab.title.length > 30
+              ? tab.title.slice(0, 30) + '...'
+              : tab.title
+            : 'New Bookmark';
+
+          return {
+            success: true,
+            message: `"${truncatedTitle}" added to "${parentFolder.title}"`,
+          };
+        } catch (error) {
+          console.error('Failed to add bookmark:', error);
+          return { success: false, message: 'Failed to add bookmark. Please try again.' };
+        }
+      },
+
+      createFolder: async (parentId, name) => {
+        try {
+          const parentFolder = await getBookmark(parentId);
+          await createBookmark({ parentId, title: name.trim() });
+          await get().fetchFolders();
+          return {
+            success: true,
+            message: `New folder "${name.trim()}" added in "${parentFolder.title}"`,
+          };
+        } catch (error) {
+          console.error('Failed to create folder:', error);
+          return { success: false, message: 'Failed to create new folder. Please try again.' };
+        }
+      },
+
+      removeBookmark: async (bookmarkId) => {
+        try {
+          const bookmark = await getBookmark(bookmarkId);
+          await deleteBookmark(bookmarkId);
+          await get().fetchFolders();
+
+          const truncatedTitle = bookmark.title
+            ? bookmark.title.length > 30
+              ? bookmark.title.slice(0, 30) + '...'
+              : bookmark.title
+            : 'Bookmark';
+
+          return { success: true, message: `"${truncatedTitle}" has been removed` };
+        } catch (error) {
+          console.error('Failed to delete bookmark:', error);
+          return { success: false, message: 'Failed to delete bookmark. Please try again.' };
+        }
+      },
+
+      removeFolder: async (folderId) => {
+        try {
+          const folder = await getBookmark(folderId);
+          await deleteBookmark(folderId);
+          await get().fetchFolders();
+
+          const truncatedTitle = folder.title
+            ? folder.title.length > 30
+              ? folder.title.slice(0, 30) + '...'
+              : folder.title
+            : 'Folder';
+
+          return { success: true, message: `"${truncatedTitle}" has been removed` };
+        } catch (error) {
+          console.error('Failed to delete folder:', error);
+          return { success: false, message: 'Failed to delete folder. Please try again.' };
+        }
+      },
+
+      handleDrop: async (operation) => {
+        try {
+          if (operation.type === 'folder-move' || operation.type === 'bookmark-move') {
+            await moveBookmark(operation.sourceId, {
+              parentId: operation.targetParentId,
+              index: operation.targetIndex,
+            });
+          } else {
+            await moveBookmark(operation.sourceId, { index: operation.targetIndex });
+          }
+
+          await get().fetchFolders();
+
+          const sourceItem = await getBookmark(operation.sourceId);
+          const targetFolder = operation.targetParentId
+            ? await getBookmark(operation.targetParentId)
+            : null;
+
+          const message = operation.type.includes('move')
+            ? `"${sourceItem.title}" moved to "${targetFolder?.title || 'root'}"`
+            : `"${sourceItem.title}" reordered to position ${operation.targetIndex + 1}`;
+
+          return { success: true, message };
+        } catch (error) {
+          console.error('Failed to move item:', error);
+          return { success: false, message: 'Failed to move item. Please try again.' };
+        }
+      },
+
+      // Folder expansion helpers
+      getAllChildFolderIds: (node) => {
+        if (!node.children) return [];
+        return node.children.reduce((acc: string[], child) => {
+          if (child.children) {
+            return [...acc, child.id, ...get().getAllChildFolderIds(child)];
+          }
+          return acc;
+        }, []);
+      },
+
+      toggleExpandAllChildren: (node, e) => {
+        e.stopPropagation();
+        const { folders, expandedFolders, getAllChildFolderIds, setExpandedFolders } = get();
+
+        const findNode = (nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null => {
+          for (const n of nodes) {
+            if (n.id === id) return n;
+            if (n.children) {
+              const found = findNode(n.children, id);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+
+        const originalNode = findNode(folders, node.id);
+        if (!originalNode) return;
+
+        const childFolderIds = getAllChildFolderIds(originalNode);
+        const isExpanded = childFolderIds.every((id) => expandedFolders.includes(id));
+
+        if (isExpanded) {
+          setExpandedFolders(expandedFolders.filter((id) => !childFolderIds.includes(id)));
+        } else {
+          setExpandedFolders([...new Set([...expandedFolders, ...childFolderIds])]);
+        }
+      },
+
+      areAllChildrenExpanded: (node) => {
+        const { folders, expandedFolders, getAllChildFolderIds } = get();
+
+        const findNode = (nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null => {
+          for (const n of nodes) {
+            if (n.id === id) return n;
+            if (n.children) {
+              const found = findNode(n.children, id);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+
+        const originalNode = findNode(folders, node.id);
+        if (!originalNode) return false;
+
+        const childFolderIds = getAllChildFolderIds(originalNode);
+        return (
+          childFolderIds.length > 0 && childFolderIds.every((id) => expandedFolders.includes(id))
+        );
+      },
+
+      // Filter helpers
+      filterFolders: (nodes, searchQuery) => {
+        const { forceExpandAll } = get();
+
+        if (!searchQuery) return nodes;
+
+        if (forceExpandAll) {
+          const deepCopy = (node: BookmarkTreeNode): BookmarkTreeNode => ({
+            ...node,
+            children: node.children ? node.children.map(deepCopy) : undefined,
+            isOpen: true,
+          });
+          return nodes.map(deepCopy);
+        }
+
+        const filtered: BookmarkTreeNode[] = [];
+        for (const node of nodes) {
+          const nodeMatches = node.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+          if (node.children) {
+            const filteredChildren = get().filterFolders(node.children, searchQuery);
+
+            if (nodeMatches || filteredChildren.length > 0) {
+              const childrenToInclude = nodeMatches
+                ? node.children.map((child) => {
+                    if (
+                      child.children &&
+                      child.title.toLowerCase().includes(searchQuery.toLowerCase())
+                    ) {
+                      return {
+                        ...child,
+                        title: child.title.replace(
+                          new RegExp(`(${searchQuery})`, 'gi'),
+                          '<b>$1</b>',
+                        ),
+                        isOpen: true,
+                      };
+                    }
+                    return child;
+                  })
+                : filteredChildren;
+
+              const shouldExpand =
+                !nodeMatches ||
+                node.children?.some(
+                  (child) =>
+                    child.children && child.title.toLowerCase().includes(searchQuery.toLowerCase()),
+                );
+
+              filtered.push({
+                ...node,
+                title: nodeMatches
+                  ? node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>')
+                  : node.title,
+                children: childrenToInclude,
+                isOpen: shouldExpand,
+              });
+            }
+          } else if (nodeMatches) {
+            filtered.push({
+              ...node,
+              title: node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>'),
+            });
+          }
+        }
+        return filtered;
+      },
+
+      applyFilter: () => {
+        const { folders, debouncedQuery, filterFolders, forceExpandAll } = get();
+
+        if (debouncedQuery) {
+          const filtered = filterFolders(folders, debouncedQuery);
+          set({ filteredFolders: filtered });
+
+          const getExpandableFolderIds = (nodes: BookmarkTreeNode[]): string[] => {
+            return nodes.reduce((acc: string[], node) => {
+              if (node.children && (node.isOpen || forceExpandAll)) {
+                return [...acc, node.id, ...getExpandableFolderIds(node.children)];
+              }
+              return acc;
+            }, []);
+          };
+
+          set({ expandedFolders: getExpandableFolderIds(filtered) });
+        } else {
+          set({ filteredFolders: folders, expandedFolders: [], forceExpandAll: false });
+        }
+      },
+    }),
+    { name: 'bookmark-store' },
+  ),
+);
+</file>
+
+<file path="src/stores/index.ts">
+/**
+ * Stores barrel export.
+ */
+
+export { useBookmarkStore } from './bookmark-store';
+</file>
+
+<file path="src/styles/popup.css">
+/* Popup page styles for drag and drop */
+
+.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+  background-color: hsl(var(--accent));
+  border-radius: 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.drop-target {
+  background-color: hsl(var(--accent));
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Drop indicator styles */
+.drop-indicator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgb(37, 99, 235);
+  pointer-events: none;
+  z-index: 1000;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 1px white;
+}
+
+.drop-indicator::before,
+.drop-indicator::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: rgb(37, 99, 235);
+  border-radius: 50%;
+  top: -2px;
+}
+
+.drop-indicator::before {
+  left: -1px;
+}
+
+.drop-indicator::after {
+  right: -1px;
+}
+
+/* Accordion styles */
+.accordion-content {
+  overflow: hidden !important;
+  position: relative;
+}
+
+.accordion-item {
+  overflow: visible !important;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.accordion-content .accordion-content {
+  overflow: hidden;
+}
+
+.accordion-container {
+  max-height: 100%;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Bookmark content area */
+.bookmark-content {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Hover effects */
+.bookmark-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.bookmark-item:hover {
+  background-color: hsl(var(--accent));
+}
+
+.folder-item {
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.folder-item:hover {
+  background-color: hsl(var(--accent));
+}
+
+/* Action button styles */
+.action-button {
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.bookmark-item:hover .action-button,
+.folder-item:hover .action-button {
+  opacity: 1;
+}
+
+.action-button:hover {
+  transform: scale(1.1);
+}
+
+/* Search input styles */
+.search-input {
+  transition: all 0.2s ease;
+}
+
+.search-input:focus {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+</file>
+
+<file path="src/types/bookmark.ts">
+/**
+ * Centralized type definitions for bookmark-related types.
+ * Used across PopupPage, BookmarksPage, and other components.
+ */
+
+/**
+ * Extended bookmark tree node with additional UI state properties.
+ * Extends the Chrome bookmarks API type with UI-specific fields.
+ */
+export interface BookmarkTreeNode {
+  id: string;
+  parentId?: string;
+  index?: number;
+  title: string;
+  url?: string;
+  dateAdded?: number;
+  dateGroupModified?: number;
+  children?: BookmarkTreeNode[];
+  /** Whether the folder is expanded in the UI */
+  isOpen?: boolean;
+  /** Whether this is a temporary node (e.g., new folder being created) */
+  isTemporary?: boolean;
+}
+
+/**
+ * Types of drag-and-drop operations.
+ */
+export type DragOperationType =
+  | 'folder-move'
+  | 'folder-reorder'
+  | 'bookmark-move'
+  | 'bookmark-reorder';
+
+/**
+ * Represents a drag-and-drop operation for bookmarks/folders.
+ */
+export interface DragOperation {
+  type: DragOperationType;
+  sourceId: string;
+  sourceParentId: string;
+  sourceIndex: number;
+  targetId: string;
+  targetParentId: string;
+  targetIndex: number;
+}
+
+/**
+ * Data attached to draggable elements.
+ */
+export interface DragData {
+  type: 'folder' | 'bookmark';
+  node: BookmarkTreeNode;
+  instanceId: symbol;
+}
+
+/**
+ * Bookmark item for table view (used in BookmarksPage).
+ */
+export enum ItemTypeEnum {
+  Folder = 'folder',
+  Link = 'link',
+}
+
+export interface BookmarkTableItem {
+  type: ItemTypeEnum;
+  id: string;
+  parentId: string;
+  index?: number;
+  title: string;
+  url?: string;
+  dateAdded?: string;
+  dateGroupModified?: string;
+  unmodifiable?: 'managed';
+}
+</file>
+
+<file path="src/types/index.ts">
+/**
+ * Types barrel export.
+ * Import types from this file for cleaner imports.
+ */
+
+export * from './bookmark';
 </file>
 
 <file path="src/App.css">
@@ -2780,1307 +4807,6 @@ export default function BookmarksPage() {
     </div>
   );
 }
-</file>
-
-<file path="src/components/page/PopupPage.tsx">
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine';
-import {
-  draggable,
-  dropTargetForElements,
-  monitorForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import { getReorderDestinationIndex } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/get-reorder-destination-index';
-import * as liveRegion from '@atlaskit/pragmatic-drag-and-drop-live-region';
-import {
-  BookmarkPlus,
-  ChevronDown,
-  ChevronsDown,
-  ChevronsUp,
-  ChevronUp,
-  Folder,
-  FolderPlus,
-  Trash2,
-} from 'lucide-react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Toaster } from '@/components/ui/toaster';
-import { useDebounce } from '@/hooks/use-debounce';
-import { useToast } from '@/hooks/use-toast';
-
-// Add styles for drag and drop
-const styles = `
-    .dragging {
-        opacity: 0.5;
-        cursor: grabbing;
-        background-color: hsl(var(--accent));
-        border-radius: 0.5rem;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    }
-    .drop-target {
-        background-color: hsl(var(--accent));
-        border-radius: 0.5rem;
-        transition: background-color 0.2s ease;
-    }
-    /* Drop indicator styles */
-    .drop-indicator {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: rgb(37, 99, 235);
-        pointer-events: none;
-        z-index: 1000;
-        transition: all 0.2s ease;
-        box-shadow: 0 0 0 1px white;
-    }
-    .drop-indicator::before, .drop-indicator::after {
-        content: '';
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        background-color: rgb(37, 99, 235);
-        border-radius: 50%;
-        top: -2px;
-    }
-    .drop-indicator::before {
-        left: -1px;
-    }
-    .drop-indicator::after {
-        right: -1px;
-    }
-    /* Fix for scrolling issues */
-    .accordion-content {
-        overflow: hidden !important;
-        position: relative;
-    }
-    .accordion-item {
-        overflow: visible !important;
-        transition: all 0.2s ease;
-        position: relative;
-    }
-    /* Ensure the main container allows scrolling */
-    .accordion-container {
-        max-height: 100%;
-        overflow-y: auto;
-        position: relative;
-    }
-    /* Fix for nested accordion items */
-    .accordion-content .accordion-content {
-        overflow: hidden;
-    }
-    /* Fix for the main content area */
-    .bookmark-content {
-        height: 100%;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-    /* Position relative for drop indicators */
-    .accordion-item {
-        position: relative;
-    }
-    /* Hover effects */
-    .bookmark-item {
-        transition: all 0.2s ease;
-        position: relative;
-    }
-    .bookmark-item:hover {
-        background-color: hsl(var(--accent));
-    }
-    /* Folder styles */
-    .folder-item {
-        transition: all 0.2s ease;
-        position: relative;
-    }
-    .folder-item:hover {
-        background-color: hsl(var(--accent));
-    }
-    /* Button styles */
-    .action-button {
-        opacity: 0;
-        transition: all 0.2s ease;
-    }
-    .bookmark-item:hover .action-button,
-    .folder-item:hover .action-button {
-        opacity: 1;
-    }
-    .action-button:hover {
-        transform: scale(1.1);
-    }
-    /* Search input styles */
-    .search-input {
-        transition: all 0.2s ease;
-    }
-    .search-input:focus {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    }
-`;
-
-interface BookmarkTreeNode {
-  id: string;
-  parentId?: string;
-  index?: number;
-  title: string;
-  url?: string;
-  dateAdded?: number;
-  dateGroupModified?: number;
-  children?: BookmarkTreeNode[];
-  isOpen?: boolean;
-  isTemporary?: boolean;
-}
-
-type DragOperation = {
-  type: 'folder-move' | 'folder-reorder' | 'bookmark-move' | 'bookmark-reorder';
-  sourceId: string;
-  sourceParentId: string;
-  sourceIndex: number;
-  targetId: string;
-  targetParentId: string;
-  targetIndex: number;
-};
-
-function PopupPage() {
-  const [query, setQuery] = useState('');
-  const [folders, setFolders] = useState<BookmarkTreeNode[]>([]);
-  const [filteredFolders, setFilteredFolders] = useState<BookmarkTreeNode[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [creatingFolderId, setCreatingFolderId] = useState<string | null>(null);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [expandedFolders, setExpandedFolders] = useState<string[]>([]);
-  const [forceExpandAll, setForceExpandAll] = useState(false);
-  const debouncedQuery = useDebounce(query, 300);
-  const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [draggedItem, setDraggedItem] = useState<BookmarkTreeNode | null>(null);
-  const [instanceId] = useState(() => Symbol('instance-id'));
-
-  const fetchFolders = useCallback(async (): Promise<BookmarkTreeNode[]> => {
-    return new Promise((resolve, reject) => {
-      if (!chrome || !chrome.bookmarks) {
-        reject('Chrome bookmarks API not available.');
-      }
-      chrome.bookmarks.getTree((tree) => {
-        const processNode = (node: chrome.bookmarks.BookmarkTreeNode): BookmarkTreeNode => {
-          return {
-            id: node.id,
-            parentId: node.parentId,
-            index: node.index,
-            title: node.title,
-            url: node.url,
-            dateAdded: node.dateAdded,
-            dateGroupModified: node.dateGroupModified,
-            children: node.children ? node.children.map(processNode) : undefined,
-            isOpen: false,
-          };
-        };
-        resolve(tree.map(processNode));
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    setIsLoading(true);
-    setError(null);
-    fetchFolders()
-      .then((data) => {
-        setFolders(data);
-        setFilteredFolders(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching bookmarks:', error);
-        setError(error.toString());
-        setIsLoading(false);
-      });
-  }, [fetchFolders]);
-
-  // Function to get all folder IDs recursively
-  const getAllChildFolderIds = useCallback((node: BookmarkTreeNode): string[] => {
-    if (!node.children) return [];
-
-    return node.children.reduce((acc: string[], child) => {
-      if (child.children) {
-        return [...acc, child.id, ...getAllChildFolderIds(child)];
-      }
-      return acc;
-    }, []);
-  }, []);
-
-  // Function to expand/collapse all children of a folder
-  const toggleExpandAllChildren = useCallback(
-    (node: BookmarkTreeNode, e: React.MouseEvent) => {
-      e.stopPropagation();
-
-      // Get all child folder IDs from the original folders tree, not the filtered one
-      // This ensures we get all folders regardless of search matching
-      const findNodeInOriginalTree = (
-        nodes: BookmarkTreeNode[],
-        targetId: string,
-      ): BookmarkTreeNode | null => {
-        for (const node of nodes) {
-          if (node.id === targetId) return node;
-          if (node.children) {
-            const found = findNodeInOriginalTree(node.children, targetId);
-            if (found) return found;
-          }
-        }
-        return null;
-      };
-
-      const originalNode = findNodeInOriginalTree(folders, node.id);
-      if (!originalNode) return;
-
-      const childFolderIds = getAllChildFolderIds(originalNode);
-      const isCurrentlyExpanded = childFolderIds.every((id) => expandedFolders.includes(id));
-
-      if (isCurrentlyExpanded) {
-        // Collapse all children
-        setExpandedFolders((prev) => prev.filter((id) => !childFolderIds.includes(id)));
-      } else {
-        // Expand all children
-        setExpandedFolders((prev) => [...new Set([...prev, ...childFolderIds])]);
-      }
-    },
-    [expandedFolders, getAllChildFolderIds, folders],
-  );
-
-  // Function to get all folder IDs from a tree
-  const getAllFolderIds = useCallback((nodes: BookmarkTreeNode[]): string[] => {
-    return nodes.reduce((acc: string[], node) => {
-      if (node.children) {
-        return [...acc, node.id, ...getAllFolderIds(node.children)];
-      }
-      return acc;
-    }, []);
-  }, []);
-
-  // Function to handle forceExpandAll case
-  const handleForceExpandAll = useCallback((nodes: BookmarkTreeNode[]): BookmarkTreeNode[] => {
-    // Create a deep copy of the nodes to avoid modifying the original
-    const deepCopy = (node: BookmarkTreeNode): BookmarkTreeNode => {
-      return {
-        ...node,
-        children: node.children ? node.children.map(deepCopy) : undefined,
-        isOpen: true, // Force all folders to be open
-      };
-    };
-
-    return nodes.map(deepCopy);
-  }, []);
-
-  const filterFolders = useCallback(
-    (nodes: BookmarkTreeNode[], query: string): BookmarkTreeNode[] => {
-      if (!query) return nodes;
-
-      // If forceExpandAll is true, we want to include all content regardless of matching
-      if (forceExpandAll) {
-        // Use the handleForceExpandAll function to ensure all content is included and expanded
-        return handleForceExpandAll(nodes);
-      }
-
-      // Normal filtering behavior when forceExpandAll is false
-      const filtered: BookmarkTreeNode[] = [];
-      nodes.forEach((node) => {
-        // Check if current node matches the query
-        const nodeMatches = node.title.toLowerCase().includes(query.toLowerCase());
-
-        // If it's a folder, check its children
-        if (node.children) {
-          const filteredChildren = filterFolders(node.children, query);
-
-          // If either the current node matches or has matching children, include it
-          if (nodeMatches || filteredChildren.length > 0) {
-            // If the current node matches, include all children but make sure to bold matching child folders
-            let childrenToInclude;
-            if (nodeMatches) {
-              // When parent matches, include all children but apply bold formatting to matching ones
-              childrenToInclude = node.children.map((child) => {
-                if (child.children && child.title.toLowerCase().includes(query.toLowerCase())) {
-                  // This is a child folder that matches the query
-                  return {
-                    ...child,
-                    title: child.title.replace(new RegExp(`(${query})`, 'gi'), '<b>$1</b>'),
-                    isOpen: true,
-                  };
-                }
-                return child;
-              });
-            } else {
-              // When parent doesn't match, only include matching children
-              childrenToInclude = filteredChildren;
-            }
-
-            // Determine if we should expand this folder
-            // Expand if:
-            // 1. The current folder doesn't match but has matching children, OR
-            // 2. Both the current folder and a child folder match
-            const shouldExpand =
-              !nodeMatches ||
-              (nodeMatches &&
-                node.children?.some(
-                  (child) =>
-                    child.children && child.title.toLowerCase().includes(query.toLowerCase()),
-                ));
-
-            filtered.push({
-              ...node,
-              title: nodeMatches
-                ? node.title.replace(new RegExp(`(${query})`, 'gi'), '<b>$1</b>')
-                : node.title,
-              children: childrenToInclude,
-              isOpen: shouldExpand,
-            });
-          }
-        } else if (nodeMatches) {
-          // If it's a bookmark and matches, include it
-          filtered.push({
-            ...node,
-            title: node.title.replace(new RegExp(`(${query})`, 'gi'), '<b>$1</b>'),
-          });
-        }
-      });
-      return filtered;
-    },
-    [forceExpandAll, handleForceExpandAll],
-  );
-
-  useEffect(() => {
-    if (debouncedQuery) {
-      const filtered = filterFolders(folders, debouncedQuery);
-      setFilteredFolders(filtered);
-
-      // Get folder IDs that should be expanded
-      const getExpandableFolderIds = (nodes: BookmarkTreeNode[]): string[] => {
-        return nodes.reduce((acc: string[], node) => {
-          // Include folders that should be expanded based on the isOpen property
-          if (node.children && (node.isOpen || forceExpandAll)) {
-            return [...acc, node.id, ...getExpandableFolderIds(node.children)];
-          }
-          return acc;
-        }, []);
-      };
-
-      setExpandedFolders(getExpandableFolderIds(filtered));
-    } else {
-      setFilteredFolders(folders);
-      setExpandedFolders([]); // Reset expanded folders when search is cleared
-      setForceExpandAll(false); // Reset force expand when search is cleared
-    }
-  }, [debouncedQuery, folders, filterFolders, forceExpandAll]);
-
-  // Add temporary folder to the tree
-  const addTemporaryFolder = useCallback(
-    (nodes: BookmarkTreeNode[], parentId: string): BookmarkTreeNode[] => {
-      return nodes.map((node) => {
-        if (node.id === parentId) {
-          return {
-            ...node,
-            children: [
-              {
-                id: 'temp-folder',
-                parentId: node.id,
-                title: 'New Folder',
-                isOpen: false,
-                isTemporary: true,
-                children: [], // Add empty children array to ensure it's treated as a folder
-              },
-              ...(node.children || []),
-            ],
-          };
-        }
-        if (node.children) {
-          return {
-            ...node,
-            children: addTemporaryFolder(node.children, parentId),
-          };
-        }
-        return node;
-      });
-    },
-    [],
-  );
-
-  const handleAddFolder = async (folderId: string) => {
-    setCreatingFolderId(folderId);
-    setNewFolderName('');
-    // Add the parent folder to expanded folders
-    setExpandedFolders((prev) => [...prev, folderId]);
-    // Add temporary folder to the tree
-    setFilteredFolders((prev) => addTemporaryFolder(prev, folderId));
-  };
-
-  const handleCreateFolder = async () => {
-    if (!creatingFolderId || !newFolderName.trim()) {
-      handleCancelCreateFolder();
-      return;
-    }
-
-    try {
-      const parentFolder = await chrome.bookmarks.get(creatingFolderId);
-      await chrome.bookmarks.create({
-        parentId: creatingFolderId,
-        title: newFolderName.trim(),
-      });
-      // Refresh folders after adding
-      const updatedFolders = await fetchFolders();
-      setFolders(updatedFolders);
-      setFilteredFolders(updatedFolders);
-      toast({
-        title: '✓ Folder Created',
-        description: `New folder "${newFolderName.trim()}" added in "${parentFolder[0].title}"`,
-        variant: 'success',
-      });
-      setCreatingFolderId(null);
-      setNewFolderName('');
-    } catch (error) {
-      console.error('Failed to add folder:', error);
-      setError('Failed to add folder');
-      toast({
-        title: '× Error Creating Folder',
-        description: 'Failed to create new folder. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleCancelCreateFolder = () => {
-    setCreatingFolderId(null);
-    setNewFolderName('');
-    // Remove temporary folder from the tree
-    setFilteredFolders((prev) => {
-      const removeTempFolder = (nodes: BookmarkTreeNode[]): BookmarkTreeNode[] => {
-        return nodes.filter((node) => {
-          if (node.id === 'temp-folder') {
-            return false;
-          }
-          if (node.children) {
-            node.children = removeTempFolder(node.children);
-          }
-          return true;
-        });
-      };
-      return removeTempFolder(prev);
-    });
-  };
-
-  const handleAddBookmark = async (folderId: string) => {
-    try {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      const parentFolder = await chrome.bookmarks.get(folderId);
-      await chrome.bookmarks.create({
-        parentId: folderId,
-        title: tab.title || 'New Bookmark',
-        url: tab.url || '',
-      });
-      // Refresh folders after adding
-      const updatedFolders = await fetchFolders();
-      setFolders(updatedFolders);
-      setFilteredFolders(updatedFolders);
-      const truncatedTitle = tab.title
-        ? tab.title.length > 30
-          ? tab.title.slice(0, 30) + '...'
-          : tab.title
-        : 'New Bookmark';
-      toast({
-        title: '✓ Bookmark Added',
-        description: `"${truncatedTitle}" added to "${parentFolder[0].title}"`,
-        variant: 'success',
-      });
-    } catch (error) {
-      console.error('Failed to add bookmark:', error);
-      setError('Failed to add bookmark');
-      toast({
-        title: '× Error Adding Bookmark',
-        description: 'Failed to add bookmark. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleDeleteBookmark = async (bookmarkId: string) => {
-    try {
-      const bookmark = await chrome.bookmarks.get(bookmarkId);
-      await chrome.bookmarks.removeTree(bookmarkId);
-      // Refresh folders after deleting
-      const updatedFolders = await fetchFolders();
-      setFolders(updatedFolders);
-      setFilteredFolders(updatedFolders);
-      toast({
-        title: '✓ Bookmark Deleted',
-        description: `"${bookmark[0].title?.slice(0, 30)}${bookmark[0].title?.length > 30 ? '...' : ''}" has been removed`,
-        variant: 'success',
-      });
-    } catch (error) {
-      console.error('Failed to delete bookmark:', error);
-      setError('Failed to delete bookmark');
-      toast({
-        title: '× Error Deleting Bookmark',
-        description: 'Failed to delete bookmark. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleDeleteFolder = async (folderId: string) => {
-    try {
-      const folder = await chrome.bookmarks.get(folderId);
-      await chrome.bookmarks.removeTree(folderId);
-      // Refresh folders after deleting
-      const updatedFolders = await fetchFolders();
-      setFolders(updatedFolders);
-      setFilteredFolders(updatedFolders);
-      toast({
-        title: '✓ Folder Deleted',
-        description: `"${folder[0].title?.slice(0, 30)}${folder[0].title?.length > 30 ? '...' : ''}" has been removed`,
-        variant: 'success',
-      });
-    } catch (error) {
-      console.error('Failed to delete folder:', error);
-      setError('Failed to delete folder');
-      toast({
-        title: '× Error Deleting Folder',
-        description: 'Failed to delete folder. Please try again.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  function getFaviconUrl(pageUrl: string) {
-    const url = new URL(chrome.runtime.getURL('/_favicon/'));
-    url.searchParams.set('pageUrl', pageUrl);
-    url.searchParams.set('size', '16');
-    return url.toString();
-  }
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
-        if (!newFolderName.trim()) {
-          handleCancelCreateFolder();
-        } else {
-          handleCreateFolder();
-        }
-      }
-    };
-
-    if (creatingFolderId) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-      };
-    }
-  }, [creatingFolderId, newFolderName, handleCreateFolder, handleCancelCreateFolder]);
-
-  // Add drag and drop handlers
-  const handleDragStart = useCallback((node: BookmarkTreeNode) => {
-    setDraggedItem(node);
-  }, []);
-
-  const handleDragEnd = useCallback(() => {
-    setDraggedItem(null);
-  }, []);
-
-  const getParentFolderIds = useCallback(
-    (nodes: BookmarkTreeNode[], targetId: string): string[] => {
-      const result: string[] = [];
-
-      const findParents = (currentNodes: BookmarkTreeNode[], id: string, path: string[] = []) => {
-        for (const node of currentNodes) {
-          if (node.id === id) {
-            result.push(...path);
-            return true;
-          }
-          if (node.children) {
-            if (findParents(node.children, id, [...path, node.id])) {
-              return true;
-            }
-          }
-        }
-        return false;
-      };
-
-      findParents(nodes, targetId);
-      return result;
-    },
-    [],
-  );
-
-  const handleDrop = useCallback(
-    async (operation: DragOperation) => {
-      try {
-        // Store the current expanded state before the move
-        const currentExpandedState = new Set(expandedFolders);
-
-        if (operation.type === 'folder-move' || operation.type === 'bookmark-move') {
-          await chrome.bookmarks.move(operation.sourceId, {
-            parentId: operation.targetParentId,
-            index: operation.targetIndex,
-          });
-        } else if (operation.type === 'folder-reorder' || operation.type === 'bookmark-reorder') {
-          await chrome.bookmarks.move(operation.sourceId, {
-            index: operation.targetIndex,
-          });
-        }
-
-        // Refresh folders after moving
-        const updatedFolders = await fetchFolders();
-        setFolders(updatedFolders);
-
-        // Get all parent folder IDs for the target location
-        const parentFolders = getParentFolderIds(updatedFolders, operation.targetParentId);
-
-        // Combine current expanded state with parent folders
-        const newExpandedState = new Set([
-          ...currentExpandedState,
-          ...parentFolders,
-          operation.targetParentId,
-        ]);
-
-        // If there's a search query active, filter the updated folders
-        if (debouncedQuery) {
-          const filtered = filterFolders(updatedFolders, debouncedQuery);
-          setFilteredFolders(filtered);
-        } else {
-          setFilteredFolders(updatedFolders);
-        }
-
-        // Update expanded folders state
-        setExpandedFolders(Array.from(newExpandedState));
-
-        // Announce the move
-        const sourceItem = await chrome.bookmarks.get(operation.sourceId);
-        const targetFolder = operation.targetParentId
-          ? await chrome.bookmarks.get(operation.targetParentId)
-          : null;
-
-        if (operation.type.includes('move')) {
-          liveRegion.announce(
-            `Moved "${sourceItem[0].title}" to "${targetFolder?.[0].title || 'root'}"`,
-          );
-        } else {
-          liveRegion.announce(
-            `Reordered "${sourceItem[0].title}" to position ${operation.targetIndex + 1}`,
-          );
-        }
-
-        toast({
-          title: '✓ Item Moved',
-          description: operation.type.includes('move')
-            ? `"${sourceItem[0].title}" moved to "${targetFolder?.[0].title || 'root'}"`
-            : `"${sourceItem[0].title}" reordered to position ${operation.targetIndex + 1}`,
-          variant: 'success',
-        });
-      } catch (error) {
-        console.error('Failed to move item:', error);
-        setError('Failed to move item');
-        toast({
-          title: '× Error Moving Item',
-          description: 'Failed to move item. Please try again.',
-          variant: 'destructive',
-        });
-      }
-    },
-    [fetchFolders, filterFolders, debouncedQuery, expandedFolders, getParentFolderIds, toast],
-  );
-
-  // Setup drag and drop monitoring
-  useEffect(() => {
-    return combine(
-      monitorForElements({
-        canMonitor({ source }) {
-          return source.data.instanceId === instanceId;
-        },
-        onDrop(args) {
-          const { location, source } = args;
-          if (!location.current.dropTargets.length) {
-            return;
-          }
-
-          const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
-          const sourceNode = sourceData.node;
-          const target = location.current.dropTargets[0];
-          const targetData = target.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
-          const targetNode = targetData.node;
-
-          // Get the closest edge of the target
-          const closestEdge = extractClosestEdge(target.data);
-
-          // Calculate the target index based on the edge
-          const targetIndex = getReorderDestinationIndex({
-            startIndex: sourceNode.index || 0,
-            indexOfTarget: targetNode.index || 0,
-            closestEdgeOfTarget: closestEdge,
-            axis: 'vertical',
-          });
-
-          // Determine if this is a move or reorder operation
-          const isDroppingIntoFolder = targetNode.children !== undefined;
-
-          // Determine the operation type based on source type
-          let operationType:
-            | 'folder-move'
-            | 'folder-reorder'
-            | 'bookmark-move'
-            | 'bookmark-reorder';
-
-          if (sourceData.type === 'folder') {
-            operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
-          } else {
-            operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
-          }
-
-          const operation: DragOperation = {
-            type: operationType,
-            sourceId: sourceNode.id,
-            sourceParentId: sourceNode.parentId || 'root',
-            sourceIndex: sourceNode.index || 0,
-            targetId: targetNode.id,
-            targetParentId: targetNode.parentId || 'root',
-            targetIndex,
-          };
-
-          handleDrop(operation);
-        },
-      }),
-    );
-  }, [instanceId, handleDrop]);
-
-  // Cleanup live region on unmount
-  useEffect(() => {
-    return liveRegion.cleanup();
-  }, []);
-
-  // Add styles to document
-  useEffect(() => {
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = styles;
-    document.head.appendChild(styleSheet);
-    return () => {
-      document.head.removeChild(styleSheet);
-    };
-  }, []);
-
-  const renderFolderItem = (node: BookmarkTreeNode) => {
-    if (node.isTemporary) {
-      return (
-        <div
-          key={node.id}
-          className="flex items-center gap-2 py-1 px-2 hover:bg-accent rounded-md folder-item"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Folder className="w-4 h-4 shrink-0 text-muted-foreground" />
-          <div className="flex-1">
-            <Input
-              ref={inputRef}
-              type="text"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="New folder name"
-              className="h-7 text-sm w-full search-input"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  handleCancelCreateFolder();
-                }
-                if (e.key === 'Enter') {
-                  handleCreateFolder();
-                }
-              }}
-            />
-          </div>
-        </div>
-      );
-    }
-
-    const isDragging = draggedItem?.id === node.id;
-    const isDropTarget = draggedItem && draggedItem.id !== node.id && node.children;
-    const hasChildren = node.children && node.children.length > 0;
-
-    // Find the original node in the unfiltered tree to get all child folder IDs
-    const findNodeInOriginalTree = (
-      nodes: BookmarkTreeNode[],
-      targetId: string,
-    ): BookmarkTreeNode | null => {
-      for (const node of nodes) {
-        if (node.id === targetId) return node;
-        if (node.children) {
-          const found = findNodeInOriginalTree(node.children, targetId);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-
-    const originalNode = findNodeInOriginalTree(folders, node.id);
-    const childFolderIds = originalNode ? getAllChildFolderIds(originalNode) : [];
-    const isAllChildrenExpanded =
-      hasChildren &&
-      childFolderIds.length > 0 &&
-      childFolderIds.every((id) => expandedFolders.includes(id));
-
-    return (
-      <AccordionItem
-        key={node.id}
-        value={node.id}
-        className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''} ${isDropTarget ? 'drop-target' : ''}`}
-      >
-        <AccordionTrigger className="hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item">
-          <div className="flex items-center w-full">
-            <div
-              className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
-              ref={(element) => {
-                if (element) {
-                  const cleanup = draggable({
-                    element,
-                    onDragStart: () => {
-                      handleDragStart(node);
-                      element.classList.add('dragging');
-                    },
-                    onDrag: () => {
-                      handleDragEnd();
-                      element.classList.remove('dragging');
-                    },
-                    getInitialData: () => ({
-                      type: 'folder',
-                      node,
-                      instanceId,
-                    }),
-                  });
-
-                  const dropTargetCleanup = dropTargetForElements({
-                    element,
-                    onDrag: ({ source, location }) => {
-                      const sourceData = source.data as {
-                        type: 'folder' | 'bookmark';
-                        node: BookmarkTreeNode;
-                      };
-                      if (sourceData.node.id !== node.id) {
-                        element.classList.add('drop-target');
-                        // Remove any existing drop indicators
-                        const existingIndicator =
-                          element.parentElement?.querySelector('.drop-indicator');
-                        if (existingIndicator) {
-                          existingIndicator.remove();
-                        }
-
-                        // Create drop indicator
-                        const indicator = document.createElement('div');
-                        indicator.className = 'drop-indicator';
-
-                        // Get the mouse position relative to the element
-                        const rect = element.getBoundingClientRect();
-                        const mouseY = location.current.input.clientY;
-                        const relativeY = mouseY - rect.top;
-
-                        // Extract closest edge
-                        const closestEdge = relativeY < rect.height / 2 ? 'top' : 'bottom';
-
-                        // Position the indicator based on the closest edge
-                        if (closestEdge === 'top') {
-                          indicator.style.top = '-1px';
-                        } else {
-                          indicator.style.bottom = '-1px';
-                        }
-
-                        // Store the edge information for use in onDrop
-                        element.dataset.closestEdge = closestEdge;
-
-                        element.parentElement?.appendChild(indicator);
-                      }
-                    },
-                    onDragLeave: () => {
-                      element.classList.remove('drop-target');
-                      // Remove drop indicator
-                      const indicator = element.parentElement?.querySelector('.drop-indicator');
-                      if (indicator) {
-                        indicator.remove();
-                      }
-                      // Clean up stored edge information
-                      delete element.dataset.closestEdge;
-                    },
-                    onDrop: ({ source }) => {
-                      const sourceData = source.data as {
-                        type: 'folder' | 'bookmark';
-                        node: BookmarkTreeNode;
-                      };
-                      if (sourceData.node.id !== node.id) {
-                        const closestEdge = element.dataset.closestEdge as
-                          | 'top'
-                          | 'bottom'
-                          | undefined;
-
-                        // Check if we're dropping into a folder or reordering
-                        const isDroppingIntoFolder = node.children !== undefined;
-
-                        // Determine the operation type based on source type
-                        let operationType:
-                          | 'folder-move'
-                          | 'folder-reorder'
-                          | 'bookmark-move'
-                          | 'bookmark-reorder';
-
-                        if (sourceData.type === 'folder') {
-                          operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
-                        } else {
-                          operationType = isDroppingIntoFolder
-                            ? 'bookmark-move'
-                            : 'bookmark-reorder';
-                        }
-
-                        const operation: DragOperation = {
-                          type: operationType,
-                          sourceId: sourceData.node.id,
-                          sourceParentId: sourceData.node.parentId || 'root',
-                          sourceIndex: sourceData.node.index || 0,
-                          targetId: node.id,
-                          targetParentId: node.parentId || 'root',
-                          targetIndex:
-                            closestEdge === 'bottom' ? (node.index || 0) + 1 : node.index || 0,
-                        };
-
-                        handleDrop(operation);
-                      }
-                      element.classList.remove('drop-target');
-                      // Remove drop indicator
-                      const indicator = element.parentElement?.querySelector('.drop-indicator');
-                      if (indicator) {
-                        indicator.remove();
-                      }
-                      // Clean up stored edge information
-                      delete element.dataset.closestEdge;
-                    },
-                    getData: () => ({
-                      type: 'folder',
-                      node,
-                      instanceId,
-                    }),
-                  });
-
-                  return () => {
-                    cleanup();
-                    dropTargetCleanup();
-                  };
-                }
-              }}
-            >
-              <Folder className="w-4 h-4 mr-2 shrink-0 text-muted-foreground" />
-              <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
-            </div>
-            <div className="flex items-center gap-1 ml-2 shrink-0 action-button">
-              {hasChildren && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-5 w-5"
-                  onClick={(e) => toggleExpandAllChildren(node, e)}
-                  title={
-                    isAllChildrenExpanded ? 'Collapse all subfolders' : 'Expand all subfolders'
-                  }
-                >
-                  {isAllChildrenExpanded ? (
-                    <ChevronsUp className="h-3 w-3" />
-                  ) : (
-                    <ChevronsDown className="h-3 w-3" />
-                  )}
-                </Button>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddBookmark(node.id);
-                }}
-              >
-                <BookmarkPlus className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddFolder(node.id);
-                }}
-              >
-                <FolderPlus className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-5 w-5 text-destructive hover:text-destructive"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteFolder(node.id);
-                }}
-              >
-                <Trash2 className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
-        </AccordionTrigger>
-        <AccordionContent className="pl-6 py-0 accordion-content">
-          {node.children?.map((child) =>
-            child.isTemporary
-              ? renderFolderItem(child)
-              : child.children
-                ? renderFolderItem(child)
-                : renderBookmarkItem(child),
-          )}
-        </AccordionContent>
-      </AccordionItem>
-    );
-  };
-
-  const renderBookmarkItem = (node: BookmarkTreeNode) => {
-    if (node.isTemporary) {
-      return null;
-    }
-
-    const isDragging = draggedItem?.id === node.id;
-    const isDropTarget = draggedItem && draggedItem.id !== node.id && node.children;
-
-    return (
-      <div
-        key={node.id}
-        className={`flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md group bookmark-item ${isDragging ? 'opacity-50' : ''} ${isDropTarget ? 'drop-target' : ''}`}
-      >
-        <a
-          href={node.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
-          ref={(element) => {
-            if (element) {
-              const cleanup = draggable({
-                element,
-                onDragStart: () => {
-                  handleDragStart(node);
-                  element.classList.add('dragging');
-                },
-                onDrag: () => {
-                  handleDragEnd();
-                  element.classList.remove('dragging');
-                },
-                getInitialData: () => ({
-                  type: 'bookmark',
-                  node,
-                  instanceId,
-                }),
-              });
-
-              const dropTargetCleanup = dropTargetForElements({
-                element,
-                onDrag: ({ source, location }) => {
-                  const sourceData = source.data as {
-                    type: 'folder' | 'bookmark';
-                    node: BookmarkTreeNode;
-                  };
-                  if (sourceData.node.id !== node.id) {
-                    element.classList.add('drop-target');
-                    // Remove any existing drop indicators
-                    const existingIndicator =
-                      element.parentElement?.querySelector('.drop-indicator');
-                    if (existingIndicator) {
-                      existingIndicator.remove();
-                    }
-
-                    // Create drop indicator
-                    const indicator = document.createElement('div');
-                    indicator.className = 'drop-indicator';
-
-                    // Get the mouse position relative to the element
-                    const rect = element.getBoundingClientRect();
-                    const mouseY = location.current.input.clientY;
-                    const relativeY = mouseY - rect.top;
-
-                    // Extract closest edge
-                    const closestEdge = relativeY < rect.height / 2 ? 'top' : 'bottom';
-
-                    // Position the indicator based on the closest edge
-                    if (closestEdge === 'top') {
-                      indicator.style.top = '-1px';
-                    } else {
-                      indicator.style.bottom = '-1px';
-                    }
-
-                    // Store the edge information for use in onDrop
-                    element.dataset.closestEdge = closestEdge;
-
-                    element.parentElement?.appendChild(indicator);
-                  }
-                },
-                onDragLeave: () => {
-                  element.classList.remove('drop-target');
-                  // Remove drop indicator
-                  const indicator = element.parentElement?.querySelector('.drop-indicator');
-                  if (indicator) {
-                    indicator.remove();
-                  }
-                  // Clean up stored edge information
-                  delete element.dataset.closestEdge;
-                },
-                onDrop: ({ source }) => {
-                  const sourceData = source.data as {
-                    type: 'folder' | 'bookmark';
-                    node: BookmarkTreeNode;
-                  };
-                  if (sourceData.node.id !== node.id) {
-                    const closestEdge = element.dataset.closestEdge as 'top' | 'bottom' | undefined;
-
-                    // Check if we're dropping into a folder or reordering
-                    const isDroppingIntoFolder = node.children !== undefined;
-
-                    // Determine the operation type based on source type
-                    let operationType:
-                      | 'folder-move'
-                      | 'folder-reorder'
-                      | 'bookmark-move'
-                      | 'bookmark-reorder';
-
-                    if (sourceData.type === 'folder') {
-                      operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
-                    } else {
-                      operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
-                    }
-
-                    const operation: DragOperation = {
-                      type: operationType,
-                      sourceId: sourceData.node.id,
-                      sourceParentId: sourceData.node.parentId || 'root',
-                      sourceIndex: sourceData.node.index || 0,
-                      targetId: node.id,
-                      targetParentId: node.parentId || 'root',
-                      targetIndex:
-                        closestEdge === 'bottom' ? (node.index || 0) + 1 : node.index || 0,
-                    };
-
-                    handleDrop(operation);
-                  }
-                  element.classList.remove('drop-target');
-                  // Remove drop indicator
-                  const indicator = element.parentElement?.querySelector('.drop-indicator');
-                  if (indicator) {
-                    indicator.remove();
-                  }
-                  // Clean up stored edge information
-                  delete element.dataset.closestEdge;
-                },
-                getData: () => ({
-                  type: 'bookmark',
-                  node,
-                  instanceId,
-                }),
-              });
-
-              return () => {
-                cleanup();
-                dropTargetCleanup();
-              };
-            }
-          }}
-        >
-          <img
-            src={getFaviconUrl(node.url ?? '')}
-            alt="favicon"
-            className="w-4 h-4 mr-2 shrink-0"
-          />
-          <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
-        </a>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-5 w-5 ml-2 shrink-0 action-button text-destructive hover:text-destructive"
-          onClick={() => handleDeleteBookmark(node.id)}
-        >
-          <Trash2 className="h-3 w-3" />
-        </Button>
-      </div>
-    );
-  };
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <div className="text-red-500 mb-4">Error: {error}</div>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
-      <style>{styles}</style>
-      <div className="flex flex-col h-full overflow-hidden">
-        <div className="p-4 border-b shrink-0">
-          <div className="flex items-center gap-2">
-            <Input
-              ref={inputRef}
-              type="text"
-              placeholder="Search bookmarks..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full"
-            />
-            {query && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="shrink-0"
-                onClick={() => setForceExpandAll(!forceExpandAll)}
-                title={forceExpandAll ? 'Collapse non-matching folders' : 'Expand all folders'}
-              >
-                {forceExpandAll ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
-              </Button>
-            )}
-          </div>
-        </div>
-        <div className="flex-1 overflow-hidden bookmark-content">
-          {isLoading ? (
-            <div className="p-4 space-y-2">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          ) : error ? (
-            <div className="p-4 text-red-500">{error}</div>
-          ) : (
-            <div className="p-4">
-              <Accordion
-                type="multiple"
-                value={expandedFolders}
-                onValueChange={setExpandedFolders}
-                className="w-full accordion-container"
-              >
-                {filteredFolders.map((node) => renderFolderItem(node))}
-              </Accordion>
-            </div>
-          )}
-        </div>
-      </div>
-      <Toaster />
-    </div>
-  );
-}
-
-export default PopupPage;
 </file>
 
 <file path="src/components/ui/table/columns.tsx">
@@ -8388,6 +9114,252 @@ const OptionsPage: React.FC = () => {
 export default OptionsPage;
 </file>
 
+<file path="src/components/page/PopupPage.tsx">
+/**
+ * PopupPage - Bookmark popup using Zustand store.
+ *
+ * Refactored from 1299 lines to ~140 lines using:
+ * - Zustand for centralized state management
+ * - Extracted components for UI
+ * - Extracted services for Chrome API
+ */
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BookmarkSearch, FolderItem } from '@/components/bookmark';
+import { Accordion } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster } from '@/components/ui/toaster';
+import { useDebounce } from '@/hooks/use-debounce';
+import { useToast } from '@/hooks/use-toast';
+import { useBookmarkStore } from '@/stores';
+import type { BookmarkTreeNode, DragOperation } from '@/types';
+import '@/styles/popup.css';
+
+function PopupPage() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
+
+  // Zustand store
+  const {
+    folders,
+    filteredFolders,
+    isLoading,
+    error,
+    query,
+    expandedFolders,
+    forceExpandAll,
+    draggedItem,
+    creatingFolderId,
+    newFolderName,
+    fetchFolders,
+    setQuery,
+    setDebouncedQuery,
+    setExpandedFolders,
+    setForceExpandAll,
+    setDraggedItem,
+    setCreatingFolderId,
+    setNewFolderName,
+    addBookmarkToFolder,
+    createFolder,
+    removeBookmark,
+    removeFolder,
+    handleDrop,
+    toggleExpandAllChildren,
+    areAllChildrenExpanded,
+  } = useBookmarkStore();
+
+  // Debounce search query
+  const debouncedQuery = useDebounce(query, 300);
+  useEffect(() => {
+    setDebouncedQuery(debouncedQuery);
+  }, [debouncedQuery, setDebouncedQuery]);
+
+  // Fetch folders on mount
+  useEffect(() => {
+    fetchFolders();
+  }, [fetchFolders]);
+
+  // Toast wrapper for operations
+  const withToast = useCallback(
+    async (
+      operation: () => Promise<{ success: boolean; message: string }>,
+      successTitle: string,
+      errorTitle: string,
+    ) => {
+      const result = await operation();
+      toast({
+        title: result.success ? `✓ ${successTitle}` : `× ${errorTitle}`,
+        description: result.message,
+        variant: result.success ? 'success' : 'destructive',
+      });
+      return result.success;
+    },
+    [toast],
+  );
+
+  // Add temporary folder to tree
+  const addTemporaryFolder = useCallback(
+    (nodes: BookmarkTreeNode[], parentId: string): BookmarkTreeNode[] => {
+      return nodes.map((node) => {
+        if (node.id === parentId) {
+          return {
+            ...node,
+            children: [
+              {
+                id: 'temp-folder',
+                parentId: node.id,
+                title: 'New Folder',
+                isOpen: false,
+                isTemporary: true,
+                children: [],
+              },
+              ...(node.children || []),
+            ],
+          };
+        }
+        if (node.children) {
+          return { ...node, children: addTemporaryFolder(node.children, parentId) };
+        }
+        return node;
+      });
+    },
+    [],
+  );
+
+  const handleAddFolder = useCallback(
+    (folderId: string) => {
+      setCreatingFolderId(folderId);
+      setNewFolderName('');
+      setExpandedFolders((prev) => [...prev, folderId]);
+    },
+    [setCreatingFolderId, setNewFolderName, setExpandedFolders],
+  );
+
+  const handleCreateFolder = useCallback(async () => {
+    if (!creatingFolderId || !newFolderName.trim()) {
+      setCreatingFolderId(null);
+      setNewFolderName('');
+      return;
+    }
+    await withToast(
+      () => createFolder(creatingFolderId, newFolderName),
+      'Folder Created',
+      'Error Creating Folder',
+    );
+    setCreatingFolderId(null);
+    setNewFolderName('');
+  }, [
+    creatingFolderId,
+    newFolderName,
+    createFolder,
+    setCreatingFolderId,
+    setNewFolderName,
+    withToast,
+  ]);
+
+  const handleCancelCreateFolder = useCallback(() => {
+    setCreatingFolderId(null);
+    setNewFolderName('');
+  }, [setCreatingFolderId, setNewFolderName]);
+
+  const handleDropWithToast = useCallback(
+    async (operation: DragOperation) => {
+      await withToast(() => handleDrop(operation), 'Item Moved', 'Error Moving Item');
+    },
+    [handleDrop, withToast],
+  );
+
+  const displayFolders = creatingFolderId
+    ? addTemporaryFolder(filteredFolders, creatingFolderId)
+    : filteredFolders;
+
+  if (error) {
+    return (
+      <div className="p-4">
+        <div className="text-red-500 mb-4">Error: {error}</div>
+        <Button onClick={() => window.location.reload()}>Retry</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden">
+        <BookmarkSearch
+          query={query}
+          onQueryChange={setQuery}
+          forceExpandAll={forceExpandAll}
+          onToggleExpandAll={() => setForceExpandAll(!forceExpandAll)}
+          inputRef={inputRef}
+        />
+
+        <div className="flex-1 overflow-hidden bookmark-content">
+          {isLoading ? (
+            <div className="p-4 space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : (
+            <div className="p-4">
+              <Accordion
+                type="multiple"
+                value={expandedFolders}
+                onValueChange={setExpandedFolders}
+                className="w-full accordion-container"
+              >
+                {displayFolders.map((node) => (
+                  <FolderItem
+                    key={node.id}
+                    node={node}
+                    instanceId={instanceId}
+                    isDragging={draggedItem?.id === node.id}
+                    isAllChildrenExpanded={areAllChildrenExpanded(node)}
+                    creatingFolderId={creatingFolderId}
+                    newFolderName={newFolderName}
+                    folders={folders}
+                    onDragStart={setDraggedItem}
+                    onDragEnd={() => setDraggedItem(null)}
+                    onDrop={handleDropWithToast}
+                    onAddBookmark={(id) =>
+                      withToast(
+                        () => addBookmarkToFolder(id),
+                        'Bookmark Added',
+                        'Error Adding Bookmark',
+                      )
+                    }
+                    onAddFolder={handleAddFolder}
+                    onDeleteFolder={(id) =>
+                      withToast(() => removeFolder(id), 'Folder Deleted', 'Error Deleting Folder')
+                    }
+                    onDeleteBookmark={(id) =>
+                      withToast(
+                        () => removeBookmark(id),
+                        'Bookmark Deleted',
+                        'Error Deleting Bookmark',
+                      )
+                    }
+                    onCreateFolder={handleCreateFolder}
+                    onCancelCreateFolder={handleCancelCreateFolder}
+                    onNewFolderNameChange={setNewFolderName}
+                    onToggleExpandAllChildren={toggleExpandAllChildren}
+                  />
+                ))}
+              </Accordion>
+            </div>
+          )}
+        </div>
+      </div>
+      <Toaster />
+    </div>
+  );
+}
+
+export default PopupPage;
+</file>
+
 <file path=".gitignore">
 # Logs
 logs
@@ -8467,7 +9439,8 @@ repomix-output.*
     "react-day-picker": "^9.11.3",
     "react-dom": "^19.2.0",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
