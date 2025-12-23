@@ -27,7 +27,6 @@ export default defineConfig({
             },
         },
         permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel'],
-        host_permissions: ['<all_urls>'],
         web_accessible_resources: [
             {
                 resources: ['_favicon/*'],
