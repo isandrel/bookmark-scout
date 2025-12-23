@@ -1,0 +1,42 @@
+name: Generate Repomix Output
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  repomix:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Generate Repomix Output
+        run: bunx repomix --output repomix-output.xml
+
+      - name: Upload Repomix Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: repomix-output
+          path: repomix-output.xml
+          retention-days: 30
+
+      - name: Commit Repomix Output (on push to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add repomix-output.xml
+          git diff --staged --quiet || git commit -m "chore: update repomix-output.xml"
+          git push
