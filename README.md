@@ -1,4 +1,10 @@
 <p align="center">
+  <strong>English</strong> ·
+  <a href="./translations/README.ja.md">日本語</a> ·
+  <a href="./translations/README.ko.md">한국어</a>
+</p>
+
+<p align="center">
   <img src="https://raw.githubusercontent.com/isandrel/bookmark-scout/main/public/vite.svg" alt="Bookmark Scout Logo" width="80" height="80">
 </p>
 
