@@ -44,7 +44,7 @@ jobs:
           zip -r ../../bookmark-scout-firefox.zip .
 
       - name: Build Chrome CRX
-        uses: nicholasadamou/webext-buildtools-chrome-crx-action@v1.0.1
+        uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
           zipFilePath: bookmark-scout-chrome.zip
           crxFilePath: bookmark-scout-chrome.crx
