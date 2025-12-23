@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/isandrel/bookmark-scout/discussions
+    about: Ask questions and share ideas in GitHub Discussions
+  - name: 🌐 Website
+    url: https://bookmark-scout.vercel.app
+    about: Visit our website for more information
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/isandrel/bookmark-scout/security/advisories/new
+    about: Report security vulnerabilities privately

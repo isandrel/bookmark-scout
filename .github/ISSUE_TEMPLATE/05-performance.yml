@@ -1,0 +1,86 @@
+name: 🐢 Performance Issue
+description: Report a performance or speed issue
+title: "🐢 [Perf]: "
+labels: ["performance", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve performance! Please describe the issue in detail.
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues for similar performance reports
+          required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Performance Issue Type
+      options:
+        - Slow loading
+        - High memory usage
+        - CPU spikes
+        - UI lag/stuttering
+        - Slow search
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the performance issue
+      placeholder: What is slow or taking too long?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this performance issue?
+      placeholder: |
+        1. Open popup with...
+        2. Search for...
+        3. Notice slowdown when...
+    validations:
+      required: true
+
+  - type: input
+    id: bookmark-count
+    attributes:
+      label: Number of Bookmarks
+      description: Approximately how many bookmarks do you have?
+      placeholder: e.g., 500, 5000, 10000+
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: system-specs
+    attributes:
+      label: System Specs
+      description: Your system specifications (RAM, CPU)
+      placeholder: e.g., 16GB RAM, Apple M1
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information (screenshots, console logs, etc.)

@@ -1,0 +1,75 @@
+name: 🌐 Translation/i18n
+description: Report translation issues or request new languages
+title: "🌐 [i18n]: "
+labels: ["i18n", "translation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us make Bookmark Scout available in more languages!
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request Type
+      options:
+        - Fix incorrect translation
+        - Request new language
+        - Improve existing translation
+        - Missing translation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      description: Which language does this concern?
+      options:
+        - English (en)
+        - Japanese (ja)
+        - Korean (ko)
+        - Chinese Simplified (zh-CN)
+        - Chinese Traditional (zh-TW)
+        - Spanish (es)
+        - French (fr)
+        - German (de)
+        - Portuguese (pt)
+        - Russian (ru)
+        - Arabic (ar)
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: input
+    id: other-language
+    attributes:
+      label: Other Language
+      description: If you selected "Other", specify the language
+      placeholder: e.g., Italian (it)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the translation issue or request
+      placeholder: |
+        For fixes: "The word X should be Y"
+        For new languages: "I would like to contribute translations for..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to help translate
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
