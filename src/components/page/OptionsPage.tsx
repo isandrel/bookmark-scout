@@ -64,8 +64,8 @@ const OptionsPage: React.FC = () => {
 
     useEffect(() => {
         chrome.storage.sync.get('options', (data) => {
-            if (data.options) {
-                setOptions(data.options);
+            if (data.options && Array.isArray(data.options)) {
+                setOptions(data.options as Option[]);
             }
         });
     }, []);
