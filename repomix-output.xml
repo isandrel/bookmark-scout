@@ -62,6 +62,7 @@ public/
   icon-32.png
   icon-48.png
   icon-96.png
+  icon-original.png
 src/
   assets/
     react.svg
