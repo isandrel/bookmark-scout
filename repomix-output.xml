@@ -44,6 +44,15 @@ The content is organized as follows:
   config.json
   README.md
 .github/
+  ISSUE_TEMPLATE/
+    01-bug-report.yml
+    02-feature-request.yml
+    03-documentation.yml
+    04-question.yml
+    05-performance.yml
+    06-accessibility.yml
+    07-i18n.yml
+    config.yml
   workflows/
     dependabot-auto-merge.yml
     deploy-website.yml
@@ -243,6 +252,600 @@ find the full documentation for it [in our repository](https://github.com/change
 
 We have a quick list of common questions to get you started engaging with this project in
 [our documentation](https://github.com/changesets/changesets/blob/main/docs/common-questions.md)
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/01-bug-report.yml">
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: "🐛 [Bug]: "
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below.
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      description: Please check the following before submitting
+      options:
+        - label: I have searched existing issues and this is not a duplicate
+          required: true
+        - label: I am using the latest version of the extension
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+      placeholder: Describe what should happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+      placeholder: Describe what actually happened...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using?
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser Version
+      description: What version of the browser are you using?
+      placeholder: e.g., 120.0.0
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension Version
+      description: What version of Bookmark Scout?
+      placeholder: e.g., 0.1.0
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain the problem
+      placeholder: Drag and drop images here...
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/02-feature-request.yml">
+name: ✨ Feature Request
+description: Suggest an idea or enhancement
+title: "✨ [Feature]: "
+labels: ["enhancement", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please describe your idea below.
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      description: Please check the following before submitting
+      options:
+        - label: I have searched existing issues and this feature has not been requested
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Describe it.
+      placeholder: I'm always frustrated when...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear description of what you want to happen...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Any alternative solutions or features you've considered
+      placeholder: Other approaches you've thought about...
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What area does this feature relate to?
+      options:
+        - UI/UX
+        - Search
+        - Folder Management
+        - Drag & Drop
+        - Performance
+        - Accessibility
+        - Internationalization
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Nice to have
+        - Important
+        - Critical
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you like to contribute to this feature?
+      options:
+        - label: I would like to work on this feature
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any mockups, screenshots, or additional context
+      placeholder: Drag and drop images here...
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/03-documentation.yml">
+name: 📝 Documentation
+description: Suggest improvements to documentation
+title: "📝 [Docs]: "
+labels: ["documentation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve our documentation!
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation change?
+      options:
+        - Fix typo/error
+        - Add missing information
+        - Improve clarity
+        - Add example
+        - Update outdated content
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: Where is the documentation issue? (file path or URL)
+      placeholder: e.g., README.md or docs/installation.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: Current Documentation
+      description: What does the current documentation say?
+      placeholder: Copy the current text or describe the issue...
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggested
+    attributes:
+      label: Suggested Change
+      description: What should it say instead?
+      placeholder: Your suggested improvement...
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to submit a PR for this change
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/04-question.yml">
+name: ❓ Question
+description: Ask a question about the extension
+title: "❓ [Question]: "
+labels: ["question"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help!
+        
+        > 💡 **Tip:** For general discussions, consider using [GitHub Discussions](https://github.com/isandrel/bookmark-scout/discussions) instead.
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have read the README and documentation
+          required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Question Category
+      options:
+        - Installation
+        - Usage
+        - Configuration
+        - Development
+        - Contributing
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Ask your question here...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any relevant context that might help us answer
+      placeholder: Browser version, extension version, screenshots, etc.
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/05-performance.yml">
+name: 🐢 Performance Issue
+description: Report a performance or speed issue
+title: "🐢 [Perf]: "
+labels: ["performance", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve performance! Please describe the issue in detail.
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues for similar performance reports
+          required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Performance Issue Type
+      options:
+        - Slow loading
+        - High memory usage
+        - CPU spikes
+        - UI lag/stuttering
+        - Slow search
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the performance issue
+      placeholder: What is slow or taking too long?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce this performance issue?
+      placeholder: |
+        1. Open popup with...
+        2. Search for...
+        3. Notice slowdown when...
+    validations:
+      required: true
+
+  - type: input
+    id: bookmark-count
+    attributes:
+      label: Number of Bookmarks
+      description: Approximately how many bookmarks do you have?
+      placeholder: e.g., 500, 5000, 10000+
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Firefox
+        - Edge
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: system-specs
+    attributes:
+      label: System Specs
+      description: Your system specifications (RAM, CPU)
+      placeholder: e.g., 16GB RAM, Apple M1
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information (screenshots, console logs, etc.)
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/06-accessibility.yml">
+name: ♿ Accessibility Issue
+description: Report an accessibility problem
+title: "♿ [A11y]: "
+labels: ["accessibility", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We want Bookmark Scout to be accessible to everyone. Please help us improve!
+
+  - type: checkboxes
+    id: existing-issue
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have searched existing issues for similar accessibility reports
+          required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Accessibility Issue Type
+      options:
+        - Screen reader compatibility
+        - Keyboard navigation
+        - Color contrast
+        - Focus management
+        - Missing labels/ARIA
+        - Motion/animation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Description
+      description: Describe the accessibility barrier
+      placeholder: What is preventing accessible use?
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: User Impact
+      description: How does this affect users?
+      placeholder: e.g., "Users cannot navigate to X using keyboard only"
+    validations:
+      required: true
+
+  - type: input
+    id: assistive-tech
+    attributes:
+      label: Assistive Technology
+      description: What assistive technology are you using (if applicable)?
+      placeholder: e.g., NVDA, VoiceOver, JAWS
+
+  - type: textarea
+    id: suggested-fix
+    attributes:
+      label: Suggested Fix
+      description: If you have ideas for how to fix this, please share
+      placeholder: Optional suggestions...
+
+  - type: dropdown
+    id: wcag
+    attributes:
+      label: WCAG Guideline
+      description: If known, which WCAG guideline does this relate to?
+      options:
+        - Perceivable
+        - Operable
+        - Understandable
+        - Robust
+        - Unknown
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Screenshots, screen recordings, or other context
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/07-i18n.yml">
+name: 🌐 Translation/i18n
+description: Report translation issues or request new languages
+title: "🌐 [i18n]: "
+labels: ["i18n", "translation"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us make Bookmark Scout available in more languages!
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Request Type
+      options:
+        - Fix incorrect translation
+        - Request new language
+        - Improve existing translation
+        - Missing translation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      description: Which language does this concern?
+      options:
+        - English (en)
+        - Japanese (ja)
+        - Korean (ko)
+        - Chinese Simplified (zh-CN)
+        - Chinese Traditional (zh-TW)
+        - Spanish (es)
+        - French (fr)
+        - German (de)
+        - Portuguese (pt)
+        - Russian (ru)
+        - Arabic (ar)
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: input
+    id: other-language
+    attributes:
+      label: Other Language
+      description: If you selected "Other", specify the language
+      placeholder: e.g., Italian (it)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the translation issue or request
+      placeholder: |
+        For fixes: "The word X should be Y"
+        For new languages: "I would like to contribute translations for..."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to help translate
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+</file>
+
+<file path=".github/ISSUE_TEMPLATE/config.yml">
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/isandrel/bookmark-scout/discussions
+    about: Ask questions and share ideas in GitHub Discussions
+  - name: 🌐 Website
+    url: https://bookmark-scout.vercel.app
+    about: Visit our website for more information
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/isandrel/bookmark-scout/security/advisories/new
+    about: Report security vulnerabilities privately
 </file>
 
 <file path=".github/workflows/dependabot-auto-merge.yml">
