@@ -2871,529 +2871,6 @@ src/
 </p>
 </file>
 
-<file path="website/app/[locale]/docs/contributing/page.tsx">
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export default async function ContributingPage({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-    const t = await getTranslations();
-
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 glass">
-                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href={`/${locale}`} className="flex items-center gap-3">
-                        <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors"
-                        >
-                            {t("nav.docs")}
-                        </Link>
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-                        >
-                            {t("nav.github")}
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            <main className="pt-32 pb-24">
-                <div className="mx-auto max-w-4xl px-6">
-                    <div className="mb-8">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors text-sm"
-                        >
-                            {t("nav.backToDocs")}
-                        </Link>
-                    </div>
-
-                    <h1 className="text-4xl font-bold mb-4">{t("contributingPage.title")}</h1>
-                    <p className="text-muted text-lg mb-12">{t("contributingPage.subtitle")}</p>
-
-                    <div className="space-y-8">
-                        <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.howTo.title")}</h2>
-                            <ol className="list-decimal list-inside text-muted space-y-3">
-                                <li>{t("contributingPage.howTo.step1")}</li>
-                                <li>
-                                    {t("contributingPage.howTo.step2")}{" "}
-                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
-                                        git checkout -b feature/amazing-feature
-                                    </code>
-                                </li>
-                                <li>
-                                    {t("contributingPage.howTo.step3")}{" "}
-                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
-                                        git commit -m &apos;feat: add amazing feature&apos;
-                                    </code>
-                                </li>
-                                <li>
-                                    {t("contributingPage.howTo.step4")}{" "}
-                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
-                                        git push origin feature/amazing-feature
-                                    </code>
-                                </li>
-                                <li>{t("contributingPage.howTo.step5")}</li>
-                            </ol>
-                        </section>
-
-                        <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.commits.title")}</h2>
-                            <p className="text-muted mb-4">
-                                {t("contributingPage.commits.description")}
-                            </p>
-                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                <code className="text-sm text-green-400">
-                                    &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
-                                </code>
-                            </pre>
-                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <span className="text-foreground font-medium">feat</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.feat")}</span>
-                                </div>
-                                <div>
-                                    <span className="text-foreground font-medium">fix</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.fix")}</span>
-                                </div>
-                                <div>
-                                    <span className="text-foreground font-medium">docs</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.docs")}</span>
-                                </div>
-                                <div>
-                                    <span className="text-foreground font-medium">refactor</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.refactor")}</span>
-                                </div>
-                                <div>
-                                    <span className="text-foreground font-medium">test</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.test")}</span>
-                                </div>
-                                <div>
-                                    <span className="text-foreground font-medium">chore</span>
-                                    <span className="text-muted"> - {t("contributingPage.commits.chore")}</span>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.setup.title")}</h2>
-                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                <code className="text-sm text-green-400">
-                                    # Clone your fork{"\n"}
-                                    git clone https://github.com/YOUR_USERNAME/bookmark-scout.git
-                                    {"\n"}
-                                    cd bookmark-scout{"\n\n"}
-                                    # Install dependencies{"\n"}
-                                    bun install{"\n\n"}
-                                    # Start dev server{"\n"}
-                                    bun run dev{"\n\n"}
-                                    # Run linter{"\n"}
-                                    bun run lint{"\n\n"}
-                                    # Format code{"\n"}
-                                    bun run format
-                                </code>
-                            </pre>
-                        </section>
-
-                        <section className="glass rounded-2xl p-6">
-                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.codeStyle.title")}</h2>
-                            <ul className="list-disc list-inside text-muted space-y-2">
-                                <li>{t("contributingPage.codeStyle.biome")}</li>
-                                <li>{t("contributingPage.codeStyle.check")}</li>
-                                <li>{t("contributingPage.codeStyle.strict")}</li>
-                                <li>{t("contributingPage.codeStyle.functional")}</li>
-                            </ul>
-                        </section>
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-}
-</file>
-
-<file path="website/app/[locale]/docs/features/page.tsx">
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export default async function FeaturesPage({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-    const t = await getTranslations();
-
-    const features = [
-        {
-            icon: "🔍",
-            title: t("featuresPage.instantSearch.title"),
-            description: t("featuresPage.instantSearch.description"),
-        },
-        {
-            icon: "📂",
-            title: t("featuresPage.dragAndDrop.title"),
-            description: t("featuresPage.dragAndDrop.description"),
-        },
-        {
-            icon: "⚡",
-            title: t("featuresPage.quickAdd.title"),
-            description: t("featuresPage.quickAdd.description"),
-        },
-        {
-            icon: "📱",
-            title: t("featuresPage.sidePanel.title"),
-            description: t("featuresPage.sidePanel.description"),
-        },
-        {
-            icon: "🌙",
-            title: t("featuresPage.darkMode.title"),
-            description: t("featuresPage.darkMode.description"),
-        },
-        {
-            icon: "🎯",
-            title: t("featuresPage.expandCollapse.title"),
-            description: t("featuresPage.expandCollapse.description"),
-        },
-        {
-            icon: "📁",
-            title: t("featuresPage.createFolders.title"),
-            description: t("featuresPage.createFolders.description"),
-        },
-        {
-            icon: "🗑️",
-            title: t("featuresPage.deleteItems.title"),
-            description: t("featuresPage.deleteItems.description"),
-        },
-    ];
-
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 glass">
-                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href={`/${locale}`} className="flex items-center gap-3">
-                        <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors"
-                        >
-                            {t("nav.docs")}
-                        </Link>
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-                        >
-                            {t("nav.github")}
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            <main className="pt-32 pb-24">
-                <div className="mx-auto max-w-4xl px-6">
-                    <div className="mb-8">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors text-sm"
-                        >
-                            {t("nav.backToDocs")}
-                        </Link>
-                    </div>
-
-                    <h1 className="text-4xl font-bold mb-4">{t("featuresPage.title")}</h1>
-                    <p className="text-muted text-lg mb-12">{t("featuresPage.subtitle")}</p>
-
-                    <div className="space-y-8">
-                        {features.map((feature) => (
-                            <div key={feature.title} className="glass rounded-2xl p-6">
-                                <div className="flex items-start gap-4">
-                                    <span className="text-3xl">{feature.icon}</span>
-                                    <div>
-                                        <h2 className="text-xl font-semibold mb-2">
-                                            {feature.title}
-                                        </h2>
-                                        <p className="text-muted">{feature.description}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <section className="mt-16">
-                        <h2 className="text-2xl font-bold mb-6">{t("featuresPage.roadmap.title")}</h2>
-                        <div className="glass rounded-2xl p-6">
-                            <ul className="space-y-3 text-muted">
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.fullManager")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.options")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.tags")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.duplicates")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.deadLinks")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.shortcuts")}
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-                </div>
-            </main>
-        </div>
-    );
-}
-</file>
-
-<file path="website/app/[locale]/docs/getting-started/page.tsx">
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export default async function GettingStartedPage({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-    const t = await getTranslations();
-
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 glass">
-                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href={`/${locale}`} className="flex items-center gap-3">
-                        <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors"
-                        >
-                            {t("nav.docs")}
-                        </Link>
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-                        >
-                            {t("nav.github")}
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            <main className="pt-32 pb-24">
-                <div className="mx-auto max-w-4xl px-6">
-                    <div className="mb-8">
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors text-sm"
-                        >
-                            {t("nav.backToDocs")}
-                        </Link>
-                    </div>
-
-                    <h1 className="text-4xl font-bold mb-8">{t("gettingStarted.title")}</h1>
-
-                    <div className="prose prose-invert max-w-none">
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.prerequisites.title")}</h2>
-                            <ul className="list-disc list-inside text-muted space-y-2">
-                                <li>
-                                    <a
-                                        href="https://bun.sh"
-                                        className="text-primary-light hover:underline"
-                                    >
-                                        Bun
-                                    </a>{" "}
-                                    {t("gettingStarted.prerequisites.bun")}
-                                </li>
-                                <li>{t("gettingStarted.prerequisites.chrome")}</li>
-                                <li>{t("gettingStarted.prerequisites.git")}</li>
-                            </ul>
-                        </section>
-
-                        <section className="mb-12">
-                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.installation.title")}</h2>
-
-                            <div className="space-y-6">
-                                <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">1. {t("gettingStarted.installation.step1")}</h3>
-                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                        <code className="text-sm text-green-400">
-                                            git clone https://github.com/isandrel/bookmark-scout.git
-                                            {"\n"}
-                                            cd bookmark-scout
-                                        </code>
-                                    </pre>
-                                </div>
-
-                                <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">2. {t("gettingStarted.installation.step2")}</h3>
-                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                        <code className="text-sm text-green-400">bun install</code>
-                                    </pre>
-                                </div>
-
-                                <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">3. {t("gettingStarted.installation.step3")}</h3>
-                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                        <code className="text-sm text-green-400">bun run build</code>
-                                    </pre>
-                                </div>
-
-                                <div className="glass rounded-xl p-6">
-                                    <h3 className="font-medium mb-3">4. {t("gettingStarted.installation.step4.title")}</h3>
-                                    <ol className="text-muted space-y-2 list-decimal list-inside">
-                                        <li>{t("gettingStarted.installation.step4.1")}</li>
-                                        <li>{t("gettingStarted.installation.step4.2")}</li>
-                                        <li>{t("gettingStarted.installation.step4.3")}</li>
-                                        <li>{t("gettingStarted.installation.step4.4")}</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section>
-                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.development.title")}</h2>
-                            <div className="glass rounded-xl p-6">
-                                <p className="text-muted mb-4">
-                                    {t("gettingStarted.development.description")}
-                                </p>
-                                <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                    <code className="text-sm text-green-400">bun run dev</code>
-                                </pre>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-}
-</file>
-
-<file path="website/app/[locale]/docs/page.tsx">
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-
-export default async function DocsPage({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-    const t = await getTranslations();
-
-    const docs = [
-        {
-            title: t("docs.gettingStarted.title"),
-            description: t("docs.gettingStarted.description"),
-            href: "getting-started",
-        },
-        {
-            title: t("docs.features.title"),
-            description: t("docs.features.description"),
-            href: "features",
-        },
-        {
-            title: t("docs.contributing.title"),
-            description: t("docs.contributing.description"),
-            href: "contributing",
-        },
-    ];
-
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 glass">
-                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <Link href={`/${locale}`} className="flex items-center gap-3">
-                        <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
-                    </Link>
-                    <div className="flex items-center gap-6">
-                        <Link href={`/${locale}/docs`} className="text-foreground font-medium">
-                            {t("nav.docs")}
-                        </Link>
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-                        >
-                            {t("nav.github")}
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            <main className="pt-32 pb-24">
-                <div className="mx-auto max-w-4xl px-6">
-                    <h1 className="text-4xl font-bold mb-4">{t("docs.title")}</h1>
-                    <p className="text-muted text-lg mb-12">{t("docs.subtitle")}</p>
-
-                    <div className="grid gap-6">
-                        {docs.map((doc) => (
-                            <Link
-                                key={doc.href}
-                                href={`/${locale}/docs/${doc.href}`}
-                                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 transition-all"
-                            >
-                                <h2 className="text-xl font-semibold mb-2 group-hover:text-primary-light transition-colors">
-                                    {doc.title}
-                                </h2>
-                                <p className="text-muted">{doc.description}</p>
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-}
-</file>
-
 <file path="website/app/[locale]/layout.tsx">
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -3462,292 +2939,6 @@ export default async function LocaleLayout({
 }
 </file>
 
-<file path="website/app/[locale]/page.tsx">
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-
-// Tech stack badges
-const techStack = [
-    { name: "React 19", color: "#61DAFB", logo: "react" },
-    { name: "TypeScript", color: "#3178C6", logo: "typescript" },
-    { name: "WXT", color: "#646CFF", logo: "vite" },
-    { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
-    { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
-    { name: "Zustand", color: "#764ABC", logo: "redux" },
-    { name: "Nx", color: "#143055", logo: "nx" },
-    { name: "Bun", color: "#000000", logo: "bun" },
-];
-
-export default async function Home({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-
-    const t = await getTranslations();
-
-    const features = [
-        {
-            icon: "🔍",
-            title: t("features.instantSearch.title"),
-            description: t("features.instantSearch.description"),
-        },
-        {
-            icon: "📂",
-            title: t("features.dragAndDrop.title"),
-            description: t("features.dragAndDrop.description"),
-        },
-        {
-            icon: "⚡",
-            title: t("features.quickAdd.title"),
-            description: t("features.quickAdd.description"),
-        },
-        {
-            icon: "📱",
-            title: t("features.sidePanel.title"),
-            description: t("features.sidePanel.description"),
-        },
-        {
-            icon: "🌙",
-            title: t("features.darkMode.title"),
-            description: t("features.darkMode.description"),
-        },
-        {
-            icon: "🎯",
-            title: t("features.expandCollapse.title"),
-            description: t("features.expandCollapse.description"),
-        },
-    ];
-
-    return (
-        <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <nav className="fixed top-0 left-0 right-0 z-50 glass">
-                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <LanguageSwitcher currentLocale={locale} />
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="text-muted hover:text-foreground transition-colors"
-                        >
-                            {t("nav.docs")}
-                        </Link>
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
-                        >
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                            {t("nav.github")}
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero Section */}
-            <section className="relative pt-32 pb-24 overflow-hidden">
-                {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
-
-                <div className="relative mx-auto max-w-6xl px-6 text-center">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
-                        <span className="text-sm text-muted">{t("hero.badge")}</span>
-                        <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
-                            {t("hero.manifestV3")}
-                        </span>
-                    </div>
-
-                    <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
-                        <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
-                            {t("hero.title")}
-                        </span>
-                    </h1>
-
-                    <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
-                        {t("hero.description")}
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <a
-                            href="https://github.com/isandrel/bookmark-scout"
-                            className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
-                        >
-                            <svg
-                                className="w-5 h-5"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                            </svg>
-                            {t("hero.viewOnGitHub")}
-                            <svg
-                                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 5l7 7-7 7"
-                                />
-                            </svg>
-                        </a>
-                        <Link
-                            href={`/${locale}/docs`}
-                            className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
-                        >
-                            {t("hero.documentation")}
-                        </Link>
-                    </div>
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="py-24 border-t border-white/5">
-                <div className="mx-auto max-w-6xl px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                            {t("features.title")}
-                        </h2>
-                        <p className="text-muted text-lg">{t("features.subtitle")}</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {features.map((feature) => (
-                            <div
-                                key={feature.title}
-                                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
-                            >
-                                <div className="text-4xl mb-4">{feature.icon}</div>
-                                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                                <p className="text-muted">{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Tech Stack Section */}
-            <section className="py-24 border-t border-white/5">
-                <div className="mx-auto max-w-6xl px-6 text-center">
-                    <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                        {t("techStack.title")}
-                    </h2>
-                    <p className="text-muted text-lg mb-12">{t("techStack.subtitle")}</p>
-
-                    <div className="flex flex-wrap items-center justify-center gap-4">
-                        {techStack.map((tech) => (
-                            <div
-                                key={tech.name}
-                                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
-                            >
-                                <img
-                                    src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
-                                    alt={tech.name}
-                                    className="h-5"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Installation Section */}
-            <section className="py-24 border-t border-white/5">
-                <div className="mx-auto max-w-4xl px-6">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                            {t("installation.title")}
-                        </h2>
-                        <p className="text-muted text-lg">{t("installation.subtitle")}</p>
-                    </div>
-
-                    <div className="space-y-6">
-                        <div className="glass rounded-2xl p-6">
-                            <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                                    1
-                                </span>
-                                {t("installation.step1.title")}
-                            </h3>
-                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                <code className="text-sm text-green-400">
-                                    git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
-                                    cd bookmark-scout
-                                </code>
-                            </pre>
-                        </div>
-
-                        <div className="glass rounded-2xl p-6">
-                            <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                                    2
-                                </span>
-                                {t("installation.step2.title")}
-                            </h3>
-                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
-                                <code className="text-sm text-green-400">
-                                    bun install{"\n"}
-                                    bun run build
-                                </code>
-                            </pre>
-                        </div>
-
-                        <div className="glass rounded-2xl p-6">
-                            <h3 className="font-semibold mb-4 flex items-center gap-2">
-                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
-                                    3
-                                </span>
-                                {t("installation.step3.title")}
-                            </h3>
-                            <ol className="text-muted space-y-2 ml-10">
-                                <li>
-                                    1. <code className="text-foreground">{t("installation.step3.instructions.1")}</code>
-                                </li>
-                                <li>2. {t("installation.step3.instructions.2")}</li>
-                                <li>3. {t("installation.step3.instructions.3")}</li>
-                                <li>
-                                    4. <code className="text-foreground">{t("installation.step3.instructions.4")}</code>
-                                </li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Footer */}
-            <footer className="py-12 border-t border-white/5">
-                <div className="mx-auto max-w-6xl px-6 text-center">
-                    <p className="text-muted">
-                        {t("footer.madeWith")}{" "}
-                        <a
-                            href="https://github.com/isandrel"
-                            className="text-foreground hover:text-primary-light transition-colors"
-                        >
-                            isandrel
-                        </a>
-                    </p>
-                    <p className="text-sm text-muted/60 mt-2">{t("footer.license")}</p>
-                </div>
-            </footer>
-        </div>
-    );
-}
-</file>
-
 <file path="website/app/globals.css">
 @import "tailwindcss";
 
@@ -3801,57 +2992,6 @@ body {
   background: rgba(24, 24, 27, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-}
-</file>
-
-<file path="website/components/LanguageSwitcher.tsx">
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { routing, type Locale } from "@/i18n/routing";
-
-const localeNames: Record<Locale, string> = {
-    en: "English",
-    ja: "日本語",
-    ko: "한국어",
-};
-
-export function LanguageSwitcher({ currentLocale }: { currentLocale: string }) {
-    const pathname = usePathname();
-
-    // Get the path without the basePath and locale prefix
-    const getPathWithoutLocale = () => {
-        // pathname already excludes basePath when using Next.js Link
-        // e.g., pathname = "/en/docs" (not "/bookmark-scout/en/docs")
-        const segments = pathname.split("/");
-        // Remove locale segment (first segment after base)
-        const pathWithoutLocale = segments.slice(2).join("/");
-        return pathWithoutLocale ? `/${pathWithoutLocale}` : "";
-    };
-
-    return (
-        <div className="flex items-center gap-2">
-            {routing.locales.map((locale) => {
-                const isActive = locale === currentLocale;
-                // Don't include basePath - Next.js Link handles it automatically
-                const newPath = `/${locale}${getPathWithoutLocale()}`;
-
-                return (
-                    <Link
-                        key={locale}
-                        href={newPath}
-                        className={`text-sm px-2 py-1 rounded transition-colors ${isActive
-                                ? "bg-white/20 font-medium"
-                                : "text-muted hover:text-foreground hover:bg-white/10"
-                            }`}
-                    >
-                        {localeNames[locale]}
-                    </Link>
-                );
-            })}
-        </div>
-    );
 }
 </file>
 
@@ -9777,6 +8917,823 @@ body {
 }
 </file>
 
+<file path="website/app/[locale]/docs/contributing/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+export default async function ContributingPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            {t("nav.github")}
+                        </a>
+                        <LanguageSwitcher currentLocale={locale} />
+                    </div>
+                </div>
+            </nav>
+
+            <main className="pt-32 pb-24">
+                <div className="mx-auto max-w-4xl px-6">
+                    <div className="mb-8">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
+                        </Link>
+                    </div>
+
+                    <h1 className="text-4xl font-bold mb-4">{t("contributingPage.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("contributingPage.subtitle")}</p>
+
+                    <div className="space-y-8">
+                        <section className="glass rounded-2xl p-6">
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.howTo.title")}</h2>
+                            <ol className="list-decimal list-inside text-muted space-y-3">
+                                <li>{t("contributingPage.howTo.step1")}</li>
+                                <li>
+                                    {t("contributingPage.howTo.step2")}{" "}
+                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
+                                        git checkout -b feature/amazing-feature
+                                    </code>
+                                </li>
+                                <li>
+                                    {t("contributingPage.howTo.step3")}{" "}
+                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
+                                        git commit -m &apos;feat: add amazing feature&apos;
+                                    </code>
+                                </li>
+                                <li>
+                                    {t("contributingPage.howTo.step4")}{" "}
+                                    <code className="bg-black/50 px-2 py-1 rounded text-green-400">
+                                        git push origin feature/amazing-feature
+                                    </code>
+                                </li>
+                                <li>{t("contributingPage.howTo.step5")}</li>
+                            </ol>
+                        </section>
+
+                        <section className="glass rounded-2xl p-6">
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.commits.title")}</h2>
+                            <p className="text-muted mb-4">
+                                {t("contributingPage.commits.description")}
+                            </p>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    &lt;type&gt;(&lt;scope&gt;): &lt;description&gt;
+                                </code>
+                            </pre>
+                            <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span className="text-foreground font-medium">feat</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.feat")}</span>
+                                </div>
+                                <div>
+                                    <span className="text-foreground font-medium">fix</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.fix")}</span>
+                                </div>
+                                <div>
+                                    <span className="text-foreground font-medium">docs</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.docs")}</span>
+                                </div>
+                                <div>
+                                    <span className="text-foreground font-medium">refactor</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.refactor")}</span>
+                                </div>
+                                <div>
+                                    <span className="text-foreground font-medium">test</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.test")}</span>
+                                </div>
+                                <div>
+                                    <span className="text-foreground font-medium">chore</span>
+                                    <span className="text-muted"> - {t("contributingPage.commits.chore")}</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="glass rounded-2xl p-6">
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.setup.title")}</h2>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    # Clone your fork{"\n"}
+                                    git clone https://github.com/YOUR_USERNAME/bookmark-scout.git
+                                    {"\n"}
+                                    cd bookmark-scout{"\n\n"}
+                                    # Install dependencies{"\n"}
+                                    bun install{"\n\n"}
+                                    # Start dev server{"\n"}
+                                    bun run dev{"\n\n"}
+                                    # Run linter{"\n"}
+                                    bun run lint{"\n\n"}
+                                    # Format code{"\n"}
+                                    bun run format
+                                </code>
+                            </pre>
+                        </section>
+
+                        <section className="glass rounded-2xl p-6">
+                            <h2 className="text-2xl font-semibold mb-4">{t("contributingPage.codeStyle.title")}</h2>
+                            <ul className="list-disc list-inside text-muted space-y-2">
+                                <li>{t("contributingPage.codeStyle.biome")}</li>
+                                <li>{t("contributingPage.codeStyle.check")}</li>
+                                <li>{t("contributingPage.codeStyle.strict")}</li>
+                                <li>{t("contributingPage.codeStyle.functional")}</li>
+                            </ul>
+                        </section>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/docs/features/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+export default async function FeaturesPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
+    const features = [
+        {
+            icon: "🔍",
+            title: t("featuresPage.instantSearch.title"),
+            description: t("featuresPage.instantSearch.description"),
+        },
+        {
+            icon: "📂",
+            title: t("featuresPage.dragAndDrop.title"),
+            description: t("featuresPage.dragAndDrop.description"),
+        },
+        {
+            icon: "⚡",
+            title: t("featuresPage.quickAdd.title"),
+            description: t("featuresPage.quickAdd.description"),
+        },
+        {
+            icon: "📱",
+            title: t("featuresPage.sidePanel.title"),
+            description: t("featuresPage.sidePanel.description"),
+        },
+        {
+            icon: "🌙",
+            title: t("featuresPage.darkMode.title"),
+            description: t("featuresPage.darkMode.description"),
+        },
+        {
+            icon: "🎯",
+            title: t("featuresPage.expandCollapse.title"),
+            description: t("featuresPage.expandCollapse.description"),
+        },
+        {
+            icon: "📁",
+            title: t("featuresPage.createFolders.title"),
+            description: t("featuresPage.createFolders.description"),
+        },
+        {
+            icon: "🗑️",
+            title: t("featuresPage.deleteItems.title"),
+            description: t("featuresPage.deleteItems.description"),
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            {t("nav.github")}
+                        </a>
+                        <LanguageSwitcher currentLocale={locale} />
+                    </div>
+                </div>
+            </nav>
+
+            <main className="pt-32 pb-24">
+                <div className="mx-auto max-w-4xl px-6">
+                    <div className="mb-8">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
+                        </Link>
+                    </div>
+
+                    <h1 className="text-4xl font-bold mb-4">{t("featuresPage.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("featuresPage.subtitle")}</p>
+
+                    <div className="space-y-8">
+                        {features.map((feature) => (
+                            <div key={feature.title} className="glass rounded-2xl p-6">
+                                <div className="flex items-start gap-4">
+                                    <span className="text-3xl">{feature.icon}</span>
+                                    <div>
+                                        <h2 className="text-xl font-semibold mb-2">
+                                            {feature.title}
+                                        </h2>
+                                        <p className="text-muted">{feature.description}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <section className="mt-16">
+                        <h2 className="text-2xl font-bold mb-6">{t("featuresPage.roadmap.title")}</h2>
+                        <div className="glass rounded-2xl p-6">
+                            <ul className="space-y-3 text-muted">
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.fullManager")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.options")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.tags")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.duplicates")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.deadLinks")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.shortcuts")}
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/docs/getting-started/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+export default async function GettingStartedPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            {t("nav.github")}
+                        </a>
+                        <LanguageSwitcher currentLocale={locale} />
+                    </div>
+                </div>
+            </nav>
+
+            <main className="pt-32 pb-24">
+                <div className="mx-auto max-w-4xl px-6">
+                    <div className="mb-8">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors text-sm"
+                        >
+                            {t("nav.backToDocs")}
+                        </Link>
+                    </div>
+
+                    <h1 className="text-4xl font-bold mb-8">{t("gettingStarted.title")}</h1>
+
+                    <div className="prose prose-invert max-w-none">
+                        <section className="mb-12">
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.prerequisites.title")}</h2>
+                            <ul className="list-disc list-inside text-muted space-y-2">
+                                <li>
+                                    <a
+                                        href="https://bun.sh"
+                                        className="text-primary-light hover:underline"
+                                    >
+                                        Bun
+                                    </a>{" "}
+                                    {t("gettingStarted.prerequisites.bun")}
+                                </li>
+                                <li>{t("gettingStarted.prerequisites.chrome")}</li>
+                                <li>{t("gettingStarted.prerequisites.git")}</li>
+                            </ul>
+                        </section>
+
+                        <section className="mb-12">
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.installation.title")}</h2>
+
+                            <div className="space-y-6">
+                                <div className="glass rounded-xl p-6">
+                                    <h3 className="font-medium mb-3">1. {t("gettingStarted.installation.step1")}</h3>
+                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                        <code className="text-sm text-green-400">
+                                            git clone https://github.com/isandrel/bookmark-scout.git
+                                            {"\n"}
+                                            cd bookmark-scout
+                                        </code>
+                                    </pre>
+                                </div>
+
+                                <div className="glass rounded-xl p-6">
+                                    <h3 className="font-medium mb-3">2. {t("gettingStarted.installation.step2")}</h3>
+                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                        <code className="text-sm text-green-400">bun install</code>
+                                    </pre>
+                                </div>
+
+                                <div className="glass rounded-xl p-6">
+                                    <h3 className="font-medium mb-3">3. {t("gettingStarted.installation.step3")}</h3>
+                                    <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                        <code className="text-sm text-green-400">bun run build</code>
+                                    </pre>
+                                </div>
+
+                                <div className="glass rounded-xl p-6">
+                                    <h3 className="font-medium mb-3">4. {t("gettingStarted.installation.step4.title")}</h3>
+                                    <ol className="text-muted space-y-2 list-decimal list-inside">
+                                        <li>{t("gettingStarted.installation.step4.1")}</li>
+                                        <li>{t("gettingStarted.installation.step4.2")}</li>
+                                        <li>{t("gettingStarted.installation.step4.3")}</li>
+                                        <li>{t("gettingStarted.installation.step4.4")}</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h2 className="text-2xl font-semibold mb-4">{t("gettingStarted.development.title")}</h2>
+                            <div className="glass rounded-xl p-6">
+                                <p className="text-muted mb-4">
+                                    {t("gettingStarted.development.description")}
+                                </p>
+                                <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                    <code className="text-sm text-green-400">bun run dev</code>
+                                </pre>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/docs/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+export default async function DocsPage({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations();
+
+    const docs = [
+        {
+            title: t("docs.gettingStarted.title"),
+            description: t("docs.gettingStarted.description"),
+            href: "getting-started",
+        },
+        {
+            title: t("docs.features.title"),
+            description: t("docs.features.description"),
+            href: "features",
+        },
+        {
+            title: t("docs.contributing.title"),
+            description: t("docs.contributing.description"),
+            href: "contributing",
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <Link href={`/${locale}`} className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Link href={`/${locale}/docs`} className="text-foreground font-medium">
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            {t("nav.github")}
+                        </a>
+                        <LanguageSwitcher currentLocale={locale} />
+                    </div>
+                </div>
+            </nav>
+
+            <main className="pt-32 pb-24">
+                <div className="mx-auto max-w-4xl px-6">
+                    <h1 className="text-4xl font-bold mb-4">{t("docs.title")}</h1>
+                    <p className="text-muted text-lg mb-12">{t("docs.subtitle")}</p>
+
+                    <div className="grid gap-6">
+                        {docs.map((doc) => (
+                            <Link
+                                key={doc.href}
+                                href={`/${locale}/docs/${doc.href}`}
+                                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 transition-all"
+                            >
+                                <h2 className="text-xl font-semibold mb-2 group-hover:text-primary-light transition-colors">
+                                    {doc.title}
+                                </h2>
+                                <p className="text-muted">{doc.description}</p>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+</file>
+
+<file path="website/app/[locale]/page.tsx">
+import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+
+// Tech stack badges
+const techStack = [
+    { name: "React 19", color: "#61DAFB", logo: "react" },
+    { name: "TypeScript", color: "#3178C6", logo: "typescript" },
+    { name: "WXT", color: "#646CFF", logo: "vite" },
+    { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
+    { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
+    { name: "Zustand", color: "#764ABC", logo: "redux" },
+    { name: "Nx", color: "#143055", logo: "nx" },
+    { name: "Bun", color: "#000000", logo: "bun" },
+];
+
+export default async function Home({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+
+    const t = await getTranslations();
+
+    const features = [
+        {
+            icon: "🔍",
+            title: t("features.instantSearch.title"),
+            description: t("features.instantSearch.description"),
+        },
+        {
+            icon: "📂",
+            title: t("features.dragAndDrop.title"),
+            description: t("features.dragAndDrop.description"),
+        },
+        {
+            icon: "⚡",
+            title: t("features.quickAdd.title"),
+            description: t("features.quickAdd.description"),
+        },
+        {
+            icon: "📱",
+            title: t("features.sidePanel.title"),
+            description: t("features.sidePanel.description"),
+        },
+        {
+            icon: "🌙",
+            title: t("features.darkMode.title"),
+            description: t("features.darkMode.description"),
+        },
+        {
+            icon: "🎯",
+            title: t("features.expandCollapse.title"),
+            description: t("features.expandCollapse.description"),
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <nav className="fixed top-0 left-0 right-0 z-50 glass">
+                <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <span className="text-2xl">🔖</span>
+                        <span className="font-bold text-lg">Bookmark Scout</span>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="text-muted hover:text-foreground transition-colors"
+                        >
+                            {t("nav.docs")}
+                        </Link>
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
+                        >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            {t("nav.github")}
+                        </a>
+                        <LanguageSwitcher currentLocale={locale} />
+                    </div>
+                </div>
+            </nav>
+
+            {/* Hero Section */}
+            <section className="relative pt-32 pb-24 overflow-hidden">
+                {/* Background gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+
+                <div className="relative mx-auto max-w-6xl px-6 text-center">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
+                        <span className="text-sm text-muted">{t("hero.badge")}</span>
+                        <span className="text-xs bg-primary/20 text-primary-light px-2 py-0.5 rounded-full">
+                            {t("hero.manifestV3")}
+                        </span>
+                    </div>
+
+                    <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
+                        <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
+                            {t("hero.title")}
+                        </span>
+                    </h1>
+
+                    <p className="text-xl text-muted max-w-2xl mx-auto mb-12">
+                        {t("hero.description")}
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <a
+                            href="https://github.com/isandrel/bookmark-scout"
+                            className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg>
+                            {t("hero.viewOnGitHub")}
+                            <svg
+                                className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 5l7 7-7 7"
+                                />
+                            </svg>
+                        </a>
+                        <Link
+                            href={`/${locale}/docs`}
+                            className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
+                        >
+                            {t("hero.documentation")}
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
+            {/* Features Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                            {t("features.title")}
+                        </h2>
+                        <p className="text-muted text-lg">{t("features.subtitle")}</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {features.map((feature) => (
+                            <div
+                                key={feature.title}
+                                className="group p-6 rounded-2xl bg-card border border-card-border hover:border-primary/50 hover:glow transition-all duration-300"
+                            >
+                                <div className="text-4xl mb-4">{feature.icon}</div>
+                                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                                <p className="text-muted">{feature.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Tech Stack Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6 text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                        {t("techStack.title")}
+                    </h2>
+                    <p className="text-muted text-lg mb-12">{t("techStack.subtitle")}</p>
+
+                    <div className="flex flex-wrap items-center justify-center gap-4">
+                        {techStack.map((tech) => (
+                            <div
+                                key={tech.name}
+                                className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
+                            >
+                                <img
+                                    src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
+                                    alt={tech.name}
+                                    className="h-5"
+                                />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Installation Section */}
+            <section className="py-24 border-t border-white/5">
+                <div className="mx-auto max-w-4xl px-6">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                            {t("installation.title")}
+                        </h2>
+                        <p className="text-muted text-lg">{t("installation.subtitle")}</p>
+                    </div>
+
+                    <div className="space-y-6">
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    1
+                                </span>
+                                {t("installation.step1.title")}
+                            </h3>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    git clone https://github.com/isandrel/bookmark-scout.git{"\n"}
+                                    cd bookmark-scout
+                                </code>
+                            </pre>
+                        </div>
+
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    2
+                                </span>
+                                {t("installation.step2.title")}
+                            </h3>
+                            <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
+                                <code className="text-sm text-green-400">
+                                    bun install{"\n"}
+                                    bun run build
+                                </code>
+                            </pre>
+                        </div>
+
+                        <div className="glass rounded-2xl p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                                <span className="w-8 h-8 rounded-full bg-primary/20 text-primary-light flex items-center justify-center text-sm">
+                                    3
+                                </span>
+                                {t("installation.step3.title")}
+                            </h3>
+                            <ol className="text-muted space-y-2 ml-10">
+                                <li>
+                                    1. <code className="text-foreground">{t("installation.step3.instructions.1")}</code>
+                                </li>
+                                <li>2. {t("installation.step3.instructions.2")}</li>
+                                <li>3. {t("installation.step3.instructions.3")}</li>
+                                <li>
+                                    4. <code className="text-foreground">{t("installation.step3.instructions.4")}</code>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Footer */}
+            <footer className="py-12 border-t border-white/5">
+                <div className="mx-auto max-w-6xl px-6 text-center">
+                    <p className="text-muted">
+                        {t("footer.madeWith")}{" "}
+                        <a
+                            href="https://github.com/isandrel"
+                            className="text-foreground hover:text-primary-light transition-colors"
+                        >
+                            isandrel
+                        </a>
+                    </p>
+                    <p className="text-sm text-muted/60 mt-2">{t("footer.license")}</p>
+                </div>
+            </footer>
+        </div>
+    );
+}
+</file>
+
 <file path="website/app/layout.tsx">
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -9804,6 +9761,100 @@ export default function RootLayout({
                 {children}
             </body>
         </html>
+    );
+}
+</file>
+
+<file path="website/components/LanguageSwitcher.tsx">
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { routing, type Locale } from "@/i18n/routing";
+
+const localeNames: Record<Locale, string> = {
+    en: "English",
+    ja: "日本語",
+    ko: "한국어",
+};
+
+export function LanguageSwitcher({ currentLocale }: { currentLocale: string }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const pathname = usePathname();
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    // Get the path without the locale prefix
+    const getPathWithoutLocale = () => {
+        const segments = pathname.split("/");
+        const pathWithoutLocale = segments.slice(2).join("/");
+        return pathWithoutLocale ? `/${pathWithoutLocale}` : "";
+    };
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted hover:text-foreground hover:bg-white/10 transition-colors"
+                aria-expanded={isOpen}
+                aria-haspopup="true"
+            >
+                <span className="text-base">🌐</span>
+                <span>{localeNames[currentLocale as Locale]}</span>
+                <svg
+                    className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            {isOpen && (
+                <div className="absolute right-0 mt-2 w-40 rounded-xl bg-card border border-card-border shadow-lg overflow-hidden z-50">
+                    {routing.locales.map((locale) => {
+                        const isActive = locale === currentLocale;
+                        const newPath = `/${locale}${getPathWithoutLocale()}`;
+
+                        return (
+                            <Link
+                                key={locale}
+                                href={newPath}
+                                onClick={() => setIsOpen(false)}
+                                className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${isActive
+                                        ? "bg-white/10 text-foreground"
+                                        : "text-muted hover:text-foreground hover:bg-white/5"
+                                    }`}
+                            >
+                                {isActive && (
+                                    <svg className="w-4 h-4 text-primary-light" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                )}
+                                {!isActive && <span className="w-4" />}
+                                {localeNames[locale]}
+                            </Link>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
     );
 }
 </file>
