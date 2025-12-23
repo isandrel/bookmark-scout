@@ -26,7 +26,6 @@ dist-ssr
 # Repomix
 repomix-output.*
 
-
-
-.nx/cache
-.nx/workspace-data
+# WXT
+.wxt
+.output
