@@ -172,9 +172,13 @@ website/
       page.tsx
     favicon.ico
     globals.css
+    icon.png
     layout.tsx
     page.tsx
+    robots.ts
+    sitemap.ts
   components/
+    JsonLd.tsx
     LanguageSwitcher.tsx
   i18n/
     request.ts
@@ -186,6 +190,8 @@ website/
   public/
     file.svg
     globe.svg
+    icon.png
+    manifest.json
     next.svg
     vercel.svg
     window.svg
@@ -3101,74 +3107,6 @@ src/
 </p>
 </file>
 
-<file path="website/app/[locale]/layout.tsx">
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/routing";
-import "../globals.css";
-
-const inter = Inter({
-    variable: "--font-inter",
-    subsets: ["latin"],
-});
-
-export function generateStaticParams() {
-    return routing.locales.map((locale) => ({ locale }));
-}
-
-export async function generateMetadata({
-    params,
-}: {
-    params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-    const { locale } = await params;
-    const messages = await getMessages();
-    const metadata = messages.metadata as { title: string; description: string };
-
-    return {
-        title: metadata.title,
-        description: metadata.description,
-        keywords: [
-            "chrome extension",
-            "bookmarks",
-            "bookmark manager",
-            "productivity",
-            "browser extension",
-        ],
-        openGraph: {
-            title: "Bookmark Scout",
-            description: metadata.description,
-            type: "website",
-        },
-    };
-}
-
-export default async function LocaleLayout({
-    children,
-    params,
-}: {
-    children: React.ReactNode;
-    params: Promise<{ locale: string }>;
-}) {
-    const { locale } = await params;
-    setRequestLocale(locale);
-
-    const messages = await getMessages();
-
-    return (
-        <html lang={locale} className="dark">
-            <body className={`${inter.variable} font-sans antialiased`}>
-                <NextIntlClientProvider messages={messages}>
-                    {children}
-                </NextIntlClientProvider>
-            </body>
-        </html>
-    );
-}
-</file>
-
 <file path="website/app/globals.css">
 @import "tailwindcss";
 
@@ -3222,6 +3160,104 @@ body {
   background: rgba(24, 24, 27, 0.7);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+</file>
+
+<file path="website/app/robots.ts">
+import type { MetadataRoute } from "next";
+
+export const dynamic = "force-static";
+
+export default function robots(): MetadataRoute.Robots {
+    return {
+        rules: {
+            userAgent: "*",
+            allow: "/",
+        },
+        sitemap: "https://bookmark-scout.vercel.app/sitemap.xml",
+    };
+}
+</file>
+
+<file path="website/app/sitemap.ts">
+import type { MetadataRoute } from "next";
+
+export const dynamic = "force-static";
+
+const baseUrl = "https://bookmark-scout.vercel.app";
+const locales = ["en", "ja", "ko"];
+
+export default function sitemap(): MetadataRoute.Sitemap {
+    const routes = [
+        "",
+        "/docs",
+        "/docs/getting-started",
+        "/docs/features",
+        "/docs/contributing",
+    ];
+
+    const sitemap: MetadataRoute.Sitemap = [];
+
+    for (const locale of locales) {
+        for (const route of routes) {
+            sitemap.push({
+                url: `${baseUrl}/${locale}${route}`,
+                lastModified: new Date(),
+                changeFrequency: route === "" ? "weekly" : "monthly",
+                priority: route === "" ? 1 : 0.8,
+            });
+        }
+    }
+
+    return sitemap;
+}
+</file>
+
+<file path="website/components/JsonLd.tsx">
+export function JsonLd() {
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "Bookmark Scout",
+        applicationCategory: "BrowserApplication",
+        operatingSystem: "Chrome, Firefox",
+        offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+        },
+        description:
+            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+        author: {
+            "@type": "Person",
+            name: "isandrel",
+            url: "https://github.com/isandrel",
+        },
+        url: "https://bookmark-scout.vercel.app",
+        downloadUrl: "https://github.com/isandrel/bookmark-scout",
+        screenshot: "https://bookmark-scout.vercel.app/icon.png",
+        softwareVersion: "0.1.0",
+        aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "5",
+            ratingCount: "1",
+        },
+        featureList: [
+            "Instant bookmark search",
+            "Drag and drop organization",
+            "Quick bookmark saving",
+            "Side panel support",
+            "Dark mode",
+            "Multi-language support",
+        ],
+    };
+
+    return (
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+    );
 }
 </file>
 
@@ -3849,6 +3885,25 @@ export type Locale = (typeof routing.locales)[number];
 
 <file path="website/public/globe.svg">
 <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g clip-path="url(#a)"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.27 14.1a6.5 6.5 0 0 0 3.67-3.45q-1.24.21-2.7.34-.31 1.83-.97 3.1M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.48-1.52a7 7 0 0 1-.96 0H7.5a4 4 0 0 1-.84-1.32q-.38-.89-.63-2.08a40 40 0 0 0 3.92 0q-.25 1.2-.63 2.08a4 4 0 0 1-.84 1.31zm2.94-4.76q1.66-.15 2.95-.43a7 7 0 0 0 0-2.58q-1.3-.27-2.95-.43a18 18 0 0 1 0 3.44m-1.27-3.54a17 17 0 0 1 0 3.64 39 39 0 0 1-4.3 0 17 17 0 0 1 0-3.64 39 39 0 0 1 4.3 0m1.1-1.17q1.45.13 2.69.34a6.5 6.5 0 0 0-3.67-3.44q.65 1.26.98 3.1M8.48 1.5l.01.02q.41.37.84 1.31.38.89.63 2.08a40 40 0 0 0-3.92 0q.25-1.2.63-2.08a4 4 0 0 1 .85-1.32 7 7 0 0 1 .96 0m-2.75.4a6.5 6.5 0 0 0-3.67 3.44 29 29 0 0 1 2.7-.34q.31-1.83.97-3.1M4.58 6.28q-1.66.16-2.95.43a7 7 0 0 0 0 2.58q1.3.27 2.95.43a18 18 0 0 1 0-3.44m.17 4.71q-1.45-.12-2.69-.34a6.5 6.5 0 0 0 3.67 3.44q-.65-1.27-.98-3.1" fill="#666"/></g><defs><clipPath id="a"><path fill="#fff" d="M0 0h16v16H0z"/></clipPath></defs></svg>
+</file>
+
+<file path="website/public/manifest.json">
+{
+    "name": "Bookmark Scout",
+    "short_name": "Bookmark Scout",
+    "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#6366f1",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        }
+    ]
+}
 </file>
 
 <file path="website/public/next.svg">
@@ -9805,31 +9860,99 @@ export default async function DocsPage({
 }
 </file>
 
-<file path="website/app/layout.tsx">
+<file path="website/app/[locale]/layout.tsx">
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { routing } from "@/i18n/routing";
+import { JsonLd } from "@/components/JsonLd";
+import "../globals.css";
 
 const inter = Inter({
     variable: "--font-inter",
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-    title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-    description:
-        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
-};
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
 
-export default function RootLayout({
+export async function generateMetadata({
+    params,
+}: {
+    params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+    const { locale } = await params;
+    const messages = await getMessages();
+    const metadata = messages.metadata as { title: string; description: string };
+
+    return {
+        title: metadata.title,
+        description: metadata.description,
+        keywords: [
+            "chrome extension",
+            "bookmarks",
+            "bookmark manager",
+            "productivity",
+            "browser extension",
+            "bookmark search",
+            "bookmark organizer",
+            "drag and drop",
+        ],
+        alternates: {
+            canonical: `https://bookmark-scout.vercel.app/${locale}`,
+            languages: {
+                en: "https://bookmark-scout.vercel.app/en",
+                ja: "https://bookmark-scout.vercel.app/ja",
+                ko: "https://bookmark-scout.vercel.app/ko",
+            },
+        },
+        openGraph: {
+            title: "Bookmark Scout",
+            description: metadata.description,
+            type: "website",
+            locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
+            url: `https://bookmark-scout.vercel.app/${locale}`,
+            images: [
+                {
+                    url: "/icon.png",
+                    width: 128,
+                    height: 128,
+                    alt: "Bookmark Scout",
+                },
+            ],
+        },
+        twitter: {
+            card: "summary",
+            title: "Bookmark Scout",
+            description: metadata.description,
+            images: ["/icon.png"],
+        },
+    };
+}
+
+export default async function LocaleLayout({
     children,
-}: Readonly<{
+    params,
+}: {
     children: React.ReactNode;
-}>) {
+    params: Promise<{ locale: string }>;
+}) {
+    const { locale } = await params;
+    setRequestLocale(locale);
+
+    const messages = await getMessages();
+
     return (
-        <html lang="en" className="dark">
+        <html lang={locale} className="dark">
+            <head>
+                <JsonLd />
+            </head>
             <body className={`${inter.variable} font-sans antialiased`}>
-                {children}
+                <NextIntlClientProvider messages={messages}>
+                    {children}
+                </NextIntlClientProvider>
             </body>
         </html>
     );
@@ -10407,6 +10530,100 @@ export default async function Home({
                 </div>
             </footer>
         </div>
+    );
+}
+</file>
+
+<file path="website/app/layout.tsx">
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+});
+
+const baseUrl = "https://bookmark-scout.vercel.app";
+
+export const metadata: Metadata = {
+    metadataBase: new URL(baseUrl),
+    title: {
+        default: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        template: "%s | Bookmark Scout",
+    },
+    description:
+        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support.",
+    keywords: [
+        "Chrome extension",
+        "bookmark manager",
+        "bookmark organizer",
+        "browser bookmarks",
+        "bookmark search",
+        "drag and drop bookmarks",
+        "bookmark folders",
+        "Chrome bookmarks",
+        "Firefox bookmarks",
+        "bookmark scout",
+    ],
+    authors: [{ name: "isandrel", url: "https://github.com/isandrel" }],
+    creator: "isandrel",
+    publisher: "isandrel",
+    openGraph: {
+        type: "website",
+        locale: "en_US",
+        alternateLocale: ["ja_JP", "ko_KR"],
+        url: baseUrl,
+        siteName: "Bookmark Scout",
+        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        description:
+            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+        images: [
+            {
+                url: "/icon.png",
+                width: 128,
+                height: 128,
+                alt: "Bookmark Scout Icon",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary",
+        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        description:
+            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
+        images: ["/icon.png"],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+    icons: {
+        icon: "/icon.png",
+        apple: "/icon.png",
+    },
+    manifest: "/manifest.json",
+    category: "technology",
+};
+
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <html lang="en" className="dark">
+            <body className={`${inter.variable} font-sans antialiased`}>
+                {children}
+            </body>
+        </html>
     );
 }
 </file>
