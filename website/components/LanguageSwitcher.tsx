@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 
 const localeNames: Record<Locale, string> = {
-    en: "English",
-    ja: "日本語",
-    ko: "한국어",
+    en: "🇺🇸 English",
+    ja: "🇯🇵 日本語",
+    ko: "🇰🇷 한국어",
 };
 
 export function LanguageSwitcher({ currentLocale }: { currentLocale: string }) {
@@ -66,8 +66,8 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: string }) {
                                 href={newPath}
                                 onClick={() => setIsOpen(false)}
                                 className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${isActive
-                                        ? "bg-white/10 text-foreground"
-                                        : "text-muted hover:text-foreground hover:bg-white/5"
+                                    ? "bg-white/10 text-foreground"
+                                    : "text-muted hover:text-foreground hover:bg-white/5"
                                     }`}
                             >
                                 {isActive && (
