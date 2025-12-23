@@ -6,6 +6,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { t } from '@/hooks/use-i18n';
 
 interface BookmarkSearchProps {
   query: string;
@@ -28,7 +29,7 @@ export function BookmarkSearch({
         <Input
           ref={inputRef}
           type="text"
-          placeholder="Search bookmarks..."
+          placeholder={t('searchPlaceholder')}
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="w-full search-input"
@@ -39,7 +40,7 @@ export function BookmarkSearch({
             size="icon"
             className="shrink-0"
             onClick={onToggleExpandAll}
-            title={forceExpandAll ? 'Collapse non-matching folders' : 'Expand all folders'}
+            title={forceExpandAll ? t('collapseAll') : t('expandAll')}
           >
             {forceExpandAll ? (
               <ChevronUp className="h-4 w-4" />

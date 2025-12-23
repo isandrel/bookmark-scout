@@ -1,0 +1,94 @@
+{
+    "extName": {
+        "message": "북마크 스카우트",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "북마크를 빠르게 검색하고 특정 폴더에 저장합니다.",
+        "description": "Extension description"
+    },
+    "searchPlaceholder": {
+        "message": "북마크 검색...",
+        "description": "Search input placeholder"
+    },
+    "newFolder": {
+        "message": "새 폴더",
+        "description": "Default name for new folder"
+    },
+    "retry": {
+        "message": "다시 시도",
+        "description": "Retry button text"
+    },
+    "error": {
+        "message": "오류",
+        "description": "Error label"
+    },
+    "folderCreated": {
+        "message": "폴더가 생성되었습니다",
+        "description": "Toast title for folder creation success"
+    },
+    "errorCreatingFolder": {
+        "message": "폴더 생성 오류",
+        "description": "Toast title for folder creation error"
+    },
+    "bookmarkAdded": {
+        "message": "북마크가 추가되었습니다",
+        "description": "Toast title for bookmark addition success"
+    },
+    "errorAddingBookmark": {
+        "message": "북마크 추가 오류",
+        "description": "Toast title for bookmark addition error"
+    },
+    "bookmarkDeleted": {
+        "message": "북마크가 삭제되었습니다",
+        "description": "Toast title for bookmark deletion success"
+    },
+    "errorDeletingBookmark": {
+        "message": "북마크 삭제 오류",
+        "description": "Toast title for bookmark deletion error"
+    },
+    "folderDeleted": {
+        "message": "폴더가 삭제되었습니다",
+        "description": "Toast title for folder deletion success"
+    },
+    "errorDeletingFolder": {
+        "message": "폴더 삭제 오류",
+        "description": "Toast title for folder deletion error"
+    },
+    "itemMoved": {
+        "message": "항목이 이동되었습니다",
+        "description": "Toast title for item move success"
+    },
+    "errorMovingItem": {
+        "message": "항목 이동 오류",
+        "description": "Toast title for item move error"
+    },
+    "addBookmark": {
+        "message": "현재 페이지 추가",
+        "description": "Add bookmark tooltip"
+    },
+    "addFolder": {
+        "message": "폴더 추가",
+        "description": "Add folder tooltip"
+    },
+    "deleteFolder": {
+        "message": "폴더 삭제",
+        "description": "Delete folder tooltip"
+    },
+    "deleteBookmark": {
+        "message": "북마크 삭제",
+        "description": "Delete bookmark tooltip"
+    },
+    "expandAll": {
+        "message": "모두 펼치기",
+        "description": "Expand all button tooltip"
+    },
+    "collapseAll": {
+        "message": "모두 접기",
+        "description": "Collapse all button tooltip"
+    },
+    "enterFolderName": {
+        "message": "폴더 이름 입력...",
+        "description": "New folder input placeholder"
+    }
+}

@@ -1,0 +1,94 @@
+{
+    "extName": {
+        "message": "ブックマークスカウト",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "ブックマークを素早く検索し、特定のフォルダに保存します。",
+        "description": "Extension description"
+    },
+    "searchPlaceholder": {
+        "message": "ブックマークを検索...",
+        "description": "Search input placeholder"
+    },
+    "newFolder": {
+        "message": "新規フォルダ",
+        "description": "Default name for new folder"
+    },
+    "retry": {
+        "message": "再試行",
+        "description": "Retry button text"
+    },
+    "error": {
+        "message": "エラー",
+        "description": "Error label"
+    },
+    "folderCreated": {
+        "message": "フォルダを作成しました",
+        "description": "Toast title for folder creation success"
+    },
+    "errorCreatingFolder": {
+        "message": "フォルダの作成に失敗しました",
+        "description": "Toast title for folder creation error"
+    },
+    "bookmarkAdded": {
+        "message": "ブックマークを追加しました",
+        "description": "Toast title for bookmark addition success"
+    },
+    "errorAddingBookmark": {
+        "message": "ブックマークの追加に失敗しました",
+        "description": "Toast title for bookmark addition error"
+    },
+    "bookmarkDeleted": {
+        "message": "ブックマークを削除しました",
+        "description": "Toast title for bookmark deletion success"
+    },
+    "errorDeletingBookmark": {
+        "message": "ブックマークの削除に失敗しました",
+        "description": "Toast title for bookmark deletion error"
+    },
+    "folderDeleted": {
+        "message": "フォルダを削除しました",
+        "description": "Toast title for folder deletion success"
+    },
+    "errorDeletingFolder": {
+        "message": "フォルダの削除に失敗しました",
+        "description": "Toast title for folder deletion error"
+    },
+    "itemMoved": {
+        "message": "アイテムを移動しました",
+        "description": "Toast title for item move success"
+    },
+    "errorMovingItem": {
+        "message": "アイテムの移動に失敗しました",
+        "description": "Toast title for item move error"
+    },
+    "addBookmark": {
+        "message": "現在のページを追加",
+        "description": "Add bookmark tooltip"
+    },
+    "addFolder": {
+        "message": "フォルダを追加",
+        "description": "Add folder tooltip"
+    },
+    "deleteFolder": {
+        "message": "フォルダを削除",
+        "description": "Delete folder tooltip"
+    },
+    "deleteBookmark": {
+        "message": "ブックマークを削除",
+        "description": "Delete bookmark tooltip"
+    },
+    "expandAll": {
+        "message": "すべて展開",
+        "description": "Expand all button tooltip"
+    },
+    "collapseAll": {
+        "message": "すべて折りたたむ",
+        "description": "Collapse all button tooltip"
+    },
+    "enterFolderName": {
+        "message": "フォルダ名を入力...",
+        "description": "New folder input placeholder"
+    }
+}

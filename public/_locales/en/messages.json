@@ -1,0 +1,94 @@
+{
+    "extName": {
+        "message": "Bookmark Scout",
+        "description": "Extension name"
+    },
+    "extDescription": {
+        "message": "Quickly search and save bookmarks to specific folders.",
+        "description": "Extension description"
+    },
+    "searchPlaceholder": {
+        "message": "Search bookmarks...",
+        "description": "Search input placeholder"
+    },
+    "newFolder": {
+        "message": "New Folder",
+        "description": "Default name for new folder"
+    },
+    "retry": {
+        "message": "Retry",
+        "description": "Retry button text"
+    },
+    "error": {
+        "message": "Error",
+        "description": "Error label"
+    },
+    "folderCreated": {
+        "message": "Folder Created",
+        "description": "Toast title for folder creation success"
+    },
+    "errorCreatingFolder": {
+        "message": "Error Creating Folder",
+        "description": "Toast title for folder creation error"
+    },
+    "bookmarkAdded": {
+        "message": "Bookmark Added",
+        "description": "Toast title for bookmark addition success"
+    },
+    "errorAddingBookmark": {
+        "message": "Error Adding Bookmark",
+        "description": "Toast title for bookmark addition error"
+    },
+    "bookmarkDeleted": {
+        "message": "Bookmark Deleted",
+        "description": "Toast title for bookmark deletion success"
+    },
+    "errorDeletingBookmark": {
+        "message": "Error Deleting Bookmark",
+        "description": "Toast title for bookmark deletion error"
+    },
+    "folderDeleted": {
+        "message": "Folder Deleted",
+        "description": "Toast title for folder deletion success"
+    },
+    "errorDeletingFolder": {
+        "message": "Error Deleting Folder",
+        "description": "Toast title for folder deletion error"
+    },
+    "itemMoved": {
+        "message": "Item Moved",
+        "description": "Toast title for item move success"
+    },
+    "errorMovingItem": {
+        "message": "Error Moving Item",
+        "description": "Toast title for item move error"
+    },
+    "addBookmark": {
+        "message": "Add current page",
+        "description": "Add bookmark tooltip"
+    },
+    "addFolder": {
+        "message": "Add folder",
+        "description": "Add folder tooltip"
+    },
+    "deleteFolder": {
+        "message": "Delete folder",
+        "description": "Delete folder tooltip"
+    },
+    "deleteBookmark": {
+        "message": "Delete bookmark",
+        "description": "Delete bookmark tooltip"
+    },
+    "expandAll": {
+        "message": "Expand all",
+        "description": "Expand all button tooltip"
+    },
+    "collapseAll": {
+        "message": "Collapse all",
+        "description": "Collapse all button tooltip"
+    },
+    "enterFolderName": {
+        "message": "Enter folder name...",
+        "description": "New folder input placeholder"
+    }
+}

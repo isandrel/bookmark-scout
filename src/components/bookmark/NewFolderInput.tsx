@@ -6,6 +6,7 @@
 import { Folder } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { Input } from '@/components/ui/input';
+import { t } from '@/hooks/use-i18n';
 
 interface NewFolderInputProps {
   value: string;
@@ -48,7 +49,7 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="New folder name"
+          placeholder={t('enterFolderName')}
           className="h-7 text-sm w-full search-input"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {

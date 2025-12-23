@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/toaster';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useToast } from '@/hooks/use-toast';
+import { t } from '@/hooks/use-i18n';
 import { useBookmarkStore } from '@/stores';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.css';
@@ -93,7 +94,7 @@ function PopupPage() {
               {
                 id: 'temp-folder',
                 parentId: node.id,
-                title: 'New Folder',
+                title: t('newFolder'),
                 isOpen: false,
                 isTemporary: true,
                 children: [],
@@ -128,8 +129,8 @@ function PopupPage() {
     }
     await withToast(
       () => createFolder(creatingFolderId, newFolderName),
-      'Folder Created',
-      'Error Creating Folder',
+      t('folderCreated'),
+      t('errorCreatingFolder'),
     );
     setCreatingFolderId(null);
     setNewFolderName('');
@@ -149,7 +150,7 @@ function PopupPage() {
 
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      await withToast(() => handleDrop(operation), 'Item Moved', 'Error Moving Item');
+      await withToast(() => handleDrop(operation), t('itemMoved'), t('errorMovingItem'));
     },
     [handleDrop, withToast],
   );
@@ -161,8 +162,8 @@ function PopupPage() {
   if (error) {
     return (
       <div className="p-4">
-        <div className="text-red-500 mb-4">Error: {error}</div>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
+        <div className="text-red-500 mb-4">{t('error')}: {error}</div>
+        <Button onClick={() => window.location.reload()}>{t('retry')}</Button>
       </div>
     );
   }
@@ -209,19 +210,19 @@ function PopupPage() {
                     onAddBookmark={(id) =>
                       withToast(
                         () => addBookmarkToFolder(id),
-                        'Bookmark Added',
-                        'Error Adding Bookmark',
+                        t('bookmarkAdded'),
+                        t('errorAddingBookmark'),
                       )
                     }
                     onAddFolder={handleAddFolder}
                     onDeleteFolder={(id) =>
-                      withToast(() => removeFolder(id), 'Folder Deleted', 'Error Deleting Folder')
+                      withToast(() => removeFolder(id), t('folderDeleted'), t('errorDeletingFolder'))
                     }
                     onDeleteBookmark={(id) =>
                       withToast(
                         () => removeBookmark(id),
-                        'Bookmark Deleted',
-                        'Error Deleting Bookmark',
+                        t('bookmarkDeleted'),
+                        t('errorDeletingBookmark'),
                       )
                     }
                     onCreateFolder={handleCreateFolder}

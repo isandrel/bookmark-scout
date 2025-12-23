@@ -8,9 +8,10 @@ export default defineConfig({
     outDir: 'dist',
 
     manifest: {
-        name: 'Bookmark Scout',
-        version: '1.0.0',
-        description: 'Quickly search and save bookmarks to specific folders.',
+        name: '__MSG_extName__',
+        version: '0.1.0',
+        description: '__MSG_extDescription__',
+        default_locale: 'en',
         icons: {
             16: 'icon-16.png',
             32: 'icon-32.png',
