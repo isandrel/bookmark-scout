@@ -19,7 +19,8 @@
     "changeset": "changeset",
     "version": "changeset version",
     "release": "bun run build && changeset publish",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "prepare": "husky"
   },
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.7.7",
@@ -63,10 +64,17 @@
     "@vitejs/plugin-react-swc": "^4.2.2",
     "autoprefixer": "^10.4.22",
     "class-variance-authority": "^0.7.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "postcss": "^8.5.6",
     "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
     "wxt": "^0.20.13"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "bunx biome check --write"
+    ]
   }
 }
