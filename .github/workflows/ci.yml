@@ -46,4 +46,10 @@ jobs:
         run: bun install
 
       - name: Build for ${{ matrix.target }}
-        run: bun run build:${{ matrix.target }}
+        run: |
+          if [ "${{ matrix.target }}" = "chrome" ]; then
+            bun run build
+          else
+            bun run build:${{ matrix.target }}
+          fi
+
