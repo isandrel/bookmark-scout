@@ -20,6 +20,10 @@ export function DataTableToolbar<TData>({ table, currentFolderId }: DataTableToo
   const isFiltered = table.getState().columnFilters.length > 0;
   const [applyToCurrentFolder, setApplyToCurrentFolder] = useState(false);
 
+  // Call hooks unconditionally at the top level
+  const parentIdOptions = Object.values(useParentIdMap());
+  const urlOptions = Object.values(useUrlMap());
+
   const handleApplyToCurrentFolderChange = (checked: boolean | 'indeterminate') => {
     setApplyToCurrentFolder(checked === true);
   };
@@ -79,14 +83,14 @@ export function DataTableToolbar<TData>({ table, currentFolderId }: DataTableToo
           <DataTableFacetedFilter
             column={table.getColumn('parentId')}
             title="Parent ID"
-            options={Object.values(useParentIdMap())}
+            options={parentIdOptions}
           />
         )}
         {table.getColumn('url') && (
           <DataTableFacetedFilter
             column={table.getColumn('url')}
             title="URL"
-            options={Object.values(useUrlMap())}
+            options={urlOptions}
           />
         )}
         {table.getColumn('url') && (

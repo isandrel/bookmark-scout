@@ -43,7 +43,7 @@ export function useBookmarkOperations(onRefresh: () => Promise<void>): UseBookma
 
         const truncatedTitle = tab.title
           ? tab.title.length > 30
-            ? tab.title.slice(0, 30) + '...'
+            ? `${tab.title.slice(0, 30)}...`
             : tab.title
           : 'New Bookmark';
 
@@ -104,7 +104,7 @@ export function useBookmarkOperations(onRefresh: () => Promise<void>): UseBookma
 
         const truncatedTitle = bookmark.title
           ? bookmark.title.length > 30
-            ? bookmark.title.slice(0, 30) + '...'
+            ? `${bookmark.title.slice(0, 30)}...`
             : bookmark.title
           : 'Bookmark';
 
@@ -136,7 +136,7 @@ export function useBookmarkOperations(onRefresh: () => Promise<void>): UseBookma
 
         const truncatedTitle = folder.title
           ? folder.title.length > 30
-            ? folder.title.slice(0, 30) + '...'
+            ? `${folder.title.slice(0, 30)}...`
             : folder.title
           : 'Folder';
 

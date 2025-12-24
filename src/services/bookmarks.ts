@@ -173,7 +173,7 @@ export async function getCurrentTab(): Promise<chrome.tabs.Tab> {
  */
 export function truncate(text?: string, length = 50): string {
   if (!text) return '';
-  return text.length > length ? text.slice(0, length) + '...' : text;
+  return text.length > length ? `${text.slice(0, length)}...` : text;
 }
 
 /**

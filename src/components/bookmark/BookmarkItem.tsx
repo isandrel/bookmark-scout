@@ -143,6 +143,7 @@ export function BookmarkItem({
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
         <img src={getFaviconUrl(node.url ?? '')} alt="favicon" className="w-4 h-4 mr-2 shrink-0" />
+        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
         <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
       </a>
       <Button

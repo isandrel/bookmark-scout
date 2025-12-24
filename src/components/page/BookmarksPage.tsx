@@ -22,7 +22,7 @@ const formatDate = (timestamp?: number) => {
 
 const truncate = (text?: string, length = 50) => {
   if (!text) return '';
-  return text.length > length ? text.slice(0, length) + '...' : text;
+  return text.length > length ? `${text.slice(0, length)}...` : text;
 };
 
 const processNode = (node: chrome.bookmarks.BookmarkTreeNode, parentId = 'Root'): Bookmark => {
@@ -44,7 +44,7 @@ const processNode = (node: chrome.bookmarks.BookmarkTreeNode, parentId = 'Root')
 
 async function getTopLevelFolders(): Promise<Bookmark[]> {
   return new Promise((resolve) => {
-    if (chrome && chrome.bookmarks) {
+    if (chrome?.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         // Filter out the root node and only process the actual top-level folders
         const topLevelFolders = nodes[0].children?.map((node) => processNode(node)) || [];
@@ -58,7 +58,7 @@ async function getTopLevelFolders(): Promise<Bookmark[]> {
 
 async function getFolderContents(folderId: string): Promise<Bookmark[]> {
   return new Promise((resolve) => {
-    if (chrome && chrome.bookmarks) {
+    if (chrome?.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         // Find the target folder in the tree
         const findFolder = (
@@ -77,7 +77,7 @@ async function getFolderContents(folderId: string): Promise<Bookmark[]> {
         };
 
         const targetFolder = findFolder(nodes);
-        if (targetFolder && targetFolder.children) {
+        if (targetFolder?.children) {
           const contents = targetFolder.children.map((node) => processNode(node, folderId));
           resolve(contents);
         } else {
@@ -99,7 +99,7 @@ export const useParentIdMap = () => {
   const [parentIdMapState, setParentIdMap] = useState(parentIdMap);
 
   useEffect(() => {
-    if (chrome && chrome.bookmarks) {
+    if (chrome?.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         const map: Record<
           string,
@@ -114,11 +114,15 @@ export const useParentIdMap = () => {
           };
 
           if (node.children) {
-            node.children.forEach((child) => processNode(child, node.id));
+            node.children.forEach((child) => {
+              processNode(child, node.id);
+            });
           }
         };
 
-        nodes.forEach((node) => processNode(node));
+        nodes.forEach((node) => {
+          processNode(node);
+        });
         setParentIdMap(map);
       });
     }
@@ -136,7 +140,7 @@ export const useUrlMap = () => {
   const [urlMapState, setUrlMap] = useState(urlMap);
 
   useEffect(() => {
-    if (chrome && chrome.bookmarks) {
+    if (chrome?.bookmarks) {
       chrome.bookmarks.getTree((nodes) => {
         const map: Record<
           string,
@@ -145,7 +149,9 @@ export const useUrlMap = () => {
 
         const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
           if (node.children) {
-            node.children.forEach((child) => processNode(child));
+            node.children.forEach((child) => {
+              processNode(child);
+            });
           } else if (node.url) {
             const domain = new URL(node.url).hostname.split('.').slice(-2).join('.');
             map[domain] = {
@@ -156,7 +162,9 @@ export const useUrlMap = () => {
           }
         };
 
-        nodes.forEach((node) => processNode(node));
+        nodes.forEach((node) => {
+          processNode(node);
+        });
         setUrlMap(map);
       });
     }

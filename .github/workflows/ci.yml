@@ -24,7 +24,6 @@ jobs:
 
       - name: Run lint
         run: bun lint
-        continue-on-error: true  # TODO: Fix existing lint errors and remove this
 
   build:
     name: Build

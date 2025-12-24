@@ -14,8 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/toaster';
 import { useDebounce } from '@/hooks/use-debounce';
-import { useToast } from '@/hooks/use-toast';
 import { t } from '@/hooks/use-i18n';
+import { useToast } from '@/hooks/use-toast';
 import { useBookmarkStore } from '@/stores';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.css';
@@ -162,7 +162,9 @@ function PopupPage() {
   if (error) {
     return (
       <div className="p-4">
-        <div className="text-red-500 mb-4">{t('error')}: {error}</div>
+        <div className="text-red-500 mb-4">
+          {t('error')}: {error}
+        </div>
         <Button onClick={() => window.location.reload()}>{t('retry')}</Button>
       </div>
     );
@@ -216,7 +218,11 @@ function PopupPage() {
                     }
                     onAddFolder={handleAddFolder}
                     onDeleteFolder={(id) =>
-                      withToast(() => removeFolder(id), t('folderDeleted'), t('errorDeletingFolder'))
+                      withToast(
+                        () => removeFolder(id),
+                        t('folderDeleted'),
+                        t('errorDeletingFolder'),
+                      )
                     }
                     onDeleteBookmark={(id) =>
                       withToast(

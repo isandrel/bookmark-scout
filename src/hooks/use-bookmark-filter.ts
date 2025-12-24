@@ -55,7 +55,7 @@ export function useBookmarkFilter(
           const filteredChildren = filterFolders(node.children, searchQuery);
 
           if (nodeMatches || filteredChildren.length > 0) {
-            let childrenToInclude;
+            let childrenToInclude: BookmarkTreeNode[];
             if (nodeMatches) {
               childrenToInclude = node.children.map((child) => {
                 if (
