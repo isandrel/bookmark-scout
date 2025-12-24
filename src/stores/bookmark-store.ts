@@ -121,7 +121,7 @@ export const useBookmarkStore = create<BookmarkState>()(
 
           const truncatedTitle = tab.title
             ? tab.title.length > 30
-              ? tab.title.slice(0, 30) + '...'
+              ? `${tab.title.slice(0, 30)}...`
               : tab.title
             : 'New Bookmark';
 
@@ -158,7 +158,7 @@ export const useBookmarkStore = create<BookmarkState>()(
 
           const truncatedTitle = bookmark.title
             ? bookmark.title.length > 30
-              ? bookmark.title.slice(0, 30) + '...'
+              ? `${bookmark.title.slice(0, 30)}...`
               : bookmark.title
             : 'Bookmark';
 
@@ -177,7 +177,7 @@ export const useBookmarkStore = create<BookmarkState>()(
 
           const truncatedTitle = folder.title
             ? folder.title.length > 30
-              ? folder.title.slice(0, 30) + '...'
+              ? `${folder.title.slice(0, 30)}...`
               : folder.title
             : 'Folder';
 

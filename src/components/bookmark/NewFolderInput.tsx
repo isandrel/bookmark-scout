@@ -38,6 +38,8 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
   }, [value, onSubmit, onCancel]);
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: onClick used only for event bubbling control
+    // biome-ignore lint/a11y/noStaticElementInteractions: This div is a container, not interactive
     <div
       className="flex items-center gap-2 py-1 px-2 hover:bg-accent rounded-md folder-item"
       onClick={(e) => e.stopPropagation()}

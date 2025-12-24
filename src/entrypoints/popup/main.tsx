@@ -5,9 +5,9 @@ import { SidebarProvider } from '@/components/ui/sidebar';
 import '@/index.css';
 
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <SidebarProvider>
-            <PopupPage />
-        </SidebarProvider>
-    </StrictMode>,
+  <StrictMode>
+    <SidebarProvider>
+      <PopupPage />
+    </SidebarProvider>
+  </StrictMode>,
 );

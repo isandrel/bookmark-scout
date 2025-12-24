@@ -181,6 +181,7 @@ export function FolderItem({
             className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
           >
             <Folder className="w-4 h-4 mr-2 shrink-0 text-muted-foreground" />
+            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
             <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
           </div>
           <div className="flex items-center gap-1 ml-2 shrink-0 action-button">

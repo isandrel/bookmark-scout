@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import OptionsPage from '@/components/page/OptionsPage';
 
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <OptionsPage />
-    </StrictMode>,
+  <StrictMode>
+    <OptionsPage />
+  </StrictMode>,
 );

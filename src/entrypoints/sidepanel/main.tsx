@@ -6,9 +6,9 @@ import '@/index.css';
 
 // Sidepanel reuses the same PopupPage component
 createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-        <SidebarProvider>
-            <PopupPage />
-        </SidebarProvider>
-    </StrictMode>,
+  <StrictMode>
+    <SidebarProvider>
+      <PopupPage />
+    </SidebarProvider>
+  </StrictMode>,
 );
