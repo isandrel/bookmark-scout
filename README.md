@@ -24,6 +24,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/ci.yml?style=flat-square&label=ci" alt="CI"></a>
   <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
   <a href="https://github.com/isandrel/bookmark-scout/actions/workflows/repomix.yml"><img src="https://img.shields.io/github/actions/workflow/status/isandrel/bookmark-scout/repomix.yml?style=flat-square&label=repomix" alt="Repomix CI"></a>
   <a href="https://github.com/isandrel/bookmark-scout/releases"><img src="https://img.shields.io/github/v/release/isandrel/bookmark-scout?style=flat-square" alt="Release"></a>
