@@ -1,0 +1,52 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "ES2022",
+        "module": "ESNext",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@bookmark-scout/ui": [
+                "packages/ui/src/index.ts"
+            ],
+            "@bookmark-scout/ui/*": [
+                "packages/ui/src/*"
+            ],
+            "@bookmark-scout/shared": [
+                "packages/shared/src/index.ts"
+            ],
+            "@bookmark-scout/shared/*": [
+                "packages/shared/src/*"
+            ],
+            "@bookmark-scout/i18n": [
+                "packages/i18n/src/index.ts"
+            ],
+            "@bookmark-scout/i18n/*": [
+                "packages/i18n/src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "tmp"
+    ]
+}

@@ -3,23 +3,22 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "wxt",
-    "dev:firefox": "wxt -b firefox",
-    "dev:edge": "wxt -b edge",
-    "build": "wxt build",
-    "build:firefox": "wxt build -b firefox",
-    "build:edge": "wxt build -b edge",
-    "zip": "wxt zip",
-    "zip:firefox": "wxt zip -b firefox",
-    "zip:edge": "wxt zip -b edge",
-    "lint": "biome lint ./src",
-    "format": "biome format --write ./src",
-    "check": "biome check --write ./src",
-    "changeset": "changeset",
-    "version": "changeset version",
-    "release": "bun run build && changeset publish",
-    "postinstall": "wxt prepare",
+    "dev": "nx run extension:dev",
+    "dev:firefox": "nx run extension:dev:firefox",
+    "dev:edge": "nx run extension:dev:edge",
+    "build": "nx run extension:build",
+    "build:firefox": "nx run extension:build:firefox",
+    "build:edge": "nx run extension:build:edge",
+    "build:all": "nx run-many --target=build --all",
+    "lint": "nx run-many --target=lint --all",
+    "dev:website": "nx run website:dev",
+    "build:website": "nx run website:build",
+    "graph": "nx graph",
     "prepare": "husky"
   },
   "dependencies": {
@@ -55,6 +54,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.3.10",
     "@changesets/cli": "^2.29.8",
+    "@nx/js": "^22.3.3",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/chrome": "^0.1.32",
@@ -66,6 +66,7 @@
     "class-variance-authority": "^0.7.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "nx": "^22.3.3",
     "postcss": "^8.5.6",
     "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4.1.17",
@@ -73,8 +74,8 @@
     "wxt": "^0.20.13"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx}": [
-      "bunx biome check --write"
+    "apps/extension/src/**/*.{ts,tsx}": [
+      "bunx nx run extension:lint"
     ]
   }
 }

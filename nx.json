@@ -1,0 +1,49 @@
+{
+    "$schema": "https://raw.githubusercontent.com/nrwl/nx/master/packages/nx/schemas/nx-schema.json",
+    "namedInputs": {
+        "default": [
+            "{projectRoot}/**/*",
+            "sharedGlobals"
+        ],
+        "sharedGlobals": [],
+        "production": [
+            "default",
+            "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+            "!{projectRoot}/tsconfig.spec.json"
+        ]
+    },
+    "targetDefaults": {
+        "build": {
+            "dependsOn": [
+                "^build"
+            ],
+            "inputs": [
+                "production",
+                "^production"
+            ],
+            "cache": true
+        },
+        "lint": {
+            "inputs": [
+                "default"
+            ],
+            "cache": true
+        },
+        "dev": {
+            "cache": false
+        }
+    },
+    "defaultBase": "main",
+    "plugins": [
+        {
+            "plugin": "@nx/js",
+            "options": {
+                "analyzeSourceFiles": true
+            }
+        }
+    ],
+    "workspaceLayout": {
+        "appsDir": "apps",
+        "libsDir": "packages"
+    }
+}
