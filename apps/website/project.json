@@ -1,0 +1,36 @@
+{
+    "name": "website",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/website/app",
+    "tags": [
+        "scope:website",
+        "type:app"
+    ],
+    "targets": {
+        "dev": {
+            "command": "next dev",
+            "options": {
+                "cwd": "apps/website"
+            }
+        },
+        "build": {
+            "command": "next build",
+            "options": {
+                "cwd": "apps/website"
+            }
+        },
+        "start": {
+            "command": "next start",
+            "options": {
+                "cwd": "apps/website"
+            }
+        },
+        "lint": {
+            "command": "next lint",
+            "options": {
+                "cwd": "apps/website"
+            }
+        }
+    }
+}

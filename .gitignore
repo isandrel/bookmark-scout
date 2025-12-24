@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# App build outputs
+apps/*/dist
+apps/*/.output
+apps/*/out
+apps/*/.next
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -33,3 +39,6 @@ repomix-output.*
 # Extension signing (keep locally, add to GitHub Secrets)
 dist.pem
 dist.crx
+# Nx cache
+.nx/cache
+.nx/workspace-data

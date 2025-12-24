@@ -1,0 +1,60 @@
+{
+    "name": "extension",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/extension/src",
+    "tags": [
+        "scope:extension",
+        "type:app"
+    ],
+    "targets": {
+        "dev": {
+            "command": "wxt",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:firefox": {
+            "command": "wxt -b firefox",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:edge": {
+            "command": "wxt -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build": {
+            "command": "wxt build",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:firefox": {
+            "command": "wxt build -b firefox",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:edge": {
+            "command": "wxt build -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip": {
+            "command": "wxt zip",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "lint": {
+            "command": "biome lint ./src",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        }
+    }
+}
