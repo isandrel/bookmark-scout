@@ -71,8 +71,11 @@ bun run dev
 ### Building
 
 ```bash
-# Build for Chrome
+# Build for all browsers
 bun run build
+
+# Build for Chrome
+bun run build:chrome
 
 # Build for Firefox
 bun run build:firefox
