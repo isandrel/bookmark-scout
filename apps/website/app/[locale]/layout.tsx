@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { JsonLd } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/site-config";
 import "../globals.css";
 
 const inter = Inter({
@@ -38,11 +39,11 @@ export async function generateMetadata({
             "drag and drop",
         ],
         alternates: {
-            canonical: `https://bookmark-scout.com/${locale}`,
+            canonical: `${SITE_URL}/${locale}`,
             languages: {
-                en: "https://bookmark-scout.com/en",
-                ja: "https://bookmark-scout.com/ja",
-                ko: "https://bookmark-scout.com/ko",
+                en: `${SITE_URL}/en`,
+                ja: `${SITE_URL}/ja`,
+                ko: `${SITE_URL}/ko`,
             },
         },
         openGraph: {
@@ -50,7 +51,7 @@ export async function generateMetadata({
             description: metadata.description,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
-            url: `https://bookmark-scout.com/${locale}`,
+            url: `${SITE_URL}/${locale}`,
             images: [
                 {
                     url: "/icon.png",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SITE_URL } from "@/lib/site-config";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,7 +8,7 @@ const inter = Inter({
     subsets: ["latin"],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bookmark-scout.com";
+const baseUrl = SITE_URL;
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
