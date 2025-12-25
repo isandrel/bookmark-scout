@@ -5,7 +5,8 @@ const withNextIntl = createNextIntlPlugin();
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath: "/bookmark-scout",
+  // Use /bookmark-scout for GitHub Pages, empty for custom domains
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? "",
   images: { unoptimized: true },
   trailingSlash: true,
   turbopack: {
