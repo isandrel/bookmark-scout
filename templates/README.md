@@ -5,13 +5,13 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/main/public/icon-128.png" alt="Bookmark Scout Logo" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/main/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} Logo" width="80" height="80">
 </p>
 
-<h1 align="center">🔖 Bookmark Scout</h1>
+<h1 align="center">🔖 {{SITE_NAME}}</h1>
 
 <p align="center">
-  <strong>A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.</strong>
+  <strong>{{SITE_DESCRIPTION}}</strong>
 </p>
 
 <p align="center">
@@ -19,30 +19,31 @@
   <a href="https://github.com/{{GITHUB_REPO}}/stargazers"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="Stars"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/issues"><img src="https://img.shields.io/github/issues/{{GITHUB_REPO}}?style=flat-square" alt="Issues"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/pulls"><img src="https://img.shields.io/github/issues-pr/{{GITHUB_REPO}}?style=flat-square" alt="PRs"></a>
-  <a href="https://github.com/sponsors/isandrel"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
+  <a href="https://github.com/sponsors/{{AUTHOR_NAME}}"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
 </p>
 
 <p align="center">
   <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/ci.yml?style=flat-square&label=ci" alt="CI"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/release-extension.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/release-extension.yml?style=flat-square&label=release" alt="Release CI"></a>
-  <a href="https://github.com/{{GITHUB_REPO}}/actions/workflows/repomix.yml"><img src="https://img.shields.io/github/actions/workflow/status/{{GITHUB_REPO}}/repomix.yml?style=flat-square&label=repomix" alt="Repomix CI"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/github/last-commit/{{GITHUB_REPO}}?style=flat-square" alt="Last Commit">
-  <img src="https://img.shields.io/github/repo-size/{{GITHUB_REPO}}?style=flat-square" alt="Repo Size">
-  <a href="https://depfu.com/github/{{GITHUB_REPO}}"><img src="https://img.shields.io/depfu/dependencies/github/{{GITHUB_REPO}}?style=flat-square" alt="Depfu"></a>
   <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
   <img src="https://img.shields.io/badge/TypeScript-5.9-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Rolldown--Vite-7.3-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Rolldown-Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square&logo=redux&logoColor=white" alt="Zustand">
-  <img src="https://img.shields.io/badge/Nx-22-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-5.0-764ABC?style=flat-square" alt="Zustand">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-0.9-000000?style=flat-square" alt="shadcn/ui">
+  <img src="https://img.shields.io/badge/Nx-22.3-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+  <img src="https://img.shields.io/badge/Biome-2.3-60A5FA?style=flat-square" alt="Biome">
+</p>
+
 <p align="center">
   <img src="https://img.shields.io/badge/Chrome-Supported-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
   <img src="https://img.shields.io/badge/Firefox-Supported-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
@@ -52,118 +53,117 @@
 
 ---
 
+## 🌐 Website
+
+Visit **[{{SITE_URL}}]({{SITE_URL}})** for documentation, features overview, and installation guides.
+
+---
+
 ## 🌐 Browser Support
 
-| Browser | Status          | Notes                                          |
-| ------- | --------------- | ---------------------------------------------- |
-| Chrome  | ✅ Supported     | Full support with Manifest V3                  |
-| Firefox | ✅ Supported     | Full support with Manifest V2                  |
-| Edge    | ✅ Supported     | Full support with Manifest V3 (Chromium-based) |
-| Safari  | ❌ Not Supported | Apple has not implemented the `bookmarks` API  |
+|                                                   Browser                                                   | Support Level | Notes                              |
+| :---------------------------------------------------------------------------------------------------------: | :-----------: | ---------------------------------- |
+| ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) |  ⭐⭐⭐ Primary  | Manifest V3, all features          |
+|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   | ⭐⭐ Secondary  | Manifest V2, sidebar not available |
+|  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   | ⭐⭐ Secondary  | Chromium-based, full compatibility |
+|    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |    ❌ None     | `bookmarks` API not implemented    |
 
-### Why Safari is Not Supported
-
-Safari Web Extensions do not support the `browser.bookmarks` API, which is essential for this extension's core functionality. Despite Apple announcing Web Extension support in Safari 14 (2020), the bookmarks API was never implemented. This is an Apple platform limitation, not a WXT or extension framework issue.
-
-For updates on Safari API support, see [WebKit Bug Tracker](https://bugs.webkit.org/).
+> **Why Safari?** Safari Web Extensions do not support the `browser.bookmarks` API, which is essential for this extension's core functionality.
 
 ---
 
 ## ✨ Features
 
-### ✅ Current Focus: Popup & Side Panel
+### ✅ Implemented
 
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
 - [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
-- [x] 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
 - [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
+- [x] 🌍 **i18n** — English, Japanese, and Korean language support
+- [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
 
 ### 🚧 Roadmap
 
-- [ ] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page with modern table view
-- [ ] ⚙️ **Options Page** — Customize extension settings and preferences
-- [ ] 🏷️ **Tags** — Add custom tags to bookmarks for better organization
-- [ ] 🔄 **Sync** — Cross-device bookmark sync with cloud backup
-- [ ] 📊 **Analytics** — View bookmark usage statistics
-- [ ] 🔗 **Duplicate Detection** — Find and remove duplicate bookmarks
-- [ ] 💀 **Dead Link Checker** — Detect and clean up broken links
-- [ ] 📤 **Import/Export** — Backup and restore bookmarks as JSON
-- [ ] ⌨️ **Keyboard Shortcuts** — Navigate and manage bookmarks with hotkeys
-- [ ] 🔒 **Private Bookmarks** — Password-protected bookmark folders
----
-
-## 📊 Comparison with Other Extensions
-
-|                         |    [Bookmark Scout]({{SITE_URL}})    | [Raindrop.io](https://raindrop.io/) | [Pocket](https://getpocket.com/) | [Diigo](https://www.diigo.com/) | [Toby](https://www.gettoby.com/) | [Workona](https://workona.com/) | [Qlearly](https://qlearly.com/) | [Booky.io](https://booky.io/) | [Pinboard](https://pinboard.in/) |      [Linkwarden](https://linkwarden.app/)       |        [Hoarder](https://hoarder.app/)         |
-| ----------------------- | :------------------------------------------------: | :---------------------------------: | :------------------------------: | :-----------------------------: | :------------------------------: | :-----------------------------: | :-----------------------------: | :---------------------------: | :------------------------------: | :----------------------------------------------: | :--------------------------------------------: |
-| **Free**                |                         ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Price**               |                        Free                        |               $28/yr                |              $45/yr              |            $40-59/yr            |              $4/mo               |            $7.50/mo             |             $29/yr              |            €19/yr             |              $22/yr              |                       Free                       |                      Free                      |
-| **Open Source**         |                         ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **GitHub**              | [Link](https://github.com/{{GITHUB_REPO}}) |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 | [Link](https://github.com/linkwarden/linkwarden) | [Link](https://github.com/hoarder-app/hoarder) |
-| **Search**              |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Full-text Search**    |                         ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Drag & Drop**         |                         ✅                          |                  ✅                  |                ❌                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
-| **Folder Organization** |                         ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Nested Folders**      |                         ✅                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Tags/Labels**         |                         🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ✅                         |                      ✅ AI                      |
-| **One-Click Save**      |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Side Panel**          |                         ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
-| **Dark Mode**           |                         ✅                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Visual Previews**     |                         ❌                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ❌                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Annotations/Notes**   |                         ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Highlights**          |                         ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ❌                        |
-| **Cloud Sync**          |                         🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Offline Access**      |                         ✅                          |                  ✅                  |                ✅                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
-| **Page Archiving**      |                         ❌                          |                  ✅                  |                ❌                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ❌               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Duplicate Detection** |                         🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
-| **Dead Link Checker**   |                         🚧                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ❌                        |
-| **Import/Export**       |                         🚧                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Keyboard Shortcuts**  |                         🚧                          |                  ✅                  |                ✅                 |                ❌                |                ✅                 |                ✅                |                ✅                |               ❌               |                ✅                 |                        ❌                         |                       ❌                        |
-| **Team Collaboration**  |                         ❌                          |                  ✅                  |                ❌                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Mobile App**          |                         ❌                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ❌                |                ❌                |               ✅               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Chrome**              |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Firefox**             |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ✅               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Edge**                |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ✅                 |                ✅                |                ✅                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Manifest V3**         |                         ✅                          |                  ✅                  |                ✅                 |                ⚠️                |                ⚠️                 |                ✅                |                ⚠️                |               ⚠️               |                ❌                 |                       N/A                        |                      N/A                       |
-| **i18n**                |                         ✅                          |                  ✅                  |                ✅                 |                ✅                |                ❌                 |                ✅                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **Privacy-Focused**     |                         ✅                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ⚠️               |                ✅                 |                        ✅                         |                       ✅                        |
-| **Self-Hostable**       |                         ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ✅                         |                       ✅                        |
-| **AI Features**         |                         ❌                          |                  ❌                  |                ❌                 |                ❌                |                ❌                 |                ❌                |                ❌                |               ❌               |                ❌                 |                        ❌                         |                       ✅                        |
-
-**Legend:** ✅ Supported | ❌ Not Supported | ⚠️ Limited | 🚧 Roadmap | N/A Not Applicable
+- [ ] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page
+- [ ] ⚙️ **Options Page** — Customize extension settings
+- [ ] 🌙 **Dark Mode** — Beautiful dark theme with smooth transitions
+- [ ] ⚙️ **Settings Sync** — Sync extension preferences across devices
+- [ ] 🔗 **Duplicate Detection** — Find and remove duplicates
+- [ ] 💀 **Dead Link Checker** — Detect broken links
+- [ ] 📤 **Import/Export** — Backup bookmarks as JSON
 
 ---
-
 
 ## 🛠️ Tech Stack
 
-| Layer             | Technology                                                                                       |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| **Framework**     | React 19 + TypeScript                                                                            |
-| **Build**         | [WXT](https://wxt.dev) + Rolldown-Vite + Nx (monorepo with caching)                              |
-| **Runtime**       | Bun 1.3                                                                                          |
-| **State**         | [Zustand](https://zustand-demo.pmnd.rs/) (lightweight state management)                          |
-| **Styling**       | TailwindCSS 4 + CSS Variables                                                                    |
-| **UI Components** | [shadcn/ui](https://ui.shadcn.com) (Radix primitives)                                            |
-| **Drag & Drop**   | [@atlaskit/pragmatic-drag-and-drop](https://atlassian.design/components/pragmatic-drag-and-drop) |
-| **Animations**    | Framer Motion                                                                                    |
-| **Table**         | TanStack React Table                                                                             |
+### Framework & Language
 
-> **📍 Current Focus:** Popup development. Options page and bookmarks override temporarily disabled.
+|                                                    Technology                                                     | Version | Description          |
+| :---------------------------------------------------------------------------------------------------------------: | :-----: | -------------------- |
+|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  19.2   | UI library           |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   5.9   | Type-safe JavaScript |
+|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |   15    | Website framework    |
+
+### Build & Tooling
+
+|                                           Technology                                            | Version | Description          |
+| :---------------------------------------------------------------------------------------------: | :-----: | -------------------- |
+|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  0.20   | Extension framework  |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    7    | Build tool           |
+|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |  22.3   | Monorepo management  |
+|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   1.3   | JavaScript runtime   |
+|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   2.3   | Linting & formatting |
+
+### UI & Styling
+
+|                                                      Technology                                                      | Version | Description            |
+| :------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   4.1   | Utility-first CSS      |
+|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   0.9   | Radix-based components |
+|       ![Radix UI](https://img.shields.io/badge/Radix-161618?style=for-the-badge&logo=radixui&logoColor=white)        |   1.2   | Headless UI primitives |
+| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |  12.23  | Animation library      |
+|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |  0.562  | Icon library           |
+
+### State & Data
+
+|                                                       Technology                                                       | Version | Description            |
+| :--------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
+|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   5.0   | State management       |
+|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  8.21   | Headless table library |
+| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   1.7   | Drag & drop            |
+
+### Deploy & Infrastructure
+
+|                                                    Technology                                                     | Version | Description     |
+| :---------------------------------------------------------------------------------------------------------------: | :-----: | --------------- |
+|       ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)       |    -    | CI/CD & hosting |
+| ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white) |    -    | CDN & DNS       |
 
 ---
 
 ## 📦 Installation
 
+### From GitHub Releases
+
+Download the latest release from [GitHub Releases](https://github.com/{{GITHUB_REPO}}/releases):
+
+```bash
+# Download latest release using GitHub CLI
+gh release download --repo {{GITHUB_REPO}} --pattern "*.zip"
+
+# Extract the zip file
+unzip bookmark-scout-chrome-*.zip -d bookmark-scout
+```
+
 ### From Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/{{GITHUB_REPO}}.git
+gh repo clone {{GITHUB_REPO}}
 cd bookmark-scout
 
 # Install dependencies
@@ -178,20 +178,23 @@ bun run build
 1. Open `chrome://extensions/`
 2. Enable **Developer mode** (top right)
 3. Click **Load unpacked**
-4. Select the `dist` folder
+4. Select `apps/extension/.output/chrome-mv3`
 
 ---
 
 ## 🚀 Development
 
 ```bash
-# Start development server
+# Start extension dev server
 bun run dev
 
-# Build for production
-bun run build
+# Start website dev server
+bun run dev:website
 
-# Lint code
+# Build all
+bun run build:all
+
+# Lint
 bun run lint
 ```
 
@@ -200,19 +203,23 @@ bun run lint
 ## 📁 Project Structure
 
 ```
-src/
-├── components/
-│   ├── page/
-│   │   ├── BookmarksPage.tsx    # Full bookmarks manager
-│   │   ├── OptionsPage.tsx      # Extension settings
-│   │   └── PopupPage.tsx        # Main popup with search & DnD
-│   └── ui/                      # shadcn components
-├── hooks/                       # Custom React hooks
-├── lib/                         # Utility functions
-├── popup.html                   # Popup entry
-├── bookmarks.html               # Bookmarks page override
-├── options.html                 # Options page
-└── sidepanel.html               # Side panel
+bookmark-scout/
+├── apps/
+│   ├── extension/          # Browser extension (WXT)
+│   │   ├── src/
+│   │   │   ├── components/ # React components
+│   │   │   ├── entrypoints/ # popup, sidepanel, options, bookmarks
+│   │   │   ├── hooks/      # Custom React hooks
+│   │   │   ├── stores/     # Zustand stores
+│   │   │   └── services/   # Bookmark API services
+│   │   └── wxt.config.ts
+│   └── website/            # Next.js marketing site
+│       └── app/
+├── packages/
+│   └── config/             # Shared configuration
+├── config/
+│   └── site.config.toml    # Central config file
+└── templates/              # README templates
 ```
 
 ---
@@ -231,19 +238,28 @@ src/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+```bash
+# Fork and clone the repository
+gh repo fork {{GITHUB_REPO}} --clone
+
+# Create your feature branch
+git checkout -b feature/amazing-feature
+
+# Make your changes and commit
+git commit -m 'feat: add amazing feature'
+
+# Push and create a pull request
+git push origin feature/amazing-feature
+gh pr create --title "feat: add amazing feature"
+```
 
 ---
 
 ## 📄 License
 
-This project is licensed under the GNU Affero General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **GNU Affero General Public License v3.0** - see the [LICENSE](LICENSE) file for details.
 
 ---
 
