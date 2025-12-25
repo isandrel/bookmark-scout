@@ -38,11 +38,11 @@ export async function generateMetadata({
             "drag and drop",
         ],
         alternates: {
-            canonical: `https://isandrel.github.io/bookmark-scout/${locale}`,
+            canonical: `https://bookmark-scout.com/${locale}`,
             languages: {
-                en: "https://isandrel.github.io/bookmark-scout/en",
-                ja: "https://isandrel.github.io/bookmark-scout/ja",
-                ko: "https://isandrel.github.io/bookmark-scout/ko",
+                en: "https://bookmark-scout.com/en",
+                ja: "https://bookmark-scout.com/ja",
+                ko: "https://bookmark-scout.com/ko",
             },
         },
         openGraph: {
@@ -50,10 +50,10 @@ export async function generateMetadata({
             description: metadata.description,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
-            url: `https://isandrel.github.io/bookmark-scout/${locale}`,
+            url: `https://bookmark-scout.com/${locale}`,
             images: [
                 {
-                    url: "/bookmark-scout/icon.png",
+                    url: "/icon.png",
                     width: 128,
                     height: 128,
                     alt: "Bookmark Scout",
@@ -64,7 +64,7 @@ export async function generateMetadata({
             card: "summary",
             title: "Bookmark Scout",
             description: metadata.description,
-            images: ["/bookmark-scout/icon.png"],
+            images: ["/icon.png"],
         },
     };
 }

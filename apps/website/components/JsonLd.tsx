@@ -17,9 +17,9 @@ export function JsonLd() {
             name: "isandrel",
             url: "https://github.com/isandrel",
         },
-        url: "https://isandrel.github.io/bookmark-scout",
+        url: "https://bookmark-scout.com",
         downloadUrl: "https://github.com/isandrel/bookmark-scout",
-        screenshot: "https://isandrel.github.io/bookmark-scout/icon.png",
+        screenshot: "https://bookmark-scout.com/icon.png",
         softwareVersion: "0.1.0",
         aggregateRating: {
             "@type": "AggregateRating",
