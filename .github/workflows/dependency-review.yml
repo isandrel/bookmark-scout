@@ -27,7 +27,5 @@ jobs:
           warn-only: false
           # Check for license issues
           license-check: true
-          # Block GPL licenses (optional, can be customized)
-          deny-licenses: GPL-3.0, AGPL-3.0
           # Allow common permissive licenses
-          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, Unlicense
+          allow-licenses: MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD, Unlicense, CC0-1.0, CC-BY-4.0, Python-2.0, BlueOak-1.0.0
