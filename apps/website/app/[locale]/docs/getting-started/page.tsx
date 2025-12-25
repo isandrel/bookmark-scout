@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { SITE_NAME, GITHUB_URL } from "@bookmark-scout/config";
 
 export default async function GettingStartedPage({
     params,
@@ -18,7 +19,7 @@ export default async function GettingStartedPage({
                 <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
                     <Link href={`/${locale}`} className="flex items-center gap-3">
                         <span className="text-2xl">🔖</span>
-                        <span className="font-bold text-lg">Bookmark Scout</span>
+                        <span className="font-bold text-lg">{SITE_NAME}</span>
                     </Link>
                     <div className="flex items-center gap-4">
                         <Link
@@ -28,7 +29,7 @@ export default async function GettingStartedPage({
                             {t("nav.docs")}
                         </Link>
                         <a
-                            href="https://github.com/isandrel/bookmark-scout"
+                            href={GITHUB_URL}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20 transition-colors"
@@ -79,7 +80,7 @@ export default async function GettingStartedPage({
                                     <h3 className="font-medium mb-3">1. {t("gettingStarted.installation.step1")}</h3>
                                     <pre className="bg-black/50 rounded-lg p-4 overflow-x-auto">
                                         <code className="text-sm text-green-400">
-                                            git clone https://github.com/isandrel/bookmark-scout.git
+                                            git clone {GITHUB_URL}.git
                                             {"\n"}
                                             cd bookmark-scout
                                         </code>
