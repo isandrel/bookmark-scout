@@ -7,7 +7,7 @@ const inter = Inter({
     subsets: ["latin"],
 });
 
-const baseUrl = "https://isandrel.github.io/bookmark-scout";
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bookmark-scout.com";
 
 export const metadata: Metadata = {
     metadataBase: new URL(baseUrl),
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
             "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
         images: [
             {
-                url: "/bookmark-scout/icon.png",
+                url: "/icon.png",
                 width: 128,
                 height: 128,
                 alt: "Bookmark Scout Icon",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         title: "Bookmark Scout - Modern Chrome Bookmark Manager",
         description:
             "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
-        images: ["/bookmark-scout/icon.png"],
+        images: ["/icon.png"],
     },
     robots: {
         index: true,
@@ -69,10 +69,10 @@ export const metadata: Metadata = {
         },
     },
     icons: {
-        icon: "/bookmark-scout/icon.png",
-        apple: "/bookmark-scout/icon.png",
+        icon: "/icon.png",
+        apple: "/icon.png",
     },
-    manifest: "/bookmark-scout/manifest.json",
+    manifest: "/manifest.json",
     category: "technology",
 };
 
