@@ -9,7 +9,13 @@
     ],
     "targets": {
         "dev": {
-            "command": "wxt",
+            "command": "wxt -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:chrome": {
+            "command": "wxt -b chrome",
             "options": {
                 "cwd": "apps/extension"
             }
@@ -27,7 +33,13 @@
             }
         },
         "build": {
-            "command": "wxt build",
+            "command": "wxt build -b chrome && wxt build -b firefox && wxt build -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:chrome": {
+            "command": "wxt build -b chrome",
             "options": {
                 "cwd": "apps/extension"
             }
@@ -45,7 +57,13 @@
             }
         },
         "zip": {
-            "command": "wxt zip",
+            "command": "wxt zip -b chrome && wxt zip -b firefox && wxt zip -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip:chrome": {
+            "command": "wxt zip -b chrome",
             "options": {
                 "cwd": "apps/extension"
             }

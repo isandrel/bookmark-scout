@@ -28,13 +28,16 @@ jobs:
         run: bun install
 
       - name: Build extension for Chrome
-        run: bun run build
+        run: bun run build:chrome
+        working-directory: ./apps/extension
 
       - name: Build extension for Firefox
         run: bun run build:firefox
+        working-directory: ./apps/extension
 
       - name: Build extension for Edge
         run: bun run build:edge
+        working-directory: ./apps/extension
 
       - name: Create Chrome zip
         run: |
