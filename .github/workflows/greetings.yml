@@ -10,6 +10,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/first-interaction@v3
+        continue-on-error: true
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           issue_message: |
