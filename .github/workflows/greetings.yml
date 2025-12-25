@@ -11,8 +11,8 @@ jobs:
     steps:
       - uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
             👋 Welcome to **Bookmark Scout**! Thanks for opening your first issue!
 
             We appreciate you taking the time to report this. Here's what happens next:
@@ -21,7 +21,7 @@ jobs:
             - Feel free to submit a PR if you'd like to contribute a fix!
 
             📚 Check out our [Contributing Guide](https://github.com/isandrel/bookmark-scout/blob/main/CONTRIBUTING.md) for more info.
-          pr-message: |
+          pr_message: |
             🎉 Welcome to **Bookmark Scout**! Thanks for your first contribution!
 
             We're excited to review your pull request. Here's what to expect:
