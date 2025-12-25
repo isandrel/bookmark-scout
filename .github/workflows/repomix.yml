@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   repomix:
@@ -16,7 +17,7 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -29,17 +30,24 @@ jobs:
         run: bunx repomix --output repomix-output.xml
 
       - name: Upload Repomix Output
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: repomix-output
           path: repomix-output.xml
           retention-days: 30
 
-      - name: Commit Repomix Output (on push to main only)
+      - name: Create Pull Request (on push to main only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -f repomix-output.xml
-          git diff --staged --quiet || git commit -m "🔧 chore: update repomix-output.xml"
-          git push
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "🔧 chore: update repomix-output.xml"
+          title: "🔧 chore: update repomix-output.xml"
+          body: |
+            Auto-generated update to `repomix-output.xml`.
+            
+            This PR was automatically created by the Repomix workflow.
+          branch: chore/update-repomix
+          delete-branch: true
+          labels: dependencies
+          add-paths: repomix-output.xml
