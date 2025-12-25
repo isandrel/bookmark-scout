@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export const dynamic = "force-static";
 
-const baseUrl = "https://bookmark-scout.vercel.app";
+const baseUrl = "https://bookmark-scout.com";
 const locales = ["en", "ja", "ko"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
