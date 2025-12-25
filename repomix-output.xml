@@ -11457,26 +11457,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 </file>
 
-<file path="apps/website/next.config.ts">
-import createNextIntlPlugin from 'next-intl/plugin';
-import type { NextConfig } from "next";
-
-const withNextIntl = createNextIntlPlugin();
-
-const nextConfig: NextConfig = {
-  output: "export",
-  // Use /bookmark-scout for GitHub Pages, empty for custom domains
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? "",
-  images: { unoptimized: true },
-  trailingSlash: true,
-  turbopack: {
-    root: ".",
-  },
-};
-
-export default withNextIntl(nextConfig);
-</file>
-
 <file path="nx.json">
 {
     "$schema": "https://raw.githubusercontent.com/nrwl/nx/master/packages/nx/schemas/nx-schema.json",
@@ -11527,6 +11507,23 @@ export default withNextIntl(nextConfig);
         "libsDir": "packages"
     }
 }
+</file>
+
+<file path="apps/website/next.config.ts">
+import createNextIntlPlugin from 'next-intl/plugin';
+import type { NextConfig } from "next";
+
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig: NextConfig = {
+  output: "export",
+  // Use /bookmark-scout for GitHub Pages, empty for custom domains
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? "",
+  images: { unoptimized: true },
+  trailingSlash: true,
+};
+
+export default withNextIntl(nextConfig);
 </file>
 
 <file path=".gitignore">
