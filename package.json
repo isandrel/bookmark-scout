@@ -19,6 +19,7 @@
     "dev:website": "nx run website:dev",
     "build:website": "nx run website:build",
     "graph": "nx graph",
+    "generate:readme": "bun run scripts/generate-readme.ts",
     "prepare": "husky"
   },
   "dependencies": {
