@@ -8611,69 +8611,6 @@ export default {
 };
 </file>
 
-<file path="apps/extension/project.json">
-{
-    "name": "extension",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "projectType": "application",
-    "sourceRoot": "apps/extension/src",
-    "tags": [
-        "scope:extension",
-        "type:app"
-    ],
-    "targets": {
-        "dev": {
-            "command": "wxt",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "dev:firefox": {
-            "command": "wxt -b firefox",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "dev:edge": {
-            "command": "wxt -b edge",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "build": {
-            "command": "wxt build",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "build:firefox": {
-            "command": "wxt build -b firefox",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "build:edge": {
-            "command": "wxt build -b edge",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "zip": {
-            "command": "wxt zip",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        },
-        "lint": {
-            "command": "biome lint ./src",
-            "options": {
-                "cwd": "apps/extension"
-            }
-        }
-    }
-}
-</file>
-
 <file path="apps/extension/tailwind.config.ts">
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
@@ -10841,29 +10778,83 @@ function App() {
 export default App;
 </file>
 
-<file path="apps/extension/package.json">
+<file path="apps/extension/project.json">
 {
-    "name": "@bookmark-scout/extension",
-    "private": true,
-    "version": "0.1.0",
-    "type": "module",
-    "scripts": {
-        "dev": "wxt",
-        "dev:firefox": "wxt -b firefox",
-        "dev:edge": "wxt -b edge",
-        "build": "wxt build",
-        "build:firefox": "wxt build -b firefox",
-        "build:edge": "wxt build -b edge",
-        "zip": "wxt zip",
-        "zip:firefox": "wxt zip -b firefox",
-        "zip:edge": "wxt zip -b edge",
-        "lint": "biome lint ./src",
-        "format": "biome format --write ./src",
-        "check": "biome check --write ./src",
-        "postinstall": "wxt prepare"
-    },
-    "devDependencies": {
-        "sass": "^1.97.1"
+    "name": "extension",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "sourceRoot": "apps/extension/src",
+    "tags": [
+        "scope:extension",
+        "type:app"
+    ],
+    "targets": {
+        "dev": {
+            "command": "wxt -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:chrome": {
+            "command": "wxt -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:firefox": {
+            "command": "wxt -b firefox",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "dev:edge": {
+            "command": "wxt -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build": {
+            "command": "wxt build -b chrome && wxt build -b firefox && wxt build -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:chrome": {
+            "command": "wxt build -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:firefox": {
+            "command": "wxt build -b firefox",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "build:edge": {
+            "command": "wxt build -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip": {
+            "command": "wxt zip -b chrome && wxt zip -b firefox && wxt zip -b edge",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip:chrome": {
+            "command": "wxt zip -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "lint": {
+            "command": "biome lint ./src",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        }
     }
 }
 </file>
@@ -11500,6 +11491,36 @@ jobs:
           git push
 </file>
 
+<file path="apps/extension/package.json">
+{
+    "name": "@bookmark-scout/extension",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "dev": "wxt -b chrome",
+        "dev:chrome": "wxt -b chrome",
+        "dev:firefox": "wxt -b firefox",
+        "dev:edge": "wxt -b edge",
+        "build": "wxt build -b chrome && wxt build -b firefox && wxt build -b edge",
+        "build:chrome": "wxt build -b chrome",
+        "build:firefox": "wxt build -b firefox",
+        "build:edge": "wxt build -b edge",
+        "zip": "wxt zip -b chrome && wxt zip -b firefox && wxt zip -b edge",
+        "zip:chrome": "wxt zip -b chrome",
+        "zip:firefox": "wxt zip -b firefox",
+        "zip:edge": "wxt zip -b edge",
+        "lint": "biome lint ./src",
+        "format": "biome format --write ./src",
+        "check": "biome check --write ./src",
+        "postinstall": "wxt prepare"
+    },
+    "devDependencies": {
+        "sass": "^1.97.1"
+    }
+}
+</file>
+
 <file path="apps/website/app/[locale]/page.tsx">
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -11848,120 +11869,6 @@ dist.crx
 # Nx cache
 .nx/cache
 .nx/workspace-data
-</file>
-
-<file path=".github/workflows/release-extension.yml">
-name: Release Extension
-
-on:
-  push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version tag (e.g., v0.1.0)'
-        required: true
-        type: string
-
-permissions:
-  contents: write
-
-jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install dependencies
-        run: bun install
-
-      - name: Build extension for Chrome
-        run: bun run build
-
-      - name: Build extension for Firefox
-        run: bun run build:firefox
-
-      - name: Build extension for Edge
-        run: bun run build:edge
-
-      - name: Create Chrome zip
-        run: |
-          cd dist/chrome-mv3
-          zip -r ../../bookmark-scout-chrome.zip .
-
-      - name: Create Firefox zip
-        run: |
-          cd dist/firefox-mv2
-          zip -r ../../bookmark-scout-firefox.zip .
-
-      - name: Create Edge zip
-        run: |
-          cd dist/edge-mv3
-          zip -r ../../bookmark-scout-edge.zip .
-
-      - name: Build Chrome CRX
-        uses: cardinalby/webext-buildtools-chrome-crx-action@v2
-        with:
-          zipFilePath: bookmark-scout-chrome.zip
-          crxFilePath: bookmark-scout-chrome.crx
-          privateKey: ${{ secrets.CRX_PRIVATE_KEY }}
-
-      - name: Get version from tag
-        id: get_version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
-          else
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: Bookmark Scout ${{ steps.get_version.outputs.version }}
-          body: |
-            ## 📦 Downloads
-
-            | Browser | File | Description |
-            |---------|------|-------------|
-            | Chrome | `bookmark-scout-chrome.crx` | Signed extension (sideload) |
-            | Chrome | `bookmark-scout-chrome.zip` | For Chrome Web Store |
-            | Firefox | `bookmark-scout-firefox.zip` | For Firefox Add-ons |
-            | Edge | `bookmark-scout-edge.zip` | For Edge Add-ons |
-
-            ## Installation
-
-            ### Chrome (CRX - Developer Mode)
-            1. Download `bookmark-scout-chrome.crx`
-            2. Open `chrome://extensions/`
-            3. Enable "Developer mode"
-            4. Drag and drop the `.crx` file
-
-            ### Firefox
-            1. Download `bookmark-scout-firefox.zip`
-            2. Open `about:debugging#/runtime/this-firefox`
-            3. Click "Load Temporary Add-on"
-            4. Select the zip file
-
-            ### Edge
-            1. Download `bookmark-scout-edge.zip`
-            2. Open `edge://extensions/`
-            3. Enable "Developer mode"
-            4. Click "Load unpacked" and select the extracted folder
-          files: |
-            bookmark-scout-chrome.crx
-            bookmark-scout-chrome.zip
-            bookmark-scout-firefox.zip
-            bookmark-scout-edge.zip
-          generate_release_notes: true
-          draft: false
-          prerelease: false
 </file>
 
 <file path="translations/README.ja.md">
@@ -12416,6 +12323,123 @@ src/
 </p>
 </file>
 
+<file path=".github/workflows/release-extension.yml">
+name: Release Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v0.1.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build extension for Chrome
+        run: bun run build:chrome
+        working-directory: ./apps/extension
+
+      - name: Build extension for Firefox
+        run: bun run build:firefox
+        working-directory: ./apps/extension
+
+      - name: Build extension for Edge
+        run: bun run build:edge
+        working-directory: ./apps/extension
+
+      - name: Create Chrome zip
+        run: |
+          cd dist/chrome-mv3
+          zip -r ../../bookmark-scout-chrome.zip .
+
+      - name: Create Firefox zip
+        run: |
+          cd dist/firefox-mv2
+          zip -r ../../bookmark-scout-firefox.zip .
+
+      - name: Create Edge zip
+        run: |
+          cd dist/edge-mv3
+          zip -r ../../bookmark-scout-edge.zip .
+
+      - name: Build Chrome CRX
+        uses: cardinalby/webext-buildtools-chrome-crx-action@v2
+        with:
+          zipFilePath: bookmark-scout-chrome.zip
+          crxFilePath: bookmark-scout-chrome.crx
+          privateKey: ${{ secrets.CRX_PRIVATE_KEY }}
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Bookmark Scout ${{ steps.get_version.outputs.version }}
+          body: |
+            ## 📦 Downloads
+
+            | Browser | File | Description |
+            |---------|------|-------------|
+            | Chrome | `bookmark-scout-chrome.crx` | Signed extension (sideload) |
+            | Chrome | `bookmark-scout-chrome.zip` | For Chrome Web Store |
+            | Firefox | `bookmark-scout-firefox.zip` | For Firefox Add-ons |
+            | Edge | `bookmark-scout-edge.zip` | For Edge Add-ons |
+
+            ## Installation
+
+            ### Chrome (CRX - Developer Mode)
+            1. Download `bookmark-scout-chrome.crx`
+            2. Open `chrome://extensions/`
+            3. Enable "Developer mode"
+            4. Drag and drop the `.crx` file
+
+            ### Firefox
+            1. Download `bookmark-scout-firefox.zip`
+            2. Open `about:debugging#/runtime/this-firefox`
+            3. Click "Load Temporary Add-on"
+            4. Select the zip file
+
+            ### Edge
+            1. Download `bookmark-scout-edge.zip`
+            2. Open `edge://extensions/`
+            3. Enable "Developer mode"
+            4. Click "Load unpacked" and select the extracted folder
+          files: |
+            bookmark-scout-chrome.crx
+            bookmark-scout-chrome.zip
+            bookmark-scout-firefox.zip
+            bookmark-scout-edge.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+</file>
+
 <file path=".github/workflows/ci.yml">
 name: CI
 
@@ -12470,7 +12494,7 @@ jobs:
       - name: Build for ${{ matrix.target }}
         run: |
           if [ "${{ matrix.target }}" = "chrome" ]; then
-            bunx nx run extension:build
+            bunx nx run extension:build:chrome
           elif [ "${{ matrix.target }}" = "firefox" ]; then
             bunx nx run extension:build:firefox
           else
