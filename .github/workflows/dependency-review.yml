@@ -10,13 +10,13 @@ permissions:
 
 jobs:
   dependency-review:
-    name: Dependency Review
+    name: Scan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Dependency Review
+      - name: Check Dependencies
         uses: actions/dependency-review-action@v4
         with:
           # Fail on high and critical vulnerabilities
