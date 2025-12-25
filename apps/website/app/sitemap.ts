@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL, LOCALES } from "@/lib/site-config";
+import { SITE_URL, LOCALES } from "@bookmark-scout/config";
 
 export const dynamic = "force-static";
 

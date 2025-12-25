@@ -1,10 +1,16 @@
-import { SITE_URL, AUTHOR, GITHUB_URL } from "@/lib/site-config";
+import {
+    SITE_NAME,
+    SITE_URL,
+    SITE_DESCRIPTION,
+    AUTHOR,
+    GITHUB_URL,
+} from "@bookmark-scout/config";
 
 export function JsonLd() {
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: "Bookmark Scout",
+        name: SITE_NAME,
         applicationCategory: "BrowserApplication",
         operatingSystem: "Chrome, Firefox",
         offers: {
@@ -12,8 +18,7 @@ export function JsonLd() {
             price: "0",
             priceCurrency: "USD",
         },
-        description:
-            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+        description: SITE_DESCRIPTION,
         author: {
             "@type": "Person",
             name: AUTHOR.name,

@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { JsonLd } from "@/components/JsonLd";
-import { SITE_URL } from "@/lib/site-config";
+import { SITE_URL, SITE_NAME } from "@bookmark-scout/config";
 import "../globals.css";
 
 const inter = Inter({
@@ -47,7 +47,7 @@ export async function generateMetadata({
             },
         },
         openGraph: {
-            title: "Bookmark Scout",
+            title: SITE_NAME,
             description: metadata.description,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
@@ -57,13 +57,13 @@ export async function generateMetadata({
                     url: "/icon.png",
                     width: 128,
                     height: 128,
-                    alt: "Bookmark Scout",
+                    alt: SITE_NAME,
                 },
             ],
         },
         twitter: {
             card: "summary",
-            title: "Bookmark Scout",
+            title: SITE_NAME,
             description: metadata.description,
             images: ["/icon.png"],
         },

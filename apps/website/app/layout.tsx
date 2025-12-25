@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SITE_URL } from "@/lib/site-config";
+import {
+    SITE_URL,
+    SITE_NAME,
+    SITE_DESCRIPTION,
+    AUTHOR,
+} from "@bookmark-scout/config";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,16 +13,13 @@ const inter = Inter({
     subsets: ["latin"],
 });
 
-const baseUrl = SITE_URL;
-
 export const metadata: Metadata = {
-    metadataBase: new URL(baseUrl),
+    metadataBase: new URL(SITE_URL),
     title: {
-        default: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        template: "%s | Bookmark Scout",
+        default: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        template: `%s | ${SITE_NAME}`,
     },
-    description:
-        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support.",
+    description: SITE_DESCRIPTION,
     keywords: [
         "Chrome extension",
         "bookmark manager",
@@ -30,32 +32,30 @@ export const metadata: Metadata = {
         "Firefox bookmarks",
         "bookmark scout",
     ],
-    authors: [{ name: "isandrel", url: "https://github.com/isandrel" }],
-    creator: "isandrel",
-    publisher: "isandrel",
+    authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
+    creator: AUTHOR.name,
+    publisher: AUTHOR.name,
     openGraph: {
         type: "website",
         locale: "en_US",
         alternateLocale: ["ja_JP", "ko_KR"],
-        url: baseUrl,
-        siteName: "Bookmark Scout",
-        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        description:
-            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+        url: SITE_URL,
+        siteName: SITE_NAME,
+        title: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        description: SITE_DESCRIPTION,
         images: [
             {
                 url: "/icon.png",
                 width: 128,
                 height: 128,
-                alt: "Bookmark Scout Icon",
+                alt: `${SITE_NAME} Icon`,
             },
         ],
     },
     twitter: {
         card: "summary",
-        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        description:
-            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
+        title: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        description: SITE_DESCRIPTION,
         images: ["/icon.png"],
     },
     robots: {
