@@ -11309,6 +11309,155 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 </file>
 
+<file path="tsconfig.base.json">
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "ES2022",
+        "module": "ESNext",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@bookmark-scout/ui": [
+                "packages/ui/src/index.ts"
+            ],
+            "@bookmark-scout/ui/*": [
+                "packages/ui/src/*"
+            ],
+            "@bookmark-scout/shared": [
+                "packages/shared/src/index.ts"
+            ],
+            "@bookmark-scout/shared/*": [
+                "packages/shared/src/*"
+            ],
+            "@bookmark-scout/i18n": [
+                "packages/i18n/src/index.ts"
+            ],
+            "@bookmark-scout/i18n/*": [
+                "packages/i18n/src/*"
+            ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "tmp"
+    ]
+}
+</file>
+
+<file path="apps/website/app/layout.tsx">
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+});
+
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bookmark-scout.com";
+
+export const metadata: Metadata = {
+    metadataBase: new URL(baseUrl),
+    title: {
+        default: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        template: "%s | Bookmark Scout",
+    },
+    description:
+        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support.",
+    keywords: [
+        "Chrome extension",
+        "bookmark manager",
+        "bookmark organizer",
+        "browser bookmarks",
+        "bookmark search",
+        "drag and drop bookmarks",
+        "bookmark folders",
+        "Chrome bookmarks",
+        "Firefox bookmarks",
+        "bookmark scout",
+    ],
+    authors: [{ name: "isandrel", url: "https://github.com/isandrel" }],
+    creator: "isandrel",
+    publisher: "isandrel",
+    openGraph: {
+        type: "website",
+        locale: "en_US",
+        alternateLocale: ["ja_JP", "ko_KR"],
+        url: baseUrl,
+        siteName: "Bookmark Scout",
+        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        description:
+            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
+        images: [
+            {
+                url: "/icon.png",
+                width: 128,
+                height: 128,
+                alt: "Bookmark Scout Icon",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary",
+        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
+        description:
+            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
+        images: ["/icon.png"],
+    },
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
+    icons: {
+        icon: "/icon.png",
+        apple: "/icon.png",
+    },
+    manifest: "/manifest.json",
+    category: "technology",
+};
+
+export default function RootLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <html lang="en" className="dark">
+            <body className={`${inter.variable} font-sans antialiased`}>
+                {children}
+            </body>
+        </html>
+    );
+}
+</file>
+
 <file path="CONTRIBUTING.md">
 # 🤝 Contributing to Bookmark Scout
 
@@ -11383,8 +11532,11 @@ bun run dev
 ### Building
 
 ```bash
-# Build for Chrome
+# Build for all browsers
 bun run build
+
+# Build for Chrome
+bun run build:chrome
 
 # Build for Firefox
 bun run build:firefox
@@ -11534,155 +11686,6 @@ Every contribution helps make Bookmark Scout better. Whether it's:
 - 🌐 Translating
 
 We appreciate your time and effort!
-</file>
-
-<file path="tsconfig.base.json">
-{
-    "compileOnSave": false,
-    "compilerOptions": {
-        "rootDir": ".",
-        "sourceMap": true,
-        "declaration": false,
-        "moduleResolution": "bundler",
-        "esModuleInterop": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "ES2022",
-        "module": "ESNext",
-        "lib": [
-            "ES2022",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "skipLibCheck": true,
-        "skipDefaultLibCheck": true,
-        "strict": true,
-        "noEmit": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "jsx": "react-jsx",
-        "baseUrl": ".",
-        "paths": {
-            "@bookmark-scout/ui": [
-                "packages/ui/src/index.ts"
-            ],
-            "@bookmark-scout/ui/*": [
-                "packages/ui/src/*"
-            ],
-            "@bookmark-scout/shared": [
-                "packages/shared/src/index.ts"
-            ],
-            "@bookmark-scout/shared/*": [
-                "packages/shared/src/*"
-            ],
-            "@bookmark-scout/i18n": [
-                "packages/i18n/src/index.ts"
-            ],
-            "@bookmark-scout/i18n/*": [
-                "packages/i18n/src/*"
-            ]
-        }
-    },
-    "exclude": [
-        "node_modules",
-        "tmp"
-    ]
-}
-</file>
-
-<file path="apps/website/app/layout.tsx">
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-
-const inter = Inter({
-    variable: "--font-inter",
-    subsets: ["latin"],
-});
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://bookmark-scout.com";
-
-export const metadata: Metadata = {
-    metadataBase: new URL(baseUrl),
-    title: {
-        default: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        template: "%s | Bookmark Scout",
-    },
-    description:
-        "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support.",
-    keywords: [
-        "Chrome extension",
-        "bookmark manager",
-        "bookmark organizer",
-        "browser bookmarks",
-        "bookmark search",
-        "drag and drop bookmarks",
-        "bookmark folders",
-        "Chrome bookmarks",
-        "Firefox bookmarks",
-        "bookmark scout",
-    ],
-    authors: [{ name: "isandrel", url: "https://github.com/isandrel" }],
-    creator: "isandrel",
-    publisher: "isandrel",
-    openGraph: {
-        type: "website",
-        locale: "en_US",
-        alternateLocale: ["ja_JP", "ko_KR"],
-        url: baseUrl,
-        siteName: "Bookmark Scout",
-        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        description:
-            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
-        images: [
-            {
-                url: "/icon.png",
-                width: 128,
-                height: 128,
-                alt: "Bookmark Scout Icon",
-            },
-        ],
-    },
-    twitter: {
-        card: "summary",
-        title: "Bookmark Scout - Modern Chrome Bookmark Manager",
-        description:
-            "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders.",
-        images: ["/icon.png"],
-    },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    },
-    icons: {
-        icon: "/icon.png",
-        apple: "/icon.png",
-    },
-    manifest: "/manifest.json",
-    category: "technology",
-};
-
-export default function RootLayout({
-    children,
-}: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <html lang="en" className="dark">
-            <body className={`${inter.variable} font-sans antialiased`}>
-                {children}
-            </body>
-        </html>
-    );
-}
 </file>
 
 <file path="nx.json">
@@ -11974,6 +11977,54 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+</file>
+
+<file path=".github/workflows/repomix.yml">
+name: Generate Repomix Output
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  repomix:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Generate Repomix Output
+        run: bunx repomix --output repomix-output.xml
+
+      - name: Upload Repomix Output
+        uses: actions/upload-artifact@v6
+        with:
+          name: repomix-output
+          path: repomix-output.xml
+          retention-days: 30
+
+      - name: Commit Repomix Output (on push to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -f repomix-output.xml
+          git diff --staged --quiet || git commit -m "🔧 chore: update repomix-output.xml"
+          git push
 </file>
 
 <file path="translations/README.ja.md">
@@ -12488,54 +12539,6 @@ jobs:
           else
             bunx nx run extension:build:edge
           fi
-</file>
-
-<file path=".github/workflows/repomix.yml">
-name: Generate Repomix Output
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch: # Allow manual trigger
-
-permissions:
-  contents: write
-
-jobs:
-  repomix:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Generate Repomix Output
-        run: bunx repomix --output repomix-output.xml
-
-      - name: Upload Repomix Output
-        uses: actions/upload-artifact@v6
-        with:
-          name: repomix-output
-          path: repomix-output.xml
-          retention-days: 30
-
-      - name: Commit Repomix Output (on push to main only)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -f repomix-output.xml
-          git diff --staged --quiet || git commit -m "🔧 chore: update repomix-output.xml"
-          git push
 </file>
 
 <file path="package.json">
