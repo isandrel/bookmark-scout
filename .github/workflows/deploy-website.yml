@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'website/**'
+      - 'apps/website/**'
   workflow_dispatch:
 
 permissions:
@@ -33,18 +33,18 @@ jobs:
 
       - name: Install dependencies
         run: bun install
-        working-directory: ./website
+        working-directory: ./apps/website
 
       - name: Build with Next.js
         run: bun run build
-        working-directory: ./website
+        working-directory: ./apps/website
         env:
           NODE_ENV: production
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./website/out
+          path: ./apps/website/out
 
   deploy:
     environment:
