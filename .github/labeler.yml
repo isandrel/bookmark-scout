@@ -1,0 +1,72 @@
+# Labels are applied based on file path patterns
+# https://github.com/actions/labeler
+
+# Extension app
+extension:
+  - changed-files:
+      - any-glob-to-any-file: 'apps/extension/**'
+
+# Website app
+website:
+  - changed-files:
+      - any-glob-to-any-file: 'apps/website/**'
+
+# CI/CD and GitHub workflows
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+github-actions:
+  - changed-files:
+      - any-glob-to-any-file: '.github/workflows/**'
+
+# Documentation
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**'
+
+# UI components
+ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/components/**'
+          - '**/*.css'
+          - '**/*.scss'
+          - '**/styles/**'
+
+# Internationalization
+i18n:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/i18n/**'
+          - '**/locales/**'
+          - '**/_locales/**'
+          - '**/messages/**'
+
+# Testing
+testing:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.test.*'
+          - '**/*.spec.*'
+          - '**/tests/**'
+          - '**/__tests__/**'
+
+# Dependencies
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'bun.lockb'
+          - '**/package.json'
+
+# Configuration
+refactor:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.config.*'
+          - 'tsconfig*.json'
+          - 'biome.json'
+          - '.eslintrc*'
