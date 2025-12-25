@@ -51,7 +51,7 @@ jobs:
       - name: Build for ${{ matrix.target }}
         run: |
           if [ "${{ matrix.target }}" = "chrome" ]; then
-            bunx nx run extension:build
+            bunx nx run extension:build:chrome
           elif [ "${{ matrix.target }}" = "firefox" ]; then
             bunx nx run extension:build:firefox
           else
