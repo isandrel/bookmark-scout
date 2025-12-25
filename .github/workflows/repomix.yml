@@ -30,7 +30,7 @@ jobs:
         run: bunx repomix --output repomix-output.xml
 
       - name: Upload Repomix Output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: repomix-output
           path: repomix-output.xml
