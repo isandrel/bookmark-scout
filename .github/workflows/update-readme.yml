@@ -1,0 +1,47 @@
+name: Update README
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'config/site.config.toml'
+      - 'templates/**'
+      - 'scripts/generate-readme.ts'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Generate README files
+        run: bun run generate:readme
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: '📝 docs: update README from templates'
+          title: '📝 docs: update README from templates'
+          body: |
+            This PR updates README files generated from templates.
+
+            Triggered by changes to:
+            - `config/site.config.toml`
+            - `templates/**`
+            - `scripts/generate-readme.ts`
+          branch: auto/update-readme
+          delete-branch: true
+          labels: documentation
