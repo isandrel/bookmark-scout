@@ -160,14 +160,13 @@ apps/
         bookmark-store.ts
         index.ts
       styles/
-        popup.css
+        popup.scss
       types/
         bookmark.ts
         index.ts
-      App.css
       App.tsx
-      globals.css
-      index.css
+      globals.scss
+      index.scss
       vite-env.d.ts
     biome.json
     components.json
@@ -3015,259 +3014,6 @@ const OptionsPage: React.FC = () => {
 };
 
 export default OptionsPage;
-</file>
-
-<file path="apps/extension/src/components/page/PopupPage.tsx">
-/**
- * PopupPage - Bookmark popup using Zustand store.
- *
- * Refactored from 1299 lines to ~140 lines using:
- * - Zustand for centralized state management
- * - Extracted components for UI
- * - Extracted services for Chrome API
- */
-
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { BookmarkSearch, FolderItem } from '@/components/bookmark';
-import { Accordion } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Toaster } from '@/components/ui/toaster';
-import { useDebounce } from '@/hooks/use-debounce';
-import { t } from '@/hooks/use-i18n';
-import { useToast } from '@/hooks/use-toast';
-import { useBookmarkStore } from '@/stores';
-import type { BookmarkTreeNode, DragOperation } from '@/types';
-import '@/styles/popup.css';
-
-function PopupPage() {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { toast } = useToast();
-  const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
-
-  // Zustand store
-  const {
-    folders,
-    filteredFolders,
-    isLoading,
-    error,
-    query,
-    expandedFolders,
-    forceExpandAll,
-    draggedItem,
-    creatingFolderId,
-    newFolderName,
-    fetchFolders,
-    setQuery,
-    setDebouncedQuery,
-    setExpandedFolders,
-    setForceExpandAll,
-    setDraggedItem,
-    setCreatingFolderId,
-    setNewFolderName,
-    addBookmarkToFolder,
-    createFolder,
-    removeBookmark,
-    removeFolder,
-    handleDrop,
-    toggleExpandAllChildren,
-    areAllChildrenExpanded,
-  } = useBookmarkStore();
-
-  // Debounce search query
-  const debouncedQuery = useDebounce(query, 300);
-  useEffect(() => {
-    setDebouncedQuery(debouncedQuery);
-  }, [debouncedQuery, setDebouncedQuery]);
-
-  // Fetch folders on mount
-  useEffect(() => {
-    fetchFolders();
-  }, [fetchFolders]);
-
-  // Toast wrapper for operations
-  const withToast = useCallback(
-    async (
-      operation: () => Promise<{ success: boolean; message: string }>,
-      successTitle: string,
-      errorTitle: string,
-    ) => {
-      const result = await operation();
-      toast({
-        title: result.success ? `✓ ${successTitle}` : `× ${errorTitle}`,
-        description: result.message,
-        variant: result.success ? 'success' : 'destructive',
-      });
-      return result.success;
-    },
-    [toast],
-  );
-
-  // Add temporary folder to tree
-  const addTemporaryFolder = useCallback(
-    (nodes: BookmarkTreeNode[], parentId: string): BookmarkTreeNode[] => {
-      return nodes.map((node) => {
-        if (node.id === parentId) {
-          return {
-            ...node,
-            children: [
-              {
-                id: 'temp-folder',
-                parentId: node.id,
-                title: t('newFolder'),
-                isOpen: false,
-                isTemporary: true,
-                children: [],
-              },
-              ...(node.children || []),
-            ],
-          };
-        }
-        if (node.children) {
-          return { ...node, children: addTemporaryFolder(node.children, parentId) };
-        }
-        return node;
-      });
-    },
-    [],
-  );
-
-  const handleAddFolder = useCallback(
-    (folderId: string) => {
-      setCreatingFolderId(folderId);
-      setNewFolderName('');
-      setExpandedFolders((prev) => [...prev, folderId]);
-    },
-    [setCreatingFolderId, setNewFolderName, setExpandedFolders],
-  );
-
-  const handleCreateFolder = useCallback(async () => {
-    if (!creatingFolderId || !newFolderName.trim()) {
-      setCreatingFolderId(null);
-      setNewFolderName('');
-      return;
-    }
-    await withToast(
-      () => createFolder(creatingFolderId, newFolderName),
-      t('folderCreated'),
-      t('errorCreatingFolder'),
-    );
-    setCreatingFolderId(null);
-    setNewFolderName('');
-  }, [
-    creatingFolderId,
-    newFolderName,
-    createFolder,
-    setCreatingFolderId,
-    setNewFolderName,
-    withToast,
-  ]);
-
-  const handleCancelCreateFolder = useCallback(() => {
-    setCreatingFolderId(null);
-    setNewFolderName('');
-  }, [setCreatingFolderId, setNewFolderName]);
-
-  const handleDropWithToast = useCallback(
-    async (operation: DragOperation) => {
-      await withToast(() => handleDrop(operation), t('itemMoved'), t('errorMovingItem'));
-    },
-    [handleDrop, withToast],
-  );
-
-  const displayFolders = creatingFolderId
-    ? addTemporaryFolder(filteredFolders, creatingFolderId)
-    : filteredFolders;
-
-  if (error) {
-    return (
-      <div className="p-4">
-        <div className="text-red-500 mb-4">
-          {t('error')}: {error}
-        </div>
-        <Button onClick={() => window.location.reload()}>{t('retry')}</Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
-      <div className="flex flex-col h-full overflow-hidden">
-        <BookmarkSearch
-          query={query}
-          onQueryChange={setQuery}
-          forceExpandAll={forceExpandAll}
-          onToggleExpandAll={() => setForceExpandAll(!forceExpandAll)}
-          inputRef={inputRef}
-        />
-
-        <div className="flex-1 overflow-hidden bookmark-content">
-          {isLoading ? (
-            <div className="p-4 space-y-2">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-            </div>
-          ) : (
-            <div className="p-4">
-              <Accordion
-                type="multiple"
-                value={expandedFolders}
-                onValueChange={setExpandedFolders}
-                className="w-full accordion-container"
-              >
-                {displayFolders.map((node) => (
-                  <FolderItem
-                    key={node.id}
-                    node={node}
-                    instanceId={instanceId}
-                    isDragging={draggedItem?.id === node.id}
-                    isAllChildrenExpanded={areAllChildrenExpanded(node)}
-                    creatingFolderId={creatingFolderId}
-                    newFolderName={newFolderName}
-                    folders={folders}
-                    onDragStart={setDraggedItem}
-                    onDragEnd={() => setDraggedItem(null)}
-                    onDrop={handleDropWithToast}
-                    onAddBookmark={(id) =>
-                      withToast(
-                        () => addBookmarkToFolder(id),
-                        t('bookmarkAdded'),
-                        t('errorAddingBookmark'),
-                      )
-                    }
-                    onAddFolder={handleAddFolder}
-                    onDeleteFolder={(id) =>
-                      withToast(
-                        () => removeFolder(id),
-                        t('folderDeleted'),
-                        t('errorDeletingFolder'),
-                      )
-                    }
-                    onDeleteBookmark={(id) =>
-                      withToast(
-                        () => removeBookmark(id),
-                        t('bookmarkDeleted'),
-                        t('errorDeletingBookmark'),
-                      )
-                    }
-                    onCreateFolder={handleCreateFolder}
-                    onCancelCreateFolder={handleCancelCreateFolder}
-                    onNewFolderNameChange={setNewFolderName}
-                    onToggleExpandAllChildren={toggleExpandAllChildren}
-                  />
-                ))}
-              </Accordion>
-            </div>
-          )}
-        </div>
-      </div>
-      <Toaster />
-    </div>
-  );
-}
-
-export default PopupPage;
 </file>
 
 <file path="apps/extension/src/components/ui/table/columns.tsx">
@@ -6656,30 +6402,6 @@ export const useTheme = () => {
 </html>
 </file>
 
-<file path="apps/extension/src/entrypoints/bookmarks/main.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import BookmarksPage from '@/components/page/BookmarksPage';
-import '@/globals.css';
-import { ErrorBoundary } from '@/components/error-boundary';
-import { ThemeProvider } from '@/components/theme-provider';
-
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error('Failed to find the root element');
-}
-
-createRoot(rootElement).render(
-  <StrictMode>
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="system" storageKey="bookmark-scout-theme">
-        <BookmarksPage />
-      </ThemeProvider>
-    </ErrorBoundary>
-  </StrictMode>,
-);
-</file>
-
 <file path="apps/extension/src/entrypoints/options/index.html">
 <!doctype html>
 <html lang="en">
@@ -6747,22 +6469,6 @@ createRoot(document.getElementById('root')!).render(
 </html>
 </file>
 
-<file path="apps/extension/src/entrypoints/popup/main.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import PopupPage from '@/components/page/PopupPage';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import '@/index.css';
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SidebarProvider>
-      <PopupPage />
-    </SidebarProvider>
-  </StrictMode>,
-);
-</file>
-
 <file path="apps/extension/src/entrypoints/sidepanel/index.html">
 <!doctype html>
 <html lang="en">
@@ -6797,23 +6503,6 @@ createRoot(document.getElementById('root')!).render(
 </body>
 
 </html>
-</file>
-
-<file path="apps/extension/src/entrypoints/sidepanel/main.tsx">
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import PopupPage from '@/components/page/PopupPage';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import '@/index.css';
-
-// Sidepanel reuses the same PopupPage component
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <SidebarProvider>
-      <PopupPage />
-    </SidebarProvider>
-  </StrictMode>,
-);
 </file>
 
 <file path="apps/extension/src/hooks/use-bookmark-drag-drop.ts">
@@ -8316,8 +8005,8 @@ export const useBookmarkStore = create<BookmarkState>()(
 export { useBookmarkStore } from './bookmark-store';
 </file>
 
-<file path="apps/extension/src/styles/popup.css">
-/* Popup page styles for drag and drop */
+<file path="apps/extension/src/styles/popup.scss">
+// Popup page styles for drag and drop
 
 .dragging {
   opacity: 0.5;
@@ -8335,7 +8024,7 @@ export { useBookmarkStore } from './bookmark-store';
   transition: background-color 0.2s ease;
 }
 
-/* Drop indicator styles */
+// Drop indicator styles
 .drop-indicator {
   position: absolute;
   left: 0;
@@ -8346,31 +8035,35 @@ export { useBookmarkStore } from './bookmark-store';
   z-index: 1000;
   transition: all 0.2s ease;
   box-shadow: 0 0 0 1px white;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: rgb(37, 99, 235);
+    border-radius: 50%;
+    top: -2px;
+  }
+
+  &::before {
+    left: -1px;
+  }
+
+  &::after {
+    right: -1px;
+  }
 }
 
-.drop-indicator::before,
-.drop-indicator::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: rgb(37, 99, 235);
-  border-radius: 50%;
-  top: -2px;
-}
-
-.drop-indicator::before {
-  left: -1px;
-}
-
-.drop-indicator::after {
-  right: -1px;
-}
-
-/* Accordion styles */
+// Accordion styles
 .accordion-content {
   overflow: hidden !important;
   position: relative;
+
+  .accordion-content {
+    overflow: hidden;
+  }
 }
 
 .accordion-item {
@@ -8379,17 +8072,13 @@ export { useBookmarkStore } from './bookmark-store';
   position: relative;
 }
 
-.accordion-content .accordion-content {
-  overflow: hidden;
-}
-
 .accordion-container {
   max-height: 100%;
   overflow-y: auto;
   position: relative;
 }
 
-/* Bookmark content area */
+// Bookmark content area
 .bookmark-content {
   height: 100%;
   overflow-y: auto;
@@ -8398,50 +8087,41 @@ export { useBookmarkStore } from './bookmark-store';
   position: relative;
 }
 
-/* Hover effects */
-.bookmark-item {
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.bookmark-item:hover {
-  background-color: hsl(var(--accent));
-}
-
+// Bookmark and folder items with hover effects
+.bookmark-item,
 .folder-item {
   transition: all 0.2s ease;
   position: relative;
+
+  &:hover {
+    background-color: hsl(var(--accent));
+
+    .action-button {
+      opacity: 1;
+    }
+  }
 }
 
-.folder-item:hover {
-  background-color: hsl(var(--accent));
-}
-
-/* Action button styles */
+// Action button styles
 .action-button {
   opacity: 0;
   transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
-.bookmark-item:hover .action-button,
-.folder-item:hover .action-button {
-  opacity: 1;
-}
-
-.action-button:hover {
-  transform: scale(1.1);
-}
-
-/* Search input styles */
+// Search input styles
 .search-input {
   transition: all 0.2s ease;
-}
 
-.search-input:focus {
-  transform: translateY(-1px);
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  &:focus {
+    transform: translateY(-1px);
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
 }
 </file>
 
@@ -8531,393 +8211,322 @@ export interface BookmarkTableItem {
 export * from './bookmark';
 </file>
 
-<file path="apps/extension/src/App.css">
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  /* text-align: center; */
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.lucide {
-  width: 12px;
-  height: 12px;
-}
-</file>
-
-<file path="apps/extension/src/App.tsx">
-import PopupPage from '@/components/page/PopupPage';
-import './index.css';
-
-function App() {
-  return (
-    <div className="min-h-screen bg-background">
-      <PopupPage />
-    </div>
-  );
-}
-
-export default App;
-</file>
-
-<file path="apps/extension/src/globals.css">
-@import "tailwindcss";
+<file path="apps/extension/src/globals.scss">
+@use "tailwindcss";
 
 @theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --color-sidebar: hsl(var(--sidebar-background));
+    --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+    --color-sidebar-primary: hsl(var(--sidebar-primary));
+    --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+    --color-sidebar-accent: hsl(var(--sidebar-accent));
+    --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+    --color-sidebar-border: hsl(var(--sidebar-border));
+    --color-sidebar-ring: hsl(var(--sidebar-ring));
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 72.22% 50.59%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5% 64.9%;
-  --radius: 0.5rem;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-  --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 240 5% 64.9%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5% 64.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 240 5% 64.9%;
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 85.7% 97.3%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
-  --sidebar-background: 240 5.9% 10%;
-  --sidebar-foreground: 240 4.8% 95.9%;
-  --sidebar-primary: 224.3 76.3% 48%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 3.7% 15.9%;
-  --sidebar-accent-foreground: 240 4.8% 95.9%;
-  --sidebar-border: 240 3.7% 15.9%;
-  --sidebar-ring: 240 4.9% 83.9%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
 }
 
 * {
-  border-color: hsl(var(--border));
+    border-color: hsl(var(--border));
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  overscroll-behavior: none;
-  font-synthesis-weight: none;
-  text-rendering: optimizeLegibility;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    overscroll-behavior: none;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbar styling */
+// Custom scrollbar styling
 ::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 5px;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--border)) transparent;
+    background: hsl(var(--border));
+    border-radius: 5px;
 }
 
 @utility no-scrollbar {
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 
 @utility step {
-  counter-increment: step;
+    counter-increment: step;
 }
 
 @utility container-wrapper {
-  max-width: 1536px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
+    max-width: 1536px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
 
 @utility container {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 1536px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1536px;
 }
 </file>
 
-<file path="apps/extension/src/index.css">
-@import "tailwindcss";
+<file path="apps/extension/src/index.scss">
+@use "tailwindcss";
 
 @theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: hsl(var(--sidebar-background));
-  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
-  --color-sidebar-primary: hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent: hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border: hsl(var(--sidebar-border));
-  --color-sidebar-ring: hsl(var(--sidebar-ring));
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --color-sidebar: hsl(var(--sidebar-background));
+    --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+    --color-sidebar-primary: hsl(var(--sidebar-primary));
+    --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+    --color-sidebar-accent: hsl(var(--sidebar-accent));
+    --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+    --color-sidebar-border: hsl(var(--sidebar-border));
+    --color-sidebar-ring: hsl(var(--sidebar-ring));
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 72.22% 50.59%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5% 64.9%;
-  --radius: 0.5rem;
-  --chart-1: 12 76% 61%;
-  --chart-2: 173 58% 39%;
-  --chart-3: 197 37% 24%;
-  --chart-4: 43 74% 66%;
-  --chart-5: 27 87% 67%;
-  --sidebar-background: 0 0% 98%;
-  --sidebar-foreground: 240 5.3% 26.1%;
-  --sidebar-primary: 240 5.9% 10%;
-  --sidebar-primary-foreground: 0 0% 98%;
-  --sidebar-accent: 240 4.8% 95.9%;
-  --sidebar-accent-foreground: 240 5.9% 10%;
-  --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 240 5% 64.9%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 72.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5% 64.9%;
+    --radius: 0.5rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 240 5% 64.9%;
 }
 
 .dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 85.7% 97.3%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  --chart-1: 220 70% 50%;
-  --chart-2: 160 60% 45%;
-  --chart-3: 30 80% 55%;
-  --chart-4: 280 65% 60%;
-  --chart-5: 340 75% 55%;
-  --sidebar-background: 240 5.9% 10%;
-  --sidebar-foreground: 240 4.8% 95.9%;
-  --sidebar-primary: 224.3 76.3% 48%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 240 3.7% 15.9%;
-  --sidebar-accent-foreground: 240 4.8% 95.9%;
-  --sidebar-border: 240 3.7% 15.9%;
-  --sidebar-ring: 240 4.9% 83.9%;
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
 }
 
 * {
-  border-color: hsl(var(--border));
+    border-color: hsl(var(--border));
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  overscroll-behavior: none;
-  font-synthesis-weight: none;
-  text-rendering: optimizeLegibility;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    overscroll-behavior: none;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
 }
 
-/* Custom scrollbar styling */
+// Custom scrollbar styling
 ::-webkit-scrollbar {
-  width: 5px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
-  border-radius: 5px;
-}
-
-* {
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--border)) transparent;
+    background: hsl(var(--border));
+    border-radius: 5px;
 }
 
 @utility no-scrollbar {
-  &::-webkit-scrollbar {
-    display: none;
-  }
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
 }
 </file>
 
@@ -8990,30 +8599,6 @@ body {
     "hooks": "@/hooks"
   },
   "iconLibrary": "lucide"
-}
-</file>
-
-<file path="apps/extension/package.json">
-{
-    "name": "@bookmark-scout/extension",
-    "private": true,
-    "version": "0.1.0",
-    "type": "module",
-    "scripts": {
-        "dev": "wxt",
-        "dev:firefox": "wxt -b firefox",
-        "dev:edge": "wxt -b edge",
-        "build": "wxt build",
-        "build:firefox": "wxt build -b firefox",
-        "build:edge": "wxt build -b edge",
-        "zip": "wxt zip",
-        "zip:firefox": "wxt zip -b firefox",
-        "zip:edge": "wxt zip -b edge",
-        "lint": "biome lint ./src",
-        "format": "biome format --write ./src",
-        "check": "biome check --write ./src",
-        "postinstall": "wxt prepare"
-    }
 }
 </file>
 
@@ -10931,6 +10516,358 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 </file>
 
+<file path="apps/extension/src/components/page/PopupPage.tsx">
+/**
+ * PopupPage - Bookmark popup using Zustand store.
+ *
+ * Refactored from 1299 lines to ~140 lines using:
+ * - Zustand for centralized state management
+ * - Extracted components for UI
+ * - Extracted services for Chrome API
+ */
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BookmarkSearch, FolderItem } from '@/components/bookmark';
+import { Accordion } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Toaster } from '@/components/ui/toaster';
+import { useDebounce } from '@/hooks/use-debounce';
+import { t } from '@/hooks/use-i18n';
+import { useToast } from '@/hooks/use-toast';
+import { useBookmarkStore } from '@/stores';
+import type { BookmarkTreeNode, DragOperation } from '@/types';
+import '@/styles/popup.scss';
+
+function PopupPage() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
+
+  // Zustand store
+  const {
+    folders,
+    filteredFolders,
+    isLoading,
+    error,
+    query,
+    expandedFolders,
+    forceExpandAll,
+    draggedItem,
+    creatingFolderId,
+    newFolderName,
+    fetchFolders,
+    setQuery,
+    setDebouncedQuery,
+    setExpandedFolders,
+    setForceExpandAll,
+    setDraggedItem,
+    setCreatingFolderId,
+    setNewFolderName,
+    addBookmarkToFolder,
+    createFolder,
+    removeBookmark,
+    removeFolder,
+    handleDrop,
+    toggleExpandAllChildren,
+    areAllChildrenExpanded,
+  } = useBookmarkStore();
+
+  // Debounce search query
+  const debouncedQuery = useDebounce(query, 300);
+  useEffect(() => {
+    setDebouncedQuery(debouncedQuery);
+  }, [debouncedQuery, setDebouncedQuery]);
+
+  // Fetch folders on mount
+  useEffect(() => {
+    fetchFolders();
+  }, [fetchFolders]);
+
+  // Toast wrapper for operations
+  const withToast = useCallback(
+    async (
+      operation: () => Promise<{ success: boolean; message: string }>,
+      successTitle: string,
+      errorTitle: string,
+    ) => {
+      const result = await operation();
+      toast({
+        title: result.success ? `✓ ${successTitle}` : `× ${errorTitle}`,
+        description: result.message,
+        variant: result.success ? 'success' : 'destructive',
+      });
+      return result.success;
+    },
+    [toast],
+  );
+
+  // Add temporary folder to tree
+  const addTemporaryFolder = useCallback(
+    (nodes: BookmarkTreeNode[], parentId: string): BookmarkTreeNode[] => {
+      return nodes.map((node) => {
+        if (node.id === parentId) {
+          return {
+            ...node,
+            children: [
+              {
+                id: 'temp-folder',
+                parentId: node.id,
+                title: t('newFolder'),
+                isOpen: false,
+                isTemporary: true,
+                children: [],
+              },
+              ...(node.children || []),
+            ],
+          };
+        }
+        if (node.children) {
+          return { ...node, children: addTemporaryFolder(node.children, parentId) };
+        }
+        return node;
+      });
+    },
+    [],
+  );
+
+  const handleAddFolder = useCallback(
+    (folderId: string) => {
+      setCreatingFolderId(folderId);
+      setNewFolderName('');
+      setExpandedFolders((prev) => [...prev, folderId]);
+    },
+    [setCreatingFolderId, setNewFolderName, setExpandedFolders],
+  );
+
+  const handleCreateFolder = useCallback(async () => {
+    if (!creatingFolderId || !newFolderName.trim()) {
+      setCreatingFolderId(null);
+      setNewFolderName('');
+      return;
+    }
+    await withToast(
+      () => createFolder(creatingFolderId, newFolderName),
+      t('folderCreated'),
+      t('errorCreatingFolder'),
+    );
+    setCreatingFolderId(null);
+    setNewFolderName('');
+  }, [
+    creatingFolderId,
+    newFolderName,
+    createFolder,
+    setCreatingFolderId,
+    setNewFolderName,
+    withToast,
+  ]);
+
+  const handleCancelCreateFolder = useCallback(() => {
+    setCreatingFolderId(null);
+    setNewFolderName('');
+  }, [setCreatingFolderId, setNewFolderName]);
+
+  const handleDropWithToast = useCallback(
+    async (operation: DragOperation) => {
+      await withToast(() => handleDrop(operation), t('itemMoved'), t('errorMovingItem'));
+    },
+    [handleDrop, withToast],
+  );
+
+  const displayFolders = creatingFolderId
+    ? addTemporaryFolder(filteredFolders, creatingFolderId)
+    : filteredFolders;
+
+  if (error) {
+    return (
+      <div className="p-4">
+        <div className="text-red-500 mb-4">
+          {t('error')}: {error}
+        </div>
+        <Button onClick={() => window.location.reload()}>{t('retry')}</Button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden">
+        <BookmarkSearch
+          query={query}
+          onQueryChange={setQuery}
+          forceExpandAll={forceExpandAll}
+          onToggleExpandAll={() => setForceExpandAll(!forceExpandAll)}
+          inputRef={inputRef}
+        />
+
+        <div className="flex-1 overflow-hidden bookmark-content">
+          {isLoading ? (
+            <div className="p-4 space-y-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="h-8 w-full" />
+            </div>
+          ) : (
+            <div className="p-4">
+              <Accordion
+                type="multiple"
+                value={expandedFolders}
+                onValueChange={setExpandedFolders}
+                className="w-full accordion-container"
+              >
+                {displayFolders.map((node) => (
+                  <FolderItem
+                    key={node.id}
+                    node={node}
+                    instanceId={instanceId}
+                    isDragging={draggedItem?.id === node.id}
+                    isAllChildrenExpanded={areAllChildrenExpanded(node)}
+                    creatingFolderId={creatingFolderId}
+                    newFolderName={newFolderName}
+                    folders={folders}
+                    onDragStart={setDraggedItem}
+                    onDragEnd={() => setDraggedItem(null)}
+                    onDrop={handleDropWithToast}
+                    onAddBookmark={(id) =>
+                      withToast(
+                        () => addBookmarkToFolder(id),
+                        t('bookmarkAdded'),
+                        t('errorAddingBookmark'),
+                      )
+                    }
+                    onAddFolder={handleAddFolder}
+                    onDeleteFolder={(id) =>
+                      withToast(
+                        () => removeFolder(id),
+                        t('folderDeleted'),
+                        t('errorDeletingFolder'),
+                      )
+                    }
+                    onDeleteBookmark={(id) =>
+                      withToast(
+                        () => removeBookmark(id),
+                        t('bookmarkDeleted'),
+                        t('errorDeletingBookmark'),
+                      )
+                    }
+                    onCreateFolder={handleCreateFolder}
+                    onCancelCreateFolder={handleCancelCreateFolder}
+                    onNewFolderNameChange={setNewFolderName}
+                    onToggleExpandAllChildren={toggleExpandAllChildren}
+                  />
+                ))}
+              </Accordion>
+            </div>
+          )}
+        </div>
+      </div>
+      <Toaster />
+    </div>
+  );
+}
+
+export default PopupPage;
+</file>
+
+<file path="apps/extension/src/entrypoints/bookmarks/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import BookmarksPage from '@/components/page/BookmarksPage';
+import '@/globals.scss';
+import { ErrorBoundary } from '@/components/error-boundary';
+import { ThemeProvider } from '@/components/theme-provider';
+
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Failed to find the root element');
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <ErrorBoundary>
+      <ThemeProvider defaultTheme="system" storageKey="bookmark-scout-theme">
+        <BookmarksPage />
+      </ThemeProvider>
+    </ErrorBoundary>
+  </StrictMode>,
+);
+</file>
+
+<file path="apps/extension/src/entrypoints/popup/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import PopupPage from '@/components/page/PopupPage';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import '@/index.scss';
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <SidebarProvider>
+      <PopupPage />
+    </SidebarProvider>
+  </StrictMode>,
+);
+</file>
+
+<file path="apps/extension/src/entrypoints/sidepanel/main.tsx">
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import PopupPage from '@/components/page/PopupPage';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import '@/index.scss';
+
+// Sidepanel reuses the same PopupPage component
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <SidebarProvider>
+      <PopupPage />
+    </SidebarProvider>
+  </StrictMode>,
+);
+</file>
+
+<file path="apps/extension/src/App.tsx">
+import PopupPage from '@/components/page/PopupPage';
+import './index.scss';
+
+function App() {
+  return (
+    <div className="min-h-screen bg-background">
+      <PopupPage />
+    </div>
+  );
+}
+
+export default App;
+</file>
+
+<file path="apps/extension/package.json">
+{
+    "name": "@bookmark-scout/extension",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "dev": "wxt",
+        "dev:firefox": "wxt -b firefox",
+        "dev:edge": "wxt -b edge",
+        "build": "wxt build",
+        "build:firefox": "wxt build -b firefox",
+        "build:edge": "wxt build -b edge",
+        "zip": "wxt zip",
+        "zip:firefox": "wxt zip -b firefox",
+        "zip:edge": "wxt zip -b edge",
+        "lint": "biome lint ./src",
+        "format": "biome format --write ./src",
+        "check": "biome check --write ./src",
+        "postinstall": "wxt prepare"
+    },
+    "devDependencies": {
+        "sass": "^1.97.1"
+    }
+}
+</file>
+
 <file path="apps/website/app/[locale]/layout.tsx">
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -11740,6 +11677,54 @@ We appreciate your time and effort!
 }
 </file>
 
+<file path=".github/workflows/repomix.yml">
+name: Generate Repomix Output
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  repomix:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Generate Repomix Output
+        run: bunx repomix --output repomix-output.xml
+
+      - name: Upload Repomix Output
+        uses: actions/upload-artifact@v6
+        with:
+          name: repomix-output
+          path: repomix-output.xml
+          retention-days: 30
+
+      - name: Commit Repomix Output (on push to main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -f repomix-output.xml
+          git diff --staged --quiet || git commit -m "🔧 chore: update repomix-output.xml"
+          git push
+</file>
+
 <file path="apps/website/next.config.ts">
 import createNextIntlPlugin from 'next-intl/plugin';
 import type { NextConfig } from "next";
@@ -11977,54 +11962,6 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
-</file>
-
-<file path=".github/workflows/repomix.yml">
-name: Generate Repomix Output
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  workflow_dispatch: # Allow manual trigger
-
-permissions:
-  contents: write
-
-jobs:
-  repomix:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Generate Repomix Output
-        run: bunx repomix --output repomix-output.xml
-
-      - name: Upload Repomix Output
-        uses: actions/upload-artifact@v6
-        with:
-          name: repomix-output
-          path: repomix-output.xml
-          retention-days: 30
-
-      - name: Commit Repomix Output (on push to main only)
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add -f repomix-output.xml
-          git diff --staged --quiet || git commit -m "🔧 chore: update repomix-output.xml"
-          git push
 </file>
 
 <file path="translations/README.ja.md">
