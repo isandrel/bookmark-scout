@@ -1,3 +1,5 @@
+import { SITE_URL, AUTHOR, GITHUB_URL } from "@/lib/site-config";
+
 export function JsonLd() {
     const structuredData = {
         "@context": "https://schema.org",
@@ -14,12 +16,12 @@ export function JsonLd() {
             "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and dark mode.",
         author: {
             "@type": "Person",
-            name: "isandrel",
-            url: "https://github.com/isandrel",
+            name: AUTHOR.name,
+            url: AUTHOR.url,
         },
-        url: "https://bookmark-scout.com",
-        downloadUrl: "https://github.com/isandrel/bookmark-scout",
-        screenshot: "https://bookmark-scout.com/icon.png",
+        url: SITE_URL,
+        downloadUrl: GITHUB_URL,
+        screenshot: `${SITE_URL}/icon.png`,
         softwareVersion: "0.1.0",
         aggregateRating: {
             "@type": "AggregateRating",

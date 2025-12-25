@@ -1,9 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL, LOCALES } from "@/lib/site-config";
 
 export const dynamic = "force-static";
-
-const baseUrl = "https://bookmark-scout.com";
-const locales = ["en", "ja", "ko"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const routes = [
@@ -16,10 +14,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     const sitemap: MetadataRoute.Sitemap = [];
 
-    for (const locale of locales) {
+    for (const locale of LOCALES) {
         for (const route of routes) {
             sitemap.push({
-                url: `${baseUrl}/${locale}${route}`,
+                url: `${SITE_URL}/${locale}${route}`,
                 lastModified: new Date(),
                 changeFrequency: route === "" ? "weekly" : "monthly",
                 priority: route === "" ? 1 : 0.8,

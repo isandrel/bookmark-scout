@@ -1,0 +1,19 @@
+# Bookmark Scout Configuration
+# This file contains site-wide configuration settings.
+# Change these values to update the domain/settings across the entire project.
+
+[site]
+name = "Bookmark Scout"
+url = "https://bookmark-scout.com"
+description = "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support."
+
+[author]
+name = "isandrel"
+url = "https://github.com/isandrel"
+
+[github]
+url = "https://github.com/isandrel/bookmark-scout"
+
+[locales]
+supported = ["en", "ja", "ko"]
+default = "en"
