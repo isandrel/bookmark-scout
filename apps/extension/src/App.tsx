@@ -1,5 +1,5 @@
 import PopupPage from '@/components/page/PopupPage';
-import './index.css';
+import './index.scss';
 
 function App() {
   return (

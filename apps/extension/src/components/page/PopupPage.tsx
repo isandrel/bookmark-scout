@@ -18,7 +18,7 @@ import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
 import { useBookmarkStore } from '@/stores';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-import '@/styles/popup.css';
+import '@/styles/popup.scss';
 
 function PopupPage() {
   const inputRef = useRef<HTMLInputElement>(null);

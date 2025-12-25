@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import BookmarksPage from '@/components/page/BookmarksPage';
-import '@/globals.css';
+import '@/globals.scss';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { ThemeProvider } from '@/components/theme-provider';
 

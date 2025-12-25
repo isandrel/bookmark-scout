@@ -1,4 +1,4 @@
-/* Popup page styles for drag and drop */
+// Popup page styles for drag and drop
 
 .dragging {
   opacity: 0.5;
@@ -16,7 +16,7 @@
   transition: background-color 0.2s ease;
 }
 
-/* Drop indicator styles */
+// Drop indicator styles
 .drop-indicator {
   position: absolute;
   left: 0;
@@ -27,31 +27,35 @@
   z-index: 1000;
   transition: all 0.2s ease;
   box-shadow: 0 0 0 1px white;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: rgb(37, 99, 235);
+    border-radius: 50%;
+    top: -2px;
+  }
+
+  &::before {
+    left: -1px;
+  }
+
+  &::after {
+    right: -1px;
+  }
 }
 
-.drop-indicator::before,
-.drop-indicator::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background-color: rgb(37, 99, 235);
-  border-radius: 50%;
-  top: -2px;
-}
-
-.drop-indicator::before {
-  left: -1px;
-}
-
-.drop-indicator::after {
-  right: -1px;
-}
-
-/* Accordion styles */
+// Accordion styles
 .accordion-content {
   overflow: hidden !important;
   position: relative;
+
+  .accordion-content {
+    overflow: hidden;
+  }
 }
 
 .accordion-item {
@@ -60,17 +64,13 @@
   position: relative;
 }
 
-.accordion-content .accordion-content {
-  overflow: hidden;
-}
-
 .accordion-container {
   max-height: 100%;
   overflow-y: auto;
   position: relative;
 }
 
-/* Bookmark content area */
+// Bookmark content area
 .bookmark-content {
   height: 100%;
   overflow-y: auto;
@@ -79,48 +79,39 @@
   position: relative;
 }
 
-/* Hover effects */
-.bookmark-item {
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.bookmark-item:hover {
-  background-color: hsl(var(--accent));
-}
-
+// Bookmark and folder items with hover effects
+.bookmark-item,
 .folder-item {
   transition: all 0.2s ease;
   position: relative;
+
+  &:hover {
+    background-color: hsl(var(--accent));
+
+    .action-button {
+      opacity: 1;
+    }
+  }
 }
 
-.folder-item:hover {
-  background-color: hsl(var(--accent));
-}
-
-/* Action button styles */
+// Action button styles
 .action-button {
   opacity: 0;
   transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }
 
-.bookmark-item:hover .action-button,
-.folder-item:hover .action-button {
-  opacity: 1;
-}
-
-.action-button:hover {
-  transform: scale(1.1);
-}
-
-/* Search input styles */
+// Search input styles
 .search-input {
   transition: all 0.2s ease;
-}
 
-.search-input:focus {
-  transform: translateY(-1px);
-  box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  &:focus {
+    transform: translateY(-1px);
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
 }
