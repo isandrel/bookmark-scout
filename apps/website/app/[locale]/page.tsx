@@ -92,8 +92,8 @@ export default async function Home({
             {/* Hero Section */}
             <section className="relative pt-32 pb-24 overflow-hidden">
                 {/* Background gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-background to-accent/20 animate-gradient" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
 
                 <div className="relative mx-auto max-w-6xl px-6 text-center">
                     <div className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2 mb-8">
@@ -104,7 +104,7 @@ export default async function Home({
                     </div>
 
                     <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
-                        <span className="bg-gradient-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
+                        <span className="bg-linear-to-r from-white via-primary-light to-accent bg-clip-text text-transparent">
                             {t("hero.title")}
                         </span>
                     </h1>
@@ -116,7 +116,7 @@ export default async function Home({
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <a
                             href="https://github.com/isandrel/bookmark-scout"
-                            className="group flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
+                            className="group flex items-center gap-2 rounded-full bg-linear-to-r from-primary to-accent px-8 py-4 font-medium text-white shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all"
                         >
                             <svg
                                 className="w-5 h-5"
