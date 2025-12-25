@@ -17,5 +17,8 @@
         "format": "biome format --write ./src",
         "check": "biome check --write ./src",
         "postinstall": "wxt prepare"
+    },
+    "devDependencies": {
+        "sass": "^1.97.1"
     }
 }
