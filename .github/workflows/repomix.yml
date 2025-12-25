@@ -38,7 +38,7 @@ jobs:
 
       - name: Create Pull Request (on push to main only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "🔧 chore: update repomix-output.xml"
