@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { SITE_NAME, GITHUB_URL, AUTHOR } from "@bookmark-scout/config";
+import { SITE_NAME, GITHUB_URL, AUTHOR, DOCS_URL } from "@bookmark-scout/config";
 
 // Tech stack badges
 const techStack = [
@@ -69,7 +69,7 @@ export default async function Home({
                     </div>
                     <div className="flex items-center gap-4">
                         <Link
-                            href={`/${locale}/docs`}
+                            href={DOCS_URL}
                             className="text-muted hover:text-foreground transition-colors"
                         >
                             {t("nav.docs")}
@@ -142,7 +142,7 @@ export default async function Home({
                             </svg>
                         </a>
                         <Link
-                            href={`/${locale}/docs`}
+                            href={DOCS_URL}
                             className="rounded-full border border-white/20 px-8 py-4 font-medium hover:bg-white/5 transition-colors"
                         >
                             {t("hero.documentation")}

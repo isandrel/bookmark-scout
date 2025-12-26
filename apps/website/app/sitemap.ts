@@ -4,13 +4,8 @@ import { SITE_URL, LOCALES } from "@bookmark-scout/config";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const routes = [
-        "",
-        "/docs",
-        "/docs/getting-started",
-        "/docs/features",
-        "/docs/contributing",
-    ];
+    // Only include main landing page - docs are on docs.bookmark-scout.com
+    const routes = [""];
 
     const sitemap: MetadataRoute.Sitemap = [];
 
@@ -19,8 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
             sitemap.push({
                 url: `${SITE_URL}/${locale}${route}`,
                 lastModified: new Date(),
-                changeFrequency: route === "" ? "weekly" : "monthly",
-                priority: route === "" ? 1 : 0.8,
+                changeFrequency: "weekly",
+                priority: 1,
             });
         }
     }
