@@ -37,6 +37,10 @@ export interface SiteConfig {
         supported: string[];
         default: string;
     };
+    docs: {
+        name: string;
+        url: string;
+    };
 }
 
 /**
@@ -121,3 +125,9 @@ export const DEFAULT_LOCALE = config.locales.default;
 
 /** Locale type */
 export type Locale = (typeof LOCALES)[number];
+
+/** Docs site name */
+export const DOCS_NAME = config.docs?.name ?? "Docs";
+
+/** Docs site URL */
+export const DOCS_URL = config.docs?.url ?? "https://docs.bookmark-scout.com";
