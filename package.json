@@ -18,6 +18,8 @@
     "lint": "nx run-many --target=lint --all",
     "dev:website": "nx run website:dev",
     "build:website": "nx run website:build",
+    "dev:docs": "nx run docs:dev",
+    "build:docs": "nx run docs:build",
     "graph": "nx graph",
     "generate:readme": "bun run scripts/generate-readme.ts",
     "prepare": "husky"
