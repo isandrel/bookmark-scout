@@ -29,6 +29,7 @@
   <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/github/last-commit/{{GITHUB_REPO}}?style=flat-square" alt="Last Commit">
   <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
+  <a href="{{DOCS_URL}}"><img src="https://img.shields.io/badge/docs-live-blue?style=flat-square" alt="Documentation"></a>
 </p>
 
 <p align="center">
@@ -53,9 +54,19 @@
 
 ---
 
+## 📚 Documentation
+
+Visit **[{{DOCS_URL}}]({{DOCS_URL}})** for comprehensive documentation:
+
+- **Getting Started** — Installation and setup guides
+- **Features** — Detailed feature documentation
+- **Contributing** — How to contribute to the project
+
+---
+
 ## 🌐 Website
 
-Visit **[{{SITE_URL}}]({{SITE_URL}})** for documentation, features overview, and installation guides.
+Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 
 ---
 

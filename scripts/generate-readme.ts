@@ -27,6 +27,7 @@ interface SiteConfig {
     author: { name: string; url: string };
     github: { url: string };
     locales: { supported: string[]; default: string };
+    docs: { name: string; url: string };
 }
 
 const config = parse(tomlContent) as unknown as SiteConfig;
@@ -39,6 +40,7 @@ const placeholders: Record<string, string> = {
     "{{AUTHOR_NAME}}": config.author.name,
     "{{AUTHOR_URL}}": config.author.url,
     "{{GITHUB_URL}}": config.github.url,
+    "{{DOCS_URL}}": config.docs?.url ?? "https://docs.bookmark-scout.com",
     // Derived values
     "{{GITHUB_REPO}}": config.github.url.replace("https://github.com/", ""),
 };
