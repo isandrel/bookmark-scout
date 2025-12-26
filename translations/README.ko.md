@@ -43,9 +43,19 @@
 
 ---
 
+## 📚 문서
+
+상세 문서는 **[https://docs.bookmark-scout.com](https://docs.bookmark-scout.com)** 를 참조하세요:
+
+- **시작하기** — 설치 및 설정 가이드
+- **기능** — 상세 기능 문서
+- **기여하기** — 프로젝트 기여 방법
+
+---
+
 ## 🌐 웹사이트
 
-문서, 기능 개요, 설치 가이드는 **[https://bookmark-scout.com](https://bookmark-scout.com)** 를 방문하세요.
+랜딩 페이지와 다운로드 링크는 **[https://bookmark-scout.com](https://bookmark-scout.com)** 를 방문하세요.
 
 ---
 

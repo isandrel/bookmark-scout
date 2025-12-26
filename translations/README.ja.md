@@ -43,9 +43,19 @@
 
 ---
 
+## 📚 ドキュメント
+
+詳細なドキュメントは **[https://docs.bookmark-scout.com](https://docs.bookmark-scout.com)** をご覧ください：
+
+- **はじめに** — インストールとセットアップガイド
+- **機能** — 詳細な機能ドキュメント
+- **コントリビュート** — プロジェクトへの貢献方法
+
+---
+
 ## 🌐 ウェブサイト
 
-ドキュメント、機能概要、インストールガイドは **[https://bookmark-scout.com](https://bookmark-scout.com)** をご覧ください。
+ランディングページとダウンロードリンクは **[https://bookmark-scout.com](https://bookmark-scout.com)** をご覧ください。
 
 ---
 

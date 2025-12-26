@@ -29,6 +29,7 @@
   <a href="https://github.com/isandrel/bookmark-scout/releases"><img src="https://img.shields.io/github/v/release/isandrel/bookmark-scout?style=flat-square" alt="Release"></a>
   <img src="https://img.shields.io/github/last-commit/isandrel/bookmark-scout?style=flat-square" alt="Last Commit">
   <a href="https://bookmark-scout.com"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="Website"></a>
+  <a href="https://docs.bookmark-scout.com"><img src="https://img.shields.io/badge/docs-live-blue?style=flat-square" alt="Documentation"></a>
 </p>
 
 <p align="center">
@@ -53,9 +54,19 @@
 
 ---
 
+## 📚 Documentation
+
+Visit **[https://docs.bookmark-scout.com](https://docs.bookmark-scout.com)** for comprehensive documentation:
+
+- **Getting Started** — Installation and setup guides
+- **Features** — Detailed feature documentation
+- **Contributing** — How to contribute to the project
+
+---
+
 ## 🌐 Website
 
-Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for documentation, features overview, and installation guides.
+Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landing page and download links.
 
 ---
 
