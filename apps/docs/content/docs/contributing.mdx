@@ -1,0 +1,38 @@
+---
+title: Contributing
+description: How to contribute to Bookmark Scout
+---
+
+# Contributing
+
+Contributions are welcome!
+
+## Setup
+
+```bash
+gh repo fork isandrel/bookmark-scout --clone
+cd bookmark-scout
+bun install
+bun run dev
+```
+
+## Pull Request
+
+```bash
+git checkout -b feat/your-feature
+git add .
+git commit -m "feat: add feature"
+git push origin feat/your-feature
+gh pr create
+```
+
+## Commit Convention
+
+| Type | Description |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation |
+| `refactor` | Code refactoring |
+| `test` | Tests |
+| `chore` | Maintenance |

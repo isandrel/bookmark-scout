@@ -1,0 +1,43 @@
+---
+title: Installation
+description: How to install Bookmark Scout
+---
+
+# Installation
+
+## From GitHub Releases
+
+Download the latest release from [GitHub Releases](https://github.com/isandrel/bookmark-scout/releases).
+
+### Chrome
+
+1. Download the Chrome `.zip` file
+2. Extract the archive
+3. Open `chrome://extensions/`
+4. Enable **Developer mode**
+5. Click **Load unpacked**
+6. Select the extracted folder
+
+### Firefox
+
+1. Download the Firefox `.zip` file
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on**
+4. Select the `manifest.json` file
+
+### Edge
+
+1. Download the Edge `.zip` file
+2. Open `edge://extensions/`
+3. Enable **Developer mode**
+4. Click **Load unpacked**
+5. Select the extracted folder
+
+## From Source
+
+```bash
+gh repo clone isandrel/bookmark-scout
+cd bookmark-scout
+bun install
+bun run build
+```
