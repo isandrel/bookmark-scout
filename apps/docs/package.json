@@ -12,6 +12,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@bookmark-scout/config": "workspace:*",
     "fumadocs-core": "16.4.0",
     "fumadocs-mdx": "14.2.2",
     "fumadocs-ui": "16.4.0",

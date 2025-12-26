@@ -17,3 +17,7 @@ url = "https://github.com/isandrel/bookmark-scout"
 [locales]
 supported = ["en", "ja", "ko"]
 default = "en"
+
+[docs]
+name = "Bookmark Scout Docs"
+url = "https://docs.bookmark-scout.com"

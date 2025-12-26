@@ -1,6 +1,7 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import { DocsLayout } from 'fumadocs-ui/layouts/docs';
 import { source } from '@/lib/source';
+import { SITE_NAME, SITE_URL, GITHUB_URL, DOCS_NAME } from '@bookmark-scout/config';
 import './global.css';
 import { Inter } from 'next/font/google';
 
@@ -11,16 +12,16 @@ const inter = Inter({
 const docsOptions = {
   tree: source.pageTree,
   nav: {
-    title: '🔖 Bookmark Scout',
+    title: `🔖 ${DOCS_NAME}`,
   },
   links: [
     {
       text: 'Website',
-      url: 'https://bookmark-scout.com',
+      url: SITE_URL,
     },
     {
       text: 'GitHub',
-      url: 'https://github.com/isandrel/bookmark-scout',
+      url: GITHUB_URL,
     },
   ],
 };
