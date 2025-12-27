@@ -3,21 +3,41 @@
 # Change these values to update the domain/settings across the entire project.
 
 [site]
-name = "Bookmark Scout"
-url = "https://bookmark-scout.com"
 description = "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support."
+name        = "Bookmark Scout"
+url         = "https://bookmark-scout.com"
 
 [author]
 name = "isandrel"
-url = "https://github.com/isandrel"
+url  = "https://github.com/isandrel"
 
 [github]
 url = "https://github.com/isandrel/bookmark-scout"
 
 [locales]
+default   = "en"
 supported = ["en", "ja", "ko"]
-default = "en"
 
 [docs]
 name = "Bookmark Scout Docs"
-url = "https://docs.bookmark-scout.com"
+url  = "https://docs.bookmark-scout.com"
+
+# =============================================================================
+# Analytics (Umami Cloud)
+# Each site has its own analytics configuration
+# =============================================================================
+
+# Analytics for bookmark-scout.com (main website)
+[analytics.website]
+enabled    = true
+provider   = "umami"
+script_url = "https://cloud.umami.is/script.js"
+website_id = "878e552a-c74d-4ebf-b101-398993c55023"
+
+# Analytics for docs.bookmark-scout.com
+# Uncomment and configure when ready
+# [analytics.docs]
+# enabled    = false
+# provider   = "umami"
+# script_url = "https://cloud.umami.is/script.js"
+# website_id = ""
