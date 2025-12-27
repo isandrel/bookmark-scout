@@ -20,20 +20,21 @@ const inter = Inter({
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     title: {
-        default: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        default: `${SITE_NAME} | Browser Bookmark Manager`,
         template: `%s | ${SITE_NAME}`,
     },
     description: SITE_DESCRIPTION,
     keywords: [
-        "Chrome extension",
+        "browser extension",
         "bookmark manager",
         "bookmark organizer",
         "browser bookmarks",
         "bookmark search",
         "drag and drop bookmarks",
         "bookmark folders",
-        "Chrome bookmarks",
-        "Firefox bookmarks",
+        "Chrome extension",
+        "Firefox addon",
+        "Edge extension",
         "bookmark scout",
     ],
     authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
         alternateLocale: ["ja_JP", "ko_KR"],
         url: SITE_URL,
         siteName: SITE_NAME,
-        title: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        title: `${SITE_NAME} | Browser Bookmark Manager`,
         description: SITE_DESCRIPTION,
         images: [
             {
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary",
-        title: `${SITE_NAME} - Modern Chrome Bookmark Manager`,
+        title: `${SITE_NAME} | Browser Bookmark Manager`,
         description: SITE_DESCRIPTION,
         images: ["/icon.png"],
     },
