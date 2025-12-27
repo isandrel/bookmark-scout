@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import {
     SITE_URL,
     SITE_NAME,
     SITE_DESCRIPTION,
     AUTHOR,
+    UMAMI_ENABLED,
+    UMAMI_WEBSITE_ID,
+    UMAMI_SCRIPT_URL,
 } from "@bookmark-scout/config";
 import "./globals.css";
 
@@ -84,6 +88,16 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" className="dark">
+            <head>
+                {UMAMI_ENABLED && (
+                    <Script
+                        defer
+                        src={UMAMI_SCRIPT_URL}
+                        data-website-id={UMAMI_WEBSITE_ID}
+                        strategy="afterInteractive"
+                    />
+                )}
+            </head>
             <body className={`${inter.variable} font-sans antialiased`}>
                 {children}
             </body>

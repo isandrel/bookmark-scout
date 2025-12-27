@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { JsonLd } from "@/components/JsonLd";
-import { SITE_URL, SITE_NAME } from "@bookmark-scout/config";
+import {
+    SITE_URL,
+    SITE_NAME,
+    UMAMI_ENABLED,
+    UMAMI_WEBSITE_ID,
+    UMAMI_SCRIPT_URL,
+} from "@bookmark-scout/config";
 import "../globals.css";
 
 const inter = Inter({
@@ -85,6 +92,14 @@ export default async function LocaleLayout({
     return (
         <html lang={locale} className="dark">
             <head>
+                {UMAMI_ENABLED && (
+                    <Script
+                        defer
+                        src={UMAMI_SCRIPT_URL}
+                        data-website-id={UMAMI_WEBSITE_ID}
+                        strategy="afterInteractive"
+                    />
+                )}
                 <JsonLd />
             </head>
             <body className={`${inter.variable} font-sans antialiased`}>
