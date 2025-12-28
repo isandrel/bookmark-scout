@@ -11,7 +11,7 @@
 <h1 align="center">🔖 Bookmark Scout</h1>
 
 <p align="center">
-  <strong>A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, dark mode, and side panel support.</strong>
+  <strong>A browser extension to quickly search, organize, and save bookmarks. Features drag-and-drop, instant search, and dark mode.</strong>
 </p>
 
 <p align="center">
