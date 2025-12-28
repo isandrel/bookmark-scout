@@ -11,7 +11,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   generate:
@@ -30,18 +29,16 @@ jobs:
       - name: Generate README files
         run: bun run generate:readme
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v8
-        with:
-          commit-message: '📝 docs: update README from templates'
-          title: '📝 docs: update README from templates'
-          body: |
-            This PR updates README files generated from templates.
+      - name: Check for changes
+        id: changes
+        run: |
+          git diff --quiet README.md translations/ || echo "has_changes=true" >> $GITHUB_OUTPUT
 
-            Triggered by changes to:
-            - `config/site.config.toml`
-            - `templates/**`
-            - `scripts/generate-readme.ts`
-          branch: auto/update-readme
-          delete-branch: true
-          labels: documentation
+      - name: Commit and push changes
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md translations/
+          git commit -m "📝 docs: update README from templates"
+          git push
