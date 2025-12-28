@@ -5,6 +5,8 @@ on: [pull_request_target, issues]
 jobs:
   greeting:
     runs-on: ubuntu-latest
+    # Skip greeting for bot accounts
+    if: github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]'
     permissions:
       issues: write
       pull-requests: write
