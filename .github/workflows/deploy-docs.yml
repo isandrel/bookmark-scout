@@ -35,4 +35,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy apps/docs/out --project-name=bookmark-scout-docs
+          command: pages deploy apps/docs/out --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME_DOCS }}
