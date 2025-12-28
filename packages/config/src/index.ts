@@ -23,6 +23,7 @@ const __dirname = dirname(__filename);
 export interface SiteConfig {
 	site: {
 		name: string;
+		meta_title: string;
 		url: string;
 		description: string;
 	};
@@ -124,6 +125,9 @@ export const SITE_URL = config.site.url;
 
 /** Site description */
 export const SITE_DESCRIPTION = config.site.description;
+
+/** Site meta title for SEO (short version without site name) */
+export const SITE_META_TITLE = config.site.meta_title;
 
 /** Author information */
 export const AUTHOR = config.author;

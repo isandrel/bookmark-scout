@@ -8,6 +8,8 @@ import { JsonLd } from "@/components/JsonLd";
 import {
     SITE_URL,
     SITE_NAME,
+    SITE_META_TITLE,
+    SITE_DESCRIPTION,
     UMAMI_ENABLED,
     UMAMI_WEBSITE_ID,
     UMAMI_SCRIPT_URL,
@@ -29,12 +31,11 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
     const { locale } = await params;
-    const messages = await getMessages();
-    const metadata = messages.metadata as { title: string; description: string };
+    await getMessages();
 
     return {
-        title: metadata.title,
-        description: metadata.description,
+        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
+        description: SITE_DESCRIPTION,
         keywords: [
             "chrome extension",
             "bookmarks",
@@ -55,7 +56,7 @@ export async function generateMetadata({
         },
         openGraph: {
             title: SITE_NAME,
-            description: metadata.description,
+            description: SITE_DESCRIPTION,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
             url: `${SITE_URL}/${locale}`,
@@ -71,7 +72,7 @@ export async function generateMetadata({
         twitter: {
             card: "summary",
             title: SITE_NAME,
-            description: metadata.description,
+            description: SITE_DESCRIPTION,
             images: ["/icon.png"],
         },
     };
