@@ -5,6 +5,7 @@ import {
     SITE_URL,
     SITE_NAME,
     SITE_DESCRIPTION,
+    SITE_META_TITLE,
     AUTHOR,
     UMAMI_ENABLED,
     UMAMI_WEBSITE_ID,
@@ -20,7 +21,7 @@ const inter = Inter({
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     title: {
-        default: `${SITE_NAME} | Browser Bookmark Manager`,
+        default: `${SITE_NAME} | ${SITE_META_TITLE}`,
         template: `%s | ${SITE_NAME}`,
     },
     description: SITE_DESCRIPTION,
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
         alternateLocale: ["ja_JP", "ko_KR"],
         url: SITE_URL,
         siteName: SITE_NAME,
-        title: `${SITE_NAME} | Browser Bookmark Manager`,
+        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
         description: SITE_DESCRIPTION,
         images: [
             {
@@ -59,7 +60,7 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary",
-        title: `${SITE_NAME} | Browser Bookmark Manager`,
+        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
         description: SITE_DESCRIPTION,
         images: ["/icon.png"],
     },
