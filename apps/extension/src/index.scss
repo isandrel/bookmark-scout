@@ -121,8 +121,9 @@ body {
     overscroll-behavior: none;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
-    width: 400px;
-    height: 500px;
+    /* Dimensions controlled by entrypoint HTML files */
+    height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
