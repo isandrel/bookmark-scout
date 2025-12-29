@@ -5,6 +5,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { type Settings, defaultSettings, settingsSchema } from './settings-schema';
+import { setLanguage } from '@/hooks/use-i18n';
 
 // Storage key for settings
 const SETTINGS_KEY = 'bookmark-scout-settings';
@@ -36,6 +37,8 @@ export async function getSettings(): Promise<Settings> {
       // Validate and merge with defaults
       const parsed = settingsSchema.safeParse({ ...defaultSettings, ...stored });
       if (parsed.success) {
+        // Update i18n language
+        setLanguage(parsed.data.language);
         resolve(parsed.data);
       } else {
         console.warn('Invalid settings, using defaults:', parsed.error);
@@ -130,6 +133,8 @@ export function useSettings(): {
         if (newSettings) {
           const parsed = settingsSchema.safeParse({ ...defaultSettings, ...newSettings });
           if (parsed.success) {
+            // Update i18n language
+            setLanguage(parsed.data.language);
             setSettings(parsed.data);
           }
         }
