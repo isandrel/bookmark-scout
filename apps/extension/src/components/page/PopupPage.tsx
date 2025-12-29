@@ -16,6 +16,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { useDebounce } from '@/hooks/use-debounce';
 import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
+import { useSetting } from '@/lib';
 import { useBookmarkStore } from '@/stores';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.scss';
@@ -54,8 +55,11 @@ function PopupPage() {
     areAllChildrenExpanded,
   } = useBookmarkStore();
 
-  // Debounce search query
-  const debouncedQuery = useDebounce(query, 300);
+  // Get configurable debounce delay from settings
+  const { value: searchDebounceMs } = useSetting('searchDebounceMs');
+
+  // Debounce search query using configurable delay
+  const debouncedQuery = useDebounce(query, searchDebounceMs);
   useEffect(() => {
     setDebouncedQuery(debouncedQuery);
   }, [debouncedQuery, setDebouncedQuery]);
