@@ -121,6 +121,9 @@ body {
     overscroll-behavior: none;
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
+    width: 400px;
+    height: 500px;
+    overflow: hidden;
 }
 
 // Custom scrollbar styling

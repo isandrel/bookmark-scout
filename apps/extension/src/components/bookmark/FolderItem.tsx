@@ -165,13 +165,16 @@ export function FolderItem({
     };
   };
 
+  // Count total items in folder (folders + bookmarks)
+  const itemCount = node.children?.length ?? 0;
+
   return (
     <AccordionItem
       key={node.id}
       value={node.id}
       className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
     >
-      <AccordionTrigger className="hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item">
+      <AccordionTrigger className="group hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item transition-colors">
         <div className="flex items-center w-full">
           <div
             ref={(el) => {
@@ -180,58 +183,66 @@ export function FolderItem({
             }}
             className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
           >
-            <Folder className="w-4 h-4 mr-2 shrink-0 text-muted-foreground" />
+            <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
             {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
             <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
+            {itemCount > 0 && (
+              <span className="ml-2 text-xs text-muted-foreground tabular-nums">
+                ({itemCount})
+              </span>
+            )}
           </div>
-          <div className="flex items-center gap-1 ml-2 shrink-0 action-button">
+          <div className="flex items-center gap-0.5 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
             {hasChildren && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-5 w-5"
+                className="h-6 w-6"
                 onClick={(e) => onToggleExpandAllChildren(node, e)}
                 title={isAllChildrenExpanded ? 'Collapse all subfolders' : 'Expand all subfolders'}
               >
                 {isAllChildrenExpanded ? (
-                  <ChevronsUp className="h-3 w-3" />
+                  <ChevronsUp className="h-3.5 w-3.5" />
                 ) : (
-                  <ChevronsDown className="h-3 w-3" />
+                  <ChevronsDown className="h-3.5 w-3.5" />
                 )}
               </Button>
             )}
             <Button
               variant="ghost"
               size="icon"
-              className="h-5 w-5"
+              className="h-6 w-6"
               onClick={(e) => {
                 e.stopPropagation();
                 onAddBookmark(node.id);
               }}
+              title="Add current page"
             >
-              <BookmarkPlus className="h-3 w-3" />
+              <BookmarkPlus className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-5 w-5"
+              className="h-6 w-6"
               onClick={(e) => {
                 e.stopPropagation();
                 onAddFolder(node.id);
               }}
+              title="Add folder"
             >
-              <FolderPlus className="h-3 w-3" />
+              <FolderPlus className="h-3.5 w-3.5" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-5 w-5 text-destructive hover:text-destructive"
+              className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
               onClick={(e) => {
                 e.stopPropagation();
                 onDeleteFolder(node.id);
               }}
+              title="Delete folder"
             >
-              <Trash2 className="h-3 w-3" />
+              <Trash2 className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

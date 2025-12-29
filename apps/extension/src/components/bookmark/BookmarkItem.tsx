@@ -130,7 +130,7 @@ export function BookmarkItem({
 
   return (
     <div
-      className={`flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md group bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md transition-colors bookmark-item ${isDragging ? 'opacity-50' : ''}`}
     >
       <a
         ref={(el) => {
@@ -142,17 +142,18 @@ export function BookmarkItem({
         rel="noopener noreferrer"
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
-        <img src={getFaviconUrl(node.url ?? '')} alt="favicon" className="w-4 h-4 mr-2 shrink-0" />
+        <img src={getFaviconUrl(node.url ?? '')} alt="" className="w-4 h-4 mr-2 shrink-0 rounded-sm" />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
         <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
       </a>
       <Button
         variant="ghost"
         size="icon"
-        className="h-5 w-5 ml-2 shrink-0 action-button text-destructive hover:text-destructive"
+        className="h-6 w-6 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
         onClick={() => onDelete(node.id)}
+        title="Delete bookmark"
       >
-        <Trash2 className="h-3 w-3" />
+        <Trash2 className="h-3.5 w-3.5" />
       </Button>
     </div>
   );
