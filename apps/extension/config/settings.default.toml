@@ -2,6 +2,9 @@
 # All configurable settings are defined here to avoid hardcoding in source code.
 
 [appearance]
+# Language preference: "auto" (follow browser), "en", "ja", or "ko"
+language = "auto"
+
 # Theme preference: "system", "light", or "dark"
 theme = "system"
 

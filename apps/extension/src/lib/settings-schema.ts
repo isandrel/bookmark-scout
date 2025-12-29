@@ -14,6 +14,7 @@ import settingsToml from '../../config/settings.default.toml?raw';
  */
 interface TomlConfig {
   appearance: {
+    language: string;
     theme: string;
     show_favicons: boolean;
     favicon_size: number;
@@ -52,6 +53,12 @@ export const sortOrderSchema = z.enum(['date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
 
 /**
+ * Language options
+ */
+export const languageSchema = z.enum(['auto', 'en', 'ja', 'ko']);
+export type Language = z.infer<typeof languageSchema>;
+
+/**
  * Favicon size options
  */
 export const faviconSizeSchema = z.union([z.literal(16), z.literal(24), z.literal(32)]);
@@ -74,6 +81,7 @@ export type MaxSearchResults = z.infer<typeof maxSearchResultsSchema>;
  */
 export const settingsSchema = z.object({
   // Appearance - defaults from config.appearance
+  language: languageSchema.default(config.appearance.language as Language),
   theme: themeSchema.default(config.appearance.theme as Theme),
   showFavicons: z.boolean().default(config.appearance.show_favicons),
   faviconSize: faviconSizeSchema.default(config.appearance.favicon_size as FaviconSize),
@@ -110,7 +118,7 @@ export const settingsCategories = {
   appearance: {
     label: 'Appearance',
     description: 'Customize how bookmarks look',
-    fields: ['theme', 'showFavicons', 'faviconSize'] as const,
+    fields: ['language', 'theme', 'showFavicons', 'faviconSize'] as const,
   },
   search: {
     label: 'Search',
@@ -148,6 +156,17 @@ export const settingsFieldMeta: Record<
   }
 > = {
   // Appearance
+  language: {
+    label: 'Language',
+    description: 'Choose extension language',
+    type: 'select',
+    options: [
+      { value: 'auto', label: 'Auto (Browser)' },
+      { value: 'en', label: 'English' },
+      { value: 'ja', label: '日本語' },
+      { value: 'ko', label: '한국어' },
+    ],
+  },
   theme: {
     label: 'Theme',
     description: 'Choose your preferred color scheme',
