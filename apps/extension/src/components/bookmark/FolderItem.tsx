@@ -96,7 +96,7 @@ export function FolderItem({
       onDrag: ({ source, location }) => {
         const sourceData = source.data as { node: BookmarkTreeNode };
         if (sourceData.node.id !== node.id) {
-          const existingIndicator = element.parentElement?.querySelector('.drop-indicator');
+          const existingIndicator = element.querySelector('.drop-indicator');
           if (existingIndicator) existingIndicator.remove();
 
           const rect = element.getBoundingClientRect();
@@ -132,14 +132,14 @@ export function FolderItem({
             } else {
               indicator.style.bottom = '-1px';
             }
-            element.parentElement?.appendChild(indicator);
+            element.appendChild(indicator);
           }
         }
       },
       onDragLeave: () => {
         element.classList.remove('drop-target');
         element.classList.remove('drop-into-folder');
-        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        element.querySelector('.drop-indicator')?.remove();
         delete element.dataset.dropZone;
       },
       onDrop: ({ source }) => {
@@ -185,7 +185,7 @@ export function FolderItem({
 
         element.classList.remove('drop-target');
         element.classList.remove('drop-into-folder');
-        element.parentElement?.querySelector('.drop-indicator')?.remove();
+        element.querySelector('.drop-indicator')?.remove();
         delete element.dataset.dropZone;
       },
       getData: () => ({
@@ -217,7 +217,7 @@ export function FolderItem({
               elementRef.current = el;
               setupDragDrop(el);
             }}
-            className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
+            className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
           >
             <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
             {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
