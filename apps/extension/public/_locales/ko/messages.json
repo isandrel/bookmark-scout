@@ -202,5 +202,201 @@
     "saveChanges": {
         "message": "변경 사항 저장",
         "description": "Save changes button label"
+    },
+    "settingsAppearance": {
+        "message": "외관",
+        "description": "Appearance category label"
+    },
+    "settingsAppearanceDesc": {
+        "message": "북마크 표시 방법 맞춤 설정",
+        "description": "Appearance category description"
+    },
+    "settingsSearch": {
+        "message": "검색",
+        "description": "Search category label"
+    },
+    "settingsSearchDesc": {
+        "message": "검색 동작 설정",
+        "description": "Search category description"
+    },
+    "settingsBehavior": {
+        "message": "동작",
+        "description": "Behavior category label"
+    },
+    "settingsBehaviorDesc": {
+        "message": "확장 프로그램 동작 제어",
+        "description": "Behavior category description"
+    },
+    "settingsAdvanced": {
+        "message": "고급 설정",
+        "description": "Advanced category label"
+    },
+    "settingsAdvancedDesc": {
+        "message": "고급 설정",
+        "description": "Advanced category description"
+    },
+    "settingsLanguage": {
+        "message": "언어",
+        "description": "Language setting label"
+    },
+    "settingsLanguageDesc": {
+        "message": "확장 프로그램 언어 선택",
+        "description": "Language setting description"
+    },
+    "settingsLanguageAuto": {
+        "message": "자동 (브라우저)",
+        "description": "Auto language option"
+    },
+    "settingsTheme": {
+        "message": "테마",
+        "description": "Theme setting label"
+    },
+    "settingsThemeDesc": {
+        "message": "원하는 색상 구성표 선택",
+        "description": "Theme setting description"
+    },
+    "settingsThemeSystem": {
+        "message": "시스템",
+        "description": "System theme option"
+    },
+    "settingsThemeLight": {
+        "message": "라이트",
+        "description": "Light theme option"
+    },
+    "settingsThemeDark": {
+        "message": "다크",
+        "description": "Dark theme option"
+    },
+    "settingsShowFavicons": {
+        "message": "파비콘 표시",
+        "description": "Show favicons setting label"
+    },
+    "settingsShowFaviconsDesc": {
+        "message": "북마크 옆에 웹사이트 아이콘 표시",
+        "description": "Show favicons setting description"
+    },
+    "settingsFaviconSize": {
+        "message": "파비콘 크기",
+        "description": "Favicon size setting label"
+    },
+    "settingsFaviconSizeDesc": {
+        "message": "파비콘 아이콘 크기 (픽셀)",
+        "description": "Favicon size setting description"
+    },
+    "settingsFaviconSmall": {
+        "message": "16px (작게)",
+        "description": "Small favicon size option"
+    },
+    "settingsFaviconMedium": {
+        "message": "24px (중간)",
+        "description": "Medium favicon size option"
+    },
+    "settingsFaviconLarge": {
+        "message": "32px (크게)",
+        "description": "Large favicon size option"
+    },
+    "settingsSearchDelay": {
+        "message": "검색 지연",
+        "description": "Search delay setting label"
+    },
+    "settingsSearchDelayDesc": {
+        "message": "입력 후 검색 시작까지의 지연 시간",
+        "description": "Search delay setting description"
+    },
+    "settingsMaxResults": {
+        "message": "최대 검색 결과",
+        "description": "Max results setting label"
+    },
+    "settingsMaxResultsDesc": {
+        "message": "표시할 결과의 최대 수",
+        "description": "Max results setting description"
+    },
+    "settingsExpandFolders": {
+        "message": "검색 시 폴더 펼치기",
+        "description": "Expand folders setting label"
+    },
+    "settingsExpandFoldersDesc": {
+        "message": "검색 시 폴더 자동 펼치기",
+        "description": "Expand folders setting description"
+    },
+    "settingsSearchHistory": {
+        "message": "검색 기록",
+        "description": "Search history setting label"
+    },
+    "settingsSearchHistoryDesc": {
+        "message": "최근 검색 기억",
+        "description": "Search history setting description"
+    },
+    "settingsSortOrder": {
+        "message": "정렬 순서",
+        "description": "Sort order setting label"
+    },
+    "settingsSortOrderDesc": {
+        "message": "북마크 기본 정렬 순서",
+        "description": "Sort order setting description"
+    },
+    "settingsSortDate": {
+        "message": "추가일 순",
+        "description": "Date sort option"
+    },
+    "settingsSortAlphabetical": {
+        "message": "알파벳 순",
+        "description": "Alphabetical sort option"
+    },
+    "settingsSortFolders": {
+        "message": "폴더 우선",
+        "description": "Folders first sort option"
+    },
+    "settingsGroupByFolders": {
+        "message": "폴더별 그룹화",
+        "description": "Group by folders setting label"
+    },
+    "settingsGroupByFoldersDesc": {
+        "message": "폴더 구조로 북마크 정리",
+        "description": "Group by folders setting description"
+    },
+    "settingsConfirmDelete": {
+        "message": "삭제 전 확인",
+        "description": "Confirm delete setting label"
+    },
+    "settingsConfirmDeleteDesc": {
+        "message": "삭제 전 확인 대화상자 표시",
+        "description": "Confirm delete setting description"
+    },
+    "settingsDefaultFolderName": {
+        "message": "기본 폴더 이름",
+        "description": "Default folder name setting label"
+    },
+    "settingsDefaultFolderNameDesc": {
+        "message": "새 폴더의 기본 이름",
+        "description": "Default folder name setting description"
+    },
+    "settingsPopupWidth": {
+        "message": "팝업 너비",
+        "description": "Popup width setting label"
+    },
+    "settingsPopupWidthDesc": {
+        "message": "팝업 창 너비",
+        "description": "Popup width setting description"
+    },
+    "settingsPopupHeight": {
+        "message": "팝업 높이",
+        "description": "Popup height setting label"
+    },
+    "settingsPopupHeightDesc": {
+        "message": "팝업 창 높이",
+        "description": "Popup height setting description"
+    },
+    "settingsTruncateLength": {
+        "message": "글자 수 제한",
+        "description": "Truncate length setting label"
+    },
+    "settingsTruncateLengthDesc": {
+        "message": "텍스트 자르기 전 최대 글자 수",
+        "description": "Truncate length setting description"
+    },
+    "settingsResults": {
+        "message": "$1개 결과",
+        "description": "Results count option"
     }
 }
