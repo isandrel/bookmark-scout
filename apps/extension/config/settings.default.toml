@@ -1,0 +1,48 @@
+# Bookmark Scout Extension - Default Settings Configuration
+# All configurable settings are defined here to avoid hardcoding in source code.
+
+[appearance]
+# Theme preference: "system", "light", or "dark"
+theme = "system"
+
+# Whether to display favicon icons next to bookmarks
+show_favicons = true
+
+# Size of favicon icons in pixels: 16, 24, or 32
+favicon_size = 16
+
+[search]
+# Delay in milliseconds before search starts after typing (50-1000)
+debounce_ms = 300
+
+# Maximum number of search results to display: 10, 20, 50, or 100
+max_results = 20
+
+# Automatically expand folders when searching
+expand_folders_on_search = true
+
+# Remember and display recent searches
+search_history = true
+
+[behavior]
+# Default sort order: "date", "alphabetical", or "folders"
+sort_order = "date"
+
+# Organize bookmarks by folder structure
+group_by_folders = true
+
+# Show confirmation dialog before deleting items
+confirm_before_delete = true
+
+# Default name for newly created folders
+default_new_folder_name = "New Folder"
+
+[advanced]
+# Popup window width in pixels (300-800)
+popup_width = 400
+
+# Popup window height in pixels (300-1000)
+popup_height = 500
+
+# Maximum characters before truncating bookmark titles (20-200)
+truncate_length = 50
