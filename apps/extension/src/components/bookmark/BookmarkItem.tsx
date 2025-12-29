@@ -144,7 +144,7 @@ export function BookmarkItem({
       >
         <img src={getFaviconUrl(node.url ?? '')} alt="" className="w-4 h-4 mr-2 shrink-0 rounded-sm" />
         {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-        <span className="truncate text-sm" dangerouslySetInnerHTML={{ __html: node.title }} />
+        <span className="truncate text-sm" title={node.title.replace(/<[^>]*>/g, '')} dangerouslySetInnerHTML={{ __html: node.title }} />
       </a>
       <Button
         variant="ghost"
