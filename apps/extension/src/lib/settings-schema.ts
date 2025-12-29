@@ -5,6 +5,7 @@
 
 import { z } from 'zod';
 import { parse } from 'smol-toml';
+import { t } from '@/hooks/use-i18n';
 
 // Import TOML config as raw string (bundled at build time)
 import settingsToml from '../../config/settings.default.toml?raw';
@@ -113,7 +114,34 @@ export const defaultSettings: Settings = settingsSchema.parse({});
 
 /**
  * Settings categories for UI grouping.
+ * Returns translated labels and descriptions.
  */
+export function getSettingsCategories() {
+  return {
+    appearance: {
+      label: t('settingsAppearance'),
+      description: t('settingsAppearanceDesc'),
+      fields: ['language', 'theme', 'showFavicons', 'faviconSize'] as const,
+    },
+    search: {
+      label: t('settingsSearch'),
+      description: t('settingsSearchDesc'),
+      fields: ['searchDebounceMs', 'maxSearchResults', 'expandFoldersOnSearch', 'searchHistory'] as const,
+    },
+    behavior: {
+      label: t('settingsBehavior'),
+      description: t('settingsBehaviorDesc'),
+      fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName'] as const,
+    },
+    advanced: {
+      label: t('settingsAdvanced'),
+      description: t('settingsAdvancedDesc'),
+      fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
+    },
+  } as const;
+}
+
+// Keep static version for type inference
 export const settingsCategories = {
   appearance: {
     label: 'Appearance',
@@ -138,10 +166,152 @@ export const settingsCategories = {
 } as const;
 
 /**
- * Field metadata for rendering forms.
- * Labels and descriptions loaded from config comments would be ideal,
- * but kept here for type safety and internationalization support.
+ * Field metadata for rendering forms with translations.
+ * Call this in components to get translated labels.
  */
+export function getSettingsFieldMeta(): Record<
+  keyof Settings,
+  {
+    label: string;
+    description: string;
+    type: 'switch' | 'select' | 'number' | 'text';
+    options?: { value: string | number; label: string }[];
+    min?: number;
+    max?: number;
+    step?: number;
+    unit?: string;
+  }
+> {
+  return {
+    // Appearance
+    language: {
+      label: t('settingsLanguage'),
+      description: t('settingsLanguageDesc'),
+      type: 'select',
+      options: [
+        { value: 'auto', label: t('settingsLanguageAuto') },
+        { value: 'en', label: 'English' },
+        { value: 'ja', label: '日本語' },
+        { value: 'ko', label: '한국어' },
+      ],
+    },
+    theme: {
+      label: t('settingsTheme'),
+      description: t('settingsThemeDesc'),
+      type: 'select',
+      options: [
+        { value: 'system', label: t('settingsThemeSystem') },
+        { value: 'light', label: t('settingsThemeLight') },
+        { value: 'dark', label: t('settingsThemeDark') },
+      ],
+    },
+    showFavicons: {
+      label: t('settingsShowFavicons'),
+      description: t('settingsShowFaviconsDesc'),
+      type: 'switch',
+    },
+    faviconSize: {
+      label: t('settingsFaviconSize'),
+      description: t('settingsFaviconSizeDesc'),
+      type: 'select',
+      options: [
+        { value: 16, label: t('settingsFaviconSmall') },
+        { value: 24, label: t('settingsFaviconMedium') },
+        { value: 32, label: t('settingsFaviconLarge') },
+      ],
+    },
+
+    // Search
+    searchDebounceMs: {
+      label: t('settingsSearchDelay'),
+      description: t('settingsSearchDelayDesc'),
+      type: 'number',
+      min: 50,
+      max: 1000,
+      step: 50,
+      unit: 'ms',
+    },
+    maxSearchResults: {
+      label: t('settingsMaxResults'),
+      description: t('settingsMaxResultsDesc'),
+      type: 'select',
+      options: [
+        { value: 10, label: t('settingsResults', '10') },
+        { value: 20, label: t('settingsResults', '20') },
+        { value: 50, label: t('settingsResults', '50') },
+        { value: 100, label: t('settingsResults', '100') },
+      ],
+    },
+    expandFoldersOnSearch: {
+      label: t('settingsExpandFolders'),
+      description: t('settingsExpandFoldersDesc'),
+      type: 'switch',
+    },
+    searchHistory: {
+      label: t('settingsSearchHistory'),
+      description: t('settingsSearchHistoryDesc'),
+      type: 'switch',
+    },
+
+    // Behavior
+    sortOrder: {
+      label: t('settingsSortOrder'),
+      description: t('settingsSortOrderDesc'),
+      type: 'select',
+      options: [
+        { value: 'date', label: t('settingsSortDate') },
+        { value: 'alphabetical', label: t('settingsSortAlphabetical') },
+        { value: 'folders', label: t('settingsSortFolders') },
+      ],
+    },
+    groupByFolders: {
+      label: t('settingsGroupByFolders'),
+      description: t('settingsGroupByFoldersDesc'),
+      type: 'switch',
+    },
+    confirmBeforeDelete: {
+      label: t('settingsConfirmDelete'),
+      description: t('settingsConfirmDeleteDesc'),
+      type: 'switch',
+    },
+    defaultNewFolderName: {
+      label: t('settingsDefaultFolderName'),
+      description: t('settingsDefaultFolderNameDesc'),
+      type: 'text',
+    },
+
+    // Advanced
+    popupWidth: {
+      label: t('settingsPopupWidth'),
+      description: t('settingsPopupWidthDesc'),
+      type: 'number',
+      min: 300,
+      max: 800,
+      step: 50,
+      unit: 'px',
+    },
+    popupHeight: {
+      label: t('settingsPopupHeight'),
+      description: t('settingsPopupHeightDesc'),
+      type: 'number',
+      min: 300,
+      max: 1000,
+      step: 50,
+      unit: 'px',
+    },
+    truncateLength: {
+      label: t('settingsTruncateLength'),
+      description: t('settingsTruncateLengthDesc'),
+      type: 'number',
+      min: 20,
+      max: 200,
+      step: 10,
+      unit: 'chars',
+    },
+  };
+}
+
+// Keep static version for type inference (fallback for non-i18n contexts)
 export const settingsFieldMeta: Record<
   keyof Settings,
   {

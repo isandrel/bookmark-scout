@@ -42,8 +42,8 @@ import { useToast } from '@/hooks/use-toast';
 import {
   type Settings,
   settingsSchema,
-  settingsCategories,
-  settingsFieldMeta,
+  getSettingsCategories,
+  getSettingsFieldMeta,
 } from '@/lib/settings-schema';
 import { useSettings, exportSettings, importSettings } from '@/lib/settings-storage';
 
@@ -170,7 +170,7 @@ const OptionsPage: React.FC = () => {
   const filterFields = (fields: readonly (keyof Settings)[]) => {
     if (!searchQuery) return fields;
     return fields.filter((fieldKey) => {
-      const meta = settingsFieldMeta[fieldKey];
+      const meta = getSettingsFieldMeta()[fieldKey];
       return (
         meta.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
         meta.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -179,7 +179,7 @@ const OptionsPage: React.FC = () => {
   };
 
   const renderField = (fieldKey: keyof Settings) => {
-    const meta = settingsFieldMeta[fieldKey];
+    const meta = getSettingsFieldMeta()[fieldKey];
 
     switch (meta.type) {
       case 'switch':
@@ -250,7 +250,7 @@ const OptionsPage: React.FC = () => {
   };
 
   const renderSettingsField = (fieldKey: keyof Settings) => {
-    const meta = settingsFieldMeta[fieldKey];
+    const meta = getSettingsFieldMeta()[fieldKey];
     const error = form.formState.errors[fieldKey];
 
     return (
@@ -330,7 +330,7 @@ const OptionsPage: React.FC = () => {
               <CardContent className="pt-0">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                   <TabsList className="grid w-full grid-cols-4 mb-6">
-                    {Object.entries(settingsCategories).map(([key, category]) => (
+                    {Object.entries(getSettingsCategories()).map(([key, category]) => (
                       <TabsTrigger
                         key={key}
                         value={key}
@@ -343,7 +343,7 @@ const OptionsPage: React.FC = () => {
                   </TabsList>
 
                   <AnimatePresence mode="wait">
-                    {Object.entries(settingsCategories).map(([categoryKey, category]) => {
+                    {Object.entries(getSettingsCategories()).map(([categoryKey, category]) => {
                       const filteredFields = filterFields(category.fields);
                       return (
                         <TabsContent key={categoryKey} value={categoryKey} className="mt-0">

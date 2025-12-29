@@ -202,5 +202,201 @@
     "saveChanges": {
         "message": "Save Changes",
         "description": "Save changes button label"
+    },
+    "settingsAppearance": {
+        "message": "Appearance",
+        "description": "Appearance category label"
+    },
+    "settingsAppearanceDesc": {
+        "message": "Customize how bookmarks look",
+        "description": "Appearance category description"
+    },
+    "settingsSearch": {
+        "message": "Search",
+        "description": "Search category label"
+    },
+    "settingsSearchDesc": {
+        "message": "Configure search behavior",
+        "description": "Search category description"
+    },
+    "settingsBehavior": {
+        "message": "Behavior",
+        "description": "Behavior category label"
+    },
+    "settingsBehaviorDesc": {
+        "message": "Control extension behavior",
+        "description": "Behavior category description"
+    },
+    "settingsAdvanced": {
+        "message": "Advanced",
+        "description": "Advanced category label"
+    },
+    "settingsAdvancedDesc": {
+        "message": "Advanced settings",
+        "description": "Advanced category description"
+    },
+    "settingsLanguage": {
+        "message": "Language",
+        "description": "Language setting label"
+    },
+    "settingsLanguageDesc": {
+        "message": "Choose extension language",
+        "description": "Language setting description"
+    },
+    "settingsLanguageAuto": {
+        "message": "Auto (Browser)",
+        "description": "Auto language option"
+    },
+    "settingsTheme": {
+        "message": "Theme",
+        "description": "Theme setting label"
+    },
+    "settingsThemeDesc": {
+        "message": "Choose your preferred color scheme",
+        "description": "Theme setting description"
+    },
+    "settingsThemeSystem": {
+        "message": "System",
+        "description": "System theme option"
+    },
+    "settingsThemeLight": {
+        "message": "Light",
+        "description": "Light theme option"
+    },
+    "settingsThemeDark": {
+        "message": "Dark",
+        "description": "Dark theme option"
+    },
+    "settingsShowFavicons": {
+        "message": "Show Favicons",
+        "description": "Show favicons setting label"
+    },
+    "settingsShowFaviconsDesc": {
+        "message": "Display website icons next to bookmarks",
+        "description": "Show favicons setting description"
+    },
+    "settingsFaviconSize": {
+        "message": "Favicon Size",
+        "description": "Favicon size setting label"
+    },
+    "settingsFaviconSizeDesc": {
+        "message": "Size of favicon icons in pixels",
+        "description": "Favicon size setting description"
+    },
+    "settingsFaviconSmall": {
+        "message": "16px (Small)",
+        "description": "Small favicon size option"
+    },
+    "settingsFaviconMedium": {
+        "message": "24px (Medium)",
+        "description": "Medium favicon size option"
+    },
+    "settingsFaviconLarge": {
+        "message": "32px (Large)",
+        "description": "Large favicon size option"
+    },
+    "settingsSearchDelay": {
+        "message": "Search Delay",
+        "description": "Search delay setting label"
+    },
+    "settingsSearchDelayDesc": {
+        "message": "Delay before search starts after typing",
+        "description": "Search delay setting description"
+    },
+    "settingsMaxResults": {
+        "message": "Max Search Results",
+        "description": "Max results setting label"
+    },
+    "settingsMaxResultsDesc": {
+        "message": "Maximum number of results to show",
+        "description": "Max results setting description"
+    },
+    "settingsExpandFolders": {
+        "message": "Expand Folders on Search",
+        "description": "Expand folders setting label"
+    },
+    "settingsExpandFoldersDesc": {
+        "message": "Automatically expand folders when searching",
+        "description": "Expand folders setting description"
+    },
+    "settingsSearchHistory": {
+        "message": "Search History",
+        "description": "Search history setting label"
+    },
+    "settingsSearchHistoryDesc": {
+        "message": "Remember recent searches",
+        "description": "Search history setting description"
+    },
+    "settingsSortOrder": {
+        "message": "Sort Order",
+        "description": "Sort order setting label"
+    },
+    "settingsSortOrderDesc": {
+        "message": "Default sort order for bookmarks",
+        "description": "Sort order setting description"
+    },
+    "settingsSortDate": {
+        "message": "Date Added",
+        "description": "Date sort option"
+    },
+    "settingsSortAlphabetical": {
+        "message": "Alphabetical",
+        "description": "Alphabetical sort option"
+    },
+    "settingsSortFolders": {
+        "message": "Folders First",
+        "description": "Folders first sort option"
+    },
+    "settingsGroupByFolders": {
+        "message": "Group by Folders",
+        "description": "Group by folders setting label"
+    },
+    "settingsGroupByFoldersDesc": {
+        "message": "Organize bookmarks by folder structure",
+        "description": "Group by folders setting description"
+    },
+    "settingsConfirmDelete": {
+        "message": "Confirm Before Delete",
+        "description": "Confirm delete setting label"
+    },
+    "settingsConfirmDeleteDesc": {
+        "message": "Show confirmation dialog before deleting",
+        "description": "Confirm delete setting description"
+    },
+    "settingsDefaultFolderName": {
+        "message": "Default Folder Name",
+        "description": "Default folder name setting label"
+    },
+    "settingsDefaultFolderNameDesc": {
+        "message": "Default name for new folders",
+        "description": "Default folder name setting description"
+    },
+    "settingsPopupWidth": {
+        "message": "Popup Width",
+        "description": "Popup width setting label"
+    },
+    "settingsPopupWidthDesc": {
+        "message": "Width of the popup window",
+        "description": "Popup width setting description"
+    },
+    "settingsPopupHeight": {
+        "message": "Popup Height",
+        "description": "Popup height setting label"
+    },
+    "settingsPopupHeightDesc": {
+        "message": "Height of the popup window",
+        "description": "Popup height setting description"
+    },
+    "settingsTruncateLength": {
+        "message": "Truncate Length",
+        "description": "Truncate length setting label"
+    },
+    "settingsTruncateLengthDesc": {
+        "message": "Maximum characters before truncating text",
+        "description": "Truncate length setting description"
+    },
+    "settingsResults": {
+        "message": "$1 results",
+        "description": "Results count option"
     }
 }
