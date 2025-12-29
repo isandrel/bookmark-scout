@@ -130,7 +130,7 @@ export function BookmarkItem({
 
   return (
     <div
-      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md transition-colors bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md transition-all duration-150 hover:scale-[1.01] origin-left bookmark-item ${isDragging ? 'opacity-50' : ''}`}
     >
       <a
         ref={(el) => {

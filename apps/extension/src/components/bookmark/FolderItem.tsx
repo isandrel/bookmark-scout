@@ -174,7 +174,7 @@ export function FolderItem({
       value={node.id}
       className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
     >
-      <AccordionTrigger className="group hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item transition-colors">
+      <AccordionTrigger className="group hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item transition-all duration-150 hover:scale-[1.01] origin-left">
         <div className="flex items-center w-full">
           <div
             ref={(el) => {
