@@ -1,9 +1,43 @@
 /**
  * Settings schema using Zod.
- * Defines all configurable settings with validation and defaults.
+ * Reads default values from TOML config file - no hardcoded defaults in code.
  */
 
 import { z } from 'zod';
+import { parse } from 'smol-toml';
+
+// Import TOML config as raw string (bundled at build time)
+import settingsToml from '../../config/settings.default.toml?raw';
+
+/**
+ * Parse TOML config to get default values.
+ */
+interface TomlConfig {
+  appearance: {
+    theme: string;
+    show_favicons: boolean;
+    favicon_size: number;
+  };
+  search: {
+    debounce_ms: number;
+    max_results: number;
+    expand_folders_on_search: boolean;
+    search_history: boolean;
+  };
+  behavior: {
+    sort_order: string;
+    group_by_folders: boolean;
+    confirm_before_delete: boolean;
+    default_new_folder_name: string;
+  };
+  advanced: {
+    popup_width: number;
+    popup_height: number;
+    truncate_length: number;
+  };
+}
+
+const config = parse(settingsToml) as TomlConfig;
 
 /**
  * Theme options
@@ -36,35 +70,36 @@ export type MaxSearchResults = z.infer<typeof maxSearchResultsSchema>;
 
 /**
  * Complete settings schema with all configurable options.
+ * Default values are read from config/settings.default.toml - NOT hardcoded.
  */
 export const settingsSchema = z.object({
-  // Appearance
-  theme: themeSchema.default('system'),
-  showFavicons: z.boolean().default(true),
-  faviconSize: faviconSizeSchema.default(16),
+  // Appearance - defaults from config.appearance
+  theme: themeSchema.default(config.appearance.theme as Theme),
+  showFavicons: z.boolean().default(config.appearance.show_favicons),
+  faviconSize: faviconSizeSchema.default(config.appearance.favicon_size as FaviconSize),
 
-  // Search
-  searchDebounceMs: z.number().min(50).max(1000).default(300),
-  maxSearchResults: maxSearchResultsSchema.default(20),
-  expandFoldersOnSearch: z.boolean().default(true),
-  searchHistory: z.boolean().default(true),
+  // Search - defaults from config.search
+  searchDebounceMs: z.number().min(50).max(1000).default(config.search.debounce_ms),
+  maxSearchResults: maxSearchResultsSchema.default(config.search.max_results as MaxSearchResults),
+  expandFoldersOnSearch: z.boolean().default(config.search.expand_folders_on_search),
+  searchHistory: z.boolean().default(config.search.search_history),
 
-  // Behavior
-  sortOrder: sortOrderSchema.default('date'),
-  groupByFolders: z.boolean().default(true),
-  confirmBeforeDelete: z.boolean().default(true),
-  defaultNewFolderName: z.string().min(1).max(100).default('New Folder'),
+  // Behavior - defaults from config.behavior
+  sortOrder: sortOrderSchema.default(config.behavior.sort_order as SortOrder),
+  groupByFolders: z.boolean().default(config.behavior.group_by_folders),
+  confirmBeforeDelete: z.boolean().default(config.behavior.confirm_before_delete),
+  defaultNewFolderName: z.string().min(1).max(100).default(config.behavior.default_new_folder_name),
 
-  // Advanced
-  popupWidth: z.number().min(300).max(800).default(400),
-  popupHeight: z.number().min(300).max(1000).default(500),
-  truncateLength: z.number().min(20).max(200).default(50),
+  // Advanced - defaults from config.advanced
+  popupWidth: z.number().min(300).max(800).default(config.advanced.popup_width),
+  popupHeight: z.number().min(300).max(1000).default(config.advanced.popup_height),
+  truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
 
 /**
- * Default settings values.
+ * Default settings values - generated from TOML config.
  */
 export const defaultSettings: Settings = settingsSchema.parse({});
 
@@ -96,6 +131,8 @@ export const settingsCategories = {
 
 /**
  * Field metadata for rendering forms.
+ * Labels and descriptions loaded from config comments would be ideal,
+ * but kept here for type safety and internationalization support.
  */
 export const settingsFieldMeta: Record<
   keyof Settings,
