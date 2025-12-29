@@ -96,45 +96,80 @@ export function FolderItem({
       onDrag: ({ source, location }) => {
         const sourceData = source.data as { node: BookmarkTreeNode };
         if (sourceData.node.id !== node.id) {
-          element.classList.add('drop-target');
-
           const existingIndicator = element.parentElement?.querySelector('.drop-indicator');
           if (existingIndicator) existingIndicator.remove();
-
-          const indicator = document.createElement('div');
-          indicator.className = 'drop-indicator';
 
           const rect = element.getBoundingClientRect();
           const mouseY = location.current.input.clientY;
           const relativeY = mouseY - rect.top;
-          const closestEdge = relativeY < rect.height / 2 ? 'top' : 'bottom';
+          const percentY = relativeY / rect.height;
 
-          if (closestEdge === 'top') {
-            indicator.style.top = '-1px';
+          // 3-zone detection: top 25% | center 50% | bottom 25%
+          let dropZone: 'top' | 'center' | 'bottom';
+          if (percentY < 0.25) {
+            dropZone = 'top';
+          } else if (percentY > 0.75) {
+            dropZone = 'bottom';
           } else {
-            indicator.style.bottom = '-1px';
+            dropZone = 'center';
           }
 
-          element.dataset.closestEdge = closestEdge;
-          element.parentElement?.appendChild(indicator);
+          element.dataset.dropZone = dropZone;
+
+          if (dropZone === 'center') {
+            // Highlight folder for drop-INTO
+            element.classList.add('drop-target');
+            element.classList.add('drop-into-folder');
+          } else {
+            // Show indicator line for reorder
+            element.classList.add('drop-target');
+            element.classList.remove('drop-into-folder');
+            
+            const indicator = document.createElement('div');
+            indicator.className = 'drop-indicator';
+            if (dropZone === 'top') {
+              indicator.style.top = '-1px';
+            } else {
+              indicator.style.bottom = '-1px';
+            }
+            element.parentElement?.appendChild(indicator);
+          }
         }
       },
       onDragLeave: () => {
         element.classList.remove('drop-target');
+        element.classList.remove('drop-into-folder');
         element.parentElement?.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.closestEdge;
+        delete element.dataset.dropZone;
       },
       onDrop: ({ source }) => {
         const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
         if (sourceData.node.id !== node.id) {
-          const closestEdge = element.dataset.closestEdge as 'top' | 'bottom' | undefined;
-          const isDroppingIntoFolder = node.children !== undefined;
+          const dropZone = element.dataset.dropZone as 'top' | 'center' | 'bottom' | undefined;
+          const isFolder = node.children !== undefined;
+
+          // Determine if we're dropping INTO the folder (center zone) or beside it (edge zones)
+          const isDroppingIntoFolder = isFolder && dropZone === 'center';
 
           let operationType: DragOperation['type'];
-          if (sourceData.type === 'folder') {
-            operationType = isDroppingIntoFolder ? 'folder-move' : 'folder-reorder';
+          let targetParentId: string;
+          let targetIndex: number;
+
+          if (isDroppingIntoFolder) {
+            // Dropping INTO the folder - item becomes child of this folder
+            operationType = sourceData.type === 'folder' ? 'folder-move' : 'bookmark-move';
+            targetParentId = node.id; // The folder we're dropping into
+            targetIndex = node.children?.length ?? 0; // Append to end of folder
+          } else if (dropZone === 'top' || dropZone === 'bottom') {
+            // Dropping beside the folder (reorder within same parent)
+            operationType = sourceData.type === 'folder' ? 'folder-reorder' : 'bookmark-reorder';
+            targetParentId = node.parentId || 'root';
+            targetIndex = dropZone === 'bottom' ? (node.index || 0) + 1 : node.index || 0;
           } else {
-            operationType = isDroppingIntoFolder ? 'bookmark-move' : 'bookmark-reorder';
+            // Fallback: treat as move into folder if it's a folder
+            operationType = sourceData.type === 'folder' ? 'folder-move' : 'bookmark-move';
+            targetParentId = isFolder ? node.id : (node.parentId || 'root');
+            targetIndex = isFolder ? (node.children?.length ?? 0) : (node.index || 0);
           }
 
           onDrop({
@@ -143,14 +178,15 @@ export function FolderItem({
             sourceParentId: sourceData.node.parentId || 'root',
             sourceIndex: sourceData.node.index || 0,
             targetId: node.id,
-            targetParentId: node.parentId || 'root',
-            targetIndex: closestEdge === 'bottom' ? (node.index || 0) + 1 : node.index || 0,
+            targetParentId,
+            targetIndex,
           });
         }
 
         element.classList.remove('drop-target');
+        element.classList.remove('drop-into-folder');
         element.parentElement?.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.closestEdge;
+        delete element.dataset.dropZone;
       },
       getData: () => ({
         type: 'folder',

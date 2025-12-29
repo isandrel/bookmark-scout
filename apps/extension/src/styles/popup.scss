@@ -16,6 +16,13 @@
   transition: background-color 0.2s ease;
 }
 
+// Visual feedback when dropping INTO a folder (center zone)
+.drop-into-folder {
+  background-color: hsl(var(--primary) / 0.15);
+  border: 2px dashed hsl(var(--primary));
+  border-radius: 0.5rem;
+}
+
 // Drop indicator styles
 .drop-indicator {
   position: absolute;
