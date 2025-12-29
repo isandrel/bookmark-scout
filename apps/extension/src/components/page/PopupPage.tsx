@@ -181,15 +181,29 @@ function PopupPage() {
           inputRef={inputRef}
         />
 
-        <div className="flex-1 overflow-hidden bookmark-content">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {isLoading ? (
-            <div className="p-4 space-y-2">
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
-              <Skeleton className="h-8 w-full" />
+            <div className="p-3 space-y-1">
+              <Skeleton className="h-7 w-full rounded-md" />
+              <Skeleton className="h-7 w-11/12 ml-4 rounded-md" />
+              <Skeleton className="h-7 w-10/12 ml-4 rounded-md" />
+              <Skeleton className="h-7 w-full rounded-md" />
+              <Skeleton className="h-7 w-9/12 ml-4 rounded-md" />
+            </div>
+          ) : displayFolders.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+              <div className="text-4xl mb-3">🔍</div>
+              <p className="text-sm text-muted-foreground">
+                {query ? 'No bookmarks found' : 'No bookmarks yet'}
+              </p>
+              {query && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Try a different search term
+                </p>
+              )}
             </div>
           ) : (
-            <div className="p-4">
+            <div className="p-3">
               <Accordion
                 type="multiple"
                 value={expandedFolders}

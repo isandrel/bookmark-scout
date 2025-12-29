@@ -13,7 +13,7 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="system" storageKey="bookmark-scout-theme">
+      <ThemeProvider storageKey="bookmark-scout-theme">
         <BookmarksPage />
       </ThemeProvider>
     </ErrorBoundary>
