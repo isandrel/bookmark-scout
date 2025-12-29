@@ -23,14 +23,14 @@ const ToastViewport = React.forwardRef<
 ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-center justify-between space-x-2 overflow-hidden rounded-md border p-4 pr-6 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full',
+  'group pointer-events-auto relative flex w-full flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-bottom-full data-[state=open]:duration-300 data-[state=closed]:duration-500',
   {
     variants: {
       variant: {
         default: 'border bg-background text-foreground',
         destructive:
           'destructive group border-destructive bg-destructive text-destructive-foreground',
-        success: 'border-green-600 bg-green-50 text-green-900',
+        success: 'border-green-600/50 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-100 dark:border-green-800',
       },
     },
     defaultVariants: {
@@ -39,14 +39,25 @@ const toastVariants = cva(
   },
 );
 
+// Default toast duration in ms
+const TOAST_DURATION = 4000;
+
+interface ToastProps
+  extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root>,
+    VariantProps<typeof toastVariants> {
+  duration?: number;
+}
+
 const Toast = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> & VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+  ToastProps
+>(({ className, variant, duration = TOAST_DURATION, ...props }, ref) => {
   return (
     <ToastPrimitives.Root
       ref={ref}
+      duration={duration}
       className={cn(toastVariants({ variant }), className)}
+      style={{ '--toast-duration': `${duration}ms` } as React.CSSProperties}
       {...props}
     />
   );
@@ -106,12 +117,39 @@ const ToastDescription = React.forwardRef<
 ));
 ToastDescription.displayName = ToastPrimitives.Description.displayName;
 
-type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+// Progress bar that animates from 100% to 0% over the toast duration
+const ToastProgress = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null }
+>(({ className, variant, ...props }, ref) => {
+  const progressColors = {
+    default: 'bg-foreground/20',
+    destructive: 'bg-destructive-foreground/30',
+    success: 'bg-green-600/30 dark:bg-green-400/30',
+  };
+
+  return (
+    <div className="w-full h-1 bg-black/5 dark:bg-white/5 overflow-hidden">
+      <div
+        ref={ref}
+        className={cn(
+          'h-full animate-toast-progress origin-left',
+          progressColors[variant ?? 'default'],
+          className,
+        )}
+        {...props}
+      />
+    </div>
+  );
+});
+ToastProgress.displayName = 'ToastProgress';
+
+type ToastPropsExport = React.ComponentPropsWithoutRef<typeof Toast>;
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
 
 export {
-  type ToastProps,
+  type ToastPropsExport as ToastProps,
   type ToastActionElement,
   ToastProvider,
   ToastViewport,
@@ -120,4 +158,6 @@ export {
   ToastDescription,
   ToastClose,
   ToastAction,
+  ToastProgress,
+  TOAST_DURATION,
 };
