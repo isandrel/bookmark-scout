@@ -1,11 +1,23 @@
 /**
- * OptionsPage - Settings page using react-hook-form and zod validation.
- * Provides UI for configuring all extension settings.
+ * OptionsPage - Settings page with multi-tab interface.
+ * Uses react-hook-form and zod validation.
+ * Designed to scale for many options with categorized tabs.
  */
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { Download, Moon, RotateCcw, Save, Sun, Upload } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Download,
+  Moon,
+  Palette,
+  RotateCcw,
+  Save,
+  Search,
+  Settings2,
+  Sliders,
+  Sun,
+  Upload,
+} from 'lucide-react';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,9 +33,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -32,11 +44,15 @@ import {
   settingsCategories,
   settingsFieldMeta,
 } from '@/lib/settings-schema';
-import {
-  useSettings,
-  exportSettings,
-  importSettings,
-} from '@/lib/settings-storage';
+import { useSettings, exportSettings, importSettings } from '@/lib/settings-storage';
+
+// Tab icons mapping
+const tabIcons: Record<string, React.ReactNode> = {
+  appearance: <Palette className="h-4 w-4" />,
+  search: <Search className="h-4 w-4" />,
+  behavior: <Settings2 className="h-4 w-4" />,
+  advanced: <Sliders className="h-4 w-4" />,
+};
 
 const OptionsPage: React.FC = () => {
   const { settings, isLoading, updateSettings, resetToDefaults } = useSettings();
@@ -44,6 +60,8 @@ const OptionsPage: React.FC = () => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState('appearance');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const form = useForm<Settings>({
     resolver: zodResolver(settingsSchema),
@@ -61,7 +79,6 @@ const OptionsPage: React.FC = () => {
     setIsSaving(true);
     try {
       await updateSettings(data);
-      // Sync theme with theme provider
       if (data.theme !== theme) {
         setTheme(data.theme);
       }
@@ -143,10 +160,21 @@ const OptionsPage: React.FC = () => {
       });
     }
 
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+  };
+
+  // Filter settings by search query
+  const filterFields = (fields: readonly (keyof Settings)[]) => {
+    if (!searchQuery) return fields;
+    return fields.filter((fieldKey) => {
+      const meta = settingsFieldMeta[fieldKey];
+      return (
+        meta.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        meta.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
   };
 
   const renderField = (fieldKey: keyof Settings) => {
@@ -157,7 +185,9 @@ const OptionsPage: React.FC = () => {
         return (
           <Switch
             checked={form.watch(fieldKey) as boolean}
-            onCheckedChange={(checked) => form.setValue(fieldKey, checked as Settings[typeof fieldKey])}
+            onCheckedChange={(checked) =>
+              form.setValue(fieldKey, checked as Settings[typeof fieldKey])
+            }
           />
         );
 
@@ -166,7 +196,6 @@ const OptionsPage: React.FC = () => {
           <Select
             value={String(form.watch(fieldKey))}
             onValueChange={(value) => {
-              // Convert to number if options have numeric values
               const numValue = Number(value);
               const finalValue = Number.isNaN(numValue) ? value : numValue;
               form.setValue(fieldKey, finalValue as Settings[typeof fieldKey]);
@@ -190,14 +219,17 @@ const OptionsPage: React.FC = () => {
           <div className="flex items-center gap-3 w-[200px]">
             <Slider
               value={[form.watch(fieldKey) as number]}
-              onValueChange={([value]) => form.setValue(fieldKey, value as Settings[typeof fieldKey])}
+              onValueChange={([value]) =>
+                form.setValue(fieldKey, value as Settings[typeof fieldKey])
+              }
               min={meta.min}
               max={meta.max}
               step={meta.step}
               className="flex-1"
             />
             <span className="text-sm text-muted-foreground w-16 text-right">
-              {form.watch(fieldKey)}{meta.unit}
+              {form.watch(fieldKey)}
+              {meta.unit}
             </span>
           </div>
         );
@@ -216,6 +248,32 @@ const OptionsPage: React.FC = () => {
     }
   };
 
+  const renderSettingsField = (fieldKey: keyof Settings) => {
+    const meta = settingsFieldMeta[fieldKey];
+    const error = form.formState.errors[fieldKey];
+
+    return (
+      <motion.div
+        key={fieldKey}
+        layout
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        whileHover={{ scale: 1.01 }}
+        className="flex items-start justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors border border-transparent hover:border-border"
+      >
+        <div className="space-y-1 flex-1 pr-4">
+          <Label htmlFor={fieldKey} className="text-base font-medium">
+            {meta.label}
+          </Label>
+          <p className="text-sm text-muted-foreground">{meta.description}</p>
+          {error && <p className="text-sm text-destructive">{error.message}</p>}
+        </div>
+        {renderField(fieldKey)}
+      </motion.div>
+    );
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
@@ -226,7 +284,7 @@ const OptionsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto p-6 max-w-3xl">
+      <div className="container mx-auto p-6 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -234,64 +292,91 @@ const OptionsPage: React.FC = () => {
         >
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <Card className="border-none shadow-lg">
-              <CardHeader className="space-y-1">
+              <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-2xl font-bold">Bookmark Scout Settings</CardTitle>
-                    <CardDescription>Customize your bookmark management experience</CardDescription>
+                    <CardTitle className="text-2xl font-bold">Settings</CardTitle>
+                    <CardDescription>Customize your Bookmark Scout experience</CardDescription>
                   </div>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  >
-                    {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                    >
+                      {theme === 'dark' ? (
+                        <Sun className="h-5 w-5" />
+                      ) : (
+                        <Moon className="h-5 w-5" />
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Search bar */}
+                <div className="relative mt-4">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search settings..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
                 </div>
               </CardHeader>
-              <CardContent className="space-y-8">
-                {Object.entries(settingsCategories).map(([categoryKey, category], index) => (
-                  <motion.div
-                    key={categoryKey}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    <h3 className="text-lg font-semibold mb-1">{category.label}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{category.description}</p>
-                    <div className="space-y-4">
-                      {category.fields.map((fieldKey) => {
-                        const meta = settingsFieldMeta[fieldKey];
-                        const error = form.formState.errors[fieldKey];
-                        return (
+
+              <CardContent className="pt-0">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-4 mb-6">
+                    {Object.entries(settingsCategories).map(([key, category]) => (
+                      <TabsTrigger
+                        key={key}
+                        value={key}
+                        className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      >
+                        {tabIcons[key]}
+                        <span className="hidden sm:inline">{category.label}</span>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+
+                  <AnimatePresence mode="wait">
+                    {Object.entries(settingsCategories).map(([categoryKey, category]) => {
+                      const filteredFields = filterFields(category.fields);
+                      return (
+                        <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
                           <motion.div
-                            key={fieldKey}
-                            whileHover={{ scale: 1.01 }}
-                            className="flex items-start justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors"
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -20 }}
+                            transition={{ duration: 0.2 }}
                           >
-                            <div className="space-y-1 flex-1">
-                              <Label htmlFor={fieldKey} className="text-base">
-                                {meta.label}
-                              </Label>
-                              <p className="text-sm text-muted-foreground">{meta.description}</p>
-                              {error && (
-                                <p className="text-sm text-destructive">{error.message}</p>
+                            <div className="mb-4">
+                              <h3 className="text-lg font-semibold">{category.label}</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {category.description}
+                              </p>
+                            </div>
+
+                            <div className="space-y-3">
+                              {filteredFields.length > 0 ? (
+                                filteredFields.map((fieldKey) => renderSettingsField(fieldKey))
+                              ) : (
+                                <div className="text-center py-8 text-muted-foreground">
+                                  No settings match your search in this category.
+                                </div>
                               )}
                             </div>
-                            {renderField(fieldKey)}
                           </motion.div>
-                        );
-                      })}
-                    </div>
-                    {index < Object.keys(settingsCategories).length - 1 && (
-                      <Separator className="my-6" />
-                    )}
-                  </motion.div>
-                ))}
+                        </TabsContent>
+                      );
+                    })}
+                  </AnimatePresence>
+                </Tabs>
 
                 {/* Action Buttons */}
-                <div className="pt-6 flex flex-wrap gap-3 justify-between">
+                <div className="pt-8 border-t mt-8 flex flex-wrap gap-3 justify-between">
                   <div className="flex gap-2">
                     <Button type="button" variant="outline" size="sm" onClick={handleExport}>
                       <Download className="h-4 w-4 mr-2" />
@@ -322,7 +407,7 @@ const OptionsPage: React.FC = () => {
                       className="hover:bg-destructive/10 hover:text-destructive"
                     >
                       <RotateCcw className="h-4 w-4 mr-2" />
-                      Reset
+                      Reset All
                     </Button>
                     <Button type="submit" disabled={isSaving}>
                       <Save className="h-4 w-4 mr-2" />
