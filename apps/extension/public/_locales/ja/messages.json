@@ -90,5 +90,117 @@
     "enterFolderName": {
         "message": "フォルダ名を入力...",
         "description": "New folder input placeholder"
+    },
+    "noBookmarksFound": {
+        "message": "ブックマークが見つかりません",
+        "description": "Empty state when search has no results"
+    },
+    "noBookmarksYet": {
+        "message": "ブックマークはまだありません",
+        "description": "Empty state when there are no bookmarks"
+    },
+    "tryDifferentSearch": {
+        "message": "別の検索ワードをお試しください",
+        "description": "Hint for empty search results"
+    },
+    "lightMode": {
+        "message": "ライトモード",
+        "description": "Light mode toggle tooltip"
+    },
+    "darkMode": {
+        "message": "ダークモード",
+        "description": "Dark mode toggle tooltip"
+    },
+    "settings": {
+        "message": "設定",
+        "description": "Settings page title"
+    },
+    "settingsDescription": {
+        "message": "Bookmark Scoutをカスタマイズ",
+        "description": "Settings page description"
+    },
+    "searchSettings": {
+        "message": "設定を検索...",
+        "description": "Settings search placeholder"
+    },
+    "loadingSettings": {
+        "message": "設定を読み込み中...",
+        "description": "Settings loading state"
+    },
+    "noSettingsMatch": {
+        "message": "このカテゴリには一致する設定がありません",
+        "description": "Empty settings search result"
+    },
+    "settingsSaved": {
+        "message": "設定を保存しました",
+        "description": "Toast title for settings save success"
+    },
+    "preferencesUpdated": {
+        "message": "設定が更新されました",
+        "description": "Toast description for settings save success"
+    },
+    "errorSavingSettings": {
+        "message": "設定の保存に失敗しました",
+        "description": "Toast title for settings save error"
+    },
+    "settingsReset": {
+        "message": "設定をリセットしました",
+        "description": "Toast title for settings reset success"
+    },
+    "settingsResetDescription": {
+        "message": "すべての設定がデフォルトに戻りました",
+        "description": "Toast description for settings reset success"
+    },
+    "errorResettingSettings": {
+        "message": "設定のリセットに失敗しました",
+        "description": "Toast title for settings reset error"
+    },
+    "settingsExported": {
+        "message": "設定をエクスポートしました",
+        "description": "Toast title for settings export success"
+    },
+    "settingsExportedDescription": {
+        "message": "設定ファイルがダウンロードされました",
+        "description": "Toast description for settings export success"
+    },
+    "exportFailed": {
+        "message": "エクスポートに失敗しました",
+        "description": "Toast title for settings export error"
+    },
+    "settingsImported": {
+        "message": "設定をインポートしました",
+        "description": "Toast title for settings import success"
+    },
+    "settingsImportedDescription": {
+        "message": "ファイルから設定を復元しました",
+        "description": "Toast description for settings import success"
+    },
+    "importFailed": {
+        "message": "インポートに失敗しました",
+        "description": "Toast title for settings import error"
+    },
+    "invalidSettingsFile": {
+        "message": "無効な設定ファイルです",
+        "description": "Error message for invalid settings import"
+    },
+    "export": {
+        "message": "エクスポート",
+        "description": "Export button label"
+    },
+    "import": {
+        "message": "インポート",
+        "description": "Import button label"
+    },
+    "resetAll": {
+        "message": "すべてリセット",
+        "description": "Reset all settings button label"
+    },
+    "saving": {
+        "message": "保存中...",
+        "description": "Saving state button label"
+    },
+    "saveChanges": {
+        "message": "変更を保存",
+        "description": "Save changes button label"
     }
 }

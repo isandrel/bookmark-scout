@@ -90,5 +90,117 @@
     "enterFolderName": {
         "message": "Enter folder name...",
         "description": "New folder input placeholder"
+    },
+    "noBookmarksFound": {
+        "message": "No bookmarks found",
+        "description": "Empty state when search has no results"
+    },
+    "noBookmarksYet": {
+        "message": "No bookmarks yet",
+        "description": "Empty state when there are no bookmarks"
+    },
+    "tryDifferentSearch": {
+        "message": "Try a different search term",
+        "description": "Hint for empty search results"
+    },
+    "lightMode": {
+        "message": "Light mode",
+        "description": "Light mode toggle tooltip"
+    },
+    "darkMode": {
+        "message": "Dark mode",
+        "description": "Dark mode toggle tooltip"
+    },
+    "settings": {
+        "message": "Settings",
+        "description": "Settings page title"
+    },
+    "settingsDescription": {
+        "message": "Customize your Bookmark Scout experience",
+        "description": "Settings page description"
+    },
+    "searchSettings": {
+        "message": "Search settings...",
+        "description": "Settings search placeholder"
+    },
+    "loadingSettings": {
+        "message": "Loading settings...",
+        "description": "Settings loading state"
+    },
+    "noSettingsMatch": {
+        "message": "No settings match your search in this category.",
+        "description": "Empty settings search result"
+    },
+    "settingsSaved": {
+        "message": "Settings saved",
+        "description": "Toast title for settings save success"
+    },
+    "preferencesUpdated": {
+        "message": "Your preferences have been updated.",
+        "description": "Toast description for settings save success"
+    },
+    "errorSavingSettings": {
+        "message": "Error saving settings",
+        "description": "Toast title for settings save error"
+    },
+    "settingsReset": {
+        "message": "Settings reset",
+        "description": "Toast title for settings reset success"
+    },
+    "settingsResetDescription": {
+        "message": "All settings have been restored to defaults.",
+        "description": "Toast description for settings reset success"
+    },
+    "errorResettingSettings": {
+        "message": "Error resetting settings",
+        "description": "Toast title for settings reset error"
+    },
+    "settingsExported": {
+        "message": "Settings exported",
+        "description": "Toast title for settings export success"
+    },
+    "settingsExportedDescription": {
+        "message": "Settings file has been downloaded.",
+        "description": "Toast description for settings export success"
+    },
+    "exportFailed": {
+        "message": "Export failed",
+        "description": "Toast title for settings export error"
+    },
+    "settingsImported": {
+        "message": "Settings imported",
+        "description": "Toast title for settings import success"
+    },
+    "settingsImportedDescription": {
+        "message": "Your settings have been restored from file.",
+        "description": "Toast description for settings import success"
+    },
+    "importFailed": {
+        "message": "Import failed",
+        "description": "Toast title for settings import error"
+    },
+    "invalidSettingsFile": {
+        "message": "Invalid settings file",
+        "description": "Error message for invalid settings import"
+    },
+    "export": {
+        "message": "Export",
+        "description": "Export button label"
+    },
+    "import": {
+        "message": "Import",
+        "description": "Import button label"
+    },
+    "resetAll": {
+        "message": "Reset All",
+        "description": "Reset all settings button label"
+    },
+    "saving": {
+        "message": "Saving...",
+        "description": "Saving state button label"
+    },
+    "saveChanges": {
+        "message": "Save Changes",
+        "description": "Save changes button label"
     }
 }

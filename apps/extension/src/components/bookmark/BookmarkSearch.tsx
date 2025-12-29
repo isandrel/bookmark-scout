@@ -65,7 +65,7 @@ export function BookmarkSearch({
           size="icon"
           className="shrink-0 h-8 w-8"
           onClick={toggleTheme}
-          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          title={theme === 'dark' ? t('lightMode') : t('darkMode')}
         >
           {theme === 'dark' ? (
             <Sun className="h-4 w-4" />
