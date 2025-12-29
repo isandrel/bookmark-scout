@@ -90,5 +90,117 @@
     "enterFolderName": {
         "message": "폴더 이름 입력...",
         "description": "New folder input placeholder"
+    },
+    "noBookmarksFound": {
+        "message": "북마크를 찾을 수 없습니다",
+        "description": "Empty state when search has no results"
+    },
+    "noBookmarksYet": {
+        "message": "아직 북마크가 없습니다",
+        "description": "Empty state when there are no bookmarks"
+    },
+    "tryDifferentSearch": {
+        "message": "다른 검색어를 시도해 보세요",
+        "description": "Hint for empty search results"
+    },
+    "lightMode": {
+        "message": "라이트 모드",
+        "description": "Light mode toggle tooltip"
+    },
+    "darkMode": {
+        "message": "다크 모드",
+        "description": "Dark mode toggle tooltip"
+    },
+    "settings": {
+        "message": "설정",
+        "description": "Settings page title"
+    },
+    "settingsDescription": {
+        "message": "Bookmark Scout를 맞춤 설정하세요",
+        "description": "Settings page description"
+    },
+    "searchSettings": {
+        "message": "설정 검색...",
+        "description": "Settings search placeholder"
+    },
+    "loadingSettings": {
+        "message": "설정 로딩 중...",
+        "description": "Settings loading state"
+    },
+    "noSettingsMatch": {
+        "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
+        "description": "Empty settings search result"
+    },
+    "settingsSaved": {
+        "message": "설정이 저장되었습니다",
+        "description": "Toast title for settings save success"
+    },
+    "preferencesUpdated": {
+        "message": "환경 설정이 업데이트되었습니다",
+        "description": "Toast description for settings save success"
+    },
+    "errorSavingSettings": {
+        "message": "설정 저장 오류",
+        "description": "Toast title for settings save error"
+    },
+    "settingsReset": {
+        "message": "설정이 초기화되었습니다",
+        "description": "Toast title for settings reset success"
+    },
+    "settingsResetDescription": {
+        "message": "모든 설정이 기본값으로 복원되었습니다",
+        "description": "Toast description for settings reset success"
+    },
+    "errorResettingSettings": {
+        "message": "설정 초기화 오류",
+        "description": "Toast title for settings reset error"
+    },
+    "settingsExported": {
+        "message": "설정이 내보내졌습니다",
+        "description": "Toast title for settings export success"
+    },
+    "settingsExportedDescription": {
+        "message": "설정 파일이 다운로드되었습니다",
+        "description": "Toast description for settings export success"
+    },
+    "exportFailed": {
+        "message": "내보내기 실패",
+        "description": "Toast title for settings export error"
+    },
+    "settingsImported": {
+        "message": "설정을 가져왔습니다",
+        "description": "Toast title for settings import success"
+    },
+    "settingsImportedDescription": {
+        "message": "파일에서 설정을 복원했습니다",
+        "description": "Toast description for settings import success"
+    },
+    "importFailed": {
+        "message": "가져오기 실패",
+        "description": "Toast title for settings import error"
+    },
+    "invalidSettingsFile": {
+        "message": "잘못된 설정 파일입니다",
+        "description": "Error message for invalid settings import"
+    },
+    "export": {
+        "message": "내보내기",
+        "description": "Export button label"
+    },
+    "import": {
+        "message": "가져오기",
+        "description": "Import button label"
+    },
+    "resetAll": {
+        "message": "전체 초기화",
+        "description": "Reset all settings button label"
+    },
+    "saving": {
+        "message": "저장 중...",
+        "description": "Saving state button label"
+    },
+    "saveChanges": {
+        "message": "변경 사항 저장",
+        "description": "Save changes button label"
     }
 }

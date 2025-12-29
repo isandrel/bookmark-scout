@@ -37,6 +37,7 @@ import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Toaster } from '@/components/ui/toaster';
+import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
 import {
   type Settings,
@@ -83,13 +84,13 @@ const OptionsPage: React.FC = () => {
         setTheme(data.theme);
       }
       toast({
-        title: '✓ Settings saved',
-        description: 'Your preferences have been updated.',
+        title: `✓ ${t('settingsSaved')}`,
+        description: t('preferencesUpdated'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: '× Error saving settings',
+        title: `× ${t('errorSavingSettings')}`,
         description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'destructive',
       });
@@ -103,13 +104,13 @@ const OptionsPage: React.FC = () => {
       await resetToDefaults();
       form.reset();
       toast({
-        title: '✓ Settings reset',
-        description: 'All settings have been restored to defaults.',
+        title: `✓ ${t('settingsReset')}`,
+        description: t('settingsResetDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: '× Error resetting settings',
+        title: `× ${t('errorResettingSettings')}`,
         description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'destructive',
       });
@@ -127,13 +128,13 @@ const OptionsPage: React.FC = () => {
       a.click();
       URL.revokeObjectURL(url);
       toast({
-        title: '✓ Settings exported',
-        description: 'Settings file has been downloaded.',
+        title: `✓ ${t('settingsExported')}`,
+        description: t('settingsExportedDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: '× Export failed',
+        title: `× ${t('exportFailed')}`,
         description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'destructive',
       });
@@ -148,14 +149,14 @@ const OptionsPage: React.FC = () => {
       const text = await file.text();
       await importSettings(text);
       toast({
-        title: '✓ Settings imported',
-        description: 'Your settings have been restored from file.',
+        title: `✓ ${t('settingsImported')}`,
+        description: t('settingsImportedDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: '× Import failed',
-        description: error instanceof Error ? error.message : 'Invalid settings file',
+        title: `× ${t('importFailed')}`,
+        description: error instanceof Error ? error.message : t('invalidSettingsFile'),
         variant: 'destructive',
       });
     }
@@ -277,7 +278,7 @@ const OptionsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
-        <div className="text-muted-foreground">Loading settings...</div>
+        <div className="text-muted-foreground">{t('loadingSettings')}</div>
       </div>
     );
   }
@@ -295,8 +296,8 @@ const OptionsPage: React.FC = () => {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-2xl font-bold">Settings</CardTitle>
-                    <CardDescription>Customize your Bookmark Scout experience</CardDescription>
+                    <CardTitle className="text-2xl font-bold">{t('settings')}</CardTitle>
+                    <CardDescription>{t('settingsDescription')}</CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -318,7 +319,7 @@ const OptionsPage: React.FC = () => {
                 <div className="relative mt-4">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search settings..."
+                    placeholder={t('searchSettings')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-9"
@@ -364,7 +365,7 @@ const OptionsPage: React.FC = () => {
                                 filteredFields.map((fieldKey) => renderSettingsField(fieldKey))
                               ) : (
                                 <div className="text-center py-8 text-muted-foreground">
-                                  No settings match your search in this category.
+                                  {t('noSettingsMatch')}
                                 </div>
                               )}
                             </div>
@@ -380,7 +381,7 @@ const OptionsPage: React.FC = () => {
                   <div className="flex gap-2">
                     <Button type="button" variant="outline" size="sm" onClick={handleExport}>
                       <Download className="h-4 w-4 mr-2" />
-                      Export
+                      {t('export')}
                     </Button>
                     <Button
                       type="button"
@@ -389,7 +390,7 @@ const OptionsPage: React.FC = () => {
                       onClick={() => fileInputRef.current?.click()}
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      Import
+                      {t('import')}
                     </Button>
                     <input
                       ref={fileInputRef}
@@ -407,11 +408,11 @@ const OptionsPage: React.FC = () => {
                       className="hover:bg-destructive/10 hover:text-destructive"
                     >
                       <RotateCcw className="h-4 w-4 mr-2" />
-                      Reset All
+                      {t('resetAll')}
                     </Button>
                     <Button type="submit" disabled={isSaving}>
                       <Save className="h-4 w-4 mr-2" />
-                      {isSaving ? 'Saving...' : 'Save Changes'}
+                      {isSaving ? t('saving') : t('saveChanges')}
                     </Button>
                   </div>
                 </div>

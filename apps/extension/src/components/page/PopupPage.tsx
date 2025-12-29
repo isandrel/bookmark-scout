@@ -198,11 +198,11 @@ function PopupPage() {
             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
               <div className="text-4xl mb-3">🔍</div>
               <p className="text-sm text-muted-foreground">
-                {query ? 'No bookmarks found' : 'No bookmarks yet'}
+                {query ? t('noBookmarksFound') : t('noBookmarksYet')}
               </p>
               {query && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  Try a different search term
+                  {t('tryDifferentSearch')}
                 </p>
               )}
             </div>
