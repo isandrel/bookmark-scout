@@ -1,0 +1,59 @@
+# GitHub Release Notes Configuration
+# Customizes the auto-generated "What's Changed" section
+# Docs: https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+      - dependencies
+    authors:
+      - dependabot
+      - dependabot[bot]
+
+  categories:
+    - title: ✨ New Features
+      labels:
+        - enhancement
+        - feature
+        - feat
+
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+        - fix
+        - bugfix
+
+    - title: 💄 UI Improvements
+      labels:
+        - ui
+        - style
+        - design
+
+    - title: 🌐 Internationalization
+      labels:
+        - i18n
+        - localization
+
+    - title: 🔧 Configuration & CI
+      labels:
+        - config
+        - ci
+        - chore
+
+    - title: 📝 Documentation
+      labels:
+        - documentation
+        - docs
+
+    - title: 🔒 Security
+      labels:
+        - security
+
+    - title: 📦 Dependencies
+      labels:
+        - dependencies
+
+    - title: 🧹 Other Changes
+      labels:
+        - "*"
