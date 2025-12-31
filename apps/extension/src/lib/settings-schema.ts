@@ -37,6 +37,11 @@ interface TomlConfig {
     popup_height: number;
     truncate_length: number;
   };
+  ai: {
+    enabled: boolean;
+    provider: string;
+    model: string;
+  };
 }
 
 const config = parse(settingsToml) as TomlConfig;
@@ -103,6 +108,12 @@ export const settingsSchema = z.object({
   popupWidth: z.number().min(300).max(800).default(config.advanced.popup_width),
   popupHeight: z.number().min(300).max(1000).default(config.advanced.popup_height),
   truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
+
+  // AI - defaults from config.ai
+  aiEnabled: z.boolean().default(config.ai.enabled),
+  aiProvider: z.enum(['openai', 'anthropic', 'google']).default(config.ai.provider as 'openai' | 'anthropic' | 'google'),
+  aiModel: z.string().default(config.ai.model),
+  aiMaxRecommendations: z.number().min(1).max(5).default(3),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
@@ -138,6 +149,11 @@ export function getSettingsCategories() {
       description: t('settingsAdvancedDesc'),
       fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
     },
+    ai: {
+      label: t('settingsAI'),
+      description: t('settingsAIDesc'),
+      fields: ['aiEnabled', 'aiProvider', 'aiModel'] as const,
+    },
   } as const;
 }
 
@@ -162,6 +178,11 @@ export const settingsCategories = {
     label: 'Advanced',
     description: 'Advanced settings',
     fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
+  },
+  ai: {
+    label: 'AI',
+    description: 'AI-powered folder recommendations',
+    fields: ['aiEnabled', 'aiProvider', 'aiModel', 'aiMaxRecommendations'] as const,
   },
 } as const;
 
@@ -308,6 +329,43 @@ export function getSettingsFieldMeta(): Record<
       step: 10,
       unit: 'chars',
     },
+
+    // AI
+    aiEnabled: {
+      label: 'AI Recommendations',
+      description: 'Enable AI-powered folder suggestions',
+      type: 'switch',
+    },
+    aiProvider: {
+      label: 'AI Provider',
+      description: 'Choose your AI provider',
+      type: 'select',
+      options: [
+        { value: 'openai', label: 'OpenAI' },
+        { value: 'anthropic', label: 'Anthropic' },
+        { value: 'google', label: 'Google' },
+      ],
+    },
+    aiModel: {
+      label: 'Model',
+      description: 'AI model to use',
+      type: 'select',
+      options: [
+        { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
+        { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
+        { value: 'claude-opus-4.5', label: 'Claude Opus 4.5 (Anthropic)' },
+        { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5 (Anthropic)' },
+        { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
+        { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
+      ],
+    },
+    aiMaxRecommendations: {
+      label: 'Max Recommendations',
+      description: 'Maximum number of folder suggestions (1-5)',
+      type: 'number',
+      min: 1,
+      max: 5,
+    },
   };
 }
 
@@ -449,5 +507,42 @@ export const settingsFieldMeta: Record<
     max: 200,
     step: 10,
     unit: 'chars',
+  },
+
+  // AI
+  aiEnabled: {
+    label: 'AI Recommendations',
+    description: 'Enable AI-powered folder suggestions',
+    type: 'switch',
+  },
+  aiProvider: {
+    label: 'AI Provider',
+    description: 'Choose your AI provider',
+    type: 'select',
+    options: [
+      { value: 'openai', label: 'OpenAI' },
+      { value: 'anthropic', label: 'Anthropic' },
+      { value: 'google', label: 'Google' },
+    ],
+  },
+  aiModel: {
+    label: 'Model',
+    description: 'AI model to use',
+    type: 'select',
+    options: [
+      { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
+      { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
+      { value: 'claude-opus-4.5', label: 'Claude Opus 4.5 (Anthropic)' },
+      { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5 (Anthropic)' },
+      { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
+      { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
+    ],
+  },
+  aiMaxRecommendations: {
+    label: 'Max Recommendations',
+    description: 'Maximum number of folder suggestions (1-5)',
+    type: 'number',
+    min: 1,
+    max: 5,
   },
 };
