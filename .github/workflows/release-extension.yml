@@ -43,22 +43,25 @@ jobs:
         run: |
           cd dist/chrome-mv3
           zip -r ../../bookmark-scout-chrome.zip .
+        working-directory: ./apps/extension
 
       - name: Create Firefox zip
         run: |
           cd dist/firefox-mv2
           zip -r ../../bookmark-scout-firefox.zip .
+        working-directory: ./apps/extension
 
       - name: Create Edge zip
         run: |
           cd dist/edge-mv3
           zip -r ../../bookmark-scout-edge.zip .
+        working-directory: ./apps/extension
 
       - name: Build Chrome CRX
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
-          zipFilePath: bookmark-scout-chrome.zip
-          crxFilePath: bookmark-scout-chrome.crx
+          zipFilePath: apps/extension/bookmark-scout-chrome.zip
+          crxFilePath: apps/extension/bookmark-scout-chrome.crx
           privateKey: ${{ secrets.CRX_PRIVATE_KEY }}
 
       - name: Get version from tag
@@ -105,10 +108,10 @@ jobs:
             3. Enable "Developer mode"
             4. Click "Load unpacked" and select the extracted folder
           files: |
-            bookmark-scout-chrome.crx
-            bookmark-scout-chrome.zip
-            bookmark-scout-firefox.zip
-            bookmark-scout-edge.zip
+            apps/extension/bookmark-scout-chrome.crx
+            apps/extension/bookmark-scout-chrome.zip
+            apps/extension/bookmark-scout-firefox.zip
+            apps/extension/bookmark-scout-edge.zip
           generate_release_notes: true
           draft: false
           prerelease: false
