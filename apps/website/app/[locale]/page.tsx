@@ -27,6 +27,11 @@ export default async function Home({
 
     const features = [
         {
+            icon: "🤖",
+            title: t("features.aiRecommendations.title"),
+            description: t("features.aiRecommendations.description"),
+        },
+        {
             icon: "🔍",
             title: t("features.instantSearch.title"),
             description: t("features.instantSearch.description"),

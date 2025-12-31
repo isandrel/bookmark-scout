@@ -12,13 +12,17 @@
         "badge": "Chrome Extension",
         "manifestV3": "Manifest V3",
         "title": "Bookmark Scout",
-        "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders. Features drag-and-drop, instant search, and beautiful dark mode.",
+        "description": "A modern Chrome extension to search, organize, and save bookmarks. Powered by AI folder recommendations with multi-provider support.",
         "viewOnGitHub": "View on GitHub",
         "documentation": "Documentation"
     },
     "features": {
         "title": "Features",
         "subtitle": "Everything you need to manage your bookmarks efficiently",
+        "aiRecommendations": {
+            "title": "AI Folder Recommendations",
+            "description": "Smart folder suggestions powered by OpenAI, Anthropic, or Google AI"
+        },
         "instantSearch": {
             "title": "Instant Search",
             "description": "Find bookmarks instantly with debounced search and folder filtering"
