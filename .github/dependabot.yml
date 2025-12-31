@@ -12,7 +12,6 @@ updates:
       prefix: "📦 chore(deps)"
     labels:
       - "dependencies"
-      - "bun"
     open-pull-requests-limit: 10
     groups:
       # Group minor and patch updates together
@@ -32,7 +31,6 @@ updates:
       prefix: "📦 chore(deps)"
     labels:
       - "dependencies"
-      - "bun"
       - "website"
     open-pull-requests-limit: 5
 
