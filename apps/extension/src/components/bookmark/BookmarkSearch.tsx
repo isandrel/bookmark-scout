@@ -3,7 +3,7 @@
  * Search input with expand/collapse toggle and dark mode switch.
  */
 
-import { ChevronDown, ChevronUp, Moon, Sun } from 'lucide-react';
+import { ChevronDown, ChevronUp, Moon, Sparkles, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTheme } from '@/components/theme-provider';
@@ -15,6 +15,9 @@ interface BookmarkSearchProps {
   forceExpandAll: boolean;
   onToggleExpandAll: () => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
+  onAIRecommend?: () => void;
+  isAIEnabled?: boolean;
+  isAILoading?: boolean;
 }
 
 export function BookmarkSearch({
@@ -23,6 +26,9 @@ export function BookmarkSearch({
   forceExpandAll,
   onToggleExpandAll,
   inputRef,
+  onAIRecommend,
+  isAIEnabled = false,
+  isAILoading = false,
 }: BookmarkSearchProps) {
   const { theme, setTheme } = useTheme();
 
@@ -73,6 +79,18 @@ export function BookmarkSearch({
             <Moon className="h-4 w-4" />
           )}
         </Button>
+        {onAIRecommend && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0 h-8 w-8"
+            onClick={onAIRecommend}
+            disabled={isAILoading}
+            title="AI folder recommendation"
+          >
+            <Sparkles className={`h-4 w-4 text-violet-500 ${isAILoading ? 'animate-pulse' : ''}`} />
+          </Button>
+        )}
       </div>
     </div>
   );

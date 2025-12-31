@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Download,
+  Eye,
+  EyeOff,
   Moon,
   Palette,
   RotateCcw,
@@ -15,6 +17,7 @@ import {
   Search,
   Settings2,
   Sliders,
+  Sparkles,
   Sun,
   Upload,
 } from 'lucide-react';
@@ -46,6 +49,7 @@ import {
   getSettingsFieldMeta,
 } from '@/lib/settings-schema';
 import { useSettings, exportSettings, importSettings } from '@/lib/settings-storage';
+import { getModelsForProvider, type AIProvider } from '@/services';
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
@@ -53,6 +57,7 @@ const tabIcons: Record<string, React.ReactNode> = {
   search: <Search className="h-4 w-4" />,
   behavior: <Settings2 className="h-4 w-4" />,
   advanced: <Sliders className="h-4 w-4" />,
+  ai: <Sparkles className="h-4 w-4" />,
 };
 
 const OptionsPage: React.FC = () => {
@@ -63,11 +68,53 @@ const OptionsPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('appearance');
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // API Key state (stored separately for security)
+  const [apiKey, setApiKey] = useState('');
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [apiKeyError, setApiKeyError] = useState('');
 
   const form = useForm<Settings>({
     resolver: zodResolver(settingsSchema),
     defaultValues: settings,
   });
+
+  // Load API key from storage
+  useEffect(() => {
+    chrome.storage.local.get('aiApiKey').then(({ aiApiKey }) => {
+      if (aiApiKey) setApiKey(aiApiKey);
+    });
+  }, []);
+
+  // Validate and save API key
+  const saveApiKey = async (key: string) => {
+    setApiKeyError('');
+    
+    if (!key.trim()) {
+      await chrome.storage.local.remove('aiApiKey');
+      setApiKey('');
+      return;
+    }
+
+    // Basic format validation
+    const provider = form.watch('aiProvider');
+    if (provider === 'openai' && !key.startsWith('sk-')) {
+      setApiKeyError('OpenAI keys start with sk-');
+      return;
+    }
+    if (provider === 'anthropic' && !key.startsWith('sk-ant-')) {
+      setApiKeyError('Anthropic keys start with sk-ant-');
+      return;
+    }
+    
+    await chrome.storage.local.set({ aiApiKey: key });
+    setApiKey(key);
+    toast({
+      title: '✓ API Key Saved',
+      description: 'Your API key has been saved securely.',
+      variant: 'success',
+    });
+  };
 
   // Update form when settings load
   useEffect(() => {
@@ -192,7 +239,15 @@ const OptionsPage: React.FC = () => {
           />
         );
 
-      case 'select':
+      case 'select': {
+        // For aiModel, use dynamic options based on selected provider
+        let selectOptions = meta.options;
+        if (fieldKey === 'aiModel') {
+          const provider = form.watch('aiProvider') as AIProvider;
+          const models = getModelsForProvider(provider);
+          selectOptions = models.map(m => ({ value: m.id, label: m.name }));
+        }
+        
         return (
           <Select
             value={String(form.watch(fieldKey))}
@@ -206,7 +261,7 @@ const OptionsPage: React.FC = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {meta.options?.map((option) => (
+              {selectOptions?.map((option) => (
                 <SelectItem key={String(option.value)} value={String(option.value)}>
                   {option.label}
                 </SelectItem>
@@ -214,6 +269,7 @@ const OptionsPage: React.FC = () => {
             </SelectContent>
           </Select>
         );
+      }
 
       case 'number':
         return (
@@ -329,7 +385,7 @@ const OptionsPage: React.FC = () => {
 
               <CardContent className="pt-0">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 mb-6">
+                <TabsList className="grid w-full grid-cols-5 mb-6">
                     {Object.entries(getSettingsCategories()).map(([key, category]) => (
                       <TabsTrigger
                         key={key}
@@ -353,12 +409,31 @@ const OptionsPage: React.FC = () => {
                             exit={{ opacity: 0, x: -20 }}
                             transition={{ duration: 0.2 }}
                           >
-                            <div className="mb-4">
-                              <h3 className="text-lg font-semibold">{category.label}</h3>
-                              <p className="text-sm text-muted-foreground">
-                                {category.description}
-                              </p>
-                            </div>
+                            {/* Special header for AI tab */}
+                            {categoryKey === 'ai' ? (
+                              <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 border border-violet-500/20">
+                                <div className="flex items-center gap-3">
+                                  <div className="p-2 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 text-white">
+                                    <Sparkles className="h-5 w-5" />
+                                  </div>
+                                  <div>
+                                    <h3 className="text-lg font-semibold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                                      {category.label}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                      {category.description}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="mb-4">
+                                <h3 className="text-lg font-semibold">{category.label}</h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {category.description}
+                                </p>
+                              </div>
+                            )}
 
                             <div className="space-y-3">
                               {filteredFields.length > 0 ? (
@@ -367,6 +442,43 @@ const OptionsPage: React.FC = () => {
                                 <div className="text-center py-8 text-muted-foreground">
                                   {t('noSettingsMatch')}
                                 </div>
+                              )}
+                              
+                              {/* API Key input for AI category */}
+                              {categoryKey === 'ai' && (
+                                <motion.div
+                                  layout
+                                  initial={{ opacity: 0, y: 10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className="flex items-start justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors border border-transparent hover:border-border"
+                                >
+                                  <div className="space-y-1 flex-1 pr-4">
+                                    <Label className="text-base font-medium">API Key</Label>
+                                    <p className="text-sm text-muted-foreground">Your AI provider API key (stored locally)</p>
+                                    {apiKeyError && <p className="text-sm text-destructive">{apiKeyError}</p>}
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="relative">
+                                      <Input
+                                        type={showApiKey ? 'text' : 'password'}
+                                        value={apiKey}
+                                        onChange={(e) => setApiKey(e.target.value)}
+                                        onBlur={(e) => saveApiKey(e.target.value)}
+                                        placeholder="sk-..."
+                                        className="w-[200px] pr-8"
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-0 top-0 h-full w-8"
+                                        onClick={() => setShowApiKey(!showApiKey)}
+                                      >
+                                        {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </motion.div>
                               )}
                             </div>
                           </motion.div>

@@ -13,11 +13,13 @@ import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/toaster';
+import { Folder, FolderPlus } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
 import { useSetting } from '@/lib';
 import { useBookmarkStore } from '@/stores';
+import { recommendFolders, type AISettings, type FolderRecommendation } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.scss';
 
@@ -55,8 +57,15 @@ function PopupPage() {
     areAllChildrenExpanded,
   } = useBookmarkStore();
 
-  // Get configurable debounce delay from settings
+  // Get configurable settings
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
+  const { value: aiEnabled } = useSetting('aiEnabled');
+  const { value: aiProvider } = useSetting('aiProvider');
+  const { value: aiModel } = useSetting('aiModel');
+  const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
+  const [aiLoading, setAILoading] = useState(false);
+  const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
+  const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
 
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);
@@ -69,6 +78,62 @@ function PopupPage() {
     fetchFolders();
   }, [fetchFolders]);
 
+  // AI Recommendation handler
+  const handleAIRecommend = useCallback(async () => {
+    setAILoading(true);
+    setAIRecommendations([]);
+    
+    try {
+      // Get current tab info
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab?.title || !tab?.url) {
+        toast({
+          title: 'Cannot get current page',
+          description: 'Please open a webpage first',
+          variant: 'destructive',
+        });
+        return;
+      }
+      
+      setCurrentTabInfo({ title: tab.title, url: tab.url });
+
+      // Get API key from storage (stored separately for security)
+      const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
+      if (!aiApiKey) {
+        toast({
+          title: 'API Key Required',
+          description: 'Please set your API key in Settings → AI',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const settings: AISettings = {
+        enabled: aiEnabled,
+        provider: aiProvider as AISettings['provider'],
+        model: aiModel,
+        apiKey: aiApiKey as string,
+      };
+
+      const recommendations = await recommendFolders(
+        { title: tab.title, url: tab.url },
+        folders,
+        settings,
+        aiMaxRecommendations
+      );
+
+      setAIRecommendations(recommendations);
+    } catch (error) {
+      toast({
+        title: 'AI Recommendation Failed',
+        description: error instanceof Error ? error.message : 'Unknown error',
+        variant: 'destructive',
+      });
+    } finally {
+      setAILoading(false);
+    }
+  }, [aiEnabled, aiProvider, aiModel, folders, toast]);
+
   // Toast wrapper for operations
   const withToast = useCallback(
     async (
@@ -78,7 +143,7 @@ function PopupPage() {
     ) => {
       const result = await operation();
       toast({
-        title: result.success ? `✓ ${successTitle}` : `× ${errorTitle}`,
+        title: result.success ? `\u2713 ${successTitle}` : `\u00d7 ${errorTitle}`,
         description: result.message,
         variant: result.success ? 'success' : 'destructive',
       });
@@ -86,6 +151,28 @@ function PopupPage() {
     },
     [toast],
   );
+
+  // Add bookmark to selected folder
+  const handleAddToFolder = useCallback(async (rec: FolderRecommendation) => {
+    if (!currentTabInfo) return;
+    
+    if (rec.type === 'existing' && rec.folderId) {
+      await withToast(
+        () => addBookmarkToFolder(rec.folderId || ''),
+        t('bookmarkAdded'),
+        t('errorAddingBookmark'),
+      );
+    } else {
+      // For new folder suggestions, just show a message
+      toast({
+        title: `Create folder "${rec.folderPath}"`,
+        description: 'New folder creation coming soon!',
+      });
+    }
+    
+    setAIRecommendations([]);
+    setCurrentTabInfo(null);
+  }, [currentTabInfo, addBookmarkToFolder, withToast, toast]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -183,7 +270,52 @@ function PopupPage() {
           forceExpandAll={forceExpandAll}
           onToggleExpandAll={() => setForceExpandAll(!forceExpandAll)}
           inputRef={inputRef}
+          isAIEnabled={aiEnabled}
+          isAILoading={aiLoading}
+          onAIRecommend={handleAIRecommend}
         />
+
+        {/* AI Recommendations Panel */}
+        {aiRecommendations.length > 0 && (
+          <div className="border-b bg-muted/30 p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium text-muted-foreground">
+                AI Suggestions for: {currentTabInfo?.title?.slice(0, 40)}...
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 px-1 text-xs"
+                onClick={() => setAIRecommendations([])}
+              >
+                ×
+              </Button>
+            </div>
+            {aiRecommendations.map((rec) => (
+              <button
+                key={rec.folderPath}
+                type="button"
+                onClick={() => handleAddToFolder(rec)}
+                title={rec.reason}
+                className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors border border-transparent hover:border-border"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium truncate flex-1 flex items-center gap-1.5">
+                    {rec.type === 'new' ? (
+                      <FolderPlus className="h-4 w-4 text-violet-500 shrink-0" />
+                    ) : (
+                      <Folder className="h-4 w-4 text-amber-500 shrink-0" />
+                    )}
+                    {rec.folderPath.replace(/^Bookmarks Bar\//, '')}
+                  </span>
+                  <span className="text-xs text-muted-foreground ml-2">
+                    {Math.round(rec.confidence * 100)}%
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {isLoading ? (

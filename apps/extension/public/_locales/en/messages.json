@@ -398,5 +398,13 @@
     "settingsResults": {
         "message": "$1 results",
         "description": "Results count option"
+    },
+    "settingsAI": {
+        "message": "AI",
+        "description": "AI category label"
+    },
+    "settingsAIDesc": {
+        "message": "AI-powered folder recommendations",
+        "description": "AI category description"
     }
 }
