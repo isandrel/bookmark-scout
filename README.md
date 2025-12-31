@@ -11,7 +11,7 @@
 <h1 align="center">🔖 Bookmark Scout</h1>
 
 <p align="center">
-  <strong>A browser extension to quickly search, organize, and save bookmarks. Features drag-and-drop, instant search, and dark mode.</strong>
+  <strong>A modern browser extension to search, organize, and save bookmarks. Powered by AI folder recommendations with multi-provider support.</strong>
 </p>
 
 <p align="center">
@@ -87,6 +87,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### ✅ Implemented
 
+- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, or Google AI
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
@@ -96,6 +97,16 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
+
+> **🤖 AI Features Disclaimer**
+>
+> AI-powered folder recommendations are **disabled by default** and require manual opt-in:
+>
+> 1. Go to **Settings → AI** tab
+> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, or Google)
+> 3. Enter your own API key from your provider's dashboard
+>
+> ⚠️ **Note:** This feature uses third-party AI services. Your bookmark titles and URLs are sent to the selected AI provider for processing. API usage may incur costs depending on your provider's pricing. Results are experimental and may vary in accuracy.
 
 ### 🚧 Roadmap
 
