@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import { BookmarkItem } from './BookmarkItem';
 import { NewFolderInput } from './NewFolderInput';
+import { stripHtmlTags } from '@/utils/sanitize';
 
 interface FolderItemProps {
   node: BookmarkTreeNode;
@@ -221,7 +222,7 @@ export function FolderItem({
           >
             <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
             {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-            <span className="truncate text-sm" title={node.title.replace(/<[^>]*>/g, '')} dangerouslySetInnerHTML={{ __html: node.title }} />
+            <span className="truncate text-sm" title={stripHtmlTags(node.title)} dangerouslySetInnerHTML={{ __html: node.title }} />
             {itemCount > 0 && (
               <span className="ml-2 text-xs text-muted-foreground tabular-nums">
                 ({itemCount})
