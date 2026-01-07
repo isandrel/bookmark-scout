@@ -138,7 +138,7 @@ const OptionsPage: React.FC = () => {
     } catch (error) {
       toast({
         title: `× ${t('errorSavingSettings')}`,
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : t('unknownError'),
         variant: 'destructive',
       });
     } finally {
@@ -158,7 +158,7 @@ const OptionsPage: React.FC = () => {
     } catch (error) {
       toast({
         title: `× ${t('errorResettingSettings')}`,
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : t('unknownError'),
         variant: 'destructive',
       });
     }
@@ -182,7 +182,7 @@ const OptionsPage: React.FC = () => {
     } catch (error) {
       toast({
         title: `× ${t('exportFailed')}`,
-        description: error instanceof Error ? error.message : 'Unknown error',
+        description: error instanceof Error ? error.message : t('unknownError'),
         variant: 'destructive',
       });
     }
