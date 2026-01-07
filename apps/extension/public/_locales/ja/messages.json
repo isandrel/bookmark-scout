@@ -398,5 +398,97 @@
     "settingsResults": {
         "message": "$1件の結果",
         "description": "Results count option"
+    },
+    "settingsAI": {
+        "message": "AI",
+        "description": "AI category label"
+    },
+    "settingsAIDesc": {
+        "message": "AIによるフォルダ推薦",
+        "description": "AI category description"
+    },
+    "settingsRecentFoldersMax": {
+        "message": "最近のフォルダ最大数",
+        "description": "Recent folders max setting label"
+    },
+    "settingsRecentFoldersMaxDesc": {
+        "message": "クイック選択に表示する最近のフォルダの最大数",
+        "description": "Recent folders max setting description"
+    },
+    "recentFolders": {
+        "message": "最近",
+        "description": "Recent folders panel title"
+    },
+    "noRecentFolders": {
+        "message": "最近のフォルダはありません",
+        "description": "Empty state for recent folders"
+    },
+    "settingsRecentFoldersEnabled": {
+        "message": "最近のフォルダ",
+        "description": "Recent folders enabled setting label"
+    },
+    "settingsRecentFoldersEnabledDesc": {
+        "message": "クイックブックマーク保存用の最近のフォルダパネルを表示",
+        "description": "Recent folders enabled setting description"
+    },
+    "cannotGetCurrentPage": {
+        "message": "現在のページを取得できません",
+        "description": "Toast title when tab info unavailable"
+    },
+    "pleaseOpenWebpage": {
+        "message": "まずウェブページを開いてください",
+        "description": "Toast description when tab info unavailable"
+    },
+    "apiKeyRequired": {
+        "message": "APIキーが必要です",
+        "description": "Toast title when API key missing"
+    },
+    "apiKeyRequiredDesc": {
+        "message": "設定 → AIでAPIキーを設定してください",
+        "description": "Toast description when API key missing"
+    },
+    "aiRecommendationFailed": {
+        "message": "AI推薦に失敗しました",
+        "description": "Toast title when AI fails"
+    },
+    "unknownError": {
+        "message": "不明なエラー",
+        "description": "Generic error message"
+    },
+    "createFolderPrompt": {
+        "message": "フォルダ \"$1\" を作成",
+        "description": "Toast title for folder creation prompt"
+    },
+    "newFolderComingSoon": {
+        "message": "新規フォルダ作成は近日公開予定！",
+        "description": "Toast description for new folder feature"
+    },
+    "aiSuggestionsFor": {
+        "message": "AIの提案:",
+        "description": "AI suggestions section label"
+    },
+    "newBookmark": {
+        "message": "新規ブックマーク",
+        "description": "Default name for new bookmark"
+    },
+    "bookmarkAddedToFolder": {
+        "message": "\"$1\" を \"$2\" に追加しました",
+        "description": "Toast description for bookmark added"
+    },
+    "folderAddedIn": {
+        "message": "新規フォルダ \"$1\" を \"$2\" に追加しました",
+        "description": "Toast description for folder created"
+    },
+    "itemRemoved": {
+        "message": "\"$1\" を削除しました",
+        "description": "Toast description for item deleted"
+    },
+    "untitled": {
+        "message": "無題",
+        "description": "Default name for untitled items"
+    },
+    "failedToLoadBookmarks": {
+        "message": "ブックマークの読み込みに失敗しました",
+        "description": "Error message for bookmark loading failure"
     }
 }
