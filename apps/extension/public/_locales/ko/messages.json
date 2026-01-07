@@ -409,7 +409,11 @@
     },
     "settings_toastDurationDesc": {
         "message": "알림이 자동으로 사라지기 전 시간",
-        "description": "Toast duration setting description"
+        "description": "Description for toast duration setting"
+    },
+    "action_saving": {
+        "message": "저장 중...",
+        "description": "Saving state indicator"
     },
     "settings_results": {
         "message": "$1개 결과",

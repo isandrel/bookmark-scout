@@ -409,7 +409,11 @@
     },
     "settings_toastDurationDesc": {
         "message": "Duration before notifications auto-dismiss",
-        "description": "Toast duration setting description"
+        "description": "Description for toast duration setting"
+    },
+    "action_saving": {
+        "message": "Saving...",
+        "description": "Saving state indicator"
     },
     "settings_results": {
         "message": "$1 results",
