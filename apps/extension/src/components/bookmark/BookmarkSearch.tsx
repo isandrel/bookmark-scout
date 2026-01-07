@@ -3,7 +3,7 @@
  * Search input with expand/collapse toggle and dark mode switch.
  */
 
-import { ChevronDown, ChevronUp, Moon, Sparkles, Sun } from 'lucide-react';
+import { ChevronDown, ChevronUp, Moon, Sparkles, Sun, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useTheme } from '@/components/theme-provider';
@@ -43,14 +43,29 @@ export function BookmarkSearch({
   return (
     <div className="p-3 border-b shrink-0">
       <div className="flex items-center gap-2">
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder={t('popup_searchPlaceholder')}
-          value={query}
-          onChange={(e) => onQueryChange(e.target.value)}
-          className="flex-1 h-8 text-sm search-input"
-        />
+        <div className="relative flex-1">
+          <Input
+            ref={inputRef}
+            type="text"
+            placeholder={t('popup_searchPlaceholder')}
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            className="w-full h-8 text-sm search-input pr-8"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                onQueryChange('');
+                inputRef?.current?.focus();
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-0.5"
+              aria-label="Clear search"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
         {query && (
           <Button
             variant="ghost"
