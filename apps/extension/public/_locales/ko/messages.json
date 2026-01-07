@@ -1,4 +1,12 @@
 {
+    "extName": {
+        "message": "북마크 스카우트",
+        "description": "Extension name (used in manifest.json)"
+    },
+    "extDescription": {
+        "message": "북마크를 빠르게 검색하고 특정 폴더에 저장합니다.",
+        "description": "Extension description (used in manifest.json)"
+    },
     "ext_name": {
         "message": "북마크 스카우트",
         "description": "Extension name"
