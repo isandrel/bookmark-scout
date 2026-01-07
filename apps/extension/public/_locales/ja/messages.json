@@ -403,6 +403,14 @@
         "message": "テキストを省略する前の最大文字数",
         "description": "Truncate length setting description"
     },
+    "settings_toastDuration": {
+        "message": "通知の表示時間",
+        "description": "Toast duration setting label"
+    },
+    "settings_toastDurationDesc": {
+        "message": "通知が自動的に消えるまでの時間",
+        "description": "Toast duration setting description"
+    },
     "settings_results": {
         "message": "$1件の結果",
         "description": "Results count option"

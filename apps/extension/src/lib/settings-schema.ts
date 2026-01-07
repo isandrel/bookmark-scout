@@ -38,6 +38,7 @@ interface TomlConfig {
     popup_width: number;
     popup_height: number;
     truncate_length: number;
+    toast_duration_ms: number;
   };
   ai: {
     enabled: boolean;
@@ -112,6 +113,7 @@ export const settingsSchema = z.object({
   popupWidth: z.number().min(300).max(800).default(config.advanced.popup_width),
   popupHeight: z.number().min(300).max(1000).default(config.advanced.popup_height),
   truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
+  toastDurationMs: z.number().min(2000).max(10000).default(config.advanced.toast_duration_ms),
 
   // AI - defaults from config.ai
   aiEnabled: z.boolean().default(config.ai.enabled),
@@ -151,7 +153,7 @@ export function getSettingsCategories() {
     advanced: {
       label: t('settings_advanced'),
       description: t('settings_advancedDesc'),
-      fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
+      fields: ['popupWidth', 'popupHeight', 'truncateLength', 'toastDurationMs'] as const,
     },
     ai: {
       label: t('settings_ai'),
@@ -181,7 +183,7 @@ export const settingsCategories = {
   advanced: {
     label: 'Advanced',
     description: 'Advanced settings',
-    fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
+    fields: ['popupWidth', 'popupHeight', 'truncateLength', 'toastDurationMs'] as const,
   },
   ai: {
     label: 'AI',
@@ -345,6 +347,15 @@ export function getSettingsFieldMeta(): Record<
       max: 200,
       step: 10,
       unit: 'chars',
+    },
+    toastDurationMs: {
+      label: t('settings_toastDuration'),
+      description: t('settings_toastDurationDesc'),
+      type: 'number',
+      min: 2000,
+      max: 10000,
+      step: 500,
+      unit: 'ms',
     },
 
     // AI
@@ -537,6 +548,15 @@ export const settingsFieldMeta: Record<
     max: 200,
     step: 10,
     unit: 'chars',
+  },
+  toastDurationMs: {
+    label: 'Toast Duration',
+    description: 'Duration before toast notifications auto-dismiss',
+    type: 'number',
+    min: 2000,
+    max: 10000,
+    step: 500,
+    unit: 'ms',
   },
 
   // AI
