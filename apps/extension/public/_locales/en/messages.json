@@ -430,5 +430,65 @@
     "settingsRecentFoldersEnabledDesc": {
         "message": "Show recent folders panel for quick bookmark saving",
         "description": "Recent folders enabled setting description"
+    },
+    "cannotGetCurrentPage": {
+        "message": "Cannot get current page",
+        "description": "Toast title when tab info unavailable"
+    },
+    "pleaseOpenWebpage": {
+        "message": "Please open a webpage first",
+        "description": "Toast description when tab info unavailable"
+    },
+    "apiKeyRequired": {
+        "message": "API Key Required",
+        "description": "Toast title when API key missing"
+    },
+    "apiKeyRequiredDesc": {
+        "message": "Please set your API key in Settings → AI",
+        "description": "Toast description when API key missing"
+    },
+    "aiRecommendationFailed": {
+        "message": "AI Recommendation Failed",
+        "description": "Toast title when AI fails"
+    },
+    "unknownError": {
+        "message": "Unknown error",
+        "description": "Generic error message"
+    },
+    "createFolderPrompt": {
+        "message": "Create folder \"$1\"",
+        "description": "Toast title for folder creation prompt"
+    },
+    "newFolderComingSoon": {
+        "message": "New folder creation coming soon!",
+        "description": "Toast description for new folder feature"
+    },
+    "aiSuggestionsFor": {
+        "message": "AI Suggestions for:",
+        "description": "AI suggestions section label"
+    },
+    "newBookmark": {
+        "message": "New Bookmark",
+        "description": "Default name for new bookmark"
+    },
+    "bookmarkAddedToFolder": {
+        "message": "\"$1\" added to \"$2\"",
+        "description": "Toast description for bookmark added"
+    },
+    "folderAddedIn": {
+        "message": "New folder \"$1\" added in \"$2\"",
+        "description": "Toast description for folder created"
+    },
+    "itemRemoved": {
+        "message": "\"$1\" has been removed",
+        "description": "Toast description for item deleted"
+    },
+    "untitled": {
+        "message": "Untitled",
+        "description": "Default name for untitled items"
+    },
+    "failedToLoadBookmarks": {
+        "message": "Failed to load bookmarks",
+        "description": "Error message for bookmark loading failure"
     }
 }

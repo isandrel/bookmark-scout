@@ -65,6 +65,7 @@ function PopupPage() {
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
+  const { value: truncateLength } = useSetting('truncateLength');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
@@ -90,8 +91,8 @@ function PopupPage() {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab?.title || !tab?.url) {
         toast({
-          title: 'Cannot get current page',
-          description: 'Please open a webpage first',
+          title: t('cannotGetCurrentPage'),
+          description: t('pleaseOpenWebpage'),
           variant: 'destructive',
         });
         return;
@@ -103,8 +104,8 @@ function PopupPage() {
       const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
       if (!aiApiKey) {
         toast({
-          title: 'API Key Required',
-          description: 'Please set your API key in Settings → AI',
+          title: t('apiKeyRequired'),
+          description: t('apiKeyRequiredDesc'),
           variant: 'destructive',
         });
         return;
@@ -127,8 +128,8 @@ function PopupPage() {
       setAIRecommendations(recommendations);
     } catch (error) {
       toast({
-        title: 'AI Recommendation Failed',
-        description: error instanceof Error ? error.message : 'Unknown error',
+        title: t('aiRecommendationFailed'),
+        description: error instanceof Error ? error.message : t('unknownError'),
         variant: 'destructive',
       });
     } finally {
@@ -176,8 +177,8 @@ function PopupPage() {
     } else {
       // For new folder suggestions, just show a message
       toast({
-        title: `Create folder "${rec.folderPath}"`,
-        description: 'New folder creation coming soon!',
+        title: t('createFolderPrompt').replace('$1', rec.folderPath || ''),
+        description: t('newFolderComingSoon'),
       });
     }
     
@@ -314,7 +315,7 @@ function PopupPage() {
           <div className="border-b bg-muted/30 p-3 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">
-                AI Suggestions for: {currentTabInfo?.title?.slice(0, 40)}...
+                {t('aiSuggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
               </span>
               <Button
                 variant="ghost"
