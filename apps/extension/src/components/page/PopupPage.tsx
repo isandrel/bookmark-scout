@@ -91,8 +91,8 @@ function PopupPage() {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       if (!tab?.title || !tab?.url) {
         toast({
-          title: t('cannotGetCurrentPage'),
-          description: t('pleaseOpenWebpage'),
+          title: t('toast_cannotGetCurrentPage'),
+          description: t('toast_pleaseOpenWebpage'),
           variant: 'destructive',
         });
         return;
@@ -104,8 +104,8 @@ function PopupPage() {
       const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
       if (!aiApiKey) {
         toast({
-          title: t('apiKeyRequired'),
-          description: t('apiKeyRequiredDesc'),
+          title: t('toast_apiKeyRequired'),
+          description: t('toast_apiKeyRequiredDesc'),
           variant: 'destructive',
         });
         return;
@@ -128,8 +128,8 @@ function PopupPage() {
       setAIRecommendations(recommendations);
     } catch (error) {
       toast({
-        title: t('aiRecommendationFailed'),
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: t('ai_recommendationFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
     } finally {
@@ -162,8 +162,8 @@ function PopupPage() {
     if (rec.type === 'existing' && rec.folderId) {
       const success = await withToast(
         () => addBookmarkToFolder(rec.folderId || ''),
-        t('bookmarkAdded'),
-        t('errorAddingBookmark'),
+        t('toast_bookmarkAdded'),
+        t('toast_errorAddingBookmark'),
       );
       // Track as recent folder if successful
       if (success && rec.folderId) {
@@ -177,8 +177,8 @@ function PopupPage() {
     } else {
       // For new folder suggestions, just show a message
       toast({
-        title: t('createFolderPrompt').replace('$1', rec.folderPath || ''),
-        description: t('newFolderComingSoon'),
+        title: t('toast_createFolderPrompt').replace('$1', rec.folderPath || ''),
+        description: t('toast_newFolderComingSoon'),
       });
     }
     
@@ -197,7 +197,7 @@ function PopupPage() {
               {
                 id: 'temp-folder',
                 parentId: node.id,
-                title: t('newFolder'),
+                title: t('popup_newFolder'),
                 isOpen: false,
                 isTemporary: true,
                 children: [],
@@ -232,8 +232,8 @@ function PopupPage() {
     }
     await withToast(
       () => createFolder(creatingFolderId, newFolderName),
-      t('folderCreated'),
-      t('errorCreatingFolder'),
+      t('toast_folderCreated'),
+      t('toast_errorCreatingFolder'),
     );
     setCreatingFolderId(null);
     setNewFolderName('');
@@ -253,7 +253,7 @@ function PopupPage() {
 
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      await withToast(() => handleDrop(operation), t('itemMoved'), t('errorMovingItem'));
+      await withToast(() => handleDrop(operation), t('toast_itemMoved'), t('toast_errorMovingItem'));
     },
     [handleDrop, withToast],
   );
@@ -266,9 +266,9 @@ function PopupPage() {
     return (
       <div className="p-4">
         <div className="text-red-500 mb-4">
-          {t('error')}: {error}
+          {t('error_generic')}: {error}
         </div>
-        <Button onClick={() => window.location.reload()}>{t('retry')}</Button>
+        <Button onClick={() => window.location.reload()}>{t('action_retry')}</Button>
       </div>
     );
   }
@@ -294,8 +294,8 @@ function PopupPage() {
             onAddToFolder={async (folderId) => {
             const success = await withToast(
               () => addBookmarkToFolder(folderId),
-              t('bookmarkAdded'),
-              t('errorAddingBookmark'),
+              t('toast_bookmarkAdded'),
+              t('toast_errorAddingBookmark'),
             );
             // Track as recent if successful
             if (success) {
@@ -315,7 +315,7 @@ function PopupPage() {
           <div className="border-b bg-muted/30 p-3 space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-xs font-medium text-muted-foreground">
-                {t('aiSuggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
+                {t('ai_suggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
               </span>
               <Button
                 variant="ghost"
@@ -365,11 +365,11 @@ function PopupPage() {
             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
               <div className="text-4xl mb-3">🔍</div>
               <p className="text-sm text-muted-foreground">
-                {query ? t('noBookmarksFound') : t('noBookmarksYet')}
+                {query ? t('state_noBookmarksFound') : t('state_noBookmarksYet')}
               </p>
               {query && (
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('tryDifferentSearch')}
+                  {t('state_tryDifferentSearch')}
                 </p>
               )}
             </div>
@@ -397,8 +397,8 @@ function PopupPage() {
                     onAddBookmark={async (id) => {
                       const success = await withToast(
                         () => addBookmarkToFolder(id),
-                        t('bookmarkAdded'),
-                        t('errorAddingBookmark'),
+                        t('toast_bookmarkAdded'),
+                        t('toast_errorAddingBookmark'),
                       );
                       if (success) {
                         try {
@@ -413,15 +413,15 @@ function PopupPage() {
                     onDeleteFolder={(id) =>
                       withToast(
                         () => removeFolder(id),
-                        t('folderDeleted'),
-                        t('errorDeletingFolder'),
+                        t('toast_folderDeleted'),
+                        t('toast_errorDeletingFolder'),
                       )
                     }
                     onDeleteBookmark={(id) =>
                       withToast(
                         () => removeBookmark(id),
-                        t('bookmarkDeleted'),
-                        t('errorDeletingBookmark'),
+                        t('toast_bookmarkDeleted'),
+                        t('toast_errorDeletingBookmark'),
                       )
                     }
                     onCreateFolder={handleCreateFolder}

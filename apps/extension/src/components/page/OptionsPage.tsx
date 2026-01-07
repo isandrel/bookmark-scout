@@ -131,14 +131,14 @@ const OptionsPage: React.FC = () => {
         setTheme(data.theme);
       }
       toast({
-        title: `✓ ${t('settingsSaved')}`,
-        description: t('preferencesUpdated'),
+        title: `✓ ${t('toast_settingsSaved')}`,
+        description: t('toast_preferencesUpdated'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: `× ${t('errorSavingSettings')}`,
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: `× ${t('toast_errorSavingSettings')}`,
+        description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
     } finally {
@@ -151,14 +151,14 @@ const OptionsPage: React.FC = () => {
       await resetToDefaults();
       form.reset();
       toast({
-        title: `✓ ${t('settingsReset')}`,
-        description: t('settingsResetDescription'),
+        title: `✓ ${t('toast_settingsReset')}`,
+        description: t('toast_settingsResetDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: `× ${t('errorResettingSettings')}`,
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: `× ${t('toast_errorResettingSettings')}`,
+        description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
     }
@@ -175,14 +175,14 @@ const OptionsPage: React.FC = () => {
       a.click();
       URL.revokeObjectURL(url);
       toast({
-        title: `✓ ${t('settingsExported')}`,
-        description: t('settingsExportedDescription'),
+        title: `✓ ${t('toast_settingsExported')}`,
+        description: t('toast_settingsExportedDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: `× ${t('exportFailed')}`,
-        description: error instanceof Error ? error.message : t('unknownError'),
+        title: `× ${t('toast_exportFailed')}`,
+        description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
     }
@@ -196,14 +196,14 @@ const OptionsPage: React.FC = () => {
       const text = await file.text();
       await importSettings(text);
       toast({
-        title: `✓ ${t('settingsImported')}`,
-        description: t('settingsImportedDescription'),
+        title: `✓ ${t('toast_settingsImported')}`,
+        description: t('toast_settingsImportedDescription'),
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: `× ${t('importFailed')}`,
-        description: error instanceof Error ? error.message : t('invalidSettingsFile'),
+        title: `× ${t('toast_importFailed')}`,
+        description: error instanceof Error ? error.message : t('error_invalidSettingsFile'),
         variant: 'destructive',
       });
     }
@@ -334,7 +334,7 @@ const OptionsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
-        <div className="text-muted-foreground">{t('loadingSettings')}</div>
+        <div className="text-muted-foreground">{t('state_loadingSettings')}</div>
       </div>
     );
   }
@@ -352,8 +352,8 @@ const OptionsPage: React.FC = () => {
               <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-2xl font-bold">{t('settings')}</CardTitle>
-                    <CardDescription>{t('settingsDescription')}</CardDescription>
+                    <CardTitle className="text-2xl font-bold">{t('settings_title')}</CardTitle>
+                    <CardDescription>{t('settings_description')}</CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
@@ -375,7 +375,7 @@ const OptionsPage: React.FC = () => {
                 <div className="relative mt-4">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder={t('searchSettings')}
+                    placeholder={t('settings_searchPlaceholder')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-9"
@@ -440,7 +440,7 @@ const OptionsPage: React.FC = () => {
                                 filteredFields.map((fieldKey) => renderSettingsField(fieldKey))
                               ) : (
                                 <div className="text-center py-8 text-muted-foreground">
-                                  {t('noSettingsMatch')}
+                                  {t('state_noSettingsMatch')}
                                 </div>
                               )}
                               
@@ -493,7 +493,7 @@ const OptionsPage: React.FC = () => {
                   <div className="flex gap-2">
                     <Button type="button" variant="outline" size="sm" onClick={handleExport}>
                       <Download className="h-4 w-4 mr-2" />
-                      {t('export')}
+                      {t('action_export')}
                     </Button>
                     <Button
                       type="button"
@@ -502,7 +502,7 @@ const OptionsPage: React.FC = () => {
                       onClick={() => fileInputRef.current?.click()}
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      {t('import')}
+                      {t('action_import')}
                     </Button>
                     <input
                       ref={fileInputRef}
@@ -520,11 +520,11 @@ const OptionsPage: React.FC = () => {
                       className="hover:bg-destructive/10 hover:text-destructive"
                     >
                       <RotateCcw className="h-4 w-4 mr-2" />
-                      {t('resetAll')}
+                      {t('action_resetAll')}
                     </Button>
                     <Button type="submit" disabled={isSaving}>
                       <Save className="h-4 w-4 mr-2" />
-                      {isSaving ? t('saving') : t('saveChanges')}
+                      {isSaving ? t('action_saving') : t('action_saveChanges')}
                     </Button>
                   </div>
                 </div>

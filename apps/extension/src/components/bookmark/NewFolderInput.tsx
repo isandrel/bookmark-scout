@@ -51,7 +51,7 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={t('enterFolderName')}
+          placeholder={t('popup_enterFolderName')}
           className="h-7 text-sm w-full search-input"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
