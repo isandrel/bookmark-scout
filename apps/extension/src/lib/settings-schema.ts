@@ -134,28 +134,28 @@ export const defaultSettings: Settings = settingsSchema.parse({});
 export function getSettingsCategories() {
   return {
     appearance: {
-      label: t('settingsAppearance'),
-      description: t('settingsAppearanceDesc'),
+      label: t('settings_appearance'),
+      description: t('settings_appearanceDesc'),
       fields: ['language', 'theme', 'showFavicons', 'faviconSize'] as const,
     },
     search: {
-      label: t('settingsSearch'),
-      description: t('settingsSearchDesc'),
+      label: t('settings_search'),
+      description: t('settings_searchDesc'),
       fields: ['searchDebounceMs', 'maxSearchResults', 'expandFoldersOnSearch', 'searchHistory'] as const,
     },
     behavior: {
-      label: t('settingsBehavior'),
-      description: t('settingsBehaviorDesc'),
+      label: t('settings_behavior'),
+      description: t('settings_behaviorDesc'),
       fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName', 'recentFoldersEnabled', 'recentFoldersMax'] as const,
     },
     advanced: {
-      label: t('settingsAdvanced'),
-      description: t('settingsAdvancedDesc'),
+      label: t('settings_advanced'),
+      description: t('settings_advancedDesc'),
       fields: ['popupWidth', 'popupHeight', 'truncateLength'] as const,
     },
     ai: {
-      label: t('settingsAI'),
-      description: t('settingsAIDesc'),
+      label: t('settings_ai'),
+      description: t('settings_aiDesc'),
       fields: ['aiEnabled', 'aiProvider', 'aiModel'] as const,
     },
   } as const;
@@ -210,46 +210,46 @@ export function getSettingsFieldMeta(): Record<
   return {
     // Appearance
     language: {
-      label: t('settingsLanguage'),
-      description: t('settingsLanguageDesc'),
+      label: t('settings_language'),
+      description: t('settings_languageDesc'),
       type: 'select',
       options: [
-        { value: 'auto', label: t('settingsLanguageAuto') },
+        { value: 'auto', label: t('settings_languageAuto') },
         { value: 'en', label: 'English' },
         { value: 'ja', label: '日本語' },
         { value: 'ko', label: '한국어' },
       ],
     },
     theme: {
-      label: t('settingsTheme'),
-      description: t('settingsThemeDesc'),
+      label: t('settings_theme'),
+      description: t('settings_themeDesc'),
       type: 'select',
       options: [
-        { value: 'system', label: t('settingsThemeSystem') },
-        { value: 'light', label: t('settingsThemeLight') },
-        { value: 'dark', label: t('settingsThemeDark') },
+        { value: 'system', label: t('settings_themeSystem') },
+        { value: 'light', label: t('settings_themeLight') },
+        { value: 'dark', label: t('settings_themeDark') },
       ],
     },
     showFavicons: {
-      label: t('settingsShowFavicons'),
-      description: t('settingsShowFaviconsDesc'),
+      label: t('settings_showFavicons'),
+      description: t('settings_showFaviconsDesc'),
       type: 'switch',
     },
     faviconSize: {
-      label: t('settingsFaviconSize'),
-      description: t('settingsFaviconSizeDesc'),
+      label: t('settings_faviconSize'),
+      description: t('settings_faviconSizeDesc'),
       type: 'select',
       options: [
-        { value: 16, label: t('settingsFaviconSmall') },
-        { value: 24, label: t('settingsFaviconMedium') },
-        { value: 32, label: t('settingsFaviconLarge') },
+        { value: 16, label: t('settings_faviconSmall') },
+        { value: 24, label: t('settings_faviconMedium') },
+        { value: 32, label: t('settings_faviconLarge') },
       ],
     },
 
     // Search
     searchDebounceMs: {
-      label: t('settingsSearchDelay'),
-      description: t('settingsSearchDelayDesc'),
+      label: t('settings_searchDelay'),
+      description: t('settings_searchDelayDesc'),
       type: 'number',
       min: 50,
       max: 1000,
@@ -257,8 +257,8 @@ export function getSettingsFieldMeta(): Record<
       unit: 'ms',
     },
     maxSearchResults: {
-      label: t('settingsMaxResults'),
-      description: t('settingsMaxResultsDesc'),
+      label: t('settings_maxResults'),
+      description: t('settings_maxResultsDesc'),
       type: 'select',
       options: [
         { value: 10, label: t('settingsResults', '10') },
@@ -268,60 +268,60 @@ export function getSettingsFieldMeta(): Record<
       ],
     },
     expandFoldersOnSearch: {
-      label: t('settingsExpandFolders'),
-      description: t('settingsExpandFoldersDesc'),
+      label: t('settings_expandFolders'),
+      description: t('settings_expandFoldersDesc'),
       type: 'switch',
     },
     searchHistory: {
-      label: t('settingsSearchHistory'),
-      description: t('settingsSearchHistoryDesc'),
+      label: t('settings_searchHistory'),
+      description: t('settings_searchHistoryDesc'),
       type: 'switch',
     },
 
     // Behavior
     sortOrder: {
-      label: t('settingsSortOrder'),
-      description: t('settingsSortOrderDesc'),
+      label: t('settings_sortOrder'),
+      description: t('settings_sortOrderDesc'),
       type: 'select',
       options: [
-        { value: 'date', label: t('settingsSortDate') },
-        { value: 'alphabetical', label: t('settingsSortAlphabetical') },
-        { value: 'folders', label: t('settingsSortFolders') },
+        { value: 'date', label: t('settings_sortDate') },
+        { value: 'alphabetical', label: t('settings_sortAlphabetical') },
+        { value: 'folders', label: t('settings_sortFolders') },
       ],
     },
     groupByFolders: {
-      label: t('settingsGroupByFolders'),
-      description: t('settingsGroupByFoldersDesc'),
+      label: t('settings_groupByFolders'),
+      description: t('settings_groupByFoldersDesc'),
       type: 'switch',
     },
     confirmBeforeDelete: {
-      label: t('settingsConfirmDelete'),
-      description: t('settingsConfirmDeleteDesc'),
+      label: t('settings_confirmDelete'),
+      description: t('settings_confirmDeleteDesc'),
       type: 'switch',
     },
     defaultNewFolderName: {
-      label: t('settingsDefaultFolderName'),
-      description: t('settingsDefaultFolderNameDesc'),
+      label: t('settings_defaultFolderName'),
+      description: t('settings_defaultFolderNameDesc'),
       type: 'text',
     },
     recentFoldersMax: {
-      label: t('settingsRecentFoldersMax'),
-      description: t('settingsRecentFoldersMaxDesc'),
+      label: t('settings_recentFoldersMax'),
+      description: t('settings_recentFoldersMaxDesc'),
       type: 'number',
       min: 1,
       max: 10,
       step: 1,
     },
     recentFoldersEnabled: {
-      label: t('settingsRecentFoldersEnabled'),
-      description: t('settingsRecentFoldersEnabledDesc'),
+      label: t('settings_recentFoldersEnabled'),
+      description: t('settings_recentFoldersEnabledDesc'),
       type: 'switch',
     },
 
     // Advanced
     popupWidth: {
-      label: t('settingsPopupWidth'),
-      description: t('settingsPopupWidthDesc'),
+      label: t('settings_popupWidth'),
+      description: t('settings_popupWidthDesc'),
       type: 'number',
       min: 300,
       max: 800,
@@ -329,8 +329,8 @@ export function getSettingsFieldMeta(): Record<
       unit: 'px',
     },
     popupHeight: {
-      label: t('settingsPopupHeight'),
-      description: t('settingsPopupHeightDesc'),
+      label: t('settings_popupHeight'),
+      description: t('settings_popupHeightDesc'),
       type: 'number',
       min: 300,
       max: 1000,
@@ -338,8 +338,8 @@ export function getSettingsFieldMeta(): Record<
       unit: 'px',
     },
     truncateLength: {
-      label: t('settingsTruncateLength'),
-      description: t('settingsTruncateLengthDesc'),
+      label: t('settings_truncateLength'),
+      description: t('settings_truncateLengthDesc'),
       type: 'number',
       min: 20,
       max: 200,

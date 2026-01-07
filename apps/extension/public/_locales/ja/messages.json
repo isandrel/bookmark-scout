@@ -1,493 +1,493 @@
 {
-    "extName": {
+    "ext_name": {
         "message": "ブックマークスカウト",
         "description": "Extension name"
     },
-    "extDescription": {
+    "ext_description": {
         "message": "ブックマークを素早く検索し、特定のフォルダに保存します。",
         "description": "Extension description"
     },
-    "searchPlaceholder": {
+    "popup_searchPlaceholder": {
         "message": "ブックマークを検索...",
         "description": "Search input placeholder"
     },
-    "newFolder": {
+    "popup_newFolder": {
         "message": "新規フォルダ",
         "description": "Default name for new folder"
     },
-    "retry": {
+    "action_retry": {
         "message": "再試行",
         "description": "Retry button text"
     },
-    "error": {
+    "error_generic": {
         "message": "エラー",
         "description": "Error label"
     },
-    "folderCreated": {
+    "toast_folderCreated": {
         "message": "フォルダを作成しました",
         "description": "Toast title for folder creation success"
     },
-    "errorCreatingFolder": {
+    "toast_errorCreatingFolder": {
         "message": "フォルダの作成に失敗しました",
         "description": "Toast title for folder creation error"
     },
-    "bookmarkAdded": {
+    "toast_bookmarkAdded": {
         "message": "ブックマークを追加しました",
         "description": "Toast title for bookmark addition success"
     },
-    "errorAddingBookmark": {
+    "toast_errorAddingBookmark": {
         "message": "ブックマークの追加に失敗しました",
         "description": "Toast title for bookmark addition error"
     },
-    "bookmarkDeleted": {
+    "toast_bookmarkDeleted": {
         "message": "ブックマークを削除しました",
         "description": "Toast title for bookmark deletion success"
     },
-    "errorDeletingBookmark": {
+    "toast_errorDeletingBookmark": {
         "message": "ブックマークの削除に失敗しました",
         "description": "Toast title for bookmark deletion error"
     },
-    "folderDeleted": {
+    "toast_folderDeleted": {
         "message": "フォルダを削除しました",
         "description": "Toast title for folder deletion success"
     },
-    "errorDeletingFolder": {
+    "toast_errorDeletingFolder": {
         "message": "フォルダの削除に失敗しました",
         "description": "Toast title for folder deletion error"
     },
-    "itemMoved": {
+    "toast_itemMoved": {
         "message": "アイテムを移動しました",
         "description": "Toast title for item move success"
     },
-    "errorMovingItem": {
+    "toast_errorMovingItem": {
         "message": "アイテムの移動に失敗しました",
         "description": "Toast title for item move error"
     },
-    "addBookmark": {
+    "popup_addBookmark": {
         "message": "現在のページを追加",
         "description": "Add bookmark tooltip"
     },
-    "addFolder": {
+    "popup_addFolder": {
         "message": "フォルダを追加",
         "description": "Add folder tooltip"
     },
-    "deleteFolder": {
+    "popup_deleteFolder": {
         "message": "フォルダを削除",
         "description": "Delete folder tooltip"
     },
-    "deleteBookmark": {
+    "popup_deleteBookmark": {
         "message": "ブックマークを削除",
         "description": "Delete bookmark tooltip"
     },
-    "expandAll": {
+    "popup_expandAll": {
         "message": "すべて展開",
         "description": "Expand all button tooltip"
     },
-    "collapseAll": {
+    "popup_collapseAll": {
         "message": "すべて折りたたむ",
         "description": "Collapse all button tooltip"
     },
-    "enterFolderName": {
+    "popup_enterFolderName": {
         "message": "フォルダ名を入力...",
         "description": "New folder input placeholder"
     },
-    "noBookmarksFound": {
+    "state_noBookmarksFound": {
         "message": "ブックマークが見つかりません",
         "description": "Empty state when search has no results"
     },
-    "noBookmarksYet": {
+    "state_noBookmarksYet": {
         "message": "ブックマークはまだありません",
         "description": "Empty state when there are no bookmarks"
     },
-    "tryDifferentSearch": {
+    "state_tryDifferentSearch": {
         "message": "別の検索ワードをお試しください",
         "description": "Hint for empty search results"
     },
-    "lightMode": {
+    "action_lightMode": {
         "message": "ライトモード",
         "description": "Light mode toggle tooltip"
     },
-    "darkMode": {
+    "action_darkMode": {
         "message": "ダークモード",
         "description": "Dark mode toggle tooltip"
     },
-    "settings": {
+    "settings_title": {
         "message": "設定",
         "description": "Settings page title"
     },
-    "settingsDescription": {
+    "settings_description": {
         "message": "Bookmark Scoutをカスタマイズ",
         "description": "Settings page description"
     },
-    "searchSettings": {
+    "settings_searchPlaceholder": {
         "message": "設定を検索...",
         "description": "Settings search placeholder"
     },
-    "loadingSettings": {
+    "state_loadingSettings": {
         "message": "設定を読み込み中...",
         "description": "Settings loading state"
     },
-    "noSettingsMatch": {
+    "state_noSettingsMatch": {
         "message": "このカテゴリには一致する設定がありません",
         "description": "Empty settings search result"
     },
-    "settingsSaved": {
+    "toast_settingsSaved": {
         "message": "設定を保存しました",
         "description": "Toast title for settings save success"
     },
-    "preferencesUpdated": {
+    "toast_preferencesUpdated": {
         "message": "設定が更新されました",
         "description": "Toast description for settings save success"
     },
-    "errorSavingSettings": {
+    "toast_errorSavingSettings": {
         "message": "設定の保存に失敗しました",
         "description": "Toast title for settings save error"
     },
-    "settingsReset": {
+    "toast_settingsReset": {
         "message": "設定をリセットしました",
         "description": "Toast title for settings reset success"
     },
-    "settingsResetDescription": {
+    "toast_settingsResetDescription": {
         "message": "すべての設定がデフォルトに戻りました",
         "description": "Toast description for settings reset success"
     },
-    "errorResettingSettings": {
+    "toast_errorResettingSettings": {
         "message": "設定のリセットに失敗しました",
         "description": "Toast title for settings reset error"
     },
-    "settingsExported": {
+    "toast_settingsExported": {
         "message": "設定をエクスポートしました",
         "description": "Toast title for settings export success"
     },
-    "settingsExportedDescription": {
+    "toast_settingsExportedDescription": {
         "message": "設定ファイルがダウンロードされました",
         "description": "Toast description for settings export success"
     },
-    "exportFailed": {
+    "toast_exportFailed": {
         "message": "エクスポートに失敗しました",
         "description": "Toast title for settings export error"
     },
-    "settingsImported": {
+    "toast_settingsImported": {
         "message": "設定をインポートしました",
         "description": "Toast title for settings import success"
     },
-    "settingsImportedDescription": {
+    "toast_settingsImportedDescription": {
         "message": "ファイルから設定を復元しました",
         "description": "Toast description for settings import success"
     },
-    "importFailed": {
+    "toast_importFailed": {
         "message": "インポートに失敗しました",
         "description": "Toast title for settings import error"
     },
-    "invalidSettingsFile": {
+    "error_invalidSettingsFile": {
         "message": "無効な設定ファイルです",
         "description": "Error message for invalid settings import"
     },
-    "export": {
+    "action_export": {
         "message": "エクスポート",
         "description": "Export button label"
     },
-    "import": {
+    "action_import": {
         "message": "インポート",
         "description": "Import button label"
     },
-    "resetAll": {
+    "action_resetAll": {
         "message": "すべてリセット",
         "description": "Reset all settings button label"
     },
-    "saving": {
+    "action_saving": {
         "message": "保存中...",
         "description": "Saving state button label"
     },
-    "saveChanges": {
+    "action_saveChanges": {
         "message": "変更を保存",
         "description": "Save changes button label"
     },
-    "settingsAppearance": {
+    "settings_appearance": {
         "message": "外観",
         "description": "Appearance category label"
     },
-    "settingsAppearanceDesc": {
+    "settings_appearanceDesc": {
         "message": "ブックマークの表示をカスタマイズ",
         "description": "Appearance category description"
     },
-    "settingsSearch": {
+    "settings_search": {
         "message": "検索",
         "description": "Search category label"
     },
-    "settingsSearchDesc": {
+    "settings_searchDesc": {
         "message": "検索動作を設定",
         "description": "Search category description"
     },
-    "settingsBehavior": {
+    "settings_behavior": {
         "message": "動作",
         "description": "Behavior category label"
     },
-    "settingsBehaviorDesc": {
+    "settings_behaviorDesc": {
         "message": "拡張機能の動作を制御",
         "description": "Behavior category description"
     },
-    "settingsAdvanced": {
+    "settings_advanced": {
         "message": "詳細設定",
         "description": "Advanced category label"
     },
-    "settingsAdvancedDesc": {
+    "settings_advancedDesc": {
         "message": "詳細な設定",
         "description": "Advanced category description"
     },
-    "settingsLanguage": {
+    "settings_language": {
         "message": "言語",
         "description": "Language setting label"
     },
-    "settingsLanguageDesc": {
+    "settings_languageDesc": {
         "message": "拡張機能の言語を選択",
         "description": "Language setting description"
     },
-    "settingsLanguageAuto": {
+    "settings_languageAuto": {
         "message": "自動 (ブラウザ)",
         "description": "Auto language option"
     },
-    "settingsTheme": {
+    "settings_theme": {
         "message": "テーマ",
         "description": "Theme setting label"
     },
-    "settingsThemeDesc": {
+    "settings_themeDesc": {
         "message": "お好みの配色を選択",
         "description": "Theme setting description"
     },
-    "settingsThemeSystem": {
+    "settings_themeSystem": {
         "message": "システム",
         "description": "System theme option"
     },
-    "settingsThemeLight": {
+    "settings_themeLight": {
         "message": "ライト",
         "description": "Light theme option"
     },
-    "settingsThemeDark": {
+    "settings_themeDark": {
         "message": "ダーク",
         "description": "Dark theme option"
     },
-    "settingsShowFavicons": {
+    "settings_showFavicons": {
         "message": "ファビコンを表示",
         "description": "Show favicons setting label"
     },
-    "settingsShowFaviconsDesc": {
+    "settings_showFaviconsDesc": {
         "message": "ブックマークの横にウェブサイトアイコンを表示",
         "description": "Show favicons setting description"
     },
-    "settingsFaviconSize": {
+    "settings_faviconSize": {
         "message": "ファビコンサイズ",
         "description": "Favicon size setting label"
     },
-    "settingsFaviconSizeDesc": {
+    "settings_faviconSizeDesc": {
         "message": "ファビコンアイコンのサイズ (ピクセル)",
         "description": "Favicon size setting description"
     },
-    "settingsFaviconSmall": {
+    "settings_faviconSmall": {
         "message": "16px (小)",
         "description": "Small favicon size option"
     },
-    "settingsFaviconMedium": {
+    "settings_faviconMedium": {
         "message": "24px (中)",
         "description": "Medium favicon size option"
     },
-    "settingsFaviconLarge": {
+    "settings_faviconLarge": {
         "message": "32px (大)",
         "description": "Large favicon size option"
     },
-    "settingsSearchDelay": {
+    "settings_searchDelay": {
         "message": "検索遅延",
         "description": "Search delay setting label"
     },
-    "settingsSearchDelayDesc": {
+    "settings_searchDelayDesc": {
         "message": "入力後に検索を開始するまでの遅延",
         "description": "Search delay setting description"
     },
-    "settingsMaxResults": {
+    "settings_maxResults": {
         "message": "最大検索結果数",
         "description": "Max results setting label"
     },
-    "settingsMaxResultsDesc": {
+    "settings_maxResultsDesc": {
         "message": "表示する結果の最大数",
         "description": "Max results setting description"
     },
-    "settingsExpandFolders": {
+    "settings_expandFolders": {
         "message": "検索時にフォルダを展開",
         "description": "Expand folders setting label"
     },
-    "settingsExpandFoldersDesc": {
+    "settings_expandFoldersDesc": {
         "message": "検索時にフォルダを自動的に展開",
         "description": "Expand folders setting description"
     },
-    "settingsSearchHistory": {
+    "settings_searchHistory": {
         "message": "検索履歴",
         "description": "Search history setting label"
     },
-    "settingsSearchHistoryDesc": {
+    "settings_searchHistoryDesc": {
         "message": "最近の検索を記憶",
         "description": "Search history setting description"
     },
-    "settingsSortOrder": {
+    "settings_sortOrder": {
         "message": "並び順",
         "description": "Sort order setting label"
     },
-    "settingsSortOrderDesc": {
+    "settings_sortOrderDesc": {
         "message": "ブックマークのデフォルト並び順",
         "description": "Sort order setting description"
     },
-    "settingsSortDate": {
+    "settings_sortDate": {
         "message": "追加日順",
         "description": "Date sort option"
     },
-    "settingsSortAlphabetical": {
+    "settings_sortAlphabetical": {
         "message": "アルファベット順",
         "description": "Alphabetical sort option"
     },
-    "settingsSortFolders": {
+    "settings_sortFolders": {
         "message": "フォルダ優先",
         "description": "Folders first sort option"
     },
-    "settingsGroupByFolders": {
+    "settings_groupByFolders": {
         "message": "フォルダでグループ化",
         "description": "Group by folders setting label"
     },
-    "settingsGroupByFoldersDesc": {
+    "settings_groupByFoldersDesc": {
         "message": "フォルダ構造でブックマークを整理",
         "description": "Group by folders setting description"
     },
-    "settingsConfirmDelete": {
+    "settings_confirmDelete": {
         "message": "削除前に確認",
         "description": "Confirm delete setting label"
     },
-    "settingsConfirmDeleteDesc": {
+    "settings_confirmDeleteDesc": {
         "message": "削除前に確認ダイアログを表示",
         "description": "Confirm delete setting description"
     },
-    "settingsDefaultFolderName": {
+    "settings_defaultFolderName": {
         "message": "デフォルトフォルダ名",
         "description": "Default folder name setting label"
     },
-    "settingsDefaultFolderNameDesc": {
+    "settings_defaultFolderNameDesc": {
         "message": "新規フォルダのデフォルト名",
         "description": "Default folder name setting description"
     },
-    "settingsPopupWidth": {
+    "settings_popupWidth": {
         "message": "ポップアップ幅",
         "description": "Popup width setting label"
     },
-    "settingsPopupWidthDesc": {
+    "settings_popupWidthDesc": {
         "message": "ポップアップウィンドウの幅",
         "description": "Popup width setting description"
     },
-    "settingsPopupHeight": {
+    "settings_popupHeight": {
         "message": "ポップアップ高さ",
         "description": "Popup height setting label"
     },
-    "settingsPopupHeightDesc": {
+    "settings_popupHeightDesc": {
         "message": "ポップアップウィンドウの高さ",
         "description": "Popup height setting description"
     },
-    "settingsTruncateLength": {
+    "settings_truncateLength": {
         "message": "文字数制限",
         "description": "Truncate length setting label"
     },
-    "settingsTruncateLengthDesc": {
+    "settings_truncateLengthDesc": {
         "message": "テキストを省略する前の最大文字数",
         "description": "Truncate length setting description"
     },
-    "settingsResults": {
+    "settings_results": {
         "message": "$1件の結果",
         "description": "Results count option"
     },
-    "settingsAI": {
+    "settings_ai": {
         "message": "AI",
         "description": "AI category label"
     },
-    "settingsAIDesc": {
+    "settings_aiDesc": {
         "message": "AIによるフォルダ推薦",
         "description": "AI category description"
     },
-    "settingsRecentFoldersMax": {
+    "settings_recentFoldersMax": {
         "message": "最近のフォルダ最大数",
         "description": "Recent folders max setting label"
     },
-    "settingsRecentFoldersMaxDesc": {
+    "settings_recentFoldersMaxDesc": {
         "message": "クイック選択に表示する最近のフォルダの最大数",
         "description": "Recent folders max setting description"
     },
-    "recentFolders": {
+    "popup_recentFolders": {
         "message": "最近",
         "description": "Recent folders panel title"
     },
-    "noRecentFolders": {
+    "state_noRecentFolders": {
         "message": "最近のフォルダはありません",
         "description": "Empty state for recent folders"
     },
-    "settingsRecentFoldersEnabled": {
+    "settings_recentFoldersEnabled": {
         "message": "最近のフォルダ",
         "description": "Recent folders enabled setting label"
     },
-    "settingsRecentFoldersEnabledDesc": {
+    "settings_recentFoldersEnabledDesc": {
         "message": "クイックブックマーク保存用の最近のフォルダパネルを表示",
         "description": "Recent folders enabled setting description"
     },
-    "cannotGetCurrentPage": {
+    "toast_cannotGetCurrentPage": {
         "message": "現在のページを取得できません",
         "description": "Toast title when tab info unavailable"
     },
-    "pleaseOpenWebpage": {
+    "toast_pleaseOpenWebpage": {
         "message": "まずウェブページを開いてください",
         "description": "Toast description when tab info unavailable"
     },
-    "apiKeyRequired": {
+    "toast_apiKeyRequired": {
         "message": "APIキーが必要です",
         "description": "Toast title when API key missing"
     },
-    "apiKeyRequiredDesc": {
+    "toast_apiKeyRequiredDesc": {
         "message": "設定 → AIでAPIキーを設定してください",
         "description": "Toast description when API key missing"
     },
-    "aiRecommendationFailed": {
+    "ai_recommendationFailed": {
         "message": "AI推薦に失敗しました",
         "description": "Toast title when AI fails"
     },
-    "unknownError": {
+    "error_unknown": {
         "message": "不明なエラー",
         "description": "Generic error message"
     },
-    "createFolderPrompt": {
+    "toast_createFolderPrompt": {
         "message": "フォルダ \"$1\" を作成",
         "description": "Toast title for folder creation prompt"
     },
-    "newFolderComingSoon": {
+    "toast_newFolderComingSoon": {
         "message": "新規フォルダ作成は近日公開予定！",
         "description": "Toast description for new folder feature"
     },
-    "aiSuggestionsFor": {
+    "ai_suggestionsFor": {
         "message": "AIの提案:",
         "description": "AI suggestions section label"
     },
-    "newBookmark": {
+    "popup_newBookmark": {
         "message": "新規ブックマーク",
         "description": "Default name for new bookmark"
     },
-    "bookmarkAddedToFolder": {
+    "toast_bookmarkAddedToFolder": {
         "message": "\"$1\" を \"$2\" に追加しました",
         "description": "Toast description for bookmark added"
     },
-    "folderAddedIn": {
+    "toast_folderAddedIn": {
         "message": "新規フォルダ \"$1\" を \"$2\" に追加しました",
         "description": "Toast description for folder created"
     },
-    "itemRemoved": {
+    "toast_itemRemoved": {
         "message": "\"$1\" を削除しました",
         "description": "Toast description for item deleted"
     },
-    "untitled": {
+    "popup_untitled": {
         "message": "無題",
         "description": "Default name for untitled items"
     },
-    "failedToLoadBookmarks": {
+    "error_failedToLoadBookmarks": {
         "message": "ブックマークの読み込みに失敗しました",
         "description": "Error message for bookmark loading failure"
     }

@@ -1,493 +1,493 @@
 {
-    "extName": {
+    "ext_name": {
         "message": "Bookmark Scout",
         "description": "Extension name"
     },
-    "extDescription": {
+    "ext_description": {
         "message": "Quickly search and save bookmarks to specific folders.",
         "description": "Extension description"
     },
-    "searchPlaceholder": {
+    "popup_searchPlaceholder": {
         "message": "Search bookmarks...",
         "description": "Search input placeholder"
     },
-    "newFolder": {
+    "popup_newFolder": {
         "message": "New Folder",
         "description": "Default name for new folder"
     },
-    "retry": {
+    "action_retry": {
         "message": "Retry",
         "description": "Retry button text"
     },
-    "error": {
+    "error_generic": {
         "message": "Error",
         "description": "Error label"
     },
-    "folderCreated": {
+    "toast_folderCreated": {
         "message": "Folder Created",
         "description": "Toast title for folder creation success"
     },
-    "errorCreatingFolder": {
+    "toast_errorCreatingFolder": {
         "message": "Error Creating Folder",
         "description": "Toast title for folder creation error"
     },
-    "bookmarkAdded": {
+    "toast_bookmarkAdded": {
         "message": "Bookmark Added",
         "description": "Toast title for bookmark addition success"
     },
-    "errorAddingBookmark": {
+    "toast_errorAddingBookmark": {
         "message": "Error Adding Bookmark",
         "description": "Toast title for bookmark addition error"
     },
-    "bookmarkDeleted": {
+    "toast_bookmarkDeleted": {
         "message": "Bookmark Deleted",
         "description": "Toast title for bookmark deletion success"
     },
-    "errorDeletingBookmark": {
+    "toast_errorDeletingBookmark": {
         "message": "Error Deleting Bookmark",
         "description": "Toast title for bookmark deletion error"
     },
-    "folderDeleted": {
+    "toast_folderDeleted": {
         "message": "Folder Deleted",
         "description": "Toast title for folder deletion success"
     },
-    "errorDeletingFolder": {
+    "toast_errorDeletingFolder": {
         "message": "Error Deleting Folder",
         "description": "Toast title for folder deletion error"
     },
-    "itemMoved": {
+    "toast_itemMoved": {
         "message": "Item Moved",
         "description": "Toast title for item move success"
     },
-    "errorMovingItem": {
+    "toast_errorMovingItem": {
         "message": "Error Moving Item",
         "description": "Toast title for item move error"
     },
-    "addBookmark": {
+    "popup_addBookmark": {
         "message": "Add current page",
         "description": "Add bookmark tooltip"
     },
-    "addFolder": {
+    "popup_addFolder": {
         "message": "Add folder",
         "description": "Add folder tooltip"
     },
-    "deleteFolder": {
+    "popup_deleteFolder": {
         "message": "Delete folder",
         "description": "Delete folder tooltip"
     },
-    "deleteBookmark": {
+    "popup_deleteBookmark": {
         "message": "Delete bookmark",
         "description": "Delete bookmark tooltip"
     },
-    "expandAll": {
+    "popup_expandAll": {
         "message": "Expand all",
         "description": "Expand all button tooltip"
     },
-    "collapseAll": {
+    "popup_collapseAll": {
         "message": "Collapse all",
         "description": "Collapse all button tooltip"
     },
-    "enterFolderName": {
+    "popup_enterFolderName": {
         "message": "Enter folder name...",
         "description": "New folder input placeholder"
     },
-    "noBookmarksFound": {
+    "state_noBookmarksFound": {
         "message": "No bookmarks found",
         "description": "Empty state when search has no results"
     },
-    "noBookmarksYet": {
+    "state_noBookmarksYet": {
         "message": "No bookmarks yet",
         "description": "Empty state when there are no bookmarks"
     },
-    "tryDifferentSearch": {
+    "state_tryDifferentSearch": {
         "message": "Try a different search term",
         "description": "Hint for empty search results"
     },
-    "lightMode": {
+    "action_lightMode": {
         "message": "Light mode",
         "description": "Light mode toggle tooltip"
     },
-    "darkMode": {
+    "action_darkMode": {
         "message": "Dark mode",
         "description": "Dark mode toggle tooltip"
     },
-    "settings": {
+    "settings_title": {
         "message": "Settings",
         "description": "Settings page title"
     },
-    "settingsDescription": {
+    "settings_description": {
         "message": "Customize your Bookmark Scout experience",
         "description": "Settings page description"
     },
-    "searchSettings": {
+    "settings_searchPlaceholder": {
         "message": "Search settings...",
         "description": "Settings search placeholder"
     },
-    "loadingSettings": {
+    "state_loadingSettings": {
         "message": "Loading settings...",
         "description": "Settings loading state"
     },
-    "noSettingsMatch": {
+    "state_noSettingsMatch": {
         "message": "No settings match your search in this category.",
         "description": "Empty settings search result"
     },
-    "settingsSaved": {
+    "toast_settingsSaved": {
         "message": "Settings saved",
         "description": "Toast title for settings save success"
     },
-    "preferencesUpdated": {
+    "toast_preferencesUpdated": {
         "message": "Your preferences have been updated.",
         "description": "Toast description for settings save success"
     },
-    "errorSavingSettings": {
+    "toast_errorSavingSettings": {
         "message": "Error saving settings",
         "description": "Toast title for settings save error"
     },
-    "settingsReset": {
+    "toast_settingsReset": {
         "message": "Settings reset",
         "description": "Toast title for settings reset success"
     },
-    "settingsResetDescription": {
+    "toast_settingsResetDescription": {
         "message": "All settings have been restored to defaults.",
         "description": "Toast description for settings reset success"
     },
-    "errorResettingSettings": {
+    "toast_errorResettingSettings": {
         "message": "Error resetting settings",
         "description": "Toast title for settings reset error"
     },
-    "settingsExported": {
+    "toast_settingsExported": {
         "message": "Settings exported",
         "description": "Toast title for settings export success"
     },
-    "settingsExportedDescription": {
+    "toast_settingsExportedDescription": {
         "message": "Settings file has been downloaded.",
         "description": "Toast description for settings export success"
     },
-    "exportFailed": {
+    "toast_exportFailed": {
         "message": "Export failed",
         "description": "Toast title for settings export error"
     },
-    "settingsImported": {
+    "toast_settingsImported": {
         "message": "Settings imported",
         "description": "Toast title for settings import success"
     },
-    "settingsImportedDescription": {
+    "toast_settingsImportedDescription": {
         "message": "Your settings have been restored from file.",
         "description": "Toast description for settings import success"
     },
-    "importFailed": {
+    "toast_importFailed": {
         "message": "Import failed",
         "description": "Toast title for settings import error"
     },
-    "invalidSettingsFile": {
+    "error_invalidSettingsFile": {
         "message": "Invalid settings file",
         "description": "Error message for invalid settings import"
     },
-    "export": {
+    "action_export": {
         "message": "Export",
         "description": "Export button label"
     },
-    "import": {
+    "action_import": {
         "message": "Import",
         "description": "Import button label"
     },
-    "resetAll": {
+    "action_resetAll": {
         "message": "Reset All",
         "description": "Reset all settings button label"
     },
-    "saving": {
+    "action_saving": {
         "message": "Saving...",
         "description": "Saving state button label"
     },
-    "saveChanges": {
+    "action_saveChanges": {
         "message": "Save Changes",
         "description": "Save changes button label"
     },
-    "settingsAppearance": {
+    "settings_appearance": {
         "message": "Appearance",
         "description": "Appearance category label"
     },
-    "settingsAppearanceDesc": {
+    "settings_appearanceDesc": {
         "message": "Customize how bookmarks look",
         "description": "Appearance category description"
     },
-    "settingsSearch": {
+    "settings_search": {
         "message": "Search",
         "description": "Search category label"
     },
-    "settingsSearchDesc": {
+    "settings_searchDesc": {
         "message": "Configure search behavior",
         "description": "Search category description"
     },
-    "settingsBehavior": {
+    "settings_behavior": {
         "message": "Behavior",
         "description": "Behavior category label"
     },
-    "settingsBehaviorDesc": {
+    "settings_behaviorDesc": {
         "message": "Control extension behavior",
         "description": "Behavior category description"
     },
-    "settingsAdvanced": {
+    "settings_advanced": {
         "message": "Advanced",
         "description": "Advanced category label"
     },
-    "settingsAdvancedDesc": {
+    "settings_advancedDesc": {
         "message": "Advanced settings",
         "description": "Advanced category description"
     },
-    "settingsLanguage": {
+    "settings_language": {
         "message": "Language",
         "description": "Language setting label"
     },
-    "settingsLanguageDesc": {
+    "settings_languageDesc": {
         "message": "Choose extension language",
         "description": "Language setting description"
     },
-    "settingsLanguageAuto": {
+    "settings_languageAuto": {
         "message": "Auto (Browser)",
         "description": "Auto language option"
     },
-    "settingsTheme": {
+    "settings_theme": {
         "message": "Theme",
         "description": "Theme setting label"
     },
-    "settingsThemeDesc": {
+    "settings_themeDesc": {
         "message": "Choose your preferred color scheme",
         "description": "Theme setting description"
     },
-    "settingsThemeSystem": {
+    "settings_themeSystem": {
         "message": "System",
         "description": "System theme option"
     },
-    "settingsThemeLight": {
+    "settings_themeLight": {
         "message": "Light",
         "description": "Light theme option"
     },
-    "settingsThemeDark": {
+    "settings_themeDark": {
         "message": "Dark",
         "description": "Dark theme option"
     },
-    "settingsShowFavicons": {
+    "settings_showFavicons": {
         "message": "Show Favicons",
         "description": "Show favicons setting label"
     },
-    "settingsShowFaviconsDesc": {
+    "settings_showFaviconsDesc": {
         "message": "Display website icons next to bookmarks",
         "description": "Show favicons setting description"
     },
-    "settingsFaviconSize": {
+    "settings_faviconSize": {
         "message": "Favicon Size",
         "description": "Favicon size setting label"
     },
-    "settingsFaviconSizeDesc": {
+    "settings_faviconSizeDesc": {
         "message": "Size of favicon icons in pixels",
         "description": "Favicon size setting description"
     },
-    "settingsFaviconSmall": {
+    "settings_faviconSmall": {
         "message": "16px (Small)",
         "description": "Small favicon size option"
     },
-    "settingsFaviconMedium": {
+    "settings_faviconMedium": {
         "message": "24px (Medium)",
         "description": "Medium favicon size option"
     },
-    "settingsFaviconLarge": {
+    "settings_faviconLarge": {
         "message": "32px (Large)",
         "description": "Large favicon size option"
     },
-    "settingsSearchDelay": {
+    "settings_searchDelay": {
         "message": "Search Delay",
         "description": "Search delay setting label"
     },
-    "settingsSearchDelayDesc": {
+    "settings_searchDelayDesc": {
         "message": "Delay before search starts after typing",
         "description": "Search delay setting description"
     },
-    "settingsMaxResults": {
+    "settings_maxResults": {
         "message": "Max Search Results",
         "description": "Max results setting label"
     },
-    "settingsMaxResultsDesc": {
+    "settings_maxResultsDesc": {
         "message": "Maximum number of results to show",
         "description": "Max results setting description"
     },
-    "settingsExpandFolders": {
+    "settings_expandFolders": {
         "message": "Expand Folders on Search",
         "description": "Expand folders setting label"
     },
-    "settingsExpandFoldersDesc": {
+    "settings_expandFoldersDesc": {
         "message": "Automatically expand folders when searching",
         "description": "Expand folders setting description"
     },
-    "settingsSearchHistory": {
+    "settings_searchHistory": {
         "message": "Search History",
         "description": "Search history setting label"
     },
-    "settingsSearchHistoryDesc": {
+    "settings_searchHistoryDesc": {
         "message": "Remember recent searches",
         "description": "Search history setting description"
     },
-    "settingsSortOrder": {
+    "settings_sortOrder": {
         "message": "Sort Order",
         "description": "Sort order setting label"
     },
-    "settingsSortOrderDesc": {
+    "settings_sortOrderDesc": {
         "message": "Default sort order for bookmarks",
         "description": "Sort order setting description"
     },
-    "settingsSortDate": {
+    "settings_sortDate": {
         "message": "Date Added",
         "description": "Date sort option"
     },
-    "settingsSortAlphabetical": {
+    "settings_sortAlphabetical": {
         "message": "Alphabetical",
         "description": "Alphabetical sort option"
     },
-    "settingsSortFolders": {
+    "settings_sortFolders": {
         "message": "Folders First",
         "description": "Folders first sort option"
     },
-    "settingsGroupByFolders": {
+    "settings_groupByFolders": {
         "message": "Group by Folders",
         "description": "Group by folders setting label"
     },
-    "settingsGroupByFoldersDesc": {
+    "settings_groupByFoldersDesc": {
         "message": "Organize bookmarks by folder structure",
         "description": "Group by folders setting description"
     },
-    "settingsConfirmDelete": {
+    "settings_confirmDelete": {
         "message": "Confirm Before Delete",
         "description": "Confirm delete setting label"
     },
-    "settingsConfirmDeleteDesc": {
+    "settings_confirmDeleteDesc": {
         "message": "Show confirmation dialog before deleting",
         "description": "Confirm delete setting description"
     },
-    "settingsDefaultFolderName": {
+    "settings_defaultFolderName": {
         "message": "Default Folder Name",
         "description": "Default folder name setting label"
     },
-    "settingsDefaultFolderNameDesc": {
+    "settings_defaultFolderNameDesc": {
         "message": "Default name for new folders",
         "description": "Default folder name setting description"
     },
-    "settingsPopupWidth": {
+    "settings_popupWidth": {
         "message": "Popup Width",
         "description": "Popup width setting label"
     },
-    "settingsPopupWidthDesc": {
+    "settings_popupWidthDesc": {
         "message": "Width of the popup window",
         "description": "Popup width setting description"
     },
-    "settingsPopupHeight": {
+    "settings_popupHeight": {
         "message": "Popup Height",
         "description": "Popup height setting label"
     },
-    "settingsPopupHeightDesc": {
+    "settings_popupHeightDesc": {
         "message": "Height of the popup window",
         "description": "Popup height setting description"
     },
-    "settingsTruncateLength": {
+    "settings_truncateLength": {
         "message": "Truncate Length",
         "description": "Truncate length setting label"
     },
-    "settingsTruncateLengthDesc": {
+    "settings_truncateLengthDesc": {
         "message": "Maximum characters before truncating text",
         "description": "Truncate length setting description"
     },
-    "settingsResults": {
+    "settings_results": {
         "message": "$1 results",
         "description": "Results count option"
     },
-    "settingsAI": {
+    "settings_ai": {
         "message": "AI",
         "description": "AI category label"
     },
-    "settingsAIDesc": {
+    "settings_aiDesc": {
         "message": "AI-powered folder recommendations",
         "description": "AI category description"
     },
-    "settingsRecentFoldersMax": {
+    "settings_recentFoldersMax": {
         "message": "Recent Folders Max",
         "description": "Recent folders max setting label"
     },
-    "settingsRecentFoldersMaxDesc": {
+    "settings_recentFoldersMaxDesc": {
         "message": "Maximum number of recent folders to show for quick select",
         "description": "Recent folders max setting description"
     },
-    "recentFolders": {
+    "popup_recentFolders": {
         "message": "Recent",
         "description": "Recent folders panel title"
     },
-    "noRecentFolders": {
+    "state_noRecentFolders": {
         "message": "No recent folders",
         "description": "Empty state for recent folders"
     },
-    "settingsRecentFoldersEnabled": {
+    "settings_recentFoldersEnabled": {
         "message": "Recent Folders",
         "description": "Recent folders enabled setting label"
     },
-    "settingsRecentFoldersEnabledDesc": {
+    "settings_recentFoldersEnabledDesc": {
         "message": "Show recent folders panel for quick bookmark saving",
         "description": "Recent folders enabled setting description"
     },
-    "cannotGetCurrentPage": {
+    "toast_cannotGetCurrentPage": {
         "message": "Cannot get current page",
         "description": "Toast title when tab info unavailable"
     },
-    "pleaseOpenWebpage": {
+    "toast_pleaseOpenWebpage": {
         "message": "Please open a webpage first",
         "description": "Toast description when tab info unavailable"
     },
-    "apiKeyRequired": {
+    "toast_apiKeyRequired": {
         "message": "API Key Required",
         "description": "Toast title when API key missing"
     },
-    "apiKeyRequiredDesc": {
+    "toast_apiKeyRequiredDesc": {
         "message": "Please set your API key in Settings → AI",
         "description": "Toast description when API key missing"
     },
-    "aiRecommendationFailed": {
+    "ai_recommendationFailed": {
         "message": "AI Recommendation Failed",
         "description": "Toast title when AI fails"
     },
-    "unknownError": {
+    "error_unknown": {
         "message": "Unknown error",
         "description": "Generic error message"
     },
-    "createFolderPrompt": {
+    "toast_createFolderPrompt": {
         "message": "Create folder \"$1\"",
         "description": "Toast title for folder creation prompt"
     },
-    "newFolderComingSoon": {
+    "toast_newFolderComingSoon": {
         "message": "New folder creation coming soon!",
         "description": "Toast description for new folder feature"
     },
-    "aiSuggestionsFor": {
+    "ai_suggestionsFor": {
         "message": "AI Suggestions for:",
         "description": "AI suggestions section label"
     },
-    "newBookmark": {
+    "popup_newBookmark": {
         "message": "New Bookmark",
         "description": "Default name for new bookmark"
     },
-    "bookmarkAddedToFolder": {
+    "toast_bookmarkAddedToFolder": {
         "message": "\"$1\" added to \"$2\"",
         "description": "Toast description for bookmark added"
     },
-    "folderAddedIn": {
+    "toast_folderAddedIn": {
         "message": "New folder \"$1\" added in \"$2\"",
         "description": "Toast description for folder created"
     },
-    "itemRemoved": {
+    "toast_itemRemoved": {
         "message": "\"$1\" has been removed",
         "description": "Toast description for item deleted"
     },
-    "untitled": {
+    "popup_untitled": {
         "message": "Untitled",
         "description": "Default name for untitled items"
     },
-    "failedToLoadBookmarks": {
+    "error_failedToLoadBookmarks": {
         "message": "Failed to load bookmarks",
         "description": "Error message for bookmark loading failure"
     }

@@ -1,493 +1,493 @@
 {
-    "extName": {
+    "ext_name": {
         "message": "북마크 스카우트",
         "description": "Extension name"
     },
-    "extDescription": {
+    "ext_description": {
         "message": "북마크를 빠르게 검색하고 특정 폴더에 저장합니다.",
         "description": "Extension description"
     },
-    "searchPlaceholder": {
+    "popup_searchPlaceholder": {
         "message": "북마크 검색...",
         "description": "Search input placeholder"
     },
-    "newFolder": {
+    "popup_newFolder": {
         "message": "새 폴더",
         "description": "Default name for new folder"
     },
-    "retry": {
+    "action_retry": {
         "message": "다시 시도",
         "description": "Retry button text"
     },
-    "error": {
+    "error_generic": {
         "message": "오류",
         "description": "Error label"
     },
-    "folderCreated": {
+    "toast_folderCreated": {
         "message": "폴더가 생성되었습니다",
         "description": "Toast title for folder creation success"
     },
-    "errorCreatingFolder": {
+    "toast_errorCreatingFolder": {
         "message": "폴더 생성 오류",
         "description": "Toast title for folder creation error"
     },
-    "bookmarkAdded": {
+    "toast_bookmarkAdded": {
         "message": "북마크가 추가되었습니다",
         "description": "Toast title for bookmark addition success"
     },
-    "errorAddingBookmark": {
+    "toast_errorAddingBookmark": {
         "message": "북마크 추가 오류",
         "description": "Toast title for bookmark addition error"
     },
-    "bookmarkDeleted": {
+    "toast_bookmarkDeleted": {
         "message": "북마크가 삭제되었습니다",
         "description": "Toast title for bookmark deletion success"
     },
-    "errorDeletingBookmark": {
+    "toast_errorDeletingBookmark": {
         "message": "북마크 삭제 오류",
         "description": "Toast title for bookmark deletion error"
     },
-    "folderDeleted": {
+    "toast_folderDeleted": {
         "message": "폴더가 삭제되었습니다",
         "description": "Toast title for folder deletion success"
     },
-    "errorDeletingFolder": {
+    "toast_errorDeletingFolder": {
         "message": "폴더 삭제 오류",
         "description": "Toast title for folder deletion error"
     },
-    "itemMoved": {
+    "toast_itemMoved": {
         "message": "항목이 이동되었습니다",
         "description": "Toast title for item move success"
     },
-    "errorMovingItem": {
+    "toast_errorMovingItem": {
         "message": "항목 이동 오류",
         "description": "Toast title for item move error"
     },
-    "addBookmark": {
+    "popup_addBookmark": {
         "message": "현재 페이지 추가",
         "description": "Add bookmark tooltip"
     },
-    "addFolder": {
+    "popup_addFolder": {
         "message": "폴더 추가",
         "description": "Add folder tooltip"
     },
-    "deleteFolder": {
+    "popup_deleteFolder": {
         "message": "폴더 삭제",
         "description": "Delete folder tooltip"
     },
-    "deleteBookmark": {
+    "popup_deleteBookmark": {
         "message": "북마크 삭제",
         "description": "Delete bookmark tooltip"
     },
-    "expandAll": {
+    "popup_expandAll": {
         "message": "모두 펼치기",
         "description": "Expand all button tooltip"
     },
-    "collapseAll": {
+    "popup_collapseAll": {
         "message": "모두 접기",
         "description": "Collapse all button tooltip"
     },
-    "enterFolderName": {
+    "popup_enterFolderName": {
         "message": "폴더 이름 입력...",
         "description": "New folder input placeholder"
     },
-    "noBookmarksFound": {
+    "state_noBookmarksFound": {
         "message": "북마크를 찾을 수 없습니다",
         "description": "Empty state when search has no results"
     },
-    "noBookmarksYet": {
+    "state_noBookmarksYet": {
         "message": "아직 북마크가 없습니다",
         "description": "Empty state when there are no bookmarks"
     },
-    "tryDifferentSearch": {
+    "state_tryDifferentSearch": {
         "message": "다른 검색어를 시도해 보세요",
         "description": "Hint for empty search results"
     },
-    "lightMode": {
+    "action_lightMode": {
         "message": "라이트 모드",
         "description": "Light mode toggle tooltip"
     },
-    "darkMode": {
+    "action_darkMode": {
         "message": "다크 모드",
         "description": "Dark mode toggle tooltip"
     },
-    "settings": {
+    "settings_title": {
         "message": "설정",
         "description": "Settings page title"
     },
-    "settingsDescription": {
+    "settings_description": {
         "message": "Bookmark Scout를 맞춤 설정하세요",
         "description": "Settings page description"
     },
-    "searchSettings": {
+    "settings_searchPlaceholder": {
         "message": "설정 검색...",
         "description": "Settings search placeholder"
     },
-    "loadingSettings": {
+    "state_loadingSettings": {
         "message": "설정 로딩 중...",
         "description": "Settings loading state"
     },
-    "noSettingsMatch": {
+    "state_noSettingsMatch": {
         "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
     },
-    "settingsSaved": {
+    "toast_settingsSaved": {
         "message": "설정이 저장되었습니다",
         "description": "Toast title for settings save success"
     },
-    "preferencesUpdated": {
+    "toast_preferencesUpdated": {
         "message": "환경 설정이 업데이트되었습니다",
         "description": "Toast description for settings save success"
     },
-    "errorSavingSettings": {
+    "toast_errorSavingSettings": {
         "message": "설정 저장 오류",
         "description": "Toast title for settings save error"
     },
-    "settingsReset": {
+    "toast_settingsReset": {
         "message": "설정이 초기화되었습니다",
         "description": "Toast title for settings reset success"
     },
-    "settingsResetDescription": {
+    "toast_settingsResetDescription": {
         "message": "모든 설정이 기본값으로 복원되었습니다",
         "description": "Toast description for settings reset success"
     },
-    "errorResettingSettings": {
+    "toast_errorResettingSettings": {
         "message": "설정 초기화 오류",
         "description": "Toast title for settings reset error"
     },
-    "settingsExported": {
+    "toast_settingsExported": {
         "message": "설정이 내보내졌습니다",
         "description": "Toast title for settings export success"
     },
-    "settingsExportedDescription": {
+    "toast_settingsExportedDescription": {
         "message": "설정 파일이 다운로드되었습니다",
         "description": "Toast description for settings export success"
     },
-    "exportFailed": {
+    "toast_exportFailed": {
         "message": "내보내기 실패",
         "description": "Toast title for settings export error"
     },
-    "settingsImported": {
+    "toast_settingsImported": {
         "message": "설정을 가져왔습니다",
         "description": "Toast title for settings import success"
     },
-    "settingsImportedDescription": {
+    "toast_settingsImportedDescription": {
         "message": "파일에서 설정을 복원했습니다",
         "description": "Toast description for settings import success"
     },
-    "importFailed": {
+    "toast_importFailed": {
         "message": "가져오기 실패",
         "description": "Toast title for settings import error"
     },
-    "invalidSettingsFile": {
+    "error_invalidSettingsFile": {
         "message": "잘못된 설정 파일입니다",
         "description": "Error message for invalid settings import"
     },
-    "export": {
+    "action_export": {
         "message": "내보내기",
         "description": "Export button label"
     },
-    "import": {
+    "action_import": {
         "message": "가져오기",
         "description": "Import button label"
     },
-    "resetAll": {
+    "action_resetAll": {
         "message": "전체 초기화",
         "description": "Reset all settings button label"
     },
-    "saving": {
+    "action_saving": {
         "message": "저장 중...",
         "description": "Saving state button label"
     },
-    "saveChanges": {
+    "action_saveChanges": {
         "message": "변경 사항 저장",
         "description": "Save changes button label"
     },
-    "settingsAppearance": {
+    "settings_appearance": {
         "message": "외관",
         "description": "Appearance category label"
     },
-    "settingsAppearanceDesc": {
+    "settings_appearanceDesc": {
         "message": "북마크 표시 방법 맞춤 설정",
         "description": "Appearance category description"
     },
-    "settingsSearch": {
+    "settings_search": {
         "message": "검색",
         "description": "Search category label"
     },
-    "settingsSearchDesc": {
+    "settings_searchDesc": {
         "message": "검색 동작 설정",
         "description": "Search category description"
     },
-    "settingsBehavior": {
+    "settings_behavior": {
         "message": "동작",
         "description": "Behavior category label"
     },
-    "settingsBehaviorDesc": {
+    "settings_behaviorDesc": {
         "message": "확장 프로그램 동작 제어",
         "description": "Behavior category description"
     },
-    "settingsAdvanced": {
+    "settings_advanced": {
         "message": "고급 설정",
         "description": "Advanced category label"
     },
-    "settingsAdvancedDesc": {
+    "settings_advancedDesc": {
         "message": "고급 설정",
         "description": "Advanced category description"
     },
-    "settingsLanguage": {
+    "settings_language": {
         "message": "언어",
         "description": "Language setting label"
     },
-    "settingsLanguageDesc": {
+    "settings_languageDesc": {
         "message": "확장 프로그램 언어 선택",
         "description": "Language setting description"
     },
-    "settingsLanguageAuto": {
+    "settings_languageAuto": {
         "message": "자동 (브라우저)",
         "description": "Auto language option"
     },
-    "settingsTheme": {
+    "settings_theme": {
         "message": "테마",
         "description": "Theme setting label"
     },
-    "settingsThemeDesc": {
+    "settings_themeDesc": {
         "message": "원하는 색상 구성표 선택",
         "description": "Theme setting description"
     },
-    "settingsThemeSystem": {
+    "settings_themeSystem": {
         "message": "시스템",
         "description": "System theme option"
     },
-    "settingsThemeLight": {
+    "settings_themeLight": {
         "message": "라이트",
         "description": "Light theme option"
     },
-    "settingsThemeDark": {
+    "settings_themeDark": {
         "message": "다크",
         "description": "Dark theme option"
     },
-    "settingsShowFavicons": {
+    "settings_showFavicons": {
         "message": "파비콘 표시",
         "description": "Show favicons setting label"
     },
-    "settingsShowFaviconsDesc": {
+    "settings_showFaviconsDesc": {
         "message": "북마크 옆에 웹사이트 아이콘 표시",
         "description": "Show favicons setting description"
     },
-    "settingsFaviconSize": {
+    "settings_faviconSize": {
         "message": "파비콘 크기",
         "description": "Favicon size setting label"
     },
-    "settingsFaviconSizeDesc": {
+    "settings_faviconSizeDesc": {
         "message": "파비콘 아이콘 크기 (픽셀)",
         "description": "Favicon size setting description"
     },
-    "settingsFaviconSmall": {
+    "settings_faviconSmall": {
         "message": "16px (작게)",
         "description": "Small favicon size option"
     },
-    "settingsFaviconMedium": {
+    "settings_faviconMedium": {
         "message": "24px (중간)",
         "description": "Medium favicon size option"
     },
-    "settingsFaviconLarge": {
+    "settings_faviconLarge": {
         "message": "32px (크게)",
         "description": "Large favicon size option"
     },
-    "settingsSearchDelay": {
+    "settings_searchDelay": {
         "message": "검색 지연",
         "description": "Search delay setting label"
     },
-    "settingsSearchDelayDesc": {
+    "settings_searchDelayDesc": {
         "message": "입력 후 검색 시작까지의 지연 시간",
         "description": "Search delay setting description"
     },
-    "settingsMaxResults": {
+    "settings_maxResults": {
         "message": "최대 검색 결과",
         "description": "Max results setting label"
     },
-    "settingsMaxResultsDesc": {
+    "settings_maxResultsDesc": {
         "message": "표시할 결과의 최대 수",
         "description": "Max results setting description"
     },
-    "settingsExpandFolders": {
+    "settings_expandFolders": {
         "message": "검색 시 폴더 펼치기",
         "description": "Expand folders setting label"
     },
-    "settingsExpandFoldersDesc": {
+    "settings_expandFoldersDesc": {
         "message": "검색 시 폴더 자동 펼치기",
         "description": "Expand folders setting description"
     },
-    "settingsSearchHistory": {
+    "settings_searchHistory": {
         "message": "검색 기록",
         "description": "Search history setting label"
     },
-    "settingsSearchHistoryDesc": {
+    "settings_searchHistoryDesc": {
         "message": "최근 검색 기억",
         "description": "Search history setting description"
     },
-    "settingsSortOrder": {
+    "settings_sortOrder": {
         "message": "정렬 순서",
         "description": "Sort order setting label"
     },
-    "settingsSortOrderDesc": {
+    "settings_sortOrderDesc": {
         "message": "북마크 기본 정렬 순서",
         "description": "Sort order setting description"
     },
-    "settingsSortDate": {
+    "settings_sortDate": {
         "message": "추가일 순",
         "description": "Date sort option"
     },
-    "settingsSortAlphabetical": {
+    "settings_sortAlphabetical": {
         "message": "알파벳 순",
         "description": "Alphabetical sort option"
     },
-    "settingsSortFolders": {
+    "settings_sortFolders": {
         "message": "폴더 우선",
         "description": "Folders first sort option"
     },
-    "settingsGroupByFolders": {
+    "settings_groupByFolders": {
         "message": "폴더별 그룹화",
         "description": "Group by folders setting label"
     },
-    "settingsGroupByFoldersDesc": {
+    "settings_groupByFoldersDesc": {
         "message": "폴더 구조로 북마크 정리",
         "description": "Group by folders setting description"
     },
-    "settingsConfirmDelete": {
+    "settings_confirmDelete": {
         "message": "삭제 전 확인",
         "description": "Confirm delete setting label"
     },
-    "settingsConfirmDeleteDesc": {
+    "settings_confirmDeleteDesc": {
         "message": "삭제 전 확인 대화상자 표시",
         "description": "Confirm delete setting description"
     },
-    "settingsDefaultFolderName": {
+    "settings_defaultFolderName": {
         "message": "기본 폴더 이름",
         "description": "Default folder name setting label"
     },
-    "settingsDefaultFolderNameDesc": {
+    "settings_defaultFolderNameDesc": {
         "message": "새 폴더의 기본 이름",
         "description": "Default folder name setting description"
     },
-    "settingsPopupWidth": {
+    "settings_popupWidth": {
         "message": "팝업 너비",
         "description": "Popup width setting label"
     },
-    "settingsPopupWidthDesc": {
+    "settings_popupWidthDesc": {
         "message": "팝업 창 너비",
         "description": "Popup width setting description"
     },
-    "settingsPopupHeight": {
+    "settings_popupHeight": {
         "message": "팝업 높이",
         "description": "Popup height setting label"
     },
-    "settingsPopupHeightDesc": {
+    "settings_popupHeightDesc": {
         "message": "팝업 창 높이",
         "description": "Popup height setting description"
     },
-    "settingsTruncateLength": {
+    "settings_truncateLength": {
         "message": "글자 수 제한",
         "description": "Truncate length setting label"
     },
-    "settingsTruncateLengthDesc": {
+    "settings_truncateLengthDesc": {
         "message": "텍스트 자르기 전 최대 글자 수",
         "description": "Truncate length setting description"
     },
-    "settingsResults": {
+    "settings_results": {
         "message": "$1개 결과",
         "description": "Results count option"
     },
-    "settingsAI": {
+    "settings_ai": {
         "message": "AI",
         "description": "AI category label"
     },
-    "settingsAIDesc": {
+    "settings_aiDesc": {
         "message": "AI 기반 폴더 추천",
         "description": "AI category description"
     },
-    "settingsRecentFoldersMax": {
+    "settings_recentFoldersMax": {
         "message": "최근 폴더 최대 수",
         "description": "Recent folders max setting label"
     },
-    "settingsRecentFoldersMaxDesc": {
+    "settings_recentFoldersMaxDesc": {
         "message": "빠른 선택에 표시할 최근 폴더의 최대 수",
         "description": "Recent folders max setting description"
     },
-    "recentFolders": {
+    "popup_recentFolders": {
         "message": "최근",
         "description": "Recent folders panel title"
     },
-    "noRecentFolders": {
+    "state_noRecentFolders": {
         "message": "최근 폴더 없음",
         "description": "Empty state for recent folders"
     },
-    "settingsRecentFoldersEnabled": {
+    "settings_recentFoldersEnabled": {
         "message": "최근 폴더",
         "description": "Recent folders enabled setting label"
     },
-    "settingsRecentFoldersEnabledDesc": {
+    "settings_recentFoldersEnabledDesc": {
         "message": "빠른 북마크 저장을 위한 최근 폴더 패널 표시",
         "description": "Recent folders enabled setting description"
     },
-    "cannotGetCurrentPage": {
+    "toast_cannotGetCurrentPage": {
         "message": "현재 페이지를 가져올 수 없습니다",
         "description": "Toast title when tab info unavailable"
     },
-    "pleaseOpenWebpage": {
+    "toast_pleaseOpenWebpage": {
         "message": "먼저 웹페이지를 열어주세요",
         "description": "Toast description when tab info unavailable"
     },
-    "apiKeyRequired": {
+    "toast_apiKeyRequired": {
         "message": "API 키 필요",
         "description": "Toast title when API key missing"
     },
-    "apiKeyRequiredDesc": {
+    "toast_apiKeyRequiredDesc": {
         "message": "설정 → AI에서 API 키를 설정해주세요",
         "description": "Toast description when API key missing"
     },
-    "aiRecommendationFailed": {
+    "ai_recommendationFailed": {
         "message": "AI 추천 실패",
         "description": "Toast title when AI fails"
     },
-    "unknownError": {
+    "error_unknown": {
         "message": "알 수 없는 오류",
         "description": "Generic error message"
     },
-    "createFolderPrompt": {
+    "toast_createFolderPrompt": {
         "message": "폴더 \"$1\" 만들기",
         "description": "Toast title for folder creation prompt"
     },
-    "newFolderComingSoon": {
+    "toast_newFolderComingSoon": {
         "message": "새 폴더 만들기 기능 곧 출시 예정!",
         "description": "Toast description for new folder feature"
     },
-    "aiSuggestionsFor": {
+    "ai_suggestionsFor": {
         "message": "AI 추천:",
         "description": "AI suggestions section label"
     },
-    "newBookmark": {
+    "popup_newBookmark": {
         "message": "새 북마크",
         "description": "Default name for new bookmark"
     },
-    "bookmarkAddedToFolder": {
+    "toast_bookmarkAddedToFolder": {
         "message": "\"$1\"을(를) \"$2\"에 추가했습니다",
         "description": "Toast description for bookmark added"
     },
-    "folderAddedIn": {
+    "toast_folderAddedIn": {
         "message": "새 폴더 \"$1\"을(를) \"$2\"에 추가했습니다",
         "description": "Toast description for folder created"
     },
-    "itemRemoved": {
+    "toast_itemRemoved": {
         "message": "\"$1\"이(가) 삭제되었습니다",
         "description": "Toast description for item deleted"
     },
-    "untitled": {
+    "popup_untitled": {
         "message": "제목 없음",
         "description": "Default name for untitled items"
     },
-    "failedToLoadBookmarks": {
+    "error_failedToLoadBookmarks": {
         "message": "북마크를 불러오지 못했습니다",
         "description": "Error message for bookmark loading failure"
     }

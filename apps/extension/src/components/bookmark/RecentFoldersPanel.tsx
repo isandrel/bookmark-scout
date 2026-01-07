@@ -32,7 +32,7 @@ export function RecentFoldersPanel({ onAddToFolder, maxFolders }: RecentFoldersP
       <div className="flex items-center gap-1.5 mb-1.5">
         <Clock className="h-3 w-3 text-muted-foreground" />
         <span className="text-xs font-medium text-muted-foreground">
-          {t('recentFolders')}
+          {t('popup_recentFolders')}
         </span>
       </div>
       <div className="flex flex-wrap gap-1.5">

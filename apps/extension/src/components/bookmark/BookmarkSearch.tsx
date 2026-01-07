@@ -46,7 +46,7 @@ export function BookmarkSearch({
         <Input
           ref={inputRef}
           type="text"
-          placeholder={t('searchPlaceholder')}
+          placeholder={t('popup_searchPlaceholder')}
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           className="flex-1 h-8 text-sm search-input"
@@ -57,7 +57,7 @@ export function BookmarkSearch({
             size="icon"
             className="shrink-0 h-8 w-8"
             onClick={onToggleExpandAll}
-            title={forceExpandAll ? t('collapseAll') : t('expandAll')}
+            title={forceExpandAll ? t('popup_collapseAll') : t('popup_expandAll')}
           >
             {forceExpandAll ? (
               <ChevronUp className="h-4 w-4" />
@@ -71,7 +71,7 @@ export function BookmarkSearch({
           size="icon"
           className="shrink-0 h-8 w-8"
           onClick={toggleTheme}
-          title={theme === 'dark' ? t('lightMode') : t('darkMode')}
+          title={theme === 'dark' ? t('action_lightMode') : t('action_darkMode')}
         >
           {theme === 'dark' ? (
             <Sun className="h-4 w-4" />
