@@ -40,6 +40,12 @@ confirm_before_delete = true
 # Default name for newly created folders
 default_new_folder_name = "New Folder"
 
+# Maximum number of recent folders to show for quick select (1-10)
+recent_folders_max = 5
+
+# Enable recent folders quick select panel
+recent_folders_enabled = true
+
 [advanced]
 # Popup window width in pixels (300-800)
 popup_width = 400

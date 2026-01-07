@@ -8,7 +8,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { BookmarkSearch, FolderItem } from '@/components/bookmark';
+import { BookmarkSearch, FolderItem, RecentFoldersPanel } from '@/components/bookmark';
 import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,9 +17,9 @@ import { Folder, FolderPlus } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
-import { useSetting } from '@/lib';
+import { useSetting, addRecentFolder } from '@/lib';
 import { useBookmarkStore } from '@/stores';
-import { recommendFolders, type AISettings, type FolderRecommendation } from '@/services';
+import { recommendFolders, getBookmark, type AISettings, type FolderRecommendation } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.scss';
 
@@ -63,6 +63,8 @@ function PopupPage() {
   const { value: aiProvider } = useSetting('aiProvider');
   const { value: aiModel } = useSetting('aiModel');
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
+  const { value: recentFoldersMax } = useSetting('recentFoldersMax');
+  const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
@@ -152,16 +154,25 @@ function PopupPage() {
     [toast],
   );
 
-  // Add bookmark to selected folder
+  // Add bookmark to selected folder and track as recent
   const handleAddToFolder = useCallback(async (rec: FolderRecommendation) => {
     if (!currentTabInfo) return;
     
     if (rec.type === 'existing' && rec.folderId) {
-      await withToast(
+      const success = await withToast(
         () => addBookmarkToFolder(rec.folderId || ''),
         t('bookmarkAdded'),
         t('errorAddingBookmark'),
       );
+      // Track as recent folder if successful
+      if (success && rec.folderId) {
+        try {
+          const folder = await getBookmark(rec.folderId);
+          await addRecentFolder(rec.folderId, folder.title);
+        } catch (e) {
+          console.error('Failed to track recent folder:', e);
+        }
+      }
     } else {
       // For new folder suggestions, just show a message
       toast({
@@ -275,6 +286,29 @@ function PopupPage() {
           onAIRecommend={handleAIRecommend}
         />
 
+        {/* Recent Folders Panel */}
+        {!recentFoldersLoading && recentFoldersEnabled && (
+          <RecentFoldersPanel
+            maxFolders={recentFoldersMax}
+            onAddToFolder={async (folderId) => {
+            const success = await withToast(
+              () => addBookmarkToFolder(folderId),
+              t('bookmarkAdded'),
+              t('errorAddingBookmark'),
+            );
+            // Track as recent if successful
+            if (success) {
+              try {
+                const folder = await getBookmark(folderId);
+                await addRecentFolder(folderId, folder.title);
+              } catch (e) {
+                console.error('Failed to track recent folder:', e);
+              }
+            }
+          }}
+          />
+        )}
+
         {/* AI Recommendations Panel */}
         {aiRecommendations.length > 0 && (
           <div className="border-b bg-muted/30 p-3 space-y-2">
@@ -359,13 +393,21 @@ function PopupPage() {
                     onDragStart={setDraggedItem}
                     onDragEnd={() => setDraggedItem(null)}
                     onDrop={handleDropWithToast}
-                    onAddBookmark={(id) =>
-                      withToast(
+                    onAddBookmark={async (id) => {
+                      const success = await withToast(
                         () => addBookmarkToFolder(id),
                         t('bookmarkAdded'),
                         t('errorAddingBookmark'),
-                      )
-                    }
+                      );
+                      if (success) {
+                        try {
+                          const folder = await getBookmark(id);
+                          await addRecentFolder(id, folder.title);
+                        } catch (e) {
+                          console.error('Failed to track recent folder:', e);
+                        }
+                      }
+                    }}
                     onAddFolder={handleAddFolder}
                     onDeleteFolder={(id) =>
                       withToast(

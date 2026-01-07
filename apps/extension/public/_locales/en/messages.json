@@ -406,5 +406,29 @@
     "settingsAIDesc": {
         "message": "AI-powered folder recommendations",
         "description": "AI category description"
+    },
+    "settingsRecentFoldersMax": {
+        "message": "Recent Folders Max",
+        "description": "Recent folders max setting label"
+    },
+    "settingsRecentFoldersMaxDesc": {
+        "message": "Maximum number of recent folders to show for quick select",
+        "description": "Recent folders max setting description"
+    },
+    "recentFolders": {
+        "message": "Recent",
+        "description": "Recent folders panel title"
+    },
+    "noRecentFolders": {
+        "message": "No recent folders",
+        "description": "Empty state for recent folders"
+    },
+    "settingsRecentFoldersEnabled": {
+        "message": "Recent Folders",
+        "description": "Recent folders enabled setting label"
+    },
+    "settingsRecentFoldersEnabledDesc": {
+        "message": "Show recent folders panel for quick bookmark saving",
+        "description": "Recent folders enabled setting description"
     }
 }
