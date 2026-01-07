@@ -1,4 +1,12 @@
 {
+    "extName": {
+        "message": "Bookmark Scout",
+        "description": "Extension name (used in manifest.json)"
+    },
+    "extDescription": {
+        "message": "Quickly search and save bookmarks to specific folders.",
+        "description": "Extension description (used in manifest.json)"
+    },
     "ext_name": {
         "message": "Bookmark Scout",
         "description": "Extension name"

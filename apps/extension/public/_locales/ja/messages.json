@@ -1,4 +1,12 @@
 {
+    "extName": {
+        "message": "ブックマークスカウト",
+        "description": "Extension name (used in manifest.json)"
+    },
+    "extDescription": {
+        "message": "ブックマークを素早く検索し、特定のフォルダに保存します。",
+        "description": "Extension description (used in manifest.json)"
+    },
     "ext_name": {
         "message": "ブックマークスカウト",
         "description": "Extension name"
