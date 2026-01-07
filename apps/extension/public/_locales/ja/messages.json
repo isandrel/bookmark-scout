@@ -411,6 +411,10 @@
         "message": "通知が自動的に消えるまでの時間",
         "description": "Toast duration setting description"
     },
+    "action_saving": {
+        "message": "保存中...",
+        "description": "Saving state indicator"
+    },
     "settings_results": {
         "message": "$1件の結果",
         "description": "Results count option"
