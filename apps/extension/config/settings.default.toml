@@ -56,6 +56,9 @@ popup_height = 500
 # Maximum characters before truncating bookmark titles (20-200)
 truncate_length = 50
 
+# Duration in milliseconds before toast notifications auto-dismiss (2000-10000)
+toast_duration_ms = 4000
+
 [ai]
 # Enable AI-powered folder recommendations
 enabled = false

@@ -120,8 +120,8 @@ ToastDescription.displayName = ToastPrimitives.Description.displayName;
 // Progress bar that animates from 100% to 0% over the toast duration
 const ToastProgress = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null }
->(({ className, variant, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null; duration?: number }
+>(({ className, variant, duration = TOAST_DURATION, ...props }, ref) => {
   const progressColors = {
     default: 'bg-foreground/20',
     destructive: 'bg-destructive-foreground/30',
@@ -137,6 +137,7 @@ const ToastProgress = React.forwardRef<
           progressColors[variant ?? 'default'],
           className,
         )}
+        style={{ '--toast-duration': `${duration}ms` } as React.CSSProperties}
         {...props}
       />
     </div>

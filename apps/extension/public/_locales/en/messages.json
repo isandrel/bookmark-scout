@@ -403,6 +403,14 @@
         "message": "Maximum characters before truncating text",
         "description": "Truncate length setting description"
     },
+    "settings_toastDuration": {
+        "message": "Toast Duration",
+        "description": "Toast duration setting label"
+    },
+    "settings_toastDurationDesc": {
+        "message": "Duration before notifications auto-dismiss",
+        "description": "Toast duration setting description"
+    },
     "settings_results": {
         "message": "$1 results",
         "description": "Results count option"

@@ -403,6 +403,14 @@
         "message": "텍스트 자르기 전 최대 글자 수",
         "description": "Truncate length setting description"
     },
+    "settings_toastDuration": {
+        "message": "알림 표시 시간",
+        "description": "Toast duration setting label"
+    },
+    "settings_toastDurationDesc": {
+        "message": "알림이 자동으로 사라지기 전 시간",
+        "description": "Toast duration setting description"
+    },
     "settings_results": {
         "message": "$1개 결과",
         "description": "Results count option"
