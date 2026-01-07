@@ -123,27 +123,45 @@ const OptionsPage: React.FC = () => {
     }
   }, [settings, isLoading, form]);
 
-  const onSubmit = async (data: Settings) => {
-    setIsSaving(true);
-    try {
-      await updateSettings(data);
-      if (data.theme !== theme) {
-        setTheme(data.theme);
+  // Auto-save logic
+  const values = form.watch();
+
+  // Debounced save function
+  useEffect(() => {
+    // Skip initial load or empty settings
+    if (isLoading || Object.keys(values).length === 0) return;
+
+    const timeoutId = setTimeout(async () => {
+      setIsSaving(true);
+      try {
+        await updateSettings(values);
+        if (values.theme !== theme) {
+          setTheme(values.theme);
+        }
+        toast({
+          title: `✓ ${t('toast_settingsSaved')}`,
+          description: t('toast_preferencesUpdated'),
+          variant: 'success',
+          duration: 2000, // Short duration for auto-save
+        });
+      } catch (error) {
+        toast({
+          title: `× ${t('toast_errorSavingSettings')}`,
+          description: error instanceof Error ? error.message : t('error_unknown'),
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSaving(false);
       }
-      toast({
-        title: `✓ ${t('toast_settingsSaved')}`,
-        description: t('toast_preferencesUpdated'),
-        variant: 'success',
-      });
-    } catch (error) {
-      toast({
-        title: `× ${t('toast_errorSavingSettings')}`,
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSaving(false);
-    }
+    }, 1000); // 1 second debounce
+
+    return () => clearTimeout(timeoutId);
+  }, [values, updateSettings, theme, setTheme, isLoading, t, toast]);
+
+  // Remove manual submit handler
+  const onSubmit = (data: Settings) => {
+    // No-op, handled by auto-save
+    return;
   };
 
   const handleReset = async () => {
@@ -522,10 +540,19 @@ const OptionsPage: React.FC = () => {
                       <RotateCcw className="h-4 w-4 mr-2" />
                       {t('action_resetAll')}
                     </Button>
-                    <Button type="submit" disabled={isSaving}>
-                      <Save className="h-4 w-4 mr-2" />
-                      {isSaving ? t('action_saving') : t('action_saveChanges')}
-                    </Button>
+                    <div className="flex items-center justify-end text-sm text-muted-foreground px-3 min-w-[140px]">
+                      {isSaving ? (
+                        <div className="flex items-center animate-pulse">
+                          <Settings2 className="h-3 w-3 mr-2 animate-spin" />
+                          {t('action_saving')}
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <Save className="h-3 w-3 mr-2 opacity-50" />
+                          {t('toast_settingsSaved')}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
