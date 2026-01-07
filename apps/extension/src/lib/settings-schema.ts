@@ -31,6 +31,8 @@ interface TomlConfig {
     group_by_folders: boolean;
     confirm_before_delete: boolean;
     default_new_folder_name: string;
+    recent_folders_max: number;
+    recent_folders_enabled: boolean;
   };
   advanced: {
     popup_width: number;
@@ -103,6 +105,8 @@ export const settingsSchema = z.object({
   groupByFolders: z.boolean().default(config.behavior.group_by_folders),
   confirmBeforeDelete: z.boolean().default(config.behavior.confirm_before_delete),
   defaultNewFolderName: z.string().min(1).max(100).default(config.behavior.default_new_folder_name),
+  recentFoldersMax: z.number().min(1).max(10).default(config.behavior.recent_folders_max),
+  recentFoldersEnabled: z.boolean().default(config.behavior.recent_folders_enabled),
 
   // Advanced - defaults from config.advanced
   popupWidth: z.number().min(300).max(800).default(config.advanced.popup_width),
@@ -142,7 +146,7 @@ export function getSettingsCategories() {
     behavior: {
       label: t('settingsBehavior'),
       description: t('settingsBehaviorDesc'),
-      fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName'] as const,
+      fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName', 'recentFoldersEnabled', 'recentFoldersMax'] as const,
     },
     advanced: {
       label: t('settingsAdvanced'),
@@ -172,7 +176,7 @@ export const settingsCategories = {
   behavior: {
     label: 'Behavior',
     description: 'Control extension behavior',
-    fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName'] as const,
+    fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName', 'recentFoldersEnabled', 'recentFoldersMax'] as const,
   },
   advanced: {
     label: 'Advanced',
@@ -299,6 +303,19 @@ export function getSettingsFieldMeta(): Record<
       label: t('settingsDefaultFolderName'),
       description: t('settingsDefaultFolderNameDesc'),
       type: 'text',
+    },
+    recentFoldersMax: {
+      label: t('settingsRecentFoldersMax'),
+      description: t('settingsRecentFoldersMaxDesc'),
+      type: 'number',
+      min: 1,
+      max: 10,
+      step: 1,
+    },
+    recentFoldersEnabled: {
+      label: t('settingsRecentFoldersEnabled'),
+      description: t('settingsRecentFoldersEnabledDesc'),
+      type: 'switch',
     },
 
     // Advanced
@@ -478,6 +495,19 @@ export const settingsFieldMeta: Record<
     label: 'Default Folder Name',
     description: 'Default name for new folders',
     type: 'text',
+  },
+  recentFoldersMax: {
+    label: 'Recent Folders Max',
+    description: 'Maximum number of recent folders to show for quick select',
+    type: 'number',
+    min: 1,
+    max: 10,
+    step: 1,
+  },
+  recentFoldersEnabled: {
+    label: 'Recent Folders',
+    description: 'Show recent folders for quick bookmark saving',
+    type: 'switch',
   },
 
   // Advanced

@@ -6,3 +6,4 @@ export { BookmarkItem } from './BookmarkItem';
 export { BookmarkSearch } from './BookmarkSearch';
 export { FolderItem } from './FolderItem';
 export { NewFolderInput } from './NewFolderInput';
+export { RecentFoldersPanel } from './RecentFoldersPanel';
