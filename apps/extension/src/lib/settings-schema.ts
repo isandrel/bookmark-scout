@@ -44,6 +44,7 @@ interface TomlConfig {
     enabled: boolean;
     provider: string;
     model: string;
+    auto_trigger_on_open: boolean;
   };
 }
 
@@ -120,6 +121,7 @@ export const settingsSchema = z.object({
   aiProvider: z.enum(['openai', 'anthropic', 'google']).default(config.ai.provider as 'openai' | 'anthropic' | 'google'),
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(5).default(3),
+  aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
@@ -158,7 +160,7 @@ export function getSettingsCategories() {
     ai: {
       label: t('settings_ai'),
       description: t('settings_aiDesc'),
-      fields: ['aiEnabled', 'aiProvider', 'aiModel'] as const,
+      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiProvider', 'aiModel', 'aiMaxRecommendations'] as const,
     },
   } as const;
 }
@@ -188,7 +190,7 @@ export const settingsCategories = {
   ai: {
     label: 'AI',
     description: 'AI-powered folder recommendations',
-    fields: ['aiEnabled', 'aiProvider', 'aiModel', 'aiMaxRecommendations'] as const,
+    fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiProvider', 'aiModel', 'aiMaxRecommendations'] as const,
   },
 } as const;
 
@@ -362,6 +364,11 @@ export function getSettingsFieldMeta(): Record<
     aiEnabled: {
       label: 'AI Recommendations',
       description: 'Enable AI-powered folder suggestions',
+      type: 'switch',
+    },
+    aiAutoTriggerOnOpen: {
+      label: 'Auto-recommend on Open',
+      description: 'Automatically suggest folders when popup opens',
       type: 'switch',
     },
     aiProvider: {
@@ -594,5 +601,10 @@ export const settingsFieldMeta: Record<
     type: 'number',
     min: 1,
     max: 5,
+  },
+  aiAutoTriggerOnOpen: {
+    label: 'Auto-recommend on Open',
+    description: 'Automatically suggest folders when popup opens',
+    type: 'switch',
   },
 };

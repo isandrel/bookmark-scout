@@ -427,6 +427,14 @@
         "message": "AI 기반 폴더 추천",
         "description": "AI category description"
     },
+    "settings_aiAutoTrigger": {
+        "message": "열기 시 자동 추천",
+        "description": "Auto trigger AI setting label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "팝업이 열릴 때 자동으로 폴더 추천",
+        "description": "Auto trigger AI setting description"
+    },
     "settings_recentFoldersMax": {
         "message": "최근 폴더 최대 수",
         "description": "Recent folders max setting label"
