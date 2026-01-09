@@ -518,5 +518,45 @@
     "error_failedToLoadBookmarks": {
         "message": "북마크를 불러오지 못했습니다",
         "description": "Error message for bookmark loading failure"
+    },
+    "tools_title": {
+        "message": "도구",
+        "description": "Tools panel title"
+    },
+    "tools_checkDeadLinks": {
+        "message": "깨진 링크 확인",
+        "description": "Dead link checker tool title"
+    },
+    "tools_checkDeadLinksDesc": {
+        "message": "접근할 수 없는 URL을 검색합니다",
+        "description": "Dead link checker description"
+    },
+    "tools_aiReorganize": {
+        "message": "AI 폴더 재구성",
+        "description": "AI reorganization tool title"
+    },
+    "tools_aiReorganizeDesc": {
+        "message": "AI를 사용하여 더 나은 폴더 구조를 제안합니다",
+        "description": "AI reorganization description"
+    },
+    "tools_statistics": {
+        "message": "북마크 통계",
+        "description": "Statistics tool title"
+    },
+    "tools_statisticsDesc": {
+        "message": "북마크 컬렉션에 대한 통계를 확인합니다",
+        "description": "Statistics tool description"
+    },
+    "action_scan": {
+        "message": "검색",
+        "description": "Scan button label"
+    },
+    "action_analyze": {
+        "message": "분석",
+        "description": "Analyze button label"
+    },
+    "action_view": {
+        "message": "보기",
+        "description": "View button label"
     }
 }
