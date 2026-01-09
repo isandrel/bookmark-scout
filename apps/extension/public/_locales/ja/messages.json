@@ -518,5 +518,45 @@
     "error_failedToLoadBookmarks": {
         "message": "ブックマークの読み込みに失敗しました",
         "description": "Error message for bookmark loading failure"
+    },
+    "tools_title": {
+        "message": "ツール",
+        "description": "Tools panel title"
+    },
+    "tools_checkDeadLinks": {
+        "message": "リンク切れチェック",
+        "description": "Dead link checker tool title"
+    },
+    "tools_checkDeadLinksDesc": {
+        "message": "アクセスできないURLを検出します",
+        "description": "Dead link checker description"
+    },
+    "tools_aiReorganize": {
+        "message": "AIフォルダ整理",
+        "description": "AI reorganization tool title"
+    },
+    "tools_aiReorganizeDesc": {
+        "message": "AIを使ってより良いフォルダ構造を提案します",
+        "description": "AI reorganization description"
+    },
+    "tools_statistics": {
+        "message": "ブックマーク統計",
+        "description": "Statistics tool title"
+    },
+    "tools_statisticsDesc": {
+        "message": "ブックマークの統計情報を表示します",
+        "description": "Statistics tool description"
+    },
+    "action_scan": {
+        "message": "スキャン",
+        "description": "Scan button label"
+    },
+    "action_analyze": {
+        "message": "分析",
+        "description": "Analyze button label"
+    },
+    "action_view": {
+        "message": "表示",
+        "description": "View button label"
     }
 }

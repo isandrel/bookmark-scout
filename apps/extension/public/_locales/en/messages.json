@@ -518,5 +518,45 @@
     "error_failedToLoadBookmarks": {
         "message": "Failed to load bookmarks",
         "description": "Error message for bookmark loading failure"
+    },
+    "tools_title": {
+        "message": "Tools",
+        "description": "Tools panel title"
+    },
+    "tools_checkDeadLinks": {
+        "message": "Check Dead Links",
+        "description": "Dead link checker tool title"
+    },
+    "tools_checkDeadLinksDesc": {
+        "message": "Scan bookmarks for broken or unreachable URLs",
+        "description": "Dead link checker description"
+    },
+    "tools_aiReorganize": {
+        "message": "AI Folder Reorganization",
+        "description": "AI reorganization tool title"
+    },
+    "tools_aiReorganizeDesc": {
+        "message": "Use AI to suggest a better folder structure",
+        "description": "AI reorganization description"
+    },
+    "tools_statistics": {
+        "message": "Bookmark Statistics",
+        "description": "Statistics tool title"
+    },
+    "tools_statisticsDesc": {
+        "message": "View stats about your bookmarks collection",
+        "description": "Statistics tool description"
+    },
+    "action_scan": {
+        "message": "Scan",
+        "description": "Scan button label"
+    },
+    "action_analyze": {
+        "message": "Analyze",
+        "description": "Analyze button label"
+    },
+    "action_view": {
+        "message": "View",
+        "description": "View button label"
     }
 }
