@@ -66,9 +66,11 @@ function PopupPage() {
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
+  const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
+  const autoTriggerExecutedRef = useRef(false);
 
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);
@@ -80,6 +82,7 @@ function PopupPage() {
   useEffect(() => {
     fetchFolders();
   }, [fetchFolders]);
+
 
   // AI Recommendation handler
   const handleAIRecommend = useCallback(async () => {
@@ -136,6 +139,22 @@ function PopupPage() {
       setAILoading(false);
     }
   }, [aiEnabled, aiProvider, aiModel, folders, toast]);
+
+  // Auto-trigger AI recommendations on popup open if setting is enabled
+  useEffect(() => {
+    // Only run once per popup open, after settings and folders are loaded
+    if (
+      !autoTriggerExecutedRef.current &&
+      !aiAutoTriggerLoading &&
+      !isLoading &&
+      aiEnabled &&
+      aiAutoTriggerOnOpen &&
+      folders.length > 0
+    ) {
+      autoTriggerExecutedRef.current = true;
+      handleAIRecommend();
+    }
+  }, [aiAutoTriggerLoading, isLoading, aiEnabled, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
 
   // Toast wrapper for operations
   const withToast = useCallback(

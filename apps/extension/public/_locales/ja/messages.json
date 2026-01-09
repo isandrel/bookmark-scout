@@ -427,6 +427,14 @@
         "message": "AIによるフォルダ推薦",
         "description": "AI category description"
     },
+    "settings_aiAutoTrigger": {
+        "message": "起動時に自動推薦",
+        "description": "Auto trigger AI setting label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "ポップアップを開いたときに自動的にフォルダを提案",
+        "description": "Auto trigger AI setting description"
+    },
     "settings_recentFoldersMax": {
         "message": "最近のフォルダ最大数",
         "description": "Recent folders max setting label"

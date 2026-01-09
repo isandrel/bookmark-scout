@@ -71,3 +71,6 @@ provider = "openai"
 # Anthropic: claude-3-haiku-20240307, claude-3-5-sonnet-20241022
 # Google: gemini-1.5-flash, gemini-1.5-pro
 model = "gpt-4o-mini"
+
+# Auto-trigger AI recommendations when popup opens
+auto_trigger_on_open = false

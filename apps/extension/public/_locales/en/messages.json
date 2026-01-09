@@ -427,6 +427,14 @@
         "message": "AI-powered folder recommendations",
         "description": "AI category description"
     },
+    "settings_aiAutoTrigger": {
+        "message": "Auto-recommend on Open",
+        "description": "Auto trigger AI setting label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "Automatically suggest folders when popup opens",
+        "description": "Auto trigger AI setting description"
+    },
     "settings_recentFoldersMax": {
         "message": "Recent Folders Max",
         "description": "Recent folders max setting label"
