@@ -558,5 +558,17 @@
     "action_view": {
         "message": "보기",
         "description": "View button label"
+    },
+    "bookmarks_root": {
+        "message": "북마크",
+        "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_untitled": {
+        "message": "제목 없음",
+        "description": "Default name for untitled bookmarks"
+    },
+    "bookmarks_loading": {
+        "message": "북마크 불러오는 중...",
+        "description": "Loading message for bookmarks page"
     }
 }

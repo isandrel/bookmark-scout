@@ -154,6 +154,36 @@ export const columns: ColumnDef<Bookmark>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      const title = row.getValue('title') as string;
+      const url = row.original.url;
+      const type = row.original.type;
+
+      // Show favicon for links, folder icon for folders
+      const icon =
+        type === 'folder' ? (
+          <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
+        ) : url ? (
+          <img
+            src={`chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`}
+            alt=""
+            className="h-4 w-4 shrink-0 rounded-sm"
+            onError={(e) => {
+              // Fallback to generic link icon
+              e.currentTarget.style.display = 'none';
+            }}
+          />
+        ) : (
+          <Link className="h-4 w-4 text-muted-foreground shrink-0" />
+        );
+
+      return (
+        <div className="flex items-center gap-2 min-w-0">
+          {icon}
+          <span className="truncate">{title}</span>
+        </div>
+      );
+    },
     filterFn: (row, id, value) => {
       const title = row.getValue(id) as string;
       return title.toLowerCase().includes(value.toLowerCase());

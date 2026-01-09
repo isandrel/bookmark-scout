@@ -149,10 +149,14 @@ export function useBookmarkNavigation() {
     };
   }, [currentFolder, refreshCurrentFolder]);
 
-  const navigateToFolder = useCallback((folderId: string) => {
+  const navigateToFolder = useCallback((folderId: string | null) => {
     setCurrentFolder(folderId);
     const newUrl = new URL(window.location.href);
-    newUrl.searchParams.set('id', folderId);
+    if (folderId) {
+      newUrl.searchParams.set('id', folderId);
+    } else {
+      newUrl.searchParams.delete('id');
+    }
     window.history.pushState({}, '', newUrl.toString());
   }, []);
 

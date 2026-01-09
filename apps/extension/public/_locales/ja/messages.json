@@ -558,5 +558,17 @@
     "action_view": {
         "message": "表示",
         "description": "View button label"
+    },
+    "bookmarks_root": {
+        "message": "ブックマーク",
+        "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_untitled": {
+        "message": "無題",
+        "description": "Default name for untitled bookmarks"
+    },
+    "bookmarks_loading": {
+        "message": "ブックマークを読み込み中...",
+        "description": "Loading message for bookmarks page"
     }
 }

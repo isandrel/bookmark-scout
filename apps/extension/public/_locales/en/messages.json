@@ -558,5 +558,17 @@
     "action_view": {
         "message": "View",
         "description": "View button label"
+    },
+    "bookmarks_root": {
+        "message": "Bookmarks",
+        "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_untitled": {
+        "message": "Untitled",
+        "description": "Default name for untitled bookmarks"
+    },
+    "bookmarks_loading": {
+        "message": "Loading bookmarks...",
+        "description": "Loading message for bookmarks page"
     }
 }
