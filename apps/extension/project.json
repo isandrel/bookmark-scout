@@ -33,7 +33,12 @@
             }
         },
         "build": {
-            "command": "wxt build -b chrome && wxt build -b firefox && wxt build -b edge",
+            "executor": "nx:noop",
+            "dependsOn": [
+                "build:chrome",
+                "build:firefox",
+                "build:edge"
+            ],
             "options": {
                 "cwd": "apps/extension"
             }
@@ -57,13 +62,30 @@
             }
         },
         "zip": {
-            "command": "wxt zip -b chrome && wxt zip -b firefox && wxt zip -b edge",
+            "executor": "nx:noop",
+            "dependsOn": [
+                "zip:chrome",
+                "zip:firefox",
+                "zip:edge"
+            ],
             "options": {
                 "cwd": "apps/extension"
             }
         },
         "zip:chrome": {
             "command": "wxt zip -b chrome",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip:firefox": {
+            "command": "wxt zip -b firefox",
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "zip:edge": {
+            "command": "wxt zip -b edge",
             "options": {
                 "cwd": "apps/extension"
             }
