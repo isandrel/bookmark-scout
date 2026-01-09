@@ -411,10 +411,6 @@
         "message": "Duration before notifications auto-dismiss",
         "description": "Description for toast duration setting"
     },
-    "action_saving": {
-        "message": "Saving...",
-        "description": "Saving state indicator"
-    },
     "settings_results": {
         "message": "$1 results",
         "description": "Results count option"
@@ -570,5 +566,77 @@
     "bookmarks_loading": {
         "message": "Loading bookmarks...",
         "description": "Loading message for bookmarks page"
+    },
+    "tools_category_ai": {
+        "message": "AI & Intelligence",
+        "description": "AI tools category"
+    },
+    "tools_category_maintenance": {
+        "message": "Maintenance",
+        "description": "Maintenance tools category"
+    },
+    "tools_category_metadata": {
+        "message": "Metadata & Content",
+        "description": "Metadata tools category"
+    },
+    "tools_category_security": {
+        "message": "Security",
+        "description": "Security tools category"
+    },
+    "tools_exportAI": {
+        "message": "AI Context Packer",
+        "description": "Title for AI Export tool"
+    },
+    "tools_exportAIDesc": {
+        "message": "Export bookmarks in AI-friendly format (XML/Markdown)",
+        "description": "Description for AI Export tool"
+    },
+    "tools_autoTagging": {
+        "message": "Auto-Tagging",
+        "description": "Title for Auto-Tagging tool"
+    },
+    "tools_autoTaggingDesc": {
+        "message": "Automatically suggest tags for bookmarks",
+        "description": "Description for Auto-Tagging tool"
+    },
+    "tools_summarizer": {
+        "message": "Content Summarizer",
+        "description": "Title for Summarizer tool"
+    },
+    "tools_summarizerDesc": {
+        "message": "Generate brief summaries for bookmarked content",
+        "description": "Description for Summarizer tool"
+    },
+    "tools_findDuplicates": {
+        "message": "Duplicate Cleaner",
+        "description": "Title for Duplicate Cleaner tool"
+    },
+    "tools_findDuplicatesDesc": {
+        "message": "Find and remove duplicate bookmarks",
+        "description": "Description for Duplicate Cleaner tool"
+    },
+    "tools_cleanUrls": {
+        "message": "URL Cleaner",
+        "description": "Title for URL Cleaner tool"
+    },
+    "tools_cleanUrlsDesc": {
+        "message": "Remove tracking parameters from URLs",
+        "description": "Description for URL Cleaner tool"
+    },
+    "tools_metadataFetcher": {
+        "message": "Metadata Fetcher",
+        "description": "Title for Metadata Fetcher tool"
+    },
+    "tools_metadataFetcherDesc": {
+        "message": "Fix missing titles and favicons",
+        "description": "Description for Metadata Fetcher tool"
+    },
+    "tools_privacyScanner": {
+        "message": "Privacy Scanner",
+        "description": "Title for Privacy Scanner tool"
+    },
+    "tools_privacyScannerDesc": {
+        "message": "Detect sensitive data in URLs",
+        "description": "Description for Privacy Scanner tool"
     }
 }

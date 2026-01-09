@@ -19,6 +19,13 @@ import {
   Wrench,
   Globe,
   Folder,
+  FileText,
+  Tags,
+  FileOutput,
+  Copy,
+  Eraser,
+  RefreshCw,
+  ShieldAlert,
 } from 'lucide-react';
 import { t } from '@/hooks/use-i18n';
 import { useState } from 'react';
@@ -117,7 +124,7 @@ function ToolCard({
           </Select>
         )}
         <Button
-          variant="default"
+          variant="secondary"
           size="sm"
           onClick={() => onClick(scope)}
           disabled={disabled || isLoading}
@@ -136,89 +143,171 @@ interface ToolsSidebarProps {
 }
 
 export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSidebarProps) {
-  const handleCheckDeadLinks = (scope: ToolScope) => {
-    console.log('Check dead links:', scope, currentFolderId);
-    // TODO: Implement dead link checker
-  };
-
-  const handleAIReorganize = (scope: ToolScope) => {
-    console.log('AI reorganize:', scope, currentFolderId);
-    // TODO: Implement AI folder reorganization
-  };
-
-  const handleShowStatistics = (scope: ToolScope) => {
-    console.log('Show statistics:', scope);
-    // TODO: Implement bookmark statistics
+  // Handlers (Placeholders)
+  const handleToolAction = (toolName: string, scope: ToolScope) => {
+    console.log(`Tool action: ${toolName}`, scope, currentFolderId);
+    // TODO: Implement tool actions
   };
 
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-2 border-b">
+      <div className="p-2 border-b flex-shrink-0">
         <h2 className="text-sm font-semibold px-2 flex items-center gap-2">
           <Wrench className="h-4 w-4" />
           {t('tools_title') || 'Tools'}
         </h2>
       </div>
 
-      {/* Scope Legend */}
-      <div className="px-3 py-2 text-xs text-muted-foreground border-b bg-muted/30">
-        <div className="flex flex-wrap gap-2">
-          <span className="flex items-center gap-1">
-            <Folder className="h-3 w-3" /> Folder
-          </span>
-          <span className="flex items-center gap-1">
-            <Globe className="h-3 w-3" /> All
-          </span>
-          <span className="flex items-center gap-1">
-            <Folder className="h-3 w-3" />/<Globe className="h-3 w-3" /> Choose
-          </span>
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="p-3 space-y-6">
+          
+          {/* AI & Intelligence */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t('tools_category_ai') || 'AI & Intelligence'}
+            </h3>
+            
+            <ToolCard
+              icon={<FileText className="h-4 w-4 text-indigo-500" />}
+              title={t('tools_exportAI') || 'AI Context Packer'}
+              description={t('tools_exportAIDesc') || 'Export bookmarks for LLMs'}
+              buttonLabel={t('action_export') || 'Export'}
+              onClick={(scope) => handleToolAction('ai-pack', scope)}
+              scopeCapability="both"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+
+            <ToolCard
+              icon={<Tags className="h-4 w-4 text-indigo-500" />}
+              title={t('tools_autoTagging') || 'Auto-Tagging'}
+              description={t('tools_autoTaggingDesc') || 'Suggest tags for bookmarks'}
+              buttonLabel={t('action_analyze') || 'Analyze'}
+              onClick={(scope) => handleToolAction('auto-tag', scope)}
+              scopeCapability="folder"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+
+            <ToolCard
+              icon={<FileOutput className="h-4 w-4 text-indigo-500" />}
+              title={t('tools_summarizer') || 'Content Summarizer'}
+              description={t('tools_summarizerDesc') || 'Generate summaries'}
+              buttonLabel={t('action_analyze') || 'Summarize'}
+              onClick={(scope) => handleToolAction('summarize', scope)}
+              scopeCapability="folder"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+
+            <ToolCard
+              icon={<Sparkles className="h-4 w-4 text-purple-500" />}
+              title={t('tools_aiReorganize') || 'AI Reorganization'}
+              description={t('tools_aiReorganizeDesc') || 'Suggest structure'}
+              buttonLabel={t('action_analyze') || 'Reorganize'}
+              onClick={(scope) => handleToolAction('reorganize', scope)}
+              scopeCapability="folder"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+          </div>
+
+          {/* Maintenance */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t('tools_category_maintenance') || 'Maintenance'}
+            </h3>
+
+            <ToolCard
+              icon={<Copy className="h-4 w-4 text-orange-500" />}
+              title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
+              description={t('tools_findDuplicatesDesc') || 'Find duplicates'}
+              buttonLabel={t('action_scan') || 'Scan'}
+              onClick={(scope) => handleToolAction('duplicates', scope)}
+              scopeCapability="all"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+
+            <ToolCard
+              icon={<Eraser className="h-4 w-4 text-orange-500" />}
+              title={t('tools_cleanUrls') || 'URL Cleaner'}
+              description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
+              buttonLabel="Clean"
+              onClick={(scope) => handleToolAction('clean-urls', scope)}
+              scopeCapability="both"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+
+            <ToolCard
+              icon={<Link2Off className="h-4 w-4 text-orange-500" />}
+              title={t('tools_checkDeadLinks') || 'Check Dead Links'}
+              description={t('tools_checkDeadLinksDesc') || 'Find broken links'}
+              buttonLabel={t('action_scan') || 'Scan'}
+              onClick={(scope) => handleToolAction('dead-links', scope)}
+              scopeCapability="both"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+          </div>
+
+          {/* Metadata & Content */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t('tools_category_metadata') || 'Metadata'}
+            </h3>
+            
+            <ToolCard
+              icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
+              title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
+              description={t('tools_metadataFetcherDesc') || 'Fix titles & icons'}
+              buttonLabel={t('action_scan') || 'Fetch'}
+              onClick={(scope) => handleToolAction('metadata', scope)}
+              scopeCapability="both"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+          </div>
+
+          {/* Security */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t('tools_category_security') || 'Security'}
+            </h3>
+            
+            <ToolCard
+              icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
+              title={t('tools_privacyScanner') || 'Privacy Scanner'}
+              description={t('tools_privacyScannerDesc') || 'Scan for secrets'}
+              buttonLabel={t('action_scan') || 'Scan'}
+              onClick={(scope) => handleToolAction('privacy', scope)}
+              scopeCapability="all"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+          </div>
+
+          {/* Analytics */}
+          <div className="space-y-3">
+             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              Analytics
+            </h3>
+
+            <ToolCard
+              icon={<BarChart3 className="h-4 w-4 text-green-500" />}
+              title={t('tools_statistics') || 'Statistics'}
+              description={t('tools_statisticsDesc') || 'View stats'}
+              buttonLabel={t('action_view') || 'View'}
+              onClick={(scope) => handleToolAction('stats', scope)}
+              scopeCapability="both"
+              currentFolderName={currentFolderName}
+              disabled
+            />
+          </div>
         </div>
-      </div>
-
-      {/* Tool Cards */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3">
-        <ToolCard
-          icon={<Link2Off className="h-4 w-4 text-orange-500" />}
-          title={t('tools_checkDeadLinks') || 'Check Dead Links'}
-          description={
-            t('tools_checkDeadLinksDesc') ||
-            'Scan for broken or unreachable URLs'
-          }
-          buttonLabel={t('action_scan') || 'Scan'}
-          onClick={handleCheckDeadLinks}
-          scopeCapability="both"
-          currentFolderName={currentFolderName}
-          disabled
-        />
-
-        <ToolCard
-          icon={<Sparkles className="h-4 w-4 text-purple-500" />}
-          title={t('tools_aiReorganize') || 'AI Reorganization'}
-          description={
-            t('tools_aiReorganizeDesc') ||
-            'Use AI to suggest better folder structure'
-          }
-          buttonLabel={t('action_analyze') || 'Analyze'}
-          onClick={handleAIReorganize}
-          scopeCapability="folder"
-          currentFolderName={currentFolderName}
-          disabled
-        />
-
-        <ToolCard
-          icon={<BarChart3 className="h-4 w-4 text-blue-500" />}
-          title={t('tools_statistics') || 'Statistics'}
-          description={
-            t('tools_statisticsDesc') ||
-            'View stats about your bookmarks'
-          }
-          buttonLabel={t('action_view') || 'View'}
-          onClick={handleShowStatistics}
-          scopeCapability="both"
-          currentFolderName={currentFolderName}
-          disabled
-        />
       </div>
     </div>
   );
