@@ -137,7 +137,37 @@ export type MessageKey =
   | 'settingsPopupHeightDesc'
   | 'settingsTruncateLength'
   | 'settingsTruncateLengthDesc'
-  | 'settingsResults';
+  | 'settingsResults'
+  // Tools
+  | 'tools_title'
+  | 'tools_category_ai'
+  | 'tools_category_maintenance'
+  | 'tools_category_metadata'
+  | 'tools_category_security'
+  | 'tools_exportAI'
+  | 'tools_exportAIDesc'
+  | 'tools_autoTagging'
+  | 'tools_autoTaggingDesc'
+  | 'tools_summarizer'
+  | 'tools_summarizerDesc'
+  | 'tools_findDuplicates'
+  | 'tools_findDuplicatesDesc'
+  | 'tools_cleanUrls'
+  | 'tools_cleanUrlsDesc'
+  | 'tools_metadataFetcher'
+  | 'tools_metadataFetcherDesc'
+  | 'tools_privacyScanner'
+  | 'tools_privacyScannerDesc'
+  | 'tools_checkDeadLinks'
+  | 'tools_checkDeadLinksDesc'
+  | 'tools_aiReorganize'
+  | 'tools_aiReorganizeDesc'
+  | 'tools_statistics'
+  | 'tools_statisticsDesc'
+  | 'action_scan'
+  | 'action_analyze'
+  | 'action_view'
+  | 'action_export';
 
 /**
  * Get localized message.
