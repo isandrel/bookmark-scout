@@ -1,7 +1,7 @@
 /**
  * BookmarksPage - Full-page bookmark management view.
  * Overrides chrome://bookmarks with a custom data table interface.
- * Features: Sidebar tree view, breadcrumb navigation, and collapsible tools panel.
+ * Features: Left sidebar (folders), collapsible right sidebar (tools), breadcrumb navigation.
  */
 
 import { t } from '@/hooks/use-i18n';
@@ -12,18 +12,36 @@ import {
 } from '@/hooks/use-bookmarks-page';
 import { columns } from '../ui/table/columns';
 import { DataTable } from '../ui/table/data-table';
-import { ToolsPanel } from '../bookmarks/ToolsPanel';
 import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
 import { FolderTree } from '../bookmarks/FolderTree';
-import { useState } from 'react';
-import { PanelLeftClose, PanelLeft } from 'lucide-react';
+import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
+import { useState, useEffect } from 'react';
+import { PanelLeftClose, PanelLeft, PanelRightClose, PanelRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
 export default function BookmarksPage() {
   const { currentFolder, data, isLoading, error, navigateToFolder } =
     useBookmarkNavigation();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
+  const [currentFolderName, setCurrentFolderName] = useState<string | undefined>();
+
+  // Get current folder name for display
+  useEffect(() => {
+    if (!currentFolder) {
+      setCurrentFolderName(undefined);
+      return;
+    }
+
+    if (chrome?.bookmarks) {
+      chrome.bookmarks.get(currentFolder, (results) => {
+        if (results?.[0]) {
+          setCurrentFolderName(results[0].title || 'Untitled');
+        }
+      });
+    }
+  }, [currentFolder]);
 
   if (error) {
     return (
@@ -40,11 +58,11 @@ export default function BookmarksPage() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
+      {/* Left Sidebar - Folders */}
       <aside
         className={cn(
           'border-r bg-muted/30 transition-all duration-200 overflow-hidden',
-          sidebarCollapsed ? 'w-0' : 'w-64'
+          leftSidebarCollapsed ? 'w-0' : 'w-64'
         )}
       >
         <div className="w-64 h-full overflow-y-auto">
@@ -69,10 +87,11 @@ export default function BookmarksPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                onClick={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
                 className="shrink-0"
+                title={leftSidebarCollapsed ? 'Show folders' : 'Hide folders'}
               >
-                {sidebarCollapsed ? (
+                {leftSidebarCollapsed ? (
                   <PanelLeft className="h-4 w-4" />
                 ) : (
                   <PanelLeftClose className="h-4 w-4" />
@@ -83,9 +102,19 @@ export default function BookmarksPage() {
                 onNavigate={navigateToFolder}
               />
             </div>
-            <div className="border rounded-lg bg-background shrink-0">
-              <ToolsPanel />
-            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
+              className="shrink-0"
+              title={rightSidebarCollapsed ? 'Show tools' : 'Hide tools'}
+            >
+              {rightSidebarCollapsed ? (
+                <PanelRight className="h-4 w-4" />
+              ) : (
+                <PanelRightClose className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </header>
 
@@ -121,6 +150,21 @@ export default function BookmarksPage() {
           )}
         </div>
       </main>
+
+      {/* Right Sidebar - Tools */}
+      <aside
+        className={cn(
+          'border-l bg-muted/30 transition-all duration-200 overflow-hidden',
+          rightSidebarCollapsed ? 'w-0' : 'w-80'
+        )}
+      >
+        <div className="w-80 h-full overflow-y-auto">
+          <ToolsSidebar
+            currentFolderId={currentFolder}
+            currentFolderName={currentFolderName}
+          />
+        </div>
+      </aside>
     </div>
   );
 }
