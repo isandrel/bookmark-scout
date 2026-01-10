@@ -74,3 +74,17 @@ model = "gpt-4o-mini"
 
 # Auto-trigger AI recommendations when popup opens
 auto_trigger_on_open = false
+
+[export]
+# Filename settings for exported bookmark files
+filename_prefix = "bookmarks_"
+filename_max_length = 50
+
+# Indentation settings (spaces)
+json_indent_size = 2
+html_indent_spaces = 4
+markdown_indent_spaces = 2
+
+# Default export options
+include_dates_by_default = true
+include_urls_by_default = true

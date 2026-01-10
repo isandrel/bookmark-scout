@@ -1,26 +1,29 @@
 /**
  * Bookmark Export Service
  * Extensible export with strategy pattern for multiple formats.
+ * Uses config-driven settings and i18n for all user-facing text.
  */
 
 import type { BookmarkTreeNode } from '@/types';
+import { t } from '@/hooks/use-i18n';
+import { defaultSettings } from '@/lib/settings-schema';
 
 // ============================================================================
 // Export Format Interface (Strategy Pattern)
 // ============================================================================
 
 export interface ExportOptions {
-  /** Include bookmark URLs (default: true) */
+  /** Include bookmark URLs (default: from settings) */
   includeUrls?: boolean;
-  /** Include dates (default: false) */
+  /** Include dates (default: from settings) */
   includeDates?: boolean;
-  /** Indentation size for formatted output (default: 2) */
+  /** Indentation size for formatted output (default: from settings) */
   indentSize?: number;
 }
 
 export interface ExportFormat {
-  /** Display name of the format */
-  name: string;
+  /** i18n key for format name */
+  nameKey: string;
   /** File extension (without dot) */
   extension: string;
   /** MIME type for download */
@@ -37,11 +40,13 @@ export interface ExportFormat {
  * Chrome/Netscape HTML format - compatible with browser import
  */
 export const htmlFormat: ExportFormat = {
-  name: 'HTML (Chrome)',
+  nameKey: 'export_formatHtml',
   extension: 'html',
   mimeType: 'text/html',
   serialize(node: BookmarkTreeNode, options?: ExportOptions): string {
-    const includeDates = options?.includeDates ?? false;
+    const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
+    const indentSpaces = defaultSettings.exportHtmlIndentSpaces;
+    const indent = ' '.repeat(indentSpaces);
 
     const escapeHtml = (text: string): string =>
       text
@@ -51,12 +56,12 @@ export const htmlFormat: ExportFormat = {
         .replace(/"/g, '&quot;');
 
     const renderNode = (n: BookmarkTreeNode, depth: number): string => {
-      const indent = '    '.repeat(depth);
+      const nodeIndent = indent.repeat(depth);
 
       if (n.url) {
         // Bookmark
         const dateAttr = includeDates && n.dateAdded ? ` ADD_DATE="${Math.floor(n.dateAdded / 1000)}"` : '';
-        return `${indent}<DT><A HREF="${escapeHtml(n.url)}"${dateAttr}>${escapeHtml(n.title)}</A>\n`;
+        return `${nodeIndent}<DT><A HREF="${escapeHtml(n.url)}"${dateAttr}>${escapeHtml(n.title)}</A>\n`;
       }
 
       // Folder
@@ -65,18 +70,19 @@ export const htmlFormat: ExportFormat = {
         : '';
       const children = n.children?.map((c) => renderNode(c, depth + 1)).join('') ?? '';
       
-      return `${indent}<DT><H3${dateAttr}>${escapeHtml(n.title)}</H3>\n${indent}<DL><p>\n${children}${indent}</DL><p>\n`;
+      return `${nodeIndent}<DT><H3${dateAttr}>${escapeHtml(n.title)}</H3>\n${nodeIndent}<DL><p>\n${children}${nodeIndent}</DL><p>\n`;
     };
 
     const content = node.children?.map((c) => renderNode(c, 1)).join('') ?? renderNode(node, 1);
+    const htmlTitle = t('export_htmlTitle') || 'Bookmarks';
 
     return `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
      It will be read and overwritten.
      DO NOT EDIT! -->
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
-<TITLE>Bookmarks</TITLE>
-<H1>Bookmarks</H1>
+<TITLE>${htmlTitle}</TITLE>
+<H1>${htmlTitle}</H1>
 <DL><p>
 ${content}</DL><p>
 `;
@@ -87,12 +93,12 @@ ${content}</DL><p>
  * JSON format - preserves all data, easy to process programmatically
  */
 export const jsonFormat: ExportFormat = {
-  name: 'JSON',
+  nameKey: 'export_formatJson',
   extension: 'json',
   mimeType: 'application/json',
   serialize(node: BookmarkTreeNode, options?: ExportOptions): string {
-    const indentSize = options?.indentSize ?? 2;
-    const includeDates = options?.includeDates ?? true;
+    const indentSize = options?.indentSize ?? defaultSettings.exportJsonIndentSize;
+    const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
 
     const cleanNode = (n: BookmarkTreeNode): Record<string, unknown> => {
       const result: Record<string, unknown> = {
@@ -123,24 +129,26 @@ export const jsonFormat: ExportFormat = {
  * Markdown format - human-readable hierarchical list
  */
 export const markdownFormat: ExportFormat = {
-  name: 'Markdown',
+  nameKey: 'export_formatMarkdown',
   extension: 'md',
   mimeType: 'text/markdown',
   serialize(node: BookmarkTreeNode, options?: ExportOptions): string {
-    const includeUrls = options?.includeUrls ?? true;
+    const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
+    const indentSpaces = defaultSettings.exportMarkdownIndentSpaces;
+    const indent = ' '.repeat(indentSpaces);
 
     const renderNode = (n: BookmarkTreeNode, depth: number): string => {
-      const indent = '  '.repeat(depth);
+      const nodeIndent = indent.repeat(depth);
 
       if (n.url) {
         // Bookmark as link
         return includeUrls
-          ? `${indent}- [${n.title}](${n.url})\n`
-          : `${indent}- ${n.title}\n`;
+          ? `${nodeIndent}- [${n.title}](${n.url})\n`
+          : `${nodeIndent}- ${n.title}\n`;
       }
 
       // Folder
-      const header = depth === 0 ? `# ${n.title}\n\n` : `${indent}- **${n.title}**\n`;
+      const header = depth === 0 ? `# ${n.title}\n\n` : `${nodeIndent}- **${n.title}**\n`;
       const children = n.children?.map((c) => renderNode(c, depth + 1)).join('') ?? '';
       return header + children;
     };
@@ -153,11 +161,11 @@ export const markdownFormat: ExportFormat = {
  * CSV format - flat table, useful for spreadsheets
  */
 export const csvFormat: ExportFormat = {
-  name: 'CSV',
+  nameKey: 'export_formatCsv',
   extension: 'csv',
   mimeType: 'text/csv',
   serialize(node: BookmarkTreeNode, options?: ExportOptions): string {
-    const includeDates = options?.includeDates ?? true;
+    const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
     const rows: string[][] = [];
 
     const escapeCsv = (text: string): string => {
@@ -183,10 +191,19 @@ export const csvFormat: ExportFormat = {
       });
     };
 
-    // Header
+    // Header - use i18n keys
     const header = includeDates
-      ? ['Title', 'URL', 'Folder', 'Date Added']
-      : ['Title', 'URL', 'Folder'];
+      ? [
+          t('export_csvTitle') || 'Title',
+          t('export_csvUrl') || 'URL',
+          t('export_csvFolder') || 'Folder',
+          t('export_csvDateAdded') || 'Date Added',
+        ]
+      : [
+          t('export_csvTitle') || 'Title',
+          t('export_csvUrl') || 'URL',
+          t('export_csvFolder') || 'Folder',
+        ];
     rows.push(header);
 
     // Collect all bookmarks
@@ -206,6 +223,13 @@ export const exportFormats: Record<string, ExportFormat> = {
   markdown: markdownFormat,
   csv: csvFormat,
 };
+
+/**
+ * Get format display name using i18n
+ */
+export function getFormatName(format: ExportFormat): string {
+  return t(format.nameKey as Parameters<typeof t>[0]) || format.nameKey;
+}
 
 // ============================================================================
 // Export Functions
@@ -263,16 +287,19 @@ export function downloadExport(
 }
 
 /**
- * Generate a filename for export
+ * Generate a filename for export using config settings
  */
 export function generateFilename(
   folderName: string,
   format: ExportFormat
 ): string {
+  const prefix = defaultSettings.exportFilenamePrefix;
+  const maxLength = defaultSettings.exportFilenameMaxLength;
+  
   const sanitized = folderName
     .replace(/[^a-zA-Z0-9-_]/g, '_')
     .replace(/_+/g, '_')
-    .substring(0, 50);
+    .substring(0, maxLength);
   const date = new Date().toISOString().split('T')[0];
-  return `bookmarks_${sanitized}_${date}.${format.extension}`;
+  return `${prefix}${sanitized}_${date}.${format.extension}`;
 }

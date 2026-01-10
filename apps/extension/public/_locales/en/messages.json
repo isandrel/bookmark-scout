@@ -678,5 +678,41 @@
     "error_importFailed": {
         "message": "Import failed: $1",
         "description": "Error message for failed bookmark import"
+    },
+    "export_formatHtml": {
+        "message": "HTML (Chrome)",
+        "description": "Export format name for HTML/Chrome format"
+    },
+    "export_formatJson": {
+        "message": "JSON",
+        "description": "Export format name for JSON format"
+    },
+    "export_formatMarkdown": {
+        "message": "Markdown",
+        "description": "Export format name for Markdown format"
+    },
+    "export_formatCsv": {
+        "message": "CSV",
+        "description": "Export format name for CSV format"
+    },
+    "export_htmlTitle": {
+        "message": "Bookmarks",
+        "description": "Title in exported HTML bookmark file"
+    },
+    "export_csvTitle": {
+        "message": "Title",
+        "description": "CSV header for bookmark title column"
+    },
+    "export_csvUrl": {
+        "message": "URL",
+        "description": "CSV header for bookmark URL column"
+    },
+    "export_csvFolder": {
+        "message": "Folder",
+        "description": "CSV header for bookmark folder column"
+    },
+    "export_csvDateAdded": {
+        "message": "Date Added",
+        "description": "CSV header for bookmark date added column"
     }
 }
