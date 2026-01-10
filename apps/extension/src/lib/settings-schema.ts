@@ -45,6 +45,9 @@ interface TomlConfig {
     provider: string;
     model: string;
     auto_trigger_on_open: boolean;
+    max_categories?: number;
+    min_items_per_folder?: number;
+    max_items_per_folder?: number;
   };
   export: {
     filename_prefix: string;
@@ -131,6 +134,9 @@ export const settingsSchema = z.object({
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(5).default(3),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
+  aiMaxCategories: z.number().default(config.ai.max_categories ?? -1),
+  aiMinItemsPerFolder: z.number().min(1).default(config.ai.min_items_per_folder ?? 1),
+  aiMaxItemsPerFolder: z.number().default(config.ai.max_items_per_folder ?? -1),
 
   // Export - defaults from config.export
   exportFilenamePrefix: z.string().default(config.export.filename_prefix),
