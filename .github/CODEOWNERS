@@ -1,0 +1,21 @@
+# CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything
+* @isandrel
+
+# Extension code
+/apps/extension/ @isandrel
+
+# Documentation
+/apps/docs/ @isandrel
+
+# Website
+/apps/website/ @isandrel
+
+# CI/CD and GitHub config
+/.github/ @isandrel
+
+# Config files
+/config/ @isandrel
+/packages/ @isandrel
