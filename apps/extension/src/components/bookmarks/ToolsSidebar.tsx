@@ -26,10 +26,25 @@ import {
   Eraser,
   RefreshCw,
   ShieldAlert,
+  Download,
+  Upload,
 } from 'lucide-react';
 import { t } from '@/hooks/use-i18n';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import {
+  exportFormats,
+  exportBookmarks,
+  downloadExport,
+  generateFilename,
+  parseBookmarks,
+  importBookmarks,
+  detectFormat,
+  readFile,
+  getAcceptedFileTypes,
+} from '@/services';
+import { useBookmarks } from '@/hooks/use-bookmarks';
+import { useToast } from '@/hooks/use-toast';
 
 type ToolScope = 'folder' | 'all';
 type ScopeCapability = 'folder' | 'all' | 'both';
@@ -143,10 +158,107 @@ interface ToolsSidebarProps {
 }
 
 export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSidebarProps) {
+  const { folders, refresh } = useBookmarks();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [exportFormat, setExportFormat] = useState('html');
+
   // Handlers (Placeholders)
   const handleToolAction = (toolName: string, scope: ToolScope) => {
     console.log(`Tool action: ${toolName}`, scope, currentFolderId);
     // TODO: Implement tool actions
+  };
+
+  // Export handler
+  const handleExport = async () => {
+    if (!folders || folders.length === 0) return;
+    setIsExporting(true);
+
+    try {
+      const format = exportFormats[exportFormat];
+      // Create a virtual root node for export
+      const rootNode = {
+        id: '0',
+        title: 'Bookmarks',
+        children: folders,
+      };
+      const content = exportBookmarks(rootNode, format, { includeDates: true });
+      const filename = generateFilename(currentFolderName || 'all', format);
+      downloadExport(content, filename, format.mimeType);
+
+      // Count items for toast
+      let count = 0;
+      const countItems = (nodes: typeof folders) => {
+        for (const node of nodes) {
+          if (node.url) count++;
+          if (node.children) countItems(node.children);
+        }
+      };
+      countItems(folders);
+
+      toast({
+        title: t('toast_exportSuccess') || 'Export Complete',
+        description: (t('toast_exportSuccessDesc') || '$1 bookmarks exported as $2')
+          .replace('$1', String(count))
+          .replace('$2', format.name),
+      });
+    } catch (err) {
+      toast({
+        title: t('toast_exportFailed') || 'Export Failed',
+        description: err instanceof Error ? err.message : 'Unknown error',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  // Import handler
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+
+    try {
+      const format = detectFormat(file.name);
+      if (!format) {
+        throw new Error('Unsupported file format');
+      }
+
+      const content = await readFile(file);
+      const { bookmarks: parsed } = parseBookmarks(content, format);
+
+      // Import to Bookmarks Bar (folder ID "1") or current folder
+      const targetId = currentFolderId || '1';
+      const { created, errors } = await importBookmarks(parsed, targetId);
+
+      if (errors.length > 0) {
+        console.warn('Import errors:', errors);
+      }
+
+      await refresh();
+
+      toast({
+        title: t('toast_importSuccess') || 'Import Complete',
+        description: (t('toast_importSuccessDesc') || '$1 items imported successfully')
+          .replace('$1', String(created)),
+      });
+    } catch (err) {
+      toast({
+        title: t('toast_importFailed') || 'Import Failed',
+        description: err instanceof Error ? err.message : 'Unknown error',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsImporting(false);
+      // Reset input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
   };
 
   return (
@@ -306,6 +418,101 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               currentFolderName={currentFolderName}
               disabled
             />
+          </div>
+
+          {/* Data (Export/Import) */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
+              {t('tools_category_data') || 'Data'}
+            </h3>
+
+            {/* Export Tool */}
+            <div className="p-3 rounded-lg border bg-card space-y-2">
+              <div className="flex items-start gap-2">
+                <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
+                  <Download className="h-4 w-4 text-emerald-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-medium truncate">
+                      {t('tools_export') || 'Export Bookmarks'}
+                    </h4>
+                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
+                      <Folder className="h-3 w-3" />
+                      <span>/</span>
+                      <Globe className="h-3 w-3" />
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                    {t('tools_exportDesc') || 'Export bookmarks to HTML, JSON, Markdown, or CSV'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Select value={exportFormat} onValueChange={setExportFormat}>
+                  <SelectTrigger className="flex-1 h-8 text-xs">
+                    <SelectValue placeholder="Format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(exportFormats).map(([key, format]) => (
+                      <SelectItem key={key} value={key}>
+                        {format.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={handleExport}
+                  disabled={isExporting || folders.length === 0}
+                  className="h-8 text-xs"
+                >
+                  {isExporting ? 'Exporting...' : t('action_export') || 'Export'}
+                </Button>
+              </div>
+            </div>
+
+            {/* Import Tool */}
+            <div className="p-3 rounded-lg border bg-card space-y-2">
+              <div className="flex items-start gap-2">
+                <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
+                  <Upload className="h-4 w-4 text-emerald-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-medium truncate">
+                      {t('tools_import') || 'Import Bookmarks'}
+                    </h4>
+                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                      <Folder className="h-3 w-3" />
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                    {t('tools_importDesc') || 'Import bookmarks from HTML or JSON file'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept={getAcceptedFileTypes()}
+                  onChange={handleImport}
+                  className="hidden"
+                  id="bookmark-import-input"
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isImporting}
+                  className="h-8 text-xs w-full"
+                >
+                  {isImporting ? 'Importing...' : t('action_import') || 'Import'}
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
