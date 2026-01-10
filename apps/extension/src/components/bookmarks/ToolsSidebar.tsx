@@ -43,9 +43,15 @@ import {
   detectFormat,
   readFile,
   getAcceptedFileTypes,
+  generateReorganizationPlan,
+  applyReorganizationPlan,
+  type ReorganizationPlan,
 } from '@/services';
+import { defaultSettings } from '@/lib/settings-schema';
+import { useSetting } from '@/lib';
 import { useBookmarks } from '@/hooks/use-bookmarks';
 import { useToast } from '@/hooks/use-toast';
+import { ReorganizationDialog } from './ReorganizationDialog';
 
 type ToolScope = 'folder' | 'all';
 type ScopeCapability = 'folder' | 'all' | 'both';
@@ -166,10 +172,59 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [isImporting, setIsImporting] = useState(false);
   const [exportFormat, setExportFormat] = useState('html');
 
+  // AI Reorganization state
+  const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
+  const [reorgPlan, setReorgPlan] = useState<ReorganizationPlan | null>(null);
+  const [reorgLoading, setReorgLoading] = useState(false);
+  const [reorgErrors, setReorgErrors] = useState<string[]>([]);
+
+  // Get actual AI settings from storage
+  const { value: aiEnabled } = useSetting('aiEnabled');
+  const { value: aiProvider } = useSetting('aiProvider');
+  const { value: aiModel } = useSetting('aiModel');
+
   // Handlers (Placeholders)
-  const handleToolAction = (toolName: string, scope: ToolScope) => {
+  const handleToolAction = async (toolName: string, scope: ToolScope) => {
     console.log(`Tool action: ${toolName}`, scope, currentFolderId);
-    // TODO: Implement tool actions
+    console.log('Folders from hook:', folders?.length, folders);
+    
+    if (toolName === 'reorganize') {
+      // Open dialog and start analyzing
+      setReorgDialogOpen(true);
+      setReorgLoading(true);
+      setReorgPlan(null);
+      setReorgErrors([]);
+      
+      try {
+        const targetFolders = scope === 'folder' && currentFolderId
+          ? folders?.filter(f => f.id === currentFolderId) || []
+          : folders || [];
+        
+        console.log('Target folders for AI:', targetFolders.length, targetFolders);
+        
+        // Get API key from storage (same as PopupPage)
+        const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
+        if (!aiApiKey) {
+          setReorgErrors(['API key not configured. Please set it in Options → AI.']);
+          setReorgLoading(false);
+          return;
+        }
+
+        const aiSettings = {
+          enabled: aiEnabled,
+          provider: aiProvider as 'openai' | 'anthropic' | 'google',
+          model: aiModel,
+          apiKey: aiApiKey as string,
+        };
+        
+        const plan = await generateReorganizationPlan(targetFolders, aiSettings);
+        setReorgPlan(plan);
+      } catch (err) {
+        setReorgErrors([err instanceof Error ? err.message : 'Failed to analyze bookmarks']);
+      } finally {
+        setReorgLoading(false);
+      }
+    }
   };
 
   // Export handler
@@ -317,13 +372,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
             <ToolCard
               icon={<Sparkles className="h-4 w-4 text-purple-500" />}
-              title={t('tools_aiReorganize') || 'AI Reorganization'}
-              description={t('tools_aiReorganizeDesc') || 'Suggest structure'}
-              buttonLabel={t('action_analyze') || 'Reorganize'}
+              title={t('tools_aiReorganize') || 'AI Folder Reorganization'}
+              description={t('tools_aiReorganizeDesc') || 'Use AI to suggest a better folder structure'}
+              buttonLabel={t('action_analyze') || 'Analyze'}
               onClick={(scope) => handleToolAction('reorganize', scope)}
-              scopeCapability="folder"
+              scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={reorgLoading}
             />
           </div>
 
@@ -517,6 +572,31 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           </div>
         </div>
       </div>
+
+      {/* AI Reorganization Dialog */}
+      <ReorganizationDialog
+        open={reorgDialogOpen}
+        onOpenChange={setReorgDialogOpen}
+        plan={reorgPlan}
+        isLoading={reorgLoading}
+        errors={reorgErrors}
+        onApply={async () => {
+          if (reorgPlan) {
+            const result = await applyReorganizationPlan(reorgPlan);
+            if (result.success) {
+              await refresh();
+              setReorgDialogOpen(false);
+              toast({
+                title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
+                description: t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
+              });
+            } else {
+              setReorgErrors(result.errors);
+            }
+          }
+        }}
+        onCancel={() => setReorgDialogOpen(false)}
+      />
     </div>
   );
 }

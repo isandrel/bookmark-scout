@@ -189,7 +189,24 @@ export type MessageKey =
   | 'export_csvTitle'
   | 'export_csvUrl'
   | 'export_csvFolder'
-  | 'export_csvDateAdded';
+  | 'export_csvDateAdded'
+  | 'action_cancel'
+  | 'ai_reorganizationTitle'
+  | 'ai_reorganizationDesc'
+  | 'ai_analyzing'
+  | 'ai_noChangesNeeded'
+  | 'ai_applying'
+  | 'ai_applyChanges'
+  | 'toast_reorganizeSuccess'
+  | 'toast_reorganizeSuccessDesc'
+  | 'ai_promptFolderRecommendation'
+  | 'ai_promptFolderRecommendationDesc'
+  | 'ai_promptFolderReorganization'
+  | 'ai_promptFolderReorganizationDesc'
+  | 'ai_promptAutoTagging'
+  | 'ai_promptAutoTaggingDesc'
+  | 'ai_promptSummarization'
+  | 'ai_promptSummarizationDesc';
 
 /**
  * Get localized message.

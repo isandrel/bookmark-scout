@@ -714,5 +714,61 @@
     "export_csvDateAdded": {
         "message": "Date Added",
         "description": "CSV header for bookmark date added column"
+    },
+    "ai_reorganizationTitle": {
+        "message": "AI Folder Reorganization",
+        "description": "Title for AI reorganization dialog"
+    },
+    "ai_reorganizationDesc": {
+        "message": "Review the suggested changes before applying. No changes will be made until you approve.",
+        "description": "Description for AI reorganization dialog"
+    },
+    "ai_analyzing": {
+        "message": "Analyzing bookmarks...",
+        "description": "Loading text while AI analyzes bookmarks"
+    },
+    "ai_noChangesNeeded": {
+        "message": "Your bookmarks are already well organized!",
+        "description": "Message when no reorganization is needed"
+    },
+    "ai_applying": {
+        "message": "Applying...",
+        "description": "Button text while applying changes"
+    },
+    "ai_applyChanges": {
+        "message": "Apply Changes",
+        "description": "Button text to apply reorganization changes"
+    },
+    "ai_promptFolderRecommendation": {
+        "message": "Folder Recommendation",
+        "description": "Name for folder recommendation prompt"
+    },
+    "ai_promptFolderRecommendationDesc": {
+        "message": "Suggests the best folder for a new bookmark",
+        "description": "Description for folder recommendation prompt"
+    },
+    "ai_promptFolderReorganization": {
+        "message": "Folder Reorganization",
+        "description": "Name for folder reorganization prompt"
+    },
+    "ai_promptFolderReorganizationDesc": {
+        "message": "Analyzes and restructures bookmark folders",
+        "description": "Description for folder reorganization prompt"
+    },
+    "ai_promptAutoTagging": {
+        "message": "Auto Tagging",
+        "description": "Name for auto tagging prompt"
+    },
+    "ai_promptAutoTaggingDesc": {
+        "message": "Suggests tags for bookmarks based on content",
+        "description": "Description for auto tagging prompt"
+    },
+    "ai_promptSummarization": {
+        "message": "Content Summary",
+        "description": "Name for summarization prompt"
+    },
+    "ai_promptSummarizationDesc": {
+        "message": "Generates brief descriptions for bookmarks",
+        "description": "Description for summarization prompt"
     }
 }

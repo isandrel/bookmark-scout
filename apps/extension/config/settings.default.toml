@@ -75,16 +75,29 @@ model = "gpt-4o-mini"
 # Auto-trigger AI recommendations when popup opens
 auto_trigger_on_open = false
 
+# Reorganization settings (-1 = no limit)
+max_categories       = -1
+max_items_per_folder = -1
+min_items_per_folder = 1
+
+# Custom prompts (leave empty to use defaults)
+# Users can edit in options page
+[ai.custom_prompts]
+# folder_recommendation = ""
+# folder_reorganization = ""
+# auto_tagging = ""
+# summarization = ""
+
 [export]
 # Filename settings for exported bookmark files
-filename_prefix = "bookmarks_"
 filename_max_length = 50
+filename_prefix     = "bookmarks_"
 
 # Indentation settings (spaces)
-json_indent_size = 2
-html_indent_spaces = 4
+html_indent_spaces     = 4
+json_indent_size       = 2
 markdown_indent_spaces = 2
 
 # Default export options
 include_dates_by_default = true
-include_urls_by_default = true
+include_urls_by_default  = true
