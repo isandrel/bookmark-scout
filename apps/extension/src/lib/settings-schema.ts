@@ -58,6 +58,10 @@ interface TomlConfig {
     include_dates_by_default: boolean;
     include_urls_by_default: boolean;
   };
+  context_menu: {
+    enabled: boolean;
+    bookmark_naming: string;
+  };
 }
 
 const config = parse(settingsToml) as TomlConfig;
@@ -146,6 +150,12 @@ export const settingsSchema = z.object({
   exportMarkdownIndentSpaces: z.number().min(1).max(8).default(config.export.markdown_indent_spaces),
   exportIncludeDates: z.boolean().default(config.export.include_dates_by_default),
   exportIncludeUrls: z.boolean().default(config.export.include_urls_by_default),
+
+  // Context Menu - defaults from config.context_menu
+  contextMenuEnabled: z.boolean().default(config.context_menu.enabled),
+  contextMenuBookmarkNaming: z.enum(['link_text', 'page_title', 'link_url']).default(
+    config.context_menu.bookmark_naming as 'link_text' | 'page_title' | 'link_url'
+  ),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
