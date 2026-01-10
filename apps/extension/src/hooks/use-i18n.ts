@@ -180,7 +180,16 @@ export type MessageKey =
   | 'action_analyze'
   | 'action_view'
   | 'action_export'
-  | 'action_import';
+  | 'action_import'
+  | 'export_formatHtml'
+  | 'export_formatJson'
+  | 'export_formatMarkdown'
+  | 'export_formatCsv'
+  | 'export_htmlTitle'
+  | 'export_csvTitle'
+  | 'export_csvUrl'
+  | 'export_csvFolder'
+  | 'export_csvDateAdded';
 
 /**
  * Get localized message.

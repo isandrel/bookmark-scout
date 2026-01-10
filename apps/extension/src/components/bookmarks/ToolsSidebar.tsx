@@ -37,6 +37,7 @@ import {
   exportBookmarks,
   downloadExport,
   generateFilename,
+  getFormatName,
   parseBookmarks,
   importBookmarks,
   detectFormat,
@@ -202,7 +203,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         title: t('toast_exportSuccess') || 'Export Complete',
         description: (t('toast_exportSuccessDesc') || '$1 bookmarks exported as $2')
           .replace('$1', String(count))
-          .replace('$2', format.name),
+          .replace('$2', getFormatName(format)),
       });
     } catch (err) {
       toast({
@@ -456,7 +457,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                   <SelectContent>
                     {Object.entries(exportFormats).map(([key, format]) => (
                       <SelectItem key={key} value={key}>
-                        {format.name}
+                        {getFormatName(format)}
                       </SelectItem>
                     ))}
                   </SelectContent>

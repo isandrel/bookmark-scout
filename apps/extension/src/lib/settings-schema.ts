@@ -46,6 +46,15 @@ interface TomlConfig {
     model: string;
     auto_trigger_on_open: boolean;
   };
+  export: {
+    filename_prefix: string;
+    filename_max_length: number;
+    json_indent_size: number;
+    html_indent_spaces: number;
+    markdown_indent_spaces: number;
+    include_dates_by_default: boolean;
+    include_urls_by_default: boolean;
+  };
 }
 
 const config = parse(settingsToml) as TomlConfig;
@@ -122,6 +131,15 @@ export const settingsSchema = z.object({
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(5).default(3),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
+
+  // Export - defaults from config.export
+  exportFilenamePrefix: z.string().default(config.export.filename_prefix),
+  exportFilenameMaxLength: z.number().min(10).max(100).default(config.export.filename_max_length),
+  exportJsonIndentSize: z.number().min(1).max(8).default(config.export.json_indent_size),
+  exportHtmlIndentSpaces: z.number().min(1).max(8).default(config.export.html_indent_spaces),
+  exportMarkdownIndentSpaces: z.number().min(1).max(8).default(config.export.markdown_indent_spaces),
+  exportIncludeDates: z.boolean().default(config.export.include_dates_by_default),
+  exportIncludeUrls: z.boolean().default(config.export.include_urls_by_default),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;
@@ -191,6 +209,11 @@ export const settingsCategories = {
     label: 'AI',
     description: 'AI-powered folder recommendations',
     fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiProvider', 'aiModel', 'aiMaxRecommendations'] as const,
+  },
+  export: {
+    label: 'Export',
+    description: 'Bookmark export settings',
+    fields: ['exportFilenamePrefix', 'exportFilenameMaxLength', 'exportJsonIndentSize', 'exportIncludeDates', 'exportIncludeUrls'] as const,
   },
 } as const;
 
@@ -605,6 +628,55 @@ export const settingsFieldMeta: Record<
   aiAutoTriggerOnOpen: {
     label: 'Auto-recommend on Open',
     description: 'Automatically suggest folders when popup opens',
+    type: 'switch',
+  },
+
+  // Export
+  exportFilenamePrefix: {
+    label: 'Filename Prefix',
+    description: 'Prefix for exported bookmark files',
+    type: 'text',
+  },
+  exportFilenameMaxLength: {
+    label: 'Max Filename Length',
+    description: 'Maximum characters in exported filename',
+    type: 'number',
+    min: 10,
+    max: 100,
+    step: 5,
+  },
+  exportJsonIndentSize: {
+    label: 'JSON Indent Size',
+    description: 'Spaces for JSON formatting',
+    type: 'number',
+    min: 1,
+    max: 8,
+    step: 1,
+  },
+  exportHtmlIndentSpaces: {
+    label: 'HTML Indent Size',
+    description: 'Spaces for HTML formatting',
+    type: 'number',
+    min: 1,
+    max: 8,
+    step: 1,
+  },
+  exportMarkdownIndentSpaces: {
+    label: 'Markdown Indent Size',
+    description: 'Spaces for Markdown formatting',
+    type: 'number',
+    min: 1,
+    max: 8,
+    step: 1,
+  },
+  exportIncludeDates: {
+    label: 'Include Dates',
+    description: 'Include creation dates in exports',
+    type: 'switch',
+  },
+  exportIncludeUrls: {
+    label: 'Include URLs',
+    description: 'Include bookmark URLs in exports',
     type: 'switch',
   },
 };
