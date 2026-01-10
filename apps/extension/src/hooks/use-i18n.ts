@@ -164,10 +164,23 @@ export type MessageKey =
   | 'tools_aiReorganizeDesc'
   | 'tools_statistics'
   | 'tools_statisticsDesc'
+  | 'tools_category_data'
+  | 'tools_export'
+  | 'tools_exportDesc'
+  | 'tools_import'
+  | 'tools_importDesc'
+  | 'toast_exportSuccess'
+  | 'toast_exportSuccessDesc'
+  | 'toast_exportFailed'
+  | 'toast_importSuccess'
+  | 'toast_importSuccessDesc'
+  | 'toast_importFailed'
+  | 'error_importFailed'
   | 'action_scan'
   | 'action_analyze'
   | 'action_view'
-  | 'action_export';
+  | 'action_export'
+  | 'action_import';
 
 /**
  * Get localized message.

@@ -638,5 +638,45 @@
     "tools_privacyScannerDesc": {
         "message": "Detect sensitive data in URLs",
         "description": "Description for Privacy Scanner tool"
+    },
+    "tools_category_data": {
+        "message": "Data",
+        "description": "Data tools category for import/export"
+    },
+    "tools_export": {
+        "message": "Export Bookmarks",
+        "description": "Export bookmarks tool title"
+    },
+    "tools_exportDesc": {
+        "message": "Export bookmarks to HTML, JSON, Markdown, or CSV",
+        "description": "Export bookmarks tool description"
+    },
+    "tools_import": {
+        "message": "Import Bookmarks",
+        "description": "Import bookmarks tool title"
+    },
+    "tools_importDesc": {
+        "message": "Import bookmarks from HTML or JSON file",
+        "description": "Import bookmarks tool description"
+    },
+    "toast_exportSuccess": {
+        "message": "Export Complete",
+        "description": "Toast title for successful bookmark export"
+    },
+    "toast_exportSuccessDesc": {
+        "message": "$1 bookmarks exported as $2",
+        "description": "Toast description for successful bookmark export"
+    },
+    "toast_importSuccess": {
+        "message": "Import Complete",
+        "description": "Toast title for successful bookmark import"
+    },
+    "toast_importSuccessDesc": {
+        "message": "$1 items imported successfully",
+        "description": "Toast description for successful bookmark import"
+    },
+    "error_importFailed": {
+        "message": "Import failed: $1",
+        "description": "Error message for failed bookmark import"
     }
 }
