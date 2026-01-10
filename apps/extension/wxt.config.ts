@@ -26,7 +26,7 @@ export default defineConfig({
                 48: 'icon-48.png',
             },
         },
-        permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel'],
+        permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel', 'contextMenus'],
         web_accessible_resources: [
             {
                 resources: ['_favicon/*'],

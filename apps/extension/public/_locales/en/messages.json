@@ -770,5 +770,57 @@
     "ai_promptSummarizationDesc": {
         "message": "Generates brief descriptions for bookmarks",
         "description": "Description for summarization prompt"
+    },
+    "contextMenu_saveToFolder": {
+        "message": "Save bookmark to...",
+        "description": "Root context menu item title"
+    },
+    "contextMenu_noFolders": {
+        "message": "No folders available",
+        "description": "Placeholder when no folders to show"
+    },
+    "contextMenu_bookmarksBar": {
+        "message": "Bookmarks Bar",
+        "description": "Bookmarks bar folder name"
+    },
+    "toast_linkSaved": {
+        "message": "Link Saved",
+        "description": "Toast title when link saved via context menu"
+    },
+    "toast_linkSavedDesc": {
+        "message": "\"$1\" added to \"$2\"",
+        "description": "Toast description for link saved"
+    },
+    "toast_linkSaveFailed": {
+        "message": "Failed to save link",
+        "description": "Toast title when link save fails"
+    },
+    "settings_contextMenuEnabled": {
+        "message": "Context Menu",
+        "description": "Context menu enabled setting label"
+    },
+    "settings_contextMenuEnabledDesc": {
+        "message": "Show right-click menu for quick bookmark saving",
+        "description": "Context menu enabled setting description"
+    },
+    "settings_contextMenuNaming": {
+        "message": "Bookmark Name Source",
+        "description": "Context menu bookmark naming setting label"
+    },
+    "settings_contextMenuNamingDesc": {
+        "message": "What to use as the bookmark title when saving via right-click",
+        "description": "Context menu bookmark naming setting description"
+    },
+    "settings_namingLinkText": {
+        "message": "Link text",
+        "description": "Use link text for bookmark name"
+    },
+    "settings_namingPageTitle": {
+        "message": "Page title",
+        "description": "Use page title for bookmark name"
+    },
+    "settings_namingLinkUrl": {
+        "message": "Link URL",
+        "description": "Use link URL for bookmark name"
     }
 }
