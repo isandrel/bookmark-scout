@@ -15,6 +15,12 @@ import {
 } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 
+export interface SearchOptions {
+  matchCase: boolean;
+  wholeWord: boolean;
+  useRegex: boolean;
+}
+
 interface BookmarkState {
   // State
   folders: BookmarkTreeNode[];
@@ -23,6 +29,7 @@ interface BookmarkState {
   error: string | null;
   query: string;
   debouncedQuery: string;
+  searchOptions: SearchOptions;
   expandedFolders: string[];
   forceExpandAll: boolean;
   draggedItem: BookmarkTreeNode | null;
@@ -35,6 +42,7 @@ interface BookmarkState {
   setDebouncedQuery: (query: string) => void;
   setExpandedFolders: (folders: string[] | ((prev: string[]) => string[])) => void;
   setForceExpandAll: (expand: boolean) => void;
+  setSearchOptions: (options: Partial<SearchOptions>) => void;
   setDraggedItem: (item: BookmarkTreeNode | null) => void;
   setCreatingFolderId: (id: string | null) => void;
   setNewFolderName: (name: string) => void;
@@ -66,6 +74,7 @@ export const useBookmarkStore = create<BookmarkState>()(
       error: null,
       query: '',
       debouncedQuery: '',
+      searchOptions: { matchCase: false, wholeWord: false, useRegex: false },
       expandedFolders: [],
       forceExpandAll: false,
       draggedItem: null,
@@ -101,6 +110,10 @@ export const useBookmarkStore = create<BookmarkState>()(
       },
       setForceExpandAll: (forceExpandAll) => {
         set({ forceExpandAll });
+        get().applyFilter();
+      },
+      setSearchOptions: (options) => {
+        set((state) => ({ searchOptions: { ...state.searchOptions, ...options } }));
         get().applyFilter();
       },
       setDraggedItem: (draggedItem) => set({ draggedItem }),
@@ -281,7 +294,7 @@ export const useBookmarkStore = create<BookmarkState>()(
 
       // Filter helpers
       filterFolders: (nodes, searchQuery) => {
-        const { forceExpandAll } = get();
+        const { forceExpandAll, searchOptions } = get();
 
         if (!searchQuery) return nodes;
 
@@ -294,9 +307,54 @@ export const useBookmarkStore = create<BookmarkState>()(
           return nodes.map(deepCopy);
         }
 
+        // Build match function based on search options
+        const createMatcher = (query: string): ((text: string) => boolean) => {
+          try {
+            if (searchOptions.useRegex) {
+              const flags = searchOptions.matchCase ? '' : 'i';
+              const pattern = searchOptions.wholeWord ? `\\b${query}\\b` : query;
+              const regex = new RegExp(pattern, flags);
+              return (text: string) => regex.test(text);
+            } else {
+              let pattern = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special chars
+              if (searchOptions.wholeWord) {
+                pattern = `\\b${pattern}\\b`;
+              }
+              const flags = searchOptions.matchCase ? '' : 'i';
+              const regex = new RegExp(pattern, flags);
+              return (text: string) => regex.test(text);
+            }
+          } catch {
+            // Invalid regex, fall back to simple includes
+            return (text: string) =>
+              searchOptions.matchCase
+                ? text.includes(query)
+                : text.toLowerCase().includes(query.toLowerCase());
+          }
+        };
+
+        const matches = createMatcher(searchQuery);
+
+        // Build highlight function
+        const highlightText = (text: string, query: string): string => {
+          try {
+            let pattern: string;
+            if (searchOptions.useRegex) {
+              pattern = searchOptions.wholeWord ? `\\b(${query})\\b` : `(${query})`;
+            } else {
+              const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+              pattern = searchOptions.wholeWord ? `\\b(${escaped})\\b` : `(${escaped})`;
+            }
+            const flags = searchOptions.matchCase ? 'g' : 'gi';
+            return text.replace(new RegExp(pattern, flags), '<b>$1</b>');
+          } catch {
+            return text;
+          }
+        };
+
         const filtered: BookmarkTreeNode[] = [];
         for (const node of nodes) {
-          const nodeMatches = node.title.toLowerCase().includes(searchQuery.toLowerCase());
+          const nodeMatches = matches(node.title);
 
           if (node.children) {
             const filteredChildren = get().filterFolders(node.children, searchQuery);
@@ -304,16 +362,10 @@ export const useBookmarkStore = create<BookmarkState>()(
             if (nodeMatches || filteredChildren.length > 0) {
               const childrenToInclude = nodeMatches
                 ? node.children.map((child) => {
-                    if (
-                      child.children &&
-                      child.title.toLowerCase().includes(searchQuery.toLowerCase())
-                    ) {
+                    if (child.children && matches(child.title)) {
                       return {
                         ...child,
-                        title: child.title.replace(
-                          new RegExp(`(${searchQuery})`, 'gi'),
-                          '<b>$1</b>',
-                        ),
+                        title: highlightText(child.title, searchQuery),
                         isOpen: true,
                       };
                     }
@@ -323,16 +375,11 @@ export const useBookmarkStore = create<BookmarkState>()(
 
               const shouldExpand =
                 !nodeMatches ||
-                node.children?.some(
-                  (child) =>
-                    child.children && child.title.toLowerCase().includes(searchQuery.toLowerCase()),
-                );
+                node.children?.some((child) => child.children && matches(child.title));
 
               filtered.push({
                 ...node,
-                title: nodeMatches
-                  ? node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>')
-                  : node.title,
+                title: nodeMatches ? highlightText(node.title, searchQuery) : node.title,
                 children: childrenToInclude,
                 isOpen: shouldExpand,
               });
@@ -340,7 +387,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           } else if (nodeMatches) {
             filtered.push({
               ...node,
-              title: node.title.replace(new RegExp(`(${searchQuery})`, 'gi'), '<b>$1</b>'),
+              title: highlightText(node.title, searchQuery),
             });
           }
         }

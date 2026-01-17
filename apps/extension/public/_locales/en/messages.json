@@ -822,5 +822,17 @@
     "settings_namingLinkUrl": {
         "message": "Link URL",
         "description": "Use link URL for bookmark name"
+    },
+    "search_matchCase": {
+        "message": "Match Case",
+        "description": "Toggle case-sensitive search"
+    },
+    "search_matchWholeWord": {
+        "message": "Match Whole Word",
+        "description": "Toggle whole word matching"
+    },
+    "search_useRegex": {
+        "message": "Use Regular Expression",
+        "description": "Toggle regex search mode"
     }
 }
