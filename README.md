@@ -87,7 +87,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### ✅ Implemented
 
-- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, or Google AI
+- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, or Ollama
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
@@ -103,7 +103,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 > AI-powered folder recommendations are **disabled by default** and require manual opt-in:
 >
 > 1. Go to **Settings → AI** tab
-> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, or Google)
+> 2. Enable AI features and select your preferred provider (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, or Ollama)
 > 3. Enter your own API key from your provider's dashboard
 >
 > ⚠️ **Note:** This feature uses third-party AI services. Your bookmark titles and URLs are sent to the selected AI provider for processing. API usage may incur costs depending on your provider's pricing. Results are experimental and may vary in accuracy.

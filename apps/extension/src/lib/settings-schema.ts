@@ -136,7 +136,7 @@ export const settingsSchema = z.object({
 
   // AI - defaults from config.ai
   aiEnabled: z.boolean().default(config.ai.enabled),
-  aiProvider: z.enum(['openai', 'anthropic', 'google']).default(config.ai.provider as 'openai' | 'anthropic' | 'google'),
+  aiProvider: z.enum(['openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek', 'ollama']).default(config.ai.provider as AIProvider),
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(5).default(3),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
@@ -423,7 +423,7 @@ export function getSettingsFieldMeta(): Record<
       description: 'AI model to use',
       type: 'select',
       // Note: This shows all models; UI should filter based on selected provider
-      options: (['openai', 'anthropic', 'google'] as const).flatMap((provider) =>
+      options: (['openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek', 'ollama'] as const).flatMap((provider) =>
         getModelsForProvider(provider).map((m) => ({
           value: m.id,
           label: `${m.name} (${getProviderName(provider)})`,
@@ -619,7 +619,7 @@ export const settingsFieldMeta: Record<
     description: 'AI model to use',
     type: 'select',
     // Note: This shows all models; UI should filter based on selected provider
-    options: (['openai', 'anthropic', 'google'] as AIProvider[]).flatMap((provider) =>
+    options: (['openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek', 'ollama'] as AIProvider[]).flatMap((provider) =>
       getModelsForProvider(provider).map((m) => ({
         value: m.id,
         label: `${m.name} (${getProviderName(provider)})`,

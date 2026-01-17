@@ -81,11 +81,14 @@ min_items_per_folder = 1
 # AI Providers Configuration
 # Add or modify providers and their models here for extensibility.
 # Each provider needs: id, name, default_model, and a list of models.
+# Optional: api_key_pattern (regex), api_key_placeholder
 # ============================================================================
 
 [ai.providers.openai]
 name = "OpenAI"
 default_model = "gpt-4o-mini"
+api_key_pattern = "^sk-"
+api_key_placeholder = "sk-..."
 
 [[ai.providers.openai.models]]
 id = "gpt-4o-mini"
@@ -115,6 +118,8 @@ description = "Reasoning model"
 [ai.providers.anthropic]
 name = "Anthropic"
 default_model = "claude-sonnet-4-20250514"
+api_key_pattern = "^sk-ant-"
+api_key_placeholder = "sk-ant-..."
 
 [[ai.providers.anthropic.models]]
 id = "claude-sonnet-4-20250514"
@@ -134,6 +139,7 @@ description = "Fast & cheap"
 [ai.providers.google]
 name = "Google"
 default_model = "gemini-2.5-flash"
+api_key_placeholder = "AI..."
 
 [[ai.providers.google.models]]
 id = "gemini-2.5-flash"
@@ -154,6 +160,92 @@ description = "Fast frontier"
 id = "gemini-3-pro"
 name = "Gemini 3 Pro"
 description = "Best reasoning"
+
+[ai.providers.groq]
+name = "Groq"
+default_model = "llama-3.3-70b-versatile"
+api_key_pattern = "^gsk_"
+api_key_placeholder = "gsk_..."
+
+[[ai.providers.groq.models]]
+id = "llama-3.3-70b-versatile"
+name = "Llama 3.3 70B"
+description = "Fast & Capable"
+
+[[ai.providers.groq.models]]
+id = "llama-3.1-8b-instant"
+name = "Llama 3.1 8B"
+description = "Super Fast"
+
+[[ai.providers.groq.models]]
+id = "mixtral-8x7b-32768"
+name = "Mixtral 8x7B"
+description = "Good Balance"
+
+[[ai.providers.groq.models]]
+id = "gemma2-9b-it"
+name = "Gemma 2 9B"
+description = "Google's Open Model"
+
+[ai.providers.mistral]
+name = "Mistral AI"
+default_model = "mistral-large-latest"
+api_key_placeholder = "..."
+
+[[ai.providers.mistral.models]]
+id = "mistral-large-latest"
+name = "Mistral Large"
+description = "Flagship"
+
+[[ai.providers.mistral.models]]
+id = "mistral-small-latest"
+name = "Mistral Small"
+description = "Efficient"
+
+[[ai.providers.mistral.models]]
+id = "codestral-latest"
+name = "Codestral"
+description = "Code Specialist"
+
+[ai.providers.deepseek]
+name = "DeepSeek"
+default_model = "deepseek-chat"
+api_key_placeholder = "sk-..."
+
+[[ai.providers.deepseek.models]]
+id = "deepseek-chat"
+name = "DeepSeek V3"
+description = "General Chat"
+
+[[ai.providers.deepseek.models]]
+id = "deepseek-reasoner"
+name = "DeepSeek R1"
+description = "Reasoning"
+
+[ai.providers.ollama]
+name = "Ollama (Local)"
+default_model = "llama3"
+api_key_placeholder = "(Optional)"
+
+[[ai.providers.ollama.models]]
+id = "llama3"
+name = "Llama 3"
+description = "Meta's Llama 3"
+
+[[ai.providers.ollama.models]]
+id = "mistral"
+name = "Mistral"
+description = "Mistral 7B"
+
+[[ai.providers.ollama.models]]
+id = "gemma"
+name = "Gemma"
+description = "Google's Gemma"
+
+[[ai.providers.ollama.models]]
+id = "deepseek-r1"
+name = "DeepSeek R1"
+description = "Reasoning (Local)"
 
 # Custom prompts (leave empty to use defaults)
 # Users can edit in options page

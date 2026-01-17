@@ -204,7 +204,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         
         // Get API key from storage (same as PopupPage)
         const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
-        if (!aiApiKey) {
+        
+        // Skip API key check for Ollama
+        if (!aiApiKey && aiProvider !== 'ollama') {
           setReorgErrors(['API key not configured. Please set it in Options → AI.']);
           setReorgLoading(false);
           return;
@@ -212,7 +214,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
         const aiSettings = {
           enabled: aiEnabled,
-          provider: aiProvider as 'openai' | 'anthropic' | 'google',
+          provider: aiProvider as AIProvider,
           model: aiModel,
           apiKey: aiApiKey as string,
         };
