@@ -13,14 +13,16 @@ export interface AIModel {
   description?: string;
 }
 
-interface ProviderConfig {
+export interface AIProviderConfig {
   name: string;
   default_model: string;
   models: AIModel[];
+  api_key_pattern?: string;
+  api_key_placeholder?: string;
 }
 
 interface AIConfig {
-  providers: Record<string, ProviderConfig>;
+  providers: Record<string, AIProviderConfig>;
 }
 
 interface TomlConfig {
@@ -57,6 +59,10 @@ export const AI_MODELS: Record<AIProvider, AIModel[]> = (() => {
     openai: result.openai || [],
     anthropic: result.anthropic || [],
     google: result.google || [],
+    groq: result.groq || [],
+    mistral: result.mistral || [],
+    deepseek: result.deepseek || [],
+    ollama: result.ollama || [],
   };
 })();
 
@@ -68,15 +74,12 @@ export function getDefaultModel(provider: AIProvider): string {
   if (providerConfig?.default_model) {
     return providerConfig.default_model;
   }
-  // Fallback defaults if config is missing
-  switch (provider) {
-    case 'openai':
-      return 'gpt-4o-mini';
-    case 'anthropic':
-      return 'claude-sonnet-4-20250514';
-    case 'google':
-      return 'gemini-2.5-flash';
+  // Safe fallback: first model in the list
+  const models = AI_MODELS[provider];
+  if (models && models.length > 0) {
+    return models[0].id;
   }
+  return '';
 }
 
 /**
@@ -91,4 +94,11 @@ export function getModelsForProvider(provider: AIProvider): AIModel[] {
  */
 export function getProviderName(provider: AIProvider): string {
   return config.ai?.providers?.[provider]?.name || provider;
+}
+
+/**
+ * Get full config for a provider.
+ */
+export function getProviderConfig(provider: AIProvider): AIProviderConfig | undefined {
+  return config.ai?.providers?.[provider];
 }

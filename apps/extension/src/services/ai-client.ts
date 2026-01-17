@@ -6,11 +6,15 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createGroq } from '@ai-sdk/groq';
+import { createMistral } from '@ai-sdk/mistral';
+import { createDeepSeek } from '@ai-sdk/deepseek';
+import { createOllama } from 'ollama-ai-provider';
 
 /**
  * Supported AI providers.
  */
-export type AIProvider = 'openai' | 'anthropic' | 'google';
+export type AIProvider = 'openai' | 'anthropic' | 'google' | 'groq' | 'mistral' | 'deepseek' | 'ollama';
 
 /**
  * Base AI settings shared across all AI features.
@@ -37,7 +41,8 @@ export const defaultAISettings: AISettings = {
  * This is the shared client used by all AI features.
  */
 export function createAIModel(settings: AISettings) {
-  if (!settings.apiKey) {
+  // API key check is relaxed for Ollama as it is local
+  if (settings.provider !== 'ollama' && !settings.apiKey) {
     throw new Error('API key is required');
   }
 
@@ -54,6 +59,22 @@ export function createAIModel(settings: AISettings) {
       const google = createGoogleGenerativeAI({ apiKey: settings.apiKey });
       return google(settings.model);
     }
+    case 'groq': {
+      const groq = createGroq({ apiKey: settings.apiKey });
+      return groq(settings.model);
+    }
+    case 'mistral': {
+      const mistral = createMistral({ apiKey: settings.apiKey });
+      return mistral(settings.model);
+    }
+    case 'deepseek': {
+      const deepseek = createDeepSeek({ apiKey: settings.apiKey });
+      return deepseek(settings.model);
+    }
+    case 'ollama': {
+      const ollama = createOllama();
+      return ollama(settings.model);
+    }
     default:
       throw new Error(`Unsupported provider: ${settings.provider}`);
   }
@@ -66,7 +87,8 @@ export function validateAISettings(settings: AISettings): void {
   if (!settings.enabled) {
     throw new Error('AI features are disabled');
   }
-  if (!settings.apiKey) {
+  // API key check is relaxed for Ollama as it is local
+  if (settings.provider !== 'ollama' && !settings.apiKey) {
     throw new Error('API key is required');
   }
   if (!settings.model) {

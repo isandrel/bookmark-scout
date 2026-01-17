@@ -49,7 +49,7 @@ import {
   getSettingsFieldMeta,
 } from '@/lib/settings-schema';
 import { useSettings, exportSettings, importSettings } from '@/lib/settings-storage';
-import { getModelsForProvider, type AIProvider } from '@/services';
+import { getModelsForProvider, getProviderConfig, type AIProvider } from '@/services';
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
@@ -97,14 +97,31 @@ const OptionsPage: React.FC = () => {
     }
 
     // Basic format validation
-    const provider = form.watch('aiProvider');
-    if (provider === 'openai' && !key.startsWith('sk-')) {
-      setApiKeyError('OpenAI keys start with sk-');
+    const provider = form.watch('aiProvider') as AIProvider;
+    const providerConfig = getProviderConfig(provider);
+    
+    // Skip validation for Ollama
+    if (provider === 'ollama') {
+      await chrome.storage.local.set({ aiApiKey: key });
+      setApiKey(key);
+      toast({
+        title: '✓ Settings Saved',
+        description: 'Ollama settings saved.',
+        variant: 'success',
+      });
       return;
     }
-    if (provider === 'anthropic' && !key.startsWith('sk-ant-')) {
-      setApiKeyError('Anthropic keys start with sk-ant-');
-      return;
+
+    if (providerConfig?.api_key_pattern) {
+      try {
+        const regex = new RegExp(providerConfig.api_key_pattern);
+        if (!regex.test(key)) {
+          setApiKeyError(`Invalid API key format for ${providerConfig.name}`);
+          return;
+        }
+      } catch (e) {
+        console.error('Invalid regex in config', e);
+      }
     }
     
     await chrome.storage.local.set({ aiApiKey: key });
@@ -472,7 +489,11 @@ const OptionsPage: React.FC = () => {
                                 >
                                   <div className="space-y-1 flex-1 pr-4">
                                     <Label className="text-base font-medium">API Key</Label>
-                                    <p className="text-sm text-muted-foreground">Your AI provider API key (stored locally)</p>
+                                    <p className="text-sm text-muted-foreground">
+                                      {form.watch('aiProvider') === 'ollama' 
+                                        ? 'Ollama runs locally (key optional)' 
+                                        : 'Your AI provider API key (stored locally)'}
+                                    </p>
                                     {apiKeyError && <p className="text-sm text-destructive">{apiKeyError}</p>}
                                   </div>
                                   <div className="flex items-center gap-2">
@@ -482,8 +503,11 @@ const OptionsPage: React.FC = () => {
                                         value={apiKey}
                                         onChange={(e) => setApiKey(e.target.value)}
                                         onBlur={(e) => saveApiKey(e.target.value)}
-                                        placeholder="sk-..."
+                                        placeholder={
+                                          getProviderConfig(form.watch('aiProvider') as AIProvider)?.api_key_placeholder || 'sk-...'
+                                        }
                                         className="w-[200px] pr-8"
+                                        disabled={form.watch('aiProvider') === 'ollama'}
                                       />
                                       <Button
                                         type="button"
@@ -491,6 +515,7 @@ const OptionsPage: React.FC = () => {
                                         size="icon"
                                         className="absolute right-0 top-0 h-full w-8"
                                         onClick={() => setShowApiKey(!showApiKey)}
+                                        disabled={form.watch('aiProvider') === 'ollama'}
                                       >
                                         {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                       </Button>
