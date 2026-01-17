@@ -57,6 +57,10 @@ function PopupPage() {
     areAllChildrenExpanded,
   } = useBookmarkStore();
 
+  // Get searchOptions separately to pass to BookmarkSearch
+  const searchOptions = useBookmarkStore((state) => state.searchOptions);
+  const setSearchOptions = useBookmarkStore((state) => state.setSearchOptions);
+
   // Get configurable settings
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
   const { value: aiEnabled } = useSetting('aiEnabled');
@@ -304,6 +308,8 @@ function PopupPage() {
           isAIEnabled={aiEnabled}
           isAILoading={aiLoading}
           onAIRecommend={handleAIRecommend}
+          searchOptions={searchOptions}
+          onSearchOptionsChange={setSearchOptions}
         />
 
         {/* Recent Folders Panel */}

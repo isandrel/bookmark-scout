@@ -206,7 +206,11 @@ export type MessageKey =
   | 'ai_promptAutoTagging'
   | 'ai_promptAutoTaggingDesc'
   | 'ai_promptSummarization'
-  | 'ai_promptSummarizationDesc';
+  | 'ai_promptSummarizationDesc'
+  // Search options
+  | 'search_matchCase'
+  | 'search_matchWholeWord'
+  | 'search_useRegex';
 
 /**
  * Get localized message.

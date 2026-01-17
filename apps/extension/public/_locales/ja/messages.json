@@ -570,5 +570,17 @@
     "bookmarks_loading": {
         "message": "ブックマークを読み込み中...",
         "description": "Loading message for bookmarks page"
+    },
+    "search_matchCase": {
+        "message": "大文字/小文字を区別",
+        "description": "Toggle case-sensitive search"
+    },
+    "search_matchWholeWord": {
+        "message": "単語全体を検索",
+        "description": "Toggle whole word matching"
+    },
+    "search_useRegex": {
+        "message": "正規表現を使用",
+        "description": "Toggle regex search mode"
     }
 }
