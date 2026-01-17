@@ -6,6 +6,8 @@
 import { z } from 'zod';
 import { parse } from 'smol-toml';
 import { t } from '@/hooks/use-i18n';
+import { getAvailableProviders, getModelsForProvider, getProviderName } from '@/services/ai-models';
+import type { AIProvider } from '@/services/ai-client';
 
 // Import TOML config as raw string (bundled at build time)
 import settingsToml from '../../config/settings.default.toml?raw';
@@ -414,25 +416,19 @@ export function getSettingsFieldMeta(): Record<
       label: 'AI Provider',
       description: 'Choose your AI provider',
       type: 'select',
-      options: [
-        { value: 'openai', label: 'OpenAI' },
-        { value: 'anthropic', label: 'Anthropic' },
-        { value: 'google', label: 'Google' },
-      ],
+      options: getAvailableProviders().map((p) => ({ value: p.id, label: p.name })),
     },
     aiModel: {
       label: 'Model',
       description: 'AI model to use',
       type: 'select',
-      options: [
-        { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
-        { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
-        { value: 'claude-opus-4-20250514', label: 'Claude Opus 4 (Anthropic)' },
-        { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4 (Anthropic)' },
-        { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Anthropic)' },
-        { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
-        { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
-      ],
+      // Note: This shows all models; UI should filter based on selected provider
+      options: (['openai', 'anthropic', 'google'] as const).flatMap((provider) =>
+        getModelsForProvider(provider).map((m) => ({
+          value: m.id,
+          label: `${m.name} (${getProviderName(provider)})`,
+        }))
+      ),
     },
     aiMaxRecommendations: {
       label: 'Max Recommendations',
@@ -616,25 +612,19 @@ export const settingsFieldMeta: Record<
     label: 'AI Provider',
     description: 'Choose your AI provider',
     type: 'select',
-    options: [
-      { value: 'openai', label: 'OpenAI' },
-      { value: 'anthropic', label: 'Anthropic' },
-      { value: 'google', label: 'Google' },
-    ],
+    options: getAvailableProviders().map((p) => ({ value: p.id, label: p.name })),
   },
   aiModel: {
     label: 'Model',
     description: 'AI model to use',
     type: 'select',
-    options: [
-      { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
-      { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
-      { value: 'claude-opus-4-20250514', label: 'Claude Opus 4 (Anthropic)' },
-      { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4 (Anthropic)' },
-      { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Anthropic)' },
-      { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
-      { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
-    ],
+    // Note: This shows all models; UI should filter based on selected provider
+    options: (['openai', 'anthropic', 'google'] as AIProvider[]).flatMap((provider) =>
+      getModelsForProvider(provider).map((m) => ({
+        value: m.id,
+        label: `${m.name} (${getProviderName(provider)})`,
+      }))
+    ),
   },
   aiMaxRecommendations: {
     label: 'Max Recommendations',
