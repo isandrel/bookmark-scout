@@ -1,9 +1,11 @@
 /**
  * AI Model Configuration.
- * Provider-specific model lists for dynamic dropdown.
+ * Provider-specific model lists loaded from TOML config for extensibility.
  */
 
+import { parse } from 'smol-toml';
 import type { AIProvider } from './ai-client';
+import settingsToml from '../../config/settings.default.toml?raw';
 
 export interface AIModel {
   id: string;
@@ -11,34 +13,62 @@ export interface AIModel {
   description?: string;
 }
 
-/**
- * Models available for each provider (December 2025).
- */
-export const AI_MODELS: Record<AIProvider, AIModel[]> = {
-  openai: [
-    { id: 'gpt-5', name: 'GPT-5', description: 'Most capable model' },
-    { id: 'gpt-5-mini', name: 'GPT-5 Mini', description: 'Fast & efficient' },
-    { id: 'gpt-4o', name: 'GPT-4o', description: 'Multimodal flagship' },
-    { id: 'gpt-4o-mini', name: 'GPT-4o Mini', description: 'Cost-effective' },
-    { id: 'o1', name: 'o1', description: 'Reasoning model' },
-  ],
-  anthropic: [
-    { id: 'claude-opus-4-20250514', name: 'Claude Opus 4', description: 'Most intelligent' },
-    { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4', description: 'Best balance' },
-    { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', description: 'Fast & cheap' },
-  ],
-  google: [
-    { id: 'gemini-3-pro', name: 'Gemini 3 Pro', description: 'Best reasoning' },
-    { id: 'gemini-3-flash', name: 'Gemini 3 Flash', description: 'Fast frontier' },
-    { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', description: 'Cost-effective' },
-    { id: 'gemini-2.5-pro', name: 'Gemini 2.5 Pro', description: '2M context' },
-  ],
-};
+interface ProviderConfig {
+  name: string;
+  default_model: string;
+  models: AIModel[];
+}
+
+interface AIConfig {
+  providers: Record<string, ProviderConfig>;
+}
+
+interface TomlConfig {
+  ai: AIConfig;
+}
+
+// Parse config at module load time
+const config = parse(settingsToml) as unknown as TomlConfig;
 
 /**
- * Get default model for a provider.
+ * Get all available provider IDs from config.
+ */
+export function getAvailableProviders(): { id: AIProvider; name: string }[] {
+  const providers = config.ai?.providers || {};
+  return Object.entries(providers).map(([id, provider]) => ({
+    id: id as AIProvider,
+    name: provider.name,
+  }));
+}
+
+/**
+ * Models available for each provider (loaded from TOML config).
+ */
+export const AI_MODELS: Record<AIProvider, AIModel[]> = (() => {
+  const providers = config.ai?.providers || {};
+  const result: Record<string, AIModel[]> = {};
+
+  for (const [providerId, provider] of Object.entries(providers)) {
+    result[providerId] = provider.models || [];
+  }
+
+  // Ensure all expected providers exist (fallback to empty arrays)
+  return {
+    openai: result.openai || [],
+    anthropic: result.anthropic || [],
+    google: result.google || [],
+  };
+})();
+
+/**
+ * Get default model for a provider (from TOML config).
  */
 export function getDefaultModel(provider: AIProvider): string {
+  const providerConfig = config.ai?.providers?.[provider];
+  if (providerConfig?.default_model) {
+    return providerConfig.default_model;
+  }
+  // Fallback defaults if config is missing
   switch (provider) {
     case 'openai':
       return 'gpt-4o-mini';
@@ -54,4 +84,11 @@ export function getDefaultModel(provider: AIProvider): string {
  */
 export function getModelsForProvider(provider: AIProvider): AIModel[] {
   return AI_MODELS[provider] || [];
+}
+
+/**
+ * Get provider display name.
+ */
+export function getProviderName(provider: AIProvider): string {
+  return config.ai?.providers?.[provider]?.name || provider;
 }
