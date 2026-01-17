@@ -427,8 +427,9 @@ export function getSettingsFieldMeta(): Record<
       options: [
         { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
         { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
-        { value: 'claude-opus-4.5', label: 'Claude Opus 4.5 (Anthropic)' },
-        { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5 (Anthropic)' },
+        { value: 'claude-opus-4-20250514', label: 'Claude Opus 4 (Anthropic)' },
+        { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4 (Anthropic)' },
+        { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Anthropic)' },
         { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
         { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
       ],
@@ -628,8 +629,9 @@ export const settingsFieldMeta: Record<
     options: [
       { value: 'gpt-5.2', label: 'GPT-5.2 (OpenAI)' },
       { value: 'gpt-4o-mini', label: 'GPT-4o Mini (OpenAI)' },
-      { value: 'claude-opus-4.5', label: 'Claude Opus 4.5 (Anthropic)' },
-      { value: 'claude-sonnet-4.5', label: 'Claude Sonnet 4.5 (Anthropic)' },
+      { value: 'claude-opus-4-20250514', label: 'Claude Opus 4 (Anthropic)' },
+      { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4 (Anthropic)' },
+      { value: 'claude-3-5-haiku-20241022', label: 'Claude 3.5 Haiku (Anthropic)' },
       { value: 'gemini-3-flash', label: 'Gemini 3 Flash (Google)' },
       { value: 'gemini-3-pro', label: 'Gemini 3 Pro (Google)' },
     ],

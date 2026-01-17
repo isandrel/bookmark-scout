@@ -23,9 +23,9 @@ export const AI_MODELS: Record<AIProvider, AIModel[]> = {
     { id: 'o1', name: 'o1', description: 'Reasoning model' },
   ],
   anthropic: [
-    { id: 'claude-opus-4.5', name: 'Claude Opus 4.5', description: 'Most intelligent' },
-    { id: 'claude-sonnet-4.5', name: 'Claude Sonnet 4.5', description: 'Best balance' },
-    { id: 'claude-haiku-4.5', name: 'Claude Haiku 4.5', description: 'Fast & cheap' },
+    { id: 'claude-opus-4-20250514', name: 'Claude Opus 4', description: 'Most intelligent' },
+    { id: 'claude-sonnet-4-20250514', name: 'Claude Sonnet 4', description: 'Best balance' },
+    { id: 'claude-3-5-haiku-20241022', name: 'Claude 3.5 Haiku', description: 'Fast & cheap' },
   ],
   google: [
     { id: 'gemini-3-pro', name: 'Gemini 3 Pro', description: 'Best reasoning' },
@@ -43,7 +43,7 @@ export function getDefaultModel(provider: AIProvider): string {
     case 'openai':
       return 'gpt-4o-mini';
     case 'anthropic':
-      return 'claude-sonnet-4.5';
+      return 'claude-sonnet-4-20250514';
     case 'google':
       return 'gemini-2.5-flash';
   }
