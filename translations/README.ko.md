@@ -11,7 +11,7 @@
 <h1 align="center">🔖 Bookmark Scout</h1>
 
 <p align="center">
-  <strong>A browser extension to quickly search, organize, and save bookmarks. Features drag-and-drop, instant search, and dark mode.</strong>
+  <strong>북마크를 빠르게 검색, 정리, 저장하는 브라우저 확장입니다. AI 폴더 추천 기능을 지원하며 멀티 프로바이더를 지원합니다.</strong>
 </p>
 
 <p align="center">
@@ -76,6 +76,7 @@
 
 ### ✅ 구현됨
 
+- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama로 구동되는 스마트 폴더 제안
 - [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 빠르게 검색
 - [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 정리
 - [x] ⚡ **빠른 추가** — 원클릭으로 원하는 폴더에 저장
@@ -85,6 +86,16 @@
 - [x] 🗑️ **항목 삭제** — 확인 후 삭제
 - [x] 🌍 **i18n** — 영어, 일본어, 한국어 지원
 - [x] 🔄 **북마크 동기화** — 브라우저 내장 동기화로 기기 간 동기화
+
+> **🤖 AI 기능 안내**
+>
+> AI 기반 폴더 추천은 **기본적으로 비활성화**되어 있으며 수동으로 활성화해야 합니다:
+>
+> 1. **설정 → AI** 탭으로 이동
+> 2. AI 기능을 활성화하고 선호하는 프로바이더 선택 (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, OpenRouter, Ollama)
+> 3. 프로바이더 대시보드에서 발급받은 API 키 입력
+>
+> ⚠️ **참고:** 이 기능은 타사 AI 서비스를 사용합니다. 북마크 제목과 URL이 선택한 AI 프로바이더로 전송됩니다. 프로바이더의 가격 정책에 따라 API 사용 비용이 발생할 수 있습니다. 결과는 실험적이며 정확도가 다를 수 있습니다.
 
 ### 🚧 로드맵
 
