@@ -115,6 +115,16 @@ id = "o1"
 name = "o1"
 description = "Reasoning model"
 
+[[ai.providers.openai.models]]
+id = "o3-mini"
+name = "o3 Mini"
+description = "Fast reasoning"
+
+[[ai.providers.openai.models]]
+id = "o3"
+name = "o3"
+description = "Advanced reasoning"
+
 [ai.providers.anthropic]
 name = "Anthropic"
 default_model = "claude-sonnet-4-20250514"
@@ -135,6 +145,16 @@ description = "Most intelligent"
 id = "claude-3-5-haiku-20241022"
 name = "Claude 3.5 Haiku"
 description = "Fast & cheap"
+
+[[ai.providers.anthropic.models]]
+id = "claude-3-opus-20240229"
+name = "Claude 3 Opus"
+description = "Legacy flagship"
+
+[[ai.providers.anthropic.models]]
+id = "claude-3-sonnet-20240229"
+name = "Claude 3 Sonnet"
+description = "Legacy balanced"
 
 [ai.providers.google]
 name = "Google"
@@ -187,6 +207,26 @@ id = "gemma2-9b-it"
 name = "Gemma 2 9B"
 description = "Google's Open Model"
 
+[[ai.providers.groq.models]]
+id = "deepseek-r1-distill-qwen-32b"
+name = "DeepSeek R1 Distill Qwen 32B"
+description = "Reasoning distilled"
+
+[[ai.providers.groq.models]]
+id = "deepseek-r1-distill-llama-70b"
+name = "DeepSeek R1 Distill Llama 70B"
+description = "Large reasoning"
+
+[[ai.providers.groq.models]]
+id = "qwen-2.5-32b"
+name = "Qwen 2.5 32B"
+description = "Alibaba's model"
+
+[[ai.providers.groq.models]]
+id = "qwen-qwq-32b"
+name = "Qwen QwQ 32B"
+description = "Reasoning variant"
+
 [ai.providers.mistral]
 name = "Mistral AI"
 default_model = "mistral-large-latest"
@@ -194,18 +234,38 @@ api_key_placeholder = "..."
 
 [[ai.providers.mistral.models]]
 id = "mistral-large-latest"
-name = "Mistral Large"
-description = "Flagship"
+name = "Mistral Large 3"
+description = "Flagship 675B MoE"
 
 [[ai.providers.mistral.models]]
 id = "mistral-small-latest"
-name = "Mistral Small"
-description = "Efficient"
+name = "Mistral Small 3.2"
+description = "Efficient 24B"
 
 [[ai.providers.mistral.models]]
 id = "codestral-latest"
 name = "Codestral"
 description = "Code Specialist"
+
+[[ai.providers.mistral.models]]
+id = "ministral-3b-latest"
+name = "Ministral 3B"
+description = "Edge deployment"
+
+[[ai.providers.mistral.models]]
+id = "ministral-8b-latest"
+name = "Ministral 8B"
+description = "Compact & fast"
+
+[[ai.providers.mistral.models]]
+id = "pixtral-12b-2409"
+name = "Pixtral 12B"
+description = "Multimodal 12B"
+
+[[ai.providers.mistral.models]]
+id = "pixtral-large-latest"
+name = "Pixtral Large"
+description = "Multimodal 124B"
 
 [ai.providers.deepseek]
 name = "DeepSeek"
@@ -221,6 +281,62 @@ description = "General Chat"
 id = "deepseek-reasoner"
 name = "DeepSeek R1"
 description = "Reasoning"
+
+[ai.providers.openrouter]
+name = "OpenRouter"
+default_model = "openai/gpt-4o-mini"
+api_key_pattern = "^sk-or-"
+api_key_placeholder = "sk-or-..."
+
+[[ai.providers.openrouter.models]]
+id = "openai/gpt-4o-mini"
+name = "GPT-4o Mini"
+description = "OpenAI via OR"
+
+[[ai.providers.openrouter.models]]
+id = "openai/gpt-4o"
+name = "GPT-4o"
+description = "OpenAI flagship"
+
+[[ai.providers.openrouter.models]]
+id = "anthropic/claude-sonnet-4"
+name = "Claude Sonnet 4"
+description = "Anthropic via OR"
+
+[[ai.providers.openrouter.models]]
+id = "anthropic/claude-opus-4"
+name = "Claude Opus 4"
+description = "Most intelligent"
+
+[[ai.providers.openrouter.models]]
+id = "google/gemini-2.5-flash"
+name = "Gemini 2.5 Flash"
+description = "Google via OR"
+
+[[ai.providers.openrouter.models]]
+id = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro"
+description = "Google flagship"
+
+[[ai.providers.openrouter.models]]
+id = "deepseek/deepseek-chat"
+name = "DeepSeek V3"
+description = "DeepSeek via OR"
+
+[[ai.providers.openrouter.models]]
+id = "deepseek/deepseek-r1"
+name = "DeepSeek R1"
+description = "Reasoning via OR"
+
+[[ai.providers.openrouter.models]]
+id = "meta-llama/llama-4-maverick"
+name = "Llama 4 Maverick"
+description = "Meta's latest"
+
+[[ai.providers.openrouter.models]]
+id = "qwen/qwen-2.5-72b"
+name = "Qwen 2.5 72B"
+description = "Alibaba via OR"
 
 [ai.providers.ollama]
 name = "Ollama (Local)"
