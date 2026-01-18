@@ -11,7 +11,7 @@
 <h1 align="center">🔖 Bookmark Scout</h1>
 
 <p align="center">
-  <strong>A browser extension to quickly search, organize, and save bookmarks. Features drag-and-drop, instant search, and dark mode.</strong>
+  <strong>ブックマークを素早く検索、整理、保存するブラウザ拡張機能。AIフォルダ推薦機能を搭載し、マルチプロバイダーに対応。</strong>
 </p>
 
 <p align="center">
@@ -76,6 +76,7 @@
 
 ### ✅ 実装済み
 
+- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、OpenRouter、Ollamaによるスマートなフォルダ提案
 - [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングで素早く検索
 - [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップで整理
 - [x] ⚡ **クイック追加** — ワンクリックで任意のフォルダに保存
@@ -85,6 +86,16 @@
 - [x] 🗑️ **アイテム削除** — 確認付きで削除
 - [x] 🌍 **i18n** — 英語、日本語、韓国語対応
 - [x] 🔄 **ブックマーク同期** — ブラウザ内蔵同期でクロスデバイス同期
+
+> **🤖 AI機能に関する注意事項**
+>
+> AIによるフォルダ推薦は**デフォルトで無効**であり、手動での有効化が必要です：
+>
+> 1. **設定 → AI** タブに移動
+> 2. AI機能を有効にし、お好みのプロバイダーを選択（OpenAI、Anthropic、Google、Groq、Mistral、DeepSeek、OpenRouter、Ollama）
+> 3. プロバイダーのダッシュボードから取得したAPIキーを入力
+>
+> ⚠️ **注意:** この機能はサードパーティのAIサービスを使用します。ブックマークのタイトルとURLが選択したAIプロバイダーに送信されます。プロバイダーの価格設定によってはAPI使用料が発生する場合があります。結果は実験的であり、精度にばらつきがある場合があります。
 
 ### 🚧 ロードマップ
 

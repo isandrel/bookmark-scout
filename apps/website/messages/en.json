@@ -21,7 +21,7 @@
         "subtitle": "Everything you need to manage your bookmarks efficiently",
         "aiRecommendations": {
             "title": "AI Folder Recommendations",
-            "description": "Smart folder suggestions powered by OpenAI, Anthropic, or Google AI"
+            "description": "Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, or Ollama"
         },
         "instantSearch": {
             "title": "Instant Search",
