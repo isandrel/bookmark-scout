@@ -56,10 +56,12 @@
         "title": "Installation",
         "subtitle": "Get started in minutes",
         "step1": {
-            "title": "Clone the repository"
+            "title": "Download from GitHub Releases",
+            "description": "Download the latest release ZIP file for your browser"
         },
         "step2": {
-            "title": "Install dependencies & build"
+            "title": "Extract the ZIP file",
+            "description": "Unzip the downloaded file to a folder"
         },
         "step3": {
             "title": "Load in Chrome",
@@ -67,7 +69,7 @@
                 "1": "Open chrome://extensions/",
                 "2": "Enable Developer mode (top right)",
                 "3": "Click Load unpacked",
-                "4": "Select the dist folder"
+                "4": "Select the extracted folder"
             }
         }
     },
