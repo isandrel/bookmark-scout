@@ -1,104 +1,79 @@
-/**
- * AI Model Configuration.
- * Provider-specific model lists loaded from TOML config for extensibility.
- */
-
 import { parse } from 'smol-toml';
 import type { AIProvider } from './ai-client';
 import settingsToml from '../../config/settings.default.toml?raw';
 
-export interface AIModel {
+export type AIModel = {
   id: string;
   name: string;
   description?: string;
-}
+};
 
-export interface AIProviderConfig {
+export type AIProviderKind = 'native' | 'openai_compatible' | 'ollama';
+
+export type AIProviderConfig = {
   name: string;
   default_model: string;
   models: AIModel[];
   api_key_pattern?: string;
   api_key_placeholder?: string;
-}
+  provider_kind?: AIProviderKind;
+  requires_api_key?: boolean;
+  base_url?: string;
+  supports_custom_model?: boolean;
+};
 
-interface AIConfig {
-  providers: Record<string, AIProviderConfig>;
-}
+type TomlConfig = {
+  ai: {
+    providers: Record<string, AIProviderConfig>;
+  };
+};
 
-interface TomlConfig {
-  ai: AIConfig;
-}
-
-// Parse config at module load time
 const config = parse(settingsToml) as unknown as TomlConfig;
 
-/**
- * Get all available provider IDs from config.
- */
+function getProviders() {
+  return config.ai?.providers ?? {};
+}
+
 export function getAvailableProviders(): { id: AIProvider; name: string }[] {
-  const providers = config.ai?.providers || {};
-  return Object.entries(providers).map(([id, provider]) => ({
+  return Object.entries(getProviders()).map(([id, provider]) => ({
     id: id as AIProvider,
     name: provider.name,
   }));
 }
 
-/**
- * Models available for each provider (loaded from TOML config).
- */
-export const AI_MODELS: Record<AIProvider, AIModel[]> = (() => {
-  const providers = config.ai?.providers || {};
-  const result: Record<string, AIModel[]> = {};
+export function getProviderConfig(provider: AIProvider): AIProviderConfig | undefined {
+  return getProviders()[provider];
+}
 
-  for (const [providerId, provider] of Object.entries(providers)) {
-    result[providerId] = provider.models || [];
-  }
+export function getProviderName(provider: AIProvider): string {
+  return getProviderConfig(provider)?.name ?? provider;
+}
 
-  // Ensure all expected providers exist (fallback to empty arrays)
-  return {
-    openai: result.openai || [],
-    anthropic: result.anthropic || [],
-    google: result.google || [],
-    groq: result.groq || [],
-    mistral: result.mistral || [],
-    deepseek: result.deepseek || [],
-    ollama: result.ollama || [],
-  };
-})();
+export function getModelsForProvider(provider: AIProvider): AIModel[] {
+  return getProviderConfig(provider)?.models ?? [];
+}
 
-/**
- * Get default model for a provider (from TOML config).
- */
 export function getDefaultModel(provider: AIProvider): string {
-  const providerConfig = config.ai?.providers?.[provider];
+  const providerConfig = getProviderConfig(provider);
   if (providerConfig?.default_model) {
     return providerConfig.default_model;
   }
-  // Safe fallback: first model in the list
-  const models = AI_MODELS[provider];
-  if (models && models.length > 0) {
-    return models[0].id;
-  }
-  return '';
+
+  return getModelsForProvider(provider)[0]?.id ?? '';
 }
 
-/**
- * Get models for a specific provider.
- */
-export function getModelsForProvider(provider: AIProvider): AIModel[] {
-  return AI_MODELS[provider] || [];
+export function getProviderKind(provider: AIProvider): AIProviderKind {
+  return getProviderConfig(provider)?.provider_kind ?? 'native';
 }
 
-/**
- * Get provider display name.
- */
-export function getProviderName(provider: AIProvider): string {
-  return config.ai?.providers?.[provider]?.name || provider;
+export function getProviderBaseUrl(provider: AIProvider): string | undefined {
+  return getProviderConfig(provider)?.base_url;
 }
 
-/**
- * Get full config for a provider.
- */
-export function getProviderConfig(provider: AIProvider): AIProviderConfig | undefined {
-  return config.ai?.providers?.[provider];
+export function providerRequiresApiKey(provider: AIProvider): boolean {
+  return getProviderConfig(provider)?.requires_api_key ?? true;
+}
+
+export function providerSupportsCustomModel(provider: AIProvider): boolean {
+  return getProviderConfig(provider)?.supports_custom_model ?? false;
 }

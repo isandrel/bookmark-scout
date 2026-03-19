@@ -411,10 +411,6 @@
         "message": "通知が自動的に消えるまでの時間",
         "description": "Toast duration setting description"
     },
-    "action_saving": {
-        "message": "保存中...",
-        "description": "Saving state indicator"
-    },
     "settings_results": {
         "message": "$1件の結果",
         "description": "Results count option"
@@ -582,5 +578,221 @@
     "search_useRegex": {
         "message": "正規表現を使用",
         "description": "Toggle regex search mode"
+    },
+    "settings_aiEnabled": {
+        "message": "AI機能",
+        "description": "AI feature toggle label"
+    },
+    "settings_aiEnabledDesc": {
+        "message": "AIを使ったブックマークワークフローを有効にします",
+        "description": "AI feature toggle description"
+    },
+    "settings_aiProvider": {
+        "message": "AIプロバイダー",
+        "description": "AI provider setting label"
+    },
+    "settings_aiProviderDesc": {
+        "message": "AIツールで使うプロバイダーを選択します",
+        "description": "AI provider setting description"
+    },
+    "settings_aiModel": {
+        "message": "AIモデル",
+        "description": "AI model setting label"
+    },
+    "settings_aiModelDesc": {
+        "message": "AIツールで使うモデルを選択します",
+        "description": "AI model setting description"
+    },
+    "settings_aiMaxRecommendations": {
+        "message": "最大候補数",
+        "description": "Max recommendations setting label"
+    },
+    "settings_aiMaxRecommendationsDesc": {
+        "message": "AIに要求する候補の最大数です",
+        "description": "Max recommendations setting description"
+    },
+    "settings_aiAutoTrigger": {
+        "message": "起動時に自動提案",
+        "description": "AI auto trigger label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "ポップアップを開いたときに自動で提案を実行します",
+        "description": "AI auto trigger description"
+    },
+    "settings_aiTools": {
+        "message": "AIツール",
+        "description": "AI tools settings tab label"
+    },
+    "settings_aiToolsDesc": {
+        "message": "AIを使ったブックマークツールを設定します",
+        "description": "AI tools settings tab description"
+    },
+    "settings_maintenance": {
+        "message": "メンテナンス",
+        "description": "Maintenance settings tab label"
+    },
+    "settings_maintenanceDesc": {
+        "message": "クリーンアップと修復ツールを設定します",
+        "description": "Maintenance settings tab description"
+    },
+    "settings_metadataContent": {
+        "message": "メタデータと内容",
+        "description": "Metadata settings tab label"
+    },
+    "settings_metadataContentDesc": {
+        "message": "メタデータ補完ツールを設定します",
+        "description": "Metadata settings tab description"
+    },
+    "settings_security": {
+        "message": "セキュリティ",
+        "description": "Security settings tab label"
+    },
+    "settings_securityDesc": {
+        "message": "セキュリティとプライバシーツールを設定します",
+        "description": "Security settings tab description"
+    },
+    "settings_analytics": {
+        "message": "分析",
+        "description": "Analytics settings tab label"
+    },
+    "settings_analyticsDesc": {
+        "message": "統計とレポート機能を設定します",
+        "description": "Analytics settings tab description"
+    },
+    "settings_data": {
+        "message": "データ",
+        "description": "Data settings tab label"
+    },
+    "settings_dataDesc": {
+        "message": "インポート・エクスポート設定を管理します",
+        "description": "Data settings tab description"
+    },
+    "settings_scopeFolder": {
+        "message": "現在のフォルダ",
+        "description": "Folder scope option label"
+    },
+    "settings_scopeAll": {
+        "message": "すべてのブックマーク",
+        "description": "All bookmarks scope option label"
+    },
+    "settings_scopeBoth": {
+        "message": "フォルダまたは全体",
+        "description": "Combined scope option label"
+    },
+    "settings_mergeAppend": {
+        "message": "追加",
+        "description": "Merge append option label"
+    },
+    "settings_mergeReplace": {
+        "message": "置換",
+        "description": "Merge replace option label"
+    },
+    "toast_duplicatesRemoved": {
+        "message": "重複を削除しました",
+        "description": "Duplicate removal success title"
+    },
+    "toast_duplicatesRemovedDesc": {
+        "message": "$1 件の重複ブックマークを削除しました",
+        "description": "Duplicate removal success description"
+    },
+    "toast_toolFailed": {
+        "message": "ツールの実行に失敗しました",
+        "description": "Generic tool failure title"
+    },
+    "toast_urlCleanerApplied": {
+        "message": "URLをクリーンアップしました",
+        "description": "URL cleaner success title"
+    },
+    "toast_urlCleanerAppliedDesc": {
+        "message": "$1 件のブックマークを更新しました",
+        "description": "URL cleaner success description"
+    },
+    "toast_aiContextPacked": {
+        "message": "AI用コンテキストを書き出しました",
+        "description": "AI context export success title"
+    },
+    "toast_aiContextPackedDesc": {
+        "message": "$1 件のブックマークをAI用に書き出しました",
+        "description": "AI context export success description"
+    },
+    "tools_duplicatesDialogDesc": {
+        "message": "$2 件のブックマークから $1 個の重複グループが見つかりました",
+        "description": "Duplicate dialog description"
+    },
+    "tools_urlCleanerDialogDesc": {
+        "message": "$1 件のブックマークをクリーンアップできます",
+        "description": "URL cleaner dialog description"
+    },
+    "tools_statisticsDialogDesc": {
+        "message": "選択した範囲のスナップショットです",
+        "description": "Statistics dialog description"
+    },
+    "tools_autoTaggingDialogDesc": {
+        "message": "選択したブックマークへのAIタグ提案です",
+        "description": "Auto-tagging dialog description"
+    },
+    "tools_summarizerDialogDesc": {
+        "message": "AIが生成したブックマーク要約です",
+        "description": "Summarizer dialog description"
+    },
+    "state_keep": {
+        "message": "保持",
+        "description": "Keep badge label"
+    },
+    "state_noDuplicatesFound": {
+        "message": "重複ブックマークは見つかりませんでした。",
+        "description": "No duplicates found state"
+    },
+    "state_noUrlChangesFound": {
+        "message": "URLの変更はありませんでした。",
+        "description": "No URL changes found state"
+    },
+    "state_noData": {
+        "message": "表示できるデータがありません。",
+        "description": "No data available state"
+    },
+    "state_noAiResults": {
+        "message": "AIの結果はありません。",
+        "description": "No AI results state"
+    },
+    "action_clean": {
+        "message": "クリーン",
+        "description": "Clean button label"
+    },
+    "action_removing": {
+        "message": "削除中...",
+        "description": "Removing state label"
+    },
+    "action_removeDuplicates": {
+        "message": "重複を削除",
+        "description": "Remove duplicates button label"
+    },
+    "stats_totalBookmarks": {
+        "message": "ブックマーク",
+        "description": "Statistics total bookmarks label"
+    },
+    "stats_totalFolders": {
+        "message": "フォルダ",
+        "description": "Statistics total folders label"
+    },
+    "stats_deepestLevel": {
+        "message": "最大深度",
+        "description": "Statistics deepest level label"
+    },
+    "stats_duplicates": {
+        "message": "重複数",
+        "description": "Statistics duplicates label"
+    },
+    "stats_topDomains": {
+        "message": "上位ドメイン",
+        "description": "Statistics top domains label"
+    },
+    "stats_topFolders": {
+        "message": "上位フォルダ",
+        "description": "Statistics top folders label"
+    },
+    "stats_protocols": {
+        "message": "プロトコル",
+        "description": "Statistics protocols label"
     }
 }

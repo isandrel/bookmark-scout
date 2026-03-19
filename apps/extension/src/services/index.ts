@@ -12,3 +12,5 @@ export * from './bookmark-import';
 export * from './prompt-config';
 export * from './ai-reorganization';
 export * from './bookmark-tooling';
+export * from './ai-bookmark-tools';
+export * from './ai-settings';

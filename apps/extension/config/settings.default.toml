@@ -63,7 +63,7 @@ toast_duration_ms = 4000
 # Enable AI-powered folder recommendations
 enabled = false
 
-# Default AI provider: "openai", "anthropic", or "google"
+# Default AI provider
 provider = "openai"
 
 # Default model to use (must match a model id from providers below)
@@ -87,6 +87,8 @@ min_items_per_folder = 1
 [ai.providers.openai]
 name                = "OpenAI"
 default_model       = "gpt-4o-mini"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_pattern     = "^sk-"
 api_key_placeholder = "sk-..."
 
@@ -128,6 +130,8 @@ description = "Advanced reasoning"
 [ai.providers.anthropic]
 name                = "Anthropic"
 default_model       = "claude-sonnet-4-20250514"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_pattern     = "^sk-ant-"
 api_key_placeholder = "sk-ant-..."
 
@@ -159,6 +163,8 @@ description = "Legacy balanced"
 [ai.providers.google]
 name                = "Google"
 default_model       = "gemini-2.5-flash"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "AI..."
 
 [[ai.providers.google.models]]
@@ -184,6 +190,8 @@ description = "Best reasoning"
 [ai.providers.groq]
 name                = "Groq"
 default_model       = "llama-3.3-70b-versatile"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_pattern     = "^gsk_"
 api_key_placeholder = "gsk_..."
 
@@ -230,6 +238,8 @@ description = "Reasoning variant"
 [ai.providers.mistral]
 name                = "Mistral AI"
 default_model       = "mistral-large-latest"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "..."
 
 [[ai.providers.mistral.models]]
@@ -270,6 +280,8 @@ description = "Multimodal 124B"
 [ai.providers.deepseek]
 name                = "DeepSeek"
 default_model       = "deepseek-chat"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "sk-..."
 
 [[ai.providers.deepseek.models]]
@@ -285,6 +297,9 @@ description = "Reasoning"
 [ai.providers.openrouter]
 name                = "OpenRouter"
 default_model       = "openai/gpt-4o-mini"
+provider_kind       = "openai_compatible"
+requires_api_key    = true
+base_url            = "https://openrouter.ai/api/v1"
 api_key_pattern     = "^sk-or-"
 api_key_placeholder = "sk-or-..."
 
@@ -339,9 +354,13 @@ name        = "Qwen 2.5 72B"
 description = "Alibaba via OR"
 
 [ai.providers.ollama]
-name                = "Ollama (Local)"
-default_model       = "llama3"
-api_key_placeholder = "(Optional)"
+name                  = "Ollama (Local)"
+default_model         = "llama3"
+provider_kind         = "ollama"
+requires_api_key      = false
+base_url              = "http://localhost:11434/api"
+supports_custom_model = true
+api_key_placeholder   = "(Optional)"
 
 [[ai.providers.ollama.models]]
 id          = "llama3"
@@ -362,6 +381,44 @@ description = "Google's Gemma"
 id          = "deepseek-r1"
 name        = "DeepSeek R1"
 description = "Reasoning (Local)"
+
+[ai.providers.cliproxyapi]
+name                  = "CLIProxyAPI"
+default_model         = "gpt-4o-mini"
+provider_kind         = "openai_compatible"
+requires_api_key      = false
+base_url              = "http://localhost:8317/v1"
+supports_custom_model = true
+api_key_placeholder   = "(Optional)"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "gpt-4o-mini"
+name        = "GPT-4o Mini"
+description = "OpenAI-compatible route"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "claude-sonnet-4"
+name        = "Claude Sonnet 4"
+description = "Claude route via CLIProxyAPI"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "gemini-2.5-pro"
+name        = "Gemini 2.5 Pro"
+description = "Gemini route via CLIProxyAPI"
+
+[ai.providers.custom]
+name                  = "Custom Provider"
+default_model         = "gpt-4o-mini"
+provider_kind         = "openai_compatible"
+requires_api_key      = false
+base_url              = "https://api.openai.com/v1"
+supports_custom_model = true
+api_key_placeholder   = "Optional custom API key"
+
+[[ai.providers.custom.models]]
+id          = "gpt-4o-mini"
+name        = "Default Model"
+description = "Replace with your provider's model id"
 
 # Custom prompts (leave empty to use defaults)
 # Users can edit in options page

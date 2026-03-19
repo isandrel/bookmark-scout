@@ -19,7 +19,12 @@ import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
 import { useSetting, addRecentFolder } from '@/lib';
 import { useBookmarkStore } from '@/stores';
-import { recommendFolders, getBookmark, type AISettings, type FolderRecommendation } from '@/services';
+import {
+  recommendFolders,
+  getBookmark,
+  buildAISettingsFromProvider,
+  type FolderRecommendation,
+} from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 import '@/styles/popup.scss';
 
@@ -107,23 +112,11 @@ function PopupPage() {
       
       setCurrentTabInfo({ title: tab.title, url: tab.url });
 
-      // Get API key from storage (stored separately for security)
-      const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
-      if (!aiApiKey) {
-        toast({
-          title: t('toast_apiKeyRequired'),
-          description: t('toast_apiKeyRequiredDesc'),
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      const settings: AISettings = {
-        enabled: aiEnabled,
-        provider: aiProvider as AISettings['provider'],
-        model: aiModel,
-        apiKey: aiApiKey as string,
-      };
+      const settings = await buildAISettingsFromProvider(
+        aiProvider as Parameters<typeof buildAISettingsFromProvider>[0],
+        aiModel,
+        aiEnabled,
+      );
 
       const recommendations = await recommendFolders(
         { title: tab.title, url: tab.url },
@@ -142,7 +135,7 @@ function PopupPage() {
     } finally {
       setAILoading(false);
     }
-  }, [aiEnabled, aiProvider, aiModel, folders, toast]);
+  }, [aiEnabled, aiProvider, aiModel, folders, toast, aiMaxRecommendations]);
 
   // Auto-trigger AI recommendations on popup open if setting is enabled
   useEffect(() => {
