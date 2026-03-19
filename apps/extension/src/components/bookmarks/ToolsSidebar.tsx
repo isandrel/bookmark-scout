@@ -28,11 +28,12 @@ import {
   ShieldAlert,
   Download,
   Upload,
-  Info,
 } from 'lucide-react';
 import { t } from '@/hooks/use-i18n';
 import { useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { useBookmarks } from '@/hooks/use-bookmarks';
+import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 import {
   exportFormats,
   exportBookmarks,
@@ -59,116 +60,38 @@ import {
   suggestBookmarkTags,
   summarizeBookmarksWithAI,
   buildAISettingsFromProvider,
+  scanDeadLinks,
+  fetchBookmarkMetadata,
+  scanBookmarkPrivacy,
+  type DeadLinkScanResult,
+  type MetadataFetchResult,
+  type PrivacyScanResult,
 } from '@/services';
 import { useSetting } from '@/lib';
-import { useBookmarks } from '@/hooks/use-bookmarks';
-import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
 import { ReorganizationDialog } from './ReorganizationDialog';
 import { ToolResultsDialog } from './ToolResultsDialog';
+import { ToolCard, type ToolScope } from './ToolCards';
+import {
+  DeadLinkResultsView,
+  DuplicateResultsView,
+  MetadataResultsView,
+  PrivacyResultsView,
+  StatisticsResultsView,
+  UrlCleanerResultsView,
+} from './ToolResultViews';
 
-type ToolScope = 'folder' | 'all';
-type ScopeCapability = 'folder' | 'all' | 'both';
-
-interface ToolCardProps {
-  icon: React.ReactNode;
+type ToolSectionProps = {
   title: string;
-  description: string;
-  buttonLabel: string;
-  onClick: (scope: ToolScope) => void;
-  disabled?: boolean;
-  isLoading?: boolean;
-  scopeCapability: ScopeCapability;
-  currentFolderName?: string;
-}
+  children: React.ReactNode;
+};
 
-function ToolCard({
-  icon,
-  title,
-  description,
-  buttonLabel,
-  onClick,
-  disabled = false,
-  isLoading = false,
-  scopeCapability,
-  currentFolderName,
-}: ToolCardProps) {
-  const [scope, setScope] = useState<ToolScope>(
-    scopeCapability === 'all' ? 'all' : 'folder'
-  );
-
-  const showScopeSelector = scopeCapability === 'both';
-
-  // Scope badge indicator
-  const ScopeBadge = () => {
-    if (scopeCapability === 'folder') {
-      return (
-        <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-          <Folder className="h-3 w-3" />
-        </span>
-      );
-    }
-    if (scopeCapability === 'all') {
-      return (
-        <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-          <Globe className="h-3 w-3" />
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-        <Folder className="h-3 w-3" />
-        <span>/</span>
-        <Globe className="h-3 w-3" />
-      </span>
-    );
-  };
-
+function ToolSection({ title, children }: ToolSectionProps) {
   return (
-    <div className="p-3 rounded-lg border bg-card space-y-2">
-      <div className="flex items-start gap-2">
-        <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">{icon}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium truncate">{title}</h4>
-            <ScopeBadge />
-          </div>
-          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{description}</p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {showScopeSelector && (
-          <Select value={scope} onValueChange={(v) => setScope(v as ToolScope)}>
-            <SelectTrigger className="flex-1 h-8 text-xs">
-              <SelectValue placeholder="Select scope" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="folder">
-                <div className="flex items-center gap-2">
-                  <Folder className="h-3 w-3" />
-                  <span className="truncate">{currentFolderName || 'Current Folder'}</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="all">
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3 w-3" />
-                  <span>All Bookmarks</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        )}
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => onClick(scope)}
-          disabled={disabled || isLoading}
-          className={cn('h-8 text-xs', !showScopeSelector && 'w-full')}
-        >
-          {isLoading ? 'Running...' : buttonLabel}
-        </Button>
-      </div>
+    <div className="space-y-3">
+      <h3 className="px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </h3>
+      {children}
     </div>
   );
 }
@@ -205,6 +128,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
   const [statisticsDialogOpen, setStatisticsDialogOpen] = useState(false);
   const [statisticsResult, setStatisticsResult] = useState<ReturnType<typeof collectBookmarkStatistics> | null>(null);
+  const [deadLinksDialogOpen, setDeadLinksDialogOpen] = useState(false);
+  const [deadLinksLoading, setDeadLinksLoading] = useState(false);
+  const [deadLinksResult, setDeadLinksResult] = useState<DeadLinkScanResult | null>(null);
+  const [metadataDialogOpen, setMetadataDialogOpen] = useState(false);
+  const [metadataLoading, setMetadataLoading] = useState(false);
+  const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
+  const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
+  const [privacyResult, setPrivacyResult] = useState<PrivacyScanResult | null>(null);
 
   const [aiContextLoading, setAiContextLoading] = useState(false);
   const [autoTaggingLoading, setAutoTaggingLoading] = useState(false);
@@ -230,6 +161,22 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
   const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
   const { value: statisticsTopN } = useSetting('statisticsTopN');
+  const { value: deadLinksRequestTimeoutMs } = useSetting('deadLinksRequestTimeoutMs');
+  const { value: deadLinksConcurrency } = useSetting('deadLinksConcurrency');
+  const { value: deadLinksRetryCount } = useSetting('deadLinksRetryCount');
+  const { value: deadLinksFollowRedirects } = useSetting('deadLinksFollowRedirects');
+  const { value: deadLinksSuccessStatuses } = useSetting('deadLinksSuccessStatuses');
+  const { value: metadataFetcherOverwriteTitles } = useSetting('metadataFetcherOverwriteTitles');
+  const { value: metadataFetcherFetchFavicons } = useSetting('metadataFetcherFetchFavicons');
+  const { value: metadataFetcherFetchDescriptions } = useSetting('metadataFetcherFetchDescriptions');
+  const { value: metadataFetcherRequestTimeoutMs } = useSetting('metadataFetcherRequestTimeoutMs');
+  const { value: metadataFetcherConcurrency } = useSetting('metadataFetcherConcurrency');
+  const { value: privacyScannerScanTitles } = useSetting('privacyScannerScanTitles');
+  const { value: privacyScannerScanQueryParams } = useSetting('privacyScannerScanQueryParams');
+  const { value: privacyScannerScanFragments } = useSetting('privacyScannerScanFragments');
+  const { value: privacyScannerSensitiveParams } = useSetting('privacyScannerSensitiveParams');
+  const { value: privacyScannerEmailDetection } = useSetting('privacyScannerEmailDetection');
+  const { value: privacyScannerUuidDetection } = useSetting('privacyScannerUuidDetection');
   const { value: aiContextPackerOutputFormat } = useSetting('aiContextPackerOutputFormat');
   const { value: aiContextPackerIncludeFolderPath } = useSetting('aiContextPackerIncludeFolderPath');
   const { value: aiContextPackerIncludeDates } = useSetting('aiContextPackerIncludeDates');
@@ -366,6 +313,65 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     setStatisticsDialogOpen(true);
   };
 
+  const handleDeadLinks = async (scope: ToolScope) => {
+    setDeadLinksLoading(true);
+    try {
+      const result = await scanDeadLinks(getTargetNodes(scope), {
+        requestTimeoutMs: deadLinksRequestTimeoutMs,
+        concurrency: deadLinksConcurrency,
+        retryCount: deadLinksRetryCount,
+        followRedirects: deadLinksFollowRedirects,
+        successStatuses: deadLinksSuccessStatuses,
+      });
+      setDeadLinksResult(result);
+      setDeadLinksDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setDeadLinksLoading(false);
+    }
+  };
+
+  const handleMetadata = async (scope: ToolScope) => {
+    setMetadataLoading(true);
+    try {
+      const result = await fetchBookmarkMetadata(getTargetNodes(scope), {
+        overwriteTitles: metadataFetcherOverwriteTitles,
+        fetchFavicons: metadataFetcherFetchFavicons,
+        fetchDescriptions: metadataFetcherFetchDescriptions,
+        requestTimeoutMs: metadataFetcherRequestTimeoutMs,
+        concurrency: metadataFetcherConcurrency,
+      });
+      setMetadataResult(result);
+      setMetadataDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setMetadataLoading(false);
+    }
+  };
+
+  const handlePrivacy = (scope: ToolScope) => {
+    const result = scanBookmarkPrivacy(getTargetNodes(scope), {
+      scanTitles: privacyScannerScanTitles,
+      scanQueryParams: privacyScannerScanQueryParams,
+      scanFragments: privacyScannerScanFragments,
+      sensitiveParams: privacyScannerSensitiveParams,
+      emailDetection: privacyScannerEmailDetection,
+      uuidDetection: privacyScannerUuidDetection,
+    });
+    setPrivacyResult(result);
+    setPrivacyDialogOpen(true);
+  };
+
   const buildAISettings = async () =>
     buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
 
@@ -458,6 +464,21 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     if (toolName === 'stats') {
       handleStatistics(scope);
+      return;
+    }
+
+    if (toolName === 'dead-links') {
+      await handleDeadLinks(scope);
+      return;
+    }
+
+    if (toolName === 'metadata') {
+      await handleMetadata(scope);
+      return;
+    }
+
+    if (toolName === 'privacy') {
+      handlePrivacy(scope);
       return;
     }
 
@@ -615,11 +636,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         <div className="p-3 space-y-6">
           
           {/* AI & Intelligence */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_ai') || 'AI & Intelligence'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_ai') || 'AI & Intelligence'}>
             <ToolCard
               icon={<FileText className="h-4 w-4 text-indigo-500" />}
               title={t('tools_exportAI') || 'AI Context Packer'}
@@ -663,13 +680,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               currentFolderName={currentFolderName}
               isLoading={reorgLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Maintenance */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_maintenance') || 'Maintenance'}
-            </h3>
+          <ToolSection title={t('tools_category_maintenance') || 'Maintenance'}>
 
             <ToolCard
               icon={<Copy className="h-4 w-4 text-orange-500" />}
@@ -701,16 +715,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('dead-links', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={deadLinksLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Metadata & Content */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_metadata') || 'Metadata'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_metadata') || 'Metadata'}>
             <ToolCard
               icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
               title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
@@ -719,16 +729,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('metadata', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={metadataLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Security */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_security') || 'Security'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_security') || 'Security'}>
             <ToolCard
               icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
               title={t('tools_privacyScanner') || 'Privacy Scanner'}
@@ -737,15 +743,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('privacy', scope)}
               scopeCapability="all"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={false}
             />
-          </div>
+          </ToolSection>
 
           {/* Analytics */}
-          <div className="space-y-3">
-             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              Analytics
-            </h3>
+          <ToolSection title={t('tools_category_analytics') || 'Analytics'}>
 
             <ToolCard
               icon={<BarChart3 className="h-4 w-4 text-green-500" />}
@@ -756,13 +759,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               scopeCapability="both"
               currentFolderName={currentFolderName}
             />
-          </div>
+          </ToolSection>
 
           {/* Data (Export/Import) */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_data') || 'Data'}
-            </h3>
+          <ToolSection title={t('tools_category_data') || 'Data'}>
 
             {/* Export Tool */}
             <div className="p-3 rounded-lg border bg-card space-y-2">
@@ -851,7 +851,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 </Button>
               </div>
             </div>
-          </div>
+          </ToolSection>
         </div>
       </div>
 
@@ -888,46 +888,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           .replace('$1', String(duplicateResult?.groups.length ?? 0))
           .replace('$2', String(duplicateResult?.scannedBookmarks ?? 0))}
       >
-        <div className="space-y-4">
-          {duplicateResult?.groups.length ? (
-            duplicateResult.groups.map((group) => (
-              <div key={group.key} className="rounded-lg border p-3 space-y-3">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary">{group.items.length}</Badge>
-                  <code className="truncate text-xs text-muted-foreground">{group.key}</code>
-                </div>
-                <div className="space-y-2">
-                  {group.items.map((item, index) => (
-                    <div key={item.node.id} className="rounded-md bg-muted/40 p-2 text-sm">
-                      <div className="flex items-center gap-2">
-                        {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
-                        <span className="font-medium">{item.node.title || 'Untitled'}</span>
-                        {index === 0 ? <Badge>{t('state_keep') || 'Keep'}</Badge> : null}
-                      </div>
-                      <p className="text-xs text-muted-foreground break-all">{item.node.url}</p>
-                      <p className="text-xs text-muted-foreground">{item.pathLabel || 'Root'}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              {t('state_noDuplicatesFound') || 'No duplicate bookmarks found.'}
-            </div>
-          )}
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setDuplicatesDialogOpen(false)}>
-              {t('action_cancel') || 'Cancel'}
-            </Button>
-            <Button
-              onClick={handleRemoveDuplicates}
-              disabled={!duplicateResult?.groups.length || duplicateRemoving}
-            >
-              {duplicateRemoving ? t('action_removing') || 'Removing...' : t('action_removeDuplicates') || 'Remove duplicates'}
-            </Button>
-          </div>
-        </div>
+        <DuplicateResultsView
+          result={duplicateResult}
+          isRemoving={duplicateRemoving}
+          onClose={() => setDuplicatesDialogOpen(false)}
+          onConfirm={handleRemoveDuplicates}
+        />
       </ToolResultsDialog>
 
       <ToolResultsDialog
@@ -937,40 +903,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned')
           .replace('$1', String(urlCleanerResult?.previews.length ?? 0))}
       >
-        <div className="space-y-4">
-          {urlCleanerResult?.previews.length ? (
-            urlCleanerResult.previews.map((preview) => (
-              <div key={preview.id} className="rounded-lg border p-3 space-y-2 text-sm">
-                <div className="font-medium">{preview.title}</div>
-                <div className="text-xs text-muted-foreground">{preview.folderPath || 'Root'}</div>
-                <div className="rounded-md bg-muted/40 p-2 text-xs break-all">{preview.originalUrl}</div>
-                <div className="rounded-md bg-emerald-500/10 p-2 text-xs break-all text-emerald-700 dark:text-emerald-300">{preview.cleanedUrl}</div>
-                <div className="flex flex-wrap gap-2">
-                  {preview.removedParams.map((param) => (
-                    <Badge key={`${preview.id}-${param}`} variant="outline">
-                      {param}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              {t('state_noUrlChangesFound') || 'No URL cleanup changes found.'}
-            </div>
-          )}
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setUrlCleanerDialogOpen(false)}>
-              {t('action_cancel') || 'Cancel'}
-            </Button>
-            <Button
-              onClick={handleApplyUrlCleaner}
-              disabled={!urlCleanerResult?.previews.length || urlCleanerApplying}
-            >
-              {urlCleanerApplying ? t('action_applying') || 'Applying...' : t('action_applyChanges') || 'Apply Changes'}
-            </Button>
-          </div>
-        </div>
+        <UrlCleanerResultsView
+          result={urlCleanerResult}
+          isApplying={urlCleanerApplying}
+          onClose={() => setUrlCleanerDialogOpen(false)}
+          onConfirm={handleApplyUrlCleaner}
+        />
       </ToolResultsDialog>
 
       <ToolResultsDialog
@@ -979,17 +917,34 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         title={t('tools_statistics') || 'Bookmark Statistics'}
         description={t('tools_statisticsDialogDesc') || 'Snapshot of the selected bookmark scope'}
       >
-        {statisticsResult ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <StatCard label={t('stats_totalBookmarks') || 'Bookmarks'} value={statisticsResult.totalBookmarks} />
-            <StatCard label={t('stats_totalFolders') || 'Folders'} value={statisticsResult.totalFolders} />
-            <StatCard label={t('stats_deepestLevel') || 'Deepest level'} value={statisticsResult.deepestLevel} />
-            <StatCard label={t('stats_duplicates') || 'Duplicates'} value={statisticsResult.duplicateCount} />
-            <StatList label={t('stats_topDomains') || 'Top domains'} items={statisticsResult.topDomains} />
-            <StatList label={t('stats_topFolders') || 'Top folders'} items={statisticsResult.topFolders} />
-            <StatList label={t('stats_protocols') || 'Protocols'} items={statisticsResult.protocols} />
-          </div>
-        ) : null}
+        <StatisticsResultsView result={statisticsResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={deadLinksDialogOpen}
+        onOpenChange={setDeadLinksDialogOpen}
+        title={t('tools_checkDeadLinks') || 'Check Dead Links'}
+        description={t('tools_deadLinksDialogDesc') || 'Reachability results for the selected bookmarks'}
+      >
+        <DeadLinkResultsView result={deadLinksResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={metadataDialogOpen}
+        onOpenChange={setMetadataDialogOpen}
+        title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
+        description={t('tools_metadataDialogDesc') || 'Metadata suggestions for the selected bookmarks'}
+      >
+        <MetadataResultsView result={metadataResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={privacyDialogOpen}
+        onOpenChange={setPrivacyDialogOpen}
+        title={t('tools_privacyScanner') || 'Privacy Scanner'}
+        description={t('tools_privacyDialogDesc') || 'Potential sensitive data found in the selected bookmarks'}
+      >
+        <PrivacyResultsView result={privacyResult} />
       </ToolResultsDialog>
 
       <ToolResultsDialog
@@ -1044,41 +999,6 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           )}
         </div>
       </ToolResultsDialog>
-    </div>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-lg border p-4">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="mt-2 text-2xl font-semibold">{value}</div>
-    </div>
-  );
-}
-
-function StatList({
-  label,
-  items,
-}: {
-  label: string;
-  items: Array<{ label: string; count: number }>;
-}) {
-  return (
-    <div className="rounded-lg border p-4 sm:col-span-2">
-      <div className="text-sm text-muted-foreground">{label}</div>
-      <div className="mt-3 space-y-2">
-        {items.length ? (
-          items.map((item) => (
-            <div key={`${label}-${item.label}`} className="flex items-center justify-between text-sm">
-              <span className="truncate pr-4">{item.label}</span>
-              <Badge variant="secondary">{item.count}</Badge>
-            </div>
-          ))
-        ) : (
-          <div className="text-sm text-muted-foreground">{t('state_noData') || 'No data available.'}</div>
-        )}
-      </div>
     </div>
   );
 }
