@@ -124,6 +124,28 @@ export async function moveBookmark(
 }
 
 /**
+ * Updates an existing bookmark.
+ */
+export async function updateBookmark(
+  id: string,
+  changes: chrome.bookmarks.UpdateChanges,
+): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.update(id, changes, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(result);
+    });
+  });
+}
+
+/**
  * Deletes a bookmark or folder (and all its contents).
  * @param id - The bookmark/folder ID
  */

@@ -7,9 +7,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+	BarChart3,
 	Download,
 	Eye,
 	EyeOff,
+	FolderKanban,
+	HardDriveDownload,
+	ShieldAlert,
 	Moon,
 	Palette,
 	RotateCcw,
@@ -20,6 +24,7 @@ import {
 	Sparkles,
 	Sun,
 	Upload,
+	Wrench,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -73,6 +78,12 @@ const tabIcons: Record<string, React.ReactNode> = {
 	behavior: <Settings2 className="h-4 w-4" />,
 	advanced: <Sliders className="h-4 w-4" />,
 	ai: <Sparkles className="h-4 w-4" />,
+	aiTools: <Sparkles className="h-4 w-4" />,
+	maintenance: <Wrench className="h-4 w-4" />,
+	metadataContent: <FolderKanban className="h-4 w-4" />,
+	security: <ShieldAlert className="h-4 w-4" />,
+	analytics: <BarChart3 className="h-4 w-4" />,
+	data: <HardDriveDownload className="h-4 w-4" />,
 };
 
 const OptionsPage: React.FC = () => {
@@ -94,6 +105,7 @@ const OptionsPage: React.FC = () => {
 		resolver: zodResolver(settingsSchema),
 		defaultValues: settings,
 	});
+	const categories = getSettingsCategories();
 
 	// Load API key from storage
 	useEffect(() => {
@@ -282,10 +294,32 @@ const OptionsPage: React.FC = () => {
 		});
 	};
 
+	const serializeFieldValue = (value: Settings[keyof Settings]) => {
+		if (Array.isArray(value)) {
+			return value.join(", ");
+		}
+		return String(value ?? "");
+	};
+
+	const parseTextFieldValue = (
+		fieldKey: keyof Settings,
+		value: string,
+	): Settings[keyof Settings] => {
+		const currentValue = form.watch(fieldKey);
+		if (Array.isArray(currentValue)) {
+			return value
+				.split(",")
+				.map((item) => item.trim())
+				.filter(Boolean) as Settings[keyof Settings];
+		}
+
+		return value as Settings[keyof Settings];
+	};
+
 	const renderField = (fieldKey: keyof Settings) => {
 		const meta = getSettingsFieldMeta()[fieldKey];
 
-		switch (meta.type) {
+			switch (meta.type) {
 			case "switch":
 				return (
 					<Switch
@@ -354,7 +388,13 @@ const OptionsPage: React.FC = () => {
 			case "text":
 				return (
 					<Input
-						{...form.register(fieldKey)}
+						value={serializeFieldValue(form.watch(fieldKey))}
+						onChange={(event) =>
+							form.setValue(
+								fieldKey,
+								parseTextFieldValue(fieldKey, event.target.value),
+							)
+						}
 						className="w-[200px]"
 						placeholder={meta.label}
 					/>
@@ -491,25 +531,23 @@ const OptionsPage: React.FC = () => {
 									onValueChange={setActiveTab}
 									className="w-full"
 								>
-									<TabsList className="grid w-full grid-cols-5 mb-6">
-										{Object.entries(getSettingsCategories()).map(
+									<TabsList className="mb-6 flex w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+										{Object.entries(categories).map(
 											([key, category]) => (
 												<TabsTrigger
 													key={key}
 													value={key}
-													className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+													className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
 												>
 													{tabIcons[key]}
-													<span className="hidden sm:inline">
-														{category.label}
-													</span>
+													<span>{category.label}</span>
 												</TabsTrigger>
 											),
 										)}
 									</TabsList>
 
 									<AnimatePresence mode="wait">
-										{Object.entries(getSettingsCategories()).map(
+										{Object.entries(categories).map(
 											([categoryKey, category]) => {
 												const filteredFields = filterFields(category.fields);
 												return (
