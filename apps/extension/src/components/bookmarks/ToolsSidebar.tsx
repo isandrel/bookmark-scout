@@ -28,6 +28,7 @@ import {
   ShieldAlert,
   Download,
   Upload,
+  Info,
 } from 'lucide-react';
 import { t } from '@/hooks/use-i18n';
 import { useState, useRef } from 'react';
@@ -46,12 +47,20 @@ import {
   generateReorganizationPlan,
   applyReorganizationPlan,
   type ReorganizationPlan,
+  type AIProvider,
+  getScopedNodes,
+  scanDuplicateBookmarks,
+  previewCleanUrls,
+  collectBookmarkStatistics,
+  deleteBookmark,
+  updateBookmark,
 } from '@/services';
-import { defaultSettings } from '@/lib/settings-schema';
 import { useSetting } from '@/lib';
 import { useBookmarks } from '@/hooks/use-bookmarks';
 import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 import { ReorganizationDialog } from './ReorganizationDialog';
+import { ToolResultsDialog } from './ToolResultsDialog';
 
 type ToolScope = 'folder' | 'all';
 type ScopeCapability = 'folder' | 'all' | 'both';
@@ -170,7 +179,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const [exportFormat, setExportFormat] = useState('html');
+  const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
+  const [exportFormat, setExportFormat] = useState(String(dataDefaultExportFormat));
 
   // AI Reorganization state
   const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
@@ -178,34 +188,186 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [reorgLoading, setReorgLoading] = useState(false);
   const [reorgErrors, setReorgErrors] = useState<string[]>([]);
 
+  const [duplicatesDialogOpen, setDuplicatesDialogOpen] = useState(false);
+  const [duplicateResult, setDuplicateResult] = useState<ReturnType<typeof scanDuplicateBookmarks> | null>(null);
+  const [duplicateLoading, setDuplicateLoading] = useState(false);
+  const [duplicateRemoving, setDuplicateRemoving] = useState(false);
+
+  const [urlCleanerDialogOpen, setUrlCleanerDialogOpen] = useState(false);
+  const [urlCleanerResult, setUrlCleanerResult] = useState<ReturnType<typeof previewCleanUrls> | null>(null);
+  const [urlCleanerLoading, setUrlCleanerLoading] = useState(false);
+  const [urlCleanerApplying, setUrlCleanerApplying] = useState(false);
+
+  const [statisticsDialogOpen, setStatisticsDialogOpen] = useState(false);
+  const [statisticsResult, setStatisticsResult] = useState<ReturnType<typeof collectBookmarkStatistics> | null>(null);
+
+  const { value: duplicatesMatchStrategy } = useSetting('duplicatesMatchStrategy');
+  const { value: duplicatesNormalizeWww } = useSetting('duplicatesNormalizeWww');
+  const { value: duplicatesIgnoreProtocol } = useSetting('duplicatesIgnoreProtocol');
+  const { value: duplicatesIgnoreTrailingSlash } = useSetting('duplicatesIgnoreTrailingSlash');
+  const { value: duplicatesMaxGroups } = useSetting('duplicatesMaxGroups');
+  const { value: duplicatesKeepRule } = useSetting('duplicatesKeepRule');
+  const { value: urlCleanerRemoveHash } = useSetting('urlCleanerRemoveHash');
+  const { value: urlCleanerSortQueryParams } = useSetting('urlCleanerSortQueryParams');
+  const { value: urlCleanerDedupeQueryParams } = useSetting('urlCleanerDedupeQueryParams');
+  const { value: urlCleanerPreserveParams } = useSetting('urlCleanerPreserveParams');
+  const { value: urlCleanerRemoveParams } = useSetting('urlCleanerRemoveParams');
+  const { value: statisticsIncludeDomains } = useSetting('statisticsIncludeDomains');
+  const { value: statisticsIncludeFolders } = useSetting('statisticsIncludeFolders');
+  const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
+  const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
+  const { value: statisticsTopN } = useSetting('statisticsTopN');
+
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
   const { value: aiProvider } = useSetting('aiProvider');
   const { value: aiModel } = useSetting('aiModel');
 
+  const getTargetNodes = (scope: ToolScope) => getScopedNodes(folders, currentFolderId, scope);
+
+  const handleDuplicates = async (scope: ToolScope) => {
+    setDuplicateLoading(true);
+    try {
+      const result = scanDuplicateBookmarks(getTargetNodes(scope), {
+        strategy: duplicatesMatchStrategy,
+        normalizeWww: duplicatesNormalizeWww,
+        ignoreProtocol: duplicatesIgnoreProtocol,
+        ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
+        maxGroups: duplicatesMaxGroups,
+      });
+      setDuplicateResult(result);
+      setDuplicatesDialogOpen(true);
+    } finally {
+      setDuplicateLoading(false);
+    }
+  };
+
+  const handleRemoveDuplicates = async () => {
+    if (!duplicateResult) return;
+
+    setDuplicateRemoving(true);
+    try {
+      const toDelete = duplicateResult.groups.flatMap((group) => {
+        const sorted = [...group.items].sort((a, b) => {
+          const dateA = a.node.dateAdded ?? 0;
+          const dateB = b.node.dateAdded ?? 0;
+
+          if (duplicatesKeepRule === 'newest') {
+            return dateB - dateA;
+          }
+
+          if (duplicatesKeepRule === 'oldest') {
+            return dateA - dateB;
+          }
+
+          return a.node.id.localeCompare(b.node.id);
+        });
+
+        return sorted.slice(1).map((item) => item.node.id);
+      });
+
+      await Promise.all(toDelete.map((id) => deleteBookmark(id)));
+      await refresh();
+      setDuplicatesDialogOpen(false);
+      toast({
+        title: t('toast_duplicatesRemoved') || 'Duplicates removed',
+        description: (t('toast_duplicatesRemovedDesc') || '$1 duplicate bookmarks removed').replace('$1', String(toDelete.length)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setDuplicateRemoving(false);
+    }
+  };
+
+  const handleUrlCleaner = async (scope: ToolScope) => {
+    setUrlCleanerLoading(true);
+    try {
+      const result = previewCleanUrls(getTargetNodes(scope), {
+        removeHash: urlCleanerRemoveHash,
+        sortQueryParams: urlCleanerSortQueryParams,
+        dedupeQueryParams: urlCleanerDedupeQueryParams,
+        preserveParams: urlCleanerPreserveParams,
+        removeParams: urlCleanerRemoveParams,
+      });
+      setUrlCleanerResult(result);
+      setUrlCleanerDialogOpen(true);
+    } finally {
+      setUrlCleanerLoading(false);
+    }
+  };
+
+  const handleApplyUrlCleaner = async () => {
+    if (!urlCleanerResult) return;
+
+    setUrlCleanerApplying(true);
+    try {
+      await Promise.all(
+        urlCleanerResult.previews.map((preview) =>
+          updateBookmark(preview.id, { url: preview.cleanedUrl }),
+        ),
+      );
+      await refresh();
+      setUrlCleanerDialogOpen(false);
+      toast({
+        title: t('toast_urlCleanerApplied') || 'URLs cleaned',
+        description: (t('toast_urlCleanerAppliedDesc') || '$1 bookmarks updated').replace('$1', String(urlCleanerResult.previews.length)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setUrlCleanerApplying(false);
+    }
+  };
+
+  const handleStatistics = (scope: ToolScope) => {
+    const result = collectBookmarkStatistics(getTargetNodes(scope), {
+      includeDomains: statisticsIncludeDomains,
+      includeFolders: statisticsIncludeFolders,
+      includeProtocols: statisticsIncludeProtocols,
+      includeDuplicates: statisticsIncludeDuplicates,
+      topN: statisticsTopN,
+    });
+    setStatisticsResult(result);
+    setStatisticsDialogOpen(true);
+  };
+
   // Handlers (Placeholders)
   const handleToolAction = async (toolName: string, scope: ToolScope) => {
-    console.log(`Tool action: ${toolName}`, scope, currentFolderId);
-    console.log('Folders from hook:', folders?.length, folders);
-    
+    if (toolName === 'duplicates') {
+      await handleDuplicates(scope);
+      return;
+    }
+
+    if (toolName === 'clean-urls') {
+      await handleUrlCleaner(scope);
+      return;
+    }
+
+    if (toolName === 'stats') {
+      handleStatistics(scope);
+      return;
+    }
+
     if (toolName === 'reorganize') {
-      // Open dialog and start analyzing
       setReorgDialogOpen(true);
       setReorgLoading(true);
       setReorgPlan(null);
       setReorgErrors([]);
       
       try {
-        const targetFolders = scope === 'folder' && currentFolderId
-          ? folders?.filter(f => f.id === currentFolderId) || []
-          : folders || [];
+        const targetFolders = getTargetNodes(scope);
         
-        console.log('Target folders for AI:', targetFolders.length, targetFolders);
-        
-        // Get API key from storage (same as PopupPage)
         const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
         
-        // Skip API key check for Ollama
         if (!aiApiKey && aiProvider !== 'ollama') {
           setReorgErrors(['API key not configured. Please set it in Options → AI.']);
           setReorgLoading(false);
@@ -398,18 +560,18 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('duplicates', scope)}
               scopeCapability="all"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={duplicateLoading}
             />
 
             <ToolCard
               icon={<Eraser className="h-4 w-4 text-orange-500" />}
               title={t('tools_cleanUrls') || 'URL Cleaner'}
               description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
-              buttonLabel="Clean"
+              buttonLabel={t('action_clean') || 'Clean'}
               onClick={(scope) => handleToolAction('clean-urls', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={urlCleanerLoading}
             />
 
             <ToolCard
@@ -474,7 +636,6 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('stats', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
             />
           </div>
 
@@ -599,6 +760,153 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         }}
         onCancel={() => setReorgDialogOpen(false)}
       />
+
+      <ToolResultsDialog
+        open={duplicatesDialogOpen}
+        onOpenChange={setDuplicatesDialogOpen}
+        title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
+        description={(t('tools_duplicatesDialogDesc') || '$1 duplicate groups found across $2 bookmarks')
+          .replace('$1', String(duplicateResult?.groups.length ?? 0))
+          .replace('$2', String(duplicateResult?.scannedBookmarks ?? 0))}
+      >
+        <div className="space-y-4">
+          {duplicateResult?.groups.length ? (
+            duplicateResult.groups.map((group) => (
+              <div key={group.key} className="rounded-lg border p-3 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">{group.items.length}</Badge>
+                  <code className="truncate text-xs text-muted-foreground">{group.key}</code>
+                </div>
+                <div className="space-y-2">
+                  {group.items.map((item, index) => (
+                    <div key={item.node.id} className="rounded-md bg-muted/40 p-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
+                        <span className="font-medium">{item.node.title || 'Untitled'}</span>
+                        {index === 0 ? <Badge>{t('state_keep') || 'Keep'}</Badge> : null}
+                      </div>
+                      <p className="text-xs text-muted-foreground break-all">{item.node.url}</p>
+                      <p className="text-xs text-muted-foreground">{item.pathLabel || 'Root'}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noDuplicatesFound') || 'No duplicate bookmarks found.'}
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setDuplicatesDialogOpen(false)}>
+              {t('action_cancel') || 'Cancel'}
+            </Button>
+            <Button
+              onClick={handleRemoveDuplicates}
+              disabled={!duplicateResult?.groups.length || duplicateRemoving}
+            >
+              {duplicateRemoving ? t('action_removing') || 'Removing...' : t('action_removeDuplicates') || 'Remove duplicates'}
+            </Button>
+          </div>
+        </div>
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={urlCleanerDialogOpen}
+        onOpenChange={setUrlCleanerDialogOpen}
+        title={t('tools_cleanUrls') || 'URL Cleaner'}
+        description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned')
+          .replace('$1', String(urlCleanerResult?.previews.length ?? 0))}
+      >
+        <div className="space-y-4">
+          {urlCleanerResult?.previews.length ? (
+            urlCleanerResult.previews.map((preview) => (
+              <div key={preview.id} className="rounded-lg border p-3 space-y-2 text-sm">
+                <div className="font-medium">{preview.title}</div>
+                <div className="text-xs text-muted-foreground">{preview.folderPath || 'Root'}</div>
+                <div className="rounded-md bg-muted/40 p-2 text-xs break-all">{preview.originalUrl}</div>
+                <div className="rounded-md bg-emerald-500/10 p-2 text-xs break-all text-emerald-700 dark:text-emerald-300">{preview.cleanedUrl}</div>
+                <div className="flex flex-wrap gap-2">
+                  {preview.removedParams.map((param) => (
+                    <Badge key={`${preview.id}-${param}`} variant="outline">
+                      {param}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noUrlChangesFound') || 'No URL cleanup changes found.'}
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setUrlCleanerDialogOpen(false)}>
+              {t('action_cancel') || 'Cancel'}
+            </Button>
+            <Button
+              onClick={handleApplyUrlCleaner}
+              disabled={!urlCleanerResult?.previews.length || urlCleanerApplying}
+            >
+              {urlCleanerApplying ? t('action_applying') || 'Applying...' : t('action_applyChanges') || 'Apply Changes'}
+            </Button>
+          </div>
+        </div>
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={statisticsDialogOpen}
+        onOpenChange={setStatisticsDialogOpen}
+        title={t('tools_statistics') || 'Bookmark Statistics'}
+        description={t('tools_statisticsDialogDesc') || 'Snapshot of the selected bookmark scope'}
+      >
+        {statisticsResult ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <StatCard label={t('stats_totalBookmarks') || 'Bookmarks'} value={statisticsResult.totalBookmarks} />
+            <StatCard label={t('stats_totalFolders') || 'Folders'} value={statisticsResult.totalFolders} />
+            <StatCard label={t('stats_deepestLevel') || 'Deepest level'} value={statisticsResult.deepestLevel} />
+            <StatCard label={t('stats_duplicates') || 'Duplicates'} value={statisticsResult.duplicateCount} />
+            <StatList label={t('stats_topDomains') || 'Top domains'} items={statisticsResult.topDomains} />
+            <StatList label={t('stats_topFolders') || 'Top folders'} items={statisticsResult.topFolders} />
+            <StatList label={t('stats_protocols') || 'Protocols'} items={statisticsResult.protocols} />
+          </div>
+        ) : null}
+      </ToolResultsDialog>
+    </div>
+  );
+}
+
+function StatCard({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border p-4">
+      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="mt-2 text-2xl font-semibold">{value}</div>
+    </div>
+  );
+}
+
+function StatList({
+  label,
+  items,
+}: {
+  label: string;
+  items: Array<{ label: string; count: number }>;
+}) {
+  return (
+    <div className="rounded-lg border p-4 sm:col-span-2">
+      <div className="text-sm text-muted-foreground">{label}</div>
+      <div className="mt-3 space-y-2">
+        {items.length ? (
+          items.map((item) => (
+            <div key={`${label}-${item.label}`} className="flex items-center justify-between text-sm">
+              <span className="truncate pr-4">{item.label}</span>
+              <Badge variant="secondary">{item.count}</Badge>
+            </div>
+          ))
+        ) : (
+          <div className="text-sm text-muted-foreground">{t('state_noData') || 'No data available.'}</div>
+        )}
+      </div>
     </div>
   );
 }
