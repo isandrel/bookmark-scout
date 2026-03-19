@@ -68,8 +68,15 @@ import {
 import {
 	getModelsForProvider,
 	getProviderConfig,
+	providerRequiresApiKey,
+	providerSupportsCustomModel,
 	type AIProvider,
 } from "@/services";
+import {
+	getStoredAIProviderConfig,
+	saveStoredAIProviderConfig,
+	clearStoredAIProviderConfig,
+} from "@/lib";
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
@@ -100,41 +107,68 @@ const OptionsPage: React.FC = () => {
 	const [apiKey, setApiKey] = useState("");
 	const [showApiKey, setShowApiKey] = useState(false);
 	const [apiKeyError, setApiKeyError] = useState("");
+	const [providerBaseUrl, setProviderBaseUrl] = useState("");
+	const [providerCustomModel, setProviderCustomModel] = useState("");
+	const [providerExtraHeaders, setProviderExtraHeaders] = useState("");
 
 	const form = useForm<Settings>({
-		resolver: zodResolver(settingsSchema),
+		resolver: zodResolver(settingsSchema) as never,
 		defaultValues: settings,
 	});
+	const selectedProvider = form.watch("aiProvider") as AIProvider;
 	const categories = getSettingsCategories();
 
 	// Load API key from storage
 	useEffect(() => {
-		chrome.storage.local.get("aiApiKey").then(({ aiApiKey }) => {
-			if (aiApiKey) setApiKey(aiApiKey);
+		const provider = selectedProvider;
+		getStoredAIProviderConfig(provider).then((stored) => {
+			setApiKey(stored.apiKey ?? "");
+			setProviderBaseUrl(stored.baseUrl ?? getProviderConfig(provider)?.base_url ?? "");
+			setProviderCustomModel(stored.customModel ?? "");
+			setProviderExtraHeaders(stored.extraHeaders ?? "");
 		});
-	}, []);
+	}, [selectedProvider]);
+
+	useEffect(() => {
+		const subscription = form.watch((_value, { name }) => {
+			if (name === "aiProvider") {
+				const provider = form.getValues("aiProvider") as AIProvider;
+				getStoredAIProviderConfig(provider).then((stored) => {
+					setApiKey(stored.apiKey ?? "");
+					setProviderBaseUrl(stored.baseUrl ?? getProviderConfig(provider)?.base_url ?? "");
+					setProviderCustomModel(stored.customModel ?? "");
+					setProviderExtraHeaders(stored.extraHeaders ?? "");
+				});
+
+				const currentModel = form.getValues("aiModel");
+				const validModels = getModelsForProvider(provider).map((model) => model.id);
+				if (validModels.length > 0 && !validModels.includes(currentModel)) {
+					form.setValue("aiModel", validModels[0] as Settings["aiModel"]);
+				}
+			}
+		});
+
+		return () => subscription.unsubscribe();
+	}, [form]);
 
 	// Validate and save API key
 	const saveApiKey = async (key: string) => {
 		setApiKeyError("");
+		const provider = selectedProvider;
+		const providerConfig = getProviderConfig(provider);
 
 		if (!key.trim()) {
-			await chrome.storage.local.remove("aiApiKey");
+			await saveStoredAIProviderConfig(provider, { apiKey: "" });
 			setApiKey("");
 			return;
 		}
 
-		// Basic format validation
-		const provider = form.watch("aiProvider") as AIProvider;
-		const providerConfig = getProviderConfig(provider);
-
-		// Skip validation for Ollama
-		if (provider === "ollama") {
-			await chrome.storage.local.set({ aiApiKey: key });
+		if (!providerRequiresApiKey(provider)) {
+			await saveStoredAIProviderConfig(provider, { apiKey: key });
 			setApiKey(key);
 			toast({
 				title: "✓ Settings Saved",
-				description: "Ollama settings saved.",
+				description: `${providerConfig?.name || provider} settings saved.`,
 				variant: "success",
 			});
 			return;
@@ -152,7 +186,7 @@ const OptionsPage: React.FC = () => {
 			}
 		}
 
-		await chrome.storage.local.set({ aiApiKey: key });
+		await saveStoredAIProviderConfig(provider, { apiKey: key });
 		setApiKey(key);
 		toast({
 			title: "✓ API Key Saved",
@@ -160,6 +194,27 @@ const OptionsPage: React.FC = () => {
 			variant: "success",
 		});
 	};
+
+	const saveProviderOverrides = async () => {
+		const provider = selectedProvider;
+		if (!providerBaseUrl.trim() && !providerCustomModel.trim() && !providerExtraHeaders.trim()) {
+			await clearStoredAIProviderConfig(provider);
+			return;
+		}
+
+		await saveStoredAIProviderConfig(provider, {
+			apiKey,
+			baseUrl: providerBaseUrl,
+			customModel: providerCustomModel,
+			extraHeaders: providerExtraHeaders,
+		});
+	};
+
+	const providerDescription = providerRequiresApiKey(selectedProvider)
+		? "Your AI provider API key (stored locally)"
+		: `${getProviderConfig(selectedProvider)?.name || "Provider"} can run without an API key`;
+	const providerPlaceholder =
+		getProviderConfig(selectedProvider)?.api_key_placeholder || "sk-...";
 
 	// Update form when settings load
 	useEffect(() => {
@@ -202,10 +257,10 @@ const OptionsPage: React.FC = () => {
 		}, 1000); // 1 second debounce
 
 		return () => clearTimeout(timeoutId);
-	}, [values, updateSettings, theme, setTheme, isLoading, t, toast]);
+	}, [values, updateSettings, theme, setTheme, isLoading, toast]);
 
 	// Remove manual submit handler
-	const onSubmit = (data: Settings) => {
+	const onSubmit = (_data: Settings) => {
 		// No-op, handled by auto-save
 		return;
 	};
@@ -602,79 +657,103 @@ const OptionsPage: React.FC = () => {
 																)}
 
 																{/* API Key input for AI category */}
-																{categoryKey === "ai" && (
-																	<motion.div
-																		layout
-																		initial={{ opacity: 0, y: 10 }}
-																		animate={{ opacity: 1, y: 0 }}
-																		className="flex items-start justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors border border-transparent hover:border-border"
-																	>
-																		<div className="space-y-1 flex-1 pr-4">
-																			<Label className="text-base font-medium">
-																				API Key
-																			</Label>
-																			<p className="text-sm text-muted-foreground">
-																				{form.watch("aiProvider") === "ollama"
-																					? "Ollama runs locally (key optional)"
-																					: "Your AI provider API key (stored locally)"}
-																			</p>
-																			{apiKeyError && (
-																				<p className="text-sm text-destructive">
-																					{apiKeyError}
-																				</p>
-																			)}
-																		</div>
-																		<div className="flex items-center gap-2">
-																			<div className="relative">
-																				<Input
-																					type={
-																						showApiKey ? "text" : "password"
-																					}
-																					value={apiKey}
-																					onChange={(e) =>
-																						setApiKey(e.target.value)
-																					}
-																					onBlur={(e) =>
-																						saveApiKey(e.target.value)
-																					}
-																					placeholder={
-																						getProviderConfig(
-																							form.watch(
-																								"aiProvider",
-																							) as AIProvider,
-																						)?.api_key_placeholder || "sk-..."
-																					}
-																					className="w-[200px] pr-8"
-																					disabled={
-																						form.watch("aiProvider") ===
-																						"ollama"
-																					}
-																				/>
-																				<Button
-																					type="button"
-																					variant="ghost"
-																					size="icon"
-																					className="absolute right-0 top-0 h-full w-8"
-																					onClick={() =>
-																						setShowApiKey(!showApiKey)
-																					}
-																					disabled={
-																						form.watch("aiProvider") ===
-																						"ollama"
-																					}
-																				>
-																					{showApiKey ? (
-																						<EyeOff className="h-4 w-4" />
-																					) : (
-																						<Eye className="h-4 w-4" />
-																					)}
-																				</Button>
-																			</div>
-																		</div>
-																	</motion.div>
+										{categoryKey === "ai" && (
+											<>
+												<motion.div
+													layout
+													initial={{ opacity: 0, y: 10 }}
+													animate={{ opacity: 1, y: 0 }}
+													className="flex items-start justify-between rounded-lg border border-transparent bg-card p-4 transition-colors hover:border-border hover:bg-accent/50"
+												>
+													<div className="space-y-1 flex-1 pr-4">
+														<Label className="text-base font-medium">API Key</Label>
+														<p className="text-sm text-muted-foreground">{providerDescription}</p>
+														{apiKeyError && (
+															<p className="text-sm text-destructive">{apiKeyError}</p>
+														)}
+													</div>
+													<div className="flex items-center gap-2">
+														<div className="relative">
+															<Input
+																type={showApiKey ? "text" : "password"}
+																value={apiKey}
+																onChange={(e) => setApiKey(e.target.value)}
+																onBlur={(e) => saveApiKey(e.target.value)}
+																placeholder={providerPlaceholder}
+																className="w-[200px] pr-8"
+																disabled={!providerRequiresApiKey(selectedProvider)}
+															/>
+															<Button
+																type="button"
+																variant="ghost"
+																size="icon"
+																className="absolute right-0 top-0 h-full w-8"
+																onClick={() => setShowApiKey(!showApiKey)}
+																disabled={!providerRequiresApiKey(selectedProvider)}
+															>
+																{showApiKey ? (
+																	<EyeOff className="h-4 w-4" />
+																) : (
+																	<Eye className="h-4 w-4" />
 																)}
-															</div>
-														</motion.div>
+															</Button>
+														</div>
+													</div>
+												</motion.div>
+
+												<motion.div
+													layout
+													initial={{ opacity: 0, y: 10 }}
+												animate={{ opacity: 1, y: 0 }}
+												className="space-y-3 rounded-lg border border-transparent bg-card p-4 hover:border-border"
+													>
+														<div className="space-y-1">
+															<Label className="text-base font-medium">Base URL</Label>
+													<p className="text-sm text-muted-foreground">
+														Optional override for OpenAI-compatible providers such as CLIProxyAPI or custom endpoints.
+													</p>
+												</div>
+														<Input
+															value={providerBaseUrl}
+															onChange={(event) => setProviderBaseUrl(event.target.value)}
+															onBlur={saveProviderOverrides}
+															placeholder={getProviderConfig(selectedProvider)?.base_url || "https://api.example.com/v1"}
+														/>
+
+														{providerSupportsCustomModel(selectedProvider) && (
+															<>
+														<div className="space-y-1">
+															<Label className="text-base font-medium">Custom Model</Label>
+															<p className="text-sm text-muted-foreground">
+																Optional model id override for providers that allow arbitrary model names.
+															</p>
+														</div>
+														<Input
+															value={providerCustomModel}
+															onChange={(event) => setProviderCustomModel(event.target.value)}
+															onBlur={saveProviderOverrides}
+															placeholder="gpt-4o-mini"
+														/>
+													</>
+												)}
+
+												<div className="space-y-1">
+													<Label className="text-base font-medium">Extra Headers JSON</Label>
+													<p className="text-sm text-muted-foreground">
+														Optional JSON object for provider-specific headers.
+													</p>
+												</div>
+														<Input
+															value={providerExtraHeaders}
+															onChange={(event) => setProviderExtraHeaders(event.target.value)}
+															onBlur={saveProviderOverrides}
+															placeholder='{"HTTP-Referer":"https://example.com"}'
+														/>
+													</motion.div>
+											</>
+										)}
+									</div>
+								</motion.div>
 													</TabsContent>
 												);
 											},

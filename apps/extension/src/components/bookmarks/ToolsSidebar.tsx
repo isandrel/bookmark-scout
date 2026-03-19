@@ -54,6 +54,11 @@ import {
   collectBookmarkStatistics,
   deleteBookmark,
   updateBookmark,
+  buildAIContextPack,
+  downloadTextFile,
+  suggestBookmarkTags,
+  summarizeBookmarksWithAI,
+  buildAISettingsFromProvider,
 } from '@/services';
 import { useSetting } from '@/lib';
 import { useBookmarks } from '@/hooks/use-bookmarks';
@@ -201,6 +206,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [statisticsDialogOpen, setStatisticsDialogOpen] = useState(false);
   const [statisticsResult, setStatisticsResult] = useState<ReturnType<typeof collectBookmarkStatistics> | null>(null);
 
+  const [aiContextLoading, setAiContextLoading] = useState(false);
+  const [autoTaggingLoading, setAutoTaggingLoading] = useState(false);
+  const [autoTaggingDialogOpen, setAutoTaggingDialogOpen] = useState(false);
+  const [autoTaggingResult, setAutoTaggingResult] = useState<Awaited<ReturnType<typeof suggestBookmarkTags>>>([]);
+  const [summarizerLoading, setSummarizerLoading] = useState(false);
+  const [summarizerDialogOpen, setSummarizerDialogOpen] = useState(false);
+  const [summarizerResult, setSummarizerResult] = useState<Awaited<ReturnType<typeof summarizeBookmarksWithAI>>>([]);
+
   const { value: duplicatesMatchStrategy } = useSetting('duplicatesMatchStrategy');
   const { value: duplicatesNormalizeWww } = useSetting('duplicatesNormalizeWww');
   const { value: duplicatesIgnoreProtocol } = useSetting('duplicatesIgnoreProtocol');
@@ -217,6 +230,19 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
   const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
   const { value: statisticsTopN } = useSetting('statisticsTopN');
+  const { value: aiContextPackerOutputFormat } = useSetting('aiContextPackerOutputFormat');
+  const { value: aiContextPackerIncludeFolderPath } = useSetting('aiContextPackerIncludeFolderPath');
+  const { value: aiContextPackerIncludeDates } = useSetting('aiContextPackerIncludeDates');
+  const { value: aiContextPackerIncludeTags } = useSetting('aiContextPackerIncludeTags');
+  const { value: aiContextPackerIncludeSummaries } = useSetting('aiContextPackerIncludeSummaries');
+  const { value: aiContextPackerMaxItems } = useSetting('aiContextPackerMaxItems');
+  const { value: aiContextPackerMaxDepth } = useSetting('aiContextPackerMaxDepth');
+  const { value: aiContextPackerExcerptLength } = useSetting('aiContextPackerExcerptLength');
+  const { value: autoTaggingMinTags } = useSetting('autoTaggingMinTags');
+  const { value: autoTaggingMaxTags } = useSetting('autoTaggingMaxTags');
+  const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
+  const { value: summarizerSummaryLength } = useSetting('summarizerSummaryLength');
+  const { value: summarizerIncludeDomainHint } = useSetting('summarizerIncludeDomainHint');
 
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
@@ -340,6 +366,84 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     setStatisticsDialogOpen(true);
   };
 
+  const buildAISettings = async () =>
+    buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+
+  const handleAIContextPack = async (scope: ToolScope) => {
+    setAiContextLoading(true);
+    try {
+      const packed = buildAIContextPack(getTargetNodes(scope), {
+        format: aiContextPackerOutputFormat,
+        includeFolderPath: aiContextPackerIncludeFolderPath,
+        includeDates: aiContextPackerIncludeDates,
+        includeTags: aiContextPackerIncludeTags,
+        includeSummaries: aiContextPackerIncludeSummaries,
+        maxItems: aiContextPackerMaxItems,
+        maxDepth: aiContextPackerMaxDepth,
+        excerptLength: aiContextPackerExcerptLength,
+      });
+
+      const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
+      const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
+      downloadTextFile(packed.content, filename, mimeType);
+      toast({
+        title: t('toast_aiContextPacked') || 'AI context exported',
+        description: (t('toast_aiContextPackedDesc') || '$1 bookmarks exported for AI use').replace('$1', String(packed.itemCount)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setAiContextLoading(false);
+    }
+  };
+
+  const handleAutoTagging = async (scope: ToolScope) => {
+    setAutoTaggingLoading(true);
+    try {
+      const settings = await buildAISettings();
+      const result = await suggestBookmarkTags(getTargetNodes(scope), settings, {
+        minTags: autoTaggingMinTags,
+        maxTags: autoTaggingMaxTags,
+        tagStyle: autoTaggingTagStyle,
+      });
+      setAutoTaggingResult(result);
+      setAutoTaggingDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setAutoTaggingLoading(false);
+    }
+  };
+
+  const handleSummarizer = async (scope: ToolScope) => {
+    setSummarizerLoading(true);
+    try {
+      const settings = await buildAISettings();
+      const result = await summarizeBookmarksWithAI(getTargetNodes(scope), settings, {
+        summaryLength: summarizerSummaryLength,
+        includeDomainHint: summarizerIncludeDomainHint,
+      });
+      setSummarizerResult(result);
+      setSummarizerDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSummarizerLoading(false);
+    }
+  };
+
   // Handlers (Placeholders)
   const handleToolAction = async (toolName: string, scope: ToolScope) => {
     if (toolName === 'duplicates') {
@@ -354,6 +458,21 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     if (toolName === 'stats') {
       handleStatistics(scope);
+      return;
+    }
+
+    if (toolName === 'ai-pack') {
+      await handleAIContextPack(scope);
+      return;
+    }
+
+    if (toolName === 'auto-tag') {
+      await handleAutoTagging(scope);
+      return;
+    }
+
+    if (toolName === 'summarize') {
+      await handleSummarizer(scope);
       return;
     }
 
@@ -509,7 +628,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('ai-pack', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={aiContextLoading}
             />
 
             <ToolCard
@@ -520,7 +639,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('auto-tag', scope)}
               scopeCapability="folder"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={autoTaggingLoading}
             />
 
             <ToolCard
@@ -531,7 +650,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('summarize', scope)}
               scopeCapability="folder"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={summarizerLoading}
             />
 
             <ToolCard
@@ -871,6 +990,59 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             <StatList label={t('stats_protocols') || 'Protocols'} items={statisticsResult.protocols} />
           </div>
         ) : null}
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={autoTaggingDialogOpen}
+        onOpenChange={setAutoTaggingDialogOpen}
+        title={t('tools_autoTagging') || 'Auto-Tagging'}
+        description={t('tools_autoTaggingDialogDesc') || 'AI-generated tags for the selected bookmarks'}
+      >
+        <div className="space-y-4">
+          {autoTaggingResult.length ? (
+            autoTaggingResult.map((item) => (
+              <div key={item.bookmarkId} className="rounded-lg border p-3 space-y-2">
+                <div className="font-medium text-sm">{item.title}</div>
+                <div className="text-xs text-muted-foreground break-all">{item.url}</div>
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <Badge key={`${item.bookmarkId}-${tag}`} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="text-xs text-muted-foreground">{item.reason}</div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noAiResults') || 'No AI results available.'}
+            </div>
+          )}
+        </div>
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={summarizerDialogOpen}
+        onOpenChange={setSummarizerDialogOpen}
+        title={t('tools_summarizer') || 'Content Summarizer'}
+        description={t('tools_summarizerDialogDesc') || 'AI-generated bookmark summaries'}
+      >
+        <div className="space-y-4">
+          {summarizerResult.length ? (
+            summarizerResult.map((item) => (
+              <div key={item.bookmarkId} className="rounded-lg border p-3 space-y-2">
+                <div className="font-medium text-sm">{item.title}</div>
+                <div className="text-xs text-muted-foreground break-all">{item.url}</div>
+                <div className="rounded-md bg-muted/40 p-2 text-sm">{item.summary}</div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noAiResults') || 'No AI results available.'}
+            </div>
+          )}
+        </div>
       </ToolResultsDialog>
     </div>
   );

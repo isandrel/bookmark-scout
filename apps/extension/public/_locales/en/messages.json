@@ -834,5 +834,901 @@
     "search_useRegex": {
         "message": "Use Regular Expression",
         "description": "Toggle regex search mode"
+    },
+    "settings_aiEnabled": {
+        "message": "AI Features",
+        "description": "AI feature toggle label"
+    },
+    "settings_aiEnabledDesc": {
+        "message": "Enable AI-powered bookmark workflows",
+        "description": "AI feature toggle description"
+    },
+    "settings_aiProvider": {
+        "message": "AI Provider",
+        "description": "AI provider setting label"
+    },
+    "settings_aiProviderDesc": {
+        "message": "Choose the provider used for AI-powered tools",
+        "description": "AI provider setting description"
+    },
+    "settings_aiModel": {
+        "message": "AI Model",
+        "description": "AI model setting label"
+    },
+    "settings_aiModelDesc": {
+        "message": "Choose the model used for AI-powered tools",
+        "description": "AI model setting description"
+    },
+    "settings_aiMaxRecommendations": {
+        "message": "Max Recommendations",
+        "description": "Max recommendations setting label"
+    },
+    "settings_aiMaxRecommendationsDesc": {
+        "message": "Maximum number of AI recommendations to request",
+        "description": "Max recommendations setting description"
+    },
+    "settings_aiAutoTrigger": {
+        "message": "Auto-recommend on Open",
+        "description": "AI auto trigger label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "Automatically run bookmark recommendations when the popup opens",
+        "description": "AI auto trigger description"
+    },
+    "settings_aiTools": {
+        "message": "AI Tools",
+        "description": "AI tools settings tab label"
+    },
+    "settings_aiToolsDesc": {
+        "message": "Configure AI-powered bookmark tooling",
+        "description": "AI tools settings tab description"
+    },
+    "settings_maintenance": {
+        "message": "Maintenance",
+        "description": "Maintenance settings tab label"
+    },
+    "settings_maintenanceDesc": {
+        "message": "Configure cleanup and repair tools",
+        "description": "Maintenance settings tab description"
+    },
+    "settings_metadataContent": {
+        "message": "Metadata & Content",
+        "description": "Metadata settings tab label"
+    },
+    "settings_metadataContentDesc": {
+        "message": "Configure metadata enrichment tools",
+        "description": "Metadata settings tab description"
+    },
+    "settings_security": {
+        "message": "Security",
+        "description": "Security settings tab label"
+    },
+    "settings_securityDesc": {
+        "message": "Configure security and privacy tools",
+        "description": "Security settings tab description"
+    },
+    "settings_analytics": {
+        "message": "Analytics",
+        "description": "Analytics settings tab label"
+    },
+    "settings_analyticsDesc": {
+        "message": "Configure bookmark analysis and reporting",
+        "description": "Analytics settings tab description"
+    },
+    "settings_data": {
+        "message": "Data",
+        "description": "Data settings tab label"
+    },
+    "settings_dataDesc": {
+        "message": "Configure import, export, and data handling tools",
+        "description": "Data settings tab description"
+    },
+    "settings_aiMaxCategories": {
+        "message": "Max Categories",
+        "description": "AI reorganization max categories label"
+    },
+    "settings_aiMaxCategoriesDesc": {
+        "message": "Maximum top-level categories AI can create (-1 for no limit)",
+        "description": "AI reorganization max categories description"
+    },
+    "settings_aiMinItemsPerFolder": {
+        "message": "Min Items Per Folder",
+        "description": "AI reorganization min items label"
+    },
+    "settings_aiMinItemsPerFolderDesc": {
+        "message": "Minimum number of bookmarks AI should target per folder",
+        "description": "AI reorganization min items description"
+    },
+    "settings_aiMaxItemsPerFolder": {
+        "message": "Max Items Per Folder",
+        "description": "AI reorganization max items label"
+    },
+    "settings_aiMaxItemsPerFolderDesc": {
+        "message": "Maximum number of bookmarks AI should target per folder (-1 for no limit)",
+        "description": "AI reorganization max items description"
+    },
+    "settings_exportFilenamePrefix": {
+        "message": "Filename Prefix",
+        "description": "Export filename prefix label"
+    },
+    "settings_exportFilenamePrefixDesc": {
+        "message": "Prefix used when generating bookmark export filenames",
+        "description": "Export filename prefix description"
+    },
+    "settings_exportFilenameMaxLength": {
+        "message": "Max Filename Length",
+        "description": "Export filename max length label"
+    },
+    "settings_exportFilenameMaxLengthDesc": {
+        "message": "Maximum length of generated bookmark export filenames",
+        "description": "Export filename max length description"
+    },
+    "settings_exportJsonIndentSize": {
+        "message": "JSON Indent Size",
+        "description": "JSON indent size label"
+    },
+    "settings_exportJsonIndentSizeDesc": {
+        "message": "Spaces used for JSON bookmark exports",
+        "description": "JSON indent size description"
+    },
+    "settings_exportHtmlIndentSpaces": {
+        "message": "HTML Indent Size",
+        "description": "HTML indent size label"
+    },
+    "settings_exportHtmlIndentSpacesDesc": {
+        "message": "Spaces used for HTML bookmark exports",
+        "description": "HTML indent size description"
+    },
+    "settings_exportMarkdownIndentSpaces": {
+        "message": "Markdown Indent Size",
+        "description": "Markdown indent size label"
+    },
+    "settings_exportMarkdownIndentSpacesDesc": {
+        "message": "Spaces used for Markdown bookmark exports",
+        "description": "Markdown indent size description"
+    },
+    "settings_exportIncludeDates": {
+        "message": "Include Dates",
+        "description": "Export include dates label"
+    },
+    "settings_exportIncludeDatesDesc": {
+        "message": "Include bookmark creation dates in exports by default",
+        "description": "Export include dates description"
+    },
+    "settings_exportIncludeUrls": {
+        "message": "Include URLs",
+        "description": "Export include URLs label"
+    },
+    "settings_exportIncludeUrlsDesc": {
+        "message": "Include bookmark URLs in exports by default",
+        "description": "Export include URLs description"
+    },
+    "settings_scopeFolder": {
+        "message": "Current Folder",
+        "description": "Folder scope option label"
+    },
+    "settings_scopeAll": {
+        "message": "All Bookmarks",
+        "description": "All bookmarks scope option label"
+    },
+    "settings_scopeBoth": {
+        "message": "Folder or All",
+        "description": "Combined scope option label"
+    },
+    "settings_mergeAppend": {
+        "message": "Append",
+        "description": "Merge append option label"
+    },
+    "settings_mergeReplace": {
+        "message": "Replace",
+        "description": "Merge replace option label"
+    },
+    "settings_aiContextPackerEnabled": {
+        "message": "Enable AI Context Packer",
+        "description": "AI context packer enabled label"
+    },
+    "settings_aiContextPackerEnabledDesc": {
+        "message": "Allow exporting bookmarks in AI-friendly formats",
+        "description": "AI context packer enabled description"
+    },
+    "settings_aiContextPackerDefaultScope": {
+        "message": "Default Scope",
+        "description": "AI context packer default scope label"
+    },
+    "settings_aiContextPackerDefaultScopeDesc": {
+        "message": "Default scope used when exporting AI context",
+        "description": "AI context packer default scope description"
+    },
+    "settings_aiContextPackerOutputFormat": {
+        "message": "Output Format",
+        "description": "AI context packer output format label"
+    },
+    "settings_aiContextPackerOutputFormatDesc": {
+        "message": "Choose Markdown or XML for AI context exports",
+        "description": "AI context packer output format description"
+    },
+    "settings_aiContextPackerIncludeFolderPath": {
+        "message": "Include Folder Paths",
+        "description": "AI context packer include folder path label"
+    },
+    "settings_aiContextPackerIncludeFolderPathDesc": {
+        "message": "Include each bookmark's folder path in exported AI context",
+        "description": "AI context packer include folder path description"
+    },
+    "settings_aiContextPackerIncludeDates": {
+        "message": "Include Dates",
+        "description": "AI context packer include dates label"
+    },
+    "settings_aiContextPackerIncludeDatesDesc": {
+        "message": "Include bookmark creation dates in AI context exports",
+        "description": "AI context packer include dates description"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "Include Tags Placeholder",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "Reserve a tags field in exported AI context",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "Include Summary Placeholder",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "Reserve a summary field in exported AI context",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerMaxItems": {
+        "message": "Max Items",
+        "description": "AI context packer max items label"
+    },
+    "settings_aiContextPackerMaxItemsDesc": {
+        "message": "Maximum bookmarks to include in one AI context export",
+        "description": "AI context packer max items description"
+    },
+    "settings_aiContextPackerMaxDepth": {
+        "message": "Max Depth",
+        "description": "AI context packer max depth label"
+    },
+    "settings_aiContextPackerMaxDepthDesc": {
+        "message": "Maximum folder depth to include in AI context exports",
+        "description": "AI context packer max depth description"
+    },
+    "settings_aiContextPackerExcerptLength": {
+        "message": "Excerpt Length",
+        "description": "AI context packer excerpt length label"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "Maximum summary placeholder length in AI context exports",
+        "description": "AI context packer excerpt length description"
+    },
+    "settings_autoTaggingEnabled": {
+        "message": "Enable Auto-Tagging",
+        "description": "Auto-tagging enabled label"
+    },
+    "settings_autoTaggingEnabledDesc": {
+        "message": "Allow AI to suggest tags for bookmarks",
+        "description": "Auto-tagging enabled description"
+    },
+    "settings_autoTaggingDefaultScope": {
+        "message": "Default Scope",
+        "description": "Auto-tagging default scope label"
+    },
+    "settings_autoTaggingDefaultScopeDesc": {
+        "message": "Default scope used for auto-tagging runs",
+        "description": "Auto-tagging default scope description"
+    },
+    "settings_autoTaggingMinTags": {
+        "message": "Minimum Tags",
+        "description": "Auto-tagging minimum tags label"
+    },
+    "settings_autoTaggingMinTagsDesc": {
+        "message": "Minimum number of tags AI should generate per bookmark",
+        "description": "Auto-tagging minimum tags description"
+    },
+    "settings_autoTaggingMaxTags": {
+        "message": "Maximum Tags",
+        "description": "Auto-tagging maximum tags label"
+    },
+    "settings_autoTaggingMaxTagsDesc": {
+        "message": "Maximum number of tags AI should generate per bookmark",
+        "description": "Auto-tagging maximum tags description"
+    },
+    "settings_autoTaggingTagStyle": {
+        "message": "Tag Style",
+        "description": "Auto-tagging tag style label"
+    },
+    "settings_autoTaggingTagStyleDesc": {
+        "message": "Preferred formatting style for generated tags",
+        "description": "Auto-tagging tag style description"
+    },
+    "settings_autoTaggingMergeMode": {
+        "message": "Merge Mode",
+        "description": "Auto-tagging merge mode label"
+    },
+    "settings_autoTaggingMergeModeDesc": {
+        "message": "How suggested tags should be combined with existing tags later",
+        "description": "Auto-tagging merge mode description"
+    },
+    "settings_autoTaggingDedupeTags": {
+        "message": "Remove Duplicate Tags",
+        "description": "Auto-tagging dedupe tag label"
+    },
+    "settings_autoTaggingDedupeTagsDesc": {
+        "message": "Remove duplicate tags from AI results",
+        "description": "Auto-tagging dedupe tag description"
+    },
+    "settings_summarizerEnabled": {
+        "message": "Enable Content Summarizer",
+        "description": "Summarizer enabled label"
+    },
+    "settings_summarizerEnabledDesc": {
+        "message": "Allow AI to create bookmark summaries",
+        "description": "Summarizer enabled description"
+    },
+    "settings_summarizerDefaultScope": {
+        "message": "Default Scope",
+        "description": "Summarizer default scope label"
+    },
+    "settings_summarizerDefaultScopeDesc": {
+        "message": "Default scope used for bookmark summarization",
+        "description": "Summarizer default scope description"
+    },
+    "settings_summarizerSummaryLength": {
+        "message": "Summary Length",
+        "description": "Summarizer length label"
+    },
+    "settings_summarizerSummaryLengthDesc": {
+        "message": "Target maximum length for generated summaries",
+        "description": "Summarizer length description"
+    },
+    "settings_summarizerIncludeDomainHint": {
+        "message": "Include Domain Hint",
+        "description": "Summarizer include domain hint label"
+    },
+    "settings_summarizerIncludeDomainHintDesc": {
+        "message": "Include the bookmark domain as additional AI context",
+        "description": "Summarizer include domain hint description"
+    },
+    "settings_summarizerMergeMode": {
+        "message": "Merge Mode",
+        "description": "Summarizer merge mode label"
+    },
+    "settings_summarizerMergeModeDesc": {
+        "message": "How generated summaries should be merged with saved metadata later",
+        "description": "Summarizer merge mode description"
+    },
+    "settings_reorganizationEnabled": {
+        "message": "Enable AI Reorganization",
+        "description": "Reorganization enabled label"
+    },
+    "settings_reorganizationEnabledDesc": {
+        "message": "Allow AI to propose folder reorganization plans",
+        "description": "Reorganization enabled description"
+    },
+    "settings_reorganizationDefaultScope": {
+        "message": "Default Scope",
+        "description": "Reorganization default scope label"
+    },
+    "settings_reorganizationDefaultScopeDesc": {
+        "message": "Default scope used for AI folder reorganization",
+        "description": "Reorganization default scope description"
+    },
+    "settings_reorganizationDryRunFirst": {
+        "message": "Always Preview First",
+        "description": "Reorganization dry run label"
+    },
+    "settings_reorganizationDryRunFirstDesc": {
+        "message": "Show the proposed reorganization plan before applying changes",
+        "description": "Reorganization dry run description"
+    },
+    "settings_reorganizationMinConfidence": {
+        "message": "Minimum Confidence",
+        "description": "Reorganization minimum confidence label"
+    },
+    "settings_reorganizationMinConfidenceDesc": {
+        "message": "Minimum confidence score required for proposed bookmark moves",
+        "description": "Reorganization minimum confidence description"
+    },
+    "settings_reorganizationBatchSize": {
+        "message": "Batch Size",
+        "description": "Reorganization batch size label"
+    },
+    "settings_reorganizationBatchSizeDesc": {
+        "message": "Maximum number of bookmarks to send per reorganization batch",
+        "description": "Reorganization batch size description"
+    },
+    "settings_duplicatesEnabled": {
+        "message": "Enable Duplicate Cleaner",
+        "description": "Duplicate cleaner enabled label"
+    },
+    "settings_duplicatesEnabledDesc": {
+        "message": "Allow scanning for duplicate bookmarks",
+        "description": "Duplicate cleaner enabled description"
+    },
+    "settings_duplicatesDefaultScope": {
+        "message": "Default Scope",
+        "description": "Duplicate cleaner default scope label"
+    },
+    "settings_duplicatesDefaultScopeDesc": {
+        "message": "Default scope used when scanning for duplicate bookmarks",
+        "description": "Duplicate cleaner default scope description"
+    },
+    "settings_duplicatesMatchStrategy": {
+        "message": "Match Strategy",
+        "description": "Duplicate cleaner match strategy label"
+    },
+    "settings_duplicatesMatchStrategyDesc": {
+        "message": "How bookmarks are compared when looking for duplicates",
+        "description": "Duplicate cleaner match strategy description"
+    },
+    "settings_duplicatesNormalizeWww": {
+        "message": "Normalize www",
+        "description": "Duplicate cleaner normalize www label"
+    },
+    "settings_duplicatesNormalizeWwwDesc": {
+        "message": "Treat www.example.com and example.com as the same host",
+        "description": "Duplicate cleaner normalize www description"
+    },
+    "settings_duplicatesIgnoreProtocol": {
+        "message": "Ignore Protocol",
+        "description": "Duplicate cleaner ignore protocol label"
+    },
+    "settings_duplicatesIgnoreProtocolDesc": {
+        "message": "Treat http and https versions as duplicates",
+        "description": "Duplicate cleaner ignore protocol description"
+    },
+    "settings_duplicatesIgnoreTrailingSlash": {
+        "message": "Ignore Trailing Slash",
+        "description": "Duplicate cleaner ignore trailing slash label"
+    },
+    "settings_duplicatesIgnoreTrailingSlashDesc": {
+        "message": "Treat URLs with and without trailing slashes as duplicates",
+        "description": "Duplicate cleaner ignore trailing slash description"
+    },
+    "settings_duplicatesKeepRule": {
+        "message": "Keep Rule",
+        "description": "Duplicate cleaner keep rule label"
+    },
+    "settings_duplicatesKeepRuleDesc": {
+        "message": "Choose which bookmark to keep when duplicates are removed",
+        "description": "Duplicate cleaner keep rule description"
+    },
+    "settings_duplicatesMaxGroups": {
+        "message": "Max Groups",
+        "description": "Duplicate cleaner max groups label"
+    },
+    "settings_duplicatesMaxGroupsDesc": {
+        "message": "Maximum duplicate groups to return in one scan",
+        "description": "Duplicate cleaner max groups description"
+    },
+    "settings_urlCleanerEnabled": {
+        "message": "Enable URL Cleaner",
+        "description": "URL cleaner enabled label"
+    },
+    "settings_urlCleanerEnabledDesc": {
+        "message": "Allow cleaning tracking parameters from bookmark URLs",
+        "description": "URL cleaner enabled description"
+    },
+    "settings_urlCleanerDefaultScope": {
+        "message": "Default Scope",
+        "description": "URL cleaner default scope label"
+    },
+    "settings_urlCleanerDefaultScopeDesc": {
+        "message": "Default scope used when cleaning bookmark URLs",
+        "description": "URL cleaner default scope description"
+    },
+    "settings_urlCleanerRemoveHash": {
+        "message": "Remove Fragments",
+        "description": "URL cleaner remove hash label"
+    },
+    "settings_urlCleanerRemoveHashDesc": {
+        "message": "Remove URL fragments like #section from cleaned URLs",
+        "description": "URL cleaner remove hash description"
+    },
+    "settings_urlCleanerSortQueryParams": {
+        "message": "Sort Query Parameters",
+        "description": "URL cleaner sort query params label"
+    },
+    "settings_urlCleanerSortQueryParamsDesc": {
+        "message": "Sort remaining query parameters alphabetically",
+        "description": "URL cleaner sort query params description"
+    },
+    "settings_urlCleanerDedupeQueryParams": {
+        "message": "Deduplicate Query Parameters",
+        "description": "URL cleaner dedupe query params label"
+    },
+    "settings_urlCleanerDedupeQueryParamsDesc": {
+        "message": "Remove duplicated query parameters when cleaning URLs",
+        "description": "URL cleaner dedupe query params description"
+    },
+    "settings_urlCleanerPreserveParams": {
+        "message": "Preserve Parameters",
+        "description": "URL cleaner preserve params label"
+    },
+    "settings_urlCleanerPreserveParamsDesc": {
+        "message": "Comma-separated query parameters that should never be removed",
+        "description": "URL cleaner preserve params description"
+    },
+    "settings_urlCleanerRemoveParams": {
+        "message": "Remove Parameters",
+        "description": "URL cleaner remove params label"
+    },
+    "settings_urlCleanerRemoveParamsDesc": {
+        "message": "Comma-separated query parameters that should be stripped from URLs",
+        "description": "URL cleaner remove params description"
+    },
+    "settings_deadLinksEnabled": {
+        "message": "Enable Dead Link Checker",
+        "description": "Dead links enabled label"
+    },
+    "settings_deadLinksEnabledDesc": {
+        "message": "Allow checking bookmarks for unreachable URLs",
+        "description": "Dead links enabled description"
+    },
+    "settings_deadLinksDefaultScope": {
+        "message": "Default Scope",
+        "description": "Dead links default scope label"
+    },
+    "settings_deadLinksDefaultScopeDesc": {
+        "message": "Default scope used when checking dead links",
+        "description": "Dead links default scope description"
+    },
+    "settings_deadLinksRequestTimeoutMs": {
+        "message": "Request Timeout",
+        "description": "Dead links request timeout label"
+    },
+    "settings_deadLinksRequestTimeoutMsDesc": {
+        "message": "Maximum time to wait for each link check request",
+        "description": "Dead links request timeout description"
+    },
+    "settings_deadLinksConcurrency": {
+        "message": "Concurrency",
+        "description": "Dead links concurrency label"
+    },
+    "settings_deadLinksConcurrencyDesc": {
+        "message": "Number of concurrent requests used during dead link scanning",
+        "description": "Dead links concurrency description"
+    },
+    "settings_deadLinksRetryCount": {
+        "message": "Retry Count",
+        "description": "Dead links retry count label"
+    },
+    "settings_deadLinksRetryCountDesc": {
+        "message": "Number of times to retry failed dead link checks",
+        "description": "Dead links retry count description"
+    },
+    "settings_deadLinksFollowRedirects": {
+        "message": "Follow Redirects",
+        "description": "Dead links follow redirects label"
+    },
+    "settings_deadLinksFollowRedirectsDesc": {
+        "message": "Treat redirected URLs as reachable when scanning dead links",
+        "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksSuccessStatuses": {
+        "message": "Success Status Codes",
+        "description": "Dead links success statuses label"
+    },
+    "settings_deadLinksSuccessStatusesDesc": {
+        "message": "Comma-separated HTTP status codes treated as reachable",
+        "description": "Dead links success statuses description"
+    },
+    "settings_metadataFetcherEnabled": {
+        "message": "Enable Metadata Fetcher",
+        "description": "Metadata fetcher enabled label"
+    },
+    "settings_metadataFetcherEnabledDesc": {
+        "message": "Allow fetching missing bookmark metadata",
+        "description": "Metadata fetcher enabled description"
+    },
+    "settings_metadataFetcherDefaultScope": {
+        "message": "Default Scope",
+        "description": "Metadata fetcher default scope label"
+    },
+    "settings_metadataFetcherDefaultScopeDesc": {
+        "message": "Default scope used when fetching metadata",
+        "description": "Metadata fetcher default scope description"
+    },
+    "settings_metadataFetcherOverwriteTitles": {
+        "message": "Overwrite Titles",
+        "description": "Metadata fetcher overwrite titles label"
+    },
+    "settings_metadataFetcherOverwriteTitlesDesc": {
+        "message": "Replace existing bookmark titles when better metadata is found",
+        "description": "Metadata fetcher overwrite titles description"
+    },
+    "settings_metadataFetcherFetchFavicons": {
+        "message": "Fetch Favicons",
+        "description": "Metadata fetcher fetch favicons label"
+    },
+    "settings_metadataFetcherFetchFaviconsDesc": {
+        "message": "Attempt to refresh missing or outdated favicons",
+        "description": "Metadata fetcher fetch favicons description"
+    },
+    "settings_metadataFetcherFetchDescriptions": {
+        "message": "Fetch Descriptions",
+        "description": "Metadata fetcher fetch descriptions label"
+    },
+    "settings_metadataFetcherFetchDescriptionsDesc": {
+        "message": "Attempt to collect short metadata descriptions for bookmarks",
+        "description": "Metadata fetcher fetch descriptions description"
+    },
+    "settings_metadataFetcherRequestTimeoutMs": {
+        "message": "Request Timeout",
+        "description": "Metadata fetcher timeout label"
+    },
+    "settings_metadataFetcherRequestTimeoutMsDesc": {
+        "message": "Maximum time to wait for each metadata request",
+        "description": "Metadata fetcher timeout description"
+    },
+    "settings_metadataFetcherConcurrency": {
+        "message": "Concurrency",
+        "description": "Metadata fetcher concurrency label"
+    },
+    "settings_metadataFetcherConcurrencyDesc": {
+        "message": "Number of concurrent requests used when fetching metadata",
+        "description": "Metadata fetcher concurrency description"
+    },
+    "settings_privacyScannerEnabled": {
+        "message": "Enable Privacy Scanner",
+        "description": "Privacy scanner enabled label"
+    },
+    "settings_privacyScannerEnabledDesc": {
+        "message": "Allow scanning bookmark URLs for sensitive data",
+        "description": "Privacy scanner enabled description"
+    },
+    "settings_privacyScannerDefaultScope": {
+        "message": "Default Scope",
+        "description": "Privacy scanner default scope label"
+    },
+    "settings_privacyScannerDefaultScopeDesc": {
+        "message": "Default scope used when scanning for sensitive data",
+        "description": "Privacy scanner default scope description"
+    },
+    "settings_privacyScannerScanTitles": {
+        "message": "Scan Titles",
+        "description": "Privacy scanner scan titles label"
+    },
+    "settings_privacyScannerScanTitlesDesc": {
+        "message": "Check bookmark titles for sensitive values as well as URLs",
+        "description": "Privacy scanner scan titles description"
+    },
+    "settings_privacyScannerScanQueryParams": {
+        "message": "Scan Query Parameters",
+        "description": "Privacy scanner scan query params label"
+    },
+    "settings_privacyScannerScanQueryParamsDesc": {
+        "message": "Inspect query parameters for secrets and sensitive data",
+        "description": "Privacy scanner scan query params description"
+    },
+    "settings_privacyScannerScanFragments": {
+        "message": "Scan Fragments",
+        "description": "Privacy scanner scan fragments label"
+    },
+    "settings_privacyScannerScanFragmentsDesc": {
+        "message": "Inspect URL fragments for sensitive data",
+        "description": "Privacy scanner scan fragments description"
+    },
+    "settings_privacyScannerSensitiveParams": {
+        "message": "Sensitive Parameters",
+        "description": "Privacy scanner sensitive params label"
+    },
+    "settings_privacyScannerSensitiveParamsDesc": {
+        "message": "Comma-separated parameter names that should be flagged as sensitive",
+        "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerEmailDetection": {
+        "message": "Detect Emails",
+        "description": "Privacy scanner email detection label"
+    },
+    "settings_privacyScannerEmailDetectionDesc": {
+        "message": "Flag email addresses found in bookmark URLs or titles",
+        "description": "Privacy scanner email detection description"
+    },
+    "settings_privacyScannerUuidDetection": {
+        "message": "Detect UUIDs",
+        "description": "Privacy scanner uuid detection label"
+    },
+    "settings_privacyScannerUuidDetectionDesc": {
+        "message": "Flag UUID-like values found in bookmark URLs",
+        "description": "Privacy scanner uuid detection description"
+    },
+    "settings_statisticsEnabled": {
+        "message": "Enable Statistics",
+        "description": "Statistics enabled label"
+    },
+    "settings_statisticsEnabledDesc": {
+        "message": "Allow generating bookmark statistics reports",
+        "description": "Statistics enabled description"
+    },
+    "settings_statisticsDefaultScope": {
+        "message": "Default Scope",
+        "description": "Statistics default scope label"
+    },
+    "settings_statisticsDefaultScopeDesc": {
+        "message": "Default scope used when viewing bookmark statistics",
+        "description": "Statistics default scope description"
+    },
+    "settings_statisticsIncludeDomains": {
+        "message": "Include Domains",
+        "description": "Statistics include domains label"
+    },
+    "settings_statisticsIncludeDomainsDesc": {
+        "message": "Include top domains in bookmark statistics",
+        "description": "Statistics include domains description"
+    },
+    "settings_statisticsIncludeFolders": {
+        "message": "Include Folders",
+        "description": "Statistics include folders label"
+    },
+    "settings_statisticsIncludeFoldersDesc": {
+        "message": "Include top folders in bookmark statistics",
+        "description": "Statistics include folders description"
+    },
+    "settings_statisticsIncludeDuplicates": {
+        "message": "Include Duplicates",
+        "description": "Statistics include duplicates label"
+    },
+    "settings_statisticsIncludeDuplicatesDesc": {
+        "message": "Include duplicate bookmark counts in statistics",
+        "description": "Statistics include duplicates description"
+    },
+    "settings_statisticsIncludeProtocols": {
+        "message": "Include Protocols",
+        "description": "Statistics include protocols label"
+    },
+    "settings_statisticsIncludeProtocolsDesc": {
+        "message": "Include URL protocol distribution in statistics",
+        "description": "Statistics include protocols description"
+    },
+    "settings_statisticsIncludeDepthBreakdown": {
+        "message": "Include Depth Breakdown",
+        "description": "Statistics include depth breakdown label"
+    },
+    "settings_statisticsIncludeDepthBreakdownDesc": {
+        "message": "Track the deepest folder nesting level in statistics",
+        "description": "Statistics include depth breakdown description"
+    },
+    "settings_statisticsTopN": {
+        "message": "Top N Entries",
+        "description": "Statistics top N label"
+    },
+    "settings_statisticsTopNDesc": {
+        "message": "Maximum number of entries to show in top domain and folder lists",
+        "description": "Statistics top N description"
+    },
+    "settings_dataShowExport": {
+        "message": "Show Export Tool",
+        "description": "Data export tool visibility label"
+    },
+    "settings_dataShowExportDesc": {
+        "message": "Show the bookmark export tool in the sidebar",
+        "description": "Data export tool visibility description"
+    },
+    "settings_dataShowImport": {
+        "message": "Show Import Tool",
+        "description": "Data import tool visibility label"
+    },
+    "settings_dataShowImportDesc": {
+        "message": "Show the bookmark import tool in the sidebar",
+        "description": "Data import tool visibility description"
+    },
+    "settings_dataDefaultExportFormat": {
+        "message": "Default Export Format",
+        "description": "Default export format label"
+    },
+    "settings_dataDefaultExportFormatDesc": {
+        "message": "Default format selected in the bookmark export tool",
+        "description": "Default export format description"
+    },
+    "toast_duplicatesRemoved": {
+        "message": "Duplicates removed",
+        "description": "Duplicate removal success title"
+    },
+    "toast_duplicatesRemovedDesc": {
+        "message": "$1 duplicate bookmarks removed",
+        "description": "Duplicate removal success description"
+    },
+    "toast_toolFailed": {
+        "message": "Tool failed",
+        "description": "Generic tool failure title"
+    },
+    "toast_urlCleanerApplied": {
+        "message": "URLs cleaned",
+        "description": "URL cleaner success title"
+    },
+    "toast_urlCleanerAppliedDesc": {
+        "message": "$1 bookmarks updated",
+        "description": "URL cleaner success description"
+    },
+    "toast_aiContextPacked": {
+        "message": "AI context exported",
+        "description": "AI context export success title"
+    },
+    "toast_aiContextPackedDesc": {
+        "message": "$1 bookmarks exported for AI use",
+        "description": "AI context export success description"
+    },
+    "tools_duplicatesDialogDesc": {
+        "message": "$1 duplicate groups found across $2 bookmarks",
+        "description": "Duplicate dialog description"
+    },
+    "tools_urlCleanerDialogDesc": {
+        "message": "$1 bookmarks can be cleaned",
+        "description": "URL cleaner dialog description"
+    },
+    "tools_statisticsDialogDesc": {
+        "message": "Snapshot of the selected bookmark scope",
+        "description": "Statistics dialog description"
+    },
+    "tools_autoTaggingDialogDesc": {
+        "message": "AI-generated tags for the selected bookmarks",
+        "description": "Auto-tagging dialog description"
+    },
+    "tools_summarizerDialogDesc": {
+        "message": "AI-generated bookmark summaries",
+        "description": "Summarizer dialog description"
+    },
+    "state_keep": {
+        "message": "Keep",
+        "description": "Keep badge label"
+    },
+    "state_noDuplicatesFound": {
+        "message": "No duplicate bookmarks found.",
+        "description": "No duplicates found state"
+    },
+    "state_noUrlChangesFound": {
+        "message": "No URL cleanup changes found.",
+        "description": "No URL changes found state"
+    },
+    "state_noData": {
+        "message": "No data available.",
+        "description": "No data available state"
+    },
+    "state_noAiResults": {
+        "message": "No AI results available.",
+        "description": "No AI results state"
+    },
+    "action_clean": {
+        "message": "Clean",
+        "description": "Clean button label"
+    },
+    "action_removing": {
+        "message": "Removing...",
+        "description": "Removing state label"
+    },
+    "action_removeDuplicates": {
+        "message": "Remove duplicates",
+        "description": "Remove duplicates button label"
+    },
+    "stats_totalBookmarks": {
+        "message": "Bookmarks",
+        "description": "Statistics total bookmarks label"
+    },
+    "stats_totalFolders": {
+        "message": "Folders",
+        "description": "Statistics total folders label"
+    },
+    "stats_deepestLevel": {
+        "message": "Deepest level",
+        "description": "Statistics deepest level label"
+    },
+    "stats_duplicates": {
+        "message": "Duplicates",
+        "description": "Statistics duplicates label"
+    },
+    "stats_topDomains": {
+        "message": "Top domains",
+        "description": "Statistics top domains label"
+    },
+    "stats_topFolders": {
+        "message": "Top folders",
+        "description": "Statistics top folders label"
+    },
+    "stats_protocols": {
+        "message": "Protocols",
+        "description": "Statistics protocols label"
     }
 }

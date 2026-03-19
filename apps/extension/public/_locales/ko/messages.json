@@ -411,10 +411,6 @@
         "message": "알림이 자동으로 사라지기 전 시간",
         "description": "Description for toast duration setting"
     },
-    "action_saving": {
-        "message": "저장 중...",
-        "description": "Saving state indicator"
-    },
     "settings_results": {
         "message": "$1개 결과",
         "description": "Results count option"
@@ -582,5 +578,221 @@
     "search_useRegex": {
         "message": "정규식 사용",
         "description": "Toggle regex search mode"
+    },
+    "settings_aiEnabled": {
+        "message": "AI 기능",
+        "description": "AI feature toggle label"
+    },
+    "settings_aiEnabledDesc": {
+        "message": "AI 기반 북마크 워크플로를 활성화합니다",
+        "description": "AI feature toggle description"
+    },
+    "settings_aiProvider": {
+        "message": "AI 제공자",
+        "description": "AI provider setting label"
+    },
+    "settings_aiProviderDesc": {
+        "message": "AI 도구에 사용할 제공자를 선택합니다",
+        "description": "AI provider setting description"
+    },
+    "settings_aiModel": {
+        "message": "AI 모델",
+        "description": "AI model setting label"
+    },
+    "settings_aiModelDesc": {
+        "message": "AI 도구에 사용할 모델을 선택합니다",
+        "description": "AI model setting description"
+    },
+    "settings_aiMaxRecommendations": {
+        "message": "최대 추천 수",
+        "description": "Max recommendations setting label"
+    },
+    "settings_aiMaxRecommendationsDesc": {
+        "message": "AI에 요청할 최대 추천 수입니다",
+        "description": "Max recommendations setting description"
+    },
+    "settings_aiAutoTrigger": {
+        "message": "열 때 자동 추천",
+        "description": "AI auto trigger label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "팝업을 열 때 자동으로 추천을 실행합니다",
+        "description": "AI auto trigger description"
+    },
+    "settings_aiTools": {
+        "message": "AI 도구",
+        "description": "AI tools settings tab label"
+    },
+    "settings_aiToolsDesc": {
+        "message": "AI 기반 북마크 도구를 설정합니다",
+        "description": "AI tools settings tab description"
+    },
+    "settings_maintenance": {
+        "message": "유지보수",
+        "description": "Maintenance settings tab label"
+    },
+    "settings_maintenanceDesc": {
+        "message": "정리 및 복구 도구를 설정합니다",
+        "description": "Maintenance settings tab description"
+    },
+    "settings_metadataContent": {
+        "message": "메타데이터 및 콘텐츠",
+        "description": "Metadata settings tab label"
+    },
+    "settings_metadataContentDesc": {
+        "message": "메타데이터 보강 도구를 설정합니다",
+        "description": "Metadata settings tab description"
+    },
+    "settings_security": {
+        "message": "보안",
+        "description": "Security settings tab label"
+    },
+    "settings_securityDesc": {
+        "message": "보안 및 개인정보 도구를 설정합니다",
+        "description": "Security settings tab description"
+    },
+    "settings_analytics": {
+        "message": "분석",
+        "description": "Analytics settings tab label"
+    },
+    "settings_analyticsDesc": {
+        "message": "통계 및 리포트 기능을 설정합니다",
+        "description": "Analytics settings tab description"
+    },
+    "settings_data": {
+        "message": "데이터",
+        "description": "Data settings tab label"
+    },
+    "settings_dataDesc": {
+        "message": "가져오기/내보내기 설정을 관리합니다",
+        "description": "Data settings tab description"
+    },
+    "settings_scopeFolder": {
+        "message": "현재 폴더",
+        "description": "Folder scope option label"
+    },
+    "settings_scopeAll": {
+        "message": "모든 북마크",
+        "description": "All bookmarks scope option label"
+    },
+    "settings_scopeBoth": {
+        "message": "폴더 또는 전체",
+        "description": "Combined scope option label"
+    },
+    "settings_mergeAppend": {
+        "message": "추가",
+        "description": "Merge append option label"
+    },
+    "settings_mergeReplace": {
+        "message": "교체",
+        "description": "Merge replace option label"
+    },
+    "toast_duplicatesRemoved": {
+        "message": "중복을 제거했습니다",
+        "description": "Duplicate removal success title"
+    },
+    "toast_duplicatesRemovedDesc": {
+        "message": "$1개의 중복 북마크를 제거했습니다",
+        "description": "Duplicate removal success description"
+    },
+    "toast_toolFailed": {
+        "message": "도구 실행에 실패했습니다",
+        "description": "Generic tool failure title"
+    },
+    "toast_urlCleanerApplied": {
+        "message": "URL을 정리했습니다",
+        "description": "URL cleaner success title"
+    },
+    "toast_urlCleanerAppliedDesc": {
+        "message": "$1개의 북마크를 업데이트했습니다",
+        "description": "URL cleaner success description"
+    },
+    "toast_aiContextPacked": {
+        "message": "AI 컨텍스트를 내보냈습니다",
+        "description": "AI context export success title"
+    },
+    "toast_aiContextPackedDesc": {
+        "message": "$1개의 북마크를 AI용으로 내보냈습니다",
+        "description": "AI context export success description"
+    },
+    "tools_duplicatesDialogDesc": {
+        "message": "$2개의 북마크에서 $1개의 중복 그룹을 찾았습니다",
+        "description": "Duplicate dialog description"
+    },
+    "tools_urlCleanerDialogDesc": {
+        "message": "$1개의 북마크를 정리할 수 있습니다",
+        "description": "URL cleaner dialog description"
+    },
+    "tools_statisticsDialogDesc": {
+        "message": "선택한 범위의 스냅샷입니다",
+        "description": "Statistics dialog description"
+    },
+    "tools_autoTaggingDialogDesc": {
+        "message": "선택한 북마크에 대한 AI 태그 제안입니다",
+        "description": "Auto-tagging dialog description"
+    },
+    "tools_summarizerDialogDesc": {
+        "message": "AI가 생성한 북마크 요약입니다",
+        "description": "Summarizer dialog description"
+    },
+    "state_keep": {
+        "message": "유지",
+        "description": "Keep badge label"
+    },
+    "state_noDuplicatesFound": {
+        "message": "중복 북마크를 찾지 못했습니다.",
+        "description": "No duplicates found state"
+    },
+    "state_noUrlChangesFound": {
+        "message": "정리할 URL 변경 사항이 없습니다.",
+        "description": "No URL changes found state"
+    },
+    "state_noData": {
+        "message": "표시할 데이터가 없습니다.",
+        "description": "No data available state"
+    },
+    "state_noAiResults": {
+        "message": "AI 결과가 없습니다.",
+        "description": "No AI results state"
+    },
+    "action_clean": {
+        "message": "정리",
+        "description": "Clean button label"
+    },
+    "action_removing": {
+        "message": "제거 중...",
+        "description": "Removing state label"
+    },
+    "action_removeDuplicates": {
+        "message": "중복 제거",
+        "description": "Remove duplicates button label"
+    },
+    "stats_totalBookmarks": {
+        "message": "북마크",
+        "description": "Statistics total bookmarks label"
+    },
+    "stats_totalFolders": {
+        "message": "폴더",
+        "description": "Statistics total folders label"
+    },
+    "stats_deepestLevel": {
+        "message": "최대 깊이",
+        "description": "Statistics deepest level label"
+    },
+    "stats_duplicates": {
+        "message": "중복 수",
+        "description": "Statistics duplicates label"
+    },
+    "stats_topDomains": {
+        "message": "상위 도메인",
+        "description": "Statistics top domains label"
+    },
+    "stats_topFolders": {
+        "message": "상위 폴더",
+        "description": "Statistics top folders label"
+    },
+    "stats_protocols": {
+        "message": "프로토콜",
+        "description": "Statistics protocols label"
     }
 }
