@@ -31,7 +31,9 @@ import {
 } from 'lucide-react';
 import { t } from '@/hooks/use-i18n';
 import { useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { useBookmarks } from '@/hooks/use-bookmarks';
+import { useToast } from '@/hooks/use-toast';
+import { Badge } from '@/components/ui/badge';
 import {
   exportFormats,
   exportBookmarks,
@@ -46,115 +48,50 @@ import {
   generateReorganizationPlan,
   applyReorganizationPlan,
   type ReorganizationPlan,
+  type AIProvider,
+  getScopedNodes,
+  scanDuplicateBookmarks,
+  previewCleanUrls,
+  collectBookmarkStatistics,
+  deleteBookmark,
+  updateBookmark,
+  buildAIContextPack,
+  downloadTextFile,
+  suggestBookmarkTags,
+  summarizeBookmarksWithAI,
+  buildAISettingsFromProvider,
+  scanDeadLinks,
+  fetchBookmarkMetadata,
+  scanBookmarkPrivacy,
+  type DeadLinkScanResult,
+  type MetadataFetchResult,
+  type PrivacyScanResult,
 } from '@/services';
-import { defaultSettings } from '@/lib/settings-schema';
 import { useSetting } from '@/lib';
-import { useBookmarks } from '@/hooks/use-bookmarks';
-import { useToast } from '@/hooks/use-toast';
 import { ReorganizationDialog } from './ReorganizationDialog';
+import { ToolResultsDialog } from './ToolResultsDialog';
+import { ToolCard, type ToolScope } from './ToolCards';
+import {
+  DeadLinkResultsView,
+  DuplicateResultsView,
+  MetadataResultsView,
+  PrivacyResultsView,
+  StatisticsResultsView,
+  UrlCleanerResultsView,
+} from './ToolResultViews';
 
-type ToolScope = 'folder' | 'all';
-type ScopeCapability = 'folder' | 'all' | 'both';
-
-interface ToolCardProps {
-  icon: React.ReactNode;
+type ToolSectionProps = {
   title: string;
-  description: string;
-  buttonLabel: string;
-  onClick: (scope: ToolScope) => void;
-  disabled?: boolean;
-  isLoading?: boolean;
-  scopeCapability: ScopeCapability;
-  currentFolderName?: string;
-}
+  children: React.ReactNode;
+};
 
-function ToolCard({
-  icon,
-  title,
-  description,
-  buttonLabel,
-  onClick,
-  disabled = false,
-  isLoading = false,
-  scopeCapability,
-  currentFolderName,
-}: ToolCardProps) {
-  const [scope, setScope] = useState<ToolScope>(
-    scopeCapability === 'all' ? 'all' : 'folder'
-  );
-
-  const showScopeSelector = scopeCapability === 'both';
-
-  // Scope badge indicator
-  const ScopeBadge = () => {
-    if (scopeCapability === 'folder') {
-      return (
-        <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
-          <Folder className="h-3 w-3" />
-        </span>
-      );
-    }
-    if (scopeCapability === 'all') {
-      return (
-        <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
-          <Globe className="h-3 w-3" />
-        </span>
-      );
-    }
-    return (
-      <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-        <Folder className="h-3 w-3" />
-        <span>/</span>
-        <Globe className="h-3 w-3" />
-      </span>
-    );
-  };
-
+function ToolSection({ title, children }: ToolSectionProps) {
   return (
-    <div className="p-3 rounded-lg border bg-card space-y-2">
-      <div className="flex items-start gap-2">
-        <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">{icon}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium truncate">{title}</h4>
-            <ScopeBadge />
-          </div>
-          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{description}</p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-2">
-        {showScopeSelector && (
-          <Select value={scope} onValueChange={(v) => setScope(v as ToolScope)}>
-            <SelectTrigger className="flex-1 h-8 text-xs">
-              <SelectValue placeholder="Select scope" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="folder">
-                <div className="flex items-center gap-2">
-                  <Folder className="h-3 w-3" />
-                  <span className="truncate">{currentFolderName || 'Current Folder'}</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="all">
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3 w-3" />
-                  <span>All Bookmarks</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        )}
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => onClick(scope)}
-          disabled={disabled || isLoading}
-          className={cn('h-8 text-xs', !showScopeSelector && 'w-full')}
-        >
-          {isLoading ? 'Running...' : buttonLabel}
-        </Button>
-      </div>
+    <div className="space-y-3">
+      <h3 className="px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {title}
+      </h3>
+      {children}
     </div>
   );
 }
@@ -170,7 +107,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const [exportFormat, setExportFormat] = useState('html');
+  const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
+  const [exportFormat, setExportFormat] = useState(String(dataDefaultExportFormat));
 
   // AI Reorganization state
   const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
@@ -178,34 +116,398 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [reorgLoading, setReorgLoading] = useState(false);
   const [reorgErrors, setReorgErrors] = useState<string[]>([]);
 
+  const [duplicatesDialogOpen, setDuplicatesDialogOpen] = useState(false);
+  const [duplicateResult, setDuplicateResult] = useState<ReturnType<typeof scanDuplicateBookmarks> | null>(null);
+  const [duplicateLoading, setDuplicateLoading] = useState(false);
+  const [duplicateRemoving, setDuplicateRemoving] = useState(false);
+
+  const [urlCleanerDialogOpen, setUrlCleanerDialogOpen] = useState(false);
+  const [urlCleanerResult, setUrlCleanerResult] = useState<ReturnType<typeof previewCleanUrls> | null>(null);
+  const [urlCleanerLoading, setUrlCleanerLoading] = useState(false);
+  const [urlCleanerApplying, setUrlCleanerApplying] = useState(false);
+
+  const [statisticsDialogOpen, setStatisticsDialogOpen] = useState(false);
+  const [statisticsResult, setStatisticsResult] = useState<ReturnType<typeof collectBookmarkStatistics> | null>(null);
+  const [deadLinksDialogOpen, setDeadLinksDialogOpen] = useState(false);
+  const [deadLinksLoading, setDeadLinksLoading] = useState(false);
+  const [deadLinksResult, setDeadLinksResult] = useState<DeadLinkScanResult | null>(null);
+  const [metadataDialogOpen, setMetadataDialogOpen] = useState(false);
+  const [metadataLoading, setMetadataLoading] = useState(false);
+  const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
+  const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
+  const [privacyResult, setPrivacyResult] = useState<PrivacyScanResult | null>(null);
+
+  const [aiContextLoading, setAiContextLoading] = useState(false);
+  const [autoTaggingLoading, setAutoTaggingLoading] = useState(false);
+  const [autoTaggingDialogOpen, setAutoTaggingDialogOpen] = useState(false);
+  const [autoTaggingResult, setAutoTaggingResult] = useState<Awaited<ReturnType<typeof suggestBookmarkTags>>>([]);
+  const [summarizerLoading, setSummarizerLoading] = useState(false);
+  const [summarizerDialogOpen, setSummarizerDialogOpen] = useState(false);
+  const [summarizerResult, setSummarizerResult] = useState<Awaited<ReturnType<typeof summarizeBookmarksWithAI>>>([]);
+
+  const { value: duplicatesMatchStrategy } = useSetting('duplicatesMatchStrategy');
+  const { value: duplicatesNormalizeWww } = useSetting('duplicatesNormalizeWww');
+  const { value: duplicatesIgnoreProtocol } = useSetting('duplicatesIgnoreProtocol');
+  const { value: duplicatesIgnoreTrailingSlash } = useSetting('duplicatesIgnoreTrailingSlash');
+  const { value: duplicatesMaxGroups } = useSetting('duplicatesMaxGroups');
+  const { value: duplicatesKeepRule } = useSetting('duplicatesKeepRule');
+  const { value: urlCleanerRemoveHash } = useSetting('urlCleanerRemoveHash');
+  const { value: urlCleanerSortQueryParams } = useSetting('urlCleanerSortQueryParams');
+  const { value: urlCleanerDedupeQueryParams } = useSetting('urlCleanerDedupeQueryParams');
+  const { value: urlCleanerPreserveParams } = useSetting('urlCleanerPreserveParams');
+  const { value: urlCleanerRemoveParams } = useSetting('urlCleanerRemoveParams');
+  const { value: statisticsIncludeDomains } = useSetting('statisticsIncludeDomains');
+  const { value: statisticsIncludeFolders } = useSetting('statisticsIncludeFolders');
+  const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
+  const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
+  const { value: statisticsTopN } = useSetting('statisticsTopN');
+  const { value: deadLinksRequestTimeoutMs } = useSetting('deadLinksRequestTimeoutMs');
+  const { value: deadLinksConcurrency } = useSetting('deadLinksConcurrency');
+  const { value: deadLinksRetryCount } = useSetting('deadLinksRetryCount');
+  const { value: deadLinksFollowRedirects } = useSetting('deadLinksFollowRedirects');
+  const { value: deadLinksSuccessStatuses } = useSetting('deadLinksSuccessStatuses');
+  const { value: metadataFetcherOverwriteTitles } = useSetting('metadataFetcherOverwriteTitles');
+  const { value: metadataFetcherFetchFavicons } = useSetting('metadataFetcherFetchFavicons');
+  const { value: metadataFetcherFetchDescriptions } = useSetting('metadataFetcherFetchDescriptions');
+  const { value: metadataFetcherRequestTimeoutMs } = useSetting('metadataFetcherRequestTimeoutMs');
+  const { value: metadataFetcherConcurrency } = useSetting('metadataFetcherConcurrency');
+  const { value: privacyScannerScanTitles } = useSetting('privacyScannerScanTitles');
+  const { value: privacyScannerScanQueryParams } = useSetting('privacyScannerScanQueryParams');
+  const { value: privacyScannerScanFragments } = useSetting('privacyScannerScanFragments');
+  const { value: privacyScannerSensitiveParams } = useSetting('privacyScannerSensitiveParams');
+  const { value: privacyScannerEmailDetection } = useSetting('privacyScannerEmailDetection');
+  const { value: privacyScannerUuidDetection } = useSetting('privacyScannerUuidDetection');
+  const { value: aiContextPackerOutputFormat } = useSetting('aiContextPackerOutputFormat');
+  const { value: aiContextPackerIncludeFolderPath } = useSetting('aiContextPackerIncludeFolderPath');
+  const { value: aiContextPackerIncludeDates } = useSetting('aiContextPackerIncludeDates');
+  const { value: aiContextPackerIncludeTags } = useSetting('aiContextPackerIncludeTags');
+  const { value: aiContextPackerIncludeSummaries } = useSetting('aiContextPackerIncludeSummaries');
+  const { value: aiContextPackerMaxItems } = useSetting('aiContextPackerMaxItems');
+  const { value: aiContextPackerMaxDepth } = useSetting('aiContextPackerMaxDepth');
+  const { value: aiContextPackerExcerptLength } = useSetting('aiContextPackerExcerptLength');
+  const { value: autoTaggingMinTags } = useSetting('autoTaggingMinTags');
+  const { value: autoTaggingMaxTags } = useSetting('autoTaggingMaxTags');
+  const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
+  const { value: summarizerSummaryLength } = useSetting('summarizerSummaryLength');
+  const { value: summarizerIncludeDomainHint } = useSetting('summarizerIncludeDomainHint');
+
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
   const { value: aiProvider } = useSetting('aiProvider');
   const { value: aiModel } = useSetting('aiModel');
 
+  const getTargetNodes = (scope: ToolScope) => getScopedNodes(folders, currentFolderId, scope);
+
+  const handleDuplicates = async (scope: ToolScope) => {
+    setDuplicateLoading(true);
+    try {
+      const result = scanDuplicateBookmarks(getTargetNodes(scope), {
+        strategy: duplicatesMatchStrategy,
+        normalizeWww: duplicatesNormalizeWww,
+        ignoreProtocol: duplicatesIgnoreProtocol,
+        ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
+        maxGroups: duplicatesMaxGroups,
+      });
+      setDuplicateResult(result);
+      setDuplicatesDialogOpen(true);
+    } finally {
+      setDuplicateLoading(false);
+    }
+  };
+
+  const handleRemoveDuplicates = async () => {
+    if (!duplicateResult) return;
+
+    setDuplicateRemoving(true);
+    try {
+      const toDelete = duplicateResult.groups.flatMap((group) => {
+        const sorted = [...group.items].sort((a, b) => {
+          const dateA = a.node.dateAdded ?? 0;
+          const dateB = b.node.dateAdded ?? 0;
+
+          if (duplicatesKeepRule === 'newest') {
+            return dateB - dateA;
+          }
+
+          if (duplicatesKeepRule === 'oldest') {
+            return dateA - dateB;
+          }
+
+          return a.node.id.localeCompare(b.node.id);
+        });
+
+        return sorted.slice(1).map((item) => item.node.id);
+      });
+
+      await Promise.all(toDelete.map((id) => deleteBookmark(id)));
+      await refresh();
+      setDuplicatesDialogOpen(false);
+      toast({
+        title: t('toast_duplicatesRemoved') || 'Duplicates removed',
+        description: (t('toast_duplicatesRemovedDesc') || '$1 duplicate bookmarks removed').replace('$1', String(toDelete.length)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setDuplicateRemoving(false);
+    }
+  };
+
+  const handleUrlCleaner = async (scope: ToolScope) => {
+    setUrlCleanerLoading(true);
+    try {
+      const result = previewCleanUrls(getTargetNodes(scope), {
+        removeHash: urlCleanerRemoveHash,
+        sortQueryParams: urlCleanerSortQueryParams,
+        dedupeQueryParams: urlCleanerDedupeQueryParams,
+        preserveParams: urlCleanerPreserveParams,
+        removeParams: urlCleanerRemoveParams,
+      });
+      setUrlCleanerResult(result);
+      setUrlCleanerDialogOpen(true);
+    } finally {
+      setUrlCleanerLoading(false);
+    }
+  };
+
+  const handleApplyUrlCleaner = async () => {
+    if (!urlCleanerResult) return;
+
+    setUrlCleanerApplying(true);
+    try {
+      await Promise.all(
+        urlCleanerResult.previews.map((preview) =>
+          updateBookmark(preview.id, { url: preview.cleanedUrl }),
+        ),
+      );
+      await refresh();
+      setUrlCleanerDialogOpen(false);
+      toast({
+        title: t('toast_urlCleanerApplied') || 'URLs cleaned',
+        description: (t('toast_urlCleanerAppliedDesc') || '$1 bookmarks updated').replace('$1', String(urlCleanerResult.previews.length)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setUrlCleanerApplying(false);
+    }
+  };
+
+  const handleStatistics = (scope: ToolScope) => {
+    const result = collectBookmarkStatistics(getTargetNodes(scope), {
+      includeDomains: statisticsIncludeDomains,
+      includeFolders: statisticsIncludeFolders,
+      includeProtocols: statisticsIncludeProtocols,
+      includeDuplicates: statisticsIncludeDuplicates,
+      topN: statisticsTopN,
+    });
+    setStatisticsResult(result);
+    setStatisticsDialogOpen(true);
+  };
+
+  const handleDeadLinks = async (scope: ToolScope) => {
+    setDeadLinksLoading(true);
+    try {
+      const result = await scanDeadLinks(getTargetNodes(scope), {
+        requestTimeoutMs: deadLinksRequestTimeoutMs,
+        concurrency: deadLinksConcurrency,
+        retryCount: deadLinksRetryCount,
+        followRedirects: deadLinksFollowRedirects,
+        successStatuses: deadLinksSuccessStatuses,
+      });
+      setDeadLinksResult(result);
+      setDeadLinksDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setDeadLinksLoading(false);
+    }
+  };
+
+  const handleMetadata = async (scope: ToolScope) => {
+    setMetadataLoading(true);
+    try {
+      const result = await fetchBookmarkMetadata(getTargetNodes(scope), {
+        overwriteTitles: metadataFetcherOverwriteTitles,
+        fetchFavicons: metadataFetcherFetchFavicons,
+        fetchDescriptions: metadataFetcherFetchDescriptions,
+        requestTimeoutMs: metadataFetcherRequestTimeoutMs,
+        concurrency: metadataFetcherConcurrency,
+      });
+      setMetadataResult(result);
+      setMetadataDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setMetadataLoading(false);
+    }
+  };
+
+  const handlePrivacy = (scope: ToolScope) => {
+    const result = scanBookmarkPrivacy(getTargetNodes(scope), {
+      scanTitles: privacyScannerScanTitles,
+      scanQueryParams: privacyScannerScanQueryParams,
+      scanFragments: privacyScannerScanFragments,
+      sensitiveParams: privacyScannerSensitiveParams,
+      emailDetection: privacyScannerEmailDetection,
+      uuidDetection: privacyScannerUuidDetection,
+    });
+    setPrivacyResult(result);
+    setPrivacyDialogOpen(true);
+  };
+
+  const buildAISettings = async () =>
+    buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+
+  const handleAIContextPack = async (scope: ToolScope) => {
+    setAiContextLoading(true);
+    try {
+      const packed = buildAIContextPack(getTargetNodes(scope), {
+        format: aiContextPackerOutputFormat,
+        includeFolderPath: aiContextPackerIncludeFolderPath,
+        includeDates: aiContextPackerIncludeDates,
+        includeTags: aiContextPackerIncludeTags,
+        includeSummaries: aiContextPackerIncludeSummaries,
+        maxItems: aiContextPackerMaxItems,
+        maxDepth: aiContextPackerMaxDepth,
+        excerptLength: aiContextPackerExcerptLength,
+      });
+
+      const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
+      const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
+      downloadTextFile(packed.content, filename, mimeType);
+      toast({
+        title: t('toast_aiContextPacked') || 'AI context exported',
+        description: (t('toast_aiContextPackedDesc') || '$1 bookmarks exported for AI use').replace('$1', String(packed.itemCount)),
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setAiContextLoading(false);
+    }
+  };
+
+  const handleAutoTagging = async (scope: ToolScope) => {
+    setAutoTaggingLoading(true);
+    try {
+      const settings = await buildAISettings();
+      const result = await suggestBookmarkTags(getTargetNodes(scope), settings, {
+        minTags: autoTaggingMinTags,
+        maxTags: autoTaggingMaxTags,
+        tagStyle: autoTaggingTagStyle,
+      });
+      setAutoTaggingResult(result);
+      setAutoTaggingDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setAutoTaggingLoading(false);
+    }
+  };
+
+  const handleSummarizer = async (scope: ToolScope) => {
+    setSummarizerLoading(true);
+    try {
+      const settings = await buildAISettings();
+      const result = await summarizeBookmarksWithAI(getTargetNodes(scope), settings, {
+        summaryLength: summarizerSummaryLength,
+        includeDomainHint: summarizerIncludeDomainHint,
+      });
+      setSummarizerResult(result);
+      setSummarizerDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed') || 'Tool failed',
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSummarizerLoading(false);
+    }
+  };
+
   // Handlers (Placeholders)
   const handleToolAction = async (toolName: string, scope: ToolScope) => {
-    console.log(`Tool action: ${toolName}`, scope, currentFolderId);
-    console.log('Folders from hook:', folders?.length, folders);
-    
+    if (toolName === 'duplicates') {
+      await handleDuplicates(scope);
+      return;
+    }
+
+    if (toolName === 'clean-urls') {
+      await handleUrlCleaner(scope);
+      return;
+    }
+
+    if (toolName === 'stats') {
+      handleStatistics(scope);
+      return;
+    }
+
+    if (toolName === 'dead-links') {
+      await handleDeadLinks(scope);
+      return;
+    }
+
+    if (toolName === 'metadata') {
+      await handleMetadata(scope);
+      return;
+    }
+
+    if (toolName === 'privacy') {
+      handlePrivacy(scope);
+      return;
+    }
+
+    if (toolName === 'ai-pack') {
+      await handleAIContextPack(scope);
+      return;
+    }
+
+    if (toolName === 'auto-tag') {
+      await handleAutoTagging(scope);
+      return;
+    }
+
+    if (toolName === 'summarize') {
+      await handleSummarizer(scope);
+      return;
+    }
+
     if (toolName === 'reorganize') {
-      // Open dialog and start analyzing
       setReorgDialogOpen(true);
       setReorgLoading(true);
       setReorgPlan(null);
       setReorgErrors([]);
       
       try {
-        const targetFolders = scope === 'folder' && currentFolderId
-          ? folders?.filter(f => f.id === currentFolderId) || []
-          : folders || [];
+        const targetFolders = getTargetNodes(scope);
         
-        console.log('Target folders for AI:', targetFolders.length, targetFolders);
-        
-        // Get API key from storage (same as PopupPage)
         const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
         
-        // Skip API key check for Ollama
         if (!aiApiKey && aiProvider !== 'ollama') {
           setReorgErrors(['API key not configured. Please set it in Options → AI.']);
           setReorgLoading(false);
@@ -334,11 +636,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         <div className="p-3 space-y-6">
           
           {/* AI & Intelligence */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_ai') || 'AI & Intelligence'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_ai') || 'AI & Intelligence'}>
             <ToolCard
               icon={<FileText className="h-4 w-4 text-indigo-500" />}
               title={t('tools_exportAI') || 'AI Context Packer'}
@@ -347,7 +645,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('ai-pack', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={aiContextLoading}
             />
 
             <ToolCard
@@ -358,7 +656,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('auto-tag', scope)}
               scopeCapability="folder"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={autoTaggingLoading}
             />
 
             <ToolCard
@@ -369,7 +667,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('summarize', scope)}
               scopeCapability="folder"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={summarizerLoading}
             />
 
             <ToolCard
@@ -382,13 +680,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               currentFolderName={currentFolderName}
               isLoading={reorgLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Maintenance */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_maintenance') || 'Maintenance'}
-            </h3>
+          <ToolSection title={t('tools_category_maintenance') || 'Maintenance'}>
 
             <ToolCard
               icon={<Copy className="h-4 w-4 text-orange-500" />}
@@ -398,18 +693,18 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('duplicates', scope)}
               scopeCapability="all"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={duplicateLoading}
             />
 
             <ToolCard
               icon={<Eraser className="h-4 w-4 text-orange-500" />}
               title={t('tools_cleanUrls') || 'URL Cleaner'}
               description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
-              buttonLabel="Clean"
+              buttonLabel={t('action_clean') || 'Clean'}
               onClick={(scope) => handleToolAction('clean-urls', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={urlCleanerLoading}
             />
 
             <ToolCard
@@ -420,16 +715,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('dead-links', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={deadLinksLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Metadata & Content */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_metadata') || 'Metadata'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_metadata') || 'Metadata'}>
             <ToolCard
               icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
               title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
@@ -438,16 +729,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('metadata', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={metadataLoading}
             />
-          </div>
+          </ToolSection>
 
           {/* Security */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_security') || 'Security'}
-            </h3>
-            
+          <ToolSection title={t('tools_category_security') || 'Security'}>
             <ToolCard
               icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
               title={t('tools_privacyScanner') || 'Privacy Scanner'}
@@ -456,15 +743,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('privacy', scope)}
               scopeCapability="all"
               currentFolderName={currentFolderName}
-              disabled
+              isLoading={false}
             />
-          </div>
+          </ToolSection>
 
           {/* Analytics */}
-          <div className="space-y-3">
-             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              Analytics
-            </h3>
+          <ToolSection title={t('tools_category_analytics') || 'Analytics'}>
 
             <ToolCard
               icon={<BarChart3 className="h-4 w-4 text-green-500" />}
@@ -474,15 +758,11 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               onClick={(scope) => handleToolAction('stats', scope)}
               scopeCapability="both"
               currentFolderName={currentFolderName}
-              disabled
             />
-          </div>
+          </ToolSection>
 
           {/* Data (Export/Import) */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-1">
-              {t('tools_category_data') || 'Data'}
-            </h3>
+          <ToolSection title={t('tools_category_data') || 'Data'}>
 
             {/* Export Tool */}
             <div className="p-3 rounded-lg border bg-card space-y-2">
@@ -571,7 +851,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 </Button>
               </div>
             </div>
-          </div>
+          </ToolSection>
         </div>
       </div>
 
@@ -599,6 +879,126 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         }}
         onCancel={() => setReorgDialogOpen(false)}
       />
+
+      <ToolResultsDialog
+        open={duplicatesDialogOpen}
+        onOpenChange={setDuplicatesDialogOpen}
+        title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
+        description={(t('tools_duplicatesDialogDesc') || '$1 duplicate groups found across $2 bookmarks')
+          .replace('$1', String(duplicateResult?.groups.length ?? 0))
+          .replace('$2', String(duplicateResult?.scannedBookmarks ?? 0))}
+      >
+        <DuplicateResultsView
+          result={duplicateResult}
+          isRemoving={duplicateRemoving}
+          onClose={() => setDuplicatesDialogOpen(false)}
+          onConfirm={handleRemoveDuplicates}
+        />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={urlCleanerDialogOpen}
+        onOpenChange={setUrlCleanerDialogOpen}
+        title={t('tools_cleanUrls') || 'URL Cleaner'}
+        description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned')
+          .replace('$1', String(urlCleanerResult?.previews.length ?? 0))}
+      >
+        <UrlCleanerResultsView
+          result={urlCleanerResult}
+          isApplying={urlCleanerApplying}
+          onClose={() => setUrlCleanerDialogOpen(false)}
+          onConfirm={handleApplyUrlCleaner}
+        />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={statisticsDialogOpen}
+        onOpenChange={setStatisticsDialogOpen}
+        title={t('tools_statistics') || 'Bookmark Statistics'}
+        description={t('tools_statisticsDialogDesc') || 'Snapshot of the selected bookmark scope'}
+      >
+        <StatisticsResultsView result={statisticsResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={deadLinksDialogOpen}
+        onOpenChange={setDeadLinksDialogOpen}
+        title={t('tools_checkDeadLinks') || 'Check Dead Links'}
+        description={t('tools_deadLinksDialogDesc') || 'Reachability results for the selected bookmarks'}
+      >
+        <DeadLinkResultsView result={deadLinksResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={metadataDialogOpen}
+        onOpenChange={setMetadataDialogOpen}
+        title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
+        description={t('tools_metadataDialogDesc') || 'Metadata suggestions for the selected bookmarks'}
+      >
+        <MetadataResultsView result={metadataResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={privacyDialogOpen}
+        onOpenChange={setPrivacyDialogOpen}
+        title={t('tools_privacyScanner') || 'Privacy Scanner'}
+        description={t('tools_privacyDialogDesc') || 'Potential sensitive data found in the selected bookmarks'}
+      >
+        <PrivacyResultsView result={privacyResult} />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={autoTaggingDialogOpen}
+        onOpenChange={setAutoTaggingDialogOpen}
+        title={t('tools_autoTagging') || 'Auto-Tagging'}
+        description={t('tools_autoTaggingDialogDesc') || 'AI-generated tags for the selected bookmarks'}
+      >
+        <div className="space-y-4">
+          {autoTaggingResult.length ? (
+            autoTaggingResult.map((item) => (
+              <div key={item.bookmarkId} className="rounded-lg border p-3 space-y-2">
+                <div className="font-medium text-sm">{item.title}</div>
+                <div className="text-xs text-muted-foreground break-all">{item.url}</div>
+                <div className="flex flex-wrap gap-2">
+                  {item.tags.map((tag) => (
+                    <Badge key={`${item.bookmarkId}-${tag}`} variant="secondary">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="text-xs text-muted-foreground">{item.reason}</div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noAiResults') || 'No AI results available.'}
+            </div>
+          )}
+        </div>
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={summarizerDialogOpen}
+        onOpenChange={setSummarizerDialogOpen}
+        title={t('tools_summarizer') || 'Content Summarizer'}
+        description={t('tools_summarizerDialogDesc') || 'AI-generated bookmark summaries'}
+      >
+        <div className="space-y-4">
+          {summarizerResult.length ? (
+            summarizerResult.map((item) => (
+              <div key={item.bookmarkId} className="rounded-lg border p-3 space-y-2">
+                <div className="font-medium text-sm">{item.title}</div>
+                <div className="text-xs text-muted-foreground break-all">{item.url}</div>
+                <div className="rounded-md bg-muted/40 p-2 text-sm">{item.summary}</div>
+              </div>
+            ))
+          ) : (
+            <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+              {t('state_noAiResults') || 'No AI results available.'}
+            </div>
+          )}
+        </div>
+      </ToolResultsDialog>
     </div>
   );
 }

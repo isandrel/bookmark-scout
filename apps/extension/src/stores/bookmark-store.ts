@@ -15,6 +15,46 @@ import {
 } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 
+const TITLE_TRUNCATE_LENGTH = 30;
+
+function truncateBookmarkTitle(title: string | undefined, fallback: string): string {
+  if (!title) {
+    return fallback;
+  }
+
+  return title.length > TITLE_TRUNCATE_LENGTH
+    ? `${title.slice(0, TITLE_TRUNCATE_LENGTH)}...`
+    : title;
+}
+
+function buildMoveSuccessMessage(
+  operation: DragOperation,
+  sourceTitle: string,
+  targetFolderTitle: string | null,
+): string {
+  return operation.type.includes('move')
+    ? `"${sourceTitle}" moved to "${targetFolderTitle || 'root'}"`
+    : `"${sourceTitle}" reordered to position ${operation.targetIndex + 1}`;
+}
+
+function findNodeById(nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
+  for (const node of nodes) {
+    if (node.id === id) {
+      return node;
+    }
+
+    if (node.children) {
+      const foundNode = findNodeById(node.children, id);
+
+      if (foundNode) {
+        return foundNode;
+      }
+    }
+  }
+
+  return null;
+}
+
 export interface SearchOptions {
   matchCase: boolean;
   wholeWord: boolean;
@@ -132,11 +172,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           });
           await get().fetchFolders();
 
-          const truncatedTitle = tab.title
-            ? tab.title.length > 30
-              ? `${tab.title.slice(0, 30)}...`
-              : tab.title
-            : 'New Bookmark';
+          const truncatedTitle = truncateBookmarkTitle(tab.title, 'New Bookmark');
 
           return {
             success: true,
@@ -169,11 +205,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           await deleteBookmark(bookmarkId);
           await get().fetchFolders();
 
-          const truncatedTitle = bookmark.title
-            ? bookmark.title.length > 30
-              ? `${bookmark.title.slice(0, 30)}...`
-              : bookmark.title
-            : 'Bookmark';
+          const truncatedTitle = truncateBookmarkTitle(bookmark.title, 'Bookmark');
 
           return { success: true, message: `"${truncatedTitle}" has been removed` };
         } catch (error) {
@@ -188,11 +220,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           await deleteBookmark(folderId);
           await get().fetchFolders();
 
-          const truncatedTitle = folder.title
-            ? folder.title.length > 30
-              ? `${folder.title.slice(0, 30)}...`
-              : folder.title
-            : 'Folder';
+          const truncatedTitle = truncateBookmarkTitle(folder.title, 'Folder');
 
           return { success: true, message: `"${truncatedTitle}" has been removed` };
         } catch (error) {
@@ -219,9 +247,11 @@ export const useBookmarkStore = create<BookmarkState>()(
             ? await getBookmark(operation.targetParentId)
             : null;
 
-          const message = operation.type.includes('move')
-            ? `"${sourceItem.title}" moved to "${targetFolder?.title || 'root'}"`
-            : `"${sourceItem.title}" reordered to position ${operation.targetIndex + 1}`;
+          const message = buildMoveSuccessMessage(
+            operation,
+            sourceItem.title,
+            targetFolder?.title ?? null,
+          );
 
           return { success: true, message };
         } catch (error) {
@@ -245,18 +275,7 @@ export const useBookmarkStore = create<BookmarkState>()(
         e.stopPropagation();
         const { folders, expandedFolders, getAllChildFolderIds, setExpandedFolders } = get();
 
-        const findNode = (nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null => {
-          for (const n of nodes) {
-            if (n.id === id) return n;
-            if (n.children) {
-              const found = findNode(n.children, id);
-              if (found) return found;
-            }
-          }
-          return null;
-        };
-
-        const originalNode = findNode(folders, node.id);
+        const originalNode = findNodeById(folders, node.id);
         if (!originalNode) return;
 
         const childFolderIds = getAllChildFolderIds(originalNode);
@@ -272,18 +291,7 @@ export const useBookmarkStore = create<BookmarkState>()(
       areAllChildrenExpanded: (node) => {
         const { folders, expandedFolders, getAllChildFolderIds } = get();
 
-        const findNode = (nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null => {
-          for (const n of nodes) {
-            if (n.id === id) return n;
-            if (n.children) {
-              const found = findNode(n.children, id);
-              if (found) return found;
-            }
-          }
-          return null;
-        };
-
-        const originalNode = findNode(folders, node.id);
+        const originalNode = findNodeById(folders, node.id);
         if (!originalNode) return false;
 
         const childFolderIds = getAllChildFolderIds(originalNode);

@@ -1,34 +1,44 @@
 /**
  * Shared AI client for multi-provider support.
- * This module provides a reusable AI client that can be used by different AI features.
  */
 
-import { createOpenAI } from '@ai-sdk/openai';
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createDeepSeek } from '@ai-sdk/deepseek';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createMistral } from '@ai-sdk/mistral';
-import { createDeepSeek } from '@ai-sdk/deepseek';
+import { createOpenAI } from '@ai-sdk/openai';
 import { createOllama } from 'ollama-ai-provider';
+import {
+  getDefaultModel,
+  getProviderBaseUrl,
+  getProviderKind,
+  providerRequiresApiKey,
+  type AIProviderKind,
+} from './ai-models';
 
-/**
- * Supported AI providers.
- */
-export type AIProvider = 'openai' | 'anthropic' | 'google' | 'groq' | 'mistral' | 'deepseek' | 'ollama';
+export type AIProvider =
+  | 'openai'
+  | 'anthropic'
+  | 'google'
+  | 'groq'
+  | 'mistral'
+  | 'deepseek'
+  | 'openrouter'
+  | 'ollama'
+  | 'cliproxyapi'
+  | 'custom';
 
-/**
- * Base AI settings shared across all AI features.
- */
-export interface AISettings {
+export type AISettings = {
   enabled: boolean;
   provider: AIProvider;
   model: string;
   apiKey: string;
-}
+  baseUrl?: string;
+  customModel?: string;
+  extraHeaders?: Record<string, string>;
+};
 
-/**
- * Default AI settings.
- */
 export const defaultAISettings: AISettings = {
   enabled: false,
   provider: 'openai',
@@ -36,62 +46,88 @@ export const defaultAISettings: AISettings = {
   apiKey: '',
 };
 
-/**
- * Creates an AI model instance based on provider settings.
- * This is the shared client used by all AI features.
- */
-export function createAIModel(settings: AISettings) {
-  // API key check is relaxed for Ollama as it is local
-  if (settings.provider !== 'ollama' && !settings.apiKey) {
-    throw new Error('API key is required');
-  }
+type AnyLanguageModel = ReturnType<ReturnType<typeof createOpenAI>>;
 
-  switch (settings.provider) {
-    case 'openai': {
-      const openai = createOpenAI({ apiKey: settings.apiKey });
-      return openai(settings.model);
-    }
-    case 'anthropic': {
-      const anthropic = createAnthropic({ apiKey: settings.apiKey });
-      return anthropic(settings.model);
-    }
-    case 'google': {
-      const google = createGoogleGenerativeAI({ apiKey: settings.apiKey });
-      return google(settings.model);
-    }
-    case 'groq': {
-      const groq = createGroq({ apiKey: settings.apiKey });
-      return groq(settings.model);
-    }
-    case 'mistral': {
-      const mistral = createMistral({ apiKey: settings.apiKey });
-      return mistral(settings.model);
-    }
-    case 'deepseek': {
-      const deepseek = createDeepSeek({ apiKey: settings.apiKey });
-      return deepseek(settings.model);
-    }
+export function createAIModel(settings: AISettings): AnyLanguageModel {
+  validateAISettings(settings);
+
+  const modelId = settings.customModel?.trim() || settings.model || getDefaultModel(settings.provider);
+  const kind = getProviderKind(settings.provider);
+
+  switch (kind) {
+    case 'native':
+      return createNativeModel(settings, modelId);
     case 'ollama': {
-      const ollama = createOllama();
-      return ollama(settings.model);
+      const ollama = createOllama({ baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) });
+      return ollama(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'openai_compatible': {
+      const compatible = createOpenAI({
+        apiKey: settings.apiKey || 'not-required',
+        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
+        headers: settings.extraHeaders,
+      });
+      return compatible(modelId) as unknown as AnyLanguageModel;
     }
     default:
-      throw new Error(`Unsupported provider: ${settings.provider}`);
+      throw new Error(`Unsupported provider kind: ${kind satisfies never}`);
   }
 }
 
-/**
- * Validates AI settings before use.
- */
 export function validateAISettings(settings: AISettings): void {
   if (!settings.enabled) {
     throw new Error('AI features are disabled');
   }
-  // API key check is relaxed for Ollama as it is local
-  if (settings.provider !== 'ollama' && !settings.apiKey) {
+
+  if (providerRequiresApiKey(settings.provider) && !settings.apiKey) {
     throw new Error('API key is required');
   }
-  if (!settings.model) {
+
+  if (!settings.model && !settings.customModel) {
     throw new Error('Model is required');
   }
+}
+
+function createNativeModel(settings: AISettings, modelId: string) {
+  switch (settings.provider) {
+    case 'openai': {
+      const openai = createOpenAI({ apiKey: settings.apiKey });
+      return openai(modelId);
+    }
+    case 'anthropic': {
+      const anthropic = createAnthropic({ apiKey: settings.apiKey });
+      return anthropic(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'google': {
+      const google = createGoogleGenerativeAI({ apiKey: settings.apiKey });
+      return google(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'groq': {
+      const groq = createGroq({ apiKey: settings.apiKey });
+      return groq(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'mistral': {
+      const mistral = createMistral({ apiKey: settings.apiKey });
+      return mistral(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'deepseek': {
+      const deepseek = createDeepSeek({ apiKey: settings.apiKey });
+      return deepseek(modelId) as unknown as AnyLanguageModel;
+    }
+    default:
+      return createCompatibleFallback(settings, modelId, 'native');
+  }
+}
+
+function createCompatibleFallback(
+  settings: AISettings,
+  modelId: string,
+  _kind: AIProviderKind,
+) {
+  const compatible = createOpenAI({
+    apiKey: settings.apiKey || 'not-required',
+    baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
+    headers: settings.extraHeaders,
+  });
+  return compatible(modelId) as unknown as AnyLanguageModel;
 }

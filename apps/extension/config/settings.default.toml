@@ -63,7 +63,7 @@ toast_duration_ms = 4000
 # Enable AI-powered folder recommendations
 enabled = false
 
-# Default AI provider: "openai", "anthropic", or "google"
+# Default AI provider
 provider = "openai"
 
 # Default model to use (must match a model id from providers below)
@@ -85,283 +85,340 @@ min_items_per_folder = 1
 # ============================================================================
 
 [ai.providers.openai]
-name = "OpenAI"
-default_model = "gpt-4o-mini"
-api_key_pattern = "^sk-"
+name                = "OpenAI"
+default_model       = "gpt-4o-mini"
+provider_kind       = "native"
+requires_api_key    = true
+api_key_pattern     = "^sk-"
 api_key_placeholder = "sk-..."
 
 [[ai.providers.openai.models]]
-id = "gpt-4o-mini"
-name = "GPT-4o Mini"
+id          = "gpt-4o-mini"
+name        = "GPT-4o Mini"
 description = "Cost-effective"
 
 [[ai.providers.openai.models]]
-id = "gpt-4o"
-name = "GPT-4o"
+id          = "gpt-4o"
+name        = "GPT-4o"
 description = "Multimodal flagship"
 
 [[ai.providers.openai.models]]
-id = "gpt-5"
-name = "GPT-5"
+id          = "gpt-5"
+name        = "GPT-5"
 description = "Most capable"
 
 [[ai.providers.openai.models]]
-id = "gpt-5-mini"
-name = "GPT-5 Mini"
+id          = "gpt-5-mini"
+name        = "GPT-5 Mini"
 description = "Fast & efficient"
 
 [[ai.providers.openai.models]]
-id = "o1"
-name = "o1"
+id          = "o1"
+name        = "o1"
 description = "Reasoning model"
 
 [[ai.providers.openai.models]]
-id = "o3-mini"
-name = "o3 Mini"
+id          = "o3-mini"
+name        = "o3 Mini"
 description = "Fast reasoning"
 
 [[ai.providers.openai.models]]
-id = "o3"
-name = "o3"
+id          = "o3"
+name        = "o3"
 description = "Advanced reasoning"
 
 [ai.providers.anthropic]
-name = "Anthropic"
-default_model = "claude-sonnet-4-20250514"
-api_key_pattern = "^sk-ant-"
+name                = "Anthropic"
+default_model       = "claude-sonnet-4-20250514"
+provider_kind       = "native"
+requires_api_key    = true
+api_key_pattern     = "^sk-ant-"
 api_key_placeholder = "sk-ant-..."
 
 [[ai.providers.anthropic.models]]
-id = "claude-sonnet-4-20250514"
-name = "Claude Sonnet 4"
+id          = "claude-sonnet-4-20250514"
+name        = "Claude Sonnet 4"
 description = "Best balance"
 
 [[ai.providers.anthropic.models]]
-id = "claude-opus-4-20250514"
-name = "Claude Opus 4"
+id          = "claude-opus-4-20250514"
+name        = "Claude Opus 4"
 description = "Most intelligent"
 
 [[ai.providers.anthropic.models]]
-id = "claude-3-5-haiku-20241022"
-name = "Claude 3.5 Haiku"
+id          = "claude-3-5-haiku-20241022"
+name        = "Claude 3.5 Haiku"
 description = "Fast & cheap"
 
 [[ai.providers.anthropic.models]]
-id = "claude-3-opus-20240229"
-name = "Claude 3 Opus"
+id          = "claude-3-opus-20240229"
+name        = "Claude 3 Opus"
 description = "Legacy flagship"
 
 [[ai.providers.anthropic.models]]
-id = "claude-3-sonnet-20240229"
-name = "Claude 3 Sonnet"
+id          = "claude-3-sonnet-20240229"
+name        = "Claude 3 Sonnet"
 description = "Legacy balanced"
 
 [ai.providers.google]
-name = "Google"
-default_model = "gemini-2.5-flash"
+name                = "Google"
+default_model       = "gemini-2.5-flash"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "AI..."
 
 [[ai.providers.google.models]]
-id = "gemini-2.5-flash"
-name = "Gemini 2.5 Flash"
+id          = "gemini-2.5-flash"
+name        = "Gemini 2.5 Flash"
 description = "Cost-effective"
 
 [[ai.providers.google.models]]
-id = "gemini-2.5-pro"
-name = "Gemini 2.5 Pro"
+id          = "gemini-2.5-pro"
+name        = "Gemini 2.5 Pro"
 description = "2M context"
 
 [[ai.providers.google.models]]
-id = "gemini-3-flash"
-name = "Gemini 3 Flash"
+id          = "gemini-3-flash"
+name        = "Gemini 3 Flash"
 description = "Fast frontier"
 
 [[ai.providers.google.models]]
-id = "gemini-3-pro"
-name = "Gemini 3 Pro"
+id          = "gemini-3-pro"
+name        = "Gemini 3 Pro"
 description = "Best reasoning"
 
 [ai.providers.groq]
-name = "Groq"
-default_model = "llama-3.3-70b-versatile"
-api_key_pattern = "^gsk_"
+name                = "Groq"
+default_model       = "llama-3.3-70b-versatile"
+provider_kind       = "native"
+requires_api_key    = true
+api_key_pattern     = "^gsk_"
 api_key_placeholder = "gsk_..."
 
 [[ai.providers.groq.models]]
-id = "llama-3.3-70b-versatile"
-name = "Llama 3.3 70B"
+id          = "llama-3.3-70b-versatile"
+name        = "Llama 3.3 70B"
 description = "Fast & Capable"
 
 [[ai.providers.groq.models]]
-id = "llama-3.1-8b-instant"
-name = "Llama 3.1 8B"
+id          = "llama-3.1-8b-instant"
+name        = "Llama 3.1 8B"
 description = "Super Fast"
 
 [[ai.providers.groq.models]]
-id = "mixtral-8x7b-32768"
-name = "Mixtral 8x7B"
+id          = "mixtral-8x7b-32768"
+name        = "Mixtral 8x7B"
 description = "Good Balance"
 
 [[ai.providers.groq.models]]
-id = "gemma2-9b-it"
-name = "Gemma 2 9B"
+id          = "gemma2-9b-it"
+name        = "Gemma 2 9B"
 description = "Google's Open Model"
 
 [[ai.providers.groq.models]]
-id = "deepseek-r1-distill-qwen-32b"
-name = "DeepSeek R1 Distill Qwen 32B"
+id          = "deepseek-r1-distill-qwen-32b"
+name        = "DeepSeek R1 Distill Qwen 32B"
 description = "Reasoning distilled"
 
 [[ai.providers.groq.models]]
-id = "deepseek-r1-distill-llama-70b"
-name = "DeepSeek R1 Distill Llama 70B"
+id          = "deepseek-r1-distill-llama-70b"
+name        = "DeepSeek R1 Distill Llama 70B"
 description = "Large reasoning"
 
 [[ai.providers.groq.models]]
-id = "qwen-2.5-32b"
-name = "Qwen 2.5 32B"
+id          = "qwen-2.5-32b"
+name        = "Qwen 2.5 32B"
 description = "Alibaba's model"
 
 [[ai.providers.groq.models]]
-id = "qwen-qwq-32b"
-name = "Qwen QwQ 32B"
+id          = "qwen-qwq-32b"
+name        = "Qwen QwQ 32B"
 description = "Reasoning variant"
 
 [ai.providers.mistral]
-name = "Mistral AI"
-default_model = "mistral-large-latest"
+name                = "Mistral AI"
+default_model       = "mistral-large-latest"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "..."
 
 [[ai.providers.mistral.models]]
-id = "mistral-large-latest"
-name = "Mistral Large 3"
+id          = "mistral-large-latest"
+name        = "Mistral Large 3"
 description = "Flagship 675B MoE"
 
 [[ai.providers.mistral.models]]
-id = "mistral-small-latest"
-name = "Mistral Small 3.2"
+id          = "mistral-small-latest"
+name        = "Mistral Small 3.2"
 description = "Efficient 24B"
 
 [[ai.providers.mistral.models]]
-id = "codestral-latest"
-name = "Codestral"
+id          = "codestral-latest"
+name        = "Codestral"
 description = "Code Specialist"
 
 [[ai.providers.mistral.models]]
-id = "ministral-3b-latest"
-name = "Ministral 3B"
+id          = "ministral-3b-latest"
+name        = "Ministral 3B"
 description = "Edge deployment"
 
 [[ai.providers.mistral.models]]
-id = "ministral-8b-latest"
-name = "Ministral 8B"
+id          = "ministral-8b-latest"
+name        = "Ministral 8B"
 description = "Compact & fast"
 
 [[ai.providers.mistral.models]]
-id = "pixtral-12b-2409"
-name = "Pixtral 12B"
+id          = "pixtral-12b-2409"
+name        = "Pixtral 12B"
 description = "Multimodal 12B"
 
 [[ai.providers.mistral.models]]
-id = "pixtral-large-latest"
-name = "Pixtral Large"
+id          = "pixtral-large-latest"
+name        = "Pixtral Large"
 description = "Multimodal 124B"
 
 [ai.providers.deepseek]
-name = "DeepSeek"
-default_model = "deepseek-chat"
+name                = "DeepSeek"
+default_model       = "deepseek-chat"
+provider_kind       = "native"
+requires_api_key    = true
 api_key_placeholder = "sk-..."
 
 [[ai.providers.deepseek.models]]
-id = "deepseek-chat"
-name = "DeepSeek V3"
+id          = "deepseek-chat"
+name        = "DeepSeek V3"
 description = "General Chat"
 
 [[ai.providers.deepseek.models]]
-id = "deepseek-reasoner"
-name = "DeepSeek R1"
+id          = "deepseek-reasoner"
+name        = "DeepSeek R1"
 description = "Reasoning"
 
 [ai.providers.openrouter]
-name = "OpenRouter"
-default_model = "openai/gpt-4o-mini"
-api_key_pattern = "^sk-or-"
+name                = "OpenRouter"
+default_model       = "openai/gpt-4o-mini"
+provider_kind       = "openai_compatible"
+requires_api_key    = true
+base_url            = "https://openrouter.ai/api/v1"
+api_key_pattern     = "^sk-or-"
 api_key_placeholder = "sk-or-..."
 
 [[ai.providers.openrouter.models]]
-id = "openai/gpt-4o-mini"
-name = "GPT-4o Mini"
+id          = "openai/gpt-4o-mini"
+name        = "GPT-4o Mini"
 description = "OpenAI via OR"
 
 [[ai.providers.openrouter.models]]
-id = "openai/gpt-4o"
-name = "GPT-4o"
+id          = "openai/gpt-4o"
+name        = "GPT-4o"
 description = "OpenAI flagship"
 
 [[ai.providers.openrouter.models]]
-id = "anthropic/claude-sonnet-4"
-name = "Claude Sonnet 4"
+id          = "anthropic/claude-sonnet-4"
+name        = "Claude Sonnet 4"
 description = "Anthropic via OR"
 
 [[ai.providers.openrouter.models]]
-id = "anthropic/claude-opus-4"
-name = "Claude Opus 4"
+id          = "anthropic/claude-opus-4"
+name        = "Claude Opus 4"
 description = "Most intelligent"
 
 [[ai.providers.openrouter.models]]
-id = "google/gemini-2.5-flash"
-name = "Gemini 2.5 Flash"
+id          = "google/gemini-2.5-flash"
+name        = "Gemini 2.5 Flash"
 description = "Google via OR"
 
 [[ai.providers.openrouter.models]]
-id = "google/gemini-2.5-pro"
-name = "Gemini 2.5 Pro"
+id          = "google/gemini-2.5-pro"
+name        = "Gemini 2.5 Pro"
 description = "Google flagship"
 
 [[ai.providers.openrouter.models]]
-id = "deepseek/deepseek-chat"
-name = "DeepSeek V3"
+id          = "deepseek/deepseek-chat"
+name        = "DeepSeek V3"
 description = "DeepSeek via OR"
 
 [[ai.providers.openrouter.models]]
-id = "deepseek/deepseek-r1"
-name = "DeepSeek R1"
+id          = "deepseek/deepseek-r1"
+name        = "DeepSeek R1"
 description = "Reasoning via OR"
 
 [[ai.providers.openrouter.models]]
-id = "meta-llama/llama-4-maverick"
-name = "Llama 4 Maverick"
+id          = "meta-llama/llama-4-maverick"
+name        = "Llama 4 Maverick"
 description = "Meta's latest"
 
 [[ai.providers.openrouter.models]]
-id = "qwen/qwen-2.5-72b"
-name = "Qwen 2.5 72B"
+id          = "qwen/qwen-2.5-72b"
+name        = "Qwen 2.5 72B"
 description = "Alibaba via OR"
 
 [ai.providers.ollama]
-name = "Ollama (Local)"
-default_model = "llama3"
-api_key_placeholder = "(Optional)"
+name                  = "Ollama (Local)"
+default_model         = "llama3"
+provider_kind         = "ollama"
+requires_api_key      = false
+base_url              = "http://localhost:11434/api"
+supports_custom_model = true
+api_key_placeholder   = "(Optional)"
 
 [[ai.providers.ollama.models]]
-id = "llama3"
-name = "Llama 3"
+id          = "llama3"
+name        = "Llama 3"
 description = "Meta's Llama 3"
 
 [[ai.providers.ollama.models]]
-id = "mistral"
-name = "Mistral"
+id          = "mistral"
+name        = "Mistral"
 description = "Mistral 7B"
 
 [[ai.providers.ollama.models]]
-id = "gemma"
-name = "Gemma"
+id          = "gemma"
+name        = "Gemma"
 description = "Google's Gemma"
 
 [[ai.providers.ollama.models]]
-id = "deepseek-r1"
-name = "DeepSeek R1"
+id          = "deepseek-r1"
+name        = "DeepSeek R1"
 description = "Reasoning (Local)"
+
+[ai.providers.cliproxyapi]
+name                  = "CLIProxyAPI"
+default_model         = "gpt-4o-mini"
+provider_kind         = "openai_compatible"
+requires_api_key      = false
+base_url              = "http://localhost:8317/v1"
+supports_custom_model = true
+api_key_placeholder   = "(Optional)"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "gpt-4o-mini"
+name        = "GPT-4o Mini"
+description = "OpenAI-compatible route"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "claude-sonnet-4"
+name        = "Claude Sonnet 4"
+description = "Claude route via CLIProxyAPI"
+
+[[ai.providers.cliproxyapi.models]]
+id          = "gemini-2.5-pro"
+name        = "Gemini 2.5 Pro"
+description = "Gemini route via CLIProxyAPI"
+
+[ai.providers.custom]
+name                  = "Custom Provider"
+default_model         = "gpt-4o-mini"
+provider_kind         = "openai_compatible"
+requires_api_key      = false
+base_url              = "https://api.openai.com/v1"
+supports_custom_model = true
+api_key_placeholder   = "Optional custom API key"
+
+[[ai.providers.custom.models]]
+id          = "gpt-4o-mini"
+name        = "Default Model"
+description = "Replace with your provider's model id"
 
 # Custom prompts (leave empty to use defaults)
 # Users can edit in options page
@@ -392,3 +449,128 @@ enabled = true
 # Source for bookmark title when saving via context menu
 # Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)
 bookmark_naming = "link_text"
+
+[tools.ai_context_packer]
+enabled             = true
+default_scope       = "folder"
+output_format       = "markdown"
+include_folder_path = true
+include_dates       = true
+include_tags        = true
+include_summaries   = true
+max_items           = 200
+max_depth           = 8
+excerpt_length      = 240
+
+[tools.auto_tagging]
+enabled       = true
+default_scope = "folder"
+min_tags      = 2
+max_tags      = 5
+tag_style     = "kebab-case"
+merge_mode    = "append"
+dedupe_tags   = true
+
+[tools.summarizer]
+enabled             = true
+default_scope       = "folder"
+summary_length      = 160
+include_domain_hint = true
+merge_mode          = "replace"
+
+[tools.reorganization]
+enabled        = true
+default_scope  = "folder"
+dry_run_first  = true
+min_confidence = 0.55
+batch_size     = 100
+
+[tools.duplicates]
+enabled               = true
+default_scope         = "all"
+match_strategy        = "normalized_url"
+normalize_www         = true
+ignore_protocol       = true
+ignore_trailing_slash = true
+keep_rule             = "oldest"
+max_groups            = 500
+
+[tools.url_cleaner]
+enabled = true
+default_scope = "folder"
+remove_hash = false
+sort_query_params = true
+dedupe_query_params = true
+preserve_params = [ "id", "page", "q", "p", "lang" ]
+remove_params = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "utm_id",
+  "gclid",
+  "fbclid",
+  "mc_cid",
+  "mc_eid",
+  "ref",
+  "ref_src",
+  "si",
+]
+
+[tools.dead_links]
+enabled            = true
+default_scope      = "folder"
+request_timeout_ms = 8000
+concurrency        = 4
+retry_count        = 1
+follow_redirects   = true
+success_statuses   = [ 200, 201, 202, 204, 301, 302, 307, 308 ]
+
+[tools.metadata_fetcher]
+enabled            = true
+default_scope      = "folder"
+overwrite_titles   = false
+fetch_favicons     = true
+fetch_descriptions = true
+request_timeout_ms = 8000
+concurrency        = 4
+
+[tools.privacy_scanner]
+enabled = true
+default_scope = "all"
+scan_titles = false
+scan_query_params = true
+scan_fragments = true
+sensitive_params = [
+  "token",
+  "access_token",
+  "refresh_token",
+  "auth",
+  "authorization",
+  "api_key",
+  "apikey",
+  "key",
+  "secret",
+  "password",
+  "pwd",
+  "code",
+  "session",
+]
+email_detection = true
+uuid_detection = true
+
+[tools.statistics]
+enabled                 = true
+default_scope           = "folder"
+include_domains         = true
+include_folders         = true
+include_duplicates      = true
+include_protocols       = true
+include_depth_breakdown = true
+top_n                   = 10
+
+[tools.data]
+show_export           = true
+show_import           = true
+default_export_format = "html"
