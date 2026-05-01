@@ -8,6 +8,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createMistral } from '@ai-sdk/mistral';
 import { createOpenAI } from '@ai-sdk/openai';
+import { generateText } from 'ai';
 import { createOllama } from 'ollama-ai-provider';
 import {
   getDefaultModel,
@@ -37,6 +38,11 @@ export type AISettings = {
   baseUrl?: string;
   customModel?: string;
   extraHeaders?: Record<string, string>;
+};
+
+export type DetectedAIModel = {
+  id: string;
+  name: string;
 };
 
 export const defaultAISettings: AISettings = {
@@ -86,6 +92,69 @@ export function validateAISettings(settings: AISettings): void {
   if (!settings.model && !settings.customModel) {
     throw new Error('Model is required');
   }
+}
+
+export async function verifyAIService(settings: AISettings): Promise<void> {
+  const model = createAIModel(settings);
+  await generateText({
+    model,
+    maxOutputTokens: 8,
+    prompt: 'Reply with exactly: ok',
+  });
+}
+
+export async function detectAIModels(settings: AISettings): Promise<DetectedAIModel[]> {
+  const baseUrl = getModelListBaseUrl(settings);
+  if (!baseUrl) {
+    throw new Error('Model detection is not available for this provider. Use a custom model instead.');
+  }
+
+  const url = new URL('models', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
+  const headers: Record<string, string> = {
+    Accept: 'application/json',
+    ...settings.extraHeaders,
+  };
+
+  if (settings.apiKey) {
+    headers.Authorization = `Bearer ${settings.apiKey}`;
+  }
+
+  if (settings.provider === 'anthropic') {
+    headers['x-api-key'] = settings.apiKey;
+    headers['anthropic-version'] = '2023-06-01';
+    delete headers.Authorization;
+  }
+
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    throw new Error(`Model detection failed: ${response.status} ${response.statusText}`);
+  }
+
+  const payload = await response.json() as { data?: unknown };
+  const data = Array.isArray(payload.data) ? payload.data : [];
+
+  return data
+    .map((item) => {
+      if (!item || typeof item !== 'object' || !('id' in item)) {
+        return null;
+      }
+
+      const id = String(item.id);
+      return { id, name: id };
+    })
+    .filter((model): model is DetectedAIModel => model !== null);
+}
+
+function getModelListBaseUrl(settings: AISettings): string | undefined {
+  if (settings.provider === 'openai') {
+    return settings.baseUrl || 'https://api.openai.com/v1';
+  }
+
+  if (settings.provider === 'anthropic') {
+    return settings.baseUrl || 'https://api.anthropic.com/v1';
+  }
+
+  return settings.baseUrl || getProviderBaseUrl(settings.provider);
 }
 
 function createNativeModel(settings: AISettings, modelId: string) {

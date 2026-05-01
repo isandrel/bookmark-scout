@@ -182,6 +182,11 @@ interface TomlConfig {
 
 const config = parse(settingsToml) as TomlConfig;
 
+const configuredProviderIds = Object.keys(config.ai.providers ?? {});
+const aiProviderSchema = configuredProviderIds.length > 0
+  ? z.enum(configuredProviderIds as [AIProvider, ...AIProvider[]])
+  : z.enum(['openai']);
+
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
 
@@ -237,7 +242,7 @@ export const settingsSchema = z.object({
   toastDurationMs: z.number().min(2000).max(10000).default(config.advanced.toast_duration_ms),
 
   aiEnabled: z.boolean().default(config.ai.enabled),
-  aiProvider: z.enum(['openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek', 'ollama']).default(config.ai.provider as AIProvider),
+  aiProvider: aiProviderSchema.default(config.ai.provider as AIProvider),
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(10).default(config.tools.auto_tagging.max_tags),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
@@ -593,10 +598,10 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
       label: t('settings_aiModel'),
       description: t('settings_aiModelDesc'),
       type: 'select',
-      options: (['openai', 'anthropic', 'google', 'groq', 'mistral', 'deepseek', 'ollama'] as AIProvider[]).flatMap((provider) =>
-        getModelsForProvider(provider).map((model) => ({
+      options: getAvailableProviders().flatMap((provider) =>
+        getModelsForProvider(provider.id).map((model) => ({
           value: model.id,
-          label: `${model.name} (${getProviderName(provider)})`,
+          label: `${model.name} (${getProviderName(provider.id)})`,
         })),
       ),
     },
