@@ -505,22 +505,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       
       try {
         const targetFolders = getTargetNodes(scope);
-        
-        const { aiApiKey } = await chrome.storage.local.get('aiApiKey');
-        
-        if (!aiApiKey && aiProvider !== 'ollama') {
-          setReorgErrors(['API key not configured. Please set it in Options → AI.']);
-          setReorgLoading(false);
-          return;
-        }
-
-        const aiSettings = {
-          enabled: aiEnabled,
-          provider: aiProvider as AIProvider,
-          model: aiModel,
-          apiKey: aiApiKey as string,
-        };
-        
+        const aiSettings = await buildAISettings();
         const plan = await generateReorganizationPlan(targetFolders, aiSettings);
         setReorgPlan(plan);
       } catch (err) {
