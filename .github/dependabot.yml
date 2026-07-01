@@ -24,7 +24,7 @@ updates:
 
   # Bun dependencies for the website
   - package-ecosystem: "bun"
-    directory: "/website"
+    directory: "/apps/website"
     schedule:
       interval: "daily"
     commit-message:
