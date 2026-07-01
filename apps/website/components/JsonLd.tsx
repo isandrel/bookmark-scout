@@ -27,7 +27,7 @@ export function JsonLd() {
         url: SITE_URL,
         downloadUrl: GITHUB_URL,
         screenshot: `${SITE_URL}/icon.png`,
-        softwareVersion: "0.1.0",
+        softwareVersion: "0.2.0",
         aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: "5",

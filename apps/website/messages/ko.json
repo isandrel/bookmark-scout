@@ -19,6 +19,10 @@
     "features": {
         "title": "기능",
         "subtitle": "북마크를 효율적으로 관리하는 데 필요한 모든 것",
+        "aiRecommendations": {
+            "title": "AI 폴더 추천",
+            "description": "OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama를 지원하는 스마트 폴더 제안"
+        },
         "instantSearch": {
             "title": "즉시 검색",
             "description": "디바운스 검색과 폴더 필터링으로 북마크를 즉시 검색"
@@ -52,18 +56,20 @@
         "title": "설치",
         "subtitle": "몇 분 안에 시작하세요",
         "step1": {
-            "title": "리포지토리 클론"
+            "title": "GitHub Releases에서 다운로드",
+            "description": "브라우저용 최신 CRX 또는 ZIP 에셋 다운로드"
         },
         "step2": {
-            "title": "의존성 설치 및 빌드"
+            "title": "확장 프로그램 파일 준비",
+            "description": "Chrome CRX를 바로 사용하거나 다운로드한 브라우저 아카이브 압축 해제"
         },
         "step3": {
             "title": "Chrome에 로드",
             "instructions": {
                 "1": "chrome://extensions/ 열기",
                 "2": "개발자 모드 활성화 (오른쪽 상단)",
-                "3": "압축해제된 확장 프로그램을 로드합니다 클릭",
-                "4": "dist 폴더 선택"
+                "3": "CRX를 드래그하거나 압축해제된 확장 프로그램을 로드합니다 클릭",
+                "4": "ZIP을 사용하는 경우 압축 해제한 폴더 선택"
             }
         }
     },
@@ -105,7 +111,7 @@
                 "1": "chrome://extensions/ 열기",
                 "2": "개발자 모드 활성화 (오른쪽 상단 토글)",
                 "3": "\"압축해제된 확장 프로그램을 로드합니다\" 클릭",
-                "4": "dist 폴더 선택"
+                "4": "apps/extension/dist/chrome-mv3 선택"
             }
         },
         "development": {

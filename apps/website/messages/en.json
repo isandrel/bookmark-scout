@@ -57,19 +57,19 @@
         "subtitle": "Get started in minutes",
         "step1": {
             "title": "Download from GitHub Releases",
-            "description": "Download the latest release ZIP file for your browser"
+            "description": "Download the latest CRX or ZIP asset for your browser"
         },
         "step2": {
-            "title": "Extract the ZIP file",
-            "description": "Unzip the downloaded file to a folder"
+            "title": "Prepare the extension files",
+            "description": "Use the Chrome CRX directly, or unzip the downloaded browser archive"
         },
         "step3": {
             "title": "Load in Chrome",
             "instructions": {
                 "1": "Open chrome://extensions/",
                 "2": "Enable Developer mode (top right)",
-                "3": "Click Load unpacked",
-                "4": "Select the extracted folder"
+                "3": "Drag in the CRX, or click Load unpacked",
+                "4": "Select the extracted folder when using ZIP"
             }
         }
     },
@@ -111,7 +111,7 @@
                 "1": "Open chrome://extensions/",
                 "2": "Enable Developer mode (top right toggle)",
                 "3": "Click \"Load unpacked\"",
-                "4": "Select the dist folder"
+                "4": "Select apps/extension/dist/chrome-mv3"
             }
         },
         "development": {

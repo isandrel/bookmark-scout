@@ -19,6 +19,10 @@
     "features": {
         "title": "機能",
         "subtitle": "ブックマークを効率的に管理するために必要なすべて",
+        "aiRecommendations": {
+            "title": "AIフォルダ推薦",
+            "description": "OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、OpenRouter、Ollamaに対応したスマートなフォルダ提案"
+        },
         "instantSearch": {
             "title": "インスタント検索",
             "description": "デバウンス検索とフォルダフィルタリングでブックマークを瞬時に検索"
@@ -52,18 +56,20 @@
         "title": "インストール",
         "subtitle": "数分で始められます",
         "step1": {
-            "title": "リポジトリをクローン"
+            "title": "GitHub Releasesからダウンロード",
+            "description": "ブラウザ用の最新CRXまたはZIPアセットをダウンロード"
         },
         "step2": {
-            "title": "依存関係をインストール＆ビルド"
+            "title": "拡張機能ファイルを準備",
+            "description": "Chrome CRXをそのまま使うか、ダウンロードしたブラウザ用アーカイブを展開"
         },
         "step3": {
             "title": "Chromeにロード",
             "instructions": {
                 "1": "chrome://extensions/ を開く",
                 "2": "デベロッパーモードを有効化（右上）",
-                "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
-                "4": "dist フォルダを選択"
+                "3": "CRXをドラッグするか、「パッケージ化されていない拡張機能を読み込む」をクリック",
+                "4": "ZIPを使う場合は展開したフォルダを選択"
             }
         }
     },
@@ -105,7 +111,7 @@
                 "1": "chrome://extensions/ を開く",
                 "2": "デベロッパーモードを有効化（右上のトグル）",
                 "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
-                "4": "dist フォルダを選択"
+                "4": "apps/extension/dist/chrome-mv3 を選択"
             }
         },
         "development": {

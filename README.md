@@ -114,12 +114,19 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 Download the latest release from [GitHub Releases](https://github.com/isandrel/bookmark-scout/releases):
 
 ```bash
-# Download latest release using GitHub CLI
-gh release download --repo isandrel/bookmark-scout --pattern "*.zip"
+# Download release assets using GitHub CLI
+gh release download --repo isandrel/bookmark-scout --pattern "bookmark-scout-*-chrome.zip"
 
-# Extract the zip file
+# Extract the Chrome zip file
 unzip bookmark-scout-*-chrome.zip -d bookmark-scout
 ```
+
+Release assets are published per browser:
+
+- `bookmark-scout-*-chrome.crx` for Chrome sideloading in developer mode
+- `bookmark-scout-*-chrome.zip` for Chrome unpacked installation or Web Store packaging
+- `bookmark-scout-*-firefox.zip` for Firefox temporary add-on installation
+- `bookmark-scout-*-edge.zip` for Edge unpacked installation
 
 ### From Source
 
@@ -140,7 +147,7 @@ bun run build
 1. Open `chrome://extensions/`
 2. Enable **Developer mode** (top right)
 3. Click **Load unpacked**
-4. Select `apps/extension/.output/chrome-mv3`
+4. Select the extracted release folder, or `apps/extension/dist/chrome-mv3` when building from source
 
 ---
 
