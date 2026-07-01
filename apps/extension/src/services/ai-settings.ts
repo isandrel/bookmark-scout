@@ -13,15 +13,16 @@ export async function buildAISettingsFromProvider(
   enabled: boolean,
 ): Promise<AISettings> {
   const stored = await getStoredAIProviderConfig(provider);
-  const finalModel = providerSupportsCustomModel(provider)
-    ? stored.customModel?.trim() || model || getDefaultModel(provider)
-    : model || getDefaultModel(provider);
+  const customModel = providerSupportsCustomModel(provider)
+    ? stored.customModel?.trim() || undefined
+    : undefined;
+  const finalModel = customModel || model || getDefaultModel(provider);
 
   const settings: AISettings = {
     enabled,
     provider,
     model: finalModel,
-    customModel: stored.customModel?.trim() || undefined,
+    customModel,
     apiKey: stored.apiKey?.trim() || '',
     baseUrl: stored.baseUrl?.trim() || getProviderBaseUrl(provider),
     extraHeaders: parseExtraHeaders(stored.extraHeaders),
