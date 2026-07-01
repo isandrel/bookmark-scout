@@ -16,6 +16,7 @@ import {
 	ShieldAlert,
 	Moon,
 	Palette,
+	RefreshCw,
 	RotateCcw,
 	Save,
 	Search,
@@ -23,6 +24,7 @@ import {
 	Sliders,
 	Sparkles,
 	Sun,
+	Wifi,
 	Upload,
 	Wrench,
 } from "lucide-react";
@@ -66,11 +68,14 @@ import {
 	importSettings,
 } from "@/lib/settings-storage";
 import {
+	buildAISettingsFromProvider,
+	detectAIModels,
 	getModelsForProvider,
 	getProviderConfig,
 	providerRequiresApiKey,
 	providerSupportsCustomModel,
 	type AIProvider,
+	verifyAIService,
 } from "@/services";
 import {
 	getStoredAIProviderConfig,
@@ -110,6 +115,9 @@ const OptionsPage: React.FC = () => {
 	const [providerBaseUrl, setProviderBaseUrl] = useState("");
 	const [providerCustomModel, setProviderCustomModel] = useState("");
 	const [providerExtraHeaders, setProviderExtraHeaders] = useState("");
+	const [isVerifyingProvider, setIsVerifyingProvider] = useState(false);
+	const [isDetectingModels, setIsDetectingModels] = useState(false);
+	const [detectedModels, setDetectedModels] = useState<Record<string, string[]>>({});
 
 	const form = useForm<Settings>({
 		resolver: zodResolver(settingsSchema) as never,
@@ -166,11 +174,6 @@ const OptionsPage: React.FC = () => {
 		if (!providerRequiresApiKey(provider)) {
 			await saveStoredAIProviderConfig(provider, { apiKey: key });
 			setApiKey(key);
-			toast({
-				title: "✓ Settings Saved",
-				description: `${providerConfig?.name || provider} settings saved.`,
-				variant: "success",
-			});
 			return;
 		}
 
@@ -197,9 +200,31 @@ const OptionsPage: React.FC = () => {
 
 	const saveProviderOverrides = async () => {
 		const provider = selectedProvider;
-		if (!providerBaseUrl.trim() && !providerCustomModel.trim() && !providerExtraHeaders.trim()) {
+		if (!apiKey.trim() && !providerBaseUrl.trim() && !providerCustomModel.trim() && !providerExtraHeaders.trim()) {
 			await clearStoredAIProviderConfig(provider);
 			return;
+		}
+
+		if (providerExtraHeaders.trim()) {
+			try {
+				const parsed = JSON.parse(providerExtraHeaders) as unknown;
+				const isStringRecord =
+					parsed !== null &&
+					typeof parsed === "object" &&
+					!Array.isArray(parsed) &&
+					Object.values(parsed).every((value) => typeof value === "string");
+
+				if (!isStringRecord) {
+					throw new Error("Extra headers must be a JSON object with string values.");
+				}
+			} catch {
+				toast({
+					title: "Invalid extra headers",
+					description: 'Use JSON object syntax, for example: {"HTTP-Referer":"https://example.com"}',
+					variant: "destructive",
+				});
+				return;
+			}
 		}
 
 		await saveStoredAIProviderConfig(provider, {
@@ -208,6 +233,60 @@ const OptionsPage: React.FC = () => {
 			customModel: providerCustomModel,
 			extraHeaders: providerExtraHeaders,
 		});
+	};
+
+	const buildSelectedAISettings = () =>
+		buildAISettingsFromProvider(selectedProvider, form.getValues("aiModel"), true);
+
+	const verifyProviderConnection = async () => {
+		setIsVerifyingProvider(true);
+		try {
+			await saveProviderOverrides();
+			await verifyAIService(await buildSelectedAISettings());
+			toast({
+				title: "Service verified",
+				description: `${getProviderConfig(selectedProvider)?.name || selectedProvider} responded successfully.`,
+				variant: "success",
+			});
+		} catch (error) {
+			toast({
+				title: "Service verification failed",
+				description: error instanceof Error ? error.message : "Provider did not respond successfully.",
+				variant: "destructive",
+			});
+		} finally {
+			setIsVerifyingProvider(false);
+		}
+	};
+
+	const refreshProviderModels = async () => {
+		setIsDetectingModels(true);
+		try {
+			await saveProviderOverrides();
+			const models = await detectAIModels(await buildSelectedAISettings());
+			if (models.length === 0) {
+				throw new Error("Provider returned no models.");
+			}
+
+			setDetectedModels((current) => ({
+				...current,
+				[selectedProvider]: models.map((model) => model.id),
+			}));
+			form.setValue("aiModel", models[0].id);
+			toast({
+				title: "Models refreshed",
+				description: `${models.length} models detected from ${getProviderConfig(selectedProvider)?.name || selectedProvider}.`,
+				variant: "success",
+			});
+		} catch (error) {
+			toast({
+				title: "Model detection failed",
+				description: error instanceof Error ? error.message : "Provider models could not be detected.",
+				variant: "destructive",
+			});
+		} finally {
+			setIsDetectingModels(false);
+		}
 	};
 
 	const providerDescription = providerRequiresApiKey(selectedProvider)
@@ -238,12 +317,6 @@ const OptionsPage: React.FC = () => {
 				if (values.theme !== theme) {
 					setTheme(values.theme);
 				}
-				toast({
-					title: `✓ ${t("toast_settingsSaved")}`,
-					description: t("toast_preferencesUpdated"),
-					variant: "success",
-					duration: 2000, // Short duration for auto-save
-				});
 			} catch (error) {
 				toast({
 					title: `× ${t("toast_errorSavingSettings")}`,
@@ -390,8 +463,10 @@ const OptionsPage: React.FC = () => {
 				let selectOptions = meta.options;
 				if (fieldKey === "aiModel") {
 					const provider = form.watch("aiProvider") as AIProvider;
-					const models = getModelsForProvider(provider);
-					selectOptions = models.map((m) => ({ value: m.id, label: m.name }));
+					const detected = detectedModels[provider];
+					selectOptions = detected?.length
+						? detected.map((id) => ({ value: id, label: id }))
+						: getModelsForProvider(provider).map((model) => ({ value: model.id, label: model.name }));
 				}
 
 				return (
@@ -586,7 +661,7 @@ const OptionsPage: React.FC = () => {
 									onValueChange={setActiveTab}
 									className="w-full"
 								>
-									<TabsList className="mb-6 flex w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+									<TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
 										{Object.entries(categories).map(
 											([key, category]) => (
 												<TabsTrigger
@@ -681,7 +756,6 @@ const OptionsPage: React.FC = () => {
 																onBlur={(e) => saveApiKey(e.target.value)}
 																placeholder={providerPlaceholder}
 																className="w-[200px] pr-8"
-																disabled={!providerRequiresApiKey(selectedProvider)}
 															/>
 															<Button
 																type="button"
@@ -689,7 +763,6 @@ const OptionsPage: React.FC = () => {
 																size="icon"
 																className="absolute right-0 top-0 h-full w-8"
 																onClick={() => setShowApiKey(!showApiKey)}
-																disabled={!providerRequiresApiKey(selectedProvider)}
 															>
 																{showApiKey ? (
 																	<EyeOff className="h-4 w-4" />
@@ -749,6 +822,26 @@ const OptionsPage: React.FC = () => {
 															onBlur={saveProviderOverrides}
 															placeholder='{"HTTP-Referer":"https://example.com"}'
 														/>
+														<div className="flex flex-wrap gap-2">
+															<Button
+																type="button"
+																variant="outline"
+																onClick={refreshProviderModels}
+																disabled={isDetectingModels}
+															>
+																<RefreshCw className="h-4 w-4 mr-2" />
+																{isDetectingModels ? "Refreshing..." : "Refresh Models"}
+															</Button>
+															<Button
+																type="button"
+																variant="outline"
+																onClick={verifyProviderConnection}
+																disabled={isVerifyingProvider}
+															>
+																<Wifi className="h-4 w-4 mr-2" />
+																{isVerifyingProvider ? "Verifying..." : "Verify Service"}
+															</Button>
+														</div>
 													</motion.div>
 											</>
 										)}
