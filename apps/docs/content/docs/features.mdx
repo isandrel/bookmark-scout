@@ -8,9 +8,19 @@ description: All features of Bookmark Scout
 ## ✅ Implemented
 
 ### 🤖 AI Folder Recommendations
-Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, or Ollama. Analyzes page title and URL to recommend the best folders for your bookmarks.
+Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible provider. AI recommendations analyze the current page title and URL to suggest bookmark folders.
 
-> **Note:** AI features are disabled by default. Enable in **Settings → AI**, select your provider, and enter your API key.
+AI features are disabled by default. Enable them in **Settings → AI**, select a provider, and enter an API key when the provider requires one.
+
+### 🧠 AI Tools
+Use AI from the bookmarks manager to:
+
+- export selected bookmarks as Markdown or XML context for LLMs
+- suggest tags for a folder
+- generate bookmark summaries
+- plan folder reorganization before applying changes
+
+AI tools can send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. Review generated results before applying organization changes.
 
 ### 🔍 Instant Search
 Quickly find bookmarks with debounced search and folder filtering.
@@ -24,13 +34,48 @@ Save the current tab to any folder with one click.
 ### 📱 Side Panel
 Access your bookmarks from Chrome's side panel.
 
+### 🗂️ Full Bookmarks Manager
+Bookmark Scout overrides Chrome's default bookmarks page with a custom manager that includes a folder tree, breadcrumb navigation, table-based bookmark browsing, and a right-side tools panel.
+
+### ⚙️ Options Page
+Configure appearance, language, search behavior, delete confirmations, popup sizing, AI providers, AI models, maintenance tools, metadata tools, privacy scanning, statistics, import/export defaults, and context-menu behavior.
+
+### 🌙 Theme Settings
+Use system, light, or dark theme mode from the options page.
+
+### 🔗 Duplicate Cleaner
+Scan all bookmarks for duplicates with configurable matching rules and remove extra copies after review.
+
+### 🧹 URL Cleaner
+Preview and apply URL cleanup for tracking parameters, duplicate query parameters, sorted query parameters, and preserved parameter allowlists.
+
+### 💀 Dead Link Checker
+Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings.
+
+### 🧾 Metadata Fetcher
+Fetch bookmark metadata such as page titles, favicons, and descriptions for selected scopes.
+
+### 🛡️ Privacy Scanner
+Detect sensitive query parameters, URL fragments, emails, and UUIDs in bookmark data.
+
+### 📊 Bookmark Statistics
+View domain, folder, protocol, duplicate, depth, and top-item statistics for a folder or all bookmarks.
+
+### 📤 Import/Export
+Export bookmarks as HTML, JSON, Markdown, or CSV. Import bookmark files from HTML or JSON.
+
+### 🖱️ Context Menu Save
+Save links from the browser right-click menu into recent folders or the default Bookmarks Bar.
+
+### ⚙️ Settings Sync
+Extension settings are stored through `chrome.storage.sync`, so preferences can sync through the browser account where supported.
+
 ### 🌍 i18n
 Multi-language support: English, Japanese, Korean.
 
 ## 🚧 Roadmap
 
-- 🗂️ Full Bookmark Manager
-- 🌙 Dark Mode
-- 🔗 Duplicate Detection
-- 💀 Dead Link Checker
-- 📤 Import/Export
+- ⌨️ Keyboard shortcuts for faster navigation and actions
+- 🏷️ Persistent custom tags beyond AI-generated suggestions
+- 🧪 Dedicated automated tests for bookmark workflows
+- 🛒 Chrome Web Store, Firefox Add-ons, and Edge Add-ons listing polish

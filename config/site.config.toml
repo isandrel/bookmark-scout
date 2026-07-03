@@ -3,7 +3,7 @@
 # Change these values to update the domain/settings across the entire project.
 
 [site]
-description = "A browser extension to quickly search, organize, and save bookmarks. Features drag-and-drop, instant search, and dark mode."
+description = "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools and multi-provider support."
 meta_title  = "Browser Bookmark Manager"
 name        = "Bookmark Scout"
 url         = "https://bookmark-scout.com"

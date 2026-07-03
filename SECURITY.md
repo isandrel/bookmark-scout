@@ -4,6 +4,7 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 0.2.x   | :white_check_mark: |
 | 0.1.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
@@ -59,6 +60,7 @@ This project implements the following security measures:
 ## Scope
 
 This security policy applies to:
+
 - The Bookmark Scout browser extension
 - The Bookmark Scout website
 - All related repositories under this organization

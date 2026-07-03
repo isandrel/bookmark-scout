@@ -51,3 +51,32 @@ cd bookmark-scout
 bun install
 bun run build
 ```
+
+The source build writes browser outputs under `apps/extension/dist/`:
+
+- Chrome: `apps/extension/dist/chrome-mv3`
+- Firefox: `apps/extension/dist/firefox-mv2`
+- Edge: `apps/extension/dist/edge-mv3`
+
+Use the matching output folder when loading the extension unpacked.
+
+## Development Commands
+
+```bash
+# Chrome development server
+bun run dev
+
+# Firefox development server
+bun run dev:firefox
+
+# Edge development server
+bun run dev:edge
+
+# Build all browser targets
+bun run build
+
+# Lint extension source
+bunx nx run extension:lint
+```
+
+The repository does not currently expose a dedicated automated unit or integration test suite in the normal workspace scripts. Treat lint and build commands as validation, not test coverage.

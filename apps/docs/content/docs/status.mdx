@@ -1,0 +1,40 @@
+---
+title: Project Status
+description: Current implemented and planned Bookmark Scout work
+---
+
+# Project Status
+
+This page summarizes the current repository status so roadmap docs do not drift from the implementation.
+
+## Implemented
+
+- Browser extension built with WXT, React, TypeScript, Zustand, Radix/shadcn UI primitives, and browser bookmark APIs
+- Chrome primary target with Firefox and Edge build targets
+- Popup bookmark search, folder filtering, drag-and-drop organization, quick add, folder creation, deletion confirmation, and expand/collapse controls
+- Chrome side panel entrypoint
+- Custom bookmarks page override with folder tree, breadcrumbs, bookmark table, and tools sidebar
+- Options page with settings for appearance, language, search, behavior, advanced UI sizing, AI, AI tools, maintenance, metadata, security, analytics, data, and context menus
+- Settings persisted through `chrome.storage.sync`
+- AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, and custom OpenAI-compatible endpoints
+- AI folder recommendations, context packing, tag suggestions, summaries, and folder reorganization planning
+- Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning, metadata fetching, privacy scanning, and statistics
+- Bookmark import from HTML or JSON
+- Bookmark export to HTML, JSON, Markdown, or CSV
+- Right-click context menu save flow for links
+- English, Japanese, and Korean extension locales
+- Localized marketing site in English, Japanese, and Korean
+- Fumadocs documentation site
+
+## Planned
+
+- Keyboard shortcuts for faster navigation and actions
+- Persistent custom tags beyond AI-generated suggestions
+- Dedicated automated unit/integration tests for bookmark workflows
+- Store listing polish for Chrome Web Store, Firefox Add-ons, and Edge Add-ons
+
+## Known Documentation Rules
+
+- Update docs when feature status, installation paths, browser support, privacy expectations, or configuration changes.
+- AI features are opt-in and may send bookmark data to the selected provider.
+- Lint and build commands validate the repository, but they are not a substitute for test coverage.

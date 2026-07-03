@@ -1,10 +1,4 @@
-import {
-    SITE_NAME,
-    SITE_URL,
-    SITE_DESCRIPTION,
-    AUTHOR,
-    GITHUB_URL,
-} from "@bookmark-scout/config";
+import { AUTHOR, GITHUB_URL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@bookmark-scout/config";
 
 export function JsonLd() {
     const structuredData = {
@@ -12,7 +6,7 @@ export function JsonLd() {
         "@type": "SoftwareApplication",
         name: SITE_NAME,
         applicationCategory: "BrowserApplication",
-        operatingSystem: "Chrome, Firefox",
+        operatingSystem: "Chrome, Firefox, Edge",
         offers: {
             "@type": "Offer",
             price: "0",
@@ -39,6 +33,11 @@ export function JsonLd() {
             "Quick bookmark saving",
             "Side panel support",
             "Dark mode",
+            "Custom bookmarks manager",
+            "Duplicate cleanup",
+            "Dead link scanning",
+            "Bookmark import and export",
+            "Opt-in AI bookmark tools",
             "Multi-language support",
         ],
     };

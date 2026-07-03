@@ -1,19 +1,19 @@
+import { JsonLd } from "@/components/JsonLd";
+import { routing } from "@/i18n/routing";
+import {
+    SITE_DESCRIPTION,
+    SITE_META_TITLE,
+    SITE_NAME,
+    SITE_URL,
+    UMAMI_ENABLED,
+    UMAMI_SCRIPT_URL,
+    UMAMI_WEBSITE_ID,
+} from "@bookmark-scout/config";
 import type { Metadata } from "next";
-import Script from "next/script";
-import { Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import { routing } from "@/i18n/routing";
-import { JsonLd } from "@/components/JsonLd";
-import {
-    SITE_URL,
-    SITE_NAME,
-    SITE_META_TITLE,
-    SITE_DESCRIPTION,
-    UMAMI_ENABLED,
-    UMAMI_WEBSITE_ID,
-    UMAMI_SCRIPT_URL,
-} from "@bookmark-scout/config";
+import { Inter } from "next/font/google";
+import Script from "next/script";
 import "../globals.css";
 
 const inter = Inter({
@@ -37,14 +37,18 @@ export async function generateMetadata({
         title: `${SITE_NAME} | ${SITE_META_TITLE}`,
         description: SITE_DESCRIPTION,
         keywords: [
+            "browser extension",
             "chrome extension",
+            "firefox addon",
+            "edge extension",
             "bookmarks",
             "bookmark manager",
             "productivity",
-            "browser extension",
             "bookmark search",
             "bookmark organizer",
             "drag and drop",
+            "bookmark cleanup",
+            "AI bookmark tools",
         ],
         alternates: {
             canonical: `${SITE_URL}/${locale}`,
