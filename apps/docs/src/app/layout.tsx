@@ -1,12 +1,12 @@
-import { RootProvider } from 'fumadocs-ui/provider/next';
-import { DocsLayout } from 'fumadocs-ui/layouts/docs';
-import { source } from '@/lib/source';
-import { SITE_NAME, SITE_URL, GITHUB_URL, DOCS_NAME } from '@bookmark-scout/config';
-import './global.css';
-import { Inter } from 'next/font/google';
+import { DOCS_NAME, GITHUB_URL, SITE_URL } from "@bookmark-scout/config";
+import { DocsLayout } from "fumadocs-ui/layouts/docs";
+import { RootProvider } from "fumadocs-ui/provider/next";
+import { source } from "@/lib/source";
+import "./global.css";
+import { Inter } from "next/font/google";
 
 const inter = Inter({
-  subsets: ['latin'],
+  subsets: ["latin"],
 });
 
 const docsOptions = {
@@ -16,17 +16,17 @@ const docsOptions = {
   },
   links: [
     {
-      text: 'Website',
+      text: "Website",
       url: SITE_URL,
     },
     {
-      text: 'GitHub',
+      text: "GitHub",
       url: GITHUB_URL,
     },
   ],
 };
 
-export default function Layout({ children }: LayoutProps<'/'>) {
+export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
