@@ -22,18 +22,6 @@ updates:
           - "minor"
           - "patch"
 
-  # Bun dependencies for the website
-  - package-ecosystem: "bun"
-    directory: "/apps/website"
-    schedule:
-      interval: "daily"
-    commit-message:
-      prefix: "📦 chore(deps)"
-    labels:
-      - "dependencies"
-      - "website"
-    open-pull-requests-limit: 5
-
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
