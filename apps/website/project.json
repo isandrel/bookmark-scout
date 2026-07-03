@@ -27,7 +27,7 @@
             }
         },
         "lint": {
-            "command": "next lint",
+            "command": "eslint",
             "options": {
                 "cwd": "apps/website"
             }
