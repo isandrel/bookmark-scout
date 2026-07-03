@@ -22,6 +22,7 @@ This project adheres to a Code of Conduct. By participating, you are expected to
 Before creating bug reports, please check existing issues to avoid duplicates.
 
 **When reporting a bug, include:**
+
 - Browser and version (Chrome, Firefox, Edge)
 - Extension version
 - Steps to reproduce
@@ -35,6 +36,7 @@ Use our [bug report template](.github/ISSUE_TEMPLATE/01-bug-report.yml).
 We love feature suggestions! Please use our [feature request template](.github/ISSUE_TEMPLATE/02-feature-request.yml).
 
 **Great feature requests include:**
+
 - Clear problem statement
 - Proposed solution
 - Alternative approaches considered
@@ -42,6 +44,7 @@ We love feature suggestions! Please use our [feature request template](.github/I
 ### 🔧 Code Contributions
 
 Looking for something to work on? Check issues labeled:
+
 - `good first issue` - Great for newcomers
 - `help wanted` - We'd love your help
 
@@ -64,7 +67,6 @@ cd bookmark-scout
 bun install
 
 # Start development server (Chrome)
-cd apps/extension
 bun run dev
 ```
 
@@ -87,15 +89,17 @@ bun run build:edge
 ### Loading the Extension
 
 **Chrome/Edge:**
+
 1. Go to `chrome://extensions` or `edge://extensions`
 2. Enable "Developer mode"
 3. Click "Load unpacked"
-4. Select `.output/chrome-mv3` folder
+4. Select `apps/extension/dist/chrome-mv3`
 
 **Firefox:**
+
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Add-on"
-3. Select any file in `.output/firefox-mv2` folder
+3. Select the `manifest.json` file in `apps/extension/dist/firefox-mv2`
 
 ## 🔄 Pull Request Process
 
@@ -129,14 +133,14 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) with [Gitmoj
 
 | Emoji | Type       | Description      |
 | ----- | ---------- | ---------------- |
-| ✨     | `feat`     | New feature      |
-| 🐛     | `fix`      | Bug fix          |
-| 📝     | `docs`     | Documentation    |
-| 💄     | `style`    | UI/styling       |
+| ✨    | `feat`     | New feature      |
+| 🐛    | `fix`      | Bug fix          |
+| 📝    | `docs`     | Documentation    |
+| 💄    | `style`    | UI/styling       |
 | ♻️     | `refactor` | Code refactoring |
-| ⚡     | `perf`     | Performance      |
-| ✅     | `test`     | Tests            |
-| 🔧     | `chore`    | Maintenance      |
+| ⚡    | `perf`     | Performance      |
+| ✅    | `test`     | Tests            |
+| 🔧    | `chore`    | Maintenance      |
 
 ### Creating a Pull Request
 
@@ -158,7 +162,8 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) with [Gitmoj
 
 - [ ] Code follows project style guidelines
 - [ ] Self-review completed
-- [ ] Tests added/updated if applicable
+- [ ] Relevant lint/build validation completed
+- [ ] Tests added/updated if applicable when a test suite exists for the changed area
 - [ ] Documentation updated if needed
 - [ ] Linked to relevant issue
 
@@ -172,9 +177,11 @@ We use [Biome](https://biomejs.dev/) for linting and formatting.
 # Check linting
 bun run lint
 
-# Auto-fix issues
-bun run lint:fix
+# Run extension lint only
+bunx nx run extension:lint
 ```
+
+The normal workspace scripts do not currently expose a dedicated automated unit or integration test suite. Treat lint and build commands as validation, not test coverage.
 
 ### TypeScript
 
@@ -206,7 +213,7 @@ When adding user-facing text:
 
 1. Add strings to `public/_locales/{locale}/messages.json`
 2. Support all locales: `en`, `ja`, `ko`
-3. Use the i18n hook: `const { t } = useI18n()`
+3. Use the existing i18n helper: `t("message_key")`
 
 ## 🤔 Questions?
 

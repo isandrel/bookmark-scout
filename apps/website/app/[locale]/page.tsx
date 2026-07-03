@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { SITE_NAME, GITHUB_URL, AUTHOR, DOCS_URL } from "@bookmark-scout/config";
+import { AUTHOR, DOCS_URL, GITHUB_URL, SITE_NAME } from "@bookmark-scout/config";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import Link from "next/link";
 
 // Tech stack badges
 const techStack = [
@@ -55,6 +55,21 @@ export default async function Home({
             icon: "🌙",
             title: t("features.darkMode.title"),
             description: t("features.darkMode.description"),
+        },
+        {
+            icon: "🗂️",
+            title: t("features.bookmarksManager.title"),
+            description: t("features.bookmarksManager.description"),
+        },
+        {
+            icon: "🧰",
+            title: t("features.maintenanceTools.title"),
+            description: t("features.maintenanceTools.description"),
+        },
+        {
+            icon: "📤",
+            title: t("features.importExport.title"),
+            description: t("features.importExport.description"),
         },
         {
             icon: "🎯",
@@ -196,7 +211,9 @@ export default async function Home({
                                 className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-4 py-2"
                             >
                                 <img
-                                    src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${tech.color.replace("#", "")}?style=flat-square&logo=${tech.logo}&logoColor=white`}
+                                    src={`https://img.shields.io/badge/-${tech.name.replace(/ /g, "_")}-${
+                                        tech.color.replace("#", "")
+                                    }?style=flat-square&logo=${tech.logo}&logoColor=white`}
                                     alt={tech.name}
                                     className="h-5"
                                 />

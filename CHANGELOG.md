@@ -1,5 +1,12 @@
 # bookmark-scout
 
+## Unreleased
+
+### Documentation
+
+- Refresh repository, docs-site, website, and localized README content to reflect current implemented features and planned work.
+- Move implemented options, theme, settings sync, full bookmarks manager, import/export, duplicate cleanup, dead-link checking, and bookmark tooling out of roadmap copy.
+
 ## 0.2.0
 
 ### Minor Changes

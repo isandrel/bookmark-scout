@@ -16,6 +16,12 @@ bun install
 bun run dev
 ```
 
+The repository is a Bun + Nx monorepo with three apps:
+
+- `apps/extension` — WXT browser extension for Chrome, Firefox, and Edge
+- `apps/website` — localized Next.js marketing site
+- `apps/docs` — Fumadocs documentation site
+
 ## Pull Request
 
 ```bash
@@ -36,3 +42,31 @@ gh pr create
 | `refactor` | Code refactoring |
 | `test` | Tests |
 | `chore` | Maintenance |
+
+## Verification
+
+Run the smallest relevant command set for your change:
+
+| Area | Command |
+|------|---------|
+| Extension source | `bunx nx run extension:lint` |
+| Extension runtime, manifest, provider, or browser integration | `bunx nx run extension:build:chrome` plus any affected browser target |
+| Website | `bunx nx run website:build` |
+| Docs | `bunx nx run docs:build` |
+| Cross-app changes | `bun run lint` and `bun run build:all` |
+
+There is no dedicated automated unit or integration test suite exposed through the normal workspace scripts yet. Do not treat lint or build success as test coverage.
+
+## Localization
+
+When changing user-facing extension copy, update all extension locale files:
+
+- `apps/extension/public/_locales/en/messages.json`
+- `apps/extension/public/_locales/ja/messages.json`
+- `apps/extension/public/_locales/ko/messages.json`
+
+When changing localized website copy, update all website message files:
+
+- `apps/website/messages/en.json`
+- `apps/website/messages/ja.json`
+- `apps/website/messages/ko.json`

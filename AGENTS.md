@@ -169,6 +169,41 @@ When reporting completion:
 
 This repository does not currently expose a dedicated automated unit or integration test suite in the normal workspace scripts. Do not represent lint or build success as test coverage.
 
+## AI maintainer runbook
+
+Use this section for repo maintenance tasks such as release publishing, CI repair, Dependabot triage, and GitHub Actions verification.
+
+### Release publishing
+
+- Do not publish a release tag unless the user explicitly asks for release publication.
+- Before pushing a release tag, confirm:
+  - `main` is clean and synced: `rtk git status --short --branch`
+  - no PRs are open: `rtk gh pr list --state open`
+  - latest relevant Actions for current `main` are green
+  - the remote tag does not already exist: `rtk git ls-remote --tags origin vX.Y.Z`
+- If a local release tag points to an older commit, move it to the current passing `main` before pushing: `rtk git tag -f vX.Y.Z HEAD`.
+- Push the tag to trigger `Release Extension`: `rtk git push origin vX.Y.Z`.
+- Watch the workflow and verify uploaded release assets: `rtk gh run watch <run-id> --exit-status` and `rtk gh release view vX.Y.Z`.
+- Expected release assets are Chrome `.crx`, Chrome `.zip`, Firefox `.zip`, and Edge `.zip`.
+
+### GitHub Actions troubleshooting
+
+- Inspect logs before changing code:
+  - list recent runs: `rtk gh run list --limit 20`
+  - inspect failed logs: `rtk gh run view <run-id> --log-failed`
+  - watch reruns: `rtk gh run watch <run-id> --exit-status`
+- If a GitHub Pages deployment fails after build/upload with `Deployment failed, try again later`, treat it as likely transient and rerun the failed job before patching code.
+- If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lockb`, then verify `rtk bun install --frozen-lockfile`.
+- Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
+
+### Dependency automation
+
+- Treat root `bun.lockb` as the workspace lockfile source of truth.
+- Avoid app-local `bun.lock` files unless an app truly installs independently in its workflow.
+- If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
+- Duplicate app-level Bun Dependabot entries can produce `Dependabot::Bun::FileUpdater::NoChangeError`; prefer a single root Bun updater unless the app has a separate lockfile and install workflow.
+- After merging Dependabot PRs, check whether `bun.lockb` needs a follow-up refresh and whether path-filtered deploy workflows were triggered.
+
 ## Coding standards
 
 ### General language rules

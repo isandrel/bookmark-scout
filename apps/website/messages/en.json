@@ -1,199 +1,237 @@
 {
-    "metadata": {
-        "title": "Bookmark Scout - Modern Chrome Bookmark Manager",
-        "description": "A modern Chrome extension to quickly search, organize, and save bookmarks to specific folders."
+  "metadata": {
+    "title": "Bookmark Scout - Modern Browser Bookmark Manager",
+    "description": "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools."
+  },
+  "nav": {
+    "docs": "Docs",
+    "github": "GitHub",
+    "backToDocs": "← Back to Docs"
+  },
+  "hero": {
+    "badge": "Browser Extension",
+    "manifestV3": "Manifest V3",
+    "title": "Bookmark Scout",
+    "description": "A browser extension to search, organize, clean up, import/export, and save bookmarks. Powered by opt-in AI tools with multi-provider support.",
+    "viewOnGitHub": "View on GitHub",
+    "documentation": "Documentation"
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "Everything you need to manage your bookmarks efficiently",
+    "aiRecommendations": {
+      "title": "AI Folder Recommendations",
+      "description": "Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, or Ollama"
     },
-    "nav": {
-        "docs": "Docs",
-        "github": "GitHub",
-        "backToDocs": "← Back to Docs"
+    "instantSearch": {
+      "title": "Instant Search",
+      "description": "Find bookmarks instantly with debounced search and folder filtering"
     },
-    "hero": {
-        "badge": "Chrome Extension",
-        "manifestV3": "Manifest V3",
-        "title": "Bookmark Scout",
-        "description": "A modern Chrome extension to search, organize, and save bookmarks. Powered by AI folder recommendations with multi-provider support.",
-        "viewOnGitHub": "View on GitHub",
-        "documentation": "Documentation"
+    "dragAndDrop": {
+      "title": "Drag & Drop",
+      "description": "Organize bookmarks and folders with intuitive drag-and-drop"
+    },
+    "quickAdd": {
+      "title": "Quick Add",
+      "description": "Save the current tab to any folder with one click"
+    },
+    "sidePanel": {
+      "title": "Side Panel",
+      "description": "Access your bookmarks from Chrome's side panel"
+    },
+    "darkMode": {
+      "title": "Dark Mode",
+      "description": "Beautiful dark theme with smooth transitions"
+    },
+    "bookmarksManager": {
+      "title": "Bookmarks Manager",
+      "description": "Replace Chrome's default bookmarks page with a custom table, folder tree, breadcrumbs, and tools sidebar"
+    },
+    "maintenanceTools": {
+      "title": "Maintenance Tools",
+      "description": "Find duplicates, clean tracking URLs, scan dead links, inspect metadata, review privacy issues, and view statistics"
+    },
+    "importExport": {
+      "title": "Import/Export",
+      "description": "Export HTML, JSON, Markdown, or CSV and import HTML or JSON bookmark files"
+    },
+    "expandCollapse": {
+      "title": "Expand/Collapse",
+      "description": "Quickly expand or collapse all nested folders"
+    }
+  },
+  "techStack": {
+    "title": "Tech Stack",
+    "subtitle": "Built with modern technologies for the best developer experience"
+  },
+  "installation": {
+    "title": "Installation",
+    "subtitle": "Get started in minutes",
+    "step1": {
+      "title": "Download from GitHub Releases",
+      "description": "Download the latest CRX or ZIP asset for your browser"
+    },
+    "step2": {
+      "title": "Prepare the extension files",
+      "description": "Use the Chrome CRX directly, or unzip the downloaded browser archive"
+    },
+    "step3": {
+      "title": "Load in Chrome",
+      "instructions": {
+        "1": "Open chrome://extensions/",
+        "2": "Enable Developer mode (top right)",
+        "3": "Drag in the CRX, or click Load unpacked",
+        "4": "Select the extracted folder when using ZIP"
+      }
+    }
+  },
+  "footer": {
+    "madeWith": "Made with ❤️ by",
+    "license": "Licensed under AGPL-3.0"
+  },
+  "docs": {
+    "title": "Documentation",
+    "subtitle": "Everything you need to know about Bookmark Scout",
+    "gettingStarted": {
+      "title": "Getting Started",
+      "description": "Learn how to install and set up Bookmark Scout"
     },
     "features": {
-        "title": "Features",
-        "subtitle": "Everything you need to manage your bookmarks efficiently",
-        "aiRecommendations": {
-            "title": "AI Folder Recommendations",
-            "description": "Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, or Ollama"
-        },
-        "instantSearch": {
-            "title": "Instant Search",
-            "description": "Find bookmarks instantly with debounced search and folder filtering"
-        },
-        "dragAndDrop": {
-            "title": "Drag & Drop",
-            "description": "Organize bookmarks and folders with intuitive drag-and-drop"
-        },
-        "quickAdd": {
-            "title": "Quick Add",
-            "description": "Save the current tab to any folder with one click"
-        },
-        "sidePanel": {
-            "title": "Side Panel",
-            "description": "Access your bookmarks from Chrome's side panel"
-        },
-        "darkMode": {
-            "title": "Dark Mode",
-            "description": "Beautiful dark theme with smooth transitions"
-        },
-        "expandCollapse": {
-            "title": "Expand/Collapse",
-            "description": "Quickly expand or collapse all nested folders"
-        }
+      "title": "Features",
+      "description": "Explore all the features and capabilities"
     },
-    "techStack": {
-        "title": "Tech Stack",
-        "subtitle": "Built with modern technologies for the best developer experience"
+    "contributing": {
+      "title": "Contributing",
+      "description": "How to contribute to the project"
+    }
+  },
+  "gettingStarted": {
+    "title": "Getting Started",
+    "prerequisites": {
+      "title": "Prerequisites",
+      "bun": "Bun 1.3 or later",
+      "chrome": "Google Chrome or Chromium-based browser",
+      "git": "Git"
     },
     "installation": {
-        "title": "Installation",
-        "subtitle": "Get started in minutes",
-        "step1": {
-            "title": "Download from GitHub Releases",
-            "description": "Download the latest CRX or ZIP asset for your browser"
-        },
-        "step2": {
-            "title": "Prepare the extension files",
-            "description": "Use the Chrome CRX directly, or unzip the downloaded browser archive"
-        },
-        "step3": {
-            "title": "Load in Chrome",
-            "instructions": {
-                "1": "Open chrome://extensions/",
-                "2": "Enable Developer mode (top right)",
-                "3": "Drag in the CRX, or click Load unpacked",
-                "4": "Select the extracted folder when using ZIP"
-            }
-        }
+      "title": "Installation",
+      "step1": "Clone the repository",
+      "step2": "Install dependencies",
+      "step3": "Build the extension",
+      "step4": {
+        "title": "Load in Chrome",
+        "1": "Open chrome://extensions/",
+        "2": "Enable Developer mode (top right toggle)",
+        "3": "Click \"Load unpacked\"",
+        "4": "Select apps/extension/dist/chrome-mv3"
+      }
     },
-    "footer": {
-        "madeWith": "Made with ❤️ by",
-        "license": "Licensed under AGPL-3.0"
-    },
-    "docs": {
-        "title": "Documentation",
-        "subtitle": "Everything you need to know about Bookmark Scout",
-        "gettingStarted": {
-            "title": "Getting Started",
-            "description": "Learn how to install and set up Bookmark Scout"
-        },
-        "features": {
-            "title": "Features",
-            "description": "Explore all the features and capabilities"
-        },
-        "contributing": {
-            "title": "Contributing",
-            "description": "How to contribute to the project"
-        }
-    },
-    "gettingStarted": {
-        "title": "Getting Started",
-        "prerequisites": {
-            "title": "Prerequisites",
-            "bun": "Bun 1.3 or later",
-            "chrome": "Google Chrome or Chromium-based browser",
-            "git": "Git"
-        },
-        "installation": {
-            "title": "Installation",
-            "step1": "Clone the repository",
-            "step2": "Install dependencies",
-            "step3": "Build the extension",
-            "step4": {
-                "title": "Load in Chrome",
-                "1": "Open chrome://extensions/",
-                "2": "Enable Developer mode (top right toggle)",
-                "3": "Click \"Load unpacked\"",
-                "4": "Select apps/extension/dist/chrome-mv3"
-            }
-        },
-        "development": {
-            "title": "Development",
-            "description": "Start the development server with hot reload:"
-        }
-    },
-    "featuresPage": {
-        "title": "Features",
-        "subtitle": "Discover everything Bookmark Scout has to offer",
-        "instantSearch": {
-            "title": "Instant Search",
-            "description": "Quickly find any bookmark with our lightning-fast search. Features debounced input for performance and folder filtering to narrow down results."
-        },
-        "dragAndDrop": {
-            "title": "Drag & Drop Organization",
-            "description": "Reorganize your bookmarks with intuitive drag-and-drop. Move bookmarks between folders or reorder within a folder with ease."
-        },
-        "quickAdd": {
-            "title": "Quick Add",
-            "description": "Save the current tab to any folder with just one click. No more navigating through nested menus - just pick a folder and done!"
-        },
-        "sidePanel": {
-            "title": "Side Panel",
-            "description": "Access your bookmarks directly from Chrome's side panel without leaving your current page. Perfect for research and reference work."
-        },
-        "darkMode": {
-            "title": "Beautiful Dark Mode",
-            "description": "A stunning dark theme that's easy on the eyes. Features smooth transitions and carefully chosen colors for optimal readability."
-        },
-        "expandCollapse": {
-            "title": "Expand/Collapse All",
-            "description": "Quickly expand or collapse all nested folders with a single click. Great for getting an overview or focusing on specific sections."
-        },
-        "createFolders": {
-            "title": "Create Folders",
-            "description": "Create new bookmark folders directly from the popup. Keep your bookmarks organized without opening the bookmark manager."
-        },
-        "deleteItems": {
-            "title": "Delete Items",
-            "description": "Remove unwanted bookmarks and folders with confirmation dialogs to prevent accidental deletions."
-        },
-        "roadmap": {
-            "title": "Roadmap",
-            "fullManager": "Full Bookmarks Manager — Replace Chrome's default bookmarks page",
-            "options": "Options Page — Customize extension settings",
-            "tags": "Tags — Add custom tags for better organization",
-            "duplicates": "Duplicate Detection — Find and remove duplicates",
-            "deadLinks": "Dead Link Checker — Detect broken links",
-            "shortcuts": "Keyboard Shortcuts — Navigate with hotkeys"
-        }
-    },
-    "contributingPage": {
-        "title": "Contributing",
-        "subtitle": "We welcome contributions! Here's how to get started.",
-        "howTo": {
-            "title": "How to Contribute",
-            "step1": "Fork the repository",
-            "step2": "Create your feature branch:",
-            "step3": "Commit your changes:",
-            "step4": "Push to the branch:",
-            "step5": "Open a Pull Request"
-        },
-        "commits": {
-            "title": "Commit Convention",
-            "description": "We use Conventional Commits. Format your commits as:",
-            "feat": "New feature",
-            "fix": "Bug fix",
-            "docs": "Documentation",
-            "refactor": "Code refactoring",
-            "test": "Tests",
-            "chore": "Maintenance"
-        },
-        "setup": {
-            "title": "Development Setup"
-        },
-        "codeStyle": {
-            "title": "Code Style",
-            "biome": "We use Biome for linting and formatting",
-            "check": "Run bun run check before committing",
-            "strict": "TypeScript strict mode is enabled",
-            "functional": "Components use functional style with hooks"
-        }
+    "development": {
+      "title": "Development",
+      "description": "Start the development server with hot reload:"
     }
+  },
+  "featuresPage": {
+    "title": "Features",
+    "subtitle": "Discover everything Bookmark Scout has to offer",
+    "instantSearch": {
+      "title": "Instant Search",
+      "description": "Quickly find any bookmark with our lightning-fast search. Features debounced input for performance and folder filtering to narrow down results."
+    },
+    "dragAndDrop": {
+      "title": "Drag & Drop Organization",
+      "description": "Reorganize your bookmarks with intuitive drag-and-drop. Move bookmarks between folders or reorder within a folder with ease."
+    },
+    "quickAdd": {
+      "title": "Quick Add",
+      "description": "Save the current tab to any folder with just one click. No more navigating through nested menus - just pick a folder and done!"
+    },
+    "sidePanel": {
+      "title": "Side Panel",
+      "description": "Access your bookmarks directly from Chrome's side panel without leaving your current page. Perfect for research and reference work."
+    },
+    "bookmarksManager": {
+      "title": "Full Bookmarks Manager",
+      "description": "Replace Chrome's default bookmarks page with a custom manager that includes a folder tree, breadcrumbs, a table-based bookmark view, and a right-side tools panel."
+    },
+    "optionsPage": {
+      "title": "Options Page",
+      "description": "Configure appearance, search, behavior, AI providers, AI tools, maintenance tools, metadata, security, analytics, data, and context-menu behavior."
+    },
+    "darkMode": {
+      "title": "Beautiful Dark Mode",
+      "description": "A stunning dark theme that's easy on the eyes. Features smooth transitions and carefully chosen colors for optimal readability."
+    },
+    "expandCollapse": {
+      "title": "Expand/Collapse All",
+      "description": "Quickly expand or collapse all nested folders with a single click. Great for getting an overview or focusing on specific sections."
+    },
+    "createFolders": {
+      "title": "Create Folders",
+      "description": "Create new bookmark folders directly from the popup. Keep your bookmarks organized without opening the bookmark manager."
+    },
+    "deleteItems": {
+      "title": "Delete Items",
+      "description": "Remove unwanted bookmarks and folders with confirmation dialogs to prevent accidental deletions."
+    },
+    "maintenanceTools": {
+      "title": "Maintenance Tools",
+      "description": "Clean duplicate bookmarks, remove tracking parameters, scan dead links, fetch metadata, inspect privacy-sensitive URLs, and collect bookmark statistics."
+    },
+    "importExport": {
+      "title": "Import/Export",
+      "description": "Export bookmarks as HTML, JSON, Markdown, or CSV. Import existing bookmark files from HTML or JSON."
+    },
+    "aiTools": {
+      "title": "AI Tools",
+      "description": "Use opt-in AI providers for bookmark recommendations, LLM context packing, tag suggestions, summaries, and folder reorganization plans."
+    },
+    "contextMenu": {
+      "title": "Context Menu Save",
+      "description": "Save links from the browser right-click menu into recent folders or the default Bookmarks Bar."
+    },
+    "settingsSync": {
+      "title": "Settings Sync",
+      "description": "Store extension preferences through chrome.storage.sync so settings can follow your browser account where supported."
+    },
+    "roadmap": {
+      "title": "Current Focus",
+      "shortcuts": "Keyboard Shortcuts — Navigate and act with hotkeys",
+      "persistentTags": "Persistent Tags — Store and manage custom tags beyond AI-generated suggestions",
+      "tests": "Automated Tests — Add dedicated unit and integration coverage for bookmark workflows",
+      "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
+    }
+  },
+  "contributingPage": {
+    "title": "Contributing",
+    "subtitle": "We welcome contributions! Here's how to get started.",
+    "howTo": {
+      "title": "How to Contribute",
+      "step1": "Fork the repository",
+      "step2": "Create your feature branch:",
+      "step3": "Commit your changes:",
+      "step4": "Push to the branch:",
+      "step5": "Open a Pull Request"
+    },
+    "commits": {
+      "title": "Commit Convention",
+      "description": "We use Conventional Commits. Format your commits as:",
+      "feat": "New feature",
+      "fix": "Bug fix",
+      "docs": "Documentation",
+      "refactor": "Code refactoring",
+      "test": "Tests",
+      "chore": "Maintenance"
+    },
+    "setup": {
+      "title": "Development Setup"
+    },
+    "codeStyle": {
+      "title": "Code Style",
+      "biome": "We use Biome for linting and formatting",
+      "check": "Run the narrowest relevant lint/build command before committing",
+      "strict": "TypeScript strict mode is enabled",
+      "functional": "Components use functional style with hooks"
+    }
+  }
 }

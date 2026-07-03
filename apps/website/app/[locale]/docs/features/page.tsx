@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { SITE_NAME, GITHUB_URL } from "@bookmark-scout/config";
+import { GITHUB_URL, SITE_NAME } from "@bookmark-scout/config";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import Link from "next/link";
 
 export default async function FeaturesPage({
     params,
@@ -34,6 +34,16 @@ export default async function FeaturesPage({
             description: t("featuresPage.sidePanel.description"),
         },
         {
+            icon: "🗂️",
+            title: t("featuresPage.bookmarksManager.title"),
+            description: t("featuresPage.bookmarksManager.description"),
+        },
+        {
+            icon: "⚙️",
+            title: t("featuresPage.optionsPage.title"),
+            description: t("featuresPage.optionsPage.description"),
+        },
+        {
             icon: "🌙",
             title: t("featuresPage.darkMode.title"),
             description: t("featuresPage.darkMode.description"),
@@ -52,6 +62,31 @@ export default async function FeaturesPage({
             icon: "🗑️",
             title: t("featuresPage.deleteItems.title"),
             description: t("featuresPage.deleteItems.description"),
+        },
+        {
+            icon: "🧰",
+            title: t("featuresPage.maintenanceTools.title"),
+            description: t("featuresPage.maintenanceTools.description"),
+        },
+        {
+            icon: "📤",
+            title: t("featuresPage.importExport.title"),
+            description: t("featuresPage.importExport.description"),
+        },
+        {
+            icon: "🧠",
+            title: t("featuresPage.aiTools.title"),
+            description: t("featuresPage.aiTools.description"),
+        },
+        {
+            icon: "🖱️",
+            title: t("featuresPage.contextMenu.title"),
+            description: t("featuresPage.contextMenu.description"),
+        },
+        {
+            icon: "🔄",
+            title: t("featuresPage.settingsSync.title"),
+            description: t("featuresPage.settingsSync.description"),
         },
     ];
 
@@ -120,27 +155,19 @@ export default async function FeaturesPage({
                             <ul className="space-y-3 text-muted">
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.fullManager")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.options")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.tags")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.duplicates")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.deadLinks")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
                                     {t("featuresPage.roadmap.shortcuts")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.persistentTags")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.tests")}
+                                </li>
+                                <li className="flex items-center gap-3">
+                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
+                                    {t("featuresPage.roadmap.storeDistribution")}
                                 </li>
                             </ul>
                         </div>
