@@ -76,7 +76,7 @@
     "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4.1.17",
     "typescript": "^6.0.2",
-    "wxt": "^0.20.13"
+    "wxt": "^0.21.1"
   },
   "lint-staged": {
     "apps/extension/src/**/*.{ts,tsx}": [
