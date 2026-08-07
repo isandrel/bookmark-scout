@@ -23,7 +23,7 @@
     "eslint": "^10.6.0",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",
-    "typescript": "^6"
+    "typescript": "^7"
   },
   "ignoreScripts": [
     "sharp",
