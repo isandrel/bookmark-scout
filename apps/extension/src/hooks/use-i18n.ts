@@ -5,7 +5,7 @@
  */
 
 // Import message files at build time for custom language support
-import browser from 'webextension-polyfill';
+import { browser } from 'wxt/browser';
 import messagesEn from '../../public/_locales/en/messages.json';
 import messagesJa from '../../public/_locales/ja/messages.json';
 import messagesKo from '../../public/_locales/ko/messages.json';
