@@ -16,6 +16,7 @@ import {
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableDateFilter } from './data-table-date-filter';
 import { MoveBookmarkButtons } from './move-bookmark-buttons';
+import type { BookmarkTableFeatures } from './table-features';
 
 export enum ItemTypeEnum {
   Folder = 'folder',
@@ -45,7 +46,7 @@ export type Bookmark = {
   unmodifiable?: 'managed';
 };
 
-export const columns: ColumnDef<Bookmark>[] = [
+export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
   {
     id: 'select',
     header: ({ table }) => (

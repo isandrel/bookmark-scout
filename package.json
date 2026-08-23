@@ -25,7 +25,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@atlaskit/pragmatic-drag-and-drop": "^2.0.1",
+    "@atlaskit/pragmatic-drag-and-drop": "^3.0.0",
     "@atlaskit/pragmatic-drag-and-drop-flourish": "^3.0.1",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^2.0.0",
     "@atlaskit/pragmatic-drag-and-drop-live-region": "^2.0.0",
@@ -42,11 +42,11 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-table": "^9.1.2",
     "clsx": "^2.1.1",
     "cmdk": "1.1.1",
     "dompurify": "^3.3.1",
-    "framer-motion": "^12.23.25",
+    "framer-motion": "^13.1.0",
     "lucide-react": "^1.8.0",
     "react": "^19.2.8",
     "react-day-picker": "^10.0.1",
