@@ -1,4 +1,4 @@
-import type { Table } from '@tanstack/react-table';
+import type { ReactTable, RowData } from '@tanstack/react-table';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
@@ -10,14 +10,18 @@ import { typeMap } from './columns';
 import { DataTableDateFilter } from './data-table-date-filter';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
 import { DataTableViewOptions } from './data-table-view-options';
+import type { BookmarkTableFeatures } from './table-features';
 
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+interface DataTableToolbarProps<TData extends RowData> {
+  table: ReactTable<BookmarkTableFeatures, TData>;
   currentFolderId?: string;
 }
 
-export function DataTableToolbar<TData>({ table, currentFolderId }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+export function DataTableToolbar<TData extends RowData>({
+  table,
+  currentFolderId,
+}: DataTableToolbarProps<TData>) {
+  const isFiltered = table.state.columnFilters.length > 0;
   const [applyToCurrentFolder, setApplyToCurrentFolder] = useState(false);
 
   // Call hooks unconditionally at the top level
