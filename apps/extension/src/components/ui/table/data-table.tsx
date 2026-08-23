@@ -3,14 +3,11 @@
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnVisibilityState,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  type RowData,
   type SortingState,
-  useReactTable,
-  type VisibilityState,
+  useTable,
 } from '@tanstack/react-table';
 import * as React from 'react';
 
@@ -25,26 +22,30 @@ import {
 
 import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import { DataTablePagination } from './data-table-pagination';
+import {
+  bookmarkTableFeatures,
+  type BookmarkTableFeatures,
+} from './table-features';
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData extends RowData> {
+  columns: ColumnDef<BookmarkTableFeatures, TData>[];
   data: TData[];
   onRowClick?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
   currentFolderId?: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends RowData>({
   columns,
   data,
   onRowClick,
   rowClassName,
   currentFolderId,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   // Hide technical columns by default for cleaner UX
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({
     id: false,
     parentId: false,
     dateGroupModified: false,
@@ -52,15 +53,12 @@ export function DataTable<TData, TValue>({
   });
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable({
+  const table = useTable({
+    features: bookmarkTableFeatures,
     data,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
