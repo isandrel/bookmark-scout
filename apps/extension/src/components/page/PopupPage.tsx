@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ToastAction } from '@/components/ui/toast';
 import { Toaster } from '@/components/ui/toaster';
 import { Folder, FolderPlus } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -32,6 +33,11 @@ import {
   recommendFolders,
   getBookmark,
   buildAISettingsFromProvider,
+  BOOKMARK_DELETION_UNDO_WINDOW_MS,
+  BookmarkRestoreError,
+  captureBookmarkDeletion,
+  restoreBookmarkDeletion,
+  type BookmarkDeletionSnapshot,
   type FolderRecommendation,
 } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
@@ -290,21 +296,71 @@ function PopupPage() {
 
   const deleteItem = useCallback(
     async ({ id, type }: PendingDeletion) => {
-      if (type === 'folder') {
-        await withToast(
-          () => removeFolder(id),
-          t('toast_folderDeleted'),
-          t('toast_errorDeletingFolder'),
-        );
-      } else {
-        await withToast(
-          () => removeBookmark(id),
-          t('toast_bookmarkDeleted'),
-          t('toast_errorDeletingBookmark'),
-        );
+      let snapshot: BookmarkDeletionSnapshot;
+      try {
+        snapshot = await captureBookmarkDeletion(id);
+      } catch (error) {
+        toast({
+          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
+          description: error instanceof Error ? error.message : t('error_unknown'),
+          variant: 'destructive',
+        });
+        return;
       }
+
+      const result = type === 'folder' ? await removeFolder(id) : await removeBookmark(id);
+      if (!result.success) {
+        toast({
+          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
+          description: result.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      let undoUsed = false;
+      toast({
+        title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
+        description: t('toast_deleteUndoWindow'),
+        variant: 'success',
+        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
+        action: (
+          <ToastAction
+            altText={t('action_undo')}
+            onClick={async () => {
+              // A snapshot restores at most once, so repeated clicks cannot duplicate the tree.
+              if (undoUsed) return;
+              undoUsed = true;
+              try {
+                await restoreBookmarkDeletion(snapshot);
+                await fetchFolders();
+                toast({
+                  title: t('toast_deleteRestored'),
+                  description: t('toast_deleteRestoredDesc', snapshot.node.title),
+                  variant: 'success',
+                });
+              } catch (error) {
+                toast({
+                  title: t('toast_errorRestoringDeletion'),
+                  description:
+                    error instanceof BookmarkRestoreError && error.code === 'parent-missing'
+                      ? t('toast_restoreParentMissing')
+                      : error instanceof BookmarkRestoreError && error.code === 'expired'
+                        ? t('toast_restoreExpired')
+                        : error instanceof Error
+                          ? error.message
+                          : t('error_unknown'),
+                  variant: 'destructive',
+                });
+              }
+            }}
+          >
+            {t('action_undo')}
+          </ToastAction>
+        ),
+      });
     },
-    [removeBookmark, removeFolder, withToast],
+    [fetchFolders, removeBookmark, removeFolder, toast],
   );
 
   const handleDeleteRequest = useCallback(

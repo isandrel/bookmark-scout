@@ -5,6 +5,48 @@
 
 import type { BookmarkTreeNode } from '@/types';
 
+/** How long a deletion can be undone from the popup or side panel. */
+export const BOOKMARK_DELETION_UNDO_WINDOW_MS = 10_000;
+
+export type RecoverableBookmarkNode = {
+  title: string;
+  url?: string;
+  index?: number;
+  /** Firefox separators have no URL or children and must not be recreated as folders. */
+  type?: 'separator';
+  children?: RecoverableBookmarkNode[];
+};
+
+export type BookmarkDeletionSnapshot = {
+  parentId: string;
+  node: RecoverableBookmarkNode;
+  /** Epoch milliseconds after which the snapshot is no longer restorable. */
+  expiresAt: number;
+};
+
+export type BookmarkRestoreErrorCode = 'expired' | 'parent-missing' | 'restore-failed';
+
+export class BookmarkRestoreError extends Error {
+  constructor(
+    message: string,
+    readonly code: BookmarkRestoreErrorCode,
+  ) {
+    super(message);
+    this.name = 'BookmarkRestoreError';
+  }
+}
+
+function toRecoverableNode(node: chrome.bookmarks.BookmarkTreeNode): RecoverableBookmarkNode {
+  const nodeType = (node as { type?: string }).type;
+  return {
+    title: node.title,
+    ...(node.url ? { url: node.url } : {}),
+    ...(typeof node.index === 'number' ? { index: node.index } : {}),
+    ...(nodeType === 'separator' ? { type: 'separator' as const } : {}),
+    ...(node.children ? { children: node.children.map(toRecoverableNode) } : {}),
+  };
+}
+
 /**
  * Gets the favicon URL for a given page URL using Chrome's favicon API.
  * @param pageUrl - The URL of the page to get the favicon for
@@ -108,6 +150,8 @@ export async function createBookmark(details: {
   index?: number;
   title?: string;
   url?: string;
+  /** Firefox-only; Chrome has no separators and never receives this field. */
+  type?: 'separator';
 }): Promise<chrome.bookmarks.BookmarkTreeNode> {
   return new Promise((resolve, reject) => {
     if (!chrome?.bookmarks) {
@@ -186,6 +230,136 @@ export async function deleteBookmark(id: string): Promise<void> {
         return;
       }
       resolve();
+    });
+  });
+}
+
+/**
+ * Captures an in-memory snapshot of a bookmark or folder subtree before deletion
+ * so it can be recreated within {@link BOOKMARK_DELETION_UNDO_WINDOW_MS}.
+ */
+export async function captureBookmarkDeletion(
+  id: string,
+  now: number = Date.now(),
+): Promise<BookmarkDeletionSnapshot> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+
+    chrome.bookmarks.getSubTree(id, (results) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+
+      const node = results[0];
+      if (!node?.parentId) {
+        reject(new Error('Bookmark cannot be recovered without its parent folder.'));
+        return;
+      }
+      resolve({
+        parentId: node.parentId,
+        node: toRecoverableNode(node),
+        expiresAt: now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+      });
+    });
+  });
+}
+
+async function recreateBookmarkNode(
+  node: RecoverableBookmarkNode,
+  parentId: string,
+  index: number | undefined,
+): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  const restored = await createBookmark({
+    parentId,
+    ...(typeof index === 'number' ? { index } : {}),
+    title: node.title,
+    ...(node.url ? { url: node.url } : {}),
+    ...(node.type ? { type: node.type } : {}),
+  });
+
+  // Children are recreated in their captured order, so sequential indexes are always in bounds.
+  const children = node.children ?? [];
+  for (const [childIndex, child] of children.entries()) {
+    await recreateBookmarkNode(child, restored.id, childIndex);
+  }
+  return restored;
+}
+
+/**
+ * Recreates a captured deletion under its original parent. Browser-generated IDs and
+ * dates are new. A partially restored tree is rolled back before the error is thrown.
+ */
+export async function restoreBookmarkDeletion(
+  snapshot: BookmarkDeletionSnapshot,
+  now: number = Date.now(),
+): Promise<chrome.bookmarks.BookmarkTreeNode> {
+  if (now > snapshot.expiresAt) {
+    throw new BookmarkRestoreError('The undo window for this deletion has expired.', 'expired');
+  }
+
+  let siblingCount: number;
+  try {
+    const [parent] = await getBookmarkSubTree(snapshot.parentId);
+    if (!parent || parent.url) throw new Error('Original parent is not a folder.');
+    siblingCount = parent.children?.length ?? 0;
+  } catch {
+    throw new BookmarkRestoreError(
+      'The original parent folder no longer exists.',
+      'parent-missing',
+    );
+  }
+
+  // Siblings may have changed since deletion; clamp so the browser accepts the index.
+  const index =
+    typeof snapshot.node.index === 'number'
+      ? Math.min(snapshot.node.index, siblingCount)
+      : undefined;
+
+  let restoredRoot: chrome.bookmarks.BookmarkTreeNode | undefined;
+  try {
+    restoredRoot = await createBookmark({
+      parentId: snapshot.parentId,
+      ...(typeof index === 'number' ? { index } : {}),
+      title: snapshot.node.title,
+      ...(snapshot.node.url ? { url: snapshot.node.url } : {}),
+      ...(snapshot.node.type ? { type: snapshot.node.type } : {}),
+    });
+    const children = snapshot.node.children ?? [];
+    for (const [childIndex, child] of children.entries()) {
+      await recreateBookmarkNode(child, restoredRoot.id, childIndex);
+    }
+    return restoredRoot;
+  } catch (error) {
+    if (restoredRoot) {
+      try {
+        await deleteBookmark(restoredRoot.id);
+      } catch {
+        // Keep the original restore failure if best-effort rollback also fails.
+      }
+    }
+    throw new BookmarkRestoreError(
+      error instanceof Error ? error.message : 'Failed to restore bookmark deletion.',
+      'restore-failed',
+    );
+  }
+}
+
+async function getBookmarkSubTree(id: string): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.getSubTree(id, (results) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(results);
     });
   });
 }

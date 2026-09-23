@@ -63,6 +63,30 @@
         "message": "フォルダの削除に失敗しました",
         "description": "Toast title for folder deletion error"
     },
+    "toast_deleteUndoWindow": {
+        "message": "10秒以内に元に戻せます。復元できるのは最新の削除のみです。元のIDと日時、およびこのウィンドウを閉じた後の復元には対応していません。",
+        "description": "Limits of popup deletion recovery"
+    },
+    "toast_deleteRestored": {
+        "message": "削除を元に戻しました",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "「$1」を復元しました。IDと日時はブラウザによって新しく生成されています。",
+        "description": "Toast description after restoring a deletion; $1 is the item title"
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "削除を元に戻せませんでした",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "この削除を元に戻せる時間は過ぎました。",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "元のフォルダが存在しないため、この項目は復元できません。",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
     "toast_itemMoved": {
         "message": "アイテムを移動しました",
         "description": "Toast title for item move success"
@@ -92,7 +116,7 @@
         "description": "Confirmation before deleting a bookmark; $1 is its title"
     },
     "popup_confirmDeleteFolder": {
-        "message": "「$1」とその中身をすべて削除しますか？この操作は元に戻せません。",
+        "message": "「$1」とその中身をすべて削除しますか？削除後、短時間だけ元に戻せます。",
         "description": "Confirmation before deleting a folder; $1 is its title"
     },
     "popup_expandAll": {
@@ -210,6 +234,10 @@
     "action_cancel": {
         "message": "キャンセル",
         "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "元に戻す",
+        "description": "Undo deletion button label"
     },
     "action_applyChanges": {
         "message": "変更を適用",

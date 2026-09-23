@@ -326,6 +326,163 @@ test('deletes bookmarks and folders immediately when confirmation is disabled', 
     .toEqual([]);
 });
 
+test('undo restores a deleted bookmark and its nested folder tree at the original positions', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Recover Delete', [
+    { title: 'Recover Bookmark', url: 'https://example.com/recover-bookmark' },
+    {
+      title: 'Recover Folder',
+      children: [
+        {
+          title: 'Recover Child Folder',
+          children: [{ title: 'Recover Deep Bookmark', url: 'https://example.com/recover-deep' }],
+        },
+      ],
+    },
+    { title: 'Recovery Anchor', url: 'https://example.com/recovery-anchor' },
+  ]);
+
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({
+      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: true },
+    });
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  const search = page.getByPlaceholder('Search bookmarks...');
+  await search.fill('Recover Bookmark');
+  const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Recover Bookmark' });
+  await bookmarkRow.hover();
+  await bookmarkRow.getByTitle('Delete bookmark').click();
+  await page
+    .getByRole('dialog', { name: 'Delete bookmark' })
+    .getByRole('button', { name: 'Delete bookmark' })
+    .click();
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText(/Only the latest deletion is recoverable/),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Undo' }).click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.map((item) => item.title);
+      }, folder.folderId),
+    )
+    .toEqual(['Recover Bookmark', 'Recover Folder', 'Recovery Anchor']);
+
+  await search.fill('Recover Folder');
+  const folderRow = page.locator('.folder-item').filter({ hasText: 'Recover Folder' }).first();
+  await folderRow.hover();
+  await folderRow.getByTitle('Delete folder').click();
+  await page
+    .getByRole('dialog', { name: 'Delete folder' })
+    .getByRole('button', { name: 'Delete folder' })
+    .click();
+  await page.getByRole('button', { name: 'Undo' }).click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        const restored = children.find((item) => item.title === 'Recover Folder');
+        if (!restored) return [];
+        const [tree] = await chrome.bookmarks.getSubTree(restored.id);
+        return [
+          tree.title,
+          tree.children?.[0]?.title,
+          tree.children?.[0]?.children?.[0]?.title,
+          tree.children?.[0]?.children?.[0]?.url,
+        ];
+      }, folder.folderId),
+    )
+    .toEqual([
+      'Recover Folder',
+      'Recover Child Folder',
+      'Recover Deep Bookmark',
+      'https://example.com/recover-deep',
+    ]);
+});
+
+test('only the latest repeated deletion is recoverable and missing parents fail safely', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Recovery Limits', [
+    { title: 'First Deleted', url: 'https://example.com/first-deleted' },
+    { title: 'Second Deleted', url: 'https://example.com/second-deleted' },
+    {
+      title: 'Conflict Parent',
+      children: [{ title: 'Conflict Child', url: 'https://example.com/conflict-child' }],
+    },
+  ]);
+
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({
+      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: false },
+    });
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  const search = page.getByPlaceholder('Search bookmarks...');
+  const deleteBookmark = async (title: string) => {
+    await search.fill(title);
+    const row = page.locator('.bookmark-item').filter({ hasText: title });
+    await expect(row).toBeVisible();
+    await row.hover();
+    await row.getByTitle('Delete bookmark').click();
+  };
+
+  await deleteBookmark('First Deleted');
+  await deleteBookmark('Second Deleted');
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText(/Only the latest deletion is recoverable/),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Undo' }).click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.map((item) => item.title);
+      }, folder.folderId),
+    )
+    .toEqual(['Second Deleted', 'Conflict Parent']);
+
+  await deleteBookmark('Conflict Child');
+  await extensionWorker.evaluate(
+    async (id) => new Promise<void>((resolve) => chrome.bookmarks.removeTree(id, () => resolve())),
+    folder.ids['Conflict Parent'],
+  );
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText('The original folder no longer exists, so this item cannot be restored.'),
+  ).toBeVisible();
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.map((item) => item.title);
+      }, folder.folderId),
+    )
+    .toEqual(['Second Deleted']);
+});
+
 test('navigates folders and filters bookmarks by title and URL', async ({
   extensionId,
   extensionWorker,
