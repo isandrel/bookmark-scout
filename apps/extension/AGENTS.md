@@ -118,7 +118,7 @@ If a change is plausibly browser-specific, prefer validating the specific browse
 - Run `nx run extension:test:unit` for sorting strategy changes.
 - Run `nx run extension:test:e2e` for changes to popup, settings, bookmark management, maintenance, reports, or import/export workflows covered by browser tests.
 - The end-to-end target builds Chrome and installs Playwright Chromium and its platform dependencies automatically. CI runs `bun run test` on pushes and pull requests.
-- Network-dependent and AI provider flows still need dedicated automated coverage; Firefox and Edge receive build validation but not browser E2E execution.
+- Dead-link and metadata requests have deterministic route-mocked Chromium E2E coverage. Live network behavior and provider-backed AI flows still need dedicated coverage; Firefox and Edge receive build validation but not browser E2E execution.
 
 ## Architectural expectations
 
