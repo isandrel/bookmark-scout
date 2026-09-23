@@ -205,6 +205,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
   const { value: summarizerSummaryLength } = useSetting('summarizerSummaryLength');
   const { value: summarizerIncludeDomainHint } = useSetting('summarizerIncludeDomainHint');
+  const { value: reorganizationDryRunFirst } = useSetting('reorganizationDryRunFirst');
+  const { value: reorganizationMinConfidence } = useSetting('reorganizationMinConfidence');
+  const { value: reorganizationBatchSize } = useSetting('reorganizationBatchSize');
 
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
@@ -393,6 +396,24 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     setPrivacyDialogOpen(true);
   };
 
+  const handleApplyReorganization = async (
+    plan: ReorganizationPlan,
+    previewConfirmed: boolean,
+  ) => {
+    const result = await applyReorganizationPlan(plan, { previewConfirmed });
+    if (!result.success) {
+      setReorgErrors(result.errors);
+      return;
+    }
+
+    await refresh();
+    setReorgDialogOpen(false);
+    toast({
+      title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
+      description: t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
+    });
+  };
+
   const buildAISettings = async () =>
     buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
 
@@ -530,8 +551,15 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       try {
         const targetFolders = getTargetNodes(scope);
         const aiSettings = await buildAISettings();
-        const plan = await generateReorganizationPlan(targetFolders, aiSettings);
+        const plan = await generateReorganizationPlan(targetFolders, aiSettings, {
+          dryRunFirst: reorganizationDryRunFirst,
+          minConfidence: reorganizationMinConfidence,
+          batchSize: reorganizationBatchSize,
+        });
         setReorgPlan(plan);
+        if (!reorganizationDryRunFirst) {
+          await handleApplyReorganization(plan, false);
+        }
       } catch (err) {
         setReorgErrors([err instanceof Error ? err.message : 'Failed to analyze bookmarks']);
       } finally {
@@ -701,7 +729,11 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     description={
                       t('tools_aiReorganizeDesc') || 'Use AI to suggest a better folder structure'
                     }
-                    buttonLabel={t('action_analyze') || 'Analyze'}
+                    buttonLabel={
+                      reorganizationDryRunFirst
+                        ? t('action_analyze') || 'Analyze'
+                        : t('action_applyChanges') || 'Apply Changes'
+                    }
                     onClick={(scope) => handleToolAction('reorganize', scope)}
                     scopeCapability="both"
                     defaultScope={toolSettings.reorganizationDefaultScope}
@@ -914,18 +946,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         errors={reorgErrors}
         onApply={async () => {
           if (reorgPlan) {
-            const result = await applyReorganizationPlan(reorgPlan);
-            if (result.success) {
-              await refresh();
-              setReorgDialogOpen(false);
-              toast({
-                title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
-                description:
-                  t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
-              });
-            } else {
-              setReorgErrors(result.errors);
-            }
+            await handleApplyReorganization(reorgPlan, true);
           }
         }}
         onCancel={() => setReorgDialogOpen(false)}
