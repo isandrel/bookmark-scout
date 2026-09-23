@@ -98,17 +98,31 @@ export function sortBookmarkItems<T>(
 export function sortBookmarkTree(
   nodes: readonly BookmarkTreeNode[],
   order: SortOrder,
+  originalNodes: readonly BookmarkTreeNode[] = nodes,
 ): BookmarkTreeNode[] {
-  const withSortedChildren = nodes.map((node) => ({
-    ...node,
-    children: node.children ? sortBookmarkTree(node.children, order) : undefined,
-  }));
+  const titlesById = new Map<string, string>();
+  const collectTitles = (items: readonly BookmarkTreeNode[]) => {
+    for (const item of items) {
+      titlesById.set(item.id, item.title);
+      if (item.children) collectTitles(item.children);
+    }
+  };
+  collectTitles(originalNodes);
 
-  return sortBookmarkItems(withSortedChildren, order, {
-    getTitle: (node) => node.title.replace(/<[^>]*>/g, ''),
-    getDateAdded: (node) => node.dateAdded ?? node.dateGroupModified,
-    isFolder: (node) => node.children !== undefined,
-    getIndex: (node) => node.index,
-    isPinned: (node) => node.isTemporary === true,
-  });
+  const sortNodes = (items: readonly BookmarkTreeNode[]): BookmarkTreeNode[] => {
+    const withSortedChildren = items.map((node) => ({
+      ...node,
+      children: node.children ? sortNodes(node.children) : undefined,
+    }));
+
+    return sortBookmarkItems(withSortedChildren, order, {
+      getTitle: (node) => titlesById.get(node.id) ?? node.title,
+      getDateAdded: (node) => node.dateAdded ?? node.dateGroupModified,
+      isFolder: (node) => node.children !== undefined,
+      getIndex: (node) => node.index,
+      isPinned: (node) => node.isTemporary === true,
+    });
+  };
+
+  return sortNodes(nodes);
 }

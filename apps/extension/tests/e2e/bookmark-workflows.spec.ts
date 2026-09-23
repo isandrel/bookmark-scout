@@ -93,8 +93,9 @@ test('updates popup ordering from synced settings and creates a folder', async (
 
   await setSortOrder('alphabetical');
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await page.locator('.accordion-item').first().locator('.folder-item').first().click();
-  await page.getByText('Bookmarks Bar', { exact: true }).click();
+  const browserRoot = page.locator('.accordion-item').first();
+  await browserRoot.locator('.folder-item').first().click();
+  await browserRoot.locator('.accordion-item').first().locator('.folder-item').first().click();
   await page.getByText('E2E Popup Actions', { exact: true }).click();
   await expect.poll(visibleLinkOrder).toEqual(['Alpha Link', 'Zulu Link']);
 
