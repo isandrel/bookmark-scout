@@ -24,7 +24,7 @@ import { createColumns } from '../ui/table/columns';
 import { DataTable } from '../ui/table/data-table';
 
 export default function BookmarksPage() {
-  const { currentFolder, data, isLoading, error, navigateToFolder } =
+  const { currentFolder, data, allData, isLoading, error, navigateToFolder } =
     useBookmarkNavigation();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
@@ -32,16 +32,23 @@ export default function BookmarksPage() {
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
   const columns = useMemo(() => createColumns(setSelectedBookmark), []);
+  const sortAccessors = useMemo(
+    () => ({
+      getTitle: (bookmark: Bookmark) => bookmark.title,
+      getDateAdded: (bookmark: Bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
+      isFolder: (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder,
+      getIndex: (bookmark: Bookmark) => bookmark.index,
+    }),
+    [],
+  );
 
   const sortedData = useMemo(
-    () =>
-      sortBookmarkItems(data, sortOrder, {
-        getTitle: (bookmark) => bookmark.title,
-        getDateAdded: (bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
-        isFolder: (bookmark) => bookmark.type === ItemTypeEnum.Folder,
-        getIndex: (bookmark) => bookmark.index,
-      }),
-    [data, sortOrder],
+    () => sortBookmarkItems(data, sortOrder, sortAccessors),
+    [data, sortOrder, sortAccessors],
+  );
+  const sortedAllData = useMemo(
+    () => sortBookmarkItems(allData, sortOrder, sortAccessors),
+    [allData, sortOrder, sortAccessors],
   );
 
   // Get current folder name for display
@@ -149,6 +156,7 @@ export default function BookmarksPage() {
             <DataTable
               columns={columns}
               data={sortedData}
+              allData={sortedAllData}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';
                 const folderClass =
@@ -162,7 +170,6 @@ export default function BookmarksPage() {
                   navigateToFolder(row.id);
                 }
               }}
-              currentFolderId={currentFolder || undefined}
             />
           )}
         </div>
@@ -192,6 +199,6 @@ export default function BookmarksPage() {
   );
 }
 
+export type { Bookmark } from '@/hooks/use-bookmarks-page';
 // Re-export types and hooks for backwards compatibility
 export { useParentIdMap, useUrlMap } from '@/hooks/use-bookmarks-page';
-export type { Bookmark } from '@/hooks/use-bookmarks-page';

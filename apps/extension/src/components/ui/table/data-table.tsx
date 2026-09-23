@@ -30,17 +30,17 @@ import {
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];
   data: TData[];
+  allData: TData[];
   onRowClick?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
-  currentFolderId?: string;
 }
 
 export function DataTable<TData extends RowData>({
   columns,
   data,
+  allData,
   onRowClick,
   rowClassName,
-  currentFolderId,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -52,10 +52,13 @@ export function DataTable<TData extends RowData>({
     unmodifiable: false,
   });
   const [rowSelection, setRowSelection] = React.useState({});
+  const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
+
+  const displayedData = columnFilters.length > 0 && !applyToCurrentFolder ? allData : data;
 
   const table = useTable({
     features: bookmarkTableFeatures,
-    data,
+    data: displayedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -71,7 +74,11 @@ export function DataTable<TData extends RowData>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} currentFolderId={currentFolderId} />
+      <DataTableToolbar
+        table={table}
+        applyToCurrentFolder={applyToCurrentFolder}
+        onApplyToCurrentFolderChange={setApplyToCurrentFolder}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
