@@ -18,7 +18,7 @@ interface BookmarkItemProps {
   node: BookmarkTreeNode;
   instanceId: symbol;
   isDragging: boolean;
-  onDelete: (id: string) => void;
+  onDelete: (node: BookmarkTreeNode) => void;
   onDragStart: (node: BookmarkTreeNode) => void;
   onDragEnd: () => void;
   onDrop: (operation: DragOperation) => void;
@@ -151,7 +151,7 @@ export function BookmarkItem({
         variant="ghost"
         size="icon"
         className="h-6 w-6 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
-        onClick={() => onDelete(node.id)}
+        onClick={() => onDelete(node)}
         title="Delete bookmark"
       >
         <Trash2 className="h-3.5 w-3.5" />
