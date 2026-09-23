@@ -5,21 +5,20 @@
 
 import { type ComponentType, useCallback, useEffect, useState } from 'react';
 import { Folder } from 'lucide-react';
+import { t } from '@/hooks/use-i18n';
 import { getFaviconUrl } from '@/services/bookmarks';
 import { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 
 // Re-export for convenience
 export { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 
-const processNode = (
-  node: chrome.bookmarks.BookmarkTreeNode,
-  parentId = 'Root',
-): Bookmark => {
+const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
   const isFolder = node.children !== undefined;
   return {
     type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
     id: node.id,
-    parentId: parentId,
+    parentId: node.parentId,
+    folderPath,
     index: node.index,
     title: node.title,
     url: node.url,
@@ -29,52 +28,37 @@ const processNode = (
   };
 };
 
-// API functions
-async function getTopLevelFolders(): Promise<Bookmark[]> {
-  return new Promise((resolve) => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const topLevelFolders =
-          nodes[0].children?.map((node) => processNode(node)) || [];
-        resolve(topLevelFolders);
-      });
-    } else {
-      resolve([]);
-    }
+async function getBookmarkTree(): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
+  if (!chrome?.bookmarks) return [];
+
+  return new Promise((resolve, reject) => {
+    chrome.bookmarks.getTree((nodes) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+      } else {
+        resolve(nodes);
+      }
+    });
   });
 }
 
-async function getFolderContents(folderId: string): Promise<Bookmark[]> {
-  return new Promise((resolve) => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const findFolder = (
-          nodes: chrome.bookmarks.BookmarkTreeNode[],
-        ): chrome.bookmarks.BookmarkTreeNode | null => {
-          for (const node of nodes) {
-            if (node.id === folderId) return node;
-            if (node.children) {
-              const found = findFolder(node.children);
-              if (found) return found;
-            }
-          }
-          return null;
-        };
-
-        const targetFolder = findFolder(nodes);
-        if (targetFolder?.children) {
-          const contents = targetFolder.children.map((node) =>
-            processNode(node, folderId),
-          );
-          resolve(contents);
-        } else {
-          resolve([]);
-        }
-      });
-    } else {
-      resolve([]);
+function flattenBookmarks(
+  nodes: chrome.bookmarks.BookmarkTreeNode[],
+  ancestorTitles: string[] = [],
+): Bookmark[] {
+  const bookmarks: Bookmark[] = [];
+  for (const node of nodes) {
+    const folderPath = ancestorTitles.length ? ancestorTitles.join(' / ') : t('bookmarks_root');
+    bookmarks.push(processNode(node, folderPath));
+    if (node.children) {
+      const childBookmarks = flattenBookmarks(node.children, [
+        ...ancestorTitles,
+        node.title || t('bookmarks_untitled'),
+      ]);
+      for (const child of childBookmarks) bookmarks.push(child);
     }
-  });
+  }
+  return bookmarks;
 }
 
 /**
@@ -84,6 +68,7 @@ async function getFolderContents(folderId: string): Promise<Bookmark[]> {
 export function useBookmarkNavigation() {
   const [currentFolder, setCurrentFolder] = useState<string | null>(null);
   const [data, setData] = useState<Bookmark[]>([]);
+  const [allData, setAllData] = useState<Bookmark[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -100,19 +85,19 @@ export function useBookmarkNavigation() {
     setIsLoading(true);
     setError(null);
     try {
+      const tree = await getBookmarkTree();
+      const root = tree[0];
+      const bookmarks = flattenBookmarks(root?.children ?? []);
+      setAllData(bookmarks);
+      setData(bookmarks.filter((bookmark) => bookmark.parentId === (currentFolder ?? root?.id)));
+
+      const newUrl = new URL(window.location.href);
       if (currentFolder) {
-        const contents = await getFolderContents(currentFolder);
-        setData(contents);
-        const newUrl = new URL(window.location.href);
         newUrl.searchParams.set('id', currentFolder);
-        window.history.pushState({}, '', newUrl.toString());
       } else {
-        const folders = await getTopLevelFolders();
-        setData(folders);
-        const newUrl = new URL(window.location.href);
         newUrl.searchParams.delete('id');
-        window.history.pushState({}, '', newUrl.toString());
       }
+      window.history.pushState({}, '', newUrl.toString());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load bookmarks');
     } finally {
@@ -124,19 +109,15 @@ export function useBookmarkNavigation() {
     refreshCurrentFolder();
   }, [refreshCurrentFolder]);
 
-  // Listen for bookmark move events
+  // Refresh both the selected folder and global data after a table move.
   useEffect(() => {
-    const handleBookmarkMove = (event: CustomEvent) => {
-      if (event.detail.parentId === currentFolder) {
-        refreshCurrentFolder();
-      }
-    };
+    const handleBookmarkMove = () => refreshCurrentFolder();
 
-    window.addEventListener('bookmarkMoved', handleBookmarkMove as EventListener);
+    window.addEventListener('bookmarkMoved', handleBookmarkMove);
     return () => {
-      window.removeEventListener('bookmarkMoved', handleBookmarkMove as EventListener);
+      window.removeEventListener('bookmarkMoved', handleBookmarkMove);
     };
-  }, [currentFolder, refreshCurrentFolder]);
+  }, [refreshCurrentFolder]);
 
   const navigateToFolder = useCallback((folderId: string | null) => {
     setCurrentFolder(folderId);
@@ -152,6 +133,7 @@ export function useBookmarkNavigation() {
   return {
     currentFolder,
     data,
+    allData,
     isLoading,
     error,
     navigateToFolder,

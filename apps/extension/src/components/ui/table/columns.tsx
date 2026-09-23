@@ -3,6 +3,7 @@ import { ArrowUpDown, Folder, Link, MoreHorizontal } from 'lucide-react';
 import { type ComponentType, useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
+import { t } from '@/hooks/use-i18n';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -38,6 +39,7 @@ export type Bookmark = {
   type: ItemTypeEnum;
   id: string;
   parentId?: string;
+  folderPath: string;
   index?: number;
   title: string;
   url?: string;
@@ -124,6 +126,20 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: 'folderPath',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={t('bookmarks_folderPath')} />
+    ),
+    cell: ({ row }) => {
+      const path = row.original.folderPath;
+      return (
+        <span className="block max-w-72 truncate" title={path}>
+          {path}
+        </span>
+      );
     },
   },
   {

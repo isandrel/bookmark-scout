@@ -567,6 +567,10 @@
         "message": "북마크",
         "description": "Root folder name in breadcrumb"
     },
+    "bookmarks_folderPath": {
+        "message": "폴더 경로",
+        "description": "Column showing the containing folder path"
+    },
     "bookmarks_untitled": {
         "message": "제목 없음",
         "description": "Default name for untitled bookmarks"

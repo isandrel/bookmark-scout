@@ -567,6 +567,10 @@
         "message": "Bookmarks",
         "description": "Root folder name in breadcrumb"
     },
+    "bookmarks_folderPath": {
+        "message": "Folder Path",
+        "description": "Column showing the containing folder path"
+    },
     "bookmarks_untitled": {
         "message": "Untitled",
         "description": "Default name for untitled bookmarks"
