@@ -67,6 +67,51 @@ test('opens the popup and finds a bookmark through search', async ({
   await expect(page.getByText('Different Link', { exact: true })).toHaveCount(0);
 });
 
+test('side panel search and dark mode persist across reload', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await seedFolder(extensionWorker, 'E2E Side Panel', [
+    { title: 'Side Panel Match', url: 'https://example.com/side-panel' },
+  ]);
+
+  await page.goto(`chrome-extension://${extensionId}/sidepanel.html`);
+  const search = page.getByPlaceholder('Search bookmarks...');
+  await expect(search).toBeVisible();
+  await search.fill('Side Panel Match');
+  await expect(page.getByText('Side Panel Match', { exact: true })).toBeVisible();
+
+  await page.getByTitle('Dark mode').click();
+  await expect(page.locator('html')).toHaveClass(/dark/);
+  await page.reload();
+  await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect(page.getByTitle('Light mode')).toBeVisible();
+});
+
+test('popup uses selected Japanese and Korean language settings', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const setLanguage = (language: 'ja' | 'ko') =>
+    extensionWorker.evaluate(async (selectedLanguage) => {
+      const key = 'bookmark-scout-settings';
+      const stored = await chrome.storage.sync.get(key);
+      await chrome.storage.sync.set({
+        [key]: { ...(stored[key] ?? {}), language: selectedLanguage },
+      });
+    }, language);
+
+  await setLanguage('ja');
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await expect(page.getByPlaceholder('ブックマークを検索...')).toBeVisible();
+
+  await setLanguage('ko');
+  await page.reload();
+  await expect(page.getByPlaceholder('북마크 검색...')).toBeVisible();
+});
+
 test('updates popup ordering from synced settings and creates a folder', async ({
   extensionId,
   extensionWorker,
@@ -119,6 +164,54 @@ test('updates popup ordering from synced settings and creates a folder', async (
       }, folder.folderId),
     )
     .toBe(true);
+});
+
+test('deletes a bookmark and a nested folder from the popup', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Delete', [
+    { title: 'Delete Me', url: 'https://example.com/delete-me' },
+    { title: 'Keep Me', url: 'https://example.com/keep-me' },
+    {
+      title: 'Removable Folder',
+      children: [{ title: 'Nested Delete', url: 'https://example.com/nested-delete' }],
+    },
+  ]);
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  const search = page.getByPlaceholder('Search bookmarks...');
+  await search.fill('Delete Me');
+  const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Delete Me' });
+  await expect(bookmarkRow).toBeVisible();
+  await bookmarkRow.hover();
+  await bookmarkRow.getByTitle('Delete bookmark').click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.some((item) => item.title === 'Delete Me');
+      }, folder.folderId),
+    )
+    .toBe(false);
+  await expect(bookmarkRow).toHaveCount(0);
+
+  await search.fill('Removable Folder');
+  const folderRow = page.locator('.folder-item').filter({ hasText: 'Removable Folder' }).first();
+  await expect(folderRow).toBeVisible();
+  await folderRow.hover();
+  await folderRow.getByTitle('Delete folder').click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.map((item) => item.title);
+      }, folder.folderId),
+    )
+    .toEqual(['Keep Me']);
 });
 
 test('navigates folders and filters bookmarks by title and URL', async ({
