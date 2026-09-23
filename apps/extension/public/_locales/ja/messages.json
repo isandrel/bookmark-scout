@@ -571,6 +571,26 @@
         "message": "表示",
         "description": "View button label"
     },
+    "table_toggleColumns": {
+        "message": "列をカスタマイズ",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "テーブル表示をカスタマイズ",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "$1列を左へ移動",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "$1列を右へ移動",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "表示をリセット",
+        "description": "Reset bookmark table view button label"
+    },
     "bookmarks_root": {
         "message": "ブックマーク",
         "description": "Root folder name in breadcrumb"

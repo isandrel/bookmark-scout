@@ -571,6 +571,26 @@
         "message": "View",
         "description": "View button label"
     },
+    "table_toggleColumns": {
+        "message": "Customize columns",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "Customize table view",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "Move $1 left",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "Move $1 right",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "Reset view",
+        "description": "Reset bookmark table view button label"
+    },
     "bookmarks_root": {
         "message": "Bookmarks",
         "description": "Root folder name in breadcrumb"

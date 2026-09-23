@@ -571,6 +571,26 @@
         "message": "보기",
         "description": "View button label"
     },
+    "table_toggleColumns": {
+        "message": "열 맞춤 설정",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "테이블 보기 맞춤 설정",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "$1 열을 왼쪽으로 이동",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "$1 열을 오른쪽으로 이동",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "보기 초기화",
+        "description": "Reset bookmark table view button label"
+    },
     "bookmarks_root": {
         "message": "북마크",
         "description": "Root folder name in breadcrumb"
