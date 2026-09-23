@@ -174,7 +174,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search and folder creation, bookmark management, settings synchronization, maintenance tools, reports, and import/export. Network-dependent and AI provider flows are not covered by this suite; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, and route-mocked dead-link and metadata requests. Live network behavior and provider-backed AI flows are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 
