@@ -575,6 +575,78 @@
         "message": "ブックマークを読み込み中...",
         "description": "Loading message for bookmarks page"
     },
+    "bookmarks_viewDetails": {
+        "message": "詳細を表示",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "ブックマークの詳細",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "ブックマークの全情報と利用可能な操作を確認します。",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "名前",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "URL",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "フォルダーパス",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "追加日",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "更新日",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "ブックマークID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "利用できません",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "フォルダーパスを取得できません",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "パスを読み込み中...",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "URLをコピー",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "IDをコピー",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "リンクを開く",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "フォルダーを開く",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "コピーしました。",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "コピーできませんでした。",
+        "description": "Error after bookmark detail copying fails"
+    },
     "search_matchCase": {
         "message": "大文字/小文字を区別",
         "description": "Toggle case-sensitive search"

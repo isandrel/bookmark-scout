@@ -69,9 +69,34 @@ export async function getBookmark(id: string): Promise<chrome.bookmarks.Bookmark
         reject(new Error(chrome.runtime.lastError.message));
         return;
       }
+      if (!results[0]) {
+        reject(new Error('Bookmark not found.'));
+        return;
+      }
       resolve(results[0]);
     });
   });
+}
+
+/**
+ * Gets the named folders containing an item, from the browser's bookmark root
+ * down to its immediate parent. The synthetic "Root" used by the manager is
+ * not a browser bookmark ID.
+ */
+export async function getBookmarkFolderPath(parentId?: string): Promise<string[]> {
+  const path: string[] = [];
+  const visited = new Set<string>();
+  let folderId = parentId;
+
+  while (folderId && folderId !== 'Root' && !visited.has(folderId)) {
+    visited.add(folderId);
+    const folder = await getBookmark(folderId);
+    // The browser's unnamed root has no parent and is represented by the UI label.
+    if (folder.parentId) path.unshift(folder.title);
+    folderId = folder.parentId;
+  }
+
+  return path;
 }
 
 /**
