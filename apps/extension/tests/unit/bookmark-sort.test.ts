@@ -115,4 +115,20 @@ describe('sortBookmarkTree', () => {
       'alpha',
     ]);
   });
+
+  it('uses original titles when the visible tree contains search highlighting', () => {
+    const original: BookmarkTreeNode[] = [
+      { id: 'zulu', title: 'Zulu', url: 'https://z.example' },
+      { id: 'alpha', title: 'Alpha', url: 'https://a.example' },
+    ];
+    const highlighted: BookmarkTreeNode[] = [
+      { ...original[0], title: '<mark>Zulu</mark>' },
+      original[1],
+    ];
+
+    expect(sortBookmarkTree(highlighted, 'alphabetical', original).map((node) => node.id)).toEqual([
+      'alpha',
+      'zulu',
+    ]);
+  });
 });

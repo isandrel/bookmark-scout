@@ -281,8 +281,8 @@ function PopupPage() {
       ? addTemporaryFolder(filteredFolders, creatingFolderId)
       : filteredFolders;
 
-    return sortBookmarkTree(visibleFolders, sortOrder);
-  }, [addTemporaryFolder, creatingFolderId, filteredFolders, sortOrder]);
+    return sortBookmarkTree(visibleFolders, sortOrder, folders);
+  }, [addTemporaryFolder, creatingFolderId, filteredFolders, folders, sortOrder]);
 
   if (error) {
     return (
