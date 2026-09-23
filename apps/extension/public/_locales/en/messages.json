@@ -1176,19 +1176,19 @@
         "description": "AI context packer include dates description"
     },
     "settings_aiContextPackerIncludeTags": {
-        "message": "Include Tags Placeholder",
+        "message": "Include Saved Tags",
         "description": "AI context packer include tags label"
     },
     "settings_aiContextPackerIncludeTagsDesc": {
-        "message": "Reserve a tags field in exported AI context",
+        "message": "Include tags only when saved metadata exists for a bookmark",
         "description": "AI context packer include tags description"
     },
     "settings_aiContextPackerIncludeSummaries": {
-        "message": "Include Summary Placeholder",
+        "message": "Include Saved Summaries",
         "description": "AI context packer include summaries label"
     },
     "settings_aiContextPackerIncludeSummariesDesc": {
-        "message": "Reserve a summary field in exported AI context",
+        "message": "Include summaries only when saved metadata exists for a bookmark",
         "description": "AI context packer include summaries description"
     },
     "settings_aiContextPackerMaxItems": {
@@ -1212,7 +1212,7 @@
         "description": "AI context packer excerpt length label"
     },
     "settings_aiContextPackerExcerptLengthDesc": {
-        "message": "Maximum summary placeholder length in AI context exports",
+        "message": "Maximum saved summary length in AI context exports",
         "description": "AI context packer excerpt length description"
     },
     "settings_autoTaggingEnabled": {

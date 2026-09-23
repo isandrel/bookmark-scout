@@ -1,6 +1,7 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
 import { createAIModel, validateAISettings, type AISettings } from './ai-client';
 import { buildPrompt } from './prompt-config';
 import { flattenBookmarks } from './bookmark-tooling';
@@ -76,6 +77,7 @@ const summarizerSchema = z.object({
 export function buildAIContextPack(
   nodes: BookmarkTreeNode[],
   options: AIContextPackOptions,
+  metadataByBookmarkId: StoredBookmarkMetadataById = {},
 ): PackedAIContext {
   const bookmarks = flattenBookmarks(nodes)
     .filter((bookmark) => bookmark.depth <= options.maxDepth)
@@ -83,8 +85,8 @@ export function buildAIContextPack(
 
   const content =
     options.format === 'xml'
-      ? buildXmlContext(bookmarks, options)
-      : buildMarkdownContext(bookmarks, options);
+      ? buildXmlContext(bookmarks, options, metadataByBookmarkId)
+      : buildMarkdownContext(bookmarks, options, metadataByBookmarkId);
 
   return {
     content,
@@ -193,10 +195,12 @@ export function downloadTextFile(content: string, filename: string, mimeType: st
 function buildMarkdownContext(
   bookmarks: ReturnType<typeof flattenBookmarks>,
   options: AIContextPackOptions,
+  metadataByBookmarkId: StoredBookmarkMetadataById,
 ) {
   const lines: string[] = ['# Bookmark Context', ''];
 
   bookmarks.forEach((bookmark, index) => {
+    const metadata = metadataByBookmarkId[bookmark.node.id];
     lines.push(`## ${index + 1}. ${bookmark.node.title || 'Untitled'}`);
     if (bookmark.node.url) {
       lines.push(`- URL: ${bookmark.node.url}`);
@@ -207,11 +211,11 @@ function buildMarkdownContext(
     if (options.includeDates && bookmark.node.dateAdded) {
       lines.push(`- Added: ${new Date(bookmark.node.dateAdded).toISOString()}`);
     }
-    if (options.includeTags) {
-      lines.push('- Tags: []');
+    if (options.includeTags && metadata?.tags?.length) {
+      lines.push(`- Tags: ${JSON.stringify(metadata.tags)}`);
     }
-    if (options.includeSummaries) {
-      lines.push(`- Summary: ${truncateForContext(bookmark.node.title, options.excerptLength)}`);
+    if (options.includeSummaries && metadata?.summary) {
+      lines.push(`- Summary: ${truncateForContext(metadata.summary, options.excerptLength)}`);
     }
     lines.push('');
   });
@@ -222,9 +226,11 @@ function buildMarkdownContext(
 function buildXmlContext(
   bookmarks: ReturnType<typeof flattenBookmarks>,
   options: AIContextPackOptions,
+  metadataByBookmarkId: StoredBookmarkMetadataById,
 ) {
   const items = bookmarks
     .map((bookmark) => {
+      const metadata = metadataByBookmarkId[bookmark.node.id];
       const fields = [
         `<title>${escapeXml(bookmark.node.title || 'Untitled')}</title>`,
         bookmark.node.url ? `<url>${escapeXml(bookmark.node.url)}</url>` : '',
@@ -232,9 +238,11 @@ function buildXmlContext(
         options.includeDates && bookmark.node.dateAdded
           ? `<dateAdded>${new Date(bookmark.node.dateAdded).toISOString()}</dateAdded>`
           : '',
-        options.includeTags ? '<tags></tags>' : '',
-        options.includeSummaries
-          ? `<summary>${escapeXml(truncateForContext(bookmark.node.title, options.excerptLength))}</summary>`
+        options.includeTags && metadata?.tags?.length
+          ? `<tags>${metadata.tags.map((tag) => `<tag>${escapeXml(tag)}</tag>`).join('')}</tags>`
+          : '',
+        options.includeSummaries && metadata?.summary
+          ? `<summary>${escapeXml(truncateForContext(metadata.summary, options.excerptLength))}</summary>`
           : '',
       ].filter(Boolean);
 

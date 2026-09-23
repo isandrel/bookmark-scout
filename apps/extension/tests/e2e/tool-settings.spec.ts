@@ -81,6 +81,8 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     duplicatesDefaultScope: 'folder',
     autoTaggingEnabled: true,
     autoTaggingDefaultScope: 'all',
+    reorganizationEnabled: true,
+    reorganizationDryRunFirst: false,
   });
 
   const statisticsCard = toolCard(page, 'Bookmark Statistics');
@@ -108,7 +110,13 @@ test('enabled flags hide all tool cards and live settings restore selected cards
   await expect(duplicates).toContainText('E2E Tool B Link');
   await page.keyboard.press('Escape');
 
-  await expect(toolCard(page, 'Auto-Tagging').getByRole('combobox')).toHaveCount(0);
+  const autoTaggingCard = toolCard(page, 'Auto-Tagging');
+  await expect(autoTaggingCard.getByRole('combobox')).toHaveCount(0);
+  await expect(autoTaggingCard.getByRole('button', { name: 'Analyze' })).toBeVisible();
+  const reorganizationCard = toolCard(page, 'AI Folder Reorganization');
+  await expect(reorganizationCard.getByRole('button', { name: 'Apply Changes' })).toBeVisible();
+  await setSettings(extensionWorker, { reorganizationDryRunFirst: true });
+  await expect(reorganizationCard.getByRole('button', { name: 'Analyze' })).toBeVisible();
   await setSettings(extensionWorker, { statisticsDefaultScope: 'folder' });
   await expect(statisticsCard.getByRole('combobox')).toContainText('E2E Tool A');
   await statisticsCard.getByRole('button', { name: 'View' }).click();
