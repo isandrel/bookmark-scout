@@ -460,6 +460,45 @@ test('keeps full titles and URLs available past the former truncation limits', a
   expect(persistedOrder).toEqual([zuluTitle, alphaTitle]);
 });
 
+test('opens full details for the selected manager item without changing it', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const title = 'Detailed Bookmark';
+  const url = 'https://example.com/details?source=e2e';
+  const folder = await seedFolder(extensionWorker, 'E2E Details', [{ title, url }]);
+  const bookmarkId = folder.ids[title];
+  const before = await extensionWorker.evaluate(async (id) => {
+    const [bookmark] = await chrome.bookmarks.get(id);
+    return bookmark;
+  }, bookmarkId);
+
+  await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
+  const row = page.locator('tbody tr').filter({ hasText: title });
+  await expect(row).toHaveCount(1);
+  await row.getByRole('button', { name: 'Open menu' }).click();
+  await page.getByRole('menuitem', { name: 'View Details' }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Details' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByTestId('bookmark-details-name')).toHaveText(title);
+  await expect(dialog.getByTestId('bookmark-details-url')).toHaveText(url);
+  await expect(dialog.getByTestId('bookmark-details-path')).toContainText('E2E Details');
+  await expect(dialog.getByTestId('bookmark-details-added').locator('time')).toHaveCount(1);
+  await expect(dialog.getByTestId('bookmark-details-modified')).toHaveText('Not available');
+  await expect(dialog.getByTestId('bookmark-details-id')).toHaveText(bookmarkId);
+  await expect(dialog.getByRole('button', { name: 'Copy URL' })).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Copy ID' })).toBeVisible();
+  await expect(dialog.getByRole('link', { name: 'Open link' })).toHaveAttribute('href', url);
+
+  const after = await extensionWorker.evaluate(async (id) => {
+    const [bookmark] = await chrome.bookmarks.get(id);
+    return bookmark;
+  }, bookmarkId);
+  expect(after).toEqual(before);
+});
+
 test('moves a bookmark with the table controls and persists the new order', async ({
   extensionId,
   extensionWorker,

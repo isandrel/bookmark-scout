@@ -3,7 +3,6 @@ import { ArrowUpDown, Folder, Link, MoreHorizontal } from 'lucide-react';
 import { type ComponentType, useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
-import { t } from '@/hooks/use-i18n';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -14,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { t } from '@/hooks/use-i18n';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableDateFilter } from './data-table-date-filter';
 import { MoveBookmarkButtons } from './move-bookmark-buttons';
@@ -52,7 +52,9 @@ function formatTimestamp(value: unknown): string {
   return typeof value === 'number' ? new Date(value).toLocaleString() : '';
 }
 
-export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
+export const createColumns = (
+  onViewDetails: (bookmark: Bookmark) => void,
+): ColumnDef<BookmarkTableFeatures, Bookmark>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -406,7 +408,14 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
                 Copy Bookmark ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View Details</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onViewDetails(bookmark);
+                }}
+              >
+                {t('bookmarks_viewDetails')}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
