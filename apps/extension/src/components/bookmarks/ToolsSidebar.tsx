@@ -50,6 +50,7 @@ import {
   type ReorganizationPlan,
   type AIProvider,
   getScopedNodes,
+  flattenBookmarks,
   scanDuplicateBookmarks,
   previewCleanUrls,
   collectBookmarkStatistics,
@@ -67,7 +68,7 @@ import {
   type MetadataFetchResult,
   type PrivacyScanResult,
 } from '@/services';
-import { useSetting, useSettings } from '@/lib';
+import { getStoredBookmarkMetadata, useSetting, useSettings } from '@/lib';
 import { ReorganizationDialog } from './ReorganizationDialog';
 import { ToolResultsDialog } from './ToolResultsDialog';
 import { ToolCard, type ToolScope } from './ToolCards';
@@ -399,16 +400,24 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const handleAIContextPack = async (scope: ToolScope) => {
     setAiContextLoading(true);
     try {
-      const packed = buildAIContextPack(getTargetNodes(scope), {
-        format: aiContextPackerOutputFormat,
-        includeFolderPath: aiContextPackerIncludeFolderPath,
-        includeDates: aiContextPackerIncludeDates,
-        includeTags: aiContextPackerIncludeTags,
-        includeSummaries: aiContextPackerIncludeSummaries,
-        maxItems: aiContextPackerMaxItems,
-        maxDepth: aiContextPackerMaxDepth,
-        excerptLength: aiContextPackerExcerptLength,
-      });
+      const targetNodes = getTargetNodes(scope);
+      const metadata = await getStoredBookmarkMetadata(
+        flattenBookmarks(targetNodes).map((bookmark) => bookmark.node.id),
+      );
+      const packed = buildAIContextPack(
+        targetNodes,
+        {
+          format: aiContextPackerOutputFormat,
+          includeFolderPath: aiContextPackerIncludeFolderPath,
+          includeDates: aiContextPackerIncludeDates,
+          includeTags: aiContextPackerIncludeTags,
+          includeSummaries: aiContextPackerIncludeSummaries,
+          maxItems: aiContextPackerMaxItems,
+          maxDepth: aiContextPackerMaxDepth,
+          excerptLength: aiContextPackerExcerptLength,
+        },
+        metadata,
+      );
 
       const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
       const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';

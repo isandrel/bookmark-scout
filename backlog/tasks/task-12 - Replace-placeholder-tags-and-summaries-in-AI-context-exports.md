@@ -1,7 +1,7 @@
 ---
 id: TASK-12
 title: Replace placeholder tags and summaries in AI context exports
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-09-23 16:30'
 labels: []
@@ -22,6 +22,15 @@ Confirmed placeholder output: includeTags writes an empty list and includeSummar
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Exports never label an empty tag list or truncated title as generated metadata.
+- [x] #1 Exports never label an empty tag list or truncated title as generated metadata.
 - [ ] #2 Tests cover both formats with and without stored tags/summaries, including escaping and privacy review.
 <!-- AC:END -->
+
+## Implementation Notes
+
+2026-09-23: AI context exports now read extension-owned bookmark metadata, include only
+non-empty saved tags and summaries, and omit missing metadata fields in Markdown and XML.
+Deterministic unit coverage verifies both formats, stored and missing metadata, and XML escaping;
+Chromium E2E coverage verifies the downloaded Markdown content from local extension storage.
+Saving, editing, and applying metadata remains TASK-23. Acceptance criterion 2 remains open because
+export privacy review and redaction is intentionally tracked in TASK-29.
