@@ -253,6 +253,47 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   await expect(rows).toHaveCount(3);
 });
 
+test('keeps full titles and URLs available past the former truncation limits', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const commonTitle = 'Common bookmark prefix '.repeat(2);
+  const zuluTitle = `${commonTitle}Zulu`;
+  const alphaTitle = `${commonTitle}Alpha`;
+  const longUrl = `https://example.com/${'segment-'.repeat(8)}tail-marker`;
+  const folder = await seedFolder(extensionWorker, 'E2E Full Values', [
+    { title: zuluTitle, url: longUrl },
+    { title: alphaTitle, url: 'https://example.com/short' },
+  ]);
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), sortOrder: 'alphabetical' } });
+  });
+
+  await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
+  const rows = page.locator('tbody tr');
+  await expect(rows).toHaveCount(2);
+  await expect(rows.nth(0)).toContainText(alphaTitle);
+  await expect(rows.nth(1).getByTitle(zuluTitle, { exact: true })).toBeVisible();
+  await expect(rows.nth(1).getByTitle(longUrl, { exact: true })).toBeVisible();
+
+  await page.getByPlaceholder('Filter titles...').fill('Zulu');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText(zuluTitle);
+  await page.getByRole('button', { name: 'Reset' }).click();
+
+  await page.getByPlaceholder('Filter URLs...').fill('tail-marker');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText(zuluTitle);
+  const persistedOrder = await extensionWorker.evaluate(async (id) => {
+    const children = await chrome.bookmarks.getChildren(id);
+    return children.map((item) => item.title);
+  }, folder.folderId);
+  expect(persistedOrder).toEqual([zuluTitle, alphaTitle]);
+});
+
 test('moves a bookmark with the table controls and persists the new order', async ({
   extensionId,
   extensionWorker,
