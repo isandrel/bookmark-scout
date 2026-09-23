@@ -11,12 +11,6 @@ import { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 // Re-export for convenience
 export { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 
-// Utility functions
-const truncate = (text?: string, length = 50): string => {
-  if (!text) return '';
-  return text.length > length ? `${text.slice(0, length)}...` : text;
-};
-
 const processNode = (
   node: chrome.bookmarks.BookmarkTreeNode,
   parentId = 'Root',
@@ -27,8 +21,8 @@ const processNode = (
     id: node.id,
     parentId: parentId,
     index: node.index,
-    title: truncate(node.title, 30),
-    url: truncate(node.url, 50),
+    title: node.title,
+    url: node.url,
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable as 'managed',

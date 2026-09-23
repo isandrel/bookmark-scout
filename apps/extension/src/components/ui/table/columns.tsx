@@ -134,16 +134,18 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       const urls = Object.values(urlMap);
 
       const rowUrl = row.getValue('url') as string;
-      const matchedUrl = urls.find(({ value }) => rowUrl.includes(value));
-
-      if (!matchedUrl) {
+      if (!rowUrl) {
         return null;
       }
+      const matchedUrl = urls.find(({ value }) => rowUrl.includes(value));
+      const Icon = matchedUrl?.icon ?? Link;
 
       return (
-        <div className="flex items-center">
-          {matchedUrl.icon && <matchedUrl.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-          <span>{rowUrl}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <span className="block max-w-72 truncate" title={rowUrl}>
+            {rowUrl}
+          </span>
         </div>
       );
     },
@@ -189,7 +191,9 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       return (
         <div className="flex items-center gap-2 min-w-0">
           {icon}
-          <span className="truncate">{title}</span>
+          <span className="max-w-72 truncate" title={title}>
+            {title}
+          </span>
         </div>
       );
     },
