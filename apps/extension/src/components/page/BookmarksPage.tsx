@@ -23,22 +23,29 @@ import { sortBookmarkItems } from '@/lib/bookmark-sort';
 import { cn } from '@/lib/utils';
 
 export default function BookmarksPage() {
-  const { currentFolder, data, isLoading, error, navigateToFolder } =
+  const { currentFolder, data, allData, isLoading, error, navigateToFolder } =
     useBookmarkNavigation();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
   const [currentFolderName, setCurrentFolderName] = useState<string | undefined>();
   const { value: sortOrder } = useSetting('sortOrder');
+  const sortAccessors = useMemo(
+    () => ({
+      getTitle: (bookmark: Bookmark) => bookmark.title,
+      getDateAdded: (bookmark: Bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
+      isFolder: (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder,
+      getIndex: (bookmark: Bookmark) => bookmark.index,
+    }),
+    [],
+  );
 
   const sortedData = useMemo(
-    () =>
-      sortBookmarkItems(data, sortOrder, {
-        getTitle: (bookmark) => bookmark.title,
-        getDateAdded: (bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
-        isFolder: (bookmark) => bookmark.type === ItemTypeEnum.Folder,
-        getIndex: (bookmark) => bookmark.index,
-      }),
-    [data, sortOrder],
+    () => sortBookmarkItems(data, sortOrder, sortAccessors),
+    [data, sortOrder, sortAccessors],
+  );
+  const sortedAllData = useMemo(
+    () => sortBookmarkItems(allData, sortOrder, sortAccessors),
+    [allData, sortOrder, sortAccessors],
   );
 
   // Get current folder name for display
@@ -146,6 +153,7 @@ export default function BookmarksPage() {
             <DataTable
               columns={columns}
               data={sortedData}
+              allData={sortedAllData}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';
                 const folderClass =
@@ -159,7 +167,6 @@ export default function BookmarksPage() {
                   navigateToFolder(row.id);
                 }
               }}
-              currentFolderId={currentFolder || undefined}
             />
           )}
         </div>

@@ -30,7 +30,11 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
       };
 
       await createItems(folder.id, entries);
-      return { folderId: folder.id, ids };
+      return {
+        folderId: folder.id,
+        ids,
+        writableRootTitle: writableRoot.title || 'Untitled',
+      };
     },
     { folderTitle: title, entries: items },
   );
@@ -359,6 +363,60 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   await page.locator('nav').getByRole('button', { name: 'E2E Collection' }).click();
   await expect(page).toHaveURL(new RegExp(`id=${folder.folderId}$`));
   await expect(rows).toHaveCount(3);
+});
+
+test('manager filters globally across nested folders or only the selected folder', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const local = await seedFolder(extensionWorker, 'E2E Scope Local', [
+    { title: 'Shared Target Local', url: 'https://example.com/local-target' },
+    {
+      title: 'Inner Scope',
+      children: [{ title: 'Shared Target Nested', url: 'https://example.com/nested-target' }],
+    },
+  ]);
+  const remote = await seedFolder(extensionWorker, 'E2E Scope Remote', [
+    { title: 'Shared Target Remote', url: 'https://example.com/remote-target' },
+  ]);
+
+  await page.goto(bookmarkPageUrl(extensionId, local.folderId));
+  const rows = page.locator('tbody tr');
+  await expect(rows).toHaveCount(2);
+  await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
+
+  await page.getByPlaceholder('Filter titles...').fill('Shared Target');
+  await expect(rows).toHaveCount(3);
+  await expect(
+    rows
+      .filter({ hasText: 'Shared Target Nested' })
+      .getByTitle(`${local.writableRootTitle} / E2E Scope Local / Inner Scope`, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    rows
+      .filter({ hasText: 'Shared Target Remote' })
+      .getByTitle(`${remote.writableRootTitle} / E2E Scope Remote`, { exact: true }),
+  ).toBeVisible();
+
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Shared Target Local');
+  await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
+  await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
+
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).uncheck();
+  await expect(rows).toHaveCount(3);
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(rows).toHaveCount(2);
+  await expect(rows.filter({ hasText: 'Inner Scope' })).toHaveCount(1);
+
+  await page.getByPlaceholder('Filter URLs...').fill('remote-target');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Shared Target Remote');
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
+  await expect(page.getByText('No results.', { exact: true })).toBeVisible();
 });
 
 test('keeps full titles and URLs available past the former truncation limits', async ({

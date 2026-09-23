@@ -1,6 +1,5 @@
 import type { ReactTable, RowData } from '@tanstack/react-table';
 import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
 import { Button } from '@/components/ui/button';
@@ -14,39 +13,21 @@ import type { BookmarkTableFeatures } from './table-features';
 
 interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
-  currentFolderId?: string;
+  applyToCurrentFolder: boolean;
+  onApplyToCurrentFolderChange: (enabled: boolean) => void;
 }
 
 export function DataTableToolbar<TData extends RowData>({
   table,
-  currentFolderId,
+  applyToCurrentFolder,
+  onApplyToCurrentFolderChange,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
-  const [applyToCurrentFolder, setApplyToCurrentFolder] = useState(false);
 
   // Call hooks unconditionally at the top level
   const parentIdOptions = Object.values(useParentIdMap());
   const urlOptions = Object.values(useUrlMap());
   const urlFilterValue = table.getColumn('url')?.getFilterValue();
-
-  const handleApplyToCurrentFolderChange = (checked: boolean | 'indeterminate') => {
-    setApplyToCurrentFolder(checked === true);
-  };
-
-  // Update table state when applyToCurrentFolder changes
-  useEffect(() => {
-    if (applyToCurrentFolder) {
-      table.setColumnFilters((prev) => [
-        ...prev.filter((f) => f.id !== 'applyToCurrentFolder'),
-        { id: 'applyToCurrentFolder', value: true },
-        { id: 'currentFolderId', value: currentFolderId },
-      ]);
-    } else {
-      table.setColumnFilters((prev) =>
-        prev.filter((f) => f.id !== 'applyToCurrentFolder' && f.id !== 'currentFolderId'),
-      );
-    }
-  }, [applyToCurrentFolder, currentFolderId, table]);
 
   return (
     <div className="flex items-center justify-between">
@@ -62,7 +43,7 @@ export function DataTableToolbar<TData extends RowData>({
             <Checkbox
               id="applyToCurrentFolder"
               checked={applyToCurrentFolder}
-              onCheckedChange={handleApplyToCurrentFolderChange}
+              onCheckedChange={(checked) => onApplyToCurrentFolderChange(checked === true)}
             />
             <div className="grid gap-1.5 leading-none">
               <label
@@ -118,7 +99,7 @@ export function DataTableToolbar<TData extends RowData>({
             variant="ghost"
             onClick={() => {
               table.resetColumnFilters();
-              setApplyToCurrentFolder(false);
+              onApplyToCurrentFolderChange(false);
             }}
             className="h-8 px-2 lg:px-3"
           >
