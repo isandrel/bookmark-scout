@@ -199,6 +199,14 @@
         "message": "가져오기",
         "description": "Import button label"
     },
+    "action_cancel": {
+        "message": "취소",
+        "description": "Cancel button label"
+    },
+    "action_applyChanges": {
+        "message": "변경 사항 적용",
+        "description": "Apply previewed changes button label"
+    },
     "action_resetAll": {
         "message": "전체 초기화",
         "description": "Reset all settings button label"

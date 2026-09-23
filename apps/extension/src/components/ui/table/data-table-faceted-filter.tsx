@@ -33,7 +33,8 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const filterValue = column?.getFilterValue();
+  const selectedValues = new Set<string>(Array.isArray(filterValue) ? filterValue : []);
 
   return (
     <div className="grid gap-2">

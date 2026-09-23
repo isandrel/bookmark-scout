@@ -199,6 +199,14 @@
         "message": "Import",
         "description": "Import button label"
     },
+    "action_cancel": {
+        "message": "Cancel",
+        "description": "Cancel button label"
+    },
+    "action_applyChanges": {
+        "message": "Apply Changes",
+        "description": "Apply previewed changes button label"
+    },
     "action_resetAll": {
         "message": "Reset All",
         "description": "Reset all settings button label"

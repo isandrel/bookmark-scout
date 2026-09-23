@@ -50,12 +50,14 @@ Run the smallest relevant command set for your change:
 | Area | Command |
 |------|---------|
 | Extension source | `bunx nx run extension:lint` |
+| Sorting logic | `bun run test:unit` |
+| Popup, settings, bookmark manager, tools, and import/export flows | `bun run test:e2e` |
 | Extension runtime, manifest, provider, or browser integration | `bunx nx run extension:build:chrome` plus any affected browser target |
 | Website | `bunx nx run website:build` |
 | Docs | `bunx nx run docs:build` |
 | Cross-app changes | `bun run lint` and `bun run build:all` |
 
-There is no dedicated automated unit or integration test suite exposed through the normal workspace scripts yet. Do not treat lint or build success as test coverage.
+`bun run test` runs the full current unit and Chromium E2E suite, including automatic browser installation. Network-dependent and AI provider flows remain outside its browser coverage.
 
 ## Localization
 

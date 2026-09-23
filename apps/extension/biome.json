@@ -10,7 +10,10 @@
         "ignoreUnknown": true,
         "includes": [
             "src/**/*.ts",
-            "src/**/*.tsx"
+            "src/**/*.tsx",
+            "tests/**/*.ts",
+            "vitest.config.ts",
+            "playwright.config.ts"
         ]
     },
     "formatter": {

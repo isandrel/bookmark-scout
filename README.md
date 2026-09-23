@@ -93,6 +93,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
 - [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
 - [x] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page with a custom table-based manager
+- [x] ↕️ **Configurable Sorting** — Sort bookmark views by date added, natural alphabetical order, or folders first
 - [x] ⚙️ **Options Page** — Configure appearance, search, behavior, AI, maintenance, metadata, security, analytics, and data settings
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
@@ -125,7 +126,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 - [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
 - [ ] 🏷️ **Persistent Tags** — Store and manage custom tags beyond AI-generated suggestions
-- [ ] 🧪 **Automated Tests** — Add dedicated unit/integration coverage for bookmark workflows
+- [ ] 🧪 **Expand Automated Tests** — Add network and AI workflow coverage beyond the automated core bookmark flows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
 
 ---

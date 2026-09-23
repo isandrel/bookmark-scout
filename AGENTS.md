@@ -122,6 +122,8 @@ Important subareas:
 - extension Chrome build: `nx run extension:build:chrome`
 - extension Firefox build: `nx run extension:build:firefox`
 - extension Edge build: `nx run extension:build:edge`
+- extension unit tests: `nx run extension:test:unit`
+- extension end-to-end tests: `nx run extension:test:e2e`
 - website build: `nx run website:build`
 - docs build: `nx run docs:build`
 
@@ -142,6 +144,11 @@ Also run build targets when the change affects runtime behavior, entrypoints, br
 - `nx run extension:build:chrome`
 - `nx run extension:build:firefox`
 - `nx run extension:build:edge`
+
+When the changed behavior is covered by the extension test suite, also run the narrowest relevant target:
+
+- unit tests: `nx run extension:test:unit`
+- Chromium end-to-end tests: `nx run extension:test:e2e`
 
 ### Website changes
 
@@ -167,7 +174,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-This repository does not currently expose a dedicated automated unit or integration test suite in the normal workspace scripts. Do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search and folder creation, bookmark management, settings synchronization, maintenance tools, reports, and import/export. Network-dependent and AI provider flows are not covered by this suite; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 

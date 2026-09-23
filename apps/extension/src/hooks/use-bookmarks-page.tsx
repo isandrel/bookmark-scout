@@ -12,11 +12,6 @@ import { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 export { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 
 // Utility functions
-const formatDate = (timestamp?: number): string => {
-  if (!timestamp) return '';
-  return new Date(timestamp).toLocaleString();
-};
-
 const truncate = (text?: string, length = 50): string => {
   if (!text) return '';
   return text.length > length ? `${text.slice(0, length)}...` : text;
@@ -34,8 +29,8 @@ const processNode = (
     index: node.index,
     title: truncate(node.title, 30),
     url: truncate(node.url, 50),
-    dateAdded: formatDate(node.dateAdded),
-    dateGroupModified: formatDate(node.dateGroupModified),
+    dateAdded: node.dateAdded,
+    dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable as 'managed',
   };
 };

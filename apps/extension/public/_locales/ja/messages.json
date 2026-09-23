@@ -199,6 +199,14 @@
         "message": "インポート",
         "description": "Import button label"
     },
+    "action_cancel": {
+        "message": "キャンセル",
+        "description": "Cancel button label"
+    },
+    "action_applyChanges": {
+        "message": "変更を適用",
+        "description": "Apply previewed changes button label"
+    },
     "action_resetAll": {
         "message": "すべてリセット",
         "description": "Reset all settings button label"
