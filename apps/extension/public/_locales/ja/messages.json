@@ -883,6 +883,26 @@
         "message": "上位フォルダ",
         "description": "Statistics top folders label"
     },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "保存済みタグを含める",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "ブックマークに保存済みメタデータがある場合のみタグを含めます",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "保存済み要約を含める",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "ブックマークに保存済みメタデータがある場合のみ要約を含めます",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AIコンテキストに書き出す保存済み要約の最大文字数",
+        "description": "AI context packer excerpt length description"
+    },
     "stats_protocols": {
         "message": "プロトコル",
         "description": "Statistics protocols label"
