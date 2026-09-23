@@ -198,7 +198,7 @@
       "title": "Current Focus",
       "shortcuts": "Keyboard Shortcuts — Navigate and act with hotkeys",
       "persistentTags": "Persistent Tags — Store and manage custom tags beyond AI-generated suggestions",
-      "tests": "Automated Tests — Add dedicated unit and integration coverage for bookmark workflows",
+      "tests": "Expand Automated Tests — Cover network and AI workflows beyond core bookmark flows",
       "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
     }
   },

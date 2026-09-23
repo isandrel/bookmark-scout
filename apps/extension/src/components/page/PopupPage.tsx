@@ -7,7 +7,7 @@
  * - Extracted services for Chrome API
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BookmarkSearch, FolderItem, RecentFoldersPanel } from '@/components/bookmark';
 import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import { useDebounce } from '@/hooks/use-debounce';
 import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
 import { useSetting, addRecentFolder } from '@/lib';
+import { sortBookmarkTree } from '@/lib/bookmark-sort';
 import { useBookmarkStore } from '@/stores';
 import {
   recommendFolders,
@@ -75,6 +76,7 @@ function PopupPage() {
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
+  const { value: sortOrder } = useSetting('sortOrder');
   const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
@@ -274,9 +276,13 @@ function PopupPage() {
     [handleDrop, withToast],
   );
 
-  const displayFolders = creatingFolderId
-    ? addTemporaryFolder(filteredFolders, creatingFolderId)
-    : filteredFolders;
+  const displayFolders = useMemo(() => {
+    const visibleFolders = creatingFolderId
+      ? addTemporaryFolder(filteredFolders, creatingFolderId)
+      : filteredFolders;
+
+    return sortBookmarkTree(visibleFolders, sortOrder);
+  }, [addTemporaryFolder, creatingFolderId, filteredFolders, sortOrder]);
 
   if (error) {
     return (

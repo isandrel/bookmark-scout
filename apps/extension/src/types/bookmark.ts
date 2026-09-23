@@ -68,7 +68,7 @@ export interface BookmarkTableItem {
   index?: number;
   title: string;
   url?: string;
-  dateAdded?: string;
-  dateGroupModified?: string;
+  dateAdded?: number;
+  dateGroupModified?: number;
   unmodifiable?: 'managed';
 }

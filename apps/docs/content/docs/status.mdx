@@ -14,6 +14,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Popup bookmark search, folder filtering, drag-and-drop organization, quick add, folder creation, deletion confirmation, and expand/collapse controls
 - Chrome side panel entrypoint
 - Custom bookmarks page override with folder tree, breadcrumbs, bookmark table, and tools sidebar
+- Configurable date-added, natural alphabetical, and folders-first ordering without mutating stored bookmark order
 - Options page with settings for appearance, language, search, behavior, advanced UI sizing, AI, AI tools, maintenance, metadata, security, analytics, data, and context menus
 - Settings persisted through `chrome.storage.sync`
 - AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, and custom OpenAI-compatible endpoints
@@ -25,16 +26,17 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - English, Japanese, and Korean extension locales
 - Localized marketing site in English, Japanese, and Korean
 - Fumadocs documentation site
+- Sorting unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, and import/export flows
 
 ## Planned
 
 - Keyboard shortcuts for faster navigation and actions
 - Persistent custom tags beyond AI-generated suggestions
-- Dedicated automated unit/integration tests for bookmark workflows
+- Automated browser coverage for network-dependent and AI provider flows, plus Firefox and Edge runtime paths
 - Store listing polish for Chrome Web Store, Firefox Add-ons, and Edge Add-ons
 
 ## Known Documentation Rules
 
 - Update docs when feature status, installation paths, browser support, privacy expectations, or configuration changes.
 - AI features are opt-in and may send bookmark data to the selected provider.
-- Lint and build commands validate the repository, but they are not a substitute for test coverage.
+- CI runs extension unit and Chromium browser tests without manual setup. Firefox and Edge currently receive build validation.

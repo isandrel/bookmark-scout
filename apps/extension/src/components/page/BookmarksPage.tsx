@@ -15,9 +15,11 @@ import { DataTable } from '../ui/table/data-table';
 import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
 import { FolderTree } from '../bookmarks/FolderTree';
 import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { PanelLeftClose, PanelLeft, PanelRightClose, PanelRight } from 'lucide-react';
 import { Button } from '../ui/button';
+import { useSetting } from '@/lib';
+import { sortBookmarkItems } from '@/lib/bookmark-sort';
 import { cn } from '@/lib/utils';
 
 export default function BookmarksPage() {
@@ -26,6 +28,18 @@ export default function BookmarksPage() {
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
   const [currentFolderName, setCurrentFolderName] = useState<string | undefined>();
+  const { value: sortOrder } = useSetting('sortOrder');
+
+  const sortedData = useMemo(
+    () =>
+      sortBookmarkItems(data, sortOrder, {
+        getTitle: (bookmark) => bookmark.title,
+        getDateAdded: (bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
+        isFolder: (bookmark) => bookmark.type === ItemTypeEnum.Folder,
+        getIndex: (bookmark) => bookmark.index,
+      }),
+    [data, sortOrder],
+  );
 
   // Get current folder name for display
   useEffect(() => {
@@ -131,7 +145,7 @@ export default function BookmarksPage() {
           ) : (
             <DataTable
               columns={columns}
-              data={data}
+              data={sortedData}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';
                 const folderClass =

@@ -198,7 +198,7 @@
       "title": "現在の注力領域",
       "shortcuts": "キーボードショートカット — ホットキーで移動と操作を高速化",
       "persistentTags": "永続タグ — AI生成候補を超えてカスタムタグを保存・管理",
-      "tests": "自動テスト — ブックマークワークフロー向けの専用ユニット/統合カバレッジを追加",
+      "tests": "自動テストの拡充 — 主要なブックマーク操作に加え、ネットワークとAIの操作も検証",
       "storeDistribution": "ストア配布 — Chrome Web Store、Firefox Add-ons、Edge Add-onsの掲載情報を整備"
     }
   },

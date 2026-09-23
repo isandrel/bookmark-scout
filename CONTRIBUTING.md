@@ -179,9 +179,12 @@ bun run lint
 
 # Run extension lint only
 bunx nx run extension:lint
+
+# Run all extension tests (builds Chrome and installs Playwright Chromium)
+bun run test
 ```
 
-The normal workspace scripts do not currently expose a dedicated automated unit or integration test suite. Treat lint and build commands as validation, not test coverage.
+The test command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs the same command without manual browser setup. Network-dependent and AI provider flows do not yet have browser E2E coverage.
 
 ### TypeScript
 

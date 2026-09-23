@@ -42,3 +42,8 @@ dist.crx
 # Nx cache
 .nx/cache
 .nx/workspace-data
+
+# Test artifacts
+coverage
+playwright-report
+test-results

@@ -16,6 +16,9 @@
     "build:edge": "nx run extension:build:edge",
     "build:all": "nx run-many --target=build --all",
     "lint": "nx run-many --target=lint --all",
+    "test": "nx run extension:test",
+    "test:unit": "nx run extension:test:unit",
+    "test:e2e": "nx run extension:test:e2e",
     "dev:website": "nx run website:dev",
     "build:website": "nx run website:build",
     "dev:docs": "nx run docs:dev",
@@ -59,6 +62,7 @@
     "@biomejs/biome": "^2.5.14",
     "@changesets/cli": "^3.0.3",
     "@nx/js": "^23.2.1",
+    "@playwright/test": "^1.62.1",
     "@shadcn/ui": "^0.0.4",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/chrome": "^0.3.0",
@@ -76,6 +80,7 @@
     "shadcn-ui": "^0.9.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
+    "vitest": "^5.0.1",
     "wxt": "^0.21.4"
   },
   "lint-staged": {

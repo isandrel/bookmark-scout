@@ -198,7 +198,7 @@
       "title": "현재 집중 영역",
       "shortcuts": "키보드 단축키 — 단축키로 탐색과 작업 수행",
       "persistentTags": "영구 태그 — AI 생성 제안을 넘어 커스텀 태그 저장 및 관리",
-      "tests": "자동화 테스트 — 북마크 워크플로를 위한 전용 단위/통합 커버리지 추가",
+      "tests": "자동화 테스트 확대 — 주요 북마크 작업에 이어 네트워크와 AI 작업도 검증",
       "storeDistribution": "스토어 배포 — Chrome Web Store, Firefox Add-ons, Edge Add-ons 등록 자료 정리"
     }
   },

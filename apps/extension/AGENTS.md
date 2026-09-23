@@ -80,6 +80,8 @@ unless the task explicitly concerns generated artifacts or debugging generated o
 - build Chrome: `nx run extension:build:chrome`
 - build Firefox: `nx run extension:build:firefox`
 - build Edge: `nx run extension:build:edge`
+- unit tests: `nx run extension:test:unit`
+- Chromium end-to-end tests: `nx run extension:test:e2e`
 
 Equivalent scripts also exist in `apps/extension/package.json` when working directly in this app.
 
@@ -110,6 +112,13 @@ Relevant commands:
 - `nx run extension:build:edge`
 
 If a change is plausibly browser-specific, prefer validating the specific browser target involved rather than only Chrome.
+
+### Automated tests
+
+- Run `nx run extension:test:unit` for sorting strategy changes.
+- Run `nx run extension:test:e2e` for changes to popup, settings, bookmark management, maintenance, reports, or import/export workflows covered by browser tests.
+- The end-to-end target builds Chrome and installs Playwright Chromium and its platform dependencies automatically. CI runs `bun run test` on pushes and pull requests.
+- Network-dependent and AI provider flows still need dedicated automated coverage; Firefox and Edge receive build validation but not browser E2E execution.
 
 ## Architectural expectations
 

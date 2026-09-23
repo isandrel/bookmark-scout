@@ -41,10 +41,14 @@ export type Bookmark = {
   index?: number;
   title: string;
   url?: string;
-  dateAdded?: string;
-  dateGroupModified?: string;
+  dateAdded?: number;
+  dateGroupModified?: number;
   unmodifiable?: 'managed';
 };
+
+function formatTimestamp(value: unknown): string {
+  return typeof value === 'number' ? new Date(value).toLocaleString() : '';
+}
 
 export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
   {
@@ -144,7 +148,11 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      const url = String(row.getValue(id) ?? '').toLowerCase();
+      if (Array.isArray(value)) {
+        return value.some((domain: string) => url.includes(domain.toLowerCase()));
+      }
+      return url.includes(String(value).toLowerCase());
     },
   },
   {
@@ -210,13 +218,13 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       return true;
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue('dateAdded'));
-      return date.toLocaleString();
+      return formatTimestamp(row.getValue('dateAdded'));
     },
   },
   {
     accessorKey: 'dateGroupModified',
     header: 'Date Group Modified',
+    cell: ({ row }) => formatTimestamp(row.getValue('dateGroupModified')),
   },
   {
     accessorKey: 'unmodifiable',

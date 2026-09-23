@@ -27,6 +27,7 @@ export function DataTableToolbar<TData extends RowData>({
   // Call hooks unconditionally at the top level
   const parentIdOptions = Object.values(useParentIdMap());
   const urlOptions = Object.values(useUrlMap());
+  const urlFilterValue = table.getColumn('url')?.getFilterValue();
 
   const handleApplyToCurrentFolderChange = (checked: boolean | 'indeterminate') => {
     setApplyToCurrentFolder(checked === true);
@@ -100,7 +101,7 @@ export function DataTableToolbar<TData extends RowData>({
         {table.getColumn('url') && (
           <Input
             placeholder="Filter URLs..."
-            value={(table.getColumn('url')?.getFilterValue() as string) ?? ''}
+            value={typeof urlFilterValue === 'string' ? urlFilterValue : ''}
             onChange={(event) => table.getColumn('url')?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
