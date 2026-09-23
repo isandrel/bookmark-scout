@@ -29,8 +29,8 @@ interface FolderItemProps {
   onDrop: (operation: DragOperation) => void;
   onAddBookmark: (folderId: string) => void;
   onAddFolder: (folderId: string) => void;
-  onDeleteFolder: (folderId: string) => void;
-  onDeleteBookmark: (bookmarkId: string) => void;
+  onDeleteFolder: (node: BookmarkTreeNode) => void;
+  onDeleteBookmark: (node: BookmarkTreeNode) => void;
   onCreateFolder: () => void;
   onCancelCreateFolder: () => void;
   onNewFolderNameChange: (name: string) => void;
@@ -275,7 +275,7 @@ export function FolderItem({
               className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
               onClick={(e) => {
                 e.stopPropagation();
-                onDeleteFolder(node.id);
+                onDeleteFolder(node);
               }}
               title="Delete folder"
             >
