@@ -11,13 +11,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BookmarkSearch, FolderItem, RecentFoldersPanel } from '@/components/bookmark';
 import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Toaster } from '@/components/ui/toaster';
 import { Folder, FolderPlus } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { t } from '@/hooks/use-i18n';
 import { useToast } from '@/hooks/use-toast';
-import { useSetting, addRecentFolder } from '@/lib';
+import { addRecentFolder, getSettings, useSetting } from '@/lib';
 import { sortBookmarkTree } from '@/lib/bookmark-sort';
 import { useBookmarkStore } from '@/stores';
 import {
@@ -27,12 +35,16 @@ import {
   type FolderRecommendation,
 } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
+import { stripHtmlTags } from '@/utils/sanitize';
 import '@/styles/popup.scss';
+
+type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };
 
 function PopupPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
+  const [pendingDeletion, setPendingDeletion] = useState<PendingDeletion | null>(null);
 
   // Zustand store
   const {
@@ -276,6 +288,45 @@ function PopupPage() {
     [handleDrop, withToast],
   );
 
+  const deleteItem = useCallback(
+    async ({ id, type }: PendingDeletion) => {
+      if (type === 'folder') {
+        await withToast(
+          () => removeFolder(id),
+          t('toast_folderDeleted'),
+          t('toast_errorDeletingFolder'),
+        );
+      } else {
+        await withToast(
+          () => removeBookmark(id),
+          t('toast_bookmarkDeleted'),
+          t('toast_errorDeletingBookmark'),
+        );
+      }
+    },
+    [removeBookmark, removeFolder, withToast],
+  );
+
+  const handleDeleteRequest = useCallback(
+    async (node: BookmarkTreeNode, type: PendingDeletion['type']) => {
+      const deletion = { id: node.id, title: stripHtmlTags(node.title), type };
+      const { confirmBeforeDelete } = await getSettings();
+      if (confirmBeforeDelete) {
+        setPendingDeletion(deletion);
+      } else {
+        await deleteItem(deletion);
+      }
+    },
+    [deleteItem],
+  );
+
+  const confirmDeletion = useCallback(async () => {
+    if (!pendingDeletion) return;
+    const deletion = pendingDeletion;
+    setPendingDeletion(null);
+    await deleteItem(deletion);
+  }, [deleteItem, pendingDeletion]);
+
   const displayFolders = useMemo(() => {
     const visibleFolders = creatingFolderId
       ? addTemporaryFolder(filteredFolders, creatingFolderId)
@@ -434,20 +485,8 @@ function PopupPage() {
                       }
                     }}
                     onAddFolder={handleAddFolder}
-                    onDeleteFolder={(id) =>
-                      withToast(
-                        () => removeFolder(id),
-                        t('toast_folderDeleted'),
-                        t('toast_errorDeletingFolder'),
-                      )
-                    }
-                    onDeleteBookmark={(id) =>
-                      withToast(
-                        () => removeBookmark(id),
-                        t('toast_bookmarkDeleted'),
-                        t('toast_errorDeletingBookmark'),
-                      )
-                    }
+                    onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
+                    onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
                     onCreateFolder={handleCreateFolder}
                     onCancelCreateFolder={handleCancelCreateFolder}
                     onNewFolderNameChange={setNewFolderName}
@@ -459,6 +498,37 @@ function PopupPage() {
           )}
         </div>
       </div>
+      <Dialog
+        open={pendingDeletion !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingDeletion(null);
+        }}
+      >
+        <DialogContent className="max-w-[calc(100%-2rem)]">
+          <DialogHeader>
+            <DialogTitle>
+              {pendingDeletion?.type === 'folder'
+                ? t('popup_deleteFolder')
+                : t('popup_deleteBookmark')}
+            </DialogTitle>
+            <DialogDescription>
+              {pendingDeletion?.type === 'folder'
+                ? t('popup_confirmDeleteFolder', pendingDeletion?.title ?? '')
+                : t('popup_confirmDeleteBookmark', pendingDeletion?.title ?? '')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button variant="outline" onClick={() => setPendingDeletion(null)}>
+              {t('action_cancel')}
+            </Button>
+            <Button variant="destructive" onClick={confirmDeletion}>
+              {pendingDeletion?.type === 'folder'
+                ? t('popup_deleteFolder')
+                : t('popup_deleteBookmark')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Toaster />
     </div>
   );

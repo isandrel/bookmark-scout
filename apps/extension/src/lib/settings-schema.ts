@@ -206,7 +206,12 @@ export const maxSearchResultsSchema = z.union([
   z.literal(100),
 ]);
 
-const scopeSchema = z.enum(['folder', 'all', 'both']);
+const selectableScopeSchema = z.enum(['folder', 'all']);
+const toolDefaultScope = (value: string) => {
+  const fallback = value === 'all' ? 'all' : 'folder';
+  return selectableScopeSchema.catch(fallback).default(fallback);
+};
+const fixedToolScope = (scope: 'folder' | 'all') => z.literal(scope).catch(scope).default(scope);
 const aiContextFormatSchema = z.enum(['markdown', 'xml']);
 const mergeModeSchema = z.enum(['append', 'replace']);
 const tagStyleSchema = z.enum(['kebab-case', 'snake_case', 'lowercase']);
@@ -264,7 +269,7 @@ export const settingsSchema = z.object({
   ),
 
   aiContextPackerEnabled: z.boolean().default(config.tools.ai_context_packer.enabled),
-  aiContextPackerDefaultScope: scopeSchema.default(config.tools.ai_context_packer.default_scope as 'folder' | 'all' | 'both'),
+  aiContextPackerDefaultScope: toolDefaultScope(config.tools.ai_context_packer.default_scope),
   aiContextPackerOutputFormat: aiContextFormatSchema.default(config.tools.ai_context_packer.output_format as 'markdown' | 'xml'),
   aiContextPackerIncludeFolderPath: z.boolean().default(config.tools.ai_context_packer.include_folder_path),
   aiContextPackerIncludeDates: z.boolean().default(config.tools.ai_context_packer.include_dates),
@@ -275,7 +280,7 @@ export const settingsSchema = z.object({
   aiContextPackerExcerptLength: z.number().min(40).max(2000).default(config.tools.ai_context_packer.excerpt_length),
 
   autoTaggingEnabled: z.boolean().default(config.tools.auto_tagging.enabled),
-  autoTaggingDefaultScope: scopeSchema.default(config.tools.auto_tagging.default_scope as 'folder' | 'all' | 'both'),
+  autoTaggingDefaultScope: fixedToolScope('folder'),
   autoTaggingMinTags: z.number().min(1).max(20).default(config.tools.auto_tagging.min_tags),
   autoTaggingMaxTags: z.number().min(1).max(20).default(config.tools.auto_tagging.max_tags),
   autoTaggingTagStyle: tagStyleSchema.default(config.tools.auto_tagging.tag_style as 'kebab-case' | 'snake_case' | 'lowercase'),
@@ -283,19 +288,19 @@ export const settingsSchema = z.object({
   autoTaggingDedupeTags: z.boolean().default(config.tools.auto_tagging.dedupe_tags),
 
   summarizerEnabled: z.boolean().default(config.tools.summarizer.enabled),
-  summarizerDefaultScope: scopeSchema.default(config.tools.summarizer.default_scope as 'folder' | 'all' | 'both'),
+  summarizerDefaultScope: fixedToolScope('folder'),
   summarizerSummaryLength: z.number().min(40).max(1000).default(config.tools.summarizer.summary_length),
   summarizerIncludeDomainHint: z.boolean().default(config.tools.summarizer.include_domain_hint),
   summarizerMergeMode: mergeModeSchema.default(config.tools.summarizer.merge_mode as 'append' | 'replace'),
 
   reorganizationEnabled: z.boolean().default(config.tools.reorganization.enabled),
-  reorganizationDefaultScope: scopeSchema.default(config.tools.reorganization.default_scope as 'folder' | 'all' | 'both'),
+  reorganizationDefaultScope: toolDefaultScope(config.tools.reorganization.default_scope),
   reorganizationDryRunFirst: z.boolean().default(config.tools.reorganization.dry_run_first),
   reorganizationMinConfidence: z.number().min(0).max(1).default(config.tools.reorganization.min_confidence),
   reorganizationBatchSize: z.number().min(1).max(1000).default(config.tools.reorganization.batch_size),
 
   duplicatesEnabled: z.boolean().default(config.tools.duplicates.enabled),
-  duplicatesDefaultScope: scopeSchema.default(config.tools.duplicates.default_scope as 'folder' | 'all' | 'both'),
+  duplicatesDefaultScope: fixedToolScope('all'),
   duplicatesMatchStrategy: duplicateMatchStrategySchema.default(config.tools.duplicates.match_strategy as z.infer<typeof duplicateMatchStrategySchema>),
   duplicatesNormalizeWww: z.boolean().default(config.tools.duplicates.normalize_www),
   duplicatesIgnoreProtocol: z.boolean().default(config.tools.duplicates.ignore_protocol),
@@ -304,7 +309,7 @@ export const settingsSchema = z.object({
   duplicatesMaxGroups: z.number().min(1).max(5000).default(config.tools.duplicates.max_groups),
 
   urlCleanerEnabled: z.boolean().default(config.tools.url_cleaner.enabled),
-  urlCleanerDefaultScope: scopeSchema.default(config.tools.url_cleaner.default_scope as 'folder' | 'all' | 'both'),
+  urlCleanerDefaultScope: toolDefaultScope(config.tools.url_cleaner.default_scope),
   urlCleanerRemoveHash: z.boolean().default(config.tools.url_cleaner.remove_hash),
   urlCleanerSortQueryParams: z.boolean().default(config.tools.url_cleaner.sort_query_params),
   urlCleanerDedupeQueryParams: z.boolean().default(config.tools.url_cleaner.dedupe_query_params),
@@ -312,7 +317,7 @@ export const settingsSchema = z.object({
   urlCleanerRemoveParams: z.array(z.string()).default(config.tools.url_cleaner.remove_params),
 
   deadLinksEnabled: z.boolean().default(config.tools.dead_links.enabled),
-  deadLinksDefaultScope: scopeSchema.default(config.tools.dead_links.default_scope as 'folder' | 'all' | 'both'),
+  deadLinksDefaultScope: toolDefaultScope(config.tools.dead_links.default_scope),
   deadLinksRequestTimeoutMs: z.number().min(1000).max(60000).default(config.tools.dead_links.request_timeout_ms),
   deadLinksConcurrency: z.number().min(1).max(20).default(config.tools.dead_links.concurrency),
   deadLinksRetryCount: z.number().min(0).max(10).default(config.tools.dead_links.retry_count),
@@ -320,7 +325,7 @@ export const settingsSchema = z.object({
   deadLinksSuccessStatuses: z.array(z.number()).default(config.tools.dead_links.success_statuses),
 
   metadataFetcherEnabled: z.boolean().default(config.tools.metadata_fetcher.enabled),
-  metadataFetcherDefaultScope: scopeSchema.default(config.tools.metadata_fetcher.default_scope as 'folder' | 'all' | 'both'),
+  metadataFetcherDefaultScope: toolDefaultScope(config.tools.metadata_fetcher.default_scope),
   metadataFetcherOverwriteTitles: z.boolean().default(config.tools.metadata_fetcher.overwrite_titles),
   metadataFetcherFetchFavicons: z.boolean().default(config.tools.metadata_fetcher.fetch_favicons),
   metadataFetcherFetchDescriptions: z.boolean().default(config.tools.metadata_fetcher.fetch_descriptions),
@@ -328,7 +333,7 @@ export const settingsSchema = z.object({
   metadataFetcherConcurrency: z.number().min(1).max(20).default(config.tools.metadata_fetcher.concurrency),
 
   privacyScannerEnabled: z.boolean().default(config.tools.privacy_scanner.enabled),
-  privacyScannerDefaultScope: scopeSchema.default(config.tools.privacy_scanner.default_scope as 'folder' | 'all' | 'both'),
+  privacyScannerDefaultScope: fixedToolScope('all'),
   privacyScannerScanTitles: z.boolean().default(config.tools.privacy_scanner.scan_titles),
   privacyScannerScanQueryParams: z.boolean().default(config.tools.privacy_scanner.scan_query_params),
   privacyScannerScanFragments: z.boolean().default(config.tools.privacy_scanner.scan_fragments),
@@ -337,7 +342,7 @@ export const settingsSchema = z.object({
   privacyScannerUuidDetection: z.boolean().default(config.tools.privacy_scanner.uuid_detection),
 
   statisticsEnabled: z.boolean().default(config.tools.statistics.enabled),
-  statisticsDefaultScope: scopeSchema.default(config.tools.statistics.default_scope as 'folder' | 'all' | 'both'),
+  statisticsDefaultScope: toolDefaultScope(config.tools.statistics.default_scope),
   statisticsIncludeDomains: z.boolean().default(config.tools.statistics.include_domains),
   statisticsIncludeFolders: z.boolean().default(config.tools.statistics.include_folders),
   statisticsIncludeDuplicates: z.boolean().default(config.tools.statistics.include_duplicates),
@@ -639,14 +644,14 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     aiContextPackerMaxDepth: { label: t('settings_aiContextPackerMaxDepth'), description: t('settings_aiContextPackerMaxDepthDesc'), type: 'number', min: 1, max: 20, step: 1 },
     aiContextPackerExcerptLength: { label: t('settings_aiContextPackerExcerptLength'), description: t('settings_aiContextPackerExcerptLengthDesc'), type: 'number', min: 40, max: 2000, step: 10 },
     autoTaggingEnabled: { label: t('settings_autoTaggingEnabled'), description: t('settings_autoTaggingEnabledDesc'), type: 'switch' },
-    autoTaggingDefaultScope: { label: t('settings_autoTaggingDefaultScope'), description: t('settings_autoTaggingDefaultScopeDesc'), type: 'select', options: scopeOptions() },
+    autoTaggingDefaultScope: { label: t('settings_autoTaggingDefaultScope'), description: t('settings_autoTaggingDefaultScopeDesc'), type: 'select', options: scopeOptions('folder') },
     autoTaggingMinTags: { label: t('settings_autoTaggingMinTags'), description: t('settings_autoTaggingMinTagsDesc'), type: 'number', min: 1, max: 20, step: 1 },
     autoTaggingMaxTags: { label: t('settings_autoTaggingMaxTags'), description: t('settings_autoTaggingMaxTagsDesc'), type: 'number', min: 1, max: 20, step: 1 },
     autoTaggingTagStyle: { label: t('settings_autoTaggingTagStyle'), description: t('settings_autoTaggingTagStyleDesc'), type: 'select', options: [{ value: 'kebab-case', label: 'kebab-case' }, { value: 'snake_case', label: 'snake_case' }, { value: 'lowercase', label: 'lowercase' }] },
     autoTaggingMergeMode: { label: t('settings_autoTaggingMergeMode'), description: t('settings_autoTaggingMergeModeDesc'), type: 'select', options: mergeModeOptions() },
     autoTaggingDedupeTags: { label: t('settings_autoTaggingDedupeTags'), description: t('settings_autoTaggingDedupeTagsDesc'), type: 'switch' },
     summarizerEnabled: { label: t('settings_summarizerEnabled'), description: t('settings_summarizerEnabledDesc'), type: 'switch' },
-    summarizerDefaultScope: { label: t('settings_summarizerDefaultScope'), description: t('settings_summarizerDefaultScopeDesc'), type: 'select', options: scopeOptions() },
+    summarizerDefaultScope: { label: t('settings_summarizerDefaultScope'), description: t('settings_summarizerDefaultScopeDesc'), type: 'select', options: scopeOptions('folder') },
     summarizerSummaryLength: { label: t('settings_summarizerSummaryLength'), description: t('settings_summarizerSummaryLengthDesc'), type: 'number', min: 40, max: 1000, step: 10 },
     summarizerIncludeDomainHint: { label: t('settings_summarizerIncludeDomainHint'), description: t('settings_summarizerIncludeDomainHintDesc'), type: 'switch' },
     summarizerMergeMode: { label: t('settings_summarizerMergeMode'), description: t('settings_summarizerMergeModeDesc'), type: 'select', options: mergeModeOptions() },
@@ -656,7 +661,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     reorganizationMinConfidence: { label: t('settings_reorganizationMinConfidence'), description: t('settings_reorganizationMinConfidenceDesc'), type: 'number', min: 0, max: 1, step: 0.05 },
     reorganizationBatchSize: { label: t('settings_reorganizationBatchSize'), description: t('settings_reorganizationBatchSizeDesc'), type: 'number', min: 1, max: 1000, step: 10 },
     duplicatesEnabled: { label: t('settings_duplicatesEnabled'), description: t('settings_duplicatesEnabledDesc'), type: 'switch' },
-    duplicatesDefaultScope: { label: t('settings_duplicatesDefaultScope'), description: t('settings_duplicatesDefaultScopeDesc'), type: 'select', options: scopeOptions() },
+    duplicatesDefaultScope: { label: t('settings_duplicatesDefaultScope'), description: t('settings_duplicatesDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
     duplicatesMatchStrategy: { label: t('settings_duplicatesMatchStrategy'), description: t('settings_duplicatesMatchStrategyDesc'), type: 'select', options: [{ value: 'exact_url', label: 'Exact URL' }, { value: 'normalized_url', label: 'Normalized URL' }, { value: 'title_url', label: 'Title + URL' }, { value: 'title_only', label: 'Title only' }] },
     duplicatesNormalizeWww: { label: t('settings_duplicatesNormalizeWww'), description: t('settings_duplicatesNormalizeWwwDesc'), type: 'switch' },
     duplicatesIgnoreProtocol: { label: t('settings_duplicatesIgnoreProtocol'), description: t('settings_duplicatesIgnoreProtocolDesc'), type: 'switch' },
@@ -685,7 +690,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     metadataFetcherRequestTimeoutMs: { label: t('settings_metadataFetcherRequestTimeoutMs'), description: t('settings_metadataFetcherRequestTimeoutMsDesc'), type: 'number', min: 1000, max: 60000, step: 500 },
     metadataFetcherConcurrency: { label: t('settings_metadataFetcherConcurrency'), description: t('settings_metadataFetcherConcurrencyDesc'), type: 'number', min: 1, max: 20, step: 1 },
     privacyScannerEnabled: { label: t('settings_privacyScannerEnabled'), description: t('settings_privacyScannerEnabledDesc'), type: 'switch' },
-    privacyScannerDefaultScope: { label: t('settings_privacyScannerDefaultScope'), description: t('settings_privacyScannerDefaultScopeDesc'), type: 'select', options: scopeOptions() },
+    privacyScannerDefaultScope: { label: t('settings_privacyScannerDefaultScope'), description: t('settings_privacyScannerDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
     privacyScannerScanTitles: { label: t('settings_privacyScannerScanTitles'), description: t('settings_privacyScannerScanTitlesDesc'), type: 'switch' },
     privacyScannerScanQueryParams: { label: t('settings_privacyScannerScanQueryParams'), description: t('settings_privacyScannerScanQueryParamsDesc'), type: 'switch' },
     privacyScannerScanFragments: { label: t('settings_privacyScannerScanFragments'), description: t('settings_privacyScannerScanFragmentsDesc'), type: 'switch' },
@@ -706,12 +711,12 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
   };
 }
 
-function scopeOptions() {
-  return [
+function scopeOptions(capability: 'folder' | 'all' | 'both' = 'both') {
+  const options = [
     { value: 'folder', label: t('settings_scopeFolder') },
     { value: 'all', label: t('settings_scopeAll') },
-    { value: 'both', label: t('settings_scopeBoth') },
   ];
+  return capability === 'both' ? options : options.filter((option) => option.value === capability);
 }
 
 function mergeModeOptions() {
