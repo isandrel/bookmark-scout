@@ -7,3 +7,4 @@ export { BookmarkSearch } from './BookmarkSearch';
 export { FolderItem } from './FolderItem';
 export { NewFolderInput } from './NewFolderInput';
 export { RecentFoldersPanel } from './RecentFoldersPanel';
+export { RecommendedFolderDialog } from './RecommendedFolderDialog';

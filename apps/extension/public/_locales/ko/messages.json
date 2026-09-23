@@ -495,17 +495,61 @@
         "message": "알 수 없는 오류",
         "description": "Generic error message"
     },
-    "toast_createFolderPrompt": {
-        "message": "폴더 \"$1\" 만들기",
-        "description": "Toast title for folder creation prompt"
-    },
-    "toast_newFolderComingSoon": {
-        "message": "새 폴더 만들기 기능 곧 출시 예정!",
-        "description": "Toast description for new folder feature"
-    },
     "ai_suggestionsFor": {
         "message": "AI 추천:",
         "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "새 폴더 검토",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "저장하기 전에 폴더 경로와 현재 페이지를 확인하세요. 승인하기 전에는 변경되지 않습니다.",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "폴더 경로",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_currentPageLabel": {
+        "message": "현재 페이지",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "폴더를 만들고 저장",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "저장 중...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "북마크 저장됨",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "\"$1\"을(를) 만들거나 재사용하고 현재 페이지를 저장했습니다.",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "이미 저장된 북마크",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "현재 페이지가 이미 \"$1\"에 있습니다. 중복 항목을 추가하지 않았습니다.",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "추천을 저장하지 못했습니다",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "북마크를 추가하지 않았습니다. 폴더 경로를 검토하고 다시 시도하세요.",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "경로가 기존 북마크 \"$1\"과(와) 충돌합니다. 북마크를 추가하지 않았습니다.",
+        "description": "Path conflict description for AI new-folder creation"
     },
     "popup_newBookmark": {
         "message": "새 북마크",

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 import { createAIModel, validateAISettings, type AISettings } from './ai-client';
 import { FOLDER_RECOMMENDATION_PROMPT } from './ai-prompts';
+import { createBookmark, deleteBookmark, getBookmarkChildren } from './bookmarks';
 
 /**
  * Folder recommendation result.
@@ -19,6 +20,24 @@ export interface FolderRecommendation {
   parentPath?: string;
   confidence: number;
   reason: string;
+}
+
+export type RecommendedFolderBookmarkResult = {
+  status: 'created' | 'duplicate';
+  folderId: string;
+  folderPath: string;
+  bookmarkId?: string;
+  createdFolderIds: string[];
+};
+
+export class RecommendedFolderError extends Error {
+  constructor(
+    public readonly code: 'invalid-path' | 'path-conflict' | 'no-writable-root',
+    public readonly segment?: string,
+  ) {
+    super(code);
+    this.name = 'RecommendedFolderError';
+  }
 }
 
 /**
@@ -136,3 +155,138 @@ export async function recommendFolder(
   return recommendations[0];
 }
 
+export async function createRecommendedFolderBookmark(
+  recommendation: FolderRecommendation,
+  bookmark: { title: string; url: string },
+  folders: BookmarkTreeNode[],
+): Promise<RecommendedFolderBookmarkResult> {
+  const pathSegments = getRecommendedPathSegments(recommendation);
+  const topLevelFolders = getTopLevelFolders(folders);
+  const createdFolderIds: string[] = [];
+
+  let currentFolder = topLevelFolders.find((folder) =>
+    sameTitle(folder.title, pathSegments[0]),
+  );
+  let segmentIndex = currentFolder ? 1 : 0;
+
+  if (!currentFolder) {
+    currentFolder = topLevelFolders[0];
+  }
+  if (!currentFolder) {
+    throw new RecommendedFolderError('no-writable-root');
+  }
+  const folderPath = segmentIndex === 0
+    ? [currentFolder.title, ...pathSegments].join('/')
+    : pathSegments.join('/');
+
+  try {
+    for (; segmentIndex < pathSegments.length; segmentIndex += 1) {
+      const segment = pathSegments[segmentIndex];
+      const children = currentFolder.children ?? [];
+      const matchingFolder = children.find(
+        (child) => !child.url && sameTitle(child.title, segment),
+      );
+
+      if (matchingFolder) {
+        currentFolder = matchingFolder;
+        continue;
+      }
+
+      const conflictingBookmark = children.find(
+        (child) => Boolean(child.url) && sameTitle(child.title, segment),
+      );
+      if (conflictingBookmark) {
+        throw new RecommendedFolderError('path-conflict', segment);
+      }
+
+      const created = await createBookmark({
+        parentId: currentFolder.id,
+        title: segment,
+      });
+      createdFolderIds.push(created.id);
+      currentFolder = {
+        id: created.id,
+        parentId: created.parentId,
+        title: created.title,
+        children: [],
+      };
+    }
+
+    const children = await getBookmarkChildren(currentFolder.id);
+    const duplicate = children.find(
+      (child) => child.url && normalizeUrl(child.url) === normalizeUrl(bookmark.url),
+    );
+    if (duplicate) {
+      return {
+        status: 'duplicate',
+        folderId: currentFolder.id,
+        folderPath,
+        bookmarkId: duplicate.id,
+        createdFolderIds,
+      };
+    }
+
+    const createdBookmark = await createBookmark({
+      parentId: currentFolder.id,
+      title: bookmark.title || 'New Bookmark',
+      url: bookmark.url,
+    });
+
+    return {
+      status: 'created',
+      folderId: currentFolder.id,
+      folderPath,
+      bookmarkId: createdBookmark.id,
+      createdFolderIds,
+    };
+  } catch (error) {
+    for (const folderId of [...createdFolderIds].reverse()) {
+      try {
+        await deleteBookmark(folderId);
+      } catch {
+        // Continue best-effort rollback for the remaining folders created by this transaction.
+      }
+    }
+    throw error;
+  }
+}
+
+function getRecommendedPathSegments(recommendation: FolderRecommendation) {
+  const folderSegments = parsePath(recommendation.folderPath);
+  const parentSegments = parsePath(recommendation.parentPath ?? '');
+  const segments = parentSegments.length > 0 && folderSegments.length === 1
+    ? [...parentSegments, folderSegments.at(-1) ?? '']
+    : folderSegments;
+
+  if (
+    segments.length === 0 ||
+    segments.some((segment) => !segment || segment === '.' || segment === '..')
+  ) {
+    throw new RecommendedFolderError('invalid-path');
+  }
+
+  return segments;
+}
+
+function parsePath(path: string) {
+  return path.split('/').map((segment) => segment.trim()).filter(Boolean);
+}
+
+function getTopLevelFolders(nodes: BookmarkTreeNode[]) {
+  const roots = nodes.length === 1 && !nodes[0].title && nodes[0].children
+    ? nodes[0].children
+    : nodes;
+  return roots.filter((node) => !node.url);
+}
+
+function sameTitle(left: string, right: string) {
+  return left.trim().localeCompare(right.trim(), undefined, { sensitivity: 'accent' }) === 0;
+}
+
+function normalizeUrl(url: string) {
+  try {
+    return new URL(url).toString();
+  } catch {
+    return url.trim();
+  }
+}
