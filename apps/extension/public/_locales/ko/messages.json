@@ -811,6 +811,26 @@
         "message": "상위 폴더",
         "description": "Statistics top folders label"
     },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "저장된 태그 포함",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 태그를 포함합니다",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "저장된 요약 포함",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 요약을 포함합니다",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AI 컨텍스트 내보내기에 포함할 저장된 요약의 최대 길이",
+        "description": "AI context packer excerpt length description"
+    },
     "stats_protocols": {
         "message": "프로토콜",
         "description": "Statistics protocols label"

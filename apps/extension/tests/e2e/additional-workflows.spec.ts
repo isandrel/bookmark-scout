@@ -32,6 +32,23 @@ async function setSettings(worker: Worker, updates: Record<string, unknown>) {
   }, updates);
 }
 
+async function setBookmarkMetadata(
+  worker: Worker,
+  bookmarkId: string,
+  metadata: { tags?: string[]; summary?: string },
+) {
+  await worker.evaluate(
+    async ({ id, value }) => {
+      const key = 'bookmark-scout-bookmark-metadata';
+      const stored = await chrome.storage.local.get(key);
+      await chrome.storage.local.set({
+        [key]: { ...(stored[key] ?? {}), [id]: value },
+      });
+    },
+    { id: bookmarkId, value: metadata },
+  );
+}
+
 function toolCard(page: Page, title: string) {
   return page
     .getByRole('heading', { name: title, exact: true })
@@ -84,6 +101,7 @@ test('AI context pack exports the selected folder with AI disabled', async ({
 }) => {
   const targetFolderId = await seedFolder(extensionWorker, 'E2E Context Target', [
     { title: 'Context Target', url: 'https://e2e.invalid/context-target' },
+    { title: 'Context Missing Metadata', url: 'https://e2e.invalid/context-missing' },
   ]);
   await seedFolder(extensionWorker, 'E2E Context Other', [
     { title: 'Context Other', url: 'https://e2e.invalid/context-other' },
@@ -92,8 +110,16 @@ test('AI context pack exports the selected folder with AI disabled', async ({
     aiEnabled: false,
     aiContextPackerOutputFormat: 'markdown',
     aiContextPackerIncludeFolderPath: true,
-    aiContextPackerIncludeTags: false,
-    aiContextPackerIncludeSummaries: false,
+    aiContextPackerIncludeDates: false,
+    aiContextPackerIncludeTags: true,
+    aiContextPackerIncludeSummaries: true,
+  });
+  const [storedBookmark] = await extensionWorker.evaluate(async (folderId) => {
+    return chrome.bookmarks.getChildren(folderId);
+  }, targetFolderId);
+  await setBookmarkMetadata(extensionWorker, storedBookmark.id, {
+    tags: ['e2e', 'reviewed'],
+    summary: 'Stored E2E summary',
   });
 
   await openTools(page, extensionId, targetFolderId);
@@ -105,6 +131,11 @@ test('AI context pack exports the selected folder with AI disabled', async ({
   expect(content).toContain('Context Target');
   expect(content).toContain('https://e2e.invalid/context-target');
   expect(content).toContain('Folder: E2E Context Target');
+  expect(content).toContain('- Tags: ["e2e","reviewed"]');
+  expect(content).toContain('- Summary: Stored E2E summary');
+  expect(content).toContain('Context Missing Metadata');
+  expect(content).not.toContain('Tags: []');
+  expect(content).not.toContain('Summary: Context Missing Metadata');
   expect(content).not.toContain('Context Other');
 });
 
