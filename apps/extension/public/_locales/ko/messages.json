@@ -587,6 +587,78 @@
         "message": "북마크 불러오는 중...",
         "description": "Loading message for bookmarks page"
     },
+    "bookmarks_viewDetails": {
+        "message": "세부정보 보기",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "북마크 세부정보",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "전체 북마크 정보와 사용할 수 있는 작업을 확인합니다.",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "이름",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "URL",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "폴더 경로",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "추가한 날짜",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "수정한 날짜",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "북마크 ID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "사용할 수 없음",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "폴더 경로를 불러올 수 없음",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "경로 불러오는 중...",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "URL 복사",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "ID 복사",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "링크 열기",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "폴더 열기",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "복사했습니다.",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "복사하지 못했습니다.",
+        "description": "Error after bookmark detail copying fails"
+    },
     "search_matchCase": {
         "message": "대소문자 구분",
         "description": "Toggle case-sensitive search"
