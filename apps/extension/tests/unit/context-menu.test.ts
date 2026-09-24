@@ -188,3 +188,75 @@ describe('context menu settings', () => {
     expect(menus.size).toBe(0);
   });
 });
+
+describe('context menu recent folders', () => {
+  const recent = (ids: string[]) => ids.map((id) => ({ id, title: `Folder ${id}`, lastUsed: 0 }));
+  const recentMenuIds = () =>
+    [...menus.keys()].filter((id) => id.startsWith('bookmark-scout::recent::'));
+
+  it('shows recent folders limited by the recent-folders max setting', async () => {
+    storedSettings = { recentFoldersMax: 3 };
+    vi.mocked(getRecentFolders).mockImplementation(async (limit?: number) =>
+      recent(['a', 'b', 'c', 'd', 'e']).slice(0, limit),
+    );
+    await contextMenu.initializeContextMenu();
+    expect(getRecentFolders).toHaveBeenCalledWith(3);
+    expect(recentMenuIds()).toEqual([
+      'bookmark-scout::recent::a',
+      'bookmark-scout::recent::b',
+      'bookmark-scout::recent::c',
+    ]);
+
+    await setSettings({ recentFoldersMax: 5 });
+    await vi.waitFor(() => expect(recentMenuIds()).toHaveLength(5));
+  });
+
+  it('hides recent folders when the setting is disabled and restores them live', async () => {
+    storedSettings = { recentFoldersEnabled: false };
+    vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
+    await contextMenu.initializeContextMenu();
+    expect(recentMenuIds()).toEqual([]);
+    expect(menus.has(MENU_ID)).toBe(true);
+
+    await setSettings({ recentFoldersEnabled: true });
+    await vi.waitFor(() => expect(recentMenuIds()).toEqual(['bookmark-scout::recent::a']));
+  });
+
+  it('skips repeated folder ids instead of failing with a duplicate id', async () => {
+    vi.mocked(getRecentFolders).mockResolvedValue(recent(['a', 'a', 'b']));
+    await contextMenu.initializeContextMenu();
+    const createdIds = vi
+      .mocked(chrome.contextMenus.create)
+      .mock.calls.map(([properties]) => properties.id);
+    expect(createdIds.filter((id) => id === 'bookmark-scout::recent::a')).toHaveLength(1);
+  });
+
+  it('localizes menu titles with the selected language', async () => {
+    storedSettings = { language: 'ja' };
+    vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
+    await contextMenu.initializeContextMenu();
+    expect(menus.get('bookmark-scout::root')?.title).not.toBe('Save bookmark to...');
+    expect(menus.get('bookmark-scout::category::recent')?.title).toBe('📁 最近のフォルダー');
+  });
+});
+
+describe('context menu link text naming', () => {
+  it('prefers Firefox linkText, then selection, then page title', () => {
+    const base = { menuItemId: MENU_ID, editable: false, pageUrl: 'https://example.test' };
+    expect(
+      contextMenu.getBookmarkTitle(
+        'link_text',
+        { ...base, linkText: 'Anchor', selectionText: 'Sel' },
+        { title: 'Page' } as chrome.tabs.Tab,
+      ),
+    ).toBe('Anchor');
+    expect(
+      contextMenu.getBookmarkTitle('link_text', { ...base, selectionText: 'Sel' }, {
+        title: 'Page',
+      } as chrome.tabs.Tab),
+    ).toBe('Sel');
+    expect(
+      contextMenu.getBookmarkTitle('link_text', base, { title: 'Page' } as chrome.tabs.Tab),
+    ).toBe('Page');
+  });
+});
