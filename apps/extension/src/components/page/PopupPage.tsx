@@ -67,6 +67,8 @@ function PopupPage() {
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
+  const [pendingNewFolder, setPendingNewFolder] = useState<FolderRecommendation | null>(null);
+  const [newFolderSaving, setNewFolderSaving] = useState(false);
   const autoTriggerExecutedRef = useRef(false);
 
   // Debounce search query using configurable delay
@@ -178,16 +180,63 @@ function PopupPage() {
         }
       }
     } else {
-      // For new folder suggestions, just show a message
-      toast({
-        title: t('toast_createFolderPrompt').replace('$1', rec.folderPath || ''),
-        description: t('toast_newFolderComingSoon'),
-      });
+      setPendingNewFolder(rec);
+      return;
     }
     
     setAIRecommendations([]);
     setCurrentTabInfo(null);
-  }, [currentTabInfo, addBookmarkToFolder, withToast, toast]);
+  }, [currentTabInfo, addBookmarkToFolder, withToast]);
+
+  const handleConfirmNewFolder = useCallback(async () => {
+    if (!pendingNewFolder || !currentTabInfo) {
+      return;
+    }
+
+    setNewFolderSaving(true);
+    try {
+      const result = await createRecommendedFolderBookmark(
+        pendingNewFolder,
+        currentTabInfo,
+        folders,
+      );
+      await fetchFolders();
+
+      try {
+        await addRecentFolder(
+          result.folderId,
+          result.folderPath.split('/').at(-1) || pendingNewFolder.folderPath,
+        );
+      } catch (error) {
+        console.error('Failed to track recent folder:', error);
+      }
+
+      toast({
+        title: result.status === 'duplicate'
+          ? t('ai_newFolderDuplicate')
+          : t('ai_newFolderSuccess'),
+        description: (result.status === 'duplicate'
+          ? t('ai_newFolderDuplicateDesc')
+          : t('ai_newFolderSuccessDesc')
+        ).replace('$1', result.folderPath),
+        variant: 'success',
+      });
+      setPendingNewFolder(null);
+      setAIRecommendations([]);
+      setCurrentTabInfo(null);
+    } catch (error) {
+      const description = error instanceof RecommendedFolderError && error.code === 'path-conflict'
+        ? t('ai_newFolderConflictDesc').replace('$1', error.segment ?? '')
+        : t('ai_newFolderFailedDesc');
+      toast({
+        title: t('ai_newFolderFailed'),
+        description,
+        variant: 'destructive',
+      });
+    } finally {
+      setNewFolderSaving(false);
+    }
+  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder, toast]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -502,6 +551,18 @@ function PopupPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <RecommendedFolderDialog
+        open={pendingNewFolder !== null}
+        recommendation={pendingNewFolder}
+        bookmark={currentTabInfo}
+        isSaving={newFolderSaving}
+        onOpenChange={(open) => {
+          if (!open && !newFolderSaving) {
+            setPendingNewFolder(null);
+          }
+        }}
+        onConfirm={handleConfirmNewFolder}
+      />
       <Toaster />
     </div>
   );
