@@ -736,8 +736,8 @@
         "description": "Accessible label for the select-all rows checkbox"
     },
     "table_selectRow": {
-        "message": "행 선택",
-        "description": "Accessible label for a row selection checkbox"
+        "message": "\"$1\" 선택",
+        "description": "Row selection checkbox label; $1 is the item title"
     },
     "table_sortAsc": {
         "message": "오름차순",
@@ -2802,6 +2802,142 @@
     "settings_statusNotSaved": {
         "message": "설정 $1개가 저장되지 않았습니다",
         "description": "Save status when fields are invalid"
+    },
+    "bookmarks_folderUnavailable": {
+        "message": "해당 폴더가 더 이상 없습니다. 가장 가까운 기존 폴더를 표시합니다.",
+        "description": "Notice when the requested or current manager folder was deleted or never existed"
+    },
+    "bookmarks_folderNotAFolder": {
+        "message": "해당 항목은 폴더가 아닙니다. 이 항목이 들어 있는 폴더를 표시합니다.",
+        "description": "Notice when the manager URL points at a bookmark instead of a folder"
+    },
+    "bookmarks_expandFolder": {
+        "message": "\"$1\" 펼치기",
+        "description": "Folder tree expand button label; $1 is the folder title"
+    },
+    "bookmarks_collapseFolder": {
+        "message": "\"$1\" 접기",
+        "description": "Folder tree collapse button label; $1 is the folder title"
+    },
+    "bookmarks_breadcrumb": {
+        "message": "폴더 경로",
+        "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "table_clearSort": {
+        "message": "정렬 해제",
+        "description": "Column header menu item that removes sorting by the column"
+    },
+    "table_sortedAsc": {
+        "message": "$1, 오름차순 정렬됨",
+        "description": "Column header button label when sorted ascending; $1 is the column name"
+    },
+    "table_sortedDesc": {
+        "message": "$1, 내림차순 정렬됨",
+        "description": "Column header button label when sorted descending; $1 is the column name"
+    },
+    "table_dateRange": {
+        "message": "$1 ~ $2",
+        "description": "Date filter button text for a range; $1 start date, $2 end date"
+    },
+    "table_clearDateFilter": {
+        "message": "날짜 필터 해제",
+        "description": "Button that clears the Date Added filter"
+    },
+    "table_filterSelectedCount": {
+        "message": "$1개 선택됨",
+        "description": "Count of selected filter options or table rows; $1 is the count"
+    },
+    "table_filterNoOptions": {
+        "message": "결과가 없습니다.",
+        "description": "Empty state inside a table filter popover"
+    },
+    "table_filterClear": {
+        "message": "필터 해제",
+        "description": "Filter popover item that clears the selected options"
+    },
+    "table_filterDomains": {
+        "message": "도메인",
+        "description": "Title of the filter that groups links by site domain"
+    },
+    "table_browserOrder": {
+        "message": "브라우저 순서",
+        "description": "Toggle that shows the current folder in the browser bookmark order"
+    },
+    "table_browserOrderHelp": {
+        "message": "브라우저 자체 순서로 표시하여 위아래 이동 결과를 볼 수 있습니다",
+        "description": "Tooltip for the Browser order toggle"
+    },
+    "table_moveNeedsBrowserOrder": {
+        "message": "항목을 이동하려면 \"브라우저 순서\"를 켜세요",
+        "description": "Why the move buttons are disabled when the table uses another sort order"
+    },
+    "table_moveNeedsNoColumnSort": {
+        "message": "항목을 이동하려면 열 정렬을 해제하세요",
+        "description": "Why the move buttons are disabled while a column is sorted"
+    },
+    "table_moveNeedsFolderView": {
+        "message": "항목을 이동하려면 필터를 해제하거나 \"현재 폴더만\"을 선택하세요",
+        "description": "Why the move buttons are disabled while filtering across all bookmarks"
+    },
+    "toast_itemsDeleted": {
+        "message": "항목 $1개를 삭제했습니다",
+        "description": "Toast title after deleting several selected items; $1 is the count"
+    },
+    "toast_deleteManyUndoWindow": {
+        "message": "$1개 항목을 삭제했습니다. $2초 안에 실행 취소할 수 있습니다.",
+        "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_itemsRestoredDesc": {
+        "message": "$1개 항목을 복원했습니다.",
+        "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "bookmarks_deleteItems": {
+        "message": "$1개 항목 삭제",
+        "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
+    },
+    "bookmarks_confirmDeleteItems": {
+        "message": "선택한 $1개 항목(선택한 폴더 안의 모든 항목 포함)을 삭제할까요? 삭제 후 잠시 동안 실행 취소할 수 있습니다.",
+        "description": "Confirmation text for deleting several selected items; $1 is the count"
+    },
+    "bookmarks_bulkActions": {
+        "message": "선택한 항목",
+        "description": "Accessible name of the toolbar for selected table rows"
+    },
+    "bookmarks_bulkMove": {
+        "message": "폴더로 이동",
+        "description": "Button that moves the selected items to another folder"
+    },
+    "bookmarks_bulkMoveTitle": {
+        "message": "$1개 항목 이동",
+        "description": "Title of the dialog that moves selected items; $1 is the count"
+    },
+    "bookmarks_bulkMoveDescription": {
+        "message": "선택한 항목을 옮길 폴더를 고르세요. 폴더 끝에 추가됩니다.",
+        "description": "Description of the bulk move dialog"
+    },
+    "bookmarks_bulkMoveTarget": {
+        "message": "대상 폴더",
+        "description": "Label of the destination folder picker in the bulk move dialog"
+    },
+    "bookmarks_bulkMoved": {
+        "message": "$1개 항목을 이동했습니다",
+        "description": "Toast after moving selected items; $1 is the count"
+    },
+    "bookmarks_clearSelection": {
+        "message": "선택 해제",
+        "description": "Button that clears the table row selection"
+    },
+    "bookmarks_editUrlScriptRejected": {
+        "message": "JavaScript URL(북마클릿)은 여기에서 저장할 수 없습니다.",
+        "description": "Validation message when an edited URL uses the javascript: scheme"
+    },
+    "bookmarks_editFolderDescription": {
+        "message": "이 폴더의 이름을 변경합니다.",
+        "description": "Edit dialog description for folders"
+    },
+    "action_dismiss": {
+        "message": "닫기",
+        "description": "Button that dismisses a notice"
     },
     "search_clear": {
         "message": "검색어 지우기",

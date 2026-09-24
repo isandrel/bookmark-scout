@@ -1,11 +1,11 @@
 /**
- * Subscribe to browser bookmark changes made anywhere: other extension pages, the browser's own
- * bookmark UI, or sync. Bursts of events (imports, folder deletes, undo restores) are coalesced
- * into one callback.
+ * Subscribes to browser bookmark changes made anywhere (this page, other extension pages,
+ * the browser UI, or sync) and calls back once per burst of events.
  */
 
 import { useEffect, useRef } from 'react';
 
+/** Bulk operations (imports, undo of a folder) fire many events; coalesce them into one refresh. */
 const BOOKMARK_EVENT_DEBOUNCE_MS = 150;
 
 type BookmarkEvent = {
@@ -15,31 +15,33 @@ type BookmarkEvent = {
 
 export function useBookmarkEvents(callback: () => void): void {
   const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
 
   useEffect(() => {
-    const api = browser.bookmarks;
+    const api = browser.bookmarks as unknown as Record<string, BookmarkEvent | undefined>;
     if (!api) return;
-
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const schedule = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => callbackRef.current(), BOOKMARK_EVENT_DEBOUNCE_MS);
-    };
-
-    // onChildrenReordered is Chrome-only; Firefox leaves it undefined.
+    // onChildrenReordered and onImportEnded are Chrome-only; Firefox leaves them undefined.
     const events = [
       api.onCreated,
       api.onRemoved,
       api.onChanged,
       api.onMoved,
-      (api as { onChildrenReordered?: BookmarkEvent }).onChildrenReordered,
-    ].filter((event): event is NonNullable<typeof event> => event !== undefined) as BookmarkEvent[];
+      api.onChildrenReordered,
+      api.onImportEnded,
+    ].filter((event): event is BookmarkEvent => Boolean(event?.addListener));
 
-    for (const event of events) event.addListener(schedule);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const handleChange = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => callbackRef.current(), BOOKMARK_EVENT_DEBOUNCE_MS);
+    };
+
+    for (const event of events) event.addListener(handleChange);
     return () => {
       clearTimeout(timer);
-      for (const event of events) event.removeListener(schedule);
+      for (const event of events) event.removeListener(handleChange);
     };
   }, []);
 }

@@ -10,14 +10,16 @@ interface DataTableFacetedFilterProps<TData extends RowData, TValue> {
     value: string;
     icon?: React.ComponentType<{ className?: string }>;
   }[];
+  /** Item counts per option value, computed over the rows the filter applies to. */
+  counts?: ReadonlyMap<string, number>;
 }
 
 export function DataTableFacetedFilter<TData extends RowData, TValue>({
   column,
   title,
   options,
+  counts,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues();
   const filterValue = column?.getFilterValue();
   const selectedValues = new Set<string>(Array.isArray(filterValue) ? filterValue : []);
 
@@ -37,7 +39,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                 <div className="hidden space-x-1 lg:flex">
                   {selectedValues.size > 2 ? (
                     <Badge variant="secondary" className="rounded-sm px-1 font-normal">
-                      {selectedValues.size} selected
+                      {t('table_filterSelectedCount', String(selectedValues.size))}
                     </Badge>
                   ) : (
                     options
@@ -57,17 +59,18 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
+        <PopoverContent className="w-[280px] p-0" align="start">
           <Command>
             <CommandInput placeholder={title} />
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>{t('table_filterNoOptions')}</CommandEmpty>
               <CommandGroup>
                 {options.map((option) => {
                   const isSelected = selectedValues.has(option.value);
                   return (
                     <CommandItem
                       key={option.value}
+                      value={`${option.label} ${option.value}`}
                       onSelect={() => {
                         if (isSelected) {
                           selectedValues.delete(option.value);
@@ -91,12 +94,14 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <span>{option.label}</span>
-                      {facets?.get(option.value) && (
-                        <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                          {facets.get(option.value)}
+                      <span className="min-w-0 truncate" title={option.label}>
+                        {option.label}
+                      </span>
+                      {counts?.get(option.value) ? (
+                        <span className="ml-auto pl-2 font-mono text-xs">
+                          {counts.get(option.value)}
                         </span>
-                      )}
+                      ) : null}
                     </CommandItem>
                   );
                 })}
@@ -109,7 +114,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                       onSelect={() => column?.setFilterValue(undefined)}
                       className="justify-center text-center"
                     >
-                      Clear filters
+                      {t('table_filterClear')}
                     </CommandItem>
                   </CommandGroup>
                 </>

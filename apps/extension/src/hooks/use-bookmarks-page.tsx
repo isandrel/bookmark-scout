@@ -1,13 +1,14 @@
 /**
- * Hooks for the BookmarksPage component.
- * Extracts navigation, folder mapping, and URL mapping logic.
+ * Navigation and data loading for the bookmark manager page.
+ * The whole tree is loaded once and refreshed on bookmark events; the current folder is
+ * derived from it, synced with `?id=` and the browser history.
  */
 
-import { type ComponentType, useCallback, useEffect, useState } from 'react';
-import { Folder } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { BookmarkTreeNode } from '@/types';
 
 const processNode = (
-  node: chrome.bookmarks.BookmarkTreeNode,
+  node: BookmarkTreeNode,
   folderPath: string,
   isRootFolder: boolean,
 ): Bookmark => {
@@ -22,27 +23,13 @@ const processNode = (
     url: node.url,
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
-    unmodifiable: node.unmodifiable as 'managed',
+    unmodifiable: node.unmodifiable,
     ...(isRootFolder ? { isRootFolder } : {}),
   };
 };
 
-async function getBookmarkTree(): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
-  if (!chrome?.bookmarks) return [];
-
-  return new Promise((resolve, reject) => {
-    chrome.bookmarks.getTree((nodes) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-      } else {
-        resolve(nodes);
-      }
-    });
-  });
-}
-
 function flattenBookmarks(
-  nodes: chrome.bookmarks.BookmarkTreeNode[],
+  nodes: readonly BookmarkTreeNode[],
   rootIds: ReadonlySet<string>,
   ancestorTitles: string[] = [],
 ): Bookmark[] {
@@ -53,7 +40,7 @@ function flattenBookmarks(
     if (node.children) {
       const childBookmarks = flattenBookmarks(node.children, rootIds, [
         ...ancestorTitles,
-        node.title || t('bookmarks_untitled'),
+        node.title.trim() || t('bookmarks_untitled'),
       ]);
       for (const child of childBookmarks) bookmarks.push(child);
     }
@@ -61,80 +48,134 @@ function flattenBookmarks(
   return bookmarks;
 }
 
+function readFolderIdFromUrl(): string | null {
+  return new URLSearchParams(window.location.search).get('id') || null;
+}
+
+function folderUrl(folderId: string | null): string {
+  const url = new URL(window.location.href);
+  if (folderId) {
+    url.searchParams.set('id', folderId);
+  } else {
+    url.searchParams.delete('id');
+  }
+  return url.toString();
+}
+
+const noticeKeys = {
+  missing: 'bookmarks_folderUnavailable',
+  'not-folder': 'bookmarks_folderNotAFolder',
+} as const;
+
 /**
  * Hook for bookmark folder navigation.
- * Handles folder state, URL sync, and data fetching.
+ * Folder navigation adds exactly one history entry; refreshes, edits, and fallbacks from
+ * missing folders replace the current entry instead.
  */
 export function useBookmarkNavigation() {
-  const [currentFolder, setCurrentFolder] = useState<string | null>(null);
-  const [data, setData] = useState<Bookmark[]>([]);
+  const [currentFolder, setCurrentFolder] = useState<string | null>(readFolderIdFromUrl);
   const [allData, setAllData] = useState<Bookmark[]>([]);
+  const [rootId, setRootId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
-  // Handle initial URL parameter
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const folderId = urlParams.get('id');
-    if (folderId) {
+  const currentFolderRef = useRef(currentFolder);
+  const itemsRef = useRef<Bookmark[]>([]);
+  const rootIdRef = useRef<string | undefined>(undefined);
+  const hasLoadedRef = useRef(false);
+  // Parents seen in the previous load let a deleted folder fall back to its nearest ancestor.
+  const previousParentsRef = useRef(new Map<string, string | undefined>());
+
+  const showFolder = useCallback(
+    (requestedId: string | null, history: 'push' | 'replace' | 'none') => {
+      const resolution = resolveManagerFolder(
+        requestedId,
+        itemsRef.current,
+        rootIdRef.current,
+        previousParentsRef.current,
+      );
+      const folderId = resolution.folderId;
+      if (resolution.status !== 'ok') {
+        setNotice(t(noticeKeys[resolution.status]));
+      } else if (history === 'push') {
+        setNotice(null);
+      }
+
+      const changed = folderId !== currentFolderRef.current;
+      currentFolderRef.current = folderId;
       setCurrentFolder(folderId);
-    }
-  }, []);
+      if (history === 'push' && changed) {
+        window.history.pushState({ folderId }, '', folderUrl(folderId));
+      } else if (resolution.status !== 'ok' || (history === 'replace' && changed)) {
+        window.history.replaceState({ folderId }, '', folderUrl(folderId));
+      }
+    },
+    [],
+  );
 
-  // Background refreshes keep the table mounted so filters and pagination survive edits.
-  const refreshCurrentFolder = useCallback(async (options: { background?: boolean } = {}) => {
-    if (!options.background) setIsLoading(true);
+  const refresh = useCallback(async () => {
+    const isInitialLoad = !hasLoadedRef.current;
     setError(null);
     try {
-      const tree = await getBookmarkTree();
+      const tree = await fetchBookmarkTree();
       const root = tree[0];
       const bookmarks = flattenBookmarks(root?.children ?? [], getBookmarkRootIds(tree));
-      // Cleanup for bookmarks removed while the extension was not running must never block
-      // loading the bookmark list.
-      void reconcileStoredBookmarkMetadata(
-        bookmarks.filter((bookmark) => Boolean(bookmark.url)).map((bookmark) => bookmark.id),
-      ).catch(() => undefined);
-      setAllData(bookmarks);
-      setData(bookmarks.filter((bookmark) => bookmark.parentId === (currentFolder ?? root?.id)));
-
-      const newUrl = new URL(window.location.href);
-      if (currentFolder) {
-        newUrl.searchParams.set('id', currentFolder);
-      } else {
-        newUrl.searchParams.delete('id');
+      if (isInitialLoad) {
+        // Cleanup for bookmarks removed while the extension was not running must never block
+        // loading. It runs only once so it cannot race an undo that is re-keying metadata.
+        void reconcileStoredBookmarkMetadata(
+          bookmarks.filter((bookmark) => Boolean(bookmark.url)).map((bookmark) => bookmark.id),
+        ).catch(() => undefined);
       }
-      window.history.pushState({}, '', newUrl.toString());
+
+      itemsRef.current = bookmarks;
+      rootIdRef.current = root?.id;
+      setAllData(bookmarks);
+      setRootId(root?.id);
+      showFolder(currentFolderRef.current, 'none');
+      previousParentsRef.current = new Map(bookmarks.map((item) => [item.id, item.parentId]));
+      hasLoadedRef.current = true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load bookmarks');
     } finally {
       setIsLoading(false);
     }
-  }, [currentFolder]);
+  }, [showFolder]);
 
   useEffect(() => {
-    refreshCurrentFolder();
-  }, [refreshCurrentFolder]);
+    void refresh();
+  }, [refresh]);
 
-  // Refresh both the selected folder and global data after a table move.
+  // Changes from this page, other extension pages, the browser UI, and sync all land here.
+  useBookmarkEvents(refresh);
+
   useEffect(() => {
-    const handleBookmarkMove = () => refreshCurrentFolder();
-
-    window.addEventListener('bookmarkMoved', handleBookmarkMove);
-    return () => {
-      window.removeEventListener('bookmarkMoved', handleBookmarkMove);
+    const handlePopState = () => {
+      if (!hasLoadedRef.current) {
+        // Resolved against the tree once the first load finishes.
+        currentFolderRef.current = readFolderIdFromUrl();
+        setCurrentFolder(currentFolderRef.current);
+        return;
+      }
+      showFolder(readFolderIdFromUrl(), 'none');
     };
-  }, [refreshCurrentFolder]);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [showFolder]);
 
-  const navigateToFolder = useCallback((folderId: string | null) => {
-    setCurrentFolder(folderId);
-    const newUrl = new URL(window.location.href);
-    if (folderId) {
-      newUrl.searchParams.set('id', folderId);
-    } else {
-      newUrl.searchParams.delete('id');
-    }
-    window.history.pushState({}, '', newUrl.toString());
-  }, []);
+  const navigateToFolder = useCallback(
+    (folderId: string | null) => {
+      if (folderId === currentFolderRef.current) return;
+      showFolder(folderId, 'push');
+    },
+    [showFolder],
+  );
+
+  const data = useMemo(
+    () => allData.filter((bookmark) => bookmark.parentId === (currentFolder ?? rootId)),
+    [allData, currentFolder, rootId],
+  );
 
   return {
     currentFolder,
@@ -142,86 +183,9 @@ export function useBookmarkNavigation() {
     allData,
     isLoading,
     error,
+    notice,
+    dismissNotice: useCallback(() => setNotice(null), []),
     navigateToFolder,
-    refreshCurrentFolder,
+    refresh,
   };
-}
-
-type IconMap = Record<
-  string,
-  { value: string; label: string; icon: ComponentType<{ className?: string }> }
->;
-
-/**
- * Hook for parent folder ID mapping.
- * Creates a map of folder IDs to their metadata.
- */
-export function useParentIdMap(): IconMap {
-  const [parentIdMap, setParentIdMap] = useState<IconMap>({});
-
-  useEffect(() => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const map: IconMap = {};
-
-        const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
-          map[node.id] = {
-            value: node.id,
-            label: node.title || 'Untitled',
-            icon: Folder,
-          };
-          node.children?.forEach(processNode);
-        };
-
-        nodes.forEach(processNode);
-        setParentIdMap(map);
-      });
-    }
-  }, []);
-
-  return parentIdMap;
-}
-
-/**
- * Hook for URL/domain mapping.
- * Creates a map of domains to their metadata with favicons.
- */
-export function useUrlMap(): IconMap {
-  const [urlMap, setUrlMap] = useState<IconMap>({});
-
-  useEffect(() => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const map: IconMap = {};
-
-        const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
-          if (node.children) {
-            node.children.forEach(processNode);
-          } else if (node.url) {
-            try {
-              const domain = new URL(node.url).hostname.split('.').slice(-2).join('.');
-              map[domain] = {
-                value: domain,
-                label: domain,
-                icon: () => (
-                  <img
-                    src={getFaviconUrl(node.url || '')}
-                    alt="favicon"
-                    className="w-4 h-4"
-                  />
-                ),
-              };
-            } catch {
-              // Invalid URL, skip
-            }
-          }
-        };
-
-        nodes.forEach(processNode);
-        setUrlMap(map);
-      });
-    }
-  }, []);
-
-  return urlMap;
 }
