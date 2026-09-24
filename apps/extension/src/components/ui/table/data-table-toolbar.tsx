@@ -15,12 +15,14 @@ interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
   applyToCurrentFolder: boolean;
   onApplyToCurrentFolderChange: (enabled: boolean) => void;
+  onResetView: () => void;
 }
 
 export function DataTableToolbar<TData extends RowData>({
   table,
   applyToCurrentFolder,
   onApplyToCurrentFolderChange,
+  onResetView,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
 
@@ -108,7 +110,7 @@ export function DataTableToolbar<TData extends RowData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} onResetView={onResetView} />
     </div>
   );
 }

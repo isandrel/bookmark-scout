@@ -2,6 +2,7 @@ import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const SETTINGS_KEY = 'bookmark-scout-settings';
+const TABLE_VIEW_KEY = 'bookmark-scout-table-view';
 
 const titles = {
   testFolder: 'Sorting Test Root',
@@ -176,4 +177,86 @@ test('applies an Options UI sorting change to an open bookmarks table', async ({
     titles.link10,
     titles.folderZulu,
   ]);
+});
+
+test('saves, restores, and resets the bookmark table view without reordering bookmarks', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const fixture = await seedBookmarks(extensionWorker);
+  const bookmarksUrl = `chrome-extension://${extensionId}/bookmarks.html?id=${fixture.folderId}`;
+
+  await page.goto(bookmarksUrl);
+  await page.getByRole('button', { name: 'Customize table view' }).click();
+  await page.getByRole('menuitemcheckbox', { name: 'url' }).click();
+  for (let index = 0; index < 5; index += 1) {
+    await page.getByRole('button', { name: 'Move title left' }).click();
+  }
+
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Title' }).click();
+
+  const pageSizeControl = page.getByText('Rows per page').locator('..').getByRole('combobox');
+  await pageSizeControl.click();
+  await page.getByRole('option', { name: '20' }).click();
+
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (key) => {
+        const stored = await chrome.storage.sync.get(key);
+        return stored[key];
+      }, TABLE_VIEW_KEY),
+    )
+    .toMatchObject({
+      version: 1,
+      columnVisibility: { url: false },
+      pageSize: 20,
+      sorting: [{ id: 'title', desc: false }],
+    });
+
+  await page.reload();
+  const headers = page.locator('thead th');
+  await expect(page.getByRole('columnheader', { name: 'URL' })).toHaveCount(0);
+  await expect(headers.nth(1)).toContainText('Title');
+  await expect(pageSizeControl).toHaveText('20');
+  await expectTableOrder(page, [
+    titles.folderAlpha,
+    titles.link2,
+    titles.link10,
+    titles.folderZulu,
+  ]);
+
+  const persistedOrder = await extensionWorker.evaluate(async (folderId) => {
+    const children = await chrome.bookmarks.getChildren(folderId);
+    return children.map((bookmark) => bookmark.title);
+  }, fixture.folderId);
+  expect(persistedOrder).toEqual(fixture.originalOrder);
+
+  await page.getByRole('button', { name: 'Customize table view' }).click();
+  await page.getByRole('button', { name: 'Reset view' }).click();
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (key) => {
+        const stored = await chrome.storage.sync.get(key);
+        return stored[key];
+      }, TABLE_VIEW_KEY),
+    )
+    .toMatchObject({
+      version: 1,
+      pageSize: 10,
+      sorting: [],
+      columnVisibility: {
+        id: false,
+        parentId: false,
+        dateGroupModified: false,
+        unmodifiable: false,
+      },
+    });
+
+  await page.reload();
+  await expect(page.getByRole('columnheader', { name: 'URL' })).toBeVisible();
+  await expect(pageSizeControl).toHaveText('10');
+  await page.getByRole('button', { name: 'Customize table view' }).click();
+  await expect(page.getByRole('menuitemcheckbox', { name: 'url' })).toBeChecked();
 });
