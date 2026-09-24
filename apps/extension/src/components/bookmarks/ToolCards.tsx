@@ -71,19 +71,19 @@ export function ToolCard({
             }
           >
             <SelectTrigger className="h-8 flex-1 text-xs">
-              <SelectValue placeholder="Select scope" />
+              <SelectValue placeholder={t('tools_scopeSelect')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="folder">
                 <div className="flex items-center gap-2">
                   <Folder className="h-3 w-3" />
-                  <span className="truncate">{currentFolderName || 'Current Folder'}</span>
+                  <span className="truncate">{currentFolderName || t('settings_scopeFolder')}</span>
                 </div>
               </SelectItem>
               <SelectItem value="all">
                 <div className="flex items-center gap-2">
                   <Globe className="h-3 w-3" />
-                  <span>All Bookmarks</span>
+                  <span>{t('settings_scopeAll')}</span>
                 </div>
               </SelectItem>
             </SelectContent>
@@ -97,7 +97,7 @@ export function ToolCard({
           disabled={disabled || isLoading}
           className={cn('h-8 text-xs', !showScopeSelector && 'w-full')}
         >
-          {isLoading ? 'Running...' : buttonLabel}
+          {isLoading ? t('tools_running') : buttonLabel}
         </Button>
       </div>
     </div>

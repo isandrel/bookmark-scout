@@ -209,15 +209,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       await refresh();
       setDuplicatesDialogOpen(false);
       toast({
-        title: t('toast_duplicatesRemoved') || 'Duplicates removed',
-        description: (t('toast_duplicatesRemovedDesc') || '$1 duplicate bookmarks removed').replace(
-          '$1',
-          String(toDelete.length),
-        ),
+        title: t('toast_duplicatesRemoved'),
+        description: t('toast_duplicatesRemovedDesc', String(toDelete.length)),
       });
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -256,15 +253,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       await refresh();
       setUrlCleanerDialogOpen(false);
       toast({
-        title: t('toast_urlCleanerApplied') || 'URLs cleaned',
-        description: (t('toast_urlCleanerAppliedDesc') || '$1 bookmarks updated').replace(
-          '$1',
-          String(urlCleanerResult.previews.length),
-        ),
+        title: t('toast_urlCleanerApplied'),
+        description: t('toast_urlCleanerAppliedDesc', String(urlCleanerResult.previews.length)),
       });
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -299,7 +293,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setDeadLinksDialogOpen(true);
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -322,7 +316,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setMetadataDialogOpen(true);
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -357,8 +351,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     await refresh();
     setReorgDialogOpen(false);
     toast({
-      title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
-      description: t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
+      title: t('toast_reorganizeSuccess'),
+      description: t('toast_reorganizeSuccessDesc'),
     });
   };
 
@@ -391,15 +385,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
       downloadTextFile(packed.content, filename, mimeType);
       toast({
-        title: t('toast_aiContextPacked') || 'AI context exported',
-        description: (t('toast_aiContextPackedDesc') || '$1 bookmarks exported for AI use').replace(
-          '$1',
-          String(packed.itemCount),
-        ),
+        title: t('toast_aiContextPacked'),
+        description: t('toast_aiContextPackedDesc', String(packed.itemCount)),
       });
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -421,7 +412,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setAutoTaggingDialogOpen(true);
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -442,7 +433,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setSummarizerDialogOpen(true);
     } catch (error) {
       toast({
-        title: t('toast_toolFailed') || 'Tool failed',
+        title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
@@ -584,7 +575,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           await handleApplyReorganization(plan, false);
         }
       } catch (err) {
-        setReorgErrors([err instanceof Error ? err.message : 'Failed to analyze bookmarks']);
+        setReorgErrors([err instanceof Error ? err.message : t('ai_reorgAnalyzeFailed')]);
       } finally {
         setReorgLoading(false);
       }
@@ -619,15 +610,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       countItems(folders);
 
       toast({
-        title: t('toast_exportSuccess') || 'Export Complete',
-        description: (t('toast_exportSuccessDesc') || '$1 bookmarks exported as $2')
-          .replace('$1', String(count))
-          .replace('$2', getFormatName(format)),
+        title: t('toast_exportSuccess'),
+        description: t('toast_exportSuccessDesc', [String(count), getFormatName(format)]),
       });
     } catch (err) {
       toast({
-        title: t('toast_exportFailed') || 'Export Failed',
-        description: err instanceof Error ? err.message : 'Unknown error',
+        title: t('toast_exportFailed'),
+        description: err instanceof Error ? err.message : t('error_unknown'),
         variant: 'destructive',
       });
     } finally {
@@ -645,7 +634,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     try {
       const format = detectFormat(file.name);
       if (!format) {
-        throw new Error('Unsupported file format');
+        throw new Error(t('error_unsupportedFileFormat'));
       }
 
       const content = await readFile(file);
@@ -662,16 +651,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       await refresh();
 
       toast({
-        title: t('toast_importSuccess') || 'Import Complete',
-        description: (t('toast_importSuccessDesc') || '$1 items imported successfully').replace(
-          '$1',
-          String(created),
-        ),
+        title: t('toast_importSuccess'),
+        description: t('toast_importSuccessDesc', String(created)),
       });
     } catch (err) {
       toast({
-        title: t('toast_importFailed') || 'Import Failed',
-        description: err instanceof Error ? err.message : 'Unknown error',
+        title: t('toast_importFailed'),
+        description: err instanceof Error ? err.message : t('error_unknown'),
         variant: 'destructive',
       });
     } finally {
@@ -689,7 +675,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <div className="p-2 border-b flex-shrink-0">
         <h2 className="text-sm font-semibold px-2 flex items-center gap-2">
           <Wrench className="h-4 w-4" />
-          {t('tools_title') || 'Tools'}
+          {t('tools_title')}
         </h2>
       </div>
 
@@ -702,13 +688,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               toolSettings.autoTaggingEnabled ||
               toolSettings.summarizerEnabled ||
               toolSettings.reorganizationEnabled) && (
-              <ToolSection title={t('tools_category_ai') || 'AI & Intelligence'}>
+              <ToolSection title={t('tools_category_ai')}>
                 {toolSettings.aiContextPackerEnabled && (
                   <ToolCard
                     icon={<FileText className="h-4 w-4 text-indigo-500" />}
-                    title={t('tools_exportAI') || 'AI Context Packer'}
-                    description={t('tools_exportAIDesc') || 'Export bookmarks for LLMs'}
-                    buttonLabel={t('action_export') || 'Export'}
+                    title={t('tools_exportAI')}
+                    description={t('tools_exportAIDesc')}
+                    buttonLabel={t('action_export')}
                     onClick={(scope) => handleToolAction('ai-pack', scope)}
                     scopeCapability="both"
                     defaultScope={toolSettings.aiContextPackerDefaultScope}
@@ -720,9 +706,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 {toolSettings.autoTaggingEnabled && (
                   <ToolCard
                     icon={<Tags className="h-4 w-4 text-indigo-500" />}
-                    title={t('tools_autoTagging') || 'Auto-Tagging'}
-                    description={t('tools_autoTaggingDesc') || 'Suggest tags for bookmarks'}
-                    buttonLabel={t('action_analyze') || 'Analyze'}
+                    title={t('tools_autoTagging')}
+                    description={t('tools_autoTaggingDesc')}
+                    buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('auto-tag', scope)}
                     scopeCapability="folder"
                     defaultScope={toolSettings.autoTaggingDefaultScope}
@@ -734,9 +720,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 {toolSettings.summarizerEnabled && (
                   <ToolCard
                     icon={<FileOutput className="h-4 w-4 text-indigo-500" />}
-                    title={t('tools_summarizer') || 'Content Summarizer'}
-                    description={t('tools_summarizerDesc') || 'Generate summaries'}
-                    buttonLabel={t('action_analyze') || 'Summarize'}
+                    title={t('tools_summarizer')}
+                    description={t('tools_summarizerDesc')}
+                    buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('summarize', scope)}
                     scopeCapability="folder"
                     defaultScope={toolSettings.summarizerDefaultScope}
@@ -748,14 +734,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 {toolSettings.reorganizationEnabled && (
                   <ToolCard
                     icon={<Sparkles className="h-4 w-4 text-purple-500" />}
-                    title={t('tools_aiReorganize') || 'AI Folder Reorganization'}
+                    title={t('tools_aiReorganize')}
                     description={
-                      t('tools_aiReorganizeDesc') || 'Use AI to suggest a better folder structure'
+                      t('tools_aiReorganizeDesc')
                     }
                     buttonLabel={
                       reorganizationDryRunFirst
-                        ? t('action_analyze') || 'Analyze'
-                        : t('action_applyChanges') || 'Apply Changes'
+                        ? t('action_analyze')
+                        : t('action_applyChanges')
                     }
                     onClick={(scope) => handleToolAction('reorganize', scope)}
                     scopeCapability="both"
@@ -772,13 +758,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             (toolSettings.duplicatesEnabled ||
               toolSettings.urlCleanerEnabled ||
               toolSettings.deadLinksEnabled) && (
-              <ToolSection title={t('tools_category_maintenance') || 'Maintenance'}>
+              <ToolSection title={t('tools_category_maintenance')}>
                 {toolSettings.duplicatesEnabled && (
                   <ToolCard
                     icon={<Copy className="h-4 w-4 text-orange-500" />}
-                    title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
-                    description={t('tools_findDuplicatesDesc') || 'Find duplicates'}
-                    buttonLabel={t('action_scan') || 'Scan'}
+                    title={t('tools_findDuplicates')}
+                    description={t('tools_findDuplicatesDesc')}
+                    buttonLabel={t('action_scan')}
                     onClick={(scope) => handleToolAction('duplicates', scope)}
                     scopeCapability="all"
                     defaultScope={toolSettings.duplicatesDefaultScope}
@@ -790,9 +776,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 {toolSettings.urlCleanerEnabled && (
                   <ToolCard
                     icon={<Eraser className="h-4 w-4 text-orange-500" />}
-                    title={t('tools_cleanUrls') || 'URL Cleaner'}
-                    description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
-                    buttonLabel={t('action_clean') || 'Clean'}
+                    title={t('tools_cleanUrls')}
+                    description={t('tools_cleanUrlsDesc')}
+                    buttonLabel={t('action_clean')}
                     onClick={(scope) => handleToolAction('clean-urls', scope)}
                     scopeCapability="both"
                     defaultScope={toolSettings.urlCleanerDefaultScope}
@@ -804,9 +790,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 {toolSettings.deadLinksEnabled && (
                   <ToolCard
                     icon={<Link2Off className="h-4 w-4 text-orange-500" />}
-                    title={t('tools_checkDeadLinks') || 'Check Dead Links'}
-                    description={t('tools_checkDeadLinksDesc') || 'Find broken links'}
-                    buttonLabel={t('action_scan') || 'Scan'}
+                    title={t('tools_checkDeadLinks')}
+                    description={t('tools_checkDeadLinksDesc')}
+                    buttonLabel={t('action_scan')}
                     onClick={(scope) => handleToolAction('dead-links', scope)}
                     scopeCapability="both"
                     defaultScope={toolSettings.deadLinksDefaultScope}
@@ -819,12 +805,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
           {/* Metadata & Content */}
           {!toolSettingsLoading && toolSettings.metadataFetcherEnabled && (
-            <ToolSection title={t('tools_category_metadata') || 'Metadata'}>
+            <ToolSection title={t('tools_category_metadata')}>
               <ToolCard
                 icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
-                title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
-                description={t('tools_metadataFetcherDesc') || 'Fix titles & icons'}
-                buttonLabel={t('action_scan') || 'Fetch'}
+                title={t('tools_metadataFetcher')}
+                description={t('tools_metadataFetcherDesc')}
+                buttonLabel={t('action_scan')}
                 onClick={(scope) => handleToolAction('metadata', scope)}
                 scopeCapability="both"
                 defaultScope={toolSettings.metadataFetcherDefaultScope}
@@ -836,12 +822,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
           {/* Security */}
           {!toolSettingsLoading && toolSettings.privacyScannerEnabled && (
-            <ToolSection title={t('tools_category_security') || 'Security'}>
+            <ToolSection title={t('tools_category_security')}>
               <ToolCard
                 icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
-                title={t('tools_privacyScanner') || 'Privacy Scanner'}
-                description={t('tools_privacyScannerDesc') || 'Scan for secrets'}
-                buttonLabel={t('action_scan') || 'Scan'}
+                title={t('tools_privacyScanner')}
+                description={t('tools_privacyScannerDesc')}
+                buttonLabel={t('action_scan')}
                 onClick={(scope) => handleToolAction('privacy', scope)}
                 scopeCapability="all"
                 defaultScope={toolSettings.privacyScannerDefaultScope}
@@ -853,12 +839,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
           {/* Analytics */}
           {!toolSettingsLoading && toolSettings.statisticsEnabled && (
-            <ToolSection title={t('tools_category_analytics') || 'Analytics'}>
+            <ToolSection title={t('tools_category_analytics')}>
               <ToolCard
                 icon={<BarChart3 className="h-4 w-4 text-green-500" />}
-                title={t('tools_statistics') || 'Statistics'}
-                description={t('tools_statisticsDesc') || 'View stats'}
-                buttonLabel={t('action_view') || 'View'}
+                title={t('tools_statistics')}
+                description={t('tools_statisticsDesc')}
+                buttonLabel={t('action_view')}
                 onClick={(scope) => handleToolAction('stats', scope)}
                 scopeCapability="both"
                 defaultScope={toolSettings.statisticsDefaultScope}
@@ -868,7 +854,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           )}
 
           {/* Data (Export/Import) */}
-          <ToolSection title={t('tools_category_data') || 'Data'}>
+          <ToolSection title={t('tools_category_data')}>
             {/* Export Tool */}
             <div className="p-3 rounded-lg border bg-card space-y-2">
               <div className="flex items-start gap-2">
@@ -878,7 +864,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm font-medium truncate">
-                      {t('tools_export') || 'Export Bookmarks'}
+                      {t('tools_export')}
                     </h4>
                     <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
                       <Folder className="h-3 w-3" />
@@ -887,14 +873,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                    {t('tools_exportDesc') || 'Export bookmarks to HTML, JSON, Markdown, or CSV'}
+                    {t('tools_exportDesc')}
                   </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <Select value={exportFormat} onValueChange={setExportFormat}>
                   <SelectTrigger className="flex-1 h-8 text-xs">
-                    <SelectValue placeholder="Format" />
+                    <SelectValue placeholder={t('tools_exportFormat')} />
                   </SelectTrigger>
                   <SelectContent>
                     {Object.entries(exportFormats).map(([key, format]) => (
@@ -911,7 +897,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                   disabled={isExporting || folders.length === 0}
                   className="h-8 text-xs"
                 >
-                  {isExporting ? 'Exporting...' : t('action_export') || 'Export'}
+                  {isExporting ? t('tools_exporting') : t('action_export')}
                 </Button>
               </div>
             </div>
@@ -925,14 +911,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm font-medium truncate">
-                      {t('tools_import') || 'Import Bookmarks'}
+                      {t('tools_import')}
                     </h4>
                     <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
                       <Folder className="h-3 w-3" />
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                    {t('tools_importDesc') || 'Import bookmarks from HTML or JSON file'}
+                    {t('tools_importDesc')}
                   </p>
                 </div>
               </div>
@@ -952,7 +938,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                   disabled={isImporting}
                   className="h-8 text-xs w-full"
                 >
-                  {isImporting ? 'Importing...' : t('action_import') || 'Import'}
+                  {isImporting ? t('tools_importing') : t('action_import')}
                 </Button>
               </div>
             </div>
@@ -978,12 +964,11 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={duplicatesDialogOpen}
         onOpenChange={setDuplicatesDialogOpen}
-        title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
-        description={(
-          t('tools_duplicatesDialogDesc') || '$1 duplicate groups found across $2 bookmarks'
-        )
-          .replace('$1', String(duplicateResult?.groups.length ?? 0))
-          .replace('$2', String(duplicateResult?.scannedBookmarks ?? 0))}
+        title={t('tools_findDuplicates')}
+        description={t('tools_duplicatesDialogDesc', [
+          String(duplicateResult?.groups.length ?? 0),
+          String(duplicateResult?.scannedBookmarks ?? 0),
+        ])}
       >
         <DuplicateResultsView
           result={duplicateResult}
@@ -996,11 +981,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={urlCleanerDialogOpen}
         onOpenChange={setUrlCleanerDialogOpen}
-        title={t('tools_cleanUrls') || 'URL Cleaner'}
-        description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned').replace(
-          '$1',
-          String(urlCleanerResult?.previews.length ?? 0),
-        )}
+        title={t('tools_cleanUrls')}
+        description={t('tools_urlCleanerDialogDesc', String(urlCleanerResult?.previews.length ?? 0))}
       >
         <UrlCleanerResultsView
           result={urlCleanerResult}
@@ -1013,8 +995,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={statisticsDialogOpen}
         onOpenChange={setStatisticsDialogOpen}
-        title={t('tools_statistics') || 'Bookmark Statistics'}
-        description={t('tools_statisticsDialogDesc') || 'Snapshot of the selected bookmark scope'}
+        title={t('tools_statistics')}
+        description={t('tools_statisticsDialogDesc')}
       >
         <StatisticsResultsView result={statisticsResult} />
       </ToolResultsDialog>
@@ -1022,9 +1004,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={deadLinksDialogOpen}
         onOpenChange={setDeadLinksDialogOpen}
-        title={t('tools_checkDeadLinks') || 'Check Dead Links'}
+        title={t('tools_checkDeadLinks')}
         description={
-          t('tools_deadLinksDialogDesc') || 'Reachability results for the selected bookmarks'
+          t('tools_deadLinksDialogDesc')
         }
       >
         <DeadLinkResultsView result={deadLinksResult} />
@@ -1033,9 +1015,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={metadataDialogOpen}
         onOpenChange={setMetadataDialogOpen}
-        title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
+        title={t('tools_metadataFetcher')}
         description={
-          t('tools_metadataDialogDesc') || 'Metadata suggestions for the selected bookmarks'
+          t('tools_metadataDialogDesc')
         }
       >
         <MetadataResultsView result={metadataResult} />
@@ -1044,9 +1026,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={privacyDialogOpen}
         onOpenChange={setPrivacyDialogOpen}
-        title={t('tools_privacyScanner') || 'Privacy Scanner'}
+        title={t('tools_privacyScanner')}
         description={
-          t('tools_privacyDialogDesc') || 'Potential sensitive data found in the selected bookmarks'
+          t('tools_privacyDialogDesc')
         }
       >
         <PrivacyResultsView result={privacyResult} />
@@ -1055,9 +1037,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={autoTaggingDialogOpen}
         onOpenChange={setAutoTaggingDialogOpen}
-        title={t('tools_autoTagging') || 'Auto-Tagging'}
+        title={t('tools_autoTagging')}
         description={
-          t('tools_autoTaggingDialogDesc') || 'AI-generated tags for the selected bookmarks'
+          t('tools_autoTaggingDialogDesc')
         }
       >
         <div className="space-y-4">
@@ -1078,7 +1060,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             ))
           ) : (
             <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              {t('state_noAiResults') || 'No AI results available.'}
+              {t('state_noAiResults')}
             </div>
           )}
           {autoTaggingResult.length ? (
@@ -1094,8 +1076,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ToolResultsDialog
         open={summarizerDialogOpen}
         onOpenChange={setSummarizerDialogOpen}
-        title={t('tools_summarizer') || 'Content Summarizer'}
-        description={t('tools_summarizerDialogDesc') || 'AI-generated bookmark summaries'}
+        title={t('tools_summarizer')}
+        description={t('tools_summarizerDialogDesc')}
       >
         <div className="space-y-4">
           {summarizerResult.length ? (
@@ -1108,7 +1090,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             ))
           ) : (
             <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-              {t('state_noAiResults') || 'No AI results available.'}
+              {t('state_noAiResults')}
             </div>
           )}
           {summarizerResult.length ? (

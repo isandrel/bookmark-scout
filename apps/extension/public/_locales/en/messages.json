@@ -64,16 +64,32 @@
         "description": "Toast title for folder deletion error"
     },
     "toast_deleteUndoWindow": {
-        "message": "Undo for 10 seconds. Only the latest deletion is recoverable; original IDs and dates, or recovery after closing this window, are unavailable.",
-        "description": "Limits of popup deletion recovery"
+        "message": "Deleted \"$title$\". Undo within $seconds$ seconds.",
+        "description": "Deletion toast description with the undo time limit",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "seconds": {
+                "content": "$2",
+                "example": "10"
+            }
+        }
     },
     "toast_deleteRestored": {
         "message": "Deletion undone",
         "description": "Toast title after restoring a deletion"
     },
     "toast_deleteRestoredDesc": {
-        "message": "Restored \"$1\" with new browser-generated IDs and dates.",
-        "description": "Toast description after restoring a deletion; $1 is the item title"
+        "message": "Restored \"$title$\".",
+        "description": "Toast description after restoring a deletion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
     },
     "toast_errorRestoringDeletion": {
         "message": "Could not undo deletion",
@@ -469,11 +485,11 @@
     },
     "settings_aiAutoTrigger": {
         "message": "Auto-recommend on Open",
-        "description": "Auto trigger AI setting label"
+        "description": "AI auto trigger label"
     },
     "settings_aiAutoTriggerDesc": {
-        "message": "Automatically suggest folders when popup opens",
-        "description": "Auto trigger AI setting description"
+        "message": "Automatically run bookmark recommendations when the popup opens",
+        "description": "AI auto trigger description"
     },
     "settings_recentFoldersMax": {
         "message": "Recent Folders Max",
@@ -835,6 +851,10 @@
         "message": "Security",
         "description": "Security tools category"
     },
+    "tools_category_analytics": {
+        "message": "Analytics",
+        "description": "Tools section heading for analytics tools"
+    },
     "tools_exportAI": {
         "message": "AI Context Packer",
         "description": "Title for AI Export tool"
@@ -911,25 +931,73 @@
         "message": "Import bookmarks from HTML or JSON file",
         "description": "Import bookmarks tool description"
     },
+    "tools_exportFormat": {
+        "message": "Format",
+        "description": "Placeholder for the export format selector"
+    },
+    "tools_exporting": {
+        "message": "Exporting...",
+        "description": "Export button label while exporting"
+    },
+    "tools_importing": {
+        "message": "Importing...",
+        "description": "Import button label while importing"
+    },
+    "tools_scopeSelect": {
+        "message": "Select scope",
+        "description": "Placeholder for a tool scope selector"
+    },
+    "tools_running": {
+        "message": "Running...",
+        "description": "Tool button label while the tool runs"
+    },
     "toast_exportSuccess": {
         "message": "Export Complete",
         "description": "Toast title for successful bookmark export"
     },
     "toast_exportSuccessDesc": {
-        "message": "$1 bookmarks exported as $2",
-        "description": "Toast description for successful bookmark export"
+        "message": "$count$ bookmarks exported as $format$",
+        "description": "Toast description for successful bookmark export",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "format": {
+                "content": "$2",
+                "example": "JSON"
+            }
+        }
     },
     "toast_importSuccess": {
         "message": "Import Complete",
         "description": "Toast title for successful bookmark import"
     },
     "toast_importSuccessDesc": {
-        "message": "$1 items imported successfully",
-        "description": "Toast description for successful bookmark import"
+        "message": "$count$ items imported successfully",
+        "description": "Toast description for successful bookmark import",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "toast_reorganizeSuccess": {
+        "message": "Reorganization Complete",
+        "description": "Toast title after applying an AI reorganization"
+    },
+    "toast_reorganizeSuccessDesc": {
+        "message": "Bookmarks reorganized successfully",
+        "description": "Toast description after applying an AI reorganization"
     },
     "error_importFailed": {
         "message": "Import failed: $1",
         "description": "Error message for failed bookmark import"
+    },
+    "error_unsupportedFileFormat": {
+        "message": "Unsupported file format",
+        "description": "Import error for an unrecognized file type"
     },
     "export_formatHtml": {
         "message": "HTML (Chrome)",
@@ -990,6 +1058,142 @@
     "ai_applyChanges": {
         "message": "Apply Changes",
         "description": "Button text to apply reorganization changes"
+    },
+    "ai_reorgAnalyzeFailed": {
+        "message": "Failed to analyze bookmarks",
+        "description": "Reorganization error when analysis fails without details"
+    },
+    "ai_reorgStatusCollecting": {
+        "message": "Collecting bookmarks...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusCollectingDesc": {
+        "message": "Gathering folder structure and bookmark data",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusSending": {
+        "message": "Sending to AI...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusSendingDesc": {
+        "message": "Preparing request for AI analysis",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusWaiting": {
+        "message": "AI is analyzing your bookmarks...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusWaitingDesc": {
+        "message": "This may take 10-30 seconds",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusProcessing": {
+        "message": "Processing suggestions...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusProcessingDesc": {
+        "message": "Building reorganization plan",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgNewFolders": {
+        "message": "New folders: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_reorgFoldersToRemove": {
+        "message": "Folders to remove: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgRenames": {
+        "message": "Renames: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgMoves": {
+        "message": "Bookmark moves: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "8"
+            }
+        }
+    },
+    "ai_reorgViewOperations": {
+        "message": "View operations ($count$)",
+        "description": "Toggle for the reorganization operation list",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ai_reorgOp_create": {
+        "message": "Create",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_delete": {
+        "message": "Delete",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_rename": {
+        "message": "Rename",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_move": {
+        "message": "Move",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgInFolder": {
+        "message": "in $path$",
+        "description": "Parent folder of a folder to create",
+        "placeholders": {
+            "path": {
+                "content": "$1",
+                "example": "Work/Projects"
+            }
+        }
+    },
+    "ai_reorgFrom": {
+        "message": "From:",
+        "description": "Source folder label for a bookmark move"
+    },
+    "ai_reorgTo": {
+        "message": "To:",
+        "description": "Destination folder label for a bookmark move"
+    },
+    "ai_reorgDebugToggle": {
+        "message": "View AI Request & Response",
+        "description": "Toggle for AI request debug details"
+    },
+    "ai_reorgSystemPrompt": {
+        "message": "System Prompt:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgRequestData": {
+        "message": "Request Data:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgResponse": {
+        "message": "AI Response:",
+        "description": "AI debug section label"
     },
     "ai_promptFolderRecommendation": {
         "message": "Folder Recommendation",
@@ -1130,14 +1334,6 @@
     "settings_aiMaxRecommendationsDesc": {
         "message": "Maximum number of AI recommendations to request",
         "description": "Max recommendations setting description"
-    },
-    "settings_aiAutoTrigger": {
-        "message": "Auto-recommend on Open",
-        "description": "AI auto trigger label"
-    },
-    "settings_aiAutoTriggerDesc": {
-        "message": "Automatically run bookmark recommendations when the popup opens",
-        "description": "AI auto trigger description"
     },
     "settings_aiTools": {
         "message": "AI Tools",
@@ -1892,8 +2088,14 @@
         "description": "Duplicate removal success title"
     },
     "toast_duplicatesRemovedDesc": {
-        "message": "$1 duplicate bookmarks removed",
-        "description": "Duplicate removal success description"
+        "message": "$count$ duplicate bookmarks removed",
+        "description": "Duplicate removal success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_toolFailed": {
         "message": "Tool failed",
@@ -1904,24 +2106,52 @@
         "description": "URL cleaner success title"
     },
     "toast_urlCleanerAppliedDesc": {
-        "message": "$1 bookmarks updated",
-        "description": "URL cleaner success description"
+        "message": "$count$ bookmarks updated",
+        "description": "URL cleaner success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_aiContextPacked": {
         "message": "AI context exported",
         "description": "AI context export success title"
     },
     "toast_aiContextPackedDesc": {
-        "message": "$1 bookmarks exported for AI use",
-        "description": "AI context export success description"
+        "message": "$count$ bookmarks exported for AI use",
+        "description": "AI context export success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "tools_duplicatesDialogDesc": {
-        "message": "$1 duplicate groups found across $2 bookmarks",
-        "description": "Duplicate dialog description"
+        "message": "$groups$ duplicate groups found across $bookmarks$ bookmarks",
+        "description": "Duplicate dialog description",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "2"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "40"
+            }
+        }
     },
     "tools_urlCleanerDialogDesc": {
-        "message": "$1 bookmarks can be cleaned",
-        "description": "URL cleaner dialog description"
+        "message": "$count$ bookmarks can be cleaned",
+        "description": "URL cleaner dialog description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "tools_statisticsDialogDesc": {
         "message": "Snapshot of the selected bookmark scope",
@@ -1934,6 +2164,120 @@
     "tools_summarizerDialogDesc": {
         "message": "AI-generated bookmark summaries",
         "description": "Summarizer dialog description"
+    },
+    "tools_deadLinksDialogDesc": {
+        "message": "Reachability results for the selected bookmarks",
+        "description": "Dead link checker dialog description"
+    },
+    "tools_metadataDialogDesc": {
+        "message": "Metadata suggestions for the selected bookmarks",
+        "description": "Metadata fetcher dialog description"
+    },
+    "tools_privacyDialogDesc": {
+        "message": "Potential sensitive data found in the selected bookmarks",
+        "description": "Privacy scanner dialog description"
+    },
+    "tools_rootFolder": {
+        "message": "Root",
+        "description": "Label for bookmarks with no parent folder path"
+    },
+    "tools_suggestedTitle": {
+        "message": "Suggested title: $title$",
+        "description": "Metadata fetcher suggested title",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            }
+        }
+    },
+    "tools_metadataAvailable": {
+        "message": "Metadata available",
+        "description": "Metadata fetcher result when a better title was found"
+    },
+    "tools_metadataNoChange": {
+        "message": "No title change needed",
+        "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_deadLinkStatus_ok": {
+        "message": "OK",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_redirect": {
+        "message": "Redirected",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_error": {
+        "message": "Error",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_timeout": {
+        "message": "Timed out",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_invalid": {
+        "message": "Invalid",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkReachable": {
+        "message": "Reachable",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkRedirected": {
+        "message": "Redirected but reachable",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkHttpStatus": {
+        "message": "HTTP $status$",
+        "description": "Dead link result detail with the HTTP status code",
+        "placeholders": {
+            "status": {
+                "content": "$1",
+                "example": "404"
+            }
+        }
+    },
+    "tools_deadLinkTimedOut": {
+        "message": "Request timed out",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkInvalidUrl": {
+        "message": "Invalid URL",
+        "description": "Dead link result detail"
+    },
+    "tools_privacySeverity_low": {
+        "message": "Low",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_medium": {
+        "message": "Medium",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_high": {
+        "message": "High",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySensitiveParam": {
+        "message": "Sensitive query parameter: $param$",
+        "description": "Privacy finding for a sensitive URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "token"
+            }
+        }
+    },
+    "tools_privacyFragment": {
+        "message": "URL contains a fragment",
+        "description": "Privacy finding"
+    },
+    "tools_privacyEmail": {
+        "message": "Email address detected",
+        "description": "Privacy finding"
+    },
+    "tools_privacyUuid": {
+        "message": "UUID-like token detected",
+        "description": "Privacy finding"
     },
     "state_keep": {
         "message": "Keep",
@@ -1955,6 +2299,18 @@
         "message": "No AI results available.",
         "description": "No AI results state"
     },
+    "state_noDeadLinksFound": {
+        "message": "No broken links found.",
+        "description": "Dead link checker empty state"
+    },
+    "state_noMetadataFound": {
+        "message": "No metadata updates found.",
+        "description": "Metadata fetcher empty state"
+    },
+    "state_noPrivacyIssuesFound": {
+        "message": "No privacy issues found.",
+        "description": "Privacy scanner empty state"
+    },
     "action_clean": {
         "message": "Clean",
         "description": "Clean button label"
@@ -1962,6 +2318,10 @@
     "action_removing": {
         "message": "Removing...",
         "description": "Removing state label"
+    },
+    "action_applying": {
+        "message": "Applying...",
+        "description": "Button label while changes are applied"
     },
     "action_removeDuplicates": {
         "message": "Remove duplicates",

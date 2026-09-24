@@ -64,16 +64,32 @@
         "description": "Toast title for folder deletion error"
     },
     "toast_deleteUndoWindow": {
-        "message": "10秒以内に元に戻せます。復元できるのは最新の削除のみです。元のIDと日時、およびこのウィンドウを閉じた後の復元には対応していません。",
-        "description": "Limits of popup deletion recovery"
+        "message": "「$title$」を削除しました。$seconds$秒以内なら元に戻せます。",
+        "description": "Deletion toast description with the undo time limit",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "seconds": {
+                "content": "$2",
+                "example": "10"
+            }
+        }
     },
     "toast_deleteRestored": {
         "message": "削除を元に戻しました",
         "description": "Toast title after restoring a deletion"
     },
     "toast_deleteRestoredDesc": {
-        "message": "「$1」を復元しました。IDと日時はブラウザによって新しく生成されています。",
-        "description": "Toast description after restoring a deletion; $1 is the item title"
+        "message": "「$title$」を復元しました。",
+        "description": "Toast description after restoring a deletion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
     },
     "toast_errorRestoringDeletion": {
         "message": "削除を元に戻せませんでした",
@@ -468,12 +484,12 @@
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
-        "message": "起動時に自動推薦",
-        "description": "Auto trigger AI setting label"
+        "message": "起動時に自動提案",
+        "description": "AI auto trigger label"
     },
     "settings_aiAutoTriggerDesc": {
-        "message": "ポップアップを開いたときに自動的にフォルダを提案",
-        "description": "Auto trigger AI setting description"
+        "message": "ポップアップを開いたときに自動で提案を実行します",
+        "description": "AI auto trigger description"
     },
     "settings_recentFoldersMax": {
         "message": "最近のフォルダ最大数",
@@ -819,6 +835,450 @@
         "message": "確認済みの要約候補をマージ設定に従って保存しました。",
         "description": "Toast description after applying generated summaries"
     },
+    "tools_category_ai": {
+        "message": "AI・インテリジェンス",
+        "description": "AI tools category"
+    },
+    "tools_category_maintenance": {
+        "message": "メンテナンス",
+        "description": "Maintenance tools category"
+    },
+    "tools_category_metadata": {
+        "message": "メタデータ・コンテンツ",
+        "description": "Metadata tools category"
+    },
+    "tools_category_security": {
+        "message": "セキュリティ",
+        "description": "Security tools category"
+    },
+    "tools_category_analytics": {
+        "message": "分析",
+        "description": "Tools section heading for analytics tools"
+    },
+    "tools_exportAI": {
+        "message": "AIコンテキストパッカー",
+        "description": "Title for AI Export tool"
+    },
+    "tools_exportAIDesc": {
+        "message": "ブックマークをAI向けの形式（XML/Markdown）で書き出します",
+        "description": "Description for AI Export tool"
+    },
+    "tools_autoTagging": {
+        "message": "自動タグ付け",
+        "description": "Title for Auto-Tagging tool"
+    },
+    "tools_autoTaggingDesc": {
+        "message": "ブックマークのタグを自動で提案します",
+        "description": "Description for Auto-Tagging tool"
+    },
+    "tools_summarizer": {
+        "message": "コンテンツ要約",
+        "description": "Title for Summarizer tool"
+    },
+    "tools_summarizerDesc": {
+        "message": "ブックマークしたコンテンツの短い要約を生成します",
+        "description": "Description for Summarizer tool"
+    },
+    "tools_findDuplicates": {
+        "message": "重複クリーナー",
+        "description": "Title for Duplicate Cleaner tool"
+    },
+    "tools_findDuplicatesDesc": {
+        "message": "重複したブックマークを見つけて削除します",
+        "description": "Description for Duplicate Cleaner tool"
+    },
+    "tools_cleanUrls": {
+        "message": "URLクリーナー",
+        "description": "Title for URL Cleaner tool"
+    },
+    "tools_cleanUrlsDesc": {
+        "message": "URLからトラッキングパラメータを削除します",
+        "description": "Description for URL Cleaner tool"
+    },
+    "tools_metadataFetcher": {
+        "message": "メタデータ取得",
+        "description": "Title for Metadata Fetcher tool"
+    },
+    "tools_metadataFetcherDesc": {
+        "message": "欠けているタイトルとファビコンを補完します",
+        "description": "Description for Metadata Fetcher tool"
+    },
+    "tools_privacyScanner": {
+        "message": "プライバシースキャナー",
+        "description": "Title for Privacy Scanner tool"
+    },
+    "tools_privacyScannerDesc": {
+        "message": "URL内の機密データを検出します",
+        "description": "Description for Privacy Scanner tool"
+    },
+    "tools_category_data": {
+        "message": "データ",
+        "description": "Data tools category for import/export"
+    },
+    "tools_export": {
+        "message": "ブックマークを書き出す",
+        "description": "Export bookmarks tool title"
+    },
+    "tools_exportDesc": {
+        "message": "ブックマークをHTML、JSON、Markdown、CSVに書き出します",
+        "description": "Export bookmarks tool description"
+    },
+    "tools_import": {
+        "message": "ブックマークを読み込む",
+        "description": "Import bookmarks tool title"
+    },
+    "tools_importDesc": {
+        "message": "HTMLまたはJSONファイルからブックマークを読み込みます",
+        "description": "Import bookmarks tool description"
+    },
+    "tools_exportFormat": {
+        "message": "形式",
+        "description": "Placeholder for the export format selector"
+    },
+    "tools_exporting": {
+        "message": "書き出し中...",
+        "description": "Export button label while exporting"
+    },
+    "tools_importing": {
+        "message": "読み込み中...",
+        "description": "Import button label while importing"
+    },
+    "tools_scopeSelect": {
+        "message": "範囲を選択",
+        "description": "Placeholder for a tool scope selector"
+    },
+    "tools_running": {
+        "message": "実行中...",
+        "description": "Tool button label while the tool runs"
+    },
+    "toast_exportSuccess": {
+        "message": "書き出し完了",
+        "description": "Toast title for successful bookmark export"
+    },
+    "toast_exportSuccessDesc": {
+        "message": "$count$ 件のブックマークを $format$ 形式で書き出しました",
+        "description": "Toast description for successful bookmark export",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "format": {
+                "content": "$2",
+                "example": "JSON"
+            }
+        }
+    },
+    "toast_importSuccess": {
+        "message": "読み込み完了",
+        "description": "Toast title for successful bookmark import"
+    },
+    "toast_importSuccessDesc": {
+        "message": "$count$ 件の項目を読み込みました",
+        "description": "Toast description for successful bookmark import",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "toast_reorganizeSuccess": {
+        "message": "再整理が完了しました",
+        "description": "Toast title after applying an AI reorganization"
+    },
+    "toast_reorganizeSuccessDesc": {
+        "message": "ブックマークを再整理しました",
+        "description": "Toast description after applying an AI reorganization"
+    },
+    "error_importFailed": {
+        "message": "読み込みに失敗しました: $1",
+        "description": "Error message for failed bookmark import"
+    },
+    "error_unsupportedFileFormat": {
+        "message": "サポートされていないファイル形式です",
+        "description": "Import error for an unrecognized file type"
+    },
+    "export_formatHtml": {
+        "message": "HTML（Chrome）",
+        "description": "Export format name for HTML/Chrome format"
+    },
+    "export_formatJson": {
+        "message": "JSON",
+        "description": "Export format name for JSON format"
+    },
+    "export_formatMarkdown": {
+        "message": "Markdown",
+        "description": "Export format name for Markdown format"
+    },
+    "export_formatCsv": {
+        "message": "CSV",
+        "description": "Export format name for CSV format"
+    },
+    "export_htmlTitle": {
+        "message": "ブックマーク",
+        "description": "Title in exported HTML bookmark file"
+    },
+    "export_csvTitle": {
+        "message": "タイトル",
+        "description": "CSV header for bookmark title column"
+    },
+    "export_csvUrl": {
+        "message": "URL",
+        "description": "CSV header for bookmark URL column"
+    },
+    "export_csvFolder": {
+        "message": "フォルダ",
+        "description": "CSV header for bookmark folder column"
+    },
+    "export_csvDateAdded": {
+        "message": "追加日",
+        "description": "CSV header for bookmark date added column"
+    },
+    "ai_reorganizationTitle": {
+        "message": "AIフォルダ再整理",
+        "description": "Title for AI reorganization dialog"
+    },
+    "ai_reorganizationDesc": {
+        "message": "適用する前に提案された変更を確認してください。承認するまで変更は行われません。",
+        "description": "Description for AI reorganization dialog"
+    },
+    "ai_analyzing": {
+        "message": "ブックマークを分析中...",
+        "description": "Loading text while AI analyzes bookmarks"
+    },
+    "ai_noChangesNeeded": {
+        "message": "ブックマークはすでに整理されています！",
+        "description": "Message when no reorganization is needed"
+    },
+    "ai_applying": {
+        "message": "適用中...",
+        "description": "Button text while applying changes"
+    },
+    "ai_applyChanges": {
+        "message": "変更を適用",
+        "description": "Button text to apply reorganization changes"
+    },
+    "ai_reorgAnalyzeFailed": {
+        "message": "ブックマークを分析できませんでした",
+        "description": "Reorganization error when analysis fails without details"
+    },
+    "ai_reorgStatusCollecting": {
+        "message": "ブックマークを収集中...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusCollectingDesc": {
+        "message": "フォルダ構造とブックマークのデータを集めています",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusSending": {
+        "message": "AIに送信中...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusSendingDesc": {
+        "message": "AI分析用のリクエストを準備しています",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusWaiting": {
+        "message": "AIがブックマークを分析中...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusWaitingDesc": {
+        "message": "10〜30秒ほどかかる場合があります",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusProcessing": {
+        "message": "提案を処理中...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusProcessingDesc": {
+        "message": "再整理プランを作成しています",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgNewFolders": {
+        "message": "新しいフォルダ: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_reorgFoldersToRemove": {
+        "message": "削除するフォルダ: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgRenames": {
+        "message": "名前の変更: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgMoves": {
+        "message": "ブックマークの移動: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "8"
+            }
+        }
+    },
+    "ai_reorgViewOperations": {
+        "message": "操作を表示（$count$）",
+        "description": "Toggle for the reorganization operation list",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ai_reorgOp_create": {
+        "message": "作成",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_delete": {
+        "message": "削除",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_rename": {
+        "message": "名前変更",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_move": {
+        "message": "移動",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgInFolder": {
+        "message": "場所: $path$",
+        "description": "Parent folder of a folder to create",
+        "placeholders": {
+            "path": {
+                "content": "$1",
+                "example": "Work/Projects"
+            }
+        }
+    },
+    "ai_reorgFrom": {
+        "message": "移動元:",
+        "description": "Source folder label for a bookmark move"
+    },
+    "ai_reorgTo": {
+        "message": "移動先:",
+        "description": "Destination folder label for a bookmark move"
+    },
+    "ai_reorgDebugToggle": {
+        "message": "AIのリクエストとレスポンスを表示",
+        "description": "Toggle for AI request debug details"
+    },
+    "ai_reorgSystemPrompt": {
+        "message": "システムプロンプト:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgRequestData": {
+        "message": "リクエストデータ:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgResponse": {
+        "message": "AIのレスポンス:",
+        "description": "AI debug section label"
+    },
+    "ai_promptFolderRecommendation": {
+        "message": "フォルダの提案",
+        "description": "Name for folder recommendation prompt"
+    },
+    "ai_promptFolderRecommendationDesc": {
+        "message": "新しいブックマークに最適なフォルダを提案します",
+        "description": "Description for folder recommendation prompt"
+    },
+    "ai_promptFolderReorganization": {
+        "message": "フォルダ再整理",
+        "description": "Name for folder reorganization prompt"
+    },
+    "ai_promptFolderReorganizationDesc": {
+        "message": "ブックマークフォルダを分析して再構成します",
+        "description": "Description for folder reorganization prompt"
+    },
+    "ai_promptAutoTagging": {
+        "message": "自動タグ付け",
+        "description": "Name for auto tagging prompt"
+    },
+    "ai_promptAutoTaggingDesc": {
+        "message": "内容に基づいてブックマークのタグを提案します",
+        "description": "Description for auto tagging prompt"
+    },
+    "ai_promptSummarization": {
+        "message": "コンテンツ要約",
+        "description": "Name for summarization prompt"
+    },
+    "ai_promptSummarizationDesc": {
+        "message": "ブックマークの短い説明を生成します",
+        "description": "Description for summarization prompt"
+    },
+    "contextMenu_saveToFolder": {
+        "message": "ブックマークの保存先...",
+        "description": "Root context menu item title"
+    },
+    "contextMenu_noFolders": {
+        "message": "利用できるフォルダがありません",
+        "description": "Placeholder when no folders to show"
+    },
+    "contextMenu_bookmarksBar": {
+        "message": "ブックマークバー",
+        "description": "Bookmarks bar folder name"
+    },
+    "toast_linkSaved": {
+        "message": "リンクを保存しました",
+        "description": "Toast title when link saved via context menu"
+    },
+    "toast_linkSavedDesc": {
+        "message": "「$1」を「$2」に追加しました",
+        "description": "Toast description for link saved"
+    },
+    "toast_linkSaveFailed": {
+        "message": "リンクを保存できませんでした",
+        "description": "Toast title when link save fails"
+    },
+    "settings_contextMenuEnabled": {
+        "message": "コンテキストメニュー",
+        "description": "Context menu enabled setting label"
+    },
+    "settings_contextMenuEnabledDesc": {
+        "message": "右クリックメニューからすばやくブックマークを保存します",
+        "description": "Context menu enabled setting description"
+    },
+    "settings_contextMenuNaming": {
+        "message": "ブックマーク名の取得元",
+        "description": "Context menu bookmark naming setting label"
+    },
+    "settings_contextMenuNamingDesc": {
+        "message": "右クリックで保存するときにブックマークのタイトルとして使うもの",
+        "description": "Context menu bookmark naming setting description"
+    },
+    "settings_namingLinkText": {
+        "message": "リンクテキスト",
+        "description": "Use link text for bookmark name"
+    },
+    "settings_namingPageTitle": {
+        "message": "ページタイトル",
+        "description": "Use page title for bookmark name"
+    },
+    "settings_namingLinkUrl": {
+        "message": "リンクURL",
+        "description": "Use link URL for bookmark name"
+    },
     "search_matchCase": {
         "message": "大文字/小文字を区別",
         "description": "Toggle case-sensitive search"
@@ -875,14 +1335,6 @@
         "message": "AIに要求する候補の最大数です",
         "description": "Max recommendations setting description"
     },
-    "settings_aiAutoTrigger": {
-        "message": "起動時に自動提案",
-        "description": "AI auto trigger label"
-    },
-    "settings_aiAutoTriggerDesc": {
-        "message": "ポップアップを開いたときに自動で提案を実行します",
-        "description": "AI auto trigger description"
-    },
     "settings_aiTools": {
         "message": "AIツール",
         "description": "AI tools settings tab label"
@@ -931,6 +1383,86 @@
         "message": "インポート・エクスポート設定を管理します",
         "description": "Data settings tab description"
     },
+    "settings_aiMaxCategories": {
+        "message": "最大カテゴリ数",
+        "description": "AI reorganization max categories label"
+    },
+    "settings_aiMaxCategoriesDesc": {
+        "message": "AIが作成できる最上位カテゴリの最大数（-1で無制限）",
+        "description": "AI reorganization max categories description"
+    },
+    "settings_aiMinItemsPerFolder": {
+        "message": "フォルダあたりの最小件数",
+        "description": "AI reorganization min items label"
+    },
+    "settings_aiMinItemsPerFolderDesc": {
+        "message": "AIが1フォルダあたりに目指すブックマークの最小数",
+        "description": "AI reorganization min items description"
+    },
+    "settings_aiMaxItemsPerFolder": {
+        "message": "フォルダあたりの最大件数",
+        "description": "AI reorganization max items label"
+    },
+    "settings_aiMaxItemsPerFolderDesc": {
+        "message": "AIが1フォルダあたりに目指すブックマークの最大数（-1で無制限）",
+        "description": "AI reorganization max items description"
+    },
+    "settings_exportFilenamePrefix": {
+        "message": "ファイル名の接頭辞",
+        "description": "Export filename prefix label"
+    },
+    "settings_exportFilenamePrefixDesc": {
+        "message": "ブックマークの書き出しファイル名に付ける接頭辞",
+        "description": "Export filename prefix description"
+    },
+    "settings_exportFilenameMaxLength": {
+        "message": "ファイル名の最大長",
+        "description": "Export filename max length label"
+    },
+    "settings_exportFilenameMaxLengthDesc": {
+        "message": "生成される書き出しファイル名の最大文字数",
+        "description": "Export filename max length description"
+    },
+    "settings_exportJsonIndentSize": {
+        "message": "JSONのインデント幅",
+        "description": "JSON indent size label"
+    },
+    "settings_exportJsonIndentSizeDesc": {
+        "message": "JSON書き出しで使うスペースの数",
+        "description": "JSON indent size description"
+    },
+    "settings_exportHtmlIndentSpaces": {
+        "message": "HTMLのインデント幅",
+        "description": "HTML indent size label"
+    },
+    "settings_exportHtmlIndentSpacesDesc": {
+        "message": "HTML書き出しで使うスペースの数",
+        "description": "HTML indent size description"
+    },
+    "settings_exportMarkdownIndentSpaces": {
+        "message": "Markdownのインデント幅",
+        "description": "Markdown indent size label"
+    },
+    "settings_exportMarkdownIndentSpacesDesc": {
+        "message": "Markdown書き出しで使うスペースの数",
+        "description": "Markdown indent size description"
+    },
+    "settings_exportIncludeDates": {
+        "message": "日付を含める",
+        "description": "Export include dates label"
+    },
+    "settings_exportIncludeDatesDesc": {
+        "message": "既定で書き出しにブックマークの作成日を含めます",
+        "description": "Export include dates description"
+    },
+    "settings_exportIncludeUrls": {
+        "message": "URLを含める",
+        "description": "Export include URLs label"
+    },
+    "settings_exportIncludeUrlsDesc": {
+        "message": "既定で書き出しにブックマークのURLを含めます",
+        "description": "Export include URLs description"
+    },
     "settings_scopeFolder": {
         "message": "現在のフォルダ",
         "description": "Folder scope option label"
@@ -951,13 +1483,619 @@
         "message": "置換",
         "description": "Merge replace option label"
     },
+    "settings_aiContextPackerEnabled": {
+        "message": "AIコンテキストパッカーを有効化",
+        "description": "AI context packer enabled label"
+    },
+    "settings_aiContextPackerEnabledDesc": {
+        "message": "ブックマークをAI向けの形式で書き出せるようにします",
+        "description": "AI context packer enabled description"
+    },
+    "settings_aiContextPackerDefaultScope": {
+        "message": "既定の範囲",
+        "description": "AI context packer default scope label"
+    },
+    "settings_aiContextPackerDefaultScopeDesc": {
+        "message": "AIコンテキストを書き出すときの既定の範囲",
+        "description": "AI context packer default scope description"
+    },
+    "settings_aiContextPackerOutputFormat": {
+        "message": "出力形式",
+        "description": "AI context packer output format label"
+    },
+    "settings_aiContextPackerOutputFormatDesc": {
+        "message": "AIコンテキストの書き出し形式（MarkdownまたはXML）",
+        "description": "AI context packer output format description"
+    },
+    "settings_aiContextPackerIncludeFolderPath": {
+        "message": "フォルダパスを含める",
+        "description": "AI context packer include folder path label"
+    },
+    "settings_aiContextPackerIncludeFolderPathDesc": {
+        "message": "書き出すAIコンテキストに各ブックマークのフォルダパスを含めます",
+        "description": "AI context packer include folder path description"
+    },
+    "settings_aiContextPackerIncludeDates": {
+        "message": "日付を含める",
+        "description": "AI context packer include dates label"
+    },
+    "settings_aiContextPackerIncludeDatesDesc": {
+        "message": "AIコンテキストの書き出しにブックマークの作成日を含めます",
+        "description": "AI context packer include dates description"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "保存済みタグを含める",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "ブックマークに保存済みメタデータがある場合のみタグを含めます",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "保存済み要約を含める",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "ブックマークに保存済みメタデータがある場合のみ要約を含めます",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerMaxItems": {
+        "message": "最大件数",
+        "description": "AI context packer max items label"
+    },
+    "settings_aiContextPackerMaxItemsDesc": {
+        "message": "1回のAIコンテキスト書き出しに含めるブックマークの最大数",
+        "description": "AI context packer max items description"
+    },
+    "settings_aiContextPackerMaxDepth": {
+        "message": "最大階層",
+        "description": "AI context packer max depth label"
+    },
+    "settings_aiContextPackerMaxDepthDesc": {
+        "message": "AIコンテキストの書き出しに含めるフォルダの最大階層",
+        "description": "AI context packer max depth description"
+    },
+    "settings_aiContextPackerExcerptLength": {
+        "message": "抜粋の長さ",
+        "description": "AI context packer excerpt length label"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AIコンテキストに書き出す保存済み要約の最大文字数",
+        "description": "AI context packer excerpt length description"
+    },
+    "settings_autoTaggingEnabled": {
+        "message": "自動タグ付けを有効化",
+        "description": "Auto-tagging enabled label"
+    },
+    "settings_autoTaggingEnabledDesc": {
+        "message": "AIがブックマークのタグを提案できるようにします",
+        "description": "Auto-tagging enabled description"
+    },
+    "settings_autoTaggingDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Auto-tagging default scope label"
+    },
+    "settings_autoTaggingDefaultScopeDesc": {
+        "message": "自動タグ付けを実行するときの既定の範囲",
+        "description": "Auto-tagging default scope description"
+    },
+    "settings_autoTaggingMinTags": {
+        "message": "最小タグ数",
+        "description": "Auto-tagging minimum tags label"
+    },
+    "settings_autoTaggingMinTagsDesc": {
+        "message": "AIがブックマークごとに生成するタグの最小数",
+        "description": "Auto-tagging minimum tags description"
+    },
+    "settings_autoTaggingMaxTags": {
+        "message": "最大タグ数",
+        "description": "Auto-tagging maximum tags label"
+    },
+    "settings_autoTaggingMaxTagsDesc": {
+        "message": "AIがブックマークごとに生成するタグの最大数",
+        "description": "Auto-tagging maximum tags description"
+    },
+    "settings_autoTaggingTagStyle": {
+        "message": "タグのスタイル",
+        "description": "Auto-tagging tag style label"
+    },
+    "settings_autoTaggingTagStyleDesc": {
+        "message": "生成されるタグの表記スタイル",
+        "description": "Auto-tagging tag style description"
+    },
+    "settings_autoTaggingMergeMode": {
+        "message": "統合モード",
+        "description": "Auto-tagging merge mode label"
+    },
+    "settings_autoTaggingMergeModeDesc": {
+        "message": "確認した提案を保存するとき、「追加」は保存済みのタグに加え、「置換」は保存済みのタグを上書きします",
+        "description": "Auto-tagging merge mode description"
+    },
+    "settings_autoTaggingDedupeTags": {
+        "message": "重複タグを削除",
+        "description": "Auto-tagging dedupe tag label"
+    },
+    "settings_autoTaggingDedupeTagsDesc": {
+        "message": "確認した提案を保存するとき、大文字と小文字だけが異なる重複タグを除外します",
+        "description": "Auto-tagging dedupe tag description"
+    },
+    "settings_summarizerEnabled": {
+        "message": "コンテンツ要約を有効化",
+        "description": "Summarizer enabled label"
+    },
+    "settings_summarizerEnabledDesc": {
+        "message": "AIがブックマークの要約を作成できるようにします",
+        "description": "Summarizer enabled description"
+    },
+    "settings_summarizerDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Summarizer default scope label"
+    },
+    "settings_summarizerDefaultScopeDesc": {
+        "message": "ブックマークを要約するときの既定の範囲",
+        "description": "Summarizer default scope description"
+    },
+    "settings_summarizerSummaryLength": {
+        "message": "要約の長さ",
+        "description": "Summarizer length label"
+    },
+    "settings_summarizerSummaryLengthDesc": {
+        "message": "生成される要約の目標最大長",
+        "description": "Summarizer length description"
+    },
+    "settings_summarizerIncludeDomainHint": {
+        "message": "ドメインのヒントを含める",
+        "description": "Summarizer include domain hint label"
+    },
+    "settings_summarizerIncludeDomainHintDesc": {
+        "message": "ブックマークのドメインを追加のAIコンテキストとして含めます",
+        "description": "Summarizer include domain hint description"
+    },
+    "settings_summarizerMergeMode": {
+        "message": "統合モード",
+        "description": "Summarizer merge mode label"
+    },
+    "settings_summarizerMergeModeDesc": {
+        "message": "確認した要約を保存するとき、「追加」は保存済みの要約の後に加え、「置換」は上書きします",
+        "description": "Summarizer merge mode description"
+    },
+    "settings_reorganizationEnabled": {
+        "message": "AI再整理を有効化",
+        "description": "Reorganization enabled label"
+    },
+    "settings_reorganizationEnabledDesc": {
+        "message": "AIがフォルダの再整理プランを提案できるようにします",
+        "description": "Reorganization enabled description"
+    },
+    "settings_reorganizationDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Reorganization default scope label"
+    },
+    "settings_reorganizationDefaultScopeDesc": {
+        "message": "AIフォルダ再整理の既定の範囲",
+        "description": "Reorganization default scope description"
+    },
+    "settings_reorganizationDryRunFirst": {
+        "message": "常に先にプレビュー",
+        "description": "Reorganization dry run label"
+    },
+    "settings_reorganizationDryRunFirstDesc": {
+        "message": "変更を適用する前に再整理プランを表示します",
+        "description": "Reorganization dry run description"
+    },
+    "settings_reorganizationMinConfidence": {
+        "message": "最小信頼度",
+        "description": "Reorganization minimum confidence label"
+    },
+    "settings_reorganizationMinConfidenceDesc": {
+        "message": "ブックマークの移動提案に必要な最小信頼度スコア",
+        "description": "Reorganization minimum confidence description"
+    },
+    "settings_reorganizationBatchSize": {
+        "message": "バッチサイズ",
+        "description": "Reorganization batch size label"
+    },
+    "settings_reorganizationBatchSizeDesc": {
+        "message": "再整理の1バッチで送信するブックマークの最大数",
+        "description": "Reorganization batch size description"
+    },
+    "settings_duplicatesEnabled": {
+        "message": "重複クリーナーを有効化",
+        "description": "Duplicate cleaner enabled label"
+    },
+    "settings_duplicatesEnabledDesc": {
+        "message": "重複したブックマークをスキャンできるようにします",
+        "description": "Duplicate cleaner enabled description"
+    },
+    "settings_duplicatesDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Duplicate cleaner default scope label"
+    },
+    "settings_duplicatesDefaultScopeDesc": {
+        "message": "重複したブックマークをスキャンするときの既定の範囲",
+        "description": "Duplicate cleaner default scope description"
+    },
+    "settings_duplicatesMatchStrategy": {
+        "message": "照合方法",
+        "description": "Duplicate cleaner match strategy label"
+    },
+    "settings_duplicatesMatchStrategyDesc": {
+        "message": "重複を探すときのブックマークの比較方法",
+        "description": "Duplicate cleaner match strategy description"
+    },
+    "settings_duplicatesNormalizeWww": {
+        "message": "wwwを正規化",
+        "description": "Duplicate cleaner normalize www label"
+    },
+    "settings_duplicatesNormalizeWwwDesc": {
+        "message": "www.example.com と example.com を同じホストとして扱います",
+        "description": "Duplicate cleaner normalize www description"
+    },
+    "settings_duplicatesIgnoreProtocol": {
+        "message": "プロトコルを無視",
+        "description": "Duplicate cleaner ignore protocol label"
+    },
+    "settings_duplicatesIgnoreProtocolDesc": {
+        "message": "httpとhttpsのURLを重複として扱います",
+        "description": "Duplicate cleaner ignore protocol description"
+    },
+    "settings_duplicatesIgnoreTrailingSlash": {
+        "message": "末尾のスラッシュを無視",
+        "description": "Duplicate cleaner ignore trailing slash label"
+    },
+    "settings_duplicatesIgnoreTrailingSlashDesc": {
+        "message": "末尾のスラッシュの有無だけが異なるURLを重複として扱います",
+        "description": "Duplicate cleaner ignore trailing slash description"
+    },
+    "settings_duplicatesKeepRule": {
+        "message": "保持ルール",
+        "description": "Duplicate cleaner keep rule label"
+    },
+    "settings_duplicatesKeepRuleDesc": {
+        "message": "重複を削除するときに残すブックマークを選びます",
+        "description": "Duplicate cleaner keep rule description"
+    },
+    "settings_duplicatesMaxGroups": {
+        "message": "最大グループ数",
+        "description": "Duplicate cleaner max groups label"
+    },
+    "settings_duplicatesMaxGroupsDesc": {
+        "message": "1回のスキャンで返す重複グループの最大数",
+        "description": "Duplicate cleaner max groups description"
+    },
+    "settings_urlCleanerEnabled": {
+        "message": "URLクリーナーを有効化",
+        "description": "URL cleaner enabled label"
+    },
+    "settings_urlCleanerEnabledDesc": {
+        "message": "ブックマークのURLからトラッキングパラメータを削除できるようにします",
+        "description": "URL cleaner enabled description"
+    },
+    "settings_urlCleanerDefaultScope": {
+        "message": "既定の範囲",
+        "description": "URL cleaner default scope label"
+    },
+    "settings_urlCleanerDefaultScopeDesc": {
+        "message": "ブックマークのURLをクリーンアップするときの既定の範囲",
+        "description": "URL cleaner default scope description"
+    },
+    "settings_urlCleanerRemoveHash": {
+        "message": "フラグメントを削除",
+        "description": "URL cleaner remove hash label"
+    },
+    "settings_urlCleanerRemoveHashDesc": {
+        "message": "クリーンアップしたURLから #section などのフラグメントを削除します",
+        "description": "URL cleaner remove hash description"
+    },
+    "settings_urlCleanerSortQueryParams": {
+        "message": "クエリパラメータを並べ替え",
+        "description": "URL cleaner sort query params label"
+    },
+    "settings_urlCleanerSortQueryParamsDesc": {
+        "message": "残ったクエリパラメータをアルファベット順に並べ替えます",
+        "description": "URL cleaner sort query params description"
+    },
+    "settings_urlCleanerDedupeQueryParams": {
+        "message": "クエリパラメータの重複を削除",
+        "description": "URL cleaner dedupe query params label"
+    },
+    "settings_urlCleanerDedupeQueryParamsDesc": {
+        "message": "URLのクリーンアップ時に重複したクエリパラメータを削除します",
+        "description": "URL cleaner dedupe query params description"
+    },
+    "settings_urlCleanerPreserveParams": {
+        "message": "保持するパラメータ",
+        "description": "URL cleaner preserve params label"
+    },
+    "settings_urlCleanerPreserveParamsDesc": {
+        "message": "削除しないクエリパラメータ（カンマ区切り）",
+        "description": "URL cleaner preserve params description"
+    },
+    "settings_urlCleanerRemoveParams": {
+        "message": "削除するパラメータ",
+        "description": "URL cleaner remove params label"
+    },
+    "settings_urlCleanerRemoveParamsDesc": {
+        "message": "URLから削除するクエリパラメータ（カンマ区切り）",
+        "description": "URL cleaner remove params description"
+    },
+    "settings_deadLinksEnabled": {
+        "message": "リンク切れチェックを有効化",
+        "description": "Dead links enabled label"
+    },
+    "settings_deadLinksEnabledDesc": {
+        "message": "ブックマークにアクセスできないURLがないか確認できるようにします",
+        "description": "Dead links enabled description"
+    },
+    "settings_deadLinksDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Dead links default scope label"
+    },
+    "settings_deadLinksDefaultScopeDesc": {
+        "message": "リンク切れを確認するときの既定の範囲",
+        "description": "Dead links default scope description"
+    },
+    "settings_deadLinksRequestTimeoutMs": {
+        "message": "リクエストのタイムアウト",
+        "description": "Dead links request timeout label"
+    },
+    "settings_deadLinksRequestTimeoutMsDesc": {
+        "message": "各リンク確認リクエストを待つ最大時間",
+        "description": "Dead links request timeout description"
+    },
+    "settings_deadLinksConcurrency": {
+        "message": "同時実行数",
+        "description": "Dead links concurrency label"
+    },
+    "settings_deadLinksConcurrencyDesc": {
+        "message": "リンク切れスキャン中の同時リクエスト数",
+        "description": "Dead links concurrency description"
+    },
+    "settings_deadLinksRetryCount": {
+        "message": "再試行回数",
+        "description": "Dead links retry count label"
+    },
+    "settings_deadLinksRetryCountDesc": {
+        "message": "失敗したリンク確認を再試行する回数",
+        "description": "Dead links retry count description"
+    },
+    "settings_deadLinksFollowRedirects": {
+        "message": "リダイレクトをたどる",
+        "description": "Dead links follow redirects label"
+    },
+    "settings_deadLinksFollowRedirectsDesc": {
+        "message": "リンク切れスキャンでリダイレクトされたURLをアクセス可能として扱います",
+        "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksSuccessStatuses": {
+        "message": "成功とみなすステータスコード",
+        "description": "Dead links success statuses label"
+    },
+    "settings_deadLinksSuccessStatusesDesc": {
+        "message": "アクセス可能として扱うHTTPステータスコード（カンマ区切り）",
+        "description": "Dead links success statuses description"
+    },
+    "settings_metadataFetcherEnabled": {
+        "message": "メタデータ取得を有効化",
+        "description": "Metadata fetcher enabled label"
+    },
+    "settings_metadataFetcherEnabledDesc": {
+        "message": "欠けているブックマークのメタデータを取得できるようにします",
+        "description": "Metadata fetcher enabled description"
+    },
+    "settings_metadataFetcherDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Metadata fetcher default scope label"
+    },
+    "settings_metadataFetcherDefaultScopeDesc": {
+        "message": "メタデータを取得するときの既定の範囲",
+        "description": "Metadata fetcher default scope description"
+    },
+    "settings_metadataFetcherOverwriteTitles": {
+        "message": "タイトルを上書き",
+        "description": "Metadata fetcher overwrite titles label"
+    },
+    "settings_metadataFetcherOverwriteTitlesDesc": {
+        "message": "より良いメタデータが見つかったら既存のブックマークタイトルを置き換えます",
+        "description": "Metadata fetcher overwrite titles description"
+    },
+    "settings_metadataFetcherFetchFavicons": {
+        "message": "ファビコンを取得",
+        "description": "Metadata fetcher fetch favicons label"
+    },
+    "settings_metadataFetcherFetchFaviconsDesc": {
+        "message": "欠けている、または古いファビコンの更新を試みます",
+        "description": "Metadata fetcher fetch favicons description"
+    },
+    "settings_metadataFetcherFetchDescriptions": {
+        "message": "説明を取得",
+        "description": "Metadata fetcher fetch descriptions label"
+    },
+    "settings_metadataFetcherFetchDescriptionsDesc": {
+        "message": "ブックマークの短いメタデータ説明の取得を試みます",
+        "description": "Metadata fetcher fetch descriptions description"
+    },
+    "settings_metadataFetcherRequestTimeoutMs": {
+        "message": "リクエストのタイムアウト",
+        "description": "Metadata fetcher timeout label"
+    },
+    "settings_metadataFetcherRequestTimeoutMsDesc": {
+        "message": "各メタデータリクエストを待つ最大時間",
+        "description": "Metadata fetcher timeout description"
+    },
+    "settings_metadataFetcherConcurrency": {
+        "message": "同時実行数",
+        "description": "Metadata fetcher concurrency label"
+    },
+    "settings_metadataFetcherConcurrencyDesc": {
+        "message": "メタデータ取得時の同時リクエスト数",
+        "description": "Metadata fetcher concurrency description"
+    },
+    "settings_privacyScannerEnabled": {
+        "message": "プライバシースキャナーを有効化",
+        "description": "Privacy scanner enabled label"
+    },
+    "settings_privacyScannerEnabledDesc": {
+        "message": "ブックマークのURLに機密データがないかスキャンできるようにします",
+        "description": "Privacy scanner enabled description"
+    },
+    "settings_privacyScannerDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Privacy scanner default scope label"
+    },
+    "settings_privacyScannerDefaultScopeDesc": {
+        "message": "機密データをスキャンするときの既定の範囲",
+        "description": "Privacy scanner default scope description"
+    },
+    "settings_privacyScannerScanTitles": {
+        "message": "タイトルをスキャン",
+        "description": "Privacy scanner scan titles label"
+    },
+    "settings_privacyScannerScanTitlesDesc": {
+        "message": "URLに加えてブックマークのタイトルも機密情報がないか確認します",
+        "description": "Privacy scanner scan titles description"
+    },
+    "settings_privacyScannerScanQueryParams": {
+        "message": "クエリパラメータをスキャン",
+        "description": "Privacy scanner scan query params label"
+    },
+    "settings_privacyScannerScanQueryParamsDesc": {
+        "message": "クエリパラメータにシークレットや機密データがないか調べます",
+        "description": "Privacy scanner scan query params description"
+    },
+    "settings_privacyScannerScanFragments": {
+        "message": "フラグメントをスキャン",
+        "description": "Privacy scanner scan fragments label"
+    },
+    "settings_privacyScannerScanFragmentsDesc": {
+        "message": "URLフラグメントに機密データがないか調べます",
+        "description": "Privacy scanner scan fragments description"
+    },
+    "settings_privacyScannerSensitiveParams": {
+        "message": "機密パラメータ",
+        "description": "Privacy scanner sensitive params label"
+    },
+    "settings_privacyScannerSensitiveParamsDesc": {
+        "message": "機密として検出するパラメータ名（カンマ区切り）",
+        "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerEmailDetection": {
+        "message": "メールアドレスを検出",
+        "description": "Privacy scanner email detection label"
+    },
+    "settings_privacyScannerEmailDetectionDesc": {
+        "message": "ブックマークのURLやタイトルに含まれるメールアドレスを検出します",
+        "description": "Privacy scanner email detection description"
+    },
+    "settings_privacyScannerUuidDetection": {
+        "message": "UUIDを検出",
+        "description": "Privacy scanner uuid detection label"
+    },
+    "settings_privacyScannerUuidDetectionDesc": {
+        "message": "ブックマークのURLに含まれるUUIDのような値を検出します",
+        "description": "Privacy scanner uuid detection description"
+    },
+    "settings_statisticsEnabled": {
+        "message": "統計を有効化",
+        "description": "Statistics enabled label"
+    },
+    "settings_statisticsEnabledDesc": {
+        "message": "ブックマークの統計レポートを生成できるようにします",
+        "description": "Statistics enabled description"
+    },
+    "settings_statisticsDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Statistics default scope label"
+    },
+    "settings_statisticsDefaultScopeDesc": {
+        "message": "ブックマーク統計を表示するときの既定の範囲",
+        "description": "Statistics default scope description"
+    },
+    "settings_statisticsIncludeDomains": {
+        "message": "ドメインを含める",
+        "description": "Statistics include domains label"
+    },
+    "settings_statisticsIncludeDomainsDesc": {
+        "message": "ブックマーク統計に上位ドメインを含めます",
+        "description": "Statistics include domains description"
+    },
+    "settings_statisticsIncludeFolders": {
+        "message": "フォルダを含める",
+        "description": "Statistics include folders label"
+    },
+    "settings_statisticsIncludeFoldersDesc": {
+        "message": "ブックマーク統計に上位フォルダを含めます",
+        "description": "Statistics include folders description"
+    },
+    "settings_statisticsIncludeDuplicates": {
+        "message": "重複を含める",
+        "description": "Statistics include duplicates label"
+    },
+    "settings_statisticsIncludeDuplicatesDesc": {
+        "message": "統計に重複ブックマークの件数を含めます",
+        "description": "Statistics include duplicates description"
+    },
+    "settings_statisticsIncludeProtocols": {
+        "message": "プロトコルを含める",
+        "description": "Statistics include protocols label"
+    },
+    "settings_statisticsIncludeProtocolsDesc": {
+        "message": "統計にURLプロトコルの内訳を含めます",
+        "description": "Statistics include protocols description"
+    },
+    "settings_statisticsIncludeDepthBreakdown": {
+        "message": "階層の内訳を含める",
+        "description": "Statistics include depth breakdown label"
+    },
+    "settings_statisticsIncludeDepthBreakdownDesc": {
+        "message": "統計にフォルダの最も深い階層を含めます",
+        "description": "Statistics include depth breakdown description"
+    },
+    "settings_statisticsTopN": {
+        "message": "上位N件",
+        "description": "Statistics top N label"
+    },
+    "settings_statisticsTopNDesc": {
+        "message": "上位ドメインと上位フォルダのリストに表示する最大件数",
+        "description": "Statistics top N description"
+    },
+    "settings_dataShowExport": {
+        "message": "書き出しツールを表示",
+        "description": "Data export tool visibility label"
+    },
+    "settings_dataShowExportDesc": {
+        "message": "サイドバーにブックマーク書き出しツールを表示します",
+        "description": "Data export tool visibility description"
+    },
+    "settings_dataShowImport": {
+        "message": "読み込みツールを表示",
+        "description": "Data import tool visibility label"
+    },
+    "settings_dataShowImportDesc": {
+        "message": "サイドバーにブックマーク読み込みツールを表示します",
+        "description": "Data import tool visibility description"
+    },
+    "settings_dataDefaultExportFormat": {
+        "message": "既定の書き出し形式",
+        "description": "Default export format label"
+    },
+    "settings_dataDefaultExportFormatDesc": {
+        "message": "ブックマーク書き出しツールで最初に選択される形式",
+        "description": "Default export format description"
+    },
     "toast_duplicatesRemoved": {
         "message": "重複を削除しました",
         "description": "Duplicate removal success title"
     },
     "toast_duplicatesRemovedDesc": {
-        "message": "$1 件の重複ブックマークを削除しました",
-        "description": "Duplicate removal success description"
+        "message": "$count$ 件の重複ブックマークを削除しました",
+        "description": "Duplicate removal success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_toolFailed": {
         "message": "ツールの実行に失敗しました",
@@ -968,24 +2106,52 @@
         "description": "URL cleaner success title"
     },
     "toast_urlCleanerAppliedDesc": {
-        "message": "$1 件のブックマークを更新しました",
-        "description": "URL cleaner success description"
+        "message": "$count$ 件のブックマークを更新しました",
+        "description": "URL cleaner success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_aiContextPacked": {
         "message": "AI用コンテキストを書き出しました",
         "description": "AI context export success title"
     },
     "toast_aiContextPackedDesc": {
-        "message": "$1 件のブックマークをAI用に書き出しました",
-        "description": "AI context export success description"
+        "message": "$count$ 件のブックマークをAI用に書き出しました",
+        "description": "AI context export success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "tools_duplicatesDialogDesc": {
-        "message": "$2 件のブックマークから $1 個の重複グループが見つかりました",
-        "description": "Duplicate dialog description"
+        "message": "$bookmarks$ 件のブックマークから $groups$ 個の重複グループが見つかりました",
+        "description": "Duplicate dialog description",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "2"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "40"
+            }
+        }
     },
     "tools_urlCleanerDialogDesc": {
-        "message": "$1 件のブックマークをクリーンアップできます",
-        "description": "URL cleaner dialog description"
+        "message": "$count$ 件のブックマークをクリーンアップできます",
+        "description": "URL cleaner dialog description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "tools_statisticsDialogDesc": {
         "message": "選択した範囲のスナップショットです",
@@ -998,6 +2164,120 @@
     "tools_summarizerDialogDesc": {
         "message": "AIが生成したブックマーク要約です",
         "description": "Summarizer dialog description"
+    },
+    "tools_deadLinksDialogDesc": {
+        "message": "選択したブックマークのアクセス確認結果",
+        "description": "Dead link checker dialog description"
+    },
+    "tools_metadataDialogDesc": {
+        "message": "選択したブックマークのメタデータ候補",
+        "description": "Metadata fetcher dialog description"
+    },
+    "tools_privacyDialogDesc": {
+        "message": "選択したブックマークで見つかった機密データの可能性がある項目",
+        "description": "Privacy scanner dialog description"
+    },
+    "tools_rootFolder": {
+        "message": "ルート",
+        "description": "Label for bookmarks with no parent folder path"
+    },
+    "tools_suggestedTitle": {
+        "message": "提案されたタイトル: $title$",
+        "description": "Metadata fetcher suggested title",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            }
+        }
+    },
+    "tools_metadataAvailable": {
+        "message": "メタデータがあります",
+        "description": "Metadata fetcher result when a better title was found"
+    },
+    "tools_metadataNoChange": {
+        "message": "タイトルの変更は不要です",
+        "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_deadLinkStatus_ok": {
+        "message": "正常",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_redirect": {
+        "message": "リダイレクト",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_error": {
+        "message": "エラー",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_timeout": {
+        "message": "タイムアウト",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_invalid": {
+        "message": "無効",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkReachable": {
+        "message": "アクセスできます",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkRedirected": {
+        "message": "リダイレクトされますがアクセスできます",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkHttpStatus": {
+        "message": "HTTP $status$",
+        "description": "Dead link result detail with the HTTP status code",
+        "placeholders": {
+            "status": {
+                "content": "$1",
+                "example": "404"
+            }
+        }
+    },
+    "tools_deadLinkTimedOut": {
+        "message": "リクエストがタイムアウトしました",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkInvalidUrl": {
+        "message": "無効なURL",
+        "description": "Dead link result detail"
+    },
+    "tools_privacySeverity_low": {
+        "message": "低",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_medium": {
+        "message": "中",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_high": {
+        "message": "高",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySensitiveParam": {
+        "message": "機密性のあるクエリパラメータ: $param$",
+        "description": "Privacy finding for a sensitive URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "token"
+            }
+        }
+    },
+    "tools_privacyFragment": {
+        "message": "URLにフラグメントが含まれています",
+        "description": "Privacy finding"
+    },
+    "tools_privacyEmail": {
+        "message": "メールアドレスが見つかりました",
+        "description": "Privacy finding"
+    },
+    "tools_privacyUuid": {
+        "message": "UUIDのようなトークンが見つかりました",
+        "description": "Privacy finding"
     },
     "state_keep": {
         "message": "保持",
@@ -1019,6 +2299,18 @@
         "message": "AIの結果はありません。",
         "description": "No AI results state"
     },
+    "state_noDeadLinksFound": {
+        "message": "リンク切れは見つかりませんでした。",
+        "description": "Dead link checker empty state"
+    },
+    "state_noMetadataFound": {
+        "message": "メタデータの更新はありません。",
+        "description": "Metadata fetcher empty state"
+    },
+    "state_noPrivacyIssuesFound": {
+        "message": "プライバシーの問題は見つかりませんでした。",
+        "description": "Privacy scanner empty state"
+    },
     "action_clean": {
         "message": "クリーン",
         "description": "Clean button label"
@@ -1026,6 +2318,10 @@
     "action_removing": {
         "message": "削除中...",
         "description": "Removing state label"
+    },
+    "action_applying": {
+        "message": "適用中...",
+        "description": "Button label while changes are applied"
     },
     "action_removeDuplicates": {
         "message": "重複を削除",
@@ -1054,26 +2350,6 @@
     "stats_topFolders": {
         "message": "上位フォルダ",
         "description": "Statistics top folders label"
-    },
-    "settings_aiContextPackerIncludeTags": {
-        "message": "保存済みタグを含める",
-        "description": "AI context packer include tags label"
-    },
-    "settings_aiContextPackerIncludeTagsDesc": {
-        "message": "ブックマークに保存済みメタデータがある場合のみタグを含めます",
-        "description": "AI context packer include tags description"
-    },
-    "settings_aiContextPackerIncludeSummaries": {
-        "message": "保存済み要約を含める",
-        "description": "AI context packer include summaries label"
-    },
-    "settings_aiContextPackerIncludeSummariesDesc": {
-        "message": "ブックマークに保存済みメタデータがある場合のみ要約を含めます",
-        "description": "AI context packer include summaries description"
-    },
-    "settings_aiContextPackerExcerptLengthDesc": {
-        "message": "AIコンテキストに書き出す保存済み要約の最大文字数",
-        "description": "AI context packer excerpt length description"
     },
     "stats_protocols": {
         "message": "プロトコル",
