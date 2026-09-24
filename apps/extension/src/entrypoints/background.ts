@@ -3,7 +3,6 @@
  * Handles context menu initialization and event listeners.
  */
 
-
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
   // Handle context menu clicks

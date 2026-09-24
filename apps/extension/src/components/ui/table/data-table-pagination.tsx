@@ -1,7 +1,6 @@
 import type { ReactTable, RowData } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
-
 interface DataTablePaginationProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
 }

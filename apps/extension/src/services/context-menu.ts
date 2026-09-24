@@ -3,7 +3,6 @@
  * Uses a provider-based architecture for extensibility.
  */
 
-
 // Type for bookmark naming setting
 export type BookmarkNamingSource = 'link_text' | 'page_title' | 'link_url';
 

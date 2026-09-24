@@ -13,8 +13,6 @@ import {
 } from '@tanstack/react-table';
 import * as React from 'react';
 
-
-
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];
   data: TData[];

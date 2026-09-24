@@ -4,7 +4,6 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import type { ReactTable, RowData } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, RotateCcw, Settings2 } from 'lucide-react';
 
-
 interface DataTableViewOptionsProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
   onResetView: () => void;

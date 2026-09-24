@@ -80,7 +80,6 @@ function PopupPage() {
     fetchFolders();
   }, [fetchFolders]);
 
-
   // AI Recommendation handler
   const handleAIRecommend = useCallback(async () => {
     setAILoading(true);

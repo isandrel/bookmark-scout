@@ -1,7 +1,6 @@
 import type { Column, RowData } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
 
-
 interface DataTableColumnHeaderProps<TData extends RowData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<BookmarkTableFeatures, TData, TValue>;
