@@ -96,7 +96,9 @@ test('import reports empty files as failures and partial JSON imports with count
     buffer: Buffer.from('Just some plain text, no bookmarks here.'),
   });
   await expect(
-    page.getByText('No bookmarks or folders were found in this file.', { exact: false }),
+    page.getByText('No bookmarks or folders were found in this file. Nothing was imported.', {
+      exact: true,
+    }),
   ).toBeVisible();
   expect(await childrenOf(extensionWorker, folder.folderId)).toEqual([]);
 
@@ -114,7 +116,8 @@ test('import reports empty files as failures and partial JSON imports with count
   });
   await expect(page.getByText('Some items were not imported', { exact: true })).toBeVisible();
   await expect(
-    page.getByText(/Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\./),
+    // The toast's screen-reader announcement repeats the text; match the visible description.
+    page.getByText(/^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/),
   ).toBeVisible();
   const titles = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
   expect(titles).toEqual(expect.arrayContaining(['Valid One', 'Valid Two']));
