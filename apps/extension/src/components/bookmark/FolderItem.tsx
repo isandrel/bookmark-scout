@@ -19,6 +19,8 @@ interface FolderItemProps {
   creatingFolderId: string | null;
   newFolderName: string;
   folders: BookmarkTreeNode[];
+  /** Folders the current page is being saved into; their add button is disabled meanwhile. */
+  addingToFolderIds: readonly string[];
   favicon: FaviconDisplay;
   onDragStart: (node: BookmarkTreeNode) => void;
   onDragEnd: () => void;
@@ -33,6 +35,14 @@ interface FolderItemProps {
   onToggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
 }
 
+/**
+ * A held Enter repeats keydown, and each repeat would activate the focused button again: after
+ * a new folder is saved, focus returns here and the still-held key would reopen the input.
+ */
+function ignoreKeyRepeat(event: React.KeyboardEvent<HTMLButtonElement>) {
+  if (event.repeat) event.preventDefault();
+}
+
 export function FolderItem({
   node,
   instanceId,
@@ -41,6 +51,7 @@ export function FolderItem({
   creatingFolderId,
   newFolderName,
   folders,
+  addingToFolderIds,
   favicon,
   onDragStart,
   onDragEnd,
@@ -201,6 +212,7 @@ export function FolderItem({
   const itemCount = node.children?.length ?? 0;
   const hasSubfolders = node.children?.some((child) => child.children !== undefined) ?? false;
   const allSubfoldersExpanded = hasSubfolders && areAllChildrenExpanded(node);
+  const isAddingBookmark = addingToFolderIds.includes(node.id);
   const expandAllLabel = allSubfoldersExpanded
     ? t('popup_collapseAllSubfolders')
     : t('popup_expandAllSubfolders');
@@ -214,7 +226,11 @@ export function FolderItem({
       {/* Actions sit beside the trigger, not inside it, so no button is nested in a button. */}
       <div className="group flex items-center h-8 rounded-md hover:bg-accent focus-within:bg-accent folder-item transition-all duration-150 hover:scale-[1.01] origin-left">
         <div className="flex-1 min-w-0">
-          <AccordionTrigger className="hover:no-underline py-1 px-2 h-8 rounded-md">
+          <AccordionTrigger
+            className="hover:no-underline py-1 px-2 h-8 rounded-md"
+            data-folder-trigger={node.id}
+            hideIndicator={itemCount === 0}
+          >
             <div
               ref={(el) => {
                 elementRef.current = el;
@@ -223,11 +239,17 @@ export function FolderItem({
               className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
             >
               <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
-              <HighlightedText
-                className="truncate text-sm"
-                text={node.title}
-                ranges={node.searchMatchRanges}
-              />
+              {node.title.trim() ? (
+                <HighlightedText
+                  className="truncate text-sm"
+                  text={node.title}
+                  ranges={node.searchMatchRanges}
+                />
+              ) : (
+                <span className="truncate text-sm italic text-muted-foreground">
+                  {getBookmarkDisplayTitle(node.title)}
+                </span>
+              )}
               {itemCount > 0 && (
                 <span className="ml-2 text-xs text-muted-foreground tabular-nums">
                   ({itemCount})
@@ -236,7 +258,8 @@ export function FolderItem({
             </div>
           </AccordionTrigger>
         </div>
-        <div className="flex items-center gap-0.5 mr-1 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+        {/* Fixed width (room for all four buttons) keeps every chevron in the same column. */}
+        <div className="flex items-center justify-end gap-0.5 mr-1 w-[102px] shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
           {hasSubfolders && (
             <Button
               variant="ghost"
@@ -259,11 +282,13 @@ export function FolderItem({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6"
+                className="h-6 w-6 aria-disabled:pointer-events-none aria-disabled:opacity-50"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onAddBookmark(node.id);
+                  if (!isAddingBookmark) onAddBookmark(node.id);
                 }}
+                onKeyDown={ignoreKeyRepeat}
+                aria-disabled={isAddingBookmark || undefined}
                 title={t('popup_addBookmark')}
                 aria-label={t('popup_addBookmark')}
               >
@@ -277,6 +302,7 @@ export function FolderItem({
                   e.stopPropagation();
                   onAddFolder(node.id);
                 }}
+                onKeyDown={ignoreKeyRepeat}
                 title={t('popup_addFolder')}
                 aria-label={t('popup_addFolder')}
               >
@@ -321,6 +347,7 @@ export function FolderItem({
               creatingFolderId={creatingFolderId}
               newFolderName={newFolderName}
               folders={folders}
+              addingToFolderIds={addingToFolderIds}
               favicon={favicon}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}

@@ -20,7 +20,8 @@ import { useEffect, useId, useRef, useState } from 'react';
 interface BookmarkSearchProps {
   query: string;
   onQueryChange: (query: string) => void;
-  forceExpandAll: boolean;
+  /** Every folder of the search results is open, so the toggle offers Collapse all. */
+  allExpanded: boolean;
   onToggleExpandAll: () => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
   onAIRecommend?: () => void;
@@ -38,7 +39,7 @@ interface BookmarkSearchProps {
 export function BookmarkSearch({
   query,
   onQueryChange,
-  forceExpandAll,
+  allExpanded,
   onToggleExpandAll,
   inputRef,
   onAIRecommend,
@@ -246,10 +247,10 @@ export function BookmarkSearch({
             size="icon"
             className="shrink-0 h-8 w-8"
             onClick={onToggleExpandAll}
-            title={forceExpandAll ? t('popup_collapseAll') : t('popup_expandAll')}
-            aria-label={forceExpandAll ? t('popup_collapseAll') : t('popup_expandAll')}
+            title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
+            aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
           >
-            {forceExpandAll ? (
+            {allExpanded ? (
               <ChevronUp className="h-4 w-4" />
             ) : (
               <ChevronDown className="h-4 w-4" />

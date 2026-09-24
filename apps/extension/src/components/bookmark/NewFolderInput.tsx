@@ -15,6 +15,18 @@ interface NewFolderInputProps {
 
 export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolderInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  // Enter, a held Enter, and the click that blurs the input must submit only once.
+  const settledRef = useRef(false);
+  const submit = () => {
+    if (settledRef.current) return;
+    settledRef.current = true;
+    onSubmit();
+  };
+  const cancel = () => {
+    if (settledRef.current) return;
+    settledRef.current = true;
+    onCancel();
+  };
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -26,16 +38,16 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
     const handleClickOutside = (event: MouseEvent) => {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
         if (!value.trim()) {
-          onCancel();
+          cancel();
         } else {
-          onSubmit();
+          submit();
         }
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [value, onSubmit, onCancel]);
+  });
 
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: onClick used only for event bubbling control
@@ -52,13 +64,15 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={t('popup_enterFolderName')}
+          aria-label={t('popup_newFolderNameLabel')}
           className="h-7 text-sm w-full search-input"
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
-              onCancel();
+              cancel();
             }
-            if (e.key === 'Enter') {
-              onSubmit();
+            // A held key repeats keydown; only the first press counts.
+            if (e.key === 'Enter' && !e.repeat && !e.nativeEvent.isComposing) {
+              submit();
             }
           }}
         />

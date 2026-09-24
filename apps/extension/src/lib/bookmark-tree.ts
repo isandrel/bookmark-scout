@@ -26,6 +26,11 @@ export function isPermanentBookmarkFolder(
   return isBookmarkTreeRoot(node) || (node.parentId !== undefined && rootIds.has(node.parentId));
 }
 
+/** A title to show for a bookmark or folder; blank titles read as the localized "Untitled". */
+export function getBookmarkDisplayTitle(title: string | null | undefined): string {
+  return title?.trim() ? title : t('popup_untitled');
+}
+
 function isEmptyMobileFolder(node: BookmarkTreeNode): boolean {
   const isMobile = node.folderType === 'mobile' || MOBILE_FOLDER_IDS.has(node.id);
   return isMobile && (node.children?.length ?? 0) === 0;
