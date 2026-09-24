@@ -14,6 +14,8 @@ export type RecoverableBookmarkNode = {
   index?: number;
   /** Firefox separators have no URL or children and must not be recreated as folders. */
   type?: 'separator';
+  /** Tags and summary stored for the node, re-keyed to its new ID on restore. */
+  metadata?: StoredBookmarkMetadata;
   children?: RecoverableBookmarkNode[];
 };
 
@@ -36,15 +38,28 @@ export class BookmarkRestoreError extends Error {
   }
 }
 
-function toRecoverableNode(node: chrome.bookmarks.BookmarkTreeNode): RecoverableBookmarkNode {
+function toRecoverableNode(
+  node: chrome.bookmarks.BookmarkTreeNode,
+  metadataById: StoredBookmarkMetadataById,
+): RecoverableBookmarkNode {
   const nodeType = (node as { type?: string }).type;
+  const metadata = metadataById[node.id];
   return {
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
     ...(typeof node.index === 'number' ? { index: node.index } : {}),
     ...(nodeType === 'separator' ? { type: 'separator' as const } : {}),
-    ...(node.children ? { children: node.children.map(toRecoverableNode) } : {}),
+    ...(metadata ? { metadata } : {}),
+    ...(node.children
+      ? { children: node.children.map((child) => toRecoverableNode(child, metadataById)) }
+      : {}),
   };
+}
+
+function collectSubtreeIds(node: chrome.bookmarks.BookmarkTreeNode, ids: string[] = []): string[] {
+  ids.push(node.id);
+  for (const child of node.children ?? []) collectSubtreeIds(child, ids);
+  return ids;
 }
 
 /**
@@ -265,36 +280,27 @@ export async function captureBookmarkDeletion(
   id: string,
   now: number = Date.now(),
 ): Promise<BookmarkDeletionSnapshot> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
+  const [node] = await getBookmarkSubTree(id);
+  if (!node?.parentId) {
+    throw new Error('Bookmark cannot be recovered without its parent folder.');
+  }
 
-    chrome.bookmarks.getSubTree(id, (results) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-
-      const node = results[0];
-      if (!node?.parentId) {
-        reject(new Error('Bookmark cannot be recovered without its parent folder.'));
-        return;
-      }
-      resolve({
-        parentId: node.parentId,
-        node: toRecoverableNode(node),
-        expiresAt: now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
-      });
-    });
-  });
+  // Tags and summaries are keyed by browser ID, which changes when the tree is recreated.
+  const metadataById = await getStoredBookmarkMetadata(collectSubtreeIds(node)).catch(
+    () => ({}) as StoredBookmarkMetadataById,
+  );
+  return {
+    parentId: node.parentId,
+    node: toRecoverableNode(node, metadataById),
+    expiresAt: now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+  };
 }
 
 async function recreateBookmarkNode(
   node: RecoverableBookmarkNode,
   parentId: string,
   index: number | undefined,
+  restoredMetadata: StoredBookmarkMetadataById,
 ): Promise<chrome.bookmarks.BookmarkTreeNode> {
   const restored = await createBookmark({
     parentId,
@@ -304,10 +310,12 @@ async function recreateBookmarkNode(
     ...(node.type ? { type: node.type } : {}),
   });
 
+  if (node.metadata) restoredMetadata[restored.id] = node.metadata;
+
   // Children are recreated in their captured order, so sequential indexes are always in bounds.
   const children = node.children ?? [];
   for (const [childIndex, child] of children.entries()) {
-    await recreateBookmarkNode(child, restored.id, childIndex);
+    await recreateBookmarkNode(child, restored.id, childIndex, restoredMetadata);
   }
   return restored;
 }
@@ -343,6 +351,7 @@ export async function restoreBookmarkDeletion(
       : undefined;
 
   let restoredRoot: chrome.bookmarks.BookmarkTreeNode | undefined;
+  const restoredMetadata: StoredBookmarkMetadataById = {};
   try {
     restoredRoot = await createBookmark({
       parentId: snapshot.parentId,
@@ -351,11 +360,11 @@ export async function restoreBookmarkDeletion(
       ...(snapshot.node.url ? { url: snapshot.node.url } : {}),
       ...(snapshot.node.type ? { type: snapshot.node.type } : {}),
     });
+    if (snapshot.node.metadata) restoredMetadata[restoredRoot.id] = snapshot.node.metadata;
     const children = snapshot.node.children ?? [];
     for (const [childIndex, child] of children.entries()) {
-      await recreateBookmarkNode(child, restoredRoot.id, childIndex);
+      await recreateBookmarkNode(child, restoredRoot.id, childIndex, restoredMetadata);
     }
-    return restoredRoot;
   } catch (error) {
     if (restoredRoot) {
       try {
@@ -369,6 +378,16 @@ export async function restoreBookmarkDeletion(
       'restore-failed',
     );
   }
+
+  if (Object.keys(restoredMetadata).length > 0) {
+    // The bookmarks are already back; losing tags must not report the whole undo as failed.
+    await mergeStoredBookmarkMetadata(restoredMetadata, {
+      tagMode: 'replace',
+      summaryMode: 'replace',
+      dedupeTags: true,
+    }).catch((error: unknown) => console.error('Failed to restore bookmark metadata:', error));
+  }
+  return restoredRoot;
 }
 
 async function getBookmarkSubTree(id: string): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
