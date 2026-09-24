@@ -38,6 +38,22 @@ export function getLanguage() {
   return currentLanguage;
 }
 
+/**
+ * The bundled language actually shown: the explicit setting, or for 'auto' the browser UI
+ * language when it is one of the bundled locales, otherwise English.
+ */
+export function getResolvedLanguage(): 'en' | 'ja' | 'ko' {
+  if (currentLanguage !== 'auto') return currentLanguage;
+  try {
+    const uiLanguage = browser.i18n.getUILanguage().toLowerCase();
+    if (uiLanguage.startsWith('ja')) return 'ja';
+    if (uiLanguage.startsWith('ko')) return 'ko';
+  } catch {
+    // Non-extension environments (tests) fall back to English.
+  }
+  return 'en';
+}
+
 export type MessageKey = string;
 
 /**

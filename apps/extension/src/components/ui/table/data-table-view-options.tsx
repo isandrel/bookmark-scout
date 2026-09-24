@@ -21,12 +21,24 @@ export function DataTableViewOptions<TData extends RowData>({
       return order.indexOf(left.id) - order.indexOf(right.id);
     });
 
-  const moveColumn = (columnId: string, direction: -1 | 1) => {
-    const configurableIds = configurableColumns.map((column) => column.id);
-    const index = configurableIds.indexOf(columnId);
-    const swapIndex = index + direction;
-    if (index < 0 || swapIndex < 0 || swapIndex >= configurableIds.length) return;
+  // A visible column swaps with the next visible one, so every move changes the table.
+  const findSwapIndex = (index: number, direction: -1 | 1) => {
+    const movingVisible = configurableColumns[index]?.getIsVisible();
+    for (
+      let next = index + direction;
+      next >= 0 && next < configurableColumns.length;
+      next += direction
+    ) {
+      if (!movingVisible || configurableColumns[next].getIsVisible()) return next;
+    }
+    return -1;
+  };
 
+  const moveColumn = (index: number, direction: -1 | 1) => {
+    const swapIndex = findSwapIndex(index, direction);
+    if (index < 0 || swapIndex < 0) return;
+
+    const configurableIds = configurableColumns.map((column) => column.id);
     [configurableIds[index], configurableIds[swapIndex]] = [
       configurableIds[swapIndex],
       configurableIds[index],
@@ -46,7 +58,7 @@ export function DataTableViewOptions<TData extends RowData>({
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hidden h-8 shrink-0 lg:flex"
+          className="h-8 shrink-0"
           aria-label={t('table_viewOptions')}
         >
           <Settings2 />
@@ -72,9 +84,9 @@ export function DataTableViewOptions<TData extends RowData>({
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7"
-                disabled={index === 0}
+                disabled={findSwapIndex(index, -1) < 0}
                 aria-label={t('table_moveColumnUp', getBookmarkColumnLabel(column.id))}
-                onClick={() => moveColumn(column.id, -1)}
+                onClick={() => moveColumn(index, -1)}
               >
                 <ArrowUp />
               </Button>
@@ -83,9 +95,9 @@ export function DataTableViewOptions<TData extends RowData>({
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7"
-                disabled={index === configurableColumns.length - 1}
+                disabled={findSwapIndex(index, 1) < 0}
                 aria-label={t('table_moveColumnDown', getBookmarkColumnLabel(column.id))}
-                onClick={() => moveColumn(column.id, 1)}
+                onClick={() => moveColumn(index, 1)}
               >
                 <ArrowDown />
               </Button>
@@ -93,7 +105,12 @@ export function DataTableViewOptions<TData extends RowData>({
           );
         })}
         <DropdownMenuSeparator />
-        <Button type="button" variant="ghost" className="w-full justify-start" onClick={onResetView}>
+        <Button
+          type="button"
+          variant="ghost"
+          className="w-full justify-start"
+          onClick={onResetView}
+        >
           <RotateCcw />
           {t('table_resetView')}
         </Button>

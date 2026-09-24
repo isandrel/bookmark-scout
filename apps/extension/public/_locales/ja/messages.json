@@ -736,8 +736,8 @@
         "description": "Accessible label for the select-all rows checkbox"
     },
     "table_selectRow": {
-        "message": "行を選択",
-        "description": "Accessible label for a row selection checkbox"
+        "message": "「$1」を選択",
+        "description": "Row selection checkbox label; $1 is the item title"
     },
     "table_sortAsc": {
         "message": "昇順",
@@ -2562,5 +2562,141 @@
     "stats_protocols": {
         "message": "プロトコル",
         "description": "Statistics protocols label"
+    },
+    "bookmarks_folderUnavailable": {
+        "message": "そのフォルダは存在しません。最も近い既存のフォルダを表示しています。",
+        "description": "Notice when the requested or current manager folder was deleted or never existed"
+    },
+    "bookmarks_folderNotAFolder": {
+        "message": "そのアイテムはフォルダではありません。含まれているフォルダを表示しています。",
+        "description": "Notice when the manager URL points at a bookmark instead of a folder"
+    },
+    "bookmarks_expandFolder": {
+        "message": "「$1」を展開",
+        "description": "Folder tree expand button label; $1 is the folder title"
+    },
+    "bookmarks_collapseFolder": {
+        "message": "「$1」を折りたたむ",
+        "description": "Folder tree collapse button label; $1 is the folder title"
+    },
+    "bookmarks_breadcrumb": {
+        "message": "フォルダのパス",
+        "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "table_clearSort": {
+        "message": "並べ替えを解除",
+        "description": "Column header menu item that removes sorting by the column"
+    },
+    "table_sortedAsc": {
+        "message": "$1（昇順）",
+        "description": "Column header button label when sorted ascending; $1 is the column name"
+    },
+    "table_sortedDesc": {
+        "message": "$1（降順）",
+        "description": "Column header button label when sorted descending; $1 is the column name"
+    },
+    "table_dateRange": {
+        "message": "$1～$2",
+        "description": "Date filter button text for a range; $1 start date, $2 end date"
+    },
+    "table_clearDateFilter": {
+        "message": "日付フィルタを解除",
+        "description": "Button that clears the Date Added filter"
+    },
+    "table_filterSelectedCount": {
+        "message": "$1件を選択中",
+        "description": "Count of selected filter options or table rows; $1 is the count"
+    },
+    "table_filterNoOptions": {
+        "message": "該当する項目がありません。",
+        "description": "Empty state inside a table filter popover"
+    },
+    "table_filterClear": {
+        "message": "フィルタを解除",
+        "description": "Filter popover item that clears the selected options"
+    },
+    "table_filterDomains": {
+        "message": "ドメイン",
+        "description": "Title of the filter that groups links by site domain"
+    },
+    "table_browserOrder": {
+        "message": "ブラウザの順序",
+        "description": "Toggle that shows the current folder in the browser bookmark order"
+    },
+    "table_browserOrderHelp": {
+        "message": "ブラウザ本来の順序で表示し、上下の移動結果が見えるようにします",
+        "description": "Tooltip for the Browser order toggle"
+    },
+    "table_moveNeedsBrowserOrder": {
+        "message": "移動するには「ブラウザの順序」をオンにしてください",
+        "description": "Why the move buttons are disabled when the table uses another sort order"
+    },
+    "table_moveNeedsNoColumnSort": {
+        "message": "移動するには列の並べ替えを解除してください",
+        "description": "Why the move buttons are disabled while a column is sorted"
+    },
+    "table_moveNeedsFolderView": {
+        "message": "移動するにはフィルタを解除するか「現在のフォルダのみ」をオンにしてください",
+        "description": "Why the move buttons are disabled while filtering across all bookmarks"
+    },
+    "toast_itemsDeleted": {
+        "message": "$1件のアイテムを削除しました",
+        "description": "Toast title after deleting several selected items; $1 is the count"
+    },
+    "toast_deleteManyUndoWindow": {
+        "message": "$1件を削除しました。$2秒以内なら元に戻せます。",
+        "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_itemsRestoredDesc": {
+        "message": "$1件を復元しました。",
+        "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "bookmarks_deleteItems": {
+        "message": "$1件を削除",
+        "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
+    },
+    "bookmarks_confirmDeleteItems": {
+        "message": "選択した$1件（選択したフォルダの中身を含む）を削除しますか？削除後、短時間だけ元に戻せます。",
+        "description": "Confirmation text for deleting several selected items; $1 is the count"
+    },
+    "bookmarks_bulkActions": {
+        "message": "選択したアイテム",
+        "description": "Accessible name of the toolbar for selected table rows"
+    },
+    "bookmarks_bulkMove": {
+        "message": "フォルダへ移動",
+        "description": "Button that moves the selected items to another folder"
+    },
+    "bookmarks_bulkMoveTitle": {
+        "message": "$1件を移動",
+        "description": "Title of the dialog that moves selected items; $1 is the count"
+    },
+    "bookmarks_bulkMoveDescription": {
+        "message": "選択したアイテムの移動先フォルダを選んでください。末尾に追加されます。",
+        "description": "Description of the bulk move dialog"
+    },
+    "bookmarks_bulkMoveTarget": {
+        "message": "移動先フォルダ",
+        "description": "Label of the destination folder picker in the bulk move dialog"
+    },
+    "bookmarks_bulkMoved": {
+        "message": "$1件を移動しました",
+        "description": "Toast after moving selected items; $1 is the count"
+    },
+    "bookmarks_clearSelection": {
+        "message": "選択を解除",
+        "description": "Button that clears the table row selection"
+    },
+    "bookmarks_editUrlScriptRejected": {
+        "message": "JavaScript の URL（ブックマークレット）はここでは保存できません。",
+        "description": "Validation message when an edited URL uses the javascript: scheme"
+    },
+    "bookmarks_editFolderDescription": {
+        "message": "このフォルダの名前を変更します。",
+        "description": "Edit dialog description for folders"
+    },
+    "action_dismiss": {
+        "message": "閉じる",
+        "description": "Button that dismisses a notice"
     }
 }

@@ -9,7 +9,7 @@ type BookmarkRowMenuProps = {
 /** Row-level actions for the bookmark manager table. */
 export function BookmarkRowMenu({ bookmark, actions }: BookmarkRowMenuProps) {
   const modifiable = isModifiableBookmark(bookmark);
-  const isLink = bookmark.type === ItemTypeEnum.Link && Boolean(bookmark.url);
+  const isLink = isOpenableBookmark(bookmark);
 
   // Menu items live inside a clickable row; keep clicks from navigating into folders.
   const run = (action: (bookmark: Bookmark) => void) => (event: MouseEvent) => {

@@ -1,5 +1,5 @@
 import type { Column, RowData } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff, X } from 'lucide-react';
 
 interface DataTableColumnHeaderProps<TData extends RowData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,7 +20,18 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="-ml-3 h-8 data-[state=open]:bg-accent">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            aria-label={
+              column.getIsSorted() === 'desc'
+                ? t('table_sortedDesc', title)
+                : column.getIsSorted() === 'asc'
+                  ? t('table_sortedAsc', title)
+                  : title
+            }
+          >
             <span>{title}</span>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDown />
@@ -40,6 +51,12 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
             <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
             {t('table_sortDesc')}
           </DropdownMenuItem>
+          {column.getIsSorted() && (
+            <DropdownMenuItem onClick={() => column.clearSorting()}>
+              <X className="h-3.5 w-3.5 text-muted-foreground/70" />
+              {t('table_clearSort')}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />

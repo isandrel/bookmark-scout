@@ -1,12 +1,39 @@
-import type { ReactTable, RowData } from '@tanstack/react-table';
-import { CircleHelp, X } from 'lucide-react';
+import type { Column, ReactTable, RowData } from '@tanstack/react-table';
+import { CircleHelp, ListOrdered, X } from 'lucide-react';
+import { useMemo } from 'react';
 import type { DateRange } from 'react-day-picker';
+
+type FacetOption = { value: string; label: string };
+
+export type DataTableFacetOptions = {
+  parentId: FacetOption[];
+  domain: FacetOption[];
+};
 
 interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
   applyToCurrentFolder: boolean;
   onApplyToCurrentFolderChange: (enabled: boolean) => void;
   onResetView: () => void;
+  facetOptions: DataTableFacetOptions;
+  /** Rows the filters apply to; facet counts always use this scope. */
+  facetScope: TData[];
+  browserOrder: boolean;
+  onBrowserOrderChange: (enabled: boolean) => void;
+}
+
+function countColumnValues<TData extends RowData>(
+  column: Column<BookmarkTableFeatures, TData, unknown> | undefined,
+  rows: TData[],
+): Map<string, number> {
+  const counts = new Map<string, number>();
+  const accessor = column?.accessorFn;
+  if (!accessor) return counts;
+  rows.forEach((row, index) => {
+    const value = String(accessor(row, index) ?? '');
+    if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
+  });
+  return counts;
 }
 
 export function DataTableToolbar<TData extends RowData>({
@@ -14,29 +41,47 @@ export function DataTableToolbar<TData extends RowData>({
   applyToCurrentFolder,
   onApplyToCurrentFolderChange,
   onResetView,
+  facetOptions,
+  facetScope,
+  browserOrder,
+  onBrowserOrderChange,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
-
-  // Call hooks unconditionally at the top level
-  const parentIdOptions = Object.values(useParentIdMap());
-  const urlOptions = Object.values(useUrlMap());
-  const urlFilterValue = table.getColumn('url')?.getFilterValue();
+  const typeColumn = table.getColumn('type');
+  const parentColumn = table.getColumn('parentId');
+  const urlColumn = table.getColumn('url');
+  const domainColumn = table.getColumn(DOMAIN_COLUMN_ID);
+  const dateColumn = table.getColumn('dateAdded');
+  const urlFilterValue = urlColumn?.getFilterValue();
   const currentFolderHelp = t('table_currentFolderOnlyHelp');
+
+  const counts = useMemo(
+    () => ({
+      type: countColumnValues(typeColumn, facetScope),
+      parentId: countColumnValues(parentColumn, facetScope),
+      domain: countColumnValues(domainColumn, facetScope),
+    }),
+    [domainColumn, facetScope, parentColumn, typeColumn],
+  );
 
   return (
     <div className="flex items-start gap-2" data-testid="bookmark-table-toolbar">
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
         <Input
           placeholder={t('table_filterTitles')}
+          aria-label={t('table_filterTitles')}
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
-          onChange={(event) => table.getColumn('title')?.setFilterValue(event.target.value)}
+          onChange={(event) =>
+            table.getColumn('title')?.setFilterValue(event.target.value || undefined)
+          }
           className="h-8 w-40 min-w-32 lg:w-56"
         />
-        {table.getColumn('url') && (
+        {urlColumn && (
           <Input
             placeholder={t('table_filterUrls')}
+            aria-label={t('table_filterUrls')}
             value={typeof urlFilterValue === 'string' ? urlFilterValue : ''}
-            onChange={(event) => table.getColumn('url')?.setFilterValue(event.target.value)}
+            onChange={(event) => urlColumn.setFilterValue(event.target.value || undefined)}
             className="h-8 w-40 min-w-32 lg:w-56"
           />
         )}
@@ -68,33 +113,36 @@ export function DataTableToolbar<TData extends RowData>({
             </Tooltip>
           </TooltipProvider>
         </div>
-        {table.getColumn('type') && (
+        {typeColumn && (
           <DataTableFacetedFilter
-            column={table.getColumn('type')}
+            column={typeColumn}
             title={getBookmarkColumnLabel('type')}
             options={getLocalizedTypeOptions()}
+            counts={counts.type}
           />
         )}
-        {table.getColumn('parentId') && (
+        {parentColumn && (
           <DataTableFacetedFilter
-            column={table.getColumn('parentId')}
+            column={parentColumn}
             title={getBookmarkColumnLabel('parentId')}
-            options={parentIdOptions}
+            options={facetOptions.parentId}
+            counts={counts.parentId}
           />
         )}
-        {table.getColumn('url') && (
+        {domainColumn && (
           <DataTableFacetedFilter
-            column={table.getColumn('url')}
-            title={getBookmarkColumnLabel('url')}
-            options={urlOptions}
+            column={domainColumn}
+            title={t('table_filterDomains')}
+            options={facetOptions.domain}
+            counts={counts.domain}
           />
         )}
-        {table.getColumn('dateAdded') && (
+        {dateColumn && (
           <DataTableDateFilter
             title={getBookmarkColumnLabel('dateAdded')}
             className="h-8 w-auto"
-            value={table.getColumn('dateAdded')?.getFilterValue() as DateRange}
-            onChange={(value) => table.getColumn('dateAdded')?.setFilterValue(value)}
+            value={dateColumn.getFilterValue() as DateRange | undefined}
+            onChange={(value) => dateColumn.setFilterValue(value)}
           />
         )}
         {isFiltered && (
@@ -111,6 +159,17 @@ export function DataTableToolbar<TData extends RowData>({
           </Button>
         )}
       </div>
+      <Button
+        variant={browserOrder ? 'secondary' : 'outline'}
+        size="sm"
+        className="h-8 shrink-0"
+        aria-pressed={browserOrder}
+        title={t('table_browserOrderHelp')}
+        onClick={() => onBrowserOrderChange(!browserOrder)}
+      >
+        <ListOrdered />
+        {t('table_browserOrder')}
+      </Button>
       <DataTableViewOptions table={table} onResetView={onResetView} />
     </div>
   );

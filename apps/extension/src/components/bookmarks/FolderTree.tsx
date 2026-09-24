@@ -1,67 +1,53 @@
 /**
  * FolderTree - Recursive tree view for bookmark folders.
- * Displays expandable folder hierarchy in sidebar.
+ * Built from the manager's bookmark list, so it follows every refresh (edits, deletes, and
+ * changes made outside the page).
  */
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-interface FolderNode {
-  id: string;
-  title: string;
-  children: FolderNode[];
-}
-
-interface FolderTreeProps {
+type FolderTreeProps = {
+  items: Bookmark[];
   selectedFolderId: string | null;
   onFolderSelect: (folderId: string | null) => void;
-}
+};
 
-interface FolderItemProps {
-  node: FolderNode;
+type FolderItemProps = {
+  node: ManagerFolderNode;
   level: number;
   selectedId: string | null;
   expandedIds: Set<string>;
   onSelect: (id: string) => void;
   onToggle: (id: string) => void;
-}
+};
 
-/**
- * Single folder item with expand/collapse functionality.
- */
-function FolderItem({
-  node,
-  level,
-  selectedId,
-  expandedIds,
-  onSelect,
-  onToggle,
-}: FolderItemProps) {
+/** Single folder row; the expand toggle and the folder button are siblings, not nested. */
+function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }: FolderItemProps) {
   const isExpanded = expandedIds.has(node.id);
   const isSelected = selectedId === node.id;
   const hasChildren = node.children.length > 0;
+  const title = node.title.trim() || t('bookmarks_untitled');
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => onSelect(node.id)}
+      <div
         className={cn(
-          'flex items-center gap-1 w-full px-2 py-1.5 text-sm rounded-md transition-colors text-left',
-          isSelected
-            ? 'bg-primary text-primary-foreground'
-            : 'hover:bg-muted text-foreground'
+          'flex w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
+          isSelected ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted',
         )}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
       >
         {hasChildren ? (
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggle(node.id);
-            }}
-            className="p-0.5 hover:bg-muted-foreground/20 rounded"
+            onClick={() => onToggle(node.id)}
+            className="rounded p-0.5 hover:bg-muted-foreground/20"
+            aria-expanded={isExpanded}
+            aria-label={t(
+              isExpanded ? 'bookmarks_collapseFolder' : 'bookmarks_expandFolder',
+              title,
+            )}
           >
             {isExpanded ? (
               <ChevronDown className="h-3.5 w-3.5" />
@@ -70,11 +56,18 @@ function FolderItem({
             )}
           </button>
         ) : (
-          <span className="w-4" />
+          <span className="w-[18px] shrink-0" />
         )}
-        <Folder className="h-4 w-4 shrink-0" />
-        <span className="truncate">{node.title || t('bookmarks_untitled')}</span>
-      </button>
+        <button
+          type="button"
+          onClick={() => onSelect(node.id)}
+          aria-current={isSelected ? 'page' : undefined}
+          className="flex min-w-0 flex-1 items-center gap-1 py-1.5 text-left"
+        >
+          <Folder className="h-4 w-4 shrink-0" />
+          <span className="truncate">{title}</span>
+        </button>
+      </div>
 
       {isExpanded && hasChildren && (
         <div>
@@ -95,103 +88,27 @@ function FolderItem({
   );
 }
 
-/**
- * Builds folder tree from Chrome bookmarks API.
- */
-async function buildFolderTree(): Promise<FolderNode[]> {
-  if (!chrome?.bookmarks) return [];
-
-  return new Promise((resolve) => {
-    chrome.bookmarks.getTree((nodes) => {
-      if (chrome.runtime.lastError) {
-        resolve([]);
-        return;
-      }
-
-      const processNode = (
-        node: chrome.bookmarks.BookmarkTreeNode
-      ): FolderNode | null => {
-        // Only include folders (nodes with children array)
-        if (!node.children) return null;
-
-        const children = node.children
-          .map(processNode)
-          .filter((n): n is FolderNode => n !== null);
-
-        return {
-          id: node.id,
-          title: node.title,
-          children,
-        };
-      };
-
-      // Get children of root node (id "0")
-      const rootChildren = nodes[0]?.children || [];
-      const tree = rootChildren
-        .map(processNode)
-        .filter((n): n is FolderNode => n !== null);
-
-      resolve(tree);
-    });
-  });
-}
-
-export function FolderTree({ selectedFolderId, onFolderSelect }: FolderTreeProps) {
-  const [tree, setTree] = useState<FolderNode[]>([]);
+export function FolderTree({ items, selectedFolderId, onFolderSelect }: FolderTreeProps) {
+  const tree = useMemo(() => buildManagerFolderTree(items), [items]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
-  const [isLoading, setIsLoading] = useState(true);
+  const hasAutoExpandedRef = useRef(false);
 
-  // Load folder tree on mount
+  // Expand the top-level folders once, when the tree first becomes available.
   useEffect(() => {
-    const loadTree = async () => {
-      setIsLoading(true);
-      const folders = await buildFolderTree();
-      setTree(folders);
+    if (hasAutoExpandedRef.current || tree.length === 0) return;
+    hasAutoExpandedRef.current = true;
+    setExpandedIds((prev) => new Set([...prev, ...tree.map((folder) => folder.id)]));
+  }, [tree]);
 
-      // Auto-expand top-level folders
-      const topLevelIds = new Set(folders.map((f) => f.id));
-      setExpandedIds(topLevelIds);
-      setIsLoading(false);
-    };
-
-    loadTree();
-  }, []);
-
-  // Auto-expand ancestors when selecting a folder
+  // Reveal the selected folder and its subfolders by expanding it and its ancestors.
   useEffect(() => {
-    if (!selectedFolderId || tree.length === 0) return;
-
-    const findAncestors = (
-      nodes: FolderNode[],
-      targetId: string,
-      ancestors: string[] = []
-    ): string[] | null => {
-      for (const node of nodes) {
-        if (node.id === targetId) {
-          return ancestors;
-        }
-        if (node.children.length > 0) {
-          const found = findAncestors(node.children, targetId, [
-            ...ancestors,
-            node.id,
-          ]);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
-
-    const ancestors = findAncestors(tree, selectedFolderId);
-    if (ancestors && ancestors.length > 0) {
-      setExpandedIds((prev) => {
-        const next = new Set(prev);
-        for (const id of ancestors) {
-          next.add(id);
-        }
-        return next;
-      });
-    }
-  }, [selectedFolderId, tree]);
+    if (!selectedFolderId) return;
+    const ancestors = getManagerFolderAncestors(items, selectedFolderId).map((folder) => folder.id);
+    if (ancestors.length === 0) return;
+    setExpandedIds((prev) =>
+      ancestors.every((id) => prev.has(id)) ? prev : new Set([...prev, ...ancestors]),
+    );
+  }, [items, selectedFolderId]);
 
   const handleToggle = useCallback((id: string) => {
     setExpandedIds((prev) => {
@@ -205,39 +122,23 @@ export function FolderTree({ selectedFolderId, onFolderSelect }: FolderTreeProps
     });
   }, []);
 
-  const handleSelect = useCallback(
-    (id: string) => {
-      onFolderSelect(id);
-    },
-    [onFolderSelect]
-  );
-
-  if (isLoading) {
-    return (
-      <div className="p-4 text-sm text-muted-foreground">
-        {t('bookmarks_loading')}
-      </div>
-    );
-  }
-
   return (
-    <div className="py-2">
-      {/* All Bookmarks root option */}
+    <div className="py-2" data-testid="folder-tree">
       <button
         type="button"
         onClick={() => onFolderSelect(null)}
+        aria-current={selectedFolderId === null ? 'page' : undefined}
         className={cn(
-          'flex items-center gap-2 w-full px-3 py-1.5 text-sm rounded-md transition-colors text-left',
+          'flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm transition-colors',
           selectedFolderId === null
             ? 'bg-primary text-primary-foreground'
-            : 'hover:bg-muted text-foreground'
+            : 'text-foreground hover:bg-muted',
         )}
       >
         <Folder className="h-4 w-4" />
         <span>{t('bookmarks_root')}</span>
       </button>
 
-      {/* Folder tree */}
       <div className="mt-1">
         {tree.map((node) => (
           <FolderItem
@@ -246,7 +147,7 @@ export function FolderTree({ selectedFolderId, onFolderSelect }: FolderTreeProps
             level={0}
             selectedId={selectedFolderId}
             expandedIds={expandedIds}
-            onSelect={handleSelect}
+            onSelect={onFolderSelect}
             onToggle={handleToggle}
           />
         ))}
