@@ -85,3 +85,45 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
   const restored = await childrenOf(extensionWorker, folder.folderId);
   expect(restored.map((item) => item.title)).toEqual(['A1', 'A3', 'B1', 'B2']);
 });
+
+test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmarks edited after the preview', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Cleaner Safety', [
+    { title: 'Encoded', url: 'https://e2e.invalid/p?q=a%20b&amp&utm_source=x' },
+    { title: 'Reordered', url: 'https://e2e.invalid/r?b=2&a=1' },
+    { title: 'Edited Later', url: 'https://e2e.invalid/e?utm_source=x' },
+  ]);
+  await setSettings(extensionWorker, {
+    urlCleanerSortQueryParams: true,
+    urlCleanerRemoveHash: false,
+    urlCleanerDefaultScope: 'folder',
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'URL Cleaner').getByRole('button', { name: 'Clean' }).click();
+  const preview = page.getByRole('dialog', { name: 'URL Cleaner' });
+  await expect(preview.getByText('2 bookmarks can be cleaned')).toBeVisible();
+  await expect(preview).not.toContainText('Reordered');
+  await expect(preview).toContainText('https://e2e.invalid/p?amp&q=a%20b');
+
+  await extensionWorker.evaluate(async (id) => {
+    await chrome.bookmarks.update(id, { url: 'https://e2e.invalid/e?utm_source=kept-by-user' });
+  }, folder.ids['Edited Later']);
+  await preview.getByRole('button', { name: 'Apply Changes' }).click();
+
+  await expect(page.getByText('Some URLs were not cleaned', { exact: true })).toBeVisible();
+  await expect
+    .poll(async () =>
+      Object.fromEntries(
+        (await childrenOf(extensionWorker, folder.folderId)).map((item) => [item.title, item.url]),
+      ),
+    )
+    .toEqual({
+      Encoded: 'https://e2e.invalid/p?amp&q=a%20b',
+      Reordered: 'https://e2e.invalid/r?b=2&a=1',
+      'Edited Later': 'https://e2e.invalid/e?utm_source=kept-by-user',
+    });
+});

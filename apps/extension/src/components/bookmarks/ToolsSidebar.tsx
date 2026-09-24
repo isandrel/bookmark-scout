@@ -287,16 +287,20 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setUrlCleanerApplying(true);
     try {
-      await Promise.all(
-        urlCleanerResult.previews.map((preview) =>
-          updateBookmark(preview.id, { url: preview.cleanedUrl }),
-        ),
-      );
+      const outcome = await applyUrlCleanerPreviews(urlCleanerResult.previews);
       await refresh();
       setUrlCleanerDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
       toast({
-        title: t('toast_urlCleanerApplied'),
-        description: t('toast_urlCleanerAppliedDesc', String(urlCleanerResult.previews.length)),
+        title: complete ? t('toast_urlCleanerApplied') : t('toast_urlCleanerPartial'),
+        description: complete
+          ? tPlural('toast_urlCleanerAppliedDesc', outcome.updated)
+          : t('toast_urlCleanerPartialDesc', [
+              String(outcome.updated),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+        variant: complete ? 'success' : 'destructive',
       });
     } catch (error) {
       toast({
@@ -1007,8 +1011,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={duplicatesDialogOpen}
         onOpenChange={setDuplicatesDialogOpen}
         title={t('tools_findDuplicates')}
-        description={t('tools_duplicatesDialogDesc', [
-          String(duplicateResult?.groups.length ?? 0),
+        description={tPlural('tools_duplicatesDialogDesc', duplicateResult?.groups.length ?? 0, [
           String(duplicateResult?.scannedBookmarks ?? 0),
         ])}
       >
@@ -1028,7 +1031,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={urlCleanerDialogOpen}
         onOpenChange={setUrlCleanerDialogOpen}
         title={t('tools_cleanUrls')}
-        description={t('tools_urlCleanerDialogDesc', String(urlCleanerResult?.previews.length ?? 0))}
+        description={tPlural('tools_urlCleanerDialogDesc', urlCleanerResult?.previews.length ?? 0)}
       >
         <UrlCleanerResultsView
           result={urlCleanerResult}

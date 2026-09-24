@@ -2608,5 +2608,61 @@
                 "example": "1"
             }
         }
+    },
+    "tools_duplicatesDialogDesc_one": {
+        "message": "$groups$ duplicate group found across $bookmarks$ bookmarks",
+        "description": "Duplicate dialog description (one group)",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "1"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc_one": {
+        "message": "$count$ bookmark can be cleaned",
+        "description": "URL cleaner dialog description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerAppliedDesc_one": {
+        "message": "$count$ bookmark updated",
+        "description": "URL cleaner success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerPartial": {
+        "message": "Some URLs were not cleaned",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "Updated: $updated$. Skipped because they changed after the preview: $skipped$. Failed: $failed$.",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
     }
 }

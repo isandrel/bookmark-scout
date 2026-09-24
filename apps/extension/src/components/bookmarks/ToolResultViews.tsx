@@ -127,7 +127,7 @@ export function UrlCleanerResultsView({
       {result?.previews.length ? (
         result.previews.map((preview) => (
           <div key={preview.id} className="space-y-2 rounded-lg border p-3 text-sm">
-            <div className="font-medium">{preview.title}</div>
+            <div className="font-medium">{preview.title || t('bookmarks_untitled')}</div>
             <div className="text-xs text-muted-foreground">{preview.folderPath || t('tools_rootFolder')}</div>
             <div className="break-all rounded-md bg-muted/40 p-2 text-xs">{preview.originalUrl}</div>
             <div className="break-all rounded-md bg-emerald-500/10 p-2 text-xs text-emerald-700 dark:text-emerald-300">

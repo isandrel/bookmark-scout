@@ -2564,7 +2564,7 @@
         "description": "Statistics protocols label"
     },
     "toast_duplicatesRemovedDesc_one": {
-        "message": "중복 북마크 $count$개를 삭제했습니다",
+        "message": "$count$개의 중복 북마크를 제거했습니다",
         "description": "Duplicate removal success description (singular)",
         "placeholders": {
             "count": {
@@ -2605,6 +2605,62 @@
             },
             "failed": {
                 "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc_one": {
+        "message": "$bookmarks$개의 북마크에서 $groups$개의 중복 그룹을 찾았습니다",
+        "description": "Duplicate dialog description (one group)",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "1"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc_one": {
+        "message": "$count$개의 북마크를 정리할 수 있습니다",
+        "description": "URL cleaner dialog description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerAppliedDesc_one": {
+        "message": "$count$개의 북마크를 업데이트했습니다",
+        "description": "URL cleaner success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerPartial": {
+        "message": "일부 URL이 정리되지 않았습니다",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "업데이트됨: $updated$개. 미리보기 후 변경되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
                 "example": "1"
             }
         }

@@ -384,7 +384,7 @@ test('URL cleaner honors preserved parameters and fragment settings', async ({
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'URL Cleaner').getByRole('button', { name: 'Clean' }).click();
   const preview = page.getByRole('dialog', { name: 'URL Cleaner' });
-  await expect(preview.getByText('1 bookmarks can be cleaned')).toBeVisible();
+  await expect(preview.getByText('1 bookmark can be cleaned')).toBeVisible();
   await expect(preview).toContainText('https://e2e.invalid/page?utm_source=e2e#keep');
   await preview.getByRole('button', { name: 'Apply Changes' }).click();
 

@@ -169,86 +169,142 @@ export function scanDuplicateBookmarks(
   };
 }
 
+function decodeQueryKey(rawKey: string): string {
+  try {
+    return decodeURIComponent(rawKey.replace(/\+/g, ' '));
+  } catch {
+    return rawKey;
+  }
+}
+
+/**
+ * Removes tracking parameters by editing the raw query string, so kept parameters keep their
+ * exact encoding (`%20` stays `%20`) and valueless parameters (`?amp`) stay valueless. Sorting
+ * is applied only alongside a real removal; reordering alone never makes a URL cleanable
+ * because it can break signed URLs.
+ */
+export function cleanBookmarkUrl(
+  originalUrl: string,
+  options: UrlCleanerOptions,
+): { cleanedUrl: string; removedParams: string[] } | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(originalUrl);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return null;
+  }
+
+  const preserveParams = new Set(options.preserveParams.map((param) => param.toLowerCase()));
+  const removeParams = new Set(options.removeParams.map((param) => param.toLowerCase()));
+  const hashIndex = originalUrl.indexOf('#');
+  const beforeHash = hashIndex >= 0 ? originalUrl.slice(0, hashIndex) : originalUrl;
+  const hash = hashIndex >= 0 ? originalUrl.slice(hashIndex) : '';
+  const queryIndex = beforeHash.indexOf('?');
+  const base = queryIndex >= 0 ? beforeHash.slice(0, queryIndex) : beforeHash;
+  const segments = queryIndex >= 0 ? beforeHash.slice(queryIndex + 1).split('&') : [];
+
+  const removedParams: string[] = [];
+  const kept: Array<{ key: string; segment: string }> = [];
+  const seen = new Set<string>();
+  for (const segment of segments) {
+    if (!segment) continue;
+    const separator = segment.indexOf('=');
+    const key = decodeQueryKey(separator >= 0 ? segment.slice(0, separator) : segment);
+    const normalizedKey = key.toLowerCase();
+
+    if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
+      removedParams.push(key);
+      continue;
+    }
+    if (options.dedupeQueryParams) {
+      const signature = `${normalizedKey}\u0000${separator >= 0 ? segment.slice(separator) : ''}`;
+      if (seen.has(signature)) {
+        removedParams.push(key);
+        continue;
+      }
+      seen.add(signature);
+    }
+    kept.push({ key, segment });
+  }
+
+  const removesHash = options.removeHash && hash.length > 0;
+  if (removedParams.length === 0 && !removesHash) {
+    return null;
+  }
+
+  const ordered = options.sortQueryParams
+    ? [...kept].sort((a, b) => a.key.localeCompare(b.key))
+    : kept;
+  const query = ordered.map((entry) => entry.segment).join('&');
+  const cleanedUrl = `${base}${query ? `?${query}` : ''}${removesHash ? '' : hash}`;
+  return cleanedUrl === originalUrl ? null : { cleanedUrl, removedParams };
+}
+
 export function previewCleanUrls(
   nodes: BookmarkTreeNode[],
   options: UrlCleanerOptions,
 ): UrlCleanerResult {
   const flatBookmarks = flattenBookmarks(nodes);
-  const preserveParams = new Set(options.preserveParams.map((param) => param.toLowerCase()));
-  const removeParams = new Set(options.removeParams.map((param) => param.toLowerCase()));
 
   const previews = flatBookmarks.flatMap((bookmark) => {
     const originalUrl = bookmark.node.url;
-    if (!originalUrl) {
+    const cleaned = originalUrl ? cleanBookmarkUrl(originalUrl, options) : null;
+    if (!originalUrl || !cleaned) {
       return [];
     }
 
-    try {
-      const url = new URL(originalUrl);
-      const removedParams: string[] = [];
-      const nextEntries: Array<[string, string]> = [];
-      const seen = new Set<string>();
-
-      url.searchParams.forEach((value, key) => {
-        const normalizedKey = key.toLowerCase();
-
-        if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
-          removedParams.push(key);
-          return;
-        }
-
-        if (options.dedupeQueryParams) {
-          const signature = `${normalizedKey}:${value}`;
-          if (seen.has(signature)) {
-            removedParams.push(key);
-            return;
-          }
-          seen.add(signature);
-        }
-
-        nextEntries.push([key, value]);
-      });
-
-      if (removedParams.length === 0 && !options.sortQueryParams && !options.removeHash) {
-        return [];
-      }
-
-      url.search = '';
-      const finalEntries = options.sortQueryParams
-        ? [...nextEntries].sort(([a], [b]) => a.localeCompare(b))
-        : nextEntries;
-      finalEntries.forEach(([key, value]) => {
-        url.searchParams.append(key, value);
-      });
-
-      if (options.removeHash) {
-        url.hash = '';
-      }
-
-      const cleanedUrl = url.toString();
-      if (cleanedUrl === originalUrl) {
-        return [];
-      }
-
-      const preview = {
+    return [
+      {
         id: bookmark.node.id,
-        title: bookmark.node.title || 'Untitled',
+        title: bookmark.node.title,
         folderPath: bookmark.pathLabel,
         originalUrl,
-        cleanedUrl,
-        removedParams,
-      };
-
-      return [preview];
-    } catch {
-      return [];
-    }
+        cleanedUrl: cleaned.cleanedUrl,
+        removedParams: cleaned.removedParams,
+      } satisfies UrlCleanerPreview,
+    ];
   });
 
   return {
     previews,
     scannedBookmarks: flatBookmarks.length,
   };
+}
+
+export type UrlCleanerApplyResult = {
+  updated: number;
+  /** Bookmarks deleted or edited since the preview; they are left untouched. */
+  skipped: number;
+  failed: number;
+};
+
+/** Applies previews only to bookmarks whose current URL still matches the previewed original. */
+export async function applyUrlCleanerPreviews(
+  previews: UrlCleanerPreview[],
+): Promise<UrlCleanerApplyResult> {
+  const result: UrlCleanerApplyResult = { updated: 0, skipped: 0, failed: 0 };
+  for (const preview of previews) {
+    let currentUrl: string | undefined;
+    try {
+      currentUrl = (await getBookmark(preview.id)).url;
+    } catch {
+      currentUrl = undefined;
+    }
+    if (currentUrl !== preview.originalUrl) {
+      result.skipped += 1;
+      continue;
+    }
+    try {
+      await updateBookmark(preview.id, { url: preview.cleanedUrl });
+      result.updated += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
 }
 
 export function collectBookmarkStatistics(
