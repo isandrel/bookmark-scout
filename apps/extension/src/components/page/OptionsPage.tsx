@@ -1,870 +1,503 @@
 /**
  * OptionsPage - Settings page with multi-tab interface.
- * Uses react-hook-form and zod validation.
- * Designed to scale for many options with categorized tabs.
+ * Edits autosave field by field: valid changes persist immediately, invalid ones stay in the form
+ * with an inline error until they are fixed, and never block other fields.
  */
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { motion, AnimatePresence } from "framer-motion";
 import {
-	BarChart3,
-	Download,
-	Eye,
-	EyeOff,
-	FolderKanban,
-	HardDriveDownload,
-	ShieldAlert,
-	Moon,
-	Palette,
-	RefreshCw,
-	RotateCcw,
-	Save,
-	Search,
-	Settings2,
-	Sliders,
-	Sparkles,
-	Sun,
-	Wifi,
-	Upload,
-	Wrench,
-} from "lucide-react";
-import type React from "react";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+  BarChart3,
+  Download,
+  FolderKanban,
+  HardDriveDownload,
+  Moon,
+  Palette,
+  RotateCcw,
+  Save,
+  Search,
+  Settings2,
+  ShieldAlert,
+  Sliders,
+  Sparkles,
+  Sun,
+  TriangleAlert,
+  Upload,
+  Wrench,
+} from 'lucide-react';
+import type React from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
-	appearance: <Palette className="h-4 w-4" />,
-	search: <Search className="h-4 w-4" />,
-	behavior: <Settings2 className="h-4 w-4" />,
-	advanced: <Sliders className="h-4 w-4" />,
-	ai: <Sparkles className="h-4 w-4" />,
-	aiTools: <Sparkles className="h-4 w-4" />,
-	maintenance: <Wrench className="h-4 w-4" />,
-	metadataContent: <FolderKanban className="h-4 w-4" />,
-	security: <ShieldAlert className="h-4 w-4" />,
-	analytics: <BarChart3 className="h-4 w-4" />,
-	data: <HardDriveDownload className="h-4 w-4" />,
+  appearance: <Palette className="h-4 w-4" />,
+  search: <Search className="h-4 w-4" />,
+  behavior: <Settings2 className="h-4 w-4" />,
+  advanced: <Sliders className="h-4 w-4" />,
+  ai: <Sparkles className="h-4 w-4" />,
+  aiTools: <Sparkles className="h-4 w-4" />,
+  maintenance: <Wrench className="h-4 w-4" />,
+  metadataContent: <FolderKanban className="h-4 w-4" />,
+  security: <ShieldAlert className="h-4 w-4" />,
+  analytics: <BarChart3 className="h-4 w-4" />,
+  data: <HardDriveDownload className="h-4 w-4" />,
 };
 
+const AUTOSAVE_DELAY_MS = 400;
+const IMPORT_CHANGE_PREVIEW_LIMIT = 5;
+
+type SettingValue = Settings[keyof Settings];
+
+function matchesQuery(fieldKey: keyof Settings, query: string): boolean {
+  const meta = getSettingsFieldMeta()[fieldKey];
+  const needle = query.trim().toLowerCase();
+  return [meta.label, meta.description, fieldKey].some((text) =>
+    text.toLowerCase().includes(needle),
+  );
+}
+
 const OptionsPage: React.FC = () => {
-	const { settings, isLoading, updateSettings, resetToDefaults } =
-		useSettings();
-	const { theme, setTheme } = useTheme();
-	const { toast } = useToast();
-	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [isSaving, setIsSaving] = useState(false);
-	const [activeTab, setActiveTab] = useState("appearance");
-	const [searchQuery, setSearchQuery] = useState("");
+  const { settings, isLoading, resetToDefaults } = useSettings();
+  const { resolvedTheme, setTheme } = useTheme();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState('appearance');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [values, setValues] = useState<Settings>(settings);
+  const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
+  const [inputErrors, setInputErrors] = useState<SettingsFieldErrors>({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [detectedModels, setDetectedModels] = useState<Partial<Record<AIProvider, string[]>>>({});
+  const savedRef = useRef<Settings>(settings);
+  const valuesRef = useRef<Settings>(values);
+  valuesRef.current = values;
 
-	// API Key state (stored separately for security)
-	const [apiKey, setApiKey] = useState("");
-	const [showApiKey, setShowApiKey] = useState(false);
-	const [apiKeyError, setApiKeyError] = useState("");
-	const [providerBaseUrl, setProviderBaseUrl] = useState("");
-	const [providerCustomModel, setProviderCustomModel] = useState("");
-	const [providerExtraHeaders, setProviderExtraHeaders] = useState("");
-	const [isVerifyingProvider, setIsVerifyingProvider] = useState(false);
-	const [isDetectingModels, setIsDetectingModels] = useState(false);
-	const [detectedModels, setDetectedModels] = useState<Record<string, string[]>>({});
+  const categories = getSettingsCategories();
+  const fieldErrors = { ...saveErrors, ...inputErrors };
+  const errorCount = Object.keys(fieldErrors).length;
 
-	const form = useForm<Settings>({
-		resolver: zodResolver(settingsSchema) as never,
-		defaultValues: settings,
-	});
-	const selectedProvider = form.watch("aiProvider") as AIProvider;
-	const categories = getSettingsCategories();
+  // Take stored settings (from this page, another page, sync, or import) while keeping local
+  // edits that have not been persisted yet.
+  useEffect(() => {
+    if (isLoading) return;
+    const previous = savedRef.current;
+    savedRef.current = settings;
+    setValues((current) => ({ ...settings, ...getChangedSettings(previous, current) }));
+  }, [settings, isLoading]);
 
-	// Load API key from storage
-	useEffect(() => {
-		const provider = selectedProvider;
-		getStoredAIProviderConfig(provider).then((stored) => {
-			setApiKey(stored.apiKey ?? "");
-			setProviderBaseUrl(stored.baseUrl ?? getProviderConfig(provider)?.base_url ?? "");
-			setProviderCustomModel(stored.customModel ?? "");
-			setProviderExtraHeaders(stored.extraHeaders ?? "");
-		});
-	}, [selectedProvider]);
+  const persist = useCallback(
+    async (changes: Partial<Settings>) => {
+      const keys = Object.keys(changes) as (keyof Settings)[];
+      if (keys.length === 0) return;
+      setIsSaving(true);
+      try {
+        const { settings: saved, errors } = await saveValidSettings(changes);
+        savedRef.current = saved;
+        setSaveErrors((current) => {
+          const next = { ...current };
+          for (const key of keys) {
+            if (errors[key]) next[key] = errors[key];
+            else delete next[key];
+          }
+          return next;
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : t('error_unknown');
+        // Keep the edits and mark them unsaved so the footer never claims success.
+        setSaveErrors((current) => ({
+          ...current,
+          ...Object.fromEntries(keys.map((key) => [key, message])),
+        }));
+        toast({
+          title: `× ${t('toast_errorSavingSettings')}`,
+          description: message,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsSaving(false);
+      }
+    },
+    [toast],
+  );
 
-	useEffect(() => {
-		const subscription = form.watch((_value, { name }) => {
-			if (name === "aiProvider") {
-				const provider = form.getValues("aiProvider") as AIProvider;
-				getStoredAIProviderConfig(provider).then((stored) => {
-					setApiKey(stored.apiKey ?? "");
-					setProviderBaseUrl(stored.baseUrl ?? getProviderConfig(provider)?.base_url ?? "");
-					setProviderCustomModel(stored.customModel ?? "");
-					setProviderExtraHeaders(stored.extraHeaders ?? "");
-				});
+  // Debounced autosave of changed fields only.
+  useEffect(() => {
+    if (isLoading) return;
+    const changes = getChangedSettings(savedRef.current, values);
+    if (Object.keys(changes).length === 0) return;
+    const timeoutId = setTimeout(() => void persist(changes), AUTOSAVE_DELAY_MS);
+    return () => clearTimeout(timeoutId);
+  }, [values, isLoading, persist]);
 
-				const currentModel = form.getValues("aiModel");
-				const validModels = getModelsForProvider(provider).map((model) => model.id);
-				if (validModels.length > 0 && !validModels.includes(currentModel)) {
-					form.setValue("aiModel", validModels[0] as Settings["aiModel"]);
-				}
-			}
-		});
+  // Do not drop an edit made just before the page is closed or reloaded.
+  useEffect(() => {
+    const flush = () => void persist(getChangedSettings(savedRef.current, valuesRef.current));
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [persist]);
 
-		return () => subscription.unsubscribe();
-	}, [form]);
+  const setFieldValue = useCallback((fieldKey: keyof Settings, value: SettingValue) => {
+    setValues((current) => {
+      const next = { ...current, [fieldKey]: value } as Settings;
+      // A model that does not belong to the new provider would leave the Model select blank.
+      if (fieldKey === 'aiProvider' && value !== current.aiProvider) {
+        const provider = value as AIProvider;
+        const models = getModelsForProvider(provider).map((model) => model.id);
+        if (!models.includes(current.aiModel)) next.aiModel = getDefaultModel(provider);
+      }
+      return next;
+    });
+  }, []);
 
-	// Validate and save API key
-	const saveApiKey = async (key: string) => {
-		setApiKeyError("");
-		const provider = selectedProvider;
-		const providerConfig = getProviderConfig(provider);
+  const setInputError = useCallback((fieldKey: keyof Settings, message: string | undefined) => {
+    setInputErrors((current) => {
+      if (current[fieldKey] === message) return current;
+      const next = { ...current };
+      if (message) next[fieldKey] = message;
+      else delete next[fieldKey];
+      return next;
+    });
+  }, []);
 
-		if (!key.trim()) {
-			await saveStoredAIProviderConfig(provider, { apiKey: "" });
-			setApiKey("");
-			return;
-		}
+  const toggleTheme = () => {
+    const next = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    setFieldValue('theme', next);
+  };
 
-		if (!providerRequiresApiKey(provider)) {
-			await saveStoredAIProviderConfig(provider, { apiKey: key });
-			setApiKey(key);
-			return;
-		}
+  const handleReset = async () => {
+    try {
+      await resetToDefaults();
+      savedRef.current = defaultSettings;
+      setValues(defaultSettings);
+      setSaveErrors({});
+      setInputErrors({});
+      toast({
+        title: `✓ ${t('toast_settingsReset')}`,
+        description: t('toast_settingsResetDescription'),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: `× ${t('toast_errorResettingSettings')}`,
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    }
+  };
 
-		if (providerConfig?.api_key_pattern) {
-			try {
-				const regex = new RegExp(providerConfig.api_key_pattern);
-				if (!regex.test(key)) {
-					setApiKeyError(`Invalid API key format for ${providerConfig.name}`);
-					return;
-				}
-			} catch (e) {
-				console.error("Invalid regex in config", e);
-			}
-		}
+  const handleExport = async () => {
+    try {
+      const json = await exportSettings();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bookmark-scout-settings.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      toast({
+        title: `✓ ${t('toast_settingsExported')}`,
+        description: t('toast_settingsExportedDescription'),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: `× ${t('toast_exportFailed')}`,
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    }
+  };
 
-		await saveStoredAIProviderConfig(provider, { apiKey: key });
-		setApiKey(key);
-		toast({
-			title: "✓ API Key Saved",
-			description: "Your API key has been saved securely.",
-			variant: "success",
-		});
-	};
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-	const saveProviderOverrides = async () => {
-		const provider = selectedProvider;
-		if (!apiKey.trim() && !providerBaseUrl.trim() && !providerCustomModel.trim() && !providerExtraHeaders.trim()) {
-			await clearStoredAIProviderConfig(provider);
-			return;
-		}
+    try {
+      const changed = await importSettings(await file.text());
+      const meta = getSettingsFieldMeta();
+      const labels = changed.slice(0, IMPORT_CHANGE_PREVIEW_LIMIT).map((key) => meta[key].label);
+      const more = changed.length - labels.length;
+      toast({
+        title: `✓ ${t('toast_settingsImported')}`,
+        description:
+          changed.length === 0
+            ? t('toast_settingsImportedNoChanges')
+            : t('toast_settingsImportedChanges', [
+                String(changed.length),
+                more > 0
+                  ? `${labels.join(', ')} ${t('toast_andMore', String(more))}`
+                  : labels.join(', '),
+              ]),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: `× ${t('toast_importFailed')}`,
+        description: error instanceof Error ? error.message : t('error_invalidSettingsFile'),
+        variant: 'destructive',
+      });
+    }
 
-		if (providerExtraHeaders.trim()) {
-			try {
-				const parsed = JSON.parse(providerExtraHeaders) as unknown;
-				const isStringRecord =
-					parsed !== null &&
-					typeof parsed === "object" &&
-					!Array.isArray(parsed) &&
-					Object.values(parsed).every((value) => typeof value === "string");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
-				if (!isStringRecord) {
-					throw new Error("Extra headers must be a JSON object with string values.");
-				}
-			} catch {
-				toast({
-					title: "Invalid extra headers",
-					description: 'Use JSON object syntax, for example: {"HTTP-Referer":"https://example.com"}',
-					variant: "destructive",
-				});
-				return;
-			}
-		}
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return null;
+    return Object.fromEntries(
+      Object.entries(categories).map(([key, category]) => [
+        key,
+        category.fields.filter((fieldKey) => matchesQuery(fieldKey, searchQuery)),
+      ]),
+    ) as Record<string, (keyof Settings)[]>;
+  }, [categories, searchQuery]);
+  const searchMatchCount = searchResults
+    ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0)
+    : 0;
 
-		await saveStoredAIProviderConfig(provider, {
-			apiKey,
-			baseUrl: providerBaseUrl,
-			customModel: providerCustomModel,
-			extraHeaders: providerExtraHeaders,
-		});
-	};
+  const modelOptions = (() => {
+    const detected = detectedModels[values.aiProvider];
+    return detected?.length
+      ? detected.map((id) => ({ value: id, label: id }))
+      : getModelsForProvider(values.aiProvider).map((model) => ({
+          value: model.id,
+          label: model.name,
+        }));
+  })();
 
-	const buildSelectedAISettings = () =>
-		buildAISettingsFromProvider(selectedProvider, form.getValues("aiModel"), true);
+  const renderSettingsField = (fieldKey: keyof Settings) => (
+    <SettingsFieldRow
+      key={fieldKey}
+      fieldKey={fieldKey}
+      value={values[fieldKey]}
+      error={fieldErrors[fieldKey]}
+      selectOptions={fieldKey === 'aiModel' ? modelOptions : undefined}
+      onChange={(value) => setFieldValue(fieldKey, value)}
+      onInputError={(message) => setInputError(fieldKey, message)}
+    />
+  );
 
-	const verifyProviderConnection = async () => {
-		setIsVerifyingProvider(true);
-		try {
-			await saveProviderOverrides();
-			await verifyAIService(await buildSelectedAISettings());
-			toast({
-				title: "Service verified",
-				description: `${getProviderConfig(selectedProvider)?.name || selectedProvider} responded successfully.`,
-				variant: "success",
-			});
-		} catch (error) {
-			toast({
-				title: "Service verification failed",
-				description: error instanceof Error ? error.message : "Provider did not respond successfully.",
-				variant: "destructive",
-			});
-		} finally {
-			setIsVerifyingProvider(false);
-		}
-	};
+  const renderCategoryHeader = (categoryKey: string, headingLevel: 'h2' | 'h3' = 'h3') => {
+    const category = categories[categoryKey];
+    const Heading = headingLevel;
+    if (categoryKey === 'ai') {
+      return (
+        <div className="mb-6 rounded-xl border border-violet-500/20 bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 p-4">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 p-2 text-white">
+              <Sparkles className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <Heading className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-lg font-semibold text-transparent">
+                {category.label}
+              </Heading>
+              <p className="text-sm text-muted-foreground">{category.description}</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return (
+      <div className="mb-4">
+        <Heading className="text-lg font-semibold">{category.label}</Heading>
+        <p className="text-sm text-muted-foreground">{category.description}</p>
+      </div>
+    );
+  };
 
-	const refreshProviderModels = async () => {
-		setIsDetectingModels(true);
-		try {
-			await saveProviderOverrides();
-			const models = await detectAIModels(await buildSelectedAISettings());
-			if (models.length === 0) {
-				throw new Error("Provider returned no models.");
-			}
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/20">
+        <div className="text-muted-foreground">{t('state_loadingSettings')}</div>
+      </div>
+    );
+  }
 
-			setDetectedModels((current) => ({
-				...current,
-				[selectedProvider]: models.map((model) => model.id),
-			}));
-			form.setValue("aiModel", models[0].id);
-			toast({
-				title: "Models refreshed",
-				description: `${models.length} models detected from ${getProviderConfig(selectedProvider)?.name || selectedProvider}.`,
-				variant: "success",
-			});
-		} catch (error) {
-			toast({
-				title: "Model detection failed",
-				description: error instanceof Error ? error.message : "Provider models could not be detected.",
-				variant: "destructive",
-			});
-		} finally {
-			setIsDetectingModels(false);
-		}
-	};
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      <div className="container mx-auto max-w-4xl p-4 sm:p-6">
+        <Card className="border-none shadow-lg">
+          <CardHeader className="pb-4">
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <CardTitle className="text-2xl font-bold">{t('settings_title')}</CardTitle>
+                <CardDescription>{t('settings_description')}</CardDescription>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                onClick={toggleTheme}
+                aria-label={
+                  resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
+                }
+                title={
+                  resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
+                }
+              >
+                {resolvedTheme === 'dark' ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+              </Button>
+            </div>
 
-	const providerDescription = providerRequiresApiKey(selectedProvider)
-		? "Your AI provider API key (stored locally)"
-		: `${getProviderConfig(selectedProvider)?.name || "Provider"} can run without an API key`;
-	const providerPlaceholder =
-		getProviderConfig(selectedProvider)?.api_key_placeholder || "sk-...";
+            {/* Search bar */}
+            <div className="relative mt-4">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder={t('settings_searchPlaceholder')}
+                aria-label={t('settings_searchPlaceholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </CardHeader>
 
-	// Update form when settings load
-	useEffect(() => {
-		if (!isLoading) {
-			form.reset(settings);
-		}
-	}, [settings, isLoading, form]);
+          <CardContent className="pt-0">
+            <Tabs
+              value={activeTab}
+              onValueChange={(tab) => {
+                setActiveTab(tab);
+                setSearchQuery('');
+              }}
+              className="w-full"
+            >
+              <TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
+                {Object.entries(categories).map(([key, category]) => {
+                  const count = searchResults?.[key]?.length;
+                  return (
+                    <TabsTrigger
+                      key={key}
+                      value={key}
+                      className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                    >
+                      {tabIcons[key]}
+                      <span>{category.label}</span>
+                      {count !== undefined && (
+                        <span className="rounded-full bg-muted px-1.5 text-xs text-muted-foreground">
+                          {count}
+                        </span>
+                      )}
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
 
-	// Auto-save logic
-	const values = form.watch();
+              {searchResults ? (
+                <section aria-live="polite" className="space-y-6">
+                  <p className="text-sm text-muted-foreground">
+                    {t('settings_searchResultsCount', String(searchMatchCount))}
+                  </p>
+                  {searchMatchCount === 0 ? (
+                    <div className="py-8 text-center text-muted-foreground">
+                      {t('state_noSettingsMatch')}
+                    </div>
+                  ) : (
+                    Object.entries(searchResults)
+                      .filter(([, fields]) => fields.length > 0)
+                      .map(([categoryKey, fields]) => (
+                        <div key={categoryKey} data-search-category={categoryKey}>
+                          {renderCategoryHeader(categoryKey, 'h2')}
+                          <div className="space-y-3">{fields.map(renderSettingsField)}</div>
+                        </div>
+                      ))
+                  )}
+                </section>
+              ) : (
+                Object.entries(categories).map(([categoryKey, category]) => (
+                  <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
+                    {renderCategoryHeader(categoryKey)}
+                    <div className="space-y-3">
+                      {category.fields.map(renderSettingsField)}
+                      {categoryKey === 'ai' && (
+                        <AIProviderPanel
+                          provider={values.aiProvider}
+                          model={values.aiModel}
+                          onModelsDetected={(provider, modelIds) => {
+                            setDetectedModels((current) => ({ ...current, [provider]: modelIds }));
+                            if (!modelIds.includes(valuesRef.current.aiModel)) {
+                              setFieldValue('aiModel', modelIds[0]);
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
+                  </TabsContent>
+                ))
+              )}
+            </Tabs>
 
-	// Debounced save function
-	useEffect(() => {
-		// Skip initial load or empty settings
-		if (isLoading || Object.keys(values).length === 0) return;
-
-		const timeoutId = setTimeout(async () => {
-			setIsSaving(true);
-			try {
-				await updateSettings(values);
-				if (values.theme !== theme) {
-					setTheme(values.theme);
-				}
-			} catch (error) {
-				toast({
-					title: `× ${t("toast_errorSavingSettings")}`,
-					description:
-						error instanceof Error ? error.message : t("error_unknown"),
-					variant: "destructive",
-				});
-			} finally {
-				setIsSaving(false);
-			}
-		}, 1000); // 1 second debounce
-
-		return () => clearTimeout(timeoutId);
-	}, [values, updateSettings, theme, setTheme, isLoading, toast]);
-
-	// Remove manual submit handler
-	const onSubmit = (_data: Settings) => {
-		// No-op, handled by auto-save
-		return;
-	};
-
-	const handleReset = async () => {
-		try {
-			await resetToDefaults();
-			form.reset();
-			toast({
-				title: `✓ ${t("toast_settingsReset")}`,
-				description: t("toast_settingsResetDescription"),
-				variant: "success",
-			});
-		} catch (error) {
-			toast({
-				title: `× ${t("toast_errorResettingSettings")}`,
-				description:
-					error instanceof Error ? error.message : t("error_unknown"),
-				variant: "destructive",
-			});
-		}
-	};
-
-	const handleExport = async () => {
-		try {
-			const json = await exportSettings();
-			const blob = new Blob([json], { type: "application/json" });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = "bookmark-scout-settings.json";
-			a.click();
-			URL.revokeObjectURL(url);
-			toast({
-				title: `✓ ${t("toast_settingsExported")}`,
-				description: t("toast_settingsExportedDescription"),
-				variant: "success",
-			});
-		} catch (error) {
-			toast({
-				title: `× ${t("toast_exportFailed")}`,
-				description:
-					error instanceof Error ? error.message : t("error_unknown"),
-				variant: "destructive",
-			});
-		}
-	};
-
-	const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) return;
-
-		try {
-			const text = await file.text();
-			await importSettings(text);
-			toast({
-				title: `✓ ${t("toast_settingsImported")}`,
-				description: t("toast_settingsImportedDescription"),
-				variant: "success",
-			});
-		} catch (error) {
-			toast({
-				title: `× ${t("toast_importFailed")}`,
-				description:
-					error instanceof Error
-						? error.message
-						: t("error_invalidSettingsFile"),
-				variant: "destructive",
-			});
-		}
-
-		if (fileInputRef.current) {
-			fileInputRef.current.value = "";
-		}
-	};
-
-	// Filter settings by search query
-	const filterFields = (fields: readonly (keyof Settings)[]) => {
-		if (!searchQuery) return fields;
-		return fields.filter((fieldKey) => {
-			const meta = getSettingsFieldMeta()[fieldKey];
-			return (
-				meta.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				meta.description.toLowerCase().includes(searchQuery.toLowerCase())
-			);
-		});
-	};
-
-	const serializeFieldValue = (value: Settings[keyof Settings]) => {
-		if (Array.isArray(value)) {
-			return value.join(", ");
-		}
-		return String(value ?? "");
-	};
-
-	const parseTextFieldValue = (
-		fieldKey: keyof Settings,
-		value: string,
-	): Settings[keyof Settings] => {
-		const currentValue = form.watch(fieldKey);
-		if (Array.isArray(currentValue)) {
-			return value
-				.split(",")
-				.map((item) => item.trim())
-				.filter(Boolean) as Settings[keyof Settings];
-		}
-
-		return value as Settings[keyof Settings];
-	};
-
-	const renderField = (fieldKey: keyof Settings) => {
-		const meta = getSettingsFieldMeta()[fieldKey];
-
-			switch (meta.type) {
-			case "switch":
-				return (
-					<Switch
-						checked={form.watch(fieldKey) as boolean}
-						onCheckedChange={(checked) =>
-							form.setValue(fieldKey, checked as Settings[typeof fieldKey])
-						}
-					/>
-				);
-
-			case "select": {
-				// For aiModel, use dynamic options based on selected provider
-				let selectOptions = meta.options;
-				if (fieldKey === "aiModel") {
-					const provider = form.watch("aiProvider") as AIProvider;
-					const detected = detectedModels[provider];
-					selectOptions = detected?.length
-						? detected.map((id) => ({ value: id, label: id }))
-						: getModelsForProvider(provider).map((model) => ({ value: model.id, label: model.name }));
-				}
-
-				return (
-					<Select
-						value={String(form.watch(fieldKey))}
-						onValueChange={(value) => {
-							const numValue = Number(value);
-							const finalValue = Number.isNaN(numValue) ? value : numValue;
-							form.setValue(fieldKey, finalValue as Settings[typeof fieldKey]);
-						}}
-					>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							{selectOptions?.map((option) => (
-								<SelectItem
-									key={String(option.value)}
-									value={String(option.value)}
-								>
-									{option.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				);
-			}
-
-			case "number":
-				return (
-					<div className="flex items-center gap-3 w-[200px]">
-						<Slider
-							value={[form.watch(fieldKey) as number]}
-							onValueChange={([value]) =>
-								form.setValue(fieldKey, value as Settings[typeof fieldKey])
-							}
-							min={meta.min}
-							max={meta.max}
-							step={meta.step}
-							className="flex-1"
-						/>
-						<span className="text-sm text-muted-foreground w-16 text-right">
-							{form.watch(fieldKey)}
-							{meta.unit}
-						</span>
-					</div>
-				);
-
-			case "text":
-				return (
-					<Input
-						value={serializeFieldValue(form.watch(fieldKey))}
-						onChange={(event) =>
-							form.setValue(
-								fieldKey,
-								parseTextFieldValue(fieldKey, event.target.value),
-							)
-						}
-						className="w-[200px]"
-						placeholder={meta.label}
-					/>
-				);
-
-			default:
-				return null;
-		}
-	};
-
-	const renderSettingsField = (fieldKey: keyof Settings) => {
-		const meta = getSettingsFieldMeta()[fieldKey];
-		const error = form.formState.errors[fieldKey];
-		const currentValue = form.watch(fieldKey);
-		const defaultValue = defaultSettings[fieldKey];
-		const isChanged =
-			JSON.stringify(currentValue) !== JSON.stringify(defaultValue);
-
-		const handleResetField = () => {
-			form.setValue(fieldKey, defaultValue as Settings[typeof fieldKey]);
-		};
-
-		return (
-			<motion.div
-				key={fieldKey}
-				layout
-				initial={{ opacity: 0, y: 10 }}
-				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: -10 }}
-				whileHover={{ scale: 1.01 }}
-				className={`flex items-start justify-between p-4 rounded-lg bg-card hover:bg-accent/50 transition-colors border ${
-					isChanged
-						? "border-primary/50 bg-primary/5"
-						: "border-transparent hover:border-border"
-				}`}
-			>
-				<div className="space-y-1 flex-1 pr-4">
-					<div className="flex items-center gap-2">
-						<Label htmlFor={fieldKey} className="text-base font-medium">
-							{meta.label}
-						</Label>
-						{isChanged && (
-							<span className="inline-flex items-center gap-1 text-xs text-primary font-medium px-1.5 py-0.5 rounded-full bg-primary/10">
-								<span className="w-1.5 h-1.5 rounded-full bg-primary" />
-								Modified
-							</span>
-						)}
-					</div>
-					<p className="text-sm text-muted-foreground">{meta.description}</p>
-					{error && <p className="text-sm text-destructive">{error.message}</p>}
-				</div>
-				<div className="flex items-center gap-2">
-					{renderField(fieldKey)}
-					{isChanged && (
-						<Button
-							type="button"
-							variant="ghost"
-							size="icon"
-							className="h-8 w-8 text-muted-foreground hover:text-primary"
-							onClick={handleResetField}
-							title="Reset to default"
-						>
-							<RotateCcw className="h-3.5 w-3.5" />
-						</Button>
-					)}
-				</div>
-			</motion.div>
-		);
-	};
-
-	if (isLoading) {
-		return (
-			<div className="min-h-screen bg-gradient-to-b from-background to-muted/20 flex items-center justify-center">
-				<div className="text-muted-foreground">
-					{t("state_loadingSettings")}
-				</div>
-			</div>
-		);
-	}
-
-	return (
-		<div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-			<div className="container mx-auto p-6 max-w-4xl">
-				<motion.div
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.3 }}
-				>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<Card className="border-none shadow-lg">
-							<CardHeader className="pb-4">
-								<div className="flex items-center justify-between">
-									<div>
-										<CardTitle className="text-2xl font-bold">
-											{t("settings_title")}
-										</CardTitle>
-										<CardDescription>
-											{t("settings_description")}
-										</CardDescription>
-									</div>
-									<div className="flex items-center gap-2">
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											onClick={() =>
-												setTheme(theme === "dark" ? "light" : "dark")
-											}
-										>
-											{theme === "dark" ? (
-												<Sun className="h-5 w-5" />
-											) : (
-												<Moon className="h-5 w-5" />
-											)}
-										</Button>
-									</div>
-								</div>
-
-								{/* Search bar */}
-								<div className="relative mt-4">
-									<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-									<Input
-										placeholder={t("settings_searchPlaceholder")}
-										value={searchQuery}
-										onChange={(e) => setSearchQuery(e.target.value)}
-										className="pl-9"
-									/>
-								</div>
-							</CardHeader>
-
-							<CardContent className="pt-0">
-								<Tabs
-									value={activeTab}
-									onValueChange={setActiveTab}
-									className="w-full"
-								>
-									<TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-										{Object.entries(categories).map(
-											([key, category]) => (
-												<TabsTrigger
-													key={key}
-													value={key}
-													className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-												>
-													{tabIcons[key]}
-													<span>{category.label}</span>
-												</TabsTrigger>
-											),
-										)}
-									</TabsList>
-
-									<AnimatePresence mode="wait">
-										{Object.entries(categories).map(
-											([categoryKey, category]) => {
-												const filteredFields = filterFields(category.fields);
-												return (
-													<TabsContent
-														key={categoryKey}
-														value={categoryKey}
-														className="mt-0"
-													>
-														<motion.div
-															initial={{ opacity: 0, x: 20 }}
-															animate={{ opacity: 1, x: 0 }}
-															exit={{ opacity: 0, x: -20 }}
-															transition={{ duration: 0.2 }}
-														>
-															{/* Special header for AI tab */}
-															{categoryKey === "ai" ? (
-																<div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 border border-violet-500/20">
-																	<div className="flex items-center gap-3">
-																		<div className="p-2 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 text-white">
-																			<Sparkles className="h-5 w-5" />
-																		</div>
-																		<div>
-																			<h3 className="text-lg font-semibold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-																				{category.label}
-																			</h3>
-																			<p className="text-sm text-muted-foreground">
-																				{category.description}
-																			</p>
-																		</div>
-																	</div>
-																</div>
-															) : (
-																<div className="mb-4">
-																	<h3 className="text-lg font-semibold">
-																		{category.label}
-																	</h3>
-																	<p className="text-sm text-muted-foreground">
-																		{category.description}
-																	</p>
-																</div>
-															)}
-
-															<div className="space-y-3">
-																{filteredFields.length > 0 ? (
-																	filteredFields.map((fieldKey) =>
-																		renderSettingsField(fieldKey),
-																	)
-																) : (
-																	<div className="text-center py-8 text-muted-foreground">
-																		{t("state_noSettingsMatch")}
-																	</div>
-																)}
-
-																{/* API Key input for AI category */}
-										{categoryKey === "ai" && (
-											<>
-												<motion.div
-													layout
-													initial={{ opacity: 0, y: 10 }}
-													animate={{ opacity: 1, y: 0 }}
-													className="flex items-start justify-between rounded-lg border border-transparent bg-card p-4 transition-colors hover:border-border hover:bg-accent/50"
-												>
-													<div className="space-y-1 flex-1 pr-4">
-														<Label className="text-base font-medium">API Key</Label>
-														<p className="text-sm text-muted-foreground">{providerDescription}</p>
-														{apiKeyError && (
-															<p className="text-sm text-destructive">{apiKeyError}</p>
-														)}
-													</div>
-													<div className="flex items-center gap-2">
-														<div className="relative">
-															<Input
-																type={showApiKey ? "text" : "password"}
-																value={apiKey}
-																onChange={(e) => setApiKey(e.target.value)}
-																onBlur={(e) => saveApiKey(e.target.value)}
-																placeholder={providerPlaceholder}
-																className="w-[200px] pr-8"
-															/>
-															<Button
-																type="button"
-																variant="ghost"
-																size="icon"
-																className="absolute right-0 top-0 h-full w-8"
-																onClick={() => setShowApiKey(!showApiKey)}
-															>
-																{showApiKey ? (
-																	<EyeOff className="h-4 w-4" />
-																) : (
-																	<Eye className="h-4 w-4" />
-																)}
-															</Button>
-														</div>
-													</div>
-												</motion.div>
-
-												<motion.div
-													layout
-													initial={{ opacity: 0, y: 10 }}
-												animate={{ opacity: 1, y: 0 }}
-												className="space-y-3 rounded-lg border border-transparent bg-card p-4 hover:border-border"
-													>
-														<div className="space-y-1">
-															<Label className="text-base font-medium">Base URL</Label>
-													<p className="text-sm text-muted-foreground">
-														Optional override for OpenAI-compatible providers such as CLIProxyAPI or custom endpoints.
-													</p>
-												</div>
-														<Input
-															value={providerBaseUrl}
-															onChange={(event) => setProviderBaseUrl(event.target.value)}
-															onBlur={saveProviderOverrides}
-															placeholder={getProviderConfig(selectedProvider)?.base_url || "https://api.example.com/v1"}
-														/>
-
-														{providerSupportsCustomModel(selectedProvider) && (
-															<>
-														<div className="space-y-1">
-															<Label className="text-base font-medium">Custom Model</Label>
-															<p className="text-sm text-muted-foreground">
-																Optional model id override for providers that allow arbitrary model names.
-															</p>
-														</div>
-														<Input
-															value={providerCustomModel}
-															onChange={(event) => setProviderCustomModel(event.target.value)}
-															onBlur={saveProviderOverrides}
-															placeholder="gpt-4o-mini"
-														/>
-													</>
-												)}
-
-												<div className="space-y-1">
-													<Label className="text-base font-medium">Extra Headers JSON</Label>
-													<p className="text-sm text-muted-foreground">
-														Optional JSON object for provider-specific headers.
-													</p>
-												</div>
-														<Input
-															value={providerExtraHeaders}
-															onChange={(event) => setProviderExtraHeaders(event.target.value)}
-															onBlur={saveProviderOverrides}
-															placeholder='{"HTTP-Referer":"https://example.com"}'
-														/>
-														<div className="flex flex-wrap gap-2">
-															<Button
-																type="button"
-																variant="outline"
-																onClick={refreshProviderModels}
-																disabled={isDetectingModels}
-															>
-																<RefreshCw className="h-4 w-4 mr-2" />
-																{isDetectingModels ? "Refreshing..." : "Refresh Models"}
-															</Button>
-															<Button
-																type="button"
-																variant="outline"
-																onClick={verifyProviderConnection}
-																disabled={isVerifyingProvider}
-															>
-																<Wifi className="h-4 w-4 mr-2" />
-																{isVerifyingProvider ? "Verifying..." : "Verify Service"}
-															</Button>
-														</div>
-													</motion.div>
-											</>
-										)}
-									</div>
-								</motion.div>
-													</TabsContent>
-												);
-											},
-										)}
-									</AnimatePresence>
-								</Tabs>
-
-								{/* Action Buttons */}
-								<div className="pt-8 border-t mt-8 flex flex-wrap gap-3 justify-between">
-									<div className="flex gap-2">
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											onClick={handleExport}
-										>
-											<Download className="h-4 w-4 mr-2" />
-											{t("action_export")}
-										</Button>
-										<Button
-											type="button"
-											variant="outline"
-											size="sm"
-											onClick={() => fileInputRef.current?.click()}
-										>
-											<Upload className="h-4 w-4 mr-2" />
-											{t("action_import")}
-										</Button>
-										<input
-											ref={fileInputRef}
-											type="file"
-											accept=".json"
-											className="hidden"
-											onChange={handleImport}
-										/>
-									</div>
-									<div className="flex gap-2">
-										<Button
-											type="button"
-											variant="outline"
-											onClick={handleReset}
-											className="hover:bg-destructive/10 hover:text-destructive"
-										>
-											<RotateCcw className="h-4 w-4 mr-2" />
-											{t("action_resetAll")}
-										</Button>
-										<div className="flex items-center justify-end text-sm text-muted-foreground px-3 min-w-[140px]">
-											{isSaving ? (
-												<div className="flex items-center animate-pulse">
-													<Settings2 className="h-3 w-3 mr-2 animate-spin" />
-													{t("action_saving")}
-												</div>
-											) : (
-												<div className="flex items-center">
-													<Save className="h-3 w-3 mr-2 opacity-50" />
-													{t("toast_settingsSaved")}
-												</div>
-											)}
-										</div>
-									</div>
-								</div>
-							</CardContent>
-						</Card>
-					</form>
-				</motion.div>
-			</div>
-			<Toaster />
-		</div>
-	);
+            {/* Action Buttons */}
+            <div className="mt-8 flex flex-wrap justify-between gap-3 border-t pt-8">
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" variant="outline" size="sm" onClick={handleExport}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {t('action_export')}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  {t('action_import')}
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json"
+                  className="hidden"
+                  aria-label={t('action_import')}
+                  onChange={handleImport}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleReset}
+                  className="hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  {t('action_resetAll')}
+                </Button>
+                <output
+                  aria-live="polite"
+                  data-testid="settings-save-status"
+                  className="flex min-w-[140px] items-center justify-end px-3 text-sm text-muted-foreground"
+                >
+                  {isSaving ? (
+                    <span className="flex animate-pulse items-center">
+                      <Settings2 className="mr-2 h-3 w-3 animate-spin" />
+                      {t('action_saving')}
+                    </span>
+                  ) : errorCount > 0 ? (
+                    <span className="flex items-center text-destructive">
+                      <TriangleAlert className="mr-2 h-3 w-3" />
+                      {t('settings_statusNotSaved', String(errorCount))}
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      <Save className="mr-2 h-3 w-3 opacity-50" />
+                      {t('toast_settingsSaved')}
+                    </span>
+                  )}
+                </output>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <Toaster />
+    </div>
+  );
 };
 
 export default OptionsPage;

@@ -1,179 +1,186 @@
 /**
- * Recent folders storage using chrome.storage.local.
+ * Recent folders storage using browser.storage.local.
  * Tracks folders where bookmarks were recently added for quick access.
  */
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
 // Storage key for recent folders
-const RECENT_FOLDERS_KEY = "bookmark-scout-recent-folders";
-const MAX_RECENT_FOLDERS = 5;
+const RECENT_FOLDERS_KEY = 'bookmark-scout-recent-folders';
+/** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
+export const RECENT_FOLDERS_STORAGE_LIMIT = 10;
 
 export interface RecentFolder {
-	id: string;
-	title: string;
-	lastUsed: number;
+  id: string;
+  title: string;
+  lastUsed: number;
+}
+
+function isRecentFolder(value: unknown): value is RecentFolder {
+  if (!value || typeof value !== 'object') return false;
+  const folder = value as Partial<RecentFolder>;
+  return typeof folder.id === 'string' && folder.id.length > 0 && typeof folder.title === 'string';
 }
 
 /**
- * Get recent folders from chrome.storage.local.
+ * Drop malformed entries and duplicate ids (keeping the most recent) and cap the list.
  */
-export async function getRecentFolders(): Promise<RecentFolder[]> {
-	return new Promise((resolve) => {
-		if (!chrome?.storage?.local) {
-			console.warn("Chrome storage API not available");
-			resolve([]);
-			return;
-		}
+export function normalizeRecentFolders(value: unknown): RecentFolder[] {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  const folders: RecentFolder[] = [];
+  for (const entry of value) {
+    if (!isRecentFolder(entry) || seen.has(entry.id)) continue;
+    seen.add(entry.id);
+    folders.push({
+      id: entry.id,
+      title: entry.title,
+      lastUsed: typeof entry.lastUsed === 'number' ? entry.lastUsed : 0,
+    });
+  }
+  return folders.slice(0, RECENT_FOLDERS_STORAGE_LIMIT);
+}
 
-		chrome.storage.local.get(RECENT_FOLDERS_KEY, (result) => {
-			if (chrome.runtime.lastError) {
-				console.error(
-					"Error reading recent folders:",
-					chrome.runtime.lastError,
-				);
-				resolve([]);
-				return;
-			}
+async function readRecentFolders(): Promise<RecentFolder[]> {
+  try {
+    const result = await browser.storage.local.get(RECENT_FOLDERS_KEY);
+    return normalizeRecentFolders(result?.[RECENT_FOLDERS_KEY]);
+  } catch (error) {
+    console.error('Error reading recent folders:', error);
+    return [];
+  }
+}
 
-			const stored = result[RECENT_FOLDERS_KEY];
-			if (!stored || !Array.isArray(stored)) {
-				resolve([]);
-				return;
-			}
+async function writeRecentFolders(folders: RecentFolder[]): Promise<void> {
+  await browser.storage.local.set({ [RECENT_FOLDERS_KEY]: normalizeRecentFolders(folders) });
+}
 
-			resolve(stored as RecentFolder[]);
-		});
-	});
+/**
+ * Remove folders that no longer exist and pick up renamed titles.
+ */
+async function reconcileWithBookmarks(folders: RecentFolder[]): Promise<RecentFolder[]> {
+  if (!browser.bookmarks?.get) return folders;
+  const checked = await Promise.all(
+    folders.map(async (folder) => {
+      try {
+        const [node] = await browser.bookmarks.get(folder.id);
+        if (!node || node.url) return null;
+        return node.title === folder.title ? folder : { ...folder, title: node.title };
+      } catch {
+        return null;
+      }
+    }),
+  );
+  return checked.filter((folder): folder is RecentFolder => folder !== null);
+}
+
+/**
+ * Get recent folders, most recent first, pruned against the live bookmark tree.
+ * Pass `limit` to apply the user's recentFoldersMax setting.
+ */
+export async function getRecentFolders(limit?: number): Promise<RecentFolder[]> {
+  const stored = await readRecentFolders();
+  const reconciled = await reconcileWithBookmarks(stored);
+  if (JSON.stringify(reconciled) !== JSON.stringify(stored)) {
+    await writeRecentFolders(reconciled).catch((error) => {
+      console.error('Error pruning recent folders:', error);
+    });
+  }
+  return limit === undefined ? reconciled : reconciled.slice(0, Math.max(0, limit));
 }
 
 /**
  * Add a folder to recent folders list.
  * If folder already exists, moves it to the front and updates lastUsed.
  */
-export async function addRecentFolder(
-	id: string,
-	title: string,
-): Promise<void> {
-	return new Promise((resolve, reject) => {
-		if (!chrome?.storage?.local) {
-			console.warn("Chrome storage API not available");
-			resolve();
-			return;
-		}
-
-		getRecentFolders().then((current) => {
-			// Remove if already exists
-			const filtered = current.filter((f) => f.id !== id);
-
-			// Add to front with current timestamp
-			const updated: RecentFolder[] = [
-				{ id, title, lastUsed: Date.now() },
-				...filtered,
-			].slice(0, MAX_RECENT_FOLDERS);
-
-			chrome.storage.local.set({ [RECENT_FOLDERS_KEY]: updated }, () => {
-				if (chrome.runtime.lastError) {
-					reject(new Error(chrome.runtime.lastError.message));
-					return;
-				}
-				resolve();
-			});
-		});
-	});
+export async function addRecentFolder(id: string, title: string): Promise<void> {
+  const current = await readRecentFolders();
+  await writeRecentFolders([
+    { id, title, lastUsed: Date.now() },
+    ...current.filter((folder) => folder.id !== id),
+  ]);
 }
 
 /**
- * Remove a folder from recent folders (e.g., when folder is deleted).
+ * Remove folders from recent folders (e.g., when a folder or its parent is deleted).
  */
+export async function removeRecentFolders(ids: readonly string[]): Promise<void> {
+  const removed = new Set(ids);
+  const current = await readRecentFolders();
+  const next = current.filter((folder) => !removed.has(folder.id));
+  if (next.length !== current.length) await writeRecentFolders(next);
+}
+
 export async function removeRecentFolder(id: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-		if (!chrome?.storage?.local) {
-			resolve();
-			return;
-		}
+  await removeRecentFolders([id]);
+}
 
-		getRecentFolders().then((current) => {
-			const filtered = current.filter((f) => f.id !== id);
-
-			chrome.storage.local.set({ [RECENT_FOLDERS_KEY]: filtered }, () => {
-				if (chrome.runtime.lastError) {
-					reject(new Error(chrome.runtime.lastError.message));
-					return;
-				}
-				resolve();
-			});
-		});
-	});
+/**
+ * Keep a recent folder's title in sync after a rename.
+ */
+export async function updateRecentFolderTitle(id: string, title: string): Promise<void> {
+  const current = await readRecentFolders();
+  if (!current.some((folder) => folder.id === id && folder.title !== title)) return;
+  await writeRecentFolders(
+    current.map((folder) => (folder.id === id ? { ...folder, title } : folder)),
+  );
 }
 
 /**
  * Clear all recent folders.
  */
 export async function clearRecentFolders(): Promise<void> {
-	return new Promise((resolve, reject) => {
-		if (!chrome?.storage?.local) {
-			resolve();
-			return;
-		}
-
-		chrome.storage.local.remove(RECENT_FOLDERS_KEY, () => {
-			if (chrome.runtime.lastError) {
-				reject(new Error(chrome.runtime.lastError.message));
-				return;
-			}
-			resolve();
-		});
-	});
+  await browser.storage.local.remove(RECENT_FOLDERS_KEY);
 }
 
 /**
  * React hook for recent folders with live updates.
  */
 export function useRecentFolders(): {
-	recentFolders: RecentFolder[];
-	isLoading: boolean;
-	addFolder: (id: string, title: string) => Promise<void>;
-	removeFolder: (id: string) => Promise<void>;
-	clearAll: () => Promise<void>;
+  recentFolders: RecentFolder[];
+  isLoading: boolean;
+  addFolder: (id: string, title: string) => Promise<void>;
+  removeFolder: (id: string) => Promise<void>;
+  clearAll: () => Promise<void>;
 } {
-	const [recentFolders, setRecentFolders] = useState<RecentFolder[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+  const [recentFolders, setRecentFolders] = useState<RecentFolder[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		getRecentFolders().then((folders) => {
-			setRecentFolders(folders);
-			setIsLoading(false);
-		});
+  useEffect(() => {
+    let active = true;
+    getRecentFolders().then((folders) => {
+      if (!active) return;
+      setRecentFolders(folders);
+      setIsLoading(false);
+    });
 
-		// Listen for storage changes
-		const handleStorageChange = (
-			changes: { [key: string]: chrome.storage.StorageChange },
-			areaName: string,
-		) => {
-			if (areaName === "local" && changes[RECENT_FOLDERS_KEY]) {
-				const newValue = changes[RECENT_FOLDERS_KEY].newValue;
-				setRecentFolders(Array.isArray(newValue) ? newValue : []);
-			}
-		};
+    const handleStorageChange = (
+      changes: Record<string, { newValue?: unknown }>,
+      areaName: string,
+    ) => {
+      if (areaName === 'local' && changes[RECENT_FOLDERS_KEY]) {
+        setRecentFolders(normalizeRecentFolders(changes[RECENT_FOLDERS_KEY].newValue));
+      }
+    };
 
-		chrome?.storage?.onChanged?.addListener(handleStorageChange);
-		return () => {
-			chrome?.storage?.onChanged?.removeListener(handleStorageChange);
-		};
-	}, []);
+    browser.storage.onChanged.addListener(handleStorageChange);
+    return () => {
+      active = false;
+      browser.storage.onChanged.removeListener(handleStorageChange);
+    };
+  }, []);
 
-	const addFolder = useCallback(async (id: string, title: string) => {
-		await addRecentFolder(id, title);
-	}, []);
+  const addFolder = useCallback(async (id: string, title: string) => {
+    await addRecentFolder(id, title);
+  }, []);
 
-	const removeFolder = useCallback(async (id: string) => {
-		await removeRecentFolder(id);
-	}, []);
+  const removeFolder = useCallback(async (id: string) => {
+    await removeRecentFolder(id);
+  }, []);
 
-	const clearAll = useCallback(async () => {
-		await clearRecentFolders();
-	}, []);
+  const clearAll = useCallback(async () => {
+    await clearRecentFolders();
+  }, []);
 
-	return { recentFolders, isLoading, addFolder, removeFolder, clearAll };
+  return { recentFolders, isLoading, addFolder, removeFolder, clearAll };
 }

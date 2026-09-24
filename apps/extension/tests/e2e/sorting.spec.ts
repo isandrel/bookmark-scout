@@ -197,7 +197,9 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await expect(page.getByRole('button', { name: 'Move title left' })).toBeDisabled();
 
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Title' }).click();
+  // Title uses the shared sortable header menu (Asc / Desc / Clear sort).
+  await page.getByRole('button', { name: 'Title', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Asc' }).click();
 
   const pageSizeControl = page.getByText('Rows per page').locator('..').getByRole('combobox');
   await pageSizeControl.click();
