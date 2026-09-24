@@ -444,7 +444,7 @@
         "description": "Popup width setting label"
     },
     "settings_popupWidthDesc": {
-        "message": "Width of the popup window",
+        "message": "Width of the popup window (browsers allow at most 800 px)",
         "description": "Popup width setting description"
     },
     "settings_popupHeight": {
@@ -452,7 +452,7 @@
         "description": "Popup height setting label"
     },
     "settings_popupHeightDesc": {
-        "message": "Height of the popup window",
+        "message": "Height of the popup window (browsers allow at most 600 px)",
         "description": "Popup height setting description"
     },
     "settings_truncateLength": {
@@ -1472,7 +1472,7 @@
         "description": "Context menu bookmark naming setting label"
     },
     "settings_contextMenuNamingDesc": {
-        "message": "What to use as the bookmark title when saving via right-click",
+        "message": "What to use as the bookmark title when saving via right-click. Link text uses the link's text in Firefox, or the selected text in Chrome; otherwise the page title.",
         "description": "Context menu bookmark naming setting description"
     },
     "settings_namingLinkText": {
@@ -2562,5 +2562,245 @@
     "stats_protocols": {
         "message": "Protocols",
         "description": "Statistics protocols label"
+    },
+    "settings_aiProviderOllama": {
+        "message": "Ollama (Local)",
+        "description": "Ollama provider name"
+    },
+    "settings_aiProviderCustom": {
+        "message": "Custom Provider",
+        "description": "Custom AI provider name"
+    },
+    "settings_duplicatesMatchExactUrl": {
+        "message": "Exact URL",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchNormalizedUrl": {
+        "message": "Normalized URL",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleUrl": {
+        "message": "Title + URL",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleOnly": {
+        "message": "Title only",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesKeepOldest": {
+        "message": "Oldest",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepNewest": {
+        "message": "Newest",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepFirst": {
+        "message": "First found",
+        "description": "Duplicate keep rule option"
+    },
+    "error_invalidSettingsFields": {
+        "message": "These settings have invalid values: $1",
+        "description": "Settings validation error listing field labels"
+    },
+    "settings_errorMinExceedsMax": {
+        "message": "The minimum cannot be greater than the maximum.",
+        "description": "Settings error for min greater than max"
+    },
+    "settings_errorStatusCodes": {
+        "message": "Enter HTTP status codes from 100 to 599, separated by commas.",
+        "description": "Settings error for status code list"
+    },
+    "settings_errorRangeOrUnlimited": {
+        "message": "Choose No limit or a value from $1 to $2.",
+        "description": "Settings error for limit fields"
+    },
+    "settings_errorRange": {
+        "message": "Choose a value from $1 to $2.",
+        "description": "Settings error for number range"
+    },
+    "settings_errorRequired": {
+        "message": "This field can't be empty.",
+        "description": "Settings error for empty text"
+    },
+    "settings_errorTooLong": {
+        "message": "Use at most $1 characters.",
+        "description": "Settings error for long text"
+    },
+    "settings_errorInvalidOption": {
+        "message": "Choose one of the available options.",
+        "description": "Settings error for invalid option"
+    },
+    "options_baseUrlInvalid": {
+        "message": "Enter a full http:// or https:// URL.",
+        "description": "Invalid AI provider base URL error"
+    },
+    "error_aiKeyNotConfigured": {
+        "message": "API key not configured. Add it in Options → AI.",
+        "description": "AI API key missing error"
+    },
+    "contextMenu_untitled": {
+        "message": "Untitled",
+        "description": "Fallback bookmark title from context menu"
+    },
+    "contextMenu_recentFolders": {
+        "message": "Recent Folders",
+        "description": "Context menu recent folders submenu"
+    },
+    "contextMenu_aiSuggestions": {
+        "message": "AI Suggestions",
+        "description": "Context menu AI suggestions submenu"
+    },
+    "contextMenu_defaultFolders": {
+        "message": "Default Folders",
+        "description": "Context menu default folders submenu"
+    },
+    "settings_noLimit": {
+        "message": "No limit",
+        "description": "Slider value meaning unlimited"
+    },
+    "settings_modified": {
+        "message": "Modified",
+        "description": "Badge for settings changed from default"
+    },
+    "settings_resetToDefault": {
+        "message": "Reset to default",
+        "description": "Reset one setting button tooltip"
+    },
+    "settings_resetFieldToDefault": {
+        "message": "Reset $1 to default",
+        "description": "Reset one setting button accessible name"
+    },
+    "options_apiKeyInvalidFormat": {
+        "message": "This doesn't look like a $1 API key. It was not saved.",
+        "description": "Invalid API key format error"
+    },
+    "toast_apiKeySaved": {
+        "message": "API key saved",
+        "description": "API key saved toast title"
+    },
+    "toast_apiKeySavedDescription": {
+        "message": "Your API key is stored only on this device.",
+        "description": "API key saved toast description"
+    },
+    "options_extraHeadersInvalid": {
+        "message": "Use a JSON object with string values, for example {\"HTTP-Referer\":\"https://example.com\"}.",
+        "description": "Invalid extra headers error"
+    },
+    "toast_aiServiceVerified": {
+        "message": "Service verified",
+        "description": "AI verify success title"
+    },
+    "toast_aiServiceVerifiedDescription": {
+        "message": "$1 responded successfully.",
+        "description": "AI verify success description"
+    },
+    "toast_aiServiceVerifyFailed": {
+        "message": "Service verification failed",
+        "description": "AI verify failure title"
+    },
+    "error_aiNoModels": {
+        "message": "The provider returned no models.",
+        "description": "AI model detection empty error"
+    },
+    "toast_aiModelsRefreshed": {
+        "message": "Models refreshed",
+        "description": "AI models refreshed title"
+    },
+    "toast_aiModelsRefreshedDescription": {
+        "message": "$1 models found from $2.",
+        "description": "AI models refreshed description"
+    },
+    "toast_aiModelsRefreshFailed": {
+        "message": "Model detection failed",
+        "description": "AI model detection failure title"
+    },
+    "options_apiKeyDescription": {
+        "message": "Your AI provider API key, stored only on this device.",
+        "description": "API key field description"
+    },
+    "options_apiKeyOptionalDescription": {
+        "message": "$1 can run without an API key.",
+        "description": "Optional API key description"
+    },
+    "options_apiKey": {
+        "message": "API Key",
+        "description": "API key field label"
+    },
+    "options_hideApiKey": {
+        "message": "Hide API key",
+        "description": "Hide API key button"
+    },
+    "options_showApiKey": {
+        "message": "Show API key",
+        "description": "Show API key button"
+    },
+    "options_baseUrl": {
+        "message": "Base URL",
+        "description": "AI provider base URL label"
+    },
+    "options_baseUrlDescription": {
+        "message": "Optional endpoint override, used for every request to this provider (for example a proxy or an OpenAI-compatible server).",
+        "description": "AI provider base URL description"
+    },
+    "options_customModel": {
+        "message": "Custom Model",
+        "description": "Custom model label"
+    },
+    "options_customModelDescription": {
+        "message": "Optional model id override for providers that allow arbitrary model names.",
+        "description": "Custom model description"
+    },
+    "options_extraHeaders": {
+        "message": "Extra Headers JSON",
+        "description": "Extra headers label"
+    },
+    "options_extraHeadersDescription": {
+        "message": "Optional JSON object of headers sent with every request to this provider.",
+        "description": "Extra headers description"
+    },
+    "options_refreshingModels": {
+        "message": "Refreshing...",
+        "description": "Refresh models button busy label"
+    },
+    "options_refreshModels": {
+        "message": "Refresh Models",
+        "description": "Refresh models button"
+    },
+    "options_verifyingService": {
+        "message": "Verifying...",
+        "description": "Verify service button busy label"
+    },
+    "options_verifyService": {
+        "message": "Verify Service",
+        "description": "Verify service button"
+    },
+    "toast_settingsImportedNoChanges": {
+        "message": "The file matched your current settings; nothing changed.",
+        "description": "Import toast when nothing changed"
+    },
+    "toast_settingsImportedChanges": {
+        "message": "$1 settings changed: $2",
+        "description": "Import toast listing changed settings"
+    },
+    "toast_andMore": {
+        "message": "and $1 more",
+        "description": "Suffix for truncated list"
+    },
+    "action_switchToLight": {
+        "message": "Switch to light theme",
+        "description": "Theme toggle accessible name"
+    },
+    "action_switchToDark": {
+        "message": "Switch to dark theme",
+        "description": "Theme toggle accessible name"
+    },
+    "settings_searchResultsCount": {
+        "message": "$1 matching settings in all tabs",
+        "description": "Settings search result count"
+    },
+    "settings_statusNotSaved": {
+        "message": "$1 settings not saved",
+        "description": "Save status when fields are invalid"
     }
 }

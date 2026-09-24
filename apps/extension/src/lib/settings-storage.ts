@@ -1,88 +1,172 @@
 /**
- * Settings storage using @webext-core/storage.
- * Type-safe storage wrapper with React hooks.
+ * Settings storage backed by browser.storage.sync.
+ * Invalid stored or submitted fields are isolated so one bad value never blocks the rest.
  */
 
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { z } from 'zod';
 
-// Storage key for settings
-const SETTINGS_KEY = 'bookmark-scout-settings';
+export const SETTINGS_SYNC_KEY = 'bookmark-scout-settings';
 
-/**
- * Get settings from chrome.storage.sync.
- */
-export async function getSettings(): Promise<Settings> {
-  return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available, using defaults');
-      resolve(defaultSettings);
-      return;
-    }
+/** Localized, human-readable validation messages keyed by setting. */
+export type SettingsFieldErrors = Partial<Record<keyof Settings, string>>;
 
-    chrome.storage.sync.get(SETTINGS_KEY, (result) => {
-      if (chrome.runtime.lastError) {
-        console.error('Error reading settings:', chrome.runtime.lastError);
-        resolve(defaultSettings);
-        return;
-      }
+export class SettingsValidationError extends Error {
+  readonly fieldErrors: SettingsFieldErrors;
 
-      const stored = result[SETTINGS_KEY];
-      if (!stored) {
-        resolve(defaultSettings);
-        return;
-      }
+  constructor(fieldErrors: SettingsFieldErrors) {
+    const meta = getSettingsFieldMeta();
+    const labels = Object.keys(fieldErrors).map((key) => meta[key as keyof Settings]?.label ?? key);
+    super(t('error_invalidSettingsFields', labels.join(', ')));
+    this.name = 'SettingsValidationError';
+    this.fieldErrors = fieldErrors;
+  }
+}
 
-      // Validate and merge with defaults
-      const parsed = settingsSchema.safeParse({ ...defaultSettings, ...stored });
-      if (parsed.success) {
-        // Update i18n language
-        setLanguage(parsed.data.language);
-        resolve(parsed.data);
-      } else {
-        console.warn('Invalid settings, using defaults:', parsed.error);
-        resolve(defaultSettings);
-      }
-    });
-  });
+const MAX_VALIDATION_PASSES = 20;
+
+const relatedSettingKeys: Partial<Record<keyof Settings, keyof Settings>> = {
+  autoTaggingMinTags: 'autoTaggingMaxTags',
+  aiMinItemsPerFolder: 'aiMaxItemsPerFolder',
+};
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function isSettingsKey(key: unknown): key is keyof Settings {
+  return typeof key === 'string' && key in settingsSchema.shape;
 }
 
 /**
- * Save settings to chrome.storage.sync.
+ * Translate a Zod issue for one setting into a message a user can act on.
+ */
+export function getSettingsErrorMessage(key: keyof Settings, issue?: z.core.$ZodIssue): string {
+  const meta = getSettingsFieldMeta()[key];
+  if (issue?.code === 'custom') return t('settings_errorMinExceedsMax');
+  if (meta?.list === 'number') return t('settings_errorStatusCodes');
+  if (meta?.type === 'number' && meta.min !== undefined && meta.max !== undefined) {
+    return meta.unlimited
+      ? t('settings_errorRangeOrUnlimited', [String(meta.min), String(meta.max)])
+      : t('settings_errorRange', [String(meta.min), String(meta.max)]);
+  }
+  if (meta?.type === 'text') {
+    if (issue?.code === 'too_small') return t('settings_errorRequired');
+    if (issue?.code === 'too_big') return t('settings_errorTooLong', String(issue.maximum));
+  }
+  return t('settings_errorInvalidOption');
+}
+
+function sameValue(left: unknown, right: unknown): boolean {
+  return JSON.stringify(left) === JSON.stringify(right);
+}
+
+/**
+ * Validate `updates` against `current`. Invalid fields fall back to their current value and are
+ * reported; every valid field is kept.
+ */
+export function validateSettingsUpdate(
+  current: Settings,
+  updates: Record<string, unknown>,
+): { settings: Settings; errors: SettingsFieldErrors } {
+  const errors: SettingsFieldErrors = {};
+  const candidate: Record<string, unknown> = { ...current };
+  for (const [key, value] of Object.entries(updates)) {
+    if (isSettingsKey(key)) candidate[key] = value;
+  }
+
+  for (let pass = 0; pass < MAX_VALIDATION_PASSES; pass += 1) {
+    const parsed = settingsSchema.safeParse(candidate);
+    if (parsed.success) return { settings: parsed.data, errors };
+
+    let reverted = false;
+    const revert = (key: keyof Settings, issue: z.core.$ZodIssue) => {
+      const changed = key in updates && !sameValue(candidate[key], current[key]);
+      if (key in updates && !(key in errors)) errors[key] = getSettingsErrorMessage(key, issue);
+      const fallback = changed ? current[key] : defaultSettings[key];
+      if (!sameValue(candidate[key], fallback)) {
+        candidate[key] = fallback;
+        reverted = true;
+      }
+    };
+
+    for (const issue of parsed.error.issues) {
+      const key = issue.path[0];
+      if (!isSettingsKey(key)) continue;
+      // Cross-field rules are reported on one key; revert whichever side the update touched.
+      const related = [key, relatedSettingKeys[key]].filter(
+        (item): item is keyof Settings => item !== undefined && item in updates,
+      );
+      if (issue.code === 'custom' && related.length > 0) {
+        for (const item of related) revert(item, issue);
+      } else {
+        revert(key, issue);
+      }
+    }
+    if (!reverted) break;
+  }
+
+  return { settings: current, errors };
+}
+
+/**
+ * Coerce stored data into valid settings, replacing only invalid fields with defaults.
+ */
+export function sanitizeSettings(stored: unknown): Settings {
+  const input = isRecord(stored) ? stored : {};
+  return validateSettingsUpdate(defaultSettings, input).settings;
+}
+
+async function readStoredSettings(): Promise<unknown> {
+  const result = await browser.storage.sync.get(SETTINGS_SYNC_KEY);
+  return result?.[SETTINGS_SYNC_KEY];
+}
+
+async function writeSettings(settings: Settings): Promise<void> {
+  await browser.storage.sync.set({ [SETTINGS_SYNC_KEY]: settings });
+}
+
+/**
+ * Get settings from browser.storage.sync.
+ */
+export async function getSettings(): Promise<Settings> {
+  try {
+    const settings = sanitizeSettings(await readStoredSettings());
+    setLanguage(settings.language);
+    return settings;
+  } catch (error) {
+    console.error('Error reading settings:', error);
+    return defaultSettings;
+  }
+}
+
+/**
+ * Save settings. Rejects with SettingsValidationError when any field is invalid; nothing is saved.
  */
 export async function saveSettings(settings: Partial<Settings>): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available');
-      resolve();
-      return;
-    }
+  const current = await getSettings();
+  const { settings: next, errors } = validateSettingsUpdate(current, settings);
+  if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+  await writeSettings(next);
+}
 
-    // Merge with existing settings
-    getSettings().then((current) => {
-      const merged = { ...current, ...settings };
-      const parsed = settingsSchema.safeParse(merged);
-
-      if (!parsed.success) {
-        reject(new Error(`Invalid settings: ${parsed.error.message}`));
-        return;
-      }
-
-      chrome.storage.sync.set({ [SETTINGS_KEY]: parsed.data }, () => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
-          return;
-        }
-        resolve();
-      });
-    });
-  });
+/**
+ * Save every valid field in `updates` and report the invalid ones instead of discarding them.
+ */
+export async function saveValidSettings(
+  updates: Partial<Settings>,
+): Promise<{ settings: Settings; errors: SettingsFieldErrors }> {
+  const current = await getSettings();
+  const result = validateSettingsUpdate(current, updates);
+  if (!sameValue(result.settings, current)) await writeSettings(result.settings);
+  return result;
 }
 
 /**
  * Reset settings to defaults.
  */
 export async function resetSettings(): Promise<void> {
-  return saveSettings(defaultSettings);
+  await writeSettings(defaultSettings);
 }
 
 /**
@@ -94,12 +178,46 @@ export async function exportSettings(): Promise<string> {
 }
 
 /**
- * Import settings from JSON string.
+ * Import settings from a JSON string, merging recognized fields onto the current settings.
+ * Rejects the whole file if it is not a settings object or any recognized field is invalid.
+ * Returns the keys whose values changed.
  */
-export async function importSettings(json: string): Promise<void> {
-  const parsed = JSON.parse(json);
-  const validated = settingsSchema.parse(parsed);
-  await saveSettings(validated);
+export async function importSettings(json: string): Promise<(keyof Settings)[]> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json);
+  } catch {
+    throw new Error(t('error_invalidSettingsFile'));
+  }
+  if (!isRecord(parsed)) throw new Error(t('error_invalidSettingsFile'));
+
+  const updates = Object.fromEntries(Object.entries(parsed).filter(([key]) => isSettingsKey(key)));
+  if (Object.keys(updates).length === 0) throw new Error(t('error_invalidSettingsFile'));
+
+  const current = await getSettings();
+  const { settings, errors } = validateSettingsUpdate(current, updates);
+  if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+
+  await writeSettings(settings);
+  return (Object.keys(settings) as (keyof Settings)[]).filter(
+    (key) => !sameValue(settings[key], current[key]),
+  );
+}
+
+/**
+ * Call `listener` with sanitized settings whenever synced settings change (any page or device).
+ */
+export function subscribeToSettings(listener: (settings: Settings) => void): () => void {
+  const handleChange = (changes: Record<string, { newValue?: unknown }>, areaName: string) => {
+    const change = areaName === 'sync' ? changes[SETTINGS_SYNC_KEY] : undefined;
+    if (!change) return;
+    const settings = sanitizeSettings(change.newValue);
+    setLanguage(settings.language);
+    listener(settings);
+  };
+
+  browser.storage.onChanged.addListener(handleChange);
+  return () => browser.storage.onChanged.removeListener(handleChange);
 }
 
 /**
@@ -116,32 +234,18 @@ export function useSettings(): {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let active = true;
     getSettings().then((s) => {
+      if (!active) return;
       setSettings(s);
       setIsLoading(false);
     });
-
-    // Listen for storage changes
-    const handleStorageChange = (
-      changes: { [key: string]: chrome.storage.StorageChange },
-      areaName: string,
-    ) => {
-      if (areaName === 'sync' && changes[SETTINGS_KEY]) {
-        const newSettings = changes[SETTINGS_KEY].newValue;
-        if (newSettings) {
-          const parsed = settingsSchema.safeParse({ ...defaultSettings, ...newSettings });
-          if (parsed.success) {
-            // Update i18n language
-            setLanguage(parsed.data.language);
-            setSettings(parsed.data);
-          }
-        }
-      }
-    };
-
-    chrome?.storage?.onChanged?.addListener(handleStorageChange);
+    const unsubscribe = subscribeToSettings((next) => {
+      if (active) setSettings(next);
+    });
     return () => {
-      chrome?.storage?.onChanged?.removeListener(handleStorageChange);
+      active = false;
+      unsubscribe();
     };
   }, []);
 
