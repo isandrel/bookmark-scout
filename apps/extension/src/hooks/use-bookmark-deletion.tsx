@@ -30,9 +30,13 @@ export function useBookmarkDeletion(onChanged: () => void | Promise<void>) {
       await onChanged();
 
       let undoUsed = false;
+      const deletedTitle = snapshot.node.title.trim() || t('bookmarks_untitled');
       toast({
         title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
-        description: t('toast_deleteUndoWindow'),
+        description: t('toast_deleteUndoWindow', [
+          deletedTitle,
+          String(BOOKMARK_DELETION_UNDO_WINDOW_MS / 1000),
+        ]),
         variant: 'success',
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action: (
@@ -47,7 +51,7 @@ export function useBookmarkDeletion(onChanged: () => void | Promise<void>) {
                 await onChanged();
                 toast({
                   title: t('toast_deleteRestored'),
-                  description: t('toast_deleteRestoredDesc', snapshot.node.title),
+                  description: t('toast_deleteRestoredDesc', deletedTitle),
                   variant: 'success',
                 });
               } catch (error) {
