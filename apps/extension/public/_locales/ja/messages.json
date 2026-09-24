@@ -523,17 +523,61 @@
         "message": "不明なエラー",
         "description": "Generic error message"
     },
-    "toast_createFolderPrompt": {
-        "message": "フォルダ \"$1\" を作成",
-        "description": "Toast title for folder creation prompt"
-    },
-    "toast_newFolderComingSoon": {
-        "message": "新規フォルダ作成は近日公開予定！",
-        "description": "Toast description for new folder feature"
-    },
     "ai_suggestionsFor": {
         "message": "AIの提案:",
         "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "新規フォルダを確認",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "保存する前にフォルダパスと現在のページを確認してください。承認するまで変更は行われません。",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "フォルダパス",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_currentPageLabel": {
+        "message": "現在のページ",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "フォルダを作成して保存",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "保存中...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "ブックマークを保存しました",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "\"$1\" を作成または再利用し、現在のページを保存しました。",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "ブックマークは保存済みです",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "現在のページはすでに \"$1\" にあります。重複は追加されませんでした。",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "提案を保存できませんでした",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "ブックマークは追加されませんでした。フォルダパスを確認して再試行してください。",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "パスは既存のブックマーク \"$1\" と競合しています。ブックマークは追加されませんでした。",
+        "description": "Path conflict description for AI new-folder creation"
     },
     "popup_newBookmark": {
         "message": "新規ブックマーク",
