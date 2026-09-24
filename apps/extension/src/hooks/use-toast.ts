@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
-// Several toasts can stack so each deletion keeps its own Undo action.
+// Toasts with an action (Undo) stack so each deletion stays recoverable; an informational toast
+// replaces the previous informational one, as before.
 const TOAST_LIMIT = 3;
 const TOAST_REMOVE_DELAY = 500;
 
@@ -72,18 +73,11 @@ const addToRemoveQueue = (toastId: string) => {
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'ADD_TOAST': {
-      const toasts = [action.toast, ...state.toasts];
-      // Over the limit, drop the oldest informational toast before any toast with an action.
-      while (toasts.length > TOAST_LIMIT) {
-        let evict = toasts.length - 1;
-        for (let index = toasts.length - 1; index >= 0; index -= 1) {
-          if (!toasts[index].action) {
-            evict = index;
-            break;
-          }
-        }
-        toasts.splice(evict, 1);
-      }
+      // Keep earlier toasts only while they still offer an action, newest first.
+      const toasts = [
+        action.toast,
+        ...state.toasts.filter((toast) => toast.action && toast.open !== false),
+      ].slice(0, TOAST_LIMIT);
       return { ...state, toasts };
     }
 
