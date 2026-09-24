@@ -4,11 +4,17 @@ import type { DateRange } from 'react-day-picker';
 
 interface DataTableDateFilterProps {
   title: string;
+  className?: string;
   value: DateRange | undefined;
   onChange: (value: DateRange | undefined) => void;
 }
 
-export function DataTableDateFilter({ title, value, onChange }: DataTableDateFilterProps) {
+export function DataTableDateFilter({
+  title,
+  className,
+  value,
+  onChange,
+}: DataTableDateFilterProps) {
   return (
     <div className="grid gap-2">
       <Popover>
@@ -19,6 +25,7 @@ export function DataTableDateFilter({ title, value, onChange }: DataTableDateFil
             className={cn(
               'w-[300px] justify-start text-left font-normal',
               !value && 'text-muted-foreground',
+              className,
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />

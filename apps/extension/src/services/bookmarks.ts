@@ -386,6 +386,13 @@ async function getBookmarkSubTree(id: string): Promise<chrome.bookmarks.Bookmark
 }
 
 /**
+ * Opens a bookmark URL in a new foreground tab.
+ */
+export async function openBookmarkInNewTab(url: string): Promise<void> {
+  await browser.tabs.create({ url, active: true });
+}
+
+/**
  * Gets the current active tab information.
  */
 export async function getCurrentTab(): Promise<chrome.tabs.Tab> {

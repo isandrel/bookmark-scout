@@ -6,7 +6,11 @@
 import { type ComponentType, useCallback, useEffect, useState } from 'react';
 import { Folder } from 'lucide-react';
 
-const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
+const processNode = (
+  node: chrome.bookmarks.BookmarkTreeNode,
+  folderPath: string,
+  isRootFolder: boolean,
+): Bookmark => {
   const isFolder = node.children !== undefined;
   return {
     type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
@@ -19,6 +23,7 @@ const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable as 'managed',
+    ...(isRootFolder ? { isRootFolder } : {}),
   };
 };
 
@@ -43,7 +48,9 @@ function flattenBookmarks(
   const bookmarks: Bookmark[] = [];
   for (const node of nodes) {
     const folderPath = ancestorTitles.length ? ancestorTitles.join(' / ') : t('bookmarks_root');
-    bookmarks.push(processNode(node, folderPath));
+    // Top-level children of the browser root are permanent folders (Bookmarks Bar, Other
+    // Bookmarks, ...); detecting them by depth avoids browser-specific IDs.
+    bookmarks.push(processNode(node, folderPath, ancestorTitles.length === 0));
     if (node.children) {
       const childBookmarks = flattenBookmarks(node.children, [
         ...ancestorTitles,
@@ -75,8 +82,9 @@ export function useBookmarkNavigation() {
     }
   }, []);
 
-  const refreshCurrentFolder = useCallback(async () => {
-    setIsLoading(true);
+  // Background refreshes keep the table mounted so filters and pagination survive edits.
+  const refreshCurrentFolder = useCallback(async (options: { background?: boolean } = {}) => {
+    if (!options.background) setIsLoading(true);
     setError(null);
     try {
       const tree = await getBookmarkTree();

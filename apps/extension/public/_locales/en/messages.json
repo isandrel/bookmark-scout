@@ -663,6 +663,214 @@
         "message": "Reset view",
         "description": "Reset bookmark table view button label"
     },
+    "table_filterTitles": {
+        "message": "Filter titles...",
+        "description": "Bookmark table title filter placeholder"
+    },
+    "table_filterUrls": {
+        "message": "Filter URLs...",
+        "description": "Bookmark table URL filter placeholder"
+    },
+    "table_currentFolderOnly": {
+        "message": "Current folder only",
+        "description": "Checkbox label limiting table filters to the current folder"
+    },
+    "table_currentFolderOnlyHelp": {
+        "message": "When unchecked, filters search all bookmarks.",
+        "description": "Help text for the current-folder-only filter checkbox"
+    },
+    "table_resetFilters": {
+        "message": "Reset",
+        "description": "Button that clears bookmark table filters"
+    },
+    "table_noResults": {
+        "message": "No results.",
+        "description": "Empty bookmark table message"
+    },
+    "table_rowsSelected": {
+        "message": "$1 of $2 row(s) selected.",
+        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
+    },
+    "table_rowsPerPage": {
+        "message": "Rows per page",
+        "description": "Bookmark table page size label"
+    },
+    "table_pageOf": {
+        "message": "Page $1 of $2",
+        "description": "Bookmark table page indicator; $1 current page, $2 page count"
+    },
+    "table_firstPage": {
+        "message": "Go to first page",
+        "description": "Accessible label for the first page button"
+    },
+    "table_previousPage": {
+        "message": "Go to previous page",
+        "description": "Accessible label for the previous page button"
+    },
+    "table_nextPage": {
+        "message": "Go to next page",
+        "description": "Accessible label for the next page button"
+    },
+    "table_lastPage": {
+        "message": "Go to last page",
+        "description": "Accessible label for the last page button"
+    },
+    "table_selectAll": {
+        "message": "Select all",
+        "description": "Accessible label for the select-all rows checkbox"
+    },
+    "table_selectRow": {
+        "message": "Select row",
+        "description": "Accessible label for a row selection checkbox"
+    },
+    "table_sortAsc": {
+        "message": "Asc",
+        "description": "Column header menu item for ascending sort"
+    },
+    "table_sortDesc": {
+        "message": "Desc",
+        "description": "Column header menu item for descending sort"
+    },
+    "table_hideColumn": {
+        "message": "Hide",
+        "description": "Column header menu item that hides the column"
+    },
+    "table_columnType": {
+        "message": "Type",
+        "description": "Bookmark table column header"
+    },
+    "table_columnId": {
+        "message": "ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnParentId": {
+        "message": "Parent ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUrl": {
+        "message": "URL",
+        "description": "Bookmark table column header"
+    },
+    "table_columnTitle": {
+        "message": "Title",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateAdded": {
+        "message": "Date Added",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateGroupModified": {
+        "message": "Date Group Modified",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUnmodifiable": {
+        "message": "Unmodifiable",
+        "description": "Bookmark table column header"
+    },
+    "table_typeFolder": {
+        "message": "Folder",
+        "description": "Bookmark item type label"
+    },
+    "table_typeLink": {
+        "message": "Link",
+        "description": "Bookmark item type label"
+    },
+    "table_openMenu": {
+        "message": "Open menu",
+        "description": "Accessible label for the bookmark row actions menu"
+    },
+    "table_actions": {
+        "message": "Actions",
+        "description": "Bookmark row actions menu heading"
+    },
+    "table_copyId": {
+        "message": "Copy Bookmark ID",
+        "description": "Bookmark row action that copies the bookmark ID"
+    },
+    "table_edit": {
+        "message": "Edit",
+        "description": "Bookmark row action that edits the item"
+    },
+    "table_openInNewTab": {
+        "message": "Open in new tab",
+        "description": "Bookmark row action that opens a link in a new tab"
+    },
+    "table_delete": {
+        "message": "Delete",
+        "description": "Bookmark row action that deletes the item"
+    },
+    "table_moveTop": {
+        "message": "Move to top",
+        "description": "Accessible label for moving a bookmark to the top of its folder"
+    },
+    "table_moveUp": {
+        "message": "Move up",
+        "description": "Accessible label for moving a bookmark up"
+    },
+    "table_moveDown": {
+        "message": "Move down",
+        "description": "Accessible label for moving a bookmark down"
+    },
+    "table_moveBottom": {
+        "message": "Move to bottom",
+        "description": "Accessible label for moving a bookmark to the bottom of its folder"
+    },
+    "bookmarks_showFolders": {
+        "message": "Show folders",
+        "description": "Bookmark manager button that shows the folder sidebar"
+    },
+    "bookmarks_hideFolders": {
+        "message": "Hide folders",
+        "description": "Bookmark manager button that hides the folder sidebar"
+    },
+    "bookmarks_showTools": {
+        "message": "Show tools",
+        "description": "Bookmark manager button that shows the tools sidebar"
+    },
+    "bookmarks_hideTools": {
+        "message": "Hide tools",
+        "description": "Bookmark manager button that hides the tools sidebar"
+    },
+    "bookmarks_editBookmark": {
+        "message": "Edit bookmark",
+        "description": "Edit dialog title for a link"
+    },
+    "bookmarks_editFolder": {
+        "message": "Edit folder",
+        "description": "Edit dialog title for a folder"
+    },
+    "bookmarks_editDescription": {
+        "message": "Change the name or address of this item.",
+        "description": "Edit dialog description"
+    },
+    "bookmarks_editName": {
+        "message": "Name",
+        "description": "Edit dialog name field label"
+    },
+    "bookmarks_editUrl": {
+        "message": "URL",
+        "description": "Edit dialog URL field label"
+    },
+    "bookmarks_editSave": {
+        "message": "Save",
+        "description": "Edit dialog save button"
+    },
+    "bookmarks_editSaved": {
+        "message": "Changes saved",
+        "description": "Toast shown after an edit is saved"
+    },
+    "bookmarks_editFailed": {
+        "message": "Could not save changes",
+        "description": "Toast shown when an edit fails"
+    },
+    "bookmarks_editUrlRequired": {
+        "message": "Enter a URL.",
+        "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_openFailed": {
+        "message": "Could not open bookmark",
+        "description": "Toast shown when a bookmark cannot be opened"
+    },
     "bookmarks_root": {
         "message": "Bookmarks",
         "description": "Root folder name in breadcrumb"

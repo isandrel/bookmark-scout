@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
-import { ArrowUpDown, Folder, Link, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, Folder, Link } from 'lucide-react';
 import { type ComponentType, useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 
@@ -12,6 +12,37 @@ export const typeMap: Record<ItemTypeEnum, ItemType> = {
   [ItemTypeEnum.Folder]: { value: 'folder', label: 'Folder', icon: Folder },
   [ItemTypeEnum.Link]: { value: 'link', label: 'Link', icon: Link },
 };
+
+const typeLabelKeys: Record<ItemTypeEnum, string> = {
+  [ItemTypeEnum.Folder]: 'table_typeFolder',
+  [ItemTypeEnum.Link]: 'table_typeLink',
+};
+
+/** Type filter options with labels resolved in the active UI language. */
+export function getLocalizedTypeOptions(): ItemType[] {
+  return Object.values(ItemTypeEnum).map((type) => ({
+    ...typeMap[type],
+    label: t(typeLabelKeys[type]),
+  }));
+}
+
+const columnLabelKeys: Record<string, string> = {
+  type: 'table_columnType',
+  id: 'table_columnId',
+  parentId: 'table_columnParentId',
+  folderPath: 'bookmarks_folderPath',
+  url: 'table_columnUrl',
+  title: 'table_columnTitle',
+  dateAdded: 'table_columnDateAdded',
+  dateGroupModified: 'table_columnDateGroupModified',
+  unmodifiable: 'table_columnUnmodifiable',
+};
+
+/** Localized display name for a bookmark table column, falling back to its id. */
+export function getBookmarkColumnLabel(columnId: string): string {
+  const key = columnLabelKeys[columnId];
+  return key ? t(key) : columnId;
+}
 
 type ItemType = {
   value: string;
@@ -30,6 +61,20 @@ export type Bookmark = {
   dateAdded?: number;
   dateGroupModified?: number;
   unmodifiable?: 'managed';
+  /** Direct child of the browser's bookmark root (e.g. Bookmarks Bar); cannot be edited or removed. */
+  isRootFolder?: boolean;
+};
+
+/** Whether the browser allows renaming, moving, or deleting this item. */
+export function isModifiableBookmark(bookmark: Bookmark): boolean {
+  return !bookmark.isRootFolder && !bookmark.unmodifiable;
+}
+
+export type BookmarkRowActionHandlers = {
+  onViewDetails: (bookmark: Bookmark) => void;
+  onEdit: (bookmark: Bookmark) => void;
+  onDelete: (bookmark: Bookmark) => void;
+  onOpenInNewTab: (bookmark: Bookmark) => void;
 };
 
 function formatTimestamp(value: unknown): string {
@@ -37,7 +82,7 @@ function formatTimestamp(value: unknown): string {
 }
 
 export const createColumns = (
-  onViewDetails: (bookmark: Bookmark) => void,
+  actions: BookmarkRowActionHandlers,
 ): ColumnDef<BookmarkTableFeatures, Bookmark>[] => [
   {
     id: 'select',
@@ -47,14 +92,14 @@ export const createColumns = (
           table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label={t('table_selectAll')}
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label={t('table_selectRow')}
       />
     ),
     enableSorting: false,
@@ -62,10 +107,9 @@ export const createColumns = (
   },
   {
     accessorKey: 'type',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('type')} />,
     cell: ({ row }) => {
-      const types = Object.values(typeMap);
-      const type = types.find((type) => type.value === row.getValue('type'));
+      const type = getLocalizedTypeOptions().find((type) => type.value === row.getValue('type'));
 
       if (!type) {
         return null;
@@ -86,14 +130,14 @@ export const createColumns = (
     accessorKey: 'id',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        ID
+        {getBookmarkColumnLabel('id')}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
   },
   {
     accessorKey: 'parentId',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Parent ID" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('parentId')} />,
     cell: ({ row }) => {
       const parentIdMap = useParentIdMap();
       const parentIds = Object.values(parentIdMap);
@@ -117,7 +161,7 @@ export const createColumns = (
   {
     accessorKey: 'folderPath',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={t('bookmarks_folderPath')} />
+      <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('folderPath')} />
     ),
     cell: ({ row }) => {
       const path = row.original.folderPath;
@@ -130,7 +174,7 @@ export const createColumns = (
   },
   {
     accessorKey: 'url',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="URL" />,
+    header: ({ column }) => <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('url')} />,
     cell: ({ row }) => {
       const urlMap = useUrlMap();
       const urls = Object.values(urlMap);
@@ -163,7 +207,7 @@ export const createColumns = (
     accessorKey: 'title',
     header: ({ column }) => (
       <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-        Title
+        {getBookmarkColumnLabel('title')}
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -207,9 +251,9 @@ export const createColumns = (
   {
     accessorKey: 'dateAdded',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Date Added">
+      <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('dateAdded')}>
         <DataTableDateFilter
-          title="Date Added"
+          title={getBookmarkColumnLabel('dateAdded')}
           value={column.getFilterValue() as DateRange}
           onChange={(value) => column.setFilterValue(value)}
         />
@@ -229,12 +273,12 @@ export const createColumns = (
   },
   {
     accessorKey: 'dateGroupModified',
-    header: 'Date Group Modified',
+    header: () => getBookmarkColumnLabel('dateGroupModified'),
     cell: ({ row }) => formatTimestamp(row.getValue('dateGroupModified')),
   },
   {
     accessorKey: 'unmodifiable',
-    header: 'Unmodifiable',
+    header: () => getBookmarkColumnLabel('unmodifiable'),
   },
   {
     id: 'actions',
@@ -370,38 +414,13 @@ export const createColumns = (
       };
 
       return (
-        <div className="flex items-center space-x-2">
-          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <MoveBookmarkButtons onMove={moveBookmark} />
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigator.clipboard.writeText(bookmark.id);
-                }}
-              >
-                Copy Bookmark ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onViewDetails(bookmark);
-                }}
-              >
-                {t('bookmarks_viewDetails')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex items-center justify-end gap-2">
+          {isModifiableBookmark(bookmark) && (
+            <div className="opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
+              <MoveBookmarkButtons onMove={moveBookmark} />
+            </div>
+          )}
+          <BookmarkRowMenu bookmark={bookmark} actions={actions} />
         </div>
       );
     },

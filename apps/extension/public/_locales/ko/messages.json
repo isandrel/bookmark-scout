@@ -663,6 +663,214 @@
         "message": "보기 초기화",
         "description": "Reset bookmark table view button label"
     },
+    "table_filterTitles": {
+        "message": "제목 필터...",
+        "description": "Bookmark table title filter placeholder"
+    },
+    "table_filterUrls": {
+        "message": "URL 필터...",
+        "description": "Bookmark table URL filter placeholder"
+    },
+    "table_currentFolderOnly": {
+        "message": "현재 폴더만",
+        "description": "Checkbox label limiting table filters to the current folder"
+    },
+    "table_currentFolderOnlyHelp": {
+        "message": "선택하지 않으면 모든 북마크에 필터가 적용됩니다.",
+        "description": "Help text for the current-folder-only filter checkbox"
+    },
+    "table_resetFilters": {
+        "message": "초기화",
+        "description": "Button that clears bookmark table filters"
+    },
+    "table_noResults": {
+        "message": "결과가 없습니다.",
+        "description": "Empty bookmark table message"
+    },
+    "table_rowsSelected": {
+        "message": "$2개 행 중 $1개 선택됨",
+        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
+    },
+    "table_rowsPerPage": {
+        "message": "페이지당 행 수",
+        "description": "Bookmark table page size label"
+    },
+    "table_pageOf": {
+        "message": "$1 / $2페이지",
+        "description": "Bookmark table page indicator; $1 current page, $2 page count"
+    },
+    "table_firstPage": {
+        "message": "첫 페이지로 이동",
+        "description": "Accessible label for the first page button"
+    },
+    "table_previousPage": {
+        "message": "이전 페이지로 이동",
+        "description": "Accessible label for the previous page button"
+    },
+    "table_nextPage": {
+        "message": "다음 페이지로 이동",
+        "description": "Accessible label for the next page button"
+    },
+    "table_lastPage": {
+        "message": "마지막 페이지로 이동",
+        "description": "Accessible label for the last page button"
+    },
+    "table_selectAll": {
+        "message": "모두 선택",
+        "description": "Accessible label for the select-all rows checkbox"
+    },
+    "table_selectRow": {
+        "message": "행 선택",
+        "description": "Accessible label for a row selection checkbox"
+    },
+    "table_sortAsc": {
+        "message": "오름차순",
+        "description": "Column header menu item for ascending sort"
+    },
+    "table_sortDesc": {
+        "message": "내림차순",
+        "description": "Column header menu item for descending sort"
+    },
+    "table_hideColumn": {
+        "message": "숨기기",
+        "description": "Column header menu item that hides the column"
+    },
+    "table_columnType": {
+        "message": "유형",
+        "description": "Bookmark table column header"
+    },
+    "table_columnId": {
+        "message": "ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnParentId": {
+        "message": "상위 폴더",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUrl": {
+        "message": "URL",
+        "description": "Bookmark table column header"
+    },
+    "table_columnTitle": {
+        "message": "제목",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateAdded": {
+        "message": "추가한 날짜",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateGroupModified": {
+        "message": "폴더 수정 날짜",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUnmodifiable": {
+        "message": "수정 불가",
+        "description": "Bookmark table column header"
+    },
+    "table_typeFolder": {
+        "message": "폴더",
+        "description": "Bookmark item type label"
+    },
+    "table_typeLink": {
+        "message": "링크",
+        "description": "Bookmark item type label"
+    },
+    "table_openMenu": {
+        "message": "메뉴 열기",
+        "description": "Accessible label for the bookmark row actions menu"
+    },
+    "table_actions": {
+        "message": "작업",
+        "description": "Bookmark row actions menu heading"
+    },
+    "table_copyId": {
+        "message": "북마크 ID 복사",
+        "description": "Bookmark row action that copies the bookmark ID"
+    },
+    "table_edit": {
+        "message": "편집",
+        "description": "Bookmark row action that edits the item"
+    },
+    "table_openInNewTab": {
+        "message": "새 탭에서 열기",
+        "description": "Bookmark row action that opens a link in a new tab"
+    },
+    "table_delete": {
+        "message": "삭제",
+        "description": "Bookmark row action that deletes the item"
+    },
+    "table_moveTop": {
+        "message": "맨 위로 이동",
+        "description": "Accessible label for moving a bookmark to the top of its folder"
+    },
+    "table_moveUp": {
+        "message": "위로 이동",
+        "description": "Accessible label for moving a bookmark up"
+    },
+    "table_moveDown": {
+        "message": "아래로 이동",
+        "description": "Accessible label for moving a bookmark down"
+    },
+    "table_moveBottom": {
+        "message": "맨 아래로 이동",
+        "description": "Accessible label for moving a bookmark to the bottom of its folder"
+    },
+    "bookmarks_showFolders": {
+        "message": "폴더 표시",
+        "description": "Bookmark manager button that shows the folder sidebar"
+    },
+    "bookmarks_hideFolders": {
+        "message": "폴더 숨기기",
+        "description": "Bookmark manager button that hides the folder sidebar"
+    },
+    "bookmarks_showTools": {
+        "message": "도구 표시",
+        "description": "Bookmark manager button that shows the tools sidebar"
+    },
+    "bookmarks_hideTools": {
+        "message": "도구 숨기기",
+        "description": "Bookmark manager button that hides the tools sidebar"
+    },
+    "bookmarks_editBookmark": {
+        "message": "북마크 편집",
+        "description": "Edit dialog title for a link"
+    },
+    "bookmarks_editFolder": {
+        "message": "폴더 편집",
+        "description": "Edit dialog title for a folder"
+    },
+    "bookmarks_editDescription": {
+        "message": "이 항목의 이름 또는 주소를 변경합니다.",
+        "description": "Edit dialog description"
+    },
+    "bookmarks_editName": {
+        "message": "이름",
+        "description": "Edit dialog name field label"
+    },
+    "bookmarks_editUrl": {
+        "message": "URL",
+        "description": "Edit dialog URL field label"
+    },
+    "bookmarks_editSave": {
+        "message": "저장",
+        "description": "Edit dialog save button"
+    },
+    "bookmarks_editSaved": {
+        "message": "변경 사항이 저장되었습니다",
+        "description": "Toast shown after an edit is saved"
+    },
+    "bookmarks_editFailed": {
+        "message": "변경 사항을 저장할 수 없습니다",
+        "description": "Toast shown when an edit fails"
+    },
+    "bookmarks_editUrlRequired": {
+        "message": "URL을 입력하세요.",
+        "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_openFailed": {
+        "message": "북마크를 열 수 없습니다",
+        "description": "Toast shown when a bookmark cannot be opened"
+    },
     "bookmarks_root": {
         "message": "북마크",
         "description": "Root folder name in breadcrumb"

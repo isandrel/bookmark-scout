@@ -46,7 +46,7 @@ export function DataTableViewOptions<TData extends RowData>({
         <Button
           variant="outline"
           size="sm"
-          className="ml-auto hidden h-8 lg:flex"
+          className="ml-auto hidden h-8 shrink-0 lg:flex"
           aria-label={t('table_viewOptions')}
         >
           <Settings2 />
@@ -60,12 +60,12 @@ export function DataTableViewOptions<TData extends RowData>({
           return (
             <div key={column.id} className="flex items-center gap-1">
               <DropdownMenuCheckboxItem
-                className="min-w-0 flex-1 capitalize"
+                className="min-w-0 flex-1"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 onSelect={(event) => event.preventDefault()}
               >
-                {column.id}
+                {getBookmarkColumnLabel(column.id)}
               </DropdownMenuCheckboxItem>
               <Button
                 type="button"
@@ -73,7 +73,7 @@ export function DataTableViewOptions<TData extends RowData>({
                 size="icon"
                 className="h-7 w-7"
                 disabled={index === 0}
-                aria-label={t('table_moveColumnUp', column.id)}
+                aria-label={t('table_moveColumnUp', getBookmarkColumnLabel(column.id))}
                 onClick={() => moveColumn(column.id, -1)}
               >
                 <ArrowUp />
@@ -84,7 +84,7 @@ export function DataTableViewOptions<TData extends RowData>({
                 size="icon"
                 className="h-7 w-7"
                 disabled={index === configurableColumns.length - 1}
-                aria-label={t('table_moveColumnDown', column.id)}
+                aria-label={t('table_moveColumnDown', getBookmarkColumnLabel(column.id))}
                 onClick={() => moveColumn(column.id, 1)}
               >
                 <ArrowDown />

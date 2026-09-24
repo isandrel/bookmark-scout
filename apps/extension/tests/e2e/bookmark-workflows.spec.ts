@@ -556,13 +556,13 @@ test('manager filters globally across nested folders or only the selected folder
       .getByTitle(`${remote.writableRootTitle} / E2E Scope Remote`, { exact: true }),
   ).toBeVisible();
 
-  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Shared Target Local');
   await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
   await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
 
-  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).uncheck();
+  await page.getByRole('checkbox', { name: 'Current folder only' }).uncheck();
   await expect(rows).toHaveCount(3);
   await page.getByRole('button', { name: 'Reset' }).click();
   await expect(rows).toHaveCount(2);
@@ -571,7 +571,7 @@ test('manager filters globally across nested folders or only the selected folder
   await page.getByPlaceholder('Filter URLs...').fill('remote-target');
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Shared Target Remote');
-  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
   await expect(page.getByText('No results.', { exact: true })).toBeVisible();
 });
