@@ -34,16 +34,16 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Asc
+            {t('table_sortAsc')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Desc
+            {t('table_sortDesc')}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70" />
-            Hide
+            {t('table_hideColumn')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

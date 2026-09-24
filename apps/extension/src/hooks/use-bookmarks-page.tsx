@@ -6,7 +6,11 @@
 import { type ComponentType, useCallback, useEffect, useState } from 'react';
 import { Folder } from 'lucide-react';
 
-const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
+const processNode = (
+  node: chrome.bookmarks.BookmarkTreeNode,
+  folderPath: string,
+  isRootFolder: boolean,
+): Bookmark => {
   const isFolder = node.children !== undefined;
   return {
     type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
@@ -19,6 +23,7 @@ const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable as 'managed',
+    ...(isRootFolder ? { isRootFolder } : {}),
   };
 };
 
@@ -38,14 +43,15 @@ async function getBookmarkTree(): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
 
 function flattenBookmarks(
   nodes: chrome.bookmarks.BookmarkTreeNode[],
+  rootIds: ReadonlySet<string>,
   ancestorTitles: string[] = [],
 ): Bookmark[] {
   const bookmarks: Bookmark[] = [];
   for (const node of nodes) {
     const folderPath = ancestorTitles.length ? ancestorTitles.join(' / ') : t('bookmarks_root');
-    bookmarks.push(processNode(node, folderPath));
+    bookmarks.push(processNode(node, folderPath, isPermanentBookmarkFolder(node, rootIds)));
     if (node.children) {
-      const childBookmarks = flattenBookmarks(node.children, [
+      const childBookmarks = flattenBookmarks(node.children, rootIds, [
         ...ancestorTitles,
         node.title || t('bookmarks_untitled'),
       ]);
@@ -75,13 +81,14 @@ export function useBookmarkNavigation() {
     }
   }, []);
 
-  const refreshCurrentFolder = useCallback(async () => {
-    setIsLoading(true);
+  // Background refreshes keep the table mounted so filters and pagination survive edits.
+  const refreshCurrentFolder = useCallback(async (options: { background?: boolean } = {}) => {
+    if (!options.background) setIsLoading(true);
     setError(null);
     try {
       const tree = await getBookmarkTree();
       const root = tree[0];
-      const bookmarks = flattenBookmarks(root?.children ?? []);
+      const bookmarks = flattenBookmarks(root?.children ?? [], getBookmarkRootIds(tree));
       // Cleanup for bookmarks removed while the extension was not running must never block
       // loading the bookmark list.
       void reconcileStoredBookmarkMetadata(

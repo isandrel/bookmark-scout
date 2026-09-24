@@ -679,6 +679,214 @@
         "message": "表示をリセット",
         "description": "Reset bookmark table view button label"
     },
+    "table_filterTitles": {
+        "message": "タイトルで絞り込み...",
+        "description": "Bookmark table title filter placeholder"
+    },
+    "table_filterUrls": {
+        "message": "URLで絞り込み...",
+        "description": "Bookmark table URL filter placeholder"
+    },
+    "table_currentFolderOnly": {
+        "message": "現在のフォルダのみ",
+        "description": "Checkbox label limiting table filters to the current folder"
+    },
+    "table_currentFolderOnlyHelp": {
+        "message": "オフの場合、フィルタはすべてのブックマークを対象にします。",
+        "description": "Help text for the current-folder-only filter checkbox"
+    },
+    "table_resetFilters": {
+        "message": "リセット",
+        "description": "Button that clears bookmark table filters"
+    },
+    "table_noResults": {
+        "message": "結果がありません。",
+        "description": "Empty bookmark table message"
+    },
+    "table_rowsSelected": {
+        "message": "$2行中$1行を選択中",
+        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
+    },
+    "table_rowsPerPage": {
+        "message": "1ページの行数",
+        "description": "Bookmark table page size label"
+    },
+    "table_pageOf": {
+        "message": "$1 / $2ページ",
+        "description": "Bookmark table page indicator; $1 current page, $2 page count"
+    },
+    "table_firstPage": {
+        "message": "最初のページへ",
+        "description": "Accessible label for the first page button"
+    },
+    "table_previousPage": {
+        "message": "前のページへ",
+        "description": "Accessible label for the previous page button"
+    },
+    "table_nextPage": {
+        "message": "次のページへ",
+        "description": "Accessible label for the next page button"
+    },
+    "table_lastPage": {
+        "message": "最後のページへ",
+        "description": "Accessible label for the last page button"
+    },
+    "table_selectAll": {
+        "message": "すべて選択",
+        "description": "Accessible label for the select-all rows checkbox"
+    },
+    "table_selectRow": {
+        "message": "行を選択",
+        "description": "Accessible label for a row selection checkbox"
+    },
+    "table_sortAsc": {
+        "message": "昇順",
+        "description": "Column header menu item for ascending sort"
+    },
+    "table_sortDesc": {
+        "message": "降順",
+        "description": "Column header menu item for descending sort"
+    },
+    "table_hideColumn": {
+        "message": "非表示",
+        "description": "Column header menu item that hides the column"
+    },
+    "table_columnType": {
+        "message": "種類",
+        "description": "Bookmark table column header"
+    },
+    "table_columnId": {
+        "message": "ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnParentId": {
+        "message": "親フォルダ",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUrl": {
+        "message": "URL",
+        "description": "Bookmark table column header"
+    },
+    "table_columnTitle": {
+        "message": "タイトル",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateAdded": {
+        "message": "追加日",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateGroupModified": {
+        "message": "フォルダ更新日",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUnmodifiable": {
+        "message": "変更不可",
+        "description": "Bookmark table column header"
+    },
+    "table_typeFolder": {
+        "message": "フォルダ",
+        "description": "Bookmark item type label"
+    },
+    "table_typeLink": {
+        "message": "リンク",
+        "description": "Bookmark item type label"
+    },
+    "table_openMenu": {
+        "message": "メニューを開く",
+        "description": "Accessible label for the bookmark row actions menu"
+    },
+    "table_actions": {
+        "message": "操作",
+        "description": "Bookmark row actions menu heading"
+    },
+    "table_copyId": {
+        "message": "ブックマークIDをコピー",
+        "description": "Bookmark row action that copies the bookmark ID"
+    },
+    "table_edit": {
+        "message": "編集",
+        "description": "Bookmark row action that edits the item"
+    },
+    "table_openInNewTab": {
+        "message": "新しいタブで開く",
+        "description": "Bookmark row action that opens a link in a new tab"
+    },
+    "table_delete": {
+        "message": "削除",
+        "description": "Bookmark row action that deletes the item"
+    },
+    "table_moveTop": {
+        "message": "先頭へ移動",
+        "description": "Accessible label for moving a bookmark to the top of its folder"
+    },
+    "table_moveUp": {
+        "message": "上へ移動",
+        "description": "Accessible label for moving a bookmark up"
+    },
+    "table_moveDown": {
+        "message": "下へ移動",
+        "description": "Accessible label for moving a bookmark down"
+    },
+    "table_moveBottom": {
+        "message": "末尾へ移動",
+        "description": "Accessible label for moving a bookmark to the bottom of its folder"
+    },
+    "bookmarks_showFolders": {
+        "message": "フォルダを表示",
+        "description": "Bookmark manager button that shows the folder sidebar"
+    },
+    "bookmarks_hideFolders": {
+        "message": "フォルダを非表示",
+        "description": "Bookmark manager button that hides the folder sidebar"
+    },
+    "bookmarks_showTools": {
+        "message": "ツールを表示",
+        "description": "Bookmark manager button that shows the tools sidebar"
+    },
+    "bookmarks_hideTools": {
+        "message": "ツールを非表示",
+        "description": "Bookmark manager button that hides the tools sidebar"
+    },
+    "bookmarks_editBookmark": {
+        "message": "ブックマークを編集",
+        "description": "Edit dialog title for a link"
+    },
+    "bookmarks_editFolder": {
+        "message": "フォルダを編集",
+        "description": "Edit dialog title for a folder"
+    },
+    "bookmarks_editDescription": {
+        "message": "この項目の名前またはアドレスを変更します。",
+        "description": "Edit dialog description"
+    },
+    "bookmarks_editName": {
+        "message": "名前",
+        "description": "Edit dialog name field label"
+    },
+    "bookmarks_editUrl": {
+        "message": "URL",
+        "description": "Edit dialog URL field label"
+    },
+    "bookmarks_editSave": {
+        "message": "保存",
+        "description": "Edit dialog save button"
+    },
+    "bookmarks_editSaved": {
+        "message": "変更を保存しました",
+        "description": "Toast shown after an edit is saved"
+    },
+    "bookmarks_editFailed": {
+        "message": "変更を保存できませんでした",
+        "description": "Toast shown when an edit fails"
+    },
+    "bookmarks_editUrlRequired": {
+        "message": "URLを入力してください。",
+        "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_openFailed": {
+        "message": "ブックマークを開けませんでした",
+        "description": "Toast shown when a bookmark cannot be opened"
+    },
     "bookmarks_root": {
         "message": "ブックマーク",
         "description": "Root folder name in breadcrumb"

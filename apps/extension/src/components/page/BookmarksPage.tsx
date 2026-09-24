@@ -5,17 +5,48 @@
  */
 
 import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 export default function BookmarksPage() {
-  const { currentFolder, data, allData, isLoading, error, navigateToFolder } =
+  const { currentFolder, data, allData, isLoading, error, navigateToFolder, refreshCurrentFolder } =
     useBookmarkNavigation();
+  const { toast } = useToast();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
   const [currentFolderName, setCurrentFolderName] = useState<string | undefined>();
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
+  const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
-  const columns = useMemo(() => createColumns(setSelectedBookmark), []);
+  const refreshTable = useCallback(
+    () => refreshCurrentFolder({ background: true }),
+    [refreshCurrentFolder],
+  );
+  const { pendingDeletion, requestDeletion, confirmDeletion, cancelDeletion } =
+    useBookmarkDeletion(refreshTable);
+  const columns = useMemo(
+    () =>
+      createColumns({
+        onViewDetails: setSelectedBookmark,
+        onEdit: setEditingBookmark,
+        onDelete: (bookmark) =>
+          requestDeletion({
+            id: bookmark.id,
+            title: bookmark.title,
+            type: bookmark.type === ItemTypeEnum.Folder ? 'folder' : 'bookmark',
+          }),
+        onOpenInNewTab: (bookmark) => {
+          if (!bookmark.url) return;
+          openBookmarkInNewTab(bookmark.url).catch((openError: unknown) =>
+            toast({
+              title: `× ${t('bookmarks_openFailed')}`,
+              description: openError instanceof Error ? openError.message : t('error_unknown'),
+              variant: 'destructive',
+            }),
+          );
+        },
+      }),
+    [requestDeletion, toast],
+  );
   const sortAccessors = useMemo(
     () => ({
       getTitle: (bookmark: Bookmark) => bookmark.title,
@@ -69,7 +100,7 @@ export default function BookmarksPage() {
       {/* Left Sidebar - Folders */}
       <aside
         className={cn(
-          'border-r bg-muted/30 transition-all duration-200 overflow-hidden',
+          'shrink-0 border-r bg-muted/30 transition-all duration-200 overflow-hidden',
           leftSidebarCollapsed ? 'w-0' : 'w-64'
         )}
       >
@@ -87,17 +118,17 @@ export default function BookmarksPage() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
         <header className="border-b p-4">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
                 className="shrink-0"
-                title={leftSidebarCollapsed ? 'Show folders' : 'Hide folders'}
+                title={leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')}
               >
                 {leftSidebarCollapsed ? (
                   <PanelLeft className="h-4 w-4" />
@@ -115,7 +146,7 @@ export default function BookmarksPage() {
               size="icon"
               onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
               className="shrink-0"
-              title={rightSidebarCollapsed ? 'Show tools' : 'Hide tools'}
+              title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
             >
               {rightSidebarCollapsed ? (
                 <PanelRight className="h-4 w-4" />
@@ -127,7 +158,7 @@ export default function BookmarksPage() {
         </header>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-4">
+        <div className="min-w-0 flex-1 overflow-auto p-4">
           {isLoading ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
@@ -162,7 +193,7 @@ export default function BookmarksPage() {
       {/* Right Sidebar - Tools */}
       <aside
         className={cn(
-          'border-l bg-muted/30 transition-all duration-200 overflow-hidden',
+          'shrink-0 border-l bg-muted/30 transition-all duration-200 overflow-hidden',
           rightSidebarCollapsed ? 'w-0' : 'w-80'
         )}
       >
@@ -178,6 +209,16 @@ export default function BookmarksPage() {
         bookmark={selectedBookmark}
         onClose={() => setSelectedBookmark(null)}
         onOpenFolder={navigateToFolder}
+      />
+      <BookmarkEditDialog
+        bookmark={editingBookmark}
+        onClose={() => setEditingBookmark(null)}
+        onSaved={refreshTable}
+      />
+      <BookmarkDeleteDialog
+        deletion={pendingDeletion}
+        onCancel={cancelDeletion}
+        onConfirm={confirmDeletion}
       />
       <Toaster />
     </div>

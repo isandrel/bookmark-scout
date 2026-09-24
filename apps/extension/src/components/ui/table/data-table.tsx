@@ -13,6 +13,10 @@ import {
 } from '@tanstack/react-table';
 import * as React from 'react';
 
+// Row actions stay pinned to the right edge so they remain reachable when the table scrolls.
+const STICKY_COLUMN_ID = 'actions';
+const stickyColumnClass = 'sticky right-0 z-10 border-l bg-background';
+
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];
   data: TData[];
@@ -105,7 +109,7 @@ export function DataTable<TData extends RowData>({
   });
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <DataTableToolbar
         table={table}
         applyToCurrentFolder={applyToCurrentFolder}
@@ -118,7 +122,10 @@ export function DataTable<TData extends RowData>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                    className={cn(header.column.id === STICKY_COLUMN_ID && stickyColumnClass)}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(header.column.columnDef.header, header.getContext())}
@@ -137,7 +144,10 @@ export function DataTable<TData extends RowData>({
                   onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cn(cell.column.id === STICKY_COLUMN_ID && stickyColumnClass)}
+                    >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -146,7 +156,7 @@ export function DataTable<TData extends RowData>({
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  {t('table_noResults')}
                 </TableCell>
               </TableRow>
             )}
