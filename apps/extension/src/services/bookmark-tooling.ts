@@ -47,12 +47,24 @@ export type BookmarkStatistics = {
   duplicateCount: number;
 };
 
+export type DuplicateKeepRule = 'oldest' | 'newest' | 'first';
+
 type DuplicateOptions = {
   strategy: 'exact_url' | 'normalized_url' | 'title_url' | 'title_only';
   normalizeWww: boolean;
   ignoreProtocol: boolean;
   ignoreTrailingSlash: boolean;
   maxGroups: number;
+  /** Orders each group so `items[0]` is the bookmark the keep rule retains. */
+  keepRule?: DuplicateKeepRule;
+};
+
+export type DuplicateRemovalResult = {
+  removed: number;
+  /** Extras skipped because they, or their group's kept item, changed or vanished after the scan. */
+  skipped: number;
+  failed: number;
+  snapshots: BookmarkDeletionSnapshot[];
 };
 
 type UrlCleanerOptions = {
@@ -148,7 +160,7 @@ export function scanDuplicateBookmarks(
   const duplicateGroups = Array.from(groups.entries())
     .filter(([, items]) => items.length > 1)
     .slice(0, options.maxGroups)
-    .map(([key, items]) => ({ key, items }));
+    .map(([key, items]) => ({ key, items: orderDuplicateGroup(items, options.keepRule ?? 'oldest') }));
 
   return {
     groups: duplicateGroups,
@@ -291,13 +303,114 @@ export function collectBookmarkStatistics(
   };
 }
 
+/** Compares browser bookmark IDs numerically when both are numeric (Chrome), else as strings. */
+function compareBookmarkIds(a: string, b: string): number {
+  const numericA = Number(a);
+  const numericB = Number(b);
+  if (Number.isFinite(numericA) && Number.isFinite(numericB) && a !== '' && b !== '') {
+    return numericA - numericB;
+  }
+  return a.localeCompare(b);
+}
+
+/**
+ * Returns the group ordered so the first item is the one the keep rule retains. The preview
+ * and the removal both read this order, so the item labeled "Keep" is never deleted.
+ */
+export function orderDuplicateGroup(
+  items: FlatBookmark[],
+  keepRule: DuplicateKeepRule,
+): FlatBookmark[] {
+  return [...items].sort((a, b) => {
+    const byId = compareBookmarkIds(a.node.id, b.node.id);
+    if (keepRule === 'first') return byId;
+    const dateA = a.node.dateAdded ?? 0;
+    const dateB = b.node.dateAdded ?? 0;
+    const byDate = keepRule === 'newest' ? dateB - dateA : dateA - dateB;
+    return byDate || byId;
+  });
+}
+
+/** The IDs the preview labels "Keep" and the IDs a removal will delete. */
+export function getDuplicateKeepRuleIds(result: DuplicateScanResult) {
+  return {
+    keep: result.groups.map((group) => group.items[0].node.id),
+    remove: result.groups.flatMap((group) => group.items.slice(1).map((item) => item.node.id)),
+  };
+}
+
+/**
+ * Removes every previewed extra (all items after the first in each group). Each group is
+ * re-read first: extras whose URL changed or that no longer exist are skipped, and a group
+ * whose kept bookmark is gone is left untouched so the URL is never lost entirely.
+ */
+export async function removeDuplicateExtras(
+  groups: DuplicateGroup[],
+): Promise<DuplicateRemovalResult> {
+  const result: DuplicateRemovalResult = { removed: 0, skipped: 0, failed: 0, snapshots: [] };
+  const readCurrent = async (id: string) => {
+    try {
+      return await getBookmark(id);
+    } catch {
+      return null;
+    }
+  };
+
+  for (const group of groups) {
+    const [keeper, ...extras] = group.items;
+    const currentKeeper = keeper ? await readCurrent(keeper.node.id) : null;
+    if (!currentKeeper) {
+      result.skipped += extras.length;
+      continue;
+    }
+
+    for (const extra of extras) {
+      const current = await readCurrent(extra.node.id);
+      if (!current || current.url !== extra.node.url) {
+        result.skipped += 1;
+        continue;
+      }
+      try {
+        const snapshot = await captureBookmarkDeletion(extra.node.id);
+        await deleteBookmark(extra.node.id);
+        result.snapshots.push(snapshot);
+        result.removed += 1;
+      } catch {
+        result.failed += 1;
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Restores bookmarks removed by {@link removeDuplicateExtras}. Snapshots are replayed in
+ * reverse deletion order so captured sibling indexes stay valid.
+ */
+export async function restoreDuplicateExtras(
+  snapshots: BookmarkDeletionSnapshot[],
+): Promise<{ restored: number; failed: number }> {
+  let restored = 0;
+  let failed = 0;
+  for (const snapshot of [...snapshots].reverse()) {
+    try {
+      await restoreBookmarkDeletion(snapshot);
+      restored += 1;
+    } catch {
+      failed += 1;
+    }
+  }
+  return { restored, failed };
+}
+
 function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
   const title = bookmark.node.title.trim().toLowerCase();
   const url = bookmark.node.url;
 
   switch (options.strategy) {
     case 'exact_url':
-      return url?.trim().toLowerCase();
+      return url || undefined;
     case 'normalized_url':
       return normalizeDuplicateUrl(url, options);
     case 'title_url': {
@@ -311,6 +424,12 @@ function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
   }
 }
 
+/**
+ * Normalizes only what never changes the target resource: scheme and host case (the URL
+ * parser lowercases both) and default ports. Explicit non-default ports, path, query, and
+ * fragment case are preserved. Query parameter order is ignored, and the optional settings
+ * strip `www.`, the scheme, and a trailing slash.
+ */
 function normalizeDuplicateUrl(url: string | undefined, options: DuplicateOptions) {
   if (!url) {
     return undefined;
@@ -318,15 +437,24 @@ function normalizeDuplicateUrl(url: string | undefined, options: DuplicateOption
 
   try {
     const parsed = new URL(url.trim());
+    if (!parsed.host) {
+      return url.trim();
+    }
     const protocol = options.ignoreProtocol ? '' : parsed.protocol;
-    const hostname = options.normalizeWww ? parsed.hostname.replace(/^www\./, '') : parsed.hostname;
+    const host = options.normalizeWww ? parsed.host.replace(/^www\./, '') : parsed.host;
     const pathname = options.ignoreTrailingSlash && parsed.pathname !== '/'
       ? parsed.pathname.replace(/\/$/, '')
       : parsed.pathname;
+    const query = parsed.search
+      .slice(1)
+      .split('&')
+      .filter(Boolean)
+      .sort()
+      .join('&');
 
-    return `${protocol}//${hostname}${pathname}${parsed.search}${parsed.hash}`.toLowerCase();
+    return `${protocol}//${host}${pathname}${query ? `?${query}` : ''}${parsed.hash}`;
   } catch {
-    return url.trim().toLowerCase();
+    return url.trim();
   }
 }
 

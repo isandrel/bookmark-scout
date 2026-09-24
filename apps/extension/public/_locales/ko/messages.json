@@ -2562,5 +2562,51 @@
     "stats_protocols": {
         "message": "프로토콜",
         "description": "Statistics protocols label"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "중복 북마크 $count$개를 삭제했습니다",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "일부 중복 항목이 삭제되지 않았습니다",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "삭제됨: $removed$개. 변경되었거나 이미 삭제되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "복원됨: $restored$개. 복원 실패: $failed$개.",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
     }
 }

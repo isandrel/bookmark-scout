@@ -2562,5 +2562,51 @@
     "stats_protocols": {
         "message": "Protocols",
         "description": "Statistics protocols label"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "$count$ duplicate bookmark removed",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "Some duplicates were not removed",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "Removed: $removed$. Skipped because they changed or were already removed: $skipped$. Failed: $failed$.",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "Restored: $restored$. Could not restore: $failed$.",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
     }
 }

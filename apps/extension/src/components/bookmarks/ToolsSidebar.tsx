@@ -22,6 +22,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { useState, useRef } from 'react';
+import type { BookmarkTreeNode } from '@/types';
 
 type ToolSectionProps = {
   title: string;
@@ -164,21 +165,46 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
   const getTargetNodes = (scope: ToolScope) => getScopedNodes(folders, currentFolderId, scope);
 
+  const [duplicateScope, setDuplicateScope] = useState<ToolScope>('all');
+  const duplicateUndoRef = useRef<(() => void) | null>(null);
+  const [duplicateNotice, setDuplicateNotice] = useState<{
+    message: string;
+    snapshots: BookmarkDeletionSnapshot[];
+  } | null>(null);
+
+  const scanDuplicates = (nodes: BookmarkTreeNode[]) =>
+    scanDuplicateBookmarks(nodes, {
+      strategy: duplicatesMatchStrategy,
+      normalizeWww: duplicatesNormalizeWww,
+      ignoreProtocol: duplicatesIgnoreProtocol,
+      ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
+      maxGroups: duplicatesMaxGroups,
+      keepRule: duplicatesKeepRule,
+    });
+
   const handleDuplicates = async (scope: ToolScope) => {
     setDuplicateLoading(true);
     try {
-      const result = scanDuplicateBookmarks(getTargetNodes(scope), {
-        strategy: duplicatesMatchStrategy,
-        normalizeWww: duplicatesNormalizeWww,
-        ignoreProtocol: duplicatesIgnoreProtocol,
-        ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
-        maxGroups: duplicatesMaxGroups,
-      });
-      setDuplicateResult(result);
+      setDuplicateScope(scope);
+      setDuplicateNotice(null);
+      setDuplicateResult(scanDuplicates(getTargetNodes(scope)));
       setDuplicatesDialogOpen(true);
     } finally {
       setDuplicateLoading(false);
     }
+  };
+
+  const undoDuplicateRemoval = async (snapshots: BookmarkDeletionSnapshot[]) => {
+    setDuplicateNotice(null);
+    const { restored, failed } = await restoreDuplicateExtras(snapshots);
+    await refresh();
+    const freshTree = await fetchBookmarkTree();
+    setDuplicateResult(scanDuplicates(getScopedNodes(freshTree, currentFolderId, duplicateScope)));
+    toast({
+      title: failed ? t('toast_errorRestoringDeletion') : t('toast_deleteRestored'),
+      description: t('toast_duplicatesRestoredDesc', [String(restored), String(failed)]),
+      variant: failed ? 'destructive' : 'success',
+    });
   };
 
   const handleRemoveDuplicates = async () => {
@@ -186,32 +212,48 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setDuplicateRemoving(true);
     try {
-      const toDelete = duplicateResult.groups.flatMap((group) => {
-        const sorted = [...group.items].sort((a, b) => {
-          const dateA = a.node.dateAdded ?? 0;
-          const dateB = b.node.dateAdded ?? 0;
-
-          if (duplicatesKeepRule === 'newest') {
-            return dateB - dateA;
-          }
-
-          if (duplicatesKeepRule === 'oldest') {
-            return dateA - dateB;
-          }
-
-          return a.node.id.localeCompare(b.node.id);
-        });
-
-        return sorted.slice(1).map((item) => item.node.id);
-      });
-
-      await Promise.all(toDelete.map((id) => deleteBookmark(id)));
+      const outcome = await removeDuplicateExtras(duplicateResult.groups);
       await refresh();
-      setDuplicatesDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
+      const description = complete
+        ? tPlural('toast_duplicatesRemovedDesc', outcome.removed)
+        : t('toast_duplicatesPartialDesc', [
+            String(outcome.removed),
+            String(outcome.skipped),
+            String(outcome.failed),
+          ]);
+      // One undo per removal, whether triggered from the toast or the dialog notice.
+      let undoUsed = false;
+      const undo = () => {
+        if (undoUsed) return;
+        undoUsed = true;
+        void undoDuplicateRemoval(outcome.snapshots);
+      };
+
+      if (complete) {
+        setDuplicatesDialogOpen(false);
+      } else {
+        // Rescan from the live tree so the dialog never shows stale groups after a partial run.
+        const freshTree = await fetchBookmarkTree();
+        setDuplicateResult(
+          scanDuplicates(getScopedNodes(freshTree, currentFolderId, duplicateScope)),
+        );
+        setDuplicateNotice({ message: description, snapshots: outcome.snapshots });
+      }
+
       toast({
-        title: t('toast_duplicatesRemoved'),
-        description: t('toast_duplicatesRemovedDesc', String(toDelete.length)),
+        title: complete ? t('toast_duplicatesRemoved') : t('toast_duplicatesPartiallyRemoved'),
+        description,
+        variant: complete ? 'success' : 'destructive',
+        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
+        action:
+          outcome.snapshots.length > 0 ? (
+            <ToastAction altText={t('action_undo')} onClick={undo}>
+              {t('action_undo')}
+            </ToastAction>
+          ) : undefined,
       });
+      duplicateUndoRef.current = undo;
     } catch (error) {
       toast({
         title: t('toast_toolFailed'),
@@ -975,6 +1017,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           isRemoving={duplicateRemoving}
           onClose={() => setDuplicatesDialogOpen(false)}
           onConfirm={handleRemoveDuplicates}
+          notice={duplicateNotice?.message}
+          onUndo={
+            duplicateNotice?.snapshots.length ? () => duplicateUndoRef.current?.() : undefined
+          }
         />
       </ToolResultsDialog>
 

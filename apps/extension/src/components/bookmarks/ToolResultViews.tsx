@@ -45,14 +45,32 @@ export function DuplicateResultsView({
   isRemoving,
   onClose,
   onConfirm,
+  notice,
+  onUndo,
 }: {
   result: DuplicateScanResult | null;
   isRemoving: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  /** Outcome of a partial removal, shown above the refreshed groups. */
+  notice?: string;
+  onUndo?: () => void;
 }) {
   return (
     <div className="space-y-4">
+      {notice ? (
+        <div
+          role="status"
+          className="flex items-center justify-between gap-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm"
+        >
+          <span>{notice}</span>
+          {onUndo ? (
+            <Button variant="outline" size="sm" onClick={onUndo}>
+              {t('action_undo')}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
       {result?.groups.length ? (
         result.groups.map((group) => (
           <div key={group.key} className="space-y-3 rounded-lg border p-3">

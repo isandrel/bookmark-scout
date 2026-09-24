@@ -1,0 +1,87 @@
+import { expect, test } from './fixtures';
+import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
+
+test('duplicate cleaner keeps the newest item it labels Keep and ignores case, port, and query-order lookalikes', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Rules', [
+    { title: 'Old Copy', url: 'https://e2e.invalid/same' },
+    { title: 'New Copy', url: 'https://e2e.invalid/same' },
+    { title: 'Upper Path', url: 'https://e2e.invalid/Docs/Readme' },
+    { title: 'Lower Path', url: 'https://e2e.invalid/docs/readme' },
+    { title: 'Port 8080', url: 'http://localhost:8080/app' },
+    { title: 'Port 3000', url: 'http://localhost:3000/app' },
+  ]);
+  await setSettings(extensionWorker, {
+    duplicatesKeepRule: 'newest',
+    duplicatesDefaultScope: 'all',
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog.getByText(/^1 duplicate groups? found/)).toBeVisible();
+  const keptRow = dialog.getByText('Keep', { exact: true }).locator('..');
+  const keptTitle = (await keptRow.locator('span.font-medium').textContent()) ?? '';
+  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+
+  await expect
+    .poll(async () => (await childrenOf(extensionWorker, folder.folderId)).length)
+    .toBe(5);
+  const titles = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
+  expect(titles).toContain(keptTitle);
+  expect(titles).toEqual(
+    expect.arrayContaining(['Upper Path', 'Lower Path', 'Port 8080', 'Port 3000']),
+  );
+  expect(titles.filter((title) => title.endsWith('Copy'))).toEqual([keptTitle]);
+});
+
+test('duplicate removal reports partial results, refreshes the dialog, and undo restores removed items', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Partial', [
+    { title: 'A1', url: 'https://e2e.invalid/a' },
+    { title: 'A2', url: 'https://e2e.invalid/a' },
+    { title: 'A3', url: 'https://e2e.invalid/a' },
+    { title: 'B1', url: 'https://e2e.invalid/b' },
+    { title: 'B2', url: 'https://e2e.invalid/b' },
+  ]);
+  await setSettings(extensionWorker, { duplicatesKeepRule: 'first' });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog).toContainText('A3');
+
+  // Changes made elsewhere after the scan: one extra deleted, one extra edited.
+  await extensionWorker.evaluate(
+    async ({ removeId, editId }) => {
+      await chrome.bookmarks.remove(removeId);
+      await chrome.bookmarks.update(editId, { url: 'https://e2e.invalid/edited' });
+    },
+    { removeId: folder.ids.A2, editId: folder.ids.B2 },
+  );
+  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+
+  await expect(page.getByText('Some duplicates were not removed', { exact: true })).toBeVisible();
+  await expect(dialog.getByRole('status')).toContainText(/Removed: 1\. .*: 2\. Failed: 0\./);
+  await expect
+    .poll(async () => (await childrenOf(extensionWorker, folder.folderId)).length)
+    .toBe(3);
+  const remaining = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
+  expect(remaining.sort()).toEqual(['A1', 'B1', 'B2']);
+  // The dialog was rescanned against the live tree and no longer lists removed items.
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText('No duplicate bookmarks found.')).toBeVisible();
+
+  await dialog.getByRole('button', { name: 'Undo' }).click();
+  await expect
+    .poll(async () => (await childrenOf(extensionWorker, folder.folderId)).length)
+    .toBe(4);
+  const restored = await childrenOf(extensionWorker, folder.folderId);
+  expect(restored.map((item) => item.title)).toEqual(['A1', 'A3', 'B1', 'B2']);
+});

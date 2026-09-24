@@ -2562,5 +2562,51 @@
     "stats_protocols": {
         "message": "プロトコル",
         "description": "Statistics protocols label"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "$count$ 件の重複ブックマークを削除しました",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "一部の重複は削除されませんでした",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "削除: $removed$ 件。変更済みまたは削除済みのためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "復元: $restored$ 件。復元できませんでした: $failed$ 件。",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
     }
 }
