@@ -47,12 +47,6 @@ function findNodeById(nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode |
   return null;
 }
 
-export interface SearchOptions {
-  matchCase: boolean;
-  wholeWord: boolean;
-  useRegex: boolean;
-}
-
 interface BookmarkState {
   // State
   folders: BookmarkTreeNode[];
@@ -62,7 +56,10 @@ interface BookmarkState {
   query: string;
   debouncedQuery: string;
   searchOptions: SearchOptions;
+  expandFoldersOnSearch: boolean;
   expandedFolders: string[];
+  /** Expansion the user had before searching; restored when the query is cleared. */
+  preSearchExpandedFolders: string[] | null;
   forceExpandAll: boolean;
   draggedItem: BookmarkTreeNode | null;
   creatingFolderId: string | null;
@@ -75,6 +72,7 @@ interface BookmarkState {
   setExpandedFolders: (folders: string[] | ((prev: string[]) => string[])) => void;
   setForceExpandAll: (expand: boolean) => void;
   setSearchOptions: (options: Partial<SearchOptions>) => void;
+  setExpandFoldersOnSearch: (expand: boolean) => void;
   setDraggedItem: (item: BookmarkTreeNode | null) => void;
   setCreatingFolderId: (id: string | null) => void;
   setNewFolderName: (name: string) => void;
@@ -91,8 +89,6 @@ interface BookmarkState {
   toggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
   areAllChildrenExpanded: (node: BookmarkTreeNode) => boolean;
 
-  // Filter helpers
-  filterFolders: (nodes: BookmarkTreeNode[], searchQuery: string) => BookmarkTreeNode[];
   applyFilter: () => void;
 }
 
@@ -107,7 +103,9 @@ export const useBookmarkStore = create<BookmarkState>()(
       query: '',
       debouncedQuery: '',
       searchOptions: { matchCase: false, wholeWord: false, useRegex: false },
+      expandFoldersOnSearch: true,
       expandedFolders: [],
+      preSearchExpandedFolders: null,
       forceExpandAll: false,
       draggedItem: null,
       creatingFolderId: null,
@@ -119,6 +117,8 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const data = await fetchBookmarkTree();
           set({ folders: data, filteredFolders: data, isLoading: false });
+          // Re-filter so a refresh during an active search keeps showing search results.
+          if (get().debouncedQuery) get().applyFilter();
         } catch (err) {
           set({
             error: err instanceof Error ? err.message : 'Failed to fetch bookmarks',
@@ -147,6 +147,11 @@ export const useBookmarkStore = create<BookmarkState>()(
       setSearchOptions: (options) => {
         set((state) => ({ searchOptions: { ...state.searchOptions, ...options } }));
         get().applyFilter();
+      },
+      setExpandFoldersOnSearch: (expandFoldersOnSearch) => {
+        if (get().expandFoldersOnSearch === expandFoldersOnSearch) return;
+        set({ expandFoldersOnSearch });
+        if (get().debouncedQuery) get().applyFilter();
       },
       setDraggedItem: (draggedItem) => set({ draggedItem }),
       setCreatingFolderId: (creatingFolderId) => set({ creatingFolderId }),
@@ -292,128 +297,45 @@ export const useBookmarkStore = create<BookmarkState>()(
         );
       },
 
-      // Filter helpers
-      filterFolders: (nodes, searchQuery) => {
-        const { forceExpandAll, searchOptions } = get();
-
-        if (!searchQuery) return nodes;
-
-        if (forceExpandAll) {
-          const deepCopy = (node: BookmarkTreeNode): BookmarkTreeNode => ({
-            ...node,
-            children: node.children ? node.children.map(deepCopy) : undefined,
-            isOpen: true,
-          });
-          return nodes.map(deepCopy);
-        }
-
-        // Build match function based on search options
-        const createMatcher = (query: string): ((text: string) => boolean) => {
-          try {
-            if (searchOptions.useRegex) {
-              const flags = searchOptions.matchCase ? '' : 'i';
-              const pattern = searchOptions.wholeWord ? `\\b${query}\\b` : query;
-              const regex = new RegExp(pattern, flags);
-              return (text: string) => regex.test(text);
-            } else {
-              let pattern = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special chars
-              if (searchOptions.wholeWord) {
-                pattern = `\\b${pattern}\\b`;
-              }
-              const flags = searchOptions.matchCase ? '' : 'i';
-              const regex = new RegExp(pattern, flags);
-              return (text: string) => regex.test(text);
-            }
-          } catch {
-            // Invalid regex, fall back to simple includes
-            return (text: string) =>
-              searchOptions.matchCase
-                ? text.includes(query)
-                : text.toLowerCase().includes(query.toLowerCase());
-          }
-        };
-
-        const matches = createMatcher(searchQuery);
-
-        // Build highlight function
-        const highlightText = (text: string, query: string): string => {
-          try {
-            let pattern: string;
-            if (searchOptions.useRegex) {
-              pattern = searchOptions.wholeWord ? `\\b(${query})\\b` : `(${query})`;
-            } else {
-              const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-              pattern = searchOptions.wholeWord ? `\\b(${escaped})\\b` : `(${escaped})`;
-            }
-            const flags = searchOptions.matchCase ? 'g' : 'gi';
-            return text.replace(new RegExp(pattern, flags), '<b>$1</b>');
-          } catch {
-            return text;
-          }
-        };
-
-        const filtered: BookmarkTreeNode[] = [];
-        for (const node of nodes) {
-          const nodeMatches = matches(node.title);
-
-          if (node.children) {
-            const filteredChildren = get().filterFolders(node.children, searchQuery);
-
-            if (nodeMatches || filteredChildren.length > 0) {
-              const childrenToInclude = nodeMatches
-                ? node.children.map((child) => {
-                    if (child.children && matches(child.title)) {
-                      return {
-                        ...child,
-                        title: highlightText(child.title, searchQuery),
-                        isOpen: true,
-                      };
-                    }
-                    return child;
-                  })
-                : filteredChildren;
-
-              const shouldExpand =
-                !nodeMatches ||
-                node.children?.some((child) => child.children && matches(child.title));
-
-              filtered.push({
-                ...node,
-                title: nodeMatches ? highlightText(node.title, searchQuery) : node.title,
-                children: childrenToInclude,
-                isOpen: shouldExpand,
-              });
-            }
-          } else if (nodeMatches) {
-            filtered.push({
-              ...node,
-              title: highlightText(node.title, searchQuery),
-            });
-          }
-        }
-        return filtered;
-      },
-
       applyFilter: () => {
-        const { folders, debouncedQuery, filterFolders, forceExpandAll } = get();
+        const {
+          folders,
+          debouncedQuery,
+          searchOptions,
+          forceExpandAll,
+          expandFoldersOnSearch,
+          expandedFolders,
+          preSearchExpandedFolders,
+        } = get();
 
-        if (debouncedQuery) {
-          const filtered = filterFolders(folders, debouncedQuery);
-          set({ filteredFolders: filtered });
-
-          const getExpandableFolderIds = (nodes: BookmarkTreeNode[]): string[] => {
-            return nodes.reduce((acc: string[], node) => {
-              if (node.children && (node.isOpen || forceExpandAll)) {
-                return [...acc, node.id, ...getExpandableFolderIds(node.children)];
-              }
-              return acc;
-            }, []);
-          };
-
-          set({ expandedFolders: getExpandableFolderIds(filtered) });
-        } else {
-          set({ filteredFolders: folders, expandedFolders: [], forceExpandAll: false });
+        if (!debouncedQuery) {
+          set({
+            filteredFolders: folders,
+            forceExpandAll: false,
+            expandedFolders: preSearchExpandedFolders ?? expandedFolders,
+            preSearchExpandedFolders: null,
+          });
+          return;
         }
+
+        const savedExpansion = preSearchExpandedFolders ?? expandedFolders;
+        if (forceExpandAll) {
+          set({
+            filteredFolders: folders,
+            expandedFolders: getAllFolderIds(folders),
+            preSearchExpandedFolders: savedExpansion,
+          });
+          return;
+        }
+
+        const filtered = filterBookmarkTree(folders, debouncedQuery, searchOptions);
+        set({
+          filteredFolders: filtered,
+          expandedFolders: expandFoldersOnSearch
+            ? getSearchExpandedFolderIds(filtered)
+            : savedExpansion,
+          preSearchExpandedFolders: savedExpansion,
+        });
       },
     }),
     { name: 'bookmark-store' },

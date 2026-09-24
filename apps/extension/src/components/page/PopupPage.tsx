@@ -27,6 +27,7 @@ function PopupPage() {
     isLoading,
     error,
     query,
+    debouncedQuery: activeQuery,
     expandedFolders,
     forceExpandAll,
     draggedItem,
@@ -63,6 +64,13 @@ function PopupPage() {
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
   const { value: sortOrder } = useSetting('sortOrder');
+  const { value: groupByFolders } = useSetting('groupByFolders');
+  const { value: maxSearchResults } = useSetting('maxSearchResults');
+  const { value: expandFoldersOnSearch } = useSetting('expandFoldersOnSearch');
+  const { value: searchHistoryEnabled, isLoading: searchHistoryLoading } =
+    useSetting('searchHistory');
+  const searchHistory = useSearchHistory(searchHistoryEnabled, searchHistoryLoading);
+  const setExpandFoldersOnSearch = useBookmarkStore((state) => state.setExpandFoldersOnSearch);
   const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
@@ -76,6 +84,10 @@ function PopupPage() {
   useEffect(() => {
     setDebouncedQuery(debouncedQuery);
   }, [debouncedQuery, setDebouncedQuery]);
+
+  useEffect(() => {
+    setExpandFoldersOnSearch(expandFoldersOnSearch);
+  }, [expandFoldersOnSearch, setExpandFoldersOnSearch]);
 
   // Fetch folders on mount
   useEffect(() => {
@@ -399,13 +411,25 @@ function PopupPage() {
     await deleteItem(deletion);
   }, [deleteItem, pendingDeletion]);
 
-  const displayFolders = useMemo(() => {
+  const sortedFolders = useMemo(() => {
     const visibleFolders = creatingFolderId
       ? addTemporaryFolder(filteredFolders, creatingFolderId)
       : filteredFolders;
 
-    return sortBookmarkTree(visibleFolders, sortOrder, folders);
-  }, [addTemporaryFolder, creatingFolderId, filteredFolders, folders, sortOrder]);
+    return sortBookmarkTree(getTopLevelBookmarkNodes(visibleFolders), sortOrder, folders, {
+      groupFolders: groupByFolders,
+    });
+  }, [addTemporaryFolder, creatingFolderId, filteredFolders, folders, groupByFolders, sortOrder]);
+
+  const totalSearchMatches = useMemo(
+    () => (activeQuery ? countSearchMatches(sortedFolders) : 0),
+    [activeQuery, sortedFolders],
+  );
+  const isSearchLimited = totalSearchMatches > maxSearchResults;
+  const displayFolders = useMemo(
+    () => (isSearchLimited ? limitSearchResults(sortedFolders, maxSearchResults) : sortedFolders),
+    [isSearchLimited, maxSearchResults, sortedFolders],
+  );
 
   if (error) {
     return (
@@ -432,6 +456,9 @@ function PopupPage() {
           onAIRecommend={handleAIRecommend}
           searchOptions={searchOptions}
           onSearchOptionsChange={setSearchOptions}
+          searchHistory={searchHistory.history}
+          onCommitQuery={searchHistory.record}
+          onClearHistory={searchHistory.clear}
         />
 
         {/* Recent Folders Panel */}
@@ -522,6 +549,14 @@ function PopupPage() {
             </div>
           ) : (
             <div className="p-3">
+              {isSearchLimited && (
+                <p className="px-2 pb-2 text-xs text-muted-foreground" role="status">
+                  {t('search_resultsLimited', [
+                    String(maxSearchResults),
+                    String(totalSearchMatches),
+                  ])}
+                </p>
+              )}
               <Accordion
                 type="multiple"
                 value={expandedFolders}

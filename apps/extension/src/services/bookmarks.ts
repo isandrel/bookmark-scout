@@ -71,6 +71,8 @@ function processNode(node: chrome.bookmarks.BookmarkTreeNode): BookmarkTreeNode 
     url: node.url,
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
+    ...(node.folderType ? { folderType: node.folderType } : {}),
+    ...(node.unmodifiable ? { unmodifiable: node.unmodifiable } : {}),
     children: node.children ? node.children.map(processNode) : undefined,
     isOpen: false,
   };

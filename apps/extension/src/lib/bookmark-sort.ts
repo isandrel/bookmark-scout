@@ -8,6 +8,11 @@ export type BookmarkSortAccessors<T> = {
   isPinned?: (item: T) => boolean;
 };
 
+export type BookmarkSortOptions = {
+  /** List folders before links at each level, then apply the sort order within each group. */
+  groupFolders?: boolean;
+};
+
 type SortableItem<T> = {
   item: T;
   originalPosition: number;
@@ -76,6 +81,7 @@ export function sortBookmarkItems<T>(
   items: readonly T[],
   order: SortOrder,
   accessors: BookmarkSortAccessors<T>,
+  options: BookmarkSortOptions = {},
 ): T[] {
   return items
     .map((item, originalPosition) => ({ item, originalPosition }))
@@ -85,6 +91,11 @@ export function sortBookmarkItems<T>(
 
       if (leftPinned !== rightPinned) {
         return leftPinned ? -1 : 1;
+      }
+
+      if (options.groupFolders) {
+        const grouping = sortComparators.folders(left, right, accessors);
+        if (grouping) return grouping;
       }
 
       const comparison = sortComparators[order](left, right, accessors);
@@ -98,6 +109,7 @@ export function sortBookmarkTree(
   nodes: readonly BookmarkTreeNode[],
   order: SortOrder,
   originalNodes: readonly BookmarkTreeNode[] = nodes,
+  options: BookmarkSortOptions = {},
 ): BookmarkTreeNode[] {
   const titlesById = new Map<string, string>();
   const collectTitles = (items: readonly BookmarkTreeNode[]) => {
@@ -120,7 +132,7 @@ export function sortBookmarkTree(
       isFolder: (node) => node.children !== undefined,
       getIndex: (node) => node.index,
       isPinned: (node) => node.isTemporary === true,
-    });
+    }, options);
   };
 
   return sortNodes(nodes);
