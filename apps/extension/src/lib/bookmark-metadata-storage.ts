@@ -18,6 +18,16 @@ export type BookmarkMetadataMergeOptions = {
   dedupeTags: boolean;
 };
 
+// Read-modify-write updates of the shared record are serialized so concurrent callers in one
+// page (for example an undo restore and a stale-ID cleanup) cannot overwrite each other.
+let metadataWriteQueue: Promise<unknown> = Promise.resolve();
+
+function withMetadataWriteLock<T>(task: () => Promise<T>): Promise<T> {
+  const run = metadataWriteQueue.then(task, task);
+  metadataWriteQueue = run.catch(() => undefined);
+  return run;
+}
+
 export async function getStoredBookmarkMetadata(
   bookmarkIds: string[],
 ): Promise<StoredBookmarkMetadataById> {
@@ -50,6 +60,13 @@ export async function mergeStoredBookmarkMetadata(
   patches: Record<string, BookmarkMetadataPatch>,
   options: BookmarkMetadataMergeOptions,
 ): Promise<StoredBookmarkMetadataById> {
+  return withMetadataWriteLock(() => mergeUnlocked(patches, options));
+}
+
+async function mergeUnlocked(
+  patches: Record<string, BookmarkMetadataPatch>,
+  options: BookmarkMetadataMergeOptions,
+): Promise<StoredBookmarkMetadataById> {
   const stored = await readAllBookmarkMetadata();
 
   for (const [bookmarkId, patch] of Object.entries(patches)) {
@@ -74,6 +91,10 @@ export async function mergeStoredBookmarkMetadata(
 }
 
 export async function removeStoredBookmarkMetadata(bookmarkIds: string[]): Promise<void> {
+  return withMetadataWriteLock(() => removeUnlocked(bookmarkIds));
+}
+
+async function removeUnlocked(bookmarkIds: string[]): Promise<void> {
   const stored = await readAllBookmarkMetadata();
   let changed = false;
 
@@ -90,6 +111,10 @@ export async function removeStoredBookmarkMetadata(bookmarkIds: string[]): Promi
 }
 
 export async function reconcileStoredBookmarkMetadata(validBookmarkIds: string[]): Promise<void> {
+  return withMetadataWriteLock(() => reconcileUnlocked(validBookmarkIds));
+}
+
+async function reconcileUnlocked(validBookmarkIds: string[]): Promise<void> {
   const validIds = new Set(validBookmarkIds);
   const stored = await readAllBookmarkMetadata();
   const staleIds = Object.keys(stored).filter((bookmarkId) => !validIds.has(bookmarkId));

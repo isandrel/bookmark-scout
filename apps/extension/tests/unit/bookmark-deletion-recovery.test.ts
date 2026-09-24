@@ -1,4 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
+import {
+  BOOKMARK_METADATA_STORAGE_KEY,
+  getStoredBookmarkMetadata,
+  removeStoredBookmarkMetadata,
+  saveBookmarkMetadata,
+} from '@/lib/bookmark-metadata-storage';
 import {
   BOOKMARK_DELETION_UNDO_WINDOW_MS,
   BookmarkRestoreError,
@@ -95,6 +102,7 @@ function childTitles(id: string): string[] {
 }
 
 beforeEach(() => {
+  fakeBrowser.reset();
   nodes = new Map([['0', { id: '0', title: '', children: [] }]]);
   nextId = 1;
   failCreateAfter = undefined;
@@ -241,5 +249,39 @@ describe('bookmark deletion recovery', () => {
     expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Target Folder', 'After']);
     await restoreBookmarkDeletion(first, 0);
     expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
+  });
+
+  it('restores tags and summaries for the whole subtree under the recreated IDs', async () => {
+    await saveBookmarkMetadata('3', { tags: ['folder-tag'] });
+    await saveBookmarkMetadata('6', { tags: ['deep'], summary: 'Deep summary' });
+    await saveBookmarkMetadata('10', { summary: 'Outside the deleted subtree' });
+
+    const snapshot = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
+    expect(JSON.stringify(snapshot.node)).not.toMatch(/"id"/);
+    await deleteBookmark(TARGET_FOLDER_ID);
+    // Deletion flows and stale-ID reconciliation drop the old entries before undo.
+    await removeStoredBookmarkMetadata(['3', '6']);
+
+    const restored = await restoreBookmarkDeletion(snapshot, 0);
+    const restoredDeep = nodes.get(restored.id)?.children?.[1]?.children?.[0];
+    expect(restoredDeep?.title).toBe('Deep');
+    expect(restoredDeep?.id).not.toBe('6');
+
+    expect(await getStoredBookmarkMetadata([restored.id, restoredDeep?.id ?? '', '3', '6'])).toEqual({
+      [restored.id]: { tags: ['folder-tag'] },
+      [restoredDeep?.id ?? '']: { tags: ['deep'], summary: 'Deep summary' },
+    });
+    const raw = await fakeBrowser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
+    expect(raw[BOOKMARK_METADATA_STORAGE_KEY]).toHaveProperty('10', {
+      summary: 'Outside the deleted subtree',
+    });
+  });
+
+  it('does not write metadata when the deleted subtree had none', async () => {
+    const snapshot = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
+    await deleteBookmark(TARGET_FOLDER_ID);
+    await restoreBookmarkDeletion(snapshot, 0);
+    const raw = await fakeBrowser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
+    expect(raw[BOOKMARK_METADATA_STORAGE_KEY]).toBeUndefined();
   });
 });

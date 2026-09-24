@@ -6,8 +6,14 @@ type BookmarkDeleteDialogProps = {
 
 /** Confirmation shown before deleting when the `confirmBeforeDelete` setting is on. */
 export function BookmarkDeleteDialog({ deletion, onCancel, onConfirm }: BookmarkDeleteDialogProps) {
+  const count = deletion?.items?.length ?? 1;
   const title =
-    deletion?.type === 'folder' ? t('popup_deleteFolder') : t('popup_deleteBookmark');
+    count > 1
+      ? t('bookmarks_deleteItems', String(count))
+      : deletion?.type === 'folder'
+        ? t('popup_deleteFolder')
+        : t('popup_deleteBookmark');
+  const itemTitle = deletion?.title.trim() || t('bookmarks_untitled');
 
   return (
     <Dialog
@@ -20,9 +26,11 @@ export function BookmarkDeleteDialog({ deletion, onCancel, onConfirm }: Bookmark
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
-            {deletion?.type === 'folder'
-              ? t('popup_confirmDeleteFolder', deletion.title)
-              : t('popup_confirmDeleteBookmark', deletion?.title ?? '')}
+            {count > 1
+              ? t('bookmarks_confirmDeleteItems', String(count))
+              : deletion?.type === 'folder'
+                ? t('popup_confirmDeleteFolder', itemTitle)
+                : t('popup_confirmDeleteBookmark', itemTitle)}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
