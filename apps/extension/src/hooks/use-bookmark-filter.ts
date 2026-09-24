@@ -4,7 +4,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
-import { useDebounce } from './use-debounce';
 
 interface UseBookmarkFilterReturn {
   /** Current search query */

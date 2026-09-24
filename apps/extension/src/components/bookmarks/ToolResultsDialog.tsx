@@ -1,11 +1,3 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-
 type ToolResultsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;

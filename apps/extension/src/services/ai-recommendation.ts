@@ -6,8 +6,6 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
-import { createAIModel, validateAISettings, type AISettings } from './ai-client';
-import { FOLDER_RECOMMENDATION_PROMPT } from './ai-prompts';
 
 /**
  * Folder recommendation result.
