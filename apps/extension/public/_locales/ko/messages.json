@@ -2790,5 +2790,63 @@
     "action_allowAccess": {
         "message": "접근 허용",
         "description": "Button that requests website access"
+    },
+    "toast_exportSuccessDesc_one": {
+        "message": "$count$개의 북마크를 $format$ 형식으로 내보냈습니다",
+        "description": "Export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "format": {
+                "content": "$2",
+                "example": "HTML"
+            }
+        }
+    },
+    "error_invalidJsonFormat": {
+        "message": "JSON 형식이 올바르지 않습니다",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "이 파일에서 북마크나 폴더를 찾을 수 없습니다. 아무것도 가져오지 않았습니다.",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개.",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "일부 항목을 가져오지 못했습니다",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개. 가져오지 못한 항목: $failed$개.",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
     }
 }

@@ -2790,5 +2790,63 @@
     "action_allowAccess": {
         "message": "Allow access",
         "description": "Button that requests website access"
+    },
+    "toast_exportSuccessDesc_one": {
+        "message": "$count$ bookmark exported as $format$",
+        "description": "Export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "format": {
+                "content": "$2",
+                "example": "HTML"
+            }
+        }
+    },
+    "error_invalidJsonFormat": {
+        "message": "Invalid JSON format",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "No bookmarks or folders were found in this file. Nothing was imported.",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "Bookmarks imported: $bookmarks$. Folders imported: $folders$.",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "Some items were not imported",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "Bookmarks imported: $bookmarks$. Folders imported: $folders$. Not imported: $failed$.",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
     }
 }

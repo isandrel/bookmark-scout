@@ -9,7 +9,6 @@ import {
   Sparkles,
   BarChart3,
   Wrench,
-  Globe,
   Folder,
   FileText,
   Tags,
@@ -21,7 +20,7 @@ import {
   Download,
   Upload,
 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
 type ToolSectionProps = {
@@ -55,7 +54,20 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [isImporting, setIsImporting] = useState(false);
   const { settings: toolSettings, isLoading: toolSettingsLoading } = useSettings();
   const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
-  const [exportFormat, setExportFormat] = useState(String(dataDefaultExportFormat));
+  const [exportFormat, setExportFormat] = useState<string>(dataDefaultExportFormat);
+  // Settings load asynchronously and can change live; follow the saved default format.
+  useEffect(() => {
+    setExportFormat(dataDefaultExportFormat);
+  }, [dataDefaultExportFormat]);
+  const { value: dataShowExport } = useSetting('dataShowExport');
+  const { value: dataShowImport } = useSetting('dataShowImport');
+  const { value: exportIncludeDates } = useSetting('exportIncludeDates');
+  const { value: exportIncludeUrls } = useSetting('exportIncludeUrls');
+  const { value: exportJsonIndentSize } = useSetting('exportJsonIndentSize');
+  const { value: exportHtmlIndentSpaces } = useSetting('exportHtmlIndentSpaces');
+  const { value: exportMarkdownIndentSpaces } = useSetting('exportMarkdownIndentSpaces');
+  const { value: exportFilenamePrefix } = useSetting('exportFilenamePrefix');
+  const { value: exportFilenameMaxLength } = useSetting('exportFilenameMaxLength');
 
   // AI Reorganization state
   const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
@@ -686,35 +698,32 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   };
 
   // Export handler
-  const handleExport = async () => {
-    if (!folders || folders.length === 0) return;
+  const handleExport = async (scope: ToolScope) => {
+    const scopeNodes = getTargetNodes(scope);
+    if (scopeNodes.length === 0) return;
     setIsExporting(true);
 
     try {
-      const format = exportFormats[exportFormat];
-      // Create a virtual root node for export
-      const rootNode = {
-        id: '0',
-        title: 'Bookmarks',
-        children: folders,
-      };
-      const content = exportBookmarks(rootNode, format, { includeDates: true });
-      const filename = generateFilename(currentFolderName || 'all', format);
+      const format = exportFormats[exportFormat] ?? exportFormats.html;
+      const root = buildExportRoot(scopeNodes);
+      const content = exportBookmarks(root, format, {
+        includeDates: exportIncludeDates,
+        includeUrls: exportIncludeUrls,
+        jsonIndentSize: exportJsonIndentSize,
+        htmlIndentSpaces: exportHtmlIndentSpaces,
+        markdownIndentSpaces: exportMarkdownIndentSpaces,
+      });
+      const scopeName = scope === 'folder' && currentFolderId ? currentFolderName || 'folder' : 'all';
+      const filename = generateFilename(scopeName, format, {
+        prefix: exportFilenamePrefix,
+        maxLength: exportFilenameMaxLength,
+      });
       downloadExport(content, filename, format.mimeType);
 
-      // Count items for toast
-      let count = 0;
-      const countItems = (nodes: typeof folders) => {
-        for (const node of nodes) {
-          if (node.url) count++;
-          if (node.children) countItems(node.children);
-        }
-      };
-      countItems(folders);
-
+      const count = countExportedBookmarks(root);
       toast({
         title: t('toast_exportSuccess'),
-        description: t('toast_exportSuccessDesc', [String(count), getFormatName(format)]),
+        description: tPlural('toast_exportSuccessDesc', count, [getFormatName(format)]),
       });
     } catch (err) {
       toast({
@@ -741,22 +750,32 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       }
 
       const content = await readFile(file);
-      const { bookmarks: parsed } = parseBookmarks(content, format);
+      const parsed = parseBookmarks(content, format);
+      if (parsed.bookmarkCount + parsed.folderCount === 0) {
+        throw new Error(t('error_importNothingFound'));
+      }
 
       // Import to Bookmarks Bar (folder ID "1") or current folder
       const targetId = currentFolderId || '1';
-      const { created, errors } = await importBookmarks(parsed, targetId);
-
-      if (errors.length > 0) {
-        console.warn('Import errors:', errors);
-      }
-
+      const outcome = await importBookmarks(parsed.bookmarks, targetId);
       await refresh();
 
-      toast({
-        title: t('toast_importSuccess'),
-        description: t('toast_importSuccessDesc', String(created)),
-      });
+      const notImported = outcome.failed + parsed.skipped;
+      const imported = outcome.bookmarksCreated + outcome.foldersCreated;
+      const counts = [String(outcome.bookmarksCreated), String(outcome.foldersCreated)];
+      toast(
+        notImported === 0
+          ? {
+              title: t('toast_importSuccess'),
+              description: t('toast_importResultDesc', counts),
+              variant: 'success',
+            }
+          : {
+              title: imported === 0 ? t('toast_importFailed') : t('toast_importPartial'),
+              description: t('toast_importPartialDesc', [...counts, String(notImported)]),
+              variant: 'destructive',
+            },
+      );
     } catch (err) {
       toast({
         title: t('toast_importFailed'),
@@ -957,55 +976,39 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           )}
 
           {/* Data (Export/Import) */}
+          {!toolSettingsLoading && (dataShowExport || dataShowImport) && (
           <ToolSection title={t('tools_category_data')}>
-            {/* Export Tool */}
-            <div className="p-3 rounded-lg border bg-card space-y-2">
-              <div className="flex items-start gap-2">
-                <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
-                  <Download className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-medium truncate">
-                      {t('tools_export')}
-                    </h4>
-                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-                      <Folder className="h-3 w-3" />
-                      <span>/</span>
-                      <Globe className="h-3 w-3" />
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                    {t('tools_exportDesc')}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Select value={exportFormat} onValueChange={setExportFormat}>
-                  <SelectTrigger className="flex-1 h-8 text-xs">
-                    <SelectValue placeholder={t('tools_exportFormat')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(exportFormats).map(([key, format]) => (
-                      <SelectItem key={key} value={key}>
-                        {getFormatName(format)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleExport}
-                  disabled={isExporting || folders.length === 0}
-                  className="h-8 text-xs"
-                >
-                  {isExporting ? t('tools_exporting') : t('action_export')}
-                </Button>
-              </div>
-            </div>
+            {dataShowExport && (
+              <ToolCard
+                icon={<Download className="h-4 w-4 text-emerald-500" />}
+                title={t('tools_export')}
+                description={t('tools_exportDesc')}
+                buttonLabel={t('action_export')}
+                onClick={(scope) => handleExport(scope)}
+                disabled={folders.length === 0}
+                isLoading={isExporting}
+                scopeCapability="both"
+                defaultScope="folder"
+                currentFolderName={currentFolderName}
+                controls={
+                  <Select value={exportFormat} onValueChange={setExportFormat}>
+                    <SelectTrigger className="h-8 w-full text-xs" aria-label={t('tools_exportFormat')}>
+                      <SelectValue placeholder={t('tools_exportFormat')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(exportFormats).map(([key, format]) => (
+                        <SelectItem key={key} value={key}>
+                          {getFormatName(format)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                }
+              />
+            )}
 
             {/* Import Tool */}
+            {dataShowImport && (
             <div className="p-3 rounded-lg border bg-card space-y-2">
               <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
@@ -1045,7 +1048,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 </Button>
               </div>
             </div>
+            )}
           </ToolSection>
+          )}
         </div>
       </div>
 

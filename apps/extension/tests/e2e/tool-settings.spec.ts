@@ -216,7 +216,7 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
   await expect(page.getByRole('option', { name: 'E2E Tool Locale' })).toBeVisible();
   await expect(page.getByRole('option', { name: 'すべてのブックマーク' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox')).toContainText(
+  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox').first()).toContainText(
     'HTML（Chrome）',
   );
 

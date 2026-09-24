@@ -15,6 +15,8 @@ type ToolCardProps = {
   scopeCapability: ScopeCapability;
   defaultScope: ScopeCapability;
   currentFolderName?: string;
+  /** Extra tool-specific controls rendered above the scope selector and action button. */
+  controls?: React.ReactNode;
 };
 
 function resolveScope(capability: ScopeCapability, configuredDefault: ScopeCapability): ToolScope {
@@ -33,6 +35,7 @@ export function ToolCard({
   scopeCapability,
   defaultScope,
   currentFolderName,
+  controls,
 }: ToolCardProps) {
   const resolvedDefault = resolveScope(scopeCapability, defaultScope);
   const [selection, setSelection] = useState<{ defaultScope: ToolScope; scope: ToolScope } | null>(
@@ -61,6 +64,8 @@ export function ToolCard({
           <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{description}</p>
         </div>
       </div>
+
+      {controls ? <div className="flex items-center gap-2">{controls}</div> : null}
 
       <div className="flex items-center gap-2">
         {showScopeSelector ? (
