@@ -264,7 +264,7 @@ export async function importBookmarks(
     try {
       if (node.url) {
         // Create bookmark
-        await chrome.bookmarks.create({
+        await browser.bookmarks.create({
           parentId,
           title: node.title,
           url: node.url,
@@ -272,7 +272,7 @@ export async function importBookmarks(
         created++;
       } else {
         // Create folder
-        const folder = await chrome.bookmarks.create({
+        const folder = await browser.bookmarks.create({
           parentId,
           title: node.title,
         });

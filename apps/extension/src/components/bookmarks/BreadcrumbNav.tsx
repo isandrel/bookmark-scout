@@ -22,18 +22,15 @@ interface BreadcrumbNavProps {
  */
 async function getBookmarkById(
   id: string
-): Promise<chrome.bookmarks.BookmarkTreeNode | null> {
-  if (!chrome?.bookmarks) return null;
+): Promise<Browser.bookmarks.BookmarkTreeNode | null> {
+  if (!browser?.bookmarks) return null;
 
-  return new Promise((resolve) => {
-    chrome.bookmarks.get(id, (results) => {
-      if (chrome.runtime.lastError || results.length === 0) {
-        resolve(null);
-        return;
-      }
-      resolve(results[0]);
-    });
-  });
+  try {
+    const [result] = await browser.bookmarks.get(id);
+    return result ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export function BreadcrumbNav({ currentFolderId, onNavigate }: BreadcrumbNavProps) {

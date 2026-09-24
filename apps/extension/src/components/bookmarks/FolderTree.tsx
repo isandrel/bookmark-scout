@@ -96,44 +96,42 @@ function FolderItem({
 }
 
 /**
- * Builds folder tree from Chrome bookmarks API.
+ * Builds folder tree from the browser bookmarks API.
  */
 async function buildFolderTree(): Promise<FolderNode[]> {
-  if (!chrome?.bookmarks) return [];
+  if (!browser?.bookmarks) return [];
 
-  return new Promise((resolve) => {
-    chrome.bookmarks.getTree((nodes) => {
-      if (chrome.runtime.lastError) {
-        resolve([]);
-        return;
-      }
+  let nodes: Browser.bookmarks.BookmarkTreeNode[];
+  try {
+    nodes = await browser.bookmarks.getTree();
+  } catch {
+    return [];
+  }
 
-      const processNode = (
-        node: chrome.bookmarks.BookmarkTreeNode
-      ): FolderNode | null => {
-        // Only include folders (nodes with children array)
-        if (!node.children) return null;
+  const processNode = (
+    node: Browser.bookmarks.BookmarkTreeNode
+  ): FolderNode | null => {
+    // Only include folders (nodes with children array)
+    if (!node.children) return null;
 
-        const children = node.children
-          .map(processNode)
-          .filter((n): n is FolderNode => n !== null);
+    const children = node.children
+      .map(processNode)
+      .filter((n): n is FolderNode => n !== null);
 
-        return {
-          id: node.id,
-          title: node.title,
-          children,
-        };
-      };
+    return {
+      id: node.id,
+      title: node.title,
+      children,
+    };
+  };
 
-      // Get children of root node (id "0")
-      const rootChildren = nodes[0]?.children || [];
-      const tree = rootChildren
-        .map(processNode)
-        .filter((n): n is FolderNode => n !== null);
+  // Get children of root node (id "0")
+  const rootChildren = nodes[0]?.children || [];
+  const tree = rootChildren
+    .map(processNode)
+    .filter((n): n is FolderNode => n !== null);
 
-      resolve(tree);
-    });
-  });
+  return tree;
 }
 
 export function FolderTree({ selectedFolderId, onFolderSelect }: FolderTreeProps) {

@@ -6,7 +6,7 @@
 import { type ComponentType, useCallback, useEffect, useState } from 'react';
 import { Folder } from 'lucide-react';
 
-const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
+const processNode = (node: Browser.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
   const isFolder = node.children !== undefined;
   return {
     type: isFolder ? ItemTypeEnum.Folder : ItemTypeEnum.Link,
@@ -22,22 +22,13 @@ const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string
   };
 };
 
-async function getBookmarkTree(): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
-  if (!chrome?.bookmarks) return [];
-
-  return new Promise((resolve, reject) => {
-    chrome.bookmarks.getTree((nodes) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-      } else {
-        resolve(nodes);
-      }
-    });
-  });
+async function getBookmarkTree(): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  if (!browser?.bookmarks) return [];
+  return browser.bookmarks.getTree();
 }
 
 function flattenBookmarks(
-  nodes: chrome.bookmarks.BookmarkTreeNode[],
+  nodes: Browser.bookmarks.BookmarkTreeNode[],
   ancestorTitles: string[] = [],
 ): Bookmark[] {
   const bookmarks: Bookmark[] = [];
@@ -148,23 +139,24 @@ export function useParentIdMap(): IconMap {
   const [parentIdMap, setParentIdMap] = useState<IconMap>({});
 
   useEffect(() => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const map: IconMap = {};
+    const load = async () => {
+      const nodes = await getBookmarkTree();
+      const map: IconMap = {};
 
-        const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
-          map[node.id] = {
-            value: node.id,
-            label: node.title || 'Untitled',
-            icon: Folder,
-          };
-          node.children?.forEach(processNode);
+      const processNode = (node: Browser.bookmarks.BookmarkTreeNode) => {
+        map[node.id] = {
+          value: node.id,
+          label: node.title || 'Untitled',
+          icon: Folder,
         };
+        node.children?.forEach(processNode);
+      };
 
-        nodes.forEach(processNode);
-        setParentIdMap(map);
-      });
-    }
+      nodes.forEach(processNode);
+      setParentIdMap(map);
+    };
+
+    load().catch((error) => console.error('Failed to build bookmark folder map:', error));
   }, []);
 
   return parentIdMap;
@@ -178,37 +170,34 @@ export function useUrlMap(): IconMap {
   const [urlMap, setUrlMap] = useState<IconMap>({});
 
   useEffect(() => {
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.getTree((nodes) => {
-        const map: IconMap = {};
+    const load = async () => {
+      const nodes = await getBookmarkTree();
+      const map: IconMap = {};
 
-        const processNode = (node: chrome.bookmarks.BookmarkTreeNode) => {
-          if (node.children) {
-            node.children.forEach(processNode);
-          } else if (node.url) {
-            try {
-              const domain = new URL(node.url).hostname.split('.').slice(-2).join('.');
-              map[domain] = {
-                value: domain,
-                label: domain,
-                icon: () => (
-                  <img
-                    src={getFaviconUrl(node.url || '')}
-                    alt="favicon"
-                    className="w-4 h-4"
-                  />
-                ),
-              };
-            } catch {
-              // Invalid URL, skip
-            }
+      const processNode = (node: Browser.bookmarks.BookmarkTreeNode) => {
+        if (node.children) {
+          node.children.forEach(processNode);
+        } else if (node.url) {
+          try {
+            const domain = new URL(node.url).hostname.split('.').slice(-2).join('.');
+            map[domain] = {
+              value: domain,
+              label: domain,
+              icon: () => (
+                <img src={getFaviconUrl(node.url || '')} alt="favicon" className="w-4 h-4" />
+              ),
+            };
+          } catch {
+            // Invalid URL, skip
           }
-        };
+        }
+      };
 
-        nodes.forEach(processNode);
-        setUrlMap(map);
-      });
-    }
+      nodes.forEach(processNode);
+      setUrlMap(map);
+    };
+
+    load().catch((error) => console.error('Failed to build bookmark domain map:', error));
   }, []);
 
   return urlMap;

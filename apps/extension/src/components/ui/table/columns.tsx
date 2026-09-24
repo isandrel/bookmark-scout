@@ -178,7 +178,7 @@ export const createColumns = (
           <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
         ) : url ? (
           <img
-            src={`chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`}
+            src={`chrome-extension://${browser.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=16`}
             alt=""
             className="h-4 w-4 shrink-0 rounded-sm"
             onError={(e) => {
@@ -244,23 +244,13 @@ export const createColumns = (
 
       useEffect(() => {
         const getSiblingCount = async () => {
-          if (!chrome?.bookmarks || !bookmark.parentId) {
+          if (!browser?.bookmarks || !bookmark.parentId) {
             setSiblingCount(null);
             return;
           }
 
           try {
-            const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>(
-              (resolve, reject) => {
-                chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
-                  if (chrome.runtime.lastError) {
-                    reject(chrome.runtime.lastError);
-                    return;
-                  }
-                  resolve(result);
-                });
-              },
-            );
+            const parent = await browser.bookmarks.getChildren(bookmark.parentId!);
             setSiblingCount(parent.length);
           } catch (error) {
             console.error('Failed to get sibling count:', error);
@@ -272,8 +262,8 @@ export const createColumns = (
       }, [bookmark.parentId]);
 
       const moveBookmark = async (direction: 'up' | 'down' | 'top' | 'bottom') => {
-        if (!chrome?.bookmarks) {
-          console.error('Chrome bookmarks API not available');
+        if (!browser?.bookmarks) {
+          console.error('Browser bookmarks API not available');
           return;
         }
 
@@ -287,17 +277,7 @@ export const createColumns = (
           }
 
           // First, get the parent node to verify the operation and get current state
-          const parent = await new Promise<chrome.bookmarks.BookmarkTreeNode[]>(
-            (resolve, reject) => {
-              chrome.bookmarks.getChildren(bookmark.parentId!, (result) => {
-                if (chrome.runtime.lastError) {
-                  reject(chrome.runtime.lastError);
-                  return;
-                }
-                resolve(result);
-              });
-            },
-          );
+          const parent = await browser.bookmarks.getChildren(bookmark.parentId!);
 
           // Find the current bookmark in the parent's children to get its actual index
           const currentBookmark = parent.find((b) => b.id === bookmark.id);
@@ -340,24 +320,11 @@ export const createColumns = (
           }
 
           // Perform the move
-          await new Promise<chrome.bookmarks.BookmarkTreeNode>((resolve, reject) => {
-            chrome.bookmarks.move(
-              bookmark.id,
-              {
-                parentId: bookmark.parentId,
-                index: direction === 'down' ? newIndex + 1 : newIndex,
-              },
-              (result) => {
-                if (chrome.runtime.lastError) {
-                  console.error('Move error:', chrome.runtime.lastError);
-                  reject(chrome.runtime.lastError);
-                  return;
-                }
-                console.log('Move operation completed:', result);
-                resolve(result);
-              },
-            );
+          const result = await browser.bookmarks.move(bookmark.id, {
+            parentId: bookmark.parentId,
+            index: direction === 'down' ? newIndex + 1 : newIndex,
           });
+          console.log('Move operation completed:', result);
 
           // Trigger a refresh of the current folder's contents
           const event = new CustomEvent('bookmarkMoved', {

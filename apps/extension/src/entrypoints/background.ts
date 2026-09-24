@@ -6,7 +6,7 @@
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
   // Handle context menu clicks
-  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  browser.contextMenus.onClicked.addListener(async (info, tab) => {
     const result = await contextMenuManager.handleClick(info, tab);
 
     if (result.success) {

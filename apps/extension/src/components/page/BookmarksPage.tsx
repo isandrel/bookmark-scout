@@ -42,12 +42,13 @@ export default function BookmarksPage() {
       return;
     }
 
-    if (chrome?.bookmarks) {
-      chrome.bookmarks.get(currentFolder, (results) => {
-        if (results?.[0]) {
-          setCurrentFolderName(results[0].title || 'Untitled');
-        }
-      });
+    if (browser?.bookmarks) {
+      browser.bookmarks
+        .get(currentFolder)
+        .then(([folder]) => {
+          if (folder) setCurrentFolderName(folder.title || 'Untitled');
+        })
+        .catch((error) => console.error('Failed to load current folder:', error));
     }
   }, [currentFolder]);
 
