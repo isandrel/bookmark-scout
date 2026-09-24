@@ -3,28 +3,51 @@
  * Uses a provider-based architecture for extensibility.
  */
 
-import { createBookmark } from './bookmarks';
-import { getRecentFolders, addRecentFolder } from '@/lib/recent-folders-storage';
+import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
 import { defaultSettings } from '@/lib/settings-schema';
+import { createBookmark } from './bookmarks';
 
 // Type for bookmark naming setting
 export type BookmarkNamingSource = 'link_text' | 'page_title' | 'link_url';
 
 // Storage key for settings (same as used in settings hook)
 const SETTINGS_STORAGE_KEY = 'bookmark-scout-settings';
+const RECENT_FOLDERS_STORAGE_KEY = 'bookmark-scout-recent-folders';
+
+type ContextMenuSettings = {
+  enabled: boolean;
+  naming: BookmarkNamingSource;
+};
+
+function isContextMenuEnabled(value: unknown): boolean {
+  if (!value || typeof value !== 'object') return defaultSettings.contextMenuEnabled;
+  const enabled = (value as { contextMenuEnabled?: unknown }).contextMenuEnabled;
+  return typeof enabled === 'boolean' ? enabled : defaultSettings.contextMenuEnabled;
+}
 
 /**
- * Get the bookmark naming preference from settings.
+ * Read the context-menu preferences from the same sync area used by Options.
  */
-async function getBookmarkNamingSetting(): Promise<BookmarkNamingSource> {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(SETTINGS_STORAGE_KEY, (result) => {
-      const settings = result[SETTINGS_STORAGE_KEY];
-      if (settings?.contextMenuBookmarkNaming) {
-        resolve(settings.contextMenuBookmarkNaming);
-      } else {
-        resolve(defaultSettings.contextMenuBookmarkNaming || 'link_text');
+async function getContextMenuSettings(): Promise<ContextMenuSettings> {
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(SETTINGS_STORAGE_KEY, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
       }
+
+      const stored = result[SETTINGS_STORAGE_KEY];
+      const settings = (stored && typeof stored === 'object' ? stored : {}) as {
+        contextMenuBookmarkNaming?: unknown;
+      };
+      const naming = settings.contextMenuBookmarkNaming;
+      resolve({
+        enabled: isContextMenuEnabled(stored),
+        naming:
+          naming === 'link_text' || naming === 'page_title' || naming === 'link_url'
+            ? naming
+            : defaultSettings.contextMenuBookmarkNaming,
+      });
     });
   });
 }
@@ -106,11 +129,13 @@ export function parseMenuItemId(menuItemId: string): { type: string; folderId: s
 class ContextMenuManager {
   private providers: ContextMenuProvider[] = [];
   private isInitialized = false;
+  private rebuildQueue: Promise<void> = Promise.resolve();
 
   /**
    * Register a menu provider.
    */
   registerProvider(provider: ContextMenuProvider): void {
+    this.providers = this.providers.filter((existing) => existing.id !== provider.id);
     this.providers.push(provider);
     this.providers.sort((a, b) => a.priority - b.priority);
   }
@@ -127,21 +152,13 @@ class ContextMenuManager {
    */
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-
-    // Remove all existing menu items first
-    await this.clearMenu();
-
-    // Create root menu item
-    chrome.contextMenus.create({
-      id: `${MENU_PREFIX}${SEPARATOR}root`,
-      title: 'Save bookmark to...',
-      contexts: ['link'],
-    });
-
     this.isInitialized = true;
-
-    // Build initial menu
-    await this.rebuildMenu();
+    try {
+      await this.rebuildMenu();
+    } catch (error) {
+      this.isInitialized = false;
+      throw error;
+    }
   }
 
   /**
@@ -160,8 +177,17 @@ class ContextMenuManager {
    * Creates separate submenus for each category (Recent, AI, etc.)
    */
   async rebuildMenu(): Promise<void> {
-    // Remove old dynamic items
+    const next = this.rebuildQueue.catch(() => undefined).then(() => this.buildMenu());
+    this.rebuildQueue = next;
+    return next;
+  }
+
+  private async buildMenu(): Promise<void> {
     await this.clearMenu();
+
+    // A failed settings read must not recreate the menu or permit a save.
+    const settings = await getContextMenuSettings();
+    if (!settings.enabled) return;
 
     // Recreate root
     chrome.contextMenus.create({
@@ -186,6 +212,13 @@ class ContextMenuManager {
       } catch (error) {
         console.error(`[ContextMenu] Provider ${provider.id} failed:`, error);
       }
+    }
+
+    // Settings can change while a provider is loading. The queued storage-change
+    // rebuild will also run, but avoid showing a menu that has already been disabled.
+    if (!(await getContextMenuSettings()).enabled) {
+      await this.clearMenu();
+      return;
     }
 
     // Category labels and icons
@@ -273,9 +306,11 @@ class ContextMenuManager {
     }
 
     try {
-      // Get naming preference from settings
-      const namingSource = await getBookmarkNamingSetting();
-      const bookmarkTitle = getBookmarkTitle(namingSource, info, tab);
+      const settings = await getContextMenuSettings();
+      if (!settings.enabled) {
+        return { success: false, error: 'Context menu is disabled' };
+      }
+      const bookmarkTitle = getBookmarkTitle(settings.naming, info, tab);
 
       // Create the bookmark
       const bookmark = await createBookmark({
@@ -317,6 +352,23 @@ class ContextMenuManager {
 
 // Singleton instance
 export const contextMenuManager = new ContextMenuManager();
+
+let storageListenerRegistered = false;
+
+function handleStorageChange(
+  changes: { [key: string]: chrome.storage.StorageChange },
+  areaName: string,
+): void {
+  const settingsChange = areaName === 'sync' ? changes[SETTINGS_STORAGE_KEY] : undefined;
+  const enabledChanged =
+    settingsChange &&
+    isContextMenuEnabled(settingsChange.oldValue) !== isContextMenuEnabled(settingsChange.newValue);
+  if (enabledChanged || (areaName === 'local' && changes[RECENT_FOLDERS_STORAGE_KEY])) {
+    void contextMenuManager.rebuildMenu().catch((error) => {
+      console.error('[ContextMenu] Failed to rebuild menu:', error);
+    });
+  }
+}
 
 // =============================================================================
 // Built-in Providers
@@ -379,6 +431,11 @@ export async function initializeContextMenu(): Promise<void> {
   // Register default providers
   contextMenuManager.registerProvider(recentFoldersProvider);
   contextMenuManager.registerProvider(bookmarksBarProvider);
+
+  if (!storageListenerRegistered) {
+    chrome.storage.onChanged.addListener(handleStorageChange);
+    storageListenerRegistered = true;
+  }
 
   // Initialize the menu
   await contextMenuManager.initialize();

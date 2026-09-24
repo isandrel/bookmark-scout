@@ -4,41 +4,51 @@
  * Features: Left sidebar (folders), collapsible right sidebar (tools), breadcrumb navigation.
  */
 
-import { t } from '@/hooks/use-i18n';
+import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   type Bookmark,
   ItemTypeEnum,
   useBookmarkNavigation,
 } from '@/hooks/use-bookmarks-page';
-import { columns } from '../ui/table/columns';
-import { DataTable } from '../ui/table/data-table';
-import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
-import { FolderTree } from '../bookmarks/FolderTree';
-import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
-import { useMemo, useState, useEffect } from 'react';
-import { PanelLeftClose, PanelLeft, PanelRightClose, PanelRight } from 'lucide-react';
-import { Button } from '../ui/button';
+import { t } from '@/hooks/use-i18n';
 import { useSetting } from '@/lib';
 import { sortBookmarkItems } from '@/lib/bookmark-sort';
 import { cn } from '@/lib/utils';
+import { BookmarkDetailsDialog } from '../bookmarks/BookmarkDetailsDialog';
+import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
+import { FolderTree } from '../bookmarks/FolderTree';
+import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
+import { Button } from '../ui/button';
+import { createColumns } from '../ui/table/columns';
+import { DataTable } from '../ui/table/data-table';
 
 export default function BookmarksPage() {
-  const { currentFolder, data, isLoading, error, navigateToFolder } =
+  const { currentFolder, data, allData, isLoading, error, navigateToFolder } =
     useBookmarkNavigation();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
   const [currentFolderName, setCurrentFolderName] = useState<string | undefined>();
+  const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
+  const columns = useMemo(() => createColumns(setSelectedBookmark), []);
+  const sortAccessors = useMemo(
+    () => ({
+      getTitle: (bookmark: Bookmark) => bookmark.title,
+      getDateAdded: (bookmark: Bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
+      isFolder: (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder,
+      getIndex: (bookmark: Bookmark) => bookmark.index,
+    }),
+    [],
+  );
 
   const sortedData = useMemo(
-    () =>
-      sortBookmarkItems(data, sortOrder, {
-        getTitle: (bookmark) => bookmark.title,
-        getDateAdded: (bookmark) => bookmark.dateAdded ?? bookmark.dateGroupModified,
-        isFolder: (bookmark) => bookmark.type === ItemTypeEnum.Folder,
-        getIndex: (bookmark) => bookmark.index,
-      }),
-    [data, sortOrder],
+    () => sortBookmarkItems(data, sortOrder, sortAccessors),
+    [data, sortOrder, sortAccessors],
+  );
+  const sortedAllData = useMemo(
+    () => sortBookmarkItems(allData, sortOrder, sortAccessors),
+    [allData, sortOrder, sortAccessors],
   );
 
   // Get current folder name for display
@@ -146,6 +156,7 @@ export default function BookmarksPage() {
             <DataTable
               columns={columns}
               data={sortedData}
+              allData={sortedAllData}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';
                 const folderClass =
@@ -159,7 +170,6 @@ export default function BookmarksPage() {
                   navigateToFolder(row.id);
                 }
               }}
-              currentFolderId={currentFolder || undefined}
             />
           )}
         </div>
@@ -179,10 +189,16 @@ export default function BookmarksPage() {
           />
         </div>
       </aside>
+
+      <BookmarkDetailsDialog
+        bookmark={selectedBookmark}
+        onClose={() => setSelectedBookmark(null)}
+        onOpenFolder={navigateToFolder}
+      />
     </div>
   );
 }
 
+export type { Bookmark } from '@/hooks/use-bookmarks-page';
 // Re-export types and hooks for backwards compatibility
 export { useParentIdMap, useUrlMap } from '@/hooks/use-bookmarks-page';
-export type { Bookmark } from '@/hooks/use-bookmarks-page';

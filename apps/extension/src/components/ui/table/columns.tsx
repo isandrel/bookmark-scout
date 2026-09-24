@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { t } from '@/hooks/use-i18n';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableDateFilter } from './data-table-date-filter';
 import { MoveBookmarkButtons } from './move-bookmark-buttons';
@@ -38,6 +39,7 @@ export type Bookmark = {
   type: ItemTypeEnum;
   id: string;
   parentId?: string;
+  folderPath: string;
   index?: number;
   title: string;
   url?: string;
@@ -50,7 +52,9 @@ function formatTimestamp(value: unknown): string {
   return typeof value === 'number' ? new Date(value).toLocaleString() : '';
 }
 
-export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
+export const createColumns = (
+  onViewDetails: (bookmark: Bookmark) => void,
+): ColumnDef<BookmarkTableFeatures, Bookmark>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -127,6 +131,20 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
     },
   },
   {
+    accessorKey: 'folderPath',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title={t('bookmarks_folderPath')} />
+    ),
+    cell: ({ row }) => {
+      const path = row.original.folderPath;
+      return (
+        <span className="block max-w-72 truncate" title={path}>
+          {path}
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: 'url',
     header: ({ column }) => <DataTableColumnHeader column={column} title="URL" />,
     cell: ({ row }) => {
@@ -134,16 +152,18 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       const urls = Object.values(urlMap);
 
       const rowUrl = row.getValue('url') as string;
-      const matchedUrl = urls.find(({ value }) => rowUrl.includes(value));
-
-      if (!matchedUrl) {
+      if (!rowUrl) {
         return null;
       }
+      const matchedUrl = urls.find(({ value }) => rowUrl.includes(value));
+      const Icon = matchedUrl?.icon ?? Link;
 
       return (
-        <div className="flex items-center">
-          {matchedUrl.icon && <matchedUrl.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-          <span>{rowUrl}</span>
+        <div className="flex min-w-0 items-center gap-2">
+          <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <span className="block max-w-72 truncate" title={rowUrl}>
+            {rowUrl}
+          </span>
         </div>
       );
     },
@@ -189,7 +209,9 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
       return (
         <div className="flex items-center gap-2 min-w-0">
           {icon}
-          <span className="truncate">{title}</span>
+          <span className="max-w-72 truncate" title={title}>
+            {title}
+          </span>
         </div>
       );
     },
@@ -386,7 +408,14 @@ export const columns: ColumnDef<BookmarkTableFeatures, Bookmark>[] = [
                 Copy Bookmark ID
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>View Details</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onViewDetails(bookmark);
+                }}
+              >
+                {t('bookmarks_viewDetails')}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

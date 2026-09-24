@@ -87,6 +87,14 @@
         "message": "북마크 삭제",
         "description": "Delete bookmark tooltip"
     },
+    "popup_confirmDeleteBookmark": {
+        "message": "\"$1\"을(를) 삭제하시겠습니까? 이 북마크가 삭제됩니다.",
+        "description": "Confirmation before deleting a bookmark; $1 is its title"
+    },
+    "popup_confirmDeleteFolder": {
+        "message": "\"$1\" 폴더와 그 안의 모든 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+        "description": "Confirmation before deleting a folder; $1 is its title"
+    },
     "popup_expandAll": {
         "message": "모두 펼치기",
         "description": "Expand all button tooltip"
@@ -563,9 +571,33 @@
         "message": "보기",
         "description": "View button label"
     },
+    "table_toggleColumns": {
+        "message": "열 맞춤 설정",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "테이블 보기 맞춤 설정",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "$1 열을 왼쪽으로 이동",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "$1 열을 오른쪽으로 이동",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "보기 초기화",
+        "description": "Reset bookmark table view button label"
+    },
     "bookmarks_root": {
         "message": "북마크",
         "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_folderPath": {
+        "message": "폴더 경로",
+        "description": "Column showing the containing folder path"
     },
     "bookmarks_untitled": {
         "message": "제목 없음",
@@ -574,6 +606,78 @@
     "bookmarks_loading": {
         "message": "북마크 불러오는 중...",
         "description": "Loading message for bookmarks page"
+    },
+    "bookmarks_viewDetails": {
+        "message": "세부정보 보기",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "북마크 세부정보",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "전체 북마크 정보와 사용할 수 있는 작업을 확인합니다.",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "이름",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "URL",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "폴더 경로",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "추가한 날짜",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "수정한 날짜",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "북마크 ID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "사용할 수 없음",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "폴더 경로를 불러올 수 없음",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "경로 불러오는 중...",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "URL 복사",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "ID 복사",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "링크 열기",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "폴더 열기",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "복사했습니다.",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "복사하지 못했습니다.",
+        "description": "Error after bookmark detail copying fails"
     },
     "search_matchCase": {
         "message": "대소문자 구분",
@@ -798,6 +902,26 @@
     "stats_topFolders": {
         "message": "상위 폴더",
         "description": "Statistics top folders label"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "저장된 태그 포함",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 태그를 포함합니다",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "저장된 요약 포함",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 요약을 포함합니다",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AI 컨텍스트 내보내기에 포함할 저장된 요약의 최대 길이",
+        "description": "AI context packer excerpt length description"
     },
     "stats_protocols": {
         "message": "프로토콜",

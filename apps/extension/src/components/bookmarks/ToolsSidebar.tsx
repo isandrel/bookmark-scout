@@ -50,6 +50,7 @@ import {
   type ReorganizationPlan,
   type AIProvider,
   getScopedNodes,
+  flattenBookmarks,
   scanDuplicateBookmarks,
   previewCleanUrls,
   collectBookmarkStatistics,
@@ -67,7 +68,7 @@ import {
   type MetadataFetchResult,
   type PrivacyScanResult,
 } from '@/services';
-import { useSetting } from '@/lib';
+import { getStoredBookmarkMetadata, useSetting, useSettings } from '@/lib';
 import { ReorganizationDialog } from './ReorganizationDialog';
 import { ToolResultsDialog } from './ToolResultsDialog';
 import { ToolCard, type ToolScope } from './ToolCards';
@@ -107,6 +108,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const { settings: toolSettings, isLoading: toolSettingsLoading } = useSettings();
   const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
   const [exportFormat, setExportFormat] = useState(String(dataDefaultExportFormat));
 
@@ -117,17 +119,23 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [reorgErrors, setReorgErrors] = useState<string[]>([]);
 
   const [duplicatesDialogOpen, setDuplicatesDialogOpen] = useState(false);
-  const [duplicateResult, setDuplicateResult] = useState<ReturnType<typeof scanDuplicateBookmarks> | null>(null);
+  const [duplicateResult, setDuplicateResult] = useState<ReturnType<
+    typeof scanDuplicateBookmarks
+  > | null>(null);
   const [duplicateLoading, setDuplicateLoading] = useState(false);
   const [duplicateRemoving, setDuplicateRemoving] = useState(false);
 
   const [urlCleanerDialogOpen, setUrlCleanerDialogOpen] = useState(false);
-  const [urlCleanerResult, setUrlCleanerResult] = useState<ReturnType<typeof previewCleanUrls> | null>(null);
+  const [urlCleanerResult, setUrlCleanerResult] = useState<ReturnType<
+    typeof previewCleanUrls
+  > | null>(null);
   const [urlCleanerLoading, setUrlCleanerLoading] = useState(false);
   const [urlCleanerApplying, setUrlCleanerApplying] = useState(false);
 
   const [statisticsDialogOpen, setStatisticsDialogOpen] = useState(false);
-  const [statisticsResult, setStatisticsResult] = useState<ReturnType<typeof collectBookmarkStatistics> | null>(null);
+  const [statisticsResult, setStatisticsResult] = useState<ReturnType<
+    typeof collectBookmarkStatistics
+  > | null>(null);
   const [deadLinksDialogOpen, setDeadLinksDialogOpen] = useState(false);
   const [deadLinksLoading, setDeadLinksLoading] = useState(false);
   const [deadLinksResult, setDeadLinksResult] = useState<DeadLinkScanResult | null>(null);
@@ -140,10 +148,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [aiContextLoading, setAiContextLoading] = useState(false);
   const [autoTaggingLoading, setAutoTaggingLoading] = useState(false);
   const [autoTaggingDialogOpen, setAutoTaggingDialogOpen] = useState(false);
-  const [autoTaggingResult, setAutoTaggingResult] = useState<Awaited<ReturnType<typeof suggestBookmarkTags>>>([]);
+  const [autoTaggingResult, setAutoTaggingResult] = useState<
+    Awaited<ReturnType<typeof suggestBookmarkTags>>
+  >([]);
   const [summarizerLoading, setSummarizerLoading] = useState(false);
   const [summarizerDialogOpen, setSummarizerDialogOpen] = useState(false);
-  const [summarizerResult, setSummarizerResult] = useState<Awaited<ReturnType<typeof summarizeBookmarksWithAI>>>([]);
+  const [summarizerResult, setSummarizerResult] = useState<
+    Awaited<ReturnType<typeof summarizeBookmarksWithAI>>
+  >([]);
 
   const { value: duplicatesMatchStrategy } = useSetting('duplicatesMatchStrategy');
   const { value: duplicatesNormalizeWww } = useSetting('duplicatesNormalizeWww');
@@ -168,7 +180,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: deadLinksSuccessStatuses } = useSetting('deadLinksSuccessStatuses');
   const { value: metadataFetcherOverwriteTitles } = useSetting('metadataFetcherOverwriteTitles');
   const { value: metadataFetcherFetchFavicons } = useSetting('metadataFetcherFetchFavicons');
-  const { value: metadataFetcherFetchDescriptions } = useSetting('metadataFetcherFetchDescriptions');
+  const { value: metadataFetcherFetchDescriptions } = useSetting(
+    'metadataFetcherFetchDescriptions',
+  );
   const { value: metadataFetcherRequestTimeoutMs } = useSetting('metadataFetcherRequestTimeoutMs');
   const { value: metadataFetcherConcurrency } = useSetting('metadataFetcherConcurrency');
   const { value: privacyScannerScanTitles } = useSetting('privacyScannerScanTitles');
@@ -178,7 +192,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: privacyScannerEmailDetection } = useSetting('privacyScannerEmailDetection');
   const { value: privacyScannerUuidDetection } = useSetting('privacyScannerUuidDetection');
   const { value: aiContextPackerOutputFormat } = useSetting('aiContextPackerOutputFormat');
-  const { value: aiContextPackerIncludeFolderPath } = useSetting('aiContextPackerIncludeFolderPath');
+  const { value: aiContextPackerIncludeFolderPath } = useSetting(
+    'aiContextPackerIncludeFolderPath',
+  );
   const { value: aiContextPackerIncludeDates } = useSetting('aiContextPackerIncludeDates');
   const { value: aiContextPackerIncludeTags } = useSetting('aiContextPackerIncludeTags');
   const { value: aiContextPackerIncludeSummaries } = useSetting('aiContextPackerIncludeSummaries');
@@ -190,6 +206,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
   const { value: summarizerSummaryLength } = useSetting('summarizerSummaryLength');
   const { value: summarizerIncludeDomainHint } = useSetting('summarizerIncludeDomainHint');
+  const { value: reorganizationDryRunFirst } = useSetting('reorganizationDryRunFirst');
+  const { value: reorganizationMinConfidence } = useSetting('reorganizationMinConfidence');
+  const { value: reorganizationBatchSize } = useSetting('reorganizationBatchSize');
 
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
@@ -244,7 +263,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setDuplicatesDialogOpen(false);
       toast({
         title: t('toast_duplicatesRemoved') || 'Duplicates removed',
-        description: (t('toast_duplicatesRemovedDesc') || '$1 duplicate bookmarks removed').replace('$1', String(toDelete.length)),
+        description: (t('toast_duplicatesRemovedDesc') || '$1 duplicate bookmarks removed').replace(
+          '$1',
+          String(toDelete.length),
+        ),
       });
     } catch (error) {
       toast({
@@ -288,7 +310,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setUrlCleanerDialogOpen(false);
       toast({
         title: t('toast_urlCleanerApplied') || 'URLs cleaned',
-        description: (t('toast_urlCleanerAppliedDesc') || '$1 bookmarks updated').replace('$1', String(urlCleanerResult.previews.length)),
+        description: (t('toast_urlCleanerAppliedDesc') || '$1 bookmarks updated').replace(
+          '$1',
+          String(urlCleanerResult.previews.length),
+        ),
       });
     } catch (error) {
       toast({
@@ -372,29 +397,58 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     setPrivacyDialogOpen(true);
   };
 
+  const handleApplyReorganization = async (
+    plan: ReorganizationPlan,
+    previewConfirmed: boolean,
+  ) => {
+    const result = await applyReorganizationPlan(plan, { previewConfirmed });
+    if (!result.success) {
+      setReorgErrors(result.errors);
+      return;
+    }
+
+    await refresh();
+    setReorgDialogOpen(false);
+    toast({
+      title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
+      description: t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
+    });
+  };
+
   const buildAISettings = async () =>
     buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
 
   const handleAIContextPack = async (scope: ToolScope) => {
     setAiContextLoading(true);
     try {
-      const packed = buildAIContextPack(getTargetNodes(scope), {
-        format: aiContextPackerOutputFormat,
-        includeFolderPath: aiContextPackerIncludeFolderPath,
-        includeDates: aiContextPackerIncludeDates,
-        includeTags: aiContextPackerIncludeTags,
-        includeSummaries: aiContextPackerIncludeSummaries,
-        maxItems: aiContextPackerMaxItems,
-        maxDepth: aiContextPackerMaxDepth,
-        excerptLength: aiContextPackerExcerptLength,
-      });
+      const targetNodes = getTargetNodes(scope);
+      const metadata = await getStoredBookmarkMetadata(
+        flattenBookmarks(targetNodes).map((bookmark) => bookmark.node.id),
+      );
+      const packed = buildAIContextPack(
+        targetNodes,
+        {
+          format: aiContextPackerOutputFormat,
+          includeFolderPath: aiContextPackerIncludeFolderPath,
+          includeDates: aiContextPackerIncludeDates,
+          includeTags: aiContextPackerIncludeTags,
+          includeSummaries: aiContextPackerIncludeSummaries,
+          maxItems: aiContextPackerMaxItems,
+          maxDepth: aiContextPackerMaxDepth,
+          excerptLength: aiContextPackerExcerptLength,
+        },
+        metadata,
+      );
 
       const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
       const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
       downloadTextFile(packed.content, filename, mimeType);
       toast({
         title: t('toast_aiContextPacked') || 'AI context exported',
-        description: (t('toast_aiContextPackedDesc') || '$1 bookmarks exported for AI use').replace('$1', String(packed.itemCount)),
+        description: (t('toast_aiContextPackedDesc') || '$1 bookmarks exported for AI use').replace(
+          '$1',
+          String(packed.itemCount),
+        ),
       });
     } catch (error) {
       toast({
@@ -502,12 +556,19 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       setReorgLoading(true);
       setReorgPlan(null);
       setReorgErrors([]);
-      
+
       try {
         const targetFolders = getTargetNodes(scope);
         const aiSettings = await buildAISettings();
-        const plan = await generateReorganizationPlan(targetFolders, aiSettings);
+        const plan = await generateReorganizationPlan(targetFolders, aiSettings, {
+          dryRunFirst: reorganizationDryRunFirst,
+          minConfidence: reorganizationMinConfidence,
+          batchSize: reorganizationBatchSize,
+        });
         setReorgPlan(plan);
+        if (!reorganizationDryRunFirst) {
+          await handleApplyReorganization(plan, false);
+        }
       } catch (err) {
         setReorgErrors([err instanceof Error ? err.message : 'Failed to analyze bookmarks']);
       } finally {
@@ -588,8 +649,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
       toast({
         title: t('toast_importSuccess') || 'Import Complete',
-        description: (t('toast_importSuccessDesc') || '$1 items imported successfully')
-          .replace('$1', String(created)),
+        description: (t('toast_importSuccessDesc') || '$1 items imported successfully').replace(
+          '$1',
+          String(created),
+        ),
       });
     } catch (err) {
       toast({
@@ -619,136 +682,179 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-3 space-y-6">
-          
           {/* AI & Intelligence */}
-          <ToolSection title={t('tools_category_ai') || 'AI & Intelligence'}>
-            <ToolCard
-              icon={<FileText className="h-4 w-4 text-indigo-500" />}
-              title={t('tools_exportAI') || 'AI Context Packer'}
-              description={t('tools_exportAIDesc') || 'Export bookmarks for LLMs'}
-              buttonLabel={t('action_export') || 'Export'}
-              onClick={(scope) => handleToolAction('ai-pack', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-              isLoading={aiContextLoading}
-            />
+          {!toolSettingsLoading &&
+            (toolSettings.aiContextPackerEnabled ||
+              toolSettings.autoTaggingEnabled ||
+              toolSettings.summarizerEnabled ||
+              toolSettings.reorganizationEnabled) && (
+              <ToolSection title={t('tools_category_ai') || 'AI & Intelligence'}>
+                {toolSettings.aiContextPackerEnabled && (
+                  <ToolCard
+                    icon={<FileText className="h-4 w-4 text-indigo-500" />}
+                    title={t('tools_exportAI') || 'AI Context Packer'}
+                    description={t('tools_exportAIDesc') || 'Export bookmarks for LLMs'}
+                    buttonLabel={t('action_export') || 'Export'}
+                    onClick={(scope) => handleToolAction('ai-pack', scope)}
+                    scopeCapability="both"
+                    defaultScope={toolSettings.aiContextPackerDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={aiContextLoading}
+                  />
+                )}
 
-            <ToolCard
-              icon={<Tags className="h-4 w-4 text-indigo-500" />}
-              title={t('tools_autoTagging') || 'Auto-Tagging'}
-              description={t('tools_autoTaggingDesc') || 'Suggest tags for bookmarks'}
-              buttonLabel={t('action_analyze') || 'Analyze'}
-              onClick={(scope) => handleToolAction('auto-tag', scope)}
-              scopeCapability="folder"
-              currentFolderName={currentFolderName}
-              isLoading={autoTaggingLoading}
-            />
+                {toolSettings.autoTaggingEnabled && (
+                  <ToolCard
+                    icon={<Tags className="h-4 w-4 text-indigo-500" />}
+                    title={t('tools_autoTagging') || 'Auto-Tagging'}
+                    description={t('tools_autoTaggingDesc') || 'Suggest tags for bookmarks'}
+                    buttonLabel={t('action_analyze') || 'Analyze'}
+                    onClick={(scope) => handleToolAction('auto-tag', scope)}
+                    scopeCapability="folder"
+                    defaultScope={toolSettings.autoTaggingDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={autoTaggingLoading}
+                  />
+                )}
 
-            <ToolCard
-              icon={<FileOutput className="h-4 w-4 text-indigo-500" />}
-              title={t('tools_summarizer') || 'Content Summarizer'}
-              description={t('tools_summarizerDesc') || 'Generate summaries'}
-              buttonLabel={t('action_analyze') || 'Summarize'}
-              onClick={(scope) => handleToolAction('summarize', scope)}
-              scopeCapability="folder"
-              currentFolderName={currentFolderName}
-              isLoading={summarizerLoading}
-            />
+                {toolSettings.summarizerEnabled && (
+                  <ToolCard
+                    icon={<FileOutput className="h-4 w-4 text-indigo-500" />}
+                    title={t('tools_summarizer') || 'Content Summarizer'}
+                    description={t('tools_summarizerDesc') || 'Generate summaries'}
+                    buttonLabel={t('action_analyze') || 'Summarize'}
+                    onClick={(scope) => handleToolAction('summarize', scope)}
+                    scopeCapability="folder"
+                    defaultScope={toolSettings.summarizerDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={summarizerLoading}
+                  />
+                )}
 
-            <ToolCard
-              icon={<Sparkles className="h-4 w-4 text-purple-500" />}
-              title={t('tools_aiReorganize') || 'AI Folder Reorganization'}
-              description={t('tools_aiReorganizeDesc') || 'Use AI to suggest a better folder structure'}
-              buttonLabel={t('action_analyze') || 'Analyze'}
-              onClick={(scope) => handleToolAction('reorganize', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-              isLoading={reorgLoading}
-            />
-          </ToolSection>
+                {toolSettings.reorganizationEnabled && (
+                  <ToolCard
+                    icon={<Sparkles className="h-4 w-4 text-purple-500" />}
+                    title={t('tools_aiReorganize') || 'AI Folder Reorganization'}
+                    description={
+                      t('tools_aiReorganizeDesc') || 'Use AI to suggest a better folder structure'
+                    }
+                    buttonLabel={
+                      reorganizationDryRunFirst
+                        ? t('action_analyze') || 'Analyze'
+                        : t('action_applyChanges') || 'Apply Changes'
+                    }
+                    onClick={(scope) => handleToolAction('reorganize', scope)}
+                    scopeCapability="both"
+                    defaultScope={toolSettings.reorganizationDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={reorgLoading}
+                  />
+                )}
+              </ToolSection>
+            )}
 
           {/* Maintenance */}
-          <ToolSection title={t('tools_category_maintenance') || 'Maintenance'}>
+          {!toolSettingsLoading &&
+            (toolSettings.duplicatesEnabled ||
+              toolSettings.urlCleanerEnabled ||
+              toolSettings.deadLinksEnabled) && (
+              <ToolSection title={t('tools_category_maintenance') || 'Maintenance'}>
+                {toolSettings.duplicatesEnabled && (
+                  <ToolCard
+                    icon={<Copy className="h-4 w-4 text-orange-500" />}
+                    title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
+                    description={t('tools_findDuplicatesDesc') || 'Find duplicates'}
+                    buttonLabel={t('action_scan') || 'Scan'}
+                    onClick={(scope) => handleToolAction('duplicates', scope)}
+                    scopeCapability="all"
+                    defaultScope={toolSettings.duplicatesDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={duplicateLoading}
+                  />
+                )}
 
-            <ToolCard
-              icon={<Copy className="h-4 w-4 text-orange-500" />}
-              title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
-              description={t('tools_findDuplicatesDesc') || 'Find duplicates'}
-              buttonLabel={t('action_scan') || 'Scan'}
-              onClick={(scope) => handleToolAction('duplicates', scope)}
-              scopeCapability="all"
-              currentFolderName={currentFolderName}
-              isLoading={duplicateLoading}
-            />
+                {toolSettings.urlCleanerEnabled && (
+                  <ToolCard
+                    icon={<Eraser className="h-4 w-4 text-orange-500" />}
+                    title={t('tools_cleanUrls') || 'URL Cleaner'}
+                    description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
+                    buttonLabel={t('action_clean') || 'Clean'}
+                    onClick={(scope) => handleToolAction('clean-urls', scope)}
+                    scopeCapability="both"
+                    defaultScope={toolSettings.urlCleanerDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={urlCleanerLoading}
+                  />
+                )}
 
-            <ToolCard
-              icon={<Eraser className="h-4 w-4 text-orange-500" />}
-              title={t('tools_cleanUrls') || 'URL Cleaner'}
-              description={t('tools_cleanUrlsDesc') || 'Remove tracking params'}
-              buttonLabel={t('action_clean') || 'Clean'}
-              onClick={(scope) => handleToolAction('clean-urls', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-              isLoading={urlCleanerLoading}
-            />
-
-            <ToolCard
-              icon={<Link2Off className="h-4 w-4 text-orange-500" />}
-              title={t('tools_checkDeadLinks') || 'Check Dead Links'}
-              description={t('tools_checkDeadLinksDesc') || 'Find broken links'}
-              buttonLabel={t('action_scan') || 'Scan'}
-              onClick={(scope) => handleToolAction('dead-links', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-              isLoading={deadLinksLoading}
-            />
-          </ToolSection>
+                {toolSettings.deadLinksEnabled && (
+                  <ToolCard
+                    icon={<Link2Off className="h-4 w-4 text-orange-500" />}
+                    title={t('tools_checkDeadLinks') || 'Check Dead Links'}
+                    description={t('tools_checkDeadLinksDesc') || 'Find broken links'}
+                    buttonLabel={t('action_scan') || 'Scan'}
+                    onClick={(scope) => handleToolAction('dead-links', scope)}
+                    scopeCapability="both"
+                    defaultScope={toolSettings.deadLinksDefaultScope}
+                    currentFolderName={currentFolderName}
+                    isLoading={deadLinksLoading}
+                  />
+                )}
+              </ToolSection>
+            )}
 
           {/* Metadata & Content */}
-          <ToolSection title={t('tools_category_metadata') || 'Metadata'}>
-            <ToolCard
-              icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
-              title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
-              description={t('tools_metadataFetcherDesc') || 'Fix titles & icons'}
-              buttonLabel={t('action_scan') || 'Fetch'}
-              onClick={(scope) => handleToolAction('metadata', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-              isLoading={metadataLoading}
-            />
-          </ToolSection>
+          {!toolSettingsLoading && toolSettings.metadataFetcherEnabled && (
+            <ToolSection title={t('tools_category_metadata') || 'Metadata'}>
+              <ToolCard
+                icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
+                title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
+                description={t('tools_metadataFetcherDesc') || 'Fix titles & icons'}
+                buttonLabel={t('action_scan') || 'Fetch'}
+                onClick={(scope) => handleToolAction('metadata', scope)}
+                scopeCapability="both"
+                defaultScope={toolSettings.metadataFetcherDefaultScope}
+                currentFolderName={currentFolderName}
+                isLoading={metadataLoading}
+              />
+            </ToolSection>
+          )}
 
           {/* Security */}
-          <ToolSection title={t('tools_category_security') || 'Security'}>
-            <ToolCard
-              icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
-              title={t('tools_privacyScanner') || 'Privacy Scanner'}
-              description={t('tools_privacyScannerDesc') || 'Scan for secrets'}
-              buttonLabel={t('action_scan') || 'Scan'}
-              onClick={(scope) => handleToolAction('privacy', scope)}
-              scopeCapability="all"
-              currentFolderName={currentFolderName}
-              isLoading={false}
-            />
-          </ToolSection>
+          {!toolSettingsLoading && toolSettings.privacyScannerEnabled && (
+            <ToolSection title={t('tools_category_security') || 'Security'}>
+              <ToolCard
+                icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
+                title={t('tools_privacyScanner') || 'Privacy Scanner'}
+                description={t('tools_privacyScannerDesc') || 'Scan for secrets'}
+                buttonLabel={t('action_scan') || 'Scan'}
+                onClick={(scope) => handleToolAction('privacy', scope)}
+                scopeCapability="all"
+                defaultScope={toolSettings.privacyScannerDefaultScope}
+                currentFolderName={currentFolderName}
+                isLoading={false}
+              />
+            </ToolSection>
+          )}
 
           {/* Analytics */}
-          <ToolSection title={t('tools_category_analytics') || 'Analytics'}>
-
-            <ToolCard
-              icon={<BarChart3 className="h-4 w-4 text-green-500" />}
-              title={t('tools_statistics') || 'Statistics'}
-              description={t('tools_statisticsDesc') || 'View stats'}
-              buttonLabel={t('action_view') || 'View'}
-              onClick={(scope) => handleToolAction('stats', scope)}
-              scopeCapability="both"
-              currentFolderName={currentFolderName}
-            />
-          </ToolSection>
+          {!toolSettingsLoading && toolSettings.statisticsEnabled && (
+            <ToolSection title={t('tools_category_analytics') || 'Analytics'}>
+              <ToolCard
+                icon={<BarChart3 className="h-4 w-4 text-green-500" />}
+                title={t('tools_statistics') || 'Statistics'}
+                description={t('tools_statisticsDesc') || 'View stats'}
+                buttonLabel={t('action_view') || 'View'}
+                onClick={(scope) => handleToolAction('stats', scope)}
+                scopeCapability="both"
+                defaultScope={toolSettings.statisticsDefaultScope}
+                currentFolderName={currentFolderName}
+              />
+            </ToolSection>
+          )}
 
           {/* Data (Export/Import) */}
           <ToolSection title={t('tools_category_data') || 'Data'}>
-
             {/* Export Tool */}
             <div className="p-3 rounded-lg border bg-card space-y-2">
               <div className="flex items-start gap-2">
@@ -849,17 +955,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         errors={reorgErrors}
         onApply={async () => {
           if (reorgPlan) {
-            const result = await applyReorganizationPlan(reorgPlan);
-            if (result.success) {
-              await refresh();
-              setReorgDialogOpen(false);
-              toast({
-                title: t('toast_reorganizeSuccess') || 'Reorganization Complete',
-                description: t('toast_reorganizeSuccessDesc') || 'Bookmarks reorganized successfully',
-              });
-            } else {
-              setReorgErrors(result.errors);
-            }
+            await handleApplyReorganization(reorgPlan, true);
           }
         }}
         onCancel={() => setReorgDialogOpen(false)}
@@ -869,7 +965,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={duplicatesDialogOpen}
         onOpenChange={setDuplicatesDialogOpen}
         title={t('tools_findDuplicates') || 'Duplicate Cleaner'}
-        description={(t('tools_duplicatesDialogDesc') || '$1 duplicate groups found across $2 bookmarks')
+        description={(
+          t('tools_duplicatesDialogDesc') || '$1 duplicate groups found across $2 bookmarks'
+        )
           .replace('$1', String(duplicateResult?.groups.length ?? 0))
           .replace('$2', String(duplicateResult?.scannedBookmarks ?? 0))}
       >
@@ -885,8 +983,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={urlCleanerDialogOpen}
         onOpenChange={setUrlCleanerDialogOpen}
         title={t('tools_cleanUrls') || 'URL Cleaner'}
-        description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned')
-          .replace('$1', String(urlCleanerResult?.previews.length ?? 0))}
+        description={(t('tools_urlCleanerDialogDesc') || '$1 bookmarks can be cleaned').replace(
+          '$1',
+          String(urlCleanerResult?.previews.length ?? 0),
+        )}
       >
         <UrlCleanerResultsView
           result={urlCleanerResult}
@@ -909,7 +1009,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={deadLinksDialogOpen}
         onOpenChange={setDeadLinksDialogOpen}
         title={t('tools_checkDeadLinks') || 'Check Dead Links'}
-        description={t('tools_deadLinksDialogDesc') || 'Reachability results for the selected bookmarks'}
+        description={
+          t('tools_deadLinksDialogDesc') || 'Reachability results for the selected bookmarks'
+        }
       >
         <DeadLinkResultsView result={deadLinksResult} />
       </ToolResultsDialog>
@@ -918,7 +1020,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={metadataDialogOpen}
         onOpenChange={setMetadataDialogOpen}
         title={t('tools_metadataFetcher') || 'Metadata Fetcher'}
-        description={t('tools_metadataDialogDesc') || 'Metadata suggestions for the selected bookmarks'}
+        description={
+          t('tools_metadataDialogDesc') || 'Metadata suggestions for the selected bookmarks'
+        }
       >
         <MetadataResultsView result={metadataResult} />
       </ToolResultsDialog>
@@ -927,7 +1031,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={privacyDialogOpen}
         onOpenChange={setPrivacyDialogOpen}
         title={t('tools_privacyScanner') || 'Privacy Scanner'}
-        description={t('tools_privacyDialogDesc') || 'Potential sensitive data found in the selected bookmarks'}
+        description={
+          t('tools_privacyDialogDesc') || 'Potential sensitive data found in the selected bookmarks'
+        }
       >
         <PrivacyResultsView result={privacyResult} />
       </ToolResultsDialog>
@@ -936,7 +1042,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={autoTaggingDialogOpen}
         onOpenChange={setAutoTaggingDialogOpen}
         title={t('tools_autoTagging') || 'Auto-Tagging'}
-        description={t('tools_autoTaggingDialogDesc') || 'AI-generated tags for the selected bookmarks'}
+        description={
+          t('tools_autoTaggingDialogDesc') || 'AI-generated tags for the selected bookmarks'
+        }
       >
         <div className="space-y-4">
           {autoTaggingResult.length ? (

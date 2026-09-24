@@ -81,6 +81,13 @@ export interface ReorganizationPlan {
   operations: ReorganizationOperation[];
   summary: string;
   createdAt: number;
+  safety: {
+    dryRunFirst: boolean;
+    minConfidence: number;
+    batchSize: number;
+    batchCount: number;
+    excludedLowConfidence: number;
+  };
   /** Debug data for transparency - shows what was sent to AI */
   debugData?: {
     request: unknown;
@@ -93,7 +100,21 @@ export interface ReorganizationConfig {
   maxCategories: number;
   minItemsPerFolder: number;
   maxItemsPerFolder: number;
+  dryRunFirst: boolean;
+  minConfidence: number;
+  batchSize: number;
 }
+
+export type ApplyReorganizationOptions = {
+  previewConfirmed?: boolean;
+};
+
+export type ApplyReorganizationResult = {
+  success: boolean;
+  errors: string[];
+  applied: number;
+  skipped: number;
+};
 
 /**
  * Get reorganization config from settings (no hardcoded values).
@@ -104,7 +125,29 @@ export function getReorgConfig(): ReorganizationConfig {
     maxCategories: (settings.aiMaxCategories as number) ?? 10,
     minItemsPerFolder: (settings.aiMinItemsPerFolder as number) ?? 3,
     maxItemsPerFolder: (settings.aiMaxItemsPerFolder as number) ?? 20,
+    dryRunFirst: (settings.reorganizationDryRunFirst as boolean) ?? true,
+    minConfidence: (settings.reorganizationMinConfidence as number) ?? 0.55,
+    batchSize: (settings.reorganizationBatchSize as number) ?? 100,
   };
+}
+
+function resolveReorgConfig(config?: Partial<ReorganizationConfig>): ReorganizationConfig {
+  const defaults = getReorgConfig();
+  const merged = { ...defaults, ...config };
+
+  return {
+    ...merged,
+    minConfidence: Math.min(1, Math.max(0, merged.minConfidence)),
+    batchSize: Math.max(1, Math.floor(merged.batchSize)),
+  };
+}
+
+function chunkItems<T>(items: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let index = 0; index < items.length; index += size) {
+    chunks.push(items.slice(index, index + size));
+  }
+  return chunks;
 }
 
 // Simplified schema for OpenAI - all fields must be required
@@ -113,7 +156,7 @@ const moveOperationSchema = z.object({
   bookmarkId: z.string().describe('ID of bookmark to move'),
   bookmarkTitle: z.string().describe('Title of the bookmark'),
   toFolderPath: z.string().describe('Target folder path'),
-  confidence: z.number().describe('Confidence score from 0 to 1'),
+  confidence: z.number().min(0).max(1).describe('Confidence score from 0 to 1'),
   reason: z.string().describe('Why move this bookmark (do not include confidence here)'),
 });
 
@@ -132,13 +175,12 @@ export function collectBookmarks(
   parentId = ''
 ): BookmarkInfo[] {
   const result: BookmarkInfo[] = [];
-  aiLogger.debug({ nodesCount: nodes.length, parentPath }, 'collectBookmarks called');
+  aiLogger.debug({ nodesCount: nodes.length }, 'collectBookmarks called');
   for (const node of nodes) {
     const currentPath = parentPath && node.title 
       ? `${parentPath}/${node.title}` 
       : node.title || parentPath;
     if (node.url) {
-      aiLogger.debug({ title: node.title, url: node.url?.slice(0, 50) }, 'Found bookmark');
       result.push({
         id: node.id,
         title: node.title,
@@ -193,9 +235,9 @@ export function findFolderByPath(
 export async function generateReorganizationPlan(
   bookmarks: BookmarkTreeNode[],
   settings: AISettings,
-  config?: ReorganizationConfig
+  config?: Partial<ReorganizationConfig>,
 ): Promise<ReorganizationPlan> {
-  const cfg = config ?? getReorgConfig();
+  const cfg = resolveReorgConfig(config);
   validateAISettings(settings);
 
   aiLogger.info({ inputNodes: bookmarks.length }, 'Starting reorganization plan generation');
@@ -208,18 +250,6 @@ export async function generateReorganizationPlan(
     folderCount: allFolders.length,
     config: cfg 
   }, 'Collected bookmarks and folders');
-
-  // Capture request data for transparency (before any early returns)
-  const requestData = {
-    bookmarks: allBookmarks.map(b => ({
-      id: b.id,
-      title: b.title,
-      url: b.url,
-      currentFolder: b.currentFolderPath,
-    })),
-    folders: allFolders.map(f => ({ path: f.path, bookmarkCount: f.bookmarkCount })),
-    config: { maxCategories: cfg.maxCategories, minItemsPerFolder: cfg.minItemsPerFolder },
-  };
 
   if (allBookmarks.length === 0) {
     aiLogger.warn('No bookmarks found in scope');
@@ -237,43 +267,108 @@ export async function generateReorganizationPlan(
 
   aiLogger.info({ provider: settings.provider, model: settings.model }, 'Calling AI for reorganization');
 
-  const { object } = await generateObject({
-    model,
-    schema: reorganizationResultSchema,
-    system,
-    prompt: JSON.stringify(requestData),
-  });
+  const bookmarkBatches = chunkItems(allBookmarks, cfg.batchSize);
+  const batchResults = [];
 
-  aiLogger.info({ operationsCount: object.operations.length }, 'AI returned operations');
+  for (const bookmarkBatch of bookmarkBatches) {
+    const request = {
+      bookmarks: bookmarkBatch.map((bookmark) => ({
+        id: bookmark.id,
+        title: bookmark.title,
+        url: bookmark.url,
+        currentFolder: bookmark.currentFolderPath,
+      })),
+      folders: allFolders.map((folder) => ({
+        path: folder.path,
+        bookmarkCount: folder.bookmarkCount,
+      })),
+      config: {
+        maxCategories: cfg.maxCategories,
+        minItemsPerFolder: cfg.minItemsPerFolder,
+        maxItemsPerFolder: cfg.maxItemsPerFolder,
+      },
+    };
+    const { object } = await generateObject({
+      model,
+      schema: reorganizationResultSchema,
+      system,
+      prompt: JSON.stringify(request),
+    });
 
-  // Enrich operations with metadata and filter out no-op moves
-  const operations: ReorganizationOperation[] = object.operations
-    .map(op => {
-      const bookmark = allBookmarks.find(b => b.id === op.bookmarkId);
-      const targetFolder = findFolderByPath(allFolders, op.toFolderPath);
-      return {
-        type: 'move' as const,
-        bookmarkId: op.bookmarkId,
-        bookmarkTitle: op.bookmarkTitle,
-        bookmarkUrl: bookmark?.url || '',
-        fromFolderPath: bookmark?.currentFolderPath || '',
-        toFolderPath: op.toFolderPath,
-        toFolderId: targetFolder?.id,
-        confidence: op.confidence,
-        reason: op.reason,
-      } satisfies MoveBookmarkOp;
-    })
-    .filter(op => op.fromFolderPath !== op.toFolderPath); // Remove no-op moves
+    batchResults.push({ request, response: object, bookmarkBatch });
+  }
 
-  aiLogger.info({ filteredCount: operations.length }, 'Filtered operations (removed same-path)');
+  const returnedOperations = batchResults.flatMap(({ response }) => response.operations);
+  aiLogger.info(
+    { operationsCount: returnedOperations.length, batchCount: batchResults.length },
+    'AI returned operations',
+  );
+
+  const seenBookmarkIds = new Set<string>();
+  let excludedLowConfidence = 0;
+  const operations: ReorganizationOperation[] = batchResults.flatMap(
+    ({ response, bookmarkBatch }) => {
+      const batchBookmarkIds = new Set(bookmarkBatch.map((bookmark) => bookmark.id));
+      return response.operations.flatMap((op) => {
+        if (op.confidence < cfg.minConfidence) {
+          excludedLowConfidence += 1;
+          return [];
+        }
+
+        const bookmark = allBookmarks.find((b) => b.id === op.bookmarkId);
+        if (
+          !bookmark ||
+          !batchBookmarkIds.has(op.bookmarkId) ||
+          seenBookmarkIds.has(op.bookmarkId)
+        ) {
+          return [];
+        }
+
+        const targetFolder = findFolderByPath(allFolders, op.toFolderPath);
+        if (bookmark.currentFolderPath === op.toFolderPath) {
+          return [];
+        }
+
+        seenBookmarkIds.add(op.bookmarkId);
+        return [
+          {
+            type: 'move' as const,
+            bookmarkId: op.bookmarkId,
+            bookmarkTitle: bookmark.title,
+            bookmarkUrl: bookmark.url,
+            fromFolderPath: bookmark.currentFolderPath,
+            toFolderPath: op.toFolderPath,
+            toFolderId: targetFolder?.id,
+            confidence: op.confidence,
+            reason: op.reason,
+          } satisfies MoveBookmarkOp,
+        ];
+      });
+    },
+  );
+
+  aiLogger.info(
+    { filteredCount: operations.length, excludedLowConfidence },
+    'Filtered unsafe and no-op operations',
+  );
 
   return {
     operations,
-    summary: object.summary,
+    summary: batchResults
+      .map(({ response }) => response.summary)
+      .filter(Boolean)
+      .join(' '),
     createdAt: Date.now(),
+    safety: {
+      dryRunFirst: cfg.dryRunFirst,
+      minConfidence: cfg.minConfidence,
+      batchSize: cfg.batchSize,
+      batchCount: batchResults.length,
+      excludedLowConfidence,
+    },
     debugData: {
-      request: requestData,
-      response: object,
+      request: batchResults.map(({ request }) => request),
+      response: batchResults.map(({ response }) => response),
       systemPrompt: system,
     },
   };
@@ -283,57 +378,82 @@ export async function generateReorganizationPlan(
  * Apply a reorganization plan (with user confirmation).
  */
 export async function applyReorganizationPlan(
-  plan: ReorganizationPlan
-): Promise<{ success: boolean; errors: string[] }> {
+  plan: ReorganizationPlan,
+  options: ApplyReorganizationOptions = {},
+): Promise<ApplyReorganizationResult> {
+  const { previewConfirmed = false } = options;
+  const config = resolveReorgConfig({
+    dryRunFirst: plan.safety.dryRunFirst,
+    minConfidence: plan.safety.minConfidence,
+    batchSize: plan.safety.batchSize,
+  });
   const errors: string[] = [];
   const createdFolders = new Map<string, string>(); // path -> id
+  const operations = plan.operations.filter((operation) => {
+    return operation.type !== 'move' || operation.confidence >= config.minConfidence;
+  });
+  const skipped = plan.operations.length - operations.length;
+  let applied = 0;
 
-  // Execute operations in order
-  for (const op of plan.operations) {
-    try {
-      switch (op.type) {
-        case 'create': {
-          let parentId = '1'; // Default to Bookmarks Bar
-          if (op.parentPath) {
-            const existing = createdFolders.get(op.parentPath);
-            if (existing) parentId = existing;
+  if (config.dryRunFirst && !previewConfirmed) {
+    return {
+      success: false,
+      errors: ['Preview must be confirmed before applying reorganization changes'],
+      applied,
+      skipped,
+    };
+  }
+
+  // Preserve operation order while limiting each mutation batch to the configured size.
+  for (const operationBatch of chunkItems(operations, config.batchSize)) {
+    for (const op of operationBatch) {
+      try {
+        switch (op.type) {
+          case 'create': {
+            let parentId = '1'; // Default to Bookmarks Bar
+            if (op.parentPath) {
+              const existing = createdFolders.get(op.parentPath);
+              if (existing) parentId = existing;
+            }
+            const created = await browser.bookmarks.create({ parentId, title: op.name });
+            const fullPath = op.parentPath ? `${op.parentPath}/${op.name}` : op.name;
+            createdFolders.set(fullPath, created.id);
+            break;
           }
-          const created = await browser.bookmarks.create({ parentId, title: op.name });
-          const fullPath = op.parentPath ? `${op.parentPath}/${op.name}` : op.name;
-          createdFolders.set(fullPath, created.id);
-          break;
+          case 'delete': {
+            if (op.folderId) {
+              await browser.bookmarks.removeTree(op.folderId);
+            }
+            break;
+          }
+          case 'rename': {
+            if (op.folderId) {
+              await browser.bookmarks.update(op.folderId, { title: op.newName });
+            }
+            break;
+          }
+          case 'move': {
+            let targetId = op.toFolderId;
+            if (!targetId) {
+              targetId = createdFolders.get(op.toFolderPath);
+            }
+            if (targetId) {
+              await browser.bookmarks.move(op.bookmarkId, { parentId: targetId });
+            } else {
+              errors.push(`Cannot find target folder for "${op.bookmarkTitle}"`);
+              continue;
+            }
+            break;
+          }
         }
-        case 'delete': {
-          if (op.folderId) {
-            await browser.bookmarks.removeTree(op.folderId);
-          }
-          break;
-        }
-        case 'rename': {
-          if (op.folderId) {
-            await browser.bookmarks.update(op.folderId, { title: op.newName });
-          }
-          break;
-        }
-        case 'move': {
-          let targetId = op.toFolderId;
-          if (!targetId) {
-            targetId = createdFolders.get(op.toFolderPath);
-          }
-          if (targetId) {
-            await browser.bookmarks.move(op.bookmarkId, { parentId: targetId });
-          } else {
-            errors.push(`Cannot find target folder for "${op.bookmarkTitle}"`);
-          }
-          break;
-        }
+        applied += 1;
+      } catch (err) {
+        errors.push(`${op.type} failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
-    } catch (err) {
-      errors.push(`${op.type} failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   }
 
-  return { success: errors.length === 0, errors };
+  return { success: errors.length === 0, errors, applied, skipped };
 }
 
 /**

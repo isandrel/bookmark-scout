@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Folder, Globe } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export type ToolScope = 'folder' | 'all';
@@ -22,8 +22,14 @@ type ToolCardProps = {
   disabled?: boolean;
   isLoading?: boolean;
   scopeCapability: ScopeCapability;
+  defaultScope: ScopeCapability;
   currentFolderName?: string;
 };
+
+function resolveScope(capability: ScopeCapability, configuredDefault: ScopeCapability): ToolScope {
+  if (capability === 'folder' || capability === 'all') return capability;
+  return configuredDefault === 'all' ? 'all' : 'folder';
+}
 
 export function ToolCard({
   icon,
@@ -34,11 +40,22 @@ export function ToolCard({
   disabled = false,
   isLoading = false,
   scopeCapability,
+  defaultScope,
   currentFolderName,
 }: ToolCardProps) {
-  const [scope, setScope] = useState<ToolScope>(
-    scopeCapability === 'all' ? 'all' : 'folder',
+  const resolvedDefault = resolveScope(scopeCapability, defaultScope);
+  const [selection, setSelection] = useState<{ defaultScope: ToolScope; scope: ToolScope } | null>(
+    null,
   );
+  useEffect(() => {
+    setSelection((previous) =>
+      scopeCapability === 'both' && previous?.defaultScope === resolvedDefault ? previous : null,
+    );
+  }, [resolvedDefault, scopeCapability]);
+  const scope =
+    scopeCapability === 'both' && selection?.defaultScope === resolvedDefault
+      ? selection.scope
+      : resolvedDefault;
   const showScopeSelector = scopeCapability === 'both';
 
   return (
@@ -56,7 +73,12 @@ export function ToolCard({
 
       <div className="flex items-center gap-2">
         {showScopeSelector ? (
-          <Select value={scope} onValueChange={(value) => setScope(value as ToolScope)}>
+          <Select
+            value={scope}
+            onValueChange={(value) =>
+              setSelection({ defaultScope: resolvedDefault, scope: value as ToolScope })
+            }
+          >
             <SelectTrigger className="h-8 flex-1 text-xs">
               <SelectValue placeholder="Select scope" />
             </SelectTrigger>

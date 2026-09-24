@@ -1,6 +1,7 @@
 import {
   columnFacetingFeature,
   columnFilteringFeature,
+  columnOrderingFeature,
   columnVisibilityFeature,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -18,6 +19,7 @@ import {
 export const bookmarkTableFeatures = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
+  columnOrderingFeature,
   columnVisibilityFeature,
   rowPaginationFeature,
   rowSelectionFeature,

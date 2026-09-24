@@ -3,8 +3,10 @@
 import {
   type ColumnDef,
   type ColumnFiltersState,
+  type ColumnOrderState,
   type ColumnVisibilityState,
   flexRender,
+  type PaginationState,
   type RowData,
   type SortingState,
   useTable,
@@ -21,6 +23,12 @@ import {
 } from '@/components/ui/table';
 
 import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
+import {
+  DEFAULT_BOOKMARK_TABLE_VIEW,
+  getBookmarkTableView,
+  resetBookmarkTableView,
+  saveBookmarkTableView,
+} from '@/lib/bookmark-table-view-storage';
 import { DataTablePagination } from './data-table-pagination';
 import {
   bookmarkTableFeatures,
@@ -30,48 +38,102 @@ import {
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];
   data: TData[];
+  allData: TData[];
   onRowClick?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
-  currentFolderId?: string;
 }
 
 export function DataTable<TData extends RowData>({
   columns,
   data,
+  allData,
   onRowClick,
   rowClassName,
-  currentFolderId,
 }: DataTableProps<TData>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>(
+    DEFAULT_BOOKMARK_TABLE_VIEW.sorting,
+  );
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  // Hide technical columns by default for cleaner UX
-  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>({
-    id: false,
-    parentId: false,
-    dateGroupModified: false,
-    unmodifiable: false,
+  const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>(
+    DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility,
+  );
+  const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>(
+    DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder,
+  );
+  const [pagination, setPagination] = React.useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize,
   });
   const [rowSelection, setRowSelection] = React.useState({});
+  const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
+  const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    let active = true;
+    getBookmarkTableView().then((view) => {
+      if (!active) return;
+      setSorting(view.sorting);
+      setColumnVisibility(view.columnVisibility);
+      setColumnOrder(view.columnOrder);
+      setPagination({ pageIndex: 0, pageSize: view.pageSize });
+      setIsTableViewLoaded(true);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!isTableViewLoaded) return;
+    void saveBookmarkTableView({
+      version: 1,
+      sorting,
+      columnVisibility,
+      columnOrder,
+      pageSize: pagination.pageSize as 10 | 20 | 30 | 40 | 50,
+    }).catch((error) => console.error('Failed to save bookmark table view:', error));
+  }, [columnOrder, columnVisibility, isTableViewLoaded, pagination.pageSize, sorting]);
+
+  const resetView = React.useCallback(() => {
+    setSorting([]);
+    setColumnVisibility({ ...DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility });
+    setColumnOrder([...DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder]);
+    setPagination({ pageIndex: 0, pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize });
+    void resetBookmarkTableView().catch((error) =>
+      console.error('Failed to reset bookmark table view:', error),
+    );
+  }, []);
+
+  const displayedData = columnFilters.length > 0 && !applyToCurrentFolder ? allData : data;
 
   const table = useTable({
     features: bookmarkTableFeatures,
-    data,
+    data: displayedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: setPagination,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
+      columnOrder,
       columnVisibility,
+      pagination,
       rowSelection,
     },
   });
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} currentFolderId={currentFolderId} />
+      <DataTableToolbar
+        table={table}
+        applyToCurrentFolder={applyToCurrentFolder}
+        onApplyToCurrentFolderChange={setApplyToCurrentFolder}
+        onResetView={resetView}
+      />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

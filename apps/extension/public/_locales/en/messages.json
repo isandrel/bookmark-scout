@@ -87,6 +87,14 @@
         "message": "Delete bookmark",
         "description": "Delete bookmark tooltip"
     },
+    "popup_confirmDeleteBookmark": {
+        "message": "Delete \"$1\"? This bookmark will be removed.",
+        "description": "Confirmation before deleting a bookmark; $1 is its title"
+    },
+    "popup_confirmDeleteFolder": {
+        "message": "Delete \"$1\" and all its contents? This cannot be undone.",
+        "description": "Confirmation before deleting a folder; $1 is its title"
+    },
     "popup_expandAll": {
         "message": "Expand all",
         "description": "Expand all button tooltip"
@@ -563,9 +571,33 @@
         "message": "View",
         "description": "View button label"
     },
+    "table_toggleColumns": {
+        "message": "Customize columns",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "Customize table view",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "Move $1 left",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "Move $1 right",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "Reset view",
+        "description": "Reset bookmark table view button label"
+    },
     "bookmarks_root": {
         "message": "Bookmarks",
         "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_folderPath": {
+        "message": "Folder Path",
+        "description": "Column showing the containing folder path"
     },
     "bookmarks_untitled": {
         "message": "Untitled",
@@ -574,6 +606,78 @@
     "bookmarks_loading": {
         "message": "Loading bookmarks...",
         "description": "Loading message for bookmarks page"
+    },
+    "bookmarks_viewDetails": {
+        "message": "View Details",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "Bookmark Details",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "Review the full bookmark information and available actions.",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "Name",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "URL",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "Folder path",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "Date added",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "Date modified",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "Bookmark ID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "Not available",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "Folder path unavailable",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "Loading path...",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "Copy URL",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "Copy ID",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "Open link",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "Open folder",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "Copied.",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "Could not copy.",
+        "description": "Error after bookmark detail copying fails"
     },
     "tools_category_ai": {
         "message": "AI & Intelligence",
@@ -1072,19 +1176,19 @@
         "description": "AI context packer include dates description"
     },
     "settings_aiContextPackerIncludeTags": {
-        "message": "Include Tags Placeholder",
+        "message": "Include Saved Tags",
         "description": "AI context packer include tags label"
     },
     "settings_aiContextPackerIncludeTagsDesc": {
-        "message": "Reserve a tags field in exported AI context",
+        "message": "Include tags only when saved metadata exists for a bookmark",
         "description": "AI context packer include tags description"
     },
     "settings_aiContextPackerIncludeSummaries": {
-        "message": "Include Summary Placeholder",
+        "message": "Include Saved Summaries",
         "description": "AI context packer include summaries label"
     },
     "settings_aiContextPackerIncludeSummariesDesc": {
-        "message": "Reserve a summary field in exported AI context",
+        "message": "Include summaries only when saved metadata exists for a bookmark",
         "description": "AI context packer include summaries description"
     },
     "settings_aiContextPackerMaxItems": {
@@ -1108,7 +1212,7 @@
         "description": "AI context packer excerpt length label"
     },
     "settings_aiContextPackerExcerptLengthDesc": {
-        "message": "Maximum summary placeholder length in AI context exports",
+        "message": "Maximum saved summary length in AI context exports",
         "description": "AI context packer excerpt length description"
     },
     "settings_autoTaggingEnabled": {

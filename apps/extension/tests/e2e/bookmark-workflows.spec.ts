@@ -30,7 +30,11 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
       };
 
       await createItems(folder.id, entries);
-      return { folderId: folder.id, ids };
+      return {
+        folderId: folder.id,
+        ids,
+        writableRootTitle: writableRoot.title || 'Untitled',
+      };
     },
     { folderTitle: title, entries: items },
   );
@@ -94,22 +98,45 @@ test('popup uses selected Japanese and Korean language settings', async ({
   extensionWorker,
   page,
 }) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Locales', [
+    { title: 'Locale Delete', url: 'https://example.com/locale-delete' },
+  ]);
   const setLanguage = (language: 'ja' | 'ko') =>
     extensionWorker.evaluate(async (selectedLanguage) => {
       const key = 'bookmark-scout-settings';
       const stored = await chrome.storage.sync.get(key);
       await chrome.storage.sync.set({
-        [key]: { ...(stored[key] ?? {}), language: selectedLanguage },
+        [key]: { ...(stored[key] ?? {}), language: selectedLanguage, confirmBeforeDelete: true },
       });
     }, language);
+
+  const openDeleteDialog = async (
+    placeholder: string,
+    dialogTitle: string,
+    cancelLabel: string,
+  ) => {
+    await page.getByPlaceholder(placeholder).fill('Locale Delete');
+    const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Locale Delete' });
+    await expect(bookmarkRow).toBeVisible();
+    await bookmarkRow.hover();
+    await bookmarkRow.getByTitle('Delete bookmark').click();
+    const dialog = page.getByRole('dialog', { name: dialogTitle });
+    await expect(dialog).toContainText('Locale Delete');
+    await dialog.getByRole('button', { name: cancelLabel }).click();
+  };
 
   await setLanguage('ja');
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(page.getByPlaceholder('ブックマークを検索...')).toBeVisible();
+  await openDeleteDialog('ブックマークを検索...', 'ブックマークを削除', 'キャンセル');
 
   await setLanguage('ko');
   await page.reload();
   await expect(page.getByPlaceholder('북마크 검색...')).toBeVisible();
+  await openDeleteDialog('북마크 검색...', '북마크 삭제', '취소');
+  await expect
+    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Locale Delete']))
+    .toHaveLength(1);
 });
 
 test('updates popup ordering from synced settings and creates a folder', async ({
@@ -166,7 +193,7 @@ test('updates popup ordering from synced settings and creates a folder', async (
     .toBe(true);
 });
 
-test('deletes a bookmark and a nested folder from the popup', async ({
+test('confirms bookmark and folder deletion, and cancels without changing the tree', async ({
   extensionId,
   extensionWorker,
   page,
@@ -180,6 +207,14 @@ test('deletes a bookmark and a nested folder from the popup', async ({
     },
   ]);
 
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({
+      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: true },
+    });
+  });
+
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
   await search.fill('Delete Me');
@@ -187,6 +222,22 @@ test('deletes a bookmark and a nested folder from the popup', async ({
   await expect(bookmarkRow).toBeVisible();
   await bookmarkRow.hover();
   await bookmarkRow.getByTitle('Delete bookmark').click();
+
+  const bookmarkDialog = page.getByRole('dialog', { name: 'Delete bookmark' });
+  await expect(bookmarkDialog).toContainText('Delete Me');
+  await expect
+    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']))
+    .toHaveLength(1);
+  await bookmarkDialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(bookmarkDialog).toHaveCount(0);
+  await expect(bookmarkRow).toBeVisible();
+  await expect
+    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']))
+    .toHaveLength(1);
+
+  await bookmarkRow.hover();
+  await bookmarkRow.getByTitle('Delete bookmark').click();
+  await bookmarkDialog.getByRole('button', { name: 'Delete bookmark' }).click();
 
   await expect
     .poll(() =>
@@ -204,6 +255,21 @@ test('deletes a bookmark and a nested folder from the popup', async ({
   await folderRow.hover();
   await folderRow.getByTitle('Delete folder').click();
 
+  const folderDialog = page.getByRole('dialog', { name: 'Delete folder' });
+  await expect(folderDialog).toContainText('Removable Folder');
+  await expect(folderDialog).toContainText('all its contents');
+  await folderDialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(folderDialog).toHaveCount(0);
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => chrome.bookmarks.getChildren(id), folder.ids['Removable Folder']),
+    )
+    .toHaveLength(1);
+
+  await folderRow.hover();
+  await folderRow.getByTitle('Delete folder').click();
+  await folderDialog.getByRole('button', { name: 'Delete folder' }).click();
+
   await expect
     .poll(() =>
       extensionWorker.evaluate(async (id) => {
@@ -212,6 +278,52 @@ test('deletes a bookmark and a nested folder from the popup', async ({
       }, folder.folderId),
     )
     .toEqual(['Keep Me']);
+});
+
+test('deletes bookmarks and folders immediately when confirmation is disabled', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Immediate Delete', [
+    { title: 'Immediate Bookmark', url: 'https://example.com/immediate' },
+    { title: 'Immediate Folder', children: [{ title: 'Nested', url: 'https://example.com/nested' }] },
+  ]);
+
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({
+      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: false },
+    });
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  const search = page.getByPlaceholder('Search bookmarks...');
+  await search.fill('Immediate Bookmark');
+  const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Immediate Bookmark' });
+  await expect(bookmarkRow).toBeVisible();
+  await bookmarkRow.hover();
+  await bookmarkRow.getByTitle('Delete bookmark').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => {
+        const children = await chrome.bookmarks.getChildren(id);
+        return children.some((item) => item.title === 'Immediate Bookmark');
+      }, folder.folderId),
+    )
+    .toBe(false);
+
+  await search.fill('Immediate Folder');
+  const folderRow = page.locator('.folder-item').filter({ hasText: 'Immediate Folder' }).first();
+  await expect(folderRow).toBeVisible();
+  await folderRow.hover();
+  await folderRow.getByTitle('Delete folder').click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expect
+    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.getChildren(id), folder.folderId))
+    .toEqual([]);
 });
 
 test('navigates folders and filters bookmarks by title and URL', async ({
@@ -251,6 +363,140 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   await page.locator('nav').getByRole('button', { name: 'E2E Collection' }).click();
   await expect(page).toHaveURL(new RegExp(`id=${folder.folderId}$`));
   await expect(rows).toHaveCount(3);
+});
+
+test('manager filters globally across nested folders or only the selected folder', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const local = await seedFolder(extensionWorker, 'E2E Scope Local', [
+    { title: 'Shared Target Local', url: 'https://example.com/local-target' },
+    {
+      title: 'Inner Scope',
+      children: [{ title: 'Shared Target Nested', url: 'https://example.com/nested-target' }],
+    },
+  ]);
+  const remote = await seedFolder(extensionWorker, 'E2E Scope Remote', [
+    { title: 'Shared Target Remote', url: 'https://example.com/remote-target' },
+  ]);
+
+  await page.goto(bookmarkPageUrl(extensionId, local.folderId));
+  const rows = page.locator('tbody tr');
+  await expect(rows).toHaveCount(2);
+  await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
+
+  await page.getByPlaceholder('Filter titles...').fill('Shared Target');
+  await expect(rows).toHaveCount(3);
+  await expect(
+    rows
+      .filter({ hasText: 'Shared Target Nested' })
+      .getByTitle(`${local.writableRootTitle} / E2E Scope Local / Inner Scope`, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    rows
+      .filter({ hasText: 'Shared Target Remote' })
+      .getByTitle(`${remote.writableRootTitle} / E2E Scope Remote`, { exact: true }),
+  ).toBeVisible();
+
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Shared Target Local');
+  await expect(rows.filter({ hasText: 'Shared Target Nested' })).toHaveCount(0);
+  await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
+
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).uncheck();
+  await expect(rows).toHaveCount(3);
+  await page.getByRole('button', { name: 'Reset' }).click();
+  await expect(rows).toHaveCount(2);
+  await expect(rows.filter({ hasText: 'Inner Scope' })).toHaveCount(1);
+
+  await page.getByPlaceholder('Filter URLs...').fill('remote-target');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText('Shared Target Remote');
+  await page.getByRole('checkbox', { name: 'Apply to current folder only' }).check();
+  await expect(rows.filter({ hasText: 'Shared Target Remote' })).toHaveCount(0);
+  await expect(page.getByText('No results.', { exact: true })).toBeVisible();
+});
+
+test('keeps full titles and URLs available past the former truncation limits', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const commonTitle = 'Common bookmark prefix '.repeat(2);
+  const zuluTitle = `${commonTitle}Zulu`;
+  const alphaTitle = `${commonTitle}Alpha`;
+  const longUrl = `https://example.com/${'segment-'.repeat(8)}tail-marker`;
+  const folder = await seedFolder(extensionWorker, 'E2E Full Values', [
+    { title: zuluTitle, url: longUrl },
+    { title: alphaTitle, url: 'https://example.com/short' },
+  ]);
+  await extensionWorker.evaluate(async () => {
+    const key = 'bookmark-scout-settings';
+    const stored = await chrome.storage.sync.get(key);
+    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), sortOrder: 'alphabetical' } });
+  });
+
+  await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
+  const rows = page.locator('tbody tr');
+  await expect(rows).toHaveCount(2);
+  await expect(rows.nth(0)).toContainText(alphaTitle);
+  await expect(rows.nth(1).getByTitle(zuluTitle, { exact: true })).toBeVisible();
+  await expect(rows.nth(1).getByTitle(longUrl, { exact: true })).toBeVisible();
+
+  await page.getByPlaceholder('Filter titles...').fill('Zulu');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText(zuluTitle);
+  await page.getByRole('button', { name: 'Reset' }).click();
+
+  await page.getByPlaceholder('Filter URLs...').fill('tail-marker');
+  await expect(rows).toHaveCount(1);
+  await expect(rows.first()).toContainText(zuluTitle);
+  const persistedOrder = await extensionWorker.evaluate(async (id) => {
+    const children = await chrome.bookmarks.getChildren(id);
+    return children.map((item) => item.title);
+  }, folder.folderId);
+  expect(persistedOrder).toEqual([zuluTitle, alphaTitle]);
+});
+
+test('opens full details for the selected manager item without changing it', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const title = 'Detailed Bookmark';
+  const url = 'https://example.com/details?source=e2e';
+  const folder = await seedFolder(extensionWorker, 'E2E Details', [{ title, url }]);
+  const bookmarkId = folder.ids[title];
+  const before = await extensionWorker.evaluate(async (id) => {
+    const [bookmark] = await chrome.bookmarks.get(id);
+    return bookmark;
+  }, bookmarkId);
+
+  await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
+  const row = page.locator('tbody tr').filter({ hasText: title });
+  await expect(row).toHaveCount(1);
+  await row.getByRole('button', { name: 'Open menu' }).click();
+  await page.getByRole('menuitem', { name: 'View Details' }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Details' });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByTestId('bookmark-details-name')).toHaveText(title);
+  await expect(dialog.getByTestId('bookmark-details-url')).toHaveText(url);
+  await expect(dialog.getByTestId('bookmark-details-path')).toContainText('E2E Details');
+  await expect(dialog.getByTestId('bookmark-details-added').locator('time')).toHaveCount(1);
+  await expect(dialog.getByTestId('bookmark-details-modified')).toHaveText('Not available');
+  await expect(dialog.getByTestId('bookmark-details-id')).toHaveText(bookmarkId);
+  await expect(dialog.getByRole('button', { name: 'Copy URL' })).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Copy ID' })).toBeVisible();
+  await expect(dialog.getByRole('link', { name: 'Open link' })).toHaveAttribute('href', url);
+
+  const after = await extensionWorker.evaluate(async (id) => {
+    const [bookmark] = await chrome.bookmarks.get(id);
+    return bookmark;
+  }, bookmarkId);
+  expect(after).toEqual(before);
 });
 
 test('moves a bookmark with the table controls and persists the new order', async ({
