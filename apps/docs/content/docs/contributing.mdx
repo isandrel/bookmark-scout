@@ -57,7 +57,7 @@ Run the smallest relevant command set for your change:
 | Docs | `bunx nx run docs:build` |
 | Cross-app changes | `bun run lint` and `bun run build:all` |
 
-`bun run test` runs the full current unit and Chromium E2E suite, including automatic browser installation. Network-dependent and AI provider flows remain outside its browser coverage.
+`bun run test` runs the full current unit and Chromium E2E suite, including automatic browser installation. Network-dependent and AI provider flows run offline against mocks. Tests titled `[mocked provider contract]` stub AI providers (Vitest `ai` mocks and a Playwright-routed OpenAI-compatible endpoint) and route-mock network fetches; they verify Bookmark Scout's request/response contract, opt-in gating, and error handling, not live provider or website compatibility, which remains manually verified.
 
 ## Localization
 

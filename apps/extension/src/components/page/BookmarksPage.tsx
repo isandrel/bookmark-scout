@@ -179,6 +179,7 @@ export default function BookmarksPage() {
         onClose={() => setSelectedBookmark(null)}
         onOpenFolder={navigateToFolder}
       />
+      <Toaster />
     </div>
   );
 }

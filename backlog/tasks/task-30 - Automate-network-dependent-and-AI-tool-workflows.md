@@ -1,10 +1,10 @@
 ---
 id: TASK-30
 title: Automate network-dependent and AI tool workflows
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-23 16:31'
-updated_date: '2026-09-23 17:15'
+updated_date: '2026-09-23 18:40'
 labels: []
 dependencies: []
 references:
@@ -25,9 +25,15 @@ Current 17-case Chromium E2E suite covers dead-link and metadata fetchers with d
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 CI runs reliable network/AI-path tests without real credentials, live provider calls, or external site dependencies.
-- [ ] #2 The test report distinguishes mocked provider contracts from actual provider compatibility.
+- [x] #1 CI runs reliable network/AI-path tests without real credentials, live provider calls, or external site dependencies.
+- [x] #2 The test report distinguishes mocked provider contracts from actual provider compatibility.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Added `[mocked provider contract]` Vitest coverage (`tests/unit/ai-bookmark-workflows.test.ts`, `ai` SDK stubbed) and Chromium E2E coverage (Playwright-routed OpenAI-compatible endpoint on `provider.invalid`, synthetic key) for auto-tagging/summarizer opt-in gating, success preview, provider errors, and route-mocked network transport failures. Tests exposed two fixes: AI tool results now keep only requested bookmark IDs (deduplicated, local title/URL), and the bookmarks page now mounts `<Toaster />` so tool errors are visible. CI runs these via `bun run test`. CONTRIBUTING, docs, and AGENTS files state that these verify mocked contracts, not live provider or website compatibility, which remains manual.
+<!-- SECTION:NOTES:END -->
 
 ## Comments
 
