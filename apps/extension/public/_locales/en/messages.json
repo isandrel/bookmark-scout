@@ -63,6 +63,30 @@
         "message": "Error Deleting Folder",
         "description": "Toast title for folder deletion error"
     },
+    "toast_deleteUndoWindow": {
+        "message": "Undo for 10 seconds. Only the latest deletion is recoverable; original IDs and dates, or recovery after closing this window, are unavailable.",
+        "description": "Limits of popup deletion recovery"
+    },
+    "toast_deleteRestored": {
+        "message": "Deletion undone",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "Restored \"$1\" with new browser-generated IDs and dates.",
+        "description": "Toast description after restoring a deletion; $1 is the item title"
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "Could not undo deletion",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "The undo window for this deletion has expired.",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "The original folder no longer exists, so this item cannot be restored.",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
     "toast_itemMoved": {
         "message": "Item Moved",
         "description": "Toast title for item move success"
@@ -92,7 +116,7 @@
         "description": "Confirmation before deleting a bookmark; $1 is its title"
     },
     "popup_confirmDeleteFolder": {
-        "message": "Delete \"$1\" and all its contents? This cannot be undone.",
+        "message": "Delete \"$1\" and all its contents? Undo will be available briefly.",
         "description": "Confirmation before deleting a folder; $1 is its title"
     },
     "popup_expandAll": {
@@ -210,6 +234,10 @@
     "action_cancel": {
         "message": "Cancel",
         "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "Undo",
+        "description": "Undo deletion button label"
     },
     "action_applyChanges": {
         "message": "Apply Changes",
