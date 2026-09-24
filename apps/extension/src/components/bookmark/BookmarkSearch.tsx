@@ -51,7 +51,6 @@ export function BookmarkSearch({
   onClearHistory,
 }: BookmarkSearchProps) {
   const { resolvedTheme, setTheme } = useTheme();
-  const { setValue: saveThemeSetting } = useSetting('theme');
   const containerRef = useRef<HTMLDivElement>(null);
   const historyListId = useId();
   const [isFocused, setIsFocused] = useState(false);
@@ -68,15 +67,10 @@ export function BookmarkSearch({
     inputRef?.current?.focus();
   }, []);
 
+  // Follow the resolved theme so the toggle is correct while the setting is "system".
+  // setTheme also persists the synced theme setting.
   const isDark = resolvedTheme === 'dark';
-  const toggleTheme = () => {
-    const next = isDark ? 'light' : 'dark';
-    setTheme(next);
-    // Keep the synced setting in step with the local theme so Options shows the same choice.
-    void saveThemeSetting(next).catch((error: unknown) => {
-      console.error('Failed to save theme setting:', error);
-    });
-  };
+  const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
 
   const chooseHistoryEntry = (entry: string) => {
     onQueryChange(entry);

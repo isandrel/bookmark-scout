@@ -57,7 +57,10 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
     case 'native':
       return createNativeModel(settings, modelId);
     case 'ollama': {
-      const ollama = createOllama({ baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) });
+      const ollama = createOllama({
+        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
+        headers: settings.extraHeaders,
+      });
       return ollama(modelId) as unknown as AnyLanguageModel;
     }
     case 'openai_compatible': {
@@ -150,30 +153,42 @@ function getModelListBaseUrl(settings: AISettings): string | undefined {
   return settings.baseUrl || getProviderBaseUrl(settings.provider);
 }
 
+/**
+ * Native SDKs use their own endpoint unless the user configured a Base URL; extra headers always
+ * apply so Verify Service and real calls hit the same configured endpoint.
+ */
+function nativeProviderOptions(settings: AISettings) {
+  return {
+    apiKey: settings.apiKey,
+    baseURL: settings.baseUrl || undefined,
+    headers: settings.extraHeaders,
+  };
+}
+
 function createNativeModel(settings: AISettings, modelId: string) {
   switch (settings.provider) {
     case 'openai': {
-      const openai = createOpenAI({ apiKey: settings.apiKey });
+      const openai = createOpenAI(nativeProviderOptions(settings));
       return openai(modelId);
     }
     case 'anthropic': {
-      const anthropic = createAnthropic({ apiKey: settings.apiKey });
+      const anthropic = createAnthropic(nativeProviderOptions(settings));
       return anthropic(modelId) as unknown as AnyLanguageModel;
     }
     case 'google': {
-      const google = createGoogleGenerativeAI({ apiKey: settings.apiKey });
+      const google = createGoogleGenerativeAI(nativeProviderOptions(settings));
       return google(modelId) as unknown as AnyLanguageModel;
     }
     case 'groq': {
-      const groq = createGroq({ apiKey: settings.apiKey });
+      const groq = createGroq(nativeProviderOptions(settings));
       return groq(modelId) as unknown as AnyLanguageModel;
     }
     case 'mistral': {
-      const mistral = createMistral({ apiKey: settings.apiKey });
+      const mistral = createMistral(nativeProviderOptions(settings));
       return mistral(modelId) as unknown as AnyLanguageModel;
     }
     case 'deepseek': {
-      const deepseek = createDeepSeek({ apiKey: settings.apiKey });
+      const deepseek = createDeepSeek(nativeProviderOptions(settings));
       return deepseek(modelId) as unknown as AnyLanguageModel;
     }
     default:

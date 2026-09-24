@@ -444,7 +444,7 @@
         "description": "Popup width setting label"
     },
     "settings_popupWidthDesc": {
-        "message": "ポップアップウィンドウの幅",
+        "message": "ポップアップウィンドウの幅（ブラウザーの上限は 800 px）",
         "description": "Popup width setting description"
     },
     "settings_popupHeight": {
@@ -452,7 +452,7 @@
         "description": "Popup height setting label"
     },
     "settings_popupHeightDesc": {
-        "message": "ポップアップウィンドウの高さ",
+        "message": "ポップアップウィンドウの高さ（ブラウザーの上限は 600 px）",
         "description": "Popup height setting description"
     },
     "settings_truncateLength": {
@@ -1472,7 +1472,7 @@
         "description": "Context menu bookmark naming setting label"
     },
     "settings_contextMenuNamingDesc": {
-        "message": "右クリックで保存するときにブックマークのタイトルとして使うもの",
+        "message": "右クリックで保存するときのブックマークのタイトル。「リンクテキスト」は Firefox ではリンクの文字列、Chrome では選択中のテキストを使い、ない場合はページのタイトルを使います。",
         "description": "Context menu bookmark naming setting description"
     },
     "settings_namingLinkText": {
@@ -2562,6 +2562,246 @@
     "stats_protocols": {
         "message": "プロトコル",
         "description": "Statistics protocols label"
+    },
+    "settings_aiProviderOllama": {
+        "message": "Ollama（ローカル）",
+        "description": "Ollama provider name"
+    },
+    "settings_aiProviderCustom": {
+        "message": "カスタムプロバイダー",
+        "description": "Custom AI provider name"
+    },
+    "settings_duplicatesMatchExactUrl": {
+        "message": "URLが完全一致",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchNormalizedUrl": {
+        "message": "正規化したURL",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleUrl": {
+        "message": "タイトル + URL",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleOnly": {
+        "message": "タイトルのみ",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesKeepOldest": {
+        "message": "最も古いもの",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepNewest": {
+        "message": "最も新しいもの",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepFirst": {
+        "message": "最初に見つかったもの",
+        "description": "Duplicate keep rule option"
+    },
+    "error_invalidSettingsFields": {
+        "message": "次の設定の値が無効です: $1",
+        "description": "Settings validation error listing field labels"
+    },
+    "settings_errorMinExceedsMax": {
+        "message": "最小値は最大値以下にしてください。",
+        "description": "Settings error for min greater than max"
+    },
+    "settings_errorStatusCodes": {
+        "message": "100〜599 の HTTP ステータスコードをカンマ区切りで入力してください。",
+        "description": "Settings error for status code list"
+    },
+    "settings_errorRangeOrUnlimited": {
+        "message": "「制限なし」または $1〜$2 の値を選んでください。",
+        "description": "Settings error for limit fields"
+    },
+    "settings_errorRange": {
+        "message": "$1〜$2 の値を選んでください。",
+        "description": "Settings error for number range"
+    },
+    "settings_errorRequired": {
+        "message": "この項目は空にできません。",
+        "description": "Settings error for empty text"
+    },
+    "settings_errorTooLong": {
+        "message": "$1 文字以内で入力してください。",
+        "description": "Settings error for long text"
+    },
+    "settings_errorInvalidOption": {
+        "message": "表示されている選択肢から選んでください。",
+        "description": "Settings error for invalid option"
+    },
+    "options_baseUrlInvalid": {
+        "message": "http:// または https:// で始まる完全なURLを入力してください。",
+        "description": "Invalid AI provider base URL error"
+    },
+    "error_aiKeyNotConfigured": {
+        "message": "APIキーが設定されていません。オプション → AI で設定してください。",
+        "description": "AI API key missing error"
+    },
+    "contextMenu_untitled": {
+        "message": "無題",
+        "description": "Fallback bookmark title from context menu"
+    },
+    "contextMenu_recentFolders": {
+        "message": "最近のフォルダー",
+        "description": "Context menu recent folders submenu"
+    },
+    "contextMenu_aiSuggestions": {
+        "message": "AIの提案",
+        "description": "Context menu AI suggestions submenu"
+    },
+    "contextMenu_defaultFolders": {
+        "message": "既定のフォルダー",
+        "description": "Context menu default folders submenu"
+    },
+    "settings_noLimit": {
+        "message": "制限なし",
+        "description": "Slider value meaning unlimited"
+    },
+    "settings_modified": {
+        "message": "変更済み",
+        "description": "Badge for settings changed from default"
+    },
+    "settings_resetToDefault": {
+        "message": "既定値に戻す",
+        "description": "Reset one setting button tooltip"
+    },
+    "settings_resetFieldToDefault": {
+        "message": "$1 を既定値に戻す",
+        "description": "Reset one setting button accessible name"
+    },
+    "options_apiKeyInvalidFormat": {
+        "message": "$1 の API キーの形式ではありません。保存されていません。",
+        "description": "Invalid API key format error"
+    },
+    "toast_apiKeySaved": {
+        "message": "APIキーを保存しました",
+        "description": "API key saved toast title"
+    },
+    "toast_apiKeySavedDescription": {
+        "message": "APIキーはこのデバイスにのみ保存されます。",
+        "description": "API key saved toast description"
+    },
+    "options_extraHeadersInvalid": {
+        "message": "文字列の値を持つ JSON オブジェクトを入力してください。例: {\"HTTP-Referer\":\"https://example.com\"}",
+        "description": "Invalid extra headers error"
+    },
+    "toast_aiServiceVerified": {
+        "message": "サービスを確認しました",
+        "description": "AI verify success title"
+    },
+    "toast_aiServiceVerifiedDescription": {
+        "message": "$1 から正常な応答がありました。",
+        "description": "AI verify success description"
+    },
+    "toast_aiServiceVerifyFailed": {
+        "message": "サービスの確認に失敗しました",
+        "description": "AI verify failure title"
+    },
+    "error_aiNoModels": {
+        "message": "プロバイダーからモデルが返されませんでした。",
+        "description": "AI model detection empty error"
+    },
+    "toast_aiModelsRefreshed": {
+        "message": "モデルを更新しました",
+        "description": "AI models refreshed title"
+    },
+    "toast_aiModelsRefreshedDescription": {
+        "message": "$2 から $1 件のモデルが見つかりました。",
+        "description": "AI models refreshed description"
+    },
+    "toast_aiModelsRefreshFailed": {
+        "message": "モデルの検出に失敗しました",
+        "description": "AI model detection failure title"
+    },
+    "options_apiKeyDescription": {
+        "message": "AIプロバイダーのAPIキー（このデバイスにのみ保存）",
+        "description": "API key field description"
+    },
+    "options_apiKeyOptionalDescription": {
+        "message": "$1 はAPIキーなしで利用できます。",
+        "description": "Optional API key description"
+    },
+    "options_apiKey": {
+        "message": "APIキー",
+        "description": "API key field label"
+    },
+    "options_hideApiKey": {
+        "message": "APIキーを隠す",
+        "description": "Hide API key button"
+    },
+    "options_showApiKey": {
+        "message": "APIキーを表示",
+        "description": "Show API key button"
+    },
+    "options_baseUrl": {
+        "message": "ベースURL",
+        "description": "AI provider base URL label"
+    },
+    "options_baseUrlDescription": {
+        "message": "任意のエンドポイント。このプロバイダーへのすべてのリクエストに使われます（プロキシや OpenAI 互換サーバーなど）。",
+        "description": "AI provider base URL description"
+    },
+    "options_customModel": {
+        "message": "カスタムモデル",
+        "description": "Custom model label"
+    },
+    "options_customModelDescription": {
+        "message": "任意のモデル名を使えるプロバイダー向けのモデルID（任意）",
+        "description": "Custom model description"
+    },
+    "options_extraHeaders": {
+        "message": "追加ヘッダー（JSON）",
+        "description": "Extra headers label"
+    },
+    "options_extraHeadersDescription": {
+        "message": "このプロバイダーへのすべてのリクエストに付けるヘッダーの JSON オブジェクト（任意）",
+        "description": "Extra headers description"
+    },
+    "options_refreshingModels": {
+        "message": "更新中...",
+        "description": "Refresh models button busy label"
+    },
+    "options_refreshModels": {
+        "message": "モデルを更新",
+        "description": "Refresh models button"
+    },
+    "options_verifyingService": {
+        "message": "確認中...",
+        "description": "Verify service button busy label"
+    },
+    "options_verifyService": {
+        "message": "サービスを確認",
+        "description": "Verify service button"
+    },
+    "toast_settingsImportedNoChanges": {
+        "message": "ファイルの内容は現在の設定と同じため、変更はありません。",
+        "description": "Import toast when nothing changed"
+    },
+    "toast_settingsImportedChanges": {
+        "message": "$1 件の設定を変更しました: $2",
+        "description": "Import toast listing changed settings"
+    },
+    "toast_andMore": {
+        "message": "ほか $1 件",
+        "description": "Suffix for truncated list"
+    },
+    "action_switchToLight": {
+        "message": "ライトテーマに切り替え",
+        "description": "Theme toggle accessible name"
+    },
+    "action_switchToDark": {
+        "message": "ダークテーマに切り替え",
+        "description": "Theme toggle accessible name"
+    },
+    "settings_searchResultsCount": {
+        "message": "すべてのタブで一致する設定: $1 件",
+        "description": "Settings search result count"
+    },
+    "settings_statusNotSaved": {
+        "message": "$1 件の設定が未保存です",
+        "description": "Save status when fields are invalid"
     },
     "search_clear": {
         "message": "検索をクリア",
