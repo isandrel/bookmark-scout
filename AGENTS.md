@@ -192,7 +192,7 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
 - If a local release tag points to an older commit, move it to the current passing `main` before pushing: `rtk git tag -f vX.Y.Z HEAD`.
 - Push the tag to trigger `Release Extension`: `rtk git push origin vX.Y.Z`.
 - Watch the workflow and verify uploaded release assets: `rtk gh run watch <run-id> --exit-status` and `rtk gh release view vX.Y.Z`.
-- Expected release assets are Chrome `.crx`, Chrome `.zip`, Firefox `.zip`, and Edge `.zip`.
+- Expected release assets are Chrome `.crx`, Chrome `.zip`, Firefox `.zip`, Edge `.zip`, and the Firefox review sources `.zip`.
 
 ### GitHub Actions troubleshooting
 

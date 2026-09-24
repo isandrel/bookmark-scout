@@ -25,19 +25,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Install dependencies
-        run: bun install
-
-      - name: Build extension for Chrome
-        run: bun run build:chrome
-        working-directory: ./apps/extension
-
-      - name: Build extension for Firefox
-        run: bun run build:firefox
-        working-directory: ./apps/extension
-
-      - name: Build extension for Edge
-        run: bun run build:edge
-        working-directory: ./apps/extension
+        run: bun install --frozen-lockfile
 
       - name: Get version from tag
         id: get_version
@@ -57,29 +45,17 @@ jobs:
             exit 1
           fi
 
-      - name: Create Chrome zip
-        run: |
-          cd dist/chrome-mv3
-          zip -r ../../bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip .
-        working-directory: ./apps/extension
-
-      - name: Create Firefox zip
-        run: |
-          cd dist/firefox-mv2
-          zip -r ../../bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip .
-        working-directory: ./apps/extension
-
-      - name: Create Edge zip
-        run: |
-          cd dist/edge-mv3
-          zip -r ../../bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip .
+      # wxt zip builds each target and writes bookmark-scout-<tag>-<browser>.zip to dist/.
+      # The Firefox run also writes bookmark-scout-<tag>-sources.zip for add-on review.
+      - name: Build and zip extension
+        run: bun run zip
         working-directory: ./apps/extension
 
       - name: Build Chrome CRX
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
-          zipFilePath: apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
-          crxFilePath: apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
+          zipFilePath: apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
+          crxFilePath: apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
           privateKey: ${{ secrets.CRX_PRIVATE_KEY }}
 
       - name: Create GitHub Release
@@ -96,6 +72,7 @@ jobs:
             | Chrome | `bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip` | For Chrome Web Store |
             | Firefox | `bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip` | For Firefox Add-ons |
             | Edge | `bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip` | For Edge Add-ons |
+            | Source | `bookmark-scout-${{ steps.get_version.outputs.version }}-sources.zip` | Source code for Firefox Add-ons review |
 
             ## Installation
 
@@ -117,10 +94,11 @@ jobs:
             3. Enable "Developer mode"
             4. Click "Load unpacked" and select the extracted folder
           files: |
-            apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
-            apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
-            apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip
-            apps/extension/bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip
+            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
+            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
+            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip
+            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip
+            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-sources.zip
           generate_release_notes: true
           draft: false
           prerelease: false
