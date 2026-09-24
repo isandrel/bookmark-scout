@@ -13,12 +13,34 @@ const RECENT_FOLDERS_STORAGE_KEY = 'bookmark-scout-recent-folders';
 type ContextMenuSettings = {
   enabled: boolean;
   naming: BookmarkNamingSource;
+  recentFoldersEnabled: boolean;
+  recentFoldersMax: number;
+  language: Settings['language'];
 };
 
-function isContextMenuEnabled(value: unknown): boolean {
-  if (!value || typeof value !== 'object') return defaultSettings.contextMenuEnabled;
-  const enabled = (value as { contextMenuEnabled?: unknown }).contextMenuEnabled;
-  return typeof enabled === 'boolean' ? enabled : defaultSettings.contextMenuEnabled;
+function toContextMenuSettings(stored: unknown): ContextMenuSettings {
+  const settings = sanitizeSettings(stored);
+  return {
+    enabled: settings.contextMenuEnabled,
+    naming: settings.contextMenuBookmarkNaming,
+    recentFoldersEnabled: settings.recentFoldersEnabled,
+    recentFoldersMax: settings.recentFoldersMax,
+    language: settings.language,
+  };
+}
+
+/** Settings that change what the menu shows, so a change to any of them rebuilds it. */
+const MENU_SETTING_KEYS = [
+  'enabled',
+  'recentFoldersEnabled',
+  'recentFoldersMax',
+  'language',
+] as const satisfies readonly (keyof ContextMenuSettings)[];
+
+function menuSettingsChanged(oldValue: unknown, newValue: unknown): boolean {
+  const before = toContextMenuSettings(oldValue);
+  const after = toContextMenuSettings(newValue);
+  return MENU_SETTING_KEYS.some((key) => before[key] !== after[key]);
 }
 
 /**
@@ -32,40 +54,31 @@ async function getContextMenuSettings(): Promise<ContextMenuSettings> {
         return;
       }
 
-      const stored = result[SETTINGS_STORAGE_KEY];
-      const settings = (stored && typeof stored === 'object' ? stored : {}) as {
-        contextMenuBookmarkNaming?: unknown;
-      };
-      const naming = settings.contextMenuBookmarkNaming;
-      resolve({
-        enabled: isContextMenuEnabled(stored),
-        naming:
-          naming === 'link_text' || naming === 'page_title' || naming === 'link_url'
-            ? naming
-            : defaultSettings.contextMenuBookmarkNaming,
-      });
+      const settings = toContextMenuSettings(result[SETTINGS_STORAGE_KEY]);
+      setLanguage(settings.language);
+      resolve(settings);
     });
   });
 }
 
 /**
  * Determine the bookmark title based on the naming preference.
+ * "Link text": Firefox reports the anchor text as `linkText`; Chrome does not expose it, so the
+ * selected text is used when the link was selected, then the page title.
  */
-function getBookmarkTitle(
+export function getBookmarkTitle(
   namingSource: BookmarkNamingSource,
-  info: chrome.contextMenus.OnClickData,
+  info: chrome.contextMenus.OnClickData & { linkText?: string },
   tab?: chrome.tabs.Tab,
 ): string {
+  const untitled = t('contextMenu_untitled');
   switch (namingSource) {
-    case 'link_text':
-      // Use selection text (the link's anchor text) or fall back to page title
-      return info.selectionText || tab?.title || 'Untitled';
     case 'page_title':
-      return tab?.title || 'Untitled';
+      return tab?.title || untitled;
     case 'link_url':
-      return info.linkUrl || 'Untitled';
+      return info.linkUrl || untitled;
     default:
-      return info.selectionText || tab?.title || 'Untitled';
+      return info.linkText?.trim() || info.selectionText?.trim() || tab?.title || untitled;
   }
 }
 
@@ -188,7 +201,7 @@ class ContextMenuManager {
     // Recreate root
     chrome.contextMenus.create({
       id: `${MENU_PREFIX}${SEPARATOR}root`,
-      title: 'Save bookmark to...',
+      title: t('contextMenu_saveToFolder'),
       contexts: ['link'],
     });
 
@@ -219,13 +232,15 @@ class ContextMenuManager {
 
     // Category labels and icons
     const categoryLabels: Record<string, { label: string; icon: string }> = {
-      recent: { label: '📁 Recent Folders', icon: '📁' },
-      ai: { label: '✨ AI Suggestions', icon: '✨' },
-      static: { label: '📚 Default Folders', icon: '📚' },
+      recent: { label: `📁 ${t('contextMenu_recentFolders')}`, icon: '📁' },
+      ai: { label: `✨ ${t('contextMenu_aiSuggestions')}`, icon: '✨' },
+      static: { label: `📚 ${t('contextMenu_defaultFolders')}`, icon: '📚' },
     };
 
     // Track if we have any items
     let hasItems = false;
+    // Menu ids must be unique; a repeated folder would otherwise fail with "duplicate id".
+    const createdIds = new Set<string>();
 
     // Create submenus for each category with items
     for (const [type, items] of Object.entries(itemsByType)) {
@@ -256,8 +271,11 @@ class ContextMenuManager {
 
       // Add items to the category submenu
       for (const item of items) {
+        const id = createMenuItemId(item.type, item.folderId);
+        if (createdIds.has(id)) continue;
+        createdIds.add(id);
         chrome.contextMenus.create({
-          id: createMenuItemId(item.type, item.folderId),
+          id,
           title: item.folderTitle,
           parentId: categoryId,
           contexts: ['link'],
@@ -269,7 +287,7 @@ class ContextMenuManager {
     if (!hasItems) {
       chrome.contextMenus.create({
         id: `${MENU_PREFIX}${SEPARATOR}empty`,
-        title: 'No folders available',
+        title: t('contextMenu_noFolders'),
         parentId: `${MENU_PREFIX}${SEPARATOR}root`,
         contexts: ['link'],
         enabled: false,
@@ -356,10 +374,9 @@ function handleStorageChange(
   areaName: string,
 ): void {
   const settingsChange = areaName === 'sync' ? changes[SETTINGS_STORAGE_KEY] : undefined;
-  const enabledChanged =
-    settingsChange &&
-    isContextMenuEnabled(settingsChange.oldValue) !== isContextMenuEnabled(settingsChange.newValue);
-  if (enabledChanged || (areaName === 'local' && changes[RECENT_FOLDERS_STORAGE_KEY])) {
+  const settingsChanged =
+    settingsChange && menuSettingsChanged(settingsChange.oldValue, settingsChange.newValue);
+  if (settingsChanged || (areaName === 'local' && changes[RECENT_FOLDERS_STORAGE_KEY])) {
     void contextMenuManager.rebuildMenu().catch((error) => {
       console.error('[ContextMenu] Failed to rebuild menu:', error);
     });
@@ -379,7 +396,9 @@ export const recentFoldersProvider: ContextMenuProvider = {
 
   async getItems(): Promise<ContextMenuItem[]> {
     try {
-      const recentFolders = await getRecentFolders();
+      const settings = await getContextMenuSettings();
+      if (!settings.recentFoldersEnabled) return [];
+      const recentFolders = await getRecentFolders(settings.recentFoldersMax);
       return recentFolders.map((folder) => ({
         id: `recent-${folder.id}`,
         title: folder.title,
@@ -403,12 +422,13 @@ export const bookmarksBarProvider: ContextMenuProvider = {
   priority: 100, // Lower priority = appears last
 
   async getItems(): Promise<ContextMenuItem[]> {
+    const title = t('contextMenu_bookmarksBar');
     return [
       {
         id: 'static-bookmarks-bar',
-        title: 'Bookmarks Bar',
+        title,
         folderId: '1', // Chrome's Bookmarks Bar folder ID
-        folderTitle: 'Bookmarks Bar',
+        folderTitle: title,
         type: 'static' as const,
         icon: '📚',
       },
