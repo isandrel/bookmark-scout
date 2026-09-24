@@ -25,10 +25,12 @@ Use AI from the bookmarks manager to:
 AI tools can send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. Review generated results before applying organization changes.
 
 ### 🔍 Instant Search
-Quickly find bookmarks with debounced search and folder filtering. Search settings control the result limit, whether matching folders and their parents open automatically, and whether recent searches are remembered on this device. Clearing the search restores the folders you had open before searching.
+Quickly find bookmarks with debounced search and folder filtering. Search settings control the result limit, whether matching folders and their parents open automatically, and whether recent searches are remembered on this device. Clearing the search restores the folders you had open before searching. Whole-word matching treats spaces, punctuation, and script changes as word boundaries, so terms such as `C++` and Japanese words match. An invalid regular expression shows a warning and is searched as plain text. Permanent folders such as the Bookmarks Bar are containers and never match by name.
 
 ### 📂 Drag & Drop
-Organize bookmarks and folders with intuitive drag-and-drop.
+Organize bookmarks and folders with intuitive drag-and-drop. Dropping beside an item in another folder moves it into that folder. Reordering changes the browser's saved order, which the popup only shows with the **Folders First** sort order; date and alphabetical sorting keep re-sorting the list, and the confirmation says so.
+
+The popup and side panel refresh automatically when bookmarks change elsewhere, such as in the bookmarks manager or the browser's own bookmark UI. Each deletion has its own Undo for 10 seconds. A restored item is recreated, so it gets a new date added and moves to the top under date sorting.
 
 ### ⚡ Quick Add
 Save the current tab to any folder with one click.

@@ -18,6 +18,8 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
 
   useEffect(() => {
     inputRef.current?.focus();
+    // Select the prefilled default name so typing replaces it.
+    inputRef.current?.select();
   }, []);
 
   useEffect(() => {
