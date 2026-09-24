@@ -63,6 +63,30 @@
         "message": "폴더 삭제 오류",
         "description": "Toast title for folder deletion error"
     },
+    "toast_deleteUndoWindow": {
+        "message": "10초 안에 실행 취소할 수 있습니다. 가장 최근 삭제만 복원할 수 있으며 원래 ID와 날짜, 이 창을 닫은 뒤의 복원은 지원되지 않습니다.",
+        "description": "Limits of popup deletion recovery"
+    },
+    "toast_deleteRestored": {
+        "message": "삭제를 실행 취소했습니다",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "\"$1\" 항목을 복원했습니다. ID와 날짜는 브라우저에서 새로 생성되었습니다.",
+        "description": "Toast description after restoring a deletion; $1 is the item title"
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "삭제를 실행 취소하지 못했습니다",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "이 삭제를 실행 취소할 수 있는 시간이 지났습니다.",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "원래 폴더가 더 이상 없어 이 항목을 복원할 수 없습니다.",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
     "toast_itemMoved": {
         "message": "항목이 이동되었습니다",
         "description": "Toast title for item move success"
@@ -92,7 +116,7 @@
         "description": "Confirmation before deleting a bookmark; $1 is its title"
     },
     "popup_confirmDeleteFolder": {
-        "message": "\"$1\" 폴더와 그 안의 모든 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
+        "message": "\"$1\" 폴더와 그 안의 모든 항목을 삭제하시겠습니까? 삭제 후 잠시 동안 실행 취소할 수 있습니다.",
         "description": "Confirmation before deleting a folder; $1 is its title"
     },
     "popup_expandAll": {
@@ -210,6 +234,10 @@
     "action_cancel": {
         "message": "취소",
         "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "실행 취소",
+        "description": "Undo deletion button label"
     },
     "action_applyChanges": {
         "message": "변경 사항 적용",
@@ -722,6 +750,74 @@
     "bookmarks_detailsCopyFailed": {
         "message": "복사하지 못했습니다.",
         "description": "Error after bookmark detail copying fails"
+    },
+    "bookmarks_metadataTitle": {
+        "message": "태그 및 요약",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "확장 프로그램에 로컬로 저장되며 사용 설정 시 AI 컨텍스트 내보내기에 포함됩니다.",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "태그",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "조사, 도구, 읽기",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "태그를 쉼표로 구분하세요. 저장할 때 중복 태그가 제거됩니다.",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "요약",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "이 북마크의 비공개 메모 또는 요약 추가",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "메타데이터 저장",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "메타데이터 지우기",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "메타데이터를 저장했습니다.",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "메타데이터를 지웠습니다.",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "저장된 메타데이터를 불러오지 못했습니다.",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "메타데이터를 저장하지 못했습니다.",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "추천 태그 저장",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "추천 요약 저장",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "검토한 태그 추천을 병합 설정에 따라 저장했습니다.",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "검토한 요약 추천을 병합 설정에 따라 저장했습니다.",
+        "description": "Toast description after applying generated summaries"
     },
     "search_matchCase": {
         "message": "대소문자 구분",
