@@ -404,7 +404,7 @@
         "description": "Group by folders setting label"
     },
     "settings_groupByFoldersDesc": {
-        "message": "フォルダ構造でブックマークを整理",
+        "message": "ポップアップとサイドパネルで、サブフォルダをブックマークより先に表示します。並び順は各グループ内に適用されます",
         "description": "Group by folders setting description"
     },
     "settings_confirmDelete": {
@@ -830,6 +830,18 @@
     "search_useRegex": {
         "message": "正規表現を使用",
         "description": "Toggle regex search mode"
+    },
+    "search_recentSearches": {
+        "message": "最近の検索",
+        "description": "Heading for the recent search history list"
+    },
+    "search_clearHistory": {
+        "message": "クリア",
+        "description": "Button that clears the recent search history"
+    },
+    "search_resultsLimited": {
+        "message": "$2 件中、最初の $1 件を表示しています。さらに表示するには検索条件を絞り込んでください。",
+        "description": "Notice when search results are truncated; $1 is the result limit, $2 is the total match count"
     },
     "settings_aiEnabled": {
         "message": "AI機能",

@@ -54,6 +54,10 @@ export function FolderItem({
 }: FolderItemProps) {
   const elementRef = useRef<HTMLDivElement>(null);
   const hasChildren = node.children && node.children.length > 0;
+  // Browsers reject moving or deleting permanent root folders and any change to managed nodes.
+  const isPermanent = isPermanentBookmarkFolder(node, getBookmarkRootIds(folders));
+  const canModify = !isPermanent && !node.unmodifiable;
+  const canAddChildren = !isBookmarkTreeRoot(node) && !node.unmodifiable;
 
   // Handle temporary folder (new folder being created)
   if (node.isTemporary) {
@@ -70,7 +74,7 @@ export function FolderItem({
   const setupDragDrop = (element: HTMLDivElement | null) => {
     if (!element) return;
 
-    const cleanup = draggable({
+    const cleanup = canModify ? draggable({
       element,
       onDragStart: () => {
         onDragStart(node);
@@ -85,7 +89,7 @@ export function FolderItem({
         node,
         instanceId,
       }),
-    });
+    }) : () => {};
 
     const dropTargetCleanup = dropTargetForElements({
       element,
@@ -101,8 +105,11 @@ export function FolderItem({
           const percentY = relativeY / rect.height;
 
           // 3-zone detection: top 25% | center 50% | bottom 25%
+          // Permanent folders cannot be reordered, so they only accept drops into themselves.
           let dropZone: 'top' | 'center' | 'bottom';
-          if (percentY < 0.25) {
+          if (!canModify) {
+            dropZone = 'center';
+          } else if (percentY < 0.25) {
             dropZone = 'top';
           } else if (percentY > 0.75) {
             dropZone = 'bottom';
@@ -240,42 +247,48 @@ export function FolderItem({
                 )}
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddBookmark(node.id);
-              }}
-              title="Add current page"
-            >
-              <BookmarkPlus className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddFolder(node.id);
-              }}
-              title="Add folder"
-            >
-              <FolderPlus className="h-3.5 w-3.5" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteFolder(node);
-              }}
-              title="Delete folder"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-            </Button>
+            {canAddChildren && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddBookmark(node.id);
+                  }}
+                  title="Add current page"
+                >
+                  <BookmarkPlus className="h-3.5 w-3.5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddFolder(node.id);
+                  }}
+                  title="Add folder"
+                >
+                  <FolderPlus className="h-3.5 w-3.5" />
+                </Button>
+              </>
+            )}
+            {canModify && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteFolder(node);
+                }}
+                title="Delete folder"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            )}
           </div>
         </div>
       </AccordionTrigger>
