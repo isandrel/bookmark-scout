@@ -9,7 +9,7 @@ import settingsToml from '../../config/settings.default.toml?raw';
 
 type SettingsFieldType = 'switch' | 'select' | 'number' | 'text';
 
-type SettingsFieldMeta = {
+export type SettingsFieldMeta = {
   label: string;
   description: string;
   type: SettingsFieldType;
@@ -18,6 +18,10 @@ type SettingsFieldMeta = {
   max?: number;
   step?: number;
   unit?: string;
+  /** -1 means "no limit"; the slider shows it as 0 and never stores 0. */
+  unlimited?: boolean;
+  /** Comma-separated list input; values are parsed when the input is committed. */
+  list?: 'string' | 'number';
 };
 
 type SettingsCategoryMeta = {
@@ -219,6 +223,18 @@ const duplicateMatchStrategySchema = z.enum([
   'title_only',
 ]);
 const duplicateKeepRuleSchema = z.enum(['oldest', 'newest', 'first']);
+/** Browser popups are capped at 800x600, so larger stored values are clamped. */
+export const POPUP_MAX_WIDTH = 800;
+export const POPUP_MAX_HEIGHT = 600;
+const clampedNumber = (max: number) => (value: unknown) =>
+  typeof value === 'number' && value > max ? max : value;
+const limitOrUnlimited = (max: number) =>
+  z
+    .number()
+    .int()
+    .max(max)
+    .refine((value) => value === -1 || value >= 1);
+export const httpStatusCodeSchema = z.number().int().min(100).max(599);
 
 export const settingsSchema = z.object({
   language: languageSchema.default(config.appearance.language as Language),
@@ -238,8 +254,12 @@ export const settingsSchema = z.object({
   recentFoldersMax: z.number().min(1).max(10).default(config.behavior.recent_folders_max),
   recentFoldersEnabled: z.boolean().default(config.behavior.recent_folders_enabled),
 
-  popupWidth: z.number().min(300).max(800).default(config.advanced.popup_width),
-  popupHeight: z.number().min(300).max(1000).default(config.advanced.popup_height),
+  popupWidth: z
+    .preprocess(clampedNumber(POPUP_MAX_WIDTH), z.number().min(300).max(POPUP_MAX_WIDTH))
+    .default(config.advanced.popup_width),
+  popupHeight: z
+    .preprocess(clampedNumber(POPUP_MAX_HEIGHT), z.number().min(300).max(POPUP_MAX_HEIGHT))
+    .default(config.advanced.popup_height),
   truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
   toastDurationMs: z.number().min(2000).max(10000).default(config.advanced.toast_duration_ms),
 
@@ -248,9 +268,9 @@ export const settingsSchema = z.object({
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(10).default(config.tools.auto_tagging.max_tags),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
-  aiMaxCategories: z.number().default(config.ai.max_categories ?? -1),
+  aiMaxCategories: limitOrUnlimited(100).default(config.ai.max_categories ?? -1),
   aiMinItemsPerFolder: z.number().min(1).default(config.ai.min_items_per_folder ?? 1),
-  aiMaxItemsPerFolder: z.number().default(config.ai.max_items_per_folder ?? -1),
+  aiMaxItemsPerFolder: limitOrUnlimited(500).default(config.ai.max_items_per_folder ?? -1),
 
   exportFilenamePrefix: z.string().default(config.export.filename_prefix),
   exportFilenameMaxLength: z.number().min(10).max(100).default(config.export.filename_max_length),
@@ -319,7 +339,7 @@ export const settingsSchema = z.object({
   deadLinksConcurrency: z.number().min(1).max(20).default(config.tools.dead_links.concurrency),
   deadLinksRetryCount: z.number().min(0).max(10).default(config.tools.dead_links.retry_count),
   deadLinksFollowRedirects: z.boolean().default(config.tools.dead_links.follow_redirects),
-  deadLinksSuccessStatuses: z.array(z.number()).default(config.tools.dead_links.success_statuses),
+  deadLinksSuccessStatuses: z.array(httpStatusCodeSchema).min(1).default(config.tools.dead_links.success_statuses),
 
   metadataFetcherEnabled: z.boolean().default(config.tools.metadata_fetcher.enabled),
   metadataFetcherDefaultScope: toolDefaultScope(config.tools.metadata_fetcher.default_scope),
@@ -584,8 +604,8 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     defaultNewFolderName: { label: t('settings_defaultFolderName'), description: t('settings_defaultFolderNameDesc'), type: 'text' },
     recentFoldersMax: { label: t('settings_recentFoldersMax'), description: t('settings_recentFoldersMaxDesc'), type: 'number', min: 1, max: 10, step: 1 },
     recentFoldersEnabled: { label: t('settings_recentFoldersEnabled'), description: t('settings_recentFoldersEnabledDesc'), type: 'switch' },
-    popupWidth: { label: t('settings_popupWidth'), description: t('settings_popupWidthDesc'), type: 'number', min: 300, max: 800, step: 50, unit: 'px' },
-    popupHeight: { label: t('settings_popupHeight'), description: t('settings_popupHeightDesc'), type: 'number', min: 300, max: 1000, step: 50, unit: 'px' },
+    popupWidth: { label: t('settings_popupWidth'), description: t('settings_popupWidthDesc'), type: 'number', min: 300, max: POPUP_MAX_WIDTH, step: 50, unit: 'px' },
+    popupHeight: { label: t('settings_popupHeight'), description: t('settings_popupHeightDesc'), type: 'number', min: 300, max: POPUP_MAX_HEIGHT, step: 50, unit: 'px' },
     truncateLength: { label: t('settings_truncateLength'), description: t('settings_truncateLengthDesc'), type: 'number', min: 20, max: 200, step: 10, unit: 'chars' },
     toastDurationMs: { label: t('settings_toastDuration'), description: t('settings_toastDurationDesc'), type: 'number', min: 2000, max: 10000, step: 500, unit: 'ms' },
     aiEnabled: { label: t('settings_aiEnabled'), description: t('settings_aiEnabledDesc'), type: 'switch' },
@@ -593,7 +613,10 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
       label: t('settings_aiProvider'),
       description: t('settings_aiProviderDesc'),
       type: 'select',
-      options: getAvailableProviders().map((provider) => ({ value: provider.id, label: provider.name })),
+      options: getAvailableProviders().map((provider) => ({
+        value: provider.id,
+        label: getLocalizedProviderName(provider.id),
+      })),
     },
     aiModel: {
       label: t('settings_aiModel'),
@@ -602,15 +625,15 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
       options: getAvailableProviders().flatMap((provider) =>
         getModelsForProvider(provider.id).map((model) => ({
           value: model.id,
-          label: `${model.name} (${getProviderName(provider.id)})`,
+          label: `${model.name} (${getLocalizedProviderName(provider.id)})`,
         })),
       ),
     },
     aiMaxRecommendations: { label: t('settings_aiMaxRecommendations'), description: t('settings_aiMaxRecommendationsDesc'), type: 'number', min: 1, max: 10, step: 1 },
     aiAutoTriggerOnOpen: { label: t('settings_aiAutoTrigger'), description: t('settings_aiAutoTriggerDesc'), type: 'switch' },
-    aiMaxCategories: { label: t('settings_aiMaxCategories'), description: t('settings_aiMaxCategoriesDesc'), type: 'number', min: -1, max: 100, step: 1 },
+    aiMaxCategories: { label: t('settings_aiMaxCategories'), description: t('settings_aiMaxCategoriesDesc'), type: 'number', min: 1, max: 100, step: 1, unlimited: true },
     aiMinItemsPerFolder: { label: t('settings_aiMinItemsPerFolder'), description: t('settings_aiMinItemsPerFolderDesc'), type: 'number', min: 1, max: 100, step: 1 },
-    aiMaxItemsPerFolder: { label: t('settings_aiMaxItemsPerFolder'), description: t('settings_aiMaxItemsPerFolderDesc'), type: 'number', min: -1, max: 500, step: 1 },
+    aiMaxItemsPerFolder: { label: t('settings_aiMaxItemsPerFolder'), description: t('settings_aiMaxItemsPerFolderDesc'), type: 'number', min: 1, max: 500, step: 1, unlimited: true },
     exportFilenamePrefix: { label: t('settings_exportFilenamePrefix'), description: t('settings_exportFilenamePrefixDesc'), type: 'text' },
     exportFilenameMaxLength: { label: t('settings_exportFilenameMaxLength'), description: t('settings_exportFilenameMaxLengthDesc'), type: 'number', min: 10, max: 100, step: 5 },
     exportJsonIndentSize: { label: t('settings_exportJsonIndentSize'), description: t('settings_exportJsonIndentSizeDesc'), type: 'number', min: 1, max: 8, step: 1 },
@@ -658,26 +681,26 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     reorganizationBatchSize: { label: t('settings_reorganizationBatchSize'), description: t('settings_reorganizationBatchSizeDesc'), type: 'number', min: 1, max: 1000, step: 10 },
     duplicatesEnabled: { label: t('settings_duplicatesEnabled'), description: t('settings_duplicatesEnabledDesc'), type: 'switch' },
     duplicatesDefaultScope: { label: t('settings_duplicatesDefaultScope'), description: t('settings_duplicatesDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
-    duplicatesMatchStrategy: { label: t('settings_duplicatesMatchStrategy'), description: t('settings_duplicatesMatchStrategyDesc'), type: 'select', options: [{ value: 'exact_url', label: 'Exact URL' }, { value: 'normalized_url', label: 'Normalized URL' }, { value: 'title_url', label: 'Title + URL' }, { value: 'title_only', label: 'Title only' }] },
+    duplicatesMatchStrategy: { label: t('settings_duplicatesMatchStrategy'), description: t('settings_duplicatesMatchStrategyDesc'), type: 'select', options: [{ value: 'exact_url', label: t('settings_duplicatesMatchExactUrl') }, { value: 'normalized_url', label: t('settings_duplicatesMatchNormalizedUrl') }, { value: 'title_url', label: t('settings_duplicatesMatchTitleUrl') }, { value: 'title_only', label: t('settings_duplicatesMatchTitleOnly') }] },
     duplicatesNormalizeWww: { label: t('settings_duplicatesNormalizeWww'), description: t('settings_duplicatesNormalizeWwwDesc'), type: 'switch' },
     duplicatesIgnoreProtocol: { label: t('settings_duplicatesIgnoreProtocol'), description: t('settings_duplicatesIgnoreProtocolDesc'), type: 'switch' },
     duplicatesIgnoreTrailingSlash: { label: t('settings_duplicatesIgnoreTrailingSlash'), description: t('settings_duplicatesIgnoreTrailingSlashDesc'), type: 'switch' },
-    duplicatesKeepRule: { label: t('settings_duplicatesKeepRule'), description: t('settings_duplicatesKeepRuleDesc'), type: 'select', options: [{ value: 'oldest', label: 'Oldest' }, { value: 'newest', label: 'Newest' }, { value: 'first', label: 'First found' }] },
+    duplicatesKeepRule: { label: t('settings_duplicatesKeepRule'), description: t('settings_duplicatesKeepRuleDesc'), type: 'select', options: [{ value: 'oldest', label: t('settings_duplicatesKeepOldest') }, { value: 'newest', label: t('settings_duplicatesKeepNewest') }, { value: 'first', label: t('settings_duplicatesKeepFirst') }] },
     duplicatesMaxGroups: { label: t('settings_duplicatesMaxGroups'), description: t('settings_duplicatesMaxGroupsDesc'), type: 'number', min: 1, max: 5000, step: 10 },
     urlCleanerEnabled: { label: t('settings_urlCleanerEnabled'), description: t('settings_urlCleanerEnabledDesc'), type: 'switch' },
     urlCleanerDefaultScope: { label: t('settings_urlCleanerDefaultScope'), description: t('settings_urlCleanerDefaultScopeDesc'), type: 'select', options: scopeOptions() },
     urlCleanerRemoveHash: { label: t('settings_urlCleanerRemoveHash'), description: t('settings_urlCleanerRemoveHashDesc'), type: 'switch' },
     urlCleanerSortQueryParams: { label: t('settings_urlCleanerSortQueryParams'), description: t('settings_urlCleanerSortQueryParamsDesc'), type: 'switch' },
     urlCleanerDedupeQueryParams: { label: t('settings_urlCleanerDedupeQueryParams'), description: t('settings_urlCleanerDedupeQueryParamsDesc'), type: 'switch' },
-    urlCleanerPreserveParams: { label: t('settings_urlCleanerPreserveParams'), description: t('settings_urlCleanerPreserveParamsDesc'), type: 'text' },
-    urlCleanerRemoveParams: { label: t('settings_urlCleanerRemoveParams'), description: t('settings_urlCleanerRemoveParamsDesc'), type: 'text' },
+    urlCleanerPreserveParams: { label: t('settings_urlCleanerPreserveParams'), description: t('settings_urlCleanerPreserveParamsDesc'), type: 'text', list: 'string' },
+    urlCleanerRemoveParams: { label: t('settings_urlCleanerRemoveParams'), description: t('settings_urlCleanerRemoveParamsDesc'), type: 'text', list: 'string' },
     deadLinksEnabled: { label: t('settings_deadLinksEnabled'), description: t('settings_deadLinksEnabledDesc'), type: 'switch' },
     deadLinksDefaultScope: { label: t('settings_deadLinksDefaultScope'), description: t('settings_deadLinksDefaultScopeDesc'), type: 'select', options: scopeOptions() },
     deadLinksRequestTimeoutMs: { label: t('settings_deadLinksRequestTimeoutMs'), description: t('settings_deadLinksRequestTimeoutMsDesc'), type: 'number', min: 1000, max: 60000, step: 500 },
     deadLinksConcurrency: { label: t('settings_deadLinksConcurrency'), description: t('settings_deadLinksConcurrencyDesc'), type: 'number', min: 1, max: 20, step: 1 },
     deadLinksRetryCount: { label: t('settings_deadLinksRetryCount'), description: t('settings_deadLinksRetryCountDesc'), type: 'number', min: 0, max: 10, step: 1 },
     deadLinksFollowRedirects: { label: t('settings_deadLinksFollowRedirects'), description: t('settings_deadLinksFollowRedirectsDesc'), type: 'switch' },
-    deadLinksSuccessStatuses: { label: t('settings_deadLinksSuccessStatuses'), description: t('settings_deadLinksSuccessStatusesDesc'), type: 'text' },
+    deadLinksSuccessStatuses: { label: t('settings_deadLinksSuccessStatuses'), description: t('settings_deadLinksSuccessStatusesDesc'), type: 'text', list: 'number' },
     metadataFetcherEnabled: { label: t('settings_metadataFetcherEnabled'), description: t('settings_metadataFetcherEnabledDesc'), type: 'switch' },
     metadataFetcherDefaultScope: { label: t('settings_metadataFetcherDefaultScope'), description: t('settings_metadataFetcherDefaultScopeDesc'), type: 'select', options: scopeOptions() },
     metadataFetcherOverwriteTitles: { label: t('settings_metadataFetcherOverwriteTitles'), description: t('settings_metadataFetcherOverwriteTitlesDesc'), type: 'switch' },
@@ -690,7 +713,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     privacyScannerScanTitles: { label: t('settings_privacyScannerScanTitles'), description: t('settings_privacyScannerScanTitlesDesc'), type: 'switch' },
     privacyScannerScanQueryParams: { label: t('settings_privacyScannerScanQueryParams'), description: t('settings_privacyScannerScanQueryParamsDesc'), type: 'switch' },
     privacyScannerScanFragments: { label: t('settings_privacyScannerScanFragments'), description: t('settings_privacyScannerScanFragmentsDesc'), type: 'switch' },
-    privacyScannerSensitiveParams: { label: t('settings_privacyScannerSensitiveParams'), description: t('settings_privacyScannerSensitiveParamsDesc'), type: 'text' },
+    privacyScannerSensitiveParams: { label: t('settings_privacyScannerSensitiveParams'), description: t('settings_privacyScannerSensitiveParamsDesc'), type: 'text', list: 'string' },
     privacyScannerEmailDetection: { label: t('settings_privacyScannerEmailDetection'), description: t('settings_privacyScannerEmailDetectionDesc'), type: 'switch' },
     privacyScannerUuidDetection: { label: t('settings_privacyScannerUuidDetection'), description: t('settings_privacyScannerUuidDetectionDesc'), type: 'switch' },
     statisticsEnabled: { label: t('settings_statisticsEnabled'), description: t('settings_statisticsEnabledDesc'), type: 'switch' },
@@ -705,6 +728,17 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     dataShowImport: { label: t('settings_dataShowImport'), description: t('settings_dataShowImportDesc'), type: 'switch' },
     dataDefaultExportFormat: { label: t('settings_dataDefaultExportFormat'), description: t('settings_dataDefaultExportFormatDesc'), type: 'select', options: [{ value: 'html', label: 'HTML' }, { value: 'json', label: 'JSON' }, { value: 'markdown', label: 'Markdown' }, { value: 'csv', label: 'CSV' }] },
   };
+}
+
+const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {
+  ollama: 'settings_aiProviderOllama',
+  custom: 'settings_aiProviderCustom',
+};
+
+/** Brand names stay as configured; generic provider names are translated. */
+export function getLocalizedProviderName(provider: AIProvider): string {
+  const key = localizedProviderNameKeys[provider];
+  return key ? t(key) : getProviderName(provider);
 }
 
 function scopeOptions(capability: 'folder' | 'all' | 'both' = 'both') {

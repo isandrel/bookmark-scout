@@ -33,7 +33,8 @@ export default defineConfig({
             },
         },
         permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel', 'contextMenus'],
-        // Requested at run time by the dead-link and metadata tools; never required at install.
+        // Requested at click time only, never at install: website access for the dead-link and
+        // metadata tools, and per-origin access for the AI provider Verify Service check.
         optional_host_permissions: OPTIONAL_WEB_ORIGINS,
         web_accessible_resources: [
             {

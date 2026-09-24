@@ -12,6 +12,8 @@ Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral,
 
 AI features are disabled by default. Enable them in **Settings → AI**, select a provider, and enter an API key when the provider requires one.
 
+API keys, Base URL, and extra headers are stored only in the browser's local extension storage. Keys that do not match the provider's format and Base URLs that are not `http://` or `https://` are rejected and never saved. The configured Base URL and headers apply to every request, including **Verify Service**, which asks the browser for access to that provider's origin when you click it.
+
 ### 🧠 AI Tools
 Use AI from the bookmarks manager to:
 
