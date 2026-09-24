@@ -1,26 +1,40 @@
 import { Info } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 
 function describeDeadLink(item: DeadLinkResultItem): string {
   switch (item.status) {
     case 'ok':
       return t('tools_deadLinkReachable');
     case 'redirect':
-      return t('tools_deadLinkRedirected');
+      return item.redirectUrl
+        ? t('tools_deadLinkRedirectsTo', item.redirectUrl)
+        : t('tools_deadLinkRedirected');
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'invalid':
       return t('tools_deadLinkInvalidUrl');
+    case 'skipped':
+      return t('tools_notWebUrlSkipped');
     default:
-      // Transport errors carry a browser-provided message instead of a status code.
       return item.statusCode === undefined
-        ? item.message
+        ? t('tools_networkFailed')
         : t('tools_deadLinkHttpStatus', String(item.statusCode));
   }
 }
 
 function describeMetadata(item: MetadataFetchResultItem): string {
-  if (item.failed) return item.message;
-  return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
+  switch (item.status) {
+    case 'httpError':
+      return t('tools_deadLinkHttpStatus', String(item.statusCode ?? 0));
+    case 'timeout':
+      return t('tools_deadLinkTimedOut');
+    case 'error':
+      return t('tools_networkFailed');
+    case 'skipped':
+      return t('tools_notWebUrlSkipped');
+    default:
+      return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
+  }
 }
 
 function describePrivacyFinding(finding: PrivacyFinding): string {
@@ -182,13 +196,17 @@ export function DeadLinkResultsView({ result }: { result: DeadLinkScanResult | n
       {result.items.map((item) => (
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
-            <span className="font-medium">{item.title}</span>
-            <Badge variant={item.status === 'ok' ? 'secondary' : 'destructive'}>
+            <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
+            <Badge
+              variant={
+                item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
+              }
+            >
               {t(`tools_deadLinkStatus_${item.status}`)}
             </Badge>
           </div>
           <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-          <div className="text-xs text-muted-foreground">{describeDeadLink(item)}</div>
+          <div className="break-all text-xs text-muted-foreground">{describeDeadLink(item)}</div>
         </div>
       ))}
     </div>
@@ -197,23 +215,81 @@ export function DeadLinkResultsView({ result }: { result: DeadLinkScanResult | n
   );
 }
 
-export function MetadataResultsView({ result }: { result: MetadataFetchResult | null }) {
-  return result?.items.length ? (
-    <div className="space-y-3">
-      {result.items.map((item) => (
-        <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
-          <div className="font-medium">{item.title}</div>
-          <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-          {item.suggestedTitle ? (
-            <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
-          ) : null}
-          {item.description ? <div className="text-xs text-muted-foreground">{item.description}</div> : null}
-          <div className="text-xs text-muted-foreground">{describeMetadata(item)}</div>
+export function MetadataResultsView({
+  result,
+  isApplying,
+  onApply,
+}: {
+  result: MetadataFetchResult | null;
+  isApplying: boolean;
+  onApply: (items: MetadataFetchResultItem[]) => void;
+}) {
+  const applicable = useMemo(
+    () => result?.items.filter((item) => item.changed && item.suggestedTitle) ?? [],
+    [result],
+  );
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    setSelected(new Set(applicable.map((item) => item.id)));
+  }, [applicable]);
+
+  const toggle = (id: string, checked: boolean) =>
+    setSelected((previous) => {
+      const next = new Set(previous);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+
+  if (!result?.items.length) {
+    return <EmptyState message={t('state_noMetadataFound')} />;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="space-y-3">
+        {result.items.map((item) => {
+          const canApply = item.changed && Boolean(item.suggestedTitle);
+          const checkboxId = `metadata-apply-${item.id}`;
+          return (
+            <div key={item.id} className="flex gap-3 rounded-lg border p-3 text-sm">
+              {canApply ? (
+                <Checkbox
+                  id={checkboxId}
+                  className="mt-0.5"
+                  checked={selected.has(item.id)}
+                  onCheckedChange={(checked) => toggle(item.id, checked === true)}
+                  aria-label={t('tools_metadataApplyItem', item.title || t('bookmarks_untitled'))}
+                />
+              ) : null}
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="font-medium">{item.title || t('bookmarks_untitled')}</div>
+                <div className="break-all text-xs text-muted-foreground">{item.url}</div>
+                {item.status === 'ok' && item.suggestedTitle ? (
+                  <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
+                ) : null}
+                {item.status === 'ok' && item.description ? (
+                  <div className="text-xs text-muted-foreground">{item.description}</div>
+                ) : null}
+                <div className="text-xs text-muted-foreground">{describeMetadata(item)}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {applicable.length ? (
+        <div className="flex justify-end">
+          <Button
+            onClick={() => onApply(applicable.filter((item) => selected.has(item.id)))}
+            disabled={isApplying || selected.size === 0}
+          >
+            {isApplying
+              ? t('action_applying')
+              : tPlural('tools_metadataApplySelected', selected.size)}
+          </Button>
         </div>
-      ))}
+      ) : null}
     </div>
-  ) : (
-    <EmptyState message={t('state_noMetadataFound')} />
   );
 }
 

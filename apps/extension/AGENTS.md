@@ -118,7 +118,7 @@ If a change is plausibly browser-specific, prefer validating the specific browse
 - Run `nx run extension:test:unit` for sorting strategy changes.
 - Run `nx run extension:test:e2e` for changes to popup, settings, bookmark management, maintenance, reports, or import/export workflows covered by browser tests.
 - The end-to-end target builds Chrome and installs Playwright Chromium and its platform dependencies automatically. CI runs `bun run test` on pushes and pull requests.
-- Dead-link and metadata requests have deterministic route-mocked Chromium E2E coverage. Provider-backed AI tools are covered by `[mocked provider contract]` unit and E2E tests with stubbed providers and synthetic keys; these do not prove live provider compatibility. Live network behavior and real providers remain manually verified; Firefox and Edge receive build validation but not browser E2E execution.
+- Dead-link and metadata requests have deterministic route-mocked Chromium E2E coverage, plus a real local HTTP server (no CORS headers) test that runs against a copy of the build with the optional website access pre-granted (`grantWebHostAccess` fixture option). The real browser permission prompt cannot be answered headlessly; the declined path is covered with a stubbed `permissions.request`. Provider-backed AI tools are covered by `[mocked provider contract]` unit and E2E tests with stubbed providers and synthetic keys; these do not prove live provider compatibility. Live network behavior and real providers remain manually verified; Firefox and Edge receive build validation but not browser E2E execution.
 
 ## Architectural expectations
 

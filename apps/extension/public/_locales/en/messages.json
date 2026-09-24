@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "Fix missing titles and favicons",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "Suggest page titles and apply the ones you approve",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "Privacy Scanner",
@@ -2664,5 +2664,131 @@
                 "example": "1"
             }
         }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "Redirects to $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "Not a web link; skipped",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "Could not connect to the site",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "Skipped",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "Apply suggested title for $title$",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "Apply $count$ titles",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "Apply $count$ title",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "Titles updated",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "$count$ bookmark titles updated",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "$count$ bookmark title updated",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "Some titles were not updated",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "Updated: $updated$. Skipped because they changed after the scan: $skipped$. Failed: $failed$.",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "Allow access to websites?",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "Dead link checks and title suggestions request each bookmarked page. Most sites block these requests unless Bookmark Scout has access to websites. Your browser will ask you to confirm.",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "Access is used only when you run these tools. Requests are sent without cookies, and you can revoke access in the browser's extension settings.",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "Website access not granted",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "Nothing was scanned. Run the tool again to allow access.",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "Not now",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "Allow access",
+        "description": "Button that requests website access"
     }
 }

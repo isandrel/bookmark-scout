@@ -2,6 +2,8 @@ import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
 
+const OPTIONAL_WEB_ORIGINS = ['http://*/*', 'https://*/*'];
+
 // See https://wxt.dev/api/config.html
 export default defineConfig({
     srcDir: 'src',
@@ -31,6 +33,8 @@ export default defineConfig({
             },
         },
         permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel', 'contextMenus'],
+        // Requested at run time by the dead-link and metadata tools; never required at install.
+        optional_host_permissions: OPTIONAL_WEB_ORIGINS,
         web_accessible_resources: [
             {
                 resources: ['_favicon/*'],
@@ -38,6 +42,18 @@ export default defineConfig({
                 extension_ids: ['*'],
             },
         ],
+    },
+
+    hooks: {
+        // MV2 (Firefox) has no optional_host_permissions; origins go in optional_permissions.
+        'build:manifestGenerated': (wxt, manifest) => {
+            if (wxt.config.manifestVersion !== 2) return;
+            manifest.optional_permissions = [
+                ...(manifest.optional_permissions ?? []),
+                ...OPTIONAL_WEB_ORIGINS,
+            ] as typeof manifest.optional_permissions;
+            delete manifest.optional_host_permissions;
+        },
     },
 
     // Release asset names match the tag, e.g. bookmark-scout-v0.2.0-chrome.zip.

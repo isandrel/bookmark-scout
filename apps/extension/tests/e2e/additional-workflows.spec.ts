@@ -2,6 +2,9 @@ import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 
+// Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
+test.use({ grantWebHostAccess: true });
+
 type SeedItem = { title: string; url: string };
 
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {

@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "欠けているタイトルとファビコンを補完します",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "ページタイトルを提案し、承認したものだけを適用します",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "プライバシースキャナー",
@@ -2664,5 +2664,131 @@
                 "example": "1"
             }
         }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "リダイレクト先: $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "Webリンクではないためスキップしました",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "サイトに接続できませんでした",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "スキップ",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "$title$ に提案タイトルを適用",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "$count$ 件のタイトルを適用",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "$count$ 件のタイトルを適用",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "タイトルを更新しました",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "$count$ 件のブックマークのタイトルを更新しました",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "$count$ 件のブックマークのタイトルを更新しました",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "一部のタイトルは更新されませんでした",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "更新: $updated$ 件。スキャン後に変更されたためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "Webサイトへのアクセスを許可しますか？",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "リンク切れチェックとタイトル提案では、ブックマークした各ページにリクエストを送ります。Bookmark Scout にWebサイトへのアクセス権がないと、多くのサイトがこのリクエストをブロックします。ブラウザで確認を求められます。",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "アクセス権はこれらのツールを実行したときにのみ使用されます。リクエストはCookieなしで送信され、ブラウザの拡張機能設定からいつでも取り消せます。",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "Webサイトへのアクセスが許可されませんでした",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "スキャンは実行されていません。アクセスを許可するにはツールをもう一度実行してください。",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "後で",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "アクセスを許可",
+        "description": "Button that requests website access"
     }
 }

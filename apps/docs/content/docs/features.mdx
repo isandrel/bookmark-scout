@@ -53,10 +53,10 @@ Scan all bookmarks for duplicates with configurable matching rules and remove ex
 Preview and apply URL cleanup for tracking parameters, duplicate query parameters, sorted query parameters, and preserved parameter allowlists.
 
 ### 💀 Dead Link Checker
-Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings.
+Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings. Servers that reject `HEAD` are retried with `GET`, redirects show their destination, and non-web links such as bookmarklets are skipped. The first scan asks for optional website access, because most sites block cross-origin checks without it; declining scans nothing.
 
 ### 🧾 Metadata Fetcher
-Fetch bookmark metadata such as page titles, favicons, and descriptions for selected scopes.
+Fetch page titles (and optionally descriptions) for selected scopes, then review and apply only the titles you select. Error pages never produce suggestions, and page character sets such as Shift_JIS are respected. Uses the same optional website access as the Dead Link Checker.
 
 ### 🛡️ Privacy Scanner
 Detect sensitive query parameters, URL fragments, emails, and UUIDs in bookmark data.

@@ -40,6 +40,8 @@ function ToolSection({ title, children }: ToolSectionProps) {
   );
 }
 
+type PendingNetworkTool = { tool: 'dead-links' | 'metadata'; scope: ToolScope };
+
 interface ToolsSidebarProps {
   currentFolderId: string | null;
   currentFolderName?: string;
@@ -85,6 +87,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [metadataDialogOpen, setMetadataDialogOpen] = useState(false);
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
+  const [metadataApplying, setMetadataApplying] = useState(false);
+  const webHostAccess = useWebHostAccess();
+  const [pendingNetworkTool, setPendingNetworkTool] = useState<PendingNetworkTool | null>(null);
   const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
   const [privacyResult, setPrivacyResult] = useState<PrivacyScanResult | null>(null);
 
@@ -124,7 +129,6 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: deadLinksFollowRedirects } = useSetting('deadLinksFollowRedirects');
   const { value: deadLinksSuccessStatuses } = useSetting('deadLinksSuccessStatuses');
   const { value: metadataFetcherOverwriteTitles } = useSetting('metadataFetcherOverwriteTitles');
-  const { value: metadataFetcherFetchFavicons } = useSetting('metadataFetcherFetchFavicons');
   const { value: metadataFetcherFetchDescriptions } = useSetting(
     'metadataFetcherFetchDescriptions',
   );
@@ -325,7 +329,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     setStatisticsDialogOpen(true);
   };
 
-  const handleDeadLinks = async (scope: ToolScope) => {
+  const runDeadLinks = async (scope: ToolScope) => {
     setDeadLinksLoading(true);
     try {
       const result = await scanDeadLinks(getTargetNodes(scope), {
@@ -348,12 +352,11 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     }
   };
 
-  const handleMetadata = async (scope: ToolScope) => {
+  const runMetadata = async (scope: ToolScope) => {
     setMetadataLoading(true);
     try {
       const result = await fetchBookmarkMetadata(getTargetNodes(scope), {
         overwriteTitles: metadataFetcherOverwriteTitles,
-        fetchFavicons: metadataFetcherFetchFavicons,
         fetchDescriptions: metadataFetcherFetchDescriptions,
         requestTimeoutMs: metadataFetcherRequestTimeoutMs,
         concurrency: metadataFetcherConcurrency,
@@ -368,6 +371,65 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       });
     } finally {
       setMetadataLoading(false);
+    }
+  };
+
+  const runNetworkTool = (request: PendingNetworkTool) =>
+    request.tool === 'dead-links' ? runDeadLinks(request.scope) : runMetadata(request.scope);
+
+  // Network tools need optional host access; explain and ask before the first scan.
+  const startNetworkTool = async (request: PendingNetworkTool) => {
+    if (webHostAccess.granted) {
+      await runNetworkTool(request);
+      return;
+    }
+    setPendingNetworkTool(request);
+  };
+
+  const handleAllowWebHostAccess = async () => {
+    const request = pendingNetworkTool;
+    // Request synchronously inside the click so the browser treats it as user-initiated.
+    const permission = requestWebHostAccess();
+    setPendingNetworkTool(null);
+    const granted = await permission;
+    await webHostAccess.recheck();
+    if (!granted) {
+      toast({
+        title: t('tools_hostAccessDenied'),
+        description: t('tools_hostAccessDeniedDesc'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (request) await runNetworkTool(request);
+  };
+
+  const handleApplyMetadata = async (items: MetadataFetchResultItem[]) => {
+    setMetadataApplying(true);
+    try {
+      const outcome = await applyMetadataTitles(items);
+      await refresh();
+      setMetadataDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
+      toast({
+        title: complete ? t('toast_metadataApplied') : t('toast_metadataPartial'),
+        description: complete
+          ? tPlural('toast_metadataAppliedDesc', outcome.updated)
+          : t('toast_metadataPartialDesc', [
+              String(outcome.updated),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+        variant: complete ? 'success' : 'destructive',
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setMetadataApplying(false);
     }
   };
 
@@ -572,13 +634,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       return;
     }
 
-    if (toolName === 'dead-links') {
-      await handleDeadLinks(scope);
-      return;
-    }
-
-    if (toolName === 'metadata') {
-      await handleMetadata(scope);
+    if (toolName === 'dead-links' || toolName === 'metadata') {
+      await startNetworkTool({ tool: toolName, scope });
       return;
     }
 
@@ -1069,8 +1126,33 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           t('tools_metadataDialogDesc')
         }
       >
-        <MetadataResultsView result={metadataResult} />
+        <MetadataResultsView
+          result={metadataResult}
+          isApplying={metadataApplying}
+          onApply={handleApplyMetadata}
+        />
       </ToolResultsDialog>
+
+      <Dialog
+        open={pendingNetworkTool !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingNetworkTool(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('tools_hostAccessTitle')}</DialogTitle>
+            <DialogDescription>{t('tools_hostAccessDesc')}</DialogDescription>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">{t('tools_hostAccessPrivacy')}</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingNetworkTool(null)}>
+              {t('action_notNow')}
+            </Button>
+            <Button onClick={handleAllowWebHostAccess}>{t('action_allowAccess')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <ToolResultsDialog
         open={privacyDialogOpen}

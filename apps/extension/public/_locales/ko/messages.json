@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "누락된 제목과 파비콘을 보완합니다",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "페이지 제목을 제안하고 승인한 항목만 적용합니다",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "개인정보 스캐너",
@@ -2664,5 +2664,131 @@
                 "example": "1"
             }
         }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "리디렉션 대상: $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "웹 링크가 아니어서 건너뛰었습니다",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "사이트에 연결할 수 없습니다",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "건너뜀",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "$title$에 제안된 제목 적용",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "제목 $count$개 적용",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "제목 $count$개 적용",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "제목을 업데이트했습니다",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "북마크 제목 $count$개를 업데이트했습니다",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "북마크 제목 $count$개를 업데이트했습니다",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "일부 제목이 업데이트되지 않았습니다",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "업데이트됨: $updated$개. 검사 후 변경되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "웹사이트 접근을 허용할까요?",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "끊어진 링크 검사와 제목 제안은 북마크한 각 페이지에 요청을 보냅니다. Bookmark Scout에 웹사이트 접근 권한이 없으면 대부분의 사이트가 이 요청을 차단합니다. 브라우저에서 확인을 요청합니다.",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "접근 권한은 이 도구를 실행할 때만 사용됩니다. 요청은 쿠키 없이 전송되며 브라우저의 확장 프로그램 설정에서 언제든지 취소할 수 있습니다.",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "웹사이트 접근이 허용되지 않았습니다",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "검사하지 않았습니다. 접근을 허용하려면 도구를 다시 실행하세요.",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "나중에",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "접근 허용",
+        "description": "Button that requests website access"
     }
 }

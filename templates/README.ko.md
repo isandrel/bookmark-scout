@@ -264,6 +264,7 @@ bookmark-scout/
 | `storage`      | 사용자 설정 저장             |
 | `sidePanel`    | Chrome 사이드 패널 활성화    |
 | `contextMenus` | 우클릭 메뉴에서 링크 저장    |
+| 웹사이트 접근(선택) | 끊어진 링크 검사 또는 메타데이터 가져오기를 실행할 때만 요청 |
 
 ---
 

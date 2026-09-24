@@ -468,7 +468,6 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         'metadataFetcherEnabled',
         'metadataFetcherDefaultScope',
         'metadataFetcherOverwriteTitles',
-        'metadataFetcherFetchFavicons',
         'metadataFetcherFetchDescriptions',
         'metadataFetcherRequestTimeoutMs',
         'metadataFetcherConcurrency',
