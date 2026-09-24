@@ -7,11 +7,6 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
-import { createAIModel, validateAISettings, type AISettings } from './ai-client';
-import { buildPrompt } from './prompt-config';
-import { defaultSettings } from '@/lib/settings-schema';
-import { aiLogger } from '@/lib/logger';
-import { browser } from 'wxt/browser';
 
 // ============================================================================
 // Types

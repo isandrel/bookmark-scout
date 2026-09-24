@@ -7,6 +7,11 @@ export default defineConfig({
     srcDir: 'src',
     outDir: 'dist',
 
+    // WXT already scans components/, composables/, hooks/, and utils/ (top level only).
+    imports: {
+        dirs: ['components/**', 'lib', 'services', 'stores', '!**/index.ts'],
+    },
+
     manifest: {
         name: '__MSG_extName__',
         version: '0.2.0',

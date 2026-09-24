@@ -1,12 +1,3 @@
-import type { AIProvider, AISettings } from './ai-client';
-import {
-  getDefaultModel,
-  getProviderBaseUrl,
-  providerRequiresApiKey,
-  providerSupportsCustomModel,
-} from './ai-models';
-import { getStoredAIProviderConfig } from '@/lib';
-
 export async function buildAISettingsFromProvider(
   provider: AIProvider,
   model: string,

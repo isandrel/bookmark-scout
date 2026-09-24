@@ -1,15 +1,6 @@
 import type { ReactTable, RowData } from '@tanstack/react-table';
 import { X } from 'lucide-react';
 import type { DateRange } from 'react-day-picker';
-import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { typeMap } from './columns';
-import { DataTableDateFilter } from './data-table-date-filter';
-import { DataTableFacetedFilter } from './data-table-faceted-filter';
-import { DataTableViewOptions } from './data-table-view-options';
-import type { BookmarkTableFeatures } from './table-features';
 
 interface DataTableToolbarProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
