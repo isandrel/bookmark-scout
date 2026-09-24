@@ -1,4 +1,3 @@
-const AI_STORAGE_KEY = 'bookmark-scout-ai';
 
 export type StoredAIProviderConfig = {
   apiKey?: string;
@@ -7,11 +6,16 @@ export type StoredAIProviderConfig = {
   extraHeaders?: string;
 };
 
+// Provider configs, including API keys, stay in the local area and never sync.
+const aiProviderStorageItem = storage.defineItem<Record<string, StoredAIProviderConfig>>(
+  'local:bookmark-scout-ai',
+  { fallback: {} },
+);
+
 export async function getStoredAIProviderConfig(
   provider: string,
 ): Promise<StoredAIProviderConfig> {
-  const result = await browser.storage.local.get(AI_STORAGE_KEY);
-  const data = (result?.[AI_STORAGE_KEY] ?? {}) as Record<string, StoredAIProviderConfig>;
+  const data = await aiProviderStorageItem.getValue();
   return data[provider] ?? {};
 }
 
@@ -19,18 +23,16 @@ export async function saveStoredAIProviderConfig(
   provider: string,
   config: StoredAIProviderConfig,
 ): Promise<void> {
-  const result = await browser.storage.local.get(AI_STORAGE_KEY);
-  const data = (result?.[AI_STORAGE_KEY] ?? {}) as Record<string, StoredAIProviderConfig>;
+  const data = await aiProviderStorageItem.getValue();
   data[provider] = {
     ...(data[provider] ?? {}),
     ...config,
   };
-  await browser.storage.local.set({ [AI_STORAGE_KEY]: data });
+  await aiProviderStorageItem.setValue(data);
 }
 
 export async function clearStoredAIProviderConfig(provider: string): Promise<void> {
-  const result = await browser.storage.local.get(AI_STORAGE_KEY);
-  const data = (result?.[AI_STORAGE_KEY] ?? {}) as Record<string, StoredAIProviderConfig>;
+  const data = await aiProviderStorageItem.getValue();
   delete data[provider];
-  await browser.storage.local.set({ [AI_STORAGE_KEY]: data });
+  await aiProviderStorageItem.setValue(data);
 }

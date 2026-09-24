@@ -1,81 +1,52 @@
 /**
- * Settings storage using @webext-core/storage.
- * Type-safe storage wrapper with React hooks.
+ * Settings storage backed by WXT storage in the sync area.
+ * The stored object is a partial Settings record; reads merge it with defaults.
  */
 
 import { useEffect, useState, useCallback } from 'react';
 
-// Storage key for settings
-const SETTINGS_KEY = 'bookmark-scout-settings';
+export const settingsStorageItem = storage.defineItem<Record<string, unknown>>(
+  'sync:bookmark-scout-settings',
+);
 
-/**
- * Get settings from chrome.storage.sync.
- */
-export async function getSettings(): Promise<Settings> {
-  return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available, using defaults');
-      resolve(defaultSettings);
-      return;
-    }
-
-    chrome.storage.sync.get(SETTINGS_KEY, (result) => {
-      if (chrome.runtime.lastError) {
-        console.error('Error reading settings:', chrome.runtime.lastError);
-        resolve(defaultSettings);
-        return;
-      }
-
-      const stored = result[SETTINGS_KEY];
-      if (!stored) {
-        resolve(defaultSettings);
-        return;
-      }
-
-      // Validate and merge with defaults
-      const parsed = settingsSchema.safeParse({ ...defaultSettings, ...stored });
-      if (parsed.success) {
-        // Update i18n language
-        setLanguage(parsed.data.language);
-        resolve(parsed.data);
-      } else {
-        console.warn('Invalid settings, using defaults:', parsed.error);
-        resolve(defaultSettings);
-      }
-    });
-  });
+function parseStoredSettings(stored: unknown): Settings | null {
+  if (!stored || typeof stored !== 'object') return null;
+  const parsed = settingsSchema.safeParse({ ...defaultSettings, ...stored });
+  if (!parsed.success) {
+    console.warn('Invalid settings, using defaults:', parsed.error);
+    return null;
+  }
+  return parsed.data;
 }
 
 /**
- * Save settings to chrome.storage.sync.
+ * Get settings from sync storage.
+ */
+export async function getSettings(): Promise<Settings> {
+  let stored: unknown;
+  try {
+    stored = await settingsStorageItem.getValue();
+  } catch (error) {
+    console.error('Error reading settings:', error);
+    return defaultSettings;
+  }
+
+  const settings = parseStoredSettings(stored);
+  if (!settings) return defaultSettings;
+  setLanguage(settings.language);
+  return settings;
+}
+
+/**
+ * Save settings to sync storage.
  */
 export async function saveSettings(settings: Partial<Settings>): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.storage?.sync) {
-      console.warn('Chrome storage API not available');
-      resolve();
-      return;
-    }
-
-    // Merge with existing settings
-    getSettings().then((current) => {
-      const merged = { ...current, ...settings };
-      const parsed = settingsSchema.safeParse(merged);
-
-      if (!parsed.success) {
-        reject(new Error(`Invalid settings: ${parsed.error.message}`));
-        return;
-      }
-
-      chrome.storage.sync.set({ [SETTINGS_KEY]: parsed.data }, () => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
-          return;
-        }
-        resolve();
-      });
-    });
-  });
+  const current = await getSettings();
+  const parsed = settingsSchema.safeParse({ ...current, ...settings });
+  if (!parsed.success) {
+    throw new Error(`Invalid settings: ${parsed.error.message}`);
+  }
+  await settingsStorageItem.setValue(parsed.data);
 }
 
 /**
@@ -121,28 +92,13 @@ export function useSettings(): {
       setIsLoading(false);
     });
 
-    // Listen for storage changes
-    const handleStorageChange = (
-      changes: { [key: string]: chrome.storage.StorageChange },
-      areaName: string,
-    ) => {
-      if (areaName === 'sync' && changes[SETTINGS_KEY]) {
-        const newSettings = changes[SETTINGS_KEY].newValue;
-        if (newSettings) {
-          const parsed = settingsSchema.safeParse({ ...defaultSettings, ...newSettings });
-          if (parsed.success) {
-            // Update i18n language
-            setLanguage(parsed.data.language);
-            setSettings(parsed.data);
-          }
-        }
+    return settingsStorageItem.watch((newValue) => {
+      const parsed = parseStoredSettings(newValue);
+      if (parsed) {
+        setLanguage(parsed.language);
+        setSettings(parsed);
       }
-    };
-
-    chrome?.storage?.onChanged?.addListener(handleStorageChange);
-    return () => {
-      chrome?.storage?.onChanged?.removeListener(handleStorageChange);
-    };
+    });
   }, []);
 
   const updateSettings = useCallback(async (updates: Partial<Settings>) => {

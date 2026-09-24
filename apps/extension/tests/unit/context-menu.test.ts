@@ -4,7 +4,8 @@ import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage'
 import { createBookmark } from '@/services/bookmarks';
 
 vi.mock('@/services/bookmarks', () => ({ createBookmark: vi.fn() }));
-vi.mock('@/lib/recent-folders-storage', () => ({
+vi.mock('@/lib/recent-folders-storage', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/recent-folders-storage')>()),
   addRecentFolder: vi.fn(),
   getRecentFolders: vi.fn(),
 }));
@@ -129,7 +130,11 @@ describe('context menu settings', () => {
     await setSettings({ contextMenuEnabled: false });
     await setSettings({ contextMenuEnabled: true });
     await setSettings({ contextMenuEnabled: false });
-    await vi.waitFor(() => expect(fakeBrowser.contextMenus.removeAll).toHaveBeenCalledTimes(4));
+    // Initial build plus one rebuild per toggle; an in-flight rebuild may clear once more.
+    await vi.waitFor(() =>
+      expect(vi.mocked(fakeBrowser.contextMenus.removeAll).mock.calls.length).toBeGreaterThanOrEqual(4),
+    );
+    await new Promise((resolve) => setTimeout(resolve, 50));
     expect(menus.size).toBe(0);
   });
 

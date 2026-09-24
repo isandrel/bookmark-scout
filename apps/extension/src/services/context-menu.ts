@@ -6,9 +6,6 @@
 // Type for bookmark naming setting
 export type BookmarkNamingSource = 'link_text' | 'page_title' | 'link_url';
 
-// Storage key for settings (same as used in settings hook)
-const SETTINGS_STORAGE_KEY = 'bookmark-scout-settings';
-const RECENT_FOLDERS_STORAGE_KEY = 'bookmark-scout-recent-folders';
 
 type ContextMenuSettings = {
   enabled: boolean;
@@ -25,8 +22,7 @@ function isContextMenuEnabled(value: unknown): boolean {
  * Read the context-menu preferences from the same sync area used by Options.
  */
 async function getContextMenuSettings(): Promise<ContextMenuSettings> {
-  const result = await browser.storage.sync.get(SETTINGS_STORAGE_KEY);
-  const stored = result[SETTINGS_STORAGE_KEY];
+  const stored = await settingsStorageItem.getValue();
   const settings = (stored && typeof stored === 'object' ? stored : {}) as {
     contextMenuBookmarkNaming?: unknown;
   };
@@ -329,21 +325,21 @@ class ContextMenuManager {
 // Singleton instance
 export const contextMenuManager = new ContextMenuManager();
 
-let storageListenerRegistered = false;
+let storageWatchersRegistered = false;
 
-function handleStorageChange(
-  changes: { [key: string]: Browser.storage.StorageChange },
-  areaName: string,
-): void {
-  const settingsChange = areaName === 'sync' ? changes[SETTINGS_STORAGE_KEY] : undefined;
-  const enabledChanged =
-    settingsChange &&
-    isContextMenuEnabled(settingsChange.oldValue) !== isContextMenuEnabled(settingsChange.newValue);
-  if (enabledChanged || (areaName === 'local' && changes[RECENT_FOLDERS_STORAGE_KEY])) {
-    void contextMenuManager.rebuildMenu().catch((error) => {
-      console.error('[ContextMenu] Failed to rebuild menu:', error);
-    });
-  }
+function rebuildAfterStorageChange(): void {
+  void contextMenuManager.rebuildMenu().catch((error) => {
+    console.error('[ContextMenu] Failed to rebuild menu:', error);
+  });
+}
+
+function watchContextMenuStorage(): void {
+  settingsStorageItem.watch((newValue, oldValue) => {
+    if (isContextMenuEnabled(oldValue) !== isContextMenuEnabled(newValue)) {
+      rebuildAfterStorageChange();
+    }
+  });
+  recentFoldersStorageItem.watch(rebuildAfterStorageChange);
 }
 
 // =============================================================================
@@ -408,9 +404,9 @@ export async function initializeContextMenu(): Promise<void> {
   contextMenuManager.registerProvider(recentFoldersProvider);
   contextMenuManager.registerProvider(bookmarksBarProvider);
 
-  if (!storageListenerRegistered) {
-    browser.storage.onChanged.addListener(handleStorageChange);
-    storageListenerRegistered = true;
+  if (!storageWatchersRegistered) {
+    watchContextMenuStorage();
+    storageWatchersRegistered = true;
   }
 
   // Initialize the menu

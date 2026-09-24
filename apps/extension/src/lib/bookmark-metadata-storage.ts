@@ -1,5 +1,3 @@
-export const BOOKMARK_METADATA_STORAGE_KEY = 'bookmark-scout-bookmark-metadata';
-
 export type StoredBookmarkMetadata = {
   tags?: string[];
   summary?: string;
@@ -7,11 +5,15 @@ export type StoredBookmarkMetadata = {
 
 export type StoredBookmarkMetadataById = Record<string, StoredBookmarkMetadata>;
 
+// Stored raw; getStoredBookmarkMetadata validates entries on read.
+const bookmarkMetadataStorageItem = storage.defineItem<unknown>(
+  'local:bookmark-scout-bookmark-metadata',
+);
+
 export async function getStoredBookmarkMetadata(
   bookmarkIds: string[],
 ): Promise<StoredBookmarkMetadataById> {
-  const result = await browser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
-  const stored = result?.[BOOKMARK_METADATA_STORAGE_KEY];
+  const stored = await bookmarkMetadataStorageItem.getValue();
   if (!isRecord(stored)) {
     return {};
   }
