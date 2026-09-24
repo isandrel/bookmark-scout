@@ -100,6 +100,27 @@ export async function getBookmarkFolderPath(parentId?: string): Promise<string[]
 }
 
 /**
+ * Gets the direct children of a bookmark folder.
+ */
+export async function getBookmarkChildren(
+  id: string,
+): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
+  return new Promise((resolve, reject) => {
+    if (!chrome?.bookmarks) {
+      reject(new Error('Chrome bookmarks API not available.'));
+      return;
+    }
+    chrome.bookmarks.getChildren(id, (results) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+        return;
+      }
+      resolve(results);
+    });
+  });
+}
+
+/**
  * Creates a new bookmark or folder.
  * @param details - The bookmark creation details
  */

@@ -495,17 +495,61 @@
         "message": "Unknown error",
         "description": "Generic error message"
     },
-    "toast_createFolderPrompt": {
-        "message": "Create folder \"$1\"",
-        "description": "Toast title for folder creation prompt"
-    },
-    "toast_newFolderComingSoon": {
-        "message": "New folder creation coming soon!",
-        "description": "Toast description for new folder feature"
-    },
     "ai_suggestionsFor": {
         "message": "AI Suggestions for:",
         "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "Review new folder",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "Confirm the folder path and current page before saving. No changes are made until you approve.",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "Folder path",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_currentPageLabel": {
+        "message": "Current page",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "Create Folder and Save",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "Saving...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "Bookmark saved",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "Created or reused \"$1\" and saved the current page.",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "Bookmark already saved",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "The current page already exists in \"$1\"; no duplicate was added.",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "Could not save recommendation",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "No bookmark was added. Review the folder path and try again.",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "The path conflicts with an existing bookmark named \"$1\". No bookmark was added.",
+        "description": "Path conflict description for AI new-folder creation"
     },
     "popup_newBookmark": {
         "message": "New Bookmark",
