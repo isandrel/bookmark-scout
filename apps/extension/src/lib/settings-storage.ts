@@ -4,8 +4,6 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
-import { type Settings, defaultSettings, settingsSchema } from './settings-schema';
-import { setLanguage } from '@/hooks/use-i18n';
 
 // Storage key for settings
 const SETTINGS_KEY = 'bookmark-scout-settings';

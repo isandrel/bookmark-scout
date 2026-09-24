@@ -8,34 +8,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BookmarkSearch, FolderItem, RecentFoldersPanel } from '@/components/bookmark';
-import { Accordion } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Toaster } from '@/components/ui/toaster';
 import { Folder, FolderPlus } from 'lucide-react';
-import { useDebounce } from '@/hooks/use-debounce';
-import { t } from '@/hooks/use-i18n';
-import { useToast } from '@/hooks/use-toast';
-import { addRecentFolder, getSettings, useSetting } from '@/lib';
-import { sortBookmarkTree } from '@/lib/bookmark-sort';
-import { useBookmarkStore } from '@/stores';
-import {
-  recommendFolders,
-  getBookmark,
-  buildAISettingsFromProvider,
-  type FolderRecommendation,
-} from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-import { stripHtmlTags } from '@/utils/sanitize';
 import '@/styles/popup.scss';
 
 type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };

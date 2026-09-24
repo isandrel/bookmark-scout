@@ -13,27 +13,7 @@ import {
 } from '@tanstack/react-table';
 import * as React from 'react';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 
-import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
-import {
-  DEFAULT_BOOKMARK_TABLE_VIEW,
-  getBookmarkTableView,
-  resetBookmarkTableView,
-  saveBookmarkTableView,
-} from '@/lib/bookmark-table-view-storage';
-import { DataTablePagination } from './data-table-pagination';
-import {
-  bookmarkTableFeatures,
-  type BookmarkTableFeatures,
-} from './table-features';
 
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];

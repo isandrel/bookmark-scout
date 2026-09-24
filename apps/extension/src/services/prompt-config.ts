@@ -4,7 +4,6 @@
  * Prompts can be edited by users in the options page.
  */
 
-import { defaultSettings } from '@/lib/settings-schema';
 
 // ============================================================================
 // Prompt Template Types

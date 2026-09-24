@@ -1,15 +1,4 @@
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-react';
-import { t } from '@/hooks/use-i18n';
-import type {
-  DuplicateScanResult,
-  UrlCleanerResult,
-  BookmarkStatistics,
-  DeadLinkScanResult,
-  MetadataFetchResult,
-  PrivacyScanResult,
-} from '@/services';
 
 export function DuplicateResultsView({
   result,

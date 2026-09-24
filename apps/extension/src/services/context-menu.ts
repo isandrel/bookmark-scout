@@ -3,9 +3,6 @@
  * Uses a provider-based architecture for extensibility.
  */
 
-import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
-import { defaultSettings } from '@/lib/settings-schema';
-import { createBookmark } from './bookmarks';
 
 // Type for bookmark naming setting
 export type BookmarkNamingSource = 'link_text' | 'page_title' | 'link_url';
