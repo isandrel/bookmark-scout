@@ -3,9 +3,6 @@
  * Handles context menu initialization and event listeners.
  */
 
-import { contextMenuManager, initializeContextMenu } from '@/services/context-menu';
-import { removeStoredBookmarkMetadata } from '@/lib/bookmark-metadata-storage';
-
 function collectBookmarkIds(node: chrome.bookmarks.BookmarkTreeNode): string[] {
   return [node.id, ...(node.children?.flatMap(collectBookmarkIds) ?? [])];
 }

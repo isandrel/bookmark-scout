@@ -1,5 +1,3 @@
-import { browser } from './extension-browser';
-
 export const BOOKMARK_METADATA_STORAGE_KEY = 'bookmark-scout-bookmark-metadata';
 
 export type StoredBookmarkMetadata = {

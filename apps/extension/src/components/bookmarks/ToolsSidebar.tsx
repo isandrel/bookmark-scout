@@ -4,14 +4,6 @@
  * Features scope selection (current folder vs all bookmarks) based on tool capabilities.
  */
 
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Link2Off,
   Sparkles,
@@ -29,62 +21,7 @@ import {
   Download,
   Upload,
 } from 'lucide-react';
-import { t } from '@/hooks/use-i18n';
 import { useState, useRef } from 'react';
-import { useBookmarks } from '@/hooks/use-bookmarks';
-import { useToast } from '@/hooks/use-toast';
-import { Badge } from '@/components/ui/badge';
-import {
-  exportFormats,
-  exportBookmarks,
-  downloadExport,
-  generateFilename,
-  getFormatName,
-  parseBookmarks,
-  importBookmarks,
-  detectFormat,
-  readFile,
-  getAcceptedFileTypes,
-  generateReorganizationPlan,
-  applyReorganizationPlan,
-  type ReorganizationPlan,
-  type AIProvider,
-  getScopedNodes,
-  flattenBookmarks,
-  scanDuplicateBookmarks,
-  previewCleanUrls,
-  collectBookmarkStatistics,
-  deleteBookmark,
-  updateBookmark,
-  buildAIContextPack,
-  downloadTextFile,
-  suggestBookmarkTags,
-  summarizeBookmarksWithAI,
-  buildAISettingsFromProvider,
-  scanDeadLinks,
-  fetchBookmarkMetadata,
-  scanBookmarkPrivacy,
-  type DeadLinkScanResult,
-  type MetadataFetchResult,
-  type PrivacyScanResult,
-} from '@/services';
-import {
-  getStoredBookmarkMetadata,
-  mergeStoredBookmarkMetadata,
-  useSetting,
-  useSettings,
-} from '@/lib';
-import { ReorganizationDialog } from './ReorganizationDialog';
-import { ToolResultsDialog } from './ToolResultsDialog';
-import { ToolCard, type ToolScope } from './ToolCards';
-import {
-  DeadLinkResultsView,
-  DuplicateResultsView,
-  MetadataResultsView,
-  PrivacyResultsView,
-  StatisticsResultsView,
-  UrlCleanerResultsView,
-} from './ToolResultViews';
 
 type ToolSectionProps = {
   title: string;

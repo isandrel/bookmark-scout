@@ -1,24 +1,4 @@
 import { type ReactNode, useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import type { Bookmark } from '@/components/ui/table/columns';
-import { t } from '@/hooks/use-i18n';
-import {
-  getStoredBookmarkMetadata,
-  removeStoredBookmarkMetadata,
-  saveBookmarkMetadata,
-} from '@/lib/bookmark-metadata-storage';
-import { cn } from '@/lib/utils';
-import { getBookmarkFolderPath } from '@/services/bookmarks';
 
 type BookmarkDetailsDialogProps = {
   bookmark: Bookmark | null;

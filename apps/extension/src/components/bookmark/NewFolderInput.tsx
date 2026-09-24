@@ -5,8 +5,6 @@
 
 import { Folder } from 'lucide-react';
 import { useEffect, useRef } from 'react';
-import { Input } from '@/components/ui/input';
-import { t } from '@/hooks/use-i18n';
 
 interface NewFolderInputProps {
   value: string;

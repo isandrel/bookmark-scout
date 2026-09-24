@@ -5,7 +5,6 @@
 
 import { ChevronRight, Home } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { t } from '@/hooks/use-i18n';
 
 interface BreadcrumbItem {
   id: string;

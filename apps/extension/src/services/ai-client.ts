@@ -10,13 +10,6 @@ import { createMistral } from '@ai-sdk/mistral';
 import { createOpenAI } from '@ai-sdk/openai';
 import { generateText } from 'ai';
 import { createOllama } from 'ollama-ai-provider';
-import {
-  getDefaultModel,
-  getProviderBaseUrl,
-  getProviderKind,
-  providerRequiresApiKey,
-  type AIProviderKind,
-} from './ai-models';
 
 export type AIProvider =
   | 'openai'

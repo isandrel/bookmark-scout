@@ -5,13 +5,6 @@
 
 import { type ComponentType, useCallback, useEffect, useState } from 'react';
 import { Folder } from 'lucide-react';
-import { t } from '@/hooks/use-i18n';
-import { reconcileStoredBookmarkMetadata } from '@/lib/bookmark-metadata-storage';
-import { getFaviconUrl } from '@/services/bookmarks';
-import { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
-
-// Re-export for convenience
-export { type Bookmark, ItemTypeEnum } from '@/components/ui/table/columns';
 
 const processNode = (node: chrome.bookmarks.BookmarkTreeNode, folderPath: string): Bookmark => {
   const isFolder = node.children !== undefined;

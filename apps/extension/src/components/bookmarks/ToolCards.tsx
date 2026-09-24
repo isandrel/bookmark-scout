@@ -1,14 +1,5 @@
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Folder, Globe } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
 
 export type ToolScope = 'folder' | 'all';
 export type ScopeCapability = 'folder' | 'all' | 'both';
