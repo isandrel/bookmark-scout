@@ -64,16 +64,32 @@
         "description": "Toast title for folder deletion error"
     },
     "toast_deleteUndoWindow": {
-        "message": "10초 안에 실행 취소할 수 있습니다. 가장 최근 삭제만 복원할 수 있으며 원래 ID와 날짜, 이 창을 닫은 뒤의 복원은 지원되지 않습니다.",
-        "description": "Limits of popup deletion recovery"
+        "message": "\"$title$\" 항목을 삭제했습니다. $seconds$초 안에 실행 취소할 수 있습니다.",
+        "description": "Deletion toast description with the undo time limit",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "seconds": {
+                "content": "$2",
+                "example": "10"
+            }
+        }
     },
     "toast_deleteRestored": {
         "message": "삭제를 실행 취소했습니다",
         "description": "Toast title after restoring a deletion"
     },
     "toast_deleteRestoredDesc": {
-        "message": "\"$1\" 항목을 복원했습니다. ID와 날짜는 브라우저에서 새로 생성되었습니다.",
-        "description": "Toast description after restoring a deletion; $1 is the item title"
+        "message": "\"$title$\" 항목을 복원했습니다.",
+        "description": "Toast description after restoring a deletion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
     },
     "toast_errorRestoringDeletion": {
         "message": "삭제를 실행 취소하지 못했습니다",
@@ -468,12 +484,12 @@
         "description": "AI category description"
     },
     "settings_aiAutoTrigger": {
-        "message": "열기 시 자동 추천",
-        "description": "Auto trigger AI setting label"
+        "message": "열 때 자동 추천",
+        "description": "AI auto trigger label"
     },
     "settings_aiAutoTriggerDesc": {
-        "message": "팝업이 열릴 때 자동으로 폴더 추천",
-        "description": "Auto trigger AI setting description"
+        "message": "팝업을 열 때 자동으로 추천을 실행합니다",
+        "description": "AI auto trigger description"
     },
     "settings_recentFoldersMax": {
         "message": "최근 폴더 최대 수",
@@ -819,6 +835,450 @@
         "message": "검토한 요약 추천을 병합 설정에 따라 저장했습니다.",
         "description": "Toast description after applying generated summaries"
     },
+    "tools_category_ai": {
+        "message": "AI 및 인텔리전스",
+        "description": "AI tools category"
+    },
+    "tools_category_maintenance": {
+        "message": "유지 관리",
+        "description": "Maintenance tools category"
+    },
+    "tools_category_metadata": {
+        "message": "메타데이터 및 콘텐츠",
+        "description": "Metadata tools category"
+    },
+    "tools_category_security": {
+        "message": "보안",
+        "description": "Security tools category"
+    },
+    "tools_category_analytics": {
+        "message": "분석",
+        "description": "Tools section heading for analytics tools"
+    },
+    "tools_exportAI": {
+        "message": "AI 컨텍스트 패커",
+        "description": "Title for AI Export tool"
+    },
+    "tools_exportAIDesc": {
+        "message": "북마크를 AI 친화적인 형식(XML/Markdown)으로 내보냅니다",
+        "description": "Description for AI Export tool"
+    },
+    "tools_autoTagging": {
+        "message": "자동 태그 지정",
+        "description": "Title for Auto-Tagging tool"
+    },
+    "tools_autoTaggingDesc": {
+        "message": "북마크에 어울리는 태그를 자동으로 제안합니다",
+        "description": "Description for Auto-Tagging tool"
+    },
+    "tools_summarizer": {
+        "message": "콘텐츠 요약",
+        "description": "Title for Summarizer tool"
+    },
+    "tools_summarizerDesc": {
+        "message": "북마크한 콘텐츠의 간단한 요약을 생성합니다",
+        "description": "Description for Summarizer tool"
+    },
+    "tools_findDuplicates": {
+        "message": "중복 정리",
+        "description": "Title for Duplicate Cleaner tool"
+    },
+    "tools_findDuplicatesDesc": {
+        "message": "중복된 북마크를 찾아 제거합니다",
+        "description": "Description for Duplicate Cleaner tool"
+    },
+    "tools_cleanUrls": {
+        "message": "URL 정리",
+        "description": "Title for URL Cleaner tool"
+    },
+    "tools_cleanUrlsDesc": {
+        "message": "URL에서 추적 매개변수를 제거합니다",
+        "description": "Description for URL Cleaner tool"
+    },
+    "tools_metadataFetcher": {
+        "message": "메타데이터 가져오기",
+        "description": "Title for Metadata Fetcher tool"
+    },
+    "tools_metadataFetcherDesc": {
+        "message": "누락된 제목과 파비콘을 보완합니다",
+        "description": "Description for Metadata Fetcher tool"
+    },
+    "tools_privacyScanner": {
+        "message": "개인정보 스캐너",
+        "description": "Title for Privacy Scanner tool"
+    },
+    "tools_privacyScannerDesc": {
+        "message": "URL에 포함된 민감한 데이터를 감지합니다",
+        "description": "Description for Privacy Scanner tool"
+    },
+    "tools_category_data": {
+        "message": "데이터",
+        "description": "Data tools category for import/export"
+    },
+    "tools_export": {
+        "message": "북마크 내보내기",
+        "description": "Export bookmarks tool title"
+    },
+    "tools_exportDesc": {
+        "message": "북마크를 HTML, JSON, Markdown 또는 CSV로 내보냅니다",
+        "description": "Export bookmarks tool description"
+    },
+    "tools_import": {
+        "message": "북마크 가져오기",
+        "description": "Import bookmarks tool title"
+    },
+    "tools_importDesc": {
+        "message": "HTML 또는 JSON 파일에서 북마크를 가져옵니다",
+        "description": "Import bookmarks tool description"
+    },
+    "tools_exportFormat": {
+        "message": "형식",
+        "description": "Placeholder for the export format selector"
+    },
+    "tools_exporting": {
+        "message": "내보내는 중...",
+        "description": "Export button label while exporting"
+    },
+    "tools_importing": {
+        "message": "가져오는 중...",
+        "description": "Import button label while importing"
+    },
+    "tools_scopeSelect": {
+        "message": "범위 선택",
+        "description": "Placeholder for a tool scope selector"
+    },
+    "tools_running": {
+        "message": "실행 중...",
+        "description": "Tool button label while the tool runs"
+    },
+    "toast_exportSuccess": {
+        "message": "내보내기 완료",
+        "description": "Toast title for successful bookmark export"
+    },
+    "toast_exportSuccessDesc": {
+        "message": "$count$개의 북마크를 $format$ 형식으로 내보냈습니다",
+        "description": "Toast description for successful bookmark export",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "format": {
+                "content": "$2",
+                "example": "JSON"
+            }
+        }
+    },
+    "toast_importSuccess": {
+        "message": "가져오기 완료",
+        "description": "Toast title for successful bookmark import"
+    },
+    "toast_importSuccessDesc": {
+        "message": "$count$개의 항목을 가져왔습니다",
+        "description": "Toast description for successful bookmark import",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "toast_reorganizeSuccess": {
+        "message": "재구성 완료",
+        "description": "Toast title after applying an AI reorganization"
+    },
+    "toast_reorganizeSuccessDesc": {
+        "message": "북마크를 재구성했습니다",
+        "description": "Toast description after applying an AI reorganization"
+    },
+    "error_importFailed": {
+        "message": "가져오기 실패: $1",
+        "description": "Error message for failed bookmark import"
+    },
+    "error_unsupportedFileFormat": {
+        "message": "지원하지 않는 파일 형식입니다",
+        "description": "Import error for an unrecognized file type"
+    },
+    "export_formatHtml": {
+        "message": "HTML (Chrome)",
+        "description": "Export format name for HTML/Chrome format"
+    },
+    "export_formatJson": {
+        "message": "JSON",
+        "description": "Export format name for JSON format"
+    },
+    "export_formatMarkdown": {
+        "message": "Markdown",
+        "description": "Export format name for Markdown format"
+    },
+    "export_formatCsv": {
+        "message": "CSV",
+        "description": "Export format name for CSV format"
+    },
+    "export_htmlTitle": {
+        "message": "북마크",
+        "description": "Title in exported HTML bookmark file"
+    },
+    "export_csvTitle": {
+        "message": "제목",
+        "description": "CSV header for bookmark title column"
+    },
+    "export_csvUrl": {
+        "message": "URL",
+        "description": "CSV header for bookmark URL column"
+    },
+    "export_csvFolder": {
+        "message": "폴더",
+        "description": "CSV header for bookmark folder column"
+    },
+    "export_csvDateAdded": {
+        "message": "추가한 날짜",
+        "description": "CSV header for bookmark date added column"
+    },
+    "ai_reorganizationTitle": {
+        "message": "AI 폴더 재구성",
+        "description": "Title for AI reorganization dialog"
+    },
+    "ai_reorganizationDesc": {
+        "message": "적용하기 전에 제안된 변경 사항을 검토하세요. 승인하기 전까지는 아무것도 변경되지 않습니다.",
+        "description": "Description for AI reorganization dialog"
+    },
+    "ai_analyzing": {
+        "message": "북마크 분석 중...",
+        "description": "Loading text while AI analyzes bookmarks"
+    },
+    "ai_noChangesNeeded": {
+        "message": "북마크가 이미 잘 정리되어 있습니다!",
+        "description": "Message when no reorganization is needed"
+    },
+    "ai_applying": {
+        "message": "적용 중...",
+        "description": "Button text while applying changes"
+    },
+    "ai_applyChanges": {
+        "message": "변경 사항 적용",
+        "description": "Button text to apply reorganization changes"
+    },
+    "ai_reorgAnalyzeFailed": {
+        "message": "북마크를 분석하지 못했습니다",
+        "description": "Reorganization error when analysis fails without details"
+    },
+    "ai_reorgStatusCollecting": {
+        "message": "북마크 수집 중...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusCollectingDesc": {
+        "message": "폴더 구조와 북마크 데이터를 모으고 있습니다",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusSending": {
+        "message": "AI로 보내는 중...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusSendingDesc": {
+        "message": "AI 분석 요청을 준비하고 있습니다",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusWaiting": {
+        "message": "AI가 북마크를 분석하는 중...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusWaitingDesc": {
+        "message": "10~30초 정도 걸릴 수 있습니다",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgStatusProcessing": {
+        "message": "제안 처리 중...",
+        "description": "Reorganization loading status"
+    },
+    "ai_reorgStatusProcessingDesc": {
+        "message": "재구성 계획을 만들고 있습니다",
+        "description": "Reorganization loading status detail"
+    },
+    "ai_reorgNewFolders": {
+        "message": "새 폴더: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_reorgFoldersToRemove": {
+        "message": "제거할 폴더: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgRenames": {
+        "message": "이름 변경: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "ai_reorgMoves": {
+        "message": "북마크 이동: $count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "8"
+            }
+        }
+    },
+    "ai_reorgViewOperations": {
+        "message": "작업 보기 ($count$)",
+        "description": "Toggle for the reorganization operation list",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ai_reorgOp_create": {
+        "message": "만들기",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_delete": {
+        "message": "삭제",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_rename": {
+        "message": "이름 변경",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgOp_move": {
+        "message": "이동",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgInFolder": {
+        "message": "위치: $path$",
+        "description": "Parent folder of a folder to create",
+        "placeholders": {
+            "path": {
+                "content": "$1",
+                "example": "Work/Projects"
+            }
+        }
+    },
+    "ai_reorgFrom": {
+        "message": "이전:",
+        "description": "Source folder label for a bookmark move"
+    },
+    "ai_reorgTo": {
+        "message": "이후:",
+        "description": "Destination folder label for a bookmark move"
+    },
+    "ai_reorgDebugToggle": {
+        "message": "AI 요청 및 응답 보기",
+        "description": "Toggle for AI request debug details"
+    },
+    "ai_reorgSystemPrompt": {
+        "message": "시스템 프롬프트:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgRequestData": {
+        "message": "요청 데이터:",
+        "description": "AI debug section label"
+    },
+    "ai_reorgResponse": {
+        "message": "AI 응답:",
+        "description": "AI debug section label"
+    },
+    "ai_promptFolderRecommendation": {
+        "message": "폴더 추천",
+        "description": "Name for folder recommendation prompt"
+    },
+    "ai_promptFolderRecommendationDesc": {
+        "message": "새 북마크에 가장 알맞은 폴더를 제안합니다",
+        "description": "Description for folder recommendation prompt"
+    },
+    "ai_promptFolderReorganization": {
+        "message": "폴더 재구성",
+        "description": "Name for folder reorganization prompt"
+    },
+    "ai_promptFolderReorganizationDesc": {
+        "message": "북마크 폴더를 분석하고 재구성합니다",
+        "description": "Description for folder reorganization prompt"
+    },
+    "ai_promptAutoTagging": {
+        "message": "자동 태그 지정",
+        "description": "Name for auto tagging prompt"
+    },
+    "ai_promptAutoTaggingDesc": {
+        "message": "콘텐츠를 바탕으로 북마크 태그를 제안합니다",
+        "description": "Description for auto tagging prompt"
+    },
+    "ai_promptSummarization": {
+        "message": "콘텐츠 요약",
+        "description": "Name for summarization prompt"
+    },
+    "ai_promptSummarizationDesc": {
+        "message": "북마크의 간단한 설명을 생성합니다",
+        "description": "Description for summarization prompt"
+    },
+    "contextMenu_saveToFolder": {
+        "message": "북마크 저장 위치...",
+        "description": "Root context menu item title"
+    },
+    "contextMenu_noFolders": {
+        "message": "사용할 수 있는 폴더가 없습니다",
+        "description": "Placeholder when no folders to show"
+    },
+    "contextMenu_bookmarksBar": {
+        "message": "북마크바",
+        "description": "Bookmarks bar folder name"
+    },
+    "toast_linkSaved": {
+        "message": "링크를 저장했습니다",
+        "description": "Toast title when link saved via context menu"
+    },
+    "toast_linkSavedDesc": {
+        "message": "\"$1\" 항목을 \"$2\"에 추가했습니다",
+        "description": "Toast description for link saved"
+    },
+    "toast_linkSaveFailed": {
+        "message": "링크를 저장하지 못했습니다",
+        "description": "Toast title when link save fails"
+    },
+    "settings_contextMenuEnabled": {
+        "message": "컨텍스트 메뉴",
+        "description": "Context menu enabled setting label"
+    },
+    "settings_contextMenuEnabledDesc": {
+        "message": "마우스 오른쪽 버튼 메뉴로 북마크를 빠르게 저장합니다",
+        "description": "Context menu enabled setting description"
+    },
+    "settings_contextMenuNaming": {
+        "message": "북마크 이름 출처",
+        "description": "Context menu bookmark naming setting label"
+    },
+    "settings_contextMenuNamingDesc": {
+        "message": "마우스 오른쪽 버튼으로 저장할 때 북마크 제목으로 사용할 항목",
+        "description": "Context menu bookmark naming setting description"
+    },
+    "settings_namingLinkText": {
+        "message": "링크 텍스트",
+        "description": "Use link text for bookmark name"
+    },
+    "settings_namingPageTitle": {
+        "message": "페이지 제목",
+        "description": "Use page title for bookmark name"
+    },
+    "settings_namingLinkUrl": {
+        "message": "링크 URL",
+        "description": "Use link URL for bookmark name"
+    },
     "search_matchCase": {
         "message": "대소문자 구분",
         "description": "Toggle case-sensitive search"
@@ -862,14 +1322,6 @@
     "settings_aiMaxRecommendationsDesc": {
         "message": "AI에 요청할 최대 추천 수입니다",
         "description": "Max recommendations setting description"
-    },
-    "settings_aiAutoTrigger": {
-        "message": "열 때 자동 추천",
-        "description": "AI auto trigger label"
-    },
-    "settings_aiAutoTriggerDesc": {
-        "message": "팝업을 열 때 자동으로 추천을 실행합니다",
-        "description": "AI auto trigger description"
     },
     "settings_aiTools": {
         "message": "AI 도구",
@@ -919,6 +1371,86 @@
         "message": "가져오기/내보내기 설정을 관리합니다",
         "description": "Data settings tab description"
     },
+    "settings_aiMaxCategories": {
+        "message": "최대 카테고리 수",
+        "description": "AI reorganization max categories label"
+    },
+    "settings_aiMaxCategoriesDesc": {
+        "message": "AI가 만들 수 있는 최상위 카테고리의 최대 개수(-1은 제한 없음)",
+        "description": "AI reorganization max categories description"
+    },
+    "settings_aiMinItemsPerFolder": {
+        "message": "폴더당 최소 항목 수",
+        "description": "AI reorganization min items label"
+    },
+    "settings_aiMinItemsPerFolderDesc": {
+        "message": "AI가 폴더마다 목표로 하는 최소 북마크 수",
+        "description": "AI reorganization min items description"
+    },
+    "settings_aiMaxItemsPerFolder": {
+        "message": "폴더당 최대 항목 수",
+        "description": "AI reorganization max items label"
+    },
+    "settings_aiMaxItemsPerFolderDesc": {
+        "message": "AI가 폴더마다 목표로 하는 최대 북마크 수(-1은 제한 없음)",
+        "description": "AI reorganization max items description"
+    },
+    "settings_exportFilenamePrefix": {
+        "message": "파일 이름 접두사",
+        "description": "Export filename prefix label"
+    },
+    "settings_exportFilenamePrefixDesc": {
+        "message": "북마크 내보내기 파일 이름을 만들 때 사용할 접두사",
+        "description": "Export filename prefix description"
+    },
+    "settings_exportFilenameMaxLength": {
+        "message": "최대 파일 이름 길이",
+        "description": "Export filename max length label"
+    },
+    "settings_exportFilenameMaxLengthDesc": {
+        "message": "생성되는 내보내기 파일 이름의 최대 길이",
+        "description": "Export filename max length description"
+    },
+    "settings_exportJsonIndentSize": {
+        "message": "JSON 들여쓰기 크기",
+        "description": "JSON indent size label"
+    },
+    "settings_exportJsonIndentSizeDesc": {
+        "message": "JSON 내보내기에 사용할 공백 수",
+        "description": "JSON indent size description"
+    },
+    "settings_exportHtmlIndentSpaces": {
+        "message": "HTML 들여쓰기 크기",
+        "description": "HTML indent size label"
+    },
+    "settings_exportHtmlIndentSpacesDesc": {
+        "message": "HTML 내보내기에 사용할 공백 수",
+        "description": "HTML indent size description"
+    },
+    "settings_exportMarkdownIndentSpaces": {
+        "message": "Markdown 들여쓰기 크기",
+        "description": "Markdown indent size label"
+    },
+    "settings_exportMarkdownIndentSpacesDesc": {
+        "message": "Markdown 내보내기에 사용할 공백 수",
+        "description": "Markdown indent size description"
+    },
+    "settings_exportIncludeDates": {
+        "message": "날짜 포함",
+        "description": "Export include dates label"
+    },
+    "settings_exportIncludeDatesDesc": {
+        "message": "기본적으로 내보내기에 북마크 생성 날짜를 포함합니다",
+        "description": "Export include dates description"
+    },
+    "settings_exportIncludeUrls": {
+        "message": "URL 포함",
+        "description": "Export include URLs label"
+    },
+    "settings_exportIncludeUrlsDesc": {
+        "message": "기본적으로 내보내기에 북마크 URL을 포함합니다",
+        "description": "Export include URLs description"
+    },
     "settings_scopeFolder": {
         "message": "현재 폴더",
         "description": "Folder scope option label"
@@ -939,13 +1471,619 @@
         "message": "교체",
         "description": "Merge replace option label"
     },
+    "settings_aiContextPackerEnabled": {
+        "message": "AI 컨텍스트 패커 사용",
+        "description": "AI context packer enabled label"
+    },
+    "settings_aiContextPackerEnabledDesc": {
+        "message": "북마크를 AI 친화적인 형식으로 내보낼 수 있게 합니다",
+        "description": "AI context packer enabled description"
+    },
+    "settings_aiContextPackerDefaultScope": {
+        "message": "기본 범위",
+        "description": "AI context packer default scope label"
+    },
+    "settings_aiContextPackerDefaultScopeDesc": {
+        "message": "AI 컨텍스트를 내보낼 때 사용할 기본 범위",
+        "description": "AI context packer default scope description"
+    },
+    "settings_aiContextPackerOutputFormat": {
+        "message": "출력 형식",
+        "description": "AI context packer output format label"
+    },
+    "settings_aiContextPackerOutputFormatDesc": {
+        "message": "AI 컨텍스트 내보내기에 사용할 Markdown 또는 XML 형식",
+        "description": "AI context packer output format description"
+    },
+    "settings_aiContextPackerIncludeFolderPath": {
+        "message": "폴더 경로 포함",
+        "description": "AI context packer include folder path label"
+    },
+    "settings_aiContextPackerIncludeFolderPathDesc": {
+        "message": "내보낸 AI 컨텍스트에 각 북마크의 폴더 경로를 포함합니다",
+        "description": "AI context packer include folder path description"
+    },
+    "settings_aiContextPackerIncludeDates": {
+        "message": "날짜 포함",
+        "description": "AI context packer include dates label"
+    },
+    "settings_aiContextPackerIncludeDatesDesc": {
+        "message": "AI 컨텍스트 내보내기에 북마크 생성 날짜를 포함합니다",
+        "description": "AI context packer include dates description"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "저장된 태그 포함",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 태그를 포함합니다",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "저장된 요약 포함",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "북마크에 저장된 메타데이터가 있는 경우에만 요약을 포함합니다",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerMaxItems": {
+        "message": "최대 항목 수",
+        "description": "AI context packer max items label"
+    },
+    "settings_aiContextPackerMaxItemsDesc": {
+        "message": "한 번의 AI 컨텍스트 내보내기에 포함할 최대 북마크 수",
+        "description": "AI context packer max items description"
+    },
+    "settings_aiContextPackerMaxDepth": {
+        "message": "최대 깊이",
+        "description": "AI context packer max depth label"
+    },
+    "settings_aiContextPackerMaxDepthDesc": {
+        "message": "AI 컨텍스트 내보내기에 포함할 최대 폴더 깊이",
+        "description": "AI context packer max depth description"
+    },
+    "settings_aiContextPackerExcerptLength": {
+        "message": "발췌 길이",
+        "description": "AI context packer excerpt length label"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AI 컨텍스트 내보내기에 포함할 저장된 요약의 최대 길이",
+        "description": "AI context packer excerpt length description"
+    },
+    "settings_autoTaggingEnabled": {
+        "message": "자동 태그 지정 사용",
+        "description": "Auto-tagging enabled label"
+    },
+    "settings_autoTaggingEnabledDesc": {
+        "message": "AI가 북마크 태그를 제안할 수 있게 합니다",
+        "description": "Auto-tagging enabled description"
+    },
+    "settings_autoTaggingDefaultScope": {
+        "message": "기본 범위",
+        "description": "Auto-tagging default scope label"
+    },
+    "settings_autoTaggingDefaultScopeDesc": {
+        "message": "자동 태그 지정을 실행할 때 사용할 기본 범위",
+        "description": "Auto-tagging default scope description"
+    },
+    "settings_autoTaggingMinTags": {
+        "message": "최소 태그 수",
+        "description": "Auto-tagging minimum tags label"
+    },
+    "settings_autoTaggingMinTagsDesc": {
+        "message": "AI가 북마크마다 생성할 최소 태그 수",
+        "description": "Auto-tagging minimum tags description"
+    },
+    "settings_autoTaggingMaxTags": {
+        "message": "최대 태그 수",
+        "description": "Auto-tagging maximum tags label"
+    },
+    "settings_autoTaggingMaxTagsDesc": {
+        "message": "AI가 북마크마다 생성할 최대 태그 수",
+        "description": "Auto-tagging maximum tags description"
+    },
+    "settings_autoTaggingTagStyle": {
+        "message": "태그 스타일",
+        "description": "Auto-tagging tag style label"
+    },
+    "settings_autoTaggingTagStyleDesc": {
+        "message": "생성되는 태그의 표기 스타일",
+        "description": "Auto-tagging tag style description"
+    },
+    "settings_autoTaggingMergeMode": {
+        "message": "병합 모드",
+        "description": "Auto-tagging merge mode label"
+    },
+    "settings_autoTaggingMergeModeDesc": {
+        "message": "검토한 제안을 저장할 때 추가는 저장된 태그에 더하고, 바꾸기는 저장된 태그를 덮어씁니다",
+        "description": "Auto-tagging merge mode description"
+    },
+    "settings_autoTaggingDedupeTags": {
+        "message": "중복 태그 제거",
+        "description": "Auto-tagging dedupe tag label"
+    },
+    "settings_autoTaggingDedupeTagsDesc": {
+        "message": "검토한 제안을 저장할 때 대소문자만 다른 중복 태그를 제외합니다",
+        "description": "Auto-tagging dedupe tag description"
+    },
+    "settings_summarizerEnabled": {
+        "message": "콘텐츠 요약 사용",
+        "description": "Summarizer enabled label"
+    },
+    "settings_summarizerEnabledDesc": {
+        "message": "AI가 북마크 요약을 만들 수 있게 합니다",
+        "description": "Summarizer enabled description"
+    },
+    "settings_summarizerDefaultScope": {
+        "message": "기본 범위",
+        "description": "Summarizer default scope label"
+    },
+    "settings_summarizerDefaultScopeDesc": {
+        "message": "북마크를 요약할 때 사용할 기본 범위",
+        "description": "Summarizer default scope description"
+    },
+    "settings_summarizerSummaryLength": {
+        "message": "요약 길이",
+        "description": "Summarizer length label"
+    },
+    "settings_summarizerSummaryLengthDesc": {
+        "message": "생성되는 요약의 목표 최대 길이",
+        "description": "Summarizer length description"
+    },
+    "settings_summarizerIncludeDomainHint": {
+        "message": "도메인 힌트 포함",
+        "description": "Summarizer include domain hint label"
+    },
+    "settings_summarizerIncludeDomainHintDesc": {
+        "message": "북마크 도메인을 추가 AI 컨텍스트로 포함합니다",
+        "description": "Summarizer include domain hint description"
+    },
+    "settings_summarizerMergeMode": {
+        "message": "병합 모드",
+        "description": "Summarizer merge mode label"
+    },
+    "settings_summarizerMergeModeDesc": {
+        "message": "검토한 요약을 저장할 때 추가는 저장된 요약 뒤에 붙이고, 바꾸기는 덮어씁니다",
+        "description": "Summarizer merge mode description"
+    },
+    "settings_reorganizationEnabled": {
+        "message": "AI 재구성 사용",
+        "description": "Reorganization enabled label"
+    },
+    "settings_reorganizationEnabledDesc": {
+        "message": "AI가 폴더 재구성 계획을 제안할 수 있게 합니다",
+        "description": "Reorganization enabled description"
+    },
+    "settings_reorganizationDefaultScope": {
+        "message": "기본 범위",
+        "description": "Reorganization default scope label"
+    },
+    "settings_reorganizationDefaultScopeDesc": {
+        "message": "AI 폴더 재구성에 사용할 기본 범위",
+        "description": "Reorganization default scope description"
+    },
+    "settings_reorganizationDryRunFirst": {
+        "message": "항상 먼저 미리 보기",
+        "description": "Reorganization dry run label"
+    },
+    "settings_reorganizationDryRunFirstDesc": {
+        "message": "변경 사항을 적용하기 전에 제안된 재구성 계획을 표시합니다",
+        "description": "Reorganization dry run description"
+    },
+    "settings_reorganizationMinConfidence": {
+        "message": "최소 신뢰도",
+        "description": "Reorganization minimum confidence label"
+    },
+    "settings_reorganizationMinConfidenceDesc": {
+        "message": "북마크 이동 제안에 필요한 최소 신뢰도 점수",
+        "description": "Reorganization minimum confidence description"
+    },
+    "settings_reorganizationBatchSize": {
+        "message": "배치 크기",
+        "description": "Reorganization batch size label"
+    },
+    "settings_reorganizationBatchSizeDesc": {
+        "message": "재구성 배치마다 보낼 최대 북마크 수",
+        "description": "Reorganization batch size description"
+    },
+    "settings_duplicatesEnabled": {
+        "message": "중복 정리 사용",
+        "description": "Duplicate cleaner enabled label"
+    },
+    "settings_duplicatesEnabledDesc": {
+        "message": "중복된 북마크를 검색할 수 있게 합니다",
+        "description": "Duplicate cleaner enabled description"
+    },
+    "settings_duplicatesDefaultScope": {
+        "message": "기본 범위",
+        "description": "Duplicate cleaner default scope label"
+    },
+    "settings_duplicatesDefaultScopeDesc": {
+        "message": "중복 북마크를 검색할 때 사용할 기본 범위",
+        "description": "Duplicate cleaner default scope description"
+    },
+    "settings_duplicatesMatchStrategy": {
+        "message": "비교 방식",
+        "description": "Duplicate cleaner match strategy label"
+    },
+    "settings_duplicatesMatchStrategyDesc": {
+        "message": "중복을 찾을 때 북마크를 비교하는 방법",
+        "description": "Duplicate cleaner match strategy description"
+    },
+    "settings_duplicatesNormalizeWww": {
+        "message": "www 정규화",
+        "description": "Duplicate cleaner normalize www label"
+    },
+    "settings_duplicatesNormalizeWwwDesc": {
+        "message": "www.example.com과 example.com을 같은 호스트로 취급합니다",
+        "description": "Duplicate cleaner normalize www description"
+    },
+    "settings_duplicatesIgnoreProtocol": {
+        "message": "프로토콜 무시",
+        "description": "Duplicate cleaner ignore protocol label"
+    },
+    "settings_duplicatesIgnoreProtocolDesc": {
+        "message": "http와 https 버전을 중복으로 취급합니다",
+        "description": "Duplicate cleaner ignore protocol description"
+    },
+    "settings_duplicatesIgnoreTrailingSlash": {
+        "message": "끝 슬래시 무시",
+        "description": "Duplicate cleaner ignore trailing slash label"
+    },
+    "settings_duplicatesIgnoreTrailingSlashDesc": {
+        "message": "끝 슬래시 유무만 다른 URL을 중복으로 취급합니다",
+        "description": "Duplicate cleaner ignore trailing slash description"
+    },
+    "settings_duplicatesKeepRule": {
+        "message": "유지 규칙",
+        "description": "Duplicate cleaner keep rule label"
+    },
+    "settings_duplicatesKeepRuleDesc": {
+        "message": "중복을 제거할 때 남길 북마크를 선택합니다",
+        "description": "Duplicate cleaner keep rule description"
+    },
+    "settings_duplicatesMaxGroups": {
+        "message": "최대 그룹 수",
+        "description": "Duplicate cleaner max groups label"
+    },
+    "settings_duplicatesMaxGroupsDesc": {
+        "message": "한 번의 검색에서 반환할 최대 중복 그룹 수",
+        "description": "Duplicate cleaner max groups description"
+    },
+    "settings_urlCleanerEnabled": {
+        "message": "URL 정리 사용",
+        "description": "URL cleaner enabled label"
+    },
+    "settings_urlCleanerEnabledDesc": {
+        "message": "북마크 URL에서 추적 매개변수를 제거할 수 있게 합니다",
+        "description": "URL cleaner enabled description"
+    },
+    "settings_urlCleanerDefaultScope": {
+        "message": "기본 범위",
+        "description": "URL cleaner default scope label"
+    },
+    "settings_urlCleanerDefaultScopeDesc": {
+        "message": "북마크 URL을 정리할 때 사용할 기본 범위",
+        "description": "URL cleaner default scope description"
+    },
+    "settings_urlCleanerRemoveHash": {
+        "message": "프래그먼트 제거",
+        "description": "URL cleaner remove hash label"
+    },
+    "settings_urlCleanerRemoveHashDesc": {
+        "message": "정리한 URL에서 #section 같은 프래그먼트를 제거합니다",
+        "description": "URL cleaner remove hash description"
+    },
+    "settings_urlCleanerSortQueryParams": {
+        "message": "쿼리 매개변수 정렬",
+        "description": "URL cleaner sort query params label"
+    },
+    "settings_urlCleanerSortQueryParamsDesc": {
+        "message": "남은 쿼리 매개변수를 알파벳순으로 정렬합니다",
+        "description": "URL cleaner sort query params description"
+    },
+    "settings_urlCleanerDedupeQueryParams": {
+        "message": "쿼리 매개변수 중복 제거",
+        "description": "URL cleaner dedupe query params label"
+    },
+    "settings_urlCleanerDedupeQueryParamsDesc": {
+        "message": "URL을 정리할 때 중복된 쿼리 매개변수를 제거합니다",
+        "description": "URL cleaner dedupe query params description"
+    },
+    "settings_urlCleanerPreserveParams": {
+        "message": "유지할 매개변수",
+        "description": "URL cleaner preserve params label"
+    },
+    "settings_urlCleanerPreserveParamsDesc": {
+        "message": "절대 제거하지 않을 쿼리 매개변수(쉼표로 구분)",
+        "description": "URL cleaner preserve params description"
+    },
+    "settings_urlCleanerRemoveParams": {
+        "message": "제거할 매개변수",
+        "description": "URL cleaner remove params label"
+    },
+    "settings_urlCleanerRemoveParamsDesc": {
+        "message": "URL에서 제거할 쿼리 매개변수(쉼표로 구분)",
+        "description": "URL cleaner remove params description"
+    },
+    "settings_deadLinksEnabled": {
+        "message": "깨진 링크 확인 사용",
+        "description": "Dead links enabled label"
+    },
+    "settings_deadLinksEnabledDesc": {
+        "message": "북마크에 접속할 수 없는 URL이 있는지 확인할 수 있게 합니다",
+        "description": "Dead links enabled description"
+    },
+    "settings_deadLinksDefaultScope": {
+        "message": "기본 범위",
+        "description": "Dead links default scope label"
+    },
+    "settings_deadLinksDefaultScopeDesc": {
+        "message": "깨진 링크를 확인할 때 사용할 기본 범위",
+        "description": "Dead links default scope description"
+    },
+    "settings_deadLinksRequestTimeoutMs": {
+        "message": "요청 제한 시간",
+        "description": "Dead links request timeout label"
+    },
+    "settings_deadLinksRequestTimeoutMsDesc": {
+        "message": "각 링크 확인 요청을 기다리는 최대 시간",
+        "description": "Dead links request timeout description"
+    },
+    "settings_deadLinksConcurrency": {
+        "message": "동시 요청 수",
+        "description": "Dead links concurrency label"
+    },
+    "settings_deadLinksConcurrencyDesc": {
+        "message": "깨진 링크 검사 중 동시에 보낼 요청 수",
+        "description": "Dead links concurrency description"
+    },
+    "settings_deadLinksRetryCount": {
+        "message": "재시도 횟수",
+        "description": "Dead links retry count label"
+    },
+    "settings_deadLinksRetryCountDesc": {
+        "message": "실패한 링크 확인을 다시 시도할 횟수",
+        "description": "Dead links retry count description"
+    },
+    "settings_deadLinksFollowRedirects": {
+        "message": "리디렉션 따라가기",
+        "description": "Dead links follow redirects label"
+    },
+    "settings_deadLinksFollowRedirectsDesc": {
+        "message": "깨진 링크를 검사할 때 리디렉션되는 URL을 접속 가능으로 취급합니다",
+        "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksSuccessStatuses": {
+        "message": "성공 상태 코드",
+        "description": "Dead links success statuses label"
+    },
+    "settings_deadLinksSuccessStatusesDesc": {
+        "message": "접속 가능으로 취급할 HTTP 상태 코드(쉼표로 구분)",
+        "description": "Dead links success statuses description"
+    },
+    "settings_metadataFetcherEnabled": {
+        "message": "메타데이터 가져오기 사용",
+        "description": "Metadata fetcher enabled label"
+    },
+    "settings_metadataFetcherEnabledDesc": {
+        "message": "누락된 북마크 메타데이터를 가져올 수 있게 합니다",
+        "description": "Metadata fetcher enabled description"
+    },
+    "settings_metadataFetcherDefaultScope": {
+        "message": "기본 범위",
+        "description": "Metadata fetcher default scope label"
+    },
+    "settings_metadataFetcherDefaultScopeDesc": {
+        "message": "메타데이터를 가져올 때 사용할 기본 범위",
+        "description": "Metadata fetcher default scope description"
+    },
+    "settings_metadataFetcherOverwriteTitles": {
+        "message": "제목 덮어쓰기",
+        "description": "Metadata fetcher overwrite titles label"
+    },
+    "settings_metadataFetcherOverwriteTitlesDesc": {
+        "message": "더 나은 메타데이터를 찾으면 기존 북마크 제목을 바꿉니다",
+        "description": "Metadata fetcher overwrite titles description"
+    },
+    "settings_metadataFetcherFetchFavicons": {
+        "message": "파비콘 가져오기",
+        "description": "Metadata fetcher fetch favicons label"
+    },
+    "settings_metadataFetcherFetchFaviconsDesc": {
+        "message": "누락되었거나 오래된 파비콘을 새로 가져옵니다",
+        "description": "Metadata fetcher fetch favicons description"
+    },
+    "settings_metadataFetcherFetchDescriptions": {
+        "message": "설명 가져오기",
+        "description": "Metadata fetcher fetch descriptions label"
+    },
+    "settings_metadataFetcherFetchDescriptionsDesc": {
+        "message": "북마크의 짧은 메타데이터 설명을 가져옵니다",
+        "description": "Metadata fetcher fetch descriptions description"
+    },
+    "settings_metadataFetcherRequestTimeoutMs": {
+        "message": "요청 제한 시간",
+        "description": "Metadata fetcher timeout label"
+    },
+    "settings_metadataFetcherRequestTimeoutMsDesc": {
+        "message": "각 메타데이터 요청을 기다리는 최대 시간",
+        "description": "Metadata fetcher timeout description"
+    },
+    "settings_metadataFetcherConcurrency": {
+        "message": "동시 요청 수",
+        "description": "Metadata fetcher concurrency label"
+    },
+    "settings_metadataFetcherConcurrencyDesc": {
+        "message": "메타데이터를 가져올 때 동시에 보낼 요청 수",
+        "description": "Metadata fetcher concurrency description"
+    },
+    "settings_privacyScannerEnabled": {
+        "message": "개인정보 스캐너 사용",
+        "description": "Privacy scanner enabled label"
+    },
+    "settings_privacyScannerEnabledDesc": {
+        "message": "북마크 URL에 민감한 데이터가 있는지 검사할 수 있게 합니다",
+        "description": "Privacy scanner enabled description"
+    },
+    "settings_privacyScannerDefaultScope": {
+        "message": "기본 범위",
+        "description": "Privacy scanner default scope label"
+    },
+    "settings_privacyScannerDefaultScopeDesc": {
+        "message": "민감한 데이터를 검사할 때 사용할 기본 범위",
+        "description": "Privacy scanner default scope description"
+    },
+    "settings_privacyScannerScanTitles": {
+        "message": "제목 검사",
+        "description": "Privacy scanner scan titles label"
+    },
+    "settings_privacyScannerScanTitlesDesc": {
+        "message": "URL뿐 아니라 북마크 제목에도 민감한 값이 있는지 확인합니다",
+        "description": "Privacy scanner scan titles description"
+    },
+    "settings_privacyScannerScanQueryParams": {
+        "message": "쿼리 매개변수 검사",
+        "description": "Privacy scanner scan query params label"
+    },
+    "settings_privacyScannerScanQueryParamsDesc": {
+        "message": "쿼리 매개변수에 비밀 값이나 민감한 데이터가 있는지 검사합니다",
+        "description": "Privacy scanner scan query params description"
+    },
+    "settings_privacyScannerScanFragments": {
+        "message": "프래그먼트 검사",
+        "description": "Privacy scanner scan fragments label"
+    },
+    "settings_privacyScannerScanFragmentsDesc": {
+        "message": "URL 프래그먼트에 민감한 데이터가 있는지 검사합니다",
+        "description": "Privacy scanner scan fragments description"
+    },
+    "settings_privacyScannerSensitiveParams": {
+        "message": "민감한 매개변수",
+        "description": "Privacy scanner sensitive params label"
+    },
+    "settings_privacyScannerSensitiveParamsDesc": {
+        "message": "민감한 것으로 표시할 매개변수 이름(쉼표로 구분)",
+        "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerEmailDetection": {
+        "message": "이메일 감지",
+        "description": "Privacy scanner email detection label"
+    },
+    "settings_privacyScannerEmailDetectionDesc": {
+        "message": "북마크 URL이나 제목에 있는 이메일 주소를 표시합니다",
+        "description": "Privacy scanner email detection description"
+    },
+    "settings_privacyScannerUuidDetection": {
+        "message": "UUID 감지",
+        "description": "Privacy scanner uuid detection label"
+    },
+    "settings_privacyScannerUuidDetectionDesc": {
+        "message": "북마크 URL에 있는 UUID 형식의 값을 표시합니다",
+        "description": "Privacy scanner uuid detection description"
+    },
+    "settings_statisticsEnabled": {
+        "message": "통계 사용",
+        "description": "Statistics enabled label"
+    },
+    "settings_statisticsEnabledDesc": {
+        "message": "북마크 통계 보고서를 생성할 수 있게 합니다",
+        "description": "Statistics enabled description"
+    },
+    "settings_statisticsDefaultScope": {
+        "message": "기본 범위",
+        "description": "Statistics default scope label"
+    },
+    "settings_statisticsDefaultScopeDesc": {
+        "message": "북마크 통계를 볼 때 사용할 기본 범위",
+        "description": "Statistics default scope description"
+    },
+    "settings_statisticsIncludeDomains": {
+        "message": "도메인 포함",
+        "description": "Statistics include domains label"
+    },
+    "settings_statisticsIncludeDomainsDesc": {
+        "message": "북마크 통계에 상위 도메인을 포함합니다",
+        "description": "Statistics include domains description"
+    },
+    "settings_statisticsIncludeFolders": {
+        "message": "폴더 포함",
+        "description": "Statistics include folders label"
+    },
+    "settings_statisticsIncludeFoldersDesc": {
+        "message": "북마크 통계에 상위 폴더를 포함합니다",
+        "description": "Statistics include folders description"
+    },
+    "settings_statisticsIncludeDuplicates": {
+        "message": "중복 포함",
+        "description": "Statistics include duplicates label"
+    },
+    "settings_statisticsIncludeDuplicatesDesc": {
+        "message": "통계에 중복 북마크 수를 포함합니다",
+        "description": "Statistics include duplicates description"
+    },
+    "settings_statisticsIncludeProtocols": {
+        "message": "프로토콜 포함",
+        "description": "Statistics include protocols label"
+    },
+    "settings_statisticsIncludeProtocolsDesc": {
+        "message": "통계에 URL 프로토콜 분포를 포함합니다",
+        "description": "Statistics include protocols description"
+    },
+    "settings_statisticsIncludeDepthBreakdown": {
+        "message": "깊이 분석 포함",
+        "description": "Statistics include depth breakdown label"
+    },
+    "settings_statisticsIncludeDepthBreakdownDesc": {
+        "message": "통계에 가장 깊은 폴더 중첩 수준을 포함합니다",
+        "description": "Statistics include depth breakdown description"
+    },
+    "settings_statisticsTopN": {
+        "message": "상위 N개 항목",
+        "description": "Statistics top N label"
+    },
+    "settings_statisticsTopNDesc": {
+        "message": "상위 도메인 및 폴더 목록에 표시할 최대 항목 수",
+        "description": "Statistics top N description"
+    },
+    "settings_dataShowExport": {
+        "message": "내보내기 도구 표시",
+        "description": "Data export tool visibility label"
+    },
+    "settings_dataShowExportDesc": {
+        "message": "사이드바에 북마크 내보내기 도구를 표시합니다",
+        "description": "Data export tool visibility description"
+    },
+    "settings_dataShowImport": {
+        "message": "가져오기 도구 표시",
+        "description": "Data import tool visibility label"
+    },
+    "settings_dataShowImportDesc": {
+        "message": "사이드바에 북마크 가져오기 도구를 표시합니다",
+        "description": "Data import tool visibility description"
+    },
+    "settings_dataDefaultExportFormat": {
+        "message": "기본 내보내기 형식",
+        "description": "Default export format label"
+    },
+    "settings_dataDefaultExportFormatDesc": {
+        "message": "북마크 내보내기 도구에서 기본으로 선택되는 형식",
+        "description": "Default export format description"
+    },
     "toast_duplicatesRemoved": {
         "message": "중복을 제거했습니다",
         "description": "Duplicate removal success title"
     },
     "toast_duplicatesRemovedDesc": {
-        "message": "$1개의 중복 북마크를 제거했습니다",
-        "description": "Duplicate removal success description"
+        "message": "$count$개의 중복 북마크를 제거했습니다",
+        "description": "Duplicate removal success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_toolFailed": {
         "message": "도구 실행에 실패했습니다",
@@ -956,24 +2094,52 @@
         "description": "URL cleaner success title"
     },
     "toast_urlCleanerAppliedDesc": {
-        "message": "$1개의 북마크를 업데이트했습니다",
-        "description": "URL cleaner success description"
+        "message": "$count$개의 북마크를 업데이트했습니다",
+        "description": "URL cleaner success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "toast_aiContextPacked": {
         "message": "AI 컨텍스트를 내보냈습니다",
         "description": "AI context export success title"
     },
     "toast_aiContextPackedDesc": {
-        "message": "$1개의 북마크를 AI용으로 내보냈습니다",
-        "description": "AI context export success description"
+        "message": "$count$개의 북마크를 AI용으로 내보냈습니다",
+        "description": "AI context export success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
     },
     "tools_duplicatesDialogDesc": {
-        "message": "$2개의 북마크에서 $1개의 중복 그룹을 찾았습니다",
-        "description": "Duplicate dialog description"
+        "message": "$bookmarks$개의 북마크에서 $groups$개의 중복 그룹을 찾았습니다",
+        "description": "Duplicate dialog description",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "2"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "40"
+            }
+        }
     },
     "tools_urlCleanerDialogDesc": {
-        "message": "$1개의 북마크를 정리할 수 있습니다",
-        "description": "URL cleaner dialog description"
+        "message": "$count$개의 북마크를 정리할 수 있습니다",
+        "description": "URL cleaner dialog description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
     },
     "tools_statisticsDialogDesc": {
         "message": "선택한 범위의 스냅샷입니다",
@@ -986,6 +2152,120 @@
     "tools_summarizerDialogDesc": {
         "message": "AI가 생성한 북마크 요약입니다",
         "description": "Summarizer dialog description"
+    },
+    "tools_deadLinksDialogDesc": {
+        "message": "선택한 북마크의 접속 확인 결과",
+        "description": "Dead link checker dialog description"
+    },
+    "tools_metadataDialogDesc": {
+        "message": "선택한 북마크의 메타데이터 제안",
+        "description": "Metadata fetcher dialog description"
+    },
+    "tools_privacyDialogDesc": {
+        "message": "선택한 북마크에서 발견된 민감한 데이터 후보",
+        "description": "Privacy scanner dialog description"
+    },
+    "tools_rootFolder": {
+        "message": "루트",
+        "description": "Label for bookmarks with no parent folder path"
+    },
+    "tools_suggestedTitle": {
+        "message": "제안된 제목: $title$",
+        "description": "Metadata fetcher suggested title",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            }
+        }
+    },
+    "tools_metadataAvailable": {
+        "message": "메타데이터 있음",
+        "description": "Metadata fetcher result when a better title was found"
+    },
+    "tools_metadataNoChange": {
+        "message": "제목을 바꿀 필요 없음",
+        "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_deadLinkStatus_ok": {
+        "message": "정상",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_redirect": {
+        "message": "리디렉션",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_error": {
+        "message": "오류",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_timeout": {
+        "message": "시간 초과",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_invalid": {
+        "message": "잘못됨",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkReachable": {
+        "message": "접속 가능",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkRedirected": {
+        "message": "리디렉션되지만 접속 가능",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkHttpStatus": {
+        "message": "HTTP $status$",
+        "description": "Dead link result detail with the HTTP status code",
+        "placeholders": {
+            "status": {
+                "content": "$1",
+                "example": "404"
+            }
+        }
+    },
+    "tools_deadLinkTimedOut": {
+        "message": "요청 시간이 초과되었습니다",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkInvalidUrl": {
+        "message": "잘못된 URL",
+        "description": "Dead link result detail"
+    },
+    "tools_privacySeverity_low": {
+        "message": "낮음",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_medium": {
+        "message": "보통",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_high": {
+        "message": "높음",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySensitiveParam": {
+        "message": "민감한 쿼리 매개변수: $param$",
+        "description": "Privacy finding for a sensitive URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "token"
+            }
+        }
+    },
+    "tools_privacyFragment": {
+        "message": "URL에 프래그먼트가 있습니다",
+        "description": "Privacy finding"
+    },
+    "tools_privacyEmail": {
+        "message": "이메일 주소가 감지되었습니다",
+        "description": "Privacy finding"
+    },
+    "tools_privacyUuid": {
+        "message": "UUID 형식의 토큰이 감지되었습니다",
+        "description": "Privacy finding"
     },
     "state_keep": {
         "message": "유지",
@@ -1007,6 +2287,18 @@
         "message": "AI 결과가 없습니다.",
         "description": "No AI results state"
     },
+    "state_noDeadLinksFound": {
+        "message": "깨진 링크가 없습니다.",
+        "description": "Dead link checker empty state"
+    },
+    "state_noMetadataFound": {
+        "message": "메타데이터 업데이트가 없습니다.",
+        "description": "Metadata fetcher empty state"
+    },
+    "state_noPrivacyIssuesFound": {
+        "message": "개인정보 문제가 없습니다.",
+        "description": "Privacy scanner empty state"
+    },
     "action_clean": {
         "message": "정리",
         "description": "Clean button label"
@@ -1014,6 +2306,10 @@
     "action_removing": {
         "message": "제거 중...",
         "description": "Removing state label"
+    },
+    "action_applying": {
+        "message": "적용 중...",
+        "description": "Button label while changes are applied"
     },
     "action_removeDuplicates": {
         "message": "중복 제거",
@@ -1042,26 +2338,6 @@
     "stats_topFolders": {
         "message": "상위 폴더",
         "description": "Statistics top folders label"
-    },
-    "settings_aiContextPackerIncludeTags": {
-        "message": "저장된 태그 포함",
-        "description": "AI context packer include tags label"
-    },
-    "settings_aiContextPackerIncludeTagsDesc": {
-        "message": "북마크에 저장된 메타데이터가 있는 경우에만 태그를 포함합니다",
-        "description": "AI context packer include tags description"
-    },
-    "settings_aiContextPackerIncludeSummaries": {
-        "message": "저장된 요약 포함",
-        "description": "AI context packer include summaries label"
-    },
-    "settings_aiContextPackerIncludeSummariesDesc": {
-        "message": "북마크에 저장된 메타데이터가 있는 경우에만 요약을 포함합니다",
-        "description": "AI context packer include summaries description"
-    },
-    "settings_aiContextPackerExcerptLengthDesc": {
-        "message": "AI 컨텍스트 내보내기에 포함할 저장된 요약의 최대 길이",
-        "description": "AI context packer excerpt length description"
     },
     "stats_protocols": {
         "message": "프로토콜",

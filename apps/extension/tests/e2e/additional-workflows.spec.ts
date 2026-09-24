@@ -350,6 +350,12 @@ test('dead-link checker reports mocked reachable and missing URLs', async ({
   await expect(results).toContainText('Reachable Fixture');
   await expect(results).toContainText('Missing Fixture');
   await expect(results).toContainText('HTTP 404');
+  await expect(results).toContainText('Reachable');
+  await expect(
+    page.getByRole('dialog', { name: 'Check Dead Links' }).getByText(
+      'Reachability results for the selected bookmarks',
+    ),
+  ).toBeVisible();
   expect(requested.sort()).toEqual([
     'HEAD https://e2e.invalid/missing',
     'HEAD https://e2e.invalid/ok',
@@ -378,6 +384,7 @@ test('URL cleaner honors preserved parameters and fragment settings', async ({
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'URL Cleaner').getByRole('button', { name: 'Clean' }).click();
   const preview = page.getByRole('dialog', { name: 'URL Cleaner' });
+  await expect(preview.getByText('1 bookmarks can be cleaned')).toBeVisible();
   await expect(preview).toContainText('https://e2e.invalid/page?utm_source=e2e#keep');
   await preview.getByRole('button', { name: 'Apply Changes' }).click();
 
@@ -442,7 +449,7 @@ test('network tools report route-mocked transport failures without mutating book
   await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
   const deadLinks = page.getByRole('dialog', { name: 'Check Dead Links' });
   await expect(deadLinks).toContainText('Offline Original');
-  await expect(deadLinks.getByText('error', { exact: true })).toBeVisible();
+  await expect(deadLinks.getByText('Error', { exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
 
   await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();

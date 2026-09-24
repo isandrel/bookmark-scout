@@ -254,7 +254,8 @@ export function collectBookmarkStatistics(
     }
 
     if (options.includeFolders) {
-      const label = bookmark.pathLabel || 'Root';
+      // An empty label marks root-level bookmarks; the view localizes it.
+      const label = bookmark.pathLabel;
       folders.set(label, (folders.get(label) ?? 0) + 1);
     }
 

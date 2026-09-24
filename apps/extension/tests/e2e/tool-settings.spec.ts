@@ -106,6 +106,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
   await expect(duplicateCard.getByRole('combobox')).toHaveCount(0);
   await duplicateCard.getByRole('button', { name: 'Scan' }).click();
   const duplicates = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(duplicates.getByText('1 duplicate groups found across 2 bookmarks')).toBeVisible();
   await expect(duplicates).toContainText('E2E Tool A Link');
   await expect(duplicates).toContainText('E2E Tool B Link');
   await page.keyboard.press('Escape');
@@ -169,4 +170,67 @@ test('unsupported and malformed saved scopes fall back without resetting other t
     'E2E Scope Fallback',
   );
   await expect(toolCard(page, 'URL Cleaner')).toHaveCount(0);
+});
+
+test('tools sidebar headings, cards, scopes, and dialogs follow the selected language', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Tool Locale');
+  await seedFolder(extensionWorker, 'E2E Tool Locale Copy');
+  await setSettings(extensionWorker, {
+    language: 'en',
+    aiContextPackerEnabled: true,
+    aiContextPackerDefaultScope: 'folder',
+    duplicatesEnabled: true,
+    urlCleanerEnabled: true,
+    urlCleanerDefaultScope: 'folder',
+    privacyScannerEnabled: true,
+    statisticsEnabled: true,
+    dataDefaultExportFormat: 'html',
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`);
+  await page.getByTitle('Show tools').click();
+  for (const heading of ['AI & Intelligence', 'Maintenance', 'Security', 'Analytics', 'Data']) {
+    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+  }
+  await expect(page.getByText(/tools_category_/i)).toHaveCount(0);
+
+  await setSettings(extensionWorker, { language: 'ja' });
+  for (const heading of [
+    'AI・インテリジェンス',
+    'メンテナンス',
+    'セキュリティ',
+    '分析',
+    'データ',
+  ]) {
+    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+  }
+  const contextCard = toolCard(page, 'AIコンテキストパッカー');
+  await expect(contextCard).toContainText(
+    'ブックマークをAI向けの形式（XML/Markdown）で書き出します',
+  );
+  await contextCard.getByRole('combobox').click();
+  await expect(page.getByRole('option', { name: 'E2E Tool Locale' })).toBeVisible();
+  await expect(page.getByRole('option', { name: 'すべてのブックマーク' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox')).toContainText(
+    'HTML（Chrome）',
+  );
+
+  await toolCard(page, '重複クリーナー').getByRole('button', { name: 'スキャン' }).click();
+  const duplicates = page.getByRole('dialog', { name: '重複クリーナー' });
+  await expect(
+    duplicates.getByText('2 件のブックマークから 1 個の重複グループが見つかりました'),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  await setSettings(extensionWorker, { language: 'ko' });
+  await expect(page.getByRole('heading', { name: '유지 관리', exact: true })).toBeVisible();
+  await toolCard(page, 'URL 정리').getByRole('button', { name: '정리' }).click();
+  await expect(page.getByRole('dialog', { name: 'URL 정리' })).toContainText(
+    '0개의 북마크를 정리할 수 있습니다',
+  );
 });
