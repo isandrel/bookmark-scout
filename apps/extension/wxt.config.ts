@@ -9,7 +9,6 @@ export default defineConfig({
 
     manifest: {
         name: '__MSG_extName__',
-        version: '0.2.0',
         description: '__MSG_extDescription__',
         default_locale: 'en',
         icons: {
