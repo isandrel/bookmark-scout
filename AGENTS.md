@@ -347,6 +347,17 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 5. run targeted verification
 6. report files changed, commands run, and remaining risks or gaps
 
+## Agent skills
+
+Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). `.claude/skills` is a symlink to that folder so Claude Code and other agents share one copy.
+
+- `extension-feature-test`: turning behaviors into unit and E2E coverage, with lessons from past audits.
+- `extension-live-smoke`: read-only checks of an installed extension with Computer Use, and its tool limits.
+- `extension-exploratory-qa`: hands-on QA of the built extension in a disposable Playwright profile, with a bundled runner script.
+- `parallel-agent-delivery`: splitting work across parallel agents and landing auto-merged PRs safely.
+
+Update a skill when a session teaches a lesson that future agents would otherwise relearn.
+
 ## When to add or update nested AGENTS.md files
 
 Use nested `AGENTS.md` files when a subtree needs local rules that are stable, repeated, and more specific than the root guidance. In this repository, the nested app files should remain the authoritative place for app-specific rules.
