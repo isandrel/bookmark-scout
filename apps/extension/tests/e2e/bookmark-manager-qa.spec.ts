@@ -359,10 +359,10 @@ test('parent and domain facets list folders by path and group by registrable dom
   await page.keyboard.press('Escape');
 
   await toolbar(page).getByRole('button', { name: 'Domain' }).click();
-  const bbc = page.getByRole('option', { name: /^bbc\.co\.uk/ });
+  const bbc = page.getByRole('option', { name: /^bbc\.co\.uk \d+$/ });
   await expect(bbc).toContainText('2');
-  await expect(page.getByRole('option', { name: /^nhk\.or\.jp/ })).toBeVisible();
-  await expect(page.getByRole('option', { name: /^co\.uk/ })).toHaveCount(0);
+  await expect(page.getByRole('option', { name: /^nhk\.or\.jp \d+$/ })).toBeVisible();
+  await expect(page.getByRole('option', { name: /^co\.uk( \d+)?$/ })).toHaveCount(0);
   await expect(page.getByRole('option', { name: /^favicon/ })).toHaveCount(0);
   await bbc.click();
   await page.keyboard.press('Escape');
