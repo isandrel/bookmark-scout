@@ -27,13 +27,22 @@ describe('toast stacking', () => {
     expect(state.toasts.map((toast) => toast.id)).toEqual(['delete-3', 'delete-2', 'delete-1']);
   });
 
-  it('evicts informational toasts before toasts with an undo action', () => {
+  it('replaces informational toasts but keeps undo toasts, up to the limit', () => {
     let state = { toasts: [] as ReturnType<typeof reducer>['toasts'] };
     state = add(state, 'delete-1', true);
     state = add(state, 'info-1', false);
     state = add(state, 'delete-2', true);
     state = add(state, 'info-2', false);
     expect(state.toasts.map((toast) => toast.id)).toEqual(['info-2', 'delete-2', 'delete-1']);
+    state = add(state, 'delete-3', true);
+    expect(state.toasts.map((toast) => toast.id)).toEqual(['delete-3', 'delete-2', 'delete-1']);
+  });
+
+  it('drops dismissed undo toasts when a new toast arrives', () => {
+    let state = add({ toasts: [] }, 'delete-1', true);
+    state = reducer(state, { type: 'DISMISS_TOAST', toastId: 'delete-1' });
+    state = add(state, 'info-1', false);
+    expect(state.toasts.map((toast) => toast.id)).toEqual(['info-1']);
   });
 });
 
