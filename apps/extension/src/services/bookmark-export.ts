@@ -5,8 +5,6 @@
  */
 
 import type { BookmarkTreeNode } from '@/types';
-import { t } from '@/hooks/use-i18n';
-import { defaultSettings } from '@/lib/settings-schema';
 
 // ============================================================================
 // Export Format Interface (Strategy Pattern)

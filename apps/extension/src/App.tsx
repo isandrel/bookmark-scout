@@ -1,4 +1,3 @@
-import PopupPage from '@/components/page/PopupPage';
 import './index.scss';
 
 function App() {

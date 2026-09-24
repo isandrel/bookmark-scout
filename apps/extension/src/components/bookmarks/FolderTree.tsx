@@ -5,8 +5,6 @@
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { t } from '@/hooks/use-i18n';
 
 interface FolderNode {
   id: string;
