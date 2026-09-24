@@ -82,6 +82,11 @@ export function useBookmarkNavigation() {
       const tree = await getBookmarkTree();
       const root = tree[0];
       const bookmarks = flattenBookmarks(root?.children ?? []);
+      // Cleanup for bookmarks removed while the extension was not running must never block
+      // loading the bookmark list.
+      void reconcileStoredBookmarkMetadata(
+        bookmarks.filter((bookmark) => Boolean(bookmark.url)).map((bookmark) => bookmark.id),
+      ).catch(() => undefined);
       setAllData(bookmarks);
       setData(bookmarks.filter((bookmark) => bookmark.parentId === (currentFolder ?? root?.id)));
 

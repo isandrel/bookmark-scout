@@ -751,6 +751,74 @@
         "message": "コピーできませんでした。",
         "description": "Error after bookmark detail copying fails"
     },
+    "bookmarks_metadataTitle": {
+        "message": "タグと要約",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "拡張機能内にローカル保存され、有効時にAIコンテキストへ書き出されます。",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "タグ",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "調査, ツール, 読書",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "タグはカンマで区切ります。保存時に重複を削除します。",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "要約",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "このブックマークの非公開メモや要約を追加",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "メタデータを保存",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "メタデータを消去",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "メタデータを保存しました。",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "メタデータを消去しました。",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "保存済みメタデータを読み込めませんでした。",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "メタデータを保存できませんでした。",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "提案タグを保存",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "提案要約を保存",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "確認済みのタグ候補をマージ設定に従って保存しました。",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "確認済みの要約候補をマージ設定に従って保存しました。",
+        "description": "Toast description after applying generated summaries"
+    },
     "search_matchCase": {
         "message": "大文字/小文字を区別",
         "description": "Toggle case-sensitive search"

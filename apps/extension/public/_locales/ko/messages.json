@@ -751,6 +751,74 @@
         "message": "복사하지 못했습니다.",
         "description": "Error after bookmark detail copying fails"
     },
+    "bookmarks_metadataTitle": {
+        "message": "태그 및 요약",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "확장 프로그램에 로컬로 저장되며 사용 설정 시 AI 컨텍스트 내보내기에 포함됩니다.",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "태그",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "조사, 도구, 읽기",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "태그를 쉼표로 구분하세요. 저장할 때 중복 태그가 제거됩니다.",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "요약",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "이 북마크의 비공개 메모 또는 요약 추가",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "메타데이터 저장",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "메타데이터 지우기",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "메타데이터를 저장했습니다.",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "메타데이터를 지웠습니다.",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "저장된 메타데이터를 불러오지 못했습니다.",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "메타데이터를 저장하지 못했습니다.",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "추천 태그 저장",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "추천 요약 저장",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "검토한 태그 추천을 병합 설정에 따라 저장했습니다.",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "검토한 요약 추천을 병합 설정에 따라 저장했습니다.",
+        "description": "Toast description after applying generated summaries"
+    },
     "search_matchCase": {
         "message": "대소문자 구분",
         "description": "Toggle case-sensitive search"
