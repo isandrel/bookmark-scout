@@ -25,3 +25,9 @@ Brainstorm proposal: the dead-link tool reports results only and uses HEAD reque
 - [ ] #1 HTTP/auth/rate-limit/HEAD-unsupported results are classified separately from confirmed dead links.
 - [ ] #2 No bookmark is changed without a review step; network tests use deterministic local fixtures.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Partial progress: HEAD 405/501 now falls back to a bounded GET (body discarded), redirects report their destination, and non-web URLs are skipped; network behavior is tested against a real local HTTP server. Still open: separate classification for auth/rate-limit responses and the reviewed edit/archive/remove workflow.
+<!-- SECTION:NOTES:END -->

@@ -9,13 +9,26 @@ import type { BookmarkTreeNode } from '@/types';
 // Import Format Interface (Strategy Pattern)
 // ============================================================================
 
-export interface ImportResult {
+export interface ParsedImport {
   /** Parsed bookmark tree */
   bookmarks: BookmarkTreeNode[];
-  /** Number of bookmarks imported */
+  /** Entries dropped because they were not valid bookmarks or folders */
+  skipped: number;
+}
+
+export interface ImportResult extends ParsedImport {
+  /** Number of bookmarks found */
   bookmarkCount: number;
-  /** Number of folders imported */
+  /** Number of folders found */
   folderCount: number;
+}
+
+export interface ImportOutcome {
+  bookmarksCreated: number;
+  foldersCreated: number;
+  /** Items the browser rejected, including the contents of folders that failed */
+  failed: number;
+  errors: string[];
 }
 
 export interface ImportFormat {
@@ -25,8 +38,8 @@ export interface ImportFormat {
   extensions: string[];
   /** MIME types to accept */
   mimeTypes: string[];
-  /** Parse content and return bookmark tree */
-  parse(content: string): BookmarkTreeNode[];
+  /** Parse content and return the bookmark tree plus the number of skipped entries */
+  parse(content: string): ParsedImport;
 }
 
 // ============================================================================
@@ -40,10 +53,11 @@ export const htmlImportFormat: ImportFormat = {
   name: 'HTML (Chrome/Netscape)',
   extensions: ['html', 'htm'],
   mimeTypes: ['text/html'],
-  parse(content: string): BookmarkTreeNode[] {
+  parse(content: string): ParsedImport {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, 'text/html');
     const result: BookmarkTreeNode[] = [];
+    let skipped = 0;
 
     let idCounter = 0;
     const generateId = () => `imported-${Date.now()}-${++idCounter}`;
@@ -51,22 +65,26 @@ export const htmlImportFormat: ImportFormat = {
     const parseNode = (element: Element, parentId?: string): BookmarkTreeNode | null => {
       // Handle <A> tags (bookmarks)
       if (element.tagName === 'A') {
-        const url = element.getAttribute('HREF');
-        const title = element.textContent?.trim() || 'Untitled';
+        const url = element.getAttribute('HREF')?.trim();
+        if (!url) {
+          skipped += 1;
+          return null;
+        }
+        const title = element.textContent?.trim() || t('bookmarks_untitled');
         const dateAdded = element.getAttribute('ADD_DATE');
 
         return {
           id: generateId(),
           parentId,
           title,
-          url: url || undefined,
+          url,
           dateAdded: dateAdded ? parseInt(dateAdded, 10) * 1000 : Date.now(),
         };
       }
 
       // Handle <H3> tags (folders)
       if (element.tagName === 'H3') {
-        const title = element.textContent?.trim() || 'Untitled Folder';
+        const title = element.textContent?.trim() || t('bookmarks_untitled');
         const dateAdded = element.getAttribute('ADD_DATE');
         const id = generateId();
 
@@ -122,7 +140,7 @@ export const htmlImportFormat: ImportFormat = {
       });
     }
 
-    return result;
+    return { bookmarks: result, skipped };
   },
 };
 
@@ -133,53 +151,73 @@ export const jsonImportFormat: ImportFormat = {
   name: 'JSON',
   extensions: ['json'],
   mimeTypes: ['application/json'],
-  parse(content: string): BookmarkTreeNode[] {
+  parse(content: string): ParsedImport {
     let idCounter = 0;
+    let skipped = 0;
     const generateId = () => `imported-${Date.now()}-${++idCounter}`;
 
-    interface RawNode {
-      title?: string;
-      url?: string;
-      dateAdded?: number;
-      dateGroupModified?: number;
-      children?: RawNode[];
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(content);
+    } catch {
+      throw new Error(t('error_invalidJsonFormat'));
     }
 
-    const parseRawNode = (raw: RawNode, parentId?: string): BookmarkTreeNode => {
+    const isRecord = (value: unknown): value is Record<string, unknown> =>
+      typeof value === 'object' && value !== null && !Array.isArray(value);
+
+    // Invalid entries are skipped and counted so one bad item never rejects the whole file.
+    const parseRawNode = (raw: unknown, parentId?: string): BookmarkTreeNode | null => {
+      if (!isRecord(raw)) {
+        skipped += 1;
+        return null;
+      }
+      const url = typeof raw.url === 'string' && raw.url.trim() ? raw.url.trim() : undefined;
+      const rawChildren = Array.isArray(raw.children) ? raw.children : undefined;
+      if (raw.url !== undefined && !url) {
+        skipped += 1;
+        return null;
+      }
+      if (!url && !rawChildren && typeof raw.title !== 'string') {
+        skipped += 1;
+        return null;
+      }
+
       const id = generateId();
       const node: BookmarkTreeNode = {
         id,
         parentId,
-        title: raw.title || 'Untitled',
-        url: raw.url,
-        dateAdded: raw.dateAdded,
-        dateGroupModified: raw.dateGroupModified,
+        title: typeof raw.title === 'string' && raw.title ? raw.title : t('bookmarks_untitled'),
+        url,
+        dateAdded: typeof raw.dateAdded === 'number' ? raw.dateAdded : undefined,
+        dateGroupModified:
+          typeof raw.dateGroupModified === 'number' ? raw.dateGroupModified : undefined,
       };
 
-      if (raw.children && raw.children.length > 0) {
-        node.children = raw.children.map((child) => parseRawNode(child, id));
+      if (!url && rawChildren) {
+        node.children = rawChildren
+          .map((child) => parseRawNode(child, id))
+          .filter((child): child is BookmarkTreeNode => child !== null);
       }
 
       return node;
     };
 
-    try {
-      const parsed = JSON.parse(content);
-      
-      // Handle both single object and array formats
-      if (Array.isArray(parsed)) {
-        return parsed.map((item) => parseRawNode(item, undefined));
-      }
-      
-      // Single root object
-      if (parsed.children && Array.isArray(parsed.children)) {
-        return parsed.children.map((item: RawNode) => parseRawNode(item, undefined));
-      }
-      
-      return [parseRawNode(parsed, undefined)];
-    } catch {
-      throw new Error('Invalid JSON format');
+    const parseList = (items: unknown[]) =>
+      items
+        .map((item) => parseRawNode(item, undefined))
+        .filter((node): node is BookmarkTreeNode => node !== null);
+
+    let bookmarks: BookmarkTreeNode[];
+    if (Array.isArray(parsed)) {
+      bookmarks = parseList(parsed);
+    } else if (isRecord(parsed) && Array.isArray(parsed.children) && !parsed.url) {
+      // An exported container: its children are the top-level entries.
+      bookmarks = parseList(parsed.children);
+    } else {
+      bookmarks = parseList([parsed]);
     }
+    return { bookmarks, skipped };
   },
 };
 
@@ -219,7 +257,7 @@ export function parseBookmarks(
   content: string,
   format: ImportFormat
 ): ImportResult {
-  const bookmarks = format.parse(content);
+  const { bookmarks, skipped } = format.parse(content);
 
   // Count items
   let bookmarkCount = 0;
@@ -242,51 +280,41 @@ export function parseBookmarks(
 
   return {
     bookmarks,
+    skipped,
     bookmarkCount,
     folderCount,
   };
 }
 
+function countItems(node: BookmarkTreeNode): number {
+  return 1 + (node.children ?? []).reduce((total, child) => total + countItems(child), 0);
+}
+
 /**
- * Create bookmarks in Chrome from parsed structure
+ * Create bookmarks from a parsed structure. Every item is attempted; failures are counted
+ * (a failed folder counts its whole subtree) rather than reported as success.
  */
 export async function importBookmarks(
   nodes: BookmarkTreeNode[],
-  targetFolderId: string
-): Promise<{ created: number; errors: string[] }> {
-  let created = 0;
-  const errors: string[] = [];
+  targetFolderId: string,
+): Promise<ImportOutcome> {
+  const outcome: ImportOutcome = { bookmarksCreated: 0, foldersCreated: 0, failed: 0, errors: [] };
 
-  const createNode = async (
-    node: BookmarkTreeNode,
-    parentId: string
-  ): Promise<void> => {
+  const createNode = async (node: BookmarkTreeNode, parentId: string): Promise<void> => {
     try {
       if (node.url) {
-        // Create bookmark
-        await chrome.bookmarks.create({
-          parentId,
-          title: node.title,
-          url: node.url,
-        });
-        created++;
-      } else {
-        // Create folder
-        const folder = await chrome.bookmarks.create({
-          parentId,
-          title: node.title,
-        });
-        created++;
-
-        // Recursively create children
-        if (node.children) {
-          for (const child of node.children) {
-            await createNode(child, folder.id);
-          }
-        }
+        await createBookmark({ parentId, title: node.title, url: node.url });
+        outcome.bookmarksCreated += 1;
+        return;
+      }
+      const folder = await createBookmark({ parentId, title: node.title });
+      outcome.foldersCreated += 1;
+      for (const child of node.children ?? []) {
+        await createNode(child, folder.id);
       }
     } catch (err) {
-      errors.push(`Failed to create "${node.title}": ${err instanceof Error ? err.message : 'Unknown error'}`);
+      outcome.failed += node.url ? 1 : countItems(node);
+      outcome.errors.push(err instanceof Error ? err.message : t('error_unknown'));
     }
   };
 
@@ -294,7 +322,7 @@ export async function importBookmarks(
     await createNode(node, targetFolderId);
   }
 
-  return { created, errors };
+  return outcome;
 }
 
 /**

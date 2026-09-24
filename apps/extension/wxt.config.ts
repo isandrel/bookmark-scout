@@ -2,7 +2,7 @@ import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
 
-const providerHostPermissions = ['http://*/*', 'https://*/*'];
+const OPTIONAL_WEB_ORIGINS = ['http://*/*', 'https://*/*'];
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -33,8 +33,9 @@ export default defineConfig({
             },
         },
         permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel', 'contextMenus'],
-        // Requested per origin at click time (e.g. AI provider Verify Service), never up front.
-        optional_host_permissions: providerHostPermissions,
+        // Requested at click time only, never at install: website access for the dead-link and
+        // metadata tools, and per-origin access for the AI provider Verify Service check.
+        optional_host_permissions: OPTIONAL_WEB_ORIGINS,
         web_accessible_resources: [
             {
                 resources: ['_favicon/*'],
@@ -42,6 +43,18 @@ export default defineConfig({
                 extension_ids: ['*'],
             },
         ],
+    },
+
+    hooks: {
+        // MV2 (Firefox) has no optional_host_permissions; origins go in optional_permissions.
+        'build:manifestGenerated': (wxt, manifest) => {
+            if (wxt.config.manifestVersion !== 2) return;
+            manifest.optional_permissions = [
+                ...(manifest.optional_permissions ?? []),
+                ...OPTIONAL_WEB_ORIGINS,
+            ] as typeof manifest.optional_permissions;
+            delete manifest.optional_host_permissions;
+        },
     },
 
     // Release asset names match the tag, e.g. bookmark-scout-v0.2.0-chrome.zip.
@@ -69,17 +82,6 @@ export default defineConfig({
             'apps/extension/playwright.config.ts',
             'apps/extension/vitest.config.ts',
         ],
-    },
-
-    hooks: {
-        // MV2 (Firefox) has no optional_host_permissions; origins go in optional_permissions.
-        'build:manifestGenerated': (_wxt, manifest) => {
-            if (manifest.manifest_version !== 2) return;
-            manifest.optional_permissions = [
-                ...(manifest.optional_permissions ?? []),
-                ...providerHostPermissions,
-            ];
-        },
     },
 
     vite: () => ({

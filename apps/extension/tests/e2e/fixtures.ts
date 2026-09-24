@@ -1,28 +1,52 @@
-import { existsSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium, expect, test as base, type BrowserContext, type Worker } from '@playwright/test';
 
 type ExtensionFixtures = {
+  /** Loads a copy whose manifest pre-grants the optional web host access the network tools request. */
+  grantWebHostAccess: boolean;
   context: BrowserContext;
   extensionId: string;
   extensionWorker: Worker;
 };
 
+type WorkerFixtures = {
+  hostAccessExtensionPath: string;
+};
+
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 const extensionPath = path.resolve(currentDirectory, '../../dist/chrome-mv3');
 
-export const test = base.extend<ExtensionFixtures>({
-  // biome-ignore lint/correctness/noEmptyPattern: Playwright requires destructuring fixture arguments.
-  context: async ({}, use, testInfo) => {
+export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
+  grantWebHostAccess: [false, { option: true }],
+  hostAccessExtensionPath: [
+    // biome-ignore lint/correctness/noEmptyPattern: Playwright requires destructuring fixture arguments.
+    async ({}, use) => {
+      // Unpacked extensions cannot answer the permission prompt headlessly, so the granted state is
+      // simulated by declaring the optional origins as install-time host permissions in a copy.
+      const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-host-access-'));
+      cpSync(extensionPath, directory, { recursive: true });
+      const manifestPath = path.join(directory, 'manifest.json');
+      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+      manifest.host_permissions = manifest.optional_host_permissions;
+      writeFileSync(manifestPath, JSON.stringify(manifest));
+      await use(directory);
+      rmSync(directory, { recursive: true, force: true });
+    },
+    { scope: 'worker' },
+  ],
+  context: async ({ grantWebHostAccess, hostAccessExtensionPath }, use, testInfo) => {
     if (!existsSync(extensionPath)) {
       throw new Error(`Built extension not found at ${extensionPath}`);
     }
+    const loadPath = grantWebHostAccess ? hostAccessExtensionPath : extensionPath;
 
     const context = await chromium.launchPersistentContext(testInfo.outputPath('user-data'), {
       channel: 'chromium',
       headless: true,
-      args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
+      args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
     });
 
     await use(context);

@@ -778,7 +778,7 @@ test('exports and imports bookmark data without manual file handling', async ({
   await page.getByTitle('Show tools').click();
 
   const exportCard = toolCard(page, 'Export Bookmarks');
-  await exportCard.getByRole('combobox').click();
+  await exportCard.getByRole('combobox', { name: 'Format' }).click();
   await page.getByRole('option', { name: 'JSON' }).click();
   const downloadPromise = page.waitForEvent('download');
   await exportCard.getByRole('button', { name: 'Export' }).click();

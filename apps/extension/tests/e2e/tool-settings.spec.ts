@@ -106,7 +106,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
   await expect(duplicateCard.getByRole('combobox')).toHaveCount(0);
   await duplicateCard.getByRole('button', { name: 'Scan' }).click();
   const duplicates = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
-  await expect(duplicates.getByText('1 duplicate groups found across 2 bookmarks')).toBeVisible();
+  await expect(duplicates.getByText('1 duplicate group found across 2 bookmarks')).toBeVisible();
   await expect(duplicates).toContainText('E2E Tool A Link');
   await expect(duplicates).toContainText('E2E Tool B Link');
   await page.keyboard.press('Escape');
@@ -216,7 +216,7 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
   await expect(page.getByRole('option', { name: 'E2E Tool Locale' })).toBeVisible();
   await expect(page.getByRole('option', { name: 'すべてのブックマーク' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox')).toContainText(
+  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox').first()).toContainText(
     'HTML（Chrome）',
   );
 
