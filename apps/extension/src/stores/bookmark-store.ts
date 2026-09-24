@@ -319,21 +319,16 @@ export const useBookmarkStore = create<BookmarkState>()(
         }
 
         const savedExpansion = preSearchExpandedFolders ?? expandedFolders;
-        if (forceExpandAll) {
-          set({
-            filteredFolders: folders,
-            expandedFolders: getAllFolderIds(folders),
-            preSearchExpandedFolders: savedExpansion,
-          });
-          return;
-        }
-
         const filtered = filterBookmarkTree(folders, debouncedQuery, searchOptions);
+        // "Expand all" opens every folder of the search results without dropping the filter.
+        const searchExpansion = forceExpandAll
+          ? getAllFolderIds(filtered)
+          : expandFoldersOnSearch
+            ? getSearchExpandedFolderIds(filtered)
+            : savedExpansion;
         set({
           filteredFolders: filtered,
-          expandedFolders: expandFoldersOnSearch
-            ? getSearchExpandedFolderIds(filtered)
-            : savedExpansion,
+          expandedFolders: searchExpansion,
           preSearchExpandedFolders: savedExpansion,
         });
       },

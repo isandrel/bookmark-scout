@@ -2562,5 +2562,17 @@
     "stats_protocols": {
         "message": "프로토콜",
         "description": "Statistics protocols label"
+    },
+    "search_clear": {
+        "message": "검색어 지우기",
+        "description": "Accessible label for the button that clears the popup search box"
+    },
+    "search_invalidRegex": {
+        "message": "정규식이 올바르지 않습니다. 일반 텍스트로 검색합니다.",
+        "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
+    },
+    "ai_folderRecommendation": {
+        "message": "AI 폴더 추천",
+        "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
     }
 }

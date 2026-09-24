@@ -2562,5 +2562,17 @@
     "stats_protocols": {
         "message": "プロトコル",
         "description": "Statistics protocols label"
+    },
+    "search_clear": {
+        "message": "検索をクリア",
+        "description": "Accessible label for the button that clears the popup search box"
+    },
+    "search_invalidRegex": {
+        "message": "正規表現が無効です。通常のテキストとして検索しています。",
+        "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
+    },
+    "ai_folderRecommendation": {
+        "message": "AI フォルダのおすすめ",
+        "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
     }
 }

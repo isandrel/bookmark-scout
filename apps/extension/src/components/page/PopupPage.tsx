@@ -530,6 +530,13 @@ function PopupPage() {
           </div>
         )}
 
+        {/* Outside the scrolling tree so the notice stays visible while scrolling results. */}
+        {!isLoading && isSearchLimited && (
+          <p className="shrink-0 border-b px-5 py-1.5 text-xs text-muted-foreground" role="status">
+            {t('search_resultsLimited', [String(maxSearchResults), String(totalSearchMatches)])}
+          </p>
+        )}
+
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {isLoading ? (
             <div className="p-3 space-y-1">
@@ -553,14 +560,6 @@ function PopupPage() {
             </div>
           ) : (
             <div className="p-3">
-              {isSearchLimited && (
-                <p className="px-2 pb-2 text-xs text-muted-foreground" role="status">
-                  {t('search_resultsLimited', [
-                    String(maxSearchResults),
-                    String(totalSearchMatches),
-                  ])}
-                </p>
-              )}
               <Accordion
                 type="multiple"
                 value={expandedFolders}

@@ -16,9 +16,32 @@ type CompiledSearch = {
 
 const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 
-function buildSearchPattern(query: string, options: SearchOptions): string {
+/**
+ * A word character for whole-word matching: any letter, number, mark, or underscore, except
+ * Han, Hiragana, and Katakana. Those scripts do not separate words with spaces, so a script
+ * change or punctuation next to them counts as a boundary. `\b` is ASCII-only and never matched
+ * CJK terms or terms ending in symbols such as `C++`.
+ */
+const WORD_CHARACTER =
+  '(?:(?![\\p{Script=Han}\\p{Script=Hiragana}\\p{Script=Katakana}])[\\p{L}\\p{N}\\p{M}_])';
+
+function buildSearchRegex(query: string, options: SearchOptions): RegExp {
   const source = options.useRegex ? query : query.replace(REGEX_SPECIAL_CHARACTERS, '\\$&');
-  return options.wholeWord ? `\\b(?:${source})\\b` : source;
+  const flags = options.matchCase ? 'g' : 'gi';
+  return options.wholeWord
+    ? new RegExp(`(?<!${WORD_CHARACTER})(?:${source})(?!${WORD_CHARACTER})`, `${flags}u`)
+    : new RegExp(source, flags);
+}
+
+/** Whether a regex-mode query compiles; invalid patterns fall back to a plain text search. */
+export function isSearchQueryValid(query: string, options: SearchOptions): boolean {
+  if (!options.useRegex || !query) return true;
+  try {
+    buildSearchRegex(query, options);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function substringSearch(query: string, matchCase: boolean): CompiledSearch {
@@ -43,7 +66,7 @@ function substringSearch(query: string, matchCase: boolean): CompiledSearch {
 function compileSearch(query: string, options: SearchOptions): CompiledSearch {
   let regex: RegExp;
   try {
-    regex = new RegExp(buildSearchPattern(query, options), options.matchCase ? 'g' : 'gi');
+    regex = buildSearchRegex(query, options);
   } catch {
     return substringSearch(query, options.matchCase);
   }
@@ -89,6 +112,10 @@ export function getSearchMatchRanges(
 /**
  * Keep matching nodes and their ancestors. A matching folder keeps all of its children so its
  * contents stay browsable; matches deeper inside it are still highlighted and flagged.
+ *
+ * The invisible browser root and the permanent folders beneath it (Bookmarks bar, Other
+ * bookmarks, ...) are containers only: their own titles never match, otherwise a query such as
+ * `bar`, `other`, or the regex `^$` would return the entire tree.
  */
 export function filterBookmarkTree(
   nodes: readonly BookmarkTreeNode[],
@@ -98,11 +125,16 @@ export function filterBookmarkTree(
   if (!query) return [...nodes];
 
   const search = compileSearch(query, options);
-  const filterNodes = (items: readonly BookmarkTreeNode[]): BookmarkTreeNode[] => {
+  const filterNodes = (
+    items: readonly BookmarkTreeNode[],
+    parentIsRoot: boolean,
+  ): BookmarkTreeNode[] => {
     const filtered: BookmarkTreeNode[] = [];
 
     for (const node of items) {
-      const isMatch = search.test(node.title);
+      const isRoot = isBookmarkTreeRoot(node);
+      const isContainer = isRoot || parentIsRoot;
+      const isMatch = !isContainer && search.test(node.title);
       const matchFields = isMatch
         ? { isSearchMatch: true, searchMatchRanges: search.ranges(node.title) }
         : {};
@@ -112,7 +144,7 @@ export function filterBookmarkTree(
         continue;
       }
 
-      const matchingChildren = filterNodes(node.children);
+      const matchingChildren = filterNodes(node.children, isRoot);
       if (!isMatch && matchingChildren.length === 0) continue;
 
       const matchingById = new Map(matchingChildren.map((child) => [child.id, child]));
@@ -128,7 +160,7 @@ export function filterBookmarkTree(
     return filtered;
   };
 
-  return filterNodes(nodes);
+  return filterNodes(nodes, false);
 }
 
 function containsSearchMatch(node: BookmarkTreeNode): boolean {
