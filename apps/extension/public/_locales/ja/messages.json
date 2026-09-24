@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "欠けているタイトルとファビコンを補完します",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "ページタイトルを提案し、承認したものだけを適用します",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "プライバシースキャナー",
@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "統計にフォルダの最も深い階層を含めます",
-        "description": "Statistics include depth breakdown description"
+        "message": "フォルダ階層ごとのブックマーク数を表示します",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "上位N件",
@@ -3082,5 +3082,345 @@
     "toast_itemLabel": {
         "message": "通知",
         "description": "Accessible label announced for each notification"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "$count$ 件の重複ブックマークを削除しました",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "一部の重複は削除されませんでした",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "削除: $removed$ 件。変更済みまたは削除済みのためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "復元: $restored$ 件。復元できませんでした: $failed$ 件。",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc_one": {
+        "message": "$bookmarks$ 件のブックマークから $groups$ 個の重複グループが見つかりました",
+        "description": "Duplicate dialog description (one group)",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "1"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc_one": {
+        "message": "$count$ 件のブックマークをクリーンアップできます",
+        "description": "URL cleaner dialog description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerAppliedDesc_one": {
+        "message": "$count$ 件のブックマークを更新しました",
+        "description": "URL cleaner success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerPartial": {
+        "message": "一部のURLはクリーンアップされませんでした",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "更新: $updated$ 件。プレビュー後に変更されたためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "リダイレクト先: $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "Webリンクではないためスキップしました",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "サイトに接続できませんでした",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "スキップ",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "$title$ に提案タイトルを適用",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "$count$ 件のタイトルを適用",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "$count$ 件のタイトルを適用",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "タイトルを更新しました",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "$count$ 件のブックマークのタイトルを更新しました",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "$count$ 件のブックマークのタイトルを更新しました",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "一部のタイトルは更新されませんでした",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "更新: $updated$ 件。スキャン後に変更されたためスキップ: $skipped$ 件。失敗: $failed$ 件。",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "Webサイトへのアクセスを許可しますか？",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "リンク切れチェックとタイトル提案では、ブックマークした各ページにリクエストを送ります。Bookmark Scout にWebサイトへのアクセス権がないと、多くのサイトがこのリクエストをブロックします。ブラウザで確認を求められます。",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "アクセス権はこれらのツールを実行したときにのみ使用されます。リクエストはCookieなしで送信され、ブラウザの拡張機能設定からいつでも取り消せます。",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "Webサイトへのアクセスが許可されませんでした",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "スキャンは実行されていません。アクセスを許可するにはツールをもう一度実行してください。",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "後で",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "アクセスを許可",
+        "description": "Button that requests website access"
+    },
+    "toast_exportSuccessDesc_one": {
+        "message": "$count$ 件のブックマークを $format$ 形式で書き出しました",
+        "description": "Export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "format": {
+                "content": "$2",
+                "example": "HTML"
+            }
+        }
+    },
+    "error_invalidJsonFormat": {
+        "message": "JSONの形式が正しくありません",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "このファイルにはブックマークやフォルダが見つかりませんでした。何もインポートされていません。",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "インポートしたブックマーク: $bookmarks$ 件。フォルダ: $folders$ 件。",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "一部の項目はインポートされませんでした",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "インポートしたブックマーク: $bookmarks$ 件。フォルダ: $folders$ 件。インポートできなかった項目: $failed$ 件。",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "URLフラグメント内の機密値: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "URLにユーザー名とパスワードが含まれています",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "URLにユーザー名が含まれています",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "APIトークンまたはアクセストークンと思われる値があります",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "フォルダ階層ごとのブックマーク",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "レベル $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI機能は無効になっています",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "このツールを使うには、オプションでAI機能を有効にしてください。",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$ 件のブックマークをAI用に書き出しました",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
     }
 }

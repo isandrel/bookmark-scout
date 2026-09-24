@@ -276,6 +276,7 @@ bookmark-scout/
 | `storage`      | Save user preferences                |
 | `sidePanel`    | Enable Chrome side panel             |
 | `contextMenus` | Save links from the right-click menu |
+| Website access (optional) | Requested only when you run Check Dead Links or Metadata Fetcher |
 
 Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only.
 

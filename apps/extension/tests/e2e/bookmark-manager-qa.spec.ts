@@ -437,7 +437,9 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   const bulk = page.getByTestId('bulk-actions');
   await expect(bulk).toContainText('2 selected');
   await bulk.getByRole('button', { name: 'Delete' }).click();
-  await expect(page.getByText('Deleted 2 items. Undo within 10 seconds.')).toBeVisible();
+  await expect(
+    page.getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true }),
+  ).toBeVisible();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A']);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A', 'Bulk B', 'Bulk C']);

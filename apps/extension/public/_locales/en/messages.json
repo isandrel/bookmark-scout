@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "Fix missing titles and favicons",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "Suggest page titles and apply the ones you approve",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "Privacy Scanner",
@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "Track the deepest folder nesting level in statistics",
-        "description": "Statistics include depth breakdown description"
+        "message": "Show how many bookmarks sit at each folder level",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "Top N Entries",
@@ -3082,5 +3082,345 @@
     "toast_itemLabel": {
         "message": "Notification",
         "description": "Accessible label announced for each notification"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "$count$ duplicate bookmark removed",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "Some duplicates were not removed",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "Removed: $removed$. Skipped because they changed or were already removed: $skipped$. Failed: $failed$.",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "Restored: $restored$. Could not restore: $failed$.",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc_one": {
+        "message": "$groups$ duplicate group found across $bookmarks$ bookmarks",
+        "description": "Duplicate dialog description (one group)",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "1"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc_one": {
+        "message": "$count$ bookmark can be cleaned",
+        "description": "URL cleaner dialog description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerAppliedDesc_one": {
+        "message": "$count$ bookmark updated",
+        "description": "URL cleaner success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerPartial": {
+        "message": "Some URLs were not cleaned",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "Updated: $updated$. Skipped because they changed after the preview: $skipped$. Failed: $failed$.",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "Redirects to $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "Not a web link; skipped",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "Could not connect to the site",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "Skipped",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "Apply suggested title for $title$",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "Apply $count$ titles",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "Apply $count$ title",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "Titles updated",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "$count$ bookmark titles updated",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "$count$ bookmark title updated",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "Some titles were not updated",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "Updated: $updated$. Skipped because they changed after the scan: $skipped$. Failed: $failed$.",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "Allow access to websites?",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "Dead link checks and title suggestions request each bookmarked page. Most sites block these requests unless Bookmark Scout has access to websites. Your browser will ask you to confirm.",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "Access is used only when you run these tools. Requests are sent without cookies, and you can revoke access in the browser's extension settings.",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "Website access not granted",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "Nothing was scanned. Run the tool again to allow access.",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "Not now",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "Allow access",
+        "description": "Button that requests website access"
+    },
+    "toast_exportSuccessDesc_one": {
+        "message": "$count$ bookmark exported as $format$",
+        "description": "Export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "format": {
+                "content": "$2",
+                "example": "HTML"
+            }
+        }
+    },
+    "error_invalidJsonFormat": {
+        "message": "Invalid JSON format",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "No bookmarks or folders were found in this file. Nothing was imported.",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "Bookmarks imported: $bookmarks$. Folders imported: $folders$.",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "Some items were not imported",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "Bookmarks imported: $bookmarks$. Folders imported: $folders$. Not imported: $failed$.",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "Sensitive value in URL fragment: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "Username and password embedded in URL",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "Username embedded in URL",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "Value looks like an API or access token",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "Bookmarks by folder level",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "Level $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI features are disabled",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "Turn on AI features in Options to use this tool.",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$ bookmark exported for AI use",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
     }
 }

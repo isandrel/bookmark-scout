@@ -275,6 +275,7 @@ bookmark-scout/
 | `storage`      | Save user preferences                |
 | `sidePanel`    | Enable Chrome side panel             |
 | `contextMenus` | Save links from the right-click menu |
+| Website access (optional) | Requested only when you run Check Dead Links or Metadata Fetcher |
 
 ---
 
