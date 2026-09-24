@@ -328,8 +328,8 @@ const TOKEN_VALUE_PATTERN =
   /(?:^|[^A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/;
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
 /** `logo@2x.png`-style asset names look like emails but are not. */
-const ASSET_DOMAIN_PATTERN =
-  /^\d+(?:\.\d+)?x\.|\.(?:png|jpe?g|gif|svg|webp|avif|ico|bmp|css|js|mjs|json|html?)$/i;
+const RETINA_SUFFIX_PATTERN = /^\d+(?:\.\d+)?x\./i;
+const ASSET_EXTENSION_PATTERN = /\.(?:png|jpe?g|gif|svg|webp|avif|ico|bmp|css|js|mjs|json|html?)$/i;
 const UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
 
 const SEVERITY_RANK: Record<PrivacySeverity, number> = { low: 0, medium: 1, high: 2 };
@@ -369,7 +369,9 @@ function fragmentParams(hash: string): URLSearchParams | null {
 }
 
 function containsEmail(text: string): boolean {
-  return [...text.matchAll(EMAIL_PATTERN)].some((match) => !ASSET_DOMAIN_PATTERN.test(match[1]));
+  return [...text.matchAll(EMAIL_PATTERN)].some(
+    (match) => !RETINA_SUFFIX_PATTERN.test(match[1]) && !ASSET_EXTENSION_PATTERN.test(match[1]),
+  );
 }
 
 export function scanBookmarkPrivacy(
