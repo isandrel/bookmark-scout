@@ -67,6 +67,8 @@ function PopupPage() {
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
+  const [pendingNewFolder, setPendingNewFolder] = useState<FolderRecommendation | null>(null);
+  const [newFolderSaving, setNewFolderSaving] = useState(false);
   const autoTriggerExecutedRef = useRef(false);
 
   // Debounce search query using configurable delay
@@ -178,16 +180,63 @@ function PopupPage() {
         }
       }
     } else {
-      // For new folder suggestions, just show a message
-      toast({
-        title: t('toast_createFolderPrompt').replace('$1', rec.folderPath || ''),
-        description: t('toast_newFolderComingSoon'),
-      });
+      setPendingNewFolder(rec);
+      return;
     }
     
     setAIRecommendations([]);
     setCurrentTabInfo(null);
-  }, [currentTabInfo, addBookmarkToFolder, withToast, toast]);
+  }, [currentTabInfo, addBookmarkToFolder, withToast]);
+
+  const handleConfirmNewFolder = useCallback(async () => {
+    if (!pendingNewFolder || !currentTabInfo) {
+      return;
+    }
+
+    setNewFolderSaving(true);
+    try {
+      const result = await createRecommendedFolderBookmark(
+        pendingNewFolder,
+        currentTabInfo,
+        folders,
+      );
+      await fetchFolders();
+
+      try {
+        await addRecentFolder(
+          result.folderId,
+          result.folderPath.split('/').at(-1) || pendingNewFolder.folderPath,
+        );
+      } catch (error) {
+        console.error('Failed to track recent folder:', error);
+      }
+
+      toast({
+        title: result.status === 'duplicate'
+          ? t('ai_newFolderDuplicate')
+          : t('ai_newFolderSuccess'),
+        description: (result.status === 'duplicate'
+          ? t('ai_newFolderDuplicateDesc')
+          : t('ai_newFolderSuccessDesc')
+        ).replace('$1', result.folderPath),
+        variant: 'success',
+      });
+      setPendingNewFolder(null);
+      setAIRecommendations([]);
+      setCurrentTabInfo(null);
+    } catch (error) {
+      const description = error instanceof RecommendedFolderError && error.code === 'path-conflict'
+        ? t('ai_newFolderConflictDesc').replace('$1', error.segment ?? '')
+        : t('ai_newFolderFailedDesc');
+      toast({
+        title: t('ai_newFolderFailed'),
+        description,
+        variant: 'destructive',
+      });
+    } finally {
+      setNewFolderSaving(false);
+    }
+  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder, toast]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -263,21 +312,71 @@ function PopupPage() {
 
   const deleteItem = useCallback(
     async ({ id, type }: PendingDeletion) => {
-      if (type === 'folder') {
-        await withToast(
-          () => removeFolder(id),
-          t('toast_folderDeleted'),
-          t('toast_errorDeletingFolder'),
-        );
-      } else {
-        await withToast(
-          () => removeBookmark(id),
-          t('toast_bookmarkDeleted'),
-          t('toast_errorDeletingBookmark'),
-        );
+      let snapshot: BookmarkDeletionSnapshot;
+      try {
+        snapshot = await captureBookmarkDeletion(id);
+      } catch (error) {
+        toast({
+          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
+          description: error instanceof Error ? error.message : t('error_unknown'),
+          variant: 'destructive',
+        });
+        return;
       }
+
+      const result = type === 'folder' ? await removeFolder(id) : await removeBookmark(id);
+      if (!result.success) {
+        toast({
+          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
+          description: result.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      let undoUsed = false;
+      toast({
+        title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
+        description: t('toast_deleteUndoWindow'),
+        variant: 'success',
+        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
+        action: (
+          <ToastAction
+            altText={t('action_undo')}
+            onClick={async () => {
+              // A snapshot restores at most once, so repeated clicks cannot duplicate the tree.
+              if (undoUsed) return;
+              undoUsed = true;
+              try {
+                await restoreBookmarkDeletion(snapshot);
+                await fetchFolders();
+                toast({
+                  title: t('toast_deleteRestored'),
+                  description: t('toast_deleteRestoredDesc', snapshot.node.title),
+                  variant: 'success',
+                });
+              } catch (error) {
+                toast({
+                  title: t('toast_errorRestoringDeletion'),
+                  description:
+                    error instanceof BookmarkRestoreError && error.code === 'parent-missing'
+                      ? t('toast_restoreParentMissing')
+                      : error instanceof BookmarkRestoreError && error.code === 'expired'
+                        ? t('toast_restoreExpired')
+                        : error instanceof Error
+                          ? error.message
+                          : t('error_unknown'),
+                  variant: 'destructive',
+                });
+              }
+            }}
+          >
+            {t('action_undo')}
+          </ToastAction>
+        ),
+      });
     },
-    [removeBookmark, removeFolder, withToast],
+    [fetchFolders, removeBookmark, removeFolder, toast],
   );
 
   const handleDeleteRequest = useCallback(
@@ -502,6 +601,18 @@ function PopupPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <RecommendedFolderDialog
+        open={pendingNewFolder !== null}
+        recommendation={pendingNewFolder}
+        bookmark={currentTabInfo}
+        isSaving={newFolderSaving}
+        onOpenChange={(open) => {
+          if (!open && !newFolderSaving) {
+            setPendingNewFolder(null);
+          }
+        }}
+        onConfirm={handleConfirmNewFolder}
+      />
       <Toaster />
     </div>
   );

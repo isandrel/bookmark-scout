@@ -63,6 +63,30 @@
         "message": "Error Deleting Folder",
         "description": "Toast title for folder deletion error"
     },
+    "toast_deleteUndoWindow": {
+        "message": "Undo for 10 seconds. Only the latest deletion is recoverable; original IDs and dates, or recovery after closing this window, are unavailable.",
+        "description": "Limits of popup deletion recovery"
+    },
+    "toast_deleteRestored": {
+        "message": "Deletion undone",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "Restored \"$1\" with new browser-generated IDs and dates.",
+        "description": "Toast description after restoring a deletion; $1 is the item title"
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "Could not undo deletion",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "The undo window for this deletion has expired.",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "The original folder no longer exists, so this item cannot be restored.",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
     "toast_itemMoved": {
         "message": "Item Moved",
         "description": "Toast title for item move success"
@@ -92,7 +116,7 @@
         "description": "Confirmation before deleting a bookmark; $1 is its title"
     },
     "popup_confirmDeleteFolder": {
-        "message": "Delete \"$1\" and all its contents? This cannot be undone.",
+        "message": "Delete \"$1\" and all its contents? Undo will be available briefly.",
         "description": "Confirmation before deleting a folder; $1 is its title"
     },
     "popup_expandAll": {
@@ -210,6 +234,10 @@
     "action_cancel": {
         "message": "Cancel",
         "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "Undo",
+        "description": "Undo deletion button label"
     },
     "action_applyChanges": {
         "message": "Apply Changes",
@@ -495,17 +523,61 @@
         "message": "Unknown error",
         "description": "Generic error message"
     },
-    "toast_createFolderPrompt": {
-        "message": "Create folder \"$1\"",
-        "description": "Toast title for folder creation prompt"
-    },
-    "toast_newFolderComingSoon": {
-        "message": "New folder creation coming soon!",
-        "description": "Toast description for new folder feature"
-    },
     "ai_suggestionsFor": {
         "message": "AI Suggestions for:",
         "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "Review new folder",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "Confirm the folder path and current page before saving. No changes are made until you approve.",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "Folder path",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_currentPageLabel": {
+        "message": "Current page",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "Create Folder and Save",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "Saving...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "Bookmark saved",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "Created or reused \"$1\" and saved the current page.",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "Bookmark already saved",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "The current page already exists in \"$1\"; no duplicate was added.",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "Could not save recommendation",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "No bookmark was added. Review the folder path and try again.",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "The path conflicts with an existing bookmark named \"$1\". No bookmark was added.",
+        "description": "Path conflict description for AI new-folder creation"
     },
     "popup_newBookmark": {
         "message": "New Bookmark",

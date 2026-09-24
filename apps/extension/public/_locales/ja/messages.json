@@ -63,6 +63,30 @@
         "message": "フォルダの削除に失敗しました",
         "description": "Toast title for folder deletion error"
     },
+    "toast_deleteUndoWindow": {
+        "message": "10秒以内に元に戻せます。復元できるのは最新の削除のみです。元のIDと日時、およびこのウィンドウを閉じた後の復元には対応していません。",
+        "description": "Limits of popup deletion recovery"
+    },
+    "toast_deleteRestored": {
+        "message": "削除を元に戻しました",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "「$1」を復元しました。IDと日時はブラウザによって新しく生成されています。",
+        "description": "Toast description after restoring a deletion; $1 is the item title"
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "削除を元に戻せませんでした",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "この削除を元に戻せる時間は過ぎました。",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "元のフォルダが存在しないため、この項目は復元できません。",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
     "toast_itemMoved": {
         "message": "アイテムを移動しました",
         "description": "Toast title for item move success"
@@ -92,7 +116,7 @@
         "description": "Confirmation before deleting a bookmark; $1 is its title"
     },
     "popup_confirmDeleteFolder": {
-        "message": "「$1」とその中身をすべて削除しますか？この操作は元に戻せません。",
+        "message": "「$1」とその中身をすべて削除しますか？削除後、短時間だけ元に戻せます。",
         "description": "Confirmation before deleting a folder; $1 is its title"
     },
     "popup_expandAll": {
@@ -210,6 +234,10 @@
     "action_cancel": {
         "message": "キャンセル",
         "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "元に戻す",
+        "description": "Undo deletion button label"
     },
     "action_applyChanges": {
         "message": "変更を適用",
@@ -495,17 +523,61 @@
         "message": "不明なエラー",
         "description": "Generic error message"
     },
-    "toast_createFolderPrompt": {
-        "message": "フォルダ \"$1\" を作成",
-        "description": "Toast title for folder creation prompt"
-    },
-    "toast_newFolderComingSoon": {
-        "message": "新規フォルダ作成は近日公開予定！",
-        "description": "Toast description for new folder feature"
-    },
     "ai_suggestionsFor": {
         "message": "AIの提案:",
         "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "新規フォルダを確認",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "保存する前にフォルダパスと現在のページを確認してください。承認するまで変更は行われません。",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "フォルダパス",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_currentPageLabel": {
+        "message": "現在のページ",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "フォルダを作成して保存",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "保存中...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "ブックマークを保存しました",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "\"$1\" を作成または再利用し、現在のページを保存しました。",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "ブックマークは保存済みです",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "現在のページはすでに \"$1\" にあります。重複は追加されませんでした。",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "提案を保存できませんでした",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "ブックマークは追加されませんでした。フォルダパスを確認して再試行してください。",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "パスは既存のブックマーク \"$1\" と競合しています。ブックマークは追加されませんでした。",
+        "description": "Path conflict description for AI new-folder creation"
     },
     "popup_newBookmark": {
         "message": "新規ブックマーク",
