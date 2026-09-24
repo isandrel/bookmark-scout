@@ -47,18 +47,10 @@ function menuSettingsChanged(oldValue: unknown, newValue: unknown): boolean {
  * Read the context-menu preferences from the same sync area used by Options.
  */
 async function getContextMenuSettings(): Promise<ContextMenuSettings> {
-  return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(SETTINGS_STORAGE_KEY, (result) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-
-      const settings = toContextMenuSettings(result[SETTINGS_STORAGE_KEY]);
-      setLanguage(settings.language);
-      resolve(settings);
-    });
-  });
+  const result = await browser.storage.sync.get(SETTINGS_STORAGE_KEY);
+  const settings = toContextMenuSettings(result[SETTINGS_STORAGE_KEY]);
+  setLanguage(settings.language);
+  return settings;
 }
 
 /**
@@ -68,8 +60,8 @@ async function getContextMenuSettings(): Promise<ContextMenuSettings> {
  */
 export function getBookmarkTitle(
   namingSource: BookmarkNamingSource,
-  info: chrome.contextMenus.OnClickData & { linkText?: string },
-  tab?: chrome.tabs.Tab,
+  info: Browser.contextMenus.OnClickData & { linkText?: string },
+  tab?: Browser.tabs.Tab,
 ): string {
   const untitled = t('contextMenu_untitled');
   switch (namingSource) {
@@ -174,11 +166,7 @@ class ContextMenuManager {
    * Clear all menu items.
    */
   private async clearMenu(): Promise<void> {
-    return new Promise((resolve) => {
-      chrome.contextMenus.removeAll(() => {
-        resolve();
-      });
-    });
+    await browser.contextMenus.removeAll();
   }
 
   /**
@@ -199,7 +187,7 @@ class ContextMenuManager {
     if (!settings.enabled) return;
 
     // Recreate root
-    chrome.contextMenus.create({
+    browser.contextMenus.create({
       id: `${MENU_PREFIX}${SEPARATOR}root`,
       title: t('contextMenu_saveToFolder'),
       contexts: ['link'],
@@ -251,7 +239,7 @@ class ContextMenuManager {
 
       // For categories with only one item (like Bookmarks Bar), add directly
       if (type === 'static' && items.length === 1) {
-        chrome.contextMenus.create({
+        browser.contextMenus.create({
           id: createMenuItemId(type, items[0].folderId),
           title: `${categoryInfo.icon} ${items[0].folderTitle}`,
           parentId: `${MENU_PREFIX}${SEPARATOR}root`,
@@ -262,7 +250,7 @@ class ContextMenuManager {
 
       // Create category submenu
       const categoryId = `${MENU_PREFIX}${SEPARATOR}category${SEPARATOR}${type}`;
-      chrome.contextMenus.create({
+      browser.contextMenus.create({
         id: categoryId,
         title: categoryInfo.label,
         parentId: `${MENU_PREFIX}${SEPARATOR}root`,
@@ -274,7 +262,7 @@ class ContextMenuManager {
         const id = createMenuItemId(item.type, item.folderId);
         if (createdIds.has(id)) continue;
         createdIds.add(id);
-        chrome.contextMenus.create({
+        browser.contextMenus.create({
           id,
           title: item.folderTitle,
           parentId: categoryId,
@@ -285,7 +273,7 @@ class ContextMenuManager {
 
     // If no items, show a disabled placeholder
     if (!hasItems) {
-      chrome.contextMenus.create({
+      browser.contextMenus.create({
         id: `${MENU_PREFIX}${SEPARATOR}empty`,
         title: t('contextMenu_noFolders'),
         parentId: `${MENU_PREFIX}${SEPARATOR}root`,
@@ -299,8 +287,8 @@ class ContextMenuManager {
    * Handle a context menu click.
    */
   async handleClick(
-    info: chrome.contextMenus.OnClickData,
-    tab?: chrome.tabs.Tab,
+    info: Browser.contextMenus.OnClickData,
+    tab?: Browser.tabs.Tab,
   ): Promise<{
     success: boolean;
     folderTitle?: string;
@@ -334,15 +322,7 @@ class ContextMenuManager {
       });
 
       // Get folder title for feedback
-      const folder = await new Promise<chrome.bookmarks.BookmarkTreeNode>((resolve, reject) => {
-        chrome.bookmarks.get(folderId, (results) => {
-          if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError.message));
-          } else {
-            resolve(results[0]);
-          }
-        });
-      });
+      const [folder] = await browser.bookmarks.get(folderId);
 
       // Update recent folders
       await addRecentFolder(folderId, folder.title);
@@ -370,7 +350,7 @@ export const contextMenuManager = new ContextMenuManager();
 let storageListenerRegistered = false;
 
 function handleStorageChange(
-  changes: { [key: string]: chrome.storage.StorageChange },
+  changes: { [key: string]: Browser.storage.StorageChange },
   areaName: string,
 ): void {
   const settingsChange = areaName === 'sync' ? changes[SETTINGS_STORAGE_KEY] : undefined;
@@ -449,7 +429,7 @@ export async function initializeContextMenu(): Promise<void> {
   contextMenuManager.registerProvider(bookmarksBarProvider);
 
   if (!storageListenerRegistered) {
-    chrome.storage.onChanged.addListener(handleStorageChange);
+    browser.storage.onChanged.addListener(handleStorageChange);
     storageListenerRegistered = true;
   }
 

@@ -37,9 +37,8 @@ let nodes: Map<string, FakeNode>;
 let nextId: number;
 let failCreateAfter: number | undefined;
 let createCalls: number;
-const runtime: { lastError?: { message: string } } = {};
 
-function withIndex(node: FakeNode): chrome.bookmarks.BookmarkTreeNode {
+function withIndex(node: FakeNode): Browser.bookmarks.BookmarkTreeNode {
   const parent = node.parentId ? nodes.get(node.parentId) : undefined;
   const index = parent?.children?.indexOf(node);
   return {
@@ -50,13 +49,13 @@ function withIndex(node: FakeNode): chrome.bookmarks.BookmarkTreeNode {
     ...(node.type ? { type: node.type } : {}),
     ...(typeof index === 'number' && index >= 0 ? { index } : {}),
     ...(node.children ? { children: node.children.map(withIndex) } : {}),
-  } as chrome.bookmarks.BookmarkTreeNode;
+  } as Browser.bookmarks.BookmarkTreeNode;
 }
 
-function respond<T>(callback: (value: T) => void, value: T, error?: string) {
-  runtime.lastError = error ? { message: error } : undefined;
-  callback(value);
-  runtime.lastError = undefined;
+function findNode(id: string): FakeNode {
+  const node = nodes.get(id);
+  if (!node) throw new Error("Can't find bookmark for id.");
+  return node;
 }
 
 function addNode(parentId: string, details: Omit<CreateDetails, 'parentId'>): FakeNode {
@@ -108,51 +107,24 @@ beforeEach(() => {
   failCreateAfter = undefined;
   createCalls = 0;
 
-  vi.stubGlobal('chrome', {
-    runtime,
-    bookmarks: {
-      getSubTree: vi.fn(
-        (id: string, callback: (results: chrome.bookmarks.BookmarkTreeNode[]) => void) => {
-          const node = nodes.get(id);
-          respond(
-            callback,
-            node ? [withIndex(node)] : [],
-            node ? undefined : "Can't find bookmark for id.",
-          );
-        },
-      ),
-      get: vi.fn((id: string, callback: (results: chrome.bookmarks.BookmarkTreeNode[]) => void) => {
-        const node = nodes.get(id);
-        respond(
-          callback,
-          node ? [withIndex(node)] : [],
-          node ? undefined : "Can't find bookmark for id.",
-        );
-      }),
-      create: vi.fn(
-        (details: CreateDetails, callback: (result: chrome.bookmarks.BookmarkTreeNode) => void) => {
-          createCalls += 1;
-          if (failCreateAfter !== undefined && createCalls > failCreateAfter) {
-            respond(callback, undefined as never, 'Simulated create failure.');
-            return;
-          }
-          try {
-            const node = addNode(details.parentId, details);
-            respond(callback, withIndex(node));
-          } catch (error) {
-            respond(callback, undefined as never, (error as Error).message);
-          }
-        },
-      ),
-      removeTree: vi.fn((id: string, callback: () => void) => {
-        try {
-          removeTree(id);
-          respond(callback, undefined);
-        } catch (error) {
-          respond(callback, undefined, (error as Error).message);
-        }
-      }),
-    },
+  vi.restoreAllMocks();
+
+  // fakeBrowser does not implement bookmarks; model the promise API over the in-memory tree.
+  vi.spyOn(fakeBrowser.bookmarks, 'getSubTree').mockImplementation(async (id: string) => [
+    withIndex(findNode(id)),
+  ]);
+  vi.spyOn(fakeBrowser.bookmarks, 'get').mockImplementation((async (id: string) => [
+    withIndex(findNode(id)),
+  ]) as typeof fakeBrowser.bookmarks.get);
+  vi.spyOn(fakeBrowser.bookmarks, 'create').mockImplementation(async (details) => {
+    createCalls += 1;
+    if (failCreateAfter !== undefined && createCalls > failCreateAfter) {
+      throw new Error('Simulated create failure.');
+    }
+    return withIndex(addNode(details.parentId ?? '', details as CreateDetails));
+  });
+  vi.spyOn(fakeBrowser.bookmarks, 'removeTree').mockImplementation(async (id: string) => {
+    removeTree(id);
   });
 
   const root = addNode('0', { title: 'Root Folder' });

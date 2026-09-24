@@ -107,40 +107,21 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
 }
 
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
-  return new Promise((resolve) => {
-    if (!chrome?.storage?.sync) {
-      resolve(cloneDefaultTableView());
-      return;
-    }
+  if (!browser?.storage?.sync) return cloneDefaultTableView();
 
-    chrome.storage.sync.get(BOOKMARK_TABLE_VIEW_STORAGE_KEY, (result) => {
-      if (chrome.runtime.lastError) {
-        console.error('Error reading bookmark table view:', chrome.runtime.lastError);
-        resolve(cloneDefaultTableView());
-        return;
-      }
-
-      resolve(parseBookmarkTableView(result[BOOKMARK_TABLE_VIEW_STORAGE_KEY]));
-    });
-  });
+  try {
+    const result = await browser.storage.sync.get(BOOKMARK_TABLE_VIEW_STORAGE_KEY);
+    return parseBookmarkTableView(result[BOOKMARK_TABLE_VIEW_STORAGE_KEY]);
+  } catch (error) {
+    console.error('Error reading bookmark table view:', error);
+    return cloneDefaultTableView();
+  }
 }
 
 export async function saveBookmarkTableView(view: BookmarkTableView): Promise<void> {
   const validated = parseBookmarkTableView(view);
-  return new Promise((resolve, reject) => {
-    if (!chrome?.storage?.sync) {
-      resolve();
-      return;
-    }
-
-    chrome.storage.sync.set({ [BOOKMARK_TABLE_VIEW_STORAGE_KEY]: validated }, () => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve();
-    });
-  });
+  if (!browser?.storage?.sync) return;
+  await browser.storage.sync.set({ [BOOKMARK_TABLE_VIEW_STORAGE_KEY]: validated });
 }
 
 export async function resetBookmarkTableView(): Promise<void> {

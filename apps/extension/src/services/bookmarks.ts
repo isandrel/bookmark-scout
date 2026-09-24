@@ -1,6 +1,6 @@
 /**
- * Chrome Bookmarks API service layer.
- * Centralizes all Chrome bookmarks API interactions.
+ * Browser bookmarks API service layer.
+ * Centralizes all browser bookmarks API interactions.
  */
 
 import type { BookmarkTreeNode } from '@/types';
@@ -39,7 +39,7 @@ export class BookmarkRestoreError extends Error {
 }
 
 function toRecoverableNode(
-  node: chrome.bookmarks.BookmarkTreeNode,
+  node: Browser.bookmarks.BookmarkTreeNode,
   metadataById: StoredBookmarkMetadataById,
 ): RecoverableBookmarkNode {
   const nodeType = (node as { type?: string }).type;
@@ -56,7 +56,7 @@ function toRecoverableNode(
   };
 }
 
-function collectSubtreeIds(node: chrome.bookmarks.BookmarkTreeNode, ids: string[] = []): string[] {
+function collectSubtreeIds(node: Browser.bookmarks.BookmarkTreeNode, ids: string[] = []): string[] {
   ids.push(node.id);
   for (const child of node.children ?? []) collectSubtreeIds(child, ids);
   return ids;
@@ -68,7 +68,8 @@ function collectSubtreeIds(node: chrome.bookmarks.BookmarkTreeNode, ids: string[
  * @param size - The size of the favicon (default: 16)
  */
 export function getFaviconUrl(pageUrl: string, size = 16): string {
-  const url = new URL(chrome.runtime.getURL('/_favicon/'));
+  // The _favicon path is a Chromium feature, so it is not one of the typed public paths.
+  const url = new URL(browser.runtime.getURL('/_favicon/' as '/'));
   url.searchParams.set('pageUrl', pageUrl);
   url.searchParams.set('size', size.toString());
   return url.toString();
@@ -77,7 +78,7 @@ export function getFaviconUrl(pageUrl: string, size = 16): string {
 /**
  * Converts a Chrome bookmark node to our BookmarkTreeNode type.
  */
-function processNode(node: chrome.bookmarks.BookmarkTreeNode): BookmarkTreeNode {
+function processNode(node: Browser.bookmarks.BookmarkTreeNode): BookmarkTreeNode {
   return {
     id: node.id,
     parentId: node.parentId,
@@ -93,48 +94,28 @@ function processNode(node: chrome.bookmarks.BookmarkTreeNode): BookmarkTreeNode 
   };
 }
 
+function requireBookmarksApi(): typeof browser.bookmarks {
+  if (!browser?.bookmarks) throw new Error('Chrome bookmarks API not available.');
+  return browser.bookmarks;
+}
+
 /**
  * Fetches the entire bookmark tree.
  * @returns Promise resolving to the bookmark tree
  */
 export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.getTree((tree) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(tree.map(processNode));
-    });
-  });
+  const tree = await requireBookmarksApi().getTree();
+  return tree.map(processNode);
 }
 
 /**
  * Gets a single bookmark by ID.
  * @param id - The bookmark ID
  */
-export async function getBookmark(id: string): Promise<chrome.bookmarks.BookmarkTreeNode> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.get(id, (results) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      if (!results[0]) {
-        reject(new Error('Bookmark not found.'));
-        return;
-      }
-      resolve(results[0]);
-    });
-  });
+export async function getBookmark(id: string): Promise<Browser.bookmarks.BookmarkTreeNode> {
+  const [result] = await requireBookmarksApi().get(id);
+  if (!result) throw new Error('Bookmark not found.');
+  return result;
 }
 
 /**
@@ -163,20 +144,8 @@ export async function getBookmarkFolderPath(parentId?: string): Promise<string[]
  */
 export async function getBookmarkChildren(
   id: string,
-): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.getChildren(id, (results) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(results);
-    });
-  });
+): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  return requireBookmarksApi().getChildren(id);
 }
 
 /**
@@ -190,20 +159,8 @@ export async function createBookmark(details: {
   url?: string;
   /** Firefox-only; Chrome has no separators and never receives this field. */
   type?: 'separator';
-}): Promise<chrome.bookmarks.BookmarkTreeNode> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.create(details, (result) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(result);
-    });
-  });
+}): Promise<Browser.bookmarks.BookmarkTreeNode> {
+  return requireBookmarksApi().create(details);
 }
 
 /**
@@ -214,20 +171,8 @@ export async function createBookmark(details: {
 export async function moveBookmark(
   id: string,
   destination: { parentId?: string; index?: number },
-): Promise<chrome.bookmarks.BookmarkTreeNode> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.move(id, destination, (result) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(result);
-    });
-  });
+): Promise<Browser.bookmarks.BookmarkTreeNode> {
+  return requireBookmarksApi().move(id, destination);
 }
 
 /**
@@ -235,21 +180,9 @@ export async function moveBookmark(
  */
 export async function updateBookmark(
   id: string,
-  changes: chrome.bookmarks.UpdateChanges,
-): Promise<chrome.bookmarks.BookmarkTreeNode> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.update(id, changes, (result) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(result);
-    });
-  });
+  changes: Browser.bookmarks.UpdateChanges,
+): Promise<Browser.bookmarks.BookmarkTreeNode> {
+  return requireBookmarksApi().update(id, changes);
 }
 
 /**
@@ -257,19 +190,7 @@ export async function updateBookmark(
  * @param id - The bookmark/folder ID
  */
 export async function deleteBookmark(id: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.removeTree(id, () => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve();
-    });
-  });
+  return requireBookmarksApi().removeTree(id);
 }
 
 /**
@@ -301,7 +222,7 @@ async function recreateBookmarkNode(
   parentId: string,
   index: number | undefined,
   restoredMetadata: StoredBookmarkMetadataById,
-): Promise<chrome.bookmarks.BookmarkTreeNode> {
+): Promise<Browser.bookmarks.BookmarkTreeNode> {
   const restored = await createBookmark({
     parentId,
     ...(typeof index === 'number' ? { index } : {}),
@@ -327,7 +248,7 @@ async function recreateBookmarkNode(
 export async function restoreBookmarkDeletion(
   snapshot: BookmarkDeletionSnapshot,
   now: number = Date.now(),
-): Promise<chrome.bookmarks.BookmarkTreeNode> {
+): Promise<Browser.bookmarks.BookmarkTreeNode> {
   if (now > snapshot.expiresAt) {
     throw new BookmarkRestoreError('The undo window for this deletion has expired.', 'expired');
   }
@@ -350,7 +271,7 @@ export async function restoreBookmarkDeletion(
       ? Math.min(snapshot.node.index, siblingCount)
       : undefined;
 
-  let restoredRoot: chrome.bookmarks.BookmarkTreeNode | undefined;
+  let restoredRoot: Browser.bookmarks.BookmarkTreeNode | undefined;
   const restoredMetadata: StoredBookmarkMetadataById = {};
   try {
     restoredRoot = await createBookmark({
@@ -390,20 +311,8 @@ export async function restoreBookmarkDeletion(
   return restoredRoot;
 }
 
-async function getBookmarkSubTree(id: string): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.bookmarks) {
-      reject(new Error('Chrome bookmarks API not available.'));
-      return;
-    }
-    chrome.bookmarks.getSubTree(id, (results) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      resolve(results);
-    });
-  });
+async function getBookmarkSubTree(id: string): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  return requireBookmarksApi().getSubTree(id);
 }
 
 /**
@@ -416,24 +325,11 @@ export async function openBookmarkInNewTab(url: string): Promise<void> {
 /**
  * Gets the current active tab information.
  */
-export async function getCurrentTab(): Promise<chrome.tabs.Tab> {
-  return new Promise((resolve, reject) => {
-    if (!chrome?.tabs) {
-      reject(new Error('Chrome tabs API not available.'));
-      return;
-    }
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-        return;
-      }
-      if (tabs.length === 0) {
-        reject(new Error('No active tab found.'));
-        return;
-      }
-      resolve(tabs[0]);
-    });
-  });
+export async function getCurrentTab(): Promise<Browser.tabs.Tab> {
+  if (!browser?.tabs) throw new Error('Chrome tabs API not available.');
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+  if (!tab) throw new Error('No active tab found.');
+  return tab;
 }
 
 /**

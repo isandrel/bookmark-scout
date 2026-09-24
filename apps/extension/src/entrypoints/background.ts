@@ -3,14 +3,14 @@
  * Handles context menu initialization and event listeners.
  */
 
-function collectBookmarkIds(node: chrome.bookmarks.BookmarkTreeNode): string[] {
+function collectBookmarkIds(node: Browser.bookmarks.BookmarkTreeNode): string[] {
   return [node.id, ...(node.children?.flatMap(collectBookmarkIds) ?? [])];
 }
 
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
   // Handle context menu clicks
-  chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  browser.contextMenus.onClicked.addListener(async (info, tab) => {
     const result = await contextMenuManager.handleClick(info, tab);
 
     if (result.success) {
@@ -22,7 +22,7 @@ export default defineBackground(() => {
     }
   });
 
-  chrome.bookmarks.onRemoved.addListener((_id, removeInfo) => {
+  browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
     const removedIds = collectBookmarkIds(removeInfo.node);
     void removeStoredBookmarkMetadata(removedIds).catch((error) => {
       console.error('[Background] Failed to remove bookmark metadata:', error);
@@ -33,7 +33,7 @@ export default defineBackground(() => {
     });
   });
 
-  chrome.bookmarks.onChanged.addListener((id, changeInfo) => {
+  browser.bookmarks.onChanged.addListener((id, changeInfo) => {
     void updateRecentFolderTitle(id, changeInfo.title).catch((error) => {
       console.error('[Background] Failed to rename recent folder:', error);
     });
