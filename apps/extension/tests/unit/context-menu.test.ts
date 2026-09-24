@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
 import { createBookmark } from '@/services/bookmarks';
 
@@ -8,82 +9,62 @@ vi.mock('@/lib/recent-folders-storage', () => ({
   getRecentFolders: vi.fn(),
 }));
 
-type StorageListener = (
-  changes: { [key: string]: chrome.storage.StorageChange },
-  areaName: string,
-) => void;
-
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const MENU_ID = 'bookmark-scout::static::1';
 
-let storedSettings: Record<string, unknown>;
-let menus: Map<string, chrome.contextMenus.CreateProperties>;
-let storageListeners: StorageListener[];
+let menus: Map<string, Browser.contextMenus.CreateProperties>;
 let contextMenu: typeof import('@/services/context-menu');
 
+async function getStoredSettings(): Promise<Record<string, unknown>> {
+  const result = await fakeBrowser.storage.sync.get(SETTINGS_KEY);
+  return (result[SETTINGS_KEY] as Record<string, unknown> | undefined) ?? {};
+}
+
+/** Seeds settings before the storage listener is registered. */
+async function seedSettings(settings: Record<string, unknown>) {
+  await fakeBrowser.storage.sync.set({ [SETTINGS_KEY]: settings });
+}
+
 async function setSettings(updates: Record<string, unknown>) {
-  await chrome.storage.sync.set({
-    [SETTINGS_KEY]: { ...storedSettings, ...updates },
+  await fakeBrowser.storage.sync.set({
+    [SETTINGS_KEY]: { ...(await getStoredSettings()), ...updates },
   });
 }
 
 beforeEach(async () => {
   vi.resetModules();
   vi.clearAllMocks();
-  storedSettings = {};
+  vi.restoreAllMocks();
+  fakeBrowser.reset();
   menus = new Map();
-  storageListeners = [];
 
-  vi.stubGlobal('chrome', {
-    runtime: { lastError: undefined },
-    storage: {
-      sync: {
-        get: vi.fn((key: string, callback: (value: Record<string, unknown>) => void) => {
-          callback({ [key]: storedSettings });
-        }),
-        set: vi.fn((items: Record<string, Record<string, unknown>>) => {
-          const oldValue = storedSettings;
-          storedSettings = items[SETTINGS_KEY];
-          for (const listener of storageListeners) {
-            listener({ [SETTINGS_KEY]: { oldValue, newValue: storedSettings } }, 'sync');
-          }
-          return Promise.resolve();
-        }),
-      },
-      onChanged: {
-        addListener: vi.fn((listener: StorageListener) => storageListeners.push(listener)),
-      },
-    },
-    contextMenus: {
-      create: vi.fn((properties: chrome.contextMenus.CreateProperties) => {
-        menus.set(String(properties.id), properties);
-      }),
-      removeAll: vi.fn((callback: () => void) => {
-        menus.clear();
-        callback();
-      }),
-    },
-    bookmarks: {
-      get: vi.fn((id: string, callback: (nodes: chrome.bookmarks.BookmarkTreeNode[]) => void) => {
-        callback([{ id, title: 'Bookmarks Bar' }]);
-      }),
-    },
+  // fakeBrowser does not implement context menus or bookmark lookups.
+  vi.spyOn(fakeBrowser.contextMenus, 'create').mockImplementation((properties) => {
+    menus.set(String(properties?.id), properties ?? {});
+    return String(properties?.id);
   });
+  vi.spyOn(fakeBrowser.contextMenus, 'removeAll').mockImplementation(async () => {
+    menus.clear();
+  });
+  vi.spyOn(fakeBrowser.bookmarks, 'get').mockImplementation((async (id: string) => [
+    { id, title: 'Bookmarks Bar', syncing: false },
+  ]) as typeof fakeBrowser.bookmarks.get);
 
   vi.mocked(getRecentFolders).mockResolvedValue([]);
   vi.mocked(addRecentFolder).mockResolvedValue();
   vi.mocked(createBookmark).mockImplementation(async ({ parentId, title, url }) => ({
     id: 'created-bookmark',
     parentId,
-    title,
+    title: title ?? '',
     url,
+    syncing: false,
   }));
   contextMenu = await import('@/services/context-menu');
 });
 
 describe('context menu settings', () => {
   it('starts without a menu when the saved setting is disabled', async () => {
-    storedSettings = { contextMenuEnabled: false };
+    await seedSettings({ contextMenuEnabled: false });
     await contextMenu.initializeContextMenu();
     expect(menus.size).toBe(0);
 
@@ -94,12 +75,12 @@ describe('context menu settings', () => {
   it('removes the menu when disabled, rejects stale clicks, and restores it when enabled', async () => {
     await contextMenu.initializeContextMenu();
     expect(menus.has(MENU_ID)).toBe(true);
-    expect(storageListeners).toHaveLength(1);
+    expect(fakeBrowser.storage.onChanged.hasListeners()).toBe(true);
 
     await setSettings({ contextMenuEnabled: false });
     await vi.waitFor(() => expect(menus.size).toBe(0));
 
-    const click: chrome.contextMenus.OnClickData = {
+    const click: Browser.contextMenus.OnClickData = {
       menuItemId: MENU_ID,
       linkUrl: 'https://example.test/story',
       selectionText: 'Anchor text',
@@ -158,7 +139,7 @@ describe('context menu settings', () => {
     await setSettings({ contextMenuEnabled: false });
     await setSettings({ contextMenuEnabled: true });
     await setSettings({ contextMenuEnabled: false });
-    await vi.waitFor(() => expect(chrome.contextMenus.removeAll).toHaveBeenCalledTimes(4));
+    await vi.waitFor(() => expect(fakeBrowser.contextMenus.removeAll).toHaveBeenCalledTimes(4));
     expect(menus.size).toBe(0);
   });
 
@@ -181,7 +162,10 @@ describe('context menu settings', () => {
 
     const rebuilding = contextMenu.contextMenuManager.rebuildMenu();
     await vi.waitFor(() => expect(getItems).toHaveBeenCalledOnce());
-    storedSettings = { contextMenuEnabled: false };
+    // Change the stored value without an onChanged event so only the in-flight rebuild re-checks it.
+    vi.spyOn(fakeBrowser.storage.sync, 'get').mockResolvedValue({
+      [SETTINGS_KEY]: { contextMenuEnabled: false },
+    });
     releaseProvider();
     await rebuilding;
 
@@ -195,7 +179,7 @@ describe('context menu recent folders', () => {
     [...menus.keys()].filter((id) => id.startsWith('bookmark-scout::recent::'));
 
   it('shows recent folders limited by the recent-folders max setting', async () => {
-    storedSettings = { recentFoldersMax: 3 };
+    await seedSettings({ recentFoldersMax: 3 });
     vi.mocked(getRecentFolders).mockImplementation(async (limit?: number) =>
       recent(['a', 'b', 'c', 'd', 'e']).slice(0, limit),
     );
@@ -212,7 +196,7 @@ describe('context menu recent folders', () => {
   });
 
   it('hides recent folders when the setting is disabled and restores them live', async () => {
-    storedSettings = { recentFoldersEnabled: false };
+    await seedSettings({ recentFoldersEnabled: false });
     vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
     await contextMenu.initializeContextMenu();
     expect(recentMenuIds()).toEqual([]);
@@ -226,13 +210,13 @@ describe('context menu recent folders', () => {
     vi.mocked(getRecentFolders).mockResolvedValue(recent(['a', 'a', 'b']));
     await contextMenu.initializeContextMenu();
     const createdIds = vi
-      .mocked(chrome.contextMenus.create)
+      .mocked(fakeBrowser.contextMenus.create)
       .mock.calls.map(([properties]) => properties.id);
     expect(createdIds.filter((id) => id === 'bookmark-scout::recent::a')).toHaveLength(1);
   });
 
   it('localizes menu titles with the selected language', async () => {
-    storedSettings = { language: 'ja' };
+    await seedSettings({ language: 'ja' });
     vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
     await contextMenu.initializeContextMenu();
     expect(menus.get('bookmark-scout::root')?.title).not.toBe('Save bookmark to...');
@@ -247,16 +231,16 @@ describe('context menu link text naming', () => {
       contextMenu.getBookmarkTitle(
         'link_text',
         { ...base, linkText: 'Anchor', selectionText: 'Sel' },
-        { title: 'Page' } as chrome.tabs.Tab,
+        { title: 'Page' } as Browser.tabs.Tab,
       ),
     ).toBe('Anchor');
     expect(
       contextMenu.getBookmarkTitle('link_text', { ...base, selectionText: 'Sel' }, {
         title: 'Page',
-      } as chrome.tabs.Tab),
+      } as Browser.tabs.Tab),
     ).toBe('Sel');
     expect(
-      contextMenu.getBookmarkTitle('link_text', base, { title: 'Page' } as chrome.tabs.Tab),
+      contextMenu.getBookmarkTitle('link_text', base, { title: 'Page' } as Browser.tabs.Tab),
     ).toBe('Page');
   });
 });

@@ -114,7 +114,7 @@ function PopupPage() {
     
     try {
       // Get current tab info
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (!tab?.title || !tab?.url) {
         toast({
           title: t('toast_cannotGetCurrentPage'),
