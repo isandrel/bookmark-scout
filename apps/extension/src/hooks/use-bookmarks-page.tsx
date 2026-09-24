@@ -43,16 +43,15 @@ async function getBookmarkTree(): Promise<chrome.bookmarks.BookmarkTreeNode[]> {
 
 function flattenBookmarks(
   nodes: chrome.bookmarks.BookmarkTreeNode[],
+  rootIds: ReadonlySet<string>,
   ancestorTitles: string[] = [],
 ): Bookmark[] {
   const bookmarks: Bookmark[] = [];
   for (const node of nodes) {
     const folderPath = ancestorTitles.length ? ancestorTitles.join(' / ') : t('bookmarks_root');
-    // Top-level children of the browser root are permanent folders (Bookmarks Bar, Other
-    // Bookmarks, ...); detecting them by depth avoids browser-specific IDs.
-    bookmarks.push(processNode(node, folderPath, ancestorTitles.length === 0));
+    bookmarks.push(processNode(node, folderPath, isPermanentBookmarkFolder(node, rootIds)));
     if (node.children) {
-      const childBookmarks = flattenBookmarks(node.children, [
+      const childBookmarks = flattenBookmarks(node.children, rootIds, [
         ...ancestorTitles,
         node.title || t('bookmarks_untitled'),
       ]);
@@ -89,7 +88,7 @@ export function useBookmarkNavigation() {
     try {
       const tree = await getBookmarkTree();
       const root = tree[0];
-      const bookmarks = flattenBookmarks(root?.children ?? []);
+      const bookmarks = flattenBookmarks(root?.children ?? [], getBookmarkRootIds(tree));
       // Cleanup for bookmarks removed while the extension was not running must never block
       // loading the bookmark list.
       void reconcileStoredBookmarkMetadata(
