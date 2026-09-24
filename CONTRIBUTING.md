@@ -184,7 +184,7 @@ bunx nx run extension:lint
 bun run test
 ```
 
-The test command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs the same command without manual browser setup. Network-dependent and AI provider flows do not yet have browser E2E coverage.
+The test command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs the same command without manual browser setup. Network-dependent and AI provider flows run offline: tests titled `[mocked provider contract]` stub AI providers (Vitest `ai` mocks and a Playwright-routed OpenAI-compatible endpoint) and route-mock network fetches; they verify Bookmark Scout's request/response contract, opt-in gating, and error handling, not live provider or website compatibility, which remains manually verified.
 
 ### TypeScript
 

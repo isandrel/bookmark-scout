@@ -49,6 +49,23 @@ async function setBookmarkMetadata(
   );
 }
 
+async function setAIProviderConfig(
+  worker: Worker,
+  provider: string,
+  config: Record<string, string>,
+) {
+  await worker.evaluate(
+    async ({ providerId, providerConfig }) => {
+      const key = 'bookmark-scout-ai';
+      const stored = await chrome.storage.local.get(key);
+      await chrome.storage.local.set({
+        [key]: { ...(stored[key] ?? {}), [providerId]: providerConfig },
+      });
+    },
+    { providerId: provider, providerConfig: config },
+  );
+}
+
 function toolCard(page: Page, title: string) {
   return page
     .getByRole('heading', { name: title, exact: true })
@@ -137,6 +154,175 @@ test('AI context pack exports the selected folder with AI disabled', async ({
   expect(content).not.toContain('Tags: []');
   expect(content).not.toContain('Summary: Context Missing Metadata');
   expect(content).not.toContain('Context Other');
+});
+
+test('[mocked provider contract] provider-backed AI previews stop at opt-in without making external requests', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E AI Opt In', [
+    { title: 'Private Fixture', url: 'https://e2e.invalid/private-ai-fixture' },
+  ]);
+  await setSettings(extensionWorker, {
+    aiEnabled: false,
+    aiProvider: 'openai',
+    aiModel: 'gpt-4o-mini',
+  });
+  await setAIProviderConfig(extensionWorker, 'openai', { apiKey: 'sk-synthetic-e2e-key' });
+  let providerRequests = 0;
+  await page.route('https://api.openai.com/**', async (route) => {
+    providerRequests += 1;
+    await route.fulfill({ status: 500, body: 'Provider route must not be called' });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();
+  await expect(page.getByText('AI features are disabled', { exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Auto-Tagging' })).toHaveCount(0);
+
+  await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
+  await expect(page.getByText('AI features are disabled', { exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
+  expect(providerRequests).toBe(0);
+});
+
+const MOCK_PROVIDER_BASE_URL = 'https://provider.invalid/v1';
+const MOCK_PROVIDER_CORS_HEADERS = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-headers': '*',
+  'access-control-allow-methods': 'POST, OPTIONS',
+};
+
+async function useMockCustomProvider(worker: Worker) {
+  await setSettings(worker, { aiEnabled: true, aiProvider: 'custom', aiModel: 'e2e-model' });
+  await setAIProviderConfig(worker, 'custom', {
+    apiKey: 'synthetic-e2e-key',
+    baseUrl: MOCK_PROVIDER_BASE_URL,
+  });
+}
+
+// Minimal OpenAI Responses API envelope; asserts our contract with the SDK, not live compatibility.
+function mockResponsesApiBody(payload: unknown) {
+  return JSON.stringify({
+    id: 'resp_e2e',
+    created_at: 0,
+    model: 'e2e-model',
+    output: [
+      {
+        type: 'message',
+        role: 'assistant',
+        id: 'msg_e2e',
+        content: [{ type: 'output_text', text: JSON.stringify(payload), annotations: [] }],
+      },
+    ],
+    usage: { input_tokens: 1, output_tokens: 1 },
+  });
+}
+
+test('[mocked provider contract] auto-tagging previews route-mocked provider tags without mutating bookmarks', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E AI Tagging', [
+    { title: 'Tagged Fixture', url: 'https://e2e.invalid/tagged-fixture' },
+  ]);
+  const [bookmark] = await extensionWorker.evaluate(async (id) => {
+    return chrome.bookmarks.getChildren(id);
+  }, folderId);
+  await useMockCustomProvider(extensionWorker);
+  const providerRequests: { authorization?: string; body: string }[] = [];
+  await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    const request = route.request();
+    if (request.method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    providerRequests.push({
+      authorization: request.headers().authorization,
+      body: request.postData() ?? '',
+    });
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: mockResponsesApiBody({
+        items: [
+          {
+            bookmarkId: bookmark.id,
+            title: 'Provider Rewritten Title',
+            tags: ['e2e-tag', 'fixture'],
+            reason: 'Route-mocked provider reason',
+          },
+          {
+            bookmarkId: 'hallucinated-id',
+            title: 'Hallucinated Bookmark',
+            tags: ['ignored'],
+            reason: 'Not requested',
+          },
+        ],
+      }),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();
+  const preview = page.getByRole('dialog', { name: 'Auto-Tagging' });
+  await expect(preview).toContainText('Tagged Fixture');
+  await expect(preview).toContainText('https://e2e.invalid/tagged-fixture');
+  await expect(preview).toContainText('e2e-tag');
+  await expect(preview).toContainText('Route-mocked provider reason');
+  await expect(preview).not.toContainText('Provider Rewritten Title');
+  await expect(preview).not.toContainText('Hallucinated Bookmark');
+
+  expect(providerRequests).toHaveLength(1);
+  expect(providerRequests[0].authorization).toBe('Bearer synthetic-e2e-key');
+  expect(providerRequests[0].body).toContain('https://e2e.invalid/tagged-fixture');
+  const titles = await extensionWorker.evaluate(async (id) => {
+    const children = await chrome.bookmarks.getChildren(id);
+    return children.map((item) => item.title);
+  }, folderId);
+  expect(titles).toEqual(['Tagged Fixture']);
+});
+
+test('[mocked provider contract] summarizer surfaces a route-mocked provider error without a preview', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E AI Summary Error', [
+    { title: 'Summary Fixture', url: 'https://e2e.invalid/summary-fixture' },
+  ]);
+  await useMockCustomProvider(extensionWorker);
+  let providerCalls = 0;
+  await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    providerCalls += 1;
+    await route.fulfill({
+      status: 401,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: JSON.stringify({
+        error: {
+          message: 'Synthetic provider rejected the key',
+          type: 'invalid_request_error',
+          param: null,
+          code: 'invalid_api_key',
+        },
+      }),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
+  await expect(page.getByText('Tool failed', { exact: true })).toBeVisible();
+  await expect(page.getByText('Synthetic provider rejected the key', { exact: true })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
+  expect(providerCalls).toBe(1);
 });
 
 test('dead-link checker reports mocked reachable and missing URLs', async ({
@@ -235,4 +421,38 @@ test('metadata fetcher previews mocked page metadata without changing bookmarks'
     return children.map((item) => item.title);
   }, folderId);
   expect(titles).toEqual(['Original Title']);
+});
+
+test('network tools report route-mocked transport failures without mutating bookmarks', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Network Failure', [
+    { title: 'Offline Original', url: 'https://e2e.invalid/offline' },
+  ]);
+  await setSettings(extensionWorker, { deadLinksRetryCount: 1 });
+  const requests: string[] = [];
+  await page.route('https://e2e.invalid/offline', async (route) => {
+    requests.push(route.request().method());
+    await route.abort('failed');
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
+  const deadLinks = page.getByRole('dialog', { name: 'Check Dead Links' });
+  await expect(deadLinks).toContainText('Offline Original');
+  await expect(deadLinks.getByText('error', { exact: true })).toBeVisible();
+  await page.keyboard.press('Escape');
+
+  await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();
+  const metadata = page.getByRole('dialog', { name: 'Metadata Fetcher' });
+  await expect(metadata).toContainText('Offline Original');
+  await expect(metadata.getByText('Suggested title:', { exact: false })).toHaveCount(0);
+
+  expect(requests).toEqual(['HEAD', 'HEAD', 'GET']);
+  const [storedBookmark] = await extensionWorker.evaluate(async (id) => {
+    return chrome.bookmarks.getChildren(id);
+  }, folderId);
+  expect(storedBookmark.title).toBe('Offline Original');
 });

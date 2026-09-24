@@ -127,15 +127,23 @@ export async function suggestBookmarkTags(
     prompt: JSON.stringify({ bookmarks }),
   });
 
-  return object.items.map((item) => {
+  const seenBookmarkIds = new Set<string>();
+  return object.items.flatMap((item) => {
     const source = bookmarks.find((bookmark) => bookmark.bookmarkId === item.bookmarkId);
-    return {
-      bookmarkId: item.bookmarkId,
-      title: item.title,
-      url: source?.url ?? '',
-      tags: item.tags,
-      reason: item.reason,
-    };
+    if (!source || seenBookmarkIds.has(source.bookmarkId)) {
+      return [];
+    }
+
+    seenBookmarkIds.add(source.bookmarkId);
+    return [
+      {
+        bookmarkId: source.bookmarkId,
+        title: source.title,
+        url: source.url,
+        tags: item.tags,
+        reason: item.reason,
+      },
+    ];
   });
 }
 
@@ -171,14 +179,22 @@ export async function summarizeBookmarksWithAI(
     prompt: JSON.stringify({ bookmarks }),
   });
 
-  return object.items.map((item) => {
+  const seenBookmarkIds = new Set<string>();
+  return object.items.flatMap((item) => {
     const source = bookmarks.find((bookmark) => bookmark.bookmarkId === item.bookmarkId);
-    return {
-      bookmarkId: item.bookmarkId,
-      title: item.title,
-      url: source?.url ?? '',
-      summary: item.summary,
-    };
+    if (!source || seenBookmarkIds.has(source.bookmarkId)) {
+      return [];
+    }
+
+    seenBookmarkIds.add(source.bookmarkId);
+    return [
+      {
+        bookmarkId: source.bookmarkId,
+        title: source.title,
+        url: source.url,
+        summary: item.summary,
+      },
+    ];
   });
 }
 

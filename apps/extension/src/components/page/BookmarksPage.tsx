@@ -20,6 +20,7 @@ import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
 import { FolderTree } from '../bookmarks/FolderTree';
 import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
 import { Button } from '../ui/button';
+import { Toaster } from '../ui/toaster';
 import { createColumns } from '../ui/table/columns';
 import { DataTable } from '../ui/table/data-table';
 
@@ -195,6 +196,7 @@ export default function BookmarksPage() {
         onClose={() => setSelectedBookmark(null)}
         onOpenFolder={navigateToFolder}
       />
+      <Toaster />
     </div>
   );
 }
