@@ -736,8 +736,8 @@
         "description": "Accessible label for the select-all rows checkbox"
     },
     "table_selectRow": {
-        "message": "Select row",
-        "description": "Accessible label for a row selection checkbox"
+        "message": "Select \"$1\"",
+        "description": "Row selection checkbox label; $1 is the item title"
     },
     "table_sortAsc": {
         "message": "Asc",
@@ -2802,6 +2802,142 @@
     "settings_statusNotSaved": {
         "message": "$1 settings not saved",
         "description": "Save status when fields are invalid"
+    },
+    "bookmarks_folderUnavailable": {
+        "message": "That folder doesn't exist anymore. Showing the nearest folder that does.",
+        "description": "Notice when the requested or current manager folder was deleted or never existed"
+    },
+    "bookmarks_folderNotAFolder": {
+        "message": "That item isn't a folder. Showing the folder that contains it.",
+        "description": "Notice when the manager URL points at a bookmark instead of a folder"
+    },
+    "bookmarks_expandFolder": {
+        "message": "Expand \"$1\"",
+        "description": "Folder tree expand button label; $1 is the folder title"
+    },
+    "bookmarks_collapseFolder": {
+        "message": "Collapse \"$1\"",
+        "description": "Folder tree collapse button label; $1 is the folder title"
+    },
+    "bookmarks_breadcrumb": {
+        "message": "Folder path",
+        "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "table_clearSort": {
+        "message": "Clear sort",
+        "description": "Column header menu item that removes sorting by the column"
+    },
+    "table_sortedAsc": {
+        "message": "$1, sorted ascending",
+        "description": "Column header button label when sorted ascending; $1 is the column name"
+    },
+    "table_sortedDesc": {
+        "message": "$1, sorted descending",
+        "description": "Column header button label when sorted descending; $1 is the column name"
+    },
+    "table_dateRange": {
+        "message": "$1 – $2",
+        "description": "Date filter button text for a range; $1 start date, $2 end date"
+    },
+    "table_clearDateFilter": {
+        "message": "Clear date filter",
+        "description": "Button that clears the Date Added filter"
+    },
+    "table_filterSelectedCount": {
+        "message": "$1 selected",
+        "description": "Count of selected filter options or table rows; $1 is the count"
+    },
+    "table_filterNoOptions": {
+        "message": "No results found.",
+        "description": "Empty state inside a table filter popover"
+    },
+    "table_filterClear": {
+        "message": "Clear filters",
+        "description": "Filter popover item that clears the selected options"
+    },
+    "table_filterDomains": {
+        "message": "Domain",
+        "description": "Title of the filter that groups links by site domain"
+    },
+    "table_browserOrder": {
+        "message": "Browser order",
+        "description": "Toggle that shows the current folder in the browser bookmark order"
+    },
+    "table_browserOrderHelp": {
+        "message": "Show items in the browser's own order so moving them up or down is visible",
+        "description": "Tooltip for the Browser order toggle"
+    },
+    "table_moveNeedsBrowserOrder": {
+        "message": "Turn on \"Browser order\" to move items",
+        "description": "Why the move buttons are disabled when the table uses another sort order"
+    },
+    "table_moveNeedsNoColumnSort": {
+        "message": "Clear column sorting to move items",
+        "description": "Why the move buttons are disabled while a column is sorted"
+    },
+    "table_moveNeedsFolderView": {
+        "message": "Clear filters or check \"Current folder only\" to move items",
+        "description": "Why the move buttons are disabled while filtering across all bookmarks"
+    },
+    "toast_itemsDeleted": {
+        "message": "$1 items deleted",
+        "description": "Toast title after deleting several selected items; $1 is the count"
+    },
+    "toast_deleteManyUndoWindow": {
+        "message": "Deleted $1 items. Undo within $2 seconds.",
+        "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_itemsRestoredDesc": {
+        "message": "Restored $1 items.",
+        "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "bookmarks_deleteItems": {
+        "message": "Delete $1 items",
+        "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
+    },
+    "bookmarks_confirmDeleteItems": {
+        "message": "Delete $1 selected items, including everything inside selected folders? Undo will be available briefly.",
+        "description": "Confirmation text for deleting several selected items; $1 is the count"
+    },
+    "bookmarks_bulkActions": {
+        "message": "Selected items",
+        "description": "Accessible name of the toolbar for selected table rows"
+    },
+    "bookmarks_bulkMove": {
+        "message": "Move to folder",
+        "description": "Button that moves the selected items to another folder"
+    },
+    "bookmarks_bulkMoveTitle": {
+        "message": "Move $1 items",
+        "description": "Title of the dialog that moves selected items; $1 is the count"
+    },
+    "bookmarks_bulkMoveDescription": {
+        "message": "Choose the folder to move the selected items into. They are added at the end.",
+        "description": "Description of the bulk move dialog"
+    },
+    "bookmarks_bulkMoveTarget": {
+        "message": "Destination folder",
+        "description": "Label of the destination folder picker in the bulk move dialog"
+    },
+    "bookmarks_bulkMoved": {
+        "message": "Moved $1 items",
+        "description": "Toast after moving selected items; $1 is the count"
+    },
+    "bookmarks_clearSelection": {
+        "message": "Clear selection",
+        "description": "Button that clears the table row selection"
+    },
+    "bookmarks_editUrlScriptRejected": {
+        "message": "JavaScript URLs (bookmarklets) cannot be saved here.",
+        "description": "Validation message when an edited URL uses the javascript: scheme"
+    },
+    "bookmarks_editFolderDescription": {
+        "message": "Change the name of this folder.",
+        "description": "Edit dialog description for folders"
+    },
+    "action_dismiss": {
+        "message": "Dismiss",
+        "description": "Button that dismisses a notice"
     },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$ duplicate bookmark removed",

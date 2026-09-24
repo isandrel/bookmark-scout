@@ -677,9 +677,12 @@ test('moves a bookmark with the table controls and persists the new order', asyn
   await expect(rows).toHaveCount(3);
   await expect(rows.nth(0)).toContainText('First Link');
 
+  // Moves are only offered while the table shows the browser's own order.
   const firstRow = rows.filter({ hasText: 'First Link' });
+  await expect(firstRow.getByRole('button', { name: 'Move down' })).toBeDisabled();
+  await page.getByRole('button', { name: 'Browser order' }).click();
   await firstRow.hover();
-  await firstRow.locator('div.opacity-0 button').nth(2).click();
+  await firstRow.getByRole('button', { name: 'Move down' }).click();
 
   await expect
     .poll(() =>

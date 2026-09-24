@@ -25,14 +25,22 @@ function BookmarkEditForm({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmedUrl = url.trim();
+    const trimmedTitle = title.trim();
     if (isLink && !trimmedUrl) {
       setUrlError(t('bookmarks_editUrlRequired'));
+      return;
+    }
+    if (isLink && isScriptUrl(trimmedUrl)) {
+      setUrlError(t('bookmarks_editUrlScriptRejected'));
       return;
     }
 
     setSaving(true);
     try {
-      await updateBookmark(bookmark.id, isLink ? { title, url: trimmedUrl } : { title });
+      await updateBookmark(
+        bookmark.id,
+        isLink ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
+      );
       await onSaved();
       toast({ title: `✓ ${t('bookmarks_editSaved')}`, variant: 'success' });
       onClose();
@@ -106,7 +114,11 @@ export function BookmarkEditDialog({ bookmark, onClose, onSaved }: BookmarkEditD
               ? t('bookmarks_editFolder')
               : t('bookmarks_editBookmark')}
           </DialogTitle>
-          <DialogDescription>{t('bookmarks_editDescription')}</DialogDescription>
+          <DialogDescription>
+            {bookmark?.type === ItemTypeEnum.Folder
+              ? t('bookmarks_editFolderDescription')
+              : t('bookmarks_editDescription')}
+          </DialogDescription>
         </DialogHeader>
         {bookmark ? (
           <BookmarkEditForm

@@ -29,6 +29,7 @@ const tableViewSchema = z.object({
   sorting: z
     .array(z.object({ id: z.string(), desc: z.boolean() }))
     .default([]),
+  browserOrder: z.boolean().default(false),
 });
 
 export type BookmarkTableView = {
@@ -37,6 +38,8 @@ export type BookmarkTableView = {
   columnOrder: string[];
   pageSize: 10 | 20 | 30 | 40 | 50;
   sorting: Array<{ id: string; desc: boolean }>;
+  /** Show the current folder in the browser's own order so row moves are visible. */
+  browserOrder: boolean;
 };
 
 export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
@@ -50,6 +53,7 @@ export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
   columnOrder: [...BOOKMARK_TABLE_COLUMN_IDS],
   pageSize: 10,
   sorting: [],
+  browserOrder: false,
 };
 
 function cloneDefaultTableView(): BookmarkTableView {
@@ -98,6 +102,7 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
     columnOrder,
     pageSize: parsed.data.pageSize,
     sorting,
+    browserOrder: parsed.data.browserOrder,
   };
 }
 

@@ -190,12 +190,16 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await page.goto(bookmarksUrl);
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('menuitemcheckbox', { name: 'url' }).click();
-  for (let index = 0; index < 5; index += 1) {
+  // Visible columns skip hidden ones: Title passes Folder Path and Type, then stops first.
+  for (let index = 0; index < 2; index += 1) {
     await page.getByRole('button', { name: 'Move title left' }).click();
   }
+  await expect(page.getByRole('button', { name: 'Move title left' })).toBeDisabled();
 
   await page.keyboard.press('Escape');
-  await page.getByRole('button', { name: 'Title' }).click();
+  // Title uses the shared sortable header menu (Asc / Desc / Clear sort).
+  await page.getByRole('button', { name: 'Title', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Asc' }).click();
 
   const pageSizeControl = page.getByText('Rows per page').locator('..').getByRole('combobox');
   await pageSizeControl.click();
