@@ -2939,6 +2939,150 @@
         "message": "닫기",
         "description": "Button that dismisses a notice"
     },
+    "search_clear": {
+        "message": "검색어 지우기",
+        "description": "Accessible label for the button that clears the popup search box"
+    },
+    "search_invalidRegex": {
+        "message": "정규식이 올바르지 않습니다. 일반 텍스트로 검색합니다.",
+        "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
+    },
+    "ai_folderRecommendation": {
+        "message": "AI 폴더 추천",
+        "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
+    },
+    "toast_bookmarkAddedDesc": {
+        "message": "\"$title$\"을(를) \"$folder$\"에 추가했습니다",
+        "description": "Toast description after saving the current page; $1 is the page title, $2 the folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_bookmarkAlreadyInFolderDesc": {
+        "message": "\"$title$\"은(는) 이미 \"$folder$\"에 있습니다.",
+        "description": "Toast description when the current page is already saved in the chosen folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_nothingChanged": {
+        "message": "이미 저장됨",
+        "description": "Toast title when an action was skipped because nothing needed to change"
+    },
+    "toast_errorAddingBookmarkDesc": {
+        "message": "북마크를 추가하지 못했습니다. 다시 시도해 주세요.",
+        "description": "Toast description when saving the current page fails"
+    },
+    "toast_folderCreatedDesc": {
+        "message": "\"$parent$\"에 새 폴더 \"$name$\"을(를) 추가했습니다",
+        "description": "Toast description after creating a folder; $1 is the new folder, $2 its parent",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Travel"
+            },
+            "parent": {
+                "content": "$2",
+                "example": "Bookmarks bar"
+            }
+        }
+    },
+    "toast_errorCreatingFolderDesc": {
+        "message": "새 폴더를 만들지 못했습니다. 다시 시도해 주세요.",
+        "description": "Toast description when creating a folder fails"
+    },
+    "toast_itemRemovedDesc": {
+        "message": "\"$title$\"을(를) 삭제했습니다",
+        "description": "Toast description after removing a bookmark or folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "toast_errorDeletingBookmarkDesc": {
+        "message": "북마크를 삭제하지 못했습니다. 다시 시도해 주세요.",
+        "description": "Toast description when deleting a bookmark fails"
+    },
+    "toast_errorDeletingFolderDesc": {
+        "message": "폴더를 삭제하지 못했습니다. 다시 시도해 주세요.",
+        "description": "Toast description when deleting a folder fails"
+    },
+    "toast_itemMovedDesc": {
+        "message": "\"$title$\"을(를) \"$folder$\"(으)로 이동했습니다",
+        "description": "Toast description after moving an item into another folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Reading"
+            }
+        }
+    },
+    "toast_itemReorderedDesc": {
+        "message": "\"$title$\"을(를) $position$번째 위치로 옮겼습니다",
+        "description": "Toast description after reordering an item inside its folder; $2 is the 1-based position",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "position": {
+                "content": "$2",
+                "example": "3"
+            }
+        }
+    },
+    "toast_reorderHiddenBySort": {
+        "message": "목록이 날짜 또는 이름순으로 정렬되어 있어 저장된 순서는 \"폴더 우선\" 정렬에서만 보입니다.",
+        "description": "Note added to the reorder toast when the popup sort order hides browser order"
+    },
+    "toast_errorMovingItemDesc": {
+        "message": "항목을 이동하지 못했습니다. 다시 시도해 주세요.",
+        "description": "Toast description when moving an item fails"
+    },
+    "toast_cannotMoveIntoDescendant": {
+        "message": "폴더를 자기 자신이나 하위 폴더로 이동할 수 없습니다.",
+        "description": "Toast description when a folder is dropped into itself or one of its subfolders"
+    },
+    "popup_expandAllSubfolders": {
+        "message": "모든 하위 폴더 펼치기",
+        "description": "Tooltip and accessible label for the folder action that opens the folder and every subfolder"
+    },
+    "popup_collapseAllSubfolders": {
+        "message": "모든 하위 폴더 접기",
+        "description": "Tooltip and accessible label for the folder action that closes every subfolder"
+    },
+    "action_close": {
+        "message": "닫기",
+        "description": "Accessible label for close buttons on dialogs, panels, and notifications"
+    },
+    "toast_regionLabel": {
+        "message": "알림 ({hotkey})",
+        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+    },
+    "toast_itemLabel": {
+        "message": "알림",
+        "description": "Accessible label announced for each notification"
+    },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$개의 중복 북마크를 제거했습니다",
         "description": "Duplicate removal success description (singular)",

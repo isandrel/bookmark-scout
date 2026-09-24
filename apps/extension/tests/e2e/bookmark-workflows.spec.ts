@@ -119,7 +119,8 @@ test('popup uses selected Japanese and Korean language settings', async ({
     const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'Locale Delete' });
     await expect(bookmarkRow).toBeVisible();
     await bookmarkRow.hover();
-    await bookmarkRow.getByTitle('Delete bookmark').click();
+    // The row action and the dialog share the localized "Delete bookmark" label.
+    await bookmarkRow.getByTitle(dialogTitle).click();
     const dialog = page.getByRole('dialog', { name: dialogTitle });
     await expect(dialog).toContainText('Locale Delete');
     await dialog.getByRole('button', { name: cancelLabel }).click();
@@ -386,7 +387,7 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
     .getByRole('dialog', { name: 'Delete folder' })
     .getByRole('button', { name: 'Delete folder' })
     .click();
-  await page.getByRole('button', { name: 'Undo' }).click();
+  await page.getByRole('button', { name: 'Undo' }).first().click();
 
   await expect
     .poll(() =>
@@ -411,7 +412,7 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
     ]);
 });
 
-test('only the latest repeated deletion is recoverable and missing parents fail safely', async ({
+test('each repeated deletion keeps its own undo and missing parents fail safely', async ({
   extensionId,
   extensionWorker,
   page,
@@ -435,6 +436,12 @@ test('only the latest repeated deletion is recoverable and missing parents fail 
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
+  const notifications = page.getByRole('region', { name: 'Notifications (F8)' });
+  const undoFor = (title: string) =>
+    notifications
+      .locator('li')
+      .filter({ hasText: `Deleted "${title}". Undo within 10 seconds.` })
+      .getByRole('button', { name: 'Undo' });
   const deleteBookmark = async (title: string) => {
     await search.fill(title);
     const row = page.locator('.bookmark-item').filter({ hasText: title });
@@ -442,45 +449,35 @@ test('only the latest repeated deletion is recoverable and missing parents fail 
     await row.hover();
     await row.getByTitle('Delete bookmark').click();
   };
+  const titles = () =>
+    extensionWorker.evaluate(async (id) => {
+      const children = await chrome.bookmarks.getChildren(id);
+      return children.map((item) => item.title);
+    }, folder.folderId);
 
   await deleteBookmark('First Deleted');
   await deleteBookmark('Second Deleted');
-  await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText('Deleted "Second Deleted". Undo within 10 seconds.', { exact: true }),
-  ).toBeVisible();
-  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(undoFor('First Deleted')).toBeVisible();
+  await expect(undoFor('Second Deleted')).toBeVisible();
 
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(async (id) => {
-        const children = await chrome.bookmarks.getChildren(id);
-        return children.map((item) => item.title);
-      }, folder.folderId),
-    )
-    .toEqual(['Second Deleted', 'Conflict Parent']);
+  // Undoing newest first restores the original order; the first deletion's undo survived the second.
+  await undoFor('Second Deleted').click();
+  await expect.poll(titles).toEqual(['Second Deleted', 'Conflict Parent']);
+  await undoFor('First Deleted').click();
+  await expect.poll(titles).toEqual(['First Deleted', 'Second Deleted', 'Conflict Parent']);
 
   await deleteBookmark('Conflict Child');
   await extensionWorker.evaluate(
     async (id) => new Promise<void>((resolve) => chrome.bookmarks.removeTree(id, () => resolve())),
     folder.ids['Conflict Parent'],
   );
-  await page.getByRole('button', { name: 'Undo' }).click();
+  await undoFor('Conflict Child').click();
   await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText('The original folder no longer exists, so this item cannot be restored.'),
+    notifications.getByText('The original folder no longer exists, so this item cannot be restored.'),
   ).toBeVisible();
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(async (id) => {
-        const children = await chrome.bookmarks.getChildren(id);
-        return children.map((item) => item.title);
-      }, folder.folderId),
-    )
-    .toEqual(['Second Deleted']);
+  await expect.poll(titles).toEqual(['First Deleted', 'Second Deleted']);
 });
+
 
 test('navigates folders and filters bookmarks by title and URL', async ({
   extensionId,

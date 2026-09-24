@@ -9,9 +9,17 @@ import type { BookmarkTreeNode, DragOperation } from '@/types';
 
 const TITLE_TRUNCATE_LENGTH = 30;
 
-function truncateBookmarkTitle(title: string | undefined, fallback: string): string {
+/** Outcome of a bookmark operation, with a localized description for the toast. */
+export type BookmarkOperationResult = {
+  success: boolean;
+  message: string;
+  /** Nothing was changed on purpose, e.g. the page is already saved in that folder. */
+  skipped?: boolean;
+};
+
+function truncateBookmarkTitle(title: string | undefined): string {
   if (!title) {
-    return fallback;
+    return t('popup_untitled');
   }
 
   return title.length > TITLE_TRUNCATE_LENGTH
@@ -19,17 +27,22 @@ function truncateBookmarkTitle(title: string | undefined, fallback: string): str
     : title;
 }
 
+function isMoveToOtherFolder(operation: DragOperation): boolean {
+  return operation.type.endsWith('-move') || operation.sourceParentId !== operation.targetParentId;
+}
+
 function buildMoveSuccessMessage(
   operation: DragOperation,
   sourceTitle: string,
   targetFolderTitle: string | null,
 ): string {
-  return operation.type.includes('move')
-    ? `"${sourceTitle}" moved to "${targetFolderTitle || 'root'}"`
-    : `"${sourceTitle}" reordered to position ${operation.targetIndex + 1}`;
+  const title = truncateBookmarkTitle(sourceTitle);
+  return isMoveToOtherFolder(operation)
+    ? t('toast_itemMovedDesc', [title, targetFolderTitle || t('popup_untitled')])
+    : t('toast_itemReorderedDesc', [title, String(operation.targetIndex + 1)]);
 }
 
-function findNodeById(nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
+function findNodeById(nodes: readonly BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
   for (const node of nodes) {
     if (node.id === id) {
       return node;
@@ -45,6 +58,16 @@ function findNodeById(nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode |
   }
 
   return null;
+}
+
+function collectChildFolderIds(node: BookmarkTreeNode, ids: string[] = []): string[] {
+  for (const child of node.children ?? []) {
+    if (child.children) {
+      ids.push(child.id);
+      collectChildFolderIds(child, ids);
+    }
+  }
+  return ids;
 }
 
 interface BookmarkState {
@@ -67,6 +90,8 @@ interface BookmarkState {
 
   // Actions
   fetchFolders: () => Promise<void>;
+  /** Reload the tree without the loading skeleton, keeping expansion and search state. */
+  refreshFolders: () => Promise<void>;
   setQuery: (query: string) => void;
   setDebouncedQuery: (query: string) => void;
   setExpandedFolders: (folders: string[] | ((prev: string[]) => string[])) => void;
@@ -78,11 +103,11 @@ interface BookmarkState {
   setNewFolderName: (name: string) => void;
 
   // Bookmark operations
-  addBookmarkToFolder: (folderId: string) => Promise<{ success: boolean; message: string }>;
-  createFolder: (parentId: string, name: string) => Promise<{ success: boolean; message: string }>;
-  removeBookmark: (bookmarkId: string) => Promise<{ success: boolean; message: string }>;
-  removeFolder: (folderId: string) => Promise<{ success: boolean; message: string }>;
-  handleDrop: (operation: DragOperation) => Promise<{ success: boolean; message: string }>;
+  addBookmarkToFolder: (folderId: string) => Promise<BookmarkOperationResult>;
+  createFolder: (parentId: string, name: string) => Promise<BookmarkOperationResult>;
+  removeBookmark: (bookmarkId: string) => Promise<BookmarkOperationResult>;
+  removeFolder: (folderId: string) => Promise<BookmarkOperationResult>;
+  handleDrop: (operation: DragOperation) => Promise<BookmarkOperationResult>;
 
   // Folder expansion helpers
   getAllChildFolderIds: (node: BookmarkTreeNode) => string[];
@@ -121,9 +146,19 @@ export const useBookmarkStore = create<BookmarkState>()(
           if (get().debouncedQuery) get().applyFilter();
         } catch (err) {
           set({
-            error: err instanceof Error ? err.message : 'Failed to fetch bookmarks',
+            error: err instanceof Error ? err.message : t('error_unknown'),
             isLoading: false,
           });
+        }
+      },
+
+      refreshFolders: async () => {
+        try {
+          const data = await fetchBookmarkTree();
+          set({ folders: data, filteredFolders: data });
+          if (get().debouncedQuery) get().applyFilter();
+        } catch (error) {
+          console.error('Failed to refresh bookmarks:', error);
         }
       },
 
@@ -162,22 +197,38 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const tab = await getCurrentTab();
           const parentFolder = await getBookmark(folderId);
+          const truncatedTitle = truncateBookmarkTitle(tab.title);
+
+          // Saving the same page into the same folder twice only creates a duplicate.
+          const siblings = tab.url ? await getBookmarkChildren(folderId) : [];
+          if (siblings.some((child) => child.url === tab.url)) {
+            return {
+              success: false,
+              skipped: true,
+              message: t('toast_bookmarkAlreadyInFolderDesc', [
+                truncatedTitle,
+                parentFolder.title || t('popup_untitled'),
+              ]),
+            };
+          }
+
           await createBookmark({
             parentId: folderId,
-            title: tab.title || 'New Bookmark',
+            title: tab.title || t('popup_untitled'),
             url: tab.url || '',
           });
-          await get().fetchFolders();
-
-          const truncatedTitle = truncateBookmarkTitle(tab.title, 'New Bookmark');
+          await get().refreshFolders();
 
           return {
             success: true,
-            message: `"${truncatedTitle}" added to "${parentFolder.title}"`,
+            message: t('toast_bookmarkAddedDesc', [
+              truncatedTitle,
+              parentFolder.title || t('popup_untitled'),
+            ]),
           };
         } catch (error) {
           console.error('Failed to add bookmark:', error);
-          return { success: false, message: 'Failed to add bookmark. Please try again.' };
+          return { success: false, message: t('toast_errorAddingBookmarkDesc') };
         }
       },
 
@@ -185,14 +236,17 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const parentFolder = await getBookmark(parentId);
           await createBookmark({ parentId, title: name.trim() });
-          await get().fetchFolders();
+          await get().refreshFolders();
           return {
             success: true,
-            message: `New folder "${name.trim()}" added in "${parentFolder.title}"`,
+            message: t('toast_folderCreatedDesc', [
+              name.trim(),
+              parentFolder.title || t('popup_untitled'),
+            ]),
           };
         } catch (error) {
           console.error('Failed to create folder:', error);
-          return { success: false, message: 'Failed to create new folder. Please try again.' };
+          return { success: false, message: t('toast_errorCreatingFolderDesc') };
         }
       },
 
@@ -200,14 +254,15 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const bookmark = await getBookmark(bookmarkId);
           await deleteBookmark(bookmarkId);
-          await get().fetchFolders();
+          await get().refreshFolders();
 
-          const truncatedTitle = truncateBookmarkTitle(bookmark.title, 'Bookmark');
-
-          return { success: true, message: `"${truncatedTitle}" has been removed` };
+          return {
+            success: true,
+            message: t('toast_itemRemovedDesc', truncateBookmarkTitle(bookmark.title)),
+          };
         } catch (error) {
           console.error('Failed to delete bookmark:', error);
-          return { success: false, message: 'Failed to delete bookmark. Please try again.' };
+          return { success: false, message: t('toast_errorDeletingBookmarkDesc') };
         }
       },
 
@@ -215,29 +270,33 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const folder = await getBookmark(folderId);
           await deleteBookmark(folderId);
-          await get().fetchFolders();
+          await get().refreshFolders();
 
-          const truncatedTitle = truncateBookmarkTitle(folder.title, 'Folder');
-
-          return { success: true, message: `"${truncatedTitle}" has been removed` };
+          return {
+            success: true,
+            message: t('toast_itemRemovedDesc', truncateBookmarkTitle(folder.title)),
+          };
         } catch (error) {
           console.error('Failed to delete folder:', error);
-          return { success: false, message: 'Failed to delete folder. Please try again.' };
+          return { success: false, message: t('toast_errorDeletingFolderDesc') };
         }
       },
 
       handleDrop: async (operation) => {
-        try {
-          if (operation.type === 'folder-move' || operation.type === 'bookmark-move') {
-            await moveBookmark(operation.sourceId, {
-              parentId: operation.targetParentId,
-              index: operation.targetIndex,
-            });
-          } else {
-            await moveBookmark(operation.sourceId, { index: operation.targetIndex });
-          }
+        // Browsers reject moving a folder into itself or its own subtree with a generic error.
+        const source = findNodeById(get().folders, operation.sourceId);
+        if (source?.children && findNodeById([source], operation.targetParentId)) {
+          return { success: false, message: t('toast_cannotMoveIntoDescendant') };
+        }
 
-          await get().fetchFolders();
+        try {
+          // Always pass the parent: dropping beside an item in another folder moves it there.
+          await moveBookmark(operation.sourceId, {
+            parentId: operation.targetParentId,
+            index: operation.targetIndex,
+          });
+
+          await get().refreshFolders();
 
           const sourceItem = await getBookmark(operation.sourceId);
           const targetFolder = operation.targetParentId
@@ -253,47 +312,42 @@ export const useBookmarkStore = create<BookmarkState>()(
           return { success: true, message };
         } catch (error) {
           console.error('Failed to move item:', error);
-          return { success: false, message: 'Failed to move item. Please try again.' };
+          return { success: false, message: t('toast_errorMovingItemDesc') };
         }
       },
 
       // Folder expansion helpers
-      getAllChildFolderIds: (node) => {
-        if (!node.children) return [];
-        return node.children.reduce((acc: string[], child) => {
-          if (child.children) {
-            return [...acc, child.id, ...get().getAllChildFolderIds(child)];
-          }
-          return acc;
-        }, []);
-      },
+      getAllChildFolderIds: (node) => collectChildFolderIds(node),
 
       toggleExpandAllChildren: (node, e) => {
         e.stopPropagation();
-        const { folders, expandedFolders, getAllChildFolderIds, setExpandedFolders } = get();
+        const { folders, expandedFolders, setExpandedFolders } = get();
 
         const originalNode = findNodeById(folders, node.id);
         if (!originalNode) return;
 
-        const childFolderIds = getAllChildFolderIds(originalNode);
-        const isExpanded = childFolderIds.every((id) => expandedFolders.includes(id));
-
-        if (isExpanded) {
-          setExpandedFolders(expandedFolders.filter((id) => !childFolderIds.includes(id)));
+        const childFolderIds = collectChildFolderIds(originalNode);
+        if (get().areAllChildrenExpanded(node)) {
+          // Collapse the subfolders but leave the folder itself open.
+          const collapsed = new Set(childFolderIds);
+          setExpandedFolders(expandedFolders.filter((id) => !collapsed.has(id)));
         } else {
-          setExpandedFolders([...new Set([...expandedFolders, ...childFolderIds])]);
+          setExpandedFolders([...new Set([...expandedFolders, node.id, ...childFolderIds])]);
         }
       },
 
       areAllChildrenExpanded: (node) => {
-        const { folders, expandedFolders, getAllChildFolderIds } = get();
+        const { folders, expandedFolders } = get();
 
         const originalNode = findNodeById(folders, node.id);
         if (!originalNode) return false;
 
-        const childFolderIds = getAllChildFolderIds(originalNode);
+        const childFolderIds = collectChildFolderIds(originalNode);
+        const expanded = new Set(expandedFolders);
         return (
-          childFolderIds.length > 0 && childFolderIds.every((id) => expandedFolders.includes(id))
+          childFolderIds.length > 0 &&
+          expanded.has(node.id) &&
+          childFolderIds.every((id) => expanded.has(id))
         );
       },
 
@@ -319,21 +373,16 @@ export const useBookmarkStore = create<BookmarkState>()(
         }
 
         const savedExpansion = preSearchExpandedFolders ?? expandedFolders;
-        if (forceExpandAll) {
-          set({
-            filteredFolders: folders,
-            expandedFolders: getAllFolderIds(folders),
-            preSearchExpandedFolders: savedExpansion,
-          });
-          return;
-        }
-
         const filtered = filterBookmarkTree(folders, debouncedQuery, searchOptions);
+        // "Expand all" opens every folder of the search results without dropping the filter.
+        const searchExpansion = forceExpandAll
+          ? getAllFolderIds(filtered)
+          : expandFoldersOnSearch
+            ? getSearchExpandedFolderIds(filtered)
+            : savedExpansion;
         set({
           filteredFolders: filtered,
-          expandedFolders: expandFoldersOnSearch
-            ? getSearchExpandedFolderIds(filtered)
-            : savedExpansion,
+          expandedFolders: searchExpansion,
           preSearchExpandedFolders: savedExpansion,
         });
       },

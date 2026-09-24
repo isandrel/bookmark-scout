@@ -45,7 +45,7 @@ async function setSettings(worker: Worker, updates: Record<string, unknown>) {
 }
 
 function topLevelFolders(page: Page) {
-  return page.locator('.accordion-container > .accordion-item > h3 .folder-item');
+  return page.locator('.accordion-container > .accordion-item > .folder-item');
 }
 
 function folderTrigger(page: Page, title: string) {
@@ -263,7 +263,7 @@ test('search history records, reuses, clears, and respects the setting', async (
   await search.fill('');
   const historyList = page.getByTestId('search-history');
   await expect(historyList).toContainText('Recent searches');
-  await historyList.getByRole('button', { name: 'History Target' }).click();
+  await historyList.getByRole('option', { name: 'History Target' }).click();
   await expect(search).toHaveValue('History Target');
   await expect(page.getByText('History Target', { exact: true })).toBeVisible();
 

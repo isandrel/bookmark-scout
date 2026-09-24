@@ -9,16 +9,17 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { BookmarkPlus, ChevronsDown, ChevronsUp, Folder, FolderPlus, Trash2 } from 'lucide-react';
 import { useRef } from 'react';
-import type { BookmarkTreeNode, DragOperation } from '@/types';
+import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 
 interface FolderItemProps {
   node: BookmarkTreeNode;
   instanceId: symbol;
   isDragging: boolean;
-  isAllChildrenExpanded: boolean;
+  areAllChildrenExpanded: (node: BookmarkTreeNode) => boolean;
   creatingFolderId: string | null;
   newFolderName: string;
   folders: BookmarkTreeNode[];
+  favicon: FaviconDisplay;
   onDragStart: (node: BookmarkTreeNode) => void;
   onDragEnd: () => void;
   onDrop: (operation: DragOperation) => void;
@@ -36,10 +37,11 @@ export function FolderItem({
   node,
   instanceId,
   isDragging,
-  isAllChildrenExpanded,
+  areAllChildrenExpanded,
   creatingFolderId,
   newFolderName,
   folders,
+  favicon,
   onDragStart,
   onDragEnd,
   onDrop,
@@ -53,7 +55,6 @@ export function FolderItem({
   onToggleExpandAllChildren,
 }: FolderItemProps) {
   const elementRef = useRef<HTMLDivElement>(null);
-  const hasChildren = node.children && node.children.length > 0;
   // Browsers reject moving or deleting permanent root folders and any change to managed nodes.
   const isPermanent = isPermanentBookmarkFolder(node, getBookmarkRootIds(folders));
   const canModify = !isPermanent && !node.unmodifiable;
@@ -73,6 +74,17 @@ export function FolderItem({
 
   const setupDragDrop = (element: HTMLDivElement | null) => {
     if (!element) return;
+
+    // 3-zone detection: top 25% | center 50% | bottom 25%.
+    // Permanent folders cannot be reordered, so they only accept drops into themselves.
+    const getDropZone = (clientY: number): 'top' | 'center' | 'bottom' => {
+      if (!canModify) return 'center';
+      const rect = element.getBoundingClientRect();
+      const percentY = (clientY - rect.top) / rect.height;
+      if (percentY < 0.25) return 'top';
+      if (percentY > 0.75) return 'bottom';
+      return 'center';
+    };
 
     const cleanup = canModify ? draggable({
       element,
@@ -99,25 +111,7 @@ export function FolderItem({
           const existingIndicator = element.querySelector('.drop-indicator');
           if (existingIndicator) existingIndicator.remove();
 
-          const rect = element.getBoundingClientRect();
-          const mouseY = location.current.input.clientY;
-          const relativeY = mouseY - rect.top;
-          const percentY = relativeY / rect.height;
-
-          // 3-zone detection: top 25% | center 50% | bottom 25%
-          // Permanent folders cannot be reordered, so they only accept drops into themselves.
-          let dropZone: 'top' | 'center' | 'bottom';
-          if (!canModify) {
-            dropZone = 'center';
-          } else if (percentY < 0.25) {
-            dropZone = 'top';
-          } else if (percentY > 0.75) {
-            dropZone = 'bottom';
-          } else {
-            dropZone = 'center';
-          }
-
-          element.dataset.dropZone = dropZone;
+          const dropZone = getDropZone(location.current.input.clientY);
 
           if (dropZone === 'center') {
             // Highlight folder for drop-INTO
@@ -143,12 +137,12 @@ export function FolderItem({
         element.classList.remove('drop-target');
         element.classList.remove('drop-into-folder');
         element.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.dropZone;
       },
-      onDrop: ({ source }) => {
+      onDrop: ({ source, location }) => {
         const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
         if (sourceData.node.id !== node.id) {
-          const dropZone = element.dataset.dropZone as 'top' | 'center' | 'bottom' | undefined;
+          // Use the drop position itself: onDrag may not have fired for a quick drop.
+          const dropZone = getDropZone(location.current.input.clientY);
           const isFolder = node.children !== undefined;
 
           // Determine if we're dropping INTO the folder (center zone) or beside it (edge zones)
@@ -189,7 +183,6 @@ export function FolderItem({
         element.classList.remove('drop-target');
         element.classList.remove('drop-into-folder');
         element.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.dropZone;
       },
       getData: () => ({
         type: 'folder',
@@ -206,6 +199,11 @@ export function FolderItem({
 
   // Count total items in folder (folders + bookmarks)
   const itemCount = node.children?.length ?? 0;
+  const hasSubfolders = node.children?.some((child) => child.children !== undefined) ?? false;
+  const allSubfoldersExpanded = hasSubfolders && areAllChildrenExpanded(node);
+  const expandAllLabel = allSubfoldersExpanded
+    ? t('popup_collapseAllSubfolders')
+    : t('popup_expandAllSubfolders');
 
   return (
     <AccordionItem
@@ -213,85 +211,96 @@ export function FolderItem({
       value={node.id}
       className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
     >
-      <AccordionTrigger className="group hover:no-underline py-1 px-2 hover:bg-accent rounded-md h-8 folder-item transition-all duration-150 hover:scale-[1.01] origin-left">
-        <div className="flex items-center w-full">
-          <div
-            ref={(el) => {
-              elementRef.current = el;
-              setupDragDrop(el);
-            }}
-            className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
-          >
-            <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
-            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-            <span className="truncate text-sm" title={stripHtmlTags(node.title)} dangerouslySetInnerHTML={{ __html: node.title }} />
-            {itemCount > 0 && (
-              <span className="ml-2 text-xs text-muted-foreground tabular-nums">
-                ({itemCount})
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-0.5 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-            {hasChildren && (
+      {/* Actions sit beside the trigger, not inside it, so no button is nested in a button. */}
+      <div className="group flex items-center h-8 rounded-md hover:bg-accent focus-within:bg-accent folder-item transition-all duration-150 hover:scale-[1.01] origin-left">
+        <div className="flex-1 min-w-0">
+          <AccordionTrigger className="hover:no-underline py-1 px-2 h-8 rounded-md">
+            <div
+              ref={(el) => {
+                elementRef.current = el;
+                setupDragDrop(el);
+              }}
+              className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
+            >
+              <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
+              <HighlightedText
+                className="truncate text-sm"
+                text={node.title}
+                ranges={node.searchMatchRanges}
+              />
+              {itemCount > 0 && (
+                <span className="ml-2 text-xs text-muted-foreground tabular-nums">
+                  ({itemCount})
+                </span>
+              )}
+            </div>
+          </AccordionTrigger>
+        </div>
+        <div className="flex items-center gap-0.5 mr-1 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+          {hasSubfolders && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={(e) => onToggleExpandAllChildren(node, e)}
+              title={expandAllLabel}
+              aria-label={expandAllLabel}
+              aria-pressed={allSubfoldersExpanded}
+            >
+              {allSubfoldersExpanded ? (
+                <ChevronsUp className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronsDown className="h-3.5 w-3.5" />
+              )}
+            </Button>
+          )}
+          {canAddChildren && (
+            <>
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-6 w-6"
-                onClick={(e) => onToggleExpandAllChildren(node, e)}
-                title={isAllChildrenExpanded ? 'Collapse all subfolders' : 'Expand all subfolders'}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddBookmark(node.id);
+                }}
+                title={t('popup_addBookmark')}
+                aria-label={t('popup_addBookmark')}
               >
-                {isAllChildrenExpanded ? (
-                  <ChevronsUp className="h-3.5 w-3.5" />
-                ) : (
-                  <ChevronsDown className="h-3.5 w-3.5" />
-                )}
+                <BookmarkPlus className="h-3.5 w-3.5" />
               </Button>
-            )}
-            {canAddChildren && (
-              <>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddBookmark(node.id);
-                  }}
-                  title="Add current page"
-                >
-                  <BookmarkPlus className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddFolder(node.id);
-                  }}
-                  title="Add folder"
-                >
-                  <FolderPlus className="h-3.5 w-3.5" />
-                </Button>
-              </>
-            )}
-            {canModify && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+                className="h-6 w-6"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDeleteFolder(node);
+                  onAddFolder(node.id);
                 }}
-                title="Delete folder"
+                title={t('popup_addFolder')}
+                aria-label={t('popup_addFolder')}
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <FolderPlus className="h-3.5 w-3.5" />
               </Button>
-            )}
-          </div>
+            </>
+          )}
+          {canModify && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteFolder(node);
+              }}
+              title={t('popup_deleteFolder')}
+              aria-label={t('popup_deleteFolder')}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
+          )}
         </div>
-      </AccordionTrigger>
+      </div>
       <AccordionContent className="pl-6 py-0 accordion-content">
         {node.children?.map((child) =>
           child.isTemporary ? (
@@ -308,10 +317,11 @@ export function FolderItem({
               node={child}
               instanceId={instanceId}
               isDragging={false}
-              isAllChildrenExpanded={false}
+              areAllChildrenExpanded={areAllChildrenExpanded}
               creatingFolderId={creatingFolderId}
               newFolderName={newFolderName}
               folders={folders}
+              favicon={favicon}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}
               onDrop={onDrop}
@@ -330,6 +340,7 @@ export function FolderItem({
               node={child}
               instanceId={instanceId}
               isDragging={false}
+              favicon={favicon}
               onDelete={onDeleteBookmark}
               onDragStart={onDragStart}
               onDragEnd={onDragEnd}

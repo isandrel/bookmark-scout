@@ -9,12 +9,13 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Trash2 } from 'lucide-react';
 import { useRef } from 'react';
-import type { BookmarkTreeNode, DragOperation } from '@/types';
+import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 
 interface BookmarkItemProps {
   node: BookmarkTreeNode;
   instanceId: symbol;
   isDragging: boolean;
+  favicon: FaviconDisplay;
   onDelete: (node: BookmarkTreeNode) => void;
   onDragStart: (node: BookmarkTreeNode) => void;
   onDragEnd: () => void;
@@ -25,6 +26,7 @@ export function BookmarkItem({
   node,
   instanceId,
   isDragging,
+  favicon,
   onDelete,
   onDragStart,
   onDragEnd,
@@ -76,19 +78,20 @@ export function BookmarkItem({
             indicator.style.bottom = '-1px';
           }
 
-          element.dataset.closestEdge = closestEdge;
           element.parentElement?.appendChild(indicator);
         }
       },
       onDragLeave: () => {
         element.classList.remove('drop-target');
         element.parentElement?.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.closestEdge;
       },
-      onDrop: ({ source }) => {
+      onDrop: ({ source, location }) => {
         const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
         if (sourceData.node.id !== node.id) {
-          const closestEdge = element.dataset.closestEdge as 'top' | 'bottom' | undefined;
+          // Use the drop position itself: onDrag may not have fired for a quick drop.
+          const rect = element.getBoundingClientRect();
+          const closestEdge =
+            location.current.input.clientY - rect.top < rect.height / 2 ? 'top' : 'bottom';
           const isDroppingIntoFolder = node.children !== undefined;
 
           let operationType: DragOperation['type'];
@@ -111,7 +114,6 @@ export function BookmarkItem({
 
         element.classList.remove('drop-target');
         element.parentElement?.querySelector('.drop-indicator')?.remove();
-        delete element.dataset.closestEdge;
       },
       getData: () => ({
         type: 'bookmark',
@@ -128,7 +130,7 @@ export function BookmarkItem({
 
   return (
     <div
-      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent rounded-md transition-all duration-150 hover:scale-[1.01] origin-left bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent focus-within:bg-accent rounded-md transition-all duration-150 hover:scale-[1.01] origin-left bookmark-item ${isDragging ? 'opacity-50' : ''}`}
     >
       <a
         ref={(el) => {
@@ -140,16 +142,29 @@ export function BookmarkItem({
         rel="noopener noreferrer"
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
-        <img src={getFaviconUrl(node.url ?? '')} alt="" className="w-4 h-4 mr-2 shrink-0 rounded-sm" />
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-        <span className="truncate text-sm" title={stripHtmlTags(node.title)} dangerouslySetInnerHTML={{ __html: node.title }} />
+        {favicon.show && (
+          <img
+            src={getFaviconUrl(node.url ?? '', favicon.size * 2)}
+            alt=""
+            width={favicon.size}
+            height={favicon.size}
+            style={{ width: favicon.size, height: favicon.size }}
+            className="mr-2 shrink-0 rounded-sm bookmark-favicon"
+          />
+        )}
+        <HighlightedText
+          className="truncate text-sm"
+          text={node.title}
+          ranges={node.searchMatchRanges}
+        />
       </a>
       <Button
         variant="ghost"
         size="icon"
-        className="h-6 w-6 ml-2 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
+        className="h-6 w-6 ml-2 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
         onClick={() => onDelete(node)}
-        title="Delete bookmark"
+        title={t('popup_deleteBookmark')}
+        aria-label={t('popup_deleteBookmark')}
       >
         <Trash2 className="h-3.5 w-3.5" />
       </Button>
