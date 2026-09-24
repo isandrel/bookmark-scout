@@ -175,3 +175,81 @@ test('bookmarklets can be renamed while new script and HTML data URLs are reject
     .poll(() => getNode(seeded.ids['Plain Link']))
     .toEqual({ title: 'Plain Link', url: 'data:text/plain,hello' });
 });
+
+test('every default column fits at 1400 wide and move buttons do not reserve width', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Column Fit / A rather long folder name', [
+    { title: 'Nested Folder With A Long Name', children: [] },
+    {
+      title: 'BBC News - Home page with a rather long title that keeps going and going',
+      url: 'https://www.bbc.co.uk/news/world-europe-12345678?utm_source=feed&utm_medium=rss&x=1',
+    },
+    { title: 'Short', url: 'https://example.com/' },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await expect(page.locator('tbody tr')).toHaveCount(3);
+
+  const layout = await page.locator('table').evaluate((table) => {
+    const wrapper = table.parentElement as HTMLElement;
+    const headers = [...table.querySelectorAll('thead th')];
+    const dateAdded = headers.find((th) => th.textContent?.includes('Date Added'));
+    const actions = headers[headers.length - 1];
+    return {
+      overflow: table.scrollWidth - wrapper.clientWidth,
+      dateAddedRight: dateAdded?.getBoundingClientRect().right ?? Number.POSITIVE_INFINITY,
+      actionsLeft: actions.getBoundingClientRect().left,
+      actionsWidth: actions.getBoundingClientRect().width,
+    };
+  });
+  expect(layout.overflow).toBeLessThanOrEqual(0);
+  expect(layout.dateAddedRight).toBeLessThanOrEqual(layout.actionsLeft + 1);
+  expect(layout.actionsWidth).toBeLessThan(80);
+
+  // Hover still reveals the move buttons as an overlay.
+  await page.getByRole('button', { name: 'Browser order' }).click();
+  const shortRow = row(page, 'Short');
+  await shortRow.hover();
+  await expect(shortRow.getByRole('button', { name: 'Move up' })).toBeVisible();
+});
+
+test('move buttons are disabled at the ends of the folder', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Edge Moves', [
+    { title: 'Edge First', url: 'https://example.com/first' },
+    { title: 'Edge Middle', url: 'https://example.com/middle' },
+    { title: 'Edge Last', url: 'https://example.com/last' },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  await page.getByRole('button', { name: 'Browser order' }).click();
+
+  const first = row(page, 'Edge First');
+  await first.hover();
+  await expect(first.getByRole('button', { name: 'Move to top' })).toBeDisabled();
+  await expect(first.getByRole('button', { name: 'Move up' })).toBeDisabled();
+  await expect(first.getByRole('button', { name: 'Move down' })).toBeEnabled();
+  await expect(first.getByRole('button', { name: 'Move to bottom' })).toBeEnabled();
+
+  const last = row(page, 'Edge Last');
+  await last.hover();
+  await expect(last.getByRole('button', { name: 'Move down' })).toBeDisabled();
+  await expect(last.getByRole('button', { name: 'Move to bottom' })).toBeDisabled();
+  await expect(last.getByRole('button', { name: 'Move up' })).toBeEnabled();
+
+  const middle = row(page, 'Edge Middle');
+  await middle.hover();
+  await middle.getByRole('button', { name: 'Move to top' }).click();
+  await expect
+    .poll(() => childTitles(extensionWorker, seeded.folderId))
+    .toEqual(['Edge Middle', 'Edge First', 'Edge Last']);
+  // The row that is now first loses its upward moves.
+  const moved = row(page, 'Edge Middle');
+  await moved.hover();
+  await expect(moved.getByRole('button', { name: 'Move up' })).toBeDisabled();
+  await expect(row(page, 'Edge First').getByRole('button', { name: 'Move up' })).toBeEnabled();
+});

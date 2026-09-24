@@ -147,6 +147,17 @@ export function partitionSelectionByVisibility<T>(
   return { visible, hiddenCount: selected.length - visible.length };
 }
 
+export type FolderMoveDirection = 'up' | 'down' | 'top' | 'bottom';
+
+/** Whether a reorder would change anything: the first item cannot go up, the last not down. */
+export function canMoveWithinFolder(
+  direction: FolderMoveDirection,
+  index: number,
+  siblingCount: number,
+): boolean {
+  return direction === 'up' || direction === 'top' ? index > 0 : index < siblingCount - 1;
+}
+
 /** Folders that can receive the selection: not a selected folder or anything inside one. */
 export function getMoveTargetFolders(
   selected: readonly ManagerItem[],

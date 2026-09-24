@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildFolderOptions,
   buildManagerFolderTree,
+  canMoveWithinFolder,
   getManagerFolderAncestors,
   getMoveTargetFolders,
   isWithinDateRange,
@@ -191,5 +192,18 @@ describe('getBlockedEditUrl', () => {
   it('allows ordinary web URLs', () => {
     expect(getBlockedEditUrl('https://example.com/javascript:')).toBeNull();
     expect(getBlockedEditUrl('https://example.com/?u=data:text/html,x')).toBeNull();
+  });
+});
+
+describe('canMoveWithinFolder', () => {
+  it('disables moves past either end of the folder', () => {
+    expect(canMoveWithinFolder('up', 0, 3)).toBe(false);
+    expect(canMoveWithinFolder('top', 0, 3)).toBe(false);
+    expect(canMoveWithinFolder('down', 0, 3)).toBe(true);
+    expect(canMoveWithinFolder('down', 2, 3)).toBe(false);
+    expect(canMoveWithinFolder('bottom', 2, 3)).toBe(false);
+    expect(canMoveWithinFolder('up', 2, 3)).toBe(true);
+    expect(canMoveWithinFolder('up', 0, 1)).toBe(false);
+    expect(canMoveWithinFolder('down', 0, 1)).toBe(false);
   });
 });
