@@ -75,7 +75,7 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
 
 export function validateAISettings(settings: AISettings): void {
   if (!settings.enabled) {
-    throw new Error('AI features are disabled');
+    throw new Error(t('ai_featuresDisabled'));
   }
 
   if (providerRequiresApiKey(settings.provider) && !settings.apiKey) {

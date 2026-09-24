@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "Track the deepest folder nesting level in statistics",
-        "description": "Statistics include depth breakdown description"
+        "message": "Show how many bookmarks sit at each folder level",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "Top N Entries",
@@ -2845,6 +2845,64 @@
             },
             "failed": {
                 "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "Sensitive value in URL fragment: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "Username and password embedded in URL",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "Username embedded in URL",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "Value looks like an API or access token",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "Bookmarks by folder level",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "Level $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI features are disabled",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "Turn on AI features in Options to use this tool.",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "ai_apiKeyNotConfigured": {
+        "message": "API key not configured. Set it in Options → AI.",
+        "description": "Error when the selected AI provider has no API key"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$ bookmark exported for AI use",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
                 "example": "1"
             }
         }

@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "統計にフォルダの最も深い階層を含めます",
-        "description": "Statistics include depth breakdown description"
+        "message": "フォルダ階層ごとのブックマーク数を表示します",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "上位N件",
@@ -2845,6 +2845,64 @@
             },
             "failed": {
                 "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "URLフラグメント内の機密値: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "URLにユーザー名とパスワードが含まれています",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "URLにユーザー名が含まれています",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "APIトークンまたはアクセストークンと思われる値があります",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "フォルダ階層ごとのブックマーク",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "レベル $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI機能は無効になっています",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "このツールを使うには、オプションでAI機能を有効にしてください。",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "ai_apiKeyNotConfigured": {
+        "message": "APIキーが設定されていません。オプション → AI で設定してください。",
+        "description": "Error when the selected AI provider has no API key"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$ 件のブックマークをAI用に書き出しました",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
                 "example": "1"
             }
         }

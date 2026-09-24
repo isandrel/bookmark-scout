@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "통계에 가장 깊은 폴더 중첩 수준을 포함합니다",
-        "description": "Statistics include depth breakdown description"
+        "message": "폴더 수준별 북마크 수를 표시합니다",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "상위 N개 항목",
@@ -2845,6 +2845,64 @@
             },
             "failed": {
                 "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "URL 프래그먼트의 민감한 값: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "URL에 사용자 이름과 비밀번호가 포함되어 있습니다",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "URL에 사용자 이름이 포함되어 있습니다",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "API 또는 액세스 토큰으로 보이는 값이 있습니다",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "폴더 수준별 북마크",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "수준 $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI 기능이 비활성화되어 있습니다",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "이 도구를 사용하려면 옵션에서 AI 기능을 켜세요.",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "ai_apiKeyNotConfigured": {
+        "message": "API 키가 설정되지 않았습니다. 옵션 → AI에서 설정하세요.",
+        "description": "Error when the selected AI provider has no API key"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$개의 북마크를 AI용으로 내보냈습니다",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
                 "example": "1"
             }
         }

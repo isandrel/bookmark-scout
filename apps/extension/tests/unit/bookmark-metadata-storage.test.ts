@@ -11,6 +11,7 @@ import {
 import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-bookmark-tools';
 import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
+import { setLanguage } from '@/hooks/use-i18n';
 
 const mocks = vi.hoisted(() => ({ generateObject: vi.fn() }));
 
@@ -142,6 +143,8 @@ describe('AI-generated metadata with a deterministic provider stub', () => {
   });
 
   it('does not call the provider when AI is disabled', async () => {
+    // Errors are localized; bundled English keeps the assertion readable.
+    setLanguage('en');
     await expect(
       suggestBookmarkTags(
         nodes,

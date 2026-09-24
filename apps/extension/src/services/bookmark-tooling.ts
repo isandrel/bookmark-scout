@@ -45,6 +45,8 @@ export type BookmarkStatistics = {
   topFolders: Array<{ label: string; count: number }>;
   protocols: Array<{ label: string; count: number }>;
   duplicateCount: number;
+  /** Bookmark counts per folder level, present only when the depth breakdown is enabled. */
+  depthBreakdown?: Array<{ level: number; count: number }>;
 };
 
 export type DuplicateKeepRule = 'oldest' | 'newest' | 'first';
@@ -80,6 +82,7 @@ type StatisticsOptions = {
   includeFolders: boolean;
   includeProtocols: boolean;
   includeDuplicates: boolean;
+  includeDepthBreakdown?: boolean;
   topN: number;
 };
 
@@ -125,6 +128,7 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
   return result;
 }
 
+/** Counts folders inside the scope; the scope roots themselves (or the browser root) are excluded. */
 export function countFolders(nodes: BookmarkTreeNode[]): number {
   let count = 0;
 
@@ -135,8 +139,18 @@ export function countFolders(nodes: BookmarkTreeNode[]): number {
     }
   };
 
-  nodes.forEach(walk);
+  nodes.forEach((root) => {
+    root.children?.forEach(walk);
+  });
   return count;
+}
+
+/**
+ * A bookmark's level is the number of named folders above it within the scope: a bookmark
+ * directly in the selected folder, or directly in Bookmarks Bar for all bookmarks, is level 1.
+ */
+function bookmarkLevel(bookmark: FlatBookmark): number {
+  return bookmark.folderPath.length;
 }
 
 export function scanDuplicateBookmarks(
@@ -351,7 +365,8 @@ export function collectBookmarkStatistics(
     totalBookmarks: flatBookmarks.length,
     totalFolders: countFolders(nodes),
     bookmarksInScope: flatBookmarks.length,
-    deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmark.depth), 0),
+    deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
+    ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
     topDomains: toTopEntries(domains, options.topN),
     topFolders: toTopEntries(folders, options.topN),
     protocols: toTopEntries(protocols, options.topN),
@@ -535,6 +550,17 @@ function safeNormalizeUrl(url: string) {
   } catch {
     return undefined;
   }
+}
+
+function buildDepthBreakdown(bookmarks: FlatBookmark[]) {
+  const counts = new Map<number, number>();
+  bookmarks.forEach((bookmark) => {
+    const level = bookmarkLevel(bookmark);
+    counts.set(level, (counts.get(level) ?? 0) + 1);
+  });
+  return Array.from(counts.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([level, count]) => ({ level, count }));
 }
 
 function toTopEntries(entries: Map<string, number>, topN: number) {

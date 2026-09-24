@@ -20,7 +20,7 @@ export async function buildAISettingsFromProvider(
   };
 
   if (providerRequiresApiKey(provider) && !settings.apiKey) {
-    throw new Error('API key not configured. Please set it in Options -> AI.');
+    throw new Error(t('ai_apiKeyNotConfigured'));
   }
 
   return settings;

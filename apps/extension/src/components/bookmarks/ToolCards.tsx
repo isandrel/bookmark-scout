@@ -17,6 +17,8 @@ type ToolCardProps = {
   currentFolderName?: string;
   /** Extra tool-specific controls rendered above the scope selector and action button. */
   controls?: React.ReactNode;
+  /** Explains why the tool cannot run right now (for example, AI is turned off). */
+  notice?: string;
 };
 
 function resolveScope(capability: ScopeCapability, configuredDefault: ScopeCapability): ToolScope {
@@ -36,6 +38,7 @@ export function ToolCard({
   defaultScope,
   currentFolderName,
   controls,
+  notice,
 }: ToolCardProps) {
   const resolvedDefault = resolveScope(scopeCapability, defaultScope);
   const [selection, setSelection] = useState<{ defaultScope: ToolScope; scope: ToolScope } | null>(
@@ -62,6 +65,7 @@ export function ToolCard({
             <ScopeBadge scopeCapability={scopeCapability} />
           </div>
           <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{description}</p>
+          {notice ? <p className="mt-1 text-xs font-medium text-amber-600 dark:text-amber-400">{notice}</p> : null}
         </div>
       </div>
 

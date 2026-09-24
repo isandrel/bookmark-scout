@@ -135,6 +135,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
   const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
   const { value: statisticsTopN } = useSetting('statisticsTopN');
+  const { value: statisticsIncludeDepthBreakdown } = useSetting('statisticsIncludeDepthBreakdown');
   const { value: deadLinksRequestTimeoutMs } = useSetting('deadLinksRequestTimeoutMs');
   const { value: deadLinksConcurrency } = useSetting('deadLinksConcurrency');
   const { value: deadLinksRetryCount } = useSetting('deadLinksRetryCount');
@@ -335,6 +336,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       includeFolders: statisticsIncludeFolders,
       includeProtocols: statisticsIncludeProtocols,
       includeDuplicates: statisticsIncludeDuplicates,
+      includeDepthBreakdown: statisticsIncludeDepthBreakdown,
       topN: statisticsTopN,
     });
     setStatisticsResult(result);
@@ -476,8 +478,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     });
   };
 
-  const buildAISettings = async () =>
-    buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+  // The enabled check comes first so a disabled AI never surfaces provider or API-key errors.
+  const buildAISettings = async () => {
+    if (!aiEnabled) {
+      throw new Error(t('ai_featuresDisabled'));
+    }
+    return buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+  };
+  const aiDisabledNotice = aiEnabled ? undefined : t('ai_featuresDisabledNotice');
 
   const handleAIContextPack = async (scope: ToolScope) => {
     setAiContextLoading(true);
@@ -506,7 +514,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       downloadTextFile(packed.content, filename, mimeType);
       toast({
         title: t('toast_aiContextPacked'),
-        description: t('toast_aiContextPackedDesc', String(packed.itemCount)),
+        description: tPlural('toast_aiContextPackedDesc', packed.itemCount),
       });
     } catch (error) {
       toast({
@@ -832,6 +840,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     description={t('tools_autoTaggingDesc')}
                     buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('auto-tag', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="folder"
                     defaultScope={toolSettings.autoTaggingDefaultScope}
                     currentFolderName={currentFolderName}
@@ -846,6 +856,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     description={t('tools_summarizerDesc')}
                     buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('summarize', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="folder"
                     defaultScope={toolSettings.summarizerDefaultScope}
                     currentFolderName={currentFolderName}
@@ -866,6 +878,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                         : t('action_applyChanges')
                     }
                     onClick={(scope) => handleToolAction('reorganize', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="both"
                     defaultScope={toolSettings.reorganizationDefaultScope}
                     currentFolderName={currentFolderName}

@@ -41,6 +41,14 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
   switch (finding.kind) {
     case 'sensitiveParam':
       return t('tools_privacySensitiveParam', finding.param);
+    case 'sensitiveFragmentParam':
+      return t('tools_privacySensitiveFragmentParam', finding.param);
+    case 'credentials':
+      return finding.withPassword
+        ? t('tools_privacyCredentials')
+        : t('tools_privacyUsername');
+    case 'tokenPattern':
+      return t('tools_privacyTokenPattern');
     case 'fragment':
       return t('tools_privacyFragment');
     case 'email':
@@ -51,7 +59,7 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
 }
 
 function privacyFindingKey(finding: PrivacyFinding): string {
-  return finding.kind === 'sensitiveParam' ? `${finding.kind}:${finding.param}` : finding.kind;
+  return 'param' in finding ? `${finding.kind}:${finding.param}` : finding.kind;
 }
 
 export function DuplicateResultsView({
@@ -186,6 +194,15 @@ export function StatisticsResultsView({ result }: { result: BookmarkStatistics |
       <StatList label={t('stats_topDomains')} items={result.topDomains} />
       <StatList label={t('stats_topFolders')} items={result.topFolders} />
       <StatList label={t('stats_protocols')} items={result.protocols} />
+      {result.depthBreakdown ? (
+        <StatList
+          label={t('stats_depthBreakdown')}
+          items={result.depthBreakdown.map((entry) => ({
+            label: t('stats_depthLevel', String(entry.level)),
+            count: entry.count,
+          }))}
+        />
+      ) : null}
     </div>
   );
 }
@@ -299,7 +316,7 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
       {result.items.map((item) => (
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
-            <span className="font-medium">{item.title}</span>
+            <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
             <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>
               {t(`tools_privacySeverity_${item.severity}`)}
             </Badge>

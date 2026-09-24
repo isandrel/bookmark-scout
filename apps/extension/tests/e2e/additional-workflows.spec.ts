@@ -171,6 +171,11 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
     aiEnabled: false,
     aiProvider: 'openai',
     aiModel: 'gpt-4o-mini',
+    aiContextPackerEnabled: true,
+    autoTaggingEnabled: true,
+    summarizerEnabled: true,
+    reorganizationEnabled: true,
+    reorganizationDryRunFirst: true,
   });
   await setAIProviderConfig(extensionWorker, 'openai', { apiKey: 'sk-synthetic-e2e-key' });
   let providerRequests = 0;
@@ -180,13 +185,26 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
   });
 
   await openTools(page, extensionId, folderId);
-  await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();
-  await expect(page.getByText('AI features are disabled', { exact: true })).toBeVisible();
+  for (const [title, action] of [
+    ['Auto-Tagging', 'Analyze'],
+    ['Content Summarizer', 'Analyze'],
+    ['AI Folder Reorganization', 'Analyze'],
+  ] as const) {
+    const card = toolCard(page, title);
+    await expect(card.getByRole('button', { name: action })).toBeDisabled();
+    await expect(card).toContainText('Turn on AI features in Options to use this tool.');
+  }
+  await expect(page.getByText(/API key/i)).toHaveCount(0);
   await expect(page.getByRole('dialog', { name: 'Auto-Tagging' })).toHaveCount(0);
+  // The offline context packer does not need AI and stays available.
+  await expect(
+    toolCard(page, 'AI Context Packer').getByRole('button', { name: 'Export' }),
+  ).toBeEnabled();
 
-  await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
-  await expect(page.getByText('AI features are disabled', { exact: true })).toBeVisible();
-  await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
+  await setSettings(extensionWorker, { language: 'ja' });
+  await expect(
+    page.getByText('このツールを使うには、オプションでAI機能を有効にしてください。'),
+  ).toHaveCount(3);
   expect(providerRequests).toBe(0);
 });
 
@@ -323,7 +341,9 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
   await expect(page.getByText('Tool failed', { exact: true })).toBeVisible();
-  await expect(page.getByText('Synthetic provider rejected the key', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Synthetic provider rejected the key', { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
   expect(providerCalls).toBe(1);
 });
@@ -355,9 +375,9 @@ test('dead-link checker reports mocked reachable and missing URLs', async ({
   await expect(results).toContainText('HTTP 404');
   await expect(results).toContainText('Reachable');
   await expect(
-    page.getByRole('dialog', { name: 'Check Dead Links' }).getByText(
-      'Reachability results for the selected bookmarks',
-    ),
+    page
+      .getByRole('dialog', { name: 'Check Dead Links' })
+      .getByText('Reachability results for the selected bookmarks'),
   ).toBeVisible();
   expect(requested.sort()).toEqual([
     'HEAD https://e2e.invalid/missing',

@@ -97,3 +97,30 @@ describe('formatBundledMessage', () => {
     );
   });
 });
+
+describe('plural message variants', () => {
+  it('every tPlural() key has a singular _one variant with matching placeholders', () => {
+    const problems = sourceFiles(path.join(appRoot, 'src')).flatMap((file) => {
+      const source = readFileSync(file, 'utf8');
+      return [...source.matchAll(/\btPlural\(\s*['"]([A-Za-z0-9_]+)['"]/g)]
+        .map((match) => match[1])
+        .filter((key) => {
+          const many = byLocale.en.messages[key];
+          const one = byLocale.en.messages[`${key}_one`];
+          return (
+            !many ||
+            !one ||
+            JSON.stringify(Object.keys(many.placeholders ?? {}).sort()) !==
+              JSON.stringify(Object.keys(one.placeholders ?? {}).sort())
+          );
+        });
+    });
+    expect(problems).toEqual([]);
+  });
+
+  it('uses singular English for a count of one', () => {
+    expect(formatBundledMessage(byLocale.en.messages.tools_urlCleanerDialogDesc_one, '1')).toBe(
+      '1 bookmark can be cleaned',
+    );
+  });
+});

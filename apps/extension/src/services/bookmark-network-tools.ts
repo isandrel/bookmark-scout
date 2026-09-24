@@ -55,6 +55,9 @@ export type PrivacySeverity = 'low' | 'medium' | 'high';
 
 export type PrivacyFinding =
   | { kind: 'sensitiveParam'; param: string }
+  | { kind: 'sensitiveFragmentParam'; param: string }
+  | { kind: 'credentials'; withPassword: boolean }
+  | { kind: 'tokenPattern' }
   | { kind: 'fragment' }
   | { kind: 'email' }
   | { kind: 'uuid' };
@@ -319,63 +322,140 @@ export async function applyMetadataTitles(
   return result;
 }
 
+/** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
+const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
+const TOKEN_VALUE_PATTERN =
+  /(?:^|[^A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/;
+const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
+/** `logo@2x.png`-style asset names look like emails but are not. */
+const ASSET_DOMAIN_PATTERN =
+  /^\d+(?:\.\d+)?x\.|\.(?:png|jpe?g|gif|svg|webp|avif|ico|bmp|css|js|mjs|json|html?)$/i;
+const UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
+
+const SEVERITY_RANK: Record<PrivacySeverity, number> = { low: 0, medium: 1, high: 2 };
+
+function findingSeverity(finding: PrivacyFinding): PrivacySeverity {
+  switch (finding.kind) {
+    case 'sensitiveParam':
+    case 'sensitiveFragmentParam':
+    case 'tokenPattern':
+      return 'high';
+    case 'credentials':
+      return finding.withPassword ? 'high' : 'medium';
+    case 'email':
+      return 'medium';
+    default:
+      return 'low';
+  }
+}
+
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value.replace(/\+/g, ' '));
+  } catch {
+    return value;
+  }
+}
+
+/** Splits a fragment into route-style params (`#/cb?access_token=…`, `#access_token=…`). */
+function fragmentParams(hash: string): URLSearchParams | null {
+  const fragment = hash.replace(/^#/, '');
+  const queryStart = fragment.indexOf('?');
+  if (queryStart >= 0) return new URLSearchParams(fragment.slice(queryStart + 1));
+  if (fragment.includes('=') && !fragment.startsWith('/') && !fragment.startsWith('!/')) {
+    return new URLSearchParams(fragment);
+  }
+  return null;
+}
+
+function containsEmail(text: string): boolean {
+  return [...text.matchAll(EMAIL_PATTERN)].some((match) => !ASSET_DOMAIN_PATTERN.test(match[1]));
+}
+
 export function scanBookmarkPrivacy(
   nodes: BookmarkTreeNode[],
   options: PrivacyOptions,
 ): PrivacyScanResult {
   const sensitiveParams = new Set(options.sensitiveParams.map((item) => item.toLowerCase()));
-  const emailRegex = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
-  const uuidRegex = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
+  const fragmentSensitive = new Set([...sensitiveParams, ...FRAGMENT_TOKEN_PARAMS]);
   const bookmarks = flattenBookmarks(nodes).filter((bookmark) => Boolean(bookmark.node.url));
 
   const items = bookmarks.flatMap((bookmark) => {
-    const url = bookmark.node.url;
-    if (!url) {
-      return [];
-    }
-
+    const url = bookmark.node.url ?? '';
+    let parsed: URL;
     try {
-      const parsed = new URL(url);
-      const findings: PrivacyFinding[] = [];
-
-      if (options.scanQueryParams) {
-        parsed.searchParams.forEach((_value, key) => {
-          if (sensitiveParams.has(key.toLowerCase())) {
-            findings.push({ kind: 'sensitiveParam', param: key });
-          }
-        });
-      }
-
-      if (options.scanFragments && parsed.hash) {
-        findings.push({ kind: 'fragment' });
-      }
-
-      const titleText = options.scanTitles ? bookmark.node.title : '';
-      const combinedText = `${url} ${titleText}`;
-
-      if (options.emailDetection && emailRegex.test(combinedText)) {
-        findings.push({ kind: 'email' });
-      }
-
-      if (options.uuidDetection && uuidRegex.test(combinedText)) {
-        findings.push({ kind: 'uuid' });
-      }
-
-      if (findings.length === 0) {
-        return [];
-      }
-
-      return [{
-        id: bookmark.node.id,
-        title: bookmark.node.title || 'Untitled',
-        url,
-        folderPath: bookmark.pathLabel,
-        severity: findings.some((finding) => finding.kind === 'sensitiveParam') ? 'high' : 'medium',
-        findings,
-      } satisfies PrivacyScanItem];
+      parsed = new URL(url);
     } catch {
       return [];
     }
+    const findings: PrivacyFinding[] = [];
+    const add = (finding: PrivacyFinding) => {
+      const key = JSON.stringify(finding);
+      if (!findings.some((existing) => JSON.stringify(existing) === key)) findings.push(finding);
+    };
+
+    if (parsed.username || parsed.password) {
+      add({ kind: 'credentials', withPassword: Boolean(parsed.password) });
+    }
+
+    if (options.scanQueryParams) {
+      parsed.searchParams.forEach((value, key) => {
+        if (sensitiveParams.has(key.toLowerCase())) {
+          add({ kind: 'sensitiveParam', param: key });
+        }
+        if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+      });
+      if (TOKEN_VALUE_PATTERN.test(safeDecode(parsed.pathname))) add({ kind: 'tokenPattern' });
+    }
+
+    if (options.scanFragments && parsed.hash) {
+      const params = fragmentParams(parsed.hash);
+      if (params) {
+        params.forEach((value, key) => {
+          if (fragmentSensitive.has(key.toLowerCase())) {
+            add({ kind: 'sensitiveFragmentParam', param: key });
+          }
+          if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+        });
+      } else if (!/^#!?\//.test(parsed.hash)) {
+        // A plain in-page anchor is a weak signal; SPA routes (`#/path`) are not flagged.
+        add({ kind: 'fragment' });
+      }
+    }
+
+    // Userinfo is reported as credentials, so it must not also read as an email address.
+    const withoutUserInfo = new URL(url);
+    withoutUserInfo.username = '';
+    withoutUserInfo.password = '';
+    const titleText = options.scanTitles ? bookmark.node.title : '';
+    const combinedText = `${safeDecode(withoutUserInfo.href)} ${titleText}`;
+
+    if (options.emailDetection && containsEmail(combinedText)) {
+      add({ kind: 'email' });
+    }
+    if (options.uuidDetection && UUID_PATTERN.test(combinedText)) {
+      add({ kind: 'uuid' });
+    }
+
+    if (findings.length === 0) {
+      return [];
+    }
+
+    const severity = findings
+      .map(findingSeverity)
+      .reduce((highest, current) =>
+        SEVERITY_RANK[current] > SEVERITY_RANK[highest] ? current : highest,
+      );
+    return [
+      {
+        id: bookmark.node.id,
+        title: bookmark.node.title,
+        url,
+        folderPath: bookmark.pathLabel,
+        severity,
+        findings,
+      } satisfies PrivacyScanItem,
+    ];
   });
 
   return {
