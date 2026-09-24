@@ -2574,5 +2574,137 @@
     "ai_folderRecommendation": {
         "message": "AI フォルダのおすすめ",
         "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
+    },
+    "toast_bookmarkAddedDesc": {
+        "message": "「$title$」を「$folder$」に追加しました",
+        "description": "Toast description after saving the current page; $1 is the page title, $2 the folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_bookmarkAlreadyInFolderDesc": {
+        "message": "「$title$」はすでに「$folder$」にあります。",
+        "description": "Toast description when the current page is already saved in the chosen folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_nothingChanged": {
+        "message": "保存済みです",
+        "description": "Toast title when an action was skipped because nothing needed to change"
+    },
+    "toast_errorAddingBookmarkDesc": {
+        "message": "ブックマークを追加できませんでした。もう一度お試しください。",
+        "description": "Toast description when saving the current page fails"
+    },
+    "toast_folderCreatedDesc": {
+        "message": "「$parent$」に新しいフォルダ「$name$」を追加しました",
+        "description": "Toast description after creating a folder; $1 is the new folder, $2 its parent",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Travel"
+            },
+            "parent": {
+                "content": "$2",
+                "example": "Bookmarks bar"
+            }
+        }
+    },
+    "toast_errorCreatingFolderDesc": {
+        "message": "新しいフォルダを作成できませんでした。もう一度お試しください。",
+        "description": "Toast description when creating a folder fails"
+    },
+    "toast_itemRemovedDesc": {
+        "message": "「$title$」を削除しました",
+        "description": "Toast description after removing a bookmark or folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "toast_errorDeletingBookmarkDesc": {
+        "message": "ブックマークを削除できませんでした。もう一度お試しください。",
+        "description": "Toast description when deleting a bookmark fails"
+    },
+    "toast_errorDeletingFolderDesc": {
+        "message": "フォルダを削除できませんでした。もう一度お試しください。",
+        "description": "Toast description when deleting a folder fails"
+    },
+    "toast_itemMovedDesc": {
+        "message": "「$title$」を「$folder$」に移動しました",
+        "description": "Toast description after moving an item into another folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Reading"
+            }
+        }
+    },
+    "toast_itemReorderedDesc": {
+        "message": "「$title$」を $position$ 番目に並べ替えました",
+        "description": "Toast description after reordering an item inside its folder; $2 is the 1-based position",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "position": {
+                "content": "$2",
+                "example": "3"
+            }
+        }
+    },
+    "toast_reorderHiddenBySort": {
+        "message": "一覧は日付または名前で並べ替えられているため、保存した順序は並べ替え「フォルダ優先」でのみ表示されます。",
+        "description": "Note added to the reorder toast when the popup sort order hides browser order"
+    },
+    "toast_errorMovingItemDesc": {
+        "message": "項目を移動できませんでした。もう一度お試しください。",
+        "description": "Toast description when moving an item fails"
+    },
+    "toast_cannotMoveIntoDescendant": {
+        "message": "フォルダをそのフォルダ自身やサブフォルダに移動することはできません。",
+        "description": "Toast description when a folder is dropped into itself or one of its subfolders"
+    },
+    "popup_expandAllSubfolders": {
+        "message": "すべてのサブフォルダを展開",
+        "description": "Tooltip and accessible label for the folder action that opens the folder and every subfolder"
+    },
+    "popup_collapseAllSubfolders": {
+        "message": "すべてのサブフォルダを折りたたむ",
+        "description": "Tooltip and accessible label for the folder action that closes every subfolder"
+    },
+    "action_close": {
+        "message": "閉じる",
+        "description": "Accessible label for close buttons on dialogs, panels, and notifications"
+    },
+    "toast_regionLabel": {
+        "message": "通知 ({hotkey})",
+        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+    },
+    "toast_itemLabel": {
+        "message": "通知",
+        "description": "Accessible label announced for each notification"
     }
 }

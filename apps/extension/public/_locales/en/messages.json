@@ -2574,5 +2574,137 @@
     "ai_folderRecommendation": {
         "message": "AI folder recommendation",
         "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
+    },
+    "toast_bookmarkAddedDesc": {
+        "message": "\"$title$\" added to \"$folder$\"",
+        "description": "Toast description after saving the current page; $1 is the page title, $2 the folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_bookmarkAlreadyInFolderDesc": {
+        "message": "\"$title$\" is already in \"$folder$\".",
+        "description": "Toast description when the current page is already saved in the chosen folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_nothingChanged": {
+        "message": "Already saved",
+        "description": "Toast title when an action was skipped because nothing needed to change"
+    },
+    "toast_errorAddingBookmarkDesc": {
+        "message": "Failed to add bookmark. Please try again.",
+        "description": "Toast description when saving the current page fails"
+    },
+    "toast_folderCreatedDesc": {
+        "message": "New folder \"$name$\" added in \"$parent$\"",
+        "description": "Toast description after creating a folder; $1 is the new folder, $2 its parent",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Travel"
+            },
+            "parent": {
+                "content": "$2",
+                "example": "Bookmarks bar"
+            }
+        }
+    },
+    "toast_errorCreatingFolderDesc": {
+        "message": "Failed to create new folder. Please try again.",
+        "description": "Toast description when creating a folder fails"
+    },
+    "toast_itemRemovedDesc": {
+        "message": "\"$title$\" has been removed",
+        "description": "Toast description after removing a bookmark or folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "toast_errorDeletingBookmarkDesc": {
+        "message": "Failed to delete bookmark. Please try again.",
+        "description": "Toast description when deleting a bookmark fails"
+    },
+    "toast_errorDeletingFolderDesc": {
+        "message": "Failed to delete folder. Please try again.",
+        "description": "Toast description when deleting a folder fails"
+    },
+    "toast_itemMovedDesc": {
+        "message": "\"$title$\" moved to \"$folder$\"",
+        "description": "Toast description after moving an item into another folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Reading"
+            }
+        }
+    },
+    "toast_itemReorderedDesc": {
+        "message": "\"$title$\" reordered to position $position$",
+        "description": "Toast description after reordering an item inside its folder; $2 is the 1-based position",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "position": {
+                "content": "$2",
+                "example": "3"
+            }
+        }
+    },
+    "toast_reorderHiddenBySort": {
+        "message": "The list is sorted by date or name, so the saved order is only visible with the \"Folders First\" sort order.",
+        "description": "Note added to the reorder toast when the popup sort order hides browser order"
+    },
+    "toast_errorMovingItemDesc": {
+        "message": "Failed to move item. Please try again.",
+        "description": "Toast description when moving an item fails"
+    },
+    "toast_cannotMoveIntoDescendant": {
+        "message": "A folder can't be moved into itself or one of its subfolders.",
+        "description": "Toast description when a folder is dropped into itself or one of its subfolders"
+    },
+    "popup_expandAllSubfolders": {
+        "message": "Expand all subfolders",
+        "description": "Tooltip and accessible label for the folder action that opens the folder and every subfolder"
+    },
+    "popup_collapseAllSubfolders": {
+        "message": "Collapse all subfolders",
+        "description": "Tooltip and accessible label for the folder action that closes every subfolder"
+    },
+    "action_close": {
+        "message": "Close",
+        "description": "Accessible label for close buttons on dialogs, panels, and notifications"
+    },
+    "toast_regionLabel": {
+        "message": "Notifications ({hotkey})",
+        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+    },
+    "toast_itemLabel": {
+        "message": "Notification",
+        "description": "Accessible label announced for each notification"
     }
 }

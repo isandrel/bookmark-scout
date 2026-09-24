@@ -6,7 +6,7 @@ export function Toaster() {
   const toastDuration = settings?.toastDurationMs ?? TOAST_DURATION;
 
   return (
-    <ToastProvider duration={toastDuration}>
+    <ToastProvider duration={toastDuration} label={t('toast_itemLabel')}>
       {toasts.map(({ id, title, description, action, variant, duration, ...props }) => (
         <Toast key={id} variant={variant} duration={duration ?? toastDuration} {...props}>
           <div className="p-4 pr-8">
@@ -17,10 +17,11 @@ export function Toaster() {
             {action}
           </div>
           <ToastProgress variant={variant} duration={duration ?? toastDuration} />
-          <ToastClose />
+          <ToastClose aria-label={t('action_close')} />
         </Toast>
       ))}
-      <ToastViewport />
+      {/* Radix replaces {hotkey} with the shortcut that focuses the notifications region. */}
+      <ToastViewport label={t('toast_regionLabel')} />
     </ToastProvider>
   );
 }

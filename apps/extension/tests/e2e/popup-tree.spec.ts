@@ -45,7 +45,7 @@ async function setSettings(worker: Worker, updates: Record<string, unknown>) {
 }
 
 function topLevelFolders(page: Page) {
-  return page.locator('.accordion-container > .accordion-item > h3 .folder-item');
+  return page.locator('.accordion-container > .accordion-item > .folder-item');
 }
 
 function folderTrigger(page: Page, title: string) {

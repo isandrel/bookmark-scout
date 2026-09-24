@@ -30,6 +30,13 @@ export interface BookmarkTreeNode {
   isTemporary?: boolean;
 }
 
+/** How bookmark favicons render in the popup and side panel tree. */
+export type FaviconDisplay = {
+  show: boolean;
+  /** Rendered size in CSS pixels. */
+  size: number;
+};
+
 /**
  * Types of drag-and-drop operations.
  */

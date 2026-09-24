@@ -9,7 +9,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Folder, FolderPlus } from 'lucide-react';
-import type { BookmarkTreeNode, DragOperation } from '@/types';
+import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
 type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };
@@ -63,6 +63,9 @@ function PopupPage() {
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
+  const { value: showFavicons } = useSetting('showFavicons');
+  const { value: faviconSize } = useSetting('faviconSize');
+  const { value: defaultNewFolderName } = useSetting('defaultNewFolderName');
   const { value: sortOrder } = useSetting('sortOrder');
   const { value: groupByFolders } = useSetting('groupByFolders');
   const { value: maxSearchResults } = useSetting('maxSearchResults');
@@ -93,6 +96,16 @@ function PopupPage() {
   useEffect(() => {
     fetchFolders();
   }, [fetchFolders]);
+
+  // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
+  const refreshFolders = useBookmarkStore((state) => state.refreshFolders);
+  useBookmarkEvents(refreshFolders);
+  usePopupSize();
+
+  const favicon = useMemo<FaviconDisplay>(
+    () => ({ show: showFavicons, size: faviconSize }),
+    [showFavicons, faviconSize],
+  );
 
   // AI Recommendation handler
   const handleAIRecommend = useCallback(async () => {
@@ -157,14 +170,20 @@ function PopupPage() {
   // Toast wrapper for operations
   const withToast = useCallback(
     async (
-      operation: () => Promise<{ success: boolean; message: string }>,
+      operation: () => Promise<BookmarkOperationResult>,
       successTitle: string,
       errorTitle: string,
+      successNote?: (result: BookmarkOperationResult) => string | undefined,
     ) => {
       const result = await operation();
+      if (result.skipped) {
+        toast({ title: t('toast_nothingChanged'), description: result.message });
+        return false;
+      }
+      const note = result.success ? successNote?.(result) : undefined;
       toast({
         title: result.success ? `\u2713 ${successTitle}` : `\u00d7 ${errorTitle}`,
-        description: result.message,
+        description: note ? `${result.message} ${note}` : result.message,
         variant: result.success ? 'success' : 'destructive',
       });
       return result.success;
@@ -282,10 +301,11 @@ function PopupPage() {
   const handleAddFolder = useCallback(
     (folderId: string) => {
       setCreatingFolderId(folderId);
-      setNewFolderName('');
-      setExpandedFolders((prev) => [...prev, folderId]);
+      // Prefilled and selected, so typing replaces it and Enter accepts the default.
+      setNewFolderName(defaultNewFolderName);
+      setExpandedFolders((prev) => [...new Set([...prev, folderId])]);
     },
-    [setCreatingFolderId, setNewFolderName, setExpandedFolders],
+    [defaultNewFolderName, setCreatingFolderId, setNewFolderName, setExpandedFolders],
   );
 
   const handleCreateFolder = useCallback(async () => {
@@ -317,9 +337,17 @@ function PopupPage() {
 
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      await withToast(() => handleDrop(operation), t('toast_itemMoved'), t('toast_errorMovingItem'));
+      // Date and title sorting re-sort the list, so a saved reorder can look like it did nothing.
+      const reorderHiddenBySort =
+        operation.sourceParentId === operation.targetParentId && sortOrder !== 'folders';
+      await withToast(
+        () => handleDrop(operation),
+        t('toast_itemMoved'),
+        t('toast_errorMovingItem'),
+        () => (reorderHiddenBySort ? t('toast_reorderHiddenBySort') : undefined),
+      );
     },
-    [handleDrop, withToast],
+    [handleDrop, sortOrder, withToast],
   );
 
   const deleteItem = useCallback(
@@ -348,7 +376,8 @@ function PopupPage() {
 
       let undoUsed = false;
       const deletedTitle = snapshot.node.title || t('popup_untitled');
-      toast({
+      // Each deletion owns its toast and snapshot, so undoing one never affects another.
+      const undoToast = toast({
         title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
         description: t('toast_deleteUndoWindow', [
           deletedTitle,
@@ -365,7 +394,7 @@ function PopupPage() {
               undoUsed = true;
               try {
                 await restoreBookmarkDeletion(snapshot);
-                await fetchFolders();
+                await useBookmarkStore.getState().refreshFolders();
                 toast({
                   title: t('toast_deleteRestored'),
                   description: t('toast_deleteRestoredDesc', deletedTitle),
@@ -391,8 +420,11 @@ function PopupPage() {
           </ToastAction>
         ),
       });
+      // Hovering pauses the toast timer, but the undo window does not pause: close the toast
+      // when the snapshot expires so it never offers an Undo that can only fail.
+      setTimeout(undoToast.dismiss, Math.max(0, snapshot.expiresAt - Date.now()));
     },
-    [fetchFolders, removeBookmark, removeFolder, toast],
+    [removeBookmark, removeFolder, toast],
   );
 
   const handleDeleteRequest = useCallback(
@@ -500,6 +532,8 @@ function PopupPage() {
                 size="sm"
                 className="h-5 px-1 text-xs"
                 onClick={() => setAIRecommendations([])}
+                aria-label={t('action_close')}
+                title={t('action_close')}
               >
                 ×
               </Button>
@@ -572,10 +606,11 @@ function PopupPage() {
                     node={node}
                     instanceId={instanceId}
                     isDragging={draggedItem?.id === node.id}
-                    isAllChildrenExpanded={areAllChildrenExpanded(node)}
+                    areAllChildrenExpanded={areAllChildrenExpanded}
                     creatingFolderId={creatingFolderId}
                     newFolderName={newFolderName}
                     folders={folders}
+                    favicon={favicon}
                     onDragStart={setDraggedItem}
                     onDragEnd={() => setDraggedItem(null)}
                     onDrop={handleDropWithToast}
