@@ -7,6 +7,11 @@ export type StoredBookmarkMetadata = {
 
 export type StoredBookmarkMetadataById = Record<string, StoredBookmarkMetadata>;
 
+/** Entries are normalized on read, so malformed stored values are dropped. */
+export const bookmarkMetadataItem = storage.defineItem<StoredBookmarkMetadataById>(
+  `local:${BOOKMARK_METADATA_STORAGE_KEY}`,
+);
+
 export type BookmarkMetadataPatch = {
   tags?: string[];
   summary?: string;
@@ -128,8 +133,7 @@ async function reconcileUnlocked(validBookmarkIds: string[]): Promise<void> {
 }
 
 async function readAllBookmarkMetadata(): Promise<StoredBookmarkMetadataById> {
-  const result = await browser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
-  const raw = result?.[BOOKMARK_METADATA_STORAGE_KEY];
+  const raw: unknown = await bookmarkMetadataItem.getValue();
   if (!isRecord(raw)) {
     return {};
   }
@@ -147,10 +151,10 @@ async function readAllBookmarkMetadata(): Promise<StoredBookmarkMetadataById> {
 
 async function writeAllBookmarkMetadata(metadata: StoredBookmarkMetadataById): Promise<void> {
   if (Object.keys(metadata).length === 0) {
-    await browser.storage.local.remove(BOOKMARK_METADATA_STORAGE_KEY);
+    await bookmarkMetadataItem.removeValue();
     return;
   }
-  await browser.storage.local.set({ [BOOKMARK_METADATA_STORAGE_KEY]: metadata });
+  await bookmarkMetadataItem.setValue(metadata);
 }
 
 function normalizeMetadata(value: Record<string, unknown>): StoredBookmarkMetadata | null {

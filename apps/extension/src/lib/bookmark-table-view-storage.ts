@@ -42,6 +42,14 @@ export type BookmarkTableView = {
   browserOrder: boolean;
 };
 
+/**
+ * `version` above is the payload's own schema version, not a WXT item version, so no
+ * `$` metadata key is written. Reads go through `parseBookmarkTableView`.
+ */
+export const bookmarkTableViewItem = storage.defineItem<BookmarkTableView>(
+  `sync:${BOOKMARK_TABLE_VIEW_STORAGE_KEY}`,
+);
+
 export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
   version: 1,
   columnVisibility: {
@@ -107,11 +115,8 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
 }
 
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
-  if (!browser?.storage?.sync) return cloneDefaultTableView();
-
   try {
-    const result = await browser.storage.sync.get(BOOKMARK_TABLE_VIEW_STORAGE_KEY);
-    return parseBookmarkTableView(result[BOOKMARK_TABLE_VIEW_STORAGE_KEY]);
+    return parseBookmarkTableView(await bookmarkTableViewItem.getValue());
   } catch (error) {
     console.error('Error reading bookmark table view:', error);
     return cloneDefaultTableView();
@@ -119,9 +124,7 @@ export async function getBookmarkTableView(): Promise<BookmarkTableView> {
 }
 
 export async function saveBookmarkTableView(view: BookmarkTableView): Promise<void> {
-  const validated = parseBookmarkTableView(view);
-  if (!browser?.storage?.sync) return;
-  await browser.storage.sync.set({ [BOOKMARK_TABLE_VIEW_STORAGE_KEY]: validated });
+  await bookmarkTableViewItem.setValue(parseBookmarkTableView(view));
 }
 
 export async function resetBookmarkTableView(): Promise<void> {

@@ -1,5 +1,5 @@
 /**
- * Settings storage backed by browser.storage.sync.
+ * Settings storage backed by a WXT storage item in the sync area.
  * Invalid stored or submitted fields are isolated so one bad value never blocks the rest.
  */
 
@@ -7,6 +7,9 @@ import { useCallback, useEffect, useState } from 'react';
 import type { z } from 'zod';
 
 export const SETTINGS_SYNC_KEY = 'bookmark-scout-settings';
+
+/** Stored data may predate the current schema; every read goes through `sanitizeSettings`. */
+export const settingsItem = storage.defineItem<Settings>(`sync:${SETTINGS_SYNC_KEY}`);
 
 /** Localized, human-readable validation messages keyed by setting. */
 export type SettingsFieldErrors = Partial<Record<keyof Settings, string>>;
@@ -117,21 +120,16 @@ export function sanitizeSettings(stored: unknown): Settings {
   return validateSettingsUpdate(defaultSettings, input).settings;
 }
 
-async function readStoredSettings(): Promise<unknown> {
-  const result = await browser.storage.sync.get(SETTINGS_SYNC_KEY);
-  return result?.[SETTINGS_SYNC_KEY];
-}
-
 async function writeSettings(settings: Settings): Promise<void> {
-  await browser.storage.sync.set({ [SETTINGS_SYNC_KEY]: settings });
+  await settingsItem.setValue(settings);
 }
 
 /**
- * Get settings from browser.storage.sync.
+ * Get settings from sync storage.
  */
 export async function getSettings(): Promise<Settings> {
   try {
-    const settings = sanitizeSettings(await readStoredSettings());
+    const settings = sanitizeSettings(await settingsItem.getValue());
     setLanguage(settings.language);
     return settings;
   } catch (error) {
@@ -208,16 +206,11 @@ export async function importSettings(json: string): Promise<(keyof Settings)[]> 
  * Call `listener` with sanitized settings whenever synced settings change (any page or device).
  */
 export function subscribeToSettings(listener: (settings: Settings) => void): () => void {
-  const handleChange = (changes: Record<string, { newValue?: unknown }>, areaName: string) => {
-    const change = areaName === 'sync' ? changes[SETTINGS_SYNC_KEY] : undefined;
-    if (!change) return;
-    const settings = sanitizeSettings(change.newValue);
+  return settingsItem.watch((newValue) => {
+    const settings = sanitizeSettings(newValue);
     setLanguage(settings.language);
     listener(settings);
-  };
-
-  browser.storage.onChanged.addListener(handleChange);
-  return () => browser.storage.onChanged.removeListener(handleChange);
+  });
 }
 
 /**
