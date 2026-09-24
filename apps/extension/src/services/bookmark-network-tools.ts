@@ -26,6 +26,8 @@ export type MetadataFetchResultItem = {
   faviconUrl?: string;
   description?: string;
   changed: boolean;
+  /** True when the page could not be fetched; `message` then holds the error. */
+  failed: boolean;
   message: string;
 };
 
@@ -36,13 +38,19 @@ export type MetadataFetchResult = {
 
 export type PrivacySeverity = 'low' | 'medium' | 'high';
 
+export type PrivacyFinding =
+  | { kind: 'sensitiveParam'; param: string }
+  | { kind: 'fragment' }
+  | { kind: 'email' }
+  | { kind: 'uuid' };
+
 export type PrivacyScanItem = {
   id: string;
   title: string;
   url: string;
   folderPath: string;
   severity: PrivacySeverity;
-  findings: string[];
+  findings: PrivacyFinding[];
 };
 
 export type PrivacyScanResult = {
@@ -190,6 +198,7 @@ export async function fetchBookmarkMetadata(
         faviconUrl,
         description,
         changed,
+        failed: false,
         message: changed ? 'Metadata available' : 'No title change needed',
       } satisfies MetadataFetchResultItem;
     } catch (error) {
@@ -199,6 +208,7 @@ export async function fetchBookmarkMetadata(
         url,
         folderPath: bookmark.pathLabel,
         changed: false,
+        failed: true,
         message: error instanceof Error ? error.message : 'Metadata request failed',
       } satisfies MetadataFetchResultItem;
     }
@@ -227,29 +237,29 @@ export function scanBookmarkPrivacy(
 
     try {
       const parsed = new URL(url);
-      const findings: string[] = [];
+      const findings: PrivacyFinding[] = [];
 
       if (options.scanQueryParams) {
         parsed.searchParams.forEach((_value, key) => {
           if (sensitiveParams.has(key.toLowerCase())) {
-            findings.push(`Sensitive query parameter: ${key}`);
+            findings.push({ kind: 'sensitiveParam', param: key });
           }
         });
       }
 
       if (options.scanFragments && parsed.hash) {
-        findings.push('URL contains a fragment');
+        findings.push({ kind: 'fragment' });
       }
 
       const titleText = options.scanTitles ? bookmark.node.title : '';
       const combinedText = `${url} ${titleText}`;
 
       if (options.emailDetection && emailRegex.test(combinedText)) {
-        findings.push('Email address detected');
+        findings.push({ kind: 'email' });
       }
 
       if (options.uuidDetection && uuidRegex.test(combinedText)) {
-        findings.push('UUID-like token detected');
+        findings.push({ kind: 'uuid' });
       }
 
       if (findings.length === 0) {
@@ -261,7 +271,7 @@ export function scanBookmarkPrivacy(
         title: bookmark.node.title || 'Untitled',
         url,
         folderPath: bookmark.pathLabel,
-        severity: findings.some((finding) => finding.includes('Sensitive query parameter')) ? 'high' : 'medium',
+        severity: findings.some((finding) => finding.kind === 'sensitiveParam') ? 'high' : 'medium',
         findings,
       } satisfies PrivacyScanItem];
     } catch {

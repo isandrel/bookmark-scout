@@ -1,5 +1,45 @@
 import { Info } from 'lucide-react';
 
+function describeDeadLink(item: DeadLinkResultItem): string {
+  switch (item.status) {
+    case 'ok':
+      return t('tools_deadLinkReachable');
+    case 'redirect':
+      return t('tools_deadLinkRedirected');
+    case 'timeout':
+      return t('tools_deadLinkTimedOut');
+    case 'invalid':
+      return t('tools_deadLinkInvalidUrl');
+    default:
+      // Transport errors carry a browser-provided message instead of a status code.
+      return item.statusCode === undefined
+        ? item.message
+        : t('tools_deadLinkHttpStatus', String(item.statusCode));
+  }
+}
+
+function describeMetadata(item: MetadataFetchResultItem): string {
+  if (item.failed) return item.message;
+  return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
+}
+
+function describePrivacyFinding(finding: PrivacyFinding): string {
+  switch (finding.kind) {
+    case 'sensitiveParam':
+      return t('tools_privacySensitiveParam', finding.param);
+    case 'fragment':
+      return t('tools_privacyFragment');
+    case 'email':
+      return t('tools_privacyEmail');
+    case 'uuid':
+      return t('tools_privacyUuid');
+  }
+}
+
+function privacyFindingKey(finding: PrivacyFinding): string {
+  return finding.kind === 'sensitiveParam' ? `${finding.kind}:${finding.param}` : finding.kind;
+}
+
 export function DuplicateResultsView({
   result,
   isRemoving,
@@ -25,28 +65,28 @@ export function DuplicateResultsView({
                 <div key={item.node.id} className="rounded-md bg-muted/40 p-2 text-sm">
                   <div className="flex items-center gap-2">
                     {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
-                    <span className="font-medium">{item.node.title || 'Untitled'}</span>
-                    {index === 0 ? <Badge>{t('state_keep') || 'Keep'}</Badge> : null}
+                    <span className="font-medium">{item.node.title || t('bookmarks_untitled')}</span>
+                    {index === 0 ? <Badge>{t('state_keep')}</Badge> : null}
                   </div>
                   <p className="break-all text-xs text-muted-foreground">{item.node.url}</p>
-                  <p className="text-xs text-muted-foreground">{item.pathLabel || 'Root'}</p>
+                  <p className="text-xs text-muted-foreground">{item.pathLabel || t('tools_rootFolder')}</p>
                 </div>
               ))}
             </div>
           </div>
         ))
       ) : (
-        <EmptyState message={t('state_noDuplicatesFound') || 'No duplicate bookmarks found.'} />
+        <EmptyState message={t('state_noDuplicatesFound')} />
       )}
 
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onClose}>
-          {t('action_cancel') || 'Cancel'}
+          {t('action_cancel')}
         </Button>
         <Button onClick={onConfirm} disabled={!result?.groups.length || isRemoving}>
           {isRemoving
-            ? t('action_removing') || 'Removing...'
-            : t('action_removeDuplicates') || 'Remove duplicates'}
+            ? t('action_removing')
+            : t('action_removeDuplicates')}
         </Button>
       </div>
     </div>
@@ -70,7 +110,7 @@ export function UrlCleanerResultsView({
         result.previews.map((preview) => (
           <div key={preview.id} className="space-y-2 rounded-lg border p-3 text-sm">
             <div className="font-medium">{preview.title}</div>
-            <div className="text-xs text-muted-foreground">{preview.folderPath || 'Root'}</div>
+            <div className="text-xs text-muted-foreground">{preview.folderPath || t('tools_rootFolder')}</div>
             <div className="break-all rounded-md bg-muted/40 p-2 text-xs">{preview.originalUrl}</div>
             <div className="break-all rounded-md bg-emerald-500/10 p-2 text-xs text-emerald-700 dark:text-emerald-300">
               {preview.cleanedUrl}
@@ -85,15 +125,15 @@ export function UrlCleanerResultsView({
           </div>
         ))
       ) : (
-        <EmptyState message={t('state_noUrlChangesFound') || 'No URL cleanup changes found.'} />
+        <EmptyState message={t('state_noUrlChangesFound')} />
       )}
 
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onClose}>
-          {t('action_cancel') || 'Cancel'}
+          {t('action_cancel')}
         </Button>
         <Button onClick={onConfirm} disabled={!result?.previews.length || isApplying}>
-          {isApplying ? t('action_applying') || 'Applying...' : t('action_applyChanges') || 'Apply Changes'}
+          {isApplying ? t('action_applying') : t('action_applyChanges')}
         </Button>
       </div>
     </div>
@@ -107,13 +147,13 @@ export function StatisticsResultsView({ result }: { result: BookmarkStatistics |
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <StatCard label={t('stats_totalBookmarks') || 'Bookmarks'} value={result.totalBookmarks} />
-      <StatCard label={t('stats_totalFolders') || 'Folders'} value={result.totalFolders} />
-      <StatCard label={t('stats_deepestLevel') || 'Deepest level'} value={result.deepestLevel} />
-      <StatCard label={t('stats_duplicates') || 'Duplicates'} value={result.duplicateCount} />
-      <StatList label={t('stats_topDomains') || 'Top domains'} items={result.topDomains} />
-      <StatList label={t('stats_topFolders') || 'Top folders'} items={result.topFolders} />
-      <StatList label={t('stats_protocols') || 'Protocols'} items={result.protocols} />
+      <StatCard label={t('stats_totalBookmarks')} value={result.totalBookmarks} />
+      <StatCard label={t('stats_totalFolders')} value={result.totalFolders} />
+      <StatCard label={t('stats_deepestLevel')} value={result.deepestLevel} />
+      <StatCard label={t('stats_duplicates')} value={result.duplicateCount} />
+      <StatList label={t('stats_topDomains')} items={result.topDomains} />
+      <StatList label={t('stats_topFolders')} items={result.topFolders} />
+      <StatList label={t('stats_protocols')} items={result.protocols} />
     </div>
   );
 }
@@ -125,15 +165,17 @@ export function DeadLinkResultsView({ result }: { result: DeadLinkScanResult | n
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">{item.title}</span>
-            <Badge variant={item.status === 'ok' ? 'secondary' : 'destructive'}>{item.status}</Badge>
+            <Badge variant={item.status === 'ok' ? 'secondary' : 'destructive'}>
+              {t(`tools_deadLinkStatus_${item.status}`)}
+            </Badge>
           </div>
           <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-          <div className="text-xs text-muted-foreground">{item.message}</div>
+          <div className="text-xs text-muted-foreground">{describeDeadLink(item)}</div>
         </div>
       ))}
     </div>
   ) : (
-    <EmptyState message={t('state_noDeadLinksFound') || 'No broken links found.'} />
+    <EmptyState message={t('state_noDeadLinksFound')} />
   );
 }
 
@@ -144,14 +186,16 @@ export function MetadataResultsView({ result }: { result: MetadataFetchResult | 
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="font-medium">{item.title}</div>
           <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-          {item.suggestedTitle ? <div className="text-sm">Suggested title: {item.suggestedTitle}</div> : null}
+          {item.suggestedTitle ? (
+            <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
+          ) : null}
           {item.description ? <div className="text-xs text-muted-foreground">{item.description}</div> : null}
-          <div className="text-xs text-muted-foreground">{item.message}</div>
+          <div className="text-xs text-muted-foreground">{describeMetadata(item)}</div>
         </div>
       ))}
     </div>
   ) : (
-    <EmptyState message={t('state_noMetadataFound') || 'No metadata updates found.'} />
+    <EmptyState message={t('state_noMetadataFound')} />
   );
 }
 
@@ -162,19 +206,23 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">{item.title}</span>
-            <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>{item.severity}</Badge>
+            <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>
+              {t(`tools_privacySeverity_${item.severity}`)}
+            </Badge>
           </div>
           <div className="break-all text-xs text-muted-foreground">{item.url}</div>
           <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
             {item.findings.map((finding) => (
-              <li key={`${item.id}-${finding}`}>{finding}</li>
+              <li key={`${item.id}-${privacyFindingKey(finding)}`}>
+                {describePrivacyFinding(finding)}
+              </li>
             ))}
           </ul>
         </div>
       ))}
     </div>
   ) : (
-    <EmptyState message={t('state_noPrivacyIssuesFound') || 'No privacy issues found.'} />
+    <EmptyState message={t('state_noPrivacyIssuesFound')} />
   );
 }
 
@@ -209,12 +257,12 @@ function StatList({
         {items.length ? (
           items.map((item) => (
             <div key={`${label}-${item.label}`} className="flex items-center justify-between text-sm">
-              <span className="truncate pr-4">{item.label}</span>
+              <span className="truncate pr-4">{item.label || t('tools_rootFolder')}</span>
               <Badge variant="secondary">{item.count}</Badge>
             </div>
           ))
         ) : (
-          <div className="text-sm text-muted-foreground">{t('state_noData') || 'No data available.'}</div>
+          <div className="text-sm text-muted-foreground">{t('state_noData')}</div>
         )}
       </div>
     </div>

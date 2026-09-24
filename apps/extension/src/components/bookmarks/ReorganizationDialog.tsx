@@ -22,6 +22,24 @@ import 'react-json-view-lite/dist/index.css';
 
 export type LoadingStatus = 'idle' | 'collecting' | 'sending' | 'waiting' | 'processing';
 
+const LOADING_STATUS_COPY: Record<
+  Exclude<LoadingStatus, 'idle'>,
+  { icon: string; titleKey: string; detailKey: string }
+> = {
+  collecting: {
+    icon: '📚',
+    titleKey: 'ai_reorgStatusCollecting',
+    detailKey: 'ai_reorgStatusCollectingDesc',
+  },
+  sending: { icon: '📤', titleKey: 'ai_reorgStatusSending', detailKey: 'ai_reorgStatusSendingDesc' },
+  waiting: { icon: '🤖', titleKey: 'ai_reorgStatusWaiting', detailKey: 'ai_reorgStatusWaitingDesc' },
+  processing: {
+    icon: '⚙️',
+    titleKey: 'ai_reorgStatusProcessing',
+    detailKey: 'ai_reorgStatusProcessingDesc',
+  },
+};
+
 interface ReorganizationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -70,7 +88,7 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
               </span>
               {op.parentPath && (
                 <span className="text-xs text-muted-foreground">
-                  in {op.parentPath}
+                  {t('ai_reorgInFolder', op.parentPath)}
                 </span>
               )}
             </div>
@@ -102,7 +120,7 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
       case 'move': {
         // Strip "Bookmarks Bar/" prefix for cleaner display
         const stripPrefix = (path: string) => path.replace(/^Bookmarks Bar\//, '');
-        const fromPath = stripPrefix(op.fromFolderPath) || '(root)';
+        const fromPath = stripPrefix(op.fromFolderPath) || t('tools_rootFolder');
         const toPath = stripPrefix(op.toFolderPath);
         return (
           <div className="flex flex-col gap-2">
@@ -117,13 +135,13 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
             {/* Stacked layout for From → To paths */}
             <div className="flex flex-col gap-1 text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground text-xs w-10 flex-shrink-0">From:</span>
+                <span className="text-muted-foreground text-xs w-10 flex-shrink-0">{t('ai_reorgFrom')}</span>
                 <span className="text-red-500 dark:text-red-400 truncate" title={fromPath}>
                   {fromPath}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground text-xs w-10 flex-shrink-0">To:</span>
+                <span className="text-muted-foreground text-xs w-10 flex-shrink-0">{t('ai_reorgTo')}</span>
                 <span className="text-green-500 dark:text-green-400 truncate" title={toPath}>
                   {toPath}
                 </span>
@@ -146,8 +164,8 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
       <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <Badge variant={getBadgeVariant()} className="text-xs capitalize">
-            {op.type}
+          <Badge variant={getBadgeVariant()} className="text-xs">
+            {t(`ai_reorgOp_${op.type}`)}
           </Badge>
         </div>
         {renderContent()}
@@ -188,6 +206,8 @@ export function ReorganizationDialog({
   };
 
   const stats = getSummaryStats();
+  const activeStatus =
+    loadingStatus && loadingStatus !== 'idle' ? LOADING_STATUS_COPY[loadingStatus] : null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -195,10 +215,10 @@ export function ReorganizationDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-purple-500" />
-            {t('ai_reorganizationTitle') || 'AI Folder Reorganization'}
+            {t('ai_reorganizationTitle')}
           </DialogTitle>
           <DialogDescription>
-            {t('ai_reorganizationDesc') || 'Review the suggested changes before applying. No changes will be made until you approve.'}
+            {t('ai_reorganizationDesc')}
           </DialogDescription>
         </DialogHeader>
 
@@ -208,18 +228,15 @@ export function ReorganizationDialog({
               <Loader2 className="h-10 w-10 animate-spin text-purple-500" />
               <div className="text-center">
                 <p className="text-sm font-medium">
-                  {loadingStatus === 'collecting' && '📚 Collecting bookmarks...'}
-                  {loadingStatus === 'sending' && '📤 Sending to AI...'}
-                  {loadingStatus === 'waiting' && '🤖 AI is analyzing your bookmarks...'}
-                  {loadingStatus === 'processing' && '⚙️ Processing suggestions...'}
-                  {(!loadingStatus || loadingStatus === 'idle') && 'Analyzing bookmarks...'}
+                  {activeStatus
+                    ? `${activeStatus.icon} ${t(activeStatus.titleKey)}`
+                    : t('ai_analyzing')}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {loadingStatus === 'collecting' && 'Gathering folder structure and bookmark data'}
-                  {loadingStatus === 'sending' && 'Preparing request for AI analysis'}
-                  {loadingStatus === 'waiting' && 'This may take 10-30 seconds'}
-                  {loadingStatus === 'processing' && 'Building reorganization plan'}
-                </p>
+                {activeStatus ? (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {t(activeStatus.detailKey)}
+                  </p>
+                ) : null}
               </div>
             </div>
           </div>
@@ -229,7 +246,7 @@ export function ReorganizationDialog({
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-red-800 dark:text-red-200">
-                  <p className="font-medium mb-1">Error</p>
+                  <p className="font-medium mb-1">{t('error_generic')}</p>
                   {errors.map((err, i) => (
                     <p key={i}>{err}</p>
                   ))}
@@ -245,25 +262,25 @@ export function ReorganizationDialog({
                 {stats.creates > 0 && (
                   <Badge variant="default" className="gap-1">
                     <FolderPlus className="h-3 w-3" />
-                    {stats.creates} new {stats.creates === 1 ? 'folder' : 'folders'}
+                    {t('ai_reorgNewFolders', String(stats.creates))}
                   </Badge>
                 )}
                 {stats.deletes > 0 && (
                   <Badge variant="destructive" className="gap-1">
                     <FolderMinus className="h-3 w-3" />
-                    {stats.deletes} {stats.deletes === 1 ? 'folder' : 'folders'} to remove
+                    {t('ai_reorgFoldersToRemove', String(stats.deletes))}
                   </Badge>
                 )}
                 {stats.renames > 0 && (
                   <Badge variant="secondary" className="gap-1">
                     <FolderPen className="h-3 w-3" />
-                    {stats.renames} {stats.renames === 1 ? 'rename' : 'renames'}
+                    {t('ai_reorgRenames', String(stats.renames))}
                   </Badge>
                 )}
                 {stats.moves > 0 && (
                   <Badge variant="outline" className="gap-1">
                     <ArrowRight className="h-3 w-3" />
-                    {stats.moves} bookmark {stats.moves === 1 ? 'move' : 'moves'}
+                    {t('ai_reorgMoves', String(stats.moves))}
                   </Badge>
                 )}
               </div>
@@ -280,7 +297,7 @@ export function ReorganizationDialog({
                 <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-2">
                     <ArrowRight className="h-4 w-4" />
-                    <span>View {plan.operations.length} Operations</span>
+                    <span>{t('ai_reorgViewOperations', String(plan.operations.length))}</span>
                   </div>
                   <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180" />
                 </CollapsibleTrigger>
@@ -299,7 +316,7 @@ export function ReorganizationDialog({
             <div className="flex flex-col items-center gap-3 text-center">
               <CheckCircle className="h-8 w-8 text-green-500" />
               <p className="text-sm text-muted-foreground">
-                {t('ai_noChangesNeeded') || 'Your bookmarks are already well organized!'}
+                {t('ai_noChangesNeeded')}
               </p>
             </div>
           </div>
@@ -311,26 +328,26 @@ export function ReorganizationDialog({
             <CollapsibleTrigger className="flex items-center justify-between w-full px-3 py-2 text-sm hover:bg-muted/50 transition-colors">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Code2 className="h-4 w-4" />
-                <span>View AI Request & Response</span>
+                <span>{t('ai_reorgDebugToggle')}</span>
               </div>
               <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 data-[state=open]:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent className="px-3 pb-3">
               <div className="space-y-3 mt-2">
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">System Prompt:</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('ai_reorgSystemPrompt')}</p>
                   <pre className="text-xs bg-muted p-2 rounded overflow-x-auto max-h-32 overflow-y-auto whitespace-pre-wrap">
                     {plan.debugData.systemPrompt}
                   </pre>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">Request Data:</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('ai_reorgRequestData')}</p>
                   <div className="text-xs bg-muted p-2 rounded overflow-x-auto max-h-48 overflow-y-auto">
                     <JsonView data={plan.debugData.request as object} style={darkStyles} />
                   </div>
                 </div>
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">AI Response:</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('ai_reorgResponse')}</p>
                   <div className="text-xs bg-muted p-2 rounded overflow-x-auto max-h-48 overflow-y-auto">
                     <JsonView data={plan.debugData.response as object} style={darkStyles} />
                   </div>
@@ -342,19 +359,19 @@ export function ReorganizationDialog({
 
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={onCancel} disabled={isApplying}>
-            Cancel
+            {t('action_cancel')}
           </Button>
           {plan && plan.operations.length > 0 && (
             <Button onClick={handleApply} disabled={isApplying}>
               {isApplying ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Applying...
+                  {t('ai_applying')}
                 </>
               ) : (
                 <>
                   <CheckCircle className="h-4 w-4 mr-2" />
-                  Apply Changes
+                  {t('ai_applyChanges')}
                 </>
               )}
             </Button>

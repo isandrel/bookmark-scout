@@ -361,12 +361,13 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
     .getByRole('dialog', { name: 'Delete bookmark' })
     .getByRole('button', { name: 'Delete bookmark' })
     .click();
+  const notifications = page.getByRole('region', { name: 'Notifications (F8)' });
   await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText(/Only the latest deletion is recoverable/),
+    notifications.getByText('Deleted "Recover Bookmark". Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
+  await expect(notifications.getByText(/browser-generated|original IDs/)).toHaveCount(0);
   await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(notifications.getByText('Restored "Recover Bookmark".', { exact: true })).toBeVisible();
 
   await expect
     .poll(() =>
@@ -447,7 +448,7 @@ test('only the latest repeated deletion is recoverable and missing parents fail 
   await expect(
     page
       .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText(/Only the latest deletion is recoverable/),
+      .getByText('Deleted "Second Deleted". Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click();
 
