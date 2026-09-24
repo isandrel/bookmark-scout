@@ -9,10 +9,7 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { Trash2 } from 'lucide-react';
 import { useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { getFaviconUrl } from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-import { stripHtmlTags } from '@/utils/sanitize';
 
 interface BookmarkItemProps {
   node: BookmarkTreeNode;

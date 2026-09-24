@@ -4,17 +4,6 @@ import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu';
 import type { ReactTable, RowData } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, RotateCcw, Settings2 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { t } from '@/hooks/use-i18n';
-import type { BookmarkTableFeatures } from './table-features';
-
 interface DataTableViewOptionsProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
   onResetView: () => void;

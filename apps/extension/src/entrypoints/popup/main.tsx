@@ -1,8 +1,5 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import PopupPage from '@/components/page/PopupPage';
-import { ThemeProvider } from '@/components/theme-provider';
-import { SidebarProvider } from '@/components/ui/sidebar';
 import '@/index.scss';
 
 createRoot(document.getElementById('root')!).render(

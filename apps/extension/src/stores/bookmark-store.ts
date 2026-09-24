@@ -5,14 +5,6 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import {
-  createBookmark,
-  deleteBookmark,
-  fetchBookmarkTree,
-  getBookmark,
-  getCurrentTab,
-  moveBookmark,
-} from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 
 const TITLE_TRUNCATE_LENGTH = 30;

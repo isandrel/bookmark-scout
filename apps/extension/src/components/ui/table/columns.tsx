@@ -2,22 +2,6 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, Folder, Link, MoreHorizontal } from 'lucide-react';
 import { type ComponentType, useEffect, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
-import { useParentIdMap, useUrlMap } from '@/components/page/BookmarksPage';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { t } from '@/hooks/use-i18n';
-import { DataTableColumnHeader } from './data-table-column-header';
-import { DataTableDateFilter } from './data-table-date-filter';
-import { MoveBookmarkButtons } from './move-bookmark-buttons';
-import type { BookmarkTableFeatures } from './table-features';
 
 export enum ItemTypeEnum {
   Folder = 'folder',

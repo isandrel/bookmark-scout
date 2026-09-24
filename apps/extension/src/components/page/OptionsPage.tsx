@@ -31,57 +31,6 @@ import {
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useTheme } from "@/components/theme-provider";
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Toaster } from "@/components/ui/toaster";
-import { t } from "@/hooks/use-i18n";
-import { useToast } from "@/hooks/use-toast";
-import {
-	type Settings,
-	settingsSchema,
-	getSettingsCategories,
-	getSettingsFieldMeta,
-} from "@/lib/settings-schema";
-import { defaultSettings } from "@/lib/settings-schema";
-import {
-	useSettings,
-	exportSettings,
-	importSettings,
-} from "@/lib/settings-storage";
-import {
-	buildAISettingsFromProvider,
-	detectAIModels,
-	getModelsForProvider,
-	getProviderConfig,
-	providerRequiresApiKey,
-	providerSupportsCustomModel,
-	type AIProvider,
-	verifyAIService,
-} from "@/services";
-import {
-	getStoredAIProviderConfig,
-	saveStoredAIProviderConfig,
-	clearStoredAIProviderConfig,
-} from "@/lib";
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {

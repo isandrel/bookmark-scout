@@ -1,4 +1,3 @@
-import type { SortOrder } from './settings-schema';
 import type { BookmarkTreeNode } from '@/types';
 
 export type BookmarkSortAccessors<T> = {

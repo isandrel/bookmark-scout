@@ -4,11 +4,6 @@
  */
 
 import { ChevronDown, ChevronUp, Moon, Sparkles, Sun, X, CaseSensitive, WholeWord, Regex } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useTheme } from '@/components/theme-provider';
-import { t } from '@/hooks/use-i18n';
-import type { SearchOptions } from '@/stores/bookmark-store';
 
 interface BookmarkSearchProps {
   query: string;
