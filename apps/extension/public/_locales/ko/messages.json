@@ -2928,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript URL(북마클릿)은 여기에서 저장할 수 없습니다.",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "스크립트 URL($1)은 여기에서 저장할 수 없습니다. 기존 북마클릿의 이름은 변경할 수 있습니다.",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "이 폴더의 이름을 변경합니다.",
@@ -3426,5 +3426,9 @@
     "bookmarks_bulkHiddenSelection": {
         "message": "(필터로 숨겨진 $1개는 제외됨)",
         "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "웹 페이지로 열리는 data: URL($1)은 여기에서 저장할 수 없습니다.",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
     }
 }

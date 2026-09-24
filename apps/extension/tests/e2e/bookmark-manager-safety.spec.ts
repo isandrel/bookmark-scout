@@ -121,3 +121,57 @@ test('bulk delete and move only touch selected rows visible under the filters', 
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Move Here', 'Keep me', 'Also keep']);
 });
+
+test('bookmarklets can be renamed while new script and HTML data URLs are rejected', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Bookmarklet Edit', [
+    { title: 'My Bookmarklet', url: 'javascript:void(0)' },
+    { title: 'Plain Link', url: 'https://example.com/plain' },
+  ]);
+  const getNode = (id: string) =>
+    extensionWorker.evaluate(async (nodeId) => {
+      const [node] = await chrome.bookmarks.get(nodeId);
+      return { title: node.title, url: node.url };
+    }, id);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+
+  // Renaming leaves the existing javascript: URL untouched.
+  await openRowMenu(page, 'My Bookmarklet');
+  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  let dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
+  await dialog.getByLabel('Name').fill('Renamed Bookmarklet');
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect
+    .poll(() => getNode(seeded.ids['My Bookmarklet']))
+    .toEqual({ title: 'Renamed Bookmarklet', url: 'javascript:void(0)' });
+
+  await openRowMenu(page, 'Plain Link');
+  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
+  const url = dialog.getByLabel('URL');
+  const error = dialog.locator('#bookmark-edit-url-error');
+  await url.fill('vbscript:msgbox(1)');
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(error).toHaveText(
+    'Script URLs (vbscript:) cannot be saved here. Existing bookmarklets can still be renamed.',
+  );
+  await url.fill('data:text/html,<script>alert(1)</script>');
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(error).toHaveText(
+    'data: URLs that open as a web page (data:text/html) cannot be saved here.',
+  );
+  await expect
+    .poll(() => getNode(seeded.ids['Plain Link']))
+    .toEqual({ title: 'Plain Link', url: 'https://example.com/plain' });
+
+  await url.fill('data:text/plain,hello');
+  await dialog.getByRole('button', { name: 'Save' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect
+    .poll(() => getNode(seeded.ids['Plain Link']))
+    .toEqual({ title: 'Plain Link', url: 'data:text/plain,hello' });
+});

@@ -485,7 +485,9 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
   await dialog.getByLabel('Name').fill('  GitHub Spaced  ');
   await dialog.getByLabel('URL').fill('javascript:alert(1)');
   await dialog.getByRole('button', { name: 'Save' }).click();
-  await expect(dialog).toContainText('JavaScript URLs (bookmarklets) cannot be saved here.');
+  await expect(dialog).toContainText(
+    'Script URLs (javascript:) cannot be saved here. Existing bookmarklets can still be renamed.',
+  );
   await dialog.getByLabel('URL').fill('https://github.com/');
   await dialog.getByRole('button', { name: 'Save' }).click();
   await expect(dialog).toHaveCount(0);

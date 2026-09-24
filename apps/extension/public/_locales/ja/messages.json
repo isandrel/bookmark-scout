@@ -2928,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript の URL（ブックマークレット）はここでは保存できません。",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "スクリプト URL ($1) はここでは保存できません。既存のブックマークレットの名前は変更できます。",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "このフォルダの名前を変更します。",
@@ -3426,5 +3426,9 @@
     "bookmarks_bulkHiddenSelection": {
         "message": "(フィルターで非表示の $1 件は対象外)",
         "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "Web ページとして開く data: URL ($1) はここでは保存できません。",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
     }
 }

@@ -30,8 +30,15 @@ function BookmarkEditForm({
       setUrlError(t('bookmarks_editUrlRequired'));
       return;
     }
-    if (isLink && isScriptUrl(trimmedUrl)) {
-      setUrlError(t('bookmarks_editUrlScriptRejected'));
+    // Only a new URL is checked, so existing bookmarklets can still be renamed.
+    const urlChanged = isLink && trimmedUrl !== bookmark.url;
+    const blocked = urlChanged ? getBlockedEditUrl(trimmedUrl) : null;
+    if (blocked) {
+      setUrlError(
+        blocked.kind === 'script'
+          ? t('bookmarks_editUrlScriptRejected', blocked.prefix)
+          : t('bookmarks_editUrlDataRejected', blocked.prefix),
+      );
       return;
     }
 
@@ -39,7 +46,7 @@ function BookmarkEditForm({
     try {
       await updateBookmark(
         bookmark.id,
-        isLink ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
+        urlChanged ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
       );
       await onSaved();
       toast({ title: `✓ ${t('bookmarks_editSaved')}`, variant: 'success' });

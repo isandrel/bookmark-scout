@@ -12,6 +12,7 @@ import {
 } from '@/lib/bookmark-manager-data';
 import { parseBookmarkTableView } from '@/lib/bookmark-table-view-storage';
 import {
+  getBlockedEditUrl,
   getRegistrableDomain,
   getUrlDomain,
   hostnameMatchesDomain,
@@ -162,5 +163,33 @@ describe('partitionSelectionByVisibility', () => {
       visible: selected,
       hiddenCount: 0,
     });
+  });
+});
+
+describe('getBlockedEditUrl', () => {
+  it('names the script scheme that was entered', () => {
+    expect(getBlockedEditUrl('javascript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
+    expect(getBlockedEditUrl(' VBScript:msgbox(1)')).toEqual({ kind: 'script', prefix: 'vbscript:' });
+    expect(getBlockedEditUrl('java\tscript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
+  });
+
+  it('rejects data: URLs that open as a page but allows inert data', () => {
+    expect(getBlockedEditUrl('data:text/html,<script>alert(1)</script>')).toEqual({
+      kind: 'data-document',
+      prefix: 'data:text/html',
+    });
+    expect(getBlockedEditUrl('DATA:Text/HTML;base64,PGI+')).toEqual({
+      kind: 'data-document',
+      prefix: 'data:text/html',
+    });
+    expect(getBlockedEditUrl('data:image/svg+xml,<svg/>')?.prefix).toBe('data:image/svg+xml');
+    expect(getBlockedEditUrl('data:text/plain,hello')).toBeNull();
+    expect(getBlockedEditUrl('data:,hello')).toBeNull();
+    expect(getBlockedEditUrl('data:image/png;base64,iVBOR')).toBeNull();
+  });
+
+  it('allows ordinary web URLs', () => {
+    expect(getBlockedEditUrl('https://example.com/javascript:')).toBeNull();
+    expect(getBlockedEditUrl('https://example.com/?u=data:text/html,x')).toBeNull();
   });
 });
