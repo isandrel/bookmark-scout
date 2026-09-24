@@ -97,6 +97,12 @@ describe('settings validation', () => {
     expect(settings.deadLinksSuccessStatuses).toEqual(defaultSettings.deadLinksSuccessStatuses);
     expect(settings.popupHeight).toBe(600);
   });
+
+  it('clamps a stored popup size below the minimum instead of resetting it', () => {
+    const settings = sanitizeSettings({ popupHeight: 250, popupWidth: 120 });
+    expect(settings.popupHeight).toBe(300);
+    expect(settings.popupWidth).toBe(300);
+  });
 });
 
 describe('settings persistence', () => {
