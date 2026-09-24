@@ -1,12 +1,10 @@
 /**
- * Recent folders storage using browser.storage.local.
+ * Recent folders storage backed by a WXT storage item in the local area.
  * Tracks folders where bookmarks were recently added for quick access.
  */
 
 import { useCallback, useEffect, useState } from 'react';
 
-// Storage key for recent folders
-const RECENT_FOLDERS_KEY = 'bookmark-scout-recent-folders';
 /** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
 export const RECENT_FOLDERS_STORAGE_LIMIT = 10;
 
@@ -15,6 +13,11 @@ export interface RecentFolder {
   title: string;
   lastUsed: number;
 }
+
+/** Entries are normalized on read, so malformed stored values are dropped. */
+export const recentFoldersItem = storage.defineItem<RecentFolder[]>(
+  'local:bookmark-scout-recent-folders',
+);
 
 function isRecentFolder(value: unknown): value is RecentFolder {
   if (!value || typeof value !== 'object') return false;
@@ -43,8 +46,7 @@ export function normalizeRecentFolders(value: unknown): RecentFolder[] {
 
 async function readRecentFolders(): Promise<RecentFolder[]> {
   try {
-    const result = await browser.storage.local.get(RECENT_FOLDERS_KEY);
-    return normalizeRecentFolders(result?.[RECENT_FOLDERS_KEY]);
+    return normalizeRecentFolders(await recentFoldersItem.getValue());
   } catch (error) {
     console.error('Error reading recent folders:', error);
     return [];
@@ -52,7 +54,7 @@ async function readRecentFolders(): Promise<RecentFolder[]> {
 }
 
 async function writeRecentFolders(folders: RecentFolder[]): Promise<void> {
-  await browser.storage.local.set({ [RECENT_FOLDERS_KEY]: normalizeRecentFolders(folders) });
+  await recentFoldersItem.setValue(normalizeRecentFolders(folders));
 }
 
 /**
@@ -130,7 +132,7 @@ export async function updateRecentFolderTitle(id: string, title: string): Promis
  * Clear all recent folders.
  */
 export async function clearRecentFolders(): Promise<void> {
-  await browser.storage.local.remove(RECENT_FOLDERS_KEY);
+  await recentFoldersItem.removeValue();
 }
 
 /**
@@ -154,19 +156,12 @@ export function useRecentFolders(): {
       setIsLoading(false);
     });
 
-    const handleStorageChange = (
-      changes: Record<string, { newValue?: unknown }>,
-      areaName: string,
-    ) => {
-      if (areaName === 'local' && changes[RECENT_FOLDERS_KEY]) {
-        setRecentFolders(normalizeRecentFolders(changes[RECENT_FOLDERS_KEY].newValue));
-      }
-    };
-
-    browser.storage.onChanged.addListener(handleStorageChange);
+    const unwatch = recentFoldersItem.watch((folders) => {
+      setRecentFolders(normalizeRecentFolders(folders));
+    });
     return () => {
       active = false;
-      browser.storage.onChanged.removeListener(handleStorageChange);
+      unwatch();
     };
   }, []);
 

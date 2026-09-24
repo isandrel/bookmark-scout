@@ -4,7 +4,8 @@ import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage'
 import { createBookmark } from '@/services/bookmarks';
 
 vi.mock('@/services/bookmarks', () => ({ createBookmark: vi.fn() }));
-vi.mock('@/lib/recent-folders-storage', () => ({
+vi.mock('@/lib/recent-folders-storage', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/recent-folders-storage')>()),
   addRecentFolder: vi.fn(),
   getRecentFolders: vi.fn(),
 }));
@@ -75,7 +76,7 @@ describe('context menu settings', () => {
   it('removes the menu when disabled, rejects stale clicks, and restores it when enabled', async () => {
     await contextMenu.initializeContextMenu();
     expect(menus.has(MENU_ID)).toBe(true);
-    expect(fakeBrowser.storage.onChanged.hasListeners()).toBe(true);
+    expect(fakeBrowser.storage.sync.onChanged.hasListeners()).toBe(true);
 
     await setSettings({ contextMenuEnabled: false });
     await vi.waitFor(() => expect(menus.size).toBe(0));
@@ -136,10 +137,14 @@ describe('context menu settings', () => {
 
   it('serializes rapid settings changes so the final disabled state wins', async () => {
     await contextMenu.initializeContextMenu();
+    const rebuildMenu = vi.spyOn(contextMenu.contextMenuManager, 'rebuildMenu');
     await setSettings({ contextMenuEnabled: false });
     await setSettings({ contextMenuEnabled: true });
     await setSettings({ contextMenuEnabled: false });
-    await vi.waitFor(() => expect(fakeBrowser.contextMenus.removeAll).toHaveBeenCalledTimes(4));
+
+    // One queued rebuild per change; wait for all of them, whatever order they settle in.
+    expect(rebuildMenu).toHaveBeenCalledTimes(3);
+    await Promise.all(rebuildMenu.mock.results.map((result) => result.value));
     expect(menus.size).toBe(0);
   });
 
