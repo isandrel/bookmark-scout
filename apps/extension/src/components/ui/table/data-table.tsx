@@ -43,7 +43,15 @@ interface DataTableProps<TData extends RowData> {
   /** Changing this (e.g. the folder ID) returns to the first page and clears the selection. */
   resetKey?: string | null;
   facetOptions: DataTableFacetOptions;
-  renderSelectionActions?: (rows: TData[], clearSelection: () => void) => React.ReactNode;
+  /**
+   * Renders actions for the selection. `rows` are the selected rows visible under the current
+   * filters; `hiddenCount` selected rows are hidden by filters and must not be acted on.
+   */
+  renderSelectionActions?: (
+    rows: TData[],
+    hiddenCount: number,
+    clearSelection: () => void,
+  ) => React.ReactNode;
   onRowClick?: (row: TData) => void;
   /** Rows that open on click also open with Enter or Space when focused. */
   isRowActivatable?: (row: TData) => boolean;
@@ -229,6 +237,15 @@ export function DataTable<TData extends RowData>({
     .filter((id) => rowSelection[id])
     .map((id) => rowsById.get(id))
     .filter((row): row is TData => row !== undefined);
+  // Bulk actions only touch selected rows the current filters show (on any page), matching the
+  // footer count; selected rows hidden by a filter are reported but never moved or deleted.
+  const filteredRows = table.getFilteredRowModel().rows;
+  const { visible: visibleSelectedRows, hiddenCount: hiddenSelectedCount } =
+    partitionSelectionByVisibility(
+      selectedRows,
+      new Set(filteredRows.map((row) => row.id)),
+      getRowId,
+    );
   const clearSelection = React.useCallback(() => setRowSelection({}), []);
 
   return (
@@ -243,7 +260,8 @@ export function DataTable<TData extends RowData>({
         browserOrder={browserOrder}
         onBrowserOrderChange={handleBrowserOrderChange}
       />
-      {selectedRows.length > 0 && renderSelectionActions?.(selectedRows, clearSelection)}
+      {selectedRows.length > 0 &&
+        renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
       <div className="rounded-md border">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
           <Table>

@@ -102,9 +102,10 @@ export default function BookmarksPage() {
   }, [allData, currentFolder]);
 
   const renderSelectionActions = useCallback(
-    (rows: Bookmark[], clearSelection: () => void) => (
+    (rows: Bookmark[], hiddenCount: number, clearSelection: () => void) => (
       <BookmarkBulkActions
         selected={rows}
+        hiddenCount={hiddenCount}
         allData={allData}
         onClearSelection={clearSelection}
         onDelete={(items) => {

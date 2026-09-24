@@ -7,7 +7,10 @@ import { FolderInput, Trash2, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 type BookmarkBulkActionsProps = {
+  /** Selected rows visible under the current filters; the only rows actions apply to. */
   selected: Bookmark[];
+  /** Selected rows hidden by filters; reported, never moved or deleted. */
+  hiddenCount: number;
   allData: Bookmark[];
   onDelete: (items: Bookmark[]) => void;
   onClearSelection: () => void;
@@ -15,6 +18,7 @@ type BookmarkBulkActionsProps = {
 
 export function BookmarkBulkActions({
   selected,
+  hiddenCount,
   allData,
   onDelete,
   onClearSelection,
@@ -66,6 +70,11 @@ export function BookmarkBulkActions({
       aria-label={t('bookmarks_bulkActions')}
     >
       <span className="font-medium">{t('table_filterSelectedCount', String(selected.length))}</span>
+      {hiddenCount > 0 && (
+        <span className="text-muted-foreground" data-testid="bulk-hidden-selection">
+          {t('bookmarks_bulkHiddenSelection', String(hiddenCount))}
+        </span>
+      )}
       <Button
         variant="outline"
         size="sm"

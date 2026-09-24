@@ -3422,5 +3422,9 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "(フィルターで非表示の $1 件は対象外)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
     }
 }

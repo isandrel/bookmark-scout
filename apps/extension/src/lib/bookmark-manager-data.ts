@@ -134,6 +134,19 @@ export function pruneNestedSelection<T extends ManagerItem>(
   return selected.filter((item) => !hasAncestorIn(item, ids, byId));
 }
 
+/**
+ * Splits a selection into the rows the current filters show and a count of rows they hide.
+ * Bulk actions act only on the visible part, so a filter can never hide what gets deleted.
+ */
+export function partitionSelectionByVisibility<T>(
+  selected: readonly T[],
+  visibleIds: ReadonlySet<string>,
+  getId: (row: T) => string,
+): { visible: T[]; hiddenCount: number } {
+  const visible = selected.filter((row) => visibleIds.has(getId(row)));
+  return { visible, hiddenCount: selected.length - visible.length };
+}
+
 /** Folders that can receive the selection: not a selected folder or anything inside one. */
 export function getMoveTargetFolders(
   selected: readonly ManagerItem[],

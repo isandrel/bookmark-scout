@@ -6,6 +6,7 @@ import {
   getMoveTargetFolders,
   isWithinDateRange,
   type ManagerItem,
+  partitionSelectionByVisibility,
   pruneNestedSelection,
   resolveManagerFolder,
 } from '@/lib/bookmark-manager-data';
@@ -144,5 +145,22 @@ describe('table view browser order', () => {
   it('defaults to off and persists when enabled', () => {
     expect(parseBookmarkTableView({}).browserOrder).toBe(false);
     expect(parseBookmarkTableView({ version: 1, browserOrder: true }).browserOrder).toBe(true);
+  });
+});
+
+describe('partitionSelectionByVisibility', () => {
+  it('keeps only selected rows the filters show and counts the hidden ones', () => {
+    const selected = [link('a', '1', 'Keep me', 'Bar'), link('b', '1', 'Target X', 'Bar'), link('c', '1', 'Also keep', 'Bar')];
+    const result = partitionSelectionByVisibility(selected, new Set(['b', 'z']), (row) => row.id);
+    expect(result.visible.map((row) => row.id)).toEqual(['b']);
+    expect(result.hiddenCount).toBe(2);
+  });
+
+  it('reports nothing hidden when every selected row is visible', () => {
+    const selected = [link('a', '1', 'A', 'Bar')];
+    expect(partitionSelectionByVisibility(selected, new Set(['a']), (row) => row.id)).toEqual({
+      visible: selected,
+      hiddenCount: 0,
+    });
   });
 });

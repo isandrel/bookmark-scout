@@ -3422,5 +3422,9 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "(필터로 숨겨진 $1개는 제외됨)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
     }
 }
