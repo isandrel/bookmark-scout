@@ -106,6 +106,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context, suggest tags, summarize bookmarks, and plan folder reorganizations
+- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear bookmark tags and summaries locally, or apply reviewed AI suggestions
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
@@ -124,7 +125,6 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 ### 🚧 Current Focus
 
 - [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
-- [ ] 🏷️ **Persistent Tags** — Store and manage custom tags beyond AI-generated suggestions
 - [ ] 🧪 **Automated Tests** — Add dedicated unit/integration coverage for bookmark workflows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
 

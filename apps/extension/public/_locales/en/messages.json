@@ -679,6 +679,74 @@
         "message": "Could not copy.",
         "description": "Error after bookmark detail copying fails"
     },
+    "bookmarks_metadataTitle": {
+        "message": "Tags and Summary",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "Saved locally in the extension and included in AI context exports when enabled.",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "Tags",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "research, tools, reading",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "Separate tags with commas. Duplicate tags are removed when saved.",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "Summary",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "Add a private note or summary for this bookmark",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "Save Metadata",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "Clear Metadata",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "Metadata saved.",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "Metadata cleared.",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "Could not load saved metadata.",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "Could not save metadata.",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "Save Suggested Tags",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "Save Suggested Summaries",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "Reviewed tag suggestions were saved using your merge settings.",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "Reviewed summary suggestions were saved using your merge settings.",
+        "description": "Toast description after applying generated summaries"
+    },
     "tools_category_ai": {
         "message": "AI & Intelligence",
         "description": "AI tools category"
@@ -1260,7 +1328,7 @@
         "description": "Auto-tagging merge mode label"
     },
     "settings_autoTaggingMergeModeDesc": {
-        "message": "How suggested tags should be combined with existing tags later",
+        "message": "When saving reviewed suggestions, Append adds them to saved tags; Replace overwrites saved tags",
         "description": "Auto-tagging merge mode description"
     },
     "settings_autoTaggingDedupeTags": {
@@ -1268,7 +1336,7 @@
         "description": "Auto-tagging dedupe tag label"
     },
     "settings_autoTaggingDedupeTagsDesc": {
-        "message": "Remove duplicate tags from AI results",
+        "message": "Drop case-insensitive duplicate tags when saving reviewed suggestions",
         "description": "Auto-tagging dedupe tag description"
     },
     "settings_summarizerEnabled": {
@@ -1308,7 +1376,7 @@
         "description": "Summarizer merge mode label"
     },
     "settings_summarizerMergeModeDesc": {
-        "message": "How generated summaries should be merged with saved metadata later",
+        "message": "When saving reviewed summaries, Append adds them after the saved summary; Replace overwrites it",
         "description": "Summarizer merge mode description"
     },
     "settings_reorganizationEnabled": {

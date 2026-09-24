@@ -68,7 +68,12 @@ import {
   type MetadataFetchResult,
   type PrivacyScanResult,
 } from '@/services';
-import { getStoredBookmarkMetadata, useSetting, useSettings } from '@/lib';
+import {
+  getStoredBookmarkMetadata,
+  mergeStoredBookmarkMetadata,
+  useSetting,
+  useSettings,
+} from '@/lib';
 import { ReorganizationDialog } from './ReorganizationDialog';
 import { ToolResultsDialog } from './ToolResultsDialog';
 import { ToolCard, type ToolScope } from './ToolCards';
@@ -151,11 +156,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [autoTaggingResult, setAutoTaggingResult] = useState<
     Awaited<ReturnType<typeof suggestBookmarkTags>>
   >([]);
+  const [autoTaggingSaving, setAutoTaggingSaving] = useState(false);
   const [summarizerLoading, setSummarizerLoading] = useState(false);
   const [summarizerDialogOpen, setSummarizerDialogOpen] = useState(false);
   const [summarizerResult, setSummarizerResult] = useState<
     Awaited<ReturnType<typeof summarizeBookmarksWithAI>>
   >([]);
+  const [summarizerSaving, setSummarizerSaving] = useState(false);
 
   const { value: duplicatesMatchStrategy } = useSetting('duplicatesMatchStrategy');
   const { value: duplicatesNormalizeWww } = useSetting('duplicatesNormalizeWww');
@@ -204,11 +211,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: autoTaggingMinTags } = useSetting('autoTaggingMinTags');
   const { value: autoTaggingMaxTags } = useSetting('autoTaggingMaxTags');
   const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
+  const { value: autoTaggingMergeMode } = useSetting('autoTaggingMergeMode');
+  const { value: autoTaggingDedupeTags } = useSetting('autoTaggingDedupeTags');
   const { value: summarizerSummaryLength } = useSetting('summarizerSummaryLength');
   const { value: summarizerIncludeDomainHint } = useSetting('summarizerIncludeDomainHint');
   const { value: reorganizationDryRunFirst } = useSetting('reorganizationDryRunFirst');
   const { value: reorganizationMinConfidence } = useSetting('reorganizationMinConfidence');
   const { value: reorganizationBatchSize } = useSetting('reorganizationBatchSize');
+  const { value: summarizerMergeMode } = useSetting('summarizerMergeMode');
 
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
@@ -501,6 +511,73 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       });
     } finally {
       setSummarizerLoading(false);
+    }
+  };
+
+  const handleSaveAutoTags = async () => {
+    setAutoTaggingSaving(true);
+    try {
+      await mergeStoredBookmarkMetadata(
+        Object.fromEntries(
+          // Only apply suggestions that map back to a reviewed bookmark in the request.
+          autoTaggingResult
+            .filter((item) => item.url)
+            .map((item) => [item.bookmarkId, { tags: item.tags }]),
+        ),
+        {
+          tagMode: autoTaggingMergeMode,
+          summaryMode: 'replace',
+          dedupeTags: autoTaggingDedupeTags,
+        },
+      );
+      setAutoTaggingDialogOpen(false);
+      setAutoTaggingResult([]);
+      toast({
+        title: t('bookmarks_metadataSaved'),
+        description: t('bookmarks_metadataGeneratedTagsSaved'),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: t('bookmarks_metadataSaveFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setAutoTaggingSaving(false);
+    }
+  };
+
+  const handleSaveSummaries = async () => {
+    setSummarizerSaving(true);
+    try {
+      await mergeStoredBookmarkMetadata(
+        Object.fromEntries(
+          summarizerResult
+            .filter((item) => item.url)
+            .map((item) => [item.bookmarkId, { summary: item.summary }]),
+        ),
+        {
+          tagMode: 'replace',
+          summaryMode: summarizerMergeMode,
+          dedupeTags: true,
+        },
+      );
+      setSummarizerDialogOpen(false);
+      setSummarizerResult([]);
+      toast({
+        title: t('bookmarks_metadataSaved'),
+        description: t('bookmarks_metadataGeneratedSummariesSaved'),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: t('bookmarks_metadataSaveFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSummarizerSaving(false);
     }
   };
 
@@ -1067,6 +1144,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               {t('state_noAiResults') || 'No AI results available.'}
             </div>
           )}
+          {autoTaggingResult.length ? (
+            <div className="flex justify-end">
+              <Button onClick={handleSaveAutoTags} disabled={autoTaggingSaving}>
+                {autoTaggingSaving ? t('action_saving') : t('bookmarks_metadataSaveTags')}
+              </Button>
+            </div>
+          ) : null}
         </div>
       </ToolResultsDialog>
 
@@ -1090,6 +1174,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               {t('state_noAiResults') || 'No AI results available.'}
             </div>
           )}
+          {summarizerResult.length ? (
+            <div className="flex justify-end">
+              <Button onClick={handleSaveSummaries} disabled={summarizerSaving}>
+                {summarizerSaving ? t('action_saving') : t('bookmarks_metadataSaveSummaries')}
+              </Button>
+            </div>
+          ) : null}
         </div>
       </ToolResultsDialog>
     </div>
