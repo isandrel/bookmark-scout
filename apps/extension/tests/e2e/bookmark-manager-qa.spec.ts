@@ -359,10 +359,10 @@ test('parent and domain facets list folders by path and group by registrable dom
   await page.keyboard.press('Escape');
 
   await toolbar(page).getByRole('button', { name: 'Domain' }).click();
-  const bbc = page.getByRole('option', { name: /^bbc\.co\.uk/ });
+  const bbc = page.getByRole('option', { name: /^bbc\.co\.uk \d+$/ });
   await expect(bbc).toContainText('2');
-  await expect(page.getByRole('option', { name: /^nhk\.or\.jp/ })).toBeVisible();
-  await expect(page.getByRole('option', { name: /^co\.uk/ })).toHaveCount(0);
+  await expect(page.getByRole('option', { name: /^nhk\.or\.jp \d+$/ })).toBeVisible();
+  await expect(page.getByRole('option', { name: /^co\.uk( \d+)?$/ })).toHaveCount(0);
   await expect(page.getByRole('option', { name: /^favicon/ })).toHaveCount(0);
   await bbc.click();
   await page.keyboard.press('Escape');
@@ -437,7 +437,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   const bulk = page.getByTestId('bulk-actions');
   await expect(bulk).toContainText('2 selected');
   await bulk.getByRole('button', { name: 'Delete' }).click();
-  await expect(page.getByText('Deleted 2 items. Undo within 10 seconds.')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Notifications (F8)' }).getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true })).toBeVisible();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A']);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A', 'Bulk B', 'Bulk C']);

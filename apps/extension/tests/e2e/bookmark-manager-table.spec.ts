@@ -12,7 +12,10 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
       const writableRoot = root.children?.find((node) => node.children !== undefined);
       if (!writableRoot) throw new Error('No writable bookmark root found');
 
-      const folder = await chrome.bookmarks.create({ parentId: writableRoot.id, title: folderTitle });
+      const folder = await chrome.bookmarks.create({
+        parentId: writableRoot.id,
+        title: folderTitle,
+      });
       const ids: Record<string, string> = {};
       for (const entry of entries) {
         const created = await chrome.bookmarks.create({
@@ -119,7 +122,10 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await expect(row(page, 'Edited Link')).toContainText('https://example.com/edited');
   await expect
     .poll(() =>
-      extensionWorker.evaluate(async (id) => (await chrome.bookmarks.get(id))[0], folder.ids['Editable Link']),
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.get(id))[0],
+        folder.ids['Editable Link'],
+      ),
     )
     .toMatchObject({ title: 'Edited Link', url: 'https://example.com/edited' });
 
@@ -139,10 +145,18 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await openRowMenu(page, 'Doomed Link');
   await page.getByRole('menuitem', { name: 'Delete' }).click();
   await expect(row(page, 'Doomed Link')).toHaveCount(0);
-  await expect(page.getByText('Deleted "Doomed Link". Undo within 10 seconds.')).toBeVisible();
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText('Deleted "Doomed Link". Undo within 10 seconds.', { exact: true }),
+  ).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(row(page, 'Doomed Link')).toBeVisible();
-  await expect(page.getByText('Restored "Doomed Link".')).toBeVisible();
+  await expect(
+    page
+      .getByRole('region', { name: 'Notifications (F8)' })
+      .getByText('Restored "Doomed Link".', { exact: true }),
+  ).toBeVisible();
   await expect
     .poll(() =>
       extensionWorker.evaluate(
