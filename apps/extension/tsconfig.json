@@ -39,7 +39,8 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    ".wxt/wxt.d.ts"
   ],
   "exclude": [
     "node_modules",

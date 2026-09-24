@@ -5,22 +5,6 @@
  */
 
 import { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import { 
   FolderPlus, 
   FolderMinus, 
@@ -35,8 +19,6 @@ import {
 } from 'lucide-react';
 import { JsonView, darkStyles } from 'react-json-view-lite';
 import 'react-json-view-lite/dist/index.css';
-import type { ReorganizationPlan, ReorganizationOperation } from '@/services';
-import { t } from '@/hooks/use-i18n';
 
 export type LoadingStatus = 'idle' | 'collecting' | 'sending' | 'waiting' | 'processing';
 

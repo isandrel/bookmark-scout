@@ -6,23 +6,6 @@
 
 import { PanelLeft, PanelLeftClose, PanelRight, PanelRightClose } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import {
-  type Bookmark,
-  ItemTypeEnum,
-  useBookmarkNavigation,
-} from '@/hooks/use-bookmarks-page';
-import { t } from '@/hooks/use-i18n';
-import { useSetting } from '@/lib';
-import { sortBookmarkItems } from '@/lib/bookmark-sort';
-import { cn } from '@/lib/utils';
-import { BookmarkDetailsDialog } from '../bookmarks/BookmarkDetailsDialog';
-import { BreadcrumbNav } from '../bookmarks/BreadcrumbNav';
-import { FolderTree } from '../bookmarks/FolderTree';
-import { ToolsSidebar } from '../bookmarks/ToolsSidebar';
-import { Button } from '../ui/button';
-import { Toaster } from '../ui/toaster';
-import { createColumns } from '../ui/table/columns';
-import { DataTable } from '../ui/table/data-table';
 
 export default function BookmarksPage() {
   const { currentFolder, data, allData, isLoading, error, navigateToFolder } =
@@ -200,7 +183,3 @@ export default function BookmarksPage() {
     </div>
   );
 }
-
-export type { Bookmark } from '@/hooks/use-bookmarks-page';
-// Re-export types and hooks for backwards compatibility
-export { useParentIdMap, useUrlMap } from '@/hooks/use-bookmarks-page';

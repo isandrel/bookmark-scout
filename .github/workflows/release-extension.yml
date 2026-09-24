@@ -48,6 +48,15 @@ jobs:
             echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           fi
 
+      # WXT writes the manifest version from apps/extension/package.json.
+      - name: Verify tag matches extension version
+        run: |
+          expected="v$(jq -r .version apps/extension/package.json)"
+          if [ "${{ steps.get_version.outputs.version }}" != "$expected" ]; then
+            echo "::error::Tag ${{ steps.get_version.outputs.version }} does not match apps/extension/package.json ($expected)"
+            exit 1
+          fi
+
       - name: Create Chrome zip
         run: |
           cd dist/chrome-mv3

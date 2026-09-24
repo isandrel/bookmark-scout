@@ -1,5 +1,4 @@
 import { parse } from 'smol-toml';
-import type { AIProvider } from './ai-client';
 import settingsToml from '../../config/settings.default.toml?raw';
 
 export type AIModel = {

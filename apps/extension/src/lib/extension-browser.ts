@@ -1,7 +1,3 @@
-import { browser } from 'wxt/browser';
-
-export { browser };
-
 export function getStorageSync() {
   return browser.storage?.sync;
 }

@@ -138,6 +138,15 @@ Preferred responsibilities:
 
 Do not duplicate the same workflow across component code and service code. Extend the existing layer where the behavior already belongs.
 
+### Auto-imports
+
+WXT auto-imports every export from `components/**`, `hooks/`, `utils/`, `lib/`, `services/`, and `stores/` (configured in `wxt.config.ts`), plus WXT APIs such as `browser`, `storage`, and `defineBackground`.
+
+- do not add explicit imports for these exports; `@/types`, third-party packages, and assets still use explicit imports
+- export names must be unique across the scanned directories; `wxt prepare` warns on duplicates
+- do not add `index.ts` barrels in scanned directories; they are excluded from scanning
+- generated declarations live in `.wxt/types/imports.d.ts` and refresh on `wxt prepare`, `dev`, and `build`
+
 ### Bookmark operations
 
 - centralize bookmark reads, writes, moves, deletes, and reorganizations

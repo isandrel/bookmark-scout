@@ -8,34 +8,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BookmarkSearch, FolderItem, RecentFoldersPanel } from '@/components/bookmark';
-import { Accordion } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Toaster } from '@/components/ui/toaster';
 import { Folder, FolderPlus } from 'lucide-react';
-import { useDebounce } from '@/hooks/use-debounce';
-import { t } from '@/hooks/use-i18n';
-import { useToast } from '@/hooks/use-toast';
-import { addRecentFolder, getSettings, useSetting } from '@/lib';
-import { sortBookmarkTree } from '@/lib/bookmark-sort';
-import { useBookmarkStore } from '@/stores';
-import {
-  recommendFolders,
-  getBookmark,
-  buildAISettingsFromProvider,
-  type FolderRecommendation,
-} from '@/services';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-import { stripHtmlTags } from '@/utils/sanitize';
 import '@/styles/popup.scss';
 
 type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };
@@ -93,6 +67,8 @@ function PopupPage() {
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
+  const [pendingNewFolder, setPendingNewFolder] = useState<FolderRecommendation | null>(null);
+  const [newFolderSaving, setNewFolderSaving] = useState(false);
   const autoTriggerExecutedRef = useRef(false);
 
   // Debounce search query using configurable delay
@@ -105,7 +81,6 @@ function PopupPage() {
   useEffect(() => {
     fetchFolders();
   }, [fetchFolders]);
-
 
   // AI Recommendation handler
   const handleAIRecommend = useCallback(async () => {
@@ -205,16 +180,63 @@ function PopupPage() {
         }
       }
     } else {
-      // For new folder suggestions, just show a message
-      toast({
-        title: t('toast_createFolderPrompt').replace('$1', rec.folderPath || ''),
-        description: t('toast_newFolderComingSoon'),
-      });
+      setPendingNewFolder(rec);
+      return;
     }
     
     setAIRecommendations([]);
     setCurrentTabInfo(null);
-  }, [currentTabInfo, addBookmarkToFolder, withToast, toast]);
+  }, [currentTabInfo, addBookmarkToFolder, withToast]);
+
+  const handleConfirmNewFolder = useCallback(async () => {
+    if (!pendingNewFolder || !currentTabInfo) {
+      return;
+    }
+
+    setNewFolderSaving(true);
+    try {
+      const result = await createRecommendedFolderBookmark(
+        pendingNewFolder,
+        currentTabInfo,
+        folders,
+      );
+      await fetchFolders();
+
+      try {
+        await addRecentFolder(
+          result.folderId,
+          result.folderPath.split('/').at(-1) || pendingNewFolder.folderPath,
+        );
+      } catch (error) {
+        console.error('Failed to track recent folder:', error);
+      }
+
+      toast({
+        title: result.status === 'duplicate'
+          ? t('ai_newFolderDuplicate')
+          : t('ai_newFolderSuccess'),
+        description: (result.status === 'duplicate'
+          ? t('ai_newFolderDuplicateDesc')
+          : t('ai_newFolderSuccessDesc')
+        ).replace('$1', result.folderPath),
+        variant: 'success',
+      });
+      setPendingNewFolder(null);
+      setAIRecommendations([]);
+      setCurrentTabInfo(null);
+    } catch (error) {
+      const description = error instanceof RecommendedFolderError && error.code === 'path-conflict'
+        ? t('ai_newFolderConflictDesc').replace('$1', error.segment ?? '')
+        : t('ai_newFolderFailedDesc');
+      toast({
+        title: t('ai_newFolderFailed'),
+        description,
+        variant: 'destructive',
+      });
+    } finally {
+      setNewFolderSaving(false);
+    }
+  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder, toast]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -529,6 +551,18 @@ function PopupPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <RecommendedFolderDialog
+        open={pendingNewFolder !== null}
+        recommendation={pendingNewFolder}
+        bookmark={currentTabInfo}
+        isSaving={newFolderSaving}
+        onOpenChange={(open) => {
+          if (!open && !newFolderSaving) {
+            setPendingNewFolder(null);
+          }
+        }}
+        onConfirm={handleConfirmNewFolder}
+      />
       <Toaster />
     </div>
   );

@@ -5,9 +5,6 @@
 
 import { z } from 'zod';
 import { parse } from 'smol-toml';
-import { t } from '@/hooks/use-i18n';
-import { getAvailableProviders, getModelsForProvider, getProviderName } from '@/services/ai-models';
-import type { AIProvider } from '@/services/ai-client';
 import settingsToml from '../../config/settings.default.toml?raw';
 
 type SettingsFieldType = 'switch' | 'select' | 'number' | 'text';

@@ -4,9 +4,6 @@
  */
 
 import { Clock, Folder } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { t } from '@/hooks/use-i18n';
-import { useRecentFolders, type RecentFolder } from '@/lib/recent-folders-storage';
 
 interface RecentFoldersPanelProps {
   onAddToFolder: (folderId: string) => void;

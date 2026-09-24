@@ -1,10 +1,6 @@
 import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
-import type { StoredBookmarkMetadataById } from '@/lib/bookmark-metadata-storage';
-import { createAIModel, validateAISettings, type AISettings } from './ai-client';
-import { buildPrompt } from './prompt-config';
-import { flattenBookmarks } from './bookmark-tooling';
 
 type CompatibleModel = Parameters<typeof generateObject>[0]['model'];
 

@@ -1,5 +1,3 @@
-import { browser } from './extension-browser';
-
 const AI_STORAGE_KEY = 'bookmark-scout-ai';
 
 export type StoredAIProviderConfig = {
