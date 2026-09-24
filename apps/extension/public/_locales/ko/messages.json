@@ -404,7 +404,7 @@
         "description": "Group by folders setting label"
     },
     "settings_groupByFoldersDesc": {
-        "message": "폴더 구조로 북마크 정리",
+        "message": "팝업과 사이드 패널에서 하위 폴더를 북마크보다 먼저 표시합니다. 정렬 순서는 각 그룹 안에서 적용됩니다",
         "description": "Group by folders setting description"
     },
     "settings_confirmDelete": {
@@ -830,6 +830,18 @@
     "search_useRegex": {
         "message": "정규식 사용",
         "description": "Toggle regex search mode"
+    },
+    "search_recentSearches": {
+        "message": "최근 검색",
+        "description": "Heading for the recent search history list"
+    },
+    "search_clearHistory": {
+        "message": "지우기",
+        "description": "Button that clears the recent search history"
+    },
+    "search_resultsLimited": {
+        "message": "$2개 결과 중 처음 $1개를 표시합니다. 더 보려면 검색어를 구체화하세요.",
+        "description": "Notice when search results are truncated; $1 is the result limit, $2 is the total match count"
     },
     "settings_aiEnabled": {
         "message": "AI 기능",

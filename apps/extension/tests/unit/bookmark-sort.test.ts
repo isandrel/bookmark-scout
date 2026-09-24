@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { sortBookmarkItems, sortBookmarkTree } from '@/lib/bookmark-sort';
+import type { SortOrder } from '@/lib/settings-schema';
 import type { BookmarkTreeNode } from '@/types';
 
 type SortableFixture = {
@@ -130,5 +131,61 @@ describe('sortBookmarkTree', () => {
       'alpha',
       'zulu',
     ]);
+  });
+});
+
+describe('groupFolders option (groupByFolders setting)', () => {
+  const mixed: SortableFixture[] = [
+    { title: 'Zulu Link', dateAdded: 400, folder: false, index: 0 },
+    { title: 'Zulu Folder', dateAdded: 300, folder: true, index: 1 },
+    { title: 'Alpha Link', dateAdded: 200, folder: false, index: 2 },
+    { title: 'Alpha Folder', dateAdded: 100, folder: true, index: 3 },
+  ];
+  const titlesFor = (order: SortOrder, groupFolders: boolean) =>
+    sortBookmarkItems(mixed, order, fixtureAccessors, { groupFolders }).map((item) => item.title);
+
+  it('lists folders before links and sorts alphabetically within each group', () => {
+    expect(titlesFor('alphabetical', true)).toEqual([
+      'Alpha Folder',
+      'Zulu Folder',
+      'Alpha Link',
+      'Zulu Link',
+    ]);
+  });
+
+  it('lists folders before links and sorts newest first within each group', () => {
+    expect(titlesFor('date', true)).toEqual([
+      'Zulu Folder',
+      'Alpha Folder',
+      'Zulu Link',
+      'Alpha Link',
+    ]);
+  });
+
+  it('interleaves folders and links when disabled', () => {
+    expect(titlesFor('alphabetical', false)).toEqual([
+      'Alpha Folder',
+      'Alpha Link',
+      'Zulu Folder',
+      'Zulu Link',
+    ]);
+    expect(titlesFor('date', false)).toEqual([
+      'Zulu Link',
+      'Zulu Folder',
+      'Alpha Link',
+      'Alpha Folder',
+    ]);
+  });
+
+  it('keeps temporary folders pinned above grouped folders in trees', () => {
+    const tree: BookmarkTreeNode[] = [
+      { id: 'link', title: 'Alpha Link', url: 'https://a.example', index: 0 },
+      { id: 'folder', title: 'Zulu Folder', index: 1, children: [] },
+      { id: 'temporary', title: 'New Folder', index: 2, isTemporary: true, children: [] },
+    ];
+
+    expect(
+      sortBookmarkTree(tree, 'alphabetical', tree, { groupFolders: true }).map((node) => node.id),
+    ).toEqual(['temporary', 'folder', 'link']);
   });
 });

@@ -16,6 +16,12 @@ export interface BookmarkTreeNode {
   dateAdded?: number;
   dateGroupModified?: number;
   children?: BookmarkTreeNode[];
+  /** Browser-reported permanent folder kind, e.g. `bookmarks-bar` or `mobile` (Chrome only). */
+  folderType?: string;
+  /** Set when the browser forbids modifying this node, e.g. admin-managed bookmarks. */
+  unmodifiable?: 'managed';
+  /** UI-only flag marking a node whose title matched the active search query. */
+  isSearchMatch?: boolean;
   /** Whether the folder is expanded in the UI */
   isOpen?: boolean;
   /** Whether this is a temporary node (e.g., new folder being created) */

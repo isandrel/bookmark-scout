@@ -404,7 +404,7 @@
         "description": "Group by folders setting label"
     },
     "settings_groupByFoldersDesc": {
-        "message": "Organize bookmarks by folder structure",
+        "message": "In the popup and side panel, list subfolders before bookmarks; the sort order applies within each group",
         "description": "Group by folders setting description"
     },
     "settings_confirmDelete": {
@@ -1086,6 +1086,18 @@
     "search_useRegex": {
         "message": "Use Regular Expression",
         "description": "Toggle regex search mode"
+    },
+    "search_recentSearches": {
+        "message": "Recent searches",
+        "description": "Heading for the recent search history list"
+    },
+    "search_clearHistory": {
+        "message": "Clear",
+        "description": "Button that clears the recent search history"
+    },
+    "search_resultsLimited": {
+        "message": "Showing the first $1 of $2 matches. Refine your search to see more.",
+        "description": "Notice when search results are truncated; $1 is the result limit, $2 is the total match count"
     },
     "settings_aiEnabled": {
         "message": "AI Features",
