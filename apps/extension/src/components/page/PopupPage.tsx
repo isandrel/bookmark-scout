@@ -397,7 +397,7 @@ function PopupPage() {
 
   const handleDeleteRequest = useCallback(
     async (node: BookmarkTreeNode, type: PendingDeletion['type']) => {
-      const deletion = { id: node.id, title: stripHtmlTags(node.title), type };
+      const deletion = { id: node.id, title: node.title, type };
       const { confirmBeforeDelete } = await getSettings();
       if (confirmBeforeDelete) {
         setPendingDeletion(deletion);

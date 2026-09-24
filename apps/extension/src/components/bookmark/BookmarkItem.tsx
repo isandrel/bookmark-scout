@@ -141,8 +141,11 @@ export function BookmarkItem({
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
         <img src={getFaviconUrl(node.url ?? '')} alt="" className="w-4 h-4 mr-2 shrink-0 rounded-sm" />
-        {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-        <span className="truncate text-sm" title={stripHtmlTags(node.title)} dangerouslySetInnerHTML={{ __html: node.title }} />
+        <HighlightedText
+          className="truncate text-sm"
+          text={node.title}
+          ranges={node.searchMatchRanges}
+        />
       </a>
       <Button
         variant="ghost"

@@ -6,11 +6,64 @@ export type SearchOptions = {
   useRegex: boolean;
 };
 
+/** Start and end offsets of one highlighted match inside a title. */
+export type SearchMatchRange = readonly [start: number, end: number];
+
+type CompiledSearch = {
+  test: (text: string) => boolean;
+  ranges: (text: string) => SearchMatchRange[];
+};
+
 const REGEX_SPECIAL_CHARACTERS = /[.*+?^${}()|[\]\\]/g;
 
 function buildSearchPattern(query: string, options: SearchOptions): string {
   const source = options.useRegex ? query : query.replace(REGEX_SPECIAL_CHARACTERS, '\\$&');
-  return options.wholeWord ? `\\b(${source})\\b` : `(${source})`;
+  return options.wholeWord ? `\\b(?:${source})\\b` : source;
+}
+
+function substringSearch(query: string, matchCase: boolean): CompiledSearch {
+  const needle = matchCase ? query : query.toLowerCase();
+  const normalize = (text: string) => (matchCase ? text : text.toLowerCase());
+  return {
+    test: (text) => normalize(text).includes(needle),
+    ranges: (text) => {
+      const ranges: SearchMatchRange[] = [];
+      if (!needle) return ranges;
+      const haystack = normalize(text);
+      for (let index = haystack.indexOf(needle); index !== -1; ) {
+        ranges.push([index, index + needle.length]);
+        index = haystack.indexOf(needle, index + needle.length);
+      }
+      return ranges;
+    },
+  };
+}
+
+/** Compile a query once; an invalid user regex falls back to a plain substring search. */
+function compileSearch(query: string, options: SearchOptions): CompiledSearch {
+  let regex: RegExp;
+  try {
+    regex = new RegExp(buildSearchPattern(query, options), options.matchCase ? 'g' : 'gi');
+  } catch {
+    return substringSearch(query, options.matchCase);
+  }
+
+  return {
+    test: (text) => {
+      regex.lastIndex = 0;
+      return regex.test(text);
+    },
+    ranges: (text) => {
+      const ranges: SearchMatchRange[] = [];
+      // matchAll starts from the shared regex's lastIndex, which test() advances.
+      regex.lastIndex = 0;
+      for (const match of text.matchAll(regex)) {
+        // Zero-length matches (e.g. `^` or `a*`) have nothing to highlight.
+        if (match[0].length > 0) ranges.push([match.index, match.index + match[0].length]);
+      }
+      return ranges;
+    },
+  };
 }
 
 /** Build a title matcher; an invalid user regex falls back to a plain substring match. */
@@ -18,23 +71,19 @@ export function createSearchMatcher(
   query: string,
   options: SearchOptions,
 ): (text: string) => boolean {
-  try {
-    const regex = new RegExp(buildSearchPattern(query, options), options.matchCase ? '' : 'i');
-    return (text) => regex.test(text);
-  } catch {
-    return (text) =>
-      options.matchCase ? text.includes(query) : text.toLowerCase().includes(query.toLowerCase());
-  }
+  return compileSearch(query, options).test;
 }
 
-/** Wrap matches in `<b>` for the tree's highlighted titles. */
-export function highlightSearchMatch(text: string, query: string, options: SearchOptions): string {
-  try {
-    const regex = new RegExp(buildSearchPattern(query, options), options.matchCase ? 'g' : 'gi');
-    return text.replace(regex, '<b>$1</b>');
-  } catch {
-    return text;
-  }
+/**
+ * Locate matches as offsets so the UI can wrap them in elements. Titles are untrusted input and
+ * are never converted to HTML.
+ */
+export function getSearchMatchRanges(
+  text: string,
+  query: string,
+  options: SearchOptions,
+): SearchMatchRange[] {
+  return query ? compileSearch(query, options).ranges(text) : [];
 }
 
 /**
@@ -48,16 +97,18 @@ export function filterBookmarkTree(
 ): BookmarkTreeNode[] {
   if (!query) return [...nodes];
 
-  const matches = createSearchMatcher(query, options);
+  const search = compileSearch(query, options);
   const filterNodes = (items: readonly BookmarkTreeNode[]): BookmarkTreeNode[] => {
     const filtered: BookmarkTreeNode[] = [];
 
     for (const node of items) {
-      const isMatch = matches(node.title);
-      const title = isMatch ? highlightSearchMatch(node.title, query, options) : node.title;
+      const isMatch = search.test(node.title);
+      const matchFields = isMatch
+        ? { isSearchMatch: true, searchMatchRanges: search.ranges(node.title) }
+        : {};
 
       if (!node.children) {
-        if (isMatch) filtered.push({ ...node, title, isSearchMatch: true });
+        if (isMatch) filtered.push({ ...node, ...matchFields });
         continue;
       }
 
@@ -67,8 +118,7 @@ export function filterBookmarkTree(
       const matchingById = new Map(matchingChildren.map((child) => [child.id, child]));
       filtered.push({
         ...node,
-        title,
-        isSearchMatch: isMatch || undefined,
+        ...matchFields,
         children: isMatch
           ? node.children.map((child) => matchingById.get(child.id) ?? child)
           : matchingChildren,

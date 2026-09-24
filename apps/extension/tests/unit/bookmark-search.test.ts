@@ -3,6 +3,7 @@ import {
   countSearchMatches,
   filterBookmarkTree,
   getSearchExpandedFolderIds,
+  getSearchMatchRanges,
   limitSearchResults,
   type SearchOptions,
 } from '@/lib/bookmark-search';
@@ -71,9 +72,45 @@ describe('filterBookmarkTree', () => {
     const recipes = result[0].children?.[0].children?.[0];
     const cake = recipes?.children?.find((node) => node.id === 'recipe-cake');
 
-    expect(recipes?.title).toBe('<b>Recipe</b>s');
-    expect(cake).toMatchObject({ title: '<b>Recipe</b> cake', isSearchMatch: true });
+    expect(recipes).toMatchObject({ title: 'Recipes', searchMatchRanges: [[0, 6]] });
+    expect(cake).toMatchObject({
+      title: 'Recipe cake',
+      isSearchMatch: true,
+      searchMatchRanges: [[0, 6]],
+    });
     expect(recipes?.children?.find((node) => node.id === 'soup')?.isSearchMatch).toBeUndefined();
+  });
+
+  it('keeps markup-like titles verbatim and reports match offsets instead of HTML', () => {
+    const title = '<img src=x onerror=alert(1)><style>*{display:none}</style> a&b';
+    const markupTree: BookmarkTreeNode[] = [
+      { id: 'root', title: '', children: [{ id: 'x', parentId: 'root', title, url: 'https://x.example' }] },
+    ];
+
+    const [match] = filterBookmarkTree(markupTree, 'style', defaults)[0].children ?? [];
+    expect(match.title).toBe(title);
+    expect(match.searchMatchRanges).toEqual([
+      [29, 34],
+      [52, 57],
+    ]);
+  });
+});
+
+describe('getSearchMatchRanges', () => {
+  it('finds every match for plain, special-character, and case-sensitive queries', () => {
+    expect(getSearchMatchRanges('a<b> & <b>', '<b>', defaults)).toEqual([
+      [1, 4],
+      [7, 10],
+    ]);
+    expect(getSearchMatchRanges('Tom & Jerry', '&', defaults)).toEqual([[4, 5]]);
+    expect(getSearchMatchRanges('Aa aA', 'a', { ...defaults, matchCase: true })).toEqual([
+      [1, 2],
+      [3, 4],
+    ]);
+  });
+
+  it('skips zero-length regex matches', () => {
+    expect(getSearchMatchRanges('abc', 'x*', { ...defaults, useRegex: true })).toEqual([]);
   });
 });
 

@@ -223,8 +223,11 @@ export function FolderItem({
             className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
           >
             <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
-            {/* biome-ignore lint/security/noDangerouslySetInnerHtml: Intentional for search highlighting */}
-            <span className="truncate text-sm" title={stripHtmlTags(node.title)} dangerouslySetInnerHTML={{ __html: node.title }} />
+            <HighlightedText
+              className="truncate text-sm"
+              text={node.title}
+              ranges={node.searchMatchRanges}
+            />
             {itemCount > 0 && (
               <span className="ml-2 text-xs text-muted-foreground tabular-nums">
                 ({itemCount})
