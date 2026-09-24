@@ -5,9 +5,14 @@
  */
 
 import { Info, PanelLeft, PanelLeftClose, PanelRight, PanelRightClose, X } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 const getBookmarkRowId = (bookmark: Bookmark) => bookmark.id;
+
+// Narrower than this, the folder and tools sidebars together leave the table too little room,
+// so opening one closes the other.
+const BOTH_SIDEBARS_QUERY = '(min-width: 1280px)';
+const fitsBothSidebars = () => window.matchMedia(BOTH_SIDEBARS_QUERY).matches;
 const isFolderRow = (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder;
 
 function toDeletionTarget(bookmark: Bookmark): BookmarkDeletionTarget {
@@ -28,11 +33,32 @@ export default function BookmarksPage() {
     notice,
     dismissNotice,
     navigateToFolder,
+    folderPageIndex,
+    rememberPageIndex,
     refresh,
   } = useBookmarkNavigation();
   const { toast } = useToast();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
+  const toggleLeftSidebar = () => {
+    if (leftSidebarCollapsed && !fitsBothSidebars()) setRightSidebarCollapsed(true);
+    setLeftSidebarCollapsed(!leftSidebarCollapsed);
+  };
+  const toggleRightSidebar = () => {
+    if (rightSidebarCollapsed && !fitsBothSidebars()) setLeftSidebarCollapsed(true);
+    setRightSidebarCollapsed(!rightSidebarCollapsed);
+  };
+  // Shrinking the window with both sidebars open closes the folder sidebar.
+  useEffect(() => {
+    if (leftSidebarCollapsed || rightSidebarCollapsed) return;
+    const query = window.matchMedia(BOTH_SIDEBARS_QUERY);
+    const collapseFolders = () => {
+      if (!query.matches) setLeftSidebarCollapsed(true);
+    };
+    collapseFolders();
+    query.addEventListener('change', collapseFolders);
+    return () => query.removeEventListener('change', collapseFolders);
+  }, [leftSidebarCollapsed, rightSidebarCollapsed]);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
@@ -111,8 +137,12 @@ export default function BookmarksPage() {
         onDelete={(items) => {
           const [first] = items;
           if (!first) return;
-          clearSelection();
-          void requestDeletion({ ...toDeletionTarget(first), items: items.map(toDeletionTarget) });
+          // Cancelling the confirmation keeps the selection; it clears once items are deleted.
+          void requestDeletion({
+            ...toDeletionTarget(first),
+            items: items.map(toDeletionTarget),
+            onDeleted: clearSelection,
+          });
         }}
       />
     ),
@@ -167,7 +197,7 @@ export default function BookmarksPage() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
+                onClick={toggleLeftSidebar}
                 className="shrink-0"
                 title={leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')}
                 aria-expanded={!leftSidebarCollapsed}
@@ -187,7 +217,7 @@ export default function BookmarksPage() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setRightSidebarCollapsed(!rightSidebarCollapsed)}
+              onClick={toggleRightSidebar}
               className="shrink-0"
               title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
               aria-expanded={!rightSidebarCollapsed}
@@ -239,6 +269,8 @@ export default function BookmarksPage() {
               getRowId={getBookmarkRowId}
               canSelectRow={isModifiableBookmark}
               resetKey={currentFolder}
+              initialPageIndex={folderPageIndex}
+              onPageIndexChange={rememberPageIndex}
               facetOptions={facetOptions}
               renderSelectionActions={renderSelectionActions}
               isRowActivatable={isFolderRow}

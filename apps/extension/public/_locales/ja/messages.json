@@ -3430,5 +3430,21 @@
     "bookmarks_editUrlDataRejected": {
         "message": "Web ページとして開く data: URL ($1) はここでは保存できません。",
         "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "1 件を移動",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "1 件を移動しました",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "選択した他の $1 件は選択したフォルダ内にあり、フォルダと一緒に移動します。",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "ほか $1 件",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
     }
 }

@@ -446,7 +446,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
 
   await page.getByRole('checkbox', { name: 'Select "Bulk A"' }).check();
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Move 1 items' });
+  const dialog = page.getByRole('dialog', { name: 'Move 1 item' });
   await dialog.getByRole('combobox').click();
   await page.getByRole('option', { name: /E2E Bulk \/ Bulk Target$/ }).click();
   await dialog.getByRole('button', { name: 'Move to folder' }).click();

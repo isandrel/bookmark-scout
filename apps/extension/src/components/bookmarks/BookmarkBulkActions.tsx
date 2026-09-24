@@ -28,10 +28,10 @@ export function BookmarkBulkActions({
   const [targetId, setTargetId] = useState('');
   const [moving, setMoving] = useState(false);
 
-  const items = useMemo(
-    () => pruneNestedSelection(selected.filter(isModifiableBookmark), allData),
-    [allData, selected],
-  );
+  const modifiable = useMemo(() => selected.filter(isModifiableBookmark), [selected]);
+  const items = useMemo(() => pruneNestedSelection(modifiable, allData), [allData, modifiable]);
+  // Selected items inside a selected folder travel with that folder instead of on their own.
+  const nestedCount = modifiable.length - items.length;
   const targets = useMemo(() => {
     const allowed = new Set(getMoveTargetFolders(items, allData).map((folder) => folder.id));
     return buildFolderOptions(allData, t('bookmarks_untitled')).filter((option) =>
@@ -48,7 +48,10 @@ export function BookmarkBulkActions({
         await moveBookmark(item.id, { parentId: targetId });
         moved += 1;
       }
-      toast({ title: `✓ ${t('bookmarks_bulkMoved', String(moved))}`, variant: 'success' });
+      toast({
+        title: `✓ ${moved === 1 ? t('bookmarks_bulkMovedOne') : t('bookmarks_bulkMoved', String(moved))}`,
+        variant: 'success',
+      });
       setMoveOpen(false);
       onClearSelection();
     } catch (error) {
@@ -91,7 +94,7 @@ export function BookmarkBulkActions({
       <Button
         variant="outline"
         size="sm"
-        className="h-8 text-destructive hover:text-destructive"
+        className="h-8 text-destructive-text hover:text-destructive-text"
         disabled={items.length === 0}
         onClick={() => onDelete(items)}
       >
@@ -106,9 +109,19 @@ export function BookmarkBulkActions({
       <Dialog open={moveOpen} onOpenChange={setMoveOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t('bookmarks_bulkMoveTitle', String(items.length))}</DialogTitle>
+            <DialogTitle>
+              {items.length === 1
+                ? t('bookmarks_bulkMoveTitleOne')
+                : t('bookmarks_bulkMoveTitle', String(items.length))}
+            </DialogTitle>
             <DialogDescription>{t('bookmarks_bulkMoveDescription')}</DialogDescription>
           </DialogHeader>
+          <BulkItemPreview items={items} />
+          {nestedCount > 0 && (
+            <p className="text-sm text-muted-foreground" data-testid="bulk-nested-note">
+              {t('bookmarks_bulkNestedIncluded', String(nestedCount))}
+            </p>
+          )}
           <Select value={targetId} onValueChange={setTargetId}>
             <SelectTrigger aria-label={t('bookmarks_bulkMoveTarget')}>
               <SelectValue placeholder={t('bookmarks_bulkMoveTarget')} />

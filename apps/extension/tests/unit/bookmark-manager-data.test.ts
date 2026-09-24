@@ -88,12 +88,22 @@ describe('folder helpers', () => {
   it('prunes nested selections and excludes selected folders from move targets', () => {
     const selected = [items[1], items[2], items[3], items[7]];
     expect(pruneNestedSelection(selected, items).map((item) => item.id)).toEqual(['10', '20']);
+    // Bar ("1") already holds News, so moving there would change nothing.
     expect(getMoveTargetFolders([items[1]], items).map((item) => item.id)).toEqual([
-      '1',
       '13',
       '14',
       '2',
       '20',
+    ]);
+  });
+
+  it('offers the current folder when the selection spans several folders', () => {
+    // News "10" sits in Bar and News "20" in Other, so both parents stay real destinations.
+    expect(getMoveTargetFolders([items[1], items[7]], items).map((item) => item.id)).toEqual([
+      '1',
+      '13',
+      '14',
+      '2',
     ]);
   });
 });

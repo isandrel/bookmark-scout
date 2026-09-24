@@ -40,8 +40,12 @@ interface DataTableProps<TData extends RowData> {
   allData: TData[];
   getRowId: (row: TData) => string;
   canSelectRow?: (row: TData) => boolean;
-  /** Changing this (e.g. the folder ID) returns to the first page and clears the selection. */
+  /** Changing this (e.g. the folder ID) returns to `initialPageIndex` and clears the selection. */
   resetKey?: string | null;
+  /** Page shown after `resetKey` changes, e.g. the page saved on a history entry (default 0). */
+  initialPageIndex?: number;
+  /** Called with the page index whenever it changes. */
+  onPageIndexChange?: (pageIndex: number) => void;
   facetOptions: DataTableFacetOptions;
   /**
    * Renders actions for the selection. `rows` are the selected rows visible under the current
@@ -70,6 +74,8 @@ export function DataTable<TData extends RowData>({
   getRowId,
   canSelectRow,
   resetKey,
+  initialPageIndex = 0,
+  onPageIndexChange,
   facetOptions,
   renderSelectionActions,
   onRowClick,
@@ -128,12 +134,21 @@ export function DataTable<TData extends RowData>({
     sorting,
   ]);
 
-  // Navigating to another folder starts on its first page with nothing selected.
+  // Navigating to another folder starts on its first page (or, going Back, on the page that was
+  // open) with nothing selected. The page is read when the key changes, not tracked.
+  const initialPageIndexRef = React.useRef(initialPageIndex);
+  initialPageIndexRef.current = initialPageIndex;
   // biome-ignore lint/correctness/useExhaustiveDependencies: resetKey is the trigger.
   React.useEffect(() => {
-    setPagination((previous) => ({ ...previous, pageIndex: 0 }));
+    setPagination((previous) => ({ ...previous, pageIndex: initialPageIndexRef.current }));
     setRowSelection({});
   }, [resetKey]);
+
+  const onPageIndexChangeRef = React.useRef(onPageIndexChange);
+  onPageIndexChangeRef.current = onPageIndexChange;
+  React.useEffect(() => {
+    onPageIndexChangeRef.current?.(pagination.pageIndex);
+  }, [pagination.pageIndex]);
 
   const goToFirstPage = React.useCallback(
     () => setPagination((previous) => ({ ...previous, pageIndex: 0 })),

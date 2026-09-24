@@ -3430,5 +3430,21 @@
     "bookmarks_editUrlDataRejected": {
         "message": "웹 페이지로 열리는 data: URL($1)은 여기에서 저장할 수 없습니다.",
         "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "1개 항목 이동",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "1개 항목을 이동했습니다",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "선택한 다른 $1개 항목은 선택한 폴더 안에 있어 폴더와 함께 이동합니다.",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "외 $1개",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
     }
 }

@@ -87,7 +87,7 @@ function BookmarkEditForm({
             }}
           />
           {urlError && (
-            <p id="bookmark-edit-url-error" className="text-sm text-destructive">
+            <p id="bookmark-edit-url-error" className="text-sm text-destructive-text">
               {urlError}
             </p>
           )}

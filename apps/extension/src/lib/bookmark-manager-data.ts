@@ -158,15 +158,24 @@ export function canMoveWithinFolder(
   return direction === 'up' || direction === 'top' ? index > 0 : index < siblingCount - 1;
 }
 
-/** Folders that can receive the selection: not a selected folder or anything inside one. */
+/**
+ * Folders that can receive the selection: not a selected folder or anything inside one, and not
+ * the folder every selected item is already in (moving there would change nothing).
+ */
 export function getMoveTargetFolders(
   selected: readonly ManagerItem[],
   items: readonly ManagerItem[],
 ): ManagerItem[] {
   const byId = new Map(items.map((item) => [item.id, item]));
   const ids = new Set(selected.map((item) => item.id));
+  const parentIds = new Set(selected.map((item) => item.parentId));
+  const sharedParentId = parentIds.size === 1 ? [...parentIds][0] : undefined;
   return items.filter(
-    (item) => item.type === FOLDER_TYPE && !ids.has(item.id) && !hasAncestorIn(item, ids, byId),
+    (item) =>
+      item.type === FOLDER_TYPE &&
+      item.id !== sharedParentId &&
+      !ids.has(item.id) &&
+      !hasAncestorIn(item, ids, byId),
   );
 }
 

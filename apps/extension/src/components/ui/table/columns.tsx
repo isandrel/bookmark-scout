@@ -152,8 +152,8 @@ export const createColumns = (
       }
 
       return (
-        <div className="flex items-center">
-          {type.icon && <type.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+        <div className="flex items-center whitespace-nowrap">
+          {type.icon && <type.icon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />}
           <span>{type.label}</span>
         </div>
       );
