@@ -9,12 +9,7 @@ import {
 } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { BookmarkPlus, ChevronsDown, ChevronsUp, Folder, FolderPlus, Trash2 } from 'lucide-react';
 import { useRef } from 'react';
-import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-import { BookmarkItem } from './BookmarkItem';
-import { NewFolderInput } from './NewFolderInput';
-import { stripHtmlTags } from '@/utils/sanitize';
 
 interface FolderItemProps {
   node: BookmarkTreeNode;

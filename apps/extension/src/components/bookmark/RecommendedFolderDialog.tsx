@@ -1,15 +1,4 @@
 import { FolderPlus, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { t } from '@/hooks/use-i18n';
-import type { FolderRecommendation } from '@/services';
 
 type RecommendedFolderDialogProps = {
   open: boolean;

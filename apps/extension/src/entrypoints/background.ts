@@ -3,8 +3,6 @@
  * Handles context menu initialization and event listeners.
  */
 
-import { contextMenuManager, initializeContextMenu } from '@/services/context-menu';
-
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
   // Handle context menu clicks

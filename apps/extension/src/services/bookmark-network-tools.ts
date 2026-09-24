@@ -1,5 +1,4 @@
 import type { BookmarkTreeNode } from '@/types';
-import { flattenBookmarks } from './bookmark-tooling';
 
 export type DeadLinkStatus = 'ok' | 'redirect' | 'error' | 'timeout' | 'invalid';
 

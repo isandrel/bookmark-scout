@@ -1,16 +1,3 @@
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastProgress,
-  ToastProvider,
-  ToastTitle,
-  ToastViewport,
-  TOAST_DURATION,
-} from '@/components/ui/toast';
-import { useToast } from '@/hooks/use-toast';
-import { useSettings } from '@/lib/settings-storage';
-
 export function Toaster() {
   const { toasts } = useToast();
   const { settings } = useSettings();
