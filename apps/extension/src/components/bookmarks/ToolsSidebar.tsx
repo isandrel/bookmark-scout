@@ -9,7 +9,6 @@ import {
   Sparkles,
   BarChart3,
   Wrench,
-  Globe,
   Folder,
   FileText,
   Tags,
@@ -21,7 +20,8 @@ import {
   Download,
   Upload,
 } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import type { BookmarkTreeNode } from '@/types';
 
 type ToolSectionProps = {
   title: string;
@@ -39,6 +39,8 @@ function ToolSection({ title, children }: ToolSectionProps) {
   );
 }
 
+type PendingNetworkTool = { tool: 'dead-links' | 'metadata'; scope: ToolScope };
+
 interface ToolsSidebarProps {
   currentFolderId: string | null;
   currentFolderName?: string;
@@ -52,7 +54,20 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [isImporting, setIsImporting] = useState(false);
   const { settings: toolSettings, isLoading: toolSettingsLoading } = useSettings();
   const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
-  const [exportFormat, setExportFormat] = useState(String(dataDefaultExportFormat));
+  const [exportFormat, setExportFormat] = useState<string>(dataDefaultExportFormat);
+  // Settings load asynchronously and can change live; follow the saved default format.
+  useEffect(() => {
+    setExportFormat(dataDefaultExportFormat);
+  }, [dataDefaultExportFormat]);
+  const { value: dataShowExport } = useSetting('dataShowExport');
+  const { value: dataShowImport } = useSetting('dataShowImport');
+  const { value: exportIncludeDates } = useSetting('exportIncludeDates');
+  const { value: exportIncludeUrls } = useSetting('exportIncludeUrls');
+  const { value: exportJsonIndentSize } = useSetting('exportJsonIndentSize');
+  const { value: exportHtmlIndentSpaces } = useSetting('exportHtmlIndentSpaces');
+  const { value: exportMarkdownIndentSpaces } = useSetting('exportMarkdownIndentSpaces');
+  const { value: exportFilenamePrefix } = useSetting('exportFilenamePrefix');
+  const { value: exportFilenameMaxLength } = useSetting('exportFilenameMaxLength');
 
   // AI Reorganization state
   const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
@@ -84,6 +99,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [metadataDialogOpen, setMetadataDialogOpen] = useState(false);
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
+  const [metadataApplying, setMetadataApplying] = useState(false);
+  const webHostAccess = useWebHostAccess();
+  const [pendingNetworkTool, setPendingNetworkTool] = useState<PendingNetworkTool | null>(null);
   const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
   const [privacyResult, setPrivacyResult] = useState<PrivacyScanResult | null>(null);
 
@@ -117,13 +135,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: statisticsIncludeDuplicates } = useSetting('statisticsIncludeDuplicates');
   const { value: statisticsIncludeProtocols } = useSetting('statisticsIncludeProtocols');
   const { value: statisticsTopN } = useSetting('statisticsTopN');
+  const { value: statisticsIncludeDepthBreakdown } = useSetting('statisticsIncludeDepthBreakdown');
   const { value: deadLinksRequestTimeoutMs } = useSetting('deadLinksRequestTimeoutMs');
   const { value: deadLinksConcurrency } = useSetting('deadLinksConcurrency');
   const { value: deadLinksRetryCount } = useSetting('deadLinksRetryCount');
   const { value: deadLinksFollowRedirects } = useSetting('deadLinksFollowRedirects');
   const { value: deadLinksSuccessStatuses } = useSetting('deadLinksSuccessStatuses');
   const { value: metadataFetcherOverwriteTitles } = useSetting('metadataFetcherOverwriteTitles');
-  const { value: metadataFetcherFetchFavicons } = useSetting('metadataFetcherFetchFavicons');
   const { value: metadataFetcherFetchDescriptions } = useSetting(
     'metadataFetcherFetchDescriptions',
   );
@@ -164,21 +182,46 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
   const getTargetNodes = (scope: ToolScope) => getScopedNodes(folders, currentFolderId, scope);
 
+  const [duplicateScope, setDuplicateScope] = useState<ToolScope>('all');
+  const duplicateUndoRef = useRef<(() => void) | null>(null);
+  const [duplicateNotice, setDuplicateNotice] = useState<{
+    message: string;
+    snapshots: BookmarkDeletionSnapshot[];
+  } | null>(null);
+
+  const scanDuplicates = (nodes: BookmarkTreeNode[]) =>
+    scanDuplicateBookmarks(nodes, {
+      strategy: duplicatesMatchStrategy,
+      normalizeWww: duplicatesNormalizeWww,
+      ignoreProtocol: duplicatesIgnoreProtocol,
+      ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
+      maxGroups: duplicatesMaxGroups,
+      keepRule: duplicatesKeepRule,
+    });
+
   const handleDuplicates = async (scope: ToolScope) => {
     setDuplicateLoading(true);
     try {
-      const result = scanDuplicateBookmarks(getTargetNodes(scope), {
-        strategy: duplicatesMatchStrategy,
-        normalizeWww: duplicatesNormalizeWww,
-        ignoreProtocol: duplicatesIgnoreProtocol,
-        ignoreTrailingSlash: duplicatesIgnoreTrailingSlash,
-        maxGroups: duplicatesMaxGroups,
-      });
-      setDuplicateResult(result);
+      setDuplicateScope(scope);
+      setDuplicateNotice(null);
+      setDuplicateResult(scanDuplicates(getTargetNodes(scope)));
       setDuplicatesDialogOpen(true);
     } finally {
       setDuplicateLoading(false);
     }
+  };
+
+  const undoDuplicateRemoval = async (snapshots: BookmarkDeletionSnapshot[]) => {
+    setDuplicateNotice(null);
+    const { restored, failed } = await restoreDuplicateExtras(snapshots);
+    await refresh();
+    const freshTree = await fetchBookmarkTree();
+    setDuplicateResult(scanDuplicates(getScopedNodes(freshTree, currentFolderId, duplicateScope)));
+    toast({
+      title: failed ? t('toast_errorRestoringDeletion') : t('toast_deleteRestored'),
+      description: t('toast_duplicatesRestoredDesc', [String(restored), String(failed)]),
+      variant: failed ? 'destructive' : 'success',
+    });
   };
 
   const handleRemoveDuplicates = async () => {
@@ -186,32 +229,48 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setDuplicateRemoving(true);
     try {
-      const toDelete = duplicateResult.groups.flatMap((group) => {
-        const sorted = [...group.items].sort((a, b) => {
-          const dateA = a.node.dateAdded ?? 0;
-          const dateB = b.node.dateAdded ?? 0;
-
-          if (duplicatesKeepRule === 'newest') {
-            return dateB - dateA;
-          }
-
-          if (duplicatesKeepRule === 'oldest') {
-            return dateA - dateB;
-          }
-
-          return a.node.id.localeCompare(b.node.id);
-        });
-
-        return sorted.slice(1).map((item) => item.node.id);
-      });
-
-      await Promise.all(toDelete.map((id) => deleteBookmark(id)));
+      const outcome = await removeDuplicateExtras(duplicateResult.groups);
       await refresh();
-      setDuplicatesDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
+      const description = complete
+        ? tPlural('toast_duplicatesRemovedDesc', outcome.removed)
+        : t('toast_duplicatesPartialDesc', [
+            String(outcome.removed),
+            String(outcome.skipped),
+            String(outcome.failed),
+          ]);
+      // One undo per removal, whether triggered from the toast or the dialog notice.
+      let undoUsed = false;
+      const undo = () => {
+        if (undoUsed) return;
+        undoUsed = true;
+        void undoDuplicateRemoval(outcome.snapshots);
+      };
+
+      if (complete) {
+        setDuplicatesDialogOpen(false);
+      } else {
+        // Rescan from the live tree so the dialog never shows stale groups after a partial run.
+        const freshTree = await fetchBookmarkTree();
+        setDuplicateResult(
+          scanDuplicates(getScopedNodes(freshTree, currentFolderId, duplicateScope)),
+        );
+        setDuplicateNotice({ message: description, snapshots: outcome.snapshots });
+      }
+
       toast({
-        title: t('toast_duplicatesRemoved'),
-        description: t('toast_duplicatesRemovedDesc', String(toDelete.length)),
+        title: complete ? t('toast_duplicatesRemoved') : t('toast_duplicatesPartiallyRemoved'),
+        description,
+        variant: complete ? 'success' : 'destructive',
+        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
+        action:
+          outcome.snapshots.length > 0 ? (
+            <ToastAction altText={t('action_undo')} onClick={undo}>
+              {t('action_undo')}
+            </ToastAction>
+          ) : undefined,
       });
+      duplicateUndoRef.current = undo;
     } catch (error) {
       toast({
         title: t('toast_toolFailed'),
@@ -245,16 +304,20 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setUrlCleanerApplying(true);
     try {
-      await Promise.all(
-        urlCleanerResult.previews.map((preview) =>
-          updateBookmark(preview.id, { url: preview.cleanedUrl }),
-        ),
-      );
+      const outcome = await applyUrlCleanerPreviews(urlCleanerResult.previews);
       await refresh();
       setUrlCleanerDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
       toast({
-        title: t('toast_urlCleanerApplied'),
-        description: t('toast_urlCleanerAppliedDesc', String(urlCleanerResult.previews.length)),
+        title: complete ? t('toast_urlCleanerApplied') : t('toast_urlCleanerPartial'),
+        description: complete
+          ? tPlural('toast_urlCleanerAppliedDesc', outcome.updated)
+          : t('toast_urlCleanerPartialDesc', [
+              String(outcome.updated),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+        variant: complete ? 'success' : 'destructive',
       });
     } catch (error) {
       toast({
@@ -273,13 +336,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       includeFolders: statisticsIncludeFolders,
       includeProtocols: statisticsIncludeProtocols,
       includeDuplicates: statisticsIncludeDuplicates,
+      includeDepthBreakdown: statisticsIncludeDepthBreakdown,
       topN: statisticsTopN,
     });
     setStatisticsResult(result);
     setStatisticsDialogOpen(true);
   };
 
-  const handleDeadLinks = async (scope: ToolScope) => {
+  const runDeadLinks = async (scope: ToolScope) => {
     setDeadLinksLoading(true);
     try {
       const result = await scanDeadLinks(getTargetNodes(scope), {
@@ -302,12 +366,11 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     }
   };
 
-  const handleMetadata = async (scope: ToolScope) => {
+  const runMetadata = async (scope: ToolScope) => {
     setMetadataLoading(true);
     try {
       const result = await fetchBookmarkMetadata(getTargetNodes(scope), {
         overwriteTitles: metadataFetcherOverwriteTitles,
-        fetchFavicons: metadataFetcherFetchFavicons,
         fetchDescriptions: metadataFetcherFetchDescriptions,
         requestTimeoutMs: metadataFetcherRequestTimeoutMs,
         concurrency: metadataFetcherConcurrency,
@@ -322,6 +385,65 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       });
     } finally {
       setMetadataLoading(false);
+    }
+  };
+
+  const runNetworkTool = (request: PendingNetworkTool) =>
+    request.tool === 'dead-links' ? runDeadLinks(request.scope) : runMetadata(request.scope);
+
+  // Network tools need optional host access; explain and ask before the first scan.
+  const startNetworkTool = async (request: PendingNetworkTool) => {
+    if (webHostAccess.granted) {
+      await runNetworkTool(request);
+      return;
+    }
+    setPendingNetworkTool(request);
+  };
+
+  const handleAllowWebHostAccess = async () => {
+    const request = pendingNetworkTool;
+    // Request synchronously inside the click so the browser treats it as user-initiated.
+    const permission = requestWebHostAccess();
+    setPendingNetworkTool(null);
+    const granted = await permission;
+    await webHostAccess.recheck();
+    if (!granted) {
+      toast({
+        title: t('tools_hostAccessDenied'),
+        description: t('tools_hostAccessDeniedDesc'),
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (request) await runNetworkTool(request);
+  };
+
+  const handleApplyMetadata = async (items: MetadataFetchResultItem[]) => {
+    setMetadataApplying(true);
+    try {
+      const outcome = await applyMetadataTitles(items);
+      await refresh();
+      setMetadataDialogOpen(false);
+      const complete = outcome.skipped === 0 && outcome.failed === 0;
+      toast({
+        title: complete ? t('toast_metadataApplied') : t('toast_metadataPartial'),
+        description: complete
+          ? tPlural('toast_metadataAppliedDesc', outcome.updated)
+          : t('toast_metadataPartialDesc', [
+              String(outcome.updated),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+        variant: complete ? 'success' : 'destructive',
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setMetadataApplying(false);
     }
   };
 
@@ -356,8 +478,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     });
   };
 
-  const buildAISettings = async () =>
-    buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+  // The enabled check comes first so a disabled AI never surfaces provider or API-key errors.
+  const buildAISettings = async () => {
+    if (!aiEnabled) {
+      throw new Error(t('ai_featuresDisabled'));
+    }
+    return buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+  };
+  const aiDisabledNotice = aiEnabled ? undefined : t('ai_featuresDisabledNotice');
 
   const handleAIContextPack = async (scope: ToolScope) => {
     setAiContextLoading(true);
@@ -386,7 +514,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       downloadTextFile(packed.content, filename, mimeType);
       toast({
         title: t('toast_aiContextPacked'),
-        description: t('toast_aiContextPackedDesc', String(packed.itemCount)),
+        description: tPlural('toast_aiContextPackedDesc', packed.itemCount),
       });
     } catch (error) {
       toast({
@@ -526,13 +654,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       return;
     }
 
-    if (toolName === 'dead-links') {
-      await handleDeadLinks(scope);
-      return;
-    }
-
-    if (toolName === 'metadata') {
-      await handleMetadata(scope);
+    if (toolName === 'dead-links' || toolName === 'metadata') {
+      await startNetworkTool({ tool: toolName, scope });
       return;
     }
 
@@ -583,35 +706,32 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   };
 
   // Export handler
-  const handleExport = async () => {
-    if (!folders || folders.length === 0) return;
+  const handleExport = async (scope: ToolScope) => {
+    const scopeNodes = getTargetNodes(scope);
+    if (scopeNodes.length === 0) return;
     setIsExporting(true);
 
     try {
-      const format = exportFormats[exportFormat];
-      // Create a virtual root node for export
-      const rootNode = {
-        id: '0',
-        title: 'Bookmarks',
-        children: folders,
-      };
-      const content = exportBookmarks(rootNode, format, { includeDates: true });
-      const filename = generateFilename(currentFolderName || 'all', format);
+      const format = exportFormats[exportFormat] ?? exportFormats.html;
+      const root = buildExportRoot(scopeNodes);
+      const content = exportBookmarks(root, format, {
+        includeDates: exportIncludeDates,
+        includeUrls: exportIncludeUrls,
+        jsonIndentSize: exportJsonIndentSize,
+        htmlIndentSpaces: exportHtmlIndentSpaces,
+        markdownIndentSpaces: exportMarkdownIndentSpaces,
+      });
+      const scopeName = scope === 'folder' && currentFolderId ? currentFolderName || 'folder' : 'all';
+      const filename = generateFilename(scopeName, format, {
+        prefix: exportFilenamePrefix,
+        maxLength: exportFilenameMaxLength,
+      });
       downloadExport(content, filename, format.mimeType);
 
-      // Count items for toast
-      let count = 0;
-      const countItems = (nodes: typeof folders) => {
-        for (const node of nodes) {
-          if (node.url) count++;
-          if (node.children) countItems(node.children);
-        }
-      };
-      countItems(folders);
-
+      const count = countExportedBookmarks(root);
       toast({
         title: t('toast_exportSuccess'),
-        description: t('toast_exportSuccessDesc', [String(count), getFormatName(format)]),
+        description: tPlural('toast_exportSuccessDesc', count, [getFormatName(format)]),
       });
     } catch (err) {
       toast({
@@ -638,22 +758,32 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       }
 
       const content = await readFile(file);
-      const { bookmarks: parsed } = parseBookmarks(content, format);
+      const parsed = parseBookmarks(content, format);
+      if (parsed.bookmarkCount + parsed.folderCount === 0) {
+        throw new Error(t('error_importNothingFound'));
+      }
 
       // Import to Bookmarks Bar (folder ID "1") or current folder
       const targetId = currentFolderId || '1';
-      const { created, errors } = await importBookmarks(parsed, targetId);
-
-      if (errors.length > 0) {
-        console.warn('Import errors:', errors);
-      }
-
+      const outcome = await importBookmarks(parsed.bookmarks, targetId);
       await refresh();
 
-      toast({
-        title: t('toast_importSuccess'),
-        description: t('toast_importSuccessDesc', String(created)),
-      });
+      const notImported = outcome.failed + parsed.skipped;
+      const imported = outcome.bookmarksCreated + outcome.foldersCreated;
+      const counts = [String(outcome.bookmarksCreated), String(outcome.foldersCreated)];
+      toast(
+        notImported === 0
+          ? {
+              title: t('toast_importSuccess'),
+              description: t('toast_importResultDesc', counts),
+              variant: 'success',
+            }
+          : {
+              title: imported === 0 ? t('toast_importFailed') : t('toast_importPartial'),
+              description: t('toast_importPartialDesc', [...counts, String(notImported)]),
+              variant: 'destructive',
+            },
+      );
     } catch (err) {
       toast({
         title: t('toast_importFailed'),
@@ -710,6 +840,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     description={t('tools_autoTaggingDesc')}
                     buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('auto-tag', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="folder"
                     defaultScope={toolSettings.autoTaggingDefaultScope}
                     currentFolderName={currentFolderName}
@@ -724,6 +856,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                     description={t('tools_summarizerDesc')}
                     buttonLabel={t('action_analyze')}
                     onClick={(scope) => handleToolAction('summarize', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="folder"
                     defaultScope={toolSettings.summarizerDefaultScope}
                     currentFolderName={currentFolderName}
@@ -744,6 +878,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                         : t('action_applyChanges')
                     }
                     onClick={(scope) => handleToolAction('reorganize', scope)}
+                    disabled={!aiEnabled}
+                    notice={aiDisabledNotice}
                     scopeCapability="both"
                     defaultScope={toolSettings.reorganizationDefaultScope}
                     currentFolderName={currentFolderName}
@@ -854,55 +990,39 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           )}
 
           {/* Data (Export/Import) */}
+          {!toolSettingsLoading && (dataShowExport || dataShowImport) && (
           <ToolSection title={t('tools_category_data')}>
-            {/* Export Tool */}
-            <div className="p-3 rounded-lg border bg-card space-y-2">
-              <div className="flex items-start gap-2">
-                <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
-                  <Download className="h-4 w-4 text-emerald-500" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-medium truncate">
-                      {t('tools_export')}
-                    </h4>
-                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-                      <Folder className="h-3 w-3" />
-                      <span>/</span>
-                      <Globe className="h-3 w-3" />
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                    {t('tools_exportDesc')}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Select value={exportFormat} onValueChange={setExportFormat}>
-                  <SelectTrigger className="flex-1 h-8 text-xs">
-                    <SelectValue placeholder={t('tools_exportFormat')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(exportFormats).map(([key, format]) => (
-                      <SelectItem key={key} value={key}>
-                        {getFormatName(format)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={handleExport}
-                  disabled={isExporting || folders.length === 0}
-                  className="h-8 text-xs"
-                >
-                  {isExporting ? t('tools_exporting') : t('action_export')}
-                </Button>
-              </div>
-            </div>
+            {dataShowExport && (
+              <ToolCard
+                icon={<Download className="h-4 w-4 text-emerald-500" />}
+                title={t('tools_export')}
+                description={t('tools_exportDesc')}
+                buttonLabel={t('action_export')}
+                onClick={(scope) => handleExport(scope)}
+                disabled={folders.length === 0}
+                isLoading={isExporting}
+                scopeCapability="both"
+                defaultScope="folder"
+                currentFolderName={currentFolderName}
+                controls={
+                  <Select value={exportFormat} onValueChange={setExportFormat}>
+                    <SelectTrigger className="h-8 w-full text-xs" aria-label={t('tools_exportFormat')}>
+                      <SelectValue placeholder={t('tools_exportFormat')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(exportFormats).map(([key, format]) => (
+                        <SelectItem key={key} value={key}>
+                          {getFormatName(format)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                }
+              />
+            )}
 
             {/* Import Tool */}
+            {dataShowImport && (
             <div className="p-3 rounded-lg border bg-card space-y-2">
               <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
@@ -942,7 +1062,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 </Button>
               </div>
             </div>
+            )}
           </ToolSection>
+          )}
         </div>
       </div>
 
@@ -965,8 +1087,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={duplicatesDialogOpen}
         onOpenChange={setDuplicatesDialogOpen}
         title={t('tools_findDuplicates')}
-        description={t('tools_duplicatesDialogDesc', [
-          String(duplicateResult?.groups.length ?? 0),
+        description={tPlural('tools_duplicatesDialogDesc', duplicateResult?.groups.length ?? 0, [
           String(duplicateResult?.scannedBookmarks ?? 0),
         ])}
       >
@@ -975,6 +1096,10 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           isRemoving={duplicateRemoving}
           onClose={() => setDuplicatesDialogOpen(false)}
           onConfirm={handleRemoveDuplicates}
+          notice={duplicateNotice?.message}
+          onUndo={
+            duplicateNotice?.snapshots.length ? () => duplicateUndoRef.current?.() : undefined
+          }
         />
       </ToolResultsDialog>
 
@@ -982,7 +1107,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         open={urlCleanerDialogOpen}
         onOpenChange={setUrlCleanerDialogOpen}
         title={t('tools_cleanUrls')}
-        description={t('tools_urlCleanerDialogDesc', String(urlCleanerResult?.previews.length ?? 0))}
+        description={tPlural('tools_urlCleanerDialogDesc', urlCleanerResult?.previews.length ?? 0)}
       >
         <UrlCleanerResultsView
           result={urlCleanerResult}
@@ -1020,8 +1145,33 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           t('tools_metadataDialogDesc')
         }
       >
-        <MetadataResultsView result={metadataResult} />
+        <MetadataResultsView
+          result={metadataResult}
+          isApplying={metadataApplying}
+          onApply={handleApplyMetadata}
+        />
       </ToolResultsDialog>
+
+      <Dialog
+        open={pendingNetworkTool !== null}
+        onOpenChange={(open) => {
+          if (!open) setPendingNetworkTool(null);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('tools_hostAccessTitle')}</DialogTitle>
+            <DialogDescription>{t('tools_hostAccessDesc')}</DialogDescription>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">{t('tools_hostAccessPrivacy')}</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPendingNetworkTool(null)}>
+              {t('action_notNow')}
+            </Button>
+            <Button onClick={handleAllowWebHostAccess}>{t('action_allowAccess')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <ToolResultsDialog
         open={privacyDialogOpen}

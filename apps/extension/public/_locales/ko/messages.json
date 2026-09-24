@@ -1108,8 +1108,8 @@
         "description": "Title for Metadata Fetcher tool"
     },
     "tools_metadataFetcherDesc": {
-        "message": "누락된 제목과 파비콘을 보완합니다",
-        "description": "Description for Metadata Fetcher tool"
+        "message": "페이지 제목을 제안하고 승인한 항목만 적용합니다",
+        "description": "Metadata fetcher tool description"
     },
     "tools_privacyScanner": {
         "message": "개인정보 스캐너",
@@ -2256,8 +2256,8 @@
         "description": "Statistics include depth breakdown label"
     },
     "settings_statisticsIncludeDepthBreakdownDesc": {
-        "message": "통계에 가장 깊은 폴더 중첩 수준을 포함합니다",
-        "description": "Statistics include depth breakdown description"
+        "message": "폴더 수준별 북마크 수를 표시합니다",
+        "description": "Statistics depth breakdown setting description"
     },
     "settings_statisticsTopN": {
         "message": "상위 N개 항목",
@@ -3082,5 +3082,345 @@
     "toast_itemLabel": {
         "message": "알림",
         "description": "Accessible label announced for each notification"
+    },
+    "toast_duplicatesRemovedDesc_one": {
+        "message": "$count$개의 중복 북마크를 제거했습니다",
+        "description": "Duplicate removal success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "일부 중복 항목이 삭제되지 않았습니다",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "삭제됨: $removed$개. 변경되었거나 이미 삭제되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "복원됨: $restored$개. 복원 실패: $failed$개.",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc_one": {
+        "message": "$bookmarks$개의 북마크에서 $groups$개의 중복 그룹을 찾았습니다",
+        "description": "Duplicate dialog description (one group)",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "1"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc_one": {
+        "message": "$count$개의 북마크를 정리할 수 있습니다",
+        "description": "URL cleaner dialog description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerAppliedDesc_one": {
+        "message": "$count$개의 북마크를 업데이트했습니다",
+        "description": "URL cleaner success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_urlCleanerPartial": {
+        "message": "일부 URL이 정리되지 않았습니다",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "업데이트됨: $updated$개. 미리보기 후 변경되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "리디렉션 대상: $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "웹 링크가 아니어서 건너뛰었습니다",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "사이트에 연결할 수 없습니다",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "건너뜀",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "$title$에 제안된 제목 적용",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "제목 $count$개 적용",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_metadataApplySelected_one": {
+        "message": "제목 $count$개 적용",
+        "description": "Button that applies selected title suggestions (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "제목을 업데이트했습니다",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "북마크 제목 $count$개를 업데이트했습니다",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataAppliedDesc_one": {
+        "message": "북마크 제목 $count$개를 업데이트했습니다",
+        "description": "Metadata apply success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "일부 제목이 업데이트되지 않았습니다",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "업데이트됨: $updated$개. 검사 후 변경되어 건너뜀: $skipped$개. 실패: $failed$개.",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "웹사이트 접근을 허용할까요?",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "끊어진 링크 검사와 제목 제안은 북마크한 각 페이지에 요청을 보냅니다. Bookmark Scout에 웹사이트 접근 권한이 없으면 대부분의 사이트가 이 요청을 차단합니다. 브라우저에서 확인을 요청합니다.",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "접근 권한은 이 도구를 실행할 때만 사용됩니다. 요청은 쿠키 없이 전송되며 브라우저의 확장 프로그램 설정에서 언제든지 취소할 수 있습니다.",
+        "description": "Privacy note in the website access dialog"
+    },
+    "tools_hostAccessDenied": {
+        "message": "웹사이트 접근이 허용되지 않았습니다",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "검사하지 않았습니다. 접근을 허용하려면 도구를 다시 실행하세요.",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "나중에",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "접근 허용",
+        "description": "Button that requests website access"
+    },
+    "toast_exportSuccessDesc_one": {
+        "message": "$count$개의 북마크를 $format$ 형식으로 내보냈습니다",
+        "description": "Export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "format": {
+                "content": "$2",
+                "example": "HTML"
+            }
+        }
+    },
+    "error_invalidJsonFormat": {
+        "message": "JSON 형식이 올바르지 않습니다",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "이 파일에서 북마크나 폴더를 찾을 수 없습니다. 아무것도 가져오지 않았습니다.",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개.",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "일부 항목을 가져오지 못했습니다",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "가져온 북마크: $bookmarks$개. 폴더: $folders$개. 가져오지 못한 항목: $failed$개.",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "URL 프래그먼트의 민감한 값: $param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "URL에 사용자 이름과 비밀번호가 포함되어 있습니다",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "URL에 사용자 이름이 포함되어 있습니다",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "API 또는 액세스 토큰으로 보이는 값이 있습니다",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "stats_depthBreakdown": {
+        "message": "폴더 수준별 북마크",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "수준 $level$",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI 기능이 비활성화되어 있습니다",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "이 도구를 사용하려면 옵션에서 AI 기능을 켜세요.",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "toast_aiContextPackedDesc_one": {
+        "message": "$count$개의 북마크를 AI용으로 내보냈습니다",
+        "description": "AI context export success description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
     }
 }

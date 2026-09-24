@@ -107,6 +107,15 @@ export function t(key: MessageKey, substitutions?: string | string[]): string {
 }
 
 /**
+ * Count-aware message lookup. `<key>_one` holds the singular form (identical to `<key>` in
+ * locales without grammatical number); the count is always the first substitution.
+ */
+export function tPlural(key: MessageKey, count: number, extra: string[] = []): string {
+  const substitutions = [String(count), ...extra];
+  return t(count === 1 ? `${key}_one` : key, substitutions);
+}
+
+/**
  * Hook for using i18n in React components
  * Returns the t function for translations
  */

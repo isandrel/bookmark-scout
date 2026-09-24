@@ -146,17 +146,11 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await page.getByRole('menuitem', { name: 'Delete' }).click();
   await expect(row(page, 'Doomed Link')).toHaveCount(0);
   await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText('Deleted "Doomed Link". Undo within 10 seconds.', { exact: true }),
+    page.getByText('Deleted "Doomed Link". Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(row(page, 'Doomed Link')).toBeVisible();
-  await expect(
-    page
-      .getByRole('region', { name: 'Notifications (F8)' })
-      .getByText('Restored "Doomed Link".', { exact: true }),
-  ).toBeVisible();
+  await expect(page.getByText('Restored "Doomed Link".', { exact: true })).toBeVisible();
   await expect
     .poll(() =>
       extensionWorker.evaluate(

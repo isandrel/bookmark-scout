@@ -174,7 +174,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, route-mocked dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 

@@ -45,7 +45,11 @@ export type BookmarkStatistics = {
   topFolders: Array<{ label: string; count: number }>;
   protocols: Array<{ label: string; count: number }>;
   duplicateCount: number;
+  /** Bookmark counts per folder level, present only when the depth breakdown is enabled. */
+  depthBreakdown?: Array<{ level: number; count: number }>;
 };
+
+export type DuplicateKeepRule = 'oldest' | 'newest' | 'first';
 
 type DuplicateOptions = {
   strategy: 'exact_url' | 'normalized_url' | 'title_url' | 'title_only';
@@ -53,6 +57,16 @@ type DuplicateOptions = {
   ignoreProtocol: boolean;
   ignoreTrailingSlash: boolean;
   maxGroups: number;
+  /** Orders each group so `items[0]` is the bookmark the keep rule retains. */
+  keepRule?: DuplicateKeepRule;
+};
+
+export type DuplicateRemovalResult = {
+  removed: number;
+  /** Extras skipped because they, or their group's kept item, changed or vanished after the scan. */
+  skipped: number;
+  failed: number;
+  snapshots: BookmarkDeletionSnapshot[];
 };
 
 type UrlCleanerOptions = {
@@ -68,6 +82,7 @@ type StatisticsOptions = {
   includeFolders: boolean;
   includeProtocols: boolean;
   includeDuplicates: boolean;
+  includeDepthBreakdown?: boolean;
   topN: number;
 };
 
@@ -113,6 +128,7 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
   return result;
 }
 
+/** Counts folders inside the scope; the scope roots themselves (or the browser root) are excluded. */
 export function countFolders(nodes: BookmarkTreeNode[]): number {
   let count = 0;
 
@@ -123,8 +139,18 @@ export function countFolders(nodes: BookmarkTreeNode[]): number {
     }
   };
 
-  nodes.forEach(walk);
+  nodes.forEach((root) => {
+    root.children?.forEach(walk);
+  });
   return count;
+}
+
+/**
+ * A bookmark's level is the number of named folders above it within the scope: a bookmark
+ * directly in the selected folder, or directly in Bookmarks Bar for all bookmarks, is level 1.
+ */
+function bookmarkLevel(bookmark: FlatBookmark): number {
+  return bookmark.folderPath.length;
 }
 
 export function scanDuplicateBookmarks(
@@ -148,7 +174,7 @@ export function scanDuplicateBookmarks(
   const duplicateGroups = Array.from(groups.entries())
     .filter(([, items]) => items.length > 1)
     .slice(0, options.maxGroups)
-    .map(([key, items]) => ({ key, items }));
+    .map(([key, items]) => ({ key, items: orderDuplicateGroup(items, options.keepRule ?? 'oldest') }));
 
   return {
     groups: duplicateGroups,
@@ -157,86 +183,142 @@ export function scanDuplicateBookmarks(
   };
 }
 
+function decodeQueryKey(rawKey: string): string {
+  try {
+    return decodeURIComponent(rawKey.replace(/\+/g, ' '));
+  } catch {
+    return rawKey;
+  }
+}
+
+/**
+ * Removes tracking parameters by editing the raw query string, so kept parameters keep their
+ * exact encoding (`%20` stays `%20`) and valueless parameters (`?amp`) stay valueless. Sorting
+ * is applied only alongside a real removal; reordering alone never makes a URL cleanable
+ * because it can break signed URLs.
+ */
+export function cleanBookmarkUrl(
+  originalUrl: string,
+  options: UrlCleanerOptions,
+): { cleanedUrl: string; removedParams: string[] } | null {
+  let parsed: URL;
+  try {
+    parsed = new URL(originalUrl);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return null;
+  }
+
+  const preserveParams = new Set(options.preserveParams.map((param) => param.toLowerCase()));
+  const removeParams = new Set(options.removeParams.map((param) => param.toLowerCase()));
+  const hashIndex = originalUrl.indexOf('#');
+  const beforeHash = hashIndex >= 0 ? originalUrl.slice(0, hashIndex) : originalUrl;
+  const hash = hashIndex >= 0 ? originalUrl.slice(hashIndex) : '';
+  const queryIndex = beforeHash.indexOf('?');
+  const base = queryIndex >= 0 ? beforeHash.slice(0, queryIndex) : beforeHash;
+  const segments = queryIndex >= 0 ? beforeHash.slice(queryIndex + 1).split('&') : [];
+
+  const removedParams: string[] = [];
+  const kept: Array<{ key: string; segment: string }> = [];
+  const seen = new Set<string>();
+  for (const segment of segments) {
+    if (!segment) continue;
+    const separator = segment.indexOf('=');
+    const key = decodeQueryKey(separator >= 0 ? segment.slice(0, separator) : segment);
+    const normalizedKey = key.toLowerCase();
+
+    if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
+      removedParams.push(key);
+      continue;
+    }
+    if (options.dedupeQueryParams) {
+      const signature = `${normalizedKey}\u0000${separator >= 0 ? segment.slice(separator) : ''}`;
+      if (seen.has(signature)) {
+        removedParams.push(key);
+        continue;
+      }
+      seen.add(signature);
+    }
+    kept.push({ key, segment });
+  }
+
+  const removesHash = options.removeHash && hash.length > 0;
+  if (removedParams.length === 0 && !removesHash) {
+    return null;
+  }
+
+  const ordered = options.sortQueryParams
+    ? [...kept].sort((a, b) => a.key.localeCompare(b.key))
+    : kept;
+  const query = ordered.map((entry) => entry.segment).join('&');
+  const cleanedUrl = `${base}${query ? `?${query}` : ''}${removesHash ? '' : hash}`;
+  return cleanedUrl === originalUrl ? null : { cleanedUrl, removedParams };
+}
+
 export function previewCleanUrls(
   nodes: BookmarkTreeNode[],
   options: UrlCleanerOptions,
 ): UrlCleanerResult {
   const flatBookmarks = flattenBookmarks(nodes);
-  const preserveParams = new Set(options.preserveParams.map((param) => param.toLowerCase()));
-  const removeParams = new Set(options.removeParams.map((param) => param.toLowerCase()));
 
   const previews = flatBookmarks.flatMap((bookmark) => {
     const originalUrl = bookmark.node.url;
-    if (!originalUrl) {
+    const cleaned = originalUrl ? cleanBookmarkUrl(originalUrl, options) : null;
+    if (!originalUrl || !cleaned) {
       return [];
     }
 
-    try {
-      const url = new URL(originalUrl);
-      const removedParams: string[] = [];
-      const nextEntries: Array<[string, string]> = [];
-      const seen = new Set<string>();
-
-      url.searchParams.forEach((value, key) => {
-        const normalizedKey = key.toLowerCase();
-
-        if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
-          removedParams.push(key);
-          return;
-        }
-
-        if (options.dedupeQueryParams) {
-          const signature = `${normalizedKey}:${value}`;
-          if (seen.has(signature)) {
-            removedParams.push(key);
-            return;
-          }
-          seen.add(signature);
-        }
-
-        nextEntries.push([key, value]);
-      });
-
-      if (removedParams.length === 0 && !options.sortQueryParams && !options.removeHash) {
-        return [];
-      }
-
-      url.search = '';
-      const finalEntries = options.sortQueryParams
-        ? [...nextEntries].sort(([a], [b]) => a.localeCompare(b))
-        : nextEntries;
-      finalEntries.forEach(([key, value]) => {
-        url.searchParams.append(key, value);
-      });
-
-      if (options.removeHash) {
-        url.hash = '';
-      }
-
-      const cleanedUrl = url.toString();
-      if (cleanedUrl === originalUrl) {
-        return [];
-      }
-
-      const preview = {
+    return [
+      {
         id: bookmark.node.id,
-        title: bookmark.node.title || 'Untitled',
+        title: bookmark.node.title,
         folderPath: bookmark.pathLabel,
         originalUrl,
-        cleanedUrl,
-        removedParams,
-      };
-
-      return [preview];
-    } catch {
-      return [];
-    }
+        cleanedUrl: cleaned.cleanedUrl,
+        removedParams: cleaned.removedParams,
+      } satisfies UrlCleanerPreview,
+    ];
   });
 
   return {
     previews,
     scannedBookmarks: flatBookmarks.length,
   };
+}
+
+export type UrlCleanerApplyResult = {
+  updated: number;
+  /** Bookmarks deleted or edited since the preview; they are left untouched. */
+  skipped: number;
+  failed: number;
+};
+
+/** Applies previews only to bookmarks whose current URL still matches the previewed original. */
+export async function applyUrlCleanerPreviews(
+  previews: UrlCleanerPreview[],
+): Promise<UrlCleanerApplyResult> {
+  const result: UrlCleanerApplyResult = { updated: 0, skipped: 0, failed: 0 };
+  for (const preview of previews) {
+    let currentUrl: string | undefined;
+    try {
+      currentUrl = (await getBookmark(preview.id)).url;
+    } catch {
+      currentUrl = undefined;
+    }
+    if (currentUrl !== preview.originalUrl) {
+      result.skipped += 1;
+      continue;
+    }
+    try {
+      await updateBookmark(preview.id, { url: preview.cleanedUrl });
+      result.updated += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
 }
 
 export function collectBookmarkStatistics(
@@ -283,12 +365,114 @@ export function collectBookmarkStatistics(
     totalBookmarks: flatBookmarks.length,
     totalFolders: countFolders(nodes),
     bookmarksInScope: flatBookmarks.length,
-    deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmark.depth), 0),
+    deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
+    ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
     topDomains: toTopEntries(domains, options.topN),
     topFolders: toTopEntries(folders, options.topN),
     protocols: toTopEntries(protocols, options.topN),
     duplicateCount,
   };
+}
+
+/** Compares browser bookmark IDs numerically when both are numeric (Chrome), else as strings. */
+function compareBookmarkIds(a: string, b: string): number {
+  const numericA = Number(a);
+  const numericB = Number(b);
+  if (Number.isFinite(numericA) && Number.isFinite(numericB) && a !== '' && b !== '') {
+    return numericA - numericB;
+  }
+  return a.localeCompare(b);
+}
+
+/**
+ * Returns the group ordered so the first item is the one the keep rule retains. The preview
+ * and the removal both read this order, so the item labeled "Keep" is never deleted.
+ */
+export function orderDuplicateGroup(
+  items: FlatBookmark[],
+  keepRule: DuplicateKeepRule,
+): FlatBookmark[] {
+  return [...items].sort((a, b) => {
+    const byId = compareBookmarkIds(a.node.id, b.node.id);
+    if (keepRule === 'first') return byId;
+    const dateA = a.node.dateAdded ?? 0;
+    const dateB = b.node.dateAdded ?? 0;
+    const byDate = keepRule === 'newest' ? dateB - dateA : dateA - dateB;
+    return byDate || byId;
+  });
+}
+
+/** The IDs the preview labels "Keep" and the IDs a removal will delete. */
+export function getDuplicateKeepRuleIds(result: DuplicateScanResult) {
+  return {
+    keep: result.groups.map((group) => group.items[0].node.id),
+    remove: result.groups.flatMap((group) => group.items.slice(1).map((item) => item.node.id)),
+  };
+}
+
+/**
+ * Removes every previewed extra (all items after the first in each group). Each group is
+ * re-read first: extras whose URL changed or that no longer exist are skipped, and a group
+ * whose kept bookmark is gone is left untouched so the URL is never lost entirely.
+ */
+export async function removeDuplicateExtras(
+  groups: DuplicateGroup[],
+): Promise<DuplicateRemovalResult> {
+  const result: DuplicateRemovalResult = { removed: 0, skipped: 0, failed: 0, snapshots: [] };
+  const readCurrent = async (id: string) => {
+    try {
+      return await getBookmark(id);
+    } catch {
+      return null;
+    }
+  };
+
+  for (const group of groups) {
+    const [keeper, ...extras] = group.items;
+    const currentKeeper = keeper ? await readCurrent(keeper.node.id) : null;
+    if (!currentKeeper) {
+      result.skipped += extras.length;
+      continue;
+    }
+
+    for (const extra of extras) {
+      const current = await readCurrent(extra.node.id);
+      if (!current || current.url !== extra.node.url) {
+        result.skipped += 1;
+        continue;
+      }
+      try {
+        const snapshot = await captureBookmarkDeletion(extra.node.id);
+        await deleteBookmark(extra.node.id);
+        result.snapshots.push(snapshot);
+        result.removed += 1;
+      } catch {
+        result.failed += 1;
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Restores bookmarks removed by {@link removeDuplicateExtras}. Snapshots are replayed in
+ * reverse deletion order so captured sibling indexes stay valid.
+ */
+export async function restoreDuplicateExtras(
+  snapshots: BookmarkDeletionSnapshot[],
+): Promise<{ restored: number; failed: number }> {
+  let restored = 0;
+  let failed = 0;
+  for (const snapshot of [...snapshots].reverse()) {
+    try {
+      await restoreBookmarkDeletion(snapshot);
+      restored += 1;
+    } catch {
+      failed += 1;
+    }
+  }
+  return { restored, failed };
 }
 
 function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
@@ -297,7 +481,7 @@ function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
 
   switch (options.strategy) {
     case 'exact_url':
-      return url?.trim().toLowerCase();
+      return url || undefined;
     case 'normalized_url':
       return normalizeDuplicateUrl(url, options);
     case 'title_url': {
@@ -311,6 +495,12 @@ function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
   }
 }
 
+/**
+ * Normalizes only what never changes the target resource: scheme and host case (the URL
+ * parser lowercases both) and default ports. Explicit non-default ports, path, query, and
+ * fragment case are preserved. Query parameter order is ignored, and the optional settings
+ * strip `www.`, the scheme, and a trailing slash.
+ */
 function normalizeDuplicateUrl(url: string | undefined, options: DuplicateOptions) {
   if (!url) {
     return undefined;
@@ -318,15 +508,24 @@ function normalizeDuplicateUrl(url: string | undefined, options: DuplicateOption
 
   try {
     const parsed = new URL(url.trim());
+    if (!parsed.host) {
+      return url.trim();
+    }
     const protocol = options.ignoreProtocol ? '' : parsed.protocol;
-    const hostname = options.normalizeWww ? parsed.hostname.replace(/^www\./, '') : parsed.hostname;
+    const host = options.normalizeWww ? parsed.host.replace(/^www\./, '') : parsed.host;
     const pathname = options.ignoreTrailingSlash && parsed.pathname !== '/'
       ? parsed.pathname.replace(/\/$/, '')
       : parsed.pathname;
+    const query = parsed.search
+      .slice(1)
+      .split('&')
+      .filter(Boolean)
+      .sort()
+      .join('&');
 
-    return `${protocol}//${hostname}${pathname}${parsed.search}${parsed.hash}`.toLowerCase();
+    return `${protocol}//${host}${pathname}${query ? `?${query}` : ''}${parsed.hash}`;
   } catch {
-    return url.trim().toLowerCase();
+    return url.trim();
   }
 }
 
@@ -351,6 +550,17 @@ function safeNormalizeUrl(url: string) {
   } catch {
     return undefined;
   }
+}
+
+function buildDepthBreakdown(bookmarks: FlatBookmark[]) {
+  const counts = new Map<number, number>();
+  bookmarks.forEach((bookmark) => {
+    const level = bookmarkLevel(bookmark);
+    counts.set(level, (counts.get(level) ?? 0) + 1);
+  });
+  return Array.from(counts.entries())
+    .sort(([a], [b]) => a - b)
+    .map(([level, count]) => ({ level, count }));
 }
 
 function toTopEntries(entries: Map<string, number>, topN: number) {
