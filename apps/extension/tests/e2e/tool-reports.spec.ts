@@ -77,3 +77,26 @@ test('statistics count folders inside the scope and show the depth breakdown onl
   await expect(breakdown).toContainText('Level 2');
   await expect(breakdown).toContainText('Level 3');
 });
+
+test('statistics count untitled folders in levels and list them as Untitled', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Stats Untitled', [
+    { title: '', children: [{ title: 'Inside Untitled', url: 'https://e2e.invalid/u' }] },
+  ]);
+  await setSettings(extensionWorker, {
+    statisticsDefaultScope: 'folder',
+    statisticsIncludeFolders: true,
+    statisticsIncludeDepthBreakdown: true,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Bookmark Statistics').getByRole('button', { name: 'View' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Statistics' });
+  const stat = (label: string) => dialog.getByText(label, { exact: true }).locator('..');
+  await expect(stat('Deepest level')).toContainText('2');
+  await expect(stat('Top folders')).toContainText('E2E Stats Untitled / Untitled1');
+  await expect(stat('Bookmarks by folder level')).toContainText('Level 21');
+});

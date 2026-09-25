@@ -123,7 +123,12 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
       return;
     }
 
-    const nextPath = node.title ? [...folderPath, node.title] : folderPath;
+    // Only the browser's unnamed root is left out of paths; other untitled folders still count
+    // as a level and are labeled "Untitled".
+    const isBrowserRoot = !node.parentId && !node.title;
+    const nextPath = isBrowserRoot
+      ? folderPath
+      : [...folderPath, node.title || t('bookmarks_untitled')];
     node.children?.forEach((child) => {
       walk(child, nextPath, depth + 1);
     });
@@ -340,7 +345,9 @@ export function collectBookmarkStatistics(
 ): BookmarkStatistics {
   const flatBookmarks = flattenBookmarks(nodes);
   const domains = new Map<string, number>();
-  const folders = new Map<string, number>();
+  // Keyed by folder ID so two folders with the same path label (such as two untitled
+  // siblings) are not merged.
+  const folders = new Map<string, { label: string; count: number }>();
   const protocols = new Map<string, number>();
 
   flatBookmarks.forEach((bookmark) => {
@@ -350,8 +357,10 @@ export function collectBookmarkStatistics(
 
     if (options.includeFolders) {
       // An empty label marks root-level bookmarks; the view localizes it.
-      const label = bookmark.pathLabel;
-      folders.set(label, (folders.get(label) ?? 0) + 1);
+      const key = bookmark.node.parentId ?? bookmark.pathLabel;
+      const entry = folders.get(key) ?? { label: bookmark.pathLabel, count: 0 };
+      entry.count += 1;
+      folders.set(key, entry);
     }
 
     if (options.includeProtocols && bookmark.node.url) {
@@ -381,7 +390,9 @@ export function collectBookmarkStatistics(
     deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
     ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
     topDomains: toTopEntries(domains, options.topN),
-    topFolders: toTopEntries(folders, options.topN),
+    topFolders: Array.from(folders.values())
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+      .slice(0, options.topN),
     protocols: toTopEntries(protocols, options.topN),
     duplicateCount,
   };
