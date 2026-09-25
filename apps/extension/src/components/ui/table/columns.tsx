@@ -152,8 +152,8 @@ export const createColumns = (
       }
 
       return (
-        <div className="flex items-center">
-          {type.icon && <type.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+        <div className="flex items-center whitespace-nowrap">
+          {type.icon && <type.icon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />}
           <span>{type.label}</span>
         </div>
       );
@@ -193,7 +193,7 @@ export const createColumns = (
     cell: ({ row }) => {
       const path = row.original.folderPath;
       return (
-        <span className="block max-w-72 truncate" title={path}>
+        <span className="block max-w-44 truncate 2xl:max-w-72" title={path}>
           {path}
         </span>
       );
@@ -213,7 +213,7 @@ export const createColumns = (
       return (
         <div className="flex min-w-0 items-center gap-2">
           <img src={getFaviconUrl(rowUrl)} alt="" className="h-4 w-4 shrink-0" />
-          <span className="block max-w-72 truncate" title={rowUrl}>
+          <span className="block max-w-40 truncate 2xl:max-w-72" title={rowUrl}>
             {rowUrl}
           </span>
         </div>
@@ -269,11 +269,11 @@ export const createColumns = (
         <div className="flex items-center gap-2 min-w-0">
           {icon}
           {title ? (
-            <span className="max-w-72 truncate" title={title}>
+            <span className="max-w-60 truncate 2xl:max-w-72" title={title}>
               {title}
             </span>
           ) : (
-            <span className="max-w-72 truncate italic text-muted-foreground">
+            <span className="max-w-60 truncate italic text-muted-foreground 2xl:max-w-72">
               {t('bookmarks_untitled')}
             </span>
           )}
@@ -306,13 +306,21 @@ export const createColumns = (
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const bookmark = row.original;
+      // Moves are only enabled while the table shows the whole folder in browser order, so the
+      // table data is the folder's children and the index says where the item sits among them.
+      const position = { index: bookmark.index ?? 0, siblingCount: table.options.data.length };
       return (
-        <div className="flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end">
           {isModifiableBookmark(bookmark) && (
-            <div className="opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100">
-              <MoveBookmarkButtons onMove={(direction) => moveWithinFolder(bookmark, direction)} />
+            // Shown on hover or focus as an overlay left of the menu, so the pinned column only
+            // reserves room for the menu button and never pushes other columns out of view.
+            <div className="pointer-events-none absolute right-full top-1/2 mr-1 -translate-y-1/2 rounded-md border bg-background p-1 opacity-0 shadow-sm transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
+              <MoveBookmarkButtons
+                position={position}
+                onMove={(direction) => moveWithinFolder(bookmark, direction)}
+              />
             </div>
           )}
           <BookmarkRowMenu bookmark={bookmark} actions={actions} />
