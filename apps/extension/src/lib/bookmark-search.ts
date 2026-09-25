@@ -27,9 +27,10 @@ const WORD_CHARACTER =
 
 function buildSearchRegex(query: string, options: SearchOptions): RegExp {
   const source = options.useRegex ? query : query.replace(REGEX_SPECIAL_CHARACTERS, '\\$&');
-  const flags = options.matchCase ? 'g' : 'gi';
+  // Always Unicode mode, so Whole Word never changes which patterns compile or what `\p{L}` means.
+  const flags = options.matchCase ? 'gu' : 'giu';
   return options.wholeWord
-    ? new RegExp(`(?<!${WORD_CHARACTER})(?:${source})(?!${WORD_CHARACTER})`, `${flags}u`)
+    ? new RegExp(`(?<!${WORD_CHARACTER})(?:${source})(?!${WORD_CHARACTER})`, flags)
     : new RegExp(source, flags);
 }
 

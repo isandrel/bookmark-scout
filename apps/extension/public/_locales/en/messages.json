@@ -147,6 +147,10 @@
         "message": "Enter folder name...",
         "description": "New folder input placeholder"
     },
+    "popup_newFolderNameLabel": {
+        "message": "New folder name",
+        "description": "Accessible name of the new folder name input"
+    },
     "state_noBookmarksFound": {
         "message": "No bookmarks found",
         "description": "Empty state when search has no results"

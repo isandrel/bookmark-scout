@@ -24,6 +24,10 @@ test('expand all during a search keeps the filter and the result limit', async (
   await expect(bookmarkRow(page, 'Needle Link')).toBeVisible();
   await expect(page.locator('.bookmark-item')).toHaveCount(1);
 
+  // The search already opened every result folder, so the toggle starts as Collapse all.
+  await page.getByRole('button', { name: 'Collapse all', exact: true }).click();
+  await expect(page.locator('.bookmark-item')).toHaveCount(0);
+
   await page.getByRole('button', { name: 'Expand all', exact: true }).click();
   await expect(bookmarkRow(page, 'Needle Link')).toBeVisible();
   await expect(page.getByText('Unrelated Link', { exact: true })).toHaveCount(0);
