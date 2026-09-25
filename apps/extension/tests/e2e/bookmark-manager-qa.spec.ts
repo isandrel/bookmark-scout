@@ -446,7 +446,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
 
   await page.getByRole('checkbox', { name: 'Select "Bulk A"' }).check();
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Move 1 items' });
+  const dialog = page.getByRole('dialog', { name: 'Move 1 item' });
   await dialog.getByRole('combobox').click();
   await page.getByRole('option', { name: /E2E Bulk \/ Bulk Target$/ }).click();
   await dialog.getByRole('button', { name: 'Move to folder' }).click();
@@ -485,7 +485,9 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
   await dialog.getByLabel('Name').fill('  GitHub Spaced  ');
   await dialog.getByLabel('URL').fill('javascript:alert(1)');
   await dialog.getByRole('button', { name: 'Save' }).click();
-  await expect(dialog).toContainText('JavaScript URLs (bookmarklets) cannot be saved here.');
+  await expect(dialog).toContainText(
+    'Script URLs (javascript:) cannot be saved here. Existing bookmarklets can still be renamed.',
+  );
   await dialog.getByLabel('URL').fill('https://github.com/');
   await dialog.getByRole('button', { name: 'Save' }).click();
   await expect(dialog).toHaveCount(0);

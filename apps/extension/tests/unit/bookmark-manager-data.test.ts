@@ -2,15 +2,18 @@ import { describe, expect, it } from 'vitest';
 import {
   buildFolderOptions,
   buildManagerFolderTree,
+  canMoveWithinFolder,
   getManagerFolderAncestors,
   getMoveTargetFolders,
   isWithinDateRange,
   type ManagerItem,
+  partitionSelectionByVisibility,
   pruneNestedSelection,
   resolveManagerFolder,
 } from '@/lib/bookmark-manager-data';
 import { parseBookmarkTableView } from '@/lib/bookmark-table-view-storage';
 import {
+  getBlockedEditUrl,
   getRegistrableDomain,
   getUrlDomain,
   hostnameMatchesDomain,
@@ -85,12 +88,22 @@ describe('folder helpers', () => {
   it('prunes nested selections and excludes selected folders from move targets', () => {
     const selected = [items[1], items[2], items[3], items[7]];
     expect(pruneNestedSelection(selected, items).map((item) => item.id)).toEqual(['10', '20']);
+    // Bar ("1") already holds News, so moving there would change nothing.
     expect(getMoveTargetFolders([items[1]], items).map((item) => item.id)).toEqual([
-      '1',
       '13',
       '14',
       '2',
       '20',
+    ]);
+  });
+
+  it('offers the current folder when the selection spans several folders', () => {
+    // News "10" sits in Bar and News "20" in Other, so both parents stay real destinations.
+    expect(getMoveTargetFolders([items[1], items[7]], items).map((item) => item.id)).toEqual([
+      '1',
+      '13',
+      '14',
+      '2',
     ]);
   });
 });
@@ -144,5 +157,63 @@ describe('table view browser order', () => {
   it('defaults to off and persists when enabled', () => {
     expect(parseBookmarkTableView({}).browserOrder).toBe(false);
     expect(parseBookmarkTableView({ version: 1, browserOrder: true }).browserOrder).toBe(true);
+  });
+});
+
+describe('partitionSelectionByVisibility', () => {
+  it('keeps only selected rows the filters show and counts the hidden ones', () => {
+    const selected = [link('a', '1', 'Keep me', 'Bar'), link('b', '1', 'Target X', 'Bar'), link('c', '1', 'Also keep', 'Bar')];
+    const result = partitionSelectionByVisibility(selected, new Set(['b', 'z']), (row) => row.id);
+    expect(result.visible.map((row) => row.id)).toEqual(['b']);
+    expect(result.hiddenCount).toBe(2);
+  });
+
+  it('reports nothing hidden when every selected row is visible', () => {
+    const selected = [link('a', '1', 'A', 'Bar')];
+    expect(partitionSelectionByVisibility(selected, new Set(['a']), (row) => row.id)).toEqual({
+      visible: selected,
+      hiddenCount: 0,
+    });
+  });
+});
+
+describe('getBlockedEditUrl', () => {
+  it('names the script scheme that was entered', () => {
+    expect(getBlockedEditUrl('javascript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
+    expect(getBlockedEditUrl(' VBScript:msgbox(1)')).toEqual({ kind: 'script', prefix: 'vbscript:' });
+    expect(getBlockedEditUrl('java\tscript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
+  });
+
+  it('rejects data: URLs that open as a page but allows inert data', () => {
+    expect(getBlockedEditUrl('data:text/html,<script>alert(1)</script>')).toEqual({
+      kind: 'data-document',
+      prefix: 'data:text/html',
+    });
+    expect(getBlockedEditUrl('DATA:Text/HTML;base64,PGI+')).toEqual({
+      kind: 'data-document',
+      prefix: 'data:text/html',
+    });
+    expect(getBlockedEditUrl('data:image/svg+xml,<svg/>')?.prefix).toBe('data:image/svg+xml');
+    expect(getBlockedEditUrl('data:text/plain,hello')).toBeNull();
+    expect(getBlockedEditUrl('data:,hello')).toBeNull();
+    expect(getBlockedEditUrl('data:image/png;base64,iVBOR')).toBeNull();
+  });
+
+  it('allows ordinary web URLs', () => {
+    expect(getBlockedEditUrl('https://example.com/javascript:')).toBeNull();
+    expect(getBlockedEditUrl('https://example.com/?u=data:text/html,x')).toBeNull();
+  });
+});
+
+describe('canMoveWithinFolder', () => {
+  it('disables moves past either end of the folder', () => {
+    expect(canMoveWithinFolder('up', 0, 3)).toBe(false);
+    expect(canMoveWithinFolder('top', 0, 3)).toBe(false);
+    expect(canMoveWithinFolder('down', 0, 3)).toBe(true);
+    expect(canMoveWithinFolder('down', 2, 3)).toBe(false);
+    expect(canMoveWithinFolder('bottom', 2, 3)).toBe(false);
+    expect(canMoveWithinFolder('up', 2, 3)).toBe(true);
+    expect(canMoveWithinFolder('up', 0, 1)).toBe(false);
+    expect(canMoveWithinFolder('down', 0, 1)).toBe(false);
   });
 });

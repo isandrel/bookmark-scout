@@ -40,10 +40,22 @@ interface DataTableProps<TData extends RowData> {
   allData: TData[];
   getRowId: (row: TData) => string;
   canSelectRow?: (row: TData) => boolean;
-  /** Changing this (e.g. the folder ID) returns to the first page and clears the selection. */
+  /** Changing this (e.g. the folder ID) returns to `initialPageIndex` and clears the selection. */
   resetKey?: string | null;
+  /** Page shown after `resetKey` changes, e.g. the page saved on a history entry (default 0). */
+  initialPageIndex?: number;
+  /** Called with the page index whenever it changes. */
+  onPageIndexChange?: (pageIndex: number) => void;
   facetOptions: DataTableFacetOptions;
-  renderSelectionActions?: (rows: TData[], clearSelection: () => void) => React.ReactNode;
+  /**
+   * Renders actions for the selection. `rows` are the selected rows visible under the current
+   * filters; `hiddenCount` selected rows are hidden by filters and must not be acted on.
+   */
+  renderSelectionActions?: (
+    rows: TData[],
+    hiddenCount: number,
+    clearSelection: () => void,
+  ) => React.ReactNode;
   onRowClick?: (row: TData) => void;
   /** Rows that open on click also open with Enter or Space when focused. */
   isRowActivatable?: (row: TData) => boolean;
@@ -62,6 +74,8 @@ export function DataTable<TData extends RowData>({
   getRowId,
   canSelectRow,
   resetKey,
+  initialPageIndex = 0,
+  onPageIndexChange,
   facetOptions,
   renderSelectionActions,
   onRowClick,
@@ -120,12 +134,21 @@ export function DataTable<TData extends RowData>({
     sorting,
   ]);
 
-  // Navigating to another folder starts on its first page with nothing selected.
+  // Navigating to another folder starts on its first page (or, going Back, on the page that was
+  // open) with nothing selected. The page is read when the key changes, not tracked.
+  const initialPageIndexRef = React.useRef(initialPageIndex);
+  initialPageIndexRef.current = initialPageIndex;
   // biome-ignore lint/correctness/useExhaustiveDependencies: resetKey is the trigger.
   React.useEffect(() => {
-    setPagination((previous) => ({ ...previous, pageIndex: 0 }));
+    setPagination((previous) => ({ ...previous, pageIndex: initialPageIndexRef.current }));
     setRowSelection({});
   }, [resetKey]);
+
+  const onPageIndexChangeRef = React.useRef(onPageIndexChange);
+  onPageIndexChangeRef.current = onPageIndexChange;
+  React.useEffect(() => {
+    onPageIndexChangeRef.current?.(pagination.pageIndex);
+  }, [pagination.pageIndex]);
 
   const goToFirstPage = React.useCallback(
     () => setPagination((previous) => ({ ...previous, pageIndex: 0 })),
@@ -229,6 +252,15 @@ export function DataTable<TData extends RowData>({
     .filter((id) => rowSelection[id])
     .map((id) => rowsById.get(id))
     .filter((row): row is TData => row !== undefined);
+  // Bulk actions only touch selected rows the current filters show (on any page), matching the
+  // footer count; selected rows hidden by a filter are reported but never moved or deleted.
+  const filteredRows = table.getFilteredRowModel().rows;
+  const { visible: visibleSelectedRows, hiddenCount: hiddenSelectedCount } =
+    partitionSelectionByVisibility(
+      selectedRows,
+      new Set(filteredRows.map((row) => row.id)),
+      getRowId,
+    );
   const clearSelection = React.useCallback(() => setRowSelection({}), []);
 
   return (
@@ -243,7 +275,8 @@ export function DataTable<TData extends RowData>({
         browserOrder={browserOrder}
         onBrowserOrderChange={handleBrowserOrderChange}
       />
-      {selectedRows.length > 0 && renderSelectionActions?.(selectedRows, clearSelection)}
+      {selectedRows.length > 0 &&
+        renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
       <div className="rounded-md border">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
           <Table>

@@ -24,7 +24,34 @@ export type BookmarkDeletionSnapshot = {
   node: RecoverableBookmarkNode;
   /** Epoch milliseconds after which the snapshot is no longer restorable. */
   expiresAt: number;
+  /** Browser ID of the deleted node, used to find its place among siblings on restore. */
+  id?: string;
 };
+
+// Per-folder reference order of children, including deleted ones that can still be restored
+// (tombstones, with their expiry), so several undos in any order rebuild the original order.
+const siblingOrders = new Map<string, string[]>();
+const restorableDeletions = new Map<string, number>();
+
+function isRestorableDeletion(id: string, now: number): boolean {
+  return (restorableDeletions.get(id) ?? Number.NEGATIVE_INFINITY) >= now;
+}
+
+async function rememberSiblingOrder(parentId: string, id: string, expiresAt: number, now: number) {
+  for (const [deletedId, expiry] of restorableDeletions) {
+    if (expiry < now) restorableDeletions.delete(deletedId);
+  }
+  const children = await requireBookmarksApi().getChildren(parentId);
+  siblingOrders.set(
+    parentId,
+    mergeSiblingOrder(
+      siblingOrders.get(parentId),
+      children.map((child) => child.id),
+      (siblingId) => isRestorableDeletion(siblingId, now),
+    ),
+  );
+  restorableDeletions.set(id, expiresAt);
+}
 
 export type BookmarkRestoreErrorCode = 'expired' | 'parent-missing' | 'restore-failed';
 
@@ -210,10 +237,14 @@ export async function captureBookmarkDeletion(
   const metadataById = await getStoredBookmarkMetadata(collectSubtreeIds(node)).catch(
     () => ({}) as StoredBookmarkMetadataById,
   );
+  const expiresAt = now + BOOKMARK_DELETION_UNDO_WINDOW_MS;
+  // Ordering is best effort: without it a restore falls back to the captured index.
+  await rememberSiblingOrder(node.parentId, id, expiresAt, now).catch(() => undefined);
   return {
     parentId: node.parentId,
     node: toRecoverableNode(node, metadataById),
-    expiresAt: now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+    expiresAt,
+    id,
   };
 }
 
@@ -253,11 +284,11 @@ export async function restoreBookmarkDeletion(
     throw new BookmarkRestoreError('The undo window for this deletion has expired.', 'expired');
   }
 
-  let siblingCount: number;
+  let siblings: Browser.bookmarks.BookmarkTreeNode[];
   try {
     const [parent] = await getBookmarkSubTree(snapshot.parentId);
     if (!parent || parent.url) throw new Error('Original parent is not a folder.');
-    siblingCount = parent.children?.length ?? 0;
+    siblings = parent.children ?? [];
   } catch {
     throw new BookmarkRestoreError(
       'The original parent folder no longer exists.',
@@ -265,11 +296,22 @@ export async function restoreBookmarkDeletion(
     );
   }
 
-  // Siblings may have changed since deletion; clamp so the browser accepts the index.
-  const index =
-    typeof snapshot.node.index === 'number'
-      ? Math.min(snapshot.node.index, siblingCount)
+  // Other deletions may have been undone since, so place the item by the remembered order;
+  // otherwise clamp the captured index so the browser accepts it.
+  const order = siblingOrders.get(snapshot.parentId);
+  const orderedIndex =
+    snapshot.id && order
+      ? findRestoreIndex(
+          order,
+          snapshot.id,
+          new Map(siblings.map((sibling, position) => [sibling.id, position])),
+        )
       : undefined;
+  const index =
+    orderedIndex ??
+    (typeof snapshot.node.index === 'number'
+      ? Math.min(snapshot.node.index, siblings.length)
+      : undefined);
 
   let restoredRoot: Browser.bookmarks.BookmarkTreeNode | undefined;
   const restoredMetadata: StoredBookmarkMetadataById = {};
@@ -298,6 +340,14 @@ export async function restoreBookmarkDeletion(
       error instanceof Error ? error.message : 'Failed to restore bookmark deletion.',
       'restore-failed',
     );
+  }
+
+  if (snapshot.id) {
+    // Later restores treat the recreated item as the one it replaces.
+    restorableDeletions.delete(snapshot.id);
+    const siblingOrder = siblingOrders.get(snapshot.parentId);
+    const position = siblingOrder?.indexOf(snapshot.id) ?? -1;
+    if (siblingOrder && position >= 0) siblingOrder[position] = restoredRoot.id;
   }
 
   if (Object.keys(restoredMetadata).length > 0) {

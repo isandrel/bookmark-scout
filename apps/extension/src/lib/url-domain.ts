@@ -93,6 +93,29 @@ export function hostnameMatchesDomain(hostname: string, domain: string): boolean
 }
 
 const SCRIPT_URL_SCHEMES = new Set(['javascript', 'vbscript']);
+// data: documents a browser renders as a page, where embedded script can run.
+const ACTIVE_DATA_MIME_TYPES = new Set([
+  'text/html',
+  'application/xhtml+xml',
+  'image/svg+xml',
+  'text/xml',
+  'application/xml',
+]);
+
+/** Lowercased URL as the browser reads its scheme: leading controls and tabs/newlines removed. */
+function normalizeForScheme(url: string): string {
+  let start = 0;
+  while (start < url.length && url.charCodeAt(start) <= 0x20) start += 1;
+  return url
+    .slice(start)
+    .replace(/[\t\n\r]/g, '')
+    .toLowerCase();
+}
+
+function getScheme(normalized: string): string {
+  const colon = normalized.indexOf(':');
+  return colon > 0 ? normalized.slice(0, colon) : '';
+}
 
 /**
  * Whether a URL runs script when opened (bookmarklets). The manager neither saves nor opens
@@ -100,13 +123,27 @@ const SCRIPT_URL_SCHEMES = new Set(['javascript', 'vbscript']);
  */
 export function isScriptUrl(url: string | undefined): boolean {
   if (!url) return false;
-  // Browsers ignore leading whitespace/control characters and tabs or newlines in the scheme.
-  let start = 0;
-  while (start < url.length && url.charCodeAt(start) <= 0x20) start += 1;
-  const normalized = url
-    .slice(start)
-    .replace(/[\t\n\r]/g, '')
-    .toLowerCase();
-  const colon = normalized.indexOf(':');
-  return colon > 0 && SCRIPT_URL_SCHEMES.has(normalized.slice(0, colon));
+  return SCRIPT_URL_SCHEMES.has(getScheme(normalizeForScheme(url)));
+}
+
+export type BlockedEditUrl = {
+  kind: 'script' | 'data-document';
+  /** What was matched, for the message, e.g. "vbscript:" or "data:text/html". */
+  prefix: string;
+};
+
+/**
+ * Why the manager refuses to save a newly entered URL, or null when it may be saved: script
+ * URLs, and data: URLs that open as a web page (HTML, XHTML, SVG, XML) and can run script.
+ */
+export function getBlockedEditUrl(url: string): BlockedEditUrl | null {
+  const normalized = normalizeForScheme(url);
+  const scheme = getScheme(normalized);
+  if (SCRIPT_URL_SCHEMES.has(scheme)) return { kind: 'script', prefix: `${scheme}:` };
+  if (scheme !== 'data') return null;
+  const header = normalized.slice('data:'.length).split(',', 1)[0] ?? '';
+  const mimeType = header.split(';', 1)[0]?.trim() ?? '';
+  return ACTIVE_DATA_MIME_TYPES.has(mimeType)
+    ? { kind: 'data-document', prefix: `data:${mimeType}` }
+    : null;
 }

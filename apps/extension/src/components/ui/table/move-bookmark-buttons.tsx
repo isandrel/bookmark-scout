@@ -5,6 +5,8 @@ type MoveDirection = 'up' | 'down' | 'top' | 'bottom';
 
 interface MoveBookmarkButtonsProps {
   onMove: (direction: MoveDirection) => Promise<void>;
+  /** The item's position in its folder; moves past either end are disabled. */
+  position?: { index: number; siblingCount: number };
 }
 
 type MoveButtonConfig = {
@@ -26,7 +28,7 @@ const moveButtons: MoveButtonConfig[] = [
  */
 export const MoveDisabledReasonContext = createContext<string | null>(null);
 
-export function MoveBookmarkButtons({ onMove }: MoveBookmarkButtonsProps) {
+export function MoveBookmarkButtons({ onMove, position }: MoveBookmarkButtonsProps) {
   const disabledReason = useContext(MoveDisabledReasonContext);
   const { toast } = useToast();
 
@@ -46,7 +48,11 @@ export function MoveBookmarkButtons({ onMove }: MoveBookmarkButtonsProps) {
           variant="outline"
           size="icon"
           className="h-8 w-8 p-0"
-          disabled={disabledReason !== null}
+          disabled={
+            disabledReason !== null ||
+            (position !== undefined &&
+              !canMoveWithinFolder(direction, position.index, position.siblingCount))
+          }
           aria-label={t(labelKey)}
           aria-description={disabledReason ?? undefined}
           title={disabledReason ?? t(labelKey)}
