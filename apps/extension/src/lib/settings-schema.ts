@@ -225,8 +225,9 @@ const duplicateKeepRuleSchema = z.enum(['oldest', 'newest', 'first']);
 /** Browser popups are capped at 800x600, so larger stored values are clamped. */
 export const POPUP_MAX_WIDTH = 800;
 export const POPUP_MAX_HEIGHT = 600;
-const clampedNumber = (max: number) => (value: unknown) =>
-  typeof value === 'number' && value > max ? max : value;
+/** Out-of-range sizes snap to the nearest limit instead of resetting to the default. */
+const clampedNumber = (min: number, max: number) => (value: unknown) =>
+  typeof value === 'number' && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : value;
 const limitOrUnlimited = (max: number) =>
   z
     .number()
@@ -254,10 +255,10 @@ export const settingsSchema = z.object({
   recentFoldersEnabled: z.boolean().default(config.behavior.recent_folders_enabled),
 
   popupWidth: z
-    .preprocess(clampedNumber(POPUP_MAX_WIDTH), z.number().min(300).max(POPUP_MAX_WIDTH))
+    .preprocess(clampedNumber(300, POPUP_MAX_WIDTH), z.number().min(300).max(POPUP_MAX_WIDTH))
     .default(config.advanced.popup_width),
   popupHeight: z
-    .preprocess(clampedNumber(POPUP_MAX_HEIGHT), z.number().min(300).max(POPUP_MAX_HEIGHT))
+    .preprocess(clampedNumber(300, POPUP_MAX_HEIGHT), z.number().min(300).max(POPUP_MAX_HEIGHT))
     .default(config.advanced.popup_height),
   truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
   toastDurationMs: z.number().min(2000).max(10000).default(config.advanced.toast_duration_ms),

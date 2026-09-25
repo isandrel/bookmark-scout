@@ -147,6 +147,10 @@
         "message": "フォルダ名を入力...",
         "description": "New folder input placeholder"
     },
+    "popup_newFolderNameLabel": {
+        "message": "新しいフォルダ名",
+        "description": "Accessible name of the new folder name input"
+    },
     "state_noBookmarksFound": {
         "message": "ブックマークが見つかりません",
         "description": "Empty state when search has no results"

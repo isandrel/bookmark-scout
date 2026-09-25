@@ -14,8 +14,17 @@ import '@/styles/popup.scss';
 
 type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };
 
+function focusFolderRow(folderId: string | undefined): void {
+  if (!folderId) return;
+  document
+    .querySelector<HTMLElement>(`[data-folder-trigger="${CSS.escape(folderId)}"]`)
+    ?.focus();
+}
+
 function PopupPage() {
   const inputRef = useRef<HTMLInputElement>(null);
+  // The control that opened a dialog or the new-folder input, to get focus back afterwards.
+  const focusReturnRef = useRef<{ opener: HTMLElement | null; folderId?: string } | null>(null);
   const { toast } = useToast();
   const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
   const [pendingDeletion, setPendingDeletion] = useState<PendingDeletion | null>(null);
@@ -29,7 +38,6 @@ function PopupPage() {
     query,
     debouncedQuery: activeQuery,
     expandedFolders,
-    forceExpandAll,
     draggedItem,
     creatingFolderId,
     newFolderName,
@@ -37,7 +45,8 @@ function PopupPage() {
     setQuery,
     setDebouncedQuery,
     setExpandedFolders,
-    setForceExpandAll,
+    setSearchExpansion,
+    addingToFolderIds,
     setDraggedItem,
     setCreatingFolderId,
     setNewFolderName,
@@ -176,6 +185,7 @@ function PopupPage() {
       successNote?: (result: BookmarkOperationResult) => string | undefined,
     ) => {
       const result = await operation();
+      if (result.silent) return false;
       if (result.skipped) {
         toast({ title: t('toast_nothingChanged'), description: result.message });
         return false;
@@ -298,22 +308,60 @@ function PopupPage() {
     [],
   );
 
+  const rememberFocus = useCallback((folderId: string | undefined) => {
+    const active = document.activeElement;
+    focusReturnRef.current = {
+      opener: active instanceof HTMLElement && active !== document.body ? active : null,
+      folderId,
+    };
+  }, []);
+
+  /**
+   * Return focus to the control that opened a dialog or input, or to its folder row when that
+   * control is gone (e.g. the deleted row). Focus the user already moved elsewhere is kept.
+   */
+  const restoreFocus = useCallback((force = false) => {
+    const target = focusReturnRef.current;
+    if (!target) return;
+    const active = document.activeElement;
+    if (!force && active && active !== document.body && active.isConnected) return;
+    if (target.opener?.isConnected) {
+      target.opener.focus();
+    } else {
+      focusFolderRow(target.folderId);
+    }
+  }, []);
+
+  /** Runs after React has rendered the tree change, so removed rows are really gone. */
+  const restoreFocusAfterRender = useCallback(() => {
+    requestAnimationFrame(() => restoreFocus());
+  }, [restoreFocus]);
+
   const handleAddFolder = useCallback(
     (folderId: string) => {
+      rememberFocus(folderId);
       setCreatingFolderId(folderId);
       // Prefilled and selected, so typing replaces it and Enter accepts the default.
       setNewFolderName(defaultNewFolderName);
       setExpandedFolders((prev) => [...new Set([...prev, folderId])]);
     },
-    [defaultNewFolderName, setCreatingFolderId, setNewFolderName, setExpandedFolders],
+    [
+      defaultNewFolderName,
+      rememberFocus,
+      setCreatingFolderId,
+      setNewFolderName,
+      setExpandedFolders,
+    ],
   );
 
   const handleCreateFolder = useCallback(async () => {
     if (!creatingFolderId || !newFolderName.trim()) {
       setCreatingFolderId(null);
       setNewFolderName('');
+      restoreFocusAfterRender();
       return;
     }
+    // The store ignores a second submit of the same folder while the first is still saving.
     await withToast(
       () => createFolder(creatingFolderId, newFolderName),
       t('toast_folderCreated'),
@@ -321,10 +369,12 @@ function PopupPage() {
     );
     setCreatingFolderId(null);
     setNewFolderName('');
+    restoreFocusAfterRender();
   }, [
     creatingFolderId,
     newFolderName,
     createFolder,
+    restoreFocusAfterRender,
     setCreatingFolderId,
     setNewFolderName,
     withToast,
@@ -333,7 +383,8 @@ function PopupPage() {
   const handleCancelCreateFolder = useCallback(() => {
     setCreatingFolderId(null);
     setNewFolderName('');
-  }, [setCreatingFolderId, setNewFolderName]);
+    restoreFocusAfterRender();
+  }, [restoreFocusAfterRender, setCreatingFolderId, setNewFolderName]);
 
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
@@ -365,6 +416,8 @@ function PopupPage() {
       }
 
       const result = type === 'folder' ? await removeFolder(id) : await removeBookmark(id);
+      // The deleted row took the focused delete button with it; move focus to its folder.
+      restoreFocusAfterRender();
       if (!result.success) {
         toast({
           title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
@@ -375,7 +428,7 @@ function PopupPage() {
       }
 
       let undoUsed = false;
-      const deletedTitle = snapshot.node.title || t('popup_untitled');
+      const deletedTitle = getBookmarkDisplayTitle(snapshot.node.title);
       // Each deletion owns its toast and snapshot, so undoing one never affects another.
       const undoToast = toast({
         title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
@@ -424,11 +477,12 @@ function PopupPage() {
       // when the snapshot expires so it never offers an Undo that can only fail.
       setTimeout(undoToast.dismiss, Math.max(0, snapshot.expiresAt - Date.now()));
     },
-    [removeBookmark, removeFolder, toast],
+    [removeBookmark, removeFolder, restoreFocusAfterRender, toast],
   );
 
   const handleDeleteRequest = useCallback(
     async (node: BookmarkTreeNode, type: PendingDeletion['type']) => {
+      rememberFocus(node.parentId);
       const deletion = { id: node.id, title: node.title, type };
       const { confirmBeforeDelete } = await getSettings();
       if (confirmBeforeDelete) {
@@ -437,8 +491,12 @@ function PopupPage() {
         await deleteItem(deletion);
       }
     },
-    [deleteItem],
+    [deleteItem, rememberFocus],
   );
+
+  const pendingDeletionTitle = pendingDeletion
+    ? getBookmarkDisplayTitle(pendingDeletion.title)
+    : '';
 
   const confirmDeletion = useCallback(async () => {
     if (!pendingDeletion) return;
@@ -466,6 +524,12 @@ function PopupPage() {
     () => (isSearchLimited ? limitSearchResults(sortedFolders, maxSearchResults) : sortedFolders),
     [isSearchLimited, maxSearchResults, sortedFolders],
   );
+  // The search toggle reflects what is on screen, whether the user or the search opened it.
+  const allResultsExpanded = useMemo(() => {
+    const expanded = new Set(expandedFolders);
+    const folderIds = getAllFolderIds(getTopLevelBookmarkNodes(filteredFolders));
+    return folderIds.length > 0 && folderIds.every((id) => expanded.has(id));
+  }, [expandedFolders, filteredFolders]);
 
   if (error) {
     return (
@@ -484,8 +548,8 @@ function PopupPage() {
         <BookmarkSearch
           query={query}
           onQueryChange={setQuery}
-          forceExpandAll={forceExpandAll}
-          onToggleExpandAll={() => setForceExpandAll(!forceExpandAll)}
+          allExpanded={allResultsExpanded}
+          onToggleExpandAll={() => setSearchExpansion(allResultsExpanded ? 'collapse' : 'expand')}
           inputRef={inputRef}
           isAIEnabled={aiEnabled}
           isAILoading={aiLoading}
@@ -501,6 +565,7 @@ function PopupPage() {
         {!recentFoldersLoading && recentFoldersEnabled && (
           <RecentFoldersPanel
             maxFolders={recentFoldersMax}
+            pendingFolderIds={addingToFolderIds}
             onAddToFolder={async (folderId) => {
             const success = await withToast(
               () => addBookmarkToFolder(folderId),
@@ -610,6 +675,7 @@ function PopupPage() {
                     creatingFolderId={creatingFolderId}
                     newFolderName={newFolderName}
                     folders={folders}
+                    addingToFolderIds={addingToFolderIds}
                     favicon={favicon}
                     onDragStart={setDraggedItem}
                     onDragEnd={() => setDraggedItem(null)}
@@ -649,7 +715,14 @@ function PopupPage() {
           if (!open) setPendingDeletion(null);
         }}
       >
-        <DialogContent className="max-w-[calc(100%-2rem)]">
+        <DialogContent
+          className="max-w-[calc(100%-2rem)]"
+          onCloseAutoFocus={(event) => {
+            // The dialog opens from code, so Radix has no trigger to return focus to.
+            event.preventDefault();
+            restoreFocus(true);
+          }}
+        >
           <DialogHeader>
             <DialogTitle>
               {pendingDeletion?.type === 'folder'
@@ -658,8 +731,8 @@ function PopupPage() {
             </DialogTitle>
             <DialogDescription>
               {pendingDeletion?.type === 'folder'
-                ? t('popup_confirmDeleteFolder', pendingDeletion?.title ?? '')
-                : t('popup_confirmDeleteBookmark', pendingDeletion?.title ?? '')}
+                ? t('popup_confirmDeleteFolder', pendingDeletionTitle)
+                : t('popup_confirmDeleteBookmark', pendingDeletionTitle)}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2">
