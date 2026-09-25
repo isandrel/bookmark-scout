@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { BookmarkTreeNode } from '@/types';
 
 const live = vi.hoisted(() => ({
-  nodes: new Map<string, { id: string; url?: string; parentId: string }>(),
+  nodes: new Map<string, { id: string; url?: string; title?: string; parentId: string }>(),
   deleted: [] as string[],
   failDelete: new Set<string>(),
   restored: [] as string[],
@@ -168,7 +168,9 @@ describe('duplicate removal', () => {
   ];
 
   beforeEach(() => {
-    live.nodes = new Map(items.map((item) => [item.id, { ...item, parentId: 'root' }]));
+    live.nodes = new Map(
+      items.map((item) => [item.id, { title: item.id, ...item, parentId: 'root' }]),
+    );
     live.deleted = [];
     live.failDelete = new Set();
     live.restored = [];
@@ -176,7 +178,7 @@ describe('duplicate removal', () => {
 
   it('deletes exactly the previewed extras and never the kept items', async () => {
     const result = scanDuplicateBookmarks(folder(items), { ...normalized, keepRule: 'newest' });
-    const outcome = await removeDuplicateExtras(result.groups);
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
     expect(live.deleted.sort()).toEqual(['1', '2', '4']);
     expect(outcome).toMatchObject({ removed: 3, skipped: 0, failed: 0 });
     expect([...live.nodes.keys()].sort()).toEqual(['3', '5']);
@@ -187,21 +189,66 @@ describe('duplicate removal', () => {
     live.nodes.delete('2');
     live.failDelete.add('3');
     live.nodes.delete('4');
-    const outcome = await removeDuplicateExtras(result.groups);
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
     expect(outcome).toMatchObject({ removed: 0, skipped: 2, failed: 1 });
     expect(live.nodes.has('5')).toBe(true);
     expect(live.deleted).toEqual([]);
 
     live.nodes.set('3', { id: '3', url: 'https://example.com/changed', parentId: 'root' });
     live.failDelete.clear();
-    const second = await removeDuplicateExtras(result.groups);
+    const second = await removeDuplicateExtras(result.groups, result.match);
     expect(second.skipped).toBe(3);
+    expect(live.deleted).toEqual([]);
+  });
+
+  it('skips a group whose kept bookmark now points to a different URL', async () => {
+    const result = scanDuplicateBookmarks(folder(items), { ...normalized, keepRule: 'oldest' });
+    live.nodes.set('1', { id: '1', title: '1', url: 'https://example.com/moved', parentId: 'root' });
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
+    expect(outcome).toMatchObject({ removed: 1, skipped: 2, skippedGroups: 1, failed: 0 });
+    expect(live.deleted).toEqual(['5']);
+    expect([...live.nodes.values()].filter((node) => node.url === 'https://example.com/a'))
+      .toHaveLength(2);
+  });
+
+  it('keeps a group whose keeper still matches after a cosmetic URL change', async () => {
+    const result = scanDuplicateBookmarks(folder(items), { ...normalized, keepRule: 'oldest' });
+    live.nodes.set('1', { id: '1', title: '1', url: 'http://www.example.com/a/', parentId: 'root' });
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
+    expect(outcome).toMatchObject({ removed: 3, skipped: 0, skippedGroups: 0 });
+    expect(live.nodes.has('1')).toBe(true);
+  });
+
+  it('re-checks titles for title-based strategies', async () => {
+    const titled: Seed[] = [
+      { id: '1', url: 'https://example.com/a', title: 'Docs', dateAdded: 1 },
+      { id: '2', url: 'https://example.com/a', title: 'Docs', dateAdded: 2 },
+      { id: '3', url: 'https://other.example/', title: 'Home', dateAdded: 1 },
+      { id: '4', url: 'https://another.example/', title: 'Home', dateAdded: 2 },
+    ];
+    live.nodes = new Map(titled.map((item) => [item.id, { ...item, parentId: 'root' }]));
+    const byTitleUrl = scanDuplicateBookmarks(folder(titled), {
+      ...normalized,
+      strategy: 'title_url',
+    });
+    live.nodes.set('2', { id: '2', title: 'Renamed', url: 'https://example.com/a', parentId: 'root' });
+    await expect(removeDuplicateExtras(byTitleUrl.groups, byTitleUrl.match)).resolves.toMatchObject({
+      removed: 0,
+      skipped: 1,
+      skippedGroups: 0,
+    });
+
+    const byTitle = scanDuplicateBookmarks(folder(titled), { ...normalized, strategy: 'title_only' });
+    live.nodes.set('3', { id: '3', title: 'Start', url: 'https://other.example/', parentId: 'root' });
+    const outcome = await removeDuplicateExtras(byTitle.groups, byTitle.match);
+    expect(outcome.skippedGroups).toBe(1);
+    expect(live.nodes.has('4')).toBe(true);
     expect(live.deleted).toEqual([]);
   });
 
   it('restores removed extras in reverse deletion order', async () => {
     const result = scanDuplicateBookmarks(folder(items), normalized);
-    const outcome = await removeDuplicateExtras(result.groups);
+    const outcome = await removeDuplicateExtras(result.groups, result.match);
     await expect(restoreDuplicateExtras(outcome.snapshots)).resolves.toEqual({
       restored: 3,
       failed: 0,

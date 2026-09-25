@@ -3119,6 +3119,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "復元: $restored$ 件。復元できませんでした: $failed$ 件。",
         "description": "Duplicate removal undo result",

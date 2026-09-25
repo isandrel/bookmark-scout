@@ -3119,6 +3119,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "$count$ groups were left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "$count$ group was left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "Restored: $restored$. Could not restore: $failed$.",
         "description": "Duplicate removal undo result",

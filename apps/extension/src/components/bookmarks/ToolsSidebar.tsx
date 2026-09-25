@@ -229,16 +229,23 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setDuplicateRemoving(true);
     try {
-      const outcome = await removeDuplicateExtras(duplicateResult.groups);
+      const outcome = await removeDuplicateExtras(duplicateResult.groups, duplicateResult.match);
       await refresh();
       const complete = outcome.skipped === 0 && outcome.failed === 0;
       const description = complete
         ? tPlural('toast_duplicatesRemovedDesc', outcome.removed)
-        : t('toast_duplicatesPartialDesc', [
-            String(outcome.removed),
-            String(outcome.skipped),
-            String(outcome.failed),
-          ]);
+        : [
+            t('toast_duplicatesPartialDesc', [
+              String(outcome.removed),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+            outcome.skippedGroups > 0
+              ? tPlural('toast_duplicatesSkippedGroupsDesc', outcome.skippedGroups)
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' ');
       // One undo per removal, whether triggered from the toast or the dialog notice.
       let undoUsed = false;
       const undo = () => {
