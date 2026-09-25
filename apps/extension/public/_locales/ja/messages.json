@@ -3450,5 +3450,9 @@
     "bookmarks_bulkPreviewMore": {
         "message": "ほか $1 件",
         "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "テーブルが狭い間はタイトルを表示するため非表示になります",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }

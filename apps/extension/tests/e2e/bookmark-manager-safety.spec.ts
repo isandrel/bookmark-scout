@@ -530,3 +530,80 @@ test('Back returns to the table page that was open', async ({
   await page.goForward();
   await expect(page.getByText('Page 1 of 1')).toBeVisible();
 });
+
+test('Title stays visible with the Tools sidebar open at 1400 wide', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Tools Title', [
+    {
+      title: 'Tools Title Row With A Fairly Long Name',
+      url: 'https://www.example.com/a/rather/long/path?with=query&and=more',
+    },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.folderId));
+  const header = (name: string) => page.locator('thead th').filter({ hasText: name });
+  await expect(header('Folder Path')).toHaveCount(1);
+  await expect(header('URL')).toHaveCount(1);
+
+  await page.getByTitle('Show tools').click();
+  await expect(page.getByTestId('tools-sidebar')).not.toHaveAttribute('inert', '');
+  await expect(header('Folder Path')).toHaveCount(0);
+  await expect(header('URL')).toHaveCount(0);
+  const layout = await page.locator('table').evaluate((table) => {
+    const frame = (table.parentElement as HTMLElement).getBoundingClientRect();
+    const right = (name: string) =>
+      [...table.querySelectorAll('thead th')]
+        .find((th) => th.textContent?.includes(name))
+        ?.getBoundingClientRect().right ?? Number.POSITIVE_INFINITY;
+    return { frameRight: frame.right, title: right('Title'), dateAdded: right('Date Added') };
+  });
+  expect(layout.title).toBeLessThanOrEqual(layout.frameRight);
+  expect(layout.dateAdded).toBeLessThanOrEqual(layout.frameRight);
+  await expect(row(page, 'Tools Title Row With A Fairly Long Name')).toBeVisible();
+
+  // The View menu explains why the columns are off instead of offering a toggle that does nothing.
+  await page.getByRole('button', { name: 'Customize table view' }).click();
+  const folderPathItem = page.getByRole('menuitemcheckbox', { name: 'Folder Path' });
+  await expect(folderPathItem).toHaveAttribute('aria-disabled', 'true');
+  await expect(folderPathItem).toHaveAttribute(
+    'title',
+    'Hidden while the table is narrow so Title stays visible',
+  );
+  await page.keyboard.press('Escape');
+
+  // Closing the sidebar brings the saved columns back.
+  await page.getByTitle('Hide tools').click();
+  await expect(header('Folder Path')).toHaveCount(1);
+  await expect(header('URL')).toHaveCount(1);
+});
+
+for (const language of ['ja', 'ko'] as const) {
+  test(`Date Added uses the ${language} date format`, async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    await updateSettings(extensionWorker, { language });
+    const seeded = await seedFolder(extensionWorker, `E2E Date ${language}`, [
+      { title: `Dated ${language}`, url: 'https://example.com/dated' },
+    ]);
+    const dateAdded = await extensionWorker.evaluate(
+      async (id) => (await chrome.bookmarks.get(id))[0].dateAdded ?? 0,
+      seeded.ids[`Dated ${language}`],
+    );
+    await page.goto(managerUrl(extensionId, seeded.folderId));
+    const expected = await page.evaluate(
+      ({ value, locale }) => new Date(value).toLocaleString(locale),
+      { value: dateAdded, locale: language },
+    );
+    const english = await page.evaluate(
+      (value) => new Date(value).toLocaleString('en-US'),
+      dateAdded,
+    );
+    expect(expected).not.toBe(english);
+    await expect(row(page, `Dated ${language}`)).toContainText(expected);
+    await expect(row(page, `Dated ${language}`)).not.toContainText(english);
+  });
+}
