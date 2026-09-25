@@ -6,10 +6,43 @@
 import { Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+export type AIProviderPanelField = 'apiKey' | 'baseUrl' | 'customModel' | 'extraHeaders';
+
+/** The panel fields shown for `provider`, with the text settings search matches against. */
+export function getAIProviderPanelFields(
+  provider: AIProvider,
+): { field: AIProviderPanelField; text: string[] }[] {
+  const fields: { field: AIProviderPanelField; text: string[] }[] = [
+    {
+      field: 'apiKey',
+      text: [
+        t('options_apiKey'),
+        providerRequiresApiKey(provider)
+          ? t('options_apiKeyDescription')
+          : t('options_apiKeyOptionalDescription', getLocalizedProviderName(provider)),
+      ],
+    },
+    { field: 'baseUrl', text: [t('options_baseUrl'), t('options_baseUrlDescription')] },
+    {
+      field: 'customModel',
+      text: [t('options_customModel'), t('options_customModelDescription')],
+    },
+    {
+      field: 'extraHeaders',
+      text: [t('options_extraHeaders'), t('options_extraHeadersDescription')],
+    },
+  ];
+  return fields.filter(
+    ({ field }) => field !== 'customModel' || providerSupportsCustomModel(provider),
+  );
+}
+
 type AIProviderPanelProps = {
   provider: AIProvider;
   model: string;
   onModelsDetected: (provider: AIProvider, modelIds: string[]) => void;
+  /** Limits the panel to these fields, e.g. settings search matches. Defaults to every field. */
+  visibleFields?: AIProviderPanelField[];
 };
 
 type ProviderFieldErrors = {
@@ -18,7 +51,12 @@ type ProviderFieldErrors = {
   extraHeaders?: string;
 };
 
-export function AIProviderPanel({ provider, model, onModelsDetected }: AIProviderPanelProps) {
+export function AIProviderPanel({
+  provider,
+  model,
+  onModelsDetected,
+  visibleFields,
+}: AIProviderPanelProps) {
   const { toast } = useToast();
   const providerConfig = getProviderConfig(provider);
   const providerName = getLocalizedProviderName(provider);
@@ -85,7 +123,7 @@ export function AIProviderPanel({ provider, model, onModelsDetected }: AIProvide
     return true;
   };
 
-  /** Persist Base URL, custom model, and headers; never touches the API key. */
+  /** Persist the valid ones of Base URL, custom model, and headers; never touches the API key. */
   const saveOverrides = async (): Promise<boolean> => {
     const trimmedBaseUrl = baseUrl.trim();
     const baseUrlError =
@@ -100,14 +138,13 @@ export function AIProviderPanel({ provider, model, onModelsDetected }: AIProvide
       baseUrl: baseUrlError,
       extraHeaders: headersError,
     }));
-    if (baseUrlError || headersError) return false;
-
+    // Save every valid field; an invalid one keeps its stored value and never blocks the rest.
     await saveStoredAIProviderConfig(provider, {
-      baseUrl: trimmedBaseUrl,
       customModel: customModel.trim(),
-      extraHeaders: extraHeaders.trim(),
+      ...(baseUrlError ? {} : { baseUrl: trimmedBaseUrl }),
+      ...(headersError ? {} : { extraHeaders: extraHeaders.trim() }),
     });
-    return true;
+    return !baseUrlError && !headersError;
   };
 
   const prepareRequest = async (): Promise<AISettings | null> => {
@@ -176,6 +213,11 @@ export function AIProviderPanel({ provider, model, onModelsDetected }: AIProvide
     ? t('options_apiKeyDescription')
     : t('options_apiKeyOptionalDescription', providerName);
 
+  const isVisible = (field: AIProviderPanelField) =>
+    !visibleFields || visibleFields.includes(field);
+  const showEndpointFields =
+    isVisible('baseUrl') || isVisible('customModel') || isVisible('extraHeaders');
+
   const fieldError = (id: string, message?: string) =>
     message ? (
       <p id={id} role="alert" className="text-sm text-destructive">
@@ -185,122 +227,141 @@ export function AIProviderPanel({ provider, model, onModelsDetected }: AIProvide
 
   return (
     <>
-      <div className="flex flex-col gap-3 rounded-lg border border-transparent bg-card p-4 transition-colors hover:border-border hover:bg-accent/50 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0 flex-1 space-y-1 sm:pr-4">
-          <Label htmlFor="ai-api-key" className="text-base font-medium">
-            {t('options_apiKey')}
-          </Label>
-          <p id="ai-api-key-description" className="text-sm text-muted-foreground">
-            {apiKeyDescription}
-          </p>
-          {fieldError('ai-api-key-error', errors.apiKey)}
-        </div>
-        <div className="relative w-full sm:w-[240px]">
-          <Input
-            id="ai-api-key"
-            type={showApiKey ? 'text' : 'password'}
-            autoComplete="off"
-            value={apiKey}
-            onChange={(event) => setApiKey(event.target.value)}
-            onBlur={() => void saveApiKey()}
-            aria-describedby={
-              errors.apiKey ? 'ai-api-key-description ai-api-key-error' : 'ai-api-key-description'
-            }
-            aria-invalid={Boolean(errors.apiKey)}
-            placeholder={providerConfig?.api_key_placeholder || 'sk-...'}
-            className="pr-8"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="absolute right-0 top-0 h-full w-8"
-            onClick={() => setShowApiKey(!showApiKey)}
-            aria-label={showApiKey ? t('options_hideApiKey') : t('options_showApiKey')}
-            aria-pressed={showApiKey}
-          >
-            {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </Button>
-        </div>
-      </div>
-
-      <div className="space-y-3 rounded-lg border border-transparent bg-card p-4 hover:border-border">
-        <div className="space-y-1">
-          <Label htmlFor="ai-base-url" className="text-base font-medium">
-            {t('options_baseUrl')}
-          </Label>
-          <p id="ai-base-url-description" className="text-sm text-muted-foreground">
-            {t('options_baseUrlDescription')}
-          </p>
-          {fieldError('ai-base-url-error', errors.baseUrl)}
-        </div>
-        <Input
-          id="ai-base-url"
-          type="url"
-          value={baseUrl}
-          onChange={(event) => setBaseUrl(event.target.value)}
-          onBlur={() => void saveOverrides()}
-          aria-describedby={
-            errors.baseUrl ? 'ai-base-url-description ai-base-url-error' : 'ai-base-url-description'
-          }
-          aria-invalid={Boolean(errors.baseUrl)}
-          placeholder={providerConfig?.base_url || 'https://api.example.com/v1'}
-        />
-
-        {providerSupportsCustomModel(provider) && (
-          <>
-            <div className="space-y-1">
-              <Label htmlFor="ai-custom-model" className="text-base font-medium">
-                {t('options_customModel')}
-              </Label>
-              <p id="ai-custom-model-description" className="text-sm text-muted-foreground">
-                {t('options_customModelDescription')}
-              </p>
-            </div>
+      {isVisible('apiKey') && (
+        <div className="flex flex-col gap-3 rounded-lg border border-transparent bg-card p-4 transition-colors hover:border-border hover:bg-accent/50 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1 space-y-1 sm:pr-4">
+            <Label htmlFor="ai-api-key" className="text-base font-medium">
+              {t('options_apiKey')}
+            </Label>
+            <p id="ai-api-key-description" className="text-sm text-muted-foreground">
+              {apiKeyDescription}
+            </p>
+            {fieldError('ai-api-key-error', errors.apiKey)}
+          </div>
+          <div className="relative w-full sm:w-[240px]">
             <Input
-              id="ai-custom-model"
-              value={customModel}
-              onChange={(event) => setCustomModel(event.target.value)}
-              onBlur={() => void saveOverrides()}
-              aria-describedby="ai-custom-model-description"
-              placeholder="gpt-4o-mini"
+              id="ai-api-key"
+              type={showApiKey ? 'text' : 'password'}
+              autoComplete="off"
+              value={apiKey}
+              onChange={(event) => setApiKey(event.target.value)}
+              onBlur={() => void saveApiKey()}
+              aria-describedby={
+                errors.apiKey ? 'ai-api-key-description ai-api-key-error' : 'ai-api-key-description'
+              }
+              aria-invalid={Boolean(errors.apiKey)}
+              placeholder={providerConfig?.api_key_placeholder || 'sk-...'}
+              className="pr-8"
             />
-          </>
-        )}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="absolute right-0 top-0 h-full w-8"
+              onClick={() => setShowApiKey(!showApiKey)}
+              aria-label={showApiKey ? t('options_hideApiKey') : t('options_showApiKey')}
+              aria-pressed={showApiKey}
+            >
+              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+          </div>
+        </div>
+      )}
 
-        <div className="space-y-1">
-          <Label htmlFor="ai-extra-headers" className="text-base font-medium">
-            {t('options_extraHeaders')}
-          </Label>
-          <p id="ai-extra-headers-description" className="text-sm text-muted-foreground">
-            {t('options_extraHeadersDescription')}
-          </p>
-          {fieldError('ai-extra-headers-error', errors.extraHeaders)}
+      {showEndpointFields && (
+        <div className="space-y-3 rounded-lg border border-transparent bg-card p-4 hover:border-border">
+          {isVisible('baseUrl') && (
+            <>
+              <div className="space-y-1">
+                <Label htmlFor="ai-base-url" className="text-base font-medium">
+                  {t('options_baseUrl')}
+                </Label>
+                <p id="ai-base-url-description" className="text-sm text-muted-foreground">
+                  {t('options_baseUrlDescription')}
+                </p>
+                {fieldError('ai-base-url-error', errors.baseUrl)}
+              </div>
+              <Input
+                id="ai-base-url"
+                type="url"
+                value={baseUrl}
+                onChange={(event) => setBaseUrl(event.target.value)}
+                onBlur={() => void saveOverrides()}
+                aria-describedby={
+                  errors.baseUrl
+                    ? 'ai-base-url-description ai-base-url-error'
+                    : 'ai-base-url-description'
+                }
+                aria-invalid={Boolean(errors.baseUrl)}
+                placeholder={providerConfig?.base_url || 'https://api.example.com/v1'}
+              />
+            </>
+          )}
+
+          {providerSupportsCustomModel(provider) && isVisible('customModel') && (
+            <>
+              <div className="space-y-1">
+                <Label htmlFor="ai-custom-model" className="text-base font-medium">
+                  {t('options_customModel')}
+                </Label>
+                <p id="ai-custom-model-description" className="text-sm text-muted-foreground">
+                  {t('options_customModelDescription')}
+                </p>
+              </div>
+              <Input
+                id="ai-custom-model"
+                value={customModel}
+                onChange={(event) => setCustomModel(event.target.value)}
+                onBlur={() => void saveOverrides()}
+                aria-describedby="ai-custom-model-description"
+                placeholder="gpt-4o-mini"
+              />
+            </>
+          )}
+
+          {isVisible('extraHeaders') && (
+            <>
+              <div className="space-y-1">
+                <Label htmlFor="ai-extra-headers" className="text-base font-medium">
+                  {t('options_extraHeaders')}
+                </Label>
+                <p id="ai-extra-headers-description" className="text-sm text-muted-foreground">
+                  {t('options_extraHeadersDescription')}
+                </p>
+                {fieldError('ai-extra-headers-error', errors.extraHeaders)}
+              </div>
+              <Input
+                id="ai-extra-headers"
+                value={extraHeaders}
+                onChange={(event) => setExtraHeaders(event.target.value)}
+                onBlur={() => void saveOverrides()}
+                aria-describedby={
+                  errors.extraHeaders
+                    ? 'ai-extra-headers-description ai-extra-headers-error'
+                    : 'ai-extra-headers-description'
+                }
+                aria-invalid={Boolean(errors.extraHeaders)}
+                placeholder='{"HTTP-Referer":"https://example.com"}'
+              />
+            </>
+          )}
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" onClick={refreshModels} disabled={isDetecting}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              {isDetecting ? t('options_refreshingModels') : t('options_refreshModels')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={verifyConnection}
+              disabled={isVerifying}
+            >
+              <Wifi className="mr-2 h-4 w-4" />
+              {isVerifying ? t('options_verifyingService') : t('options_verifyService')}
+            </Button>
+          </div>
         </div>
-        <Input
-          id="ai-extra-headers"
-          value={extraHeaders}
-          onChange={(event) => setExtraHeaders(event.target.value)}
-          onBlur={() => void saveOverrides()}
-          aria-describedby={
-            errors.extraHeaders
-              ? 'ai-extra-headers-description ai-extra-headers-error'
-              : 'ai-extra-headers-description'
-          }
-          aria-invalid={Boolean(errors.extraHeaders)}
-          placeholder='{"HTTP-Referer":"https://example.com"}'
-        />
-        <div className="flex flex-wrap gap-2">
-          <Button type="button" variant="outline" onClick={refreshModels} disabled={isDetecting}>
-            <RefreshCw className="mr-2 h-4 w-4" />
-            {isDetecting ? t('options_refreshingModels') : t('options_refreshModels')}
-          </Button>
-          <Button type="button" variant="outline" onClick={verifyConnection} disabled={isVerifying}>
-            <Wifi className="mr-2 h-4 w-4" />
-            {isVerifying ? t('options_verifyingService') : t('options_verifyService')}
-          </Button>
-        </div>
-      </div>
+      )}
     </>
   );
 }

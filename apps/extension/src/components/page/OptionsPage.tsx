@@ -65,6 +65,8 @@ const OptionsPage: React.FC = () => {
   const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
   const [inputErrors, setInputErrors] = useState<SettingsFieldErrors>({});
   const [isSaving, setIsSaving] = useState(false);
+  // Bumped by Reset All so rows drop unsaved input text, such as an invalid list draft.
+  const [formVersion, setFormVersion] = useState(0);
   const [detectedModels, setDetectedModels] = useState<Partial<Record<AIProvider, string[]>>>({});
   const savedRef = useRef<Settings>(settings);
   const valuesRef = useRef<Settings>(values);
@@ -127,12 +129,26 @@ const OptionsPage: React.FC = () => {
     return () => clearTimeout(timeoutId);
   }, [values, isLoading, persist]);
 
-  // Do not drop an edit made just before the page is closed or reloaded.
+  // Do not drop an edit made just before the page is closed, reloaded, or hidden. The write must
+  // start synchronously: an async read first would not finish before the page unloads.
   useEffect(() => {
-    const flush = () => void persist(getChangedSettings(savedRef.current, valuesRef.current));
+    const flush = () => {
+      const changes = getChangedSettings(savedRef.current, valuesRef.current);
+      if (Object.keys(changes).length === 0) return;
+      const { settings: saved, saved: done } = saveValidSettingsNow(savedRef.current, changes);
+      savedRef.current = saved;
+      done.catch((error) => console.error('Failed to save settings on page hide:', error));
+    };
+    const flushWhenHidden = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
     window.addEventListener('pagehide', flush);
-    return () => window.removeEventListener('pagehide', flush);
-  }, [persist]);
+    document.addEventListener('visibilitychange', flushWhenHidden);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', flushWhenHidden);
+    };
+  }, []);
 
   const setFieldValue = useCallback((fieldKey: keyof Settings, value: SettingValue) => {
     setValues((current) => {
@@ -170,6 +186,7 @@ const OptionsPage: React.FC = () => {
       setValues(defaultSettings);
       setSaveErrors({});
       setInputErrors({});
+      setFormVersion((version) => version + 1);
       toast({
         title: `✓ ${t('toast_settingsReset')}`,
         description: t('toast_settingsResetDescription'),
@@ -252,8 +269,17 @@ const OptionsPage: React.FC = () => {
       ]),
     ) as Record<string, (keyof Settings)[]>;
   }, [categories, searchQuery]);
+  // The AI provider panel's fields are not synced settings, so they are matched separately.
+  const aiPanelMatches = useMemo(() => {
+    const needle = searchQuery.trim().toLowerCase();
+    if (!needle) return [];
+    return getAIProviderPanelFields(values.aiProvider)
+      .filter(({ text }) => text.some((item) => item.toLowerCase().includes(needle)))
+      .map(({ field }) => field);
+  }, [searchQuery, values.aiProvider]);
   const searchMatchCount = searchResults
-    ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0)
+    ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0) +
+      aiPanelMatches.length
     : 0;
 
   const modelOptions = (() => {
@@ -266,9 +292,23 @@ const OptionsPage: React.FC = () => {
         }));
   })();
 
+  const renderAIProviderPanel = (visibleFields?: AIProviderPanelField[]) => (
+    <AIProviderPanel
+      provider={values.aiProvider}
+      model={values.aiModel}
+      visibleFields={visibleFields}
+      onModelsDetected={(provider, modelIds) => {
+        setDetectedModels((current) => ({ ...current, [provider]: modelIds }));
+        if (!modelIds.includes(valuesRef.current.aiModel)) {
+          setFieldValue('aiModel', modelIds[0]);
+        }
+      }}
+    />
+  );
+
   const renderSettingsField = (fieldKey: keyof Settings) => (
     <SettingsFieldRow
-      key={fieldKey}
+      key={`${fieldKey}-${formVersion}`}
       fieldKey={fieldKey}
       value={values[fieldKey]}
       error={fieldErrors[fieldKey]}
@@ -370,7 +410,11 @@ const OptionsPage: React.FC = () => {
             >
               <TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
                 {Object.entries(categories).map(([key, category]) => {
-                  const count = searchResults?.[key]?.length;
+                  const matches = searchResults?.[key]?.length;
+                  const count =
+                    matches === undefined
+                      ? undefined
+                      : matches + (key === 'ai' ? aiPanelMatches.length : 0);
                   return (
                     <TabsTrigger
                       key={key}
@@ -400,11 +444,19 @@ const OptionsPage: React.FC = () => {
                     </div>
                   ) : (
                     Object.entries(searchResults)
-                      .filter(([, fields]) => fields.length > 0)
+                      .filter(
+                        ([categoryKey, fields]) =>
+                          fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches.length > 0),
+                      )
                       .map(([categoryKey, fields]) => (
                         <div key={categoryKey} data-search-category={categoryKey}>
                           {renderCategoryHeader(categoryKey, 'h2')}
-                          <div className="space-y-3">{fields.map(renderSettingsField)}</div>
+                          <div className="space-y-3">
+                            {fields.map(renderSettingsField)}
+                            {categoryKey === 'ai' &&
+                              aiPanelMatches.length > 0 &&
+                              renderAIProviderPanel(aiPanelMatches)}
+                          </div>
                         </div>
                       ))
                   )}
@@ -415,18 +467,7 @@ const OptionsPage: React.FC = () => {
                     {renderCategoryHeader(categoryKey)}
                     <div className="space-y-3">
                       {category.fields.map(renderSettingsField)}
-                      {categoryKey === 'ai' && (
-                        <AIProviderPanel
-                          provider={values.aiProvider}
-                          model={values.aiModel}
-                          onModelsDetected={(provider, modelIds) => {
-                            setDetectedModels((current) => ({ ...current, [provider]: modelIds }));
-                            if (!modelIds.includes(valuesRef.current.aiModel)) {
-                              setFieldValue('aiModel', modelIds[0]);
-                            }
-                          }}
-                        />
-                      )}
+                      {categoryKey === 'ai' && renderAIProviderPanel()}
                     </div>
                   </TabsContent>
                 ))
