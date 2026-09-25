@@ -81,8 +81,25 @@ export function DuplicateResultsView({
   notice?: string;
   onUndo?: () => void;
 }) {
+  // Title-only matching can group bookmarks that point to different pages; removing the
+  // extras would then delete those pages, so say so before the user confirms.
+  const mixedUrlKeys = new Set(
+    result?.match.strategy === 'title_only'
+      ? result.groups
+          .filter((group) => new Set(group.items.map((item) => item.node.url)).size > 1)
+          .map((group) => group.key)
+      : [],
+  );
   return (
     <div className="space-y-4">
+      {mixedUrlKeys.size > 0 ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200"
+        >
+          {tPlural('tools_duplicatesTitleOnlyWarning', mixedUrlKeys.size)}
+        </div>
+      ) : null}
       {notice ? (
         <div
           role="status"
@@ -102,6 +119,9 @@ export function DuplicateResultsView({
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{group.items.length}</Badge>
               <code className="truncate text-xs text-muted-foreground">{group.key}</code>
+              {mixedUrlKeys.has(group.key) ? (
+                <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
+              ) : null}
             </div>
             <div className="space-y-2">
               {group.items.map((item, index) => (

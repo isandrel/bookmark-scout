@@ -3171,6 +3171,30 @@
             }
         }
     },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "URL が異なります",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
+    },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ 件のブックマークをクリーンアップできます",
         "description": "URL cleaner dialog description (singular)",

@@ -3171,6 +3171,30 @@
             }
         }
     },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "제목만으로 비교하여 $count$개 그룹에 URL이 다른 북마크가 묶였습니다. 중복을 제거하면 해당 다른 페이지의 북마크도 삭제되므로 먼저 확인하세요.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "제목만으로 비교하여 $count$개 그룹에 URL이 다른 북마크가 묶였습니다. 중복을 제거하면 해당 다른 페이지의 북마크도 삭제되므로 먼저 확인하세요.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "URL이 다름",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
+    },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$개의 북마크를 정리할 수 있습니다",
         "description": "URL cleaner dialog description (singular)",

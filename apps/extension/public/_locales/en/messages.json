@@ -3171,6 +3171,30 @@
             }
         }
     },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ groups. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ group. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "Different URLs",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
+    },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ bookmark can be cleaned",
         "description": "URL cleaner dialog description (singular)",
