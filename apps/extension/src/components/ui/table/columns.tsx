@@ -86,7 +86,7 @@ export type BookmarkRowActionHandlers = {
 export const DOMAIN_COLUMN_ID = 'domain';
 
 function formatTimestamp(value: unknown): string {
-  return typeof value === 'number' ? new Date(value).toLocaleString() : '';
+  return typeof value === 'number' ? formatDateTime(value) : '';
 }
 
 type MoveDirection = 'up' | 'down' | 'top' | 'bottom';

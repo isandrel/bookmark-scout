@@ -28,7 +28,7 @@ function DetailField({
 function DateValue({ value }: { value?: number }) {
   const date = typeof value === 'number' ? new Date(value) : null;
   if (!date || Number.isNaN(date.getTime())) return t('bookmarks_detailsUnavailable');
-  return <time dateTime={date.toISOString()}>{date.toLocaleString()}</time>;
+  return <time dateTime={date.toISOString()}>{formatDateTime(date)}</time>;
 }
 
 function isWebUrl(url?: string): boolean {
