@@ -114,6 +114,24 @@ describe('bookmark statistics', () => {
     ).toBe(1);
   });
 
+  it('omits disabled sections instead of reporting zeros', () => {
+    const off = collectBookmarkStatistics(tree, options);
+    for (const key of ['topDomains', 'topFolders', 'protocols', 'duplicateCount'] as const) {
+      expect(off).not.toHaveProperty(key);
+    }
+    const on = collectBookmarkStatistics(tree, {
+      ...options,
+      includeDomains: true,
+      includeFolders: true,
+      includeProtocols: true,
+      includeDuplicates: true,
+    });
+    expect(on.topDomains).toEqual([{ label: 'e2e.invalid', count: 3 }]);
+    expect(on.protocols).toEqual([{ label: 'https', count: 3 }]);
+    expect(on.duplicateCount).toBe(0);
+    expect(on.topFolders).toHaveLength(3);
+  });
+
   it('includes the depth breakdown only when enabled', () => {
     expect(collectBookmarkStatistics(tree, options).depthBreakdown).toBeUndefined();
     expect(

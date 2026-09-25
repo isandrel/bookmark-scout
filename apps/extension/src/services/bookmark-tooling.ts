@@ -43,10 +43,11 @@ export type BookmarkStatistics = {
   totalFolders: number;
   bookmarksInScope: number;
   deepestLevel: number;
-  topDomains: Array<{ label: string; count: number }>;
-  topFolders: Array<{ label: string; count: number }>;
-  protocols: Array<{ label: string; count: number }>;
-  duplicateCount: number;
+  /** Optional sections are present only when their setting is enabled, so the view hides them. */
+  topDomains?: Array<{ label: string; count: number }>;
+  topFolders?: Array<{ label: string; count: number }>;
+  protocols?: Array<{ label: string; count: number }>;
+  duplicateCount?: number;
   /** Bookmark counts per folder level, present only when the depth breakdown is enabled. */
   depthBreakdown?: Array<{ level: number; count: number }>;
 };
@@ -373,28 +374,32 @@ export function collectBookmarkStatistics(
     }
   });
 
-  const duplicateCount = options.includeDuplicates
-    ? scanDuplicateBookmarks(nodes, {
-        strategy: 'normalized_url',
-        normalizeWww: true,
-        ignoreProtocol: true,
-        ignoreTrailingSlash: true,
-        maxGroups: Number.MAX_SAFE_INTEGER,
-      }).totalDuplicates
-    : 0;
-
   return {
     totalBookmarks: flatBookmarks.length,
     totalFolders: countFolders(nodes),
     bookmarksInScope: flatBookmarks.length,
     deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
     ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
-    topDomains: toTopEntries(domains, options.topN),
-    topFolders: Array.from(folders.values())
-      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-      .slice(0, options.topN),
-    protocols: toTopEntries(protocols, options.topN),
-    duplicateCount,
+    ...(options.includeDomains ? { topDomains: toTopEntries(domains, options.topN) } : {}),
+    ...(options.includeFolders
+      ? {
+          topFolders: Array.from(folders.values())
+            .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+            .slice(0, options.topN),
+        }
+      : {}),
+    ...(options.includeProtocols ? { protocols: toTopEntries(protocols, options.topN) } : {}),
+    ...(options.includeDuplicates
+      ? {
+          duplicateCount: scanDuplicateBookmarks(nodes, {
+            strategy: 'normalized_url',
+            normalizeWww: true,
+            ignoreProtocol: true,
+            ignoreTrailingSlash: true,
+            maxGroups: Number.MAX_SAFE_INTEGER,
+          }).totalDuplicates,
+        }
+      : {}),
   };
 }
 

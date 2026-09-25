@@ -193,10 +193,16 @@ export function StatisticsResultsView({ result }: { result: BookmarkStatistics |
       <StatCard label={t('stats_totalBookmarks')} value={result.totalBookmarks} />
       <StatCard label={t('stats_totalFolders')} value={result.totalFolders} />
       <StatCard label={t('stats_deepestLevel')} value={result.deepestLevel} />
-      <StatCard label={t('stats_duplicates')} value={result.duplicateCount} />
-      <StatList label={t('stats_topDomains')} items={result.topDomains} />
-      <StatList label={t('stats_topFolders')} items={result.topFolders} />
-      <StatList label={t('stats_protocols')} items={result.protocols} />
+      {result.duplicateCount !== undefined ? (
+        <StatCard label={t('stats_duplicates')} value={result.duplicateCount} />
+      ) : null}
+      {result.topDomains ? (
+        <StatList label={t('stats_topDomains')} items={result.topDomains} />
+      ) : null}
+      {result.topFolders ? (
+        <StatList label={t('stats_topFolders')} items={result.topFolders} />
+      ) : null}
+      {result.protocols ? <StatList label={t('stats_protocols')} items={result.protocols} /> : null}
       {result.depthBreakdown ? (
         <StatList
           label={t('stats_depthBreakdown')}
