@@ -16,9 +16,10 @@ function describeDeadLink(item: DeadLinkResultItem): string {
     case 'skipped':
       return t('tools_notWebUrlSkipped');
     default:
-      return item.statusCode === undefined
-        ? t('tools_networkFailed')
-        : t('tools_deadLinkHttpStatus', String(item.statusCode));
+      if (item.statusCode !== undefined) {
+        return t('tools_deadLinkHttpStatus', String(item.statusCode));
+      }
+      return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
   }
 }
 
@@ -29,7 +30,7 @@ function describeMetadata(item: MetadataFetchResultItem): string {
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'error':
-      return t('tools_networkFailed');
+      return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     case 'skipped':
       return t('tools_notWebUrlSkipped');
     case 'notHtml':

@@ -3231,6 +3231,10 @@
         "message": "Could not connect to the site",
         "description": "Network tool detail for a transport failure"
     },
+    "tools_redirectFailed": {
+        "message": "Too many redirects (or the redirect target could not be reached)",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
+    },
     "tools_deadLinkStatus_skipped": {
         "message": "Skipped",
         "description": "Dead link status badge"

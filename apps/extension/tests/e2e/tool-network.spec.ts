@@ -32,6 +32,9 @@ async function startLocalSite(): Promise<LocalSite> {
       case '/head-405':
         if (req.method === 'HEAD') return html(res, 405, '');
         return html(res, 200, '<title>GET only</title>');
+      case '/loop':
+        res.writeHead(302, { location: '/loop' });
+        return res.end();
       case '/head-403':
         if (req.method === 'HEAD') return html(res, 403, '');
         return html(res, 200, '<title>GET only</title>');
@@ -95,6 +98,8 @@ test.describe('with website access granted', () => {
       { title: 'Head Rejected', url: `${site.origin}/head-405` },
       { title: 'Head Forbidden', url: `${site.origin}/head-403` },
       { title: 'Moved', url: `${site.origin}/redirect` },
+      { title: 'Loop', url: `${site.origin}/loop` },
+      { title: 'Refused', url: 'http://127.0.0.1:9/closed' },
       { title: 'Bookmarklet', url: 'javascript:void(0)' },
     ]);
     await setSettings(extensionWorker, {
@@ -112,6 +117,10 @@ test.describe('with website access granted', () => {
     await expect(row('Missing')).toContainText('HTTP 404');
     await expect(row('Head Rejected')).toContainText('Reachable');
     await expect(row('Head Forbidden')).toContainText('Reachable');
+    await expect(row('Loop')).toContainText(
+      'Too many redirects (or the redirect target could not be reached)',
+    );
+    await expect(row('Refused')).toContainText('Could not connect to the site');
     await expect(row('Moved')).toContainText(`Redirects to ${site.origin}/plain`);
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
@@ -130,7 +139,7 @@ test.describe('with website access granted', () => {
     );
     // A successful HEAD is never repeated as a GET.
     expect(site.requests).not.toContain('GET /plain');
-    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(6);
+    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(8);
   });
 
   test('metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles', async ({

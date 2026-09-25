@@ -123,8 +123,28 @@ export function isWebUrl(url: string): boolean {
   }
 }
 
-function toErrorKind(error: unknown): NetworkErrorKind {
-  return error instanceof RequestTimeoutError ? 'timeout' : 'network';
+/**
+ * Fetch reports a redirect loop exactly like a refused connection. After a transport failure,
+ * one request with `redirect: 'manual'` tells them apart: an opaque redirect response means the
+ * server did answer, with a redirect that could not be followed.
+ */
+async function classifyFailure(
+  error: unknown,
+  url: string,
+  timeoutMs: number,
+): Promise<NetworkErrorKind> {
+  if (error instanceof RequestTimeoutError) return 'timeout';
+  try {
+    const redirected = await requestWithTimeout(
+      url,
+      { method: 'GET', redirect: 'manual' },
+      timeoutMs,
+      async (response) => response.type === 'opaqueredirect',
+    );
+    return redirected ? 'redirect' : 'network';
+  } catch {
+    return 'network';
+  }
 }
 
 type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
@@ -179,7 +199,7 @@ export async function scanDeadLinks(
       return { ...base, status: 'skipped' } satisfies DeadLinkResultItem;
     }
 
-    let errorKind: NetworkErrorKind = 'network';
+    let lastError: unknown;
     for (let attempt = 0; attempt <= options.retryCount; attempt += 1) {
       try {
         const response = await probeUrl(url, options.requestTimeoutMs);
@@ -200,10 +220,11 @@ export async function scanDeadLinks(
           ...(redirectUrl ? { redirectUrl } : {}),
         } satisfies DeadLinkResultItem;
       } catch (error) {
-        errorKind = toErrorKind(error);
+        lastError = error;
       }
     }
 
+    const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs);
     return {
       ...base,
       status: errorKind === 'timeout' ? 'timeout' : 'error',
@@ -307,10 +328,10 @@ export async function fetchBookmarkMetadata(
         changed,
       } satisfies MetadataFetchResultItem;
     } catch (error) {
-      return {
-        ...base,
-        status: toErrorKind(error) === 'timeout' ? 'timeout' : 'error',
-      } satisfies MetadataFetchResultItem;
+      const errorKind = await classifyFailure(error, url, options.requestTimeoutMs);
+      return errorKind === 'timeout'
+        ? ({ ...base, status: 'timeout' } satisfies MetadataFetchResultItem)
+        : ({ ...base, status: 'error', errorKind } satisfies MetadataFetchResultItem);
     }
   });
 

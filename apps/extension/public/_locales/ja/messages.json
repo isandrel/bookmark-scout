@@ -3231,6 +3231,10 @@
         "message": "サイトに接続できませんでした",
         "description": "Network tool detail for a transport failure"
     },
+    "tools_redirectFailed": {
+        "message": "リダイレクトが多すぎます（またはリダイレクト先に接続できません）",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
+    },
     "tools_deadLinkStatus_skipped": {
         "message": "スキップ",
         "description": "Dead link status badge"

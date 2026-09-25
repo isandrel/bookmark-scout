@@ -191,6 +191,19 @@ describe('dead-link scanning', () => {
     expect(item).toMatchObject({ status: 'error', errorKind: 'network' });
     expect(JSON.stringify(item)).not.toContain('Failed to fetch');
   });
+
+  it('reports a redirect loop separately from a refused connection', async () => {
+    fetchMock.mockImplementation(async (_url: string, init: RequestInit) => {
+      if (init.redirect === 'manual') {
+        return { type: 'opaqueredirect', status: 0, body: null } as unknown as Response;
+      }
+      throw new TypeError('Failed to fetch');
+    });
+    const [item] = (await scanDeadLinks(tree({ a: 'https://e2e.invalid/loop' }), deadLinkOptions))
+      .items;
+    expect(item).toMatchObject({ status: 'error', errorKind: 'redirect' });
+    expect(item.statusCode).toBeUndefined();
+  });
 });
 
 /** A body that emits `chunks`, then either ends or stalls until the request is aborted. */
