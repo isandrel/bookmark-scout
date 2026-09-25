@@ -150,7 +150,7 @@ export function partitionSelectionByVisibility<T>(
 // Columns dropped, in this order, while the table is narrower than `minWidth` (for example with
 // the Tools sidebar open), so Title and Date Added stay in view instead of scrolling away.
 const SPACE_HIDDEN_COLUMNS: readonly { id: string; minWidth: number }[] = [
-  { id: 'folderPath', minWidth: 1080 },
+  { id: 'folderPath', minWidth: 960 },
   { id: 'url', minWidth: 880 },
 ];
 
