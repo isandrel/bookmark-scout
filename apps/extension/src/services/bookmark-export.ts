@@ -142,6 +142,18 @@ export function escapeMarkdownText(text: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Escapes block syntax a title would otherwise trigger at the start of a list item's text:
+ * headings (`#`), ordered (`1.`, `1)`) and nested (`-`, `+`) lists, thematic breaks and setext
+ * underlines (`---`, `===`), code fences (`~~~`), and block quotes. Apply after
+ * {@link escapeMarkdownText}, which already covers `*`, `_`, backticks, and `>`.
+ */
+export function escapeMarkdownLineStart(text: string): string {
+  return text
+    .replace(/^(\s*)(\d+)([.)])/, '$1$2\\$3')
+    .replace(/^(\s*)([#+\-=~])/, '$1\\$2');
+}
+
 /** Percent-encodes characters that would end or break a Markdown link destination. */
 function escapeMarkdownUrl(url: string): string {
   return url.replace(
@@ -170,7 +182,7 @@ export const markdownFormat: ExportFormat = {
       if (n.url) {
         return includeUrls
           ? `${nodeIndent}- [${title}](${escapeMarkdownUrl(n.url)})\n`
-          : `${nodeIndent}- ${title}\n`;
+          : `${nodeIndent}- ${escapeMarkdownLineStart(title)}\n`;
       }
 
       const children = n.children?.map((c) => renderNode(c, depth + 1)).join('') ?? '';

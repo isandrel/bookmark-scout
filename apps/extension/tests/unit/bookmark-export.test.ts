@@ -4,6 +4,7 @@ import {
   countExportedBookmarks,
   csvFormat,
   escapeCsvCell,
+  escapeMarkdownLineStart,
   generateFilename,
   htmlFormat,
   jsonFormat,
@@ -112,6 +113,46 @@ describe('bookmark export', () => {
     const markdown = markdownFormat.serialize(root);
     expect(markdown).toContain('- [\\[Docs\\] &lt;script&gt;](https://e2e.invalid/b%20%281%29)');
     expect(markdown).not.toContain('<script>');
+  });
+
+  it('escapes line-start Markdown syntax in titles when URLs are off', () => {
+    const titles = [
+      '1. Intro',
+      '2) Next',
+      '# Heading',
+      '- dash',
+      '---',
+      '> quote',
+      '+ plus',
+      '===',
+      '~~~',
+      'Plain',
+    ];
+    const markdown = markdownFormat.serialize(
+      {
+        id: 'r',
+        title: 'Root',
+        children: titles.map((title, index) => ({
+          id: String(index),
+          title,
+          url: 'https://e2e.invalid/',
+        })),
+      },
+      { includeUrls: false },
+    );
+    expect(markdown.split('\n').slice(2, -1)).toEqual([
+      '- 1\\. Intro',
+      '- 2\\) Next',
+      '- \\# Heading',
+      '- \\- dash',
+      '- \\---',
+      '- &gt; quote',
+      '- \\+ plus',
+      '- \\===',
+      '- \\~~~',
+      '- Plain',
+    ]);
+    expect(escapeMarkdownLineStart('Version 1. notes #1 - ok')).toBe('Version 1. notes #1 - ok');
   });
 
   it('names files with the saved prefix and the local date', () => {

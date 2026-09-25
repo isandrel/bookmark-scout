@@ -43,6 +43,40 @@ test('export uses the selected folder and saved preferences, and neutralizes CSV
   expect(csv).not.toContain('Outside Link');
 });
 
+test('a Markdown export without URLs escapes titles that look like Markdown syntax', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Markdown', [
+    { title: '1. Intro', url: 'https://e2e.invalid/1' },
+    { title: '# Heading', url: 'https://e2e.invalid/2' },
+    { title: '---', url: 'https://e2e.invalid/3' },
+    { title: '> Quote', url: 'https://e2e.invalid/4' },
+    { title: '+ Plus', url: 'https://e2e.invalid/5' },
+  ]);
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'markdown',
+    exportIncludeUrls: false,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const downloadPromise = page.waitForEvent('download');
+  await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
+  const markdown = await readFile(await (await downloadPromise).path(), 'utf8');
+  expect(markdown).toContain(
+    [
+      '- **E2E Markdown**',
+      '  - 1\\. Intro',
+      '  - \\# Heading',
+      '  - \\---',
+      '  - &gt; Quote',
+      '  - \\+ Plus',
+    ].join('\n'),
+  );
+  expect(markdown).not.toContain('https://');
+});
+
 test('an all-bookmarks JSON export has no nameless wrapper and re-imports without an extra level', async ({
   extensionId,
   extensionWorker,
