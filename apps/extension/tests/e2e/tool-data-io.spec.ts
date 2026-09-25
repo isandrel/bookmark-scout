@@ -36,11 +36,39 @@ test('export uses the selected folder and saved preferences, and neutralizes CSV
   expect(download.suggestedFilename()).toBe(`backup-Tracking_${localDate()}.csv`);
   const csv = await readFile(await download.path(), 'utf8');
   expect(csv.split('\n')).toEqual([
-    'Title,Folder',
+    '﻿Title,Folder',
     `"'=HYPERLINK(""https://evil.invalid"",""x"")",Tracking`,
     'Inner Link,Tracking/Nested',
   ]);
   expect(csv).not.toContain('Outside Link');
+});
+
+test('a CSV export keeps non-ASCII folder names in the filename and escapes / in folder paths', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, '日本語 メモ', [
+    { title: 'Work/Home', children: [{ title: 'Nested Link', url: 'https://e2e.invalid/n' }] },
+  ]);
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'csv',
+    exportFilenamePrefix: '',
+    exportIncludeDates: false,
+    exportIncludeUrls: false,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const downloadPromise = page.waitForEvent('download');
+  await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe(`日本語_メモ_${localDate()}.csv`);
+  const bytes = await readFile(await download.path());
+  expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+  expect(bytes.toString('utf8').split('\n')).toEqual([
+    '﻿Title,Folder',
+    'Nested Link,日本語 メモ/Work\\/Home',
+  ]);
 });
 
 test('a Markdown export without URLs escapes titles that look like Markdown syntax', async ({

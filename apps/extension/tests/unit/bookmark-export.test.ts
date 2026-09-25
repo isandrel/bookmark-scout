@@ -4,6 +4,7 @@ import {
   countExportedBookmarks,
   csvFormat,
   escapeCsvCell,
+  escapeCsvPathSegment,
   escapeMarkdownLineStart,
   generateFilename,
   htmlFormat,
@@ -96,7 +97,7 @@ describe('bookmark export', () => {
     expect(markdown).not.toContain('https://');
     expect(markdown).toContain('\n    - **Tracking**');
     const csv = csvFormat.serialize(root, { includeUrls: false, includeDates: false });
-    expect(csv.split('\n')[0]).toBe('export_csvTitle,export_csvFolder');
+    expect(csv.split('\n')[0]).toBe('﻿export_csvTitle,export_csvFolder');
     expect(csv).not.toContain('https://');
   });
 
@@ -160,5 +161,44 @@ describe('bookmark export', () => {
     expect(
       generateFilename('My Folder', jsonFormat, { prefix: 'backup-', maxLength: 20, now }),
     ).toBe('backup-My_Folder_2026-01-02.json');
+  });
+
+  it('keeps non-ASCII folder names and replaces only filesystem-unsafe characters', () => {
+    const now = new Date(2026, 0, 2);
+    const name = (folder: string, maxLength = 50) =>
+      generateFilename(folder, csvFormat, { prefix: '', maxLength, now });
+    expect(name('日本語 フォルダ')).toBe('日本語_フォルダ_2026-01-02.csv');
+    expect(name('한국어/메모: "v2"?')).toBe('한국어_메모_v2_2026-01-02.csv');
+    expect(name('Café-Notes.v1')).toBe('Café-Notes.v1_2026-01-02.csv');
+    expect(name('..hidden..')).toBe('hidden_2026-01-02.csv');
+    // The length cap counts characters and never splits a surrogate pair.
+    expect(name('😀😀😀', 2)).toBe('😀😀_2026-01-02.csv');
+  });
+
+  it('escapes / in CSV folder names and starts CSV files with a UTF-8 BOM', () => {
+    expect(escapeCsvPathSegment('A/B\\C')).toBe('A\\/B\\\\C');
+    const csv = csvFormat.serialize(
+      {
+        id: 'r',
+        title: 'Root',
+        children: [
+          {
+            id: 'f',
+            title: 'Work/Home',
+            children: [
+              {
+                id: 'g',
+                title: '日本',
+                children: [{ id: 'b', title: 'Link', url: 'https://e2e.invalid/' }],
+              },
+            ],
+          },
+        ],
+      },
+      { includeUrls: false, includeDates: false },
+    );
+    expect(csv.startsWith('﻿')).toBe(true);
+    expect(csv.split('\n')[1]).toBe('Link,Work\\/Home/日本');
+    expect(csvFormat.mimeType).toBe('text/csv;charset=utf-8');
   });
 });
