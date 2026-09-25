@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { scanBookmarkPrivacy } from '@/services/bookmark-network-tools';
+import { containsTokenValue, scanBookmarkPrivacy } from '@/services/bookmark-network-tools';
 
 const options = {
   scanTitles: false,
@@ -22,7 +22,7 @@ function scan(url: string) {
 
 // Synthetic, obviously fake token shapes.
 const FAKE_GITHUB = `ghp_${'a'.repeat(36)}`;
-const FAKE_OPENAI = `sk-${'b'.repeat(40)}`;
+const FAKE_OPENAI = `sk-${'aB3'.repeat(14)}`;
 const FAKE_SLACK = `xoxb-${'1'.repeat(12)}-fake`;
 
 describe('privacy scanner', () => {
@@ -52,6 +52,15 @@ describe('privacy scanner', () => {
         kinds: ['tokenPattern'],
       });
     }
+  });
+
+  it('does not flag sk- slugs or tokens that appear only in the path', () => {
+    expect(scan('https://example.com/ir/sk-telecom-annual-report-2024')).toBeNull();
+    expect(scan('https://example.com/?doc=sk-telecom-annual-report-2024')).toBeNull();
+    expect(scan(`https://example.com/keys/${FAKE_OPENAI}`)).toBeNull();
+    expect(scan(`https://example.com/cb#key=${FAKE_OPENAI}`)?.kinds).toEqual(['tokenPattern']);
+    expect(containsTokenValue('sk-hynix-2024-quarterly-results-q3')).toBe(false);
+    expect(containsTokenValue(`Bearer ${FAKE_OPENAI}`)).toBe(true);
   });
 
   it('uses low severity for weak signals and ignores SPA routes and asset names', () => {

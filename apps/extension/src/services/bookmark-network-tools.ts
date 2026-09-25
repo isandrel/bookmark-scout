@@ -376,8 +376,21 @@ export async function applyMetadataTitles(
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
 const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
-const TOKEN_VALUE_PATTERN =
-  /(?:^|[^A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/;
+const TOKEN_CANDIDATE_PATTERN =
+  /(?:^|[^A-Za-z0-9_])(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/g;
+
+/**
+ * True when a query or fragment value contains an API or access token. `sk-` is also a common
+ * slug prefix (`sk-telecom-annual-report-2024`), so it counts only when the rest looks random:
+ * upper case, lower case, and digits together, as in generated keys.
+ */
+export function containsTokenValue(value: string): boolean {
+  return [...value.matchAll(TOKEN_CANDIDATE_PATTERN)].some(([, candidate]) => {
+    if (!candidate.startsWith('sk-')) return true;
+    const body = candidate.slice(3);
+    return /[A-Z]/.test(body) && /[a-z]/.test(body) && /\d/.test(body);
+  });
+}
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
 /** `logo@2x.png`-style asset names look like emails but are not. */
 const RETINA_SUFFIX_PATTERN = /^\d+(?:\.\d+)?x\./i;
@@ -457,9 +470,8 @@ export function scanBookmarkPrivacy(
         if (sensitiveParams.has(key.toLowerCase())) {
           add({ kind: 'sensitiveParam', param: key });
         }
-        if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+        if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
       });
-      if (TOKEN_VALUE_PATTERN.test(safeDecode(parsed.pathname))) add({ kind: 'tokenPattern' });
     }
 
     if (options.scanFragments && parsed.hash) {
@@ -469,7 +481,7 @@ export function scanBookmarkPrivacy(
           if (fragmentSensitive.has(key.toLowerCase())) {
             add({ kind: 'sensitiveFragmentParam', param: key });
           }
-          if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+          if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
         });
       } else if (!/^#!?\//.test(parsed.hash)) {
         // A plain in-page anchor is a weak signal; SPA routes (`#/path`) are not flagged.

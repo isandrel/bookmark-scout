@@ -16,6 +16,7 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
     { title: 'Anchor', url: 'https://e2e.invalid/docs#install' },
     { title: 'Retina Logo', url: 'https://e2e.invalid/img/logo@2x.png' },
     { title: 'SPA Route', url: 'https://e2e.invalid/#/settings' },
+    { title: 'SK Slug', url: 'https://e2e.invalid/ir/sk-telecom-annual-report-2024' },
   ]);
   await setSettings(extensionWorker, { privacyScannerDefaultScope: 'all' });
 
@@ -35,6 +36,7 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
   await expect(row('Anchor')).toContainText('Low');
   await expect(dialog.getByText('Retina Logo', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SPA Route', { exact: true })).toHaveCount(0);
+  await expect(dialog.getByText('SK Slug', { exact: true })).toHaveCount(0);
 });
 
 test('statistics count folders inside the scope and show the depth breakdown only when enabled', async ({
