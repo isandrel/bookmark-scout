@@ -2411,6 +2411,10 @@
         "message": "タイトルの変更は不要です",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "HTMLページではないためスキップしました",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "正常",
         "description": "Dead link status badge"

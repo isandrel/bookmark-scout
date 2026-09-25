@@ -2411,6 +2411,10 @@
         "message": "제목을 바꿀 필요 없음",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "HTML 페이지가 아니어서 건너뛰었습니다",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "정상",
         "description": "Dead link status badge"

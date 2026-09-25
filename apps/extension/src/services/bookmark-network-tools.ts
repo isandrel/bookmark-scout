@@ -23,7 +23,8 @@ export type DeadLinkScanResult = {
   items: DeadLinkResultItem[];
 };
 
-export type MetadataFetchStatus = 'ok' | 'httpError' | 'error' | 'timeout' | 'skipped';
+/** `notHtml` marks responses (PDFs, images, archives) that are not downloaded or parsed. */
+export type MetadataFetchStatus = 'ok' | 'httpError' | 'error' | 'timeout' | 'skipped' | 'notHtml';
 
 export type MetadataFetchResultItem = {
   id: string;
@@ -127,14 +128,24 @@ function toErrorKind(error: unknown): NetworkErrorKind {
  * fetch's `redirect: 'manual'` yields an opaque response that hides both the status and the
  * Location header, which previously surfaced as "HTTP 0".
  */
-async function probeUrl(url: string, timeoutMs: number): Promise<Response> {
-  const head = await fetchWithTimeout(url, { method: 'HEAD', redirect: 'follow' }, timeoutMs);
+type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
+
+async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
+  const summarize = async ({ status, redirected, url: finalUrl }: Response) => ({
+    status,
+    redirected,
+    url: finalUrl,
+  });
+  const head = await requestWithTimeout(
+    url,
+    { method: 'HEAD', redirect: 'follow' },
+    timeoutMs,
+    summarize,
+  );
   if (head.status !== 405 && head.status !== 501) {
     return head;
   }
-  const get = await fetchWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs);
-  await get.body?.cancel().catch(() => undefined);
-  return get;
+  return requestWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs, summarize);
 }
 
 export async function scanDeadLinks(
@@ -238,23 +249,37 @@ export async function fetchBookmarkMetadata(
     }
 
     try {
-      const response = await fetchWithTimeout(
+      const page = await requestWithTimeout(
         url,
         { method: 'GET', redirect: 'follow' },
         options.requestTimeoutMs,
+        async (response) => {
+          const contentType = response.headers.get('content-type');
+          // Error pages ("404 Not Found") must never become title suggestions, and files such
+          // as PDFs or archives are never downloaded.
+          if (!response.ok || !isHtmlContentType(contentType)) {
+            return { status: response.status, ok: response.ok, html: null };
+          }
+          const bytes = await readHtmlHead(response, METADATA_MAX_BYTES);
+          return { status: response.status, ok: true, html: decodeHtml(bytes, contentType) };
+        },
       );
-      if (!response.ok) {
-        // Error pages ("404 Not Found") must never become title suggestions.
-        await response.body?.cancel().catch(() => undefined);
+      if (!page.ok) {
         return {
           ...base,
           status: 'httpError',
-          statusCode: response.status,
+          statusCode: page.status,
+        } satisfies MetadataFetchResultItem;
+      }
+      if (page.html === null) {
+        return {
+          ...base,
+          status: 'notHtml',
+          statusCode: page.status,
         } satisfies MetadataFetchResultItem;
       }
 
-      const html = decodeHtml(await response.arrayBuffer(), response.headers.get('content-type'));
-      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const doc = new DOMParser().parseFromString(page.html, 'text/html');
       const suggestedTitle =
         doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
       const description = options.fetchDescriptions
@@ -270,7 +295,7 @@ export async function fetchBookmarkMetadata(
       return {
         ...base,
         status: 'ok',
-        statusCode: response.status,
+        statusCode: page.status,
         suggestedTitle,
         description,
         changed,
@@ -466,17 +491,28 @@ export function scanBookmarkPrivacy(
   };
 }
 
-async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs: number) {
+/**
+ * Runs one request whose timeout covers both the response headers and `consume`, so a server
+ * that stalls mid-body cannot hang a scan. Any body `consume` leaves unread is cancelled.
+ */
+async function requestWithTimeout<T>(
+  input: string,
+  init: RequestInit,
+  timeoutMs: number,
+  consume: (response: Response) => Promise<T>,
+): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  let response: Response | undefined;
 
   try {
-    return await fetch(input, {
+    response = await fetch(input, {
       ...init,
       cache: 'no-store',
       credentials: 'omit',
       signal: controller.signal,
     });
+    return await consume(response);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new RequestTimeoutError();
@@ -484,7 +520,56 @@ async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs: num
     throw error;
   } finally {
     clearTimeout(timeoutId);
+    if (response?.body && !response.body.locked) {
+      response.body.cancel().catch(() => undefined);
+    }
   }
+}
+
+/** Upper bound on bytes read from one page; titles and descriptions live in the `<head>`. */
+const METADATA_MAX_BYTES = 512 * 1024;
+const HEAD_END_PATTERN = /<\/head\s*>|<body[\s>]/i;
+const HTML_CONTENT_TYPE_PATTERN = /^\s*(?:text\/html|application\/xhtml\+xml)\s*(?:;|$)/i;
+
+/** True when a Content-Type is missing (sniffed later) or declares an HTML document. */
+export function isHtmlContentType(contentType: string | null): boolean {
+  return !contentType?.trim() || HTML_CONTENT_TYPE_PATTERN.test(contentType);
+}
+
+/**
+ * Reads a page body only until the end of its `<head>` (or `<body>` start) or `maxBytes`,
+ * whichever comes first, then stops the download.
+ */
+export async function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
+  const reader = response.body?.getReader();
+  if (!reader) return new ArrayBuffer(0);
+  const chunks: Uint8Array[] = [];
+  const scanner = new TextDecoder('latin1');
+  let total = 0;
+  let tail = '';
+
+  try {
+    while (total < maxBytes) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = value.subarray(0, maxBytes - total);
+      chunks.push(chunk);
+      total += chunk.byteLength;
+      const text = tail + scanner.decode(chunk);
+      if (HEAD_END_PATTERN.test(text)) break;
+      tail = text.slice(-16);
+    }
+  } finally {
+    reader.cancel().catch(() => undefined);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes.buffer;
 }
 
 async function mapWithConcurrency<T, R>(

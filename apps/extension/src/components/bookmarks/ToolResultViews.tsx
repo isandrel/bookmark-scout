@@ -32,6 +32,8 @@ function describeMetadata(item: MetadataFetchResultItem): string {
       return t('tools_networkFailed');
     case 'skipped':
       return t('tools_notWebUrlSkipped');
+    case 'notHtml':
+      return t('tools_metadataNotHtml');
     default:
       return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
   }

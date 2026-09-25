@@ -2411,6 +2411,10 @@
         "message": "No title change needed",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "Not an HTML page; skipped",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "OK",
         "description": "Dead link status badge"

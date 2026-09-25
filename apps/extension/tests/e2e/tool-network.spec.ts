@@ -35,6 +35,16 @@ async function startLocalSite(): Promise<LocalSite> {
       case '/redirect':
         res.writeHead(302, { location: '/plain' });
         return res.end();
+      case '/stall':
+        // Headers and part of the head arrive, then the body never finishes.
+        res.writeHead(200, { 'content-type': 'text/html' });
+        res.write('<html><head><title>Never finished');
+        return;
+      case '/file.pdf':
+        res.writeHead(200, { 'content-type': 'application/pdf' });
+        res.write('%PDF-1.7\n');
+        // Never ends: a download of the whole file would hang the scan.
+        return;
       case '/sjis':
         return html(
           res,
@@ -156,6 +166,36 @@ test.describe('with website access granted', () => {
         '日本語',
         'Bookmarklet',
       ]);
+  });
+
+  test('metadata fetcher times out on a stalled body, skips non-HTML files, and leaves Running', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const folder = await seedFolder(extensionWorker, 'E2E Stalled Metadata', [
+      { title: 'Stalled', url: `${site.origin}/stall` },
+      { title: 'Document', url: `${site.origin}/file.pdf` },
+      { title: 'Plain Original', url: `${site.origin}/plain` },
+    ]);
+    await setSettings(extensionWorker, {
+      metadataFetcherOverwriteTitles: true,
+      metadataFetcherRequestTimeoutMs: 1000,
+      metadataFetcherDefaultScope: 'folder',
+    });
+
+    await openTools(page, extensionId, folder.folderId);
+    const card = toolCard(page, 'Metadata Fetcher');
+    await card.getByRole('button', { name: 'Scan' }).click();
+    const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
+    const row = (title: string) =>
+      results.locator('div.rounded-lg').filter({ has: page.getByText(title, { exact: true }) });
+    await expect(row('Stalled')).toContainText('Request timed out', { timeout: 10_000 });
+    await expect(row('Document')).toContainText('Not an HTML page; skipped');
+    await expect(row('Plain Original')).toContainText('Suggested title: Plain Page Title');
+    await page.keyboard.press('Escape');
+    await expect(card.getByRole('button', { name: 'Scan' })).toBeEnabled();
+    await expect(card).not.toContainText('Running...');
   });
 
   test('metadata apply skips bookmarks renamed after the scan', async ({
