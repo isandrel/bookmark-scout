@@ -219,7 +219,7 @@ test('rejected API keys and unsafe Base URLs are never persisted', async ({
   await key.fill('test-key-not-real');
   await key.blur();
   await expect(
-    page.getByText("This doesn't look like a OpenAI API key. It was not saved."),
+    page.getByText("This doesn't look like an API key for OpenAI. It was not saved."),
   ).toBeVisible();
 
   const baseUrl = page.getByRole('textbox', { name: 'Base URL' });
@@ -321,4 +321,180 @@ test('options layout fits a 480px window without squeezed labels', async ({
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,
   );
+});
+
+const DEFAULT_SUCCESS_STATUSES = [200, 201, 202, 204, 301, 302, 307, 308];
+
+test('options follows theme changes made from the popup', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', theme: 'light' });
+  await openOptions(page, extensionId);
+  const popup = await context.newPage();
+  await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+  await expect(popup.locator('html')).toHaveClass(/light/);
+
+  for (const theme of ['dark', 'light', 'dark']) {
+    await popup.getByRole('button', { name: /^(Light|Dark) mode$/ }).click();
+    await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe(theme);
+    await expect(popup.locator('html')).toHaveClass(new RegExp(theme));
+    await expect(page.locator('html')).toHaveClass(new RegExp(theme));
+    await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText(
+      theme === 'dark' ? 'Dark' : 'Light',
+    );
+  }
+  // Late cache events from other pages must not revert the synced theme.
+  await page.waitForTimeout(1_500);
+  await expect(page.locator('html')).toHaveClass(/dark/);
+  await page.bringToFront();
+  await expect(page.locator('html')).toHaveClass(/dark/);
+});
+
+for (const mode of ['reload', 'close'] as const) {
+  test(`an edit made right before ${mode} is saved`, async ({
+    context,
+    extensionId,
+    extensionWorker,
+  }) => {
+    await setSettings(extensionWorker, { language: 'en' });
+    const page = await context.newPage();
+    await openOptions(page, extensionId);
+    await page.getByRole('tab', { name: 'Behavior' }).click();
+    const value = `Flushed on ${mode}`;
+    await settingRow(page, 'defaultNewFolderName').getByRole('textbox').fill(value);
+    // Well inside the autosave debounce.
+    if (mode === 'reload') await page.reload();
+    else await page.close({ runBeforeUnload: true });
+
+    await expect
+      .poll(async () => (await readSettings(extensionWorker)).defaultNewFolderName)
+      .toBe(value);
+    if (mode === 'reload') {
+      await page.getByRole('tab', { name: 'Behavior' }).click();
+      await expect(settingRow(page, 'defaultNewFolderName').getByRole('textbox')).toHaveValue(
+        value,
+      );
+    }
+  });
+}
+
+test('an invalid edit pending at close is not saved and does not block valid ones', async ({
+  context,
+  extensionId,
+  extensionWorker,
+}) => {
+  await setSettings(extensionWorker, {
+    language: 'en',
+    confirmBeforeDelete: true,
+    defaultNewFolderName: 'Keep Me',
+  });
+  const page = await context.newPage();
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await settingRow(page, 'defaultNewFolderName').getByRole('textbox').fill('');
+  await settingRow(page, 'confirmBeforeDelete').getByRole('switch').click();
+  await page.close({ runBeforeUnload: true });
+
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).confirmBeforeDelete)
+    .toBe(false);
+  expect((await readSettings(extensionWorker)).defaultNewFolderName).toBe('Keep Me');
+});
+
+test('resetting a list setting clears invalid text', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', deadLinksSuccessStatuses: [200] });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'Maintenance' }).click();
+  const statuses = page.getByRole('textbox', { name: 'Success Status Codes' });
+  const alert = settingRow(page, 'deadLinksSuccessStatuses').getByRole('alert');
+
+  await statuses.fill('200, abc');
+  await statuses.blur();
+  await expect(alert).toBeVisible();
+  await page.getByRole('button', { name: 'Reset Success Status Codes to default' }).click();
+  await expect(statuses).toHaveValue(DEFAULT_SUCCESS_STATUSES.join(', '));
+  await expect(alert).toHaveCount(0);
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
+    .toEqual(DEFAULT_SUCCESS_STATUSES);
+
+  // Invalid text on a field that already holds its default is cleared by Reset All too.
+  await statuses.fill('abc');
+  await statuses.blur();
+  await expect(alert).toBeVisible();
+  await page.getByRole('button', { name: 'Reset All' }).click();
+  await expect(statuses).toHaveValue(DEFAULT_SUCCESS_STATUSES.join(', '));
+  await expect(alert).toHaveCount(0);
+  await expect(page.getByTestId('settings-save-status')).toHaveText('Settings saved');
+  expect((await readSettings(extensionWorker)).deadLinksSuccessStatuses).toEqual(
+    DEFAULT_SUCCESS_STATUSES,
+  );
+});
+
+test('settings search finds AI provider panel fields', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', aiProvider: 'custom' });
+  await openOptions(page, extensionId);
+  const search = page.getByRole('searchbox', { name: 'Search settings...' });
+
+  await search.fill('api key');
+  await expect(page.getByLabel('API Key', { exact: true })).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Base URL' })).toHaveCount(0);
+  await expect(page.getByText('0 matching settings in all tabs')).toHaveCount(0);
+
+  for (const [query, name] of [
+    ['base url', 'Base URL'],
+    ['custom model', 'Custom Model'],
+    ['extra headers', 'Extra Headers JSON'],
+  ]) {
+    await search.fill(query);
+    await expect(page.getByRole('textbox', { name, exact: true })).toBeVisible();
+    await expect(page.getByText('1 matching settings in all tabs')).toBeVisible();
+  }
+});
+
+test('unlimited sliders announce "No limit"', async ({ extensionId, extensionWorker, page }) => {
+  await setSettings(extensionWorker, { language: 'en', aiMaxCategories: -1 });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  const slider = page.getByRole('slider', { name: 'Max Categories' });
+  await expect(slider).toHaveAttribute('aria-valuetext', 'No limit');
+  await slider.focus();
+  await slider.press('ArrowRight');
+  await expect(slider).toHaveAttribute('aria-valuetext', '1');
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(1);
+});
+
+test('an invalid Base URL does not block saving valid Extra Headers', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', aiProvider: 'openai' });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  const readAI = () =>
+    extensionWorker.evaluate(async (key) => {
+      const stored = await chrome.storage.local.get(key);
+      return (stored[key] ?? {}) as Record<string, Record<string, string>>;
+    }, AI_KEY);
+
+  await page.getByRole('textbox', { name: 'Base URL' }).fill('not a url');
+  const headers = page.getByRole('textbox', { name: 'Extra Headers JSON' });
+  await headers.fill('{"X-Test":"1"}');
+  await headers.blur();
+
+  await expect(page.getByText('Enter a full http:// or https:// URL.')).toBeVisible();
+  await expect.poll(async () => (await readAI()).openai?.extraHeaders).toBe('{"X-Test":"1"}');
+  expect((await readAI()).openai?.baseUrl).toBeUndefined();
 });
