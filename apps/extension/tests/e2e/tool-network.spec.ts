@@ -32,6 +32,9 @@ async function startLocalSite(): Promise<LocalSite> {
       case '/head-405':
         if (req.method === 'HEAD') return html(res, 405, '');
         return html(res, 200, '<title>GET only</title>');
+      case '/head-403':
+        if (req.method === 'HEAD') return html(res, 403, '');
+        return html(res, 200, '<title>GET only</title>');
       case '/redirect':
         res.writeHead(302, { location: '/plain' });
         return res.end();
@@ -90,6 +93,7 @@ test.describe('with website access granted', () => {
       { title: 'Plain', url: `${site.origin}/plain` },
       { title: 'Missing', url: `${site.origin}/missing` },
       { title: 'Head Rejected', url: `${site.origin}/head-405` },
+      { title: 'Head Forbidden', url: `${site.origin}/head-403` },
       { title: 'Moved', url: `${site.origin}/redirect` },
       { title: 'Bookmarklet', url: 'javascript:void(0)' },
     ]);
@@ -107,16 +111,26 @@ test.describe('with website access granted', () => {
     await expect(row('Plain')).toContainText('Reachable');
     await expect(row('Missing')).toContainText('HTTP 404');
     await expect(row('Head Rejected')).toContainText('Reachable');
+    await expect(row('Head Forbidden')).toContainText('Reachable');
     await expect(row('Moved')).toContainText(`Redirects to ${site.origin}/plain`);
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
     await expect(results).not.toContainText('Failed to fetch');
 
     expect(site.requests).toEqual(
-      expect.arrayContaining(['HEAD /plain', 'HEAD /missing', 'HEAD /head-405', 'GET /head-405']),
+      expect.arrayContaining([
+        'HEAD /plain',
+        'HEAD /missing',
+        'GET /missing',
+        'HEAD /head-405',
+        'GET /head-405',
+        'HEAD /head-403',
+        'GET /head-403',
+      ]),
     );
-    expect(site.requests).not.toContain('GET /missing');
-    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(5);
+    // A successful HEAD is never repeated as a GET.
+    expect(site.requests).not.toContain('GET /plain');
+    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(6);
   });
 
   test('metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles', async ({

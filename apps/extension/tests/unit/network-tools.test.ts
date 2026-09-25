@@ -134,6 +134,38 @@ describe('dead-link scanning', () => {
     ]);
   });
 
+  it('retries any HEAD error status with GET before declaring a link dead', async () => {
+    fetchMock.mockImplementation(async (url: string, init: RequestInit) => {
+      const headStatus = Number(url.split('/').pop());
+      if (init.method === 'HEAD') return response(headStatus);
+      return response(url.endsWith('/404') ? 404 : 200);
+    });
+    const result = await scanDeadLinks(
+      tree({
+        a: 'https://e2e.invalid/400',
+        b: 'https://e2e.invalid/403',
+        c: 'https://e2e.invalid/404',
+        d: 'https://e2e.invalid/200',
+      }),
+      { ...deadLinkOptions, concurrency: 1 },
+    );
+    expect(result.items.map((item) => [item.id, item.status, item.statusCode])).toEqual([
+      ['a', 'ok', 200],
+      ['b', 'ok', 200],
+      ['c', 'error', 404],
+      ['d', 'ok', 200],
+    ]);
+    expect(fetchMock.mock.calls.map(([url, init]) => `${init.method} ${url}`)).toEqual([
+      'HEAD https://e2e.invalid/400',
+      'GET https://e2e.invalid/400',
+      'HEAD https://e2e.invalid/403',
+      'GET https://e2e.invalid/403',
+      'HEAD https://e2e.invalid/404',
+      'GET https://e2e.invalid/404',
+      'HEAD https://e2e.invalid/200',
+    ]);
+  });
+
   it('reports redirects with their destination instead of HTTP 0', async () => {
     fetchMock.mockResolvedValue(response(200, { redirectedTo: 'https://e2e.invalid/new' }));
     for (const followRedirects of [true, false]) {

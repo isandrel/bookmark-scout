@@ -2,8 +2,12 @@ import type { BookmarkTreeNode } from '@/types';
 
 export type DeadLinkStatus = 'ok' | 'redirect' | 'error' | 'timeout' | 'invalid' | 'skipped';
 
-/** Transport failures carry no HTTP status; `network` covers refused, DNS, and CORS-blocked. */
-export type NetworkErrorKind = 'network' | 'timeout';
+/**
+ * Transport failures carry no HTTP status; `network` covers refused, DNS, and CORS-blocked.
+ * `redirect` means the server answered with a redirect that could not be followed, which is
+ * almost always a redirect loop (too many redirects) or an unreachable redirect target.
+ */
+export type NetworkErrorKind = 'network' | 'timeout' | 'redirect';
 
 export type DeadLinkResultItem = {
   id: string;
@@ -38,6 +42,7 @@ export type MetadataFetchResultItem = {
   description?: string;
   /** True when a suggested title differs from the bookmark's title and may be applied. */
   changed: boolean;
+  errorKind?: NetworkErrorKind;
 };
 
 export type MetadataFetchResult = {
@@ -122,14 +127,15 @@ function toErrorKind(error: unknown): NetworkErrorKind {
   return error instanceof RequestTimeoutError ? 'timeout' : 'network';
 }
 
+type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
+
 /**
- * Checks reachability with HEAD and falls back to a GET (body discarded) when the server
- * rejects HEAD with 405 or 501. Redirects are always followed so the final URL is known:
+ * Checks reachability with HEAD and falls back to a GET (body discarded) whenever HEAD returns
+ * an error status: many servers and CDNs answer HEAD with 400, 403, 404, 405, or 501 while
+ * serving the page normally. Redirects are always followed so the final URL is known:
  * fetch's `redirect: 'manual'` yields an opaque response that hides both the status and the
  * Location header, which previously surfaced as "HTTP 0".
  */
-type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
-
 async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
   const summarize = async ({ status, redirected, url: finalUrl }: Response) => ({
     status,
@@ -142,7 +148,7 @@ async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
     timeoutMs,
     summarize,
   );
-  if (head.status !== 405 && head.status !== 501) {
+  if (head.status < 400) {
     return head;
   }
   return requestWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs, summarize);
