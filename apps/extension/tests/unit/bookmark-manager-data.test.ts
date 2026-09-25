@@ -5,6 +5,7 @@ import {
   canMoveWithinFolder,
   getManagerFolderAncestors,
   getMoveTargetFolders,
+  getSpaceHiddenColumnIds,
   isWithinDateRange,
   type ManagerItem,
   partitionSelectionByVisibility,
@@ -215,5 +216,15 @@ describe('canMoveWithinFolder', () => {
     expect(canMoveWithinFolder('up', 2, 3)).toBe(true);
     expect(canMoveWithinFolder('up', 0, 1)).toBe(false);
     expect(canMoveWithinFolder('down', 0, 1)).toBe(false);
+  });
+});
+
+describe('getSpaceHiddenColumnIds', () => {
+  it('drops Folder Path, then URL, as the table narrows so Title stays in view', () => {
+    expect(getSpaceHiddenColumnIds(undefined)).toEqual([]);
+    expect(getSpaceHiddenColumnIds(1109)).toEqual([]);
+    expect(getSpaceHiddenColumnIds(990)).toEqual([]);
+    expect(getSpaceHiddenColumnIds(920)).toEqual(['folderPath']);
+    expect(getSpaceHiddenColumnIds(790)).toEqual(['folderPath', 'url']);
   });
 });

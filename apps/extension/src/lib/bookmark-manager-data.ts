@@ -147,6 +147,21 @@ export function partitionSelectionByVisibility<T>(
   return { visible, hiddenCount: selected.length - visible.length };
 }
 
+// Columns dropped, in this order, while the table is narrower than `minWidth` (for example with
+// the Tools sidebar open), so Title and Date Added stay in view instead of scrolling away.
+const SPACE_HIDDEN_COLUMNS: readonly { id: string; minWidth: number }[] = [
+  { id: 'folderPath', minWidth: 960 },
+  { id: 'url', minWidth: 880 },
+];
+
+/** Columns to hide for lack of room at a table width; none until the width is known. */
+export function getSpaceHiddenColumnIds(tableWidth: number | undefined): string[] {
+  if (tableWidth === undefined) return [];
+  return SPACE_HIDDEN_COLUMNS.filter((column) => tableWidth < column.minWidth).map(
+    (column) => column.id,
+  );
+}
+
 export type FolderMoveDirection = 'up' | 'down' | 'top' | 'bottom';
 
 /** Whether a reorder would change anything: the first item cannot go up, the last not down. */

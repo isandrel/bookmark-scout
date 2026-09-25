@@ -3442,5 +3442,9 @@
     "bookmarks_bulkPreviewMore": {
         "message": "외 $1개",
         "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "표가 좁은 동안 제목이 보이도록 숨겨집니다",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }

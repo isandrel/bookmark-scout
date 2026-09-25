@@ -98,6 +98,20 @@ export function DataTable<TData extends RowData>({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
   const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
+  const tableFrameRef = React.useRef<HTMLDivElement>(null);
+  const [tableWidth, setTableWidth] = React.useState<number>();
+
+  React.useEffect(() => {
+    const frame = tableFrameRef.current;
+    if (!frame) return;
+    const observer = new ResizeObserver(([entry]) => setTableWidth(entry.contentRect.width));
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+  const spaceHiddenColumnIds = React.useMemo(
+    () => getSpaceHiddenColumnIds(tableWidth),
+    [tableWidth],
+  );
 
   React.useEffect(() => {
     let active = true;
@@ -228,8 +242,13 @@ export function DataTable<TData extends RowData>({
       sorting,
       columnFilters,
       columnOrder,
-      // The domain column only backs the URL domain filter and is never displayed.
-      columnVisibility: { ...columnVisibility, [DOMAIN_COLUMN_ID]: false },
+      // The domain column only backs the URL domain filter and is never displayed. Columns hidden
+      // for lack of room keep the saved preference and return when the table is wide enough.
+      columnVisibility: {
+        ...columnVisibility,
+        ...Object.fromEntries(spaceHiddenColumnIds.map((id) => [id, false])),
+        [DOMAIN_COLUMN_ID]: false,
+      },
       pagination,
       rowSelection,
     },
@@ -274,10 +293,11 @@ export function DataTable<TData extends RowData>({
         facetScope={filterScope}
         browserOrder={browserOrder}
         onBrowserOrderChange={handleBrowserOrderChange}
+        spaceHiddenColumnIds={spaceHiddenColumnIds}
       />
       {selectedRows.length > 0 &&
         renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
-      <div className="rounded-md border">
+      <div ref={tableFrameRef} className="rounded-md border">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
           <Table>
             <TableHeader>
