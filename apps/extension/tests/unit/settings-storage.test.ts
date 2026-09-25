@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { defaultSettings } from '@/lib/settings-schema';
 import {
@@ -8,6 +8,7 @@ import {
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
+  saveValidSettingsNow,
   SettingsValidationError,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
@@ -131,6 +132,58 @@ describe('settings persistence', () => {
     const settings = await getSettings();
     expect(settings.theme).toBe('dark');
     expect(settings.faviconSize).toBe(defaultSettings.faviconSize);
+  });
+});
+
+describe('saving before the page unloads', () => {
+  it('writes valid changes against the known settings without reading storage first', async () => {
+    const current = { ...defaultSettings, theme: 'dark' as const };
+    await fakeBrowser.storage.sync.set({ [SETTINGS_SYNC_KEY]: current });
+    const get = vi.spyOn(fakeBrowser.storage.sync, 'get');
+
+    const { settings, errors, saved } = saveValidSettingsNow(current, {
+      defaultNewFolderName: 'Flushed',
+      recentFoldersMax: 99,
+    });
+    expect(settings.defaultNewFolderName).toBe('Flushed');
+    expect(settings.recentFoldersMax).toBe(current.recentFoldersMax);
+    expect(Object.keys(errors)).toEqual(['recentFoldersMax']);
+    await saved;
+
+    expect(get).not.toHaveBeenCalled();
+    expect(await readStored()).toMatchObject({
+      theme: 'dark',
+      defaultNewFolderName: 'Flushed',
+      recentFoldersMax: current.recentFoldersMax,
+    });
+  });
+
+  it('skips the write when nothing valid changed', async () => {
+    const set = vi.spyOn(fakeBrowser.storage.sync, 'set');
+    await saveValidSettingsNow(defaultSettings, { recentFoldersMax: 99 }).saved;
+    expect(set).not.toHaveBeenCalled();
+  });
+});
+
+describe('removed settings', () => {
+  it('drops the unused metadataFetcherFetchFavicons key from stored and imported data', async () => {
+    expect('metadataFetcherFetchFavicons' in defaultSettings).toBe(false);
+    expect(
+      'metadataFetcherFetchFavicons' in
+        sanitizeSettings({ metadataFetcherFetchFavicons: false, theme: 'dark' }),
+    ).toBe(false);
+
+    await fakeBrowser.storage.sync.set({
+      [SETTINGS_SYNC_KEY]: { theme: 'dark', metadataFetcherFetchFavicons: false },
+    });
+    expect(
+      await importSettings(
+        JSON.stringify({ metadataFetcherFetchFavicons: true, defaultNewFolderName: 'Inbox' }),
+      ),
+    ).toEqual(['defaultNewFolderName']);
+    const stored = await readStored();
+    expect(stored).toMatchObject({ theme: 'dark', defaultNewFolderName: 'Inbox' });
+    expect(stored).not.toHaveProperty('metadataFetcherFetchFavicons');
   });
 });
 

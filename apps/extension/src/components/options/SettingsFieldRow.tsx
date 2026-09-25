@@ -98,6 +98,8 @@ export function SettingsFieldRow({
   const descriptionId = `${controlId}-description`;
   const errorId = `${controlId}-error`;
   const describedBy = error ? `${descriptionId} ${errorId}` : descriptionId;
+  // Remounts the list input on reset so unsaved, invalid text does not outlive the reset.
+  const [resetCount, setResetCount] = useState(0);
 
   const renderControl = () => {
     switch (meta.type) {
@@ -163,6 +165,7 @@ export function SettingsFieldRow({
               max={meta.max}
               step={meta.step}
               aria-labelledby={labelId}
+              aria-valuetext={display}
               className="flex-1"
             />
             <span className="w-20 text-right text-sm text-muted-foreground" aria-hidden="true">
@@ -176,6 +179,7 @@ export function SettingsFieldRow({
         if (meta.list) {
           return (
             <ListSettingInput
+              key={resetCount}
               id={controlId}
               kind={meta.list}
               value={value}
@@ -240,7 +244,7 @@ export function SettingsFieldRow({
       </div>
       <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
         {renderControl()}
-        {isChanged && (
+        {(isChanged || error) && (
           <Button
             type="button"
             variant="ghost"
@@ -248,6 +252,7 @@ export function SettingsFieldRow({
             className="h-8 w-8 shrink-0 text-muted-foreground hover:text-primary"
             onClick={() => {
               onInputError(undefined);
+              setResetCount((count) => count + 1);
               onChange(defaultValue);
             }}
             title={t('settings_resetToDefault')}

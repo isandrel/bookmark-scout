@@ -2107,14 +2107,6 @@
         "message": "더 나은 메타데이터를 찾으면 기존 북마크 제목을 바꿉니다",
         "description": "Metadata fetcher overwrite titles description"
     },
-    "settings_metadataFetcherFetchFavicons": {
-        "message": "파비콘 가져오기",
-        "description": "Metadata fetcher fetch favicons label"
-    },
-    "settings_metadataFetcherFetchFaviconsDesc": {
-        "message": "누락되었거나 오래된 파비콘을 새로 가져옵니다",
-        "description": "Metadata fetcher fetch favicons description"
-    },
     "settings_metadataFetcherFetchDescriptions": {
         "message": "설명 가져오기",
         "description": "Metadata fetcher fetch descriptions label"
