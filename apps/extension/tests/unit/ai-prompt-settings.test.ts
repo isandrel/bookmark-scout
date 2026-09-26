@@ -15,6 +15,7 @@ vi.mock('@/services/ai-client', () => ({
 const { suggestBookmarkTags, summarizeBookmarksWithAI } = await import(
   '@/services/ai-bookmark-tools'
 );
+const { recommendFolders } = await import('@/services/ai-recommendation');
 
 const settings: AISettings = {
   enabled: true,
@@ -57,5 +58,31 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
     expect(first).toContain('Keep summary under 60 characters');
     expect(second).toContain('Keep summary under 400 characters');
     expect(first).not.toContain('{{');
+  });
+
+  it('asks for and returns at most the saved number of folder recommendations', async () => {
+    const recommendation = (folderPath: string) => ({
+      type: 'existing',
+      folderPath,
+      confidence: 0.9,
+      reason: 'Fixture',
+    });
+    mocks.generateObject.mockResolvedValue({
+      object: {
+        recommendations: [recommendation('Research'), recommendation('Other'), recommendation('Third')],
+      },
+    });
+
+    const result = await recommendFolders(
+      { title: 'Paper', url: 'https://paper.example/one' },
+      nodes,
+      settings,
+      2,
+    );
+
+    expect(mocks.generateObject.mock.calls[0][0].system).toContain(
+      'Return exactly 2 folder recommendations',
+    );
+    expect(result.map((item) => item.folderPath)).toEqual(['Research', 'Other']);
   });
 });

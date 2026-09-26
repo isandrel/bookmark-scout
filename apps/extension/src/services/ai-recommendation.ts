@@ -130,8 +130,9 @@ Each recommendation should have a clear, brief reason.`,
     }),
   });
 
+  // Providers do not always honor the requested count; never show more than the setting allows.
   // Map folderPaths back to folderIds
-  return object.recommendations.map((rec) => {
+  return object.recommendations.slice(0, maxRecommendations).map((rec) => {
     const matchedFolder = folderList.find((f) => f.path === rec.folderPath);
     return {
       ...rec,
