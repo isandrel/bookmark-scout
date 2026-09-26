@@ -1,5 +1,8 @@
 @use "tailwindcss";
 
+// Follow the app theme class next-themes sets on <html>, not the OS media query (Tailwind v4 default).
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
     --color-background: hsl(var(--background));
     --color-foreground: hsl(var(--foreground));
