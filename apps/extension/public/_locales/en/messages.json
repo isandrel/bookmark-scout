@@ -2403,6 +2403,10 @@
         "message": "No title change needed",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "Not an HTML page; skipped",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "OK",
         "description": "Dead link status badge"
@@ -3111,6 +3115,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "$count$ groups were left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "$count$ group was left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "Restored: $restored$. Could not restore: $failed$.",
         "description": "Duplicate removal undo result",
@@ -3138,6 +3162,30 @@
                 "example": "1"
             }
         }
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ groups. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ group. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "Different URLs",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
     },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ bookmark can be cleaned",
@@ -3198,6 +3246,10 @@
     "tools_networkFailed": {
         "message": "Could not connect to the site",
         "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "Too many redirects (or the redirect target could not be reached)",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
     },
     "tools_deadLinkStatus_skipped": {
         "message": "Skipped",

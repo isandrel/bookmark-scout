@@ -32,9 +32,25 @@ async function startLocalSite(): Promise<LocalSite> {
       case '/head-405':
         if (req.method === 'HEAD') return html(res, 405, '');
         return html(res, 200, '<title>GET only</title>');
+      case '/loop':
+        res.writeHead(302, { location: '/loop' });
+        return res.end();
+      case '/head-403':
+        if (req.method === 'HEAD') return html(res, 403, '');
+        return html(res, 200, '<title>GET only</title>');
       case '/redirect':
         res.writeHead(302, { location: '/plain' });
         return res.end();
+      case '/stall':
+        // Headers and part of the head arrive, then the body never finishes.
+        res.writeHead(200, { 'content-type': 'text/html' });
+        res.write('<html><head><title>Never finished');
+        return;
+      case '/file.pdf':
+        res.writeHead(200, { 'content-type': 'application/pdf' });
+        res.write('%PDF-1.7\n');
+        // Never ends: a download of the whole file would hang the scan.
+        return;
       case '/sjis':
         return html(
           res,
@@ -60,6 +76,15 @@ async function startLocalSite(): Promise<LocalSite> {
   };
 }
 
+/** An origin on a port that was just released, so connections to it are refused. */
+async function closedPortOrigin(): Promise<string> {
+  const probe = createServer();
+  await new Promise<void>((resolve) => probe.listen(0, '127.0.0.1', resolve));
+  const { port } = probe.address() as AddressInfo;
+  await new Promise<void>((resolve) => probe.close(() => resolve()));
+  return `http://127.0.0.1:${port}`;
+}
+
 let site: LocalSite;
 test.beforeEach(async () => {
   site = await startLocalSite();
@@ -80,7 +105,10 @@ test.describe('with website access granted', () => {
       { title: 'Plain', url: `${site.origin}/plain` },
       { title: 'Missing', url: `${site.origin}/missing` },
       { title: 'Head Rejected', url: `${site.origin}/head-405` },
+      { title: 'Head Forbidden', url: `${site.origin}/head-403` },
       { title: 'Moved', url: `${site.origin}/redirect` },
+      { title: 'Loop', url: `${site.origin}/loop` },
+      { title: 'Refused', url: `${await closedPortOrigin()}/closed` },
       { title: 'Bookmarklet', url: 'javascript:void(0)' },
     ]);
     await setSettings(extensionWorker, {
@@ -90,6 +118,8 @@ test.describe('with website access granted', () => {
     });
 
     await openTools(page, extensionId, folder.folderId);
+    const consoleMessages: string[] = [];
+    page.on('console', (message) => consoleMessages.push(`${message.type()}: ${message.text()}`));
     await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Check Dead Links' });
     const row = (title: string) =>
@@ -97,16 +127,36 @@ test.describe('with website access granted', () => {
     await expect(row('Plain')).toContainText('Reachable');
     await expect(row('Missing')).toContainText('HTTP 404');
     await expect(row('Head Rejected')).toContainText('Reachable');
+    await expect(row('Head Forbidden')).toContainText('Reachable');
+    await expect(row('Loop')).toContainText(
+      'Too many redirects (or the redirect target could not be reached)',
+    );
+    await expect(row('Refused')).toContainText('Could not connect to the site');
     await expect(row('Moved')).toContainText(`Redirects to ${site.origin}/plain`);
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
     await expect(results).not.toContainText('Failed to fetch');
+    // Chrome itself logs one "Failed to load resource" line per failed request; pages cannot
+    // suppress it. The scan must add nothing else, and never bookmark data of its own.
+    expect(consoleMessages.length).toBeGreaterThan(0);
+    expect(
+      consoleMessages.filter((message) => !message.startsWith('error: Failed to load resource: ')),
+    ).toEqual([]);
 
     expect(site.requests).toEqual(
-      expect.arrayContaining(['HEAD /plain', 'HEAD /missing', 'HEAD /head-405', 'GET /head-405']),
+      expect.arrayContaining([
+        'HEAD /plain',
+        'HEAD /missing',
+        'GET /missing',
+        'HEAD /head-405',
+        'GET /head-405',
+        'HEAD /head-403',
+        'GET /head-403',
+      ]),
     );
-    expect(site.requests).not.toContain('GET /missing');
-    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(5);
+    // A successful HEAD is never repeated as a GET.
+    expect(site.requests).not.toContain('GET /plain');
+    expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(8);
   });
 
   test('metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles', async ({
@@ -156,6 +206,36 @@ test.describe('with website access granted', () => {
         '日本語',
         'Bookmarklet',
       ]);
+  });
+
+  test('metadata fetcher times out on a stalled body, skips non-HTML files, and leaves Running', async ({
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    const folder = await seedFolder(extensionWorker, 'E2E Stalled Metadata', [
+      { title: 'Stalled', url: `${site.origin}/stall` },
+      { title: 'Document', url: `${site.origin}/file.pdf` },
+      { title: 'Plain Original', url: `${site.origin}/plain` },
+    ]);
+    await setSettings(extensionWorker, {
+      metadataFetcherOverwriteTitles: true,
+      metadataFetcherRequestTimeoutMs: 1000,
+      metadataFetcherDefaultScope: 'folder',
+    });
+
+    await openTools(page, extensionId, folder.folderId);
+    const card = toolCard(page, 'Metadata Fetcher');
+    await card.getByRole('button', { name: 'Scan' }).click();
+    const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
+    const row = (title: string) =>
+      results.locator('div.rounded-lg').filter({ has: page.getByText(title, { exact: true }) });
+    await expect(row('Stalled')).toContainText('Request timed out', { timeout: 10_000 });
+    await expect(row('Document')).toContainText('Not an HTML page; skipped');
+    await expect(row('Plain Original')).toContainText('Suggested title: Plain Page Title');
+    await page.keyboard.press('Escape');
+    await expect(card.getByRole('button', { name: 'Scan' })).toBeEnabled();
+    await expect(card).not.toContainText('Running...');
   });
 
   test('metadata apply skips bookmarks renamed after the scan', async ({

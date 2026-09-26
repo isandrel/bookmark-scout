@@ -2,8 +2,12 @@ import type { BookmarkTreeNode } from '@/types';
 
 export type DeadLinkStatus = 'ok' | 'redirect' | 'error' | 'timeout' | 'invalid' | 'skipped';
 
-/** Transport failures carry no HTTP status; `network` covers refused, DNS, and CORS-blocked. */
-export type NetworkErrorKind = 'network' | 'timeout';
+/**
+ * Transport failures carry no HTTP status; `network` covers refused, DNS, and CORS-blocked.
+ * `redirect` means the server answered with a redirect that could not be followed, which is
+ * almost always a redirect loop (too many redirects) or an unreachable redirect target.
+ */
+export type NetworkErrorKind = 'network' | 'timeout' | 'redirect';
 
 export type DeadLinkResultItem = {
   id: string;
@@ -23,7 +27,8 @@ export type DeadLinkScanResult = {
   items: DeadLinkResultItem[];
 };
 
-export type MetadataFetchStatus = 'ok' | 'httpError' | 'error' | 'timeout' | 'skipped';
+/** `notHtml` marks responses (PDFs, images, archives) that are not downloaded or parsed. */
+export type MetadataFetchStatus = 'ok' | 'httpError' | 'error' | 'timeout' | 'skipped' | 'notHtml';
 
 export type MetadataFetchResultItem = {
   id: string;
@@ -37,6 +42,7 @@ export type MetadataFetchResultItem = {
   description?: string;
   /** True when a suggested title differs from the bookmark's title and may be applied. */
   changed: boolean;
+  errorKind?: NetworkErrorKind;
 };
 
 export type MetadataFetchResult = {
@@ -117,24 +123,55 @@ export function isWebUrl(url: string): boolean {
   }
 }
 
-function toErrorKind(error: unknown): NetworkErrorKind {
-  return error instanceof RequestTimeoutError ? 'timeout' : 'network';
+/**
+ * Fetch reports a redirect loop exactly like a refused connection. After a transport failure,
+ * one request with `redirect: 'manual'` tells them apart: an opaque redirect response means the
+ * server did answer, with a redirect that could not be followed.
+ */
+async function classifyFailure(
+  error: unknown,
+  url: string,
+  timeoutMs: number,
+): Promise<NetworkErrorKind> {
+  if (error instanceof RequestTimeoutError) return 'timeout';
+  try {
+    const redirected = await requestWithTimeout(
+      url,
+      { method: 'GET', redirect: 'manual' },
+      timeoutMs,
+      async (response) => response.type === 'opaqueredirect',
+    );
+    return redirected ? 'redirect' : 'network';
+  } catch {
+    return 'network';
+  }
 }
 
+type ProbeResult = Pick<Response, 'status' | 'redirected' | 'url'>;
+
 /**
- * Checks reachability with HEAD and falls back to a GET (body discarded) when the server
- * rejects HEAD with 405 or 501. Redirects are always followed so the final URL is known:
+ * Checks reachability with HEAD and falls back to a GET (body discarded) whenever HEAD returns
+ * an error status: many servers and CDNs answer HEAD with 400, 403, 404, 405, or 501 while
+ * serving the page normally. Redirects are always followed so the final URL is known:
  * fetch's `redirect: 'manual'` yields an opaque response that hides both the status and the
  * Location header, which previously surfaced as "HTTP 0".
  */
-async function probeUrl(url: string, timeoutMs: number): Promise<Response> {
-  const head = await fetchWithTimeout(url, { method: 'HEAD', redirect: 'follow' }, timeoutMs);
-  if (head.status !== 405 && head.status !== 501) {
+async function probeUrl(url: string, timeoutMs: number): Promise<ProbeResult> {
+  const summarize = async ({ status, redirected, url: finalUrl }: Response) => ({
+    status,
+    redirected,
+    url: finalUrl,
+  });
+  const head = await requestWithTimeout(
+    url,
+    { method: 'HEAD', redirect: 'follow' },
+    timeoutMs,
+    summarize,
+  );
+  if (head.status < 400) {
     return head;
   }
-  const get = await fetchWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs);
-  await get.body?.cancel().catch(() => undefined);
-  return get;
+  return requestWithTimeout(url, { method: 'GET', redirect: 'follow' }, timeoutMs, summarize);
 }
 
 export async function scanDeadLinks(
@@ -162,7 +199,7 @@ export async function scanDeadLinks(
       return { ...base, status: 'skipped' } satisfies DeadLinkResultItem;
     }
 
-    let errorKind: NetworkErrorKind = 'network';
+    let lastError: unknown;
     for (let attempt = 0; attempt <= options.retryCount; attempt += 1) {
       try {
         const response = await probeUrl(url, options.requestTimeoutMs);
@@ -183,10 +220,11 @@ export async function scanDeadLinks(
           ...(redirectUrl ? { redirectUrl } : {}),
         } satisfies DeadLinkResultItem;
       } catch (error) {
-        errorKind = toErrorKind(error);
+        lastError = error;
       }
     }
 
+    const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs);
     return {
       ...base,
       status: errorKind === 'timeout' ? 'timeout' : 'error',
@@ -238,23 +276,37 @@ export async function fetchBookmarkMetadata(
     }
 
     try {
-      const response = await fetchWithTimeout(
+      const page = await requestWithTimeout(
         url,
         { method: 'GET', redirect: 'follow' },
         options.requestTimeoutMs,
+        async (response) => {
+          const contentType = response.headers.get('content-type');
+          // Error pages ("404 Not Found") must never become title suggestions, and files such
+          // as PDFs or archives are never downloaded.
+          if (!response.ok || !isHtmlContentType(contentType)) {
+            return { status: response.status, ok: response.ok, html: null };
+          }
+          const bytes = await readHtmlHead(response, METADATA_MAX_BYTES);
+          return { status: response.status, ok: true, html: decodeHtml(bytes, contentType) };
+        },
       );
-      if (!response.ok) {
-        // Error pages ("404 Not Found") must never become title suggestions.
-        await response.body?.cancel().catch(() => undefined);
+      if (!page.ok) {
         return {
           ...base,
           status: 'httpError',
-          statusCode: response.status,
+          statusCode: page.status,
+        } satisfies MetadataFetchResultItem;
+      }
+      if (page.html === null) {
+        return {
+          ...base,
+          status: 'notHtml',
+          statusCode: page.status,
         } satisfies MetadataFetchResultItem;
       }
 
-      const html = decodeHtml(await response.arrayBuffer(), response.headers.get('content-type'));
-      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const doc = new DOMParser().parseFromString(page.html, 'text/html');
       const suggestedTitle =
         doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
       const description = options.fetchDescriptions
@@ -270,16 +322,16 @@ export async function fetchBookmarkMetadata(
       return {
         ...base,
         status: 'ok',
-        statusCode: response.status,
+        statusCode: page.status,
         suggestedTitle,
         description,
         changed,
       } satisfies MetadataFetchResultItem;
     } catch (error) {
-      return {
-        ...base,
-        status: toErrorKind(error) === 'timeout' ? 'timeout' : 'error',
-      } satisfies MetadataFetchResultItem;
+      const errorKind = await classifyFailure(error, url, options.requestTimeoutMs);
+      return errorKind === 'timeout'
+        ? ({ ...base, status: 'timeout' } satisfies MetadataFetchResultItem)
+        : ({ ...base, status: 'error', errorKind } satisfies MetadataFetchResultItem);
     }
   });
 
@@ -324,8 +376,21 @@ export async function applyMetadataTitles(
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
 const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
-const TOKEN_VALUE_PATTERN =
-  /(?:^|[^A-Za-z0-9_])(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/;
+const TOKEN_CANDIDATE_PATTERN =
+  /(?:^|[^A-Za-z0-9_])(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/g;
+
+/**
+ * True when a query or fragment value contains an API or access token. `sk-` is also a common
+ * slug prefix (`sk-telecom-annual-report-2024`), so it counts only when the rest looks random:
+ * upper case, lower case, and digits together, as in generated keys.
+ */
+export function containsTokenValue(value: string): boolean {
+  return [...value.matchAll(TOKEN_CANDIDATE_PATTERN)].some(([, candidate]) => {
+    if (!candidate.startsWith('sk-')) return true;
+    const body = candidate.slice(3);
+    return /[A-Z]/.test(body) && /[a-z]/.test(body) && /\d/.test(body);
+  });
+}
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
 /** `logo@2x.png`-style asset names look like emails but are not. */
 const RETINA_SUFFIX_PATTERN = /^\d+(?:\.\d+)?x\./i;
@@ -405,9 +470,8 @@ export function scanBookmarkPrivacy(
         if (sensitiveParams.has(key.toLowerCase())) {
           add({ kind: 'sensitiveParam', param: key });
         }
-        if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+        if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
       });
-      if (TOKEN_VALUE_PATTERN.test(safeDecode(parsed.pathname))) add({ kind: 'tokenPattern' });
     }
 
     if (options.scanFragments && parsed.hash) {
@@ -417,7 +481,7 @@ export function scanBookmarkPrivacy(
           if (fragmentSensitive.has(key.toLowerCase())) {
             add({ kind: 'sensitiveFragmentParam', param: key });
           }
-          if (TOKEN_VALUE_PATTERN.test(value)) add({ kind: 'tokenPattern' });
+          if (containsTokenValue(value)) add({ kind: 'tokenPattern' });
         });
       } else if (!/^#!?\//.test(parsed.hash)) {
         // A plain in-page anchor is a weak signal; SPA routes (`#/path`) are not flagged.
@@ -466,17 +530,28 @@ export function scanBookmarkPrivacy(
   };
 }
 
-async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs: number) {
+/**
+ * Runs one request whose timeout covers both the response headers and `consume`, so a server
+ * that stalls mid-body cannot hang a scan. Any body `consume` leaves unread is cancelled.
+ */
+async function requestWithTimeout<T>(
+  input: string,
+  init: RequestInit,
+  timeoutMs: number,
+  consume: (response: Response) => Promise<T>,
+): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  let response: Response | undefined;
 
   try {
-    return await fetch(input, {
+    response = await fetch(input, {
       ...init,
       cache: 'no-store',
       credentials: 'omit',
       signal: controller.signal,
     });
+    return await consume(response);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new RequestTimeoutError();
@@ -484,7 +559,56 @@ async function fetchWithTimeout(input: string, init: RequestInit, timeoutMs: num
     throw error;
   } finally {
     clearTimeout(timeoutId);
+    if (response?.body && !response.body.locked) {
+      response.body.cancel().catch(() => undefined);
+    }
   }
+}
+
+/** Upper bound on bytes read from one page; titles and descriptions live in the `<head>`. */
+const METADATA_MAX_BYTES = 512 * 1024;
+const HEAD_END_PATTERN = /<\/head\s*>|<body[\s>]/i;
+const HTML_CONTENT_TYPE_PATTERN = /^\s*(?:text\/html|application\/xhtml\+xml)\s*(?:;|$)/i;
+
+/** True when a Content-Type is missing (sniffed later) or declares an HTML document. */
+export function isHtmlContentType(contentType: string | null): boolean {
+  return !contentType?.trim() || HTML_CONTENT_TYPE_PATTERN.test(contentType);
+}
+
+/**
+ * Reads a page body only until the end of its `<head>` (or `<body>` start) or `maxBytes`,
+ * whichever comes first, then stops the download.
+ */
+export async function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
+  const reader = response.body?.getReader();
+  if (!reader) return new ArrayBuffer(0);
+  const chunks: Uint8Array[] = [];
+  const scanner = new TextDecoder('latin1');
+  let total = 0;
+  let tail = '';
+
+  try {
+    while (total < maxBytes) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = value.subarray(0, maxBytes - total);
+      chunks.push(chunk);
+      total += chunk.byteLength;
+      const text = tail + scanner.decode(chunk);
+      if (HEAD_END_PATTERN.test(text)) break;
+      tail = text.slice(-16);
+    }
+  } finally {
+    reader.cancel().catch(() => undefined);
+  }
+
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return bytes.buffer;
 }
 
 async function mapWithConcurrency<T, R>(

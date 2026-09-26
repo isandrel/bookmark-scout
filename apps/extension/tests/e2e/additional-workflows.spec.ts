@@ -379,7 +379,9 @@ test('dead-link checker reports mocked reachable and missing URLs', async ({
       .getByRole('dialog', { name: 'Check Dead Links' })
       .getByText('Reachability results for the selected bookmarks'),
   ).toBeVisible();
+  // A HEAD error is confirmed with GET before the link is reported dead; a HEAD 200 is not.
   expect(requested.sort()).toEqual([
+    'GET https://e2e.invalid/missing',
     'HEAD https://e2e.invalid/missing',
     'HEAD https://e2e.invalid/ok',
   ]);
@@ -480,7 +482,9 @@ test('network tools report route-mocked transport failures without mutating book
   await expect(metadata).toContainText('Offline Original');
   await expect(metadata.getByText('Suggested title:', { exact: false })).toHaveCount(0);
 
-  expect(requests).toEqual(['HEAD', 'HEAD', 'GET']);
+  // Dead links: HEAD plus one retry, then a manual-redirect GET that rules out a redirect loop.
+  // Metadata: one GET, then the same redirect check.
+  expect(requests).toEqual(['HEAD', 'HEAD', 'GET', 'GET', 'GET']);
   const [storedBookmark] = await extensionWorker.evaluate(async (id) => {
     return chrome.bookmarks.getChildren(id);
   }, folderId);

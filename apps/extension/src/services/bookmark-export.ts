@@ -142,6 +142,18 @@ export function escapeMarkdownText(text: string): string {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Escapes block syntax a title would otherwise trigger at the start of a list item's text:
+ * headings (`#`), ordered (`1.`, `1)`) and nested (`-`, `+`) lists, thematic breaks and setext
+ * underlines (`---`, `===`), code fences (`~~~`), and block quotes. Apply after
+ * {@link escapeMarkdownText}, which already covers `*`, `_`, backticks, and `>`.
+ */
+export function escapeMarkdownLineStart(text: string): string {
+  return text
+    .replace(/^(\s*)(\d+)([.)])/, '$1$2\\$3')
+    .replace(/^(\s*)([#+\-=~])/, '$1\\$2');
+}
+
 /** Percent-encodes characters that would end or break a Markdown link destination. */
 function escapeMarkdownUrl(url: string): string {
   return url.replace(
@@ -170,7 +182,7 @@ export const markdownFormat: ExportFormat = {
       if (n.url) {
         return includeUrls
           ? `${nodeIndent}- [${title}](${escapeMarkdownUrl(n.url)})\n`
-          : `${nodeIndent}- ${title}\n`;
+          : `${nodeIndent}- ${escapeMarkdownLineStart(title)}\n`;
       }
 
       const children = n.children?.map((c) => renderNode(c, depth + 1)).join('') ?? '';
@@ -189,12 +201,23 @@ export function escapeCsvCell(text: string): string {
 }
 
 /**
+ * Escapes a folder name for the CSV folder path, whose segments are joined with `/`:
+ * a literal `/` is written as `\/` and a backslash as `\\`.
+ */
+export function escapeCsvPathSegment(name: string): string {
+  return name.replace(/\\/g, '\\\\').replace(/\//g, '\\/');
+}
+
+/** Lets spreadsheet apps such as Excel detect UTF-8 instead of a legacy code page. */
+const UTF8_BOM = '﻿';
+
+/**
  * CSV format - flat table, useful for spreadsheets
  */
 export const csvFormat: ExportFormat = {
   nameKey: 'export_formatCsv',
   extension: 'csv',
-  mimeType: 'text/csv',
+  mimeType: 'text/csv;charset=utf-8',
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
     const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
@@ -217,7 +240,8 @@ export const csvFormat: ExportFormat = {
         ]);
         return;
       }
-      const folderPath = path ? `${path}/${n.title}` : n.title;
+      const segment = escapeCsvPathSegment(n.title);
+      const folderPath = path ? `${path}/${segment}` : segment;
       n.children?.forEach((c) => {
         collectRows(c, folderPath);
       });
@@ -227,7 +251,7 @@ export const csvFormat: ExportFormat = {
       collectRows(child, '');
     });
 
-    return rows.map((row) => row.map(escapeCsvCell).join(',')).join('\n');
+    return UTF8_BOM + rows.map((row) => row.map(escapeCsvCell).join(',')).join('\n');
   },
 };
 
@@ -335,10 +359,16 @@ export function generateFilename(
   const maxLength = options.maxLength ?? defaultSettings.exportFilenameMaxLength;
   const now = options.now ?? new Date();
 
-  const sanitized = folderName
-    .replace(/[^a-zA-Z0-9-_]/g, '_')
-    .replace(/_+/g, '_')
-    .substring(0, maxLength);
+  // Only characters that filesystems reject are replaced, so names such as "日本語" survive.
+  const sanitized = Array.from(
+    folderName
+      .normalize('NFC')
+      .replace(/[\\/:*?"<>|\p{Cc}\s]/gu, '_')
+      .replace(/_+/g, '_')
+      .replace(/^[._]+|[._]+$/g, ''),
+  )
+    .slice(0, maxLength)
+    .join('');
   const safePrefix = prefix.replace(/[\\/:*?"<>|]/g, '_');
   const pad = (value: number) => String(value).padStart(2, '0');
   const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;

@@ -86,6 +86,72 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
   expect(restored.map((item) => item.title)).toEqual(['A1', 'A3', 'B1', 'B2']);
 });
 
+test('duplicate removal never deletes the last copy when the kept item was moved to another URL', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Keeper Changed', [
+    { title: 'K1', url: 'https://e2e.invalid/keep' },
+    { title: 'K2', url: 'https://e2e.invalid/keep' },
+  ]);
+  await setSettings(extensionWorker, { duplicatesKeepRule: 'first' });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog.getByText('Keep', { exact: true })).toBeVisible();
+
+  await extensionWorker.evaluate(async (id) => {
+    await chrome.bookmarks.update(id, { url: 'https://e2e.invalid/elsewhere' });
+  }, folder.ids.K1);
+  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+
+  await expect(page.getByText('Some duplicates were not removed', { exact: true })).toBeVisible();
+  await expect(dialog.getByRole('status')).toContainText(
+    'Removed: 0. Skipped because they changed or were already removed: 1. Failed: 0. 1 group was left untouched because the kept bookmark was changed or removed after the scan.',
+  );
+  const remaining = await childrenOf(extensionWorker, folder.folderId);
+  expect(remaining.map((item) => [item.title, item.url])).toEqual([
+    ['K1', 'https://e2e.invalid/elsewhere'],
+    ['K2', 'https://e2e.invalid/keep'],
+  ]);
+});
+
+test('duplicate cleaner warns before title-only matching removes bookmarks with different URLs', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Title Only', [
+    { title: 'Home', url: 'https://e2e.invalid/home-a' },
+    { title: 'home', url: 'https://e2e.invalid/home-b' },
+    { title: 'Docs', url: 'https://e2e.invalid/docs' },
+    { title: 'Docs', url: 'https://e2e.invalid/docs' },
+  ]);
+  await setSettings(extensionWorker, {
+    duplicatesMatchStrategy: 'title_only',
+    duplicatesDefaultScope: 'all',
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const scan = toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' });
+  await scan.click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog.getByRole('alert')).toHaveText(
+    "Title-only matching grouped bookmarks with different URLs in 1 group. Removing duplicates deletes those other pages' bookmarks; review them first.",
+  );
+  await expect(dialog.getByText('Different URLs', { exact: true })).toHaveCount(1);
+  await page.keyboard.press('Escape');
+
+  await setSettings(extensionWorker, { duplicatesMatchStrategy: 'normalized_url' });
+  await scan.click();
+  await expect(dialog.getByText('Keep', { exact: true })).toHaveCount(1);
+  await expect(dialog.getByRole('alert')).toHaveCount(0);
+  await expect(dialog.getByText('Different URLs', { exact: true })).toHaveCount(0);
+  expect(await childrenOf(extensionWorker, folder.folderId)).toHaveLength(4);
+});
+
 test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmarks edited after the preview', async ({
   extensionId,
   extensionWorker,

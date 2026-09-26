@@ -2403,6 +2403,10 @@
         "message": "タイトルの変更は不要です",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "HTMLページではないためスキップしました",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "正常",
         "description": "Dead link status badge"
@@ -3111,6 +3115,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "復元: $restored$ 件。復元できませんでした: $failed$ 件。",
         "description": "Duplicate removal undo result",
@@ -3138,6 +3162,30 @@
                 "example": "1"
             }
         }
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "URL が異なります",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
     },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ 件のブックマークをクリーンアップできます",
@@ -3198,6 +3246,10 @@
     "tools_networkFailed": {
         "message": "サイトに接続できませんでした",
         "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "リダイレクトが多すぎます（またはリダイレクト先に接続できません）",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
     },
     "tools_deadLinkStatus_skipped": {
         "message": "スキップ",
