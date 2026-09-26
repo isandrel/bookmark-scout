@@ -2111,14 +2111,6 @@
         "message": "より良いメタデータが見つかったら既存のブックマークタイトルを置き換えます",
         "description": "Metadata fetcher overwrite titles description"
     },
-    "settings_metadataFetcherFetchFavicons": {
-        "message": "ファビコンを取得",
-        "description": "Metadata fetcher fetch favicons label"
-    },
-    "settings_metadataFetcherFetchFaviconsDesc": {
-        "message": "欠けている、または古いファビコンの更新を試みます",
-        "description": "Metadata fetcher fetch favicons description"
-    },
     "settings_metadataFetcherFetchDescriptions": {
         "message": "説明を取得",
         "description": "Metadata fetcher fetch descriptions label"
@@ -2936,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript の URL（ブックマークレット）はここでは保存できません。",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "スクリプト URL ($1) はここでは保存できません。既存のブックマークレットの名前は変更できます。",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "このフォルダの名前を変更します。",
@@ -3478,5 +3470,33 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "(フィルターで非表示の $1 件は対象外)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "Web ページとして開く data: URL ($1) はここでは保存できません。",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "1 件を移動",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "1 件を移動しました",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "選択した他の $1 件は選択したフォルダ内にあり、フォルダと一緒に移動します。",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "ほか $1 件",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "テーブルが狭い間はタイトルを表示するため非表示になります",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }

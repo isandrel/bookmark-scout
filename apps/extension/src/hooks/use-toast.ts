@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
 
-// Toasts with an action (Undo) stack so each deletion stays recoverable; an informational toast
-// replaces the previous informational one, as before.
-const TOAST_LIMIT = 3;
+// Toasts with an action (Undo) are never dropped: each deletion must stay recoverable for its
+// whole undo window, however many arrive at once. They leave only when their own timer ends or
+// they are dismissed. An informational toast replaces the previous informational one. The
+// Toaster keeps a long stack compact.
 const TOAST_REMOVE_DELAY = 500;
 
 type ToasterToast = ToastProps & {
@@ -77,7 +78,7 @@ export const reducer = (state: State, action: Action): State => {
       const toasts = [
         action.toast,
         ...state.toasts.filter((toast) => toast.action && toast.open !== false),
-      ].slice(0, TOAST_LIMIT);
+      ];
       return { ...state, toasts };
     }
 

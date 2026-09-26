@@ -531,7 +531,6 @@ success_statuses   = [ 200, 201, 202, 204, 301, 302, 307, 308 ]
 enabled            = true
 default_scope      = "folder"
 overwrite_titles   = false
-fetch_favicons     = true
 fetch_descriptions = true
 request_timeout_ms = 8000
 concurrency        = 4

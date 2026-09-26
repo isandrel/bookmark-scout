@@ -2111,14 +2111,6 @@
         "message": "Replace existing bookmark titles when better metadata is found",
         "description": "Metadata fetcher overwrite titles description"
     },
-    "settings_metadataFetcherFetchFavicons": {
-        "message": "Fetch Favicons",
-        "description": "Metadata fetcher fetch favicons label"
-    },
-    "settings_metadataFetcherFetchFaviconsDesc": {
-        "message": "Attempt to refresh missing or outdated favicons",
-        "description": "Metadata fetcher fetch favicons description"
-    },
     "settings_metadataFetcherFetchDescriptions": {
         "message": "Fetch Descriptions",
         "description": "Metadata fetcher fetch descriptions label"
@@ -2680,7 +2672,7 @@
         "description": "Reset one setting button accessible name"
     },
     "options_apiKeyInvalidFormat": {
-        "message": "This doesn't look like a $1 API key. It was not saved.",
+        "message": "This doesn't look like an API key for $1. It was not saved.",
         "description": "Invalid API key format error"
     },
     "toast_apiKeySaved": {
@@ -2936,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript URLs (bookmarklets) cannot be saved here.",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "Script URLs ($1) cannot be saved here. Existing bookmarklets can still be renamed.",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "Change the name of this folder.",
@@ -3478,5 +3470,33 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "($1 more hidden by filters, not included)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "data: URLs that open as a web page ($1) cannot be saved here.",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "Move 1 item",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "Moved 1 item",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "$1 other selected item(s) are inside a selected folder and move with it.",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "and $1 more",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "Hidden while the table is narrow so Title stays visible",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }
