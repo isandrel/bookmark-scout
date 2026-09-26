@@ -1,5 +1,5 @@
-import type { Locator, Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import type { Locator, Worker } from '@playwright/test';
+import { expect, test, toastRegion } from './fixtures';
 import {
   bookmarkRow,
   childTitles,
@@ -10,10 +10,6 @@ import {
 } from './popup-helpers';
 
 const RECENT_KEY = 'bookmark-scout-recent-folders';
-
-function toastRegion(page: Page) {
-  return page.getByRole('region', { name: 'Notifications (F8)' });
-}
 
 async function childCount(worker: Worker, folderId: string) {
   return (await childTitles(worker, folderId)).length;

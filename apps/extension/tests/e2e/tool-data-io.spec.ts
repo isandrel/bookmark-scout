@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 function localDate() {
@@ -136,7 +136,7 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
     mimeType: 'application/json',
     buffer: Buffer.from(raw),
   });
-  await expect(page.getByText('Import Complete', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('Import Complete', { exact: true })).toBeVisible();
   const topLevel = (await childrenOf(extensionWorker, target.folderId)).map((item) => item.title);
   expect(topLevel).toEqual(exported.children.map((node) => node.title));
   expect(topLevel).not.toContain('Untitled');
@@ -158,9 +158,12 @@ test('import reports empty files as failures and partial JSON imports with count
     buffer: Buffer.from('Just some plain text, no bookmarks here.'),
   });
   await expect(
-    page.getByText('No bookmarks or folders were found in this file. Nothing was imported.', {
-      exact: true,
-    }),
+    toastRegion(page).getByText(
+      'No bookmarks or folders were found in this file. Nothing was imported.',
+      {
+        exact: true,
+      },
+    ),
   ).toBeVisible();
   expect(await childrenOf(extensionWorker, folder.folderId)).toEqual([]);
 
@@ -176,10 +179,13 @@ test('import reports empty files as failures and partial JSON imports with count
       ]),
     ),
   });
-  await expect(page.getByText('Some items were not imported', { exact: true })).toBeVisible();
   await expect(
-    // The toast's screen-reader announcement repeats the text; match the visible description.
-    page.getByText(/^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/),
+    toastRegion(page).getByText('Some items were not imported', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    toastRegion(page).getByText(
+      /^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/,
+    ),
   ).toBeVisible();
   const titles = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
   expect(titles).toEqual(expect.arrayContaining(['Valid One', 'Valid Two']));

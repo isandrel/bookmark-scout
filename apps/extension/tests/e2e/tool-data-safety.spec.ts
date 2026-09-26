@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 test('duplicate cleaner keeps the newest item it labels Keep and ignores case, port, and query-order lookalikes', async ({
@@ -67,7 +67,9 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
   );
   await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
 
-  await expect(page.getByText('Some duplicates were not removed', { exact: true })).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('Some duplicates were not removed', { exact: true }),
+  ).toBeVisible();
   await expect(dialog.getByRole('status')).toContainText(/Removed: 1\. .*: 2\. Failed: 0\./);
   await expect
     .poll(async () => (await childrenOf(extensionWorker, folder.folderId)).length)
@@ -107,7 +109,9 @@ test('duplicate removal never deletes the last copy when the kept item was moved
   }, folder.ids.K1);
   await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
 
-  await expect(page.getByText('Some duplicates were not removed', { exact: true })).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('Some duplicates were not removed', { exact: true }),
+  ).toBeVisible();
   await expect(dialog.getByRole('status')).toContainText(
     'Removed: 0. Skipped because they changed or were already removed: 1. Failed: 0. 1 group was left untouched because the kept bookmark was changed or removed after the scan.',
   );
@@ -180,7 +184,9 @@ test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmar
   }, folder.ids['Edited Later']);
   await preview.getByRole('button', { name: 'Apply Changes' }).click();
 
-  await expect(page.getByText('Some URLs were not cleaned', { exact: true })).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('Some URLs were not cleaned', { exact: true }),
+  ).toBeVisible();
   await expect
     .poll(async () =>
       Object.fromEntries(

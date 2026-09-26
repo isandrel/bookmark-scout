@@ -1,5 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -146,11 +146,13 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await page.getByRole('menuitem', { name: 'Delete' }).click();
   await expect(row(page, 'Doomed Link')).toHaveCount(0);
   await expect(
-    page.getByText('Deleted "Doomed Link". Undo within 10 seconds.', { exact: true }),
+    toastRegion(page).getByText('Deleted "Doomed Link". Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(row(page, 'Doomed Link')).toBeVisible();
-  await expect(page.getByText('Restored "Doomed Link".', { exact: true })).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('Restored "Doomed Link".', { exact: true }),
+  ).toBeVisible();
   await expect
     .poll(() =>
       extensionWorker.evaluate(
