@@ -1,5 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const AI_KEY = 'bookmark-scout-ai';
@@ -158,7 +158,7 @@ test('partial import merges onto current settings and reports what changed', asy
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ theme: 'dark' })),
   });
-  await expect(page.getByText('1 settings changed: Theme')).toBeVisible();
+  await expect(toastRegion(page).getByText('1 settings changed: Theme')).toBeVisible();
   await expect
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({ theme: 'dark', defaultNewFolderName: 'Inbox' });
@@ -168,7 +168,9 @@ test('partial import merges onto current settings and reports what changed', asy
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify({ theme: 'neon' })),
   });
-  await expect(page.getByText('These settings have invalid values: Theme')).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('These settings have invalid values: Theme'),
+  ).toBeVisible();
   expect((await readSettings(extensionWorker)).theme).toBe('dark');
 });
 

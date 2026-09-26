@@ -1,5 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -438,7 +438,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   await expect(bulk).toContainText('2 selected');
   await bulk.getByRole('button', { name: 'Delete' }).click();
   await expect(
-    page.getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true }),
+    toastRegion(page).getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A']);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();

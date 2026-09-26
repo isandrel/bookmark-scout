@@ -2,7 +2,15 @@ import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } 
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { chromium, expect, test as base, type BrowserContext, type Worker } from '@playwright/test';
+import {
+  chromium,
+  expect,
+  test as base,
+  type BrowserContext,
+  type Locator,
+  type Page,
+  type Worker,
+} from '@playwright/test';
 
 type ExtensionFixtures = {
   /** Loads a copy whose manifest pre-grants the optional web host access the network tools request. */
@@ -61,5 +69,14 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
     await use(new URL(extensionWorker.url()).host);
   },
 });
+
+/**
+ * The visible toast viewport. Radix also copies each toast's text into a hidden aria-live
+ * announcer outside this region, so unscoped text locators can match twice. `includeHidden`
+ * keeps the region reachable while a modal dialog marks the rest of the page aria-hidden.
+ */
+export function toastRegion(page: Page): Locator {
+  return page.getByRole('region', { name: 'Notifications (F8)', includeHidden: true });
+}
 
 export { expect };

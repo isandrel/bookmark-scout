@@ -1,6 +1,6 @@
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 // "日本語" encoded as Shift_JIS.
@@ -193,7 +193,7 @@ test.describe('with website access granted', () => {
       .getByRole('checkbox', { name: 'Apply suggested title for Other Original' })
       .click();
     await results.getByRole('button', { name: 'Apply 2 titles' }).click();
-    await expect(page.getByText('Titles updated', { exact: true })).toBeVisible();
+    await expect(toastRegion(page).getByText('Titles updated', { exact: true })).toBeVisible();
     await expect
       .poll(async () =>
         (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),
@@ -256,7 +256,9 @@ test.describe('with website access granted', () => {
       await chrome.bookmarks.update(id, { title: 'Renamed By User' });
     }, folder.ids['Plain Original']);
     await results.getByRole('button', { name: 'Apply 1 title' }).click();
-    await expect(page.getByText('Some titles were not updated', { exact: true })).toBeVisible();
+    await expect(
+      toastRegion(page).getByText('Some titles were not updated', { exact: true }),
+    ).toBeVisible();
     expect((await childrenOf(extensionWorker, folder.folderId))[0].title).toBe('Renamed By User');
   });
 });
@@ -286,7 +288,9 @@ test('network tools explain and request website access, and scan nothing when it
 
   await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();
   await prompt.getByRole('button', { name: 'Allow access' }).click();
-  await expect(page.getByText('Website access not granted', { exact: true })).toBeVisible();
+  await expect(
+    toastRegion(page).getByText('Website access not granted', { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Metadata Fetcher' })).toHaveCount(0);
   expect(site.requests).toEqual([]);
 });

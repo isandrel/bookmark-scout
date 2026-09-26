@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 // Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
 test.use({ grantWebHostAccess: true });
@@ -340,9 +340,9 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
 
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
-  await expect(page.getByText('Tool failed', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('Tool failed', { exact: true })).toBeVisible();
   await expect(
-    page.getByText('Synthetic provider rejected the key', { exact: true }),
+    toastRegion(page).getByText('Synthetic provider rejected the key', { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
   expect(providerCalls).toBe(1);

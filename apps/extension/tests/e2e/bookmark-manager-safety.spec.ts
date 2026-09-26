@@ -1,5 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -388,7 +388,7 @@ test('bulk move explains nested items, names them, and skips their current folde
   await expect(page.getByRole('option', { name: /E2E Bulk Wording$/ })).toHaveCount(0);
   await page.getByRole('option', { name: /E2E Bulk Wording \/ Wording Target$/ }).click();
   await dialog.getByRole('button', { name: 'Move to folder' }).click();
-  await expect(page.getByText('✓ Moved 1 item', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Moved 1 item', { exact: true })).toBeVisible();
   await expect
     .poll(() => childTitles(extensionWorker, seeded.ids['Wording Target']))
     .toEqual(['Wording Parent']);
