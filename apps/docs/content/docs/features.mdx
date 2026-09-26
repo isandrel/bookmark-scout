@@ -65,6 +65,8 @@ Fetch page titles (and optionally descriptions) for selected scopes, then review
 ### 🛡️ Privacy Scanner
 Detect sensitive query parameters, URL fragments, emails, and UUIDs in bookmark data.
 
+Bookmark exports and AI context packs use the same rules before downloading. When the file would contain sensitive parameters, fragment tokens, email-like or token-like values, or URL credentials, a review lists them and lets you export the original, export a redacted copy (values replaced with `REDACTED`), or cancel. Redaction changes only the downloaded file, never your bookmarks. Exports with nothing sensitive download directly.
+
 ### 📊 Bookmark Statistics
 View domain, folder, protocol, duplicate, depth, and top-item statistics for a folder or all bookmarks. Sections turned off in settings are hidden, and untitled folders count as a level and appear as "Untitled".
 
