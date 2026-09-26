@@ -13,7 +13,7 @@ description: Plan and run several coding subagents in parallel on the Bookmark S
 4. Keep concurrency to about four agents. More agents mean more conflicts and more rate-limit stops.
 5. Make every prompt self-contained: branch name, the findings or `backlog/tasks/` file to read, the verification commands below, commit and PR rules, and the required final report (PR URL, merge status, per-bug outcome, verification results).
 
-Verification for extension changes, from the repository root:
+Verification for extension changes, from the repository root (in worktrees, export `NX_DAEMON=false` first):
 ```bash
 bunx nx run extension:lint
 bunx nx run extension:test:unit
@@ -50,6 +50,7 @@ bunx nx run extension:test:e2e
 - Run agents in the background and report to the user as each finishes; do not predict results before a notification arrives.
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
+- **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.
 - A local hook rewrites plain `git` to `rtk git`, which fails inside worktrees; call `/usr/bin/git` there.
 - Permission prompts mostly come from background agents; allow rules in `.claude/settings.local.json` apply to them too.
 
