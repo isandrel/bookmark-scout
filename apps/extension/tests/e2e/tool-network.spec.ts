@@ -76,6 +76,15 @@ async function startLocalSite(): Promise<LocalSite> {
   };
 }
 
+/** An origin on a port that was just released, so connections to it are refused. */
+async function closedPortOrigin(): Promise<string> {
+  const probe = createServer();
+  await new Promise<void>((resolve) => probe.listen(0, '127.0.0.1', resolve));
+  const { port } = probe.address() as AddressInfo;
+  await new Promise<void>((resolve) => probe.close(() => resolve()));
+  return `http://127.0.0.1:${port}`;
+}
+
 let site: LocalSite;
 test.beforeEach(async () => {
   site = await startLocalSite();
@@ -99,7 +108,7 @@ test.describe('with website access granted', () => {
       { title: 'Head Forbidden', url: `${site.origin}/head-403` },
       { title: 'Moved', url: `${site.origin}/redirect` },
       { title: 'Loop', url: `${site.origin}/loop` },
-      { title: 'Refused', url: 'http://127.0.0.1:9/closed' },
+      { title: 'Refused', url: `${await closedPortOrigin()}/closed` },
       { title: 'Bookmarklet', url: 'javascript:void(0)' },
     ]);
     await setSettings(extensionWorker, {
@@ -109,6 +118,8 @@ test.describe('with website access granted', () => {
     });
 
     await openTools(page, extensionId, folder.folderId);
+    const consoleMessages: string[] = [];
+    page.on('console', (message) => consoleMessages.push(`${message.type()}: ${message.text()}`));
     await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Check Dead Links' });
     const row = (title: string) =>
@@ -125,6 +136,12 @@ test.describe('with website access granted', () => {
     await expect(row('Moved')).not.toContainText('HTTP 0');
     await expect(row('Bookmarklet')).toContainText('Not a web link; skipped');
     await expect(results).not.toContainText('Failed to fetch');
+    // Chrome itself logs one "Failed to load resource" line per failed request; pages cannot
+    // suppress it. The scan must add nothing else, and never bookmark data of its own.
+    expect(consoleMessages.length).toBeGreaterThan(0);
+    expect(
+      consoleMessages.filter((message) => !message.startsWith('error: Failed to load resource: ')),
+    ).toEqual([]);
 
     expect(site.requests).toEqual(
       expect.arrayContaining([
