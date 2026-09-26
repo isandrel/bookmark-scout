@@ -375,7 +375,7 @@ export async function applyMetadataTitles(
 }
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
-const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
+export const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
 const TOKEN_CANDIDATE_PATTERN =
   /(?:^|[^A-Za-z0-9_])(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/g;
 
@@ -385,11 +385,18 @@ const TOKEN_CANDIDATE_PATTERN =
  * upper case, lower case, and digits together, as in generated keys.
  */
 export function containsTokenValue(value: string): boolean {
-  return [...value.matchAll(TOKEN_CANDIDATE_PATTERN)].some(([, candidate]) => {
-    if (!candidate.startsWith('sk-')) return true;
-    const body = candidate.slice(3);
-    return /[A-Z]/.test(body) && /[a-z]/.test(body) && /\d/.test(body);
-  });
+  return findTokenValues(value).length > 0;
+}
+
+/** The API or access tokens inside `value`, by the rules of {@link containsTokenValue}. */
+export function findTokenValues(value: string): string[] {
+  return [...value.matchAll(TOKEN_CANDIDATE_PATTERN)]
+    .map(([, candidate]) => candidate)
+    .filter((candidate) => {
+      if (!candidate.startsWith('sk-')) return true;
+      const body = candidate.slice(3);
+      return /[A-Z]/.test(body) && /[a-z]/.test(body) && /\d/.test(body);
+    });
 }
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
 /** `logo@2x.png`-style asset names look like emails but are not. */
@@ -423,7 +430,7 @@ function safeDecode(value: string): string {
 }
 
 /** Splits a fragment into route-style params (`#/cb?access_token=…`, `#access_token=…`). */
-function fragmentParams(hash: string): URLSearchParams | null {
+export function parseFragmentParams(hash: string): URLSearchParams | null {
   const fragment = hash.replace(/^#/, '');
   const queryStart = fragment.indexOf('?');
   if (queryStart >= 0) return new URLSearchParams(fragment.slice(queryStart + 1));
@@ -434,9 +441,16 @@ function fragmentParams(hash: string): URLSearchParams | null {
 }
 
 function containsEmail(text: string): boolean {
-  return [...text.matchAll(EMAIL_PATTERN)].some(
-    (match) => !RETINA_SUFFIX_PATTERN.test(match[1]) && !ASSET_EXTENSION_PATTERN.test(match[1]),
-  );
+  return findEmailValues(text).length > 0;
+}
+
+/** Email-like values in `text`, skipping asset names such as `logo@2x.png`. */
+export function findEmailValues(text: string): string[] {
+  return [...text.matchAll(EMAIL_PATTERN)]
+    .filter(
+      (match) => !RETINA_SUFFIX_PATTERN.test(match[1]) && !ASSET_EXTENSION_PATTERN.test(match[1]),
+    )
+    .map((match) => match[0]);
 }
 
 export function scanBookmarkPrivacy(
@@ -475,7 +489,7 @@ export function scanBookmarkPrivacy(
     }
 
     if (options.scanFragments && parsed.hash) {
-      const params = fragmentParams(parsed.hash);
+      const params = parseFragmentParams(parsed.hash);
       if (params) {
         params.forEach((value, key) => {
           if (fragmentSensitive.has(key.toLowerCase())) {

@@ -3439,6 +3439,82 @@
         "message": "APIトークンまたはアクセストークンと思われる値があります",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "export_privacyReviewTitle": {
+        "message": "エクスポート前に個人データを確認",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "このエクスポートの $count$ 件のブックマークに個人情報の可能性がある値が含まれています。編集済みエクスポートではファイル内の値だけが REDACTED に置き換えられ、ブックマーク自体は変更されません。",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewDesc_one": {
+        "message": "このエクスポートの $count$ 件のブックマークに個人情報の可能性がある値が含まれています。編集済みエクスポートではファイル内の値だけが REDACTED に置き換えられ、ブックマーク自体は変更されません。",
+        "description": "Export privacy review description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "元のままエクスポート",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "編集してエクスポート",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "URL 内のユーザー名またはパスワード",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "URL フラグメント内の個人情報の可能性がある値",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "パラメーター内のトークンのような値: $param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "URL 内のトークンのような値",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "タイトル内のトークンのような値",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "パラメーター内のメールアドレスのような値: $param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "URL 内のメールアドレスのような値",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "タイトル内のメールアドレスのような値",
+        "description": "Export privacy finding: email-like value in the title"
+    },
     "stats_depthBreakdown": {
         "message": "フォルダ階層ごとのブックマーク",
         "description": "Statistics bookmarks-per-folder-level list label"

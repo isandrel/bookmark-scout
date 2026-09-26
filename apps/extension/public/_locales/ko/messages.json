@@ -3439,6 +3439,82 @@
         "message": "API 또는 액세스 토큰으로 보이는 값이 있습니다",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "export_privacyReviewTitle": {
+        "message": "내보내기 전에 개인 데이터 검토",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "이 내보내기의 북마크 $count$개에 개인 정보일 수 있는 값이 있습니다. 가린 내보내기는 파일 안의 값만 REDACTED로 바꾸며 북마크는 변경되지 않습니다.",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewDesc_one": {
+        "message": "이 내보내기의 북마크 $count$개에 개인 정보일 수 있는 값이 있습니다. 가린 내보내기는 파일 안의 값만 REDACTED로 바꾸며 북마크는 변경되지 않습니다.",
+        "description": "Export privacy review description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "원본 내보내기",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "가려서 내보내기",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "URL의 사용자 이름 또는 비밀번호",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "URL 프래그먼트의 개인 정보일 수 있는 값",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "매개변수의 토큰 같은 값: $param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "URL의 토큰 같은 값",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "제목의 토큰 같은 값",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "매개변수의 이메일 같은 값: $param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "URL의 이메일 같은 값",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "제목의 이메일 같은 값",
+        "description": "Export privacy finding: email-like value in the title"
+    },
     "stats_depthBreakdown": {
         "message": "폴더 수준별 북마크",
         "description": "Statistics bookmarks-per-folder-level list label"
