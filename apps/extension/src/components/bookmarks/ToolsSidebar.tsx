@@ -52,6 +52,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [importSource, setImportSource] = useState<ImportPreviewSource | null>(null);
   const { settings: toolSettings, isLoading: toolSettingsLoading } = useSettings();
   const { value: dataDefaultExportFormat } = useSetting('dataDefaultExportFormat');
   const [exportFormat, setExportFormat] = useState<string>(dataDefaultExportFormat);
@@ -770,27 +771,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         throw new Error(t('error_importNothingFound'));
       }
 
-      // Import to Bookmarks Bar (folder ID "1") or current folder
-      const targetId = currentFolderId || '1';
-      const outcome = await importBookmarks(parsed.bookmarks, targetId);
-      await refresh();
-
-      const notImported = outcome.failed + parsed.skipped;
-      const imported = outcome.bookmarksCreated + outcome.foldersCreated;
-      const counts = [String(outcome.bookmarksCreated), String(outcome.foldersCreated)];
-      toast(
-        notImported === 0
-          ? {
-              title: t('toast_importSuccess'),
-              description: t('toast_importResultDesc', counts),
-              variant: 'success',
-            }
-          : {
-              title: imported === 0 ? t('toast_importFailed') : t('toast_importPartial'),
-              description: t('toast_importPartialDesc', [...counts, String(notImported)]),
-              variant: 'destructive',
-            },
-      );
+      // Nothing is written until the user reviews and applies the preview.
+      setImportSource({ fileName: file.name, parsed });
     } catch (err) {
       toast({
         title: t('toast_importFailed'),
@@ -1074,6 +1056,13 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           )}
         </div>
       </div>
+
+      <ImportPreviewDialog
+        source={importSource}
+        defaultTargetId={currentFolderId}
+        onClose={() => setImportSource(null)}
+        onChanged={refresh}
+      />
 
       {/* AI Reorganization Dialog */}
       <ReorganizationDialog

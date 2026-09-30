@@ -3498,5 +3498,105 @@
     "table_columnHiddenForSpace": {
         "message": "표가 좁은 동안 제목이 보이도록 숨겨집니다",
         "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
+    },
+    "tools_importPreviewTitle": {
+        "message": "가져오기 미리보기",
+        "description": "Title of the dialog that previews an import before anything is written"
+    },
+    "tools_importPreviewDesc": {
+        "message": "$1에서 추가될 내용을 확인하세요. 가져오기를 선택하기 전에는 아무것도 변경되지 않습니다.",
+        "description": "Import preview description; $1 is the selected file name"
+    },
+    "tools_importTarget": {
+        "message": "가져올 위치",
+        "description": "Label of the target folder picker in the import preview"
+    },
+    "tools_importStrategy": {
+        "message": "중복 항목",
+        "description": "Label of the duplicate handling picker in the import preview"
+    },
+    "tools_importStrategySkipAnywhere": {
+        "message": "이미 어딘가에 있는 북마크는 건너뛰기",
+        "description": "Import duplicate strategy that skips URLs found anywhere in the bookmarks"
+    },
+    "tools_importStrategySkipInTarget": {
+        "message": "대상 폴더에 이미 있는 북마크는 건너뛰기",
+        "description": "Import duplicate strategy that skips URLs already inside the target folder"
+    },
+    "tools_importStrategyImportAll": {
+        "message": "중복을 포함해 모두 가져오기",
+        "description": "Import duplicate strategy that creates every item"
+    },
+    "tools_importPreviewTargetLine": {
+        "message": "대상 폴더: $1",
+        "description": "Import preview line naming the exact target folder path; $1 is the path"
+    },
+    "tools_importPreviewBookmarks": {
+        "message": "만들 북마크: $1",
+        "description": "Import preview count of bookmarks that will be created; $1 is the count"
+    },
+    "tools_importPreviewFolders": {
+        "message": "만들 폴더: $1",
+        "description": "Import preview count of folders that will be created; $1 is the count"
+    },
+    "tools_importPreviewSkipped": {
+        "message": "건너뛸 항목: $1",
+        "description": "Import preview count of duplicate bookmarks and emptied folders that will be skipped; $1 is the count"
+    },
+    "tools_importPreviewInvalid": {
+        "message": "무시되는 잘못된 항목: $1",
+        "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
+    },
+    "tools_importNothingToCreate": {
+        "message": "이 설정으로는 새로 가져올 항목이 없습니다.",
+        "description": "Import preview note when every item would be skipped"
+    },
+    "tools_importPreviewConflicts": {
+        "message": "이미 있음: 대상 폴더에 $1개, 다른 위치에 $2개, 파일 안에서 반복 $3개",
+        "description": "Import preview duplicate summary; $1 in the target folder, $2 elsewhere in the bookmarks, $3 repeated within the file"
+    },
+    "tools_importConflictInTarget": {
+        "message": "대상 폴더에 있음",
+        "description": "Badge for an imported URL that already exists in the target folder"
+    },
+    "tools_importConflictElsewhere": {
+        "message": "다른 위치에 있음",
+        "description": "Badge for an imported URL that already exists outside the target folder"
+    },
+    "tools_importConflictInFile": {
+        "message": "파일 안에서 반복",
+        "description": "Badge for an imported URL that appears earlier in the same file"
+    },
+    "tools_importWillSkip": {
+        "message": "건너뜀",
+        "description": "Badge for a duplicate that the chosen strategy skips"
+    },
+    "tools_importWillImport": {
+        "message": "가져옴",
+        "description": "Badge for a duplicate that the chosen strategy still imports"
+    },
+    "tools_importPreviewChanged": {
+        "message": "미리보기 이후 북마크가 변경되었습니다. 업데이트된 계획을 확인한 후 다시 가져오세요.",
+        "description": "Import preview notice when the bookmarks changed before the import was applied"
+    },
+    "tools_importTargetMissing": {
+        "message": "대상 폴더가 더 이상 없거나 변경할 수 없습니다. 다른 폴더를 선택하세요.",
+        "description": "Import preview error when the chosen target folder is missing or read-only"
+    },
+    "tools_importOutcome": {
+        "message": "만든 북마크: $1. 만든 폴더: $2. 건너뜀: $3. 실패: $4.",
+        "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importUndone": {
+        "message": "가져오기를 취소했습니다",
+        "description": "Toast title after an import was undone"
+    },
+    "tools_importUndoPartial": {
+        "message": "가져오기를 일부만 취소했습니다",
+        "description": "Toast title when some imported items could not be removed by undo"
+    },
+    "tools_importUndoneDesc": {
+        "message": "제거한 최상위 항목: $1. 변경되었거나 제거할 수 없어 유지한 항목: $2.",
+        "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
     }
 }
