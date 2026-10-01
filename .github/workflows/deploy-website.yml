@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - 'apps/website/**'
-      - 'bun.lockb'
+      - 'bun.lock'
       - '.github/workflows/deploy-website.yml'
   workflow_dispatch:
 
