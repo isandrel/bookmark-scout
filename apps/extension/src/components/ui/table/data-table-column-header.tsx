@@ -19,28 +19,30 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
   return (
     <div className={cn('flex min-w-0 items-center space-x-2', className)}>
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="-ml-3 h-8 max-w-[calc(100%+0.75rem)] data-[state=open]:bg-accent"
-            aria-label={
-              column.getIsSorted() === 'desc'
-                ? t('table_sortedDesc', title)
-                : column.getIsSorted() === 'asc'
-                  ? t('table_sortedAsc', title)
-                  : title
-            }
-          >
-            <span className="truncate">{title}</span>
-            {column.getIsSorted() === 'desc' ? (
-              <ArrowDown />
-            ) : column.getIsSorted() === 'asc' ? (
-              <ArrowUp />
-            ) : (
-              <ChevronsUpDown />
-            )}
-          </Button>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              variant="ghost"
+              size="sm"
+              className="-ml-3 h-8 max-w-[calc(100%+0.75rem)] data-popup-open:bg-accent"
+              aria-label={
+                column.getIsSorted() === 'desc'
+                  ? t('table_sortedDesc', title)
+                  : column.getIsSorted() === 'asc'
+                    ? t('table_sortedAsc', title)
+                    : title
+              }
+            />
+          }
+        >
+          <span className="truncate">{title}</span>
+          {column.getIsSorted() === 'desc' ? (
+            <ArrowDown />
+          ) : column.getIsSorted() === 'asc' ? (
+            <ArrowUp />
+          ) : (
+            <ChevronsUpDown />
+          )}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>

@@ -1,4 +1,4 @@
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 import { Archive } from 'lucide-react';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -73,20 +73,16 @@ const archiveAction: BookmarkRowAction = {
 
 function renderRowMenu(bookmark: Bookmark, actions: readonly BookmarkRowAction[]) {
   // The real menu renders its content in a portal, which does not render on the server, so the
-  // items are rendered in an open menu without one.
+  // items are rendered directly in an open menu root.
   return renderToStaticMarkup(
     createElement(
-      DropdownMenuPrimitive.Root,
+      MenuPrimitive.Root,
       { open: true, modal: false },
-      createElement(
-        DropdownMenuPrimitive.Content,
-        null,
-        createElement(BookmarkRowMenuItems, {
-          bookmark,
-          actions,
-          context: createActionContext(),
-        }),
-      ),
+      createElement(BookmarkRowMenuItems, {
+        bookmark,
+        actions,
+        context: createActionContext(),
+      }),
     ),
   );
 }
