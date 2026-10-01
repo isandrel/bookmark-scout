@@ -329,14 +329,25 @@ export function DataTable<TData extends RowData>({
     }
   }, [pageCount, pagination.pageIndex]);
 
-  // Selection is keyed by bookmark ID; drop IDs whose rows no longer exist.
-  const rowsById = React.useMemo(
-    () => new Map([...allData, ...folderData].map((row) => [getRowId(row), row])),
-    [allData, folderData, getRowId],
+  // Selection is keyed by bookmark ID and belongs to the rows the table can show: the current
+  // folder, or every bookmark while filters search all of them. A refresh keeps selected rows that
+  // are still there, wherever they moved in the list, and drops rows that were deleted or moved
+  // out of the folder. Changing folders clears it (see `resetKey`).
+  const displayedRowsById = React.useMemo(
+    () => new Map(displayedData.map((row) => [getRowId(row), row])),
+    [displayedData, getRowId],
   );
+  React.useEffect(() => {
+    setRowSelection((previous) => {
+      const selectedIds = Object.keys(previous).filter((id) => previous[id]);
+      const keptIds = selectedIds.filter((id) => displayedRowsById.has(id));
+      if (keptIds.length === Object.keys(previous).length) return previous;
+      return Object.fromEntries(keptIds.map((id) => [id, true]));
+    });
+  }, [displayedRowsById]);
   const selectedRows = Object.keys(rowSelection)
     .filter((id) => rowSelection[id])
-    .map((id) => rowsById.get(id))
+    .map((id) => displayedRowsById.get(id))
     .filter((row): row is TData => row !== undefined);
   // Bulk actions only touch selected rows the current filters show (on any page), matching the
   // footer count; selected rows hidden by a filter are reported but never moved or deleted.
