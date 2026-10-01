@@ -178,22 +178,31 @@ test('narrow tables still hide Folder Path and URL so Title stays visible', asyn
   await expect(page.getByTestId('tools-sidebar')).not.toHaveAttribute('inert', '');
   await expect(header(page, 'Folder Path')).toHaveCount(0);
   await expect(header(page, 'URL')).toHaveCount(0);
-  const layout = await page.locator('table').evaluate((table) => {
-    const frame = (table.parentElement as HTMLElement).getBoundingClientRect();
-    const right = (name: string) =>
-      [...table.querySelectorAll('thead th')]
-        .find((th) => th.textContent?.includes(name))
-        ?.getBoundingClientRect().right ?? Number.POSITIVE_INFINITY;
-    return {
-      frameRight: frame.right,
-      title: right('Title'),
-      dateAdded: right('Date Added'),
-      overflows: table.scrollWidth > (table.parentElement as HTMLElement).clientWidth,
-    };
-  });
-  expect(layout.title).toBeLessThanOrEqual(layout.frameRight);
-  expect(layout.dateAdded).toBeLessThanOrEqual(layout.frameRight);
-  expect(layout.overflows).toBe(false);
+  // The sidebar opens with a transition, so measure until the table settles.
+  const measure = () =>
+    page.locator('table').evaluate((table) => {
+      const frame = (table.parentElement as HTMLElement).getBoundingClientRect();
+      const right = (name: string) =>
+        [...table.querySelectorAll('thead th')]
+          .find((th) => th.textContent?.includes(name))
+          ?.getBoundingClientRect().right ?? Number.POSITIVE_INFINITY;
+      return {
+        frameRight: frame.right,
+        title: right('Title'),
+        dateAdded: right('Date Added'),
+        overflows: table.scrollWidth > (table.parentElement as HTMLElement).clientWidth,
+      };
+    });
+  await expect
+    .poll(async () => {
+      const layout = await measure();
+      return {
+        titleFits: layout.title <= layout.frameRight,
+        dateAddedFits: layout.dateAdded <= layout.frameRight,
+        overflows: layout.overflows,
+      };
+    })
+    .toEqual({ titleFits: true, dateAddedFits: true, overflows: false });
 
   // Closing the sidebar brings the columns back with the saved URL width.
   await page.getByTitle('Hide tools').click();
