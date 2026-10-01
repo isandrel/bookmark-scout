@@ -196,9 +196,8 @@
     },
     "roadmap": {
       "title": "現在の注力領域",
-      "shortcuts": "キーボードショートカット — ホットキーで移動と操作を高速化",
       "savedSearches": "保存済み検索 — 検索とスマートなブックマークビューを保存",
-      "tests": "ブラウザテスト — FirefoxとEdgeでブラウザテストを実行し、コンテキストメニューとドラッグ＆ドロップを自動テスト",
+      "tests": "ブラウザテスト — FirefoxとEdgeでブラウザテストを実行",
       "storeDistribution": "ストア配布 — Chrome Web Store、Firefox Add-ons、Edge Add-onsの掲載情報を整備"
     }
   },
