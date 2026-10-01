@@ -9,7 +9,11 @@ import { useCallback, useState } from 'react';
 export type BookmarkDeletionTarget = { id: string; title: string; type: 'bookmark' | 'folder' };
 
 /** One item, or a multi-item selection that is confirmed and undone together. */
-export type PendingBookmarkDeletion = BookmarkDeletionTarget & { items?: BookmarkDeletionTarget[] };
+export type PendingBookmarkDeletion = BookmarkDeletionTarget & {
+  items?: BookmarkDeletionTarget[];
+  /** Runs after the deletion was carried out (not when the confirmation is cancelled). */
+  onDeleted?: () => void;
+};
 
 function describeRestoreError(error: unknown): string {
   if (error instanceof BookmarkRestoreError && error.code === 'parent-missing') {
@@ -138,6 +142,7 @@ export function useBookmarkDeletion(onChanged: () => void | Promise<void>) {
         setPendingDeletion(deletion);
       } else {
         await deleteItems(deletion.items ?? [deletion]);
+        deletion.onDeleted?.();
       }
     },
     [deleteItems],
@@ -148,6 +153,7 @@ export function useBookmarkDeletion(onChanged: () => void | Promise<void>) {
     const deletion = pendingDeletion;
     setPendingDeletion(null);
     await deleteItems(deletion.items ?? [deletion]);
+    deletion.onDeleted?.();
   }, [deleteItems, pendingDeletion]);
 
   const cancelDeletion = useCallback(() => setPendingDeletion(null), []);

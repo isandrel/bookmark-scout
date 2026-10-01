@@ -48,6 +48,14 @@ function flattenBookmarks(
   return bookmarks;
 }
 
+/** Table page saved on a history entry, so Back returns to the page that was open. */
+export function readPageIndexFromHistory(state: unknown): number {
+  const pageIndex = (state as { pageIndex?: unknown } | null)?.pageIndex;
+  return typeof pageIndex === 'number' && Number.isInteger(pageIndex) && pageIndex > 0
+    ? pageIndex
+    : 0;
+}
+
 function readFolderIdFromUrl(): string | null {
   return new URLSearchParams(window.location.search).get('id') || null;
 }
@@ -79,6 +87,11 @@ export function useBookmarkNavigation() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  // The table page to open for the current folder: 0 for new navigation, or the page saved on
+  // the history entry when going Back or Forward.
+  const [folderPageIndex, setFolderPageIndex] = useState(() =>
+    readPageIndexFromHistory(window.history.state),
+  );
 
   const currentFolderRef = useRef(currentFolder);
   const itemsRef = useRef<Bookmark[]>([]);
@@ -151,7 +164,8 @@ export function useBookmarkNavigation() {
   useBookmarkEvents(refresh);
 
   useEffect(() => {
-    const handlePopState = () => {
+    const handlePopState = (event: PopStateEvent) => {
+      setFolderPageIndex(readPageIndexFromHistory(event.state));
       if (!hasLoadedRef.current) {
         // Resolved against the tree once the first load finishes.
         currentFolderRef.current = readFolderIdFromUrl();
@@ -167,10 +181,18 @@ export function useBookmarkNavigation() {
   const navigateToFolder = useCallback(
     (folderId: string | null) => {
       if (folderId === currentFolderRef.current) return;
+      setFolderPageIndex(0);
       showFolder(folderId, 'push');
     },
     [showFolder],
   );
+
+  /** Saves the open table page on the current history entry. */
+  const rememberPageIndex = useCallback((pageIndex: number) => {
+    const state: unknown = window.history.state;
+    if (readPageIndexFromHistory(state) === pageIndex) return;
+    window.history.replaceState({ ...(state as object | null), pageIndex }, '');
+  }, []);
 
   const data = useMemo(
     () => allData.filter((bookmark) => bookmark.parentId === (currentFolder ?? rootId)),
@@ -186,6 +208,8 @@ export function useBookmarkNavigation() {
     notice,
     dismissNotice: useCallback(() => setNotice(null), []),
     navigateToFolder,
+    folderPageIndex,
+    rememberPageIndex,
     refresh,
   };
 }

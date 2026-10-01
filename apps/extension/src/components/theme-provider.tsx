@@ -6,36 +6,51 @@
 
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import type { ThemeProviderProps } from 'next-themes';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
-function SettingsThemeSync() {
+/**
+ * Applies the synced setting and keeps next-themes' localStorage cache out of cross-page sync.
+ * next-themes also follows `storage` events for its cache key, but those arrive late and out of
+ * order across pages (each page rewrites the cache), so a stale value could override the setting.
+ */
+function SettingsThemeSync({ storageKey }: { storageKey: string }) {
   const { setTheme } = useNextTheme();
+  const setThemeRef = useRef(setTheme);
+  setThemeRef.current = setTheme;
 
   useEffect(() => {
     let active = true;
-    void getSettings().then((settings) => {
-      if (active) setTheme(settings.theme);
-    });
-    const unsubscribe = subscribeToSettings((settings) => setTheme(settings.theme));
+    const apply = (settings: Settings) => {
+      if (active) setThemeRef.current(settings.theme);
+    };
+    void getSettings().then(apply);
+    const unsubscribe = subscribeToSettings(apply);
+    // Capture runs before next-themes' own listener on window.
+    const ignoreCacheEvent = (event: StorageEvent) => {
+      if (event.key === storageKey) event.stopImmediatePropagation();
+    };
+    window.addEventListener('storage', ignoreCacheEvent, { capture: true });
     return () => {
       active = false;
       unsubscribe();
+      window.removeEventListener('storage', ignoreCacheEvent, { capture: true });
     };
-  }, [setTheme]);
+  }, [storageKey]);
 
   return null;
 }
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
+export function ThemeProvider({ children, storageKey = 'theme', ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute="class"
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange
+      storageKey={storageKey}
       {...props}
     >
-      <SettingsThemeSync />
+      <SettingsThemeSync storageKey={storageKey} />
       {children}
     </NextThemesProvider>
   );

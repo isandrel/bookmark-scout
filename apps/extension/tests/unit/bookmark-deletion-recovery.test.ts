@@ -257,3 +257,37 @@ describe('bookmark deletion recovery', () => {
     expect(raw[BOOKMARK_METADATA_STORAGE_KEY]).toBeUndefined();
   });
 });
+
+describe('restoring several deletions out of order', () => {
+  beforeEach(() => {
+    vi.spyOn(fakeBrowser.bookmarks, 'getChildren').mockImplementation(async (id: string) =>
+      (findNode(id).children ?? []).map(withIndex),
+    );
+  });
+
+  it('puts every item back in its original place whatever order the undos run in', async () => {
+    const snapshots = [];
+    for (const id of ['2', TARGET_FOLDER_ID, '10']) {
+      snapshots.push(await captureBookmarkDeletion(id, 0));
+      await deleteBookmark(id);
+    }
+    expect(childTitles(ROOT_FOLDER_ID)).toEqual([]);
+
+    const [before, target, after] = snapshots;
+    await restoreBookmarkDeletion(after, 0);
+    await restoreBookmarkDeletion(before, 0);
+    await restoreBookmarkDeletion(target, 0);
+    expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
+  });
+
+  it('places an item before a neighbour that was deleted earlier and restored first', async () => {
+    const target = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
+    await deleteBookmark(TARGET_FOLDER_ID);
+    const before = await captureBookmarkDeletion('2', 0);
+    await deleteBookmark('2');
+
+    await restoreBookmarkDeletion(target, 0);
+    await restoreBookmarkDeletion(before, 0);
+    expect(childTitles(ROOT_FOLDER_ID)).toEqual(['Before', 'Target Folder', 'After']);
+  });
+});

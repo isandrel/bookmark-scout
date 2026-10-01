@@ -68,6 +68,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: exportMarkdownIndentSpaces } = useSetting('exportMarkdownIndentSpaces');
   const { value: exportFilenamePrefix } = useSetting('exportFilenamePrefix');
   const { value: exportFilenameMaxLength } = useSetting('exportFilenameMaxLength');
+  const exportPrivacyReview = useExportPrivacyReview();
 
   // AI Reorganization state
   const [reorgDialogOpen, setReorgDialogOpen] = useState(false);
@@ -229,16 +230,23 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
     setDuplicateRemoving(true);
     try {
-      const outcome = await removeDuplicateExtras(duplicateResult.groups);
+      const outcome = await removeDuplicateExtras(duplicateResult.groups, duplicateResult.match);
       await refresh();
       const complete = outcome.skipped === 0 && outcome.failed === 0;
       const description = complete
         ? tPlural('toast_duplicatesRemovedDesc', outcome.removed)
-        : t('toast_duplicatesPartialDesc', [
-            String(outcome.removed),
-            String(outcome.skipped),
-            String(outcome.failed),
-          ]);
+        : [
+            t('toast_duplicatesPartialDesc', [
+              String(outcome.removed),
+              String(outcome.skipped),
+              String(outcome.failed),
+            ]),
+            outcome.skippedGroups > 0
+              ? tPlural('toast_duplicatesSkippedGroupsDesc', outcome.skippedGroups)
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' ');
       // One undo per removal, whether triggered from the toast or the dialog notice.
       let undoUsed = false;
       const undo = () => {
@@ -489,39 +497,48 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
   const handleAIContextPack = async (scope: ToolScope) => {
     setAiContextLoading(true);
-    try {
-      const targetNodes = getTargetNodes(scope);
-      const metadata = await getStoredBookmarkMetadata(
-        flattenBookmarks(targetNodes).map((bookmark) => bookmark.node.id),
-      );
-      const packed = buildAIContextPack(
-        targetNodes,
-        {
-          format: aiContextPackerOutputFormat,
-          includeFolderPath: aiContextPackerIncludeFolderPath,
-          includeDates: aiContextPackerIncludeDates,
-          includeTags: aiContextPackerIncludeTags,
-          includeSummaries: aiContextPackerIncludeSummaries,
-          maxItems: aiContextPackerMaxItems,
-          maxDepth: aiContextPackerMaxDepth,
-          excerptLength: aiContextPackerExcerptLength,
-        },
-        metadata,
-      );
-
-      const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
-      const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
-      downloadTextFile(packed.content, filename, mimeType);
-      toast({
-        title: t('toast_aiContextPacked'),
-        description: tPlural('toast_aiContextPackedDesc', packed.itemCount),
-      });
-    } catch (error) {
+    const reportPackError = (error: unknown) =>
       toast({
         title: t('toast_toolFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
         variant: 'destructive',
       });
+    try {
+      const targetNodes = getTargetNodes(scope);
+      const metadata = await getStoredBookmarkMetadata(
+        flattenBookmarks(targetNodes).map((bookmark) => bookmark.node.id),
+      );
+      const packOptions: AIContextPackOptions = {
+        format: aiContextPackerOutputFormat,
+        includeFolderPath: aiContextPackerIncludeFolderPath,
+        includeDates: aiContextPackerIncludeDates,
+        includeTags: aiContextPackerIncludeTags,
+        includeSummaries: aiContextPackerIncludeSummaries,
+        maxItems: aiContextPackerMaxItems,
+        maxDepth: aiContextPackerMaxDepth,
+        excerptLength: aiContextPackerExcerptLength,
+      };
+      const writePack = (nodes: BookmarkTreeNode[]) => {
+        const packed = buildAIContextPack(nodes, packOptions, metadata);
+        const filename = `bookmark-context.${packed.format === 'xml' ? 'xml' : 'md'}`;
+        const mimeType = packed.format === 'xml' ? 'application/xml' : 'text/markdown';
+        downloadTextFile(packed.content, filename, mimeType);
+        toast({
+          title: t('toast_aiContextPacked'),
+          description: tPlural('toast_aiContextPackedDesc', packed.itemCount),
+        });
+      };
+      exportPrivacyReview.reviewBeforeExport(
+        {
+          nodes: targetNodes,
+          reviewNodes: selectAIContextBookmarks(targetNodes, packOptions).map((item) => item.node),
+          includeUrls: true,
+          onError: reportPackError,
+        },
+        writePack,
+      );
+    } catch (error) {
+      reportPackError(error);
     } finally {
       setAiContextLoading(false);
     }
@@ -710,35 +727,49 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     const scopeNodes = getTargetNodes(scope);
     if (scopeNodes.length === 0) return;
     setIsExporting(true);
-
-    try {
-      const format = exportFormats[exportFormat] ?? exportFormats.html;
-      const root = buildExportRoot(scopeNodes);
-      const content = exportBookmarks(root, format, {
-        includeDates: exportIncludeDates,
-        includeUrls: exportIncludeUrls,
-        jsonIndentSize: exportJsonIndentSize,
-        htmlIndentSpaces: exportHtmlIndentSpaces,
-        markdownIndentSpaces: exportMarkdownIndentSpaces,
-      });
-      const scopeName = scope === 'folder' && currentFolderId ? currentFolderName || 'folder' : 'all';
-      const filename = generateFilename(scopeName, format, {
-        prefix: exportFilenamePrefix,
-        maxLength: exportFilenameMaxLength,
-      });
-      downloadExport(content, filename, format.mimeType);
-
-      const count = countExportedBookmarks(root);
-      toast({
-        title: t('toast_exportSuccess'),
-        description: tPlural('toast_exportSuccessDesc', count, [getFormatName(format)]),
-      });
-    } catch (err) {
+    const reportExportError = (err: unknown) =>
       toast({
         title: t('toast_exportFailed'),
         description: err instanceof Error ? err.message : t('error_unknown'),
         variant: 'destructive',
       });
+
+    try {
+      const format = exportFormats[exportFormat] ?? exportFormats.html;
+      const root = buildExportRoot(scopeNodes);
+      const writeExport = (children: BookmarkTreeNode[]) => {
+        const exportRoot = { ...root, children };
+        const content = exportBookmarks(exportRoot, format, {
+          includeDates: exportIncludeDates,
+          includeUrls: exportIncludeUrls,
+          jsonIndentSize: exportJsonIndentSize,
+          htmlIndentSpaces: exportHtmlIndentSpaces,
+          markdownIndentSpaces: exportMarkdownIndentSpaces,
+        });
+        const scopeName =
+          scope === 'folder' && currentFolderId ? currentFolderName || 'folder' : 'all';
+        const filename = generateFilename(scopeName, format, {
+          prefix: exportFilenamePrefix,
+          maxLength: exportFilenameMaxLength,
+        });
+        downloadExport(content, filename, format.mimeType);
+
+        const count = countExportedBookmarks(exportRoot);
+        toast({
+          title: t('toast_exportSuccess'),
+          description: tPlural('toast_exportSuccessDesc', count, [getFormatName(format)]),
+        });
+      };
+      exportPrivacyReview.reviewBeforeExport(
+        {
+          nodes: root.children ?? [],
+          includeUrls: exportIncludesUrls(format, exportIncludeUrls),
+          onError: reportExportError,
+        },
+        writeExport,
+      );
+    } catch (err) {
+      reportExportError(err);
     } finally {
       setIsExporting(false);
     }
@@ -1172,6 +1203,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ExportPrivacyReviewDialog {...exportPrivacyReview.dialogProps} />
 
       <ToolResultsDialog
         open={privacyDialogOpen}

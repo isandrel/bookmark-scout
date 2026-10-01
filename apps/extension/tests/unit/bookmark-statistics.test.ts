@@ -67,6 +67,71 @@ describe('bookmark statistics', () => {
     );
   });
 
+  it('counts untitled folders as a level and lists them as Untitled in top folders', () => {
+    const untitled: BookmarkTreeNode[] = [
+      {
+        id: '0',
+        title: '',
+        children: [
+          {
+            id: '1',
+            parentId: '0',
+            title: 'Bookmarks Bar',
+            children: [
+              {
+                id: '20',
+                parentId: '1',
+                title: '',
+                children: [
+                  { id: '21', parentId: '20', title: 'X', url: 'https://e2e.invalid/x' },
+                  { id: '22', parentId: '20', title: 'Y', url: 'https://e2e.invalid/y' },
+                ],
+              },
+              {
+                id: '30',
+                parentId: '1',
+                title: '',
+                children: [{ id: '31', parentId: '30', title: 'Z', url: 'https://e2e.invalid/z' }],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const stats = collectBookmarkStatistics(untitled, {
+      ...options,
+      includeFolders: true,
+      includeDepthBreakdown: true,
+    });
+    expect(stats.deepestLevel).toBe(2);
+    expect(stats.depthBreakdown).toEqual([{ level: 2, count: 3 }]);
+    expect(stats.topFolders).toEqual([
+      { label: 'Bookmarks Bar / bookmarks_untitled', count: 2 },
+      { label: 'Bookmarks Bar / bookmarks_untitled', count: 1 },
+    ]);
+    expect(
+      collectBookmarkStatistics(getScopedNodes(untitled, '20', 'folder'), options).deepestLevel,
+    ).toBe(1);
+  });
+
+  it('omits disabled sections instead of reporting zeros', () => {
+    const off = collectBookmarkStatistics(tree, options);
+    for (const key of ['topDomains', 'topFolders', 'protocols', 'duplicateCount'] as const) {
+      expect(off).not.toHaveProperty(key);
+    }
+    const on = collectBookmarkStatistics(tree, {
+      ...options,
+      includeDomains: true,
+      includeFolders: true,
+      includeProtocols: true,
+      includeDuplicates: true,
+    });
+    expect(on.topDomains).toEqual([{ label: 'e2e.invalid', count: 3 }]);
+    expect(on.protocols).toEqual([{ label: 'https', count: 3 }]);
+    expect(on.duplicateCount).toBe(0);
+    expect(on.topFolders).toHaveLength(3);
+  });
+
   it('includes the depth breakdown only when enabled', () => {
     expect(collectBookmarkStatistics(tree, options).depthBreakdown).toBeUndefined();
     expect(

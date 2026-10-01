@@ -7,11 +7,14 @@ import { ArrowDown, ArrowUp, RotateCcw, Settings2 } from 'lucide-react';
 interface DataTableViewOptionsProps<TData extends RowData> {
   table: ReactTable<BookmarkTableFeatures, TData>;
   onResetView: () => void;
+  /** Columns hidden because the table is too narrow; they cannot be turned on until it widens. */
+  spaceHiddenColumnIds?: string[];
 }
 
 export function DataTableViewOptions<TData extends RowData>({
   table,
   onResetView,
+  spaceHiddenColumnIds = [],
 }: DataTableViewOptionsProps<TData>) {
   const configurableColumns = table
     .getAllColumns()
@@ -69,11 +72,15 @@ export function DataTableViewOptions<TData extends RowData>({
         <DropdownMenuLabel>{t('table_toggleColumns')}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {configurableColumns.map((column, index) => {
+          const hiddenForSpace = spaceHiddenColumnIds.includes(column.id);
           return (
             <div key={column.id} className="flex items-center gap-1">
               <DropdownMenuCheckboxItem
                 className="min-w-0 flex-1"
                 checked={column.getIsVisible()}
+                disabled={hiddenForSpace}
+                title={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
+                aria-description={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 onSelect={(event) => event.preventDefault()}
               >

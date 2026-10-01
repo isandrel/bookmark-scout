@@ -1,5 +1,5 @@
-import type { Locator, Page } from '@playwright/test';
-import { expect, test } from './fixtures';
+import type { Locator } from '@playwright/test';
+import { expect, test, toastRegion } from './fixtures';
 import {
   bookmarkRow,
   childTitles,
@@ -13,10 +13,6 @@ async function dropOnLowerEdge(source: Locator, target: Locator) {
   const box = await target.boundingBox();
   if (!box) throw new Error('Drop target is not visible');
   await source.dragTo(target, { targetPosition: { x: box.width / 2, y: box.height - 3 } });
-}
-
-function toastText(page: Page) {
-  return page.getByRole('region', { name: 'Notifications (F8)' });
 }
 
 test('dropping beside a bookmark in another folder moves it there', async ({
@@ -44,7 +40,7 @@ test('dropping beside a bookmark in another folder moves it there', async ({
     'Example tracked',
   ]);
   expect(await childTitles(extensionWorker, tracked.folderId)).toEqual([]);
-  await expect(toastText(page)).toContainText('"Example tracked" moved to "E2E Recipes"');
+  await expect(toastRegion(page)).toContainText('"Example tracked" moved to "E2E Recipes"');
 });
 
 test('reordering under date sort explains why the list does not change', async ({
@@ -66,7 +62,7 @@ test('reordering under date sort explains why the list does not change', async (
   await expect
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Reorder Second', 'Reorder First']);
-  await expect(toastText(page)).toContainText('sorted by date or name');
+  await expect(toastRegion(page)).toContainText('sorted by date or name');
 });
 
 test('dropping a folder into its own subfolder explains why it failed', async ({
@@ -84,7 +80,7 @@ test('dropping a folder into its own subfolder explains why it failed', async ({
   const child = folderRow(page, 'E2E Child Drop').locator('.cursor-grab');
   await parent.dragTo(child);
 
-  await expect(toastText(page)).toContainText(
+  await expect(toastRegion(page)).toContainText(
     "A folder can't be moved into itself or one of its subfolders.",
   );
   expect(await childTitles(extensionWorker, seeded.barId)).toContain('E2E Parent Drag');
@@ -259,7 +255,7 @@ test('adding the current page to a folder twice does not duplicate it', async ({
 
   await row.hover();
   await row.getByRole('button', { name: 'Add current page' }).click();
-  await expect(toastText(page)).toContainText('Already saved');
+  await expect(toastRegion(page)).toContainText('Already saved');
   expect(await childTitles(extensionWorker, seeded.folderId)).toHaveLength(1);
 });
 
@@ -280,7 +276,7 @@ test('long unbroken toast text wraps inside the toast', async ({
   await input.fill('W'.repeat(200));
   await input.press('Enter');
 
-  const description = toastText(page).locator('li').first().locator('div.opacity-90');
+  const description = toastRegion(page).locator('li').first().locator('div.opacity-90');
   await expect(description).toContainText('WWWW');
   const overflow = await description.evaluate((node) => node.scrollWidth - node.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);

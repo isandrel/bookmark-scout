@@ -54,6 +54,30 @@ export function getResolvedLanguage(): 'en' | 'ja' | 'ko' {
   return 'en';
 }
 
+/**
+ * Locale for dates and numbers: the selected language, or for 'auto' the browser UI language
+ * (undefined outside the extension, which means the runtime default).
+ */
+export function getFormattingLocale(): string | undefined {
+  if (currentLanguage !== 'auto') return currentLanguage;
+  try {
+    return browser.i18n.getUILanguage() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Date and time in the extension's language, e.g. "2026/9/24 15:05:49" in Japanese. */
+export function formatDateTime(value: number | Date): string {
+  const date = value instanceof Date ? value : new Date(value);
+  try {
+    return date.toLocaleString(getFormattingLocale());
+  } catch {
+    // An unsupported locale tag falls back to the runtime default.
+    return date.toLocaleString();
+  }
+}
+
 export type MessageKey = string;
 
 /**

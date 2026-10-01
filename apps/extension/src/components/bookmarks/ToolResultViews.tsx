@@ -16,9 +16,10 @@ function describeDeadLink(item: DeadLinkResultItem): string {
     case 'skipped':
       return t('tools_notWebUrlSkipped');
     default:
-      return item.statusCode === undefined
-        ? t('tools_networkFailed')
-        : t('tools_deadLinkHttpStatus', String(item.statusCode));
+      if (item.statusCode !== undefined) {
+        return t('tools_deadLinkHttpStatus', String(item.statusCode));
+      }
+      return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
   }
 }
 
@@ -29,9 +30,11 @@ function describeMetadata(item: MetadataFetchResultItem): string {
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'error':
-      return t('tools_networkFailed');
+      return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     case 'skipped':
       return t('tools_notWebUrlSkipped');
+    case 'notHtml':
+      return t('tools_metadataNotHtml');
     default:
       return item.changed ? t('tools_metadataAvailable') : t('tools_metadataNoChange');
   }
@@ -78,8 +81,25 @@ export function DuplicateResultsView({
   notice?: string;
   onUndo?: () => void;
 }) {
+  // Title-only matching can group bookmarks that point to different pages; removing the
+  // extras would then delete those pages, so say so before the user confirms.
+  const mixedUrlKeys = new Set(
+    result?.match.strategy === 'title_only'
+      ? result.groups
+          .filter((group) => new Set(group.items.map((item) => item.node.url)).size > 1)
+          .map((group) => group.key)
+      : [],
+  );
   return (
     <div className="space-y-4">
+      {mixedUrlKeys.size > 0 ? (
+        <div
+          role="alert"
+          className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200"
+        >
+          {tPlural('tools_duplicatesTitleOnlyWarning', mixedUrlKeys.size)}
+        </div>
+      ) : null}
       {notice ? (
         <div
           role="status"
@@ -99,6 +119,9 @@ export function DuplicateResultsView({
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{group.items.length}</Badge>
               <code className="truncate text-xs text-muted-foreground">{group.key}</code>
+              {mixedUrlKeys.has(group.key) ? (
+                <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
+              ) : null}
             </div>
             <div className="space-y-2">
               {group.items.map((item, index) => (
@@ -190,10 +213,16 @@ export function StatisticsResultsView({ result }: { result: BookmarkStatistics |
       <StatCard label={t('stats_totalBookmarks')} value={result.totalBookmarks} />
       <StatCard label={t('stats_totalFolders')} value={result.totalFolders} />
       <StatCard label={t('stats_deepestLevel')} value={result.deepestLevel} />
-      <StatCard label={t('stats_duplicates')} value={result.duplicateCount} />
-      <StatList label={t('stats_topDomains')} items={result.topDomains} />
-      <StatList label={t('stats_topFolders')} items={result.topFolders} />
-      <StatList label={t('stats_protocols')} items={result.protocols} />
+      {result.duplicateCount !== undefined ? (
+        <StatCard label={t('stats_duplicates')} value={result.duplicateCount} />
+      ) : null}
+      {result.topDomains ? (
+        <StatList label={t('stats_topDomains')} items={result.topDomains} />
+      ) : null}
+      {result.topFolders ? (
+        <StatList label={t('stats_topFolders')} items={result.topFolders} />
+      ) : null}
+      {result.protocols ? <StatList label={t('stats_protocols')} items={result.protocols} /> : null}
       {result.depthBreakdown ? (
         <StatList
           label={t('stats_depthBreakdown')}

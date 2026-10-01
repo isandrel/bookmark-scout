@@ -14,8 +14,11 @@ AccordionItem.displayName = 'AccordionItem';
 
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> & {
+    /** Hide the chevron (e.g. nothing to expand) while keeping its space for alignment. */
+    hideIndicator?: boolean;
+  }
+>(({ className, children, hideIndicator = false, ...props }, ref) => (
   <AccordionPrimitive.Header className="flex">
     <AccordionPrimitive.Trigger
       ref={ref}
@@ -26,7 +29,10 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       <div className="flex-1 min-w-0 overflow-hidden">{children}</div>
-      <div className="flex-shrink-0 ml-2 w-4 flex justify-center">
+      <div
+        className={cn('flex-shrink-0 ml-2 w-4 flex justify-center', hideIndicator && 'invisible')}
+        aria-hidden={hideIndicator || undefined}
+      >
         <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200" />
       </div>
     </AccordionPrimitive.Trigger>

@@ -156,6 +156,18 @@ describe('permanent folders and invalid queries', () => {
     expect(isSearchQueryValid('[', defaults)).toBe(true);
     expect(getSearchMatchRanges('a [b]', '[', regex)).toEqual([[2, 3]]);
   });
+
+  it('compiles and matches regex queries the same way with or without Whole Word', () => {
+    const regex = { ...defaults, useRegex: true };
+    const wholeRegex = { ...regex, wholeWord: true };
+    for (const options of [regex, wholeRegex]) {
+      // Unicode property escapes work in both modes instead of silently matching nothing.
+      expect(getSearchMatchRanges('café 42', '\\p{L}+', options)).toEqual([[0, 4]]);
+      // Escapes Unicode mode rejects are reported as invalid in both modes.
+      expect(isSearchQueryValid('a\\-b', options)).toBe(false);
+      expect(isSearchQueryValid('\\p{L}+', options)).toBe(true);
+    }
+  });
 });
 
 describe('getSearchExpandedFolderIds', () => {

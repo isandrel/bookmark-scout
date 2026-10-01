@@ -1,9 +1,10 @@
 ---
 id: TASK-4
 title: Make manager all-bookmarks filtering actually global
-status: To Do
+status: Done
 assignee: []
 created_date: '2026-09-23 16:30'
+updated_date: '2026-09-24 20:53'
 labels: []
 dependencies: []
 references:
@@ -22,6 +23,12 @@ Confirmed mismatch: the toolbar says unchecked filters apply to all bookmarks, b
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 A global filter finds matching bookmarks across nested folders and shows their actual folder path.
-- [ ] #2 Current-folder mode stays scoped to the selected folder; tests prove both modes.
+- [x] #1 A global filter finds matching bookmarks across nested folders and shows their actual folder path.
+- [x] #2 Current-folder mode stays scoped to the selected folder; tests prove both modes.
 <!-- AC:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Verified 2026-09-24: shipped in #432; covered by e2e 'manager filters globally across nested folders or only the selected folder' (bookmark-workflows.spec.ts) and bookmark-manager-qa.spec.ts.
+<!-- SECTION:NOTES:END -->

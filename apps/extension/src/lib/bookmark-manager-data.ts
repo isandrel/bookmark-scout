@@ -134,15 +134,63 @@ export function pruneNestedSelection<T extends ManagerItem>(
   return selected.filter((item) => !hasAncestorIn(item, ids, byId));
 }
 
-/** Folders that can receive the selection: not a selected folder or anything inside one. */
+/**
+ * Splits a selection into the rows the current filters show and a count of rows they hide.
+ * Bulk actions act only on the visible part, so a filter can never hide what gets deleted.
+ */
+export function partitionSelectionByVisibility<T>(
+  selected: readonly T[],
+  visibleIds: ReadonlySet<string>,
+  getId: (row: T) => string,
+): { visible: T[]; hiddenCount: number } {
+  const visible = selected.filter((row) => visibleIds.has(getId(row)));
+  return { visible, hiddenCount: selected.length - visible.length };
+}
+
+// Columns dropped, in this order, while the table is narrower than `minWidth` (for example with
+// the Tools sidebar open), so Title and Date Added stay in view instead of scrolling away.
+const SPACE_HIDDEN_COLUMNS: readonly { id: string; minWidth: number }[] = [
+  { id: 'folderPath', minWidth: 960 },
+  { id: 'url', minWidth: 880 },
+];
+
+/** Columns to hide for lack of room at a table width; none until the width is known. */
+export function getSpaceHiddenColumnIds(tableWidth: number | undefined): string[] {
+  if (tableWidth === undefined) return [];
+  return SPACE_HIDDEN_COLUMNS.filter((column) => tableWidth < column.minWidth).map(
+    (column) => column.id,
+  );
+}
+
+export type FolderMoveDirection = 'up' | 'down' | 'top' | 'bottom';
+
+/** Whether a reorder would change anything: the first item cannot go up, the last not down. */
+export function canMoveWithinFolder(
+  direction: FolderMoveDirection,
+  index: number,
+  siblingCount: number,
+): boolean {
+  return direction === 'up' || direction === 'top' ? index > 0 : index < siblingCount - 1;
+}
+
+/**
+ * Folders that can receive the selection: not a selected folder or anything inside one, and not
+ * the folder every selected item is already in (moving there would change nothing).
+ */
 export function getMoveTargetFolders(
   selected: readonly ManagerItem[],
   items: readonly ManagerItem[],
 ): ManagerItem[] {
   const byId = new Map(items.map((item) => [item.id, item]));
   const ids = new Set(selected.map((item) => item.id));
+  const parentIds = new Set(selected.map((item) => item.parentId));
+  const sharedParentId = parentIds.size === 1 ? [...parentIds][0] : undefined;
   return items.filter(
-    (item) => item.type === FOLDER_TYPE && !ids.has(item.id) && !hasAncestorIn(item, ids, byId),
+    (item) =>
+      item.type === FOLDER_TYPE &&
+      item.id !== sharedParentId &&
+      !ids.has(item.id) &&
+      !hasAncestorIn(item, ids, byId),
   );
 }
 

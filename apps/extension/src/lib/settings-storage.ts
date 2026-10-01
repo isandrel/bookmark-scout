@@ -161,6 +161,22 @@ export async function saveValidSettings(
 }
 
 /**
+ * Like `saveValidSettings`, but validates against `current` (the latest known stored settings)
+ * instead of reading storage first, so the write starts synchronously. Use it when the page may
+ * unload before an extra storage round trip completes.
+ */
+export function saveValidSettingsNow(
+  current: Settings,
+  updates: Partial<Settings>,
+): { settings: Settings; errors: SettingsFieldErrors; saved: Promise<void> } {
+  const result = validateSettingsUpdate(current, updates);
+  const saved = sameValue(result.settings, current)
+    ? Promise.resolve()
+    : writeSettings(result.settings);
+  return { ...result, saved };
+}
+
+/**
  * Reset settings to defaults.
  */
 export async function resetSettings(): Promise<void> {

@@ -147,6 +147,10 @@
         "message": "フォルダ名を入力...",
         "description": "New folder input placeholder"
     },
+    "popup_newFolderNameLabel": {
+        "message": "新しいフォルダ名",
+        "description": "Accessible name of the new folder name input"
+    },
     "state_noBookmarksFound": {
         "message": "ブックマークが見つかりません",
         "description": "Empty state when search has no results"
@@ -2107,14 +2111,6 @@
         "message": "より良いメタデータが見つかったら既存のブックマークタイトルを置き換えます",
         "description": "Metadata fetcher overwrite titles description"
     },
-    "settings_metadataFetcherFetchFavicons": {
-        "message": "ファビコンを取得",
-        "description": "Metadata fetcher fetch favicons label"
-    },
-    "settings_metadataFetcherFetchFaviconsDesc": {
-        "message": "欠けている、または古いファビコンの更新を試みます",
-        "description": "Metadata fetcher fetch favicons description"
-    },
     "settings_metadataFetcherFetchDescriptions": {
         "message": "説明を取得",
         "description": "Metadata fetcher fetch descriptions label"
@@ -2406,6 +2402,10 @@
     "tools_metadataNoChange": {
         "message": "タイトルの変更は不要です",
         "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_metadataNotHtml": {
+        "message": "HTMLページではないためスキップしました",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
     },
     "tools_deadLinkStatus_ok": {
         "message": "正常",
@@ -2928,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript の URL（ブックマークレット）はここでは保存できません。",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "スクリプト URL ($1) はここでは保存できません。既存のブックマークレットの名前は変更できます。",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "このフォルダの名前を変更します。",
@@ -3115,6 +3115,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "スキャン後に保持するブックマークが変更または削除されたため、$count$ 件のグループは変更していません。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "復元: $restored$ 件。復元できませんでした: $failed$ 件。",
         "description": "Duplicate removal undo result",
@@ -3142,6 +3162,30 @@
                 "example": "1"
             }
         }
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "タイトルのみの照合により、$count$ 件のグループで URL が異なるブックマークがまとめられています。重複を削除すると、それらの別ページのブックマークも削除されます。先に内容を確認してください。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "URL が異なります",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
     },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ 件のブックマークをクリーンアップできます",
@@ -3202,6 +3246,10 @@
     "tools_networkFailed": {
         "message": "サイトに接続できませんでした",
         "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "リダイレクトが多すぎます（またはリダイレクト先に接続できません）",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
     },
     "tools_deadLinkStatus_skipped": {
         "message": "スキップ",
@@ -3391,6 +3439,82 @@
         "message": "APIトークンまたはアクセストークンと思われる値があります",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "export_privacyReviewTitle": {
+        "message": "エクスポート前に個人データを確認",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "このエクスポートの $count$ 件のブックマークに個人情報の可能性がある値が含まれています。編集済みエクスポートではファイル内の値だけが REDACTED に置き換えられ、ブックマーク自体は変更されません。",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewDesc_one": {
+        "message": "このエクスポートの $count$ 件のブックマークに個人情報の可能性がある値が含まれています。編集済みエクスポートではファイル内の値だけが REDACTED に置き換えられ、ブックマーク自体は変更されません。",
+        "description": "Export privacy review description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "元のままエクスポート",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "編集してエクスポート",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "URL 内のユーザー名またはパスワード",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "URL フラグメント内の個人情報の可能性がある値",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "パラメーター内のトークンのような値: $param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "URL 内のトークンのような値",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "タイトル内のトークンのような値",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "パラメーター内のメールアドレスのような値: $param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "URL 内のメールアドレスのような値",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "タイトル内のメールアドレスのような値",
+        "description": "Export privacy finding: email-like value in the title"
+    },
     "stats_depthBreakdown": {
         "message": "フォルダ階層ごとのブックマーク",
         "description": "Statistics bookmarks-per-folder-level list label"
@@ -3422,5 +3546,33 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "(フィルターで非表示の $1 件は対象外)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "Web ページとして開く data: URL ($1) はここでは保存できません。",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "1 件を移動",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "1 件を移動しました",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "選択した他の $1 件は選択したフォルダ内にあり、フォルダと一緒に移動します。",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "ほか $1 件",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "テーブルが狭い間はタイトルを表示するため非表示になります",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }

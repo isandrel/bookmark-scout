@@ -16,6 +16,7 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
     { title: 'Anchor', url: 'https://e2e.invalid/docs#install' },
     { title: 'Retina Logo', url: 'https://e2e.invalid/img/logo@2x.png' },
     { title: 'SPA Route', url: 'https://e2e.invalid/#/settings' },
+    { title: 'SK Slug', url: 'https://e2e.invalid/ir/sk-telecom-annual-report-2024' },
   ]);
   await setSettings(extensionWorker, { privacyScannerDefaultScope: 'all' });
 
@@ -35,6 +36,7 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
   await expect(row('Anchor')).toContainText('Low');
   await expect(dialog.getByText('Retina Logo', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SPA Route', { exact: true })).toHaveCount(0);
+  await expect(dialog.getByText('SK Slug', { exact: true })).toHaveCount(0);
 });
 
 test('statistics count folders inside the scope and show the depth breakdown only when enabled', async ({
@@ -74,4 +76,69 @@ test('statistics count folders inside the scope and show the depth breakdown onl
   await expect(breakdown).toContainText('Level 1');
   await expect(breakdown).toContainText('Level 2');
   await expect(breakdown).toContainText('Level 3');
+});
+
+test('statistics hide sections that are turned off instead of showing zeros', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Stats Sections', [
+    { title: 'Copy A', url: 'https://e2e.invalid/same' },
+    { title: 'Copy B', url: 'https://e2e.invalid/same' },
+  ]);
+  const sections = ['Duplicates', 'Top domains', 'Top folders', 'Protocols'];
+  await setSettings(extensionWorker, {
+    statisticsDefaultScope: 'folder',
+    statisticsIncludeDomains: false,
+    statisticsIncludeFolders: false,
+    statisticsIncludeProtocols: false,
+    statisticsIncludeDuplicates: false,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const card = toolCard(page, 'Bookmark Statistics');
+  await card.getByRole('button', { name: 'View' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Statistics' });
+  const stat = (label: string) => dialog.getByText(label, { exact: true }).locator('..');
+  await expect(stat('Bookmarks')).toContainText('2');
+  for (const label of sections) {
+    await expect(dialog.getByText(label, { exact: true })).toHaveCount(0);
+  }
+  await page.keyboard.press('Escape');
+
+  await setSettings(extensionWorker, {
+    statisticsIncludeDomains: true,
+    statisticsIncludeFolders: true,
+    statisticsIncludeProtocols: true,
+    statisticsIncludeDuplicates: true,
+  });
+  await card.getByRole('button', { name: 'View' }).click();
+  await expect(stat('Duplicates')).toContainText('1');
+  await expect(stat('Top domains')).toContainText('e2e.invalid');
+  await expect(stat('Top folders')).toContainText('E2E Stats Sections');
+  await expect(stat('Protocols')).toContainText('https');
+});
+
+test('statistics count untitled folders in levels and list them as Untitled', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Stats Untitled', [
+    { title: '', children: [{ title: 'Inside Untitled', url: 'https://e2e.invalid/u' }] },
+  ]);
+  await setSettings(extensionWorker, {
+    statisticsDefaultScope: 'folder',
+    statisticsIncludeFolders: true,
+    statisticsIncludeDepthBreakdown: true,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Bookmark Statistics').getByRole('button', { name: 'View' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Statistics' });
+  const stat = (label: string) => dialog.getByText(label, { exact: true }).locator('..');
+  await expect(stat('Deepest level')).toContainText('2');
+  await expect(stat('Top folders')).toContainText('E2E Stats Untitled / Untitled1');
+  await expect(stat('Bookmarks by folder level')).toContainText('Level 21');
 });

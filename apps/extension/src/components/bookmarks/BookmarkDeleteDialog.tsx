@@ -33,6 +33,7 @@ export function BookmarkDeleteDialog({ deletion, onCancel, onConfirm }: Bookmark
                 : t('popup_confirmDeleteBookmark', itemTitle)}
           </DialogDescription>
         </DialogHeader>
+        {deletion?.items && deletion.items.length > 1 && <BulkItemPreview items={deletion.items} />}
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onCancel}>
             {t('action_cancel')}

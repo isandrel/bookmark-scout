@@ -20,6 +20,8 @@ export type DuplicateScanResult = {
   groups: DuplicateGroup[];
   totalDuplicates: number;
   scannedBookmarks: number;
+  /** The matching rules the groups were built with; removal re-checks items against them. */
+  match: DuplicateMatchOptions;
 };
 
 export type UrlCleanerPreview = {
@@ -41,21 +43,25 @@ export type BookmarkStatistics = {
   totalFolders: number;
   bookmarksInScope: number;
   deepestLevel: number;
-  topDomains: Array<{ label: string; count: number }>;
-  topFolders: Array<{ label: string; count: number }>;
-  protocols: Array<{ label: string; count: number }>;
-  duplicateCount: number;
+  /** Optional sections are present only when their setting is enabled, so the view hides them. */
+  topDomains?: Array<{ label: string; count: number }>;
+  topFolders?: Array<{ label: string; count: number }>;
+  protocols?: Array<{ label: string; count: number }>;
+  duplicateCount?: number;
   /** Bookmark counts per folder level, present only when the depth breakdown is enabled. */
   depthBreakdown?: Array<{ level: number; count: number }>;
 };
 
 export type DuplicateKeepRule = 'oldest' | 'newest' | 'first';
 
-type DuplicateOptions = {
+export type DuplicateMatchOptions = {
   strategy: 'exact_url' | 'normalized_url' | 'title_url' | 'title_only';
   normalizeWww: boolean;
   ignoreProtocol: boolean;
   ignoreTrailingSlash: boolean;
+};
+
+type DuplicateOptions = DuplicateMatchOptions & {
   maxGroups: number;
   /** Orders each group so `items[0]` is the bookmark the keep rule retains. */
   keepRule?: DuplicateKeepRule;
@@ -65,6 +71,8 @@ export type DuplicateRemovalResult = {
   removed: number;
   /** Extras skipped because they, or their group's kept item, changed or vanished after the scan. */
   skipped: number;
+  /** Groups left untouched because their kept item was removed or no longer matches the group. */
+  skippedGroups: number;
   failed: number;
   snapshots: BookmarkDeletionSnapshot[];
 };
@@ -116,7 +124,12 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
       return;
     }
 
-    const nextPath = node.title ? [...folderPath, node.title] : folderPath;
+    // Only the browser's unnamed root is left out of paths; other untitled folders still count
+    // as a level and are labeled "Untitled".
+    const isBrowserRoot = !node.parentId && !node.title;
+    const nextPath = isBrowserRoot
+      ? folderPath
+      : [...folderPath, node.title || t('bookmarks_untitled')];
     node.children?.forEach((child) => {
       walk(child, nextPath, depth + 1);
     });
@@ -161,7 +174,7 @@ export function scanDuplicateBookmarks(
   const groups = new Map<string, FlatBookmark[]>();
 
   flatBookmarks.forEach((bookmark) => {
-    const key = buildDuplicateKey(bookmark, options);
+    const key = buildDuplicateKey(bookmark.node, options);
     if (!key) {
       return;
     }
@@ -180,6 +193,12 @@ export function scanDuplicateBookmarks(
     groups: duplicateGroups,
     totalDuplicates: duplicateGroups.reduce((total, group) => total + group.items.length - 1, 0),
     scannedBookmarks: flatBookmarks.length,
+    match: {
+      strategy: options.strategy,
+      normalizeWww: options.normalizeWww,
+      ignoreProtocol: options.ignoreProtocol,
+      ignoreTrailingSlash: options.ignoreTrailingSlash,
+    },
   };
 }
 
@@ -327,7 +346,9 @@ export function collectBookmarkStatistics(
 ): BookmarkStatistics {
   const flatBookmarks = flattenBookmarks(nodes);
   const domains = new Map<string, number>();
-  const folders = new Map<string, number>();
+  // Keyed by folder ID so two folders with the same path label (such as two untitled
+  // siblings) are not merged.
+  const folders = new Map<string, { label: string; count: number }>();
   const protocols = new Map<string, number>();
 
   flatBookmarks.forEach((bookmark) => {
@@ -337,8 +358,10 @@ export function collectBookmarkStatistics(
 
     if (options.includeFolders) {
       // An empty label marks root-level bookmarks; the view localizes it.
-      const label = bookmark.pathLabel;
-      folders.set(label, (folders.get(label) ?? 0) + 1);
+      const key = bookmark.node.parentId ?? bookmark.pathLabel;
+      const entry = folders.get(key) ?? { label: bookmark.pathLabel, count: 0 };
+      entry.count += 1;
+      folders.set(key, entry);
     }
 
     if (options.includeProtocols && bookmark.node.url) {
@@ -351,26 +374,32 @@ export function collectBookmarkStatistics(
     }
   });
 
-  const duplicateCount = options.includeDuplicates
-    ? scanDuplicateBookmarks(nodes, {
-        strategy: 'normalized_url',
-        normalizeWww: true,
-        ignoreProtocol: true,
-        ignoreTrailingSlash: true,
-        maxGroups: Number.MAX_SAFE_INTEGER,
-      }).totalDuplicates
-    : 0;
-
   return {
     totalBookmarks: flatBookmarks.length,
     totalFolders: countFolders(nodes),
     bookmarksInScope: flatBookmarks.length,
     deepestLevel: flatBookmarks.reduce((depth, bookmark) => Math.max(depth, bookmarkLevel(bookmark)), 0),
     ...(options.includeDepthBreakdown ? { depthBreakdown: buildDepthBreakdown(flatBookmarks) } : {}),
-    topDomains: toTopEntries(domains, options.topN),
-    topFolders: toTopEntries(folders, options.topN),
-    protocols: toTopEntries(protocols, options.topN),
-    duplicateCount,
+    ...(options.includeDomains ? { topDomains: toTopEntries(domains, options.topN) } : {}),
+    ...(options.includeFolders
+      ? {
+          topFolders: Array.from(folders.values())
+            .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+            .slice(0, options.topN),
+        }
+      : {}),
+    ...(options.includeProtocols ? { protocols: toTopEntries(protocols, options.topN) } : {}),
+    ...(options.includeDuplicates
+      ? {
+          duplicateCount: scanDuplicateBookmarks(nodes, {
+            strategy: 'normalized_url',
+            normalizeWww: true,
+            ignoreProtocol: true,
+            ignoreTrailingSlash: true,
+            maxGroups: Number.MAX_SAFE_INTEGER,
+          }).totalDuplicates,
+        }
+      : {}),
   };
 }
 
@@ -412,13 +441,21 @@ export function getDuplicateKeepRuleIds(result: DuplicateScanResult) {
 
 /**
  * Removes every previewed extra (all items after the first in each group). Each group is
- * re-read first: extras whose URL changed or that no longer exist are skipped, and a group
- * whose kept bookmark is gone is left untouched so the URL is never lost entirely.
+ * re-read first against the rules it was scanned with: a group whose kept bookmark is gone or
+ * no longer matches the group key is left untouched, so the last copy of a URL is never lost.
+ * Extras that vanished, were edited, or no longer match the group are skipped individually.
  */
 export async function removeDuplicateExtras(
   groups: DuplicateGroup[],
+  match: DuplicateMatchOptions,
 ): Promise<DuplicateRemovalResult> {
-  const result: DuplicateRemovalResult = { removed: 0, skipped: 0, failed: 0, snapshots: [] };
+  const result: DuplicateRemovalResult = {
+    removed: 0,
+    skipped: 0,
+    skippedGroups: 0,
+    failed: 0,
+    snapshots: [],
+  };
   const readCurrent = async (id: string) => {
     try {
       return await getBookmark(id);
@@ -430,14 +467,19 @@ export async function removeDuplicateExtras(
   for (const group of groups) {
     const [keeper, ...extras] = group.items;
     const currentKeeper = keeper ? await readCurrent(keeper.node.id) : null;
-    if (!currentKeeper) {
+    if (!currentKeeper || buildDuplicateKey(currentKeeper, match) !== group.key) {
       result.skipped += extras.length;
+      result.skippedGroups += 1;
       continue;
     }
 
     for (const extra of extras) {
       const current = await readCurrent(extra.node.id);
-      if (!current || current.url !== extra.node.url) {
+      if (
+        !current ||
+        current.url !== extra.node.url ||
+        buildDuplicateKey(current, match) !== group.key
+      ) {
         result.skipped += 1;
         continue;
       }
@@ -475,9 +517,12 @@ export async function restoreDuplicateExtras(
   return { restored, failed };
 }
 
-function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
-  const title = bookmark.node.title.trim().toLowerCase();
-  const url = bookmark.node.url;
+function buildDuplicateKey(
+  node: Pick<BookmarkTreeNode, 'title' | 'url'>,
+  options: DuplicateMatchOptions,
+) {
+  const title = (node.title ?? '').trim().toLowerCase();
+  const url = node.url;
 
   switch (options.strategy) {
     case 'exact_url':
@@ -501,7 +546,7 @@ function buildDuplicateKey(bookmark: FlatBookmark, options: DuplicateOptions) {
  * fragment case are preserved. Query parameter order is ignored, and the optional settings
  * strip `www.`, the scheme, and a trailing slash.
  */
-function normalizeDuplicateUrl(url: string | undefined, options: DuplicateOptions) {
+function normalizeDuplicateUrl(url: string | undefined, options: DuplicateMatchOptions) {
   if (!url) {
     return undefined;
   }

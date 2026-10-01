@@ -15,7 +15,14 @@ vi.mock('@/services/bookmarks', () => ({
   }),
 }));
 
-const { applyMetadataTitles, decodeHtml, scanDeadLinks } = await import(
+const {
+  applyMetadataTitles,
+  decodeHtml,
+  fetchBookmarkMetadata,
+  isHtmlContentType,
+  readHtmlHead,
+  scanDeadLinks,
+} = await import(
   '@/services/bookmark-network-tools'
 );
 const { WEB_HOST_ORIGINS, hasWebHostAccess, requestWebHostAccess } = await import(
@@ -127,6 +134,38 @@ describe('dead-link scanning', () => {
     ]);
   });
 
+  it('retries any HEAD error status with GET before declaring a link dead', async () => {
+    fetchMock.mockImplementation(async (url: string, init: RequestInit) => {
+      const headStatus = Number(url.split('/').pop());
+      if (init.method === 'HEAD') return response(headStatus);
+      return response(url.endsWith('/404') ? 404 : 200);
+    });
+    const result = await scanDeadLinks(
+      tree({
+        a: 'https://e2e.invalid/400',
+        b: 'https://e2e.invalid/403',
+        c: 'https://e2e.invalid/404',
+        d: 'https://e2e.invalid/200',
+      }),
+      { ...deadLinkOptions, concurrency: 1 },
+    );
+    expect(result.items.map((item) => [item.id, item.status, item.statusCode])).toEqual([
+      ['a', 'ok', 200],
+      ['b', 'ok', 200],
+      ['c', 'error', 404],
+      ['d', 'ok', 200],
+    ]);
+    expect(fetchMock.mock.calls.map(([url, init]) => `${init.method} ${url}`)).toEqual([
+      'HEAD https://e2e.invalid/400',
+      'GET https://e2e.invalid/400',
+      'HEAD https://e2e.invalid/403',
+      'GET https://e2e.invalid/403',
+      'HEAD https://e2e.invalid/404',
+      'GET https://e2e.invalid/404',
+      'HEAD https://e2e.invalid/200',
+    ]);
+  });
+
   it('reports redirects with their destination instead of HTTP 0', async () => {
     fetchMock.mockResolvedValue(response(200, { redirectedTo: 'https://e2e.invalid/new' }));
     for (const followRedirects of [true, false]) {
@@ -151,6 +190,116 @@ describe('dead-link scanning', () => {
       .items;
     expect(item).toMatchObject({ status: 'error', errorKind: 'network' });
     expect(JSON.stringify(item)).not.toContain('Failed to fetch');
+  });
+
+  it('reports a redirect loop separately from a refused connection', async () => {
+    fetchMock.mockImplementation(async (_url: string, init: RequestInit) => {
+      if (init.redirect === 'manual') {
+        return { type: 'opaqueredirect', status: 0, body: null } as unknown as Response;
+      }
+      throw new TypeError('Failed to fetch');
+    });
+    const [item] = (await scanDeadLinks(tree({ a: 'https://e2e.invalid/loop' }), deadLinkOptions))
+      .items;
+    expect(item).toMatchObject({ status: 'error', errorKind: 'redirect' });
+    expect(item.statusCode).toBeUndefined();
+  });
+});
+
+/** A body that emits `chunks`, then either ends or stalls until the request is aborted. */
+function streamedResponse(
+  chunks: string[],
+  { contentType = 'text/html', stall = false, signal }: {
+    contentType?: string;
+    stall?: boolean;
+    signal?: AbortSignal | null;
+  } = {},
+) {
+  const encoder = new TextEncoder();
+  const state = { pulled: 0, cancelled: false };
+  let index = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      if (index < chunks.length) {
+        const bytes = encoder.encode(chunks[index]);
+        index += 1;
+        state.pulled += bytes.byteLength;
+        controller.enqueue(bytes);
+        return;
+      }
+      if (!stall) {
+        controller.close();
+        return;
+      }
+      return new Promise<void>((resolve) => {
+        signal?.addEventListener('abort', () => {
+          controller.error(new DOMException('The operation was aborted.', 'AbortError'));
+          resolve();
+        });
+      });
+    },
+    cancel() {
+      state.cancelled = true;
+    },
+  });
+  return {
+    state,
+    response: new Response(body, { status: 200, headers: { 'content-type': contentType } }),
+  };
+}
+
+describe('metadata fetching', () => {
+  const fetchMock = vi.fn();
+  const options = {
+    overwriteTitles: true,
+    fetchDescriptions: true,
+    requestTimeoutMs: 50,
+    concurrency: 1,
+  };
+  beforeEach(() => {
+    fetchMock.mockReset();
+    vi.stubGlobal('fetch', fetchMock);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('times out when the body stalls after the headers arrive', async () => {
+    fetchMock.mockImplementation(
+      async (_url: string, init: RequestInit) =>
+        streamedResponse(['<html><head><title>Part'], { stall: true, signal: init.signal })
+          .response,
+    );
+    const started = Date.now();
+    const result = await fetchBookmarkMetadata(tree({ a: 'https://e2e.invalid/stall' }), options);
+    expect(result.items.map((item) => item.status)).toEqual(['timeout']);
+    expect(Date.now() - started).toBeLessThan(2000);
+  });
+
+  it('skips non-HTML responses without downloading them', async () => {
+    const pdf = streamedResponse(['%PDF-1.7 ...'.repeat(1000)], {
+      contentType: 'application/pdf',
+    });
+    fetchMock.mockResolvedValue(pdf.response);
+    const [item] = (await fetchBookmarkMetadata(tree({ a: 'https://e2e.invalid/file.pdf' }), options))
+      .items;
+    expect(item).toMatchObject({ status: 'notHtml', statusCode: 200, changed: false });
+    expect(pdf.state.cancelled).toBe(true);
+    expect(isHtmlContentType('application/xhtml+xml; charset=utf-8')).toBe(true);
+    expect(isHtmlContentType(null)).toBe(true);
+    expect(isHtmlContentType('text/htmlx')).toBe(false);
+  });
+
+  it('stops reading at the end of the head or at the byte cap', async () => {
+    const page = streamedResponse(['<head><title>T</title></he', 'ad><body>', 'x'.repeat(4096)]);
+    const head = new TextDecoder().decode(await readHtmlHead(page.response, 1024 * 1024));
+    expect(head).toBe('<head><title>T</title></head><body>');
+    expect(page.state.cancelled).toBe(true);
+
+    const endless = streamedResponse(Array.from({ length: 64 }, () => 'y'.repeat(1024)));
+    const capped = await readHtmlHead(endless.response, 10 * 1024);
+    expect(capped.byteLength).toBe(10 * 1024);
+    expect(endless.state.pulled).toBeLessThan(64 * 1024);
   });
 });
 

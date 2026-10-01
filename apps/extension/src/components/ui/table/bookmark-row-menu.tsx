@@ -59,7 +59,7 @@ export function BookmarkRowMenu({ bookmark, actions }: BookmarkRowMenuProps) {
           <>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              className="text-destructive focus:text-destructive"
+              className="text-destructive-text focus:text-destructive-text"
               onClick={run(actions.onDelete)}
             >
               <Trash2 className="h-4 w-4" />

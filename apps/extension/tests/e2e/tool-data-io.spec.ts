@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 function localDate() {
@@ -36,11 +36,73 @@ test('export uses the selected folder and saved preferences, and neutralizes CSV
   expect(download.suggestedFilename()).toBe(`backup-Tracking_${localDate()}.csv`);
   const csv = await readFile(await download.path(), 'utf8');
   expect(csv.split('\n')).toEqual([
-    'Title,Folder',
+    '﻿Title,Folder',
     `"'=HYPERLINK(""https://evil.invalid"",""x"")",Tracking`,
     'Inner Link,Tracking/Nested',
   ]);
   expect(csv).not.toContain('Outside Link');
+});
+
+test('a CSV export keeps non-ASCII folder names in the filename and escapes / in folder paths', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, '日本語 メモ', [
+    { title: 'Work/Home', children: [{ title: 'Nested Link', url: 'https://e2e.invalid/n' }] },
+  ]);
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'csv',
+    exportFilenamePrefix: '',
+    exportIncludeDates: false,
+    exportIncludeUrls: false,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const downloadPromise = page.waitForEvent('download');
+  await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe(`日本語_メモ_${localDate()}.csv`);
+  const bytes = await readFile(await download.path());
+  expect([...bytes.subarray(0, 3)]).toEqual([0xef, 0xbb, 0xbf]);
+  expect(bytes.toString('utf8').split('\n')).toEqual([
+    '﻿Title,Folder',
+    'Nested Link,日本語 メモ/Work\\/Home',
+  ]);
+});
+
+test('a Markdown export without URLs escapes titles that look like Markdown syntax', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Markdown', [
+    { title: '1. Intro', url: 'https://e2e.invalid/1' },
+    { title: '# Heading', url: 'https://e2e.invalid/2' },
+    { title: '---', url: 'https://e2e.invalid/3' },
+    { title: '> Quote', url: 'https://e2e.invalid/4' },
+    { title: '+ Plus', url: 'https://e2e.invalid/5' },
+  ]);
+  await setSettings(extensionWorker, {
+    dataDefaultExportFormat: 'markdown',
+    exportIncludeUrls: false,
+  });
+
+  await openTools(page, extensionId, folder.folderId);
+  const downloadPromise = page.waitForEvent('download');
+  await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
+  const markdown = await readFile(await (await downloadPromise).path(), 'utf8');
+  expect(markdown).toContain(
+    [
+      '- **E2E Markdown**',
+      '  - 1\\. Intro',
+      '  - \\# Heading',
+      '  - \\---',
+      '  - &gt; Quote',
+      '  - \\+ Plus',
+    ].join('\n'),
+  );
+  expect(markdown).not.toContain('https://');
 });
 
 test('an all-bookmarks JSON export has no nameless wrapper and re-imports without an extra level', async ({
@@ -74,7 +136,7 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
     mimeType: 'application/json',
     buffer: Buffer.from(raw),
   });
-  await expect(page.getByText('Import Complete', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('Import Complete', { exact: true })).toBeVisible();
   const topLevel = (await childrenOf(extensionWorker, target.folderId)).map((item) => item.title);
   expect(topLevel).toEqual(exported.children.map((node) => node.title));
   expect(topLevel).not.toContain('Untitled');
@@ -96,9 +158,12 @@ test('import reports empty files as failures and partial JSON imports with count
     buffer: Buffer.from('Just some plain text, no bookmarks here.'),
   });
   await expect(
-    page.getByText('No bookmarks or folders were found in this file. Nothing was imported.', {
-      exact: true,
-    }),
+    toastRegion(page).getByText(
+      'No bookmarks or folders were found in this file. Nothing was imported.',
+      {
+        exact: true,
+      },
+    ),
   ).toBeVisible();
   expect(await childrenOf(extensionWorker, folder.folderId)).toEqual([]);
 
@@ -114,10 +179,13 @@ test('import reports empty files as failures and partial JSON imports with count
       ]),
     ),
   });
-  await expect(page.getByText('Some items were not imported', { exact: true })).toBeVisible();
   await expect(
-    // The toast's screen-reader announcement repeats the text; match the visible description.
-    page.getByText(/^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/),
+    toastRegion(page).getByText('Some items were not imported', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    toastRegion(page).getByText(
+      /^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/,
+    ),
   ).toBeVisible();
   const titles = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
   expect(titles).toEqual(expect.arrayContaining(['Valid One', 'Valid Two']));

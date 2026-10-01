@@ -147,6 +147,10 @@
         "message": "Enter folder name...",
         "description": "New folder input placeholder"
     },
+    "popup_newFolderNameLabel": {
+        "message": "New folder name",
+        "description": "Accessible name of the new folder name input"
+    },
     "state_noBookmarksFound": {
         "message": "No bookmarks found",
         "description": "Empty state when search has no results"
@@ -2107,14 +2111,6 @@
         "message": "Replace existing bookmark titles when better metadata is found",
         "description": "Metadata fetcher overwrite titles description"
     },
-    "settings_metadataFetcherFetchFavicons": {
-        "message": "Fetch Favicons",
-        "description": "Metadata fetcher fetch favicons label"
-    },
-    "settings_metadataFetcherFetchFaviconsDesc": {
-        "message": "Attempt to refresh missing or outdated favicons",
-        "description": "Metadata fetcher fetch favicons description"
-    },
     "settings_metadataFetcherFetchDescriptions": {
         "message": "Fetch Descriptions",
         "description": "Metadata fetcher fetch descriptions label"
@@ -2407,6 +2403,10 @@
         "message": "No title change needed",
         "description": "Metadata fetcher result when the title is already current"
     },
+    "tools_metadataNotHtml": {
+        "message": "Not an HTML page; skipped",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
     "tools_deadLinkStatus_ok": {
         "message": "OK",
         "description": "Dead link status badge"
@@ -2672,7 +2672,7 @@
         "description": "Reset one setting button accessible name"
     },
     "options_apiKeyInvalidFormat": {
-        "message": "This doesn't look like a $1 API key. It was not saved.",
+        "message": "This doesn't look like an API key for $1. It was not saved.",
         "description": "Invalid API key format error"
     },
     "toast_apiKeySaved": {
@@ -2928,8 +2928,8 @@
         "description": "Button that clears the table row selection"
     },
     "bookmarks_editUrlScriptRejected": {
-        "message": "JavaScript URLs (bookmarklets) cannot be saved here.",
-        "description": "Validation message when an edited URL uses the javascript: scheme"
+        "message": "Script URLs ($1) cannot be saved here. Existing bookmarklets can still be renamed.",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
     },
     "bookmarks_editFolderDescription": {
         "message": "Change the name of this folder.",
@@ -3115,6 +3115,26 @@
             }
         }
     },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "$count$ groups were left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc_one": {
+        "message": "$count$ group was left untouched because the kept bookmark was changed or removed after the scan.",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
     "toast_duplicatesRestoredDesc": {
         "message": "Restored: $restored$. Could not restore: $failed$.",
         "description": "Duplicate removal undo result",
@@ -3142,6 +3162,30 @@
                 "example": "1"
             }
         }
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ groups. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesTitleOnlyWarning_one": {
+        "message": "Title-only matching grouped bookmarks with different URLs in $count$ group. Removing duplicates deletes those other pages' bookmarks; review them first.",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "Different URLs",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
     },
     "tools_urlCleanerDialogDesc_one": {
         "message": "$count$ bookmark can be cleaned",
@@ -3202,6 +3246,10 @@
     "tools_networkFailed": {
         "message": "Could not connect to the site",
         "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "Too many redirects (or the redirect target could not be reached)",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
     },
     "tools_deadLinkStatus_skipped": {
         "message": "Skipped",
@@ -3391,6 +3439,82 @@
         "message": "Value looks like an API or access token",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "export_privacyReviewTitle": {
+        "message": "Review private data before export",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "$count$ bookmarks in this export contain values that may be private. A redacted export replaces them with REDACTED in the file only; your bookmarks are not changed.",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewDesc_one": {
+        "message": "$count$ bookmark in this export contains values that may be private. A redacted export replaces them with REDACTED in the file only; your bookmarks are not changed.",
+        "description": "Export privacy review description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "Export original",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "Export redacted",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "Username or password in the URL",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "Private value in the URL fragment",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "Token-like value in parameter: $param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "Token-like value in the URL",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "Token-like value in the title",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "Email-like value in parameter: $param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "Email-like value in the URL",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "Email-like value in the title",
+        "description": "Export privacy finding: email-like value in the title"
+    },
     "stats_depthBreakdown": {
         "message": "Bookmarks by folder level",
         "description": "Statistics bookmarks-per-folder-level list label"
@@ -3422,5 +3546,33 @@
                 "example": "1"
             }
         }
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "($1 more hidden by filters, not included)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "data: URLs that open as a web page ($1) cannot be saved here.",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "Move 1 item",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "Moved 1 item",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "$1 other selected item(s) are inside a selected folder and move with it.",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "and $1 more",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "Hidden while the table is narrow so Title stays visible",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
     }
 }

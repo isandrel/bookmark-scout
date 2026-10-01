@@ -20,6 +20,8 @@ interface DataTableToolbarProps<TData extends RowData> {
   facetScope: TData[];
   browserOrder: boolean;
   onBrowserOrderChange: (enabled: boolean) => void;
+  /** Columns hidden because the table is too narrow. */
+  spaceHiddenColumnIds?: string[];
 }
 
 function countColumnValues<TData extends RowData>(
@@ -45,6 +47,7 @@ export function DataTableToolbar<TData extends RowData>({
   facetScope,
   browserOrder,
   onBrowserOrderChange,
+  spaceHiddenColumnIds,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
   const typeColumn = table.getColumn('type');
@@ -170,7 +173,11 @@ export function DataTableToolbar<TData extends RowData>({
         <ListOrdered />
         {t('table_browserOrder')}
       </Button>
-      <DataTableViewOptions table={table} onResetView={onResetView} />
+      <DataTableViewOptions
+        table={table}
+        onResetView={onResetView}
+        spaceHiddenColumnIds={spaceHiddenColumnIds}
+      />
     </div>
   );
 }

@@ -152,11 +152,17 @@ export function BookmarkItem({
             className="mr-2 shrink-0 rounded-sm bookmark-favicon"
           />
         )}
-        <HighlightedText
-          className="truncate text-sm"
-          text={node.title}
-          ranges={node.searchMatchRanges}
-        />
+        {node.title.trim() ? (
+          <HighlightedText
+            className="truncate text-sm"
+            text={node.title}
+            ranges={node.searchMatchRanges}
+          />
+        ) : (
+          <span className="truncate text-sm italic text-muted-foreground">
+            {getBookmarkDisplayTitle(node.title)}
+          </span>
+        )}
       </a>
       <Button
         variant="ghost"

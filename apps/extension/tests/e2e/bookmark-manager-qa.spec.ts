@@ -1,5 +1,5 @@
 import type { Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -438,7 +438,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   await expect(bulk).toContainText('2 selected');
   await bulk.getByRole('button', { name: 'Delete' }).click();
   await expect(
-    page.getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true }),
+    toastRegion(page).getByText('Deleted 2 items. Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
   await expect.poll(childTitles).toEqual(['Bulk New', 'Bulk Target', 'Bulk A']);
   await page.getByRole('button', { name: 'Undo', exact: true }).click();
@@ -446,7 +446,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
 
   await page.getByRole('checkbox', { name: 'Select "Bulk A"' }).check();
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
-  const dialog = page.getByRole('dialog', { name: 'Move 1 items' });
+  const dialog = page.getByRole('dialog', { name: 'Move 1 item' });
   await dialog.getByRole('combobox').click();
   await page.getByRole('option', { name: /E2E Bulk \/ Bulk Target$/ }).click();
   await dialog.getByRole('button', { name: 'Move to folder' }).click();
@@ -485,7 +485,9 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
   await dialog.getByLabel('Name').fill('  GitHub Spaced  ');
   await dialog.getByLabel('URL').fill('javascript:alert(1)');
   await dialog.getByRole('button', { name: 'Save' }).click();
-  await expect(dialog).toContainText('JavaScript URLs (bookmarklets) cannot be saved here.');
+  await expect(dialog).toContainText(
+    'Script URLs (javascript:) cannot be saved here. Existing bookmarklets can still be renamed.',
+  );
   await dialog.getByLabel('URL').fill('https://github.com/');
   await dialog.getByRole('button', { name: 'Save' }).click();
   await expect(dialog).toHaveCount(0);
