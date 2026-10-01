@@ -265,8 +265,9 @@ export function DataTable<TData extends RowData>({
   const effectiveColumnVisibility = React.useMemo<ColumnVisibilityState>(
     () => ({
       ...columnVisibility,
-      ...Object.fromEntries(spaceHiddenColumnIds.map((id) => [id, false])),
-      [DOMAIN_COLUMN_ID]: false,
+      ...Object.fromEntries(
+        [...spaceHiddenColumnIds, ...INTERNAL_BOOKMARK_COLUMN_IDS].map((id) => [id, false]),
+      ),
     }),
     [columnVisibility, spaceHiddenColumnIds],
   );
@@ -310,8 +311,8 @@ export function DataTable<TData extends RowData>({
       sorting,
       columnFilters,
       columnOrder,
-      // The domain column only backs the URL domain filter and is never displayed. Columns hidden
-      // for lack of room keep the saved preference and return when the table is wide enough.
+      // Filter-only columns (the URL domain) are never displayed. Columns hidden for lack of
+      // room keep the saved preference and return when the table is wide enough.
       columnVisibility: effectiveColumnVisibility,
       columnSizing: renderedColumnSizing,
       columnResizing,

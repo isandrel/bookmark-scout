@@ -2,22 +2,18 @@ import { z } from 'zod';
 
 export const BOOKMARK_TABLE_VIEW_STORAGE_KEY = 'bookmark-scout-table-view';
 
-export const BOOKMARK_TABLE_COLUMN_IDS = [
-  'select',
-  'type',
-  'id',
-  'parentId',
-  'folderPath',
-  'url',
-  'title',
-  'dateAdded',
-  'dateGroupModified',
-  'unmodifiable',
-  'actions',
-] as const;
+// The saved view covers every column in the registry (components/ui/table/columns.tsx) except
+// filter-only ones, in registry order.
+const SAVED_COLUMNS = BOOKMARK_COLUMNS.filter((column) => !column.internal);
+
+export const BOOKMARK_TABLE_COLUMN_IDS: readonly string[] = SAVED_COLUMNS.map(
+  (column) => column.id,
+);
 
 const SORTABLE_COLUMN_IDS = new Set(
-  BOOKMARK_TABLE_COLUMN_IDS.filter((id) => id !== 'select' && id !== 'actions'),
+  SAVED_COLUMNS.filter((column) => column.accessor && column.enableSorting !== false).map(
+    (column) => column.id,
+  ),
 );
 const ALLOWED_COLUMN_IDS = new Set<string>(BOOKMARK_TABLE_COLUMN_IDS);
 
@@ -56,12 +52,12 @@ export const bookmarkTableViewItem = storage.defineItem<BookmarkTableView>(
 
 export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
   version: 1,
-  columnVisibility: {
-    id: false,
-    parentId: false,
-    dateGroupModified: false,
-    unmodifiable: false,
-  },
+  columnVisibility: Object.fromEntries(
+    SAVED_COLUMNS.filter((column) => column.defaultVisible === false).map((column) => [
+      column.id,
+      false,
+    ]),
+  ),
   columnOrder: [...BOOKMARK_TABLE_COLUMN_IDS],
   pageSize: 10,
   sorting: [],
