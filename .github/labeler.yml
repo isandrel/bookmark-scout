@@ -59,7 +59,7 @@ dependencies:
   - changed-files:
       - any-glob-to-any-file:
           - 'package.json'
-          - 'bun.lockb'
+          - 'bun.lock'
           - '**/package.json'
 
 # Configuration
