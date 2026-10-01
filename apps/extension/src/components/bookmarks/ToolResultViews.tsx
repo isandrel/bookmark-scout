@@ -1,7 +1,26 @@
 import { Info } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
-function describeDeadLink(item: DeadLinkResultItem): string {
+const HTTP_FAILURE_LABEL_KEYS: Partial<Record<DeadLinkCategory, string>> = {
+  notFound: 'tools_deadLinkCategory_notFound',
+  auth: 'tools_deadLinkCategory_auth',
+  rateLimited: 'tools_deadLinkCategory_rateLimited',
+  methodRejected: 'tools_deadLinkCategory_methodRejected',
+  serverError: 'tools_deadLinkCategory_serverError',
+  httpError: 'tools_deadLinkCategory_httpError',
+};
+
+/** Badge that separates confirmed dead links from failures that need a manual check. */
+export function DeadLinkCategoryBadge({ item }: { item: DeadLinkResultItem }) {
+  if (!item.category) return null;
+  return isConfirmedDeadLink(item) ? (
+    <Badge variant="destructive">{t('tools_deadLinkConfirmedDead')}</Badge>
+  ) : (
+    <Badge variant="outline">{t('tools_deadLinkNeedsCheck')}</Badge>
+  );
+}
+
+export function describeDeadLink(item: DeadLinkResultItem): string {
   switch (item.status) {
     case 'ok':
       return t('tools_deadLinkReachable');
@@ -15,11 +34,14 @@ function describeDeadLink(item: DeadLinkResultItem): string {
       return t('tools_deadLinkInvalidUrl');
     case 'skipped':
       return t('tools_notWebUrlSkipped');
-    default:
+    default: {
       if (item.statusCode !== undefined) {
-        return t('tools_deadLinkHttpStatus', String(item.statusCode));
+        const status = t('tools_deadLinkHttpStatus', String(item.statusCode));
+        const labelKey = item.category ? HTTP_FAILURE_LABEL_KEYS[item.category] : undefined;
+        return labelKey ? t('tools_deadLinkHttpDetail', [status, t(labelKey)]) : status;
       }
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
+    }
   }
 }
 
@@ -236,20 +258,48 @@ export function StatisticsResultsView({ result }: { result: BookmarkStatistics |
   );
 }
 
-export function DeadLinkResultsView({ result }: { result: DeadLinkScanResult | null }) {
+export function DeadLinkResultsView({
+  result,
+  onReview,
+}: {
+  result: DeadLinkScanResult | null;
+  /** Opens the reviewed repair workflow for failed and redirected links. */
+  onReview?: () => void;
+}) {
+  const confirmed = result?.items.filter(isConfirmedDeadLink).length ?? 0;
+  const needsCheck =
+    result?.items.filter((item) => item.category && !isConfirmedDeadLink(item)).length ?? 0;
+  const redirected = result?.items.filter((item) => item.status === 'redirect').length ?? 0;
+  const repairable = result?.items.filter(isDeadLinkRepairCandidate).length ?? 0;
   return result?.items.length ? (
     <div className="space-y-3">
+      <div
+        data-testid="dead-link-summary"
+        className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 p-3 text-sm"
+      >
+        <span>
+          {t('tools_deadLinkSummary', [String(confirmed), String(needsCheck), String(redirected)])}
+        </span>
+        {onReview && repairable > 0 ? (
+          <Button size="sm" onClick={onReview}>
+            {t('tools_deadLinkReview')}
+          </Button>
+        ) : null}
+      </div>
       {result.items.map((item) => (
         <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
-            <Badge
-              variant={
-                item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
-              }
-            >
-              {t(`tools_deadLinkStatus_${item.status}`)}
-            </Badge>
+            <div className="flex flex-shrink-0 items-center gap-1">
+              <DeadLinkCategoryBadge item={item} />
+              <Badge
+                variant={
+                  item.status === 'ok' || item.status === 'skipped' ? 'secondary' : 'destructive'
+                }
+              >
+                {t(`tools_deadLinkStatus_${item.status}`)}
+              </Badge>
+            </div>
           </div>
           <div className="break-all text-xs text-muted-foreground">{item.url}</div>
           <div className="break-all text-xs text-muted-foreground">{describeDeadLink(item)}</div>

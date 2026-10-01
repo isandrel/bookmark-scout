@@ -98,6 +98,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [deadLinksDialogOpen, setDeadLinksDialogOpen] = useState(false);
   const [deadLinksLoading, setDeadLinksLoading] = useState(false);
   const [deadLinksResult, setDeadLinksResult] = useState<DeadLinkScanResult | null>(null);
+  const [deadLinkRepairOpen, setDeadLinkRepairOpen] = useState(false);
   const [metadataDialogOpen, setMetadataDialogOpen] = useState(false);
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
@@ -1163,8 +1164,20 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           t('tools_deadLinksDialogDesc')
         }
       >
-        <DeadLinkResultsView result={deadLinksResult} />
+        <DeadLinkResultsView
+          result={deadLinksResult}
+          onReview={() => {
+            setDeadLinksDialogOpen(false);
+            setDeadLinkRepairOpen(true);
+          }}
+        />
       </ToolResultsDialog>
+
+      <DeadLinkRepairDialog
+        result={deadLinkRepairOpen ? deadLinksResult : null}
+        onClose={() => setDeadLinkRepairOpen(false)}
+        onChanged={refresh}
+      />
 
       <ToolResultsDialog
         open={metadataDialogOpen}

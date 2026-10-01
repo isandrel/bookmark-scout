@@ -3718,5 +3718,141 @@
     "tools_importUndoneDesc": {
         "message": "Top-level items removed: $1. Kept because they changed or could not be removed: $2.",
         "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
+    },
+    "tools_deadLinkCategory_notFound": {
+        "message": "Page not found",
+        "description": "Dead link reason for HTTP 404 or 410"
+    },
+    "tools_deadLinkCategory_auth": {
+        "message": "Sign-in required or access denied; it may work in your browser",
+        "description": "Dead link reason for HTTP 401, 403, or 407"
+    },
+    "tools_deadLinkCategory_rateLimited": {
+        "message": "Rate limited; try again later",
+        "description": "Dead link reason for HTTP 429"
+    },
+    "tools_deadLinkCategory_methodRejected": {
+        "message": "The site rejects automated checks; open it to confirm",
+        "description": "Dead link reason when both HEAD and GET are rejected with HTTP 405 or 501"
+    },
+    "tools_deadLinkCategory_serverError": {
+        "message": "Server error; it may be temporary",
+        "description": "Dead link reason for HTTP 5xx"
+    },
+    "tools_deadLinkCategory_httpError": {
+        "message": "Unexpected response; open it to confirm",
+        "description": "Dead link reason for other HTTP error statuses"
+    },
+    "tools_deadLinkHttpDetail": {
+        "message": "$1: $2",
+        "description": "Dead link detail; $1 is the HTTP status text (for example \"HTTP 404\"), $2 the reason"
+    },
+    "tools_deadLinkConfirmedDead": {
+        "message": "Confirmed dead",
+        "description": "Badge for a link that is definitely broken (404/410, unreachable, redirect loop)"
+    },
+    "tools_deadLinkNeedsCheck": {
+        "message": "Check manually",
+        "description": "Badge for a failed link that may still work in a browser"
+    },
+    "tools_deadLinkSummary": {
+        "message": "Confirmed dead: $1. Need a manual check: $2. Redirected: $3.",
+        "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
+    },
+    "tools_deadLinkReview": {
+        "message": "Review repairs",
+        "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkRepairTitle": {
+        "message": "Review dead-link repairs",
+        "description": "Dead-link repair dialog title"
+    },
+    "tools_deadLinkRepairDesc": {
+        "message": "Choose what to do with each link. Nothing changes until you apply.",
+        "description": "Dead-link repair dialog description"
+    },
+    "tools_deadLinkRepairAction": {
+        "message": "Action for $1",
+        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairChoice_keep": {
+        "message": "Keep as is",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_delete": {
+        "message": "Delete bookmark",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_redirect": {
+        "message": "Use redirect target",
+        "description": "Dead-link repair choice; replaces the URL with where the site redirected"
+    },
+    "tools_deadLinkRepairChoice_archive": {
+        "message": "Use archived copy (Wayback Machine)",
+        "description": "Dead-link repair choice; replaces the URL with a web.archive.org link"
+    },
+    "tools_deadLinkRepairChoice_edit": {
+        "message": "Edit URL",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairNewUrl": {
+        "message": "New URL for $1",
+        "description": "Accessible label of the edited URL field; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairInvalidUrl": {
+        "message": "Enter a valid http or https URL that differs from the current one.",
+        "description": "Validation message for an edited dead-link URL"
+    },
+    "tools_deadLinkRepairWillChange": {
+        "message": "New URL: $1",
+        "description": "Preview of the URL a repair will write; $1 is the URL"
+    },
+    "tools_deadLinkRepairArchiveNote": {
+        "message": "The archive link is not checked; the page may never have been archived.",
+        "description": "Note shown when the archived-copy repair is chosen"
+    },
+    "tools_deadLinkRepairSummary": {
+        "message": "Delete: $1. Replace URL: $2. Keep: $3.",
+        "description": "Planned dead-link repair counts; $1 deletions, $2 URL replacements, $3 kept"
+    },
+    "tools_deadLinkRepairApply": {
+        "message": "Apply $1 changes",
+        "description": "Apply button of the dead-link repair dialog; $1 is the number of changes"
+    },
+    "tools_deadLinkRepairApply_one": {
+        "message": "Apply $1 change",
+        "description": "Apply button of the dead-link repair dialog (singular)"
+    },
+    "tools_deadLinkRepairApplied": {
+        "message": "Repairs applied",
+        "description": "Toast title after all dead-link repairs were applied"
+    },
+    "tools_deadLinkRepairPartial": {
+        "message": "Some repairs were not applied",
+        "description": "Toast title when some dead-link repairs were skipped or failed"
+    },
+    "tools_deadLinkRepairOutcome": {
+        "message": "Deleted: $1. URLs replaced: $2. Skipped because they changed after the scan: $3. Failed: $4.",
+        "description": "Dead-link repair result counts; $1 deleted, $2 replaced, $3 skipped, $4 failed"
+    },
+    "tools_deadLinkRepairIssueChanged": {
+        "message": "$1: changed after the scan; left untouched",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairIssueFailed": {
+        "message": "$1: could not be changed",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairUndone": {
+        "message": "Repairs undone",
+        "description": "Toast title after a dead-link repair batch was undone"
+    },
+    "tools_deadLinkRepairUndoPartial": {
+        "message": "Some repairs could not be undone",
+        "description": "Toast title when part of a dead-link repair batch could not be undone"
+    },
+    "tools_deadLinkRepairUndoneDesc": {
+        "message": "Restored: $1. Could not restore: $2.",
+        "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
     }
 }
