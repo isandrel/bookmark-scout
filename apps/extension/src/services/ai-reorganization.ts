@@ -232,7 +232,14 @@ export async function generateReorganizationPlan(
   settings: AISettings,
   config?: Partial<ReorganizationConfig>,
 ): Promise<ReorganizationPlan> {
-  const cfg = resolveReorgConfig(config);
+  // Folder limits are Options settings; defaults alone would silently ignore the user's values.
+  const stored = await getSettings();
+  const cfg = resolveReorgConfig({
+    maxCategories: stored.aiMaxCategories,
+    minItemsPerFolder: stored.aiMinItemsPerFolder,
+    maxItemsPerFolder: stored.aiMaxItemsPerFolder,
+    ...config,
+  });
   validateAISettings(settings);
 
   aiLogger.info({ inputNodes: bookmarks.length }, 'Starting reorganization plan generation');

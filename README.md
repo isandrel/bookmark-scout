@@ -87,7 +87,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### ✅ Implemented
 
-- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or custom OpenAI-compatible providers
+- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
@@ -98,16 +98,15 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
+- [x] 🗑️ **Delete Items** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links
-- [x] 🧾 **Metadata Fetcher** — Fetch title, favicon, and description metadata
+- [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
-- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON
-- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context, suggest tags, summarize bookmarks, and plan folder reorganizations
-- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear bookmark tags and summaries locally, or apply reviewed AI suggestions
+- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
+- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
@@ -123,10 +122,18 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 >
 > ⚠️ **Note:** AI features may send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. API usage may incur costs depending on your provider. Results are experimental and should be reviewed before applying destructive organization changes.
 
+### 🟡 Partial
+
+- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: not synced, not searchable, and not included in bookmark exports (AI context exports include them when enabled)
+- [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
+- [x] 🦊 **Firefox and Edge** — Builds are validated in CI, but automated browser tests run only in Chromium; Firefox has no side panel
+
 ### 🚧 Current Focus
 
 - [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
-- [ ] 🧪 **Expand Automated Tests** — Add network and AI workflow coverage beyond the automated core bookmark flows
+- [ ] 📥 **Import Preview** — Review the target folder, counts, and duplicates before an import is written, with undo
+- [ ] 🔖 **Saved Searches** — Save searches and smart bookmark views
+- [ ] 🧪 **Browser Coverage** — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
 
 ---
