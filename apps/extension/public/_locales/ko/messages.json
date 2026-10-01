@@ -19,6 +19,50 @@
         "message": "북마크 검색...",
         "description": "Search input placeholder"
     },
+    "shortcuts_popupHint": {
+        "message": "단축키: / 검색, ↓ ↑ 폴더와 북마크 이동, → ← 폴더 열기 또는 닫기, Enter 현재 페이지를 포커스된 폴더에 저장, Esc 검색 지우기",
+        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
+    },
+    "shortcuts_title": {
+        "message": "키보드 단축키",
+        "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
+    },
+    "shortcuts_buttonTitle": {
+        "message": "키보드 단축키 (?)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+    },
+    "shortcuts_pausedWhileTyping": {
+        "message": "입력란에 입력하는 동안이나 대화상자 또는 메뉴가 열려 있는 동안에는 단축키가 동작하지 않습니다.",
+        "description": "Keyboard shortcuts dialog description"
+    },
+    "shortcuts_focusFilter": {
+        "message": "제목 필터에 포커스",
+        "description": "Keyboard shortcut description: / focuses the title filter"
+    },
+    "shortcuts_parentFolder": {
+        "message": "상위 폴더로 이동",
+        "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
+    },
+    "shortcuts_nextPreviousRow": {
+        "message": "다음 또는 이전 행으로 이동",
+        "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_openFolder": {
+        "message": "포커스된 폴더 열기",
+        "description": "Keyboard shortcut description: Enter opens the focused folder row"
+    },
+    "shortcuts_showHelp": {
+        "message": "키보드 단축키 보기",
+        "description": "Keyboard shortcut description: ? opens this dialog"
+    },
+    "shortcuts_closeDialog": {
+        "message": "대화상자 또는 메뉴 닫기",
+        "description": "Keyboard shortcut description: Escape closes dialogs and menus"
+    },
+    "shortcuts_or": {
+        "message": "또는",
+        "description": "Separator between alternative keys in the shortcuts dialog"
+    },
     "popup_newFolder": {
         "message": "새 폴더",
         "description": "Default name for new folder"

@@ -138,6 +138,7 @@ export function BookmarkItem({
           setupDragDrop(el);
         }}
         href={node.url}
+        data-popup-tree-row="bookmark"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"

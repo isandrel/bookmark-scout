@@ -37,6 +37,11 @@ export default function BookmarksPage() {
     rememberPageIndex,
     refresh,
   } = useBookmarkNavigation();
+  const shortcuts = useManagerShortcuts({
+    currentFolderId: currentFolder,
+    items: allData,
+    onNavigate: navigateToFolder,
+  });
   const { toast } = useToast();
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
@@ -214,6 +219,10 @@ export default function BookmarksPage() {
                 onNavigate={navigateToFolder}
               />
             </div>
+            <ManagerShortcutsHelp
+              open={shortcuts.helpOpen}
+              onOpenChange={shortcuts.setHelpOpen}
+            />
             <Button
               variant="ghost"
               size="icon"

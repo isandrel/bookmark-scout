@@ -19,6 +19,50 @@
         "message": "Search bookmarks...",
         "description": "Search input placeholder"
     },
+    "shortcuts_popupHint": {
+        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search",
+        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
+    },
+    "shortcuts_title": {
+        "message": "Keyboard shortcuts",
+        "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
+    },
+    "shortcuts_buttonTitle": {
+        "message": "Keyboard shortcuts (?)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+    },
+    "shortcuts_pausedWhileTyping": {
+        "message": "Shortcuts are paused while you type in a field or while a dialog or menu is open.",
+        "description": "Keyboard shortcuts dialog description"
+    },
+    "shortcuts_focusFilter": {
+        "message": "Focus the title filter",
+        "description": "Keyboard shortcut description: / focuses the title filter"
+    },
+    "shortcuts_parentFolder": {
+        "message": "Go to the parent folder",
+        "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
+    },
+    "shortcuts_nextPreviousRow": {
+        "message": "Move to the next or previous row",
+        "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_openFolder": {
+        "message": "Open the focused folder",
+        "description": "Keyboard shortcut description: Enter opens the focused folder row"
+    },
+    "shortcuts_showHelp": {
+        "message": "Show keyboard shortcuts",
+        "description": "Keyboard shortcut description: ? opens this dialog"
+    },
+    "shortcuts_closeDialog": {
+        "message": "Close a dialog or menu",
+        "description": "Keyboard shortcut description: Escape closes dialogs and menus"
+    },
+    "shortcuts_or": {
+        "message": "or",
+        "description": "Separator between alternative keys in the shortcuts dialog"
+    },
     "popup_newFolder": {
         "message": "New Folder",
         "description": "Default name for new folder"

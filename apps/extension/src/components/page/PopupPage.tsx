@@ -201,6 +201,41 @@ function PopupPage() {
     [toast],
   );
 
+  // Save the current page into a tree folder (its add button or Enter) and track it as recent.
+  const handleSaveToFolder = useCallback(
+    async (folderId: string) => {
+      const success = await withToast(
+        () => addBookmarkToFolder(folderId),
+        t('toast_bookmarkAdded'),
+        t('toast_errorAddingBookmark'),
+      );
+      if (success) {
+        try {
+          const folder = await getBookmark(folderId);
+          await addRecentFolder(folderId, folder.title);
+        } catch (e) {
+          console.error('Failed to track recent folder:', e);
+        }
+      }
+    },
+    [addBookmarkToFolder, withToast],
+  );
+
+  const clearQuery = useCallback(() => setQuery(''), [setQuery]);
+  usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery });
+  const setFolderExpanded = useCallback(
+    (folderId: string, expanded: boolean) =>
+      setExpandedFolders((prev) =>
+        expanded ? [...new Set([...prev, folderId])] : prev.filter((id) => id !== folderId),
+      ),
+    [setExpandedFolders],
+  );
+  const handleTreeKeyDown = usePopupTreeKeys({
+    searchInputRef: inputRef,
+    setFolderExpanded,
+    onSaveToFolder: handleSaveToFolder,
+  });
+
   // Add bookmark to selected folder and track as recent
   const handleAddToFolder = useCallback(async (rec: FolderRecommendation) => {
     if (!currentTabInfo) return;
@@ -663,6 +698,7 @@ function PopupPage() {
                 type="multiple"
                 value={expandedFolders}
                 onValueChange={setExpandedFolders}
+                onKeyDown={handleTreeKeyDown}
                 className="w-full accordion-container"
               >
                 {displayFolders.map((node) => (
@@ -680,21 +716,7 @@ function PopupPage() {
                     onDragStart={setDraggedItem}
                     onDragEnd={() => setDraggedItem(null)}
                     onDrop={handleDropWithToast}
-                    onAddBookmark={async (id) => {
-                      const success = await withToast(
-                        () => addBookmarkToFolder(id),
-                        t('toast_bookmarkAdded'),
-                        t('toast_errorAddingBookmark'),
-                      );
-                      if (success) {
-                        try {
-                          const folder = await getBookmark(id);
-                          await addRecentFolder(id, folder.title);
-                        } catch (e) {
-                          console.error('Failed to track recent folder:', e);
-                        }
-                      }
-                    }}
+                    onAddBookmark={handleSaveToFolder}
                     onAddFolder={handleAddFolder}
                     onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
                     onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}

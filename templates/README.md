@@ -97,6 +97,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows
 - [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
@@ -124,7 +125,6 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 
 ### 🚧 Current Focus
 
-- [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
 - [ ] 🧪 **Automated Tests** — Add dedicated unit/integration coverage for bookmark workflows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
 
