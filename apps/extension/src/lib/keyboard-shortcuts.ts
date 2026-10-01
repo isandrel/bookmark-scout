@@ -50,7 +50,9 @@ const NON_TEXT_INPUT_TYPES = new Set([
 ]);
 const TEXT_ROLES = new Set(['textbox', 'searchbox', 'combobox', 'spinbutton']);
 
-// Radix mounts dialogs, popovers (role dialog), menus, and select lists only while they are open.
+// Base UI mounts dialogs, popovers (role dialog), menus, and select lists only while they are open.
+// Toasts would also match (Base UI gives them role dialog), so the Toast wrapper renders them as
+// role status.
 const OVERLAY_SELECTOR = [
   '[role="dialog"]',
   '[role="alertdialog"]',

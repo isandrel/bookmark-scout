@@ -4,7 +4,7 @@
 
 /**
  * Convert a select's string value to the setting's type. Returns undefined for values that must be
- * ignored, such as the empty string Radix emits while options are (re)mounting.
+ * ignored, such as an empty string while options are (re)mounting.
  */
 export function coerceSelectValue(
   key: keyof Settings,

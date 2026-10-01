@@ -36,17 +36,19 @@ function KeyCombo({ keys }: { keys: string[] }) {
 export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHelpProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="ml-auto shrink-0"
-          aria-label={t('shortcuts_title')}
-          aria-keyshortcuts="?"
-          title={t('shortcuts_buttonTitle')}
-        >
-          <Keyboard className="h-4 w-4" />
-        </Button>
+      <DialogTrigger
+        render={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-auto shrink-0"
+            aria-label={t('shortcuts_title')}
+            aria-keyshortcuts="?"
+            title={t('shortcuts_buttonTitle')}
+          />
+        }
+      >
+        <Keyboard className="h-4 w-4" />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

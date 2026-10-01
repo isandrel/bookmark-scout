@@ -1,4 +1,3 @@
-import * as LabelPrimitive from '@radix-ui/react-label';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
@@ -6,12 +5,14 @@ const labelVariants = cva(
   'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
 );
 
+// Base UI has no Label primitive; a native <label> keeps htmlFor association.
 const Label = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root> & VariantProps<typeof labelVariants>
+  HTMLLabelElement,
+  React.ComponentPropsWithoutRef<'label'> & VariantProps<typeof labelVariants>
 >(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
+  // biome-ignore lint/a11y/noLabelWithoutControl: callers associate the control via htmlFor.
+  <label ref={ref} className={cn(labelVariants(), className)} {...props} />
 ));
-Label.displayName = LabelPrimitive.Root.displayName;
+Label.displayName = 'Label';
 
 export { Label };

@@ -27,19 +27,21 @@ export function DataTableDateFilter({
   return (
     <div className="flex items-center">
       <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            aria-label={value?.from ? `${title}: ${label}` : title}
-            className={cn(
-              'w-[300px] justify-start text-left font-normal',
-              !value?.from && 'text-muted-foreground',
-              className,
-            )}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            <span>{label}</span>
-          </Button>
+        <PopoverTrigger
+          render={
+            <Button
+              variant="outline"
+              aria-label={value?.from ? `${title}: ${label}` : title}
+              className={cn(
+                'w-[300px] justify-start text-left font-normal',
+                !value?.from && 'text-muted-foreground',
+                className,
+              )}
+            />
+          }
+        >
+          <CalendarIcon className="mr-2 h-4 w-4" />
+          <span>{label}</span>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <Calendar

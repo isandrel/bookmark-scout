@@ -419,7 +419,7 @@ const OptionsPage: React.FC = () => {
                     <TabsTrigger
                       key={key}
                       value={key}
-                      className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                      className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-active:bg-primary data-active:text-primary-foreground"
                     >
                       {tabIcons[key]}
                       <span>{category.label}</span>

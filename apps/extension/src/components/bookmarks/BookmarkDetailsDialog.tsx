@@ -239,11 +239,15 @@ function BookmarkDetailsContent({
           {t('bookmarks_detailsCopyId')}
         </Button>
         {isWebUrl(bookmarkUrl) ? (
-          <Button asChild variant="outline" size="sm">
-            <a href={bookmarkUrl} target="_blank" rel="noopener noreferrer">
-              {t('bookmarks_detailsOpenLink')}
-            </a>
-          </Button>
+          // A real link with button styles: Base UI's Button would give an <a> role="button".
+          <a
+            className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            href={bookmarkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('bookmarks_detailsOpenLink')}
+          </a>
         ) : null}
         {!bookmarkUrl ? (
           <Button

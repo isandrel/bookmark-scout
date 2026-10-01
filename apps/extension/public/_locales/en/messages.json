@@ -3127,10 +3127,6 @@
         "message": "Notifications ({hotkey})",
         "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
     },
-    "toast_itemLabel": {
-        "message": "Notification",
-        "description": "Accessible label announced for each notification"
-    },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$ duplicate bookmark removed",
         "description": "Duplicate removal success description (singular)",

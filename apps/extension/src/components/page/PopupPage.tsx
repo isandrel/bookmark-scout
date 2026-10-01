@@ -475,7 +475,6 @@ function PopupPage() {
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action: (
           <ToastAction
-            altText={t('action_undo')}
             onClick={async () => {
               // A snapshot restores at most once, so repeated clicks cannot duplicate the tree.
               if (undoUsed) return;
@@ -695,9 +694,9 @@ function PopupPage() {
           ) : (
             <div className="p-3">
               <Accordion
-                type="multiple"
+                multiple
                 value={expandedFolders}
-                onValueChange={setExpandedFolders}
+                onValueChange={(value) => setExpandedFolders([...value])}
                 onKeyDown={handleTreeKeyDown}
                 className="w-full accordion-container"
               >
@@ -739,10 +738,10 @@ function PopupPage() {
       >
         <DialogContent
           className="max-w-[calc(100%-2rem)]"
-          onCloseAutoFocus={(event) => {
-            // The dialog opens from code, so Radix has no trigger to return focus to.
-            event.preventDefault();
+          finalFocus={() => {
+            // The dialog opens from code, so there is no trigger to return focus to.
             restoreFocus(true);
+            return false;
           }}
         >
           <DialogHeader>

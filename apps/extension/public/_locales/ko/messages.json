@@ -3127,10 +3127,6 @@
         "message": "알림 ({hotkey})",
         "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
     },
-    "toast_itemLabel": {
-        "message": "알림",
-        "description": "Accessible label announced for each notification"
-    },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$개의 중복 북마크를 제거했습니다",
         "description": "Duplicate removal success description (singular)",

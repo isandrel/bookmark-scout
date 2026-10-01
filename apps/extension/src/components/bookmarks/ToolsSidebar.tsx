@@ -274,7 +274,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action:
           outcome.snapshots.length > 0 ? (
-            <ToastAction altText={t('action_undo')} onClick={undo}>
+            <ToastAction onClick={undo}>
               {t('action_undo')}
             </ToastAction>
           ) : undefined,
@@ -1018,7 +1018,16 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 defaultScope="folder"
                 currentFolderName={currentFolderName}
                 controls={
-                  <Select value={exportFormat} onValueChange={setExportFormat}>
+                  <Select
+                    value={exportFormat}
+                    onValueChange={(value) => {
+                      if (value !== null) setExportFormat(value);
+                    }}
+                    items={Object.entries(exportFormats).map(([key, format]) => ({
+                      value: key,
+                      label: getFormatName(format),
+                    }))}
+                  >
                     <SelectTrigger className="h-8 w-full text-xs" aria-label={t('tools_exportFormat')}>
                       <SelectValue placeholder={t('tools_exportFormat')} />
                     </SelectTrigger>

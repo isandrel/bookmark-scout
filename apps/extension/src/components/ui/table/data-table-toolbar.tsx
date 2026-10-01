@@ -101,16 +101,18 @@ export function DataTableToolbar<TData extends RowData>({
           <span id="applyToCurrentFolderHelp" className="sr-only">
             {currentFolderHelp}
           </span>
-          <TooltipProvider delayDuration={200}>
+          <TooltipProvider delay={200}>
             <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  className="inline-flex text-muted-foreground hover:text-foreground"
-                  aria-label={currentFolderHelp}
-                >
-                  <CircleHelp className="h-4 w-4" />
-                </button>
+              <TooltipTrigger
+                render={
+                  <button
+                    type="button"
+                    className="inline-flex text-muted-foreground hover:text-foreground"
+                    aria-label={currentFolderHelp}
+                  />
+                }
+              >
+                <CircleHelp className="h-4 w-4" />
               </TooltipTrigger>
               <TooltipContent className="max-w-64">{currentFolderHelp}</TooltipContent>
             </Tooltip>

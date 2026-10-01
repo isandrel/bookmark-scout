@@ -155,8 +155,8 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 |                                                      Technology                                                      | Version | Description            |
 | :------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
 | ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   4.1   | Utility-first CSS      |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   0.9   | Radix-based components |
-|       ![Radix UI](https://img.shields.io/badge/Radix-161618?style=for-the-badge&logo=radixui&logoColor=white)        |   1.2   | Headless UI primitives |
+|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   0.9   | Base UI-based components |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   1.8   | Headless UI primitives |
 | ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |  12.23  | Animation library      |
 |                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   1.8   | Icon library           |
 

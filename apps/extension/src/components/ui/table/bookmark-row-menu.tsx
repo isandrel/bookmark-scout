@@ -11,15 +11,17 @@ type BookmarkRowMenuProps = {
 export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuProps) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="h-8 w-8 p-0"
-          aria-label={t('table_openMenu')}
-          onClick={(event) => event.stopPropagation()}
-        >
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0"
+            aria-label={t('table_openMenu')}
+            onClick={(event) => event.stopPropagation()}
+          />
+        }
+      >
+        <MoreHorizontal className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(event) => event.stopPropagation()}>
         <BookmarkRowMenuItems bookmark={bookmark} actions={actions} context={context} />
@@ -51,8 +53,10 @@ export function BookmarkRowMenuItems({ bookmark, actions, context }: BookmarkRow
 
   return (
     <>
-      <DropdownMenuLabel>{t('table_actions')}</DropdownMenuLabel>
-      {regular.map(renderItem)}
+      <DropdownMenuGroup>
+        <DropdownMenuLabel>{t('table_actions')}</DropdownMenuLabel>
+        {regular.map(renderItem)}
+      </DropdownMenuGroup>
       {destructive.length > 0 && (
         <>
           <DropdownMenuSeparator />
