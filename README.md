@@ -131,6 +131,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 ### 🚧 Current Focus
 
 - [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
+- [ ] 📥 **Import Preview** — Review the target folder, counts, and duplicates before an import is written, with undo
 - [ ] 🔖 **Saved Searches** — Save searches and smart bookmark views
 - [ ] 🧪 **Browser Coverage** — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
