@@ -1,0 +1,21 @@
+{
+  "title": "Bookmarks",
+  "children": [
+    { "title": "Existing again", "url": "https://e2e.invalid/existing" },
+    { "title": "Fresh", "url": "https://e2e.invalid/fresh" },
+    {
+      "title": "Research",
+      "children": [
+        { "title": "Elsewhere again", "url": "https://e2e.invalid/elsewhere" },
+        {
+          "title": "Deep",
+          "children": [
+            { "title": "Deep link", "url": "https://e2e.invalid/deep" },
+            { "title": "Fresh repeat", "url": "https://e2e.invalid/fresh" }
+          ]
+        }
+      ]
+    },
+    42
+  ]
+}

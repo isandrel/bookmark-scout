@@ -3578,5 +3578,105 @@
     "table_columnHiddenForSpace": {
         "message": "テーブルが狭い間はタイトルを表示するため非表示になります",
         "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
+    },
+    "tools_importPreviewTitle": {
+        "message": "インポートのプレビュー",
+        "description": "Title of the dialog that previews an import before anything is written"
+    },
+    "tools_importPreviewDesc": {
+        "message": "$1 で追加される内容を確認してください。「インポート」を選択するまで何も変更されません。",
+        "description": "Import preview description; $1 is the selected file name"
+    },
+    "tools_importTarget": {
+        "message": "インポート先",
+        "description": "Label of the target folder picker in the import preview"
+    },
+    "tools_importStrategy": {
+        "message": "重複",
+        "description": "Label of the duplicate handling picker in the import preview"
+    },
+    "tools_importStrategySkipAnywhere": {
+        "message": "どこかに既にあるブックマークはスキップ",
+        "description": "Import duplicate strategy that skips URLs found anywhere in the bookmarks"
+    },
+    "tools_importStrategySkipInTarget": {
+        "message": "インポート先フォルダに既にあるブックマークはスキップ",
+        "description": "Import duplicate strategy that skips URLs already inside the target folder"
+    },
+    "tools_importStrategyImportAll": {
+        "message": "重複も含めてすべてインポート",
+        "description": "Import duplicate strategy that creates every item"
+    },
+    "tools_importPreviewTargetLine": {
+        "message": "インポート先フォルダ: $1",
+        "description": "Import preview line naming the exact target folder path; $1 is the path"
+    },
+    "tools_importPreviewBookmarks": {
+        "message": "作成するブックマーク: $1",
+        "description": "Import preview count of bookmarks that will be created; $1 is the count"
+    },
+    "tools_importPreviewFolders": {
+        "message": "作成するフォルダ: $1",
+        "description": "Import preview count of folders that will be created; $1 is the count"
+    },
+    "tools_importPreviewSkipped": {
+        "message": "スキップする項目: $1",
+        "description": "Import preview count of duplicate bookmarks and emptied folders that will be skipped; $1 is the count"
+    },
+    "tools_importPreviewInvalid": {
+        "message": "無視される無効な項目: $1",
+        "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
+    },
+    "tools_importNothingToCreate": {
+        "message": "この設定ではインポートする新しい項目はありません。",
+        "description": "Import preview note when every item would be skipped"
+    },
+    "tools_importPreviewConflicts": {
+        "message": "既存: インポート先フォルダに $1 件、その他の場所に $2 件、ファイル内の重複 $3 件",
+        "description": "Import preview duplicate summary; $1 in the target folder, $2 elsewhere in the bookmarks, $3 repeated within the file"
+    },
+    "tools_importConflictInTarget": {
+        "message": "インポート先フォルダにあり",
+        "description": "Badge for an imported URL that already exists in the target folder"
+    },
+    "tools_importConflictElsewhere": {
+        "message": "他の場所にあり",
+        "description": "Badge for an imported URL that already exists outside the target folder"
+    },
+    "tools_importConflictInFile": {
+        "message": "ファイル内で重複",
+        "description": "Badge for an imported URL that appears earlier in the same file"
+    },
+    "tools_importWillSkip": {
+        "message": "スキップ",
+        "description": "Badge for a duplicate that the chosen strategy skips"
+    },
+    "tools_importWillImport": {
+        "message": "インポート",
+        "description": "Badge for a duplicate that the chosen strategy still imports"
+    },
+    "tools_importPreviewChanged": {
+        "message": "プレビュー後にブックマークが変更されました。更新された内容を確認してから、もう一度インポートしてください。",
+        "description": "Import preview notice when the bookmarks changed before the import was applied"
+    },
+    "tools_importTargetMissing": {
+        "message": "インポート先フォルダが存在しないか、変更できません。別のフォルダを選択してください。",
+        "description": "Import preview error when the chosen target folder is missing or read-only"
+    },
+    "tools_importOutcome": {
+        "message": "作成したブックマーク: $1。作成したフォルダ: $2。スキップ: $3。失敗: $4。",
+        "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importUndone": {
+        "message": "インポートを取り消しました",
+        "description": "Toast title after an import was undone"
+    },
+    "tools_importUndoPartial": {
+        "message": "インポートの一部を取り消しました",
+        "description": "Toast title when some imported items could not be removed by undo"
+    },
+    "tools_importUndoneDesc": {
+        "message": "削除した最上位の項目: $1。変更されたか削除できなかったため残した項目: $2。",
+        "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
     }
 }

@@ -3578,5 +3578,105 @@
     "table_columnHiddenForSpace": {
         "message": "Hidden while the table is narrow so Title stays visible",
         "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
+    },
+    "tools_importPreviewTitle": {
+        "message": "Import preview",
+        "description": "Title of the dialog that previews an import before anything is written"
+    },
+    "tools_importPreviewDesc": {
+        "message": "Review what $1 will add. Nothing changes until you select Import.",
+        "description": "Import preview description; $1 is the selected file name"
+    },
+    "tools_importTarget": {
+        "message": "Import into",
+        "description": "Label of the target folder picker in the import preview"
+    },
+    "tools_importStrategy": {
+        "message": "Duplicates",
+        "description": "Label of the duplicate handling picker in the import preview"
+    },
+    "tools_importStrategySkipAnywhere": {
+        "message": "Skip bookmarks that already exist anywhere",
+        "description": "Import duplicate strategy that skips URLs found anywhere in the bookmarks"
+    },
+    "tools_importStrategySkipInTarget": {
+        "message": "Skip bookmarks already in the target folder",
+        "description": "Import duplicate strategy that skips URLs already inside the target folder"
+    },
+    "tools_importStrategyImportAll": {
+        "message": "Import everything, including duplicates",
+        "description": "Import duplicate strategy that creates every item"
+    },
+    "tools_importPreviewTargetLine": {
+        "message": "Target folder: $1",
+        "description": "Import preview line naming the exact target folder path; $1 is the path"
+    },
+    "tools_importPreviewBookmarks": {
+        "message": "Bookmarks to create: $1",
+        "description": "Import preview count of bookmarks that will be created; $1 is the count"
+    },
+    "tools_importPreviewFolders": {
+        "message": "Folders to create: $1",
+        "description": "Import preview count of folders that will be created; $1 is the count"
+    },
+    "tools_importPreviewSkipped": {
+        "message": "Items to skip: $1",
+        "description": "Import preview count of duplicate bookmarks and emptied folders that will be skipped; $1 is the count"
+    },
+    "tools_importPreviewInvalid": {
+        "message": "Invalid entries ignored: $1",
+        "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
+    },
+    "tools_importNothingToCreate": {
+        "message": "Nothing new to import with this choice.",
+        "description": "Import preview note when every item would be skipped"
+    },
+    "tools_importPreviewConflicts": {
+        "message": "Already exists: $1 in the target folder, $2 elsewhere, $3 repeated in this file",
+        "description": "Import preview duplicate summary; $1 in the target folder, $2 elsewhere in the bookmarks, $3 repeated within the file"
+    },
+    "tools_importConflictInTarget": {
+        "message": "In target folder",
+        "description": "Badge for an imported URL that already exists in the target folder"
+    },
+    "tools_importConflictElsewhere": {
+        "message": "Elsewhere in bookmarks",
+        "description": "Badge for an imported URL that already exists outside the target folder"
+    },
+    "tools_importConflictInFile": {
+        "message": "Repeated in file",
+        "description": "Badge for an imported URL that appears earlier in the same file"
+    },
+    "tools_importWillSkip": {
+        "message": "Will skip",
+        "description": "Badge for a duplicate that the chosen strategy skips"
+    },
+    "tools_importWillImport": {
+        "message": "Will import",
+        "description": "Badge for a duplicate that the chosen strategy still imports"
+    },
+    "tools_importPreviewChanged": {
+        "message": "Your bookmarks changed since this preview. Review the updated plan, then import again.",
+        "description": "Import preview notice when the bookmarks changed before the import was applied"
+    },
+    "tools_importTargetMissing": {
+        "message": "The target folder no longer exists or cannot be changed. Choose another folder.",
+        "description": "Import preview error when the chosen target folder is missing or read-only"
+    },
+    "tools_importOutcome": {
+        "message": "Bookmarks created: $1. Folders created: $2. Skipped: $3. Failed: $4.",
+        "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importUndone": {
+        "message": "Import undone",
+        "description": "Toast title after an import was undone"
+    },
+    "tools_importUndoPartial": {
+        "message": "Import partly undone",
+        "description": "Toast title when some imported items could not be removed by undo"
+    },
+    "tools_importUndoneDesc": {
+        "message": "Top-level items removed: $1. Kept because they changed or could not be removed: $2.",
+        "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
     }
 }
