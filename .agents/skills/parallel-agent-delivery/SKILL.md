@@ -52,11 +52,15 @@ bunx nx run extension:test:e2e
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
 - **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.
+- **Usage limits.** Agents stop on session or weekly limits mid-task. After the reset, inspect each worktree and resume with SendMessage. If an agent reports it was stopped by the user and cannot be resumed, finish the work yourself from its worktree; fetch its remote branch first, because `gh pr update-branch` may have added a merge commit there and your push would be rejected.
+- **Stale agent notices.** A "didn't finish before the previous session ended" notice can arrive after the work already merged. Check the PR state before redoing anything.
 - A local hook rewrites plain `git` to `rtk git`, which fails inside worktrees; call `/usr/bin/git` there.
 - Permission prompts mostly come from background agents; allow rules in `.claude/settings.local.json` apply to them too.
 
 ## After landing
 
+- Land the PRs and fix Dependabot lockfiles with the `repo-maintenance` skill (merge queue, lockfile script, red-main recovery).
+
 - Verify the latest CI run on `main` is green, not just the PR checks.
 - Summarize per PR: what changed, tests added, verification results, deferred items, and manual checks still needed (Firefox and Edge runtime, live permission prompts, real AI providers).
-- Offer to clean up finished worktrees and branches; delete them only with approval.
+- Offer to clean up finished worktrees and branches; delete them only with approval, using `repo-maintenance/scripts/cleanup-branches.sh` (dry run first, ref backup).
