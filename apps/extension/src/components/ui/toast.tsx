@@ -1,4 +1,4 @@
-import * as ToastPrimitives from '@radix-ui/react-toast';
+import { Toast as ToastPrimitives } from '@base-ui/react/toast';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 import * as React from 'react';
@@ -6,24 +6,29 @@ import * as React from 'react';
 const ToastProvider = ToastPrimitives.Provider;
 
 const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
+  HTMLOListElement,
+  Omit<ToastPrimitives.Viewport.Props, 'className'> & { className?: string }
 >(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      // Capped at half the window and scrollable, so a stack of undo toasts never covers most of
-      // a small popup.
-      'fixed bottom-0 right-0 z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 md:max-w-[320px]',
-      className,
-    )}
-    {...props}
-  />
+  <ToastPrimitives.Portal>
+    <ToastPrimitives.Viewport
+      ref={ref as React.Ref<HTMLDivElement>}
+      render={<ol />}
+      className={cn(
+        // Capped at half the window and scrollable, so a stack of undo toasts never covers most of
+        // a small popup.
+        'fixed bottom-0 right-0 z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 md:max-w-[320px]',
+        className,
+      )}
+      {...props}
+    />
+  </ToastPrimitives.Portal>
 ));
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+ToastViewport.displayName = 'ToastViewport';
 
 const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-bottom-full data-[state=open]:duration-300 data-[state=closed]:duration-500',
+  // Base UI moves a toast while it is swiped and resets it when a swipe is cancelled, so only the
+  // release (ending) position needs a class.
+  'group pointer-events-auto relative flex w-full shrink-0 flex-col overflow-hidden rounded-lg border shadow-lg transition-all data-swiping:transition-none data-ending-style:data-[swipe-direction=right]:translate-x-[var(--toast-swipe-movement-x)] animate-in data-ending-style:animate-out data-ending-style:fade-out-80 data-ending-style:slide-out-to-right-full slide-in-from-bottom-full duration-300 data-ending-style:duration-500',
   {
     variants: {
       variant: {
@@ -42,46 +47,63 @@ const toastVariants = cva(
 // Default toast duration in ms
 const TOAST_DURATION = 4000;
 
-interface ToastProps
-  extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root>,
-    VariantProps<typeof toastVariants> {
-  duration?: number;
-}
+// Closes the toast that renders it; see ToastAction.
+const ToastCloseContext = React.createContext<() => void>(() => {});
 
 const Toast = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Root>,
-  ToastProps
->(({ className, variant, duration = TOAST_DURATION, ...props }, ref) => {
+  HTMLLIElement,
+  Omit<ToastPrimitives.Root.Props, 'className'> &
+    VariantProps<typeof toastVariants> & { className?: string; duration?: number }
+>(({ className, variant, duration = TOAST_DURATION, toast, ...props }, ref) => {
+  const { close } = ToastPrimitives.useToastManager();
+  const closeToast = React.useCallback(() => close(toast.id), [close, toast.id]);
   return (
-    <ToastPrimitives.Root
+    <ToastCloseContext.Provider value={closeToast}>
+      <ToastPrimitives.Root
+        ref={ref as React.Ref<HTMLDivElement>}
+        toast={toast}
+        render={<li />}
+        // Keeps Radix's semantics: a status entry inside the live region, not a dialog.
+        role="status"
+        aria-live="off"
+        aria-atomic
+        swipeDirection="right"
+        className={cn(toastVariants({ variant }), className)}
+        style={{ '--toast-duration': `${duration}ms` } as React.CSSProperties}
+        {...props}
+      />
+    </ToastCloseContext.Provider>
+  );
+});
+Toast.displayName = 'Toast';
+
+// Radix's action also dismissed its toast; Base UI's Toast.Action does not, so it closes the toast
+// after the caller's onClick.
+const ToastAction = React.forwardRef<
+  HTMLButtonElement,
+  Omit<ToastPrimitives.Action.Props, 'className'> & { className?: string }
+>(({ className, onClick, ...props }, ref) => {
+  const closeToast = React.useContext(ToastCloseContext);
+  return (
+    <ToastPrimitives.Action
       ref={ref}
-      duration={duration}
-      className={cn(toastVariants({ variant }), className)}
-      style={{ '--toast-duration': `${duration}ms` } as React.CSSProperties}
+      className={cn(
+        'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive',
+        className,
+      )}
+      onClick={(event) => {
+        onClick?.(event);
+        closeToast();
+      }}
       {...props}
     />
   );
 });
-Toast.displayName = ToastPrimitives.Root.displayName;
-
-const ToastAction = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Action>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Action
-    ref={ref}
-    className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive',
-      className,
-    )}
-    {...props}
-  />
-));
-ToastAction.displayName = ToastPrimitives.Action.displayName;
+ToastAction.displayName = 'ToastAction';
 
 const ToastClose = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Close>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
+  HTMLButtonElement,
+  Omit<ToastPrimitives.Close.Props, 'className'> & { className?: string }
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Close
     ref={ref}
@@ -95,31 +117,34 @@ const ToastClose = React.forwardRef<
     <X className="h-4 w-4" />
   </ToastPrimitives.Close>
 ));
-ToastClose.displayName = ToastPrimitives.Close.displayName;
+ToastClose.displayName = 'ToastClose';
 
+// Title and description keep Radix's <div>s instead of Base UI's default <h2> and <p>.
 const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Title>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
+  HTMLDivElement,
+  Omit<ToastPrimitives.Title.Props, 'className'> & { className?: string }
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
+    render={<div />}
     className={cn('text-sm font-semibold [overflow-wrap:anywhere]', className)}
     {...props}
   />
 ));
-ToastTitle.displayName = ToastPrimitives.Title.displayName;
+ToastTitle.displayName = 'ToastTitle';
 
 const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Description>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
+  HTMLDivElement,
+  Omit<ToastPrimitives.Description.Props, 'className'> & { className?: string }
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Description
     ref={ref}
+    render={<div />}
     className={cn('text-sm opacity-90 [overflow-wrap:anywhere]', className)}
     {...props}
   />
 ));
-ToastDescription.displayName = ToastPrimitives.Description.displayName;
+ToastDescription.displayName = 'ToastDescription';
 
 // Progress bar that animates from 100% to 0% over the toast duration
 const ToastProgress = React.forwardRef<
@@ -149,7 +174,13 @@ const ToastProgress = React.forwardRef<
 });
 ToastProgress.displayName = 'ToastProgress';
 
-type ToastPropsExport = React.ComponentPropsWithoutRef<typeof Toast>;
+/** What `toast()` callers pass; the Toaster turns it into a Base UI toast. */
+type ToastPropsExport = VariantProps<typeof toastVariants> & {
+  className?: string;
+  duration?: number;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+};
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
 

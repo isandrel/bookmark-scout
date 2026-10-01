@@ -304,7 +304,7 @@ test('popup controls, row actions, and toasts use the selected language', async 
   await row.hover();
   await expect(row.getByRole('button', { name: 'フォルダを削除' })).toBeVisible();
   await row.getByRole('button', { name: '現在のページを追加' }).click();
-  const region = page.getByRole('region', { name: '通知 (F8)' });
+  const region = toastRegion(page, '通知');
   await expect(region).toContainText('」を「E2E Locale Row」に追加しました');
   await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toHaveLength(2);
 });

@@ -152,7 +152,7 @@ export function ImportPreviewDialog({
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action:
           outcome.createdRootIds.length > 0 ? (
-            <ToastAction altText={t('action_undo')} onClick={runUndo}>
+            <ToastAction onClick={runUndo}>
               {t('action_undo')}
             </ToastAction>
           ) : undefined,

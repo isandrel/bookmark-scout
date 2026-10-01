@@ -274,7 +274,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action:
           outcome.snapshots.length > 0 ? (
-            <ToastAction altText={t('action_undo')} onClick={undo}>
+            <ToastAction onClick={undo}>
               {t('action_undo')}
             </ToastAction>
           ) : undefined,

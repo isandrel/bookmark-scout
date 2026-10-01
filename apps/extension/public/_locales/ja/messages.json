@@ -3127,10 +3127,6 @@
         "message": "通知 ({hotkey})",
         "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
     },
-    "toast_itemLabel": {
-        "message": "通知",
-        "description": "Accessible label announced for each notification"
-    },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$ 件の重複ブックマークを削除しました",
         "description": "Duplicate removal success description (singular)",

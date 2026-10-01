@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import type { Locator, Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -362,7 +362,7 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
     .getByRole('dialog', { name: 'Delete bookmark' })
     .getByRole('button', { name: 'Delete bookmark' })
     .click();
-  const notifications = page.getByRole('region', { name: 'Notifications (F8)' });
+  const notifications = toastRegion(page);
   await expect(
     notifications.getByText('Deleted "Recover Bookmark". Undo within 10 seconds.', { exact: true }),
   ).toBeVisible();
@@ -436,7 +436,7 @@ test('each repeated deletion keeps its own undo and missing parents fail safely'
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
-  const notifications = page.getByRole('region', { name: 'Notifications (F8)' });
+  const notifications = toastRegion(page);
   const undoFor = (title: string) =>
     notifications
       .locator('li')

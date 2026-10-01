@@ -101,7 +101,6 @@ export function useBookmarkDeletion(onChanged: () => void | Promise<void>) {
         duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
         action: (
           <ToastAction
-            altText={t('action_undo')}
             onClick={async () => {
               // A snapshot restores at most once, so repeated clicks cannot duplicate the tree.
               if (undoUsed) return;
