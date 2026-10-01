@@ -228,7 +228,13 @@ export function ImportPreviewDialog({
                   <span className="text-xs font-medium text-muted-foreground">
                     {t('tools_importTarget')}
                   </span>
-                  <Select value={targetId} onValueChange={setTargetId} disabled={applying}>
+                  <Select
+                    // An empty id means nothing is chosen yet, so the placeholder shows.
+                    value={targetId || null}
+                    onValueChange={(value) => setTargetId(value ?? '')}
+                    items={targets.map((target) => ({ value: target.id, label: target.label }))}
+                    disabled={applying}
+                  >
                     <SelectTrigger aria-label={t('tools_importTarget')}>
                       <SelectValue placeholder={t('tools_importTarget')} />
                     </SelectTrigger>
@@ -247,7 +253,13 @@ export function ImportPreviewDialog({
                   </span>
                   <Select
                     value={strategy}
-                    onValueChange={(value) => setStrategy(value as ImportDuplicateStrategy)}
+                    onValueChange={(value) => {
+                      if (value !== null) setStrategy(value as ImportDuplicateStrategy);
+                    }}
+                    items={IMPORT_DUPLICATE_STRATEGIES.map((option) => ({
+                      value: option,
+                      label: t(STRATEGY_LABEL_KEYS[option]),
+                    }))}
                     disabled={applying}
                   >
                     <SelectTrigger aria-label={t('tools_importStrategy')}>

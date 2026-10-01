@@ -122,7 +122,12 @@ export function BookmarkBulkActions({
               {t('bookmarks_bulkNestedIncluded', String(nestedCount))}
             </p>
           )}
-          <Select value={targetId} onValueChange={setTargetId}>
+          <Select
+            // An empty id means nothing is chosen yet, so the placeholder shows.
+            value={targetId || null}
+            onValueChange={(value) => setTargetId(value ?? '')}
+            items={targets}
+          >
             <SelectTrigger aria-label={t('bookmarks_bulkMoveTarget')}>
               <SelectValue placeholder={t('bookmarks_bulkMoveTarget')} />
             </SelectTrigger>

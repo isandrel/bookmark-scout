@@ -1018,7 +1018,16 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                 defaultScope="folder"
                 currentFolderName={currentFolderName}
                 controls={
-                  <Select value={exportFormat} onValueChange={setExportFormat}>
+                  <Select
+                    value={exportFormat}
+                    onValueChange={(value) => {
+                      if (value !== null) setExportFormat(value);
+                    }}
+                    items={Object.entries(exportFormats).map(([key, format]) => ({
+                      value: key,
+                      label: getFormatName(format),
+                    }))}
+                  >
                     <SelectTrigger className="h-8 w-full text-xs" aria-label={t('tools_exportFormat')}>
                       <SelectValue placeholder={t('tools_exportFormat')} />
                     </SelectTrigger>

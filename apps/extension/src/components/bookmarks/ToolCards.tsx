@@ -54,6 +54,21 @@ export function ToolCard({
       ? selection.scope
       : resolvedDefault;
   const showScopeSelector = scopeCapability === 'both';
+  // Shared by the options and the trigger, which shows the selected option's label.
+  const scopeLabels: Record<ToolScope, React.ReactNode> = {
+    folder: (
+      <div className="flex items-center gap-2">
+        <Folder className="h-3 w-3" />
+        <span className="truncate">{currentFolderName || t('settings_scopeFolder')}</span>
+      </div>
+    ),
+    all: (
+      <div className="flex items-center gap-2">
+        <Globe className="h-3 w-3" />
+        <span>{t('settings_scopeAll')}</span>
+      </div>
+    ),
+  };
 
   return (
     <div className="space-y-2 rounded-lg border bg-card p-3">
@@ -75,26 +90,19 @@ export function ToolCard({
         {showScopeSelector ? (
           <Select
             value={scope}
-            onValueChange={(value) =>
-              setSelection({ defaultScope: resolvedDefault, scope: value as ToolScope })
-            }
+            onValueChange={(value) => {
+              if (value !== null) {
+                setSelection({ defaultScope: resolvedDefault, scope: value as ToolScope });
+              }
+            }}
+            items={scopeLabels}
           >
             <SelectTrigger className="h-8 flex-1 text-xs">
               <SelectValue placeholder={t('tools_scopeSelect')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="folder">
-                <div className="flex items-center gap-2">
-                  <Folder className="h-3 w-3" />
-                  <span className="truncate">{currentFolderName || t('settings_scopeFolder')}</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="all">
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3 w-3" />
-                  <span>{t('settings_scopeAll')}</span>
-                </div>
-              </SelectItem>
+              <SelectItem value="folder">{scopeLabels.folder}</SelectItem>
+              <SelectItem value="all">{scopeLabels.all}</SelectItem>
             </SelectContent>
           </Select>
         ) : null}

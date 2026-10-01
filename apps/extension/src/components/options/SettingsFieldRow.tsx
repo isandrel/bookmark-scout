@@ -124,9 +124,11 @@ export function SettingsFieldRow({
           <Select
             value={String(value)}
             onValueChange={(next) => {
+              if (next === null) return;
               const coerced = coerceSelectValue(fieldKey, next);
               if (coerced !== undefined) onChange(coerced);
             }}
+            items={options.map((option) => ({ value: String(option.value), label: option.label }))}
           >
             <SelectTrigger
               id={controlId}
