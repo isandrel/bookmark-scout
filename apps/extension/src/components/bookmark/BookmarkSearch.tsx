@@ -119,6 +119,8 @@ export function BookmarkSearch({
             type="text"
             placeholder={t('popup_searchPlaceholder')}
             aria-label={t('popup_searchPlaceholder')}
+            aria-keyshortcuts="/"
+            title={t('shortcuts_popupHint')}
             role="combobox"
             aria-expanded={showHistory}
             aria-controls={showHistory ? historyListId : undefined}

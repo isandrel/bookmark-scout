@@ -229,6 +229,8 @@ export function FolderItem({
           <AccordionTrigger
             className="hover:no-underline py-1 px-2 h-8 rounded-md"
             data-folder-trigger={node.id}
+            data-popup-tree-row="folder"
+            data-can-save={canAddChildren || undefined}
             hideIndicator={itemCount === 0}
           >
             <div

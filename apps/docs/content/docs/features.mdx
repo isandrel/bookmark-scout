@@ -55,6 +55,33 @@ Bookmark Scout overrides Chrome's default bookmarks page with a custom manager t
 
 Drag the edge of a column header (or focus it and press the Left and Right arrow keys) to resize that column; double-click the edge to restore its default width. Widths are saved with the rest of the table view, and **Reset view** clears them.
 
+### ⌨️ Keyboard Shortcuts
+Core workflows work from the keyboard. Shortcuts never use Ctrl or Cmd, so browser shortcuts such as Ctrl/Cmd+L, T, W, N, R, and D keep working. They pause while you type in a text field (Escape in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
+
+In the popup and side panel (hover the search box for a reminder):
+
+| Key | Action |
+| --- | --- |
+| `/` | Focus the search box |
+| `Esc` in the search box | Clear the search; press again to leave the box |
+| `↓` in the search box | Move to the first folder |
+| `↓` / `↑`, `Home` / `End` | Move between visible folders and bookmarks (`↑` on the first row returns to search) |
+| `→` / `←` | Open or close a folder; on an open folder `→` moves to its first item, and `←` moves to the parent folder |
+| `Enter` on a folder | Save the current page into that folder (a page already saved there is not duplicated) |
+| `Enter` on a bookmark | Open it in a new tab |
+| `Space` on a folder | Open or close it |
+
+In the bookmarks manager, press `?` or the keyboard button in the header to see this list:
+
+| Key | Action |
+| --- | --- |
+| `/` | Focus the title filter |
+| `Backspace` or `Alt+↑` | Go to the parent folder |
+| `j` / `k` | Move to the next or previous table row (a folder row, or a bookmark row's actions menu) |
+| `Enter` on a folder row | Open the folder |
+| `?` | Show the keyboard shortcuts |
+| `Esc` | Close a dialog or menu |
+
 ### ↕️ Configurable Sorting
 Choose date added, natural alphabetical, or folders-first ordering in Settings. The selection applies to bookmark tables and nested folder views without changing the browser's stored bookmark order. In the popup and side panel, **Group by Folders** lists subfolders before bookmarks at each level and applies the sort order within each group; turn it off to mix folders and bookmarks in one sorted list.
 
@@ -100,7 +127,6 @@ Multi-language support: English, Japanese, Korean.
 
 ## 🚧 Roadmap
 
-- ⌨️ Keyboard shortcuts for faster navigation and actions
 - 🔖 Saved searches and smart bookmark views
 - 🏷️ Search, filter, sync, and export for saved tags and summaries
 - 🧪 Browser tests in Firefox and Edge, and automated context-menu and drag-and-drop flows
