@@ -796,6 +796,10 @@ test('exports and imports bookmark data without manual file handling', async ({
       JSON.stringify([{ title: 'Imported Link', url: 'https://example.com/imported' }]),
     ),
   });
+  await page
+    .getByRole('dialog', { name: 'Import preview' })
+    .getByRole('button', { name: 'Import', exact: true })
+    .click();
 
   await expect
     .poll(() =>
