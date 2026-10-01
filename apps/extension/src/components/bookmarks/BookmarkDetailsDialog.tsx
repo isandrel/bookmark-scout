@@ -239,10 +239,13 @@ function BookmarkDetailsContent({
           {t('bookmarks_detailsCopyId')}
         </Button>
         {isWebUrl(bookmarkUrl) ? (
-          <Button asChild variant="outline" size="sm">
-            <a href={bookmarkUrl} target="_blank" rel="noopener noreferrer">
-              {t('bookmarks_detailsOpenLink')}
-            </a>
+          <Button
+            variant="outline"
+            size="sm"
+            nativeButton={false}
+            render={<a href={bookmarkUrl} target="_blank" rel="noopener noreferrer" />}
+          >
+            {t('bookmarks_detailsOpenLink')}
           </Button>
         ) : null}
         {!bookmarkUrl ? (
