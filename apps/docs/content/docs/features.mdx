@@ -10,6 +10,8 @@ description: All features of Bookmark Scout
 ### 🤖 AI Folder Recommendations
 Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible provider. AI recommendations analyze the current page title and URL to suggest bookmark folders.
 
+Choosing an existing folder saves the page there. Choosing a suggested new folder opens a review dialog with the full folder path and the page; **Create Folder and Save** creates only the missing folders and saves the page. If the page is already in that folder it is not saved twice, and if a bookmark already uses one of the folder names in the path, nothing is created and the conflict is reported. Cancelling changes nothing.
+
 AI features are disabled by default. Enable them in **Settings → AI**, select a provider, and enter an API key when the provider requires one.
 
 API keys, Base URL, and extra headers are stored only in the browser's local extension storage. Keys that do not match the provider's format and Base URLs that are not `http://` or `https://` are rejected and never saved. The configured Base URL and headers apply to every request, including **Verify Service**, which asks the browser for access to that provider's origin when you click it.
@@ -17,12 +19,22 @@ API keys, Base URL, and extra headers are stored only in the browser's local ext
 ### 🧠 AI Tools
 Use AI from the bookmarks manager to:
 
-- export selected bookmarks as Markdown or XML context for LLMs
+- export selected bookmarks as Markdown or XML context for LLMs (this export works without AI enabled and sends nothing to a provider)
 - suggest tags for a folder
 - generate bookmark summaries
-- plan folder reorganization before applying changes
+- plan folder reorganization; with **Always Preview First** on (the default), the plan is previewed and applied only after you confirm it
+
+AI context exports include the tags and summaries saved for each bookmark when **Include Saved Tags** and **Include Saved Summaries** are on; bookmarks without saved metadata get no tag or summary lines. Suggested tags and summaries are shown for review and saved only when you choose **Save Suggested Tags** or **Save Suggested Summaries**, into the same local metadata.
+
+The tag count and style, summary length, and reorganization folder limits in Settings are sent to the provider as instructions; the provider's output is not checked against them.
 
 AI tools can send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. Review generated results before applying organization changes.
+
+### 🏷️ Tags and Summaries (partial)
+Add, edit, and clear tags and a summary for any bookmark in **Bookmark Details**, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: they are not synced, not searchable or filterable, and not included in bookmark exports. They are restored with an undone deletion and removed when the bookmark is deleted.
+
+### 🗑️ Delete with Confirmation and Undo
+Bookmarks and folders can be deleted from the popup, side panel, and bookmarks manager (single items or a table selection). **Confirm Before Delete** is on by default and shows a dialog naming the item; turn it off in **Settings → Behavior** to delete immediately. Either way, each deletion shows an Undo for 10 seconds that restores the item, its subtree, and its saved tags and summaries. Permanent folders such as the Bookmarks Bar cannot be deleted.
 
 ### 🔍 Instant Search
 Quickly find bookmarks with debounced search and folder filtering. Search settings control the result limit, whether matching folders and their parents open automatically, and whether recent searches are remembered on this device. Clearing the search restores the folders you had open before searching. Whole-word matching treats spaces, punctuation, and script changes as word boundaries, so terms such as `C++` and Japanese words match. An invalid regular expression shows a warning and is searched as plain text. Permanent folders such as the Bookmarks Bar are containers and never match by name.
@@ -60,7 +72,7 @@ Preview and apply URL cleanup for tracking parameters, duplicate query parameter
 Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings. Any `HEAD` error status (for example 403 or 404 from servers that do not support `HEAD`) is confirmed with a `GET`, redirects show their destination, redirect loops are reported as "Too many redirects", and non-web links such as bookmarklets are skipped. The first scan asks for optional website access, because most sites block cross-origin checks without it; declining scans nothing. Chrome logs one "Failed to load resource" line in the page's developer console for each failed request; extensions cannot suppress these, and the scan itself logs nothing.
 
 ### 🧾 Metadata Fetcher
-Fetch page titles (and optionally descriptions) for selected scopes, then review and apply only the titles you select. Error pages never produce suggestions, and page character sets such as Shift_JIS are respected. Only the page head (at most 512 KB) is downloaded, non-HTML files such as PDFs are skipped, and the request timeout covers the whole download. Uses the same optional website access as the Dead Link Checker.
+Fetch page titles (and optionally descriptions) for selected scopes, then review and apply only the titles you select. Descriptions appear in the review list only and are never saved; favicons are not fetched. Error pages never produce suggestions, and page character sets such as Shift_JIS are respected. Only the page head (at most 512 KB) is downloaded, non-HTML files such as PDFs are skipped, and the request timeout covers the whole download. Uses the same optional website access as the Dead Link Checker.
 
 ### 🛡️ Privacy Scanner
 Detect sensitive query parameters, URL fragments, emails, and UUIDs in bookmark data.
@@ -85,6 +97,7 @@ Multi-language support: English, Japanese, Korean.
 ## 🚧 Roadmap
 
 - ⌨️ Keyboard shortcuts for faster navigation and actions
-- 🏷️ Persistent custom tags beyond AI-generated suggestions
-- 🧪 Add automated browser coverage for network and AI workflows beyond the core bookmark flows
+- 🔖 Saved searches and smart bookmark views
+- 🏷️ Search, filter, sync, and export for saved tags and summaries
+- 🧪 Browser tests in Firefox and Edge, and automated context-menu and drag-and-drop flows
 - 🛒 Chrome Web Store, Firefox Add-ons, and Edge Add-ons listing polish
