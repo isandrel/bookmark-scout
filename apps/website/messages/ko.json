@@ -172,7 +172,7 @@
     },
     "deleteItems": {
       "title": "항목 삭제",
-      "description": "확인 대화상자와 함께 원치 않는 북마크와 폴더를 삭제하세요. 실수로 삭제하는 것을 방지합니다."
+      "description": "팝업이나 북마크 관리자에서 원치 않는 북마크와 폴더를 삭제하세요. 확인 대화상자는 기본으로 켜져 있고 설정에서 끌 수 있으며, 삭제는 10초 동안 실행 취소할 수 있습니다."
     },
     "maintenanceTools": {
       "title": "유지관리 도구",
@@ -197,8 +197,8 @@
     "roadmap": {
       "title": "현재 집중 영역",
       "shortcuts": "키보드 단축키 — 단축키로 탐색과 작업 수행",
-      "persistentTags": "영구 태그 — AI 생성 제안을 넘어 커스텀 태그 저장 및 관리",
-      "tests": "자동화 테스트 확대 — 주요 북마크 작업에 이어 네트워크와 AI 작업도 검증",
+      "savedSearches": "저장된 검색 — 검색과 스마트 북마크 보기 저장",
+      "tests": "브라우저 테스트 — Firefox와 Edge에서 브라우저 테스트를 실행하고 컨텍스트 메뉴와 드래그 앤 드롭 자동화",
       "storeDistribution": "스토어 배포 — Chrome Web Store, Firefox Add-ons, Edge Add-ons 등록 자료 정리"
     }
   },

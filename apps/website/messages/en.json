@@ -172,7 +172,7 @@
     },
     "deleteItems": {
       "title": "Delete Items",
-      "description": "Remove unwanted bookmarks and folders with confirmation dialogs to prevent accidental deletions."
+      "description": "Remove unwanted bookmarks and folders from the popup or the bookmarks manager. A confirmation dialog is on by default and can be turned off in Settings, and every deletion can be undone for 10 seconds."
     },
     "maintenanceTools": {
       "title": "Maintenance Tools",
@@ -197,8 +197,8 @@
     "roadmap": {
       "title": "Current Focus",
       "shortcuts": "Keyboard Shortcuts — Navigate and act with hotkeys",
-      "persistentTags": "Persistent Tags — Store and manage custom tags beyond AI-generated suggestions",
-      "tests": "Expand Automated Tests — Cover network and AI workflows beyond core bookmark flows",
+      "savedSearches": "Saved Searches — Save searches and smart bookmark views",
+      "tests": "Browser Coverage — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows",
       "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
     }
   },
