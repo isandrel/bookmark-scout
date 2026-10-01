@@ -105,7 +105,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
-- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
+- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
@@ -131,7 +131,6 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 ### 🚧 Current Focus
 
 - [ ] ⌨️ **Keyboard Shortcuts** — Add faster keyboard-driven navigation and actions
-- [ ] 📥 **Import Preview** — Review the target folder, counts, and duplicates before an import is written, with undo
 - [ ] 🔖 **Saved Searches** — Save searches and smart bookmark views
 - [ ] 🧪 **Browser Coverage** — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
