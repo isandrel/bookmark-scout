@@ -739,10 +739,10 @@ function PopupPage() {
       >
         <DialogContent
           className="max-w-[calc(100%-2rem)]"
-          onCloseAutoFocus={(event) => {
-            // The dialog opens from code, so Radix has no trigger to return focus to.
-            event.preventDefault();
+          finalFocus={() => {
+            // The dialog opens from code, so there is no trigger to return focus to.
             restoreFocus(true);
+            return false;
           }}
         >
           <DialogHeader>
