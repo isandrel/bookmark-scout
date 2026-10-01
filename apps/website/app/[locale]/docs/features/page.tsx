@@ -155,10 +155,6 @@ export default async function FeaturesPage({
                             <ul className="space-y-3 text-muted">
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.shortcuts")}
-                                </li>
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
                                     {t("featuresPage.roadmap.savedSearches")}
                                 </li>
                                 <li className="flex items-center gap-3">

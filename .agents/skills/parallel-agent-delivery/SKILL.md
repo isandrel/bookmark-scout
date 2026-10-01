@@ -48,6 +48,7 @@ bunx nx run extension:test:e2e
 ## Running and recovering agents
 
 - Run agents in the background and report to the user as each finishes; do not predict results before a notification arrives.
+- Agents share one session scratchpad. Tell each agent to use unique scratch file names (for example `pr-body-<branch>.md`); two agents writing `pr-body.md` overwrote each other.
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
 - **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.
