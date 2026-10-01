@@ -2835,6 +2835,10 @@
         "message": "$1（降順）",
         "description": "Column header button label when sorted descending; $1 is the column name"
     },
+    "table_resizeColumn": {
+        "message": "$1 列の幅を変更",
+        "description": "Accessible name of a column resize handle (drag, double-click to reset, or ArrowLeft/ArrowRight); $1 is the column name"
+    },
     "table_dateRange": {
         "message": "$1～$2",
         "description": "Date filter button text for a range; $1 start date, $2 end date"

@@ -30,6 +30,8 @@ const tableViewSchema = z.object({
     .array(z.object({ id: z.string(), desc: z.boolean() }))
     .default([]),
   browserOrder: z.boolean().default(false),
+  // Parsed separately so one bad width drops that width instead of the whole saved view.
+  columnSizing: z.unknown().optional(),
 });
 
 export type BookmarkTableView = {
@@ -40,6 +42,8 @@ export type BookmarkTableView = {
   sorting: Array<{ id: string; desc: boolean }>;
   /** Show the current folder in the browser's own order so row moves are visible. */
   browserOrder: boolean;
+  /** Widths of the columns the user resized, in pixels. */
+  columnSizing: BookmarkColumnSizing;
 };
 
 /**
@@ -62,6 +66,7 @@ export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
   pageSize: 10,
   sorting: [],
   browserOrder: false,
+  columnSizing: {},
 };
 
 function cloneDefaultTableView(): BookmarkTableView {
@@ -70,6 +75,7 @@ function cloneDefaultTableView(): BookmarkTableView {
     columnVisibility: { ...DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility },
     columnOrder: [...DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder],
     sorting: [],
+    columnSizing: {},
   };
 }
 
@@ -111,6 +117,7 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
     pageSize: parsed.data.pageSize,
     sorting,
     browserOrder: parsed.data.browserOrder,
+    columnSizing: parseBookmarkColumnSizing(parsed.data.columnSizing),
   };
 }
 

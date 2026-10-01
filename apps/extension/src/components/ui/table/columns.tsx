@@ -138,9 +138,11 @@ export const createColumns = (
     ),
     enableSorting: false,
     enableHiding: false,
+    ...getBookmarkColumnSizeDef('select'),
   },
   {
     accessorKey: 'type',
+    ...getBookmarkColumnSizeDef('type'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('type')} />
     ),
@@ -152,9 +154,9 @@ export const createColumns = (
       }
 
       return (
-        <div className="flex items-center whitespace-nowrap">
+        <div className="flex min-w-0 items-center whitespace-nowrap">
           {type.icon && <type.icon className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />}
-          <span>{type.label}</span>
+          <span className="truncate">{type.label}</span>
         </div>
       );
     },
@@ -164,12 +166,14 @@ export const createColumns = (
   },
   {
     accessorKey: 'id',
+    ...getBookmarkColumnSizeDef('id'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('id')} />
     ),
   },
   {
     accessorKey: 'parentId',
+    ...getBookmarkColumnSizeDef('parentId'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('parentId')} />
     ),
@@ -178,7 +182,7 @@ export const createColumns = (
       row.original.parentId ? (
         <div className="flex min-w-0 items-center" title={row.original.parentId}>
           <Folder className="mr-2 h-4 w-4 shrink-0 text-muted-foreground" />
-          <span className="block max-w-72 truncate">{row.original.folderPath}</span>
+          <span className="block min-w-0 truncate">{row.original.folderPath}</span>
         </div>
       ) : null,
     filterFn: (row, id, value) => {
@@ -187,13 +191,14 @@ export const createColumns = (
   },
   {
     accessorKey: 'folderPath',
+    ...getBookmarkColumnSizeDef('folderPath'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('folderPath')} />
     ),
     cell: ({ row }) => {
       const path = row.original.folderPath;
       return (
-        <span className="block max-w-44 truncate 2xl:max-w-72" title={path}>
+        <span className="block truncate" title={path}>
           {path}
         </span>
       );
@@ -201,6 +206,7 @@ export const createColumns = (
   },
   {
     accessorKey: 'url',
+    ...getBookmarkColumnSizeDef('url'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('url')} />
     ),
@@ -213,7 +219,7 @@ export const createColumns = (
       return (
         <div className="flex min-w-0 items-center gap-2">
           <img src={getFaviconUrl(rowUrl)} alt="" className="h-4 w-4 shrink-0" />
-          <span className="block max-w-40 truncate 2xl:max-w-72" title={rowUrl}>
+          <span className="block min-w-0 truncate" title={rowUrl}>
             {rowUrl}
           </span>
         </div>
@@ -229,6 +235,7 @@ export const createColumns = (
     accessorFn: (row) => getUrlDomain(row.url),
     enableHiding: false,
     enableSorting: false,
+    enableResizing: false,
     // Match by hostname so "bbc.co.uk" covers news.bbc.co.uk but not example.com/?q=bbc.co.uk.
     filterFn: (row, _id, value) => {
       const domains: string[] = Array.isArray(value) ? value : [];
@@ -239,6 +246,7 @@ export const createColumns = (
   },
   {
     accessorKey: 'title',
+    ...getBookmarkColumnSizeDef('title'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('title')} />
     ),
@@ -269,11 +277,11 @@ export const createColumns = (
         <div className="flex items-center gap-2 min-w-0">
           {icon}
           {title ? (
-            <span className="max-w-60 truncate 2xl:max-w-72" title={title}>
+            <span className="min-w-0 truncate" title={title}>
               {title}
             </span>
           ) : (
-            <span className="max-w-60 truncate italic text-muted-foreground 2xl:max-w-72">
+            <span className="min-w-0 truncate italic text-muted-foreground">
               {t('bookmarks_untitled')}
             </span>
           )}
@@ -287,6 +295,7 @@ export const createColumns = (
   },
   {
     accessorKey: 'dateAdded',
+    ...getBookmarkColumnSizeDef('dateAdded'),
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title={getBookmarkColumnLabel('dateAdded')} />
     ),
@@ -297,15 +306,18 @@ export const createColumns = (
   },
   {
     accessorKey: 'dateGroupModified',
+    ...getBookmarkColumnSizeDef('dateGroupModified'),
     header: () => getBookmarkColumnLabel('dateGroupModified'),
     cell: ({ row }) => formatTimestamp(row.getValue('dateGroupModified')),
   },
   {
     accessorKey: 'unmodifiable',
+    ...getBookmarkColumnSizeDef('unmodifiable'),
     header: () => getBookmarkColumnLabel('unmodifiable'),
   },
   {
     id: 'actions',
+    ...getBookmarkColumnSizeDef('actions'),
     cell: ({ row, table }) => {
       const bookmark = row.original;
       // Moves are only enabled while the table shows the whole folder in browser order, so the
