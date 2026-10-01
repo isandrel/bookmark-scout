@@ -299,7 +299,7 @@ export function ReorganizationDialog({
                     <ArrowRight className="h-4 w-4" />
                     <span>{t('ai_reorgViewOperations', String(plan.operations.length))}</span>
                   </div>
-                  <ChevronDown className="h-4 w-4 transition-transform duration-200 data-[state=open]:rotate-180" />
+                  <ChevronDown className="h-4 w-4 transition-transform duration-200 data-open:rotate-180" />
                 </CollapsibleTrigger>
                 <CollapsibleContent className="px-3 pb-3">
                   <div className="space-y-2 mt-2 max-h-64 overflow-y-auto">
@@ -330,7 +330,7 @@ export function ReorganizationDialog({
                 <Code2 className="h-4 w-4" />
                 <span>{t('ai_reorgDebugToggle')}</span>
               </div>
-              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 data-[state=open]:rotate-180" />
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200 data-open:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent className="px-3 pb-3">
               <div className="space-y-3 mt-2">
