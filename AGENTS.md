@@ -211,6 +211,7 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
 - If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
 - Duplicate app-level Bun Dependabot entries can produce `Dependabot::Bun::FileUpdater::NoChangeError`; prefer a single root Bun updater unless the app has a separate lockfile and install workflow.
 - After merging Dependabot PRs, check whether `bun.lockb` needs a follow-up refresh and whether path-filtered deploy workflows were triggered.
+- Dependabot Bun PRs leave `bun.lockb` stale and fail `bun install --frozen-lockfile`; repair them with `.agents/skills/repo-maintenance/scripts/fix-dependabot-lockfile.sh <pr>`.
 
 ## Coding standards
 
@@ -354,6 +355,7 @@ Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Sk
 - `extension-feature-test`: turning behaviors into unit and E2E coverage, with lessons from past audits.
 - `extension-live-smoke`: read-only checks of an installed extension with Computer Use, and its tool limits.
 - `extension-exploratory-qa`: hands-on QA of the built extension in a disposable Playwright profile, with a bundled runner script.
+- `repo-maintenance`: landing a PR queue under the strict up-to-date ruleset, Dependabot lockfile repair, red-main recovery, and branch cleanup, with bundled scripts.
 - `parallel-agent-delivery`: splitting work across parallel agents and landing auto-merged PRs safely.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
