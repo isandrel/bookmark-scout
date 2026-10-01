@@ -4,7 +4,9 @@ import {
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnOrderState,
+  type ColumnSizingState,
   type ColumnVisibilityState,
+  type columnResizingState,
   flexRender,
   type PaginationState,
   type RowData,
@@ -28,7 +30,24 @@ const stickyColumnClass = cn(
   'group-data-[state=selected]:bg-muted!',
 );
 
+// An unsized column before the row actions takes any width the sized columns leave, so each
+// column keeps exactly the width it was given.
+const FILLER_CELL_CLASS = 'w-auto p-0';
+
 type PageSize = 10 | 20 | 30 | 40 | 50;
+
+// Widths are saved to sync storage, which limits writes per minute, so keyboard resizing is
+// saved once the presses stop and dragging once it ends.
+const COLUMN_SIZING_SAVE_DELAY_MS = 400;
+
+const IDLE_COLUMN_RESIZING: columnResizingState = {
+  columnSizingStart: [],
+  deltaOffset: null,
+  deltaPercentage: null,
+  isResizingColumn: false,
+  startOffset: null,
+  startSize: null,
+};
 
 interface DataTableProps<TData extends RowData> {
   columns: ColumnDef<BookmarkTableFeatures, TData>[];
@@ -95,6 +114,10 @@ export function DataTable<TData extends RowData>({
     pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize,
   });
   const [browserOrder, setBrowserOrder] = React.useState(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
+  const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({});
+  const [savedColumnSizing, setSavedColumnSizing] = React.useState<ColumnSizingState>({});
+  const [columnResizing, setColumnResizing] =
+    React.useState<columnResizingState>(IDLE_COLUMN_RESIZING);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
   const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
@@ -122,6 +145,8 @@ export function DataTable<TData extends RowData>({
       setColumnOrder(view.columnOrder);
       setPagination({ pageIndex: 0, pageSize: view.pageSize });
       setBrowserOrder(view.browserOrder);
+      setColumnSizing(view.columnSizing);
+      setSavedColumnSizing(view.columnSizing);
       setIsTableViewLoaded(true);
     });
     return () => {
@@ -138,6 +163,7 @@ export function DataTable<TData extends RowData>({
       columnOrder,
       pageSize: pagination.pageSize as PageSize,
       browserOrder,
+      columnSizing: savedColumnSizing,
     }).catch((error) => console.error('Failed to save bookmark table view:', error));
   }, [
     browserOrder,
@@ -145,8 +171,16 @@ export function DataTable<TData extends RowData>({
     columnVisibility,
     isTableViewLoaded,
     pagination.pageSize,
+    savedColumnSizing,
     sorting,
   ]);
+
+  const isResizingColumn = columnResizing.isResizingColumn !== false;
+  React.useEffect(() => {
+    if (isResizingColumn) return;
+    const timer = setTimeout(() => setSavedColumnSizing(columnSizing), COLUMN_SIZING_SAVE_DELAY_MS);
+    return () => clearTimeout(timer);
+  }, [columnSizing, isResizingColumn]);
 
   // Navigating to another folder starts on its first page (or, going Back, on the page that was
   // open) with nothing selected. The page is read when the key changes, not tracked.
@@ -207,6 +241,8 @@ export function DataTable<TData extends RowData>({
     setColumnOrder([...DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder]);
     setPagination({ pageIndex: 0, pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize });
     setBrowserOrder(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
+    setColumnSizing({});
+    setSavedColumnSizing({});
     void resetBookmarkTableView().catch((error) =>
       console.error('Failed to reset bookmark table view:', error),
     );
@@ -225,6 +261,34 @@ export function DataTable<TData extends RowData>({
         ? t('table_moveNeedsFolderView')
         : null;
 
+  // Columns the table shows, in order: saved visibility minus columns hidden for lack of room.
+  const effectiveColumnVisibility = React.useMemo<ColumnVisibilityState>(
+    () => ({
+      ...columnVisibility,
+      ...Object.fromEntries(spaceHiddenColumnIds.map((id) => [id, false])),
+      [DOMAIN_COLUMN_ID]: false,
+    }),
+    [columnVisibility, spaceHiddenColumnIds],
+  );
+  const visibleColumnIds = React.useMemo(
+    () => columnOrder.filter((id) => effectiveColumnVisibility[id] !== false),
+    [columnOrder, effectiveColumnVisibility],
+  );
+  const renderedColumnSizing = React.useMemo(
+    () => getRenderedColumnSizing(columnSizing, visibleColumnIds, tableWidth),
+    [columnSizing, tableWidth, visibleColumnIds],
+  );
+  // Size updates arrive relative to the rendered widths (Title may be filling spare room); only
+  // widths the user actually set are kept.
+  const renderedColumnSizingRef = React.useRef(renderedColumnSizing);
+  renderedColumnSizingRef.current = renderedColumnSizing;
+  const handleColumnSizingChange = React.useCallback((updater: Updater<ColumnSizingState>) => {
+    const rendered = renderedColumnSizingRef.current;
+    setColumnSizing((previous) =>
+      toSavedColumnSizing(resolveUpdater(updater, rendered), rendered, previous),
+    );
+  }, []);
+
   const table = useTable({
     features: bookmarkTableFeatures,
     data: displayedData,
@@ -232,6 +296,10 @@ export function DataTable<TData extends RowData>({
     getRowId: (row) => getRowId(row),
     enableRowSelection: canSelectRow ? (row) => canSelectRow(row.original) : true,
     autoResetPageIndex: false,
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
+    onColumnSizingChange: handleColumnSizingChange,
+    onColumnResizingChange: setColumnResizing,
     onSortingChange: handleSortingChange,
     onColumnFiltersChange: handleColumnFiltersChange,
     onColumnOrderChange: setColumnOrder,
@@ -244,11 +312,9 @@ export function DataTable<TData extends RowData>({
       columnOrder,
       // The domain column only backs the URL domain filter and is never displayed. Columns hidden
       // for lack of room keep the saved preference and return when the table is wide enough.
-      columnVisibility: {
-        ...columnVisibility,
-        ...Object.fromEntries(spaceHiddenColumnIds.map((id) => [id, false])),
-        [DOMAIN_COLUMN_ID]: false,
-      },
+      columnVisibility: effectiveColumnVisibility,
+      columnSizing: renderedColumnSizing,
+      columnResizing,
       pagination,
       rowSelection,
     },
@@ -299,22 +365,31 @@ export function DataTable<TData extends RowData>({
         renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
       <div ref={tableFrameRef} className="rounded-md border">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
-          <Table>
+          {/* Fixed layout applies the column sizes as given; the table only grows past the frame
+              (and scrolls) when the columns need more room than it has. */}
+          <Table className="table-fixed" style={{ minWidth: table.getTotalSize() }}>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      className={cn(
-                        header.column.id === STICKY_COLUMN_ID &&
-                          'sticky right-0 z-10 border-l bg-background',
+                    <React.Fragment key={header.id}>
+                      {header.column.id === STICKY_COLUMN_ID && (
+                        <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
                       )}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
+                      <TableHead
+                        style={{ width: header.getSize() }}
+                        className={cn(
+                          header.column.getCanResize() && 'relative truncate',
+                          header.column.id === STICKY_COLUMN_ID &&
+                            'sticky right-0 z-10 border-l bg-background',
+                        )}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.column.getCanResize() && <DataTableColumnResizer header={header} />}
+                      </TableHead>
+                    </React.Fragment>
                   ))}
                 </TableRow>
               ))}
@@ -340,19 +415,29 @@ export function DataTable<TData extends RowData>({
                       }}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell
-                          key={cell.id}
-                          className={cn(cell.column.id === STICKY_COLUMN_ID && stickyColumnClass)}
-                        >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </TableCell>
+                        <React.Fragment key={cell.id}>
+                          {cell.column.id === STICKY_COLUMN_ID && (
+                            <TableCell aria-hidden="true" className={FILLER_CELL_CLASS} />
+                          )}
+                          <TableCell
+                            className={cn(
+                              cell.column.getCanResize() && 'truncate',
+                              cell.column.id === STICKY_COLUMN_ID && stickyColumnClass,
+                            )}
+                          >
+                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                          </TableCell>
+                        </React.Fragment>
                       ))}
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <TableCell
+                    colSpan={table.getVisibleLeafColumns().length + 1}
+                    className="h-24 text-center"
+                  >
                     {t('table_noResults')}
                   </TableCell>
                 </TableRow>
