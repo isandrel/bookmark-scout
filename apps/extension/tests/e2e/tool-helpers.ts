@@ -48,7 +48,10 @@ export async function childrenOf(worker: Worker, folderId: string) {
 }
 
 export function toolCard(page: Page, title: string): Locator {
+  // Scoped to the sidebar: a tool's dialog shares the card's title and can still be mounted for a
+  // frame after it closes.
   return page
+    .getByTestId('tools-sidebar')
     .getByRole('heading', { name: title, exact: true })
     .locator('..')
     .locator('..')
