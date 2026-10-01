@@ -100,6 +100,18 @@ Preview and apply URL cleanup for tracking parameters, duplicate query parameter
 ### 💀 Dead Link Checker
 Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings. Any `HEAD` error status (for example 403 or 404 from servers that do not support `HEAD`) is confirmed with a `GET`, redirects show their destination, redirect loops are reported as "Too many redirects", and non-web links such as bookmarklets are skipped. The first scan asks for optional website access, because most sites block cross-origin checks without it; declining scans nothing. Chrome logs one "Failed to load resource" line in the page's developer console for each failed request; extensions cannot suppress these, and the scan itself logs nothing.
 
+Results separate **confirmed dead** links (404 or 410, connection refused or host not found, redirect loops) from links that **need a manual check** because they often still work in a browser: sign-in or access-denied responses (401, 403, 407), rate limits (429), servers that reject automated checks (405 or 501 for both `HEAD` and `GET`), server errors (5xx), other HTTP errors, and timeouts. A summary at the top counts each group.
+
+**Review repairs** opens a review of every failed, timed-out, or redirected link. For each one, choose:
+
+- **Keep as is** (the default, so nothing changes unless you pick something else)
+- **Delete bookmark**
+- **Use redirect target**, offered only when the scan saw a redirect
+- **Use archived copy (Wayback Machine)**, which points the bookmark at `https://web.archive.org/web/<original URL>`. The link is built locally and not checked, so the page may never have been archived.
+- **Edit URL**, which accepts only a valid `http` or `https` URL that differs from the current one
+
+Nothing changes until you select **Apply**; the review shows how many bookmarks will be deleted, have their URL replaced, or be kept. Before each change, the bookmark is re-read: one that was deleted or now has a different URL since the scan is skipped and listed, so a stale scan never overwrites your newer edit. Skipped and failed items stay listed in the dialog next to the counts. **Undo** (in the notification, or in the dialog after a partial apply) restores deleted bookmarks within 10 seconds and puts replaced URLs back unless they were edited again.
+
 ### 🧾 Metadata Fetcher
 Fetch page titles (and optionally descriptions) for selected scopes, then review and apply only the titles you select. Descriptions appear in the review list only and are never saved; favicons are not fetched. Error pages never produce suggestions, and page character sets such as Shift_JIS are respected. Only the page head (at most 512 KB) is downloaded, non-HTML files such as PDFs are skipped, and the request timeout covers the whole download. Uses the same optional website access as the Dead Link Checker.
 
