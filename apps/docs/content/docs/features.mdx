@@ -83,9 +83,9 @@ Bookmark exports and AI context packs use the same rules before downloading. Whe
 View domain, folder, protocol, duplicate, depth, and top-item statistics for a folder or all bookmarks. Sections turned off in settings are hidden, and untitled folders count as a level and appear as "Untitled".
 
 ### 📤 Import/Export
-Export bookmarks as HTML, JSON, Markdown, or CSV. Import bookmark files from HTML or JSON. An import is written immediately into the folder open in the manager (or the Bookmarks Bar) and reports how many bookmarks and folders were created or failed; there is no preview or duplicate check yet. File names keep non-ASCII folder names. CSV files start with a UTF-8 byte order mark, and the Folder column joins folders with `/`, writing a `/` inside a folder name as `\/` and a backslash as `\\`.
+Export bookmarks as HTML, JSON, Markdown, or CSV. Import bookmark files from HTML or JSON. File names keep non-ASCII folder names. CSV files start with a UTF-8 byte order mark, and the Folder column joins folders with `/`, writing a `/` inside a folder name as `\/` and a backslash as `\\`.
 
-Importing opens a preview before anything is written. It shows the target folder (you can pick another one), how many bookmarks and folders will be created or skipped, and which URLs already exist in the target folder, elsewhere in your bookmarks, or earlier in the file. You choose whether to skip bookmarks that exist anywhere, skip only those already in the target folder, or import everything. If your bookmarks change while the preview is open, the preview is refreshed instead of applied. After the import, a message lists how many items were created, skipped, and failed, and the import can be undone for 10 seconds.
+Importing opens a preview before anything is written. It shows the target folder, which defaults to the folder open in the manager and can be changed, how many bookmarks and folders will be created or skipped, and which URLs already exist in the target folder, elsewhere in your bookmarks, or earlier in the file. You choose whether to skip bookmarks that exist anywhere, skip only those already in the target folder, or import everything. If your bookmarks change while the preview is open, the preview is refreshed instead of applied. After the import, a message lists how many items were created, skipped, and failed, and the import can be undone for 10 seconds.
 
 ### 🖱️ Context Menu Save
 Save links from the browser right-click menu into recent folders or the default Bookmarks Bar.
@@ -99,7 +99,6 @@ Multi-language support: English, Japanese, Korean.
 ## 🚧 Roadmap
 
 - ⌨️ Keyboard shortcuts for faster navigation and actions
-- 📥 Import preview with target folder choice, duplicate handling, and undo
 - 🔖 Saved searches and smart bookmark views
 - 🏷️ Search, filter, sync, and export for saved tags and summaries
 - 🧪 Browser tests in Firefox and Edge, and automated context-menu and drag-and-drop flows
