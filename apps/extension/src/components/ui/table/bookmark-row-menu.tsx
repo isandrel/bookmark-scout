@@ -1,22 +1,14 @@
-import { Copy, ExternalLink, Info, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import type { MouseEvent } from 'react';
 
 type BookmarkRowMenuProps = {
   bookmark: Bookmark;
-  actions: BookmarkRowActionHandlers;
+  actions: readonly BookmarkRowAction[];
+  context: BookmarkRowActionContext;
 };
 
-/** Row-level actions for the bookmark manager table. */
-export function BookmarkRowMenu({ bookmark, actions }: BookmarkRowMenuProps) {
-  const modifiable = isModifiableBookmark(bookmark);
-  const isLink = isOpenableBookmark(bookmark);
-
-  // Menu items live inside a clickable row; keep clicks from navigating into folders.
-  const run = (action: (bookmark: Bookmark) => void) => (event: MouseEvent) => {
-    event.stopPropagation();
-    action(bookmark);
-  };
-
+/** Row-level actions for the bookmark manager table, from the row-action registry. */
+export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,44 +22,43 @@ export function BookmarkRowMenu({ bookmark, actions }: BookmarkRowMenuProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" onClick={(event) => event.stopPropagation()}>
-        <DropdownMenuLabel>{t('table_actions')}</DropdownMenuLabel>
-        {isLink && (
-          <DropdownMenuItem onClick={run(actions.onOpenInNewTab)}>
-            <ExternalLink className="h-4 w-4" />
-            {t('table_openInNewTab')}
-          </DropdownMenuItem>
-        )}
-        {modifiable && (
-          <DropdownMenuItem onClick={run(actions.onEdit)}>
-            <Pencil className="h-4 w-4" />
-            {t('table_edit')}
-          </DropdownMenuItem>
-        )}
-        <DropdownMenuItem onClick={run(actions.onViewDetails)}>
-          <Info className="h-4 w-4" />
-          {t('bookmarks_viewDetails')}
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={run((item) => {
-            void navigator.clipboard.writeText(item.id);
-          })}
-        >
-          <Copy className="h-4 w-4" />
-          {t('table_copyId')}
-        </DropdownMenuItem>
-        {modifiable && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive-text focus:text-destructive-text"
-              onClick={run(actions.onDelete)}
-            >
-              <Trash2 className="h-4 w-4" />
-              {t('table_delete')}
-            </DropdownMenuItem>
-          </>
-        )}
+        <BookmarkRowMenuItems bookmark={bookmark} actions={actions} context={context} />
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+/** The menu's label and items; destructive actions follow a separator. */
+export function BookmarkRowMenuItems({ bookmark, actions, context }: BookmarkRowMenuProps) {
+  const { regular, destructive } = getAvailableRowActions(bookmark, actions);
+
+  // Menu items live inside a clickable row; keep clicks from navigating into folders.
+  const renderItem = (action: BookmarkRowAction) => (
+    <DropdownMenuItem
+      key={action.id}
+      className={
+        action.isDestructive ? 'text-destructive-text focus:text-destructive-text' : undefined
+      }
+      onClick={(event: MouseEvent) => {
+        event.stopPropagation();
+        void action.run(bookmark, context);
+      }}
+    >
+      <action.icon className="h-4 w-4" />
+      {t(action.labelKey)}
+    </DropdownMenuItem>
+  );
+
+  return (
+    <>
+      <DropdownMenuLabel>{t('table_actions')}</DropdownMenuLabel>
+      {regular.map(renderItem)}
+      {destructive.length > 0 && (
+        <>
+          <DropdownMenuSeparator />
+          {destructive.map(renderItem)}
+        </>
+      )}
+    </>
   );
 }

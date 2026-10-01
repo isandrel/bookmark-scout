@@ -203,6 +203,33 @@ export async function moveBookmark(
 }
 
 /**
+ * Moves an item to the top or bottom of its folder, or one place up or down. Does nothing for an
+ * item without a parent or one already at that end of its folder.
+ */
+export async function moveBookmarkWithinFolder(
+  item: { id: string; parentId?: string },
+  direction: FolderMoveDirection,
+): Promise<void> {
+  const { id, parentId } = item;
+  if (!parentId) return;
+  const siblings = await getBookmarkChildren(parentId);
+  const currentIndex = siblings.findIndex((sibling) => sibling.id === id);
+  if (currentIndex < 0) return;
+
+  // The browser inserts before the item at the target index, counting the moved item itself,
+  // so moving down one slot targets index + 2.
+  const targetIndex = {
+    top: 0,
+    up: Math.max(0, currentIndex - 1),
+    down: Math.min(siblings.length, currentIndex + 2),
+    bottom: siblings.length,
+  }[direction];
+  if (direction === 'down' && currentIndex >= siblings.length - 1) return;
+  if ((direction === 'up' || direction === 'top') && currentIndex === 0) return;
+  await moveBookmark(id, { parentId, index: targetIndex });
+}
+
+/**
  * Updates an existing bookmark.
  */
 export async function updateBookmark(

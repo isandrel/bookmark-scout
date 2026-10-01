@@ -72,18 +72,17 @@ export default function BookmarksPage() {
   const columns = useMemo(
     () =>
       createColumns({
-        onViewDetails: setSelectedBookmark,
-        onEdit: setEditingBookmark,
-        onDelete: (bookmark) => requestDeletion(toDeletionTarget(bookmark)),
-        onOpenInNewTab: (bookmark) => {
-          if (!bookmark.url || !isOpenableBookmark(bookmark)) return;
-          openBookmarkInNewTab(bookmark.url).catch((openError: unknown) =>
+        rowActions: BOOKMARK_ROW_ACTIONS,
+        actionContext: {
+          showDetails: setSelectedBookmark,
+          edit: setEditingBookmark,
+          requestDeletion: (bookmark) => void requestDeletion(toDeletionTarget(bookmark)),
+          reportError: (titleKey, actionError) =>
             toast({
-              title: `× ${t('bookmarks_openFailed')}`,
-              description: openError instanceof Error ? openError.message : t('error_unknown'),
+              title: `× ${t(titleKey)}`,
+              description: actionError instanceof Error ? actionError.message : t('error_unknown'),
               variant: 'destructive',
             }),
-          );
         },
       }),
     [requestDeletion, toast],
