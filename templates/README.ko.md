@@ -144,8 +144,8 @@
 |                                                         기술                                                         | 버전  | 설명                   |
 | :------------------------------------------------------------------------------------------------------------------: | :---: | ---------------------- |
 | ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |  4.1  | 유틸리티 우선 CSS      |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |  0.9  | Radix 기반 컴포넌트    |
-|       ![Radix UI](https://img.shields.io/badge/Radix-161618?style=for-the-badge&logo=radixui&logoColor=white)        |  1.2  | 헤드리스 UI 프리미티브 |
+|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |  0.9  | Base UI 기반 컴포넌트    |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |  1.8  | 헤드리스 UI 프리미티브 |
 | ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  | 12.23 | 애니메이션 라이브러리  |
 |                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |  1.8  | 아이콘 라이브러리      |
 

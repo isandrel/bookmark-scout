@@ -112,8 +112,8 @@ type PopupTreeKeyOptions = {
 };
 
 /**
- * Key handler for the tree's accordion root. It runs before Radix's own trigger navigation and
- * replaces it (Radix skips handled events), so bookmarks are reachable too, not only folders.
+ * Key handler for the tree's accordion root. Base UI's accordion has no arrow-key navigation of its
+ * own, so this provides it, reaching bookmarks too, not only folders.
  */
 export function usePopupTreeKeys({
   searchInputRef,

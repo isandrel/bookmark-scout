@@ -20,7 +20,7 @@ The standard for changes here is higher than "make it work." Changes should be m
 - React
 - TypeScript
 - Zustand
-- shadcn/ui and Radix primitives
+- shadcn/ui components on Base UI (`@base-ui/react`) primitives
 - browser bookmark, tab, storage, and context-menu APIs
 
 Primary target:
