@@ -695,9 +695,9 @@ function PopupPage() {
           ) : (
             <div className="p-3">
               <Accordion
-                type="multiple"
+                multiple
                 value={expandedFolders}
-                onValueChange={setExpandedFolders}
+                onValueChange={(value) => setExpandedFolders([...value])}
                 onKeyDown={handleTreeKeyDown}
                 className="w-full accordion-container"
               >
