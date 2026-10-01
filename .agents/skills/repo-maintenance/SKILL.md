@@ -1,6 +1,6 @@
 ---
 name: repo-maintenance
-description: Keep the Bookmark Scout GitHub repository healthy and get PRs merged. Use this skill whenever the user asks to "merge all PRs", "merge PR #N", fix or babysit a failing Dependabot PR, resolve a bun.lockb conflict, respond to an Auto-fix CI event, investigate CI that went red on main after a merge, or clean up branches and worktrees - even when they only paste a PR link. Covers the strict up-to-date merge queue, the recurring Dependabot `lockfile had changes, but lockfile is frozen` failure, post-merge flaky tests, and safe branch cleanup with a ref backup. Bundles scripts for each.
+description: Keep the Bookmark Scout GitHub repository healthy and get PRs merged. Use this skill whenever the user asks to "merge all PRs", "merge PR #N", fix or babysit a failing Dependabot PR, resolve a bun.lock conflict, respond to an Auto-fix CI event, investigate CI that went red on main after a merge, or clean up branches and worktrees - even when they only paste a PR link. Covers the strict up-to-date merge queue, the recurring Dependabot `lockfile had changes, but lockfile is frozen` failure, post-merge flaky tests, and safe branch cleanup with a ref backup. Bundles scripts for each.
 ---
 
 # Repository maintenance
@@ -21,9 +21,9 @@ The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs,
 
 ## Dependabot Bun PRs
 
-Dependabot bumps `package.json` but leaves the binary `bun.lockb` stale, so Extension Tests fails in about 10 seconds with `error: lockfile had changes, but lockfile is frozen`. Each merged Bun PR also makes the others conflict on `bun.lockb`.
+Until October 2026 the repo used the binary `bun.lockb`, which Dependabot did not update: every Bun PR failed Extension Tests in about 10 seconds with `error: lockfile had changes, but lockfile is frozen`, and each merge made the others conflict on the lockfile. The repo now uses the text `bun.lock`, which Dependabot updates. If a Bun PR still fails that way, or conflicts on `bun.lock`, use the script below. Never commit `bun.lockb` again; it would become a second, stale lockfile.
 
-Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lockb` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, and pushes a normal commit. It stops if any file other than `bun.lockb` conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
+Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lock` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, and pushes a normal commit. It stops if any file other than `bun.lock` conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
 
 Watch for:
 - **CI only lints the extension.** A website or docs dependency bump can pass CI and still break `bun run lint`. Run the affected app's lint and build locally before letting it merge.

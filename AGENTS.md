@@ -201,17 +201,17 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
   - inspect failed logs: `rtk gh run view <run-id> --log-failed`
   - watch reruns: `rtk gh run watch <run-id> --exit-status`
 - If a GitHub Pages deployment fails after build/upload with `Deployment failed, try again later`, treat it as likely transient and rerun the failed job before patching code.
-- If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lockb`, then verify `rtk bun install --frozen-lockfile`.
+- If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lock`, then verify `rtk bun install --frozen-lockfile`.
 - Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
 
 ### Dependency automation
 
-- Treat root `bun.lockb` as the workspace lockfile source of truth.
+- Treat the root text lockfile `bun.lock` as the workspace lockfile source of truth. It replaced the binary `bun.lockb` so Dependabot can update it and conflicts can be read and merged.
 - Avoid app-local `bun.lock` files unless an app truly installs independently in its workflow.
 - If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
 - Duplicate app-level Bun Dependabot entries can produce `Dependabot::Bun::FileUpdater::NoChangeError`; prefer a single root Bun updater unless the app has a separate lockfile and install workflow.
-- After merging Dependabot PRs, check whether `bun.lockb` needs a follow-up refresh and whether path-filtered deploy workflows were triggered.
-- Dependabot Bun PRs leave `bun.lockb` stale and fail `bun install --frozen-lockfile`; repair them with `.agents/skills/repo-maintenance/scripts/fix-dependabot-lockfile.sh <pr>`.
+- After merging Dependabot PRs, check whether `bun.lock` needs a follow-up refresh and whether path-filtered deploy workflows were triggered.
+- If a Dependabot Bun PR still fails `bun install --frozen-lockfile`, repair it with `.agents/skills/repo-maintenance/scripts/fix-dependabot-lockfile.sh <pr>`.
 
 ## Coding standards
 

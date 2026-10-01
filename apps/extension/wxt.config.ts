@@ -69,7 +69,7 @@ export default defineConfig({
             // Tailwind's source detection honors .gitignore; without it, rebuilt CSS differs.
             '.gitignore',
             'package.json',
-            'bun.lockb',
+            'bun.lock',
             'tsconfig.base.json',
             'apps/*/package.json',
             'packages/*/package.json',
