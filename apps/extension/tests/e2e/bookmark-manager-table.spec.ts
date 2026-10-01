@@ -182,6 +182,24 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   await expect(row(page, 'Doomed Link')).toHaveCount(0);
 });
 
+test('current-folder help tooltip shows its full text', async ({ extensionId, page }) => {
+  await page.setViewportSize({ width: 1400, height: 900 });
+  await page.goto(managerUrl(extensionId));
+  const helpText = 'When unchecked, filters search all bookmarks.';
+  await page
+    .getByTestId('bookmark-table-toolbar')
+    .getByRole('button', { name: helpText })
+    .hover();
+
+  const tooltip = page.locator('[data-radix-popper-content-wrapper]').getByText(helpText).first();
+  await expect(tooltip).toBeVisible();
+  const clipped = await tooltip.evaluate(
+    (element) =>
+      element.scrollWidth > element.clientWidth || element.scrollHeight > element.clientHeight,
+  );
+  expect(clipped).toBe(false);
+});
+
 test('permanent root folders cannot be edited or deleted', async ({ extensionId, page }) => {
   await page.goto(managerUrl(extensionId));
   const rows = page.locator('tbody tr');
