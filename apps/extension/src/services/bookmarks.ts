@@ -361,7 +361,9 @@ export async function restoreBookmarkDeletion(
   return restoredRoot;
 }
 
-async function getBookmarkSubTree(id: string): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+export async function getBookmarkSubTree(
+  id: string,
+): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
   return requireBookmarksApi().getSubTree(id);
 }
 

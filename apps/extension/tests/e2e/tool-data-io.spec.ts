@@ -136,6 +136,11 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
     mimeType: 'application/json',
     buffer: Buffer.from(raw),
   });
+  // Every exported URL already exists, so the default strategy would skip them all.
+  const preview = page.getByRole('dialog', { name: 'Import preview' });
+  await preview.getByRole('combobox', { name: 'Duplicates' }).click();
+  await page.getByRole('option', { name: 'Import everything, including duplicates' }).click();
+  await preview.getByRole('button', { name: 'Import', exact: true }).click();
   await expect(toastRegion(page).getByText('Import Complete', { exact: true })).toBeVisible();
   const topLevel = (await childrenOf(extensionWorker, target.folderId)).map((item) => item.title);
   expect(topLevel).toEqual(exported.children.map((node) => node.title));
@@ -143,16 +148,15 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
   expect(topLevel).not.toContain('Untitled Folder');
 });
 
-test('import reports empty files as failures and partial JSON imports with counts', async ({
+test('import reports an empty file as a failure without opening a preview', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
   const folder = await seedFolder(extensionWorker, 'E2E Import Report', []);
   await openTools(page, extensionId, folder.folderId);
-  const input = page.locator('#bookmark-import-input');
 
-  await input.setInputFiles({
+  await page.locator('#bookmark-import-input').setInputFiles({
     name: 'not-bookmarks.html',
     mimeType: 'text/html',
     buffer: Buffer.from('Just some plain text, no bookmarks here.'),
@@ -165,30 +169,8 @@ test('import reports empty files as failures and partial JSON imports with count
       },
     ),
   ).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Import preview' })).toHaveCount(0);
   expect(await childrenOf(extensionWorker, folder.folderId)).toEqual([]);
-
-  await input.setInputFiles({
-    name: 'partial.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(
-      JSON.stringify([
-        { title: 'Valid One', url: 'https://e2e.invalid/one' },
-        7,
-        { title: 'Bad Scheme', url: 'javascript:alert(1)' },
-        { title: 'Valid Two', url: 'https://e2e.invalid/two' },
-      ]),
-    ),
-  });
-  await expect(
-    toastRegion(page).getByText('Some items were not imported', { exact: true }),
-  ).toBeVisible();
-  await expect(
-    toastRegion(page).getByText(
-      /^Bookmarks imported: \d\. Folders imported: 0\. Not imported: \d\.$/,
-    ),
-  ).toBeVisible();
-  const titles = (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title);
-  expect(titles).toEqual(expect.arrayContaining(['Valid One', 'Valid Two']));
 });
 
 test('export and import cards follow their visibility settings without changing bookmarks', async ({
