@@ -196,9 +196,8 @@
     },
     "roadmap": {
       "title": "현재 집중 영역",
-      "shortcuts": "키보드 단축키 — 단축키로 탐색과 작업 수행",
       "savedSearches": "저장된 검색 — 검색과 스마트 북마크 보기 저장",
-      "tests": "브라우저 테스트 — Firefox와 Edge에서 브라우저 테스트를 실행하고 컨텍스트 메뉴와 드래그 앤 드롭 자동화",
+      "tests": "브라우저 테스트 — Firefox와 Edge에서 브라우저 테스트 실행",
       "storeDistribution": "스토어 배포 — Chrome Web Store, Firefox Add-ons, Edge Add-ons 등록 자료 정리"
     }
   },

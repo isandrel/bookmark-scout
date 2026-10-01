@@ -196,9 +196,8 @@
     },
     "roadmap": {
       "title": "Current Focus",
-      "shortcuts": "Keyboard Shortcuts — Navigate and act with hotkeys",
       "savedSearches": "Saved Searches — Save searches and smart bookmark views",
-      "tests": "Browser Coverage — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows",
+      "tests": "Browser Coverage — Run browser tests in Firefox and Edge",
       "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
     }
   },
