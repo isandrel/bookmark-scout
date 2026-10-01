@@ -22,6 +22,11 @@ interface DataTableToolbarProps<TData extends RowData> {
   onBrowserOrderChange: (enabled: boolean) => void;
   /** Columns hidden because the table is too narrow. */
   spaceHiddenColumnIds?: string[];
+  /** Shows the saved searches menu. */
+  savedSearches?: {
+    currentQuery: SavedSearchQuery;
+    onApply: (query: SavedSearchQuery) => { missingFolderCount: number };
+  };
 }
 
 function countColumnValues<TData extends RowData>(
@@ -48,6 +53,7 @@ export function DataTableToolbar<TData extends RowData>({
   browserOrder,
   onBrowserOrderChange,
   spaceHiddenColumnIds,
+  savedSearches,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
   const typeColumn = table.getColumn('type');
@@ -164,6 +170,12 @@ export function DataTableToolbar<TData extends RowData>({
           </Button>
         )}
       </div>
+      {savedSearches && (
+        <DataTableSavedSearches
+          currentQuery={savedSearches.currentQuery}
+          onApply={savedSearches.onApply}
+        />
+      )}
       <Button
         variant={browserOrder ? 'secondary' : 'outline'}
         size="sm"

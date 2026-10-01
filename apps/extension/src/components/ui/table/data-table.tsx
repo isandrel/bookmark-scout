@@ -79,7 +79,19 @@ interface DataTableProps<TData extends RowData> {
   /** Rows that open on click also open with Enter or Space when focused. */
   isRowActivatable?: (row: TData) => boolean;
   rowClassName?: (row: TData) => string;
+  /** Enables saved searches, which need to know and change the folder the manager shows. */
+  savedSearchContext?: DataTableSavedSearchContext;
 }
+
+export type DataTableSavedSearchContext = {
+  /** The folder shown; null is the top level. */
+  currentFolderId: string | null;
+  /** IDs of folders that exist now, to skip stale folder IDs in saved searches. */
+  folderIds: ReadonlySet<string>;
+  onNavigateToFolder: (folderId: string | null) => void;
+};
+
+const NO_FOLDER_IDS: ReadonlySet<string> = new Set();
 
 function resolveUpdater<T>(updater: Updater<T>, previous: T): T {
   return typeof updater === 'function' ? (updater as (old: T) => T)(previous) : updater;
@@ -100,6 +112,7 @@ export function DataTable<TData extends RowData>({
   onRowClick,
   isRowActivatable,
   rowClassName,
+  savedSearchContext,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>(DEFAULT_BOOKMARK_TABLE_VIEW.sorting);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -231,6 +244,34 @@ export function DataTable<TData extends RowData>({
     (enabled: boolean) => {
       setApplyToCurrentFolder(enabled);
       goToFirstPage();
+    },
+    [goToFirstPage],
+  );
+
+  const savedSearchFolderId = savedSearchContext?.currentFolderId ?? null;
+  const currentSavedSearchQuery = React.useMemo(
+    () =>
+      captureSavedSearchQuery({
+        columnFilters,
+        sorting,
+        currentFolderOnly: applyToCurrentFolder,
+        currentFolderId: savedSearchFolderId,
+      }),
+    [applyToCurrentFolder, columnFilters, savedSearchFolderId, sorting],
+  );
+  const savedSearchContextRef = React.useRef(savedSearchContext);
+  savedSearchContextRef.current = savedSearchContext;
+  // Saved searches hold only the query, so the table filters the live bookmarks with it.
+  const applySavedSearch = React.useCallback(
+    (query: SavedSearchQuery) => {
+      const context = savedSearchContextRef.current;
+      const resolved = resolveSavedSearchQuery(query, context?.folderIds ?? NO_FOLDER_IDS);
+      setColumnFilters(resolved.columnFilters);
+      setSorting(resolved.sorting);
+      setApplyToCurrentFolder(resolved.folderId !== undefined);
+      if (resolved.folderId !== undefined) context?.onNavigateToFolder(resolved.folderId);
+      goToFirstPage();
+      return { missingFolderCount: resolved.missingFolderCount };
     },
     [goToFirstPage],
   );
@@ -372,6 +413,11 @@ export function DataTable<TData extends RowData>({
         browserOrder={browserOrder}
         onBrowserOrderChange={handleBrowserOrderChange}
         spaceHiddenColumnIds={spaceHiddenColumnIds}
+        savedSearches={
+          savedSearchContext
+            ? { currentQuery: currentSavedSearchQuery, onApply: applySavedSearch }
+            : undefined
+        }
       />
       {selectedRows.length > 0 &&
         renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
