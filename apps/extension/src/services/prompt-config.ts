@@ -77,8 +77,8 @@ Provide a confidence score (0-1) for each move.`;
 export const DEFAULT_AUTO_TAGGING_PROMPT = `You are a bookmark tagging assistant. Analyze the bookmark's title and URL to suggest relevant tags.
 
 RULES:
-1. Suggest 2-5 tags per bookmark
-2. Use lowercase, single words or hyphenated-phrases
+1. Suggest {{minTags}}-{{maxTags}} tags per bookmark
+2. Write every tag in {{tagStyle}} style
 3. Tags should describe content type, topic, technology, or purpose
 4. Prioritize commonly used tag conventions
 5. Avoid overly generic tags like "website" or "page"`;
@@ -89,7 +89,7 @@ RULES:
 export const DEFAULT_SUMMARIZATION_PROMPT = `You are a content summarizer. Given a bookmark's title and URL, provide a brief description.
 
 RULES:
-1. Keep summary under 100 characters
+1. Keep summary under {{summaryLength}} characters
 2. Focus on what the resource is about
 3. Be specific and informative
 4. Don't start with "This is..." or "A page about..."`;
