@@ -3439,6 +3439,82 @@
         "message": "Value looks like an API or access token",
         "description": "Privacy finding for a value that looks like an API token"
     },
+    "export_privacyReviewTitle": {
+        "message": "Review private data before export",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "$count$ bookmarks in this export contain values that may be private. A redacted export replaces them with REDACTED in the file only; your bookmarks are not changed.",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewDesc_one": {
+        "message": "$count$ bookmark in this export contains values that may be private. A redacted export replaces them with REDACTED in the file only; your bookmarks are not changed.",
+        "description": "Export privacy review description (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "Export original",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "Export redacted",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "Username or password in the URL",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "Private value in the URL fragment",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "Token-like value in parameter: $param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "Token-like value in the URL",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "Token-like value in the title",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "Email-like value in parameter: $param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "Email-like value in the URL",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "Email-like value in the title",
+        "description": "Export privacy finding: email-like value in the title"
+    },
     "stats_depthBreakdown": {
         "message": "Bookmarks by folder level",
         "description": "Statistics bookmarks-per-folder-level list label"
