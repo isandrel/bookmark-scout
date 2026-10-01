@@ -13,17 +13,17 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <div className={cn('truncate', className)}>{title}</div>;
   }
 
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn('flex min-w-0 items-center space-x-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="-ml-3 h-8 max-w-[calc(100%+0.75rem)] data-[state=open]:bg-accent"
             aria-label={
               column.getIsSorted() === 'desc'
                 ? t('table_sortedDesc', title)
@@ -32,7 +32,7 @@ export function DataTableColumnHeader<TData extends RowData, TValue>({
                   : title
             }
           >
-            <span>{title}</span>
+            <span className="truncate">{title}</span>
             {column.getIsSorted() === 'desc' ? (
               <ArrowDown />
             ) : column.getIsSorted() === 'asc' ? (
