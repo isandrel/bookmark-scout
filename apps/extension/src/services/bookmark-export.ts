@@ -30,6 +30,8 @@ export interface ExportFormat {
   extension: string;
   /** MIME type for download */
   mimeType: string;
+  /** True when the `includeUrls` option can leave URLs out of this format. */
+  urlsOptional?: boolean;
   /**
    * Serialize bookmarks. `root` is a container: its children are the exported top-level
    * entries and its own title is not written as a folder.
@@ -169,6 +171,7 @@ export const markdownFormat: ExportFormat = {
   nameKey: 'export_formatMarkdown',
   extension: 'md',
   mimeType: 'text/markdown',
+  urlsOptional: true,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
     const indent = ' '.repeat(
@@ -218,6 +221,7 @@ export const csvFormat: ExportFormat = {
   nameKey: 'export_formatCsv',
   extension: 'csv',
   mimeType: 'text/csv;charset=utf-8',
+  urlsOptional: true,
   serialize(root: BookmarkTreeNode, options?: ExportOptions): string {
     const includeDates = options?.includeDates ?? defaultSettings.exportIncludeDates;
     const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
@@ -338,6 +342,11 @@ export function buildExportRoot(scopeNodes: BookmarkTreeNode[]): BookmarkTreeNod
     !node.url && !node.parentId && !node.title ? (node.children ?? []) : [node],
   );
   return { id: 'export-root', title: t('export_htmlTitle') || 'Bookmarks', children };
+}
+
+/** Whether an export in `format` writes bookmark URLs, given the `includeUrls` setting. */
+export function exportIncludesUrls(format: ExportFormat, includeUrls: boolean): boolean {
+  return includeUrls || !format.urlsOptional;
 }
 
 export function countExportedBookmarks(root: BookmarkTreeNode): number {
