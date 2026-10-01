@@ -1,7 +1,7 @@
 ---
 id: TASK-12
 title: Replace placeholder tags and summaries in AI context exports
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-09-23 16:30'
 labels: []
@@ -23,7 +23,7 @@ Confirmed placeholder output: includeTags writes an empty list and includeSummar
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
 - [x] #1 Exports never label an empty tag list or truncated title as generated metadata.
-- [ ] #2 Tests cover both formats with and without stored tags/summaries, including escaping and privacy review.
+- [x] #2 Tests cover both formats with and without stored tags/summaries, including escaping and privacy review.
 <!-- AC:END -->
 
 ## Implementation Notes
@@ -34,3 +34,7 @@ Deterministic unit coverage verifies both formats, stored and missing metadata, 
 Chromium E2E coverage verifies the downloaded Markdown content from local extension storage.
 Saving, editing, and applying metadata remains TASK-23. Acceptance criterion 2 remains open because
 export privacy review and redaction is intentionally tracked in TASK-29.
+
+2026-09-25: Acceptance criterion 2 is complete with TASK-29: unit tests cover Markdown and XML
+context packs with and without stored tags and summaries, escaping, and privacy review
+redaction, and Chromium E2E covers a redacted Markdown context pack download.
