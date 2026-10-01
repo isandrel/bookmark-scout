@@ -23,14 +23,6 @@ export interface ImportResult extends ParsedImport {
   folderCount: number;
 }
 
-export interface ImportOutcome {
-  bookmarksCreated: number;
-  foldersCreated: number;
-  /** Items the browser rejected, including the contents of folders that failed */
-  failed: number;
-  errors: string[];
-}
-
 export interface ImportFormat {
   /** Display name of the format */
   name: string;
@@ -286,43 +278,290 @@ export function parseBookmarks(
   };
 }
 
-function countItems(node: BookmarkTreeNode): number {
-  return 1 + (node.children ?? []).reduce((total, child) => total + countItems(child), 0);
+// ============================================================================
+// Import Preview (dry run) and Apply
+// ============================================================================
+
+/**
+ * How bookmarks whose URL already exists are handled:
+ * - `skip-anywhere`: skip URLs found anywhere in the browser or earlier in the file.
+ * - `skip-in-target`: skip URLs already inside the target folder or earlier in the file.
+ * - `import-all`: create everything, duplicates included.
+ */
+export type ImportDuplicateStrategy = 'skip-anywhere' | 'skip-in-target' | 'import-all';
+
+export const IMPORT_DUPLICATE_STRATEGIES: readonly ImportDuplicateStrategy[] = [
+  'skip-anywhere',
+  'skip-in-target',
+  'import-all',
+];
+
+/** Where an imported URL already exists. `in-target` includes the target's subfolders. */
+export type ImportConflictKind = 'in-target' | 'elsewhere' | 'in-file';
+
+export type ImportPlanNode = {
+  title: string;
+  url?: string;
+  action: 'create' | 'skip';
+  /** Set when the URL already exists, whether or not the strategy skips it. */
+  conflict?: ImportConflictKind;
+  children?: ImportPlanNode[];
+};
+
+export type ImportConflict = {
+  title: string;
+  url: string;
+  kind: ImportConflictKind;
+  skipped: boolean;
+};
+
+export type ImportPlanCounts = {
+  bookmarksToCreate: number;
+  foldersToCreate: number;
+  bookmarksToSkip: number;
+  /** Folders left out because every item inside them is skipped. */
+  foldersToSkip: number;
+  /** Entries the parser dropped because they were not valid bookmarks or folders. */
+  invalid: number;
+  duplicatesInTarget: number;
+  duplicatesElsewhere: number;
+  duplicatesInFile: number;
+};
+
+export type ImportPlan = {
+  targetFolderId: string;
+  strategy: ImportDuplicateStrategy;
+  nodes: ImportPlanNode[];
+  counts: ImportPlanCounts;
+  conflicts: ImportConflict[];
+};
+
+export type ImportTarget = { id: string; label: string };
+
+export type ImportApplyOutcome = {
+  bookmarksCreated: number;
+  foldersCreated: number;
+  /** Items the plan skipped plus entries the parser dropped. */
+  skipped: number;
+  /** Items the browser rejected, including the planned contents of folders that failed. */
+  failed: number;
+  errors: string[];
+  /** Every created ID, used to check that an undo only removes imported items. */
+  createdIds: string[];
+  /** IDs of the created items directly inside the target folder. */
+  createdRootIds: string[];
+};
+
+function findTreeNode(nodes: readonly BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
+  for (const node of nodes) {
+    if (node.id === id) return node;
+    const found = findTreeNode(node.children ?? [], id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function collectTreeUrls(nodes: readonly BookmarkTreeNode[], urls: Set<string>): Set<string> {
+  for (const node of nodes) {
+    if (node.url) urls.add(node.url);
+    collectTreeUrls(node.children ?? [], urls);
+  }
+  return urls;
 }
 
 /**
- * Create bookmarks from a parsed structure. Every item is attempted; failures are counted
- * (a failed folder counts its whole subtree) rather than reported as success.
+ * Folders an import can write to, in browser order, labelled with their full path. The
+ * invisible root and managed (unmodifiable) folders are excluded.
  */
-export async function importBookmarks(
-  nodes: BookmarkTreeNode[],
-  targetFolderId: string,
-): Promise<ImportOutcome> {
-  const outcome: ImportOutcome = { bookmarksCreated: 0, foldersCreated: 0, failed: 0, errors: [] };
+export function listImportTargets(tree: readonly BookmarkTreeNode[]): ImportTarget[] {
+  const targets: ImportTarget[] = [];
+  const visit = (nodes: readonly BookmarkTreeNode[], path: string[]) => {
+    for (const node of nodes) {
+      if (node.url) continue;
+      const isRoot = !node.parentId;
+      const nodePath = isRoot ? path : [...path, node.title.trim() || t('bookmarks_untitled')];
+      if (!isRoot && !node.unmodifiable) {
+        targets.push({ id: node.id, label: nodePath.join(' / ') });
+      }
+      visit(node.children ?? [], nodePath);
+    }
+  };
+  visit(tree, []);
+  return targets;
+}
 
-  const createNode = async (node: BookmarkTreeNode, parentId: string): Promise<void> => {
+/**
+ * Builds a dry-run plan of what importing into `targetFolderId` would create or skip. Pure:
+ * never touches the browser. Throws when the target is not a writable folder in `tree`.
+ */
+export function planImport(
+  parsed: ParsedImport,
+  tree: readonly BookmarkTreeNode[],
+  targetFolderId: string,
+  strategy: ImportDuplicateStrategy,
+): ImportPlan {
+  const target = findTreeNode(tree, targetFolderId);
+  if (!target || target.url || !target.parentId || target.unmodifiable) {
+    throw new Error(t('tools_importTargetMissing'));
+  }
+
+  const targetUrls = collectTreeUrls(target.children ?? [], new Set());
+  const allUrls = collectTreeUrls(tree, new Set());
+  const seenInFile = new Set<string>();
+  const counts: ImportPlanCounts = {
+    bookmarksToCreate: 0,
+    foldersToCreate: 0,
+    bookmarksToSkip: 0,
+    foldersToSkip: 0,
+    invalid: parsed.skipped,
+    duplicatesInTarget: 0,
+    duplicatesElsewhere: 0,
+    duplicatesInFile: 0,
+  };
+  const conflicts: ImportConflict[] = [];
+
+  // Repeats within the file land in the target too, so both skip strategies drop them.
+  const shouldSkip = (kind: ImportConflictKind) =>
+    strategy === 'skip-anywhere' || (strategy === 'skip-in-target' && kind !== 'elsewhere');
+
+  const detectConflict = (url: string): ImportConflictKind | undefined => {
+    if (targetUrls.has(url)) return 'in-target';
+    if (allUrls.has(url)) return 'elsewhere';
+    if (seenInFile.has(url)) return 'in-file';
+    return undefined;
+  };
+
+  const planNode = (node: BookmarkTreeNode): ImportPlanNode => {
+    if (node.url) {
+      const url = node.url;
+      const conflict = detectConflict(url);
+      seenInFile.add(url);
+      const skip = conflict !== undefined && shouldSkip(conflict);
+      if (conflict === 'in-target') counts.duplicatesInTarget += 1;
+      if (conflict === 'elsewhere') counts.duplicatesElsewhere += 1;
+      if (conflict === 'in-file') counts.duplicatesInFile += 1;
+      if (conflict) conflicts.push({ title: node.title, url, kind: conflict, skipped: skip });
+      if (skip) counts.bookmarksToSkip += 1;
+      else counts.bookmarksToCreate += 1;
+      return {
+        title: node.title,
+        url,
+        action: skip ? 'skip' : 'create',
+        ...(conflict ? { conflict } : {}),
+      };
+    }
+
+    const children = (node.children ?? []).map(planNode);
+    // A folder whose every item is skipped would only add an empty shell; folders that are
+    // empty in the file are still created as the file describes them.
+    const skip = children.length > 0 && children.every((child) => child.action === 'skip');
+    if (skip) counts.foldersToSkip += 1;
+    else counts.foldersToCreate += 1;
+    return {
+      title: node.title,
+      action: skip ? 'skip' : 'create',
+      ...(children.length > 0 ? { children } : {}),
+    };
+  };
+
+  return {
+    targetFolderId,
+    strategy,
+    nodes: parsed.bookmarks.map(planNode),
+    counts,
+    conflicts,
+  };
+}
+
+/** True when two plans make the same changes; used to detect a preview made stale. */
+export function isSameImportPlan(left: ImportPlan, right: ImportPlan): boolean {
+  return (
+    left.targetFolderId === right.targetFolderId &&
+    left.strategy === right.strategy &&
+    JSON.stringify(left.nodes) === JSON.stringify(right.nodes)
+  );
+}
+
+function countPlanned(node: ImportPlanNode): number {
+  if (node.action === 'skip') return 0;
+  return 1 + (node.children ?? []).reduce((total, child) => total + countPlanned(child), 0);
+}
+
+function collectSubtreeIds(node: { id: string; children?: { id: string }[] }, ids: string[] = []) {
+  ids.push(node.id);
+  for (const child of node.children ?? []) collectSubtreeIds(child, ids);
+  return ids;
+}
+
+/**
+ * Creates the items a plan marks `create`. Every item is attempted; failures are counted (a
+ * failed folder counts its planned subtree) rather than reported as success.
+ */
+export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutcome> {
+  const outcome: ImportApplyOutcome = {
+    bookmarksCreated: 0,
+    foldersCreated: 0,
+    skipped: plan.counts.bookmarksToSkip + plan.counts.foldersToSkip + plan.counts.invalid,
+    failed: 0,
+    errors: [],
+    createdIds: [],
+    createdRootIds: [],
+  };
+
+  const createNode = async (node: ImportPlanNode, parentId: string, isTopLevel: boolean) => {
+    if (node.action === 'skip') return;
     try {
+      const created = await createBookmark({
+        parentId,
+        title: node.title,
+        ...(node.url ? { url: node.url } : {}),
+      });
+      outcome.createdIds.push(created.id);
+      if (isTopLevel) outcome.createdRootIds.push(created.id);
       if (node.url) {
-        await createBookmark({ parentId, title: node.title, url: node.url });
         outcome.bookmarksCreated += 1;
         return;
       }
-      const folder = await createBookmark({ parentId, title: node.title });
       outcome.foldersCreated += 1;
       for (const child of node.children ?? []) {
-        await createNode(child, folder.id);
+        await createNode(child, created.id, false);
       }
     } catch (err) {
-      outcome.failed += node.url ? 1 : countItems(node);
+      outcome.failed += countPlanned(node);
       outcome.errors.push(err instanceof Error ? err.message : t('error_unknown'));
     }
   };
 
-  for (const node of nodes) {
-    await createNode(node, targetFolderId);
+  for (const node of plan.nodes) {
+    await createNode(node, plan.targetFolderId, true);
   }
-
   return outcome;
+}
+
+/**
+ * Removes what an import created. A top-level item is removed only while its subtree holds
+ * nothing but imported items, so bookmarks added to an imported folder are never deleted.
+ */
+export async function undoImport(
+  outcome: Pick<ImportApplyOutcome, 'createdIds' | 'createdRootIds'>,
+): Promise<{ removed: number; failed: number }> {
+  const created = new Set(outcome.createdIds);
+  let removed = 0;
+  let failed = 0;
+  for (const id of outcome.createdRootIds) {
+    try {
+      const [node] = await getBookmarkSubTree(id);
+      if (!node || collectSubtreeIds(node).some((itemId) => !created.has(itemId))) {
+        failed += 1;
+        continue;
+      }
+      await deleteBookmark(id);
+      removed += 1;
+    } catch {
+      failed += 1;
+    }
+  }
+  return { removed, failed };
 }
 
 /**
