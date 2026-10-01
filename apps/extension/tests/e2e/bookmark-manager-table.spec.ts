@@ -191,7 +191,7 @@ test('current-folder help tooltip shows its full text', async ({ extensionId, pa
     .getByRole('button', { name: helpText })
     .hover();
 
-  const tooltip = page.locator('[data-radix-popper-content-wrapper]').getByText(helpText).first();
+  const tooltip = page.locator('[data-base-ui-portal]').getByText(helpText).first();
   await expect(tooltip).toBeVisible();
   const clipped = await tooltip.evaluate(
     (element) =>
