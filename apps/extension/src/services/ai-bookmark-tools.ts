@@ -75,9 +75,7 @@ export function buildAIContextPack(
   options: AIContextPackOptions,
   metadataByBookmarkId: StoredBookmarkMetadataById = {},
 ): PackedAIContext {
-  const bookmarks = flattenBookmarks(nodes)
-    .filter((bookmark) => bookmark.depth <= options.maxDepth)
-    .slice(0, options.maxItems);
+  const bookmarks = selectAIContextBookmarks(nodes, options);
 
   const content =
     options.format === 'xml'
@@ -89,6 +87,16 @@ export function buildAIContextPack(
     itemCount: bookmarks.length,
     format: options.format,
   };
+}
+
+/** The bookmarks a context pack includes, after its depth and item limits. */
+export function selectAIContextBookmarks(
+  nodes: BookmarkTreeNode[],
+  options: Pick<AIContextPackOptions, 'maxDepth' | 'maxItems'>,
+) {
+  return flattenBookmarks(nodes)
+    .filter((bookmark) => bookmark.depth <= options.maxDepth)
+    .slice(0, options.maxItems);
 }
 
 export async function suggestBookmarkTags(
