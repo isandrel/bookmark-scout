@@ -21,7 +21,10 @@ const SelectTrigger = React.forwardRef<
     {...props}
   >
     {children}
-    <SelectPrimitive.Icon render={<ChevronDown className="h-4 w-4 opacity-50" />} />
+    {/* Rendered as the chevron itself; null replaces Base UI's default "▼" text child. */}
+    <SelectPrimitive.Icon render={<ChevronDown className="h-4 w-4 opacity-50" />}>
+      {null}
+    </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ));
 SelectTrigger.displayName = 'SelectTrigger';
