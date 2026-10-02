@@ -1,0 +1,210 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "개인정보처리방침",
+            "description": "Bookmark Scout와 웹사이트가 데이터를 어떻게 다루는지 설명합니다. 계정도 서버도 사용 데이터 전송도 없으며, AI는 켠 경우에만 직접 고른 제공업체로 요청을 보냅니다."
+        },
+        "title": "개인정보처리방침",
+        "effective": "시행일: {date}",
+        "intro": "이 방침은 Chrome, Microsoft Edge, Firefox용 Bookmark Scout 브라우저 확장 프로그램(버전 0.2.0 이상), 이 웹사이트, 문서 사이트에 적용됩니다.",
+        "translationNote": "이 한국어판은 영어판을 번역한 것입니다. 내용이 다를 경우 영어판이 우선합니다.",
+        "glanceTitle": "한눈에 보기",
+        "glance": {
+            "noServer": {
+                "title": "계정도 서버도 없습니다",
+                "body": "확장 프로그램은 브라우저 안에서만 동작합니다. 가입할 필요가 없고, 데이터를 받는 Bookmark Scout 서버도 없습니다."
+            },
+            "noTelemetry": {
+                "title": "사용 데이터를 보내지 않습니다",
+                "body": "확장 프로그램에는 분석 도구, 오류 보고, 광고가 없습니다."
+            },
+            "aiOptIn": {
+                "title": "AI는 직접 켜기 전까지 꺼져 있습니다",
+                "body": "AI 기능을 사용하면 요청은 브라우저에서 사용자가 고른 제공업체로 바로 전송됩니다."
+            },
+            "developer": {
+                "title": "개발자는 아무것도 받지 않습니다",
+                "body": "북마크, 설정, API 키는 개발자에게 전달되지 않습니다."
+            }
+        },
+        "tocLabel": "이 페이지의 내용",
+        "sections": {
+            "summary": {
+                "title": "요약",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout는 브라우저 안에서 동작합니다. 계정, 분석 도구, 광고가 없고 자체 서버도 없습니다. 개발자는 확장 프로그램으로부터 북마크나 그 밖의 데이터를 받지 않습니다. 데이터는 네트워크가 필요한 선택 기능을 사용할 때만 브라우저 밖으로 나가며, 이때도 사용자가 고른 서비스로만 바로 전송됩니다."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "확장 프로그램이 읽는 정보",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>북마크</strong>: 표시, 검색, 편집, 이동, 삭제, 가져오기, 내보내기를 위해 읽습니다.",
+                            "<strong>현재 탭의 제목과 URL</strong>: 보고 있는 페이지를 폴더에 저장하기 위해 읽습니다.",
+                            "<strong>브라우저 자체 아이콘 캐시의 사이트 아이콘</strong>(Chrome, Edge): 북마크 옆에 표시하기 위해 읽습니다. 아이콘을 가져올 때 네트워크 요청은 발생하지 않습니다."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "확장 프로그램은 방문한 페이지의 내용을 읽지 않으며 콘텐츠 스크립트도 없습니다."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "확장 프로그램이 저장하는 정보",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "모든 데이터는 브라우저의 확장 프로그램 저장소에 보관됩니다."
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>설정</strong>은 브라우저의 동기화 저장소에 보관됩니다. 브라우저 동기화를 켜 둔 경우 브라우저 계정(Google, Mozilla, Microsoft 등)을 통해 다른 기기로 복사될 수 있습니다. 설정에는 AI 사용 여부와 선택한 제공업체 및 모델이 포함되지만 API 키는 포함되지 않습니다.",
+                            "<strong>AI 제공업체 설정</strong>(API 키, 기본 URL, 추가 헤더 포함)은 이 기기의 로컬 저장소에만 보관되며 동기화되지 않습니다.",
+                            "<strong>태그, 요약, 저장된 검색, 최근 폴더, 최근 검색</strong>은 이 기기의 로컬 저장소에만 보관됩니다. 최근 검색은 설정에서 끌 수 있습니다."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "확장 프로그램을 제거하면 이 브라우저에 저장한 데이터도 삭제됩니다. 북마크 자체는 브라우저에 그대로 남습니다."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "데이터가 브라우저 밖으로 나가는 경우",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "선택형 AI 기능(기본값: 꺼짐)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "AI 기능은 설정에서 켜고 제공업체를 고른 뒤에만 동작합니다. 기능을 사용하면 해당 기능에 필요한 데이터가 브라우저에서 사용자가 설정한 제공업체 엔드포인트로 바로 전송됩니다."
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "폴더 추천: 현재 페이지의 제목과 URL, 북마크 폴더 이름.",
+                            "자동 태그 지정, 콘텐츠 요약, AI 폴더 재구성: 선택한 범위에 있는 북마크의 제목, URL, 폴더 경로. 페이지 내용은 가져오지 않습니다."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "'열 때 자동 추천'(기본값: 꺼짐)까지 켜면 팝업이나 사이드 패널을 열 때마다 폴더 추천이 실행됩니다."
+                    },
+                    {
+                        "type": "p",
+                        "text": "API 키는 요청 인증을 위해 해당 제공업체로 전송됩니다. 전송된 데이터는 사용자가 제공업체와 직접 동의한 그 업체의 이용약관과 개인정보처리방침에 따라 처리됩니다. Bookmark Scout는 이 데이터를 다른 곳으로 보내지 않습니다. 내 컴퓨터에서 실행되는 모델(예: Ollama)을 지정하면 데이터는 내 기기를 벗어나지 않습니다."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "깨진 링크 확인과 제목 가져오기"
+                    },
+                    {
+                        "type": "p",
+                        "text": "'깨진 링크 확인'과 '메타데이터 가져오기'는 페이지가 열리는지와 제목이 무엇인지 확인하기 위해 북마크한 페이지에 직접 요청을 보냅니다. 처음 실행할 때 브라우저가 권한을 요청합니다. 요청은 쿠키 없이 각 웹사이트로 바로 전송되고, 결과는 확장 프로그램 안에만 남습니다. 일반적인 방문과 마찬가지로 웹사이트는 IP 주소와 페이지 요청 사실을 알 수 있습니다."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "내보내기"
+                    },
+                    {
+                        "type": "p",
+                        "text": "북마크 내보내기와 AI 컨텍스트 내보내기는 내 컴퓨터에 파일로 저장됩니다. 저장하기 전에 개인정보 검토 화면에서 민감한 값을 가릴 수 있습니다. 업로드되는 것은 없습니다."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "개발자가 받는 정보",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "없습니다. 확장 프로그램은 개발자에게 데이터를 보내지 않으며, 사용 데이터 전송(텔레메트리)도 없습니다."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "권한",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout는 <code>bookmarks</code>, <code>tabs</code>, <code>storage</code>, <code>contextMenus</code> 권한을 요청하며, Chrome과 Edge에서는 <code>favicon</code>과 <code>sidePanel</code>도 사용합니다. 웹사이트 접근 권한은 선택 사항이며 설치할 때는 부여되지 않습니다."
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "모든 웹사이트에 대한 접근 권한은 '깨진 링크 확인' 또는 '메타데이터 가져오기'를 처음 실행할 때 요청됩니다.",
+                            "제공업체 사이트 한 곳에 대한 접근 권한은 AI 설정에서 '서비스 확인' 또는 '모델 새로 고침'을 누를 때 요청됩니다."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "각 권한에 대한 설명은 <permissions>README의 권한 목록</permissions>에서 볼 수 있습니다."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "이 웹사이트와 문서 사이트",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "이 웹사이트 bookmark-scout.com은 GitHub Pages에서 호스팅되는 정적 사이트입니다. <githubPages>GitHub 문서</githubPages>와 <githubPrivacy>GitHub 개인정보 보호 정책</githubPrivacy>에 설명된 대로, GitHub는 보안을 위해 모든 방문자의 IP 주소를 기록합니다."
+                    },
+                    {
+                        "type": "p",
+                        "text": "이 웹사이트는 쿠키를 사용하지 않는 <umami>Umami Cloud</umami>로 방문 수를 집계합니다. Umami가 기록하는 정보는 방문한 페이지의 주소와 제목, 유입 사이트, 브라우저, 운영체제, 기기 유형, 화면 크기, 언어, 대략적인 위치(국가, 지역, 도시)입니다. IP 주소는 이 값을 구하는 데 쓰이지만 저장되지 않습니다. 페이지 조회는 매달 초에 바뀌는 솔트를 사용한 해시로 세션 단위로 묶이며, 다른 웹사이트에 걸쳐 추적되지 않습니다. 자세한 내용은 <umamiDocs>Umami 문서</umamiDocs>를 참고하세요."
+                    },
+                    {
+                        "type": "p",
+                        "text": "문서 사이트 docs.bookmark-scout.com은 Cloudflare Pages에서 호스팅되며 분석 도구를 불러오지 않습니다. 사이트를 제공하기 위해 Cloudflare가 IP 주소를 포함한 요청을 <cloudflare>Cloudflare 개인정보 보호정책</cloudflare>에 따라 처리합니다."
+                    },
+                    {
+                        "type": "p",
+                        "text": "두 사이트 모두 계정이나 광고가 없습니다. 글꼴은 각 사이트에서 직접 제공하므로 브라우저가 Google Fonts에 접속하지 않습니다."
+                    }
+                ]
+            },
+            "children": {
+                "title": "아동",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout는 아동을 대상으로 하지 않습니다. 확장 프로그램은 누구에게서도 정보를 수집하지 않으며, 웹사이트는 위에서 설명한 익명 방문 통계만 수집합니다."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "방침 변경",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "이 방침이 바뀌면 새 시행일과 함께 이 페이지에 게시하고 릴리스 노트에도 적습니다."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "문의",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "개인정보 관련 문의나 요청은 <privacyEmailLink>{privacyEmail}</privacyEmailLink>로 이메일을 보내 주세요."
+                    },
+                    {
+                        "type": "p",
+                        "text": "보안 취약점은 <securityEmailLink>{securityEmail}</securityEmailLink>로 이메일을 보내거나 <securityPolicy>SECURITY.md</securityPolicy>의 절차에 따라 신고해 주세요. 공개 이슈에는 올리지 말아 주세요."
+                    },
+                    {
+                        "type": "p",
+                        "text": "소스 코드는 <license>{licenseName}</license> 라이선스에 따라 <source>GitHub</source>에 공개되어 있습니다."
+                    }
+                ]
+            }
+        }
+    }
+}

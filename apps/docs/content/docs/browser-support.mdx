@@ -1,0 +1,39 @@
+---
+title: Browser support
+description: What works in Chrome, Microsoft Edge, and Firefox, what is tested in each, and why Safari is not supported.
+---
+
+Chrome is the primary target. Edge is Chromium-based and has the same features, except where noted below. Firefox uses a Manifest V2 build with a smaller feature set.
+
+## Feature matrix
+
+This table comes from the manifests of the built extension for each browser.
+
+| Feature | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Toolbar popup with search and saving | Yes | Yes | Yes |
+| Side panel | Yes | Yes | Not supported. The page is declared as a Firefox sidebar, but nothing tests it there. |
+| Bookmarks manager and Tools sidebar | Replaces the browser's bookmarks page | Declared the same way. Whether Edge applies it to its Favorites page has not been checked. | Not reachable. Firefox cannot replace its bookmarks page and no menu links to the manager. |
+| Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Not reachable, because they live in the manager |
+| Settings page | Yes | Yes | Yes |
+| Right-click menu to save links | Yes | Yes | Yes |
+| Site icons next to bookmarks | Yes, from the browser's icon cache | Yes | No. Firefox has no favicon API for extensions. |
+| Optional website access for dead-link checks and title fetching | Requested when you run the tool | Same | Same |
+
+## What is tested
+
+- **Chrome (Chromium)**: unit tests and end-to-end tests for the popup, side panel, manager, settings, maintenance tools, reports, import and export, keyboard shortcuts, saved searches, context-menu saves, drag and drop, network tools, and AI tools against mocked providers.
+- **Edge**: the same end-to-end suite runs against the Edge build.
+- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, the manager page, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, keyboard shortcuts, network and AI tools, and site icons are not covered.
+
+The Edge suite and the Firefox smoke suite are required CI checks, like the Chromium suite. Real AI providers and live websites are checked by hand, not by automated tests.
+
+## Safari
+
+Safari is not supported. Safari Web Extensions do not implement the `bookmarks` API, which every part of Bookmark Scout depends on.
+
+## Store availability
+
+<StoreAvailability />
+
+Listing material is prepared in the repository's <RepoLink path="/tree/main/store">`store/` folder</RepoLink>, and each submission needs the maintainer's approval. Where a store has no listing, [install from a GitHub release](/installation).

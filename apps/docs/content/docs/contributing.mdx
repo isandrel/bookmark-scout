@@ -1,74 +1,86 @@
 ---
-title: Contributing
-description: How to contribute to Bookmark Scout
+title: Contributing and development
+description: Set up the Bookmark Scout monorepo, build the extension from source, run the tests, and open a pull request.
 ---
 
-# Contributing
+Contributions are welcome: bug reports, fixes, translations, and docs. The full guidelines are in <RepoLink path="/blob/main/CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>; this page covers the commands you need.
 
-Contributions are welcome!
+## The repository
 
-## Setup
+A Bun and Nx monorepo with three apps and a shared config package:
+
+| Path | What |
+| --- | --- |
+| `apps/extension` | The browser extension: WXT, React, TypeScript, Zustand, and shadcn/ui on Base UI |
+| `apps/website` | The marketing site: Next.js, localized with `next-intl` |
+| `apps/docs` | This site: Next.js, Fumadocs, and MDX in `content/docs` |
+| `packages/config` | Site-wide values read from `config/site.config.toml` |
+
+## Set up
+
+You need [Bun](https://bun.sh) and Chrome, Edge, or Firefox. Fork <RepoLink>the repository</RepoLink> on GitHub, clone your fork, and in its folder run:
 
 ```bash
-gh repo fork isandrel/bookmark-scout --clone
-cd bookmark-scout
 bun install
 bun run dev
 ```
 
-The repository is a Bun + Nx monorepo with three apps:
+`bun run dev` starts the extension in Chrome with live reload. Use `bun run dev:edge` or `bun run dev:firefox` for the other browsers.
 
-- `apps/extension` — WXT browser extension for Chrome, Firefox, and Edge
-- `apps/website` — localized Next.js marketing site
-- `apps/docs` — Fumadocs documentation site
-
-## Pull Request
+## Build from source
 
 ```bash
-git checkout -b feat/your-feature
-git add .
-git commit -m "feat: add feature"
-git push origin feat/your-feature
-gh pr create
+bun run build
 ```
 
-## Commit Convention
+This builds all three browser targets into `apps/extension/dist/`:
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation |
-| `refactor` | Code refactoring |
-| `test` | Tests |
-| `chore` | Maintenance |
+| Browser | Folder |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
 
-## Verification
+Load the folder for your browser as an unpacked extension, the same way as a downloaded release in [Install](/installation): **Load unpacked** in Chrome and Edge, or **Load Temporary Add-on** with the folder's `manifest.json` in Firefox. To build one browser, run `bunx nx run extension:build:chrome`, `extension:build:edge`, or `extension:build:firefox`.
 
-Run the smallest relevant command set for your change:
+## Test
 
-| Area | Command |
-|------|---------|
+```bash
+bun run test
+```
+
+This builds the Chrome target, installs Playwright's Chromium, and runs the unit tests and the Chromium end-to-end tests headless. Network tools and AI tools run against local servers and mocked providers; tests titled `[mocked provider contract]` check Bookmark Scout's side of the provider contract, not live provider compatibility.
+
+| Change | Run |
+| --- | --- |
 | Extension source | `bunx nx run extension:lint` |
 | Sorting logic | `bun run test:unit` |
-| Popup, settings, bookmark manager, tools, and import/export flows | `bun run test:e2e` |
-| Extension runtime, manifest, provider, or browser integration | `bunx nx run extension:build:chrome` plus any affected browser target |
+| Popup, settings, manager, tools, import and export | `bun run test:e2e` |
+| Edge behavior | `bunx nx run extension:test:e2e:edge` |
+| Firefox behavior | `bunx nx run extension:test:e2e:firefox` (a smoke suite) |
+| Manifest, provider, or browser integration | `bunx nx run extension:build:chrome` plus each affected browser target |
 | Website | `bunx nx run website:build` |
-| Docs | `bunx nx run docs:build` |
-| Cross-app changes | `bun run lint` and `bun run build:all` |
+| Docs | `bunx nx run docs:build`, then `bunx nx run docs:verify` |
+| Changes across apps | `bun run lint` and `bun run build:all` |
 
-`bun run test` runs the full current unit and Chromium E2E suite, including automatic browser installation. Network-dependent and AI provider flows run offline against mocks. Tests titled `[mocked provider contract]` stub AI providers (Vitest `ai` mocks and a Playwright-routed OpenAI-compatible endpoint) and route-mock network fetches; they verify Bookmark Scout's request/response contract, opt-in gating, and error handling, not live provider or website compatibility, which remains manually verified.
+CI runs lint, the three extension builds, the unit and Chromium end-to-end tests, the Edge suite, and the Firefox smoke suite as required checks on every pull request. A passing build is not test coverage: say which tests you ran.
 
-## Localization
+## Work on the docs
 
-When changing user-facing extension copy, update all extension locale files:
+```bash
+bun run dev:docs
+```
 
-- `apps/extension/public/_locales/en/messages.json`
-- `apps/extension/public/_locales/ja/messages.json`
-- `apps/extension/public/_locales/ko/messages.json`
+Pages are MDX files in `apps/docs/content/docs`, ordered by the `meta.json` files next to them. Links to the website, the repository, releases, and contact addresses come from config through small components such as `<Contact role="support" />` and `<ReleaseLink />`, so pages never hard-code them. `bunx nx run docs:verify` checks the static export after a build.
 
-When changing localized website copy, update all website message files:
+## Translations
 
-- `apps/website/messages/en.json`
-- `apps/website/messages/ja.json`
-- `apps/website/messages/ko.json`
+User-facing extension text lives in `apps/extension/public/_locales/{en,ja,ko}/messages.json`, and website text in `apps/website/messages/{en,ja,ko}.json`. Change all three languages together.
+
+## Pull requests
+
+- Branch from `main` and keep each pull request to one change.
+- Write commits as [Conventional Commits](https://www.conventionalcommits.org/) with a [Gitmoji](https://gitmoji.dev/) prefix, for example `🐛 fix(popup): keep focus after deleting a folder`.
+- Update the docs when a change affects what users see, browser support, privacy, or settings. [Project status](/status) lists what is implemented, partial, and planned.
+
+Report security problems privately to <Contact role="security" />, not in a public issue. Bookmark Scout is licensed under <License />.

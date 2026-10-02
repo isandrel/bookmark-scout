@@ -1,9 +1,7 @@
 ---
-title: Project Status
-description: Current implemented and planned Bookmark Scout work
+title: Project status
+description: What Bookmark Scout does today, what is partial, and what is planned, kept in step with the code.
 ---
-
-# Project Status
 
 This page summarizes the current repository status so roadmap docs do not drift from the implementation.
 
@@ -23,7 +21,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, and custom OpenAI-compatible endpoints
 - AI folder recommendations, including reviewed creation of a suggested new folder path that saves the current page there
 - AI context packing with saved tags and summaries, tag suggestions, summaries, and folder reorganization (previewed before applying by default)
-- Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning, metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
+- Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning with confirmed-dead and needs-a-manual-check results plus reviewed repairs (delete, redirect target, Wayback Machine copy, or edited URL, with undo), metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
 - Privacy review with optional redaction before bookmark exports and AI context exports
 - Bookmark import from HTML or JSON, with a preview of the target folder, counts, and duplicates, a duplicate-handling choice, and undo
 - Bookmark export to HTML, JSON, Markdown, or CSV
@@ -41,17 +39,15 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - AI tool limits (tag count and style, summary length, reorganization folder limits) are sent to the provider as instructions; the output is not checked against them. Live provider compatibility is verified manually.
 - Firefox runtime coverage is a smoke suite, not the full suite. Playwright cannot open `moz-extension://` pages, so the Firefox tests drive the stock Firefox through geckodriver (Selenium) and install the build as a temporary add-on with a test-only add-on ID. They do not cover context-menu saves (the Chromium tests dispatch `contextMenus.onClicked` from the service worker; the Firefox build uses an MV2 background page that the harness cannot script), drag and drop, keyboard shortcuts, network tools, AI tools, or locales.
 - Firefox API differences: favicons do not load because Firefox has no `_favicon` service; the manager and Tools sidebar open only by their extension URL because Firefox cannot replace the bookmarks page; the side panel page is declared as a Firefox sidebar, and tests load that page in a tab because automation cannot open the sidebar itself.
-- The Edge and Firefox CI jobs are not required checks yet.
 - Four tool scope settings are fixed: Auto-Tagging and Content Summarizer always use the current folder; Duplicate Cleaner and Privacy Scanner always scan all bookmarks.
 
 ## Planned
 
-- Reviewed repair for dead links
-- Broader Firefox runtime coverage, and making the Edge and Firefox CI jobs required once they are stable
-- Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in [`store/`](https://github.com/isandrel/bookmark-scout/tree/main/store); submission is manual and needs release approval, and the Firefox package first needs an add-on ID and a data collection declaration
+- Broader Firefox runtime coverage: context menus, drag and drop, keyboard shortcuts, network tools, AI tools, and locales
+- Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in the repository's <RepoLink path="/tree/main/store">`store/` folder</RepoLink>; submission is manual and needs release approval, and the Firefox package first needs an add-on ID and a data collection declaration
 
-## Known Documentation Rules
+## Documentation rules
 
 - Update docs when feature status, installation paths, browser support, privacy expectations, or configuration changes.
 - AI features are opt-in and may send bookmark data to the selected provider.
-- CI runs extension unit and Chromium browser tests (required), plus the Edge suite and the Firefox smoke suite (not required yet), without manual setup. A passing build is not runtime coverage.
+- CI runs the extension unit tests, the Chromium end-to-end suite, the Edge suite, and the Firefox smoke suite as required checks, without manual setup. A passing build is not runtime coverage.

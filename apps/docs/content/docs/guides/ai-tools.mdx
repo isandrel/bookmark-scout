@@ -1,0 +1,87 @@
+---
+title: Set up AI tools
+description: Turn on the optional AI features, choose a provider and model, add your API key, and know exactly what bookmark data each AI tool sends.
+---
+
+AI features are **off by default**, and Bookmark Scout works fully without them. When you turn them on, requests go directly from your browser to the provider you choose, with your own API key. Bookmark Scout has no AI service of its own.
+
+<Callout type="warn" title="Before you turn AI on">
+AI tools send bookmark titles, URLs, and folder names or paths to the provider you configure. The provider handles that data under its own terms, and API use may cost money. Review every suggestion before you apply it.
+</Callout>
+
+## Turn on AI
+
+<Steps>
+<Step>
+Open Bookmark Scout's settings (in Chrome, right-click the toolbar icon and choose **Options**) and go to the **AI** tab.
+</Step>
+<Step>
+Turn on **AI Features**.
+</Step>
+<Step>
+Choose an **AI Provider**, then an **AI Model**.
+</Step>
+<Step>
+Enter your **API Key** if the provider needs one. It is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
+</Step>
+<Step>
+Optional: click **Verify Service** to send a test request, or **Refresh Models** to load the provider's model list. The browser asks for access to that one provider's address the first time.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON** stay in this browser's local storage and are never synced. Other settings, such as whether AI is on and which provider you chose, sync through your browser account where the browser supports it.
+
+## Providers
+
+| Provider | API key | Notes |
+| --- | --- | --- |
+| OpenAI | Required | |
+| Anthropic | Required | |
+| Google | Required | |
+| Groq | Required | |
+| Mistral AI | Required | |
+| DeepSeek | Required | |
+| OpenRouter | Required | |
+| Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
+| CLIProxyAPI | Optional | Default address `http://localhost:8317/v1` |
+| Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
+
+**Base URL** overrides the provider's address for every request, for example to use a proxy. It must start with `http://` or `https://`. **Extra Headers JSON** adds headers to every request, and **Custom Model** sets a model ID for providers that accept any model name.
+
+## What each tool sends
+
+| Tool | Where | Sends to the provider |
+| --- | --- | --- |
+| Folder recommendations | Popup, the sparkle button next to the search box (shown only when AI is on) | The current page's title and URL, and your bookmark folder names |
+| **Auto-Tagging** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder |
+| **Content Summarizer** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder |
+| **AI Folder Reorganization** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the scope you choose |
+| **AI Context Packer** | Manager, Tools, **AI & Intelligence** | Nothing. It saves a file on your computer and works with AI turned off. |
+
+Turn on **Auto-recommend on Open** to request folder recommendations every time the popup opens. Leave it off to send a request only when you click the button.
+
+## Save a page with a folder recommendation
+
+Click the sparkle button in the popup. Choosing a suggested existing folder saves the page there. Choosing a suggested new folder opens **Review new folder** with the full path and the page; **Create Folder and Save** creates only the missing folders and saves the page. If the page is already in that folder it is not saved twice, and if a bookmark already uses one of the folder names in the path, nothing is created. **Cancel** changes nothing.
+
+## Suggest tags and summaries
+
+Run **Auto-Tagging** or **Content Summarizer** with **Analyze**. Suggestions are shown for review, and saved only when you click **Save Suggested Tags** or **Save Suggested Summaries**. **Merge Mode** decides whether saved suggestions are appended to what you have or replace it.
+
+Saved tags and summaries live in this browser's local storage. You can also edit them by hand in **Bookmark Details**. They are not synced, searchable, or included in bookmark exports.
+
+The tag count and style, summary length, and reorganization limits in Settings are sent to the provider as instructions; the provider's output is not checked against them.
+
+## Reorganize folders
+
+**AI Folder Reorganization** asks the provider for a new folder plan. With **Always Preview First** on (the default), the plan opens as a list of folders to create, rename, and remove and bookmarks to move, and nothing changes until you click **Apply Changes**.
+
+## Export context for an AI chat
+
+**AI Context Packer** exports the selected bookmarks as Markdown or XML that you can paste into any AI chat. It can include folder paths, dates, and your saved tags and summaries (**Include Saved Tags** and **Include Saved Summaries**). Like bookmark exports, it opens a privacy review when the file would contain values that may be private.
+
+<Callout title="Firefox">
+The manager is not reachable in Firefox, so the manager's AI tools are not available there. AI is not covered by the Firefox automated tests.
+</Callout>

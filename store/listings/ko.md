@@ -134,3 +134,13 @@ Bookmark Scout(북마크 스카우트)는 브라우저를 떠나지 않고 북�
 ## Category
 
 Same as `en.md`. Stores set the category once for all locales.
+
+## Support and links
+
+Same as [`en.md`](en.md#support-and-links). Where a store accepts a value per locale, use the Korean pages:
+
+| Field | Value |
+| --- | --- |
+| Support URL | https://bookmark-scout.com/ko/support/ |
+| Privacy policy URL | https://bookmark-scout.com/ko/privacy/ |
+| Support email | support@bookmark-scout.com |

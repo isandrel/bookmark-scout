@@ -1,0 +1,210 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "Privacy policy",
+            "description": "How Bookmark Scout and its websites handle your data: no account, no server, no telemetry, and opt-in AI that sends requests only to the provider you choose."
+        },
+        "title": "Privacy policy",
+        "effective": "Effective {date}",
+        "intro": "This policy covers the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox (version 0.2.0 and later), this website, and the documentation site.",
+        "translationNote": "This policy is also available in Japanese and Korean. If a translation differs from the English version, the English version applies.",
+        "glanceTitle": "At a glance",
+        "glance": {
+            "noServer": {
+                "title": "No account, no server",
+                "body": "The extension runs inside your browser. There is nothing to sign up for and no Bookmark Scout server that receives your data."
+            },
+            "noTelemetry": {
+                "title": "No telemetry",
+                "body": "The extension has no analytics, no crash reporting, and no ads."
+            },
+            "aiOptIn": {
+                "title": "AI is off until you turn it on",
+                "body": "When you use an AI feature, the request goes from your browser directly to the provider you chose."
+            },
+            "developer": {
+                "title": "The developer receives nothing",
+                "body": "Your bookmarks, settings, and API keys never reach the developer."
+            }
+        },
+        "tocLabel": "On this page",
+        "sections": {
+            "summary": {
+                "title": "Summary",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout works inside your browser. It has no account, no analytics, no ads, and no server of its own. The developer does not receive your bookmarks or any other data from the extension. Data leaves your browser only when you use an optional feature that needs the network, and then it goes directly to the service you chose."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "What the extension reads",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Your bookmarks</strong>, to show, search, edit, move, delete, import, and export them.",
+                            "<strong>The title and URL of the active tab</strong>, so you can save the page you are viewing into a folder.",
+                            "<strong>Site icons from your browser's own icon cache</strong> (Chrome and Edge), to show next to bookmarks. No network request is made for them."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "The extension does not read the content of the pages you visit and has no content scripts."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "What the extension stores",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Everything is kept in your browser's extension storage:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Settings</strong> are kept in the browser's sync storage. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on and which provider and model you chose, but not your API key.",
+                            "<strong>AI provider settings</strong>, including your API key, base URL, and any extra headers, are kept in local storage on this device only. They are not synced.",
+                            "<strong>Tags, summaries, saved searches, recent folders, and recent searches</strong> are kept in local storage on this device only. You can turn off recent searches in Settings."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Uninstalling the extension removes the data it stored in this browser. Your bookmarks themselves stay in the browser."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "When data leaves your browser",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "Optional AI features (off by default)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "AI features run only after you turn them on in Settings and choose a provider. When you use one, the extension sends the data that feature needs directly from your browser to the provider endpoint you configured:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Folder suggestions: the current page's title and URL, and the names of your bookmark folders.",
+                            "Auto-Tagging, Content Summarizer, and AI Folder Reorganization: the titles, URLs, and folder paths of the bookmarks in the scope you chose. No page content is fetched."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "If you also turn on Auto-recommend on Open (off by default), folder suggestions run each time you open the popup or side panel."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Your API key is sent to that provider to authenticate the request. The provider handles the data under its own terms and privacy policy, which you accept with them directly. Bookmark Scout does not send this data anywhere else. If you point the extension at a model running on your own computer (for example Ollama), the data stays on your machine."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Dead link checks and title fetching"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. The browser asks for your permission the first time you run them. Requests go directly to each website, without cookies, and the results stay in the extension. As with any visit, the website can see your IP address and that the page was requested."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Exports"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Bookmark exports and AI context exports are saved as files on your computer. Before saving, the extension can show a privacy review that lets you redact sensitive values. Nothing is uploaded."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "What the developer receives",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Nothing. The extension does not send data to the developer, and there is no telemetry."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "Permissions",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout asks for <code>bookmarks</code>, <code>tabs</code>, <code>storage</code>, and <code>contextMenus</code>, and in Chrome and Edge also <code>favicon</code> and <code>sidePanel</code>. Website access is optional and is never granted at install:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Access to all websites is requested when you first run Check Dead Links or Metadata Fetcher.",
+                            "Access to one provider's site is requested when you click Verify Service or Refresh Models in the AI settings."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Each permission is explained in the <permissions>permission list in the README</permissions>."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "This website and the docs site",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "This website, bookmark-scout.com, is a static site hosted on GitHub Pages. GitHub logs the IP address of every visitor for security purposes, as described in <githubPages>GitHub's documentation</githubPages> and the <githubPrivacy>GitHub General Privacy Statement</githubPrivacy>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "This website counts visits with <umami>Umami Cloud</umami>, which works without cookies. Umami records the page address and title, the referring site, your browser, operating system, device type, screen size, language, and approximate location (country, region, and city). It uses your IP address to work out these values but does not store it. It groups page views into sessions with a hash whose salt changes at the start of every month, and it does not track you across other websites. Details are in <umamiDocs>Umami's documentation</umamiDocs>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "The documentation site, docs.bookmark-scout.com, is hosted on Cloudflare Pages and does not load any analytics. Cloudflare processes requests to deliver the site, including your IP address, under the <cloudflare>Cloudflare privacy policy</cloudflare>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Neither site has accounts or ads. Both serve their fonts themselves, so your browser does not contact Google Fonts."
+                    }
+                ]
+            },
+            "children": {
+                "title": "Children",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout is not directed at children. The extension does not collect information from anyone, and the websites collect only the anonymous visit statistics described above."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "Changes to this policy",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Changes to this policy will be published on this page with a new effective date and noted in the release notes."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "Contact",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "For privacy questions and requests, email <privacyEmailLink>{privacyEmail}</privacyEmailLink>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "To report a security vulnerability, email <securityEmailLink>{securityEmail}</securityEmailLink> or follow the steps in <securityPolicy>SECURITY.md</securityPolicy>. Please do not report vulnerabilities in a public issue."
+                    },
+                    {
+                        "type": "p",
+                        "text": "The source code is public on <source>GitHub</source> under the <license>{licenseName}</license> license."
+                    }
+                ]
+            }
+        }
+    }
+}

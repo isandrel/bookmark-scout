@@ -1,3 +1,4 @@
+import { SOCIAL_IMAGE } from "@/lib/assets";
 import { AUTHOR, GITHUB_URL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@bookmark-scout/config";
 
 export function JsonLd() {
@@ -19,24 +20,25 @@ export function JsonLd() {
             url: AUTHOR.url,
         },
         url: SITE_URL,
-        downloadUrl: GITHUB_URL,
-        screenshot: `${SITE_URL}/icon.png`,
-        softwareVersion: "0.2.0",
-        aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "5",
-            ratingCount: "1",
-        },
+        downloadUrl: `${GITHUB_URL}/releases/latest`,
+        screenshot: `${SITE_URL}${SOCIAL_IMAGE.url}`,
+        license: "https://www.gnu.org/licenses/agpl-3.0.html",
+        isAccessibleForFree: true,
         featureList: [
             "Instant bookmark search",
             "Drag and drop organization",
             "Quick bookmark saving",
-            "Side panel support",
+            "Side panel support (Chrome and Edge)",
+            "Saved searches",
+            "Keyboard shortcuts",
+            "Delete with undo",
             "Dark mode",
             "Custom bookmarks manager",
             "Duplicate cleanup",
-            "Dead link scanning",
+            "Tracking parameter cleanup",
+            "Dead link scanning with reviewed repairs",
             "Bookmark import and export",
+            "Privacy review with optional redaction before exports",
             "Opt-in AI bookmark tools",
             "Multi-language support",
         ],

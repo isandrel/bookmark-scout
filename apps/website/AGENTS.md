@@ -26,12 +26,17 @@ The website currently uses localized routes and shared site metadata. Preserve t
 
 ## Local repository map
 
+- `DESIGN.md`: the site's design system (tokens, type, components, do's and don'ts). Read it before UI work.
 - `app/`: route tree, layouts, static handlers, metadata, sitemap, and robots
-- `app/[locale]/`: locale-aware pages and layouts
-- `components/`: website-specific components
-- `messages/`: translation message files for `en`, `ja`, and `ko`
+- `app/[locale]/`: locale-aware pages: home, `privacy/`, `support/`, and `docs/*` meta-refresh redirects to the docs site
+- `components/site/`: header, footer, language links, redirect helper
+- `components/home/`, `components/privacy/`, `components/support/`, `components/longform/`: page components
+- `lib/content/`: typed content data (demo library, tour, install steps, FAQ, AI providers, page sections, `routes.ts` with the indexable routes)
+- `lib/`: `download.ts` (store link or release fallback), `page-metadata.ts`, `seo.ts`, `assets.ts`
+- `messages/{en,ja,ko}.json`: shared and home copy; `messages/privacy/` and `messages/support/`: long-form page copy, merged in `i18n/request.ts`
 - `i18n/`: locale routing and request behavior
-- `public/`: icons and static assets
+- `public/`: icons, store screenshots, and `.well-known/security.txt`
+- `scripts/verify-build.ts`, `scripts/serve-out.ts`, `tests/e2e/`, `playwright.config.ts`: build checks and browser tests
 
 Do not edit generated output under:
 
@@ -42,6 +47,9 @@ Do not edit generated output under:
 
 - dev server: `nx run website:dev`
 - build: `nx run website:build`
+- build and verify the export: `nx run website:verify`
+- browser tests against the export (desktop and mobile Chromium): `nx run website:test:e2e`
+- lint: `nx run website:lint`
 
 Equivalent scripts also exist in `apps/website/package.json`.
 
@@ -49,7 +57,10 @@ Equivalent scripts also exist in `apps/website/package.json`.
 
 Minimum for any substantive website change:
 
-- `nx run website:build`
+- `nx run website:lint`
+- `nx run website:verify` (builds, then checks lang, canonical, hreflang, sitemap, third-party resources, security.txt, and message key parity)
+
+Also run `nx run website:test:e2e` when the change touches pages, components, routing, or interaction. CI runs all three in the required `Website and Docs` job.
 
 Build verification is particularly important when the change touches:
 
@@ -84,13 +95,19 @@ Rules:
 - do not hardcode localized copy in page components if the page is already message-driven
 - keep translated message keys aligned across locale files
 
-### Shared config
+### Shared config and content data
 
-The website already relies on `@bookmark-scout/config` for site-wide values.
+Values come from `config/site.config.toml` through `@bookmark-scout/config`: site URL, docs URL, GitHub URL, `RELEASES_URL`, `CONTACT` (support, privacy, security addresses), `STORES` (store listing URLs; empty until live), `LICENSE`, and `PRIVACY_EFFECTIVE_DATE`.
 
-- reuse shared config when possible
-- avoid duplicating canonical URLs, titles, or product constants directly in page files
+- never hardcode URLs, email addresses, dates, or store links in components
+- keep lists (demo bookmarks, tour tabs, install steps, FAQ, page sections, routes) in typed modules under `lib/content/`; copy stays in messages
+- when a store listing goes live, set its URL in `[stores]`; download buttons switch from the GitHub release automatically
+- add new indexable pages to `lib/content/routes.ts` so the sitemap, verify script, and browser tests cover them
 - keep public claims aligned with the actual product and repository documentation
+
+### Store-required pages
+
+The Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings link to the home page, `/{locale}/privacy/`, and `/{locale}/support/`. Keep these pages live and accurate. When the privacy text changes, update `messages/privacy/*.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` together. Renew `public/.well-known/security.txt` before its `Expires` date.
 
 ### Metadata and SEO
 
@@ -122,9 +139,8 @@ When editing product claims:
 
 When you add or change localized website content:
 
-- update `messages/en.json`
-- update `messages/ja.json`
-- update `messages/ko.json`
+- update `messages/en.json`, `messages/ja.json`, and `messages/ko.json`, or the matching files under `messages/privacy/` or `messages/support/`
+- keep keys and array lengths identical across locales; `nx run website:verify` fails otherwise
 
 If the change is intentionally English-only for a temporary reason, call that out explicitly in the final report instead of silently leaving the app inconsistent.
 

@@ -41,8 +41,8 @@ Edge has **no automated browser tests**; CI only builds it. Test the exact ZIP i
 ## 4. Properties
 
 - [ ] Category: decided by the maintainer (suggested: Productivity).
-- [ ] Privacy policy required: yes. URL: hosted policy from [`../privacy-policy.md`](../privacy-policy.md). **Blocker until hosted.**
-- [ ] Website `https://bookmark-scout.com`; support contact decided by the maintainer.
+- [ ] Privacy policy required: yes. URL: `https://bookmark-scout.com/en/privacy/` (text: [`../privacy-policy.md`](../privacy-policy.md)). Confirm the page is live after the website deploys from `main`.
+- [ ] Website `https://bookmark-scout.com`; support contact `https://bookmark-scout.com/en/support/` and `support@bookmark-scout.com` (confirm the alias reaches a monitored inbox).
 - [ ] Mature content: no.
 
 ## 5. Availability

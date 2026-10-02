@@ -1,0 +1,77 @@
+---
+title: Find and repair dead links
+description: Scan bookmarks for dead links, see which ones need a manual check, and repair them by deleting, following a redirect, using an archived copy, or editing the URL.
+---
+
+**Check Dead Links** is in the **Tools** sidebar of the bookmarks manager, under **Maintenance**. It requests each bookmarked page to see whether it still loads.
+
+<Callout title="Firefox">
+The manager is not reachable in Firefox, so the dead link check is not available there.
+</Callout>
+
+## Run a scan
+
+<Steps>
+<Step>
+In **Check Dead Links**, choose the current folder or all bookmarks in the scope menu, and click **Scan**.
+</Step>
+<Step>
+The first time, Bookmark Scout explains why it needs access to websites. Click **Allow access**, then accept the browser's prompt. If you choose **Not now** or decline, nothing is scanned.
+</Step>
+<Step>
+Wait for the results. A summary at the top counts the links that are confirmed dead, need a manual check, or were redirected.
+</Step>
+</Steps>
+
+Website access is optional and is not granted at install. Requests are sent without cookies, and you can revoke the access in the browser's extension settings. See [Permissions](/permissions).
+
+## Read the results
+
+| Result | What it means |
+| --- | --- |
+| **Confirmed dead** | Page not found (404 or 410), the connection was refused, the host was not found, or the redirects looped |
+| **Check manually** | Often still works in a browser: sign-in or access denied (401, 403, 407), rate limited (429), the site rejects automated checks (405 or 501), a server error (5xx), another HTTP error, or a timeout |
+| **Redirected** | The link works but now points elsewhere; the destination is shown |
+| **Skipped** | Not a web link, such as a bookmarklet |
+
+Any error from a `HEAD` request is confirmed with a `GET` before it is reported, because some servers do not support `HEAD`.
+
+<Callout type="info" title="Console messages in Chrome">
+Chrome logs one "Failed to load resource" line in the page's developer console for each failed request. Extensions cannot suppress these lines; the scan itself logs nothing.
+</Callout>
+
+## Repair links
+
+<Steps>
+<Step>
+Click **Review repairs**. Every failed, timed-out, or redirected link is listed.
+</Step>
+<Step>
+Choose an action for each one:
+
+- **Keep as is** (the default, so nothing changes unless you pick something else)
+- **Delete bookmark**
+- **Use redirect target**, offered only when the scan saw a redirect
+- **Use archived copy (Wayback Machine)**, which points the bookmark at `https://web.archive.org/web/<original URL>`. The link is built locally and not checked, so the page may never have been archived.
+- **Edit URL**, which accepts only a valid `http` or `https` URL that differs from the current one
+</Step>
+<Step>
+Check the summary of how many bookmarks will be deleted, have their URL replaced, or be kept, then click **Apply**.
+</Step>
+</Steps>
+
+Nothing changes until you apply. Before each change, the bookmark is read again: one that was deleted or edited since the scan is skipped and listed, so a stale scan never overwrites a newer edit.
+
+**Undo**, in the message or in the dialog after a partial apply, restores deleted bookmarks within 10 seconds and puts replaced URLs back unless they were edited again.
+
+## Tune the scan
+
+On the **Maintenance** tab of [Settings](/settings):
+
+| Setting | Default |
+| --- | --- |
+| **Request Timeout** | 8 seconds per request |
+| **Concurrency** | 4 requests at a time |
+| **Retry Count** | 1 retry |
+| **Follow Redirects** | On |
+| **Success Status Codes** | 200, 201, 202, 204, 301, 302, 307, 308 |

@@ -5,6 +5,9 @@ on:
     branches: [main]
     paths:
       - "apps/docs/**"
+      - "config/**"
+      - "packages/config/**"
+      - "bun.lock"
       - ".github/workflows/deploy-docs.yml"
   workflow_dispatch:
 

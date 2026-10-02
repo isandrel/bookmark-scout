@@ -1,0 +1,55 @@
+---
+title: Save and organize
+description: Save the current page or a link into a folder, create folders, move items with drag and drop, sort the tree, and delete with an undo.
+---
+
+## Save the page you are on
+
+<Steps>
+<Step>
+Open the popup or the side panel on the page you want to keep.
+</Step>
+<Step>
+Hover the folder you want and click **Add current page**. With the keyboard, move to the folder and press `Enter`.
+</Step>
+</Steps>
+
+The **Recent** panel lists recently used folders; click one to save the current page there. Turn it off, or change how many folders it shows, with **Recent Folders** and **Recent Folders Max** in [Settings](/settings).
+
+A page that is already in the folder is not saved twice; the message says it is already there.
+
+## Save a link with the right-click menu
+
+Right-click any link on a page and choose **Save bookmark to...**, then pick one of your recent folders or the Bookmarks Bar. **Bookmark Name Source** in Settings chooses whether the bookmark is named after the link text, the page title, or the link URL. Turn the menu off with **Context Menu** (both are on the **Data** tab).
+
+## Create folders
+
+Hover a folder in the popup or side panel and click **Add folder**, then type the name. New folders start with the **Default Folder Name** from Settings.
+
+## Move bookmarks and folders
+
+- **Drag and drop** in the popup or side panel. Dropping beside an item in another folder moves it into that folder. A folder cannot be moved into itself or one of its subfolders.
+- **Several at once** in the manager: select rows in the table, then use **Move to folder** and choose the destination. Items are added at the end of that folder.
+- **Reorder** in the manager: turn on **Browser order**, clear any column sort, then use the **Move up**, **Move down**, **Move to top**, and **Move to bottom** buttons on the row. They need the table to show one folder, so clear filters or check **Current folder only**.
+
+Reordering changes the browser's saved order. The popup shows that order only with the **Folders First** sort; date and alphabetical sorting keep re-sorting the list, and the confirmation says so.
+
+The popup and side panel refresh on their own when bookmarks change elsewhere, such as in the manager or in the browser's own bookmark UI.
+
+## Sort the tree
+
+Choose **Date Added**, **Alphabetical** (natural order, so `2` comes before `10`), or **Folders First** with **Sort Order** in Settings. Sorting changes only how Bookmark Scout shows the tree, never the browser's stored order. **Group by Folders** lists subfolders before bookmarks at each level of the popup and side panel.
+
+## Edit a bookmark
+
+In the manager, open a row's menu and choose **Edit** to change a bookmark's name and URL, or a folder's name. **View Details** shows the full path, dates, and ID, and is where you add **Tags** and a **Summary**.
+
+Tags and summaries are stored only in this browser's local extension storage. They are not synced, not searchable, and not included in bookmark exports. AI context exports can include them; see [Set up AI tools](/guides/ai-tools).
+
+## Delete and undo
+
+Delete a bookmark or folder from the popup, the side panel, or a manager row's menu, or select several rows in the manager and delete them together.
+
+- **Confirm Before Delete** is on by default and shows a dialog naming what will be removed. Turn it off on the **Behavior** tab of Settings to delete immediately.
+- Every deletion shows **Undo** for 10 seconds. Undo restores the item, everything inside it, and its saved tags and summaries. A restored item is recreated, so it gets a new date added.
+- Permanent folders such as the Bookmarks Bar cannot be edited or deleted.

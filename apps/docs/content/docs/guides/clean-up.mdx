@@ -1,0 +1,72 @@
+---
+title: Clean up duplicates and tracking URLs
+description: Remove duplicate bookmarks after a review, and strip tracking parameters such as utm_source from bookmark URLs with a preview first.
+---
+
+Both tools live in the **Tools** sidebar of the bookmarks manager, under **Maintenance**. In Chrome, open the browser's bookmarks page, then click **Show tools** in the manager's header if the sidebar is hidden.
+
+<Callout title="Firefox">
+The manager is not reachable in Firefox, so these tools are not available there.
+</Callout>
+
+## Remove duplicate bookmarks
+
+<Steps>
+<Step>
+In **Duplicate Cleaner**, click **Scan**. It always checks all bookmarks.
+</Step>
+<Step>
+Review the groups. Each group lists bookmarks that match, with the one that will stay marked **Keep**.
+</Step>
+<Step>
+Click **Remove duplicates** to delete the other copies in every group, or **Cancel** to change nothing.
+</Step>
+<Step>
+Changed your mind? Click **Undo** in the message within 10 seconds to restore what was removed.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+What counts as a duplicate is set on the **Maintenance** tab of [Settings](/settings):
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Match Strategy** | Normalized URL | Compare by **Exact URL**, **Normalized URL**, **Title + URL**, or **Title only** |
+| **Normalize www** | On | Treat `www.example.com` and `example.com` as the same host |
+| **Ignore Protocol** | On | Treat `http` and `https` versions as duplicates |
+| **Ignore Trailing Slash** | On | Treat URLs with and without a trailing `/` as duplicates |
+| **Keep Rule** | Oldest | Keep the **Oldest**, the **Newest**, or the **First found** bookmark in each group |
+| **Max Groups** | 500 | Most groups returned by one scan |
+
+Before removing anything, each group is checked again. If the bookmark marked **Keep** was deleted or now points elsewhere, the whole group is left untouched and the message says how many groups were skipped. With **Title only** matching, a warning appears when a group contains different URLs, because removing those copies deletes different pages.
+
+## Strip tracking parameters
+
+<Steps>
+<Step>
+In **URL Cleaner**, choose the current folder or all bookmarks in the scope menu, and click **Clean**.
+</Step>
+<Step>
+Review the preview of every URL that would change.
+</Step>
+<Step>
+Click **Apply Changes** to update them all, or close the dialog to change nothing.
+</Step>
+</Steps>
+
+If a bookmark changed after the preview, it is skipped and counted in the message. URL cleanup has no undo, so check the preview before applying.
+
+The rules are on the **Maintenance** tab of Settings:
+
+- **Remove Parameters**: parameters to strip. The default list is `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src`, and `si`.
+- **Preserve Parameters**: parameters that are never removed. Default: `id`, `page`, `q`, `p`, and `lang`.
+- **Deduplicate Query Parameters** (on by default) removes repeated parameters.
+- **Sort Query Parameters** (on by default) sorts the remaining parameters alphabetically.
+- **Remove Fragments** (off by default) also removes parts such as `#section`.
+
+## Related tools
+
+- [Find and repair dead links](/guides/dead-links) checks whether bookmarked pages still load.
+- **Privacy Scanner** (under **Security**) flags URLs that contain tokens, email addresses, UUIDs, or sensitive parameters (and titles, if **Scan Titles** is on), so you can edit or delete them yourself.
+- **Metadata Fetcher** (under **Metadata & Content**) suggests page titles from the live pages and applies only the ones you select. It uses the same website access as the dead link check.

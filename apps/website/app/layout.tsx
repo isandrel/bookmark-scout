@@ -1,69 +1,13 @@
 import type { Metadata } from "next";
-import Script from "next/script";
-import { Inter } from "next/font/google";
-import {
-    SITE_URL,
-    SITE_NAME,
-    SITE_DESCRIPTION,
-    SITE_META_TITLE,
-    AUTHOR,
-    UMAMI_ENABLED,
-    UMAMI_WEBSITE_ID,
-    UMAMI_SCRIPT_URL,
-} from "@bookmark-scout/config";
-import "./globals.css";
+import { SITE_URL, AUTHOR } from "@bookmark-scout/config";
 
-const inter = Inter({
-    variable: "--font-inter",
-    subsets: ["latin"],
-});
-
+// `<html>` and `<body>` are rendered by `app/[locale]/layout.tsx` so each locale
+// gets the correct `lang` attribute. This layout only holds metadata shared by every route.
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
-    title: {
-        default: `${SITE_NAME} | ${SITE_META_TITLE}`,
-        template: `%s | ${SITE_NAME}`,
-    },
-    description: SITE_DESCRIPTION,
-    keywords: [
-        "browser extension",
-        "bookmark manager",
-        "bookmark organizer",
-        "browser bookmarks",
-        "bookmark search",
-        "drag and drop bookmarks",
-        "bookmark folders",
-        "Chrome extension",
-        "Firefox addon",
-        "Edge extension",
-        "bookmark scout",
-    ],
     authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
     creator: AUTHOR.name,
     publisher: AUTHOR.name,
-    openGraph: {
-        type: "website",
-        locale: "en_US",
-        alternateLocale: ["ja_JP", "ko_KR"],
-        url: SITE_URL,
-        siteName: SITE_NAME,
-        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
-        description: SITE_DESCRIPTION,
-        images: [
-            {
-                url: "/icon.png",
-                width: 128,
-                height: 128,
-                alt: `${SITE_NAME} Icon`,
-            },
-        ],
-    },
-    twitter: {
-        card: "summary",
-        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
-        description: SITE_DESCRIPTION,
-        images: ["/icon.png"],
-    },
     robots: {
         index: true,
         follow: true,
@@ -88,21 +32,5 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" className="dark">
-            <head>
-                {UMAMI_ENABLED && (
-                    <Script
-                        defer
-                        src={UMAMI_SCRIPT_URL}
-                        data-website-id={UMAMI_WEBSITE_ID}
-                        strategy="afterInteractive"
-                    />
-                )}
-            </head>
-            <body className={`${inter.variable} font-sans antialiased`}>
-                {children}
-            </body>
-        </html>
-    );
+    return children;
 }

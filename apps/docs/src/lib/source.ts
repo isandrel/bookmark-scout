@@ -1,6 +1,8 @@
 import { docs } from "fumadocs-mdx:collections/server";
-import { type InferPageType, loader } from "fumadocs-core/source";
+import { DOCS_URL, GITHUB_URL } from "@bookmark-scout/config";
+import { type InferPageType, llms, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
+import { absolutizeLinks, resolveMdxForText } from "@/lib/mdx-text";
 
 // See https://fumadocs.dev/docs/headless/source-api for more info
 export const source = loader({
@@ -9,7 +11,13 @@ export const source = loader({
   plugins: [lucideIconsPlugin()],
 });
 
-export function getPageImage(page: InferPageType<typeof source>) {
+export type DocsPage = InferPageType<typeof source>;
+
+/** Where the MDX sources live in the repository, for "view on GitHub" links. */
+const CONTENT_BRANCH = "main";
+const CONTENT_DIR = "apps/docs/content/docs";
+
+export function getPageImage(page: DocsPage) {
   const segments = [...page.slugs, "image.png"];
 
   return {
@@ -18,10 +26,37 @@ export function getPageImage(page: InferPageType<typeof source>) {
   };
 }
 
-export async function getLLMText(page: InferPageType<typeof source>) {
+/** Static Markdown copy of a page, served by `app/llms.mdx/[[...slug]]/route.ts`. */
+export function getPageMarkdownUrl(page: DocsPage) {
+  const segments = [...page.slugs, "content.md"];
+
+  return {
+    segments,
+    url: `/llms.mdx/${segments.join("/")}`,
+  };
+}
+
+export function getPageSourceUrl(page: DocsPage): string {
+  return `${GITHUB_URL}/blob/${CONTENT_BRANCH}/${CONTENT_DIR}/${page.path}`;
+}
+
+export async function getLLMText(page: DocsPage): Promise<string> {
   const processed = await page.data.getText("processed");
 
-  return `# ${page.data.title}
+  return `# ${page.data.title} (${new URL(page.url, DOCS_URL).toString()})
 
-${processed}`;
+${resolveMdxForText(processed)}`;
+}
+
+export const docsLlms = llms(source, {
+  renderPage: getLLMText,
+});
+
+/**
+ * `llms.txt` with absolute links, so the index works when read outside this site, and
+ * the sidebar sections as `##` headings, as the llms.txt format expects.
+ */
+export async function getLLMIndex(): Promise<string> {
+  const index = await docsLlms.index();
+  return absolutizeLinks(index).replace(/^- \*\*(.+)\*\*$/gm, "## $1");
 }

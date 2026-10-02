@@ -1,0 +1,51 @@
+---
+title: Privacy
+description: What Bookmark Scout reads, what it stores, and when data leaves your browser. A summary of the privacy policy.
+---
+
+This is a summary. The full <SiteLink to="privacy">privacy policy</SiteLink> on the website is the one that applies; it took effect on <PrivacyEffectiveDate />.
+
+## In short
+
+- **No account and no server.** Bookmark Scout runs inside your browser. The developer receives nothing from the extension.
+- **No telemetry.** No analytics, crash reporting, or ads in the extension.
+- **AI is off until you turn it on**, and then requests go straight from your browser to the provider you chose.
+
+## What the extension reads
+
+- Your bookmarks, to show, search, edit, move, delete, import, and export them.
+- The title and URL of the active tab, so you can save the page you are on.
+- Site icons from the browser's own icon cache, in Chrome and Edge.
+
+It does not read the content of the pages you visit.
+
+## What it stores
+
+| Data | Where | Synced |
+| --- | --- | --- |
+| Settings, including whether AI is on and which provider and model you chose | Browser sync storage | Yes, through your browser account when browser sync is on |
+| Bookmark table layout in the manager | Browser sync storage | Same as settings |
+| AI provider settings: API key, Base URL, extra headers | Local storage on this device | No |
+| Tags, summaries, saved searches, recent folders, recent searches | Local storage on this device | No |
+
+Scan results from the Tools sidebar are kept only while their dialog is open. Uninstalling the extension removes what it stored; your bookmarks stay in the browser.
+
+## When data leaves your browser
+
+Only when you use one of these, and only to the place named:
+
+| Feature | Goes to | What is sent |
+| --- | --- | --- |
+| AI folder recommendations | The AI provider you configured | The current page's title and URL, and your folder names |
+| Auto-Tagging, Content Summarizer, AI Folder Reorganization | The AI provider you configured | Titles, URLs, and folder paths of the bookmarks in scope. No page content |
+| Check Dead Links, Metadata Fetcher | Each bookmarked website | A request for the page, without cookies, after you allow website access |
+
+A provider running on your own computer, such as Ollama, keeps AI requests on your machine. Exports, including **AI Context Packer**, are saved as files on your computer and uploaded nowhere; a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
+
+## This docs site
+
+The docs are a static site with no analytics, no accounts, and no cookies of their own. Fonts are served from this site, not from Google Fonts. The privacy policy names the hosting provider.
+
+## Questions
+
+Email <Contact role="privacy" /> with privacy questions or data requests. To report a security problem, email <Contact role="security" /> instead of opening a public issue.

@@ -1,0 +1,85 @@
+---
+title: FAQ and troubleshooting
+description: Answers to common questions about Bookmark Scout, and fixes for the problems people run into most.
+---
+
+## Questions
+
+### Is Bookmark Scout free?
+
+Yes. It is free and open source under the <License /> license, with no ads and no paid plan. If you turn on AI, your AI provider may charge for API use.
+
+### Do I need to use AI?
+
+No. Search, saving, organizing, cleanup, and import and export all work without it. AI stays off until you turn it on in [Settings](/settings#ai).
+
+### Does it send my bookmarks anywhere?
+
+Not to the developer: there is no Bookmark Scout server. Data leaves your browser only when you use an AI tool you turned on (it goes to your provider) or run a dead link check or title fetch (the bookmarked websites are requested). See [Privacy](/privacy).
+
+### Will it change my bookmarks without asking?
+
+No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Deleting asks for confirmation by default, and deletions and imports can be undone for 10 seconds.
+
+### Why is it not in the browser stores?
+
+<StoreAvailability />
+
+Each store reviews an extension before it goes live, and the listings are still being prepared. Until a store lists it, [install it from a GitHub release](/installation).
+
+### Does it work in Firefox?
+
+Yes, with fewer features. The popup with search, saving, and settings works. The bookmarks manager and everything in it, such as the cleanup tools, import and export, and saved searches, cannot be reached, because Firefox does not let extensions replace its bookmarks page. See [Browser support](/browser-support).
+
+### Why not Safari?
+
+Safari Web Extensions do not implement the `bookmarks` API that Bookmark Scout is built on.
+
+## Troubleshooting
+
+### Where is the bookmarks manager?
+
+In Chrome, open the browser's own bookmarks page, for example with `Ctrl+Shift+O` (`Cmd+Option+B` on macOS). Bookmark Scout replaces it with its manager. If the **Tools** sidebar is hidden, click **Show tools** in the manager's header.
+
+### Bookmark Scout disappeared from Firefox
+
+Firefox removes temporary add-ons when it restarts. Load it again from `about:debugging#/runtime/this-firefox`, as in [Install](/installation).
+
+### Site icons are missing
+
+Firefox has no icon API for extensions, so icons do not show there. In Chrome and Edge, check that **Show Favicons** is on in [Settings](/settings#appearance).
+
+### My API key was not saved
+
+A key that does not look like a key for the chosen provider is rejected and not saved, and a message says so. Check that **AI Provider** matches the key you pasted. See [Set up AI tools](/guides/ai-tools#turn-on-ai).
+
+### The dead link check says a working site needs a manual check
+
+Sites that ask you to sign in, limit request rates, block automated checks, or have a server error are listed under **Check manually**, because they often still work in a browser. Open the link to see. Only pages that are not found, refused, unknown hosts, and redirect loops count as **Confirmed dead**. See [Find and repair dead links](/guides/dead-links#read-the-results).
+
+### The console shows "Failed to load resource" during a scan
+
+Chrome logs one line for each failed request in the page's developer console. Extensions cannot suppress these lines, and they do not mean anything went wrong with the scan.
+
+### Reordering in the manager does not show in the popup
+
+The popup shows the browser's saved order only with the **Folders First** sort. **Date Added** and **Alphabetical** sorting keep re-sorting the list. Change **Sort Order** in [Settings](/settings#behavior).
+
+### Search says there are more matches than it shows
+
+Results stop at **Max Search Results** (20 by default). Refine the search, or raise the limit in [Settings](/settings#search).
+
+### My tags, summaries, or saved searches are missing on another computer
+
+They are stored only on the device where you made them, and are not synced or included in bookmark exports. Settings do sync, through your browser account, when browser sync is on.
+
+### I deleted something by mistake
+
+Click **Undo** in the message within 10 seconds. It restores the item, everything inside it, and its saved tags and summaries; a restored item gets a new date added. After the message closes, the deletion cannot be undone from Bookmark Scout.
+
+## Get help
+
+- The <SiteLink to="support">support page</SiteLink> on the website.
+- Report a bug or ask for a feature on <RepoLink path="/issues">GitHub</RepoLink>.
+- Email <Contact role="support" />.
+- Report a security problem privately to <Contact role="security" />, not in a public issue.

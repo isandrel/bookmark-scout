@@ -25,44 +25,44 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 
 ## Local repository map
 
-- `content/docs/`: documentation pages and frontmatter-backed MDX content
-- `src/app/`: docs site routes and application shell
-- `src/lib/`: source loading and helper logic
-- `mdx-components.tsx`: shared component mapping for MDX
+- `content/docs/`: documentation pages in MDX
+- `content/docs/meta.json`: page order and the sidebar sections (Get started, Guides, Reference, About, Contribute) as `---Name---` separators
+- `content/docs/guides/`: task guides, ordered by their own `meta.json`
+- `src/app/`: routes and the application shell (`layout.tsx`, `[[...slug]]/page.tsx`, `sitemap.ts`, `robots.ts`, `og/`)
+- `src/app/llms.txt/`, `src/app/llms-full.txt/`, `src/app/llms.mdx/`: the LLM index, the full text, and one static Markdown copy per page (used by the page actions)
+- `src/app/api/search/`: the static search index
+- `src/components/mdx/`: MDX components that read config (`Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, `PrivacyEffectiveDate`) and `Screenshot`
+- `src/components/home/`: the docs home's task finder
+- `src/lib/`: source loading (`source.ts`), link helpers (`links.ts`), site constants (`site.ts`), the page index (`doc-index.ts`), screenshots (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
+- `src/mdx-components.tsx`: component mapping for MDX; register new MDX components here
 - `source.config.ts`: MDX and collection configuration
-
-Do not edit generated artifacts under:
-
-- `.next/`
-- `out/`
-- `node_modules/`
+- `scripts/verify-build.ts`: checks the static export in `out/`
+- `DESIGN.md`: the docs theme and components
 
 ## Commands
 
-- dev server: `nx run docs:dev`
+- dev server: `nx run docs:dev` (or `bun run dev:docs` from the root)
+- type and generated-source check: `bun run types:check` (in `apps/docs`)
 - build: `nx run docs:build`
-
-Useful app-local command:
-
-- type and generated-source check: `bun run types:check`
+- verify the static export: `nx run docs:verify` (runs the build first) or `bun run verify` after a build
+- lint: `bunx biome check src scripts` (in `apps/docs`)
 
 ## Verification rules
 
 Minimum for most docs changes:
 
 - `nx run docs:build`
+- `nx run docs:verify`, which checks that the legacy URLs (`/`, `/installation`, `/features`, `/status`, `/contributing`) still exist, that every sitemap URL is on `DOCS_URL` and has an HTML file, that canonical and `og:image` URLs are absolute on `DOCS_URL`, that titles use the `DOCS_NAME` template, that `robots.txt` names the sitemap, that `llms.txt` and `llms-full.txt` have content, and that no HTML links to a local address
 
-Also consider:
-
-- `bun run types:check`
-
-when the task affects:
+Also run `bun run types:check` when the task affects:
 
 - MDX structure
 - source loading
 - docs app code
 - metadata generation
 - generated LLM text or derived content helpers
+
+For UI changes, also check 375px and 1280px in light and dark.
 
 ## Content guidance
 
@@ -84,8 +84,17 @@ Rules:
 - keep examples concise and runnable where possible
 - avoid ornamental formatting that makes maintenance harder
 
+### No hard-coded values
+
+- Never write URLs for the website, repository, releases, or stores, contact addresses, the license, or the privacy date as literals in MDX or app code. They come from `config/site.config.toml` through `@bookmark-scout/config`.
+- In MDX, use the config components: `<Contact role="support" />`, `<ReleaseLink />`, `<SiteLink to="privacy">...</SiteLink>`, `<RepoLink path="/issues">...</RepoLink>`, `<StoreListing browser="chrome" />`, `<StoreAvailability />`, `<License />`, `<PrivacyEffectiveDate />`.
+- A new config component needs three changes: the component in `src/components/mdx/`, its registration in `src/mdx-components.tsx`, and a Markdown replacement in `src/lib/mdx-text.ts` so LLM text stays readable.
+- Keep link and navigation lists as typed data in `src/lib/` (`site.ts`, `links.ts`), not inline in components.
+
 ### Linking and structure
 
+- add pages to the matching `meta.json`; never rename or move a page whose URL is listed under the legacy URLs above
+- use the Diátaxis split: guides are task steps, reference pages list facts, About pages explain
 - preserve existing internal linking conventions
 - keep new pages inside the current content organization unless a structural change is explicitly requested
 - avoid introducing new documentation taxonomy without a clear need
@@ -98,6 +107,10 @@ The content source is configured through:
 - `src/lib/source.ts`
 
 Be careful when editing these files because they affect page discovery, processing, and derived outputs such as LLM text.
+
+## Design
+
+Read `DESIGN.md` before any UI or theme work. Theme Fumadocs through the `--color-fd-*` variables in `src/app/global.css`; do not replace its layout or components. Shared brand rules are in the root `DESIGN.md`.
 
 ## App code guidance
 

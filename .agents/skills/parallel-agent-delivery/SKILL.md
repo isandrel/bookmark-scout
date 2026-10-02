@@ -28,7 +28,7 @@ bunx nx run extension:test:e2e
 - Each agent works in its **own git worktree and branch from `origin/main`** under `.claude/worktrees/`. Never edit the user's main checkout. If a worktree disappears mid-task, recreate it there.
 - Conventional Commits with the repository's emoji prefix (for example `🐛 fix(extension): ...`). No Co-Authored-By or "Generated with" attribution lines.
 - Open PRs with `.github/pull_request_template.md`, then `gh pr merge <n> --auto --squash`.
-- **Auto-merge only waits for required checks.** The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Analyze (javascript-typescript)`, and CodeQL, with strict up-to-date branches. Before this, PRs auto-merged with red or still-running E2E. If a required check is ever removed, stop relying on auto-merge.
+- **Auto-merge only waits for required checks.** The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Website and Docs`, `Analyze (javascript-typescript)`, and CodeQL, with strict up-to-date branches. Before this, PRs auto-merged with red or still-running E2E. If a required check is ever removed, stop relying on auto-merge.
 - BEHIND: `gh pr update-branch <n>`. DIRTY: merge `origin/main` into the branch, resolve (keep both sides' locale keys), re-verify, push. **Never force-push** a published branch.
 - Use `gh` for all GitHub operations; never browser automation.
 

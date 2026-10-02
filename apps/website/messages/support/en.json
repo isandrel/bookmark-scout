@@ -1,0 +1,95 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "Support",
+            "description": "Get help with Bookmark Scout: answers to common problems, how to report a bug, and where to email about support, privacy, and security."
+        },
+        "title": "Support",
+        "intro": "Most answers are in the docs and the FAQ. If something is broken, report it on GitHub. For anything you would rather not post in public, email us.",
+        "sections": {
+            "start-here": {
+                "title": "Start here",
+                "items": {
+                    "docs": {
+                        "title": "Read the docs",
+                        "body": "Installation for each browser, feature guides, and every setting explained."
+                    },
+                    "faq": {
+                        "title": "Check the FAQ",
+                        "body": "Short answers about where your data goes, whether you need AI, and what works in Firefox."
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "Common problems",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "Bookmark Scout disappears when I restart Firefox",
+                        "a": [
+                            "Until the Firefox Add-ons listing is live, Bookmark Scout runs in Firefox as a temporary add-on, and Firefox removes temporary add-ons when it restarts.",
+                            "Load it again after a restart: open <code>about:debugging#/runtime/this-firefox</code>, click Load Temporary Add-on, and select the <code>manifest.json</code> file in the extracted folder."
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "I can't find the bookmarks manager in Firefox",
+                        "a": [
+                            "Firefox does not let extensions replace its bookmarks page, so the Bookmark Scout manager and its Tools sidebar are not available there. The maintenance tools, import and export, saved searches, statistics, and the AI tools in the manager work in Chrome and Edge.",
+                            "In Firefox, use the toolbar popup to search, save pages, and manage folders."
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "Site icons are missing in Firefox",
+                        "a": [
+                            "This is expected. Bookmark Scout reads site icons from the browser's own icon cache, which Chrome and Edge share with extensions and Firefox does not."
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "Check Dead Links or Metadata Fetcher did not scan anything",
+                        "a": [
+                            "These tools need access to websites, which Bookmark Scout does not get at install. The browser asks the first time you run them, and if you decline, nothing is scanned.",
+                            "Run the tool again and allow access when the browser asks."
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "AI features are missing or do not respond",
+                        "a": [
+                            "AI features are off by default. Turn them on in Settings, under AI, choose a provider, and enter your API key. A local Ollama server needs no key.",
+                            "Click Verify Service to test the connection. The first time, the browser asks for access to that provider's site; allow it so the extension can reach the provider."
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "Report a bug",
+                "body": "Bug reports go to GitHub Issues, where anyone can follow the fix. Search the existing issues first, in case someone has already reported it.",
+                "button": "Open an issue on GitHub",
+                "includeTitle": "A useful report includes",
+                "include": {
+                    "browser": "Your browser and its version (Chrome, Edge, or Firefox).",
+                    "version": "The Bookmark Scout version, shown on your browser's extensions page.",
+                    "steps": "The steps that lead to the problem, starting from where you opened Bookmark Scout: the popup, side panel, or manager.",
+                    "result": "What you expected and what happened instead, including any error message.",
+                    "screenshot": "A screenshot if it helps, with private bookmarks hidden."
+                },
+                "privacyNote": "Issues are public. Never paste an API key, and leave out bookmark titles or URLs you do not want others to see."
+            },
+            "email": {
+                "title": "Email",
+                "channels": {
+                    "support": {
+                        "title": "Help with the extension",
+                        "body": "Questions about installing or using Bookmark Scout that you would rather not post in public."
+                    },
+                    "privacy": {
+                        "title": "Privacy questions and requests",
+                        "body": "Questions about how your data is handled. The <privacyPolicy>privacy policy</privacyPolicy> explains what the extension and the websites do with data."
+                    },
+                    "security": {
+                        "title": "Security vulnerabilities",
+                        "body": "Report vulnerabilities here privately, not in a public issue. See <securityPolicy>SECURITY.md</securityPolicy> and <securityTxt>security.txt</securityTxt>."
+                    }
+                }
+            }
+        }
+    }
+}

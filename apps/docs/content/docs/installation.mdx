@@ -1,85 +1,89 @@
 ---
-title: Installation
-description: How to install Bookmark Scout
+title: Install
+description: Install Bookmark Scout in Chrome, Microsoft Edge, or Firefox from a GitHub release.
 ---
 
-# Installation
+Bookmark Scout is free and open source. Each <RepoLink path="/releases">GitHub release</RepoLink> has one download per browser:
 
-## From GitHub Releases
+| Browser | File |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` or `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
 
-Download the latest release from [GitHub Releases](https://github.com/isandrel/bookmark-scout/releases).
+Download it from <ReleaseLink />, then follow the steps for your browser.
 
-Each release includes browser-specific assets:
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
 
-- `bookmark-scout-*-chrome.crx`
-- `bookmark-scout-*-chrome.zip`
-- `bookmark-scout-*-firefox.zip`
-- `bookmark-scout-*-edge.zip`
+<StoreListing browser="chrome" />
 
-### Chrome
+<Steps>
+<Step>
+Download `bookmark-scout-<version>-chrome.crx` or `bookmark-scout-<version>-chrome.zip`. If you use the ZIP, extract it to a folder you will keep, because Chrome loads the extension from that folder.
+</Step>
+<Step>
+Open `chrome://extensions/` and turn on **Developer mode** (top right).
+</Step>
+<Step>
+Drag the CRX file onto the page, or click **Load unpacked** and select the extracted folder.
+</Step>
+<Step>
+Pin Bookmark Scout to the toolbar from the puzzle-piece Extensions menu so the popup is one click away.
+</Step>
+</Steps>
 
-Use either the signed CRX or the ZIP archive:
+</Tab>
+<Tab value="Edge" id="edge">
 
-1. Download `bookmark-scout-*-chrome.crx` or `bookmark-scout-*-chrome.zip`
-2. Open `chrome://extensions/`
-3. Enable **Developer mode**
-4. Drag `bookmark-scout-*-chrome.crx` into the page, or extract the ZIP and click **Load unpacked**
-5. Select the extracted folder when using the ZIP
+<StoreListing browser="edge" />
 
-### Firefox
+<Steps>
+<Step>
+Download `bookmark-scout-<version>-edge.zip` and extract it to a folder you will keep.
+</Step>
+<Step>
+Open `edge://extensions/` and turn on **Developer mode**.
+</Step>
+<Step>
+Click **Load unpacked** and select the extracted folder.
+</Step>
+</Steps>
 
-1. Download `bookmark-scout-*-firefox.zip`
-2. Extract the archive
-3. Open `about:debugging#/runtime/this-firefox`
-4. Click **Load Temporary Add-on**
-5. Select the extracted `manifest.json` file
+</Tab>
+<Tab value="Firefox" id="firefox">
 
-### Edge
+<StoreListing browser="firefox" />
 
-1. Download `bookmark-scout-*-edge.zip`
-2. Open `edge://extensions/`
-3. Enable **Developer mode**
-4. Extract the archive
-5. Click **Load unpacked**
-6. Select the extracted folder
+<Steps>
+<Step>
+Download `bookmark-scout-<version>-firefox.zip` and extract it.
+</Step>
+<Step>
+Open `about:debugging#/runtime/this-firefox`.
+</Step>
+<Step>
+Click **Load Temporary Add-on** and select the extracted `manifest.json` file.
+</Step>
+</Steps>
 
-## From Source
+<Callout type="warn" title="Firefox limits">
+Firefox removes temporary add-ons when it restarts, so you load it again after each restart. Firefox also cannot replace its bookmarks page, so the bookmarks manager and everything in it (Tools, saved searches, import and export) has no link in the interface. The popup, search, saving, and settings work. See [Browser support](/browser-support).
+</Callout>
 
-```bash
-gh repo clone isandrel/bookmark-scout
-cd bookmark-scout
-bun install
-bun run build
-```
+</Tab>
+</Tabs>
 
-The source build writes browser outputs under `apps/extension/dist/`:
+## After installing
 
-- Chrome: `apps/extension/dist/chrome-mv3`
-- Firefox: `apps/extension/dist/firefox-mv2`
-- Edge: `apps/extension/dist/edge-mv3`
+- Click the Bookmark Scout icon to open the popup and search your bookmarks. Start with [Search and saved searches](/guides/search).
+- In Chrome, open the browser's bookmarks page (for example with `Ctrl+Shift+O`, or `Cmd+Option+B` on macOS) to reach the Bookmark Scout manager and its Tools sidebar.
+- Settings open in a tab from the extension's **Options** entry, for example by right-clicking the toolbar icon in Chrome. See [Settings](/settings).
 
-Use the matching output folder when loading the extension unpacked.
+## Updating
 
-## Development Commands
+Download the newer release from <ReleaseLink /> and repeat the steps for your browser.
 
-```bash
-# Chrome development server
-bun run dev
+## Building from source
 
-# Firefox development server
-bun run dev:firefox
-
-# Edge development server
-bun run dev:edge
-
-# Build all browser targets
-bun run build
-
-# Lint extension source
-bunx nx run extension:lint
-
-# Build Chrome, install Playwright Chromium, and run all extension tests
-bun run test
-```
-
-The command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs it on pushes and pull requests without manual browser setup. Network-dependent and AI provider flows are not yet covered by browser tests.
+If you want to build the extension yourself, follow [Contributing and development](/contributing#build-from-source).

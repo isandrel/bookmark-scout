@@ -1,13 +1,23 @@
+import { DOCS_NAME } from "@bookmark-scout/config";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
+  EditOnGitHub,
+  MarkdownCopyButton,
+  PageLastUpdate,
+  ViewOptionsPopover,
 } from "fumadocs-ui/layouts/docs/page";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPageImage, source } from "@/lib/source";
+import {
+  getPageImage,
+  getPageMarkdownUrl,
+  getPageSourceUrl,
+  source,
+} from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 
 export default async function Page(props: PageProps<"/[[...slug]]">) {
@@ -16,11 +26,21 @@ export default async function Page(props: PageProps<"/[[...slug]]">) {
   if (!page) notFound();
 
   const MDX = page.data.body;
+  const isHome = page.slugs.length === 0;
+  const markdownUrl = getPageMarkdownUrl(page).url;
+  const sourceUrl = getPageSourceUrl(page);
+  const { lastModified } = page.data;
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+      <DocsTitle>{isHome ? DOCS_NAME : page.data.title}</DocsTitle>
+      <DocsDescription className="mb-0">
+        {page.data.description}
+      </DocsDescription>
+      <div className="flex flex-row flex-wrap items-center gap-2 border-b border-fd-border pb-6">
+        <MarkdownCopyButton markdownUrl={markdownUrl} />
+        <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={sourceUrl} />
+      </div>
       <DocsBody>
         <MDX
           components={getMDXComponents({
@@ -29,6 +49,14 @@ export default async function Page(props: PageProps<"/[[...slug]]">) {
           })}
         />
       </DocsBody>
+      {isHome ? null : (
+        <div className="flex flex-row flex-wrap items-center justify-between gap-4">
+          <EditOnGitHub href={sourceUrl} />
+          {lastModified ? (
+            <PageLastUpdate date={new Date(lastModified)} />
+          ) : null}
+        </div>
+      )}
     </DocsPage>
   );
 }
@@ -44,10 +72,16 @@ export async function generateMetadata(
   const page = source.getPage(params.slug);
   if (!page) notFound();
 
+  const isHome = page.slugs.length === 0;
+
   return {
-    title: page.data.title,
+    title: isHome ? { absolute: DOCS_NAME } : page.data.title,
     description: page.data.description,
+    alternates: { canonical: page.url },
     openGraph: {
+      title: isHome ? DOCS_NAME : page.data.title,
+      description: page.data.description,
+      url: page.url,
       images: getPageImage(page).url,
     },
   };

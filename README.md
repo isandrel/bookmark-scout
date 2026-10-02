@@ -128,7 +128,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 - [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: not synced, not searchable, and not included in bookmark exports (AI context exports include them when enabled)
 - [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
-- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); these two jobs are not required checks yet. In Firefox, favicons do not load (no favicon API) and the manager opens only by its extension URL, because Firefox cannot replace the bookmarks page
+- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); both jobs are required checks. In Firefox, favicons do not load (no favicon API) and the manager opens only by its extension URL, because Firefox cannot replace the bookmarks page
 
 ### 🚧 Current Focus
 
