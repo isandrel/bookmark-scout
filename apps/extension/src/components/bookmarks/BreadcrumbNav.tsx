@@ -28,7 +28,7 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
       <button
         type="button"
         onClick={() => onNavigate(null)}
-        className="flex shrink-0 items-center gap-1 rounded px-2 py-1 transition-colors hover:bg-muted hover:text-foreground"
+        className="flex shrink-0 items-center gap-1 rounded-md px-2 py-1 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
       >
         <Home className="h-4 w-4" />
         <span className="hidden sm:inline">{t('bookmarks_root')}</span>
@@ -51,7 +51,7 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
               <button
                 type="button"
                 onClick={() => onNavigate(item.id)}
-                className="max-w-[150px] truncate rounded px-2 py-1 transition-colors hover:bg-muted hover:text-foreground"
+                className="max-w-[150px] truncate rounded-md px-2 py-1 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 {title}
               </button>
