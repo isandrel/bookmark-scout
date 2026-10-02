@@ -156,7 +156,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "이 웹사이트 bookmark-scout.com은 GitHub Pages에서 호스팅되는 정적 사이트입니다. <githubPages>GitHub 문서</githubPages>와 <githubPrivacy>GitHub 개인정보 보호 정책</githubPrivacy>에 설명된 대로, GitHub는 보안을 위해 모든 방문자의 IP 주소를 기록합니다."
+                        "text": "이 웹사이트 bookmark-scout.com은 Cloudflare Pages에서 호스팅되는 정적 사이트입니다. 사이트를 제공하기 위해 Cloudflare가 IP 주소를 포함한 요청을 <cloudflare>Cloudflare 개인정보 보호정책</cloudflare>에 따라 처리합니다."
                     },
                     {
                         "type": "p",
@@ -164,7 +164,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "문서 사이트 docs.bookmark-scout.com은 Cloudflare Pages에서 호스팅되며 분석 도구를 불러오지 않습니다. 사이트를 제공하기 위해 Cloudflare가 IP 주소를 포함한 요청을 <cloudflare>Cloudflare 개인정보 보호정책</cloudflare>에 따라 처리합니다."
+                        "text": "문서 사이트 docs.bookmark-scout.com도 Cloudflare Pages에서 호스팅되며 분석 도구를 불러오지 않습니다."
                     },
                     {
                         "type": "p",

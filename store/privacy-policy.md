@@ -74,11 +74,11 @@ Each permission is explained in the [permission list in the README](https://gith
 
 ## This website and the docs site
 
-This website, bookmark-scout.com, is a static site hosted on GitHub Pages. GitHub logs the IP address of every visitor for security purposes, as described in [GitHub's documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection) and the [GitHub General Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
+This website, bookmark-scout.com, is a static site hosted on Cloudflare Pages. Cloudflare processes requests to deliver the site, including your IP address, under the [Cloudflare privacy policy](https://www.cloudflare.com/privacypolicy/).
 
 This website counts visits with [Umami Cloud](https://umami.is/), which works without cookies. Umami records the page address and title, the referring site, your browser, operating system, device type, screen size, language, and approximate location (country, region, and city). It uses your IP address to work out these values but does not store it. It groups page views into sessions with a hash whose salt changes at the start of every month, and it does not track you across other websites. Details are in [Umami's documentation](https://docs.umami.is/docs/metric-definitions).
 
-The documentation site, docs.bookmark-scout.com, is hosted on Cloudflare Pages and does not load any analytics. Cloudflare processes requests to deliver the site, including your IP address, under the [Cloudflare privacy policy](https://www.cloudflare.com/privacypolicy/).
+The documentation site, docs.bookmark-scout.com, is also hosted on Cloudflare Pages and does not load any analytics.
 
 Neither site has accounts or ads. Both serve their fonts themselves, so your browser does not contact Google Fonts.
 

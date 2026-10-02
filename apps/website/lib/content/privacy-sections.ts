@@ -31,10 +31,6 @@ export const PRIVACY_LINKS = {
     securityPolicy: `${GITHUB_URL}/blob/main/SECURITY.md`,
     source: GITHUB_URL,
     license: LICENSE.url,
-    githubPages:
-        "https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection",
-    githubPrivacy:
-        "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
     umami: "https://umami.is/",
     umamiDocs: "https://docs.umami.is/docs/metric-definitions",
     cloudflare: "https://www.cloudflare.com/privacypolicy/",
