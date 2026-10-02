@@ -3718,5 +3718,93 @@
     "tools_importUndoneDesc": {
         "message": "제거한 최상위 항목: $1. 변경되었거나 제거할 수 없어 유지한 항목: $2.",
         "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
+    },
+    "shortcuts_openSavedSearches": {
+        "message": "저장된 검색 열기",
+        "description": "Keyboard shortcut description: s opens the saved searches menu"
+    },
+    "savedSearches_button": {
+        "message": "저장된 검색",
+        "description": "Manager toolbar button and menu heading for saved searches (smart views)"
+    },
+    "savedSearches_buttonTitle": {
+        "message": "필터 조합을 저장하고 다시 엽니다 (s)",
+        "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
+    },
+    "savedSearches_description": {
+        "message": "북마크가 아니라 현재 필터, 정렬, 폴더 범위를 저장하므로 결과는 항상 현재 북마크를 기준으로 합니다. 이 기기에만 저장됩니다.",
+        "description": "Explanation at the top of the saved searches menu"
+    },
+    "savedSearches_nameLabel": {
+        "message": "현재 검색 이름",
+        "description": "Accessible label of the input that names a new saved search"
+    },
+    "savedSearches_namePlaceholder": {
+        "message": "이 검색의 이름 입력",
+        "description": "Placeholder of the input that names a new saved search"
+    },
+    "savedSearches_save": {
+        "message": "저장",
+        "description": "Button that saves a new saved search or a new name"
+    },
+    "savedSearches_saveHint": {
+        "message": "저장된 검색을 열면 현재 필터와 정렬이 바뀝니다.",
+        "description": "Hint under the saved search name input when the current search can be saved"
+    },
+    "savedSearches_needsFilter": {
+        "message": "검색을 저장하려면 제목, URL, 유형, 폴더, 도메인 또는 날짜 필터를 추가하세요.",
+        "description": "Hint shown when there is nothing to save because no filter is active"
+    },
+    "savedSearches_empty": {
+        "message": "아직 저장된 검색이 없습니다.",
+        "description": "Shown in the saved searches menu when none are saved"
+    },
+    "savedSearches_listLabel": {
+        "message": "저장된 검색 목록",
+        "description": "Accessible name of the list of saved searches"
+    },
+    "savedSearches_rename": {
+        "message": "\"$1\" 이름 바꾸기",
+        "description": "Accessible name of the button that renames a saved search; $1 is its name"
+    },
+    "savedSearches_renameLabel": {
+        "message": "\"$1\"의 새 이름",
+        "description": "Accessible label of the input for a saved search new name; $1 is the current name"
+    },
+    "savedSearches_delete": {
+        "message": "\"$1\" 삭제",
+        "description": "Accessible name of the button that deletes a saved search; $1 is its name"
+    },
+    "savedSearches_saved": {
+        "message": "\"$1\" 검색을 저장했습니다",
+        "description": "Toast after saving a search; $1 is its name"
+    },
+    "savedSearches_deleted": {
+        "message": "저장된 검색 \"$1\"을(를) 삭제했습니다",
+        "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
+    },
+    "savedSearches_missingFoldersTitle": {
+        "message": "일부 폴더가 더 이상 없습니다",
+        "description": "Toast title when an opened saved search names folders that no longer exist"
+    },
+    "savedSearches_missingFolders": {
+        "message": "삭제되어 건너뛴 폴더: $1. 나머지 필터는 그대로 적용됩니다.",
+        "description": "Toast description; $1 is how many folders of the saved search were skipped"
+    },
+    "savedSearches_errorEmptyName": {
+        "message": "이름을 입력하세요.",
+        "description": "Error when a saved search name is empty"
+    },
+    "savedSearches_errorDuplicateName": {
+        "message": "같은 이름의 저장된 검색이 이미 있습니다.",
+        "description": "Error when another saved search already uses the name"
+    },
+    "savedSearches_errorLimit": {
+        "message": "검색은 최대 $1개까지 저장할 수 있습니다. 새로 저장하려면 하나를 삭제하세요.",
+        "description": "Error when the saved search limit is reached; $1 is the limit"
+    },
+    "savedSearches_errorGeneric": {
+        "message": "이 검색을 저장할 수 없습니다.",
+        "description": "Error when a saved search could not be saved for another reason"
     }
 }
