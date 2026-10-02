@@ -76,7 +76,7 @@
 
 ### ✅ 구현됨
 
-- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 프로바이더로 구동되는 스마트 폴더 제안. 새 폴더 제안은 검토 대화상자에서 확인하며, 확정하면 없는 폴더를 만들고 페이지를 저장
+- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 프로바이더로 구동되는 스마트 폴더 제안. 새 폴더 제안은 검토 대화상자에서 확인하며, 확정하면 없는 폴더를 만들고 페이지를 저장
 - [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 빠르게 검색
 - [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 정리
 - [x] ⚡ **빠른 추가** — 원클릭으로 원하는 폴더에 저장
@@ -108,7 +108,7 @@
 > AI 추천과 AI 도구는 **기본적으로 비활성화**되어 있으며 수동으로 활성화해야 합니다:
 >
 > 1. **설정 → AI** 탭으로 이동
-> 2. AI 기능을 활성화하고 선호하는 프로바이더 선택 (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 엔드포인트)
+> 2. AI 기능을 활성화하고 선호하는 프로바이더 선택 (OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 엔드포인트)
 > 3. 선택한 프로바이더가 요구하는 경우 자신의 API 키 입력
 >
 > ⚠️ **참고:** AI 기능은 북마크 제목, URL, 폴더 경로, 선택한 북마크 컨텍스트를 설정된 프로바이더로 전송할 수 있습니다. 프로바이더에 따라 API 비용이 발생할 수 있습니다. 결과는 실험적이므로 파괴적인 정리 변경을 적용하기 전에 검토하세요.

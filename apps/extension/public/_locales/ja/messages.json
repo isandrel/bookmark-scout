@@ -4206,5 +4206,85 @@
     "settings_siteIconsMaxCacheKbDesc": {
         "message": "このデバイスに保存するアイコンの合計サイズ。古いものから削除されます",
         "description": "Site icons storage limit description"
+    },
+    "ai_connErrorInvalidKey": {
+        "message": "API キーが拒否されました。キーが正しく、有効であることを確認してください。",
+        "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorForbidden": {
+        "message": "アクセスが拒否されました。キーの権限とプロジェクトを確認してください。",
+        "description": "Provider connection error: 403 from a remote provider"
+    },
+    "ai_connErrorNotFound": {
+        "message": "このアドレスから応答がありません。Base URL を確認してください。",
+        "description": "Provider connection error: 404, wrong Base URL"
+    },
+    "ai_connErrorRateLimited": {
+        "message": "サービスには接続できますが、リクエストが制限されています。しばらくしてから再試行してください。",
+        "description": "Provider connection error: 429"
+    },
+    "ai_connErrorOriginRejected": {
+        "message": "ローカルサーバーが拡張機能からのリクエストを拒否しました。Ollama の場合は OLLAMA_ORIGINS=chrome-extension://*,moz-extension://* を設定して再起動してください。LM Studio の場合は「Enable CORS」をオンにしてください。",
+        "description": "Provider connection error: 403 from a local server such as Ollama"
+    },
+    "ai_connErrorUnreachable": {
+        "message": "$1 に接続できませんでした。アドレスと接続を確認するか、ローカルサーバーを起動してください。",
+        "description": "Provider connection error: network failure; $1 is the host"
+    },
+    "ai_connErrorTimeout": {
+        "message": "$1 から 8 秒以内に応答がありませんでした。",
+        "description": "Provider connection error: timeout; $1 is the host"
+    },
+    "ai_connErrorNotApi": {
+        "message": "応答はありましたが、AI プロバイダーの API ではないようです。Base URL を確認してください。",
+        "description": "Provider connection error: response was not the expected JSON"
+    },
+    "ai_connErrorHttp": {
+        "message": "プロバイダーが HTTP $1 を返しました（$2）。",
+        "description": "Provider connection error: other HTTP status; $1 status, $2 host"
+    },
+    "error_aiModelListUnavailable": {
+        "message": "このプロバイダーにはモデル一覧がありません。モデル名またはデプロイ名を入力してください。",
+        "description": "Shown when refreshing models for a provider without a model list"
+    },
+    "toast_aiServiceRateLimited": {
+        "message": "$1 に接続でき、キーも受け付けられましたが、現在リクエストが制限されています。",
+        "description": "Verify result when the provider answered 429"
+    },
+    "toast_aiServiceModelMissing": {
+        "message": "$1 に接続しましたが、$2 はモデル一覧にありません。別のモデルを選んでください。",
+        "description": "Verify result when the selected model is not listed; $1 provider, $2 model"
+    },
+    "options_organization": {
+        "message": "組織 ID",
+        "description": "OpenAI organization field label"
+    },
+    "options_organizationDescription": {
+        "message": "任意。OpenAI-Organization ヘッダーとして送信されます。",
+        "description": "OpenAI organization field description"
+    },
+    "options_project": {
+        "message": "プロジェクト ID",
+        "description": "OpenAI project field label"
+    },
+    "options_projectDescription": {
+        "message": "任意。OpenAI-Project ヘッダーとして送信されます。",
+        "description": "OpenAI project field description"
+    },
+    "options_resourceName": {
+        "message": "リソース名",
+        "description": "Azure resource name field label"
+    },
+    "options_resourceNameDescription": {
+        "message": "https://<name>.openai.azure.com の <name> 部分です。Base URL を設定した場合はそちらが使われます。",
+        "description": "Azure resource name field description"
+    },
+    "options_apiVersion": {
+        "message": "API バージョン",
+        "description": "Azure API version field label"
+    },
+    "options_apiVersionDescription": {
+        "message": "任意。空欄の場合は v1 API を使います。",
+        "description": "Azure API version field description"
     }
 }

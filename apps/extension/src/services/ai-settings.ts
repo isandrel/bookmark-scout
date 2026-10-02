@@ -22,6 +22,7 @@ export async function buildAISettingsFromProvider(
     apiKey: stored.apiKey?.trim() || '',
     baseUrl: storedBaseUrl || getProviderBaseUrl(provider),
     extraHeaders: parseExtraHeaders(stored.extraHeaders),
+    providerOptions: pickProviderOptions(provider, stored.options),
   };
 
   if (providerRequiresApiKey(provider) && !settings.apiKey) {
@@ -29,6 +30,19 @@ export async function buildAISettingsFromProvider(
   }
 
   return settings;
+}
+
+/** Only the extra fields this provider declares, trimmed, with empty values dropped. */
+function pickProviderOptions(
+  provider: AIProvider,
+  options: StoredAIProviderConfig['options'],
+): AISettings['providerOptions'] {
+  const picked: NonNullable<AISettings['providerOptions']> = {};
+  for (const field of getProviderExtraFields(provider)) {
+    const value = options?.[field]?.trim();
+    if (value) picked[field] = value;
+  }
+  return Object.keys(picked).length > 0 ? picked : undefined;
 }
 
 function parseExtraHeaders(rawHeaders?: string) {
@@ -94,20 +108,20 @@ export async function requestProviderHostAccess(baseUrl: string | undefined): Pr
   }
 }
 
-/** Default endpoints of native SDK providers, which have no base_url in the TOML config. */
-const nativeProviderEndpoints: Partial<Record<AIProvider, string>> = {
-  openai: 'https://api.openai.com/v1',
-  anthropic: 'https://api.anthropic.com/v1',
-  google: 'https://generativelanguage.googleapis.com/v1beta',
-  groq: 'https://api.groq.com/openai/v1',
-  mistral: 'https://api.mistral.ai/v1',
-  deepseek: 'https://api.deepseek.com/v1',
-};
-
-/** The endpoint a provider request will reach: the configured Base URL, else the default. */
+/**
+ * The endpoint a provider request will reach: the configured Base URL, else the provider's default
+ * from settings.default.toml. Azure builds its default from the resource name.
+ */
 export function getProviderEndpoint(
   provider: AIProvider,
   baseUrl: string | undefined,
+  options?: AISettings['providerOptions'],
 ): string | undefined {
-  return baseUrl?.trim() || getProviderBaseUrl(provider) || nativeProviderEndpoints[provider];
+  const configured = baseUrl?.trim();
+  if (configured) return configured;
+  const resourceName = options?.resourceName?.trim();
+  if (provider === 'azure' && resourceName) {
+    return `https://${encodeURIComponent(resourceName)}.openai.azure.com/openai/v1`;
+  }
+  return getProviderBaseUrl(provider);
 }

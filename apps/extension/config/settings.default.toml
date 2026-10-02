@@ -91,6 +91,8 @@ provider_kind       = "native"
 requires_api_key    = true
 api_key_pattern     = "^sk-"
 api_key_placeholder = "sk-..."
+base_url            = "https://api.openai.com/v1"
+extra_fields        = ["organization", "project"]
 
 [[ai.providers.openai.models]]
 id          = "gpt-4o-mini"
@@ -134,6 +136,8 @@ provider_kind       = "native"
 requires_api_key    = true
 api_key_pattern     = "^sk-ant-"
 api_key_placeholder = "sk-ant-..."
+base_url            = "https://api.anthropic.com/v1"
+model_list          = "anthropic"
 
 [[ai.providers.anthropic.models]]
 id          = "claude-sonnet-4-20250514"
@@ -166,6 +170,8 @@ default_model       = "gemini-2.5-flash"
 provider_kind       = "native"
 requires_api_key    = true
 api_key_placeholder = "AI..."
+base_url            = "https://generativelanguage.googleapis.com/v1beta"
+model_list          = "google"
 
 [[ai.providers.google.models]]
 id          = "gemini-2.5-flash"
@@ -194,6 +200,7 @@ provider_kind       = "native"
 requires_api_key    = true
 api_key_pattern     = "^gsk_"
 api_key_placeholder = "gsk_..."
+base_url            = "https://api.groq.com/openai/v1"
 
 [[ai.providers.groq.models]]
 id          = "llama-3.3-70b-versatile"
@@ -241,6 +248,7 @@ default_model       = "mistral-large-latest"
 provider_kind       = "native"
 requires_api_key    = true
 api_key_placeholder = "..."
+base_url            = "https://api.mistral.ai/v1"
 
 [[ai.providers.mistral.models]]
 id          = "mistral-large-latest"
@@ -283,6 +291,7 @@ default_model       = "deepseek-chat"
 provider_kind       = "native"
 requires_api_key    = true
 api_key_placeholder = "sk-..."
+base_url            = "https://api.deepseek.com/v1"
 
 [[ai.providers.deepseek.models]]
 id          = "deepseek-chat"
@@ -293,6 +302,41 @@ description = "General Chat"
 id          = "deepseek-reasoner"
 name        = "DeepSeek R1"
 description = "Reasoning"
+
+[ai.providers.xai]
+name                = "xAI"
+default_model       = "grok-4.3"
+provider_kind       = "native"
+requires_api_key    = true
+base_url            = "https://api.x.ai/v1"
+api_key_pattern     = "^xai-"
+api_key_placeholder = "xai-..."
+
+[[ai.providers.xai.models]]
+id          = "grok-4.3"
+name        = "Grok 4.3"
+description = "Cost-effective"
+
+[[ai.providers.xai.models]]
+id          = "grok-4.7"
+name        = "Grok 4.7"
+description = "Most capable"
+
+# Azure lists base models, not your deployments, so there is no model list: enter the deployment
+# name as the custom model.
+[ai.providers.azure]
+name                  = "Azure OpenAI"
+default_model         = "gpt-4o-mini"
+provider_kind         = "native"
+requires_api_key      = true
+supports_custom_model = true
+model_list            = "none"
+extra_fields          = ["resourceName", "apiVersion"]
+api_key_placeholder   = "Azure API key"
+
+[[ai.providers.azure.models]]
+id          = "gpt-4o-mini"
+name        = "gpt-4o-mini (deployment name)"
 
 [ai.providers.openrouter]
 name                = "OpenRouter"
@@ -361,6 +405,7 @@ requires_api_key      = false
 base_url              = "http://localhost:11434/api"
 supports_custom_model = true
 api_key_placeholder   = "(Optional)"
+model_list            = "ollama"
 
 [[ai.providers.ollama.models]]
 id          = "llama3"

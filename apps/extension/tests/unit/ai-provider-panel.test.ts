@@ -27,6 +27,8 @@ describe('AI provider panel search fields', () => {
     expect(getAIProviderPanelFields('openai').map(({ field }) => field)).toEqual([
       'apiKey',
       'baseUrl',
+      'organization',
+      'project',
       'extraHeaders',
     ]);
   });

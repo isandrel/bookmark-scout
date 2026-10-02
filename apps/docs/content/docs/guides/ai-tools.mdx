@@ -25,7 +25,7 @@ Choose an **AI Provider**, then an **AI Model**.
 Enter your **API Key** if the provider needs one. It is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
 </Step>
 <Step>
-Optional: click **Verify Service** to send a test request, or **Refresh Models** to load the provider's model list. The browser asks for access to that one provider's address the first time.
+Optional: click **Refresh Models** to load the provider's current model list, or **Verify Service** to check that the provider is reachable, accepts the key, and offers the chosen model. Both read the provider's model list, which costs nothing; Verify only sends a short test prompt to providers without a list, such as Azure OpenAI. The browser asks for access to that one provider's address the first time. A refreshed list is kept for the model picker until you refresh again.
 </Step>
 </Steps>
 
@@ -37,18 +37,31 @@ Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON
 
 | Provider | API key | Notes |
 | --- | --- | --- |
-| OpenAI | Required | |
+| OpenAI | Required | Optional **Organization ID** and **Project ID** |
 | Anthropic | Required | |
 | Google | Required | |
 | Groq | Required | |
 | Mistral AI | Required | |
 | DeepSeek | Required | |
+| xAI | Required | |
+| Azure OpenAI | Required | Set **Resource name** (or a **Base URL**) and enter your deployment name as **Custom Model**. Azure has no deployment list, so **Refresh Models** is not shown. |
 | OpenRouter | Required | |
 | Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
 | CLIProxyAPI | Optional | Default address `http://localhost:8317/v1` |
 | Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
 
 **Base URL** overrides the provider's address for every request, for example to use a proxy. It must start with `http://` or `https://`. **Extra Headers JSON** adds headers to every request, and **Custom Model** sets a model ID for providers that accept any model name.
+
+### Local servers
+
+Local servers must accept requests from the extension:
+
+- **Ollama:** set `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` and restart Ollama. Without it, Ollama answers 403 and Verify says the server refused the extension.
+- **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`, then use **Custom Provider** with the Base URL `http://localhost:1234/v1`.
+
+### When a check fails
+
+Verify and Refresh name the likely cause: a rejected key (401, or 400 from Google and xAI), a wrong Base URL (404), a provider that is rate-limiting requests (429, which still means the key works), a server that refused the extension's origin, no answer within 8 seconds, or an address that does not serve a provider API.
 
 ## What each tool sends
 

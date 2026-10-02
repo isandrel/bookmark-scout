@@ -4206,5 +4206,85 @@
     "settings_siteIconsMaxCacheKbDesc": {
         "message": "이 기기에 저장하는 아이콘의 총 크기이며, 오래된 것부터 삭제됩니다",
         "description": "Site icons storage limit description"
+    },
+    "ai_connErrorInvalidKey": {
+        "message": "제공업체가 API 키를 거부했습니다. 키가 올바르고 유효한지 확인하세요.",
+        "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorForbidden": {
+        "message": "액세스가 거부되었습니다. 키의 권한과 프로젝트를 확인하세요.",
+        "description": "Provider connection error: 403 from a remote provider"
+    },
+    "ai_connErrorNotFound": {
+        "message": "이 주소에서 응답이 없습니다. Base URL을 확인하세요.",
+        "description": "Provider connection error: 404, wrong Base URL"
+    },
+    "ai_connErrorRateLimited": {
+        "message": "서비스에 연결되지만 요청이 제한되고 있습니다. 잠시 후 다시 시도하세요.",
+        "description": "Provider connection error: 429"
+    },
+    "ai_connErrorOriginRejected": {
+        "message": "로컬 서버가 확장 프로그램의 요청을 거부했습니다. Ollama는 OLLAMA_ORIGINS=chrome-extension://*,moz-extension://* 를 설정한 뒤 다시 시작하세요. LM Studio는 'Enable CORS'를 켜세요.",
+        "description": "Provider connection error: 403 from a local server such as Ollama"
+    },
+    "ai_connErrorUnreachable": {
+        "message": "$1에 연결할 수 없습니다. 주소와 연결을 확인하거나 로컬 서버를 시작하세요.",
+        "description": "Provider connection error: network failure; $1 is the host"
+    },
+    "ai_connErrorTimeout": {
+        "message": "$1이(가) 8초 안에 응답하지 않았습니다.",
+        "description": "Provider connection error: timeout; $1 is the host"
+    },
+    "ai_connErrorNotApi": {
+        "message": "응답은 있었지만 AI 제공업체 API가 아닌 것 같습니다. Base URL을 확인하세요.",
+        "description": "Provider connection error: response was not the expected JSON"
+    },
+    "ai_connErrorHttp": {
+        "message": "제공업체가 HTTP $1을(를) 반환했습니다($2).",
+        "description": "Provider connection error: other HTTP status; $1 status, $2 host"
+    },
+    "error_aiModelListUnavailable": {
+        "message": "이 제공업체에는 모델 목록이 없습니다. 모델 이름 또는 배포 이름을 입력하세요.",
+        "description": "Shown when refreshing models for a provider without a model list"
+    },
+    "toast_aiServiceRateLimited": {
+        "message": "$1에 연결되었고 키도 승인되었지만 현재 요청이 제한되고 있습니다.",
+        "description": "Verify result when the provider answered 429"
+    },
+    "toast_aiServiceModelMissing": {
+        "message": "$1에 연결했지만 $2은(는) 모델 목록에 없습니다. 다른 모델을 선택하세요.",
+        "description": "Verify result when the selected model is not listed; $1 provider, $2 model"
+    },
+    "options_organization": {
+        "message": "조직 ID",
+        "description": "OpenAI organization field label"
+    },
+    "options_organizationDescription": {
+        "message": "선택 사항. OpenAI-Organization 헤더로 전송됩니다.",
+        "description": "OpenAI organization field description"
+    },
+    "options_project": {
+        "message": "프로젝트 ID",
+        "description": "OpenAI project field label"
+    },
+    "options_projectDescription": {
+        "message": "선택 사항. OpenAI-Project 헤더로 전송됩니다.",
+        "description": "OpenAI project field description"
+    },
+    "options_resourceName": {
+        "message": "리소스 이름",
+        "description": "Azure resource name field label"
+    },
+    "options_resourceNameDescription": {
+        "message": "https://<name>.openai.azure.com 의 <name> 부분입니다. Base URL을 설정하면 그 값이 대신 사용됩니다.",
+        "description": "Azure resource name field description"
+    },
+    "options_apiVersion": {
+        "message": "API 버전",
+        "description": "Azure API version field label"
+    },
+    "options_apiVersionDescription": {
+        "message": "선택 사항. 비워 두면 v1 API를 사용합니다.",
+        "description": "Azure API version field description"
     }
 }

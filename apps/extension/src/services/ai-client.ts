@@ -3,13 +3,15 @@
  */
 
 import { createAnthropic } from '@ai-sdk/anthropic';
+import { createAzure } from '@ai-sdk/azure';
 import { createDeepSeek } from '@ai-sdk/deepseek';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createMistral } from '@ai-sdk/mistral';
 import { createOpenAI } from '@ai-sdk/openai';
+import { createXai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
-import { createOllama } from 'ollama-ai-provider';
+import { createOllama } from 'ollama-ai-provider-v2';
 
 export type AIProvider =
   | 'openai'
@@ -18,6 +20,8 @@ export type AIProvider =
   | 'groq'
   | 'mistral'
   | 'deepseek'
+  | 'xai'
+  | 'azure'
   | 'openrouter'
   | 'ollama'
   | 'cliproxyapi'
@@ -31,6 +35,8 @@ export type AISettings = {
   baseUrl?: string;
   customModel?: string;
   extraHeaders?: Record<string, string>;
+  /** Provider-specific connection fields such as OpenAI's organization or Azure's resource. */
+  providerOptions?: Partial<Record<AIProviderExtraField, string>>;
 };
 
 export type DetectedAIModel = {
@@ -90,67 +96,36 @@ export function validateAISettings(settings: AISettings): void {
   }
 }
 
-export async function verifyAIService(settings: AISettings): Promise<void> {
-  const model = createAIModel(settings);
-  await generateText({
-    model,
-    maxOutputTokens: 8,
-    prompt: 'Reply with exactly: ok',
-  });
-}
+export type AIServiceCheck = {
+  /** Models the provider listed; empty when it has no model list and a test prompt was used. */
+  models: DetectedAIModel[];
+  /** Whether the selected model is in the list; undefined when there was no list to check. */
+  modelListed?: boolean;
+  /** The provider rate-limited the check: it is reachable and the key is accepted. */
+  rateLimited?: boolean;
+};
 
-export async function detectAIModels(settings: AISettings): Promise<DetectedAIModel[]> {
-  const baseUrl = getModelListBaseUrl(settings);
-  if (!baseUrl) {
-    throw new Error('Model detection is not available for this provider. Use a custom model instead.');
+/**
+ * Checks that the provider is reachable and accepts the key by listing its models, which costs
+ * nothing, then whether the selected model is offered. Providers without a model list fall back
+ * to a one-word prompt.
+ */
+export async function verifyAIService(settings: AISettings): Promise<AIServiceCheck> {
+  if (getProviderModelListStyle(settings.provider) === 'none') {
+    const model = createAIModel(settings);
+    await generateText({ model, maxOutputTokens: 8, prompt: 'Reply with exactly: ok' });
+    return { models: [] };
   }
-
-  const url = new URL('models', baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
-  const headers: Record<string, string> = {
-    Accept: 'application/json',
-    ...settings.extraHeaders,
-  };
-
-  if (settings.apiKey) {
-    headers.Authorization = `Bearer ${settings.apiKey}`;
+  try {
+    const models = await listProviderModels(settings);
+    const modelId = settings.customModel?.trim() || settings.model;
+    return { models, modelListed: models.some((model) => model.id === modelId) };
+  } catch (error) {
+    if (error instanceof AIConnectionError && error.code === 'rate_limited') {
+      return { models: [], rateLimited: true };
+    }
+    throw error;
   }
-
-  if (settings.provider === 'anthropic') {
-    headers['x-api-key'] = settings.apiKey;
-    headers['anthropic-version'] = '2023-06-01';
-    delete headers.Authorization;
-  }
-
-  const response = await fetch(url, { headers });
-  if (!response.ok) {
-    throw new Error(`Model detection failed: ${response.status} ${response.statusText}`);
-  }
-
-  const payload = await response.json() as { data?: unknown };
-  const data = Array.isArray(payload.data) ? payload.data : [];
-
-  return data
-    .map((item) => {
-      if (!item || typeof item !== 'object' || !('id' in item)) {
-        return null;
-      }
-
-      const id = String(item.id);
-      return { id, name: id };
-    })
-    .filter((model): model is DetectedAIModel => model !== null);
-}
-
-function getModelListBaseUrl(settings: AISettings): string | undefined {
-  if (settings.provider === 'openai') {
-    return settings.baseUrl || 'https://api.openai.com/v1';
-  }
-
-  if (settings.provider === 'anthropic') {
-    return settings.baseUrl || 'https://api.anthropic.com/v1';
-  }
-
-  return settings.baseUrl || getProviderBaseUrl(settings.provider);
 }
 
 /**
@@ -165,15 +140,39 @@ function nativeProviderOptions(settings: AISettings) {
   };
 }
 
+const optionValue = (settings: AISettings, field: AIProviderExtraField) =>
+  settings.providerOptions?.[field]?.trim() || undefined;
+
 function createNativeModel(settings: AISettings, modelId: string) {
   switch (settings.provider) {
     case 'openai': {
-      const openai = createOpenAI(nativeProviderOptions(settings));
+      const openai = createOpenAI({
+        ...nativeProviderOptions(settings),
+        organization: optionValue(settings, 'organization'),
+        project: optionValue(settings, 'project'),
+      });
       return openai(modelId);
     }
     case 'anthropic': {
-      const anthropic = createAnthropic(nativeProviderOptions(settings));
+      const anthropic = createAnthropic({
+        ...nativeProviderOptions(settings),
+        // Without it, Anthropic rejects requests that come from a browser origin.
+        headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
+      });
       return anthropic(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'xai': {
+      const xai = createXai(nativeProviderOptions(settings));
+      return xai(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'azure': {
+      // The model id is the deployment name; a Base URL, when set, replaces the resource name.
+      const azure = createAzure({
+        ...nativeProviderOptions(settings),
+        resourceName: settings.baseUrl ? undefined : optionValue(settings, 'resourceName'),
+        apiVersion: optionValue(settings, 'apiVersion'),
+      });
+      return azure(modelId) as unknown as AnyLanguageModel;
     }
     case 'google': {
       const google = createGoogleGenerativeAI(nativeProviderOptions(settings));

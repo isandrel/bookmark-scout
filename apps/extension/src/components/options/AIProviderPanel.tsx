@@ -6,7 +6,39 @@
 import { Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-export type AIProviderPanelField = 'apiKey' | 'baseUrl' | 'customModel' | 'extraHeaders';
+export type AIProviderPanelField =
+  | 'apiKey'
+  | 'baseUrl'
+  | 'customModel'
+  | 'extraHeaders'
+  | AIProviderExtraField;
+
+/** Labels, descriptions, and placeholders of provider-specific connection fields. */
+const EXTRA_FIELD_COPY: Record<
+  AIProviderExtraField,
+  { label: MessageKey; description: MessageKey; placeholder: string }
+> = {
+  organization: {
+    label: 'options_organization',
+    description: 'options_organizationDescription',
+    placeholder: 'org-...',
+  },
+  project: {
+    label: 'options_project',
+    description: 'options_projectDescription',
+    placeholder: 'proj_...',
+  },
+  resourceName: {
+    label: 'options_resourceName',
+    description: 'options_resourceNameDescription',
+    placeholder: 'my-resource',
+  },
+  apiVersion: {
+    label: 'options_apiVersion',
+    description: 'options_apiVersionDescription',
+    placeholder: 'v1',
+  },
+};
 
 /** The panel fields shown for `provider`, with the text settings search matches against. */
 export function getAIProviderPanelFields(
@@ -27,6 +59,10 @@ export function getAIProviderPanelFields(
       field: 'customModel',
       text: [t('options_customModel'), t('options_customModelDescription')],
     },
+    ...getProviderExtraFields(provider).map((field) => ({
+      field,
+      text: [t(EXTRA_FIELD_COPY[field].label), t(EXTRA_FIELD_COPY[field].description)],
+    })),
     {
       field: 'extraHeaders',
       text: [t('options_extraHeaders'), t('options_extraHeadersDescription')],
@@ -40,7 +76,12 @@ export function getAIProviderPanelFields(
 type AIProviderPanelProps = {
   provider: AIProvider;
   model: string;
-  onModelsDetected: (provider: AIProvider, modelIds: string[]) => void;
+  /** `fromCache` marks a list restored from storage, which must not change the chosen model. */
+  onModelsDetected: (
+    provider: AIProvider,
+    modelIds: string[],
+    options?: { fromCache?: boolean },
+  ) => void;
   /** Limits the panel to these fields, e.g. settings search matches. Defaults to every field. */
   visibleFields?: AIProviderPanelField[];
 };
@@ -67,6 +108,9 @@ export function AIProviderPanel({
   const [baseUrl, setBaseUrl] = useState('');
   const [customModel, setCustomModel] = useState('');
   const [extraHeaders, setExtraHeaders] = useState('');
+  const [extraOptions, setExtraOptions] = useState<NonNullable<StoredAIProviderConfig['options']>>(
+    {},
+  );
   const [errors, setErrors] = useState<ProviderFieldErrors>({});
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
@@ -79,6 +123,10 @@ export function AIProviderPanel({
   baseUrlRef.current = baseUrl;
   customModelRef.current = customModel;
   extraHeadersRef.current = extraHeaders;
+  const extraOptionsRef = useRef(extraOptions);
+  extraOptionsRef.current = extraOptions;
+  const onModelsDetectedRef = useRef(onModelsDetected);
+  onModelsDetectedRef.current = onModelsDetected;
 
   // The stored values last shown, to tell untouched fields from ones being edited.
   const shownRef = useRef<StoredAIProviderConfig>({});
@@ -91,7 +139,7 @@ export function AIProviderPanel({
       const shown = shownRef.current;
       // A field the user is editing keeps their text; untouched fields follow the stored value.
       const follow = (
-        field: keyof StoredAIProviderConfig,
+        field: 'apiKey' | 'baseUrl' | 'customModel' | 'extraHeaders',
         setter: (value: string) => void,
         current: string,
       ) => {
@@ -101,11 +149,30 @@ export function AIProviderPanel({
       follow('baseUrl', setBaseUrl, baseUrlRef.current);
       follow('customModel', setCustomModel, customModelRef.current);
       follow('extraHeaders', setExtraHeaders, extraHeadersRef.current);
+      setExtraOptions((current) => {
+        const next = { ...current };
+        for (const field of getProviderExtraFields(provider)) {
+          const unchanged = (current[field] ?? '') === (shown.options?.[field] ?? '');
+          if (!keepEdits || unchanged) next[field] = stored.options?.[field] ?? '';
+        }
+        return next;
+      });
       setSavedApiKey(stored.apiKey ?? '');
       shownRef.current = { ...stored };
     };
-    void getStoredAIProviderConfig(provider).then((stored) => {
-      if (active) show(stored, false);
+    void getStoredAIProviderConfig(provider).then(async (stored) => {
+      if (!active) return;
+      show(stored, false);
+      // Offer the list fetched earlier from the same endpoint, without changing the chosen model.
+      const endpoint = getProviderEndpoint(provider, stored.baseUrl, stored.options);
+      const cached = await getCachedModelList(provider, endpoint);
+      if (active && cached?.models.length) {
+        onModelsDetectedRef.current(
+          provider,
+          cached.models.map((detected) => detected.id),
+          { fromCache: true },
+        );
+      }
     });
     // Another Options tab, or a reset, can change the stored values while this one is open.
     const unwatch = aiProviderConfigItem.watch((next) => {
@@ -163,8 +230,12 @@ export function AIProviderPanel({
       extraHeaders: headersError,
     }));
     // Save every valid field; an invalid one keeps its stored value and never blocks the rest.
+    const options = Object.fromEntries(
+      getProviderExtraFields(provider).map((field) => [field, extraOptions[field]?.trim() ?? '']),
+    );
     await saveStoredAIProviderConfig(provider, {
       customModel: customModel.trim(),
+      options,
       ...(baseUrlError ? {} : { baseUrl: trimmedBaseUrl }),
       ...(headersError ? {} : { extraHeaders: extraHeaders.trim() }),
     });
@@ -173,9 +244,11 @@ export function AIProviderPanel({
 
   const prepareRequest = async (): Promise<AISettings | null> => {
     // Ask for host access first, while the click still counts as a user gesture.
-    const endpoint = isValidProviderBaseUrl(baseUrl)
-      ? baseUrl.trim()
-      : getProviderEndpoint(provider, undefined);
+    const endpoint = getProviderEndpoint(
+      provider,
+      isValidProviderBaseUrl(baseUrl) ? baseUrl : undefined,
+      extraOptions,
+    );
     const accessRequest = requestProviderHostAccess(endpoint);
     const keyValid = await saveApiKey();
     const overridesValid = await saveOverrides();
@@ -184,17 +257,41 @@ export function AIProviderPanel({
     return buildAISettingsFromProvider(provider, model, true);
   };
 
+  /** Keep a fetched list for the model picker, here and after reloads. */
+  const rememberModels = async (settings: AISettings, models: DetectedAIModel[]) => {
+    const endpoint = getProviderEndpoint(provider, settings.baseUrl, settings.providerOptions);
+    if (endpoint) await saveCachedModelList(provider, { endpoint, models, fetchedAt: Date.now() });
+    onModelsDetected(
+      provider,
+      models.map((detected) => detected.id),
+    );
+  };
+
   const verifyConnection = async () => {
     setIsVerifying(true);
     try {
       const settings = await prepareRequest();
       if (!settings) return;
-      await verifyAIService(settings);
-      toast({
-        title: t('toast_aiServiceVerified'),
-        description: t('toast_aiServiceVerifiedDescription', providerName),
-        variant: 'success',
-      });
+      const check = await verifyAIService(settings);
+      if (check.models.length > 0) await rememberModels(settings, check.models);
+      const modelId = settings.customModel?.trim() || settings.model;
+      if (check.rateLimited) {
+        toast({
+          title: t('toast_aiServiceVerified'),
+          description: t('toast_aiServiceRateLimited', providerName),
+        });
+      } else if (check.modelListed === false) {
+        toast({
+          title: t('toast_aiServiceVerified'),
+          description: t('toast_aiServiceModelMissing', [providerName, modelId]),
+        });
+      } else {
+        toast({
+          title: t('toast_aiServiceVerified'),
+          description: t('toast_aiServiceVerifiedDescription', providerName),
+          variant: 'success',
+        });
+      }
     } catch (error) {
       toast({
         title: t('toast_aiServiceVerifyFailed'),
@@ -211,12 +308,9 @@ export function AIProviderPanel({
     try {
       const settings = await prepareRequest();
       if (!settings) return;
-      const models = await detectAIModels(settings);
+      const models = await listProviderModels(settings);
       if (models.length === 0) throw new Error(t('error_aiNoModels'));
-      onModelsDetected(
-        provider,
-        models.map((detected) => detected.id),
-      );
+      await rememberModels(settings, models);
       toast({
         title: t('toast_aiModelsRefreshed'),
         description: t('toast_aiModelsRefreshedDescription', [String(models.length), providerName]),
@@ -233,6 +327,9 @@ export function AIProviderPanel({
     }
   };
 
+  const hasModelList = getProviderModelListStyle(provider) !== 'none';
+  const extraFields = getProviderExtraFields(provider);
+
   const apiKeyDescription = providerRequiresApiKey(provider)
     ? t('options_apiKeyDescription')
     : t('options_apiKeyOptionalDescription', providerName);
@@ -240,11 +337,14 @@ export function AIProviderPanel({
   const isVisible = (field: AIProviderPanelField) =>
     !visibleFields || visibleFields.includes(field);
   const showEndpointFields =
-    isVisible('baseUrl') || isVisible('customModel') || isVisible('extraHeaders');
+    isVisible('baseUrl') ||
+    isVisible('customModel') ||
+    isVisible('extraHeaders') ||
+    extraFields.some(isVisible);
 
   const fieldError = (id: string, message?: string) =>
     message ? (
-      <p id={id} role="alert" className="text-sm text-destructive">
+      <p id={id} role="alert" className="text-sm text-destructive-text">
         {message}
       </p>
     ) : null;
@@ -343,6 +443,34 @@ export function AIProviderPanel({
             </>
           )}
 
+          {extraFields.filter(isVisible).map((field) => {
+            const copy = EXTRA_FIELD_COPY[field];
+            const id = `ai-option-${field}`;
+            return (
+              <div key={field} className="space-y-2">
+                <div className="space-y-1">
+                  <Label htmlFor={id} className="text-base font-medium">
+                    {t(copy.label)}
+                  </Label>
+                  <p id={`${id}-description`} className="text-sm text-muted-foreground">
+                    {t(copy.description)}
+                  </p>
+                </div>
+                <Input
+                  id={id}
+                  value={extraOptions[field] ?? ''}
+                  onChange={(event) =>
+                    setExtraOptions((current) => ({ ...current, [field]: event.target.value }))
+                  }
+                  onBlur={() => void saveOverrides()}
+                  aria-describedby={`${id}-description`}
+                  autoComplete="off"
+                  placeholder={copy.placeholder}
+                />
+              </div>
+            );
+          })}
+
           {isVisible('extraHeaders') && (
             <>
               <div className="space-y-1">
@@ -370,10 +498,17 @@ export function AIProviderPanel({
             </>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" onClick={refreshModels} disabled={isDetecting}>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              {isDetecting ? t('options_refreshingModels') : t('options_refreshModels')}
-            </Button>
+            {hasModelList && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={refreshModels}
+                disabled={isDetecting}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                {isDetecting ? t('options_refreshingModels') : t('options_refreshModels')}
+              </Button>
+            )}
             <Button
               type="button"
               variant="outline"
