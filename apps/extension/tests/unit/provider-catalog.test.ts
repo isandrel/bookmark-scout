@@ -6,6 +6,7 @@ import { settingsSchema } from '@/lib/settings-schema';
 import { createAIModel } from '@/services/ai-client';
 import {
   getAvailableProviders,
+  getProviderGroup,
   getProviderLogoUrl,
   getProviderBaseUrl,
   getProviderKind,
@@ -16,6 +17,7 @@ import {
 } from '@/services/ai-models';
 import { buildAISettingsFromProvider } from '@/services/ai-settings';
 import providerCatalog from '../../config/provider-catalog.json';
+import settingsToml from '../../config/settings.default.toml?raw';
 
 const mocks = vi.hoisted(() => ({
   chatModel: vi.fn((model: string) => ({ model })),
@@ -84,6 +86,38 @@ describe('bundled models.dev provider catalog', () => {
 
   it('accepts catalog provider ids in synced settings', () => {
     expect(settingsSchema.shape.aiProvider.parse('togetherai')).toBe('togetherai');
+  });
+});
+
+describe('local and custom presets', () => {
+  it.each([
+    ['omlx', 'http://localhost:8000/v1'],
+    ['lmstudio', 'http://localhost:1234/v1'],
+    ['llamacpp', 'http://localhost:8080/v1'],
+    ['vllm', 'http://localhost:8000/v1'],
+    ['localai', 'http://localhost:8080/v1'],
+    ['jan', 'http://localhost:1337/v1'],
+    ['koboldcpp', 'http://localhost:5001/v1'],
+    ['textgen', 'http://localhost:5000/v1'],
+    ['cliproxyapi', 'http://localhost:8317/v1'],
+    ['ollama', 'http://localhost:11434/api'],
+  ])('%s is a local preset at %s', (provider, baseUrl) => {
+    expect(getProviderGroup(provider)).toBe('local');
+    expect(getProviderBaseUrl(provider)).toBe(baseUrl);
+    expect(providerSupportsCustomModel(provider)).toBe(true);
+  });
+
+  it('writes local addresses as localhost, never 127.0.0.1', () => {
+    expect(settingsToml).not.toContain('127.0.0.1');
+    expect(JSON.stringify(providerCatalog)).not.toContain('127.0.0.1');
+  });
+
+  it('keeps hand-written OpenAI- and Anthropic-compatible providers', () => {
+    expect(getProviderGroup('custom')).toBe('custom');
+    expect(getProviderKind('custom')).toBe('openai_compatible');
+    expect(getProviderGroup('custom_anthropic')).toBe('custom');
+    expect(getProviderKind('custom_anthropic')).toBe('anthropic_compatible');
+    expect(getProviderModelListStyle('custom_anthropic')).toBe('anthropic');
   });
 });
 

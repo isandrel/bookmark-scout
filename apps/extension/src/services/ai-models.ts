@@ -28,7 +28,12 @@ export type AIProviderConfig = {
   doc_url?: string;
   /** `catalog` providers come from config/provider-catalog.json (models.dev), not the TOML. */
   source?: 'featured' | 'catalog';
+  /** Picker group for TOML providers; catalog providers are always `catalog`. */
+  group?: 'featured' | 'local' | 'custom';
 };
+
+/** Provider picker groups, in display order. */
+export type AIProviderGroup = 'featured' | 'local' | 'custom' | 'catalog';
 
 /** Provider-specific connection settings beyond the API key, Base URL, and headers. */
 export type AIProviderExtraField = 'organization' | 'project' | 'resourceName' | 'apiVersion';
@@ -165,4 +170,10 @@ const LOGO_ALIASES: Record<string, string> = { ollama: 'ollama-cloud' };
 export function getProviderLogoUrl(provider: AIProvider): string | undefined {
   const id = LOGO_ALIASES[provider] ?? provider;
   return logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
+}
+
+export function getProviderGroup(provider: AIProvider): AIProviderGroup {
+  const providerConfig = getProviderConfig(provider);
+  if (providerConfig?.source === 'catalog') return 'catalog';
+  return providerConfig?.group ?? 'featured';
 }

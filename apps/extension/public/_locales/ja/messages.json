@@ -4310,5 +4310,17 @@
     "options_providerDocs": {
         "message": "プロバイダーのドキュメント",
         "description": "Link to the selected provider documentation"
+    },
+    "settings_aiProviderGroupLocal": {
+        "message": "ローカルサーバー",
+        "description": "Provider picker group: servers on this computer"
+    },
+    "settings_aiProviderGroupCustom": {
+        "message": "カスタム",
+        "description": "Provider picker group: endpoints the user fills in by hand"
+    },
+    "settings_aiProviderCustomAnthropic": {
+        "message": "カスタムプロバイダー（Anthropic 互換）",
+        "description": "Name of the hand-written Anthropic-compatible provider"
     }
 }

@@ -48,7 +48,10 @@ Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON
 | OpenRouter | Required | |
 | Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
 | CLIProxyAPI | Usually required | Runs on your machine and answers with your own Claude, Gemini, or Codex accounts. Default address `http://localhost:8317/v1`; enter one of the keys under `api-keys` in its `config.yaml`, then **Refresh Models** to see the models your accounts offer. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Optional | Listed under **Local servers** with their default `localhost` addresses: oMLX and vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp and LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Click **Refresh Models** to see what the server has loaded. |
+| Jan | Required | Local API server at `http://localhost:1337/v1`; enter the key from Jan's API server settings |
 | Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
+| Custom Provider (Anthropic-compatible) | Optional | Any endpoint that speaks the Anthropic Messages API, set with **Base URL** |
 | About 200 more | Usually required | Listed under **More providers (models.dev)**, for example Together AI, Fireworks AI, Cerebras, DeepInfra, and LM Studio. They have no built-in model list: click **Refresh Models** or enter a **Custom Model**. |
 
 The **AI Provider** picker has a search box. The extra providers come from a copy of the open [models.dev](https://models.dev) catalog that ships with the extension, so choosing one sends nothing to models.dev; requests go only to the provider you pick.
@@ -60,7 +63,9 @@ The **AI Provider** picker has a search box. The extra providers come from a cop
 Local servers must accept requests from the extension:
 
 - **Ollama:** set `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` and restart Ollama. Without it, Ollama answers 403 and Verify says the server refused the extension.
-- **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`, then choose **LMStudio** under **More providers**.
+- **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`.
+- **LocalAI:** set an API key; its CSRF check rejects keyless requests from the browser.
+- **text-generation-webui:** start it with `--api`.
 - **CLIProxyAPI:** accepts the extension's requests as configured by default. Start it before you click **Verify Service**; if it is not running, Verify says it could not reach `localhost:8317`.
 
 ### When a check fails

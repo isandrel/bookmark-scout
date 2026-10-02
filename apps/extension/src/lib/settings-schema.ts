@@ -638,9 +638,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
         value: provider.id,
         label: getLocalizedProviderName(provider.id),
         iconUrl: getProviderLogoUrl(provider.id),
-        group: isCatalogProvider(provider.id)
-          ? t('settings_aiProviderGroupCatalog')
-          : t('settings_aiProviderGroupFeatured'),
+        group: t(providerGroupLabelKeys[getProviderGroup(provider.id)]),
       })),
     },
     aiModel: {
@@ -762,6 +760,14 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
 const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {
   ollama: 'settings_aiProviderOllama',
   custom: 'settings_aiProviderCustom',
+  custom_anthropic: 'settings_aiProviderCustomAnthropic',
+};
+
+const providerGroupLabelKeys: Record<AIProviderGroup, string> = {
+  featured: 'settings_aiProviderGroupFeatured',
+  local: 'settings_aiProviderGroupLocal',
+  custom: 'settings_aiProviderGroupCustom',
+  catalog: 'settings_aiProviderGroupCatalog',
 };
 
 /** Brand names stay as configured; generic provider names are translated. */

@@ -4310,5 +4310,17 @@
     "options_providerDocs": {
         "message": "Provider documentation",
         "description": "Link to the selected provider documentation"
+    },
+    "settings_aiProviderGroupLocal": {
+        "message": "Local servers",
+        "description": "Provider picker group: servers on this computer"
+    },
+    "settings_aiProviderGroupCustom": {
+        "message": "Custom",
+        "description": "Provider picker group: endpoints the user fills in by hand"
+    },
+    "settings_aiProviderCustomAnthropic": {
+        "message": "Custom Provider (Anthropic-compatible)",
+        "description": "Name of the hand-written Anthropic-compatible provider"
     }
 }
