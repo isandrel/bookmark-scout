@@ -27,6 +27,14 @@ jobs:
       - name: Run lint
         run: bunx nx run extension:lint
 
+      - name: Check generated READMEs match templates
+        run: |
+          bun run generate:readme
+          git diff --exit-code -- README.md translations/ || {
+            echo "::error::README files differ from templates/. Edit templates/*.md, run 'bun run generate:readme', and commit both."
+            exit 1
+          }
+
   build:
     name: Build Extension
     runs-on: ubuntu-latest
