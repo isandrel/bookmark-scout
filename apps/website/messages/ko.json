@@ -154,6 +154,10 @@
       "title": "전체 북마크 관리자",
       "description": "Chrome 기본 북마크 페이지를 폴더 트리, 탐색 경로, 테이블 기반 북마크 보기, 오른쪽 도구 패널이 있는 커스텀 관리자로 대체합니다."
     },
+    "savedSearches": {
+      "title": "저장된 검색",
+      "description": "관리자의 필터, 정렬, 폴더 범위를 이름 있는 스마트 보기로 저장합니다. 조건만 이 기기에 저장되므로 결과는 항상 현재 북마크를 반영합니다."
+    },
     "optionsPage": {
       "title": "옵션 페이지",
       "description": "외관, 검색, 동작, AI 프로바이더, AI 도구, 유지관리, 메타데이터, 보안, 분석, 데이터, 컨텍스트 메뉴 동작을 설정하세요."
@@ -196,7 +200,6 @@
     },
     "roadmap": {
       "title": "현재 집중 영역",
-      "savedSearches": "저장된 검색 — 검색과 스마트 북마크 보기 저장",
       "tests": "브라우저 테스트 — Firefox와 Edge에서 브라우저 테스트 실행",
       "storeDistribution": "스토어 배포 — Chrome Web Store, Firefox Add-ons, Edge Add-ons 등록 자료 정리"
     }

@@ -79,8 +79,14 @@ In the bookmarks manager, press `?` or the keyboard button in the header to see 
 | `Backspace` or `Alt+↑` | Go to the parent folder |
 | `j` / `k` | Move to the next or previous table row (a folder row, or a bookmark row's actions menu) |
 | `Enter` on a folder row | Open the folder |
+| `s` | Open saved searches |
 | `?` | Show the keyboard shortcuts |
 | `Esc` | Close a dialog or menu |
+
+### 🔖 Saved Searches
+Save the manager's current filters as a named smart view: the title and URL filters, the type, parent folder, domain, and date-added filters, the column sort, and, when **Current folder only** is on, that folder. Open **Saved searches** in the table toolbar (or press `s`), name the search, and save it. Opening a saved search replaces the current filters and sort, and returns to its folder when it was limited to one. The saved search you are looking at is checked in the list. Each entry can be renamed or deleted; a deletion can be undone from the message that follows.
+
+A saved search keeps only these filter definitions, never copies of bookmarks, so its results are worked out from your bookmarks every time and change as you add, edit, move, or delete bookmarks. If a folder it names was deleted, that folder is skipped, the other filters still apply, and a message says how many folders were skipped. Saved searches stay in this browser's local extension storage: they are not synced, because their filters can reveal bookmark contents and folder IDs differ between devices. Up to 50 can be kept.
 
 ### ↕️ Configurable Sorting
 Choose date added, natural alphabetical, or folders-first ordering in Settings. The selection applies to bookmark tables and nested folder views without changing the browser's stored bookmark order. In the popup and side panel, **Group by Folders** lists subfolders before bookmarks at each level and applies the sort order within each group; turn it off to mix folders and bookmarks in one sorted list.
@@ -127,7 +133,6 @@ Multi-language support: English, Japanese, Korean.
 
 ## 🚧 Roadmap
 
-- 🔖 Saved searches and smart bookmark views
 - 🏷️ Search, filter, sync, and export for saved tags and summaries
 - 🧪 Browser tests in Firefox and Edge, and automated context-menu and drag-and-drop flows
 - 🛒 Chrome Web Store, Firefox Add-ons, and Edge Add-ons listing polish
