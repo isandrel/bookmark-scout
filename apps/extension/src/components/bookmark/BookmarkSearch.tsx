@@ -10,6 +10,7 @@ import {
   History,
   Moon,
   Regex,
+  Search,
   Sparkles,
   Sun,
   WholeWord,
@@ -104,16 +105,20 @@ export function BookmarkSearch({
   };
 
   const optionButtonClass = (active: boolean) =>
-    `p-1 rounded transition-colors ${
+    `rounded-sm p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
       active
-        ? 'bg-primary/20 text-primary'
-        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+        ? 'bg-accent text-primary'
+        : 'text-muted-foreground hover:bg-card hover:text-foreground'
     }`;
 
   return (
-    <div className="p-3 border-b shrink-0">
-      <div className="flex items-center gap-2">
+    <div className="p-2 border-b shrink-0">
+      <div className="flex items-center gap-1">
         <div ref={containerRef} className="relative flex-1">
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          />
           <Input
             ref={inputRef}
             type="text"
@@ -147,7 +152,7 @@ export function BookmarkSearch({
               onCommitQuery?.(query);
             }}
             onKeyDown={handleKeyDown}
-            className="w-full h-8 text-sm search-input pr-[6.5rem]"
+            className="search-input h-10 w-full border-transparent bg-muted pl-8 pr-[6.5rem] text-sm focus-visible:border-input focus-visible:bg-card focus-visible:ring-offset-0"
           />
           {showHistory && (
             <div
@@ -181,7 +186,7 @@ export function BookmarkSearch({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') chooseHistoryEntry(entry);
                     }}
-                    className={`flex w-full cursor-pointer items-center gap-2 rounded px-2 py-1 text-left text-sm hover:bg-accent ${
+                    className={`flex w-full cursor-pointer items-center gap-2 rounded-sm px-2 py-1 text-left text-sm hover:bg-muted ${
                       index === activeHistoryIndex ? 'bg-accent' : ''
                     }`}
                   >
@@ -192,7 +197,13 @@ export function BookmarkSearch({
               </div>
             </div>
           )}
-          <div className="absolute right-1 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+            {!query && !isFocused && (
+              // The search box takes focus on open, so the hint shows once focus moves away.
+              <Kbd aria-hidden="true" className="mr-1">
+                /
+              </Kbd>
+            )}
             <button
               type="button"
               onMouseDown={keepInputFocus}
@@ -234,7 +245,7 @@ export function BookmarkSearch({
                   onQueryChange('');
                   inputRef?.current?.focus();
                 }}
-                className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 aria-label={t('search_clear')}
                 title={t('search_clear')}
               >
@@ -247,7 +258,7 @@ export function BookmarkSearch({
           <Button
             variant="ghost"
             size="icon"
-            className="shrink-0 h-8 w-8"
+            className="shrink-0"
             onClick={onToggleExpandAll}
             title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
             aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
@@ -262,7 +273,7 @@ export function BookmarkSearch({
         <Button
           variant="ghost"
           size="icon"
-          className="shrink-0 h-8 w-8"
+          className="shrink-0"
           onClick={toggleTheme}
           title={isDark ? t('action_lightMode') : t('action_darkMode')}
           aria-label={isDark ? t('action_lightMode') : t('action_darkMode')}
@@ -273,7 +284,7 @@ export function BookmarkSearch({
           <Button
             variant="ghost"
             size="icon"
-            className="shrink-0 h-8 w-8"
+            className="shrink-0"
             onClick={onAIRecommend}
             disabled={isAILoading}
             title={t('ai_folderRecommendation')}
@@ -284,7 +295,7 @@ export function BookmarkSearch({
         )}
       </div>
       {isInvalidRegex && (
-        <p role="alert" className="mt-1 px-1 text-xs text-destructive">
+        <p role="alert" className="mt-1 px-1 text-xs text-destructive-text">
           {t('search_invalidRegex')}
         </p>
       )}

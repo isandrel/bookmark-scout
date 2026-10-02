@@ -224,10 +224,10 @@ export function FolderItem({
       className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
     >
       {/* Actions sit beside the trigger, not inside it, so no button is nested in a button. */}
-      <div className="group relative flex items-center h-8 rounded-md hover:bg-accent focus-within:bg-accent folder-item transition-colors duration-150">
+      <div className="group folder-item relative flex h-8 items-center rounded-md transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
         <div className="flex-1 min-w-0">
           <AccordionTrigger
-            className="hover:no-underline py-1 px-2 h-8 rounded-md"
+            className="h-8 rounded-md px-2 py-1 hover:no-underline focus-visible:outline-none"
             data-folder-trigger={node.id}
             data-popup-tree-row="folder"
             data-can-save={canAddChildren || undefined}
@@ -243,7 +243,7 @@ export function FolderItem({
             >
               <Folder
                 data-slot="folder-icon"
-                className="w-4 h-4 mr-2 shrink-0 text-muted-foreground"
+                className="mr-2 size-4 shrink-0 text-muted-foreground group-focus-within:text-primary"
               />
               {node.title.trim() ? (
                 <HighlightedText
@@ -270,13 +270,12 @@ export function FolderItem({
         */}
         <div
           data-slot="folder-actions"
-          className="pointer-events-none absolute inset-y-0 right-0 flex items-center gap-0.5 rounded-r-md bg-accent px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [&>button]:pointer-events-auto"
+          className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center gap-0.5 rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100 [&>button]:pointer-events-auto [&>button]:hover:bg-card"
         >
           {hasSubfolders && (
             <Button
               variant="ghost"
-              size="icon"
-              className="h-6 w-6"
+              size="icon-xs"
               onClick={(e) => onToggleExpandAllChildren(node, e)}
               title={expandAllLabel}
               aria-label={expandAllLabel}
@@ -293,8 +292,8 @@ export function FolderItem({
             <>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-6 w-6 aria-disabled:pointer-events-none aria-disabled:opacity-50"
+                size="icon-xs"
+                className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!isAddingBookmark) onAddBookmark(node.id);
@@ -308,8 +307,7 @@ export function FolderItem({
               </Button>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-6 w-6"
+                size="icon-xs"
                 onClick={(e) => {
                   e.stopPropagation();
                   onAddFolder(node.id);
@@ -325,8 +323,8 @@ export function FolderItem({
           {canModify && (
             <Button
               variant="ghost"
-              size="icon"
-              className="h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+              size="icon-xs"
+              className="text-destructive-text hover:bg-destructive-wash hover:text-destructive-text"
               onClick={(e) => {
                 e.stopPropagation();
                 onDeleteFolder(node);

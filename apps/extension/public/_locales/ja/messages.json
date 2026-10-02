@@ -551,6 +551,26 @@
         "message": "最近",
         "description": "Recent folders panel title"
     },
+    "popup_hintLabel": {
+        "message": "キーボードショートカット",
+        "description": "Accessible name of the popup footer that lists keyboard shortcuts"
+    },
+    "popup_hintSearch": {
+        "message": "検索",
+        "description": "Popup footer: the / key focuses search"
+    },
+    "popup_hintMove": {
+        "message": "移動",
+        "description": "Popup footer: arrow up and down move between rows"
+    },
+    "popup_hintExpand": {
+        "message": "フォルダー",
+        "description": "Popup footer: arrow left and right close or open a folder"
+    },
+    "popup_hintEnter": {
+        "message": "開く",
+        "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
     "state_noRecentFolders": {
         "message": "最近のフォルダはありません",
         "description": "Empty state for recent folders"
