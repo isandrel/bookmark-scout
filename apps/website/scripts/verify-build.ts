@@ -11,6 +11,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { DEFAULT_LOCALE, LOCALES, SITE_URL, UMAMI_ENABLED, UMAMI_SCRIPT_URL } from "@bookmark-scout/config";
 import { INDEXABLE_ROUTES } from "../lib/content/routes";
+import { IMAGE_BYTE_BUDGET, IMAGE_FORMATS, IMAGE_SOURCE_DIRS, SCREENSHOT_WIDTHS, variantPath } from "../lib/images";
 
 const appRoot = resolve(import.meta.dir, "..");
 const outDir = join(appRoot, "out");
@@ -114,6 +115,26 @@ function checkSitemap() {
     }
 }
 
+/** Every PNG source must ship AVIF and WebP variants within the byte budget. */
+function checkOptimizedImages() {
+    for (const dir of IMAGE_SOURCE_DIRS) {
+        const sourceDir = join(outDir, dir);
+        if (!existsSync(sourceDir)) continue;
+        for (const file of readdirSync(sourceDir).filter((name) => name.endsWith(".png"))) {
+            for (const width of SCREENSHOT_WIDTHS) {
+                for (const format of IMAGE_FORMATS) {
+                    const variant = variantPath(`/${dir}/${file}`, width, format);
+                    const path = join(outDir, variant);
+                    if (!existsSync(path)) fail(`${variant}: missing optimized image`);
+                    else if (statSync(path).size > IMAGE_BYTE_BUDGET) {
+                        fail(`${variant}: ${statSync(path).size} bytes exceeds ${IMAGE_BYTE_BUDGET}`);
+                    }
+                }
+            }
+        }
+    }
+}
+
 /** Cloudflare Pages reads these from the output root. */
 function checkHostingFiles() {
     if (!readOut("_redirects")?.includes(`/${DEFAULT_LOCALE}/`)) fail("_redirects: missing redirect to the default locale");
@@ -191,6 +212,7 @@ for (const locale of LOCALES) {
 checkSitemap();
 checkRootRedirect();
 checkHostingFiles();
+checkOptimizedImages();
 checkSecurityTxt();
 checkMessageParity(messagesDir);
 for (const entry of readdirSync(messagesDir)) {

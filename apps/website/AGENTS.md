@@ -32,7 +32,8 @@ The website currently uses localized routes and shared site metadata. Preserve t
 - `components/site/`: header, footer, language links, redirect helper
 - `components/home/`, `components/privacy/`, `components/support/`, `components/longform/`: page components
 - `lib/content/`: typed content data (demo library, tour, install steps, FAQ, AI providers, page sections, `routes.ts` with the indexable routes)
-- `lib/`: `download.ts` (store link or release fallback), `page-metadata.ts`, `seo.ts`, `assets.ts`
+- `lib/`: `download.ts` (store link or release fallback), `page-metadata.ts`, `seo.ts`, `assets.ts`, `images.ts` (responsive image widths, formats, quality, and byte budget)
+- `scripts/optimize-images.ts`: generates AVIF and WebP variants of `public/screenshots/*.png` before dev and build (`bun run images` to run alone, `--force` to rebuild all)
 - `messages/{en,ja,ko}.json`: shared and home copy; `messages/privacy/` and `messages/support/`: long-form page copy, merged in `i18n/request.ts`
 - `i18n/`: locale routing and request behavior
 - `public/`: icons, store screenshots, and `.well-known/security.txt`
