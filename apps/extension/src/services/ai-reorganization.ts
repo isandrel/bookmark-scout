@@ -255,7 +255,7 @@ export async function generateReorganizationPlan(
 
   if (allBookmarks.length === 0) {
     aiLogger.warn('No bookmarks found in scope');
-    throw new Error('No bookmarks found in the selected scope. Select "All Bookmarks" or choose a folder with bookmarks.');
+    throw new Error(t('error_aiReorganizeEmptyScope'));
   }
 
   const { system } = await buildPrompt('folder_reorganization', {
@@ -265,7 +265,7 @@ export async function generateReorganizationPlan(
   });
 
   aiLogger.debug({ provider: settings.provider, model: settings.model }, 'Creating AI model');
-  const model = createAIModel(settings);
+  const model = createAIModel(settings, 'reorganization');
 
   aiLogger.info({ provider: settings.provider, model: settings.model }, 'Calling AI for reorganization');
 

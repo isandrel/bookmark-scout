@@ -77,6 +77,26 @@ max_categories       = -1
 max_items_per_folder = -1
 min_items_per_folder = 1
 
+# Limits for AI requests and the tools around them.
+[ai.limits]
+# Model-list and Verify Service requests give up after this many milliseconds
+model_list_timeout_ms = 8000
+# Most pages read from a paginated model list (Anthropic, Gemini)
+model_list_max_pages = 20
+# Models requested per page from paginated model lists
+model_list_page_size = 1000
+# anthropic-version header sent when listing Anthropic models
+anthropic_version = "2023-06-01"
+# Largest custom prompt in UTF-8 bytes; browser sync allows 8,192 per item, including the key
+prompt_max_bytes = 7000
+
+# Opt-in AI activity log (Options > AI > AI activity)
+[ai.activity]
+# Recent calls kept on this device
+max_entries = 50
+# Characters kept from each request or response body
+max_body_chars = 64000
+
 # ============================================================================
 # AI Providers Configuration
 # Add or modify providers and their models here for extensibility.

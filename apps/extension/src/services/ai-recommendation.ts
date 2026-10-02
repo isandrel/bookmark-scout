@@ -110,7 +110,7 @@ export async function recommendFolders(
     }];
   }
 
-  const model = createAIModel(settings);
+  const model = createAIModel(settings, 'folderRecommendation');
   const { system } = await buildPrompt('folder_recommendation', { maxRecommendations });
 
   const { object } = await generateObject({

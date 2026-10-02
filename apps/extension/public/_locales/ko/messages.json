@@ -4216,8 +4216,8 @@
         "description": "Provider connection error: network failure; $1 is the host"
     },
     "ai_connErrorTimeout": {
-        "message": "$1이(가) 8초 안에 응답하지 않았습니다.",
-        "description": "Provider connection error: timeout; $1 is the host"
+        "message": "$1이(가) $2초 안에 응답하지 않았습니다.",
+        "description": "Provider connection error: timeout; $1 is the host, $2 the timeout in seconds"
     },
     "ai_connErrorNotApi": {
         "message": "응답은 있었지만 AI 제공업체 API가 아닌 것 같습니다. Base URL을 확인하세요.",
@@ -4522,5 +4522,77 @@
     "prompt_varIncludeDomainHint": {
         "message": "사이트 언급 여부(true 또는 false)",
         "description": "Variable description"
+    },
+    "aiActivity_title": {
+        "message": "AI 활동",
+        "description": "Options: heading of the AI request log"
+    },
+    "aiActivity_description": {
+        "message": "최근 AI 요청 $1개를 보낸 내용과 받은 응답과 함께 이 기기에 기록합니다. 결과를 확인하거나 실패한 호출을 조사할 때 사용합니다. 요청에는 북마크 제목과 URL이 포함됩니다. API 키는 저장되지 않습니다. 기록을 끄면 로그가 삭제됩니다.",
+        "description": "Options: AI activity description; $1 is how many requests are kept"
+    },
+    "aiActivity_record": {
+        "message": "요청 기록",
+        "description": "Options: switch that turns AI request recording on"
+    },
+    "aiActivity_empty": {
+        "message": "아직 AI 요청이 없습니다. AI 도구나 서비스 확인을 실행하면 여기에 표시됩니다.",
+        "description": "Options: AI activity empty state"
+    },
+    "aiActivity_clear": {
+        "message": "로그 지우기",
+        "description": "Options: button that deletes the AI request log"
+    },
+    "aiActivity_copy": {
+        "message": "JSON으로 복사",
+        "description": "Options: button that copies one AI request entry"
+    },
+    "aiActivity_copied": {
+        "message": "요청을 복사했습니다",
+        "description": "Toast after copying an AI request entry"
+    },
+    "aiActivity_failed": {
+        "message": "실패",
+        "description": "Options: status badge of an AI request that got no response"
+    },
+    "aiActivity_requestHeaders": {
+        "message": "요청 헤더",
+        "description": "Options: label of the recorded request headers"
+    },
+    "aiActivity_request": {
+        "message": "요청",
+        "description": "Options: label of the recorded request body"
+    },
+    "aiActivity_response": {
+        "message": "응답",
+        "description": "Options: label of the recorded response body"
+    },
+    "aiActivity_duration": {
+        "message": "$1ms",
+        "description": "Options: AI request duration; $1 is milliseconds"
+    },
+    "aiActivity_truncated": {
+        "message": "나머지 $1자는 기록되지 않았습니다.",
+        "description": "Options: note under a cut-off body; $1 is the number of characters left out"
+    },
+    "aiActivity_sourceAI": {
+        "message": "AI 요청",
+        "description": "Options: AI activity source for a call with no named tool"
+    },
+    "aiActivity_sourceModelList": {
+        "message": "모델 목록",
+        "description": "Options: AI activity source for fetching a provider model list"
+    },
+    "error_aiApiKeyRequired": {
+        "message": "Options > AI에서 이 AI 서비스의 API 키를 추가하세요.",
+        "description": "Error when an AI call needs an API key and none is saved"
+    },
+    "error_aiModelRequired": {
+        "message": "Options > AI에서 이 AI 서비스의 모델을 선택하세요.",
+        "description": "Error when an AI call has no model selected"
+    },
+    "error_aiReorganizeEmptyScope": {
+        "message": "선택한 범위에 북마크가 없습니다. \"모든 북마크\"를 선택하거나 북마크가 있는 폴더를 고르세요.",
+        "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
     }
 }

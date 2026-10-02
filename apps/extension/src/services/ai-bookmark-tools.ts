@@ -117,7 +117,7 @@ export async function suggestBookmarkTags(
     return [];
   }
 
-  const model = createAIModel(settings) as CompatibleModel;
+  const model = createAIModel(settings, 'autoTagging') as CompatibleModel;
   const { system } = await buildPrompt('auto_tagging', {
     minTags: options.minTags,
     maxTags: options.maxTags,
@@ -170,7 +170,7 @@ export async function summarizeBookmarksWithAI(
     return [];
   }
 
-  const model = createAIModel(settings) as CompatibleModel;
+  const model = createAIModel(settings, 'summarizer') as CompatibleModel;
   const { system } = await buildPrompt('summarization', {
     summaryLength: options.summaryLength,
     includeDomainHint: options.includeDomainHint ? 'true' : 'false',

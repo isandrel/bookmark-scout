@@ -29,7 +29,7 @@ export type PromptLibrary = {
 };
 
 /** Leaves room under sync's 8,192-byte item quota for the key and the other fields. */
-export const MAX_PROMPT_BYTES = 7000;
+export const MAX_PROMPT_BYTES = aiRuntimeConfig.limits.prompt_max_bytes;
 
 const INDEX_KEY = 'sync:bookmark-scout-prompts' as const;
 const promptKey = (id: string) => `sync:bookmark-scout-prompt-${id}` as const;

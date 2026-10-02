@@ -56,19 +56,28 @@ export const defaultAISettings: AISettings = {
 
 type AnyLanguageModel = ReturnType<ReturnType<typeof createOpenAI>>;
 
-export function createAIModel(settings: AISettings): AnyLanguageModel {
+/**
+ * A language model for the settings. `source` names what makes the calls (a tool name) in the
+ * AI activity log, which records them when the user turned recording on.
+ */
+export function createAIModel(
+  settings: AISettings,
+  source: AIActivitySource = 'ai',
+): AnyLanguageModel {
   validateAISettings(settings);
 
   const modelId = settings.customModel?.trim() || settings.model || getDefaultModel(settings.provider);
   const kind = getProviderKind(settings.provider);
+  const fetch = createLoggingFetch({ source, provider: settings.provider, model: modelId });
 
   switch (kind) {
     case 'native':
-      return createNativeModel(settings, modelId);
+      return createNativeModel(settings, modelId, fetch);
     case 'ollama': {
       const ollama = createOllama({
         baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
         headers: settings.extraHeaders,
+        fetch,
       });
       return ollama(modelId) as unknown as AnyLanguageModel;
     }
@@ -77,6 +86,7 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
         apiKey: settings.apiKey,
         baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
         headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
+        fetch,
       });
       return compatible(modelId) as unknown as AnyLanguageModel;
     }
@@ -91,6 +101,7 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
         // Send the JSON schema as response_format so structured results parse; without it the
         // schema is dropped and models answer in prose.
         supportsStructuredOutputs: true,
+        fetch,
       });
       return compatible.chatModel(modelId) as unknown as AnyLanguageModel;
     }
@@ -105,11 +116,11 @@ export function validateAISettings(settings: AISettings): void {
   }
 
   if (providerRequiresApiKey(settings.provider) && !settings.apiKey) {
-    throw new Error('API key is required');
+    throw new Error(t('error_aiApiKeyRequired'));
   }
 
   if (!settings.model && !settings.customModel) {
-    throw new Error('Model is required');
+    throw new Error(t('error_aiModelRequired'));
   }
 }
 
@@ -129,12 +140,12 @@ export type AIServiceCheck = {
  */
 export async function verifyAIService(settings: AISettings): Promise<AIServiceCheck> {
   if (getProviderModelListStyle(settings.provider) === 'none') {
-    const model = createAIModel(settings);
+    const model = createAIModel(settings, 'verifyService');
     await generateText({ model, maxOutputTokens: 8, prompt: 'Reply with exactly: ok' });
     return { models: [] };
   }
   try {
-    const models = await listProviderModels(settings);
+    const models = await listProviderModels(settings, { source: 'verifyService' });
     const modelId = settings.customModel?.trim() || settings.model;
     return { models, modelListed: models.some((model) => model.id === modelId) };
   } catch (error) {
@@ -149,22 +160,23 @@ export async function verifyAIService(settings: AISettings): Promise<AIServiceCh
  * Native SDKs use their own endpoint unless the user configured a Base URL; extra headers always
  * apply so Verify Service and real calls hit the same configured endpoint.
  */
-function nativeProviderOptions(settings: AISettings) {
+function nativeProviderOptions(settings: AISettings, fetch: typeof globalThis.fetch) {
   return {
     apiKey: settings.apiKey,
     baseURL: settings.baseUrl || undefined,
     headers: settings.extraHeaders,
+    fetch,
   };
 }
 
 const optionValue = (settings: AISettings, field: AIProviderExtraField) =>
   settings.providerOptions?.[field]?.trim() || undefined;
 
-function createNativeModel(settings: AISettings, modelId: string) {
+function createNativeModel(settings: AISettings, modelId: string, fetch: typeof globalThis.fetch) {
   switch (settings.provider) {
     case 'openai': {
       const openai = createOpenAI({
-        ...nativeProviderOptions(settings),
+        ...nativeProviderOptions(settings, fetch),
         organization: optionValue(settings, 'organization'),
         project: optionValue(settings, 'project'),
       });
@@ -172,55 +184,56 @@ function createNativeModel(settings: AISettings, modelId: string) {
     }
     case 'anthropic': {
       const anthropic = createAnthropic({
-        ...nativeProviderOptions(settings),
+        ...nativeProviderOptions(settings, fetch),
         // Without it, Anthropic rejects requests that come from a browser origin.
         headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
       });
       return anthropic(modelId) as unknown as AnyLanguageModel;
     }
     case 'xai': {
-      const xai = createXai(nativeProviderOptions(settings));
+      const xai = createXai(nativeProviderOptions(settings, fetch));
       return xai(modelId) as unknown as AnyLanguageModel;
     }
     case 'azure': {
       // The model id is the deployment name; a Base URL, when set, replaces the resource name.
       const azure = createAzure({
-        ...nativeProviderOptions(settings),
+        ...nativeProviderOptions(settings, fetch),
         resourceName: settings.baseUrl ? undefined : optionValue(settings, 'resourceName'),
         apiVersion: optionValue(settings, 'apiVersion'),
       });
       return azure(modelId) as unknown as AnyLanguageModel;
     }
     case 'google': {
-      const google = createGoogleGenerativeAI(nativeProviderOptions(settings));
+      const google = createGoogleGenerativeAI(nativeProviderOptions(settings, fetch));
       return google(modelId) as unknown as AnyLanguageModel;
     }
     case 'groq': {
-      const groq = createGroq(nativeProviderOptions(settings));
+      const groq = createGroq(nativeProviderOptions(settings, fetch));
       return groq(modelId) as unknown as AnyLanguageModel;
     }
     case 'mistral': {
-      const mistral = createMistral(nativeProviderOptions(settings));
+      const mistral = createMistral(nativeProviderOptions(settings, fetch));
       return mistral(modelId) as unknown as AnyLanguageModel;
     }
     case 'deepseek': {
-      const deepseek = createDeepSeek(nativeProviderOptions(settings));
+      const deepseek = createDeepSeek(nativeProviderOptions(settings, fetch));
       return deepseek(modelId) as unknown as AnyLanguageModel;
     }
     default:
-      return createCompatibleFallback(settings, modelId, 'native');
+      return createCompatibleFallback(settings, modelId, fetch);
   }
 }
 
 function createCompatibleFallback(
   settings: AISettings,
   modelId: string,
-  _kind: AIProviderKind,
+  fetch: typeof globalThis.fetch,
 ) {
   const compatible = createOpenAI({
     apiKey: settings.apiKey || 'not-required',
     baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
     headers: settings.extraHeaders,
+    fetch,
   });
   return compatible(modelId) as unknown as AnyLanguageModel;
 }
