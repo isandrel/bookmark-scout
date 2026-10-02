@@ -2743,14 +2743,6 @@
         "message": "$1 の API キーの形式ではありません。保存されていません。",
         "description": "Invalid API key format error"
     },
-    "toast_apiKeySaved": {
-        "message": "APIキーを保存しました",
-        "description": "API key saved toast title"
-    },
-    "toast_apiKeySavedDescription": {
-        "message": "APIキーはこのデバイスにのみ保存されます。",
-        "description": "API key saved toast description"
-    },
     "options_extraHeadersInvalid": {
         "message": "文字列の値を持つ JSON オブジェクトを入力してください。例: {\"HTTP-Referer\":\"https://example.com\"}",
         "description": "Invalid extra headers error"

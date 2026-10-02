@@ -2743,14 +2743,6 @@
         "message": "This doesn't look like an API key for $1. It was not saved.",
         "description": "Invalid API key format error"
     },
-    "toast_apiKeySaved": {
-        "message": "API key saved",
-        "description": "API key saved toast title"
-    },
-    "toast_apiKeySavedDescription": {
-        "message": "Your API key is stored only on this device.",
-        "description": "API key saved toast description"
-    },
     "options_extraHeadersInvalid": {
         "message": "Use a JSON object with string values, for example {\"HTTP-Referer\":\"https://example.com\"}.",
         "description": "Invalid extra headers error"

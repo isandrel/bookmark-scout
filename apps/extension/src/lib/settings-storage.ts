@@ -244,13 +244,17 @@ export function useSettings(): {
 
   useEffect(() => {
     let active = true;
+    // A change delivered by the watcher is newer than the initial read, which must not undo it.
+    let received = false;
     getSettings().then((s) => {
       if (!active) return;
-      setSettings(s);
+      if (!received) setSettings(s);
       setIsLoading(false);
     });
     const unsubscribe = subscribeToSettings((next) => {
-      if (active) setSettings(next);
+      if (!active) return;
+      received = true;
+      setSettings(next);
     });
     return () => {
       active = false;

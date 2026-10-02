@@ -2743,14 +2743,6 @@
         "message": "$1 API 키 형식이 아닙니다. 저장되지 않았습니다.",
         "description": "Invalid API key format error"
     },
-    "toast_apiKeySaved": {
-        "message": "API 키를 저장했습니다",
-        "description": "API key saved toast title"
-    },
-    "toast_apiKeySavedDescription": {
-        "message": "API 키는 이 기기에만 저장됩니다.",
-        "description": "API key saved toast description"
-    },
     "options_extraHeadersInvalid": {
         "message": "문자열 값을 가진 JSON 객체를 입력하세요. 예: {\"HTTP-Referer\":\"https://example.com\"}",
         "description": "Invalid extra headers error"
