@@ -56,10 +56,11 @@ function listHtmlFiles(dir: string): string[] {
 }
 
 function decodeEntities(value: string): string {
+  // Decode &amp; last so "&amp;quot;" stays "&quot;" instead of becoming '"'.
   return value
-    .replace(/&amp;/g, "&")
     .replace(/&#x27;|&#39;/g, "'")
-    .replace(/&quot;/g, '"');
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&");
 }
 
 function checkPage(path: string) {
