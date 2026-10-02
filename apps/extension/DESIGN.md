@@ -204,6 +204,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`error-state`**: what failed and a Retry button, in `danger` text. Every page has a localized error boundary.
 
+**`searchable-select`** (`src/components/ui/searchable-select.tsx`): a select whose popup starts with a search box, for lists too long to scan, such as the AI provider picker. Options can be grouped under small labels.
+
 **`dialog`**, **`toast`**, **`table`**: the existing primitives in `src/components/ui/`, themed by tokens only.
 
 ## Do's and don'ts

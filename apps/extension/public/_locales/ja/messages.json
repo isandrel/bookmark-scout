@@ -4286,5 +4286,29 @@
     "options_apiVersionDescription": {
         "message": "任意。空欄の場合は v1 API を使います。",
         "description": "Azure API version field description"
+    },
+    "settings_aiProviderGroupFeatured": {
+        "message": "おすすめ",
+        "description": "Provider picker group: providers with built-in model lists"
+    },
+    "settings_aiProviderGroupCatalog": {
+        "message": "その他のプロバイダー（models.dev）",
+        "description": "Provider picker group: providers from the bundled models.dev catalog"
+    },
+    "select_searchPlaceholder": {
+        "message": "検索...",
+        "description": "Search box inside a searchable select"
+    },
+    "select_noMatches": {
+        "message": "一致する項目がありません",
+        "description": "Searchable select: nothing matches the search"
+    },
+    "options_catalogProviderHint": {
+        "message": "このプロバイダーは models.dev のカタログから追加されています。「モデルを更新」でモデルを読み込むか、カスタムモデルを入力してください。",
+        "description": "Shown in the AI panel for catalog providers"
+    },
+    "options_providerDocs": {
+        "message": "プロバイダーのドキュメント",
+        "description": "Link to the selected provider documentation"
     }
 }

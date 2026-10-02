@@ -76,7 +76,7 @@
 
 ### ✅ 実装済み
 
-- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換プロバイダーによるスマートなフォルダ提案。新しいフォルダの提案は確認ダイアログで確認し、確定すると不足しているフォルダを作成してページを保存
+- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、models.dev カタログの約200のプロバイダー、またはカスタムOpenAI互換プロバイダーによるスマートなフォルダ提案。新しいフォルダの提案は確認ダイアログで確認し、確定すると不足しているフォルダを作成してページを保存
 - [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングで素早く検索
 - [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップで整理
 - [x] ⚡ **クイック追加** — ワンクリックで任意のフォルダに保存

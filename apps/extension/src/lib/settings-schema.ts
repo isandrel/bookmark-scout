@@ -13,7 +13,9 @@ export type SettingsFieldMeta = {
   label: string;
   description: string;
   type: SettingsFieldType;
-  options?: { value: string | number; label: string }[];
+  options?: { value: string | number; label: string; group?: string }[];
+  /** Long option lists get a search box instead of a plain select. */
+  searchable?: boolean;
   min?: number;
   max?: number;
   step?: number;
@@ -189,7 +191,8 @@ interface TomlConfig {
 
 const config = parse(settingsToml) as TomlConfig;
 
-const configuredProviderIds = Object.keys(config.ai.providers ?? {});
+// Featured providers from the TOML plus the bundled models.dev catalog.
+const configuredProviderIds = getAvailableProviders().map((provider) => provider.id);
 const aiProviderSchema = configuredProviderIds.length > 0
   ? z.enum(configuredProviderIds as [AIProvider, ...AIProvider[]])
   : z.enum(['openai']);
@@ -630,9 +633,13 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
       label: t('settings_aiProvider'),
       description: t('settings_aiProviderDesc'),
       type: 'select',
+      searchable: true,
       options: getAvailableProviders().map((provider) => ({
         value: provider.id,
         label: getLocalizedProviderName(provider.id),
+        group: isCatalogProvider(provider.id)
+          ? t('settings_aiProviderGroupCatalog')
+          : t('settings_aiProviderGroupFeatured'),
       })),
     },
     aiModel: {

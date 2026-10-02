@@ -9,6 +9,7 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createGroq } from '@ai-sdk/groq';
 import { createMistral } from '@ai-sdk/mistral';
 import { createOpenAI } from '@ai-sdk/openai';
+import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createXai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
@@ -25,7 +26,9 @@ export type AIProvider =
   | 'openrouter'
   | 'ollama'
   | 'cliproxyapi'
-  | 'custom';
+  | 'custom'
+  // Any other id from the bundled models.dev provider catalog.
+  | (string & {});
 
 export type AISettings = {
   enabled: boolean;
@@ -69,13 +72,24 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
       });
       return ollama(modelId) as unknown as AnyLanguageModel;
     }
-    case 'openai_compatible': {
-      const compatible = createOpenAI({
-        apiKey: settings.apiKey || 'not-required',
+    case 'anthropic_compatible': {
+      const compatible = createAnthropic({
+        apiKey: settings.apiKey,
         baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
-        headers: settings.extraHeaders,
+        headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
       });
       return compatible(modelId) as unknown as AnyLanguageModel;
+    }
+    case 'openai_compatible': {
+      // Chat Completions is the API that OpenAI-compatible servers share; the OpenAI package
+      // would call OpenAI's own Responses API, which most of them do not implement.
+      const compatible = createOpenAICompatible({
+        name: settings.provider,
+        apiKey: settings.apiKey || undefined,
+        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) || '',
+        headers: settings.extraHeaders,
+      });
+      return compatible.chatModel(modelId) as unknown as AnyLanguageModel;
     }
     default:
       throw new Error(`Unsupported provider kind: ${kind satisfies never}`);

@@ -76,7 +76,7 @@
 
 ### ✅ 구현됨
 
-- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI 또는 커스텀 OpenAI 호환 프로바이더로 구동되는 스마트 폴더 제안. 새 폴더 제안은 검토 대화상자에서 확인하며, 확정하면 없는 폴더를 만들고 페이지를 저장
+- [x] 🤖 **AI 폴더 추천** — OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, models.dev 카탈로그의 약 200개 프로바이더 또는 커스텀 OpenAI 호환 프로바이더로 구동되는 스마트 폴더 제안. 새 폴더 제안은 검토 대화상자에서 확인하며, 확정하면 없는 폴더를 만들고 페이지를 저장
 - [x] 🔍 **즉시 검색** — 디바운스 검색과 폴더 필터링으로 빠르게 검색
 - [x] 📂 **드래그 앤 드롭** — 직관적인 드래그 앤 드롭으로 정리
 - [x] ⚡ **빠른 추가** — 원클릭으로 원하는 폴더에 저장

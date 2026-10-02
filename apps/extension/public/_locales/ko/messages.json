@@ -4286,5 +4286,29 @@
     "options_apiVersionDescription": {
         "message": "선택 사항. 비워 두면 v1 API를 사용합니다.",
         "description": "Azure API version field description"
+    },
+    "settings_aiProviderGroupFeatured": {
+        "message": "추천",
+        "description": "Provider picker group: providers with built-in model lists"
+    },
+    "settings_aiProviderGroupCatalog": {
+        "message": "기타 제공업체 (models.dev)",
+        "description": "Provider picker group: providers from the bundled models.dev catalog"
+    },
+    "select_searchPlaceholder": {
+        "message": "검색...",
+        "description": "Search box inside a searchable select"
+    },
+    "select_noMatches": {
+        "message": "일치하는 항목이 없습니다",
+        "description": "Searchable select: nothing matches the search"
+    },
+    "options_catalogProviderHint": {
+        "message": "이 제공업체는 models.dev 카탈로그에서 추가되었습니다. 모델 새로 고침으로 모델을 불러오거나 사용자 지정 모델을 입력하세요.",
+        "description": "Shown in the AI panel for catalog providers"
+    },
+    "options_providerDocs": {
+        "message": "제공업체 문서",
+        "description": "Link to the selected provider documentation"
     }
 }

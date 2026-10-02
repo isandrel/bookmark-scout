@@ -175,6 +175,8 @@ Rules:
 - do not embed provider-specific logic deep inside UI components unless the current architecture already does so for a narrow reason
 - preserve clear disclosure around what user bookmark data is sent to external providers
 
+Featured providers are defined in `config/settings.default.toml`. About 200 more come from `config/provider-catalog.json`, a snapshot of the models.dev catalog (MIT; license in `public/licenses/models-dev.txt`). Regenerate it with `bun run catalog:sync` instead of editing it by hand; the extension never fetches models.dev at runtime. Model lists and connection checks go through `src/services/ai-model-list.ts`.
+
 When working in AI-related files, check whether the logic already belongs in:
 
 - `src/services/ai-client.ts`

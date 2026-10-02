@@ -6,7 +6,7 @@ import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 
 type SettingValue = Settings[keyof Settings];
-type SelectOption = { value: string | number; label: string };
+type SelectOption = { value: string | number; label: string; group?: string };
 
 type SettingsFieldRowProps = {
   fieldKey: keyof Settings;
@@ -119,6 +119,29 @@ export function SettingsFieldRow({
         // Keep a value that is valid but not in the list (e.g. a detected model) visible.
         if (value !== '' && !options.some((option) => String(option.value) === String(value))) {
           options.unshift({ value: String(value), label: String(value) });
+        }
+        if (meta.searchable) {
+          return (
+            <SearchableSelect
+              id={controlId}
+              aria-labelledby={labelId}
+              aria-describedby={describedBy}
+              aria-invalid={Boolean(error)}
+              className="w-full sm:w-[220px]"
+              value={String(value)}
+              options={options.map((option) => ({
+                value: String(option.value),
+                label: option.label,
+                group: option.group,
+              }))}
+              onValueChange={(next) => {
+                const coerced = coerceSelectValue(fieldKey, next);
+                if (coerced !== undefined) onChange(coerced);
+              }}
+              searchPlaceholder={t('select_searchPlaceholder')}
+              emptyText={t('select_noMatches')}
+            />
+          );
         }
         return (
           <Select

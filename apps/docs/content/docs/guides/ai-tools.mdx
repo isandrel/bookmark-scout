@@ -49,6 +49,9 @@ Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON
 | Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
 | CLIProxyAPI | Optional | Default address `http://localhost:8317/v1` |
 | Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
+| About 200 more | Usually required | Listed under **More providers (models.dev)**, for example Together AI, Fireworks AI, Cerebras, DeepInfra, and LM Studio. They have no built-in model list: click **Refresh Models** or enter a **Custom Model**. |
+
+The **AI Provider** picker has a search box. The extra providers come from a copy of the open [models.dev](https://models.dev) catalog that ships with the extension, so choosing one sends nothing to models.dev; requests go only to the provider you pick.
 
 **Base URL** overrides the provider's address for every request, for example to use a proxy. It must start with `http://` or `https://`. **Extra Headers JSON** adds headers to every request, and **Custom Model** sets a model ID for providers that accept any model name.
 

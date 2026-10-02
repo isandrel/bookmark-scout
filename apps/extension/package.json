@@ -24,6 +24,7 @@
         "lint": "biome lint ./src ./tests ./vitest.config.ts ./playwright.config.ts",
         "format": "biome format --write ./src",
         "check": "biome check --write ./src",
+        "catalog:sync": "bun scripts/sync-provider-catalog.ts",
         "postinstall": "wxt prepare"
     },
     "devDependencies": {
@@ -38,6 +39,7 @@
         "@ai-sdk/groq": "^4.0.46",
         "@ai-sdk/mistral": "^4.0.48",
         "@ai-sdk/openai": "^4.0.72",
+        "@ai-sdk/openai-compatible": "^3.0.62",
         "@ai-sdk/xai": "^5.0.14",
         "@base-ui/react": "^1.8.0",
         "@fontsource-variable/bricolage-grotesque": "^5.3.0",
