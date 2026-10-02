@@ -126,7 +126,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 ### 🚧 Current Focus
 
 - [ ] 🧪 **Automated Tests** — Add dedicated unit/integration coverage for bookmark workflows
-- [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
+- [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package first needs an add-on ID and a data collection declaration
 
 ---
 
