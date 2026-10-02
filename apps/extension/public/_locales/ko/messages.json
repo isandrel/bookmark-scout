@@ -1475,33 +1475,17 @@
         "message": "AI 응답:",
         "description": "AI debug section label"
     },
-    "ai_promptFolderRecommendation": {
-        "message": "폴더 추천",
-        "description": "Name for folder recommendation prompt"
-    },
     "ai_promptFolderRecommendationDesc": {
         "message": "새 북마크에 가장 알맞은 폴더를 제안합니다",
         "description": "Description for folder recommendation prompt"
-    },
-    "ai_promptFolderReorganization": {
-        "message": "폴더 재구성",
-        "description": "Name for folder reorganization prompt"
     },
     "ai_promptFolderReorganizationDesc": {
         "message": "북마크 폴더를 분석하고 재구성합니다",
         "description": "Description for folder reorganization prompt"
     },
-    "ai_promptAutoTagging": {
-        "message": "자동 태그 지정",
-        "description": "Name for auto tagging prompt"
-    },
     "ai_promptAutoTaggingDesc": {
         "message": "콘텐츠를 바탕으로 북마크 태그를 제안합니다",
         "description": "Description for auto tagging prompt"
-    },
-    "ai_promptSummarization": {
-        "message": "콘텐츠 요약",
-        "description": "Name for summarization prompt"
     },
     "ai_promptSummarizationDesc": {
         "message": "북마크의 간단한 설명을 생성합니다",
@@ -4406,5 +4390,137 @@
     "popup_aiServiceSwitch": {
         "message": "AI 서비스: $1",
         "description": "Accessible name of the popup AI service switcher; $1 is the current service"
+    },
+    "prompt_libraryTitle": {
+        "message": "프롬프트",
+        "description": "Heading of the prompt library"
+    },
+    "prompt_libraryDescription": {
+        "message": "각 AI 도구는 직접 만든 프롬프트를 선택하지 않으면 기본 제공 프롬프트를 사용합니다. 내 프롬프트는 기기 간에 동기화됩니다.",
+        "description": "Description of the prompt library"
+    },
+    "prompt_default": {
+        "message": "기본값(기본 제공)",
+        "description": "Select option for the built-in prompt"
+    },
+    "prompt_customize": {
+        "message": "사용자 지정",
+        "description": "Button that starts a custom prompt from the default"
+    },
+    "prompt_newName": {
+        "message": "내 $1 프롬프트",
+        "description": "Default name of a new custom prompt; $1 is the task name"
+    },
+    "prompt_newTitle": {
+        "message": "새 프롬프트",
+        "description": "Title of the prompt editor for a new prompt"
+    },
+    "prompt_editTitle": {
+        "message": "프롬프트 편집",
+        "description": "Title of the prompt editor for an existing prompt"
+    },
+    "prompt_editorDescription": {
+        "message": "앱은 결과를 올바르게 불러오도록 프롬프트 뒤에 자체 출력 형식 규칙을 추가합니다.",
+        "description": "Description in the prompt editor"
+    },
+    "prompt_name": {
+        "message": "이름",
+        "description": "Prompt name field"
+    },
+    "prompt_text": {
+        "message": "프롬프트",
+        "description": "Prompt text field"
+    },
+    "prompt_variables": {
+        "message": "삽입:",
+        "description": "Label before the variable chips"
+    },
+    "prompt_size": {
+        "message": "$1 KB / $2 KB",
+        "description": "Prompt size counter; $1 used, $2 limit"
+    },
+    "prompt_unknownVariables": {
+        "message": "이 도구에서 채워지지 않음: $1",
+        "description": "Warning listing unknown variables"
+    },
+    "prompt_preview": {
+        "message": "현재 설정으로 미리 보기",
+        "description": "Toggle that shows the filled-in prompt"
+    },
+    "prompt_previewDescription": {
+        "message": "변수는 현재 설정으로 채워집니다.",
+        "description": "Description of the prompt preview"
+    },
+    "prompt_save": {
+        "message": "프롬프트 저장",
+        "description": "Save button in the prompt editor"
+    },
+    "prompt_editNamed": {
+        "message": "$1 편집",
+        "description": "Accessible name of the edit prompt button"
+    },
+    "prompt_duplicateNamed": {
+        "message": "$1 복제",
+        "description": "Accessible name of the duplicate prompt button"
+    },
+    "prompt_deleteNamed": {
+        "message": "$1 삭제",
+        "description": "Accessible name of the delete prompt button"
+    },
+    "prompt_deleteTitle": {
+        "message": "$1을(를) 삭제할까요?",
+        "description": "Title of the delete prompt confirmation"
+    },
+    "prompt_deleteDescription": {
+        "message": "도구는 기본 제공 프롬프트로 돌아갑니다. 모든 기기에서 이 프롬프트가 삭제됩니다.",
+        "description": "Body of the delete prompt confirmation"
+    },
+    "prompt_errorNameRequired": {
+        "message": "이름을 입력하세요.",
+        "description": "Prompt validation: empty name"
+    },
+    "prompt_errorTextRequired": {
+        "message": "프롬프트를 입력하세요.",
+        "description": "Prompt validation: empty text"
+    },
+    "prompt_errorTooLong": {
+        "message": "프롬프트가 너무 길어 동기화할 수 없습니다. $1바이트 미만으로 줄이세요.",
+        "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_varMaxRecommendations": {
+        "message": "폴더 추천 수(최대 추천 수)",
+        "description": "Variable description"
+    },
+    "prompt_varMaxCategories": {
+        "message": "최상위 폴더 한도, -1은 무제한(최대 카테고리)",
+        "description": "Variable description"
+    },
+    "prompt_varMinItemsPerFolder": {
+        "message": "폴더당 최소 북마크 수",
+        "description": "Variable description"
+    },
+    "prompt_varMaxItemsPerFolder": {
+        "message": "폴더당 최대 북마크 수, -1은 무제한",
+        "description": "Variable description"
+    },
+    "prompt_varMinTags": {
+        "message": "북마크당 최소 태그 수",
+        "description": "Variable description"
+    },
+    "prompt_varMaxTags": {
+        "message": "북마크당 최대 태그 수",
+        "description": "Variable description"
+    },
+    "prompt_varTagStyle": {
+        "message": "태그 스타일(예: kebab-case)",
+        "description": "Variable description"
+    },
+    "prompt_varSummaryLength": {
+        "message": "요약 최대 글자 수",
+        "description": "Variable description"
+    },
+    "prompt_varIncludeDomainHint": {
+        "message": "사이트 언급 여부(true 또는 false)",
+        "description": "Variable description"
     }
 }

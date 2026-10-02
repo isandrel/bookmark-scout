@@ -1475,33 +1475,17 @@
         "message": "AI Response:",
         "description": "AI debug section label"
     },
-    "ai_promptFolderRecommendation": {
-        "message": "Folder Recommendation",
-        "description": "Name for folder recommendation prompt"
-    },
     "ai_promptFolderRecommendationDesc": {
         "message": "Suggests the best folder for a new bookmark",
         "description": "Description for folder recommendation prompt"
-    },
-    "ai_promptFolderReorganization": {
-        "message": "Folder Reorganization",
-        "description": "Name for folder reorganization prompt"
     },
     "ai_promptFolderReorganizationDesc": {
         "message": "Analyzes and restructures bookmark folders",
         "description": "Description for folder reorganization prompt"
     },
-    "ai_promptAutoTagging": {
-        "message": "Auto Tagging",
-        "description": "Name for auto tagging prompt"
-    },
     "ai_promptAutoTaggingDesc": {
         "message": "Suggests tags for bookmarks based on content",
         "description": "Description for auto tagging prompt"
-    },
-    "ai_promptSummarization": {
-        "message": "Content Summary",
-        "description": "Name for summarization prompt"
     },
     "ai_promptSummarizationDesc": {
         "message": "Generates brief descriptions for bookmarks",
@@ -4406,5 +4390,137 @@
     "popup_aiServiceSwitch": {
         "message": "AI service: $1",
         "description": "Accessible name of the popup AI service switcher; $1 is the current service"
+    },
+    "prompt_libraryTitle": {
+        "message": "Prompts",
+        "description": "Heading of the prompt library"
+    },
+    "prompt_libraryDescription": {
+        "message": "Each AI tool uses its built-in prompt unless you pick one of yours. Your prompts sync across your devices.",
+        "description": "Description of the prompt library"
+    },
+    "prompt_default": {
+        "message": "Default (built in)",
+        "description": "Select option for the built-in prompt"
+    },
+    "prompt_customize": {
+        "message": "Customize",
+        "description": "Button that starts a custom prompt from the default"
+    },
+    "prompt_newName": {
+        "message": "My $1 prompt",
+        "description": "Default name of a new custom prompt; $1 is the task name"
+    },
+    "prompt_newTitle": {
+        "message": "New prompt",
+        "description": "Title of the prompt editor for a new prompt"
+    },
+    "prompt_editTitle": {
+        "message": "Edit prompt",
+        "description": "Title of the prompt editor for an existing prompt"
+    },
+    "prompt_editorDescription": {
+        "message": "The app adds its own output format rules after your prompt, so results still load correctly.",
+        "description": "Description in the prompt editor"
+    },
+    "prompt_name": {
+        "message": "Name",
+        "description": "Prompt name field"
+    },
+    "prompt_text": {
+        "message": "Prompt",
+        "description": "Prompt text field"
+    },
+    "prompt_variables": {
+        "message": "Insert:",
+        "description": "Label before the variable chips"
+    },
+    "prompt_size": {
+        "message": "$1 KB of $2 KB",
+        "description": "Prompt size counter; $1 used, $2 limit"
+    },
+    "prompt_unknownVariables": {
+        "message": "Not filled in by this tool: $1",
+        "description": "Warning listing unknown variables"
+    },
+    "prompt_preview": {
+        "message": "Preview with current settings",
+        "description": "Toggle that shows the filled-in prompt"
+    },
+    "prompt_previewDescription": {
+        "message": "Variables are filled in with your current settings.",
+        "description": "Description of the prompt preview"
+    },
+    "prompt_save": {
+        "message": "Save prompt",
+        "description": "Save button in the prompt editor"
+    },
+    "prompt_editNamed": {
+        "message": "Edit $1",
+        "description": "Accessible name of the edit prompt button"
+    },
+    "prompt_duplicateNamed": {
+        "message": "Duplicate $1",
+        "description": "Accessible name of the duplicate prompt button"
+    },
+    "prompt_deleteNamed": {
+        "message": "Delete $1",
+        "description": "Accessible name of the delete prompt button"
+    },
+    "prompt_deleteTitle": {
+        "message": "Delete $1?",
+        "description": "Title of the delete prompt confirmation"
+    },
+    "prompt_deleteDescription": {
+        "message": "The tool goes back to its built-in prompt. This removes the prompt from all your devices.",
+        "description": "Body of the delete prompt confirmation"
+    },
+    "prompt_errorNameRequired": {
+        "message": "Enter a name.",
+        "description": "Prompt validation: empty name"
+    },
+    "prompt_errorTextRequired": {
+        "message": "Enter the prompt text.",
+        "description": "Prompt validation: empty text"
+    },
+    "prompt_errorTooLong": {
+        "message": "The prompt is too long to sync. Keep it under $1 bytes.",
+        "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_varMaxRecommendations": {
+        "message": "Number of folder suggestions (Max Recommendations)",
+        "description": "Variable description"
+    },
+    "prompt_varMaxCategories": {
+        "message": "Top-level folder limit, -1 for none (Max Categories)",
+        "description": "Variable description"
+    },
+    "prompt_varMinItemsPerFolder": {
+        "message": "Fewest bookmarks per folder",
+        "description": "Variable description"
+    },
+    "prompt_varMaxItemsPerFolder": {
+        "message": "Most bookmarks per folder, -1 for none",
+        "description": "Variable description"
+    },
+    "prompt_varMinTags": {
+        "message": "Fewest tags per bookmark",
+        "description": "Variable description"
+    },
+    "prompt_varMaxTags": {
+        "message": "Most tags per bookmark",
+        "description": "Variable description"
+    },
+    "prompt_varTagStyle": {
+        "message": "Tag style, such as kebab-case",
+        "description": "Variable description"
+    },
+    "prompt_varSummaryLength": {
+        "message": "Summary length limit in characters",
+        "description": "Variable description"
+    },
+    "prompt_varIncludeDomainHint": {
+        "message": "Whether to mention the site (true or false)",
+        "description": "Variable description"
     }
 }

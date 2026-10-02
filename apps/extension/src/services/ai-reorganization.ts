@@ -258,7 +258,7 @@ export async function generateReorganizationPlan(
     throw new Error('No bookmarks found in the selected scope. Select "All Bookmarks" or choose a folder with bookmarks.');
   }
 
-  const { system } = buildPrompt('folder_reorganization', {
+  const { system } = await buildPrompt('folder_reorganization', {
     maxCategories: cfg.maxCategories,
     minItemsPerFolder: cfg.minItemsPerFolder,
     maxItemsPerFolder: cfg.maxItemsPerFolder,
