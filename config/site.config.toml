@@ -31,8 +31,9 @@ privacy  = "privacy@bookmark-scout.com"
 security = "security@bookmark-scout.com"
 support  = "support@bookmark-scout.com"
 
-# Cloudflare Pages hosting for the website. The deploy workflow attaches these custom
-# domains to the Pages project; DNS records must point them at <project>.pages.dev.
+# Cloudflare Pages hosting for the website. One-time setup, run locally:
+# `bun apps/website/scripts/setup-cloudflare.ts` creates the project, attaches these
+# domains, and points their DNS at <project>.pages.dev. CI only deploys.
 [hosting]
 website_domains = ["bookmark-scout.com", "www.bookmark-scout.com"]
 

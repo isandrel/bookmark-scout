@@ -39,15 +39,6 @@ jobs:
         env:
           NODE_ENV: production
 
-      # First deploy only: the project must exist before `pages deploy`. Fails harmlessly once it does.
-      - name: Create Cloudflare Pages project if missing
-        continue-on-error: true
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create ${{ secrets.CLOUDFLARE_PROJECT_NAME_WEBSITE }} --production-branch=main
-
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
@@ -55,11 +46,3 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy apps/website/out --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME_WEBSITE }} --branch=${{ github.ref_name }}
 
-      - name: Attach custom domains
-        if: github.ref_name == 'main'
-        working-directory: apps/website
-        run: bun scripts/attach-domains.ts
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME_WEBSITE }}
