@@ -329,9 +329,7 @@ const OptionsPage: React.FC = () => {
               <Sparkles className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <Heading className="text-lg font-semibold">
-                {category.label}
-              </Heading>
+              <Heading className="text-lg font-semibold">{category.label}</Heading>
               <p className="text-sm text-muted-foreground">{category.description}</p>
             </div>
           </div>
@@ -348,47 +346,57 @@ const OptionsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-background to-muted/20">
-        <div className="text-muted-foreground">{t('state_loadingSettings')}</div>
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <output className="text-sm text-muted-foreground">{t('state_loadingSettings')}</output>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <div className="container mx-auto max-w-4xl p-4 sm:p-6">
-        <Card className="border-none shadow-lg">
-          <CardHeader className="pb-4">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <CardTitle className="font-display text-2xl font-semibold tracking-tight">
-                  {t('settings_title')}
-                </CardTitle>
-                <CardDescription>{t('settings_description')}</CardDescription>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="shrink-0"
-                onClick={toggleTheme}
-                aria-label={
-                  resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
-                }
-                title={
-                  resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
-                }
-              >
-                {resolvedTheme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
-                )}
-              </Button>
+    <div className="flex min-h-screen flex-col bg-background">
+      <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 sm:px-6">
+        <header className="py-6">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <h1 className="font-display text-2xl font-semibold tracking-tight">
+                {t('settings_title')}
+              </h1>
+              <p className="text-sm text-muted-foreground">{t('settings_description')}</p>
             </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+              onClick={toggleTheme}
+              aria-label={
+                resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
+              }
+              title={
+                resolvedTheme === 'dark' ? t('action_switchToLight') : t('action_switchToDark')
+              }
+            >
+              {resolvedTheme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
+        </header>
 
-            {/* Search bar */}
-            <div className="relative mt-4">
+        <Tabs
+          orientation="vertical"
+          value={activeTab}
+          onValueChange={(tab) => {
+            setActiveTab(tab);
+            setSearchQuery('');
+          }}
+          className="flex flex-col gap-6 sm:flex-row sm:items-start"
+        >
+          {/* Category list on the left; it wraps into rows above the settings on narrow windows. */}
+          <div className="shrink-0 space-y-3 sm:sticky sm:top-6 sm:w-56">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
@@ -399,145 +407,138 @@ const OptionsPage: React.FC = () => {
                 className="pl-9"
               />
             </div>
-          </CardHeader>
+            <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1 bg-transparent p-0 sm:flex-col sm:items-stretch">
+              {Object.entries(categories).map(([key, category]) => {
+                const matches = searchResults?.[key]?.length;
+                const count =
+                  matches === undefined
+                    ? undefined
+                    : matches + (key === 'ai' ? aiPanelMatches.length : 0);
+                return (
+                  <TabsTrigger
+                    key={key}
+                    value={key}
+                    className="h-8 justify-start gap-2 rounded-md px-2.5 py-0 font-normal text-muted-foreground hover:bg-muted hover:text-foreground data-active:bg-accent data-active:font-medium data-active:text-accent-foreground data-active:shadow-none [&_svg]:size-4"
+                  >
+                    {tabIcons[key]}
+                    <span className="flex-1 truncate text-left">{category.label}</span>
+                    {count !== undefined && (
+                      <span className="rounded-full bg-muted px-1.5 font-mono text-xs tabular-nums text-muted-foreground">
+                        {count}
+                      </span>
+                    )}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
 
-          <CardContent className="pt-0">
-            <Tabs
-              value={activeTab}
-              onValueChange={(tab) => {
-                setActiveTab(tab);
-                setSearchQuery('');
-              }}
-              className="w-full"
-            >
-              <TabsList className="mb-6 flex h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
-                {Object.entries(categories).map(([key, category]) => {
-                  const matches = searchResults?.[key]?.length;
-                  const count =
-                    matches === undefined
-                      ? undefined
-                      : matches + (key === 'ai' ? aiPanelMatches.length : 0);
-                  return (
-                    <TabsTrigger
-                      key={key}
-                      value={key}
-                      className="flex items-center gap-2 rounded-md border bg-background px-3 py-2 data-active:bg-primary data-active:text-primary-foreground"
-                    >
-                      {tabIcons[key]}
-                      <span>{category.label}</span>
-                      {count !== undefined && (
-                        <span className="rounded-full bg-muted px-1.5 text-xs text-muted-foreground">
-                          {count}
-                        </span>
-                      )}
-                    </TabsTrigger>
-                  );
-                })}
-              </TabsList>
-
-              {searchResults ? (
-                <section aria-live="polite" className="space-y-6">
-                  <p className="text-sm text-muted-foreground">
-                    {t('settings_searchResultsCount', String(searchMatchCount))}
-                  </p>
-                  {searchMatchCount === 0 ? (
-                    <div className="py-8 text-center text-muted-foreground">
-                      {t('state_noSettingsMatch')}
-                    </div>
-                  ) : (
-                    Object.entries(searchResults)
-                      .filter(
-                        ([categoryKey, fields]) =>
-                          fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches.length > 0),
-                      )
-                      .map(([categoryKey, fields]) => (
-                        <div key={categoryKey} data-search-category={categoryKey}>
-                          {renderCategoryHeader(categoryKey, 'h2')}
-                          <div className="space-y-3">
-                            {fields.map(renderSettingsField)}
-                            {categoryKey === 'ai' &&
-                              aiPanelMatches.length > 0 &&
-                              renderAIProviderPanel(aiPanelMatches)}
-                          </div>
+          <div className="min-w-0 flex-1">
+            {searchResults ? (
+              <section aria-live="polite" className="space-y-6">
+                <p className="text-sm text-muted-foreground">
+                  {t('settings_searchResultsCount', String(searchMatchCount))}
+                </p>
+                {searchMatchCount === 0 ? (
+                  <div className="py-8 text-center text-muted-foreground">
+                    {t('state_noSettingsMatch')}
+                  </div>
+                ) : (
+                  Object.entries(searchResults)
+                    .filter(
+                      ([categoryKey, fields]) =>
+                        fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches.length > 0),
+                    )
+                    .map(([categoryKey, fields]) => (
+                      <div key={categoryKey} data-search-category={categoryKey}>
+                        {renderCategoryHeader(categoryKey, 'h2')}
+                        <div className="space-y-3">
+                          {fields.map(renderSettingsField)}
+                          {categoryKey === 'ai' &&
+                            aiPanelMatches.length > 0 &&
+                            renderAIProviderPanel(aiPanelMatches)}
                         </div>
-                      ))
-                  )}
-                </section>
-              ) : (
-                Object.entries(categories).map(([categoryKey, category]) => (
-                  <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
-                    {renderCategoryHeader(categoryKey)}
-                    <div className="space-y-3">
-                      {category.fields.map(renderSettingsField)}
-                      {categoryKey === 'ai' && renderAIProviderPanel()}
-                    </div>
-                  </TabsContent>
-                ))
-              )}
-            </Tabs>
-
-            {/* Action Buttons */}
-            <div className="mt-8 flex flex-wrap justify-between gap-3 border-t pt-8">
-              <div className="flex flex-wrap gap-2">
-                <Button type="button" variant="outline" size="sm" onClick={handleExport}>
-                  <Download className="mr-2 h-4 w-4" />
-                  {t('action_export')}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  <Upload className="mr-2 h-4 w-4" />
-                  {t('action_import')}
-                </Button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".json"
-                  className="hidden"
-                  aria-label={t('action_import')}
-                  onChange={handleImport}
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleReset}
-                  className="hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <RotateCcw className="mr-2 h-4 w-4" />
-                  {t('action_resetAll')}
-                </Button>
-                <output
-                  aria-live="polite"
-                  data-testid="settings-save-status"
-                  className="flex min-w-[140px] items-center justify-end px-3 text-sm text-muted-foreground"
-                >
-                  {isSaving ? (
-                    <span className="flex animate-pulse items-center">
-                      <Settings2 className="mr-2 h-3 w-3 animate-spin" />
-                      {t('action_saving')}
-                    </span>
-                  ) : errorCount > 0 ? (
-                    <span className="flex items-center text-destructive">
-                      <TriangleAlert className="mr-2 h-3 w-3" />
-                      {t('settings_statusNotSaved', String(errorCount))}
-                    </span>
-                  ) : (
-                    <span className="flex items-center">
-                      <Save className="mr-2 h-3 w-3 opacity-50" />
-                      {t('toast_settingsSaved')}
-                    </span>
-                  )}
-                </output>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                      </div>
+                    ))
+                )}
+              </section>
+            ) : (
+              Object.entries(categories).map(([categoryKey, category]) => (
+                <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
+                  {renderCategoryHeader(categoryKey)}
+                  <div className="space-y-3">
+                    {category.fields.map(renderSettingsField)}
+                    {categoryKey === 'ai' && renderAIProviderPanel()}
+                  </div>
+                </TabsContent>
+              ))
+            )}
+          </div>
+        </Tabs>
       </div>
+
+      {/* The save status and data actions stay reachable while scrolling long categories. */}
+      <footer className="sticky bottom-0 border-t bg-background/95 backdrop-blur">
+        {/* Action Buttons */}
+        <div className="mx-auto flex max-w-5xl flex-wrap justify-between gap-3 px-4 py-3 sm:px-6">
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" variant="outline" size="sm" onClick={handleExport}>
+              <Download className="mr-2 h-4 w-4" />
+              {t('action_export')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="mr-2 h-4 w-4" />
+              {t('action_import')}
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              aria-label={t('action_import')}
+              onChange={handleImport}
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleReset}
+              className="hover:bg-destructive-wash hover:text-destructive-text"
+            >
+              <RotateCcw className="mr-2 h-4 w-4" />
+              {t('action_resetAll')}
+            </Button>
+            <output
+              aria-live="polite"
+              data-testid="settings-save-status"
+              className="flex min-w-[140px] items-center justify-end px-3 text-sm text-muted-foreground"
+            >
+              {isSaving ? (
+                <span className="flex animate-pulse items-center">
+                  <Settings2 className="mr-2 h-3 w-3 animate-spin" />
+                  {t('action_saving')}
+                </span>
+              ) : errorCount > 0 ? (
+                <span className="flex items-center text-destructive-text">
+                  <TriangleAlert className="mr-2 h-3 w-3" />
+                  {t('settings_statusNotSaved', String(errorCount))}
+                </span>
+              ) : (
+                <span className="flex items-center">
+                  <Save className="mr-2 h-3 w-3 opacity-50" />
+                  {t('toast_settingsSaved')}
+                </span>
+              )}
+            </output>
+          </div>
+        </div>
+      </footer>
       <Toaster />
     </div>
   );

@@ -4,8 +4,10 @@ import '@/styles/theme.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider storageKey="bookmark-scout-theme">
-      <OptionsPage />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider storageKey="bookmark-scout-theme">
+        <OptionsPage />
+      </ThemeProvider>
+    </ErrorBoundary>
   </StrictMode>,
 );

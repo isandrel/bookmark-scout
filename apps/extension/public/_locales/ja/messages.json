@@ -75,6 +75,14 @@
         "message": "エラー",
         "description": "Error label"
     },
+    "error_boundaryTitle": {
+        "message": "問題が発生しました",
+        "description": "Heading shown when a page crashes"
+    },
+    "error_boundaryFallback": {
+        "message": "予期しないエラーが発生しました。",
+        "description": "Shown under the crash heading when the error has no message"
+    },
     "toast_folderCreated": {
         "message": "フォルダを作成しました",
         "description": "Toast title for folder creation success"
