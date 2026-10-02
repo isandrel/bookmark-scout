@@ -1,53 +1,126 @@
 @import "tailwindcss";
 
+/*
+ * Palette comes from the extension icon: a compass-teal to violet ribbon.
+ * Light and dark follow the visitor's system setting.
+ */
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --primary: #3b82f6;
-  --primary-light: #60a5fa;
-  --accent: #8b5cf6;
-  --muted: #71717a;
-  --card: #18181b;
-  --card-border: #27272a;
+  --paper: #f4f7fb;
+  --surface: #ffffff;
+  --sunken: #e9eef5;
+  --ink: #0f2135;
+  --ink-soft: #4a5b70;
+  --line: #d6dfea;
+  --teal: #0b7a80;
+  --teal-ink: #ffffff;
+  --violet: #5b3fd6;
+  --marker: #ffe27a;
+  --marker-ink: #1b1600;
+  --inverse: #0f2135;
+  --inverse-ink: #e8eff6;
+  --inverse-soft: #a9bbcd;
+  --ribbon: linear-gradient(160deg, #2bb3b1 0%, #4f6ce0 48%, #8a3fd1 100%);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0d1b2a;
+    --surface: #132638;
+    --sunken: #0a1622;
+    --ink: #e8eff6;
+    --ink-soft: #9fb2c6;
+    --line: #23394f;
+    --teal: #3cc4c9;
+    --teal-ink: #04252a;
+    --violet: #a08bff;
+    --marker: #f5cf4a;
+    --marker-ink: #1b1600;
+    --inverse: #e8eff6;
+    --inverse-ink: #0f2135;
+    --inverse-soft: #42566c;
+    color-scheme: dark;
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-light: var(--primary-light);
-  --color-accent: var(--accent);
-  --color-muted: var(--muted);
-  --color-card: var(--card);
-  --color-card-border: var(--card-border);
-  --font-sans: var(--font-inter);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-line: var(--line);
+  --color-teal: var(--teal);
+  --color-teal-ink: var(--teal-ink);
+  --color-violet: var(--violet);
+  --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
+  --color-inverse: var(--inverse);
+  --color-inverse-ink: var(--inverse-ink);
+  --color-inverse-soft: var(--inverse-soft);
+  --font-sans: var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo", "Noto Sans JP",
+    "Noto Sans KR", system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo",
+    system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Gradient animations */
-@keyframes gradient-shift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+::selection {
+  background: var(--marker);
+  color: var(--marker-ink);
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 8s ease infinite;
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-/* Glow effect */
-.glow {
-  box-shadow: 0 0 60px rgba(59, 130, 246, 0.3),
-              0 0 100px rgba(139, 92, 246, 0.2);
+mark {
+  background: var(--marker);
+  color: var(--marker-ink);
+  border-radius: 2px;
+  padding: 0 1px;
 }
 
-/* Glass morphism */
-.glass {
-  background: rgba(24, 24, 27, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.ribbon {
+  background: var(--ribbon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
+
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: var(--teal);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .caret::after {
+    animation: none;
+  }
 }

@@ -42,6 +42,11 @@ export interface SiteConfig {
 		name: string;
 		url: string;
 	};
+	contact: {
+		privacy: string;
+		security: string;
+		support: string;
+	};
 	analytics?: {
 		website?: {
 			enabled: boolean;
@@ -109,6 +114,11 @@ if (!config.author?.name) {
 if (!config.github?.url) {
 	throw new Error("config/site.config.toml: github.url is required");
 }
+for (const role of ["privacy", "security", "support"] as const) {
+	if (!config.contact?.[role]?.includes("@")) {
+		throw new Error(`config/site.config.toml: contact.${role} must be an email address`);
+	}
+}
 
 // ============================================================================
 // Exports
@@ -143,6 +153,9 @@ export const DEFAULT_LOCALE = config.locales.default;
 
 /** Locale type */
 export type Locale = (typeof LOCALES)[number];
+
+/** Role-based contact addresses (privacy, security, support) */
+export const CONTACT = config.contact;
 
 /** Docs site name */
 export const DOCS_NAME = config.docs?.name ?? "Docs";

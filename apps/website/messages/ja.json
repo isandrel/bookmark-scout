@@ -4,9 +4,15 @@
     "description": "ブックマークの検索、整理、クリーンアップ、インポート/エクスポート、保存ができる、任意参加型AIツール搭載のブラウザ拡張機能"
   },
   "nav": {
+    "features": "機能",
+    "privacy": "プライバシー",
+    "install": "インストール",
     "docs": "ドキュメント",
     "github": "GitHub",
-    "backToDocs": "← ドキュメントに戻る"
+    "menu": "メニュー",
+    "skip": "本文へスキップ",
+    "languages": "言語",
+    "home": "Bookmark Scout ホーム"
   },
   "hero": {
     "badge": "ブラウザ拡張機能",
@@ -95,154 +101,23 @@
     }
   },
   "footer": {
-    "madeWith": "❤️を込めて作成",
-    "license": "AGPL-3.0ライセンス"
-  },
-  "docs": {
-    "title": "ドキュメント",
-    "subtitle": "Bookmark Scoutについて知っておくべきすべて",
-    "gettingStarted": {
-      "title": "はじめに",
-      "description": "Bookmark Scoutのインストールとセットアップ方法を学ぶ"
-    },
-    "features": {
-      "title": "機能",
-      "description": "すべての機能と機能を探索する"
-    },
-    "contributing": {
-      "title": "コントリビューション",
-      "description": "プロジェクトへの貢献方法"
-    }
-  },
-  "gettingStarted": {
-    "title": "はじめに",
-    "prerequisites": {
-      "title": "前提条件",
-      "bun": "Bun 1.3以降",
-      "chrome": "Google ChromeまたはChromiumベースのブラウザ",
-      "git": "Git"
-    },
-    "installation": {
-      "title": "インストール",
-      "step1": "リポジトリをクローン",
-      "step2": "依存関係をインストール",
-      "step3": "拡張機能をビルド",
-      "step4": {
-        "title": "Chromeにロード",
-        "1": "chrome://extensions/ を開く",
-        "2": "デベロッパーモードを有効化（右上のトグル）",
-        "3": "「パッケージ化されていない拡張機能を読み込む」をクリック",
-        "4": "apps/extension/dist/chrome-mv3 を選択"
-      }
-    },
-    "development": {
-      "title": "開発",
-      "description": "ホットリロード付きの開発サーバーを起動:"
-    }
-  },
-  "featuresPage": {
-    "title": "機能",
-    "subtitle": "Bookmark Scoutが提供するすべてを発見",
-    "instantSearch": {
-      "title": "インスタント検索",
-      "description": "高速検索でブックマークを素早く見つけます。パフォーマンスのためのデバウンス入力と結果を絞り込むフォルダフィルタリングを搭載。"
-    },
-    "dragAndDrop": {
-      "title": "ドラッグ＆ドロップ整理",
-      "description": "直感的なドラッグ＆ドロップでブックマークを再整理。フォルダ間の移動やフォルダ内の並べ替えが簡単に。"
-    },
-    "quickAdd": {
-      "title": "クイック追加",
-      "description": "ワンクリックで現在のタブを任意のフォルダに保存。ネストされたメニューをナビゲートする必要はありません。"
-    },
-    "sidePanel": {
-      "title": "サイドパネル",
-      "description": "現在のページを離れずに、Chrome または Edge のサイドパネルからブックマークにアクセスできます。調べものや参照作業に最適です。"
-    },
-    "bookmarksManager": {
-      "title": "フルブックマークマネージャー",
-      "description": "Chrome標準のブックマークページを、フォルダツリー、パンくず、テーブル型ビュー、右側ツールパネルを備えたカスタムマネージャーに置き換えます。"
-    },
-    "savedSearches": {
-      "title": "保存済み検索",
-      "description": "マネージャーのフィルター、並べ替え、フォルダーの範囲を名前付きのスマートビューとして保存。保存されるのは条件だけ（このデバイスのみ）なので、結果は常に現在のブックマークを反映します。"
-    },
-    "optionsPage": {
-      "title": "オプションページ",
-      "description": "外観、検索、動作、AIプロバイダー、AIツール、メンテナンス、メタデータ、セキュリティ、分析、データ、コンテキストメニュー動作を設定できます。"
-    },
-    "darkMode": {
-      "title": "ライト & ダークテーマ",
-      "description": "ライトかダークを選ぶか、システムのテーマに合わせられます。どちらでも読みやすい配色です。"
-    },
-    "expandCollapse": {
-      "title": "すべて展開/折りたたみ",
-      "description": "ワンクリックですべてのネストされたフォルダを展開または折りたたみ。概要把握や特定のセクションへの集中に最適。"
-    },
-    "createFolders": {
-      "title": "フォルダ作成",
-      "description": "ポップアップから直接新しいブックマークフォルダを作成。ブックマークマネージャーを開かずにブックマークを整理。"
-    },
-    "deleteItems": {
-      "title": "アイテム削除",
-      "description": "ポップアップやブックマークマネージャーから不要なブックマークやフォルダを削除。確認ダイアログは既定で有効で設定からオフにでき、削除は10秒間元に戻せます。"
-    },
-    "maintenanceTools": {
-      "title": "メンテナンスツール",
-      "description": "重複ブックマークの整理、トラッキングパラメーターの削除、リンク切れのスキャンと修復レビュー(削除、リダイレクト先の使用、アーカイブ版の使用、URL の編集)、ページタイトルの取得、プライバシーに関わる URL の確認、ブックマーク統計の収集。"
-    },
-    "importExport": {
-      "title": "インポート/エクスポート",
-      "description": "ブックマークを HTML、JSON、Markdown、CSV でエクスポート。HTML または JSON ファイルのインポートは、対象フォルダ、件数、重複を示すプレビューの後に実行し、後から元に戻せます。"
-    },
-    "aiTools": {
-      "title": "AIツール",
-      "description": "任意参加型AIプロバイダーで、ブックマーク推薦、LLMコンテキスト出力、タグ提案、要約、フォルダ再編成計画を利用できます。"
-    },
-    "contextMenu": {
-      "title": "コンテキストメニュー保存",
-      "description": "ブラウザの右クリックメニューから、最近使ったフォルダまたは標準のブックマークバーにリンクを保存できます。"
-    },
-    "settingsSync": {
-      "title": "設定同期",
-      "description": "拡張機能の設定をchrome.storage.syncに保存し、対応ブラウザではアカウント経由で設定を同期できます。"
-    },
-    "roadmap": {
-      "title": "現在の注力領域",
-      "tests": "ブラウザカバレッジ — Firefox のテストを拡充し、Edge と Firefox の CI ジョブを必須チェックにする",
-      "storeDistribution": "ストア配布 — Chrome ウェブストア、Firefox Add-ons、Edge Add-ons への申請(掲載用素材は準備済み)"
-    }
-  },
-  "contributingPage": {
-    "title": "コントリビューション",
-    "subtitle": "コントリビューションを歓迎します！始め方はこちら。",
-    "howTo": {
-      "title": "コントリビューション方法",
-      "step1": "リポジトリをフォーク",
-      "step2": "フィーチャーブランチを作成:",
-      "step3": "変更をコミット:",
-      "step4": "ブランチにプッシュ:",
-      "step5": "Pull Requestを作成"
-    },
-    "commits": {
-      "title": "コミット規約",
-      "description": "Conventional Commitsを使用しています。コミットのフォーマット:",
-      "feat": "新機能",
-      "fix": "バグ修正",
-      "docs": "ドキュメント",
-      "refactor": "コードリファクタリング",
-      "test": "テスト",
-      "chore": "メンテナンス"
-    },
-    "setup": {
-      "title": "開発セットアップ"
-    },
-    "codeStyle": {
-      "title": "コードスタイル",
-      "biome": "リンティングとフォーマッティングにBiomeを使用",
-      "check": "コミット前に変更範囲に合う最小のリント/ビルドコマンドを実行",
-      "strict": "TypeScript strictモードが有効",
-      "functional": "コンポーネントはhooksを使用した関数型スタイル"
-    }
+    "tagline": "ブックマークの検索、整理、クリーンアップを、ブラウザの中で。",
+    "product": "製品",
+    "project": "プロジェクト",
+    "contact": "お問い合わせ",
+    "legal": "法的情報",
+    "features": "機能",
+    "install": "インストール",
+    "docs": "ドキュメント",
+    "releases": "リリース",
+    "github": "ソースコード",
+    "contributing": "コントリビュート",
+    "license": "ライセンス (AGPL-3.0)",
+    "support": "サポート",
+    "privacy": "プライバシー",
+    "security": "セキュリティ",
+    "privacyPolicy": "プライバシーポリシー",
+    "securityTxt": "security.txt",
+    "madeBy": "制作: {author}。無料のオープンソースです。"
   }
 }

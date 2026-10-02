@@ -19,6 +19,14 @@ url = "https://github.com/isandrel/bookmark-scout"
 default   = "en"
 supported = ["en", "ja", "ko"]
 
+# Role-based addresses on the site domain (RFC 2142 style). Each one should be an
+# alias that forwards to a monitored inbox. Also create postmaster@ and abuse@,
+# which mail operators expect but the site does not need to publish.
+[contact]
+privacy  = "privacy@bookmark-scout.com"
+security = "security@bookmark-scout.com"
+support  = "support@bookmark-scout.com"
+
 [docs]
 name = "Bookmark Scout Docs"
 url  = "https://docs.bookmark-scout.com"

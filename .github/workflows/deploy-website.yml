@@ -45,6 +45,8 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./apps/website/out
+          # Publishes .well-known/security.txt, which the default excludes as a hidden path.
+          include-hidden-files: true
 
   deploy:
     environment:

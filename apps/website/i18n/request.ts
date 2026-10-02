@@ -9,8 +9,14 @@ export default getRequestConfig(async ({ requestLocale }) => {
         ? requested
         : routing.defaultLocale;
 
+    // The privacy policy is long-form, so it lives in its own file per locale.
+    const [site, privacy] = await Promise.all([
+        import(`../messages/${locale}.json`),
+        import(`../messages/privacy/${locale}.json`),
+    ]);
+
     return {
         locale,
-        messages: (await import(`../messages/${locale}.json`)).default,
+        messages: { ...site.default, ...privacy.default },
     };
 });
