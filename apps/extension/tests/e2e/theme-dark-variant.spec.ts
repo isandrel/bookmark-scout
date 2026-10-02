@@ -31,7 +31,7 @@ type ThemedPage = {
 const PAGES: ThemedPage[] = [
   {
     path: 'popup.html',
-    target: (page) => folderRow(page, 'Other bookmarks').locator('svg').first(),
+    target: (page) => folderRow(page, 'Other bookmarks').locator(`svg.${LIGHT_CLASS}`),
   },
   { path: 'sidepanel.html' },
   { path: 'options.html' },

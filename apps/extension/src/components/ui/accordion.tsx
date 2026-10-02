@@ -1,5 +1,5 @@
 import { Accordion as AccordionPrimitive } from '@base-ui/react/accordion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import * as React from 'react';
 
 const Accordion = AccordionPrimitive.Root;
@@ -12,6 +12,10 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = 'AccordionItem';
 
+/**
+ * Tree-style disclosure trigger: the chevron leads the row, points right while closed, and turns
+ * down while open. Its slot is fixed width so rows line up whether or not they can expand.
+ */
 const AccordionTrigger = React.forwardRef<
   HTMLButtonElement,
   Omit<AccordionPrimitive.Trigger.Props, 'className'> & {
@@ -24,18 +28,23 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'group/trigger flex w-full items-center justify-between py-4 text-sm font-medium transition-all hover:underline [&[data-panel-open]>svg]:rotate-180',
+        'group/trigger flex w-full items-center gap-1 py-4 text-sm font-medium transition-all hover:underline',
         className,
       )}
       {...props}
     >
-      <div className="flex-1 min-w-0 overflow-hidden">{children}</div>
+      {/* The trigger's aria-expanded already conveys the state, so the chevron stays decorative. */}
       <div
-        className={cn('flex-shrink-0 ml-2 w-4 flex justify-center', hideIndicator && 'invisible')}
-        aria-hidden={hideIndicator || undefined}
+        data-slot="accordion-indicator"
+        aria-hidden="true"
+        className={cn(
+          'flex size-4 shrink-0 items-center justify-center transition-transform duration-200 group-data-[panel-open]/trigger:rotate-90',
+          hideIndicator && 'invisible',
+        )}
       >
-        <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform duration-200" />
+        <ChevronRight className="size-4 text-muted-foreground" />
       </div>
+      <div className="flex-1 min-w-0 overflow-hidden">{children}</div>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

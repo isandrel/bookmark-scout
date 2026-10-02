@@ -53,10 +53,12 @@ export function NewFolderInput({ value, onChange, onSubmit, onCancel }: NewFolde
     // biome-ignore lint/a11y/useKeyWithClickEvents: onClick used only for event bubbling control
     // biome-ignore lint/a11y/noStaticElementInteractions: This div is a container, not interactive
     <div
-      className="flex items-center gap-2 py-1 px-2 hover:bg-accent rounded-md folder-item"
+      className="flex items-center py-1 px-2 hover:bg-accent rounded-md folder-item"
       onClick={(e) => e.stopPropagation()}
     >
-      <Folder className="w-4 h-4 shrink-0 text-muted-foreground" />
+      {/* Empty chevron slot, so the icon lines up with the folders around it. */}
+      <span aria-hidden="true" className="mr-1 size-4 shrink-0" />
+      <Folder className="mr-2 w-4 h-4 shrink-0 text-muted-foreground" />
       <div className="flex-1">
         <Input
           ref={inputRef}
