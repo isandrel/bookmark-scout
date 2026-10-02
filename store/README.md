@@ -100,6 +100,8 @@ Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefo
 - Synthetic bookmarks only: public documentation sites, `example.com` and `example.org` placeholder URLs, and two deliberate duplicates for the Duplicate Cleaner.
 - Theme left at the default `system`; light and dark come from the emulated OS color scheme, so Options shows no "Modified" badges.
 - The runner opens the popup as a tab, so its "current tab" would be the popup itself. The capture script stubbed `tabs.query` for the active tab to return a public MDN page instead. No other behavior was changed.
-- Raw captures stay in `~/.cache/bookmark-scout-qa/store/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
+- Site icons are real: before capturing, the script ran **Refresh Site Icons** over all bookmarks and saved the results, in a copy of the build whose manifest grants the optional website access (as the E2E `grantWebHostAccess` fixture does, because the permission prompt cannot be answered headlessly). Icons came only from the bookmarked sites. Sites without a usable same-site icon (`developer.chrome.com`, `example.com`, `example.org`) keep the generic globe, as they would for a user.
+- Recaptured on 2026-10-02 from `main` after the Refresh Site Icons tool landed (#501). The same eight files are copied to `apps/website/public/screenshots/` and `apps/docs/public/screenshots/`; the website generates its AVIF and WebP variants from them at build time.
+- Raw captures stay in `~/.cache/bookmark-scout-qa/store-icons/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
 
 Screenshots show the English UI. Localized screenshots for `ja` and `ko` were not produced; the stores accept the English set for every locale.
