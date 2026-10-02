@@ -155,11 +155,14 @@ When the changed behavior is covered by the extension test suite, also run the n
 
 ### Website changes
 
-- `nx run website:build`
+- `nx run website:lint`
+- `nx run website:verify` (builds and checks the static export)
+- `nx run website:test:e2e` when pages, components, or interaction change
 
 ### Docs changes
 
-- `nx run docs:build`
+- `nx run docs:types:check`
+- `nx run docs:build`, then `bun run --cwd apps/docs verify`
 
 ### Shared or cross-app changes
 
@@ -353,7 +356,7 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 
 ## Design system
 
-`DESIGN.md` at the repository root describes how the website and docs look and feel: tokens, typography, components, and do's and don'ts, in the DESIGN.md format. Read it before changing UI in `apps/website` or `apps/docs`, and update it when tokens or shared components change.
+Each app keeps its design file next to its `AGENTS.md`: `apps/website/DESIGN.md` and `apps/docs/DESIGN.md` (tokens, typography, components, do's and don'ts, in the DESIGN.md format). The root `DESIGN.md` holds only the shared brand and links to them. Read the app's design file before changing its UI, and update it when tokens or shared components change.
 
 ## Agent skills
 
