@@ -52,7 +52,8 @@ test('non-default selects survive reload and never block saving other settings',
   await expect
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({ showFavicons: true, theme: 'dark', faviconSize: 32, language: 'en' });
-  await expect(page.getByTestId('settings-save-status')).toHaveText('Settings saved');
+  // Autosave shows no success message; the status only speaks up when a save fails.
+  await expect(page.getByTestId('settings-save-status')).toBeEmpty();
   await expect(page.getByText(/Invalid settings|invalid_/)).toHaveCount(0);
 });
 
@@ -434,10 +435,11 @@ test('resetting a list setting clears invalid text', async ({
   await page.getByRole('button', { name: 'Reset All' }).click();
   await expect(statuses).toHaveValue(DEFAULT_SUCCESS_STATUSES.join(', '));
   await expect(alert).toHaveCount(0);
-  await expect(page.getByTestId('settings-save-status')).toHaveText('Settings saved');
-  expect((await readSettings(extensionWorker)).deadLinksSuccessStatuses).toEqual(
-    DEFAULT_SUCCESS_STATUSES,
-  );
+  // Autosave shows no success message; the status only speaks up when a save fails.
+  await expect(page.getByTestId('settings-save-status')).toBeEmpty();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
+    .toEqual(DEFAULT_SUCCESS_STATUSES);
 });
 
 test('settings search finds AI provider panel fields', async ({

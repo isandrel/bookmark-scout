@@ -12,7 +12,6 @@ import {
   Moon,
   Palette,
   RotateCcw,
-  Save,
   Search,
   Settings2,
   ShieldAlert,
@@ -64,7 +63,6 @@ const OptionsPage: React.FC = () => {
   const [values, setValues] = useState<Settings>(settings);
   const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
   const [inputErrors, setInputErrors] = useState<SettingsFieldErrors>({});
-  const [isSaving, setIsSaving] = useState(false);
   // Bumped by Reset All so rows drop unsaved input text, such as an invalid list draft.
   const [formVersion, setFormVersion] = useState(0);
   const [detectedModels, setDetectedModels] = useState<Partial<Record<AIProvider, string[]>>>({});
@@ -89,7 +87,6 @@ const OptionsPage: React.FC = () => {
     async (changes: Partial<Settings>) => {
       const keys = Object.keys(changes) as (keyof Settings)[];
       if (keys.length === 0) return;
-      setIsSaving(true);
       try {
         const { settings: saved, errors } = await saveValidSettings(changes);
         savedRef.current = saved;
@@ -113,8 +110,6 @@ const OptionsPage: React.FC = () => {
           description: message,
           variant: 'destructive',
         });
-      } finally {
-        setIsSaving(false);
       }
     },
     [toast],
@@ -514,25 +509,16 @@ const OptionsPage: React.FC = () => {
               <RotateCcw className="mr-2 h-4 w-4" />
               {t('action_resetAll')}
             </Button>
+            {/* Settings save as they change, so only a failed save needs saying. */}
             <output
               aria-live="polite"
               data-testid="settings-save-status"
-              className="flex min-w-[140px] items-center justify-end px-3 text-sm text-muted-foreground"
+              className="flex items-center justify-end px-3 text-sm text-destructive-text empty:hidden"
             >
-              {isSaving ? (
-                <span className="flex animate-pulse items-center">
-                  <Settings2 className="mr-2 h-3 w-3 animate-spin" />
-                  {t('action_saving')}
-                </span>
-              ) : errorCount > 0 ? (
-                <span className="flex items-center text-destructive-text">
+              {errorCount > 0 && (
+                <span className="flex items-center">
                   <TriangleAlert className="mr-2 h-3 w-3" />
                   {t('settings_statusNotSaved', String(errorCount))}
-                </span>
-              ) : (
-                <span className="flex items-center">
-                  <Save className="mr-2 h-3 w-3 opacity-50" />
-                  {t('toast_settingsSaved')}
                 </span>
               )}
             </output>

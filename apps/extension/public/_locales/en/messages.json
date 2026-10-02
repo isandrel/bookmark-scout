@@ -243,10 +243,6 @@
         "message": "No settings match your search in this category.",
         "description": "Empty settings search result"
     },
-    "toast_settingsSaved": {
-        "message": "Settings saved",
-        "description": "Toast title for settings save success"
-    },
     "toast_preferencesUpdated": {
         "message": "Your preferences have been updated.",
         "description": "Toast description for settings save success"

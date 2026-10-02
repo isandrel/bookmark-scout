@@ -243,10 +243,6 @@
         "message": "このカテゴリには一致する設定がありません",
         "description": "Empty settings search result"
     },
-    "toast_settingsSaved": {
-        "message": "設定を保存しました",
-        "description": "Toast title for settings save success"
-    },
     "toast_preferencesUpdated": {
         "message": "設定が更新されました",
         "description": "Toast description for settings save success"

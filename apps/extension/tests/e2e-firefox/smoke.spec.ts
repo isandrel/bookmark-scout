@@ -204,7 +204,7 @@ test('options saves a setting to sync storage and keeps it after reload', async 
   await expect.poll(async () => (await readSettings(extension)).showFavicons).toBe(false);
   await expect
     .poll(async () => (await extension.find('[data-testid="settings-save-status"]')).getText())
-    .toBe('Settings saved');
+    .toBe('');
 
   await extension.driver.navigate().refresh();
   await expect

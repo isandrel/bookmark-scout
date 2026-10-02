@@ -243,10 +243,6 @@
         "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
     },
-    "toast_settingsSaved": {
-        "message": "설정이 저장되었습니다",
-        "description": "Toast title for settings save success"
-    },
     "toast_preferencesUpdated": {
         "message": "환경 설정이 업데이트되었습니다",
         "description": "Toast description for settings save success"
