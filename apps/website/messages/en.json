@@ -154,6 +154,10 @@
       "title": "Full Bookmarks Manager",
       "description": "Replace Chrome's default bookmarks page with a custom manager that includes a folder tree, breadcrumbs, a table-based bookmark view, and a right-side tools panel."
     },
+    "savedSearches": {
+      "title": "Saved Searches",
+      "description": "Save the manager's filters, sort, and folder scope as named smart views. Only the query is stored, on this device, so results always reflect your current bookmarks."
+    },
     "optionsPage": {
       "title": "Options Page",
       "description": "Configure appearance, search, behavior, AI providers, AI tools, maintenance tools, metadata, security, analytics, data, and context-menu behavior."
@@ -196,7 +200,6 @@
     },
     "roadmap": {
       "title": "Current Focus",
-      "savedSearches": "Saved Searches — Save searches and smart bookmark views",
       "tests": "Browser Coverage — Run browser tests in Firefox and Edge",
       "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
     }

@@ -16,6 +16,7 @@ const SHORTCUT_ROWS: { keys: string[][]; label: () => string }[] = [
   { keys: [['Alt', '↑'], ['Backspace']], label: () => t('shortcuts_parentFolder') },
   { keys: [['j'], ['k']], label: () => t('shortcuts_nextPreviousRow') },
   { keys: [['Enter']], label: () => t('shortcuts_openFolder') },
+  { keys: [['s']], label: () => t('shortcuts_openSavedSearches') },
   { keys: [['?']], label: () => t('shortcuts_showHelp') },
   { keys: [['Esc']], label: () => t('shortcuts_closeDialog') },
 ];

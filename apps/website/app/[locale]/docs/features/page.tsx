@@ -39,6 +39,11 @@ export default async function FeaturesPage({
             description: t("featuresPage.bookmarksManager.description"),
         },
         {
+            icon: "🔖",
+            title: t("featuresPage.savedSearches.title"),
+            description: t("featuresPage.savedSearches.description"),
+        },
+        {
             icon: "⚙️",
             title: t("featuresPage.optionsPage.title"),
             description: t("featuresPage.optionsPage.description"),
@@ -153,10 +158,6 @@ export default async function FeaturesPage({
                         <h2 className="text-2xl font-bold mb-6">{t("featuresPage.roadmap.title")}</h2>
                         <div className="glass rounded-2xl p-6">
                             <ul className="space-y-3 text-muted">
-                                <li className="flex items-center gap-3">
-                                    <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
-                                    {t("featuresPage.roadmap.savedSearches")}
-                                </li>
                                 <li className="flex items-center gap-3">
                                     <span className="w-5 h-5 rounded border border-white/20 flex-shrink-0" />
                                     {t("featuresPage.roadmap.tests")}
