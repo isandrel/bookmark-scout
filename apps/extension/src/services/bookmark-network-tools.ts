@@ -9,6 +9,50 @@ export type DeadLinkStatus = 'ok' | 'redirect' | 'error' | 'timeout' | 'invalid'
  */
 export type NetworkErrorKind = 'network' | 'timeout' | 'redirect';
 
+/**
+ * Why a link failed. Only `notFound`, `unreachable`, and `redirectLoop` confirm a dead link; the
+ * others often work in a browser (sign-in walls, rate limits, bot protection, servers that reject
+ * automated checks, temporary outages) and need a manual check before anything is removed.
+ */
+export type DeadLinkCategory =
+  | 'notFound'
+  | 'unreachable'
+  | 'redirectLoop'
+  | 'auth'
+  | 'rateLimited'
+  | 'methodRejected'
+  | 'serverError'
+  | 'httpError'
+  | 'timeout';
+
+const CONFIRMED_DEAD_CATEGORIES: ReadonlySet<DeadLinkCategory> = new Set([
+  'notFound',
+  'unreachable',
+  'redirectLoop',
+]);
+
+/** Classifies a non-success HTTP status. A HEAD error has already been retried with GET. */
+export function classifyHttpFailure(statusCode: number): DeadLinkCategory {
+  if (statusCode === 404 || statusCode === 410) return 'notFound';
+  if (statusCode === 401 || statusCode === 403 || statusCode === 407) return 'auth';
+  if (statusCode === 429) return 'rateLimited';
+  // HEAD and the GET fallback were both rejected: the server refuses automated checks.
+  if (statusCode === 405 || statusCode === 501) return 'methodRejected';
+  if (statusCode >= 500) return 'serverError';
+  return 'httpError';
+}
+
+const TRANSPORT_FAILURE_CATEGORIES: Record<NetworkErrorKind, DeadLinkCategory> = {
+  network: 'unreachable',
+  timeout: 'timeout',
+  redirect: 'redirectLoop',
+};
+
+/** True only for failures that confirm a link is broken, not for ones that need a manual check. */
+export function isConfirmedDeadLink(item: Pick<DeadLinkResultItem, 'category'>): boolean {
+  return item.category !== undefined && CONFIRMED_DEAD_CATEGORIES.has(item.category);
+}
+
 export type DeadLinkResultItem = {
   id: string;
   /** Raw bookmark title; the view localizes empty titles. */
@@ -20,6 +64,8 @@ export type DeadLinkResultItem = {
   /** Final URL when the request was redirected. */
   redirectUrl?: string;
   errorKind?: NetworkErrorKind;
+  /** Set for `error` and `timeout` results. */
+  category?: DeadLinkCategory;
 };
 
 export type DeadLinkScanResult = {
@@ -218,6 +264,7 @@ export async function scanDeadLinks(
           status,
           statusCode: response.status,
           ...(redirectUrl ? { redirectUrl } : {}),
+          ...(status === 'error' ? { category: classifyHttpFailure(response.status) } : {}),
         } satisfies DeadLinkResultItem;
       } catch (error) {
         lastError = error;
@@ -225,10 +272,12 @@ export async function scanDeadLinks(
     }
 
     const errorKind = await classifyFailure(lastError, url, options.requestTimeoutMs);
+    const category = TRANSPORT_FAILURE_CATEGORIES[errorKind];
     return {
       ...base,
       status: errorKind === 'timeout' ? 'timeout' : 'error',
       errorKind,
+      category,
     } satisfies DeadLinkResultItem;
   });
 

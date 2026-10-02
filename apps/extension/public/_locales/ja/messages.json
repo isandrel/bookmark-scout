@@ -3806,5 +3806,141 @@
     "savedSearches_errorGeneric": {
         "message": "この検索を保存できませんでした。",
         "description": "Error when a saved search could not be saved for another reason"
+    },
+    "tools_deadLinkCategory_notFound": {
+        "message": "ページが見つかりません",
+        "description": "Dead link reason for HTTP 404 or 410"
+    },
+    "tools_deadLinkCategory_auth": {
+        "message": "ログインが必要か、アクセスが拒否されました。ブラウザでは開ける場合があります",
+        "description": "Dead link reason for HTTP 401, 403, or 407"
+    },
+    "tools_deadLinkCategory_rateLimited": {
+        "message": "リクエスト制限中です。後でもう一度お試しください",
+        "description": "Dead link reason for HTTP 429"
+    },
+    "tools_deadLinkCategory_methodRejected": {
+        "message": "サイトが自動チェックを拒否しています。開いて確認してください",
+        "description": "Dead link reason when both HEAD and GET are rejected with HTTP 405 or 501"
+    },
+    "tools_deadLinkCategory_serverError": {
+        "message": "サーバーエラーです。一時的な可能性があります",
+        "description": "Dead link reason for HTTP 5xx"
+    },
+    "tools_deadLinkCategory_httpError": {
+        "message": "予期しない応答です。開いて確認してください",
+        "description": "Dead link reason for other HTTP error statuses"
+    },
+    "tools_deadLinkHttpDetail": {
+        "message": "$1: $2",
+        "description": "Dead link detail; $1 is the HTTP status text (for example \"HTTP 404\"), $2 the reason"
+    },
+    "tools_deadLinkConfirmedDead": {
+        "message": "リンク切れ確定",
+        "description": "Badge for a link that is definitely broken (404/410, unreachable, redirect loop)"
+    },
+    "tools_deadLinkNeedsCheck": {
+        "message": "手動で確認",
+        "description": "Badge for a failed link that may still work in a browser"
+    },
+    "tools_deadLinkSummary": {
+        "message": "リンク切れ確定: $1。手動確認が必要: $2。リダイレクト: $3。",
+        "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
+    },
+    "tools_deadLinkReview": {
+        "message": "修復を確認",
+        "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkRepairTitle": {
+        "message": "リンク切れの修復を確認",
+        "description": "Dead-link repair dialog title"
+    },
+    "tools_deadLinkRepairDesc": {
+        "message": "各リンクの処理を選んでください。適用するまで何も変更されません。",
+        "description": "Dead-link repair dialog description"
+    },
+    "tools_deadLinkRepairAction": {
+        "message": "$1 の処理",
+        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairChoice_keep": {
+        "message": "そのまま残す",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_delete": {
+        "message": "ブックマークを削除",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_redirect": {
+        "message": "リダイレクト先に置き換え",
+        "description": "Dead-link repair choice; replaces the URL with where the site redirected"
+    },
+    "tools_deadLinkRepairChoice_archive": {
+        "message": "アーカイブ版に置き換え (Wayback Machine)",
+        "description": "Dead-link repair choice; replaces the URL with a web.archive.org link"
+    },
+    "tools_deadLinkRepairChoice_edit": {
+        "message": "URL を編集",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairNewUrl": {
+        "message": "$1 の新しい URL",
+        "description": "Accessible label of the edited URL field; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairInvalidUrl": {
+        "message": "現在とは異なる有効な http または https の URL を入力してください。",
+        "description": "Validation message for an edited dead-link URL"
+    },
+    "tools_deadLinkRepairWillChange": {
+        "message": "新しい URL: $1",
+        "description": "Preview of the URL a repair will write; $1 is the URL"
+    },
+    "tools_deadLinkRepairArchiveNote": {
+        "message": "アーカイブのリンクは確認されません。ページがアーカイブされていない場合があります。",
+        "description": "Note shown when the archived-copy repair is chosen"
+    },
+    "tools_deadLinkRepairSummary": {
+        "message": "削除: $1。URL を置き換え: $2。残す: $3。",
+        "description": "Planned dead-link repair counts; $1 deletions, $2 URL replacements, $3 kept"
+    },
+    "tools_deadLinkRepairApply": {
+        "message": "$1 件の変更を適用",
+        "description": "Apply button of the dead-link repair dialog; $1 is the number of changes"
+    },
+    "tools_deadLinkRepairApply_one": {
+        "message": "$1 件の変更を適用",
+        "description": "Apply button of the dead-link repair dialog (singular)"
+    },
+    "tools_deadLinkRepairApplied": {
+        "message": "修復を適用しました",
+        "description": "Toast title after all dead-link repairs were applied"
+    },
+    "tools_deadLinkRepairPartial": {
+        "message": "一部の修復は適用されませんでした",
+        "description": "Toast title when some dead-link repairs were skipped or failed"
+    },
+    "tools_deadLinkRepairOutcome": {
+        "message": "削除: $1。URL を置き換え: $2。スキャン後に変更されたためスキップ: $3。失敗: $4。",
+        "description": "Dead-link repair result counts; $1 deleted, $2 replaced, $3 skipped, $4 failed"
+    },
+    "tools_deadLinkRepairIssueChanged": {
+        "message": "$1: スキャン後に変更されたため、変更しませんでした",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairIssueFailed": {
+        "message": "$1: 変更できませんでした",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairUndone": {
+        "message": "修復を元に戻しました",
+        "description": "Toast title after a dead-link repair batch was undone"
+    },
+    "tools_deadLinkRepairUndoPartial": {
+        "message": "一部の修復を元に戻せませんでした",
+        "description": "Toast title when part of a dead-link repair batch could not be undone"
+    },
+    "tools_deadLinkRepairUndoneDesc": {
+        "message": "復元: $1。復元できませんでした: $2。",
+        "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
     }
 }
