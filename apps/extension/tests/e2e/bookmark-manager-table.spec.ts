@@ -1,4 +1,4 @@
-import type { Page, Worker } from '@playwright/test';
+import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -236,4 +236,86 @@ test('manager table uses Japanese labels', async ({ extensionId, extensionWorker
   await expect(page.getByRole('menuitem', { name: '編集' })).toBeVisible();
   await expect(page.getByRole('menuitem', { name: '新しいタブで開く' })).toBeVisible();
   await expect(page.getByRole('menuitem', { name: '削除' })).toBeVisible();
+});
+
+test('bookmark details open with the title in view', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // A short window makes the dialog scroll, so opening it scrolled to a footer button hides the title.
+  await page.setViewportSize({ width: 1400, height: 420 });
+  const folder = await seedFolder(extensionWorker, 'E2E Details Scroll', [
+    { title: 'Scroll Details Link', url: 'https://e2e.invalid/details-scroll' },
+  ]);
+
+  await page.goto(managerUrl(extensionId, folder.folderId));
+  await openRowMenu(page, 'Scroll Details Link');
+  await page.getByRole('menuitem', { name: 'View Details' }).click();
+
+  const dialog = page.getByRole('dialog', { name: 'Bookmark Details' });
+  await expect(dialog).toBeVisible();
+  // Initial focus moves a frame after opening; measure once it has landed inside the dialog.
+  await expect
+    .poll(() => dialog.evaluate((element) => element.contains(document.activeElement)))
+    .toBe(true);
+  expect(
+    await dialog.evaluate((element) => element.scrollHeight > element.clientHeight),
+    'the dialog must overflow for this check to mean anything',
+  ).toBe(true);
+
+  const title = dialog.getByRole('heading', { name: 'Bookmark Details' });
+  await expect
+    .poll(async () => {
+      const [dialogBox, titleBox] = await Promise.all([dialog.boundingBox(), title.boundingBox()]);
+      if (!dialogBox || !titleBox) return 'not rendered';
+      const inView =
+        titleBox.y >= dialogBox.y && titleBox.y + titleBox.height <= dialogBox.y + dialogBox.height;
+      return inView ? 'in view' : `title at ${titleBox.y}, dialog from ${dialogBox.y}`;
+    })
+    .toBe('in view');
+
+  // Keyboard users still reach the first control with Tab once the stored metadata has loaded.
+  const tags = dialog.getByRole('textbox', { name: 'Tags' });
+  await expect(tags).toBeEnabled();
+  await page.keyboard.press('Tab');
+  await expect(tags).toBeFocused();
+});
+
+test('rows-per-page select keeps the gap the other pagination groups use', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Pagination Spacing', [
+    { title: 'Spacing Link', url: 'https://e2e.invalid/spacing' },
+  ]);
+
+  await page.goto(managerUrl(extensionId, folder.folderId));
+  const label = page.getByText('Rows per page', { exact: true });
+  const trigger = label.locator('..').getByRole('combobox');
+  const pageOf = page.getByText('Page 1 of 1', { exact: true });
+  const firstPage = page.getByRole('button', { name: 'Go to first page' });
+  await expect(trigger).toHaveText('10');
+
+  const box = async (locator: Locator) => {
+    const value = await locator.boundingBox();
+    if (!value) throw new Error('Pagination control is not rendered');
+    return value;
+  };
+  const [labelBox, triggerBox, pageOfBox, firstPageBox] = await Promise.all([
+    box(label),
+    box(trigger),
+    box(pageOf),
+    box(firstPage),
+  ]);
+  // The pagination groups share one gap: the select ends as far from "Page 1 of 1" as that text
+  // ends from the page buttons. A stray end margin on the select pushes its group left.
+  const selectToPageOf = pageOfBox.x - (triggerBox.x + triggerBox.width);
+  const pageOfToButtons = firstPageBox.x - (pageOfBox.x + pageOfBox.width);
+  expect(Math.abs(selectToPageOf - pageOfToButtons)).toBeLessThanOrEqual(1);
+  // The label and the select stay on one row.
+  const labelMiddle = labelBox.y + labelBox.height / 2;
+  const triggerMiddle = triggerBox.y + triggerBox.height / 2;
+  expect(Math.abs(labelMiddle - triggerMiddle)).toBeLessThanOrEqual(1);
 });

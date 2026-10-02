@@ -38,14 +38,14 @@ This page summarizes the current repository status so roadmap docs do not drift 
 
 - Bookmark tags and summaries: editable in Bookmark Details and saved from reviewed AI suggestions, but stored only in local extension storage. They are not synced, searchable, or included in bookmark exports.
 - AI tool limits (tag count and style, summary length, reorganization folder limits) are sent to the provider as instructions; the output is not checked against them. Live provider compatibility is verified manually.
-- Firefox and Edge receive build validation only; browser E2E tests run in Chromium. Firefox has no side panel.
+- Firefox and Edge receive build validation only; browser E2E tests run in Chromium. Firefox has no side panel, and the bookmarks manager and Tools sidebar are not reachable in the Firefox build because Firefox cannot replace the bookmarks page.
 - Four tool scope settings are fixed: Auto-Tagging and Content Summarizer always use the current folder; Duplicate Cleaner and Privacy Scanner always scan all bookmarks.
 
 ## Planned
 
 - Reviewed repair for dead links
 - Firefox and Edge browser tests, and automated context-menu and drag-and-drop flows
-- Store listing polish for Chrome Web Store, Firefox Add-ons, and Edge Add-ons
+- Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in [`store/`](https://github.com/isandrel/bookmark-scout/tree/main/store); submission is manual and needs release approval, and the Firefox package first needs an add-on ID and a data collection declaration
 
 ## Known Documentation Rules
 
