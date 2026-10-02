@@ -42,7 +42,7 @@ const AccordionTrigger = React.forwardRef<
           hideIndicator && 'invisible',
         )}
       >
-        <ChevronRight className="size-4 text-muted-foreground" />
+        <ChevronRight data-slot="accordion-chevron" className="size-4 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0 overflow-hidden">{children}</div>
     </AccordionPrimitive.Trigger>

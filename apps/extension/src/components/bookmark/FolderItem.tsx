@@ -238,9 +238,13 @@ export function FolderItem({
                 elementRef.current = el;
                 setupDragDrop(el);
               }}
+              data-slot="drag-handle"
               className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
             >
-              <Folder className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400" />
+              <Folder
+                data-slot="folder-icon"
+                className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400"
+              />
               {node.title.trim() ? (
                 <HighlightedText
                   className="truncate text-sm"

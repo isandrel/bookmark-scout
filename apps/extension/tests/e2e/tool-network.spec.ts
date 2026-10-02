@@ -123,7 +123,9 @@ test.describe('with website access granted', () => {
     await toolCard(page, 'Check Dead Links').getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Check Dead Links' });
     const row = (title: string) =>
-      results.locator('div.rounded-lg').filter({ has: page.getByText(title, { exact: true }) });
+      results
+        .locator('[data-slot="tool-result-row"]')
+        .filter({ has: page.getByText(title, { exact: true }) });
     await expect(row('Plain')).toContainText('Reachable');
     await expect(row('Missing')).toContainText('HTTP 404');
     await expect(row('Head Rejected')).toContainText('Reachable');
@@ -229,7 +231,9 @@ test.describe('with website access granted', () => {
     await card.getByRole('button', { name: 'Scan' }).click();
     const results = page.getByRole('dialog', { name: 'Metadata Fetcher' });
     const row = (title: string) =>
-      results.locator('div.rounded-lg').filter({ has: page.getByText(title, { exact: true }) });
+      results
+        .locator('[data-slot="tool-result-row"]')
+        .filter({ has: page.getByText(title, { exact: true }) });
     await expect(row('Stalled')).toContainText('Request timed out', { timeout: 10_000 });
     await expect(row('Document')).toContainText('Not an HTML page; skipped');
     await expect(row('Plain Original')).toContainText('Suggested title: Plain Page Title');

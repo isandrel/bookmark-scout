@@ -150,7 +150,9 @@ export function DuplicateResultsView({
                 <div key={item.node.id} className="rounded-md bg-muted/40 p-2 text-sm">
                   <div className="flex items-center gap-2">
                     {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
-                    <span className="font-medium">{item.node.title || t('bookmarks_untitled')}</span>
+                    <span data-slot="tool-result-title" className="font-medium">
+                      {item.node.title || t('bookmarks_untitled')}
+                    </span>
                     {index === 0 ? <Badge>{t('state_keep')}</Badge> : null}
                   </div>
                   <p className="break-all text-xs text-muted-foreground">{item.node.url}</p>
@@ -287,7 +289,11 @@ export function DeadLinkResultsView({
         ) : null}
       </div>
       {result.items.map((item) => (
-        <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
+        <div
+          key={item.id}
+          data-slot="tool-result-row"
+          className="space-y-2 rounded-lg border p-3 text-sm"
+        >
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
             <div className="flex flex-shrink-0 items-center gap-1">
@@ -348,7 +354,11 @@ export function MetadataResultsView({
           const canApply = item.changed && Boolean(item.suggestedTitle);
           const checkboxId = `metadata-apply-${item.id}`;
           return (
-            <div key={item.id} className="flex gap-3 rounded-lg border p-3 text-sm">
+            <div
+              key={item.id}
+              data-slot="tool-result-row"
+              className="flex gap-3 rounded-lg border p-3 text-sm"
+            >
               {canApply ? (
                 <Checkbox
                   id={checkboxId}
@@ -507,7 +517,11 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
   return result?.items.length ? (
     <div className="space-y-3">
       {result.items.map((item) => (
-        <div key={item.id} className="space-y-2 rounded-lg border p-3 text-sm">
+        <div
+          key={item.id}
+          data-slot="tool-result-row"
+          className="space-y-2 rounded-lg border p-3 text-sm"
+        >
           <div className="flex items-center justify-between gap-2">
             <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
             <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>

@@ -24,7 +24,9 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
   await toolCard(page, 'Privacy Scanner').getByRole('button', { name: 'Scan' }).click();
   const dialog = page.getByRole('dialog', { name: 'Privacy Scanner' });
   const row = (title: string) =>
-    dialog.locator('div.rounded-lg').filter({ has: page.getByText(title, { exact: true }) });
+    dialog
+      .locator('[data-slot="tool-result-row"]')
+      .filter({ has: page.getByText(title, { exact: true }) });
   await expect(row('Basic Auth')).toContainText('High');
   await expect(row('Basic Auth')).toContainText('Username and password embedded in URL');
   await expect(row('Basic Auth')).not.toContainText('Email address detected');
