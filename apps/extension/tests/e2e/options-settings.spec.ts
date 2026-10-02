@@ -67,14 +67,14 @@ test('changing the AI provider selects that provider default model and saves', a
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
 
   await page.getByRole('combobox', { name: 'AI Provider' }).click();
-  await page.getByRole('option', { name: 'Anthropic' }).click();
+  await page.getByRole('option', { name: 'Anthropic', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText('Claude Sonnet 4');
   await expect
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({ aiProvider: 'anthropic', aiModel: 'claude-sonnet-4-20250514' });
 
   await page.getByRole('combobox', { name: 'AI Provider' }).click();
-  await page.getByRole('option', { name: 'Custom Provider' }).click();
+  await page.getByRole('option', { name: 'Custom Provider', exact: true }).click();
   await expect
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({ aiProvider: 'custom', aiModel: 'gpt-4o-mini' });

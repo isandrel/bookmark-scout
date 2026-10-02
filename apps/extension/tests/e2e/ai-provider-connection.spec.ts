@@ -123,3 +123,50 @@ test('[mocked provider contract] Verify Service explains a rejected key', async 
     ),
   ).toBeVisible();
 });
+
+test('[mocked provider contract] the provider picker searches the catalog and lists its models', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true, aiProvider: 'openai' });
+  let authorization = '';
+  await context.route('https://api.together.xyz/v1/**', async (route) => {
+    authorization = (await route.request().headerValue('authorization')) ?? '';
+    await route.fulfill({
+      headers: { 'access-control-allow-origin': '*' },
+      contentType: 'application/json',
+      body: JSON.stringify({ data: [{ id: 'together/model-a' }] }),
+    });
+  });
+
+  await openAIOptions(page, extensionId);
+  const provider = page.getByRole('combobox', { name: 'AI Provider' });
+  await provider.click();
+  await page.getByRole('combobox', { name: 'Search...' }).fill('togeth');
+  await expect(page.getByRole('option')).toHaveCount(1);
+  await page.getByRole('option', { name: 'Together AI', exact: true }).click();
+
+  await expect(provider).toHaveText('Together AI');
+  await expect
+    .poll(async () =>
+      extensionWorker.evaluate(async () => {
+        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
+        return (stored['bookmark-scout-settings'] as { aiProvider?: string }).aiProvider;
+      }),
+    )
+    .toBe('togetherai');
+  await expect(page.getByTestId('ai-provider-info')).toContainText('models.dev catalog');
+  await expect(page.getByRole('textbox', { name: 'Base URL' })).toHaveAttribute(
+    'placeholder',
+    'https://api.together.xyz/v1',
+  );
+
+  const apiKey = page.getByLabel('API Key', { exact: true });
+  await apiKey.fill('synthetic-key');
+  await apiKey.blur();
+  await page.getByRole('button', { name: 'Refresh Models' }).click();
+  await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText('together/model-a');
+  expect(authorization).toBe('Bearer synthetic-key');
+});

@@ -4286,5 +4286,29 @@
     "options_apiVersionDescription": {
         "message": "Optional. Leave empty to use the v1 API.",
         "description": "Azure API version field description"
+    },
+    "settings_aiProviderGroupFeatured": {
+        "message": "Featured",
+        "description": "Provider picker group: providers with built-in model lists"
+    },
+    "settings_aiProviderGroupCatalog": {
+        "message": "More providers (models.dev)",
+        "description": "Provider picker group: providers from the bundled models.dev catalog"
+    },
+    "select_searchPlaceholder": {
+        "message": "Search...",
+        "description": "Search box inside a searchable select"
+    },
+    "select_noMatches": {
+        "message": "No matches",
+        "description": "Searchable select: nothing matches the search"
+    },
+    "options_catalogProviderHint": {
+        "message": "This provider comes from the models.dev catalog. Click Refresh Models to load its models, or enter a custom model.",
+        "description": "Shown in the AI panel for catalog providers"
+    },
+    "options_providerDocs": {
+        "message": "Provider documentation",
+        "description": "Link to the selected provider documentation"
     }
 }

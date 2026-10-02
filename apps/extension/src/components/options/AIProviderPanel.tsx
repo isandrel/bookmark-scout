@@ -3,7 +3,7 @@
  * validated before they are persisted, and are never logged.
  */
 
-import { Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
+import { ExternalLink, Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 export type AIProviderPanelField =
@@ -328,6 +328,7 @@ export function AIProviderPanel({
   };
 
   const hasModelList = getProviderModelListStyle(provider) !== 'none';
+  const docUrl = getProviderDocUrl(provider);
   const extraFields = getProviderExtraFields(provider);
 
   const apiKeyDescription = providerRequiresApiKey(provider)
@@ -394,6 +395,22 @@ export function AIProviderPanel({
 
       {showEndpointFields && (
         <div className="space-y-3 rounded-lg border border-transparent bg-card p-4 hover:border-border">
+          {(isCatalogProvider(provider) || docUrl) && (
+            <div className="space-y-1 text-sm text-muted-foreground" data-testid="ai-provider-info">
+              {isCatalogProvider(provider) && <p>{t('options_catalogProviderHint')}</p>}
+              {docUrl && (
+                <a
+                  href={docUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 rounded-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {t('options_providerDocs')}
+                  <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                </a>
+              )}
+            </div>
+          )}
           {isVisible('baseUrl') && (
             <>
               <div className="space-y-1">

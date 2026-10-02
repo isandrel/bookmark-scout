@@ -1,4 +1,5 @@
 import { parse } from 'smol-toml';
+import providerCatalog from '../../config/provider-catalog.json';
 import settingsToml from '../../config/settings.default.toml?raw';
 
 export type AIModel = {
@@ -7,7 +8,7 @@ export type AIModel = {
   description?: string;
 };
 
-export type AIProviderKind = 'native' | 'openai_compatible' | 'ollama';
+export type AIProviderKind = 'native' | 'openai_compatible' | 'anthropic_compatible' | 'ollama';
 
 export type AIProviderConfig = {
   name: string;
@@ -23,6 +24,10 @@ export type AIProviderConfig = {
   model_list?: ModelListStyle;
   /** Extra connection fields shown in Options, e.g. `organization` or `resourceName`. */
   extra_fields?: AIProviderExtraField[];
+  /** Provider documentation, shown next to the provider picker. */
+  doc_url?: string;
+  /** `catalog` providers come from config/provider-catalog.json (models.dev), not the TOML. */
+  source?: 'featured' | 'catalog';
 };
 
 /** Provider-specific connection settings beyond the API key, Base URL, and headers. */
@@ -36,8 +41,60 @@ type TomlConfig = {
 
 const config = parse(settingsToml) as unknown as TomlConfig;
 
+type CatalogEntry = {
+  name: string;
+  base_url: string;
+  doc?: string;
+  protocol: 'openai' | 'anthropic';
+  requires_api_key: boolean;
+  model_list?: 'none';
+};
+
+type ProviderCatalog = { logos: string[]; providers: Record<string, CatalogEntry> };
+const catalog = providerCatalog as ProviderCatalog;
+
+/**
+ * Providers from the bundled models.dev snapshot, as provider configs. They have no built-in
+ * model list: models come from Refresh Models, or a custom model.
+ */
+function catalogProviders(): Record<string, AIProviderConfig> {
+  const entries = catalog.providers;
+  return Object.fromEntries(
+    Object.entries(entries).map(([id, entry]) => [
+      id,
+      {
+        name: entry.name,
+        default_model: '',
+        models: [],
+        provider_kind:
+          entry.protocol === 'anthropic' ? 'anthropic_compatible' : 'openai_compatible',
+        requires_api_key: entry.requires_api_key,
+        base_url: entry.base_url,
+        supports_custom_model: true,
+        model_list: entry.model_list ?? (entry.protocol === 'anthropic' ? 'anthropic' : 'openai'),
+        doc_url: entry.doc,
+        source: 'catalog',
+      } satisfies AIProviderConfig,
+    ]),
+  );
+}
+
+// Featured providers from the TOML come first and win over catalog entries with the same id.
+const providers: Record<string, AIProviderConfig> = (() => {
+  const featured = Object.fromEntries(
+    Object.entries(config.ai?.providers ?? {}).map(([id, provider]) => [
+      id,
+      { ...provider, source: 'featured' as const },
+    ]),
+  );
+  const catalog = Object.fromEntries(
+    Object.entries(catalogProviders()).filter(([id]) => !(id in featured)),
+  );
+  return { ...featured, ...catalog };
+})();
+
 function getProviders() {
-  return config.ai?.providers ?? {};
+  return providers;
 }
 
 export function getAvailableProviders(): { id: AIProvider; name: string }[] {
@@ -90,4 +147,22 @@ export function getProviderModelListStyle(provider: AIProvider): ModelListStyle 
 
 export function getProviderExtraFields(provider: AIProvider): AIProviderExtraField[] {
   return getProviderConfig(provider)?.extra_fields ?? [];
+}
+
+export function isCatalogProvider(provider: AIProvider): boolean {
+  return getProviderConfig(provider)?.source === 'catalog';
+}
+
+export function getProviderDocUrl(provider: AIProvider): string | undefined {
+  return getProviderConfig(provider)?.doc_url;
+}
+
+const logoIds = new Set(catalog.logos);
+/** Featured providers whose logo is published under another models.dev id. */
+const LOGO_ALIASES: Record<string, string> = { ollama: 'ollama-cloud' };
+
+/** URL of the provider's bundled one-color logo, if the catalog has one. */
+export function getProviderLogoUrl(provider: AIProvider): string | undefined {
+  const id = LOGO_ALIASES[provider] ?? provider;
+  return logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
 }

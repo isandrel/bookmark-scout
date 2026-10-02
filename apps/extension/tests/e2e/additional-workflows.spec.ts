@@ -223,21 +223,22 @@ async function useMockCustomProvider(worker: Worker) {
   });
 }
 
-// Minimal OpenAI Responses API envelope; asserts our contract with the SDK, not live compatibility.
-function mockResponsesApiBody(payload: unknown) {
+// Minimal Chat Completions envelope, the API OpenAI-compatible providers share; asserts our
+// contract with the SDK, not live compatibility.
+function mockChatCompletionBody(payload: unknown) {
   return JSON.stringify({
-    id: 'resp_e2e',
-    created_at: 0,
+    id: 'chatcmpl_e2e',
+    object: 'chat.completion',
+    created: 0,
     model: 'e2e-model',
-    output: [
+    choices: [
       {
-        type: 'message',
-        role: 'assistant',
-        id: 'msg_e2e',
-        content: [{ type: 'output_text', text: JSON.stringify(payload), annotations: [] }],
+        index: 0,
+        finish_reason: 'stop',
+        message: { role: 'assistant', content: JSON.stringify(payload) },
       },
     ],
-    usage: { input_tokens: 1, output_tokens: 1 },
+    usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
   });
 }
 
@@ -268,7 +269,7 @@ test('[mocked provider contract] auto-tagging previews route-mocked provider tag
       status: 200,
       contentType: 'application/json',
       headers: MOCK_PROVIDER_CORS_HEADERS,
-      body: mockResponsesApiBody({
+      body: mockChatCompletionBody({
         items: [
           {
             bookmarkId: bookmark.id,
