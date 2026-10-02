@@ -4322,5 +4322,89 @@
     "settings_aiProviderCustomAnthropic": {
         "message": "Custom Provider (Anthropic-compatible)",
         "description": "Name of the hand-written Anthropic-compatible provider"
+    },
+    "options_aiServices": {
+        "message": "AI services",
+        "description": "Heading of the saved AI services list"
+    },
+    "options_aiServicesDescription": {
+        "message": "Save as many providers as you like. Every AI tool uses the default service.",
+        "description": "Description of the AI services list"
+    },
+    "options_aiServiceAdd": {
+        "message": "Add service",
+        "description": "Button that adds an AI service"
+    },
+    "options_aiServiceAddTitle": {
+        "message": "Add an AI service",
+        "description": "Title of the add AI service dialog"
+    },
+    "options_aiServiceProvider": {
+        "message": "Provider",
+        "description": "Label of the provider picker when adding a service"
+    },
+    "options_aiServiceName": {
+        "message": "Name",
+        "description": "Label of an AI service name"
+    },
+    "options_aiServiceNameDescription": {
+        "message": "Shown in the service list and the popup.",
+        "description": "Description of an AI service name"
+    },
+    "options_aiServiceDefault": {
+        "message": "Default",
+        "description": "Badge on the default AI service"
+    },
+    "options_aiServiceSetDefault": {
+        "message": "Set as default",
+        "description": "Menu action that makes a service the default"
+    },
+    "options_aiServiceEnabled": {
+        "message": "Use $1",
+        "description": "Accessible name of the switch that turns a service on or off; $1 is its name"
+    },
+    "options_aiServiceEdit": {
+        "message": "Edit $1",
+        "description": "Accessible name of the button that expands a service editor"
+    },
+    "options_aiServiceActions": {
+        "message": "Actions for $1",
+        "description": "Accessible name of a service menu"
+    },
+    "options_aiServiceDuplicate": {
+        "message": "Duplicate",
+        "description": "Menu action that copies a service"
+    },
+    "options_aiServiceDelete": {
+        "message": "Delete",
+        "description": "Menu action and confirm button that delete a service"
+    },
+    "options_aiServiceDeleteTitle": {
+        "message": "Delete $1?",
+        "description": "Title of the delete service confirmation"
+    },
+    "options_aiServiceDeleteDescription": {
+        "message": "Its API key and settings are removed from this device.",
+        "description": "Body of the delete service confirmation"
+    },
+    "options_aiServiceCopyName": {
+        "message": "$1 (copy)",
+        "description": "Name of a duplicated service; $1 is the original name"
+    },
+    "options_aiServiceMore": {
+        "message": "More settings",
+        "description": "Toggle that shows Base URL, headers, and provider-specific fields"
+    },
+    "options_aiServiceEmpty": {
+        "message": "No AI services yet. Add one to use the AI tools.",
+        "description": "Empty state of the AI services list"
+    },
+    "error_aiNoService": {
+        "message": "No AI service is set up. Add one in Options.",
+        "description": "Error when an AI tool runs without any enabled service"
+    },
+    "popup_aiServiceSwitch": {
+        "message": "AI service: $1",
+        "description": "Accessible name of the popup AI service switcher; $1 is the current service"
     }
 }

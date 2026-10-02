@@ -19,7 +19,7 @@ Open Bookmark Scout's settings (in Chrome, right-click the toolbar icon and choo
 Turn on **AI Features**.
 </Step>
 <Step>
-Choose an **AI Provider**, then an **AI Model**.
+Under **AI services**, open the service that is already there, or click **Add service** and pick a provider. The picker has a search box, and groups providers under **Featured**, **Local servers**, **Custom**, and **More providers (models.dev)**. Then choose an **AI Model**.
 </Step>
 <Step>
 Enter your **API Key** if the provider needs one. It is saved when you leave the field, and stored only on this device. A key that does not match the provider's format is rejected and not saved.
@@ -31,7 +31,16 @@ Optional: click **Refresh Models** to load the provider's current model list, or
 
 <Screenshot name="options-ai" />
 
-Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON** stay in this browser's local storage and are never synced. Other settings, such as whether AI is on and which provider you chose, sync through your browser account where the browser supports it.
+Settings save automatically. AI services, with their API keys, **Base URL**, and **Extra Headers JSON**, stay in this browser's local storage and are never synced. Other AI settings, such as whether AI is on, sync through your browser account where the browser supports it.
+
+## Use more than one service
+
+Save as many services as you like, even several of the same provider: for example a work proxy and a home proxy, each with its own key, address, and model.
+
+- Every AI tool uses the **Default** service. Choose **Set as default** in a service's menu, or, when more than one service is turned on, pick one from the arrow next to the sparkle button in the popup.
+- Turn a service off with its switch to hide it from the popup without deleting it.
+- **Duplicate** copies a service, key included. **Delete** removes it and its key from this device.
+- **Base URL**, **Extra Headers JSON**, and provider-specific fields such as OpenAI's organization sit under **More settings**.
 
 ## Providers
 

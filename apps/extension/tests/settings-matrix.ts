@@ -198,8 +198,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       '[mocked provider contract] provider-backed AI previews stop at opt-in without making external requests',
     ),
   ]),
-  aiProvider: tested(POPUP, [popupAi]),
-  aiModel: tested(POPUP, [popupAi]),
+  // Read by the AI services store, which derives the default service from them before any
+  // service is saved.
+  aiProvider: tested('lib/ai-services-storage.ts', [popupAi]),
+  aiModel: tested('lib/ai-services-storage.ts', [popupAi]),
   aiMaxRecommendations: tested(POPUP, [
     popupAi,
     unit('ai-prompt-settings.test.ts', 'asks for and returns at most the saved number of folder recommendations'),

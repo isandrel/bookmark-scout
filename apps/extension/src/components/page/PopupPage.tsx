@@ -66,8 +66,6 @@ function PopupPage() {
   // Get configurable settings
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
   const { value: aiEnabled } = useSetting('aiEnabled');
-  const { value: aiProvider } = useSetting('aiProvider');
-  const { value: aiModel } = useSetting('aiModel');
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
@@ -135,11 +133,8 @@ function PopupPage() {
       
       setCurrentTabInfo({ title: tab.title, url: tab.url });
 
-      const settings = await buildAISettingsFromProvider(
-        aiProvider as Parameters<typeof buildAISettingsFromProvider>[0],
-        aiModel,
-        aiEnabled,
-      );
+      // The default AI service; before services are saved, the synced provider and model.
+      const settings = await getActiveAISettings(aiEnabled);
 
       const recommendations = await recommendFolders(
         { title: tab.title, url: tab.url },
@@ -158,7 +153,7 @@ function PopupPage() {
     } finally {
       setAILoading(false);
     }
-  }, [aiEnabled, aiProvider, aiModel, folders, toast, aiMaxRecommendations]);
+  }, [aiEnabled, folders, toast, aiMaxRecommendations]);
 
   // Auto-trigger AI recommendations on popup open if setting is enabled
   useEffect(() => {

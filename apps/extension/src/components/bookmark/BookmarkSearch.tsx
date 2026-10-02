@@ -293,6 +293,7 @@ export function BookmarkSearch({
             <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
           </Button>
         )}
+        {isAIEnabled && onAIRecommend && <AIServiceSwitcher />}
       </div>
       {isInvalidRegex && (
         <p role="alert" className="mt-1 px-1 text-xs text-destructive-text">

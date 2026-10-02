@@ -190,8 +190,6 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
   // Get actual AI settings from storage
   const { value: aiEnabled } = useSetting('aiEnabled');
-  const { value: aiProvider } = useSetting('aiProvider');
-  const { value: aiModel } = useSetting('aiModel');
 
   const getTargetNodes = (scope: ToolScope) => getScopedNodes(folders, currentFolderId, scope);
 
@@ -583,7 +581,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     if (!aiEnabled) {
       throw new Error(t('ai_featuresDisabled'));
     }
-    return buildAISettingsFromProvider(aiProvider as AIProvider, aiModel, aiEnabled);
+    return getActiveAISettings(aiEnabled);
   };
   const aiDisabledNotice = aiEnabled ? undefined : t('ai_featuresDisabledNotice');
 

@@ -433,7 +433,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
     ai: {
       label: t('settings_ai'),
       description: t('settings_aiDesc'),
-      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiProvider', 'aiModel', 'aiMaxRecommendations', 'aiMaxCategories', 'aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
+      // The provider and model live on AI services (AIServicesPanel), not in these synced fields.
+      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiMaxRecommendations', 'aiMaxCategories', 'aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
     },
     aiTools: {
       label: t('settings_aiTools'),

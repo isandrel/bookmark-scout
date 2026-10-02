@@ -4322,5 +4322,89 @@
     "settings_aiProviderCustomAnthropic": {
         "message": "カスタムプロバイダー（Anthropic 互換）",
         "description": "Name of the hand-written Anthropic-compatible provider"
+    },
+    "options_aiServices": {
+        "message": "AI サービス",
+        "description": "Heading of the saved AI services list"
+    },
+    "options_aiServicesDescription": {
+        "message": "プロバイダーをいくつでも保存できます。すべての AI ツールは既定のサービスを使います。",
+        "description": "Description of the AI services list"
+    },
+    "options_aiServiceAdd": {
+        "message": "サービスを追加",
+        "description": "Button that adds an AI service"
+    },
+    "options_aiServiceAddTitle": {
+        "message": "AI サービスを追加",
+        "description": "Title of the add AI service dialog"
+    },
+    "options_aiServiceProvider": {
+        "message": "プロバイダー",
+        "description": "Label of the provider picker when adding a service"
+    },
+    "options_aiServiceName": {
+        "message": "名前",
+        "description": "Label of an AI service name"
+    },
+    "options_aiServiceNameDescription": {
+        "message": "サービス一覧とポップアップに表示されます。",
+        "description": "Description of an AI service name"
+    },
+    "options_aiServiceDefault": {
+        "message": "既定",
+        "description": "Badge on the default AI service"
+    },
+    "options_aiServiceSetDefault": {
+        "message": "既定にする",
+        "description": "Menu action that makes a service the default"
+    },
+    "options_aiServiceEnabled": {
+        "message": "$1 を使用",
+        "description": "Accessible name of the switch that turns a service on or off; $1 is its name"
+    },
+    "options_aiServiceEdit": {
+        "message": "$1 を編集",
+        "description": "Accessible name of the button that expands a service editor"
+    },
+    "options_aiServiceActions": {
+        "message": "$1 の操作",
+        "description": "Accessible name of a service menu"
+    },
+    "options_aiServiceDuplicate": {
+        "message": "複製",
+        "description": "Menu action that copies a service"
+    },
+    "options_aiServiceDelete": {
+        "message": "削除",
+        "description": "Menu action and confirm button that delete a service"
+    },
+    "options_aiServiceDeleteTitle": {
+        "message": "$1 を削除しますか？",
+        "description": "Title of the delete service confirmation"
+    },
+    "options_aiServiceDeleteDescription": {
+        "message": "API キーと設定がこのデバイスから削除されます。",
+        "description": "Body of the delete service confirmation"
+    },
+    "options_aiServiceCopyName": {
+        "message": "$1（コピー）",
+        "description": "Name of a duplicated service; $1 is the original name"
+    },
+    "options_aiServiceMore": {
+        "message": "詳細設定",
+        "description": "Toggle that shows Base URL, headers, and provider-specific fields"
+    },
+    "options_aiServiceEmpty": {
+        "message": "AI サービスがまだありません。AI ツールを使うには追加してください。",
+        "description": "Empty state of the AI services list"
+    },
+    "error_aiNoService": {
+        "message": "AI サービスが設定されていません。オプションで追加してください。",
+        "description": "Error when an AI tool runs without any enabled service"
+    },
+    "popup_aiServiceSwitch": {
+        "message": "AI サービス: $1",
+        "description": "Accessible name of the popup AI service switcher; $1 is the current service"
     }
 }

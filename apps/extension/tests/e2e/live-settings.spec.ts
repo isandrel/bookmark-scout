@@ -5,6 +5,7 @@ import { openPopup, setSettings } from './popup-helpers';
 async function openAIOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  await page.getByRole('button', { name: 'More settings' }).click();
   await expect(page.getByRole('textbox', { name: 'Base URL' })).toBeVisible();
 }
 
@@ -36,7 +37,7 @@ test('a language change re-renders open pages without a reload', async ({
   await expect(manager.getByPlaceholder('Filter titles...')).toBeVisible();
 });
 
-test('the AI provider panel follows changes saved in another Options tab', async ({
+test('an AI service follows changes saved in another Options tab', async ({
   context,
   extensionId,
   extensionWorker,
