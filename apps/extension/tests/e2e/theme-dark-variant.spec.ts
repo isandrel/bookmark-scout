@@ -1,6 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { folderRow, openPopup, setSettings } from './popup-helpers';
+import { folderRow, openPopup, otherBookmarksTitle, setSettings } from './popup-helpers';
 
 // The folder icon's classes: a light color with a `dark:` override.
 const LIGHT_CLASS = 'text-amber-500';
@@ -25,13 +25,13 @@ const THEME_CASES: ThemeCase[] = [
 type ThemedPage = {
   path: string;
   /** The element whose `dark:` class is checked; defaults to an injected probe. */
-  target?: (page: Page) => Locator;
+  target?: (page: Page, otherFolderTitle: string) => Locator;
 };
 
 const PAGES: ThemedPage[] = [
   {
     path: 'popup.html',
-    target: (page) => folderRow(page, 'Other bookmarks').locator('svg').first(),
+    target: (page, otherFolderTitle) => folderRow(page, otherFolderTitle).locator('svg').first(),
   },
   { path: 'sidepanel.html' },
   { path: 'options.html' },
@@ -69,6 +69,7 @@ for (const themeCase of THEME_CASES) {
   }) => {
     await setSettings(extensionWorker, { language: 'en', theme: themeCase.theme });
     await page.emulateMedia({ colorScheme: themeCase.osScheme });
+    const otherFolderTitle = await otherBookmarksTitle(extensionWorker);
 
     for (const themedPage of PAGES) {
       if (themedPage.path === 'popup.html') {
@@ -81,7 +82,7 @@ for (const themeCase of THEME_CASES) {
 
       await injectProbes(page);
       const reference = page.getByTestId('theme-reference');
-      const target = themedPage.target?.(page) ?? page.getByTestId('theme-probe');
+      const target = themedPage.target?.(page, otherFolderTitle) ?? page.getByTestId('theme-probe');
       await expect(target).toHaveClass(new RegExp(DARK_VARIANT_CLASSES));
       const lightColor = await color(reference);
 

@@ -75,9 +75,27 @@
             }
         },
         "test:e2e": {
-            "command": "playwright install --with-deps chromium && playwright test --config playwright.config.ts",
+            "command": "playwright install --with-deps chromium && playwright test --config playwright.config.ts --project=chromium",
             "dependsOn": [
                 "build:chrome"
+            ],
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "test:e2e:edge": {
+            "command": "playwright test --config playwright.config.ts --project=edge",
+            "dependsOn": [
+                "build:edge"
+            ],
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "test:e2e:firefox": {
+            "command": "playwright test --config playwright.config.ts --project=firefox",
+            "dependsOn": [
+                "build:firefox"
             ],
             "options": {
                 "cwd": "apps/extension"

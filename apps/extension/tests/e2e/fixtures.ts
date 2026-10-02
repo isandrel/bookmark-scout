@@ -12,6 +12,16 @@ import {
   type Worker,
 } from '@playwright/test';
 
+/** Chromium-family browsers: Playwright's bundled Chromium, or the installed Microsoft Edge. */
+export type ExtensionBrowser = 'chromium' | 'msedge';
+
+export type ExtensionProjectOptions = {
+  /** Playwright channel used to launch the browser. */
+  extensionBrowser: ExtensionBrowser;
+  /** WXT output directory under `dist/` that is loaded unpacked. */
+  extensionBuild: string;
+};
+
 type ExtensionFixtures = {
   /** Loads a copy whose manifest pre-grants the optional web host access the network tools request. */
   grantWebHostAccess: boolean;
@@ -20,18 +30,30 @@ type ExtensionFixtures = {
   extensionWorker: Worker;
 };
 
-type WorkerFixtures = {
+type WorkerFixtures = ExtensionProjectOptions & {
+  extensionPath: string;
   hostAccessExtensionPath: string;
 };
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
-const extensionPath = path.resolve(currentDirectory, '../../dist/chrome-mv3');
+const distDirectory = path.resolve(currentDirectory, '../../dist');
 
 export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
+  extensionBrowser: ['chromium', { option: true, scope: 'worker' }],
+  extensionBuild: ['chrome-mv3', { option: true, scope: 'worker' }],
+  extensionPath: [
+    async ({ extensionBuild }, use) => {
+      const extensionPath = path.join(distDirectory, extensionBuild);
+      if (!existsSync(extensionPath)) {
+        throw new Error(`Built extension not found at ${extensionPath}`);
+      }
+      await use(extensionPath);
+    },
+    { scope: 'worker' },
+  ],
   grantWebHostAccess: [false, { option: true }],
   hostAccessExtensionPath: [
-    // biome-ignore lint/correctness/noEmptyPattern: Playwright requires destructuring fixture arguments.
-    async ({}, use) => {
+    async ({ extensionPath }, use) => {
       // Unpacked extensions cannot answer the permission prompt headlessly, so the granted state is
       // simulated by declaring the optional origins as install-time host permissions in a copy.
       const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-host-access-'));
@@ -45,14 +67,15 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
     },
     { scope: 'worker' },
   ],
-  context: async ({ grantWebHostAccess, hostAccessExtensionPath }, use, testInfo) => {
-    if (!existsSync(extensionPath)) {
-      throw new Error(`Built extension not found at ${extensionPath}`);
-    }
+  context: async (
+    { extensionBrowser, extensionPath, grantWebHostAccess, hostAccessExtensionPath },
+    use,
+    testInfo,
+  ) => {
     const loadPath = grantWebHostAccess ? hostAccessExtensionPath : extensionPath;
 
     const context = await chromium.launchPersistentContext(testInfo.outputPath('user-data'), {
-      channel: 'chromium',
+      channel: extensionBrowser,
       headless: true,
       args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
     });
