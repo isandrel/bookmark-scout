@@ -51,6 +51,9 @@ export interface SiteConfig {
 		security: string;
 		support: string;
 	};
+	hosting?: {
+		website_domains?: string[];
+	};
 	stores?: {
 		chrome_web_store?: string;
 		edge_addons?: string;
@@ -174,6 +177,11 @@ export type Locale = (typeof LOCALES)[number];
 
 /** Role-based contact addresses (privacy, security, support) */
 export const CONTACT = config.contact;
+
+/** Custom domains attached to the website's Cloudflare Pages project */
+export const WEBSITE_DOMAINS: readonly string[] = config.hosting?.website_domains ?? [
+	new URL(config.site.url).host,
+];
 
 /** Store listing URLs; an empty string means the listing is not live yet */
 export const STORES = {

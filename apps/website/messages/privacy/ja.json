@@ -154,7 +154,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "このウェブサイト bookmark-scout.com は、GitHub Pages でホストされている静的サイトです。<githubPages>GitHub のドキュメント</githubPages>と<githubPrivacy>GitHub のプライバシーに関する声明</githubPrivacy>にあるとおり、GitHub はセキュリティのためにすべての訪問者の IP アドレスを記録します。"
+                        "text": "このウェブサイト bookmark-scout.com は、Cloudflare Pages でホストされている静的サイトです。サイトを配信するために、Cloudflare が IP アドレスを含むリクエストを <cloudflare>Cloudflare のプライバシーポリシー</cloudflare>に従って処理します。"
                     },
                     {
                         "type": "p",
@@ -162,7 +162,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "ドキュメントサイト docs.bookmark-scout.com は Cloudflare Pages でホストされており、アクセス解析は読み込みません。サイトを配信するために、Cloudflare が IP アドレスを含むリクエストを <cloudflare>Cloudflare のプライバシーポリシー</cloudflare>に従って処理します。"
+                        "text": "ドキュメントサイト docs.bookmark-scout.com も Cloudflare Pages でホストされており、アクセス解析は読み込みません。"
                     },
                     {
                         "type": "p",

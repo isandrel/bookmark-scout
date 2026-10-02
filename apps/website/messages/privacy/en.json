@@ -154,7 +154,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "This website, bookmark-scout.com, is a static site hosted on GitHub Pages. GitHub logs the IP address of every visitor for security purposes, as described in <githubPages>GitHub's documentation</githubPages> and the <githubPrivacy>GitHub General Privacy Statement</githubPrivacy>."
+                        "text": "This website, bookmark-scout.com, is a static site hosted on Cloudflare Pages. Cloudflare processes requests to deliver the site, including your IP address, under the <cloudflare>Cloudflare privacy policy</cloudflare>."
                     },
                     {
                         "type": "p",
@@ -162,7 +162,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "The documentation site, docs.bookmark-scout.com, is hosted on Cloudflare Pages and does not load any analytics. Cloudflare processes requests to deliver the site, including your IP address, under the <cloudflare>Cloudflare privacy policy</cloudflare>."
+                        "text": "The documentation site, docs.bookmark-scout.com, is also hosted on Cloudflare Pages and does not load any analytics."
                     },
                     {
                         "type": "p",

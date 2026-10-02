@@ -31,6 +31,11 @@ privacy  = "privacy@bookmark-scout.com"
 security = "security@bookmark-scout.com"
 support  = "support@bookmark-scout.com"
 
+# Cloudflare Pages hosting for the website. The deploy workflow attaches these custom
+# domains to the Pages project; DNS records must point them at <project>.pages.dev.
+[hosting]
+website_domains = ["bookmark-scout.com", "www.bookmark-scout.com"]
+
 # Store listing URLs. Leave a value empty until that listing is live; the site then
 # shows the GitHub release download instead of a store link.
 [stores]
@@ -40,7 +45,7 @@ firefox_addons   = ""
 
 # Dates shown on legal pages (ISO 8601). Update when the policy text changes.
 [legal]
-privacy_effective_date = "2026-10-01"
+privacy_effective_date = "2026-10-02"
 
 [docs]
 name = "Bookmark Scout Docs"
