@@ -124,6 +124,8 @@ Important subareas:
 - extension Edge build: `nx run extension:build:edge`
 - extension unit tests: `nx run extension:test:unit`
 - extension end-to-end tests: `nx run extension:test:e2e`
+- extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
+- extension Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
 - website build: `nx run website:build`
 - docs build: `nx run docs:build`
 
@@ -149,6 +151,7 @@ When the changed behavior is covered by the extension test suite, also run the n
 
 - unit tests: `nx run extension:test:unit`
 - Chromium end-to-end tests: `nx run extension:test:e2e`
+- for browser-specific changes, the Edge or Firefox target: `nx run extension:test:e2e:edge`, `nx run extension:test:e2e:firefox`
 
 ### Website changes
 
@@ -174,7 +177,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and favicons are not covered there. The Edge and Firefox CI jobs are not required checks. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 
