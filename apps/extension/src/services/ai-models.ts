@@ -47,14 +47,18 @@ type CatalogEntry = {
   doc?: string;
   protocol: 'openai' | 'anthropic';
   requires_api_key: boolean;
+  model_list?: 'none';
 };
+
+type ProviderCatalog = { logos: string[]; providers: Record<string, CatalogEntry> };
+const catalog = providerCatalog as ProviderCatalog;
 
 /**
  * Providers from the bundled models.dev snapshot, as provider configs. They have no built-in
  * model list: models come from Refresh Models, or a custom model.
  */
 function catalogProviders(): Record<string, AIProviderConfig> {
-  const entries = (providerCatalog as { providers: Record<string, CatalogEntry> }).providers;
+  const entries = catalog.providers;
   return Object.fromEntries(
     Object.entries(entries).map(([id, entry]) => [
       id,
@@ -67,7 +71,7 @@ function catalogProviders(): Record<string, AIProviderConfig> {
         requires_api_key: entry.requires_api_key,
         base_url: entry.base_url,
         supports_custom_model: true,
-        model_list: entry.protocol === 'anthropic' ? 'anthropic' : 'openai',
+        model_list: entry.model_list ?? (entry.protocol === 'anthropic' ? 'anthropic' : 'openai'),
         doc_url: entry.doc,
         source: 'catalog',
       } satisfies AIProviderConfig,
@@ -151,4 +155,14 @@ export function isCatalogProvider(provider: AIProvider): boolean {
 
 export function getProviderDocUrl(provider: AIProvider): string | undefined {
   return getProviderConfig(provider)?.doc_url;
+}
+
+const logoIds = new Set(catalog.logos);
+/** Featured providers whose logo is published under another models.dev id. */
+const LOGO_ALIASES: Record<string, string> = { ollama: 'ollama-cloud' };
+
+/** URL of the provider's bundled one-color logo, if the catalog has one. */
+export function getProviderLogoUrl(provider: AIProvider): string | undefined {
+  const id = LOGO_ALIASES[provider] ?? provider;
+  return logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
 }

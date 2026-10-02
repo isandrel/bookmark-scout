@@ -2,7 +2,27 @@ import { Combobox } from '@base-ui/react/combobox';
 import { Check, ChevronDown, Search } from 'lucide-react';
 import * as React from 'react';
 
-export type SearchableSelectOption = { value: string; label: string; group?: string };
+export type SearchableSelectOption = {
+  value: string;
+  label: string;
+  group?: string;
+  /** A one-color image drawn as a mask in the current text color, such as a provider logo. */
+  iconUrl?: string;
+};
+
+/** Draws `url` as a mask so the icon follows the theme's text color; nothing from it runs. */
+function OptionIcon({ url }: { url?: string }) {
+  if (!url) return <span aria-hidden="true" className="size-4 shrink-0" />;
+  const mask = `url("${url}") center / contain no-repeat`;
+  return (
+    <span
+      aria-hidden="true"
+      data-slot="option-icon"
+      className="size-4 shrink-0 bg-current"
+      style={{ mask, WebkitMask: mask }}
+    />
+  );
+}
 
 type OptionGroup = { value: string; items: SearchableSelectOption[] };
 
@@ -43,6 +63,7 @@ export function SearchableSelect({
 }: SearchableSelectProps) {
   const groups = React.useMemo(() => groupOptions(options), [options]);
   const selected = options.find((option) => option.value === value) ?? null;
+  const hasIcons = options.some((option) => option.iconUrl);
 
   return (
     <Combobox.Root
@@ -64,8 +85,11 @@ export function SearchableSelect({
           className,
         )}
       >
-        <span className="truncate">
-          <Combobox.Value />
+        <span className="flex min-w-0 items-center gap-2">
+          {hasIcons && <OptionIcon url={selected?.iconUrl} />}
+          <span className="truncate">
+            <Combobox.Value />
+          </span>
         </span>
         <ChevronDown aria-hidden="true" className="h-4 w-4 shrink-0 opacity-50" />
       </Combobox.Trigger>
@@ -99,11 +123,12 @@ export function SearchableSelect({
                       <Combobox.Item
                         key={option.value}
                         value={option}
-                        className="relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
+                        className="relative flex cursor-default select-none items-center gap-2 rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-highlighted:bg-accent data-highlighted:text-accent-foreground"
                       >
                         <Combobox.ItemIndicator className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
                           <Check className="h-4 w-4" />
                         </Combobox.ItemIndicator>
+                        {hasIcons && <OptionIcon url={option.iconUrl} />}
                         <span className="truncate">{option.label}</span>
                       </Combobox.Item>
                     )}

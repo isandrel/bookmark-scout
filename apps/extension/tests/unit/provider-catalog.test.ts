@@ -6,6 +6,7 @@ import { settingsSchema } from '@/lib/settings-schema';
 import { createAIModel } from '@/services/ai-client';
 import {
   getAvailableProviders,
+  getProviderLogoUrl,
   getProviderBaseUrl,
   getProviderKind,
   getProviderModelListStyle,
@@ -61,6 +62,24 @@ describe('bundled models.dev provider catalog', () => {
     expect(getProviderModelListStyle('togetherai')).toBe('openai');
     expect(providerSupportsCustomModel('togetherai')).toBe(true);
     expect(providerRequiresApiKey('lmstudio')).toBe(false);
+  });
+
+  it('leaves out providers that need account-specific URLs or no longer answer', () => {
+    const ids = getAvailableProviders().map((provider) => provider.id);
+    for (const id of ['cloudflare-workers-ai', 'databricks', 'clarifai', 'crof']) {
+      expect(ids).not.toContain(id);
+    }
+  });
+
+  it('uses a test prompt for catalog providers without a model list', () => {
+    expect(getProviderModelListStyle('oci')).toBe('none');
+  });
+
+  it('points featured and catalog providers at bundled logos', () => {
+    expect(getProviderLogoUrl('openai')).toBe('/provider-logos/openai.svg');
+    expect(getProviderLogoUrl('ollama')).toBe('/provider-logos/ollama-cloud.svg');
+    expect(getProviderLogoUrl('togetherai')).toBe('/provider-logos/togetherai.svg');
+    expect(getProviderLogoUrl('custom')).toBeUndefined();
   });
 
   it('accepts catalog provider ids in synced settings', () => {

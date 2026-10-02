@@ -13,7 +13,7 @@ export type SettingsFieldMeta = {
   label: string;
   description: string;
   type: SettingsFieldType;
-  options?: { value: string | number; label: string; group?: string }[];
+  options?: { value: string | number; label: string; group?: string; iconUrl?: string }[];
   /** Long option lists get a search box instead of a plain select. */
   searchable?: boolean;
   min?: number;
@@ -637,6 +637,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
       options: getAvailableProviders().map((provider) => ({
         value: provider.id,
         label: getLocalizedProviderName(provider.id),
+        iconUrl: getProviderLogoUrl(provider.id),
         group: isCatalogProvider(provider.id)
           ? t('settings_aiProviderGroupCatalog')
           : t('settings_aiProviderGroupFeatured'),

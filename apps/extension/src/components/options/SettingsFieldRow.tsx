@@ -6,7 +6,7 @@ import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 
 type SettingValue = Settings[keyof Settings];
-type SelectOption = { value: string | number; label: string; group?: string };
+type SelectOption = { value: string | number; label: string; group?: string; iconUrl?: string };
 
 type SettingsFieldRowProps = {
   fieldKey: keyof Settings;
@@ -133,6 +133,7 @@ export function SettingsFieldRow({
                 value: String(option.value),
                 label: option.label,
                 group: option.group,
+                iconUrl: option.iconUrl,
               }))}
               onValueChange={(next) => {
                 const coerced = coerceSelectValue(fieldKey, next);

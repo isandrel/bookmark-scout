@@ -6,11 +6,28 @@
  *
  * Usage: bun run catalog:sync (from apps/extension)
  */
-import { writeFile } from 'node:fs/promises';
+import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const SOURCE_URL = 'https://models.dev/api.json';
 const OUTPUT = path.resolve(import.meta.dir, '../config/provider-catalog.json');
+const LOGO_DIR = path.resolve(import.meta.dir, '../public/provider-logos');
+const LOGO_URL = (id: string) => `https://models.dev/logos/${id}.svg`;
+/** Logos are one-color SVGs drawn as CSS masks; anything larger is not a simple logo. */
+const MAX_LOGO_BYTES = 16_384;
+/** Featured providers from settings.default.toml whose models.dev logo id matches. */
+const FEATURED_LOGO_IDS = [
+  'openai',
+  'anthropic',
+  'google',
+  'groq',
+  'mistral',
+  'deepseek',
+  'xai',
+  'azure',
+  'openrouter',
+  'ollama-cloud',
+];
 
 /** AI SDK packages whose protocol the extension can speak against any base URL. */
 const PROTOCOL_BY_PACKAGE: Record<string, CatalogProtocol> = {
@@ -45,6 +62,8 @@ export type CatalogProvider = {
   doc?: string;
   protocol: CatalogProtocol;
   requires_api_key: boolean;
+  /** Omitted when the provider has an OpenAI- or Anthropic-style model list. */
+  model_list?: 'none';
 };
 
 const isHttpUrl = (value: string) => {
@@ -55,6 +74,24 @@ const isHttpUrl = (value: string) => {
     return false;
   }
 };
+
+/**
+ * Probed 2026-10-02 with an invalid key (see the AI provider PR): these answered from a dead
+ * domain, a down origin, or a redirect to another site, so they are left out.
+ */
+const UNAVAILABLE_PROVIDERS = new Set(['clarifai', 'neosmith', 'modelis', 'crof']);
+
+/** Probed 2026-10-02: these serve no model list at /models, so Verify uses a test prompt. */
+const NO_MODEL_LIST = new Set([
+  'bailing',
+  'iflowcn',
+  'kuae-cloud-coding-plan',
+  'oci',
+  'thinkingmachines',
+]);
+
+/** Base URLs with account placeholders such as ${ACCOUNT_ID} need a user-specific address. */
+const hasPlaceholder = (value: string) => /\$\{|%7B/i.test(value);
 
 const isLocal = (value: string) =>
   ['localhost', '127.0.0.1', '[::1]'].includes(new URL(value).hostname);
@@ -72,18 +109,54 @@ for (const id of Object.keys(source).sort()) {
   }
   const protocol = entry.npm ? PROTOCOL_BY_PACKAGE[entry.npm] : undefined;
   if (!protocol || !entry.api || !isHttpUrl(entry.api) || !entry.name) continue;
+  if (hasPlaceholder(entry.api) || UNAVAILABLE_PROVIDERS.has(id)) continue;
   providers[id] = {
     name: entry.name,
     base_url: entry.api.replace(/\/+$/, ''),
     ...(entry.doc && isHttpUrl(entry.doc) ? { doc: entry.doc } : {}),
     protocol,
     requires_api_key: !isLocal(entry.api),
+    ...(NO_MODEL_LIST.has(id) ? { model_list: 'none' as const } : {}),
   };
 }
 
+/** Keeps only path geometry: no scripts, event handlers, links, or embedded images. */
+function sanitizeLogo(svg: string): string | null {
+  if (!svg.trimStart().startsWith('<svg') || svg.length > MAX_LOGO_BYTES) return null;
+  if (/<(script|foreignObject|image|use|a)\b|\son\w+=|javascript:|href=/i.test(svg)) return null;
+  return svg;
+}
+
+async function downloadLogos(ids: string[]): Promise<string[]> {
+  await rm(LOGO_DIR, { recursive: true, force: true });
+  await mkdir(LOGO_DIR, { recursive: true });
+  const saved: string[] = [];
+  const queue = [...ids];
+  await Promise.all(
+    Array.from({ length: 8 }, async () => {
+      for (let id = queue.shift(); id; id = queue.shift()) {
+        const logoResponse = await fetch(LOGO_URL(id)).catch(() => null);
+        if (!logoResponse?.ok) continue;
+        const logo = sanitizeLogo(await logoResponse.text());
+        if (!logo) continue;
+        await writeFile(path.join(LOGO_DIR, `${id}.svg`), logo);
+        saved.push(id);
+      }
+    }),
+  );
+  return saved.sort();
+}
+
+const logos = await downloadLogos([...new Set([...FEATURED_LOGO_IDS, ...Object.keys(providers)])]);
+const logoFiles = await readdir(LOGO_DIR);
+
 const output = {
   source: 'https://models.dev (MIT License, https://github.com/sst/models.dev)',
+  /** Provider ids with a logo in public/provider-logos/. */
+  logos,
   providers,
 };
 await writeFile(OUTPUT, `${JSON.stringify(output, null, 2)}\n`);
-console.log(`Wrote ${Object.keys(providers).length} providers to ${path.relative(process.cwd(), OUTPUT)}`);
+console.log(
+  `Wrote ${Object.keys(providers).length} providers and ${logoFiles.length} logos to ${path.relative(process.cwd(), OUTPUT)}`,
+);
