@@ -99,6 +99,58 @@ Utilities: `.ribbon` (clip-path ribbon shape), `.caret` (typing caret), `mark` s
 
 One orchestrated moment: on load, the demo types a query and the list filters. Respect `prefers-reduced-motion` (show the final state immediately). Hover and press feedback only on controls.
 
+### Design pass 1: first layout
+
+```text
+[logo] Bookmark Scout      Features  Privacy  Install  Docs  GitHub      English 日本語 한국어
+------------------------------------------------------------------------------------------
+Every bookmark you saved,                       (display, left, ~72px)
+one search away.
+sub (56ch)            [Download from GitHub]  [Read the docs]
++--ribbon--+-----------------------------------------------------------+
+|          | search: react docs|                       6 of 214        |
+|          | Dev Docs / React     React Reference     react.dev/...     |
++----------+-----------------------------------------------------------+
+Product tour tabs: Manager | Duplicates | Popup | AI      [screenshot]
+Find | Organize | Clean up          three columns of lists
+#### dark band: Your bookmarks stay in your browser. 4 facts ####
+AI: providers list
+Install tabs: Chrome | Edge | Firefox, numbered steps
+FAQ
+```
+
+### Critique against the brief and the generic defaults
+
+| Part | Verdict | Change |
+| --- | --- | --- |
+| Hero: headline plus a live search panel | Specific to the product; the search is the product's core job | Keep. Make the search field itself the type moment: the query renders in the display face at heading size, so the input reads as part of the headline |
+| Find / Organize / Clean up three columns | Generic feature triad, repeats the tour | Cut. Fold each job into the tour: each tab is a job (Find, Organize, Clean up, AI) with its screenshot and a short capability list |
+| Separate AI section | Thin, repeats the tour and FAQ | Cut. The AI tab lists providers; the FAQ answers "do I need AI" |
+| Inverse privacy band with four facts | Template pattern (dark band plus a fact grid) | Replace with a data-boundary diagram that carries information: your browser drawn as a boundary holding bookmarks, settings, and keys; dashed opt-in paths out to "AI provider you choose" and "websites you check"; no path to a Bookmark Scout server. The four facts sit beside it as plain text |
+| Plain hero background | Fine but flat for "fancy and modern" | Add one subject-specific texture: faint topographic contour lines (scouting, map reading) behind the search panel only, drawn in `line` color, static |
+| Tabs, numbered install steps, FAQ details | Content really is tabbed, sequential, and question-shaped | Keep |
+
+### Design pass 2: revised layout
+
+```text
+HEADER  sticky, translucent paper, bottom rule
+HERO    left column: H1 + sub + buttons + license note
+        below, full width: search instrument
+          +--ribbon tucked into top-left corner, brand gradient
+          | [magnifier] query in display face, ~40px, caret       N of M bookmarks
+          | suggestion chips: "recipes" "mdn" "travel" "pasta"
+          | rows: folder path (ink-soft) / title with <mark> / url in mono
+          +-- faint contour lines behind the panel, nowhere else
+TOUR    #features  tablist: Find | Organize | Clean up | AI (opt-in)
+        grid: screenshot in a browser frame (2/3) + capability list (1/3)
+PRIVACY #privacy   boundary diagram (left) + four facts (right) + policy link
+INSTALL #install   tabs Chrome | Edge | Firefox; numbered steps; store note
+FAQ     #faq       details list, single column, 70ch
+FOOTER  sunken, five columns
+```
+
+Mobile: everything stacks; the search query shrinks to ~26px; the tour stacks the list under the screenshot; the boundary diagram becomes vertical.
+
 ## 5. Website information architecture
 
 ### Shared chrome (`app/[locale]/layout.tsx`)
@@ -110,13 +162,13 @@ One orchestrated moment: on load, the demo types a query and the list filters. R
 
 ### Home page sections (`app/[locale]/page.tsx`)
 
-1. Hero: headline, one-sentence description, primary "Download from GitHub" (latest release), secondary "Read the docs", a short note "Free and open source under AGPL-3.0". Below or beside it: the search demo.
-2. Product tour (`#features`): tabbed screenshots, light or dark by color scheme via `<picture>`: Manager, Duplicate cleaner, Popup, AI settings. Each tab has a one-line caption.
-3. What it does: three columns (Find, Organize, Clean up), each a short list of shipped capabilities.
-4. Privacy band (`#privacy`): inverse colors. Headline "Your bookmarks stay in your browser." Four facts. Link to the privacy page.
-5. AI section: opt-in, bring your own provider, list of supported providers as text, local Ollama option.
-6. Install (`#install`): tabs for Chrome, Edge, Firefox with numbered steps (a real sequence), download button, note that store listings are being prepared, Firefox feature limits.
-7. FAQ (`#faq`): native `<details>` items.
+See "Design pass 2" above for the final layout.
+
+1. Hero: headline, one-sentence description, primary "Download from GitHub" (latest release), secondary "Read the docs", a short note "Free and open source under AGPL-3.0". Below it: the search instrument with the query in the display face, the ribbon, and contour lines behind it.
+2. Tour (`#features`): tabs Find (popup screenshot), Organize (manager), Clean up (duplicate cleaner), AI (options, opt-in). Each tab: screenshot in a browser frame, light or dark via `<picture>`, plus a short capability list. The AI tab lists providers.
+3. Privacy (`#privacy`): data-boundary diagram plus four facts and a link to the privacy page.
+4. Install (`#install`): tabs for Chrome, Edge, Firefox with numbered steps (a real sequence), download button, note that store listings are being prepared, Firefox feature limits.
+5. FAQ (`#faq`): native `<details>` items.
 
 Remove: tech stack section, emoji icons, `img.shields.io` badges, glass and glow styles.
 
