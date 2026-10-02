@@ -1,6 +1,6 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.2.0`, checked against the source on 2026-10-01, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy draft](privacy-policy.md).
+What the extension does with data at version `0.2.0`, checked against the source on 2026-10-01, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 
@@ -67,11 +67,11 @@ Certifications (all true for this code):
 - [ ] I do not use or transfer user data for purposes that are unrelated to my item's single purpose.
 - [ ] I do not use or transfer user data to determine creditworthiness or for lending purposes.
 
-Sending data to the AI provider the user configured, at the user's request, is part of the extension's single purpose. State that in the privacy policy, as the draft does.
+Sending data to the AI provider the user configured, at the user's request, is part of the extension's single purpose. State that in the privacy policy, as the published policy does.
 
 ### Privacy policy URL
 
-Required once any data category above is checked. The policy is not hosted yet; see [`privacy-policy.md`](privacy-policy.md).
+Required once any data category above is checked. Use `https://bookmark-scout.com/en/privacy/` (text: [`privacy-policy.md`](privacy-policy.md)).
 
 ## Firefox Add-ons: data collection declaration
 

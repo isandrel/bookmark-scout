@@ -134,3 +134,13 @@ Bookmark Scout（ブックマークスカウト）は、ブラウザを離れず
 ## Category
 
 Same as `en.md`. Stores set the category once for all locales.
+
+## Support and links
+
+Same as [`en.md`](en.md#support-and-links). Where a store accepts a value per locale, use the Japanese pages:
+
+| Field | Value |
+| --- | --- |
+| Support URL | https://bookmark-scout.com/ja/support/ |
+| Privacy policy URL | https://bookmark-scout.com/ja/privacy/ |
+| Support email | support@bookmark-scout.com |

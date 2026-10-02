@@ -1,6 +1,6 @@
 # Store Listing Material
 
-Listing copy, permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists for the Chrome Web Store, Firefox Add-ons (AMO), and Microsoft Edge Add-ons.
+Listing copy, permission justifications, privacy disclosures, the privacy policy text, screenshots, and submission checklists for the Chrome Web Store, Firefox Add-ons (AMO), and Microsoft Edge Add-ons.
 
 > **Nothing here has been submitted to any store.** Submission is a manual step that requires explicit release approval from the maintainer. See the checklists.
 
@@ -15,11 +15,22 @@ Prepared on 2026-10-01 against extension version `0.2.0` (`apps/extension/packag
 | [`listings/ko.md`](listings/ko.md) | Korean listing copy |
 | [`permissions.md`](permissions.md) | Permission-by-permission justification from the built manifests, the Chrome single-purpose statement, and linter results |
 | [`privacy-disclosures.md`](privacy-disclosures.md) | Data inventory and the answers for each store's privacy questions |
-| [`privacy-policy.md`](privacy-policy.md) | Privacy policy draft (not yet hosted) |
+| [`privacy-policy.md`](privacy-policy.md) | Privacy policy text, published at <https://bookmark-scout.com/en/privacy/> (also `/ja/privacy/` and `/ko/privacy/`) |
 | [`checklists/chrome-web-store.md`](checklists/chrome-web-store.md) | Chrome Web Store submission gates |
 | [`checklists/firefox-amo.md`](checklists/firefox-amo.md) | Firefox Add-ons submission gates |
 | [`checklists/edge-addons.md`](checklists/edge-addons.md) | Edge Add-ons submission gates |
 | [`screenshots/`](screenshots/) | Curated 1280x800 screenshots and a 440x280 promo tile |
+
+## Hosted pages
+
+The stores link to two pages on the website, each published in English, Japanese, and Korean once the website deploys from `main`:
+
+| Page | English URL | Other locales | Source |
+| --- | --- | --- | --- |
+| Privacy policy | <https://bookmark-scout.com/en/privacy/> | `/ja/privacy/`, `/ko/privacy/` | [`privacy-policy.md`](privacy-policy.md) and `apps/website/messages/privacy/` |
+| Support | <https://bookmark-scout.com/en/support/> | `/ja/support/`, `/ko/support/` | `apps/website/messages/support/` |
+
+Contact addresses come from `config/site.config.toml` (`[contact]`): `support@bookmark-scout.com` for help, `privacy@bookmark-scout.com` for privacy requests, and `security@bookmark-scout.com` for vulnerability reports.
 
 ## Why a root `store/` folder
 

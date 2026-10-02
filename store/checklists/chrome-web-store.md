@@ -37,7 +37,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 - [ ] Store icon: 128x128, from the package (`icon-128.png`).
 - [ ] Screenshots (up to 5, 1280x800): `01-popup-light.png`, `02-manager-light.png`, `03-tools-duplicates-light.png`, `04-options-ai-light.png`, `06-manager-dark.png` from [`../screenshots/`](../screenshots/).
 - [ ] Small promo tile 440x280: `promo-small-440x280.png`.
-- [ ] Official URL, homepage URL (`https://bookmark-scout.com`), and support URL: decided by the maintainer.
+- [ ] Homepage URL `https://bookmark-scout.com` and support URL `https://bookmark-scout.com/en/support/`. Official URL (verified site): decided by the maintainer.
 
 ## 4. Privacy practices tab
 
@@ -48,7 +48,7 @@ All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and 
 - [ ] Remote code: "No".
 - [ ] Data usage categories chosen by the maintainer (suggested: Authentication information, Web history, Website content).
 - [ ] The three certifications checked.
-- [ ] Privacy policy URL points to the hosted policy (draft: [`../privacy-policy.md`](../privacy-policy.md)). **Blocker until hosted.**
+- [ ] Privacy policy URL: `https://bookmark-scout.com/en/privacy/` (text: [`../privacy-policy.md`](../privacy-policy.md)). Confirm the page is live after the website deploys from `main`.
 
 ## 5. Reviewer notes ("Test instructions")
 

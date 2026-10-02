@@ -44,7 +44,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
 
     return (
         <footer className="border-t border-line bg-sunken">
-            <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
+            <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.8fr_0.9fr_1.5fr_0.8fr]">
                 <div>
                     <p className="font-display text-xl font-bold tracking-tight">{SITE_NAME}</p>
                     <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">{t("tagline")}</p>
@@ -60,7 +60,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
                                             {link.label}
                                         </Link>
                                     ) : (
-                                        <a href={link.href} className="break-all text-ink-soft hover:text-ink">
+                                        <a href={link.href} className="break-words text-ink-soft hover:text-ink">
                                             {link.label}
                                         </a>
                                     )}
