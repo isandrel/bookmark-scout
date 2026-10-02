@@ -111,11 +111,12 @@ export async function recommendFolders(
   }
 
   const model = createAIModel(settings);
+  const { system } = await buildPrompt('folder_recommendation', { maxRecommendations });
 
   const { object } = await generateObject({
     model,
     schema: recommendationsSchema,
-    system: `${FOLDER_RECOMMENDATION_PROMPT.system}
+    system: `${system}
 
 Return exactly ${maxRecommendations} folder recommendations ranked by confidence. Include a mix of:
 1. Best matching existing folder

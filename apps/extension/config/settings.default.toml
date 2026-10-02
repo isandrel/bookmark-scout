@@ -568,13 +568,8 @@ group                 = "custom"
 model_list            = "anthropic"
 api_key_placeholder   = "Optional custom API key"
 
-# Custom prompts (leave empty to use defaults)
-# Users can edit in options page
-[ai.custom_prompts]
-# folder_recommendation = ""
-# folder_reorganization = ""
-# auto_tagging = ""
-# summarization = ""
+# Custom prompts live in the prompt library (Options > AI Tools > Prompts), synced per user;
+# the built-in defaults are in src/services/prompt-config.ts.
 
 [export]
 # Filename settings for exported bookmark files

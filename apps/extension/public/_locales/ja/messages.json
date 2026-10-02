@@ -1475,33 +1475,17 @@
         "message": "AIのレスポンス:",
         "description": "AI debug section label"
     },
-    "ai_promptFolderRecommendation": {
-        "message": "フォルダの提案",
-        "description": "Name for folder recommendation prompt"
-    },
     "ai_promptFolderRecommendationDesc": {
         "message": "新しいブックマークに最適なフォルダを提案します",
         "description": "Description for folder recommendation prompt"
-    },
-    "ai_promptFolderReorganization": {
-        "message": "フォルダ再整理",
-        "description": "Name for folder reorganization prompt"
     },
     "ai_promptFolderReorganizationDesc": {
         "message": "ブックマークフォルダを分析して再構成します",
         "description": "Description for folder reorganization prompt"
     },
-    "ai_promptAutoTagging": {
-        "message": "自動タグ付け",
-        "description": "Name for auto tagging prompt"
-    },
     "ai_promptAutoTaggingDesc": {
         "message": "内容に基づいてブックマークのタグを提案します",
         "description": "Description for auto tagging prompt"
-    },
-    "ai_promptSummarization": {
-        "message": "コンテンツ要約",
-        "description": "Name for summarization prompt"
     },
     "ai_promptSummarizationDesc": {
         "message": "ブックマークの短い説明を生成します",
@@ -4406,5 +4390,137 @@
     "popup_aiServiceSwitch": {
         "message": "AI サービス: $1",
         "description": "Accessible name of the popup AI service switcher; $1 is the current service"
+    },
+    "prompt_libraryTitle": {
+        "message": "プロンプト",
+        "description": "Heading of the prompt library"
+    },
+    "prompt_libraryDescription": {
+        "message": "各 AI ツールは、自分のプロンプトを選ばない限り組み込みのプロンプトを使います。自分のプロンプトはデバイス間で同期されます。",
+        "description": "Description of the prompt library"
+    },
+    "prompt_default": {
+        "message": "既定（組み込み）",
+        "description": "Select option for the built-in prompt"
+    },
+    "prompt_customize": {
+        "message": "カスタマイズ",
+        "description": "Button that starts a custom prompt from the default"
+    },
+    "prompt_newName": {
+        "message": "マイ $1 プロンプト",
+        "description": "Default name of a new custom prompt; $1 is the task name"
+    },
+    "prompt_newTitle": {
+        "message": "新しいプロンプト",
+        "description": "Title of the prompt editor for a new prompt"
+    },
+    "prompt_editTitle": {
+        "message": "プロンプトを編集",
+        "description": "Title of the prompt editor for an existing prompt"
+    },
+    "prompt_editorDescription": {
+        "message": "アプリは結果を正しく読み込めるよう、プロンプトの後に独自の出力形式ルールを追加します。",
+        "description": "Description in the prompt editor"
+    },
+    "prompt_name": {
+        "message": "名前",
+        "description": "Prompt name field"
+    },
+    "prompt_text": {
+        "message": "プロンプト",
+        "description": "Prompt text field"
+    },
+    "prompt_variables": {
+        "message": "挿入:",
+        "description": "Label before the variable chips"
+    },
+    "prompt_size": {
+        "message": "$1 KB / $2 KB",
+        "description": "Prompt size counter; $1 used, $2 limit"
+    },
+    "prompt_unknownVariables": {
+        "message": "このツールでは置き換えられません: $1",
+        "description": "Warning listing unknown variables"
+    },
+    "prompt_preview": {
+        "message": "現在の設定でプレビュー",
+        "description": "Toggle that shows the filled-in prompt"
+    },
+    "prompt_previewDescription": {
+        "message": "変数は現在の設定で置き換えられます。",
+        "description": "Description of the prompt preview"
+    },
+    "prompt_save": {
+        "message": "プロンプトを保存",
+        "description": "Save button in the prompt editor"
+    },
+    "prompt_editNamed": {
+        "message": "$1 を編集",
+        "description": "Accessible name of the edit prompt button"
+    },
+    "prompt_duplicateNamed": {
+        "message": "$1 を複製",
+        "description": "Accessible name of the duplicate prompt button"
+    },
+    "prompt_deleteNamed": {
+        "message": "$1 を削除",
+        "description": "Accessible name of the delete prompt button"
+    },
+    "prompt_deleteTitle": {
+        "message": "$1 を削除しますか？",
+        "description": "Title of the delete prompt confirmation"
+    },
+    "prompt_deleteDescription": {
+        "message": "ツールは組み込みのプロンプトに戻ります。すべてのデバイスからこのプロンプトが削除されます。",
+        "description": "Body of the delete prompt confirmation"
+    },
+    "prompt_errorNameRequired": {
+        "message": "名前を入力してください。",
+        "description": "Prompt validation: empty name"
+    },
+    "prompt_errorTextRequired": {
+        "message": "プロンプトを入力してください。",
+        "description": "Prompt validation: empty text"
+    },
+    "prompt_errorTooLong": {
+        "message": "プロンプトが長すぎて同期できません。$1 バイト未満にしてください。",
+        "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_varMaxRecommendations": {
+        "message": "フォルダー候補の数（最大推薦数）",
+        "description": "Variable description"
+    },
+    "prompt_varMaxCategories": {
+        "message": "トップレベルフォルダーの上限、-1 で無制限（最大カテゴリ数）",
+        "description": "Variable description"
+    },
+    "prompt_varMinItemsPerFolder": {
+        "message": "フォルダーあたりの最小ブックマーク数",
+        "description": "Variable description"
+    },
+    "prompt_varMaxItemsPerFolder": {
+        "message": "フォルダーあたりの最大ブックマーク数、-1 で無制限",
+        "description": "Variable description"
+    },
+    "prompt_varMinTags": {
+        "message": "ブックマークあたりの最小タグ数",
+        "description": "Variable description"
+    },
+    "prompt_varMaxTags": {
+        "message": "ブックマークあたりの最大タグ数",
+        "description": "Variable description"
+    },
+    "prompt_varTagStyle": {
+        "message": "タグの書式（kebab-case など）",
+        "description": "Variable description"
+    },
+    "prompt_varSummaryLength": {
+        "message": "要約の最大文字数",
+        "description": "Variable description"
+    },
+    "prompt_varIncludeDomainHint": {
+        "message": "サイト名に触れるかどうか（true または false）",
+        "description": "Variable description"
     }
 }

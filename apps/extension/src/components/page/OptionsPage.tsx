@@ -432,6 +432,11 @@ const OptionsPage: React.FC = () => {
                         <AIServicesPanel />
                         {category.fields.slice(1).map(renderSettingsField)}
                       </>
+                    ) : categoryKey === 'aiTools' ? (
+                      <>
+                        <PromptLibraryPanel />
+                        {category.fields.map(renderSettingsField)}
+                      </>
                     ) : (
                       category.fields.map(renderSettingsField)
                     )}
