@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "bun scripts/optimize-images.ts && next dev",
+    "build": "bun scripts/optimize-images.ts && next build",
     "start": "next start",
     "lint": "eslint",
     "verify": "bun scripts/verify-build.ts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "images": "bun scripts/optimize-images.ts"
   },
   "dependencies": {
     "next": "16.3.8",
@@ -26,6 +27,7 @@
     "@types/react-dom": "^19.3.0",
     "eslint": "^10.11.0",
     "eslint-config-next": "16.3.8",
+    "sharp": "0.35.5",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
