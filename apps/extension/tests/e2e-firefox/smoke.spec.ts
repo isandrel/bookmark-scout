@@ -137,6 +137,42 @@ test('side panel page renders the bookmark tree and searches', async ({ extensio
   await extension.findByText('.bookmark-item', 'Sidebar Match');
 });
 
+test('popup shows saved site icons and a generic icon instead of a broken browser icon', async ({
+  extension,
+}) => {
+  // Firefox has no `_favicon` service, so only icons saved by Refresh Site Icons can show.
+  const icon =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==';
+  await seedFolder(extension, 'E2E Firefox Icons', [
+    { title: 'Icon Saved Link', url: 'https://icons-saved.e2e.invalid/page' },
+    { title: 'Icon Missing Link', url: 'https://icons-missing.e2e.invalid/page' },
+  ]);
+  await extension.call(
+    async (browser, value) => {
+      await browser.storage.local.set({
+        'bookmark-scout-site-icons': {
+          'https://icons-saved.e2e.invalid': { icon: value, fetchedAt: Date.now() },
+        },
+      });
+    },
+    icon,
+  );
+
+  await extension.open('popup.html');
+  await (await extension.find('input[placeholder="Search bookmarks..."]')).sendKeys('Icon ');
+  // Saved icons load from storage after the first render, so re-read the row until they apply.
+  const iconOf = async (title: string) => {
+    const row = await extension.findByText('.bookmark-item', title);
+    const element = await row.findElement(By.css('[data-icon-source]'));
+    return {
+      source: await element.getAttribute('data-icon-source'),
+      src: await element.getAttribute('src'),
+    };
+  };
+  await expect.poll(() => iconOf('Icon Saved Link')).toEqual({ source: 'saved', src: icon });
+  expect((await iconOf('Icon Missing Link')).source).toBe('fallback');
+});
+
 test('bookmark manager loads a folder, filters titles, and opens subfolders', async ({
   extension,
 }) => {

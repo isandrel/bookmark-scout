@@ -17,14 +17,14 @@ This table comes from the manifests of the built extension for each browser.
 | Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Not reachable, because they live in the manager |
 | Settings page | Yes | Yes | Yes |
 | Right-click menu to save links | Yes | Yes | Yes |
-| Site icons next to bookmarks | Yes, from the browser's icon cache | Yes | No. Firefox has no favicon API for extensions. |
-| Optional website access for dead-link checks and title fetching | Requested when you run the tool | Same | Same |
+| Site icons next to bookmarks | Yes, from the browser's icon cache, or icons saved with **Refresh Site Icons** | Yes | Only icons saved with **Refresh Site Icons**, which runs in the manager. Firefox has no favicon API for extensions, so other bookmarks show a generic icon. |
+| Optional website access for dead-link checks, title fetching, and site icon refreshes | Requested when you run the tool | Same | Same |
 
 ## What is tested
 
 - **Chrome (Chromium)**: unit tests and end-to-end tests for the popup, side panel, manager, settings, maintenance tools, reports, import and export, keyboard shortcuts, saved searches, context-menu saves, drag and drop, network tools, and AI tools against mocked providers.
 - **Edge**: the same end-to-end suite runs against the Edge build.
-- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, the manager page, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, keyboard shortcuts, network and AI tools, and site icons are not covered.
+- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, the manager page, a settings save, a JSON export and import round trip, and the statistics and privacy reports, and saved site icons in the popup. Context menus, drag and drop, keyboard shortcuts, and network and AI tools (including **Refresh Site Icons** itself) are not covered.
 
 The Edge suite and the Firefox smoke suite are required CI checks, like the Chromium suite. Real AI providers and live websites are checked by hand, not by automated tests.
 

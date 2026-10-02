@@ -174,7 +174,7 @@ export function isWebUrl(url: string): boolean {
  * one request with `redirect: 'manual'` tells them apart: an opaque redirect response means the
  * server did answer, with a redirect that could not be followed.
  */
-async function classifyFailure(
+export async function classifyFailure(
   error: unknown,
   url: string,
   timeoutMs: number,
@@ -597,7 +597,7 @@ export function scanBookmarkPrivacy(
  * Runs one request whose timeout covers both the response headers and `consume`, so a server
  * that stalls mid-body cannot hang a scan. Any body `consume` leaves unread is cancelled.
  */
-async function requestWithTimeout<T>(
+export async function requestWithTimeout<T>(
   input: string,
   init: RequestInit,
   timeoutMs: number,
@@ -629,7 +629,7 @@ async function requestWithTimeout<T>(
 }
 
 /** Upper bound on bytes read from one page; titles and descriptions live in the `<head>`. */
-const METADATA_MAX_BYTES = 512 * 1024;
+export const METADATA_MAX_BYTES = 512 * 1024;
 const HEAD_END_PATTERN = /<\/head\s*>|<body[\s>]/i;
 const HTML_CONTENT_TYPE_PATTERN = /^\s*(?:text\/html|application\/xhtml\+xml)\s*(?:;|$)/i;
 
@@ -674,7 +674,7 @@ export async function readHtmlHead(response: Response, maxBytes: number): Promis
   return bytes.buffer;
 }
 
-async function mapWithConcurrency<T, R>(
+export async function mapWithConcurrency<T, R>(
   items: T[],
   concurrency: number,
   worker: (item: T, index: number) => Promise<R>,

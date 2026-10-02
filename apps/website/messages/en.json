@@ -113,6 +113,7 @@
           "Strip tracking parameters from URLs after a preview",
           "Find dead links and repair them: delete, use the redirect, point to an archived copy, or edit the URL",
           "Fetch page titles and apply only the ones you pick",
+          "Download each site's own icon, so bookmarks show it even in Firefox",
           "Delete with a confirmation, and undo it for 10 seconds"
         ]
       },
@@ -154,7 +155,7 @@
         },
         "websites": {
           "name": "Websites you check",
-          "detail": "Dead link checks and title fetching, after you allow access"
+          "detail": "Dead link checks, title fetching, and site icons, after you allow access"
         },
         "server": {
           "name": "Bookmark Scout server",
@@ -226,7 +227,7 @@
       "items": {
         "data": {
           "q": "Does Bookmark Scout send my bookmarks anywhere?",
-          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the provider you chose, and the dead link checker and title fetcher request the bookmarked pages after you allow website access. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
+          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the provider you chose, and the dead link checker, title fetcher, and site icon refresh request the bookmarked sites after you allow website access. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
         },
         "needAi": {
           "q": "Do I need to use AI?",

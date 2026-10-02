@@ -2168,7 +2168,7 @@
         "description": "Metadata fetcher timeout label"
     },
     "settings_metadataFetcherRequestTimeoutMsDesc": {
-        "message": "各メタデータリクエストを待つ最大時間",
+        "message": "各メタデータリクエストとサイトアイコンリクエストを待つ最大時間",
         "description": "Metadata fetcher timeout description"
     },
     "settings_metadataFetcherConcurrency": {
@@ -2176,7 +2176,7 @@
         "description": "Metadata fetcher concurrency label"
     },
     "settings_metadataFetcherConcurrencyDesc": {
-        "message": "メタデータ取得時の同時リクエスト数",
+        "message": "メタデータ取得とサイトアイコン更新時の同時リクエスト数",
         "description": "Metadata fetcher concurrency description"
     },
     "settings_privacyScannerEnabled": {
@@ -3380,7 +3380,7 @@
         "description": "Title of the dialog asking for website access"
     },
     "tools_hostAccessDesc": {
-        "message": "リンク切れチェックとタイトル提案では、ブックマークした各ページにリクエストを送ります。Bookmark Scout にWebサイトへのアクセス権がないと、多くのサイトがこのリクエストをブロックします。ブラウザで確認を求められます。",
+        "message": "リンク切れチェック、タイトル提案、サイトアイコンの更新では、ブックマークした各ページにリクエストを送ります。Bookmark Scout にWebサイトへのアクセス権がないと、多くのサイトがこのリクエストをブロックします。ブラウザで確認を求められます。",
         "description": "Explains why the network tools need website access"
     },
     "tools_hostAccessPrivacy": {
@@ -3942,5 +3942,253 @@
     "tools_deadLinkRepairUndoneDesc": {
         "message": "復元: $1。復元できませんでした: $2。",
         "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
+    },
+    "action_refresh": {
+        "message": "更新",
+        "description": "Refresh button label"
+    },
+    "tools_siteIcons": {
+        "message": "サイトアイコンを更新",
+        "description": "Title for the Refresh Site Icons tool"
+    },
+    "tools_siteIconsDesc": {
+        "message": "各Webサイトのアイコンをダウンロードして、Firefox でもブックマークに表示します",
+        "description": "Refresh Site Icons tool description"
+    },
+    "tools_siteIconsDialogDesc": {
+        "message": "アイコンはブックマークした各Webサイトにのみリクエストしました。保存するまで何も保存されません。",
+        "description": "Refresh Site Icons results dialog description"
+    },
+    "tools_siteIconsCached": {
+        "message": "保存済みアイコン $count$ 件 ($size$)",
+        "description": "Number and size of saved site icons on the tool card",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "size": {
+                "content": "$2",
+                "example": "18.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsCached_one": {
+        "message": "保存済みアイコン $count$ 件 ($size$)",
+        "description": "Number and size of saved site icons on the tool card (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "size": {
+                "content": "$2",
+                "example": "1.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsClear": {
+        "message": "保存したアイコンを消去",
+        "description": "Button that deletes all saved site icons"
+    },
+    "tools_siteIconStatus_updated": {
+        "message": "更新",
+        "description": "Site icon result status: a new or changed icon"
+    },
+    "tools_siteIconStatus_unchanged": {
+        "message": "変更なし",
+        "description": "Site icon result status: same icon as already saved"
+    },
+    "tools_siteIconStatus_noIcon": {
+        "message": "アイコンなし",
+        "description": "Site icon result status: no usable icon"
+    },
+    "tools_siteIconStatus_failed": {
+        "message": "失敗",
+        "description": "Site icon result status: the site could not be reached"
+    },
+    "tools_siteIconStatus_skipped": {
+        "message": "スキップ",
+        "description": "Site icon result count: bookmarks that are not web links"
+    },
+    "tools_siteIconsNewFrom": {
+        "message": "アイコンの取得元: $url$",
+        "description": "Where a newly downloaded site icon came from",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/favicon.ico"
+            }
+        }
+    },
+    "tools_siteIconsUnchanged": {
+        "message": "保存済みのアイコンと同じです",
+        "description": "Site icon is the same as the saved one"
+    },
+    "tools_siteIconsTooLarge": {
+        "message": "アイコンファイルがサイズ上限を超えています",
+        "description": "Site icon rejected for exceeding the size limit"
+    },
+    "tools_siteIconsNotImage": {
+        "message": "アイコンファイルが画像ではありません",
+        "description": "Site icon rejected because it is not an image"
+    },
+    "tools_siteIconsNotFound": {
+        "message": "サイトにアイコンがありません",
+        "description": "The site has no icon"
+    },
+    "tools_siteIconsKeptCached": {
+        "message": "以前に保存したアイコンをそのまま使います。",
+        "description": "A previously saved icon stays in use after a failed refresh"
+    },
+    "tools_siteIconsSkippedDesc": {
+        "message": "Webリンクではないブックマーク $count$ 件をスキップしました。",
+        "description": "Bookmarks skipped by Refresh Site Icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSkippedDesc_one": {
+        "message": "Webリンクではないブックマーク $count$ 件をスキップしました。",
+        "description": "Bookmarks skipped by Refresh Site Icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount": {
+        "message": "ブックマーク $count$ 件",
+        "description": "Bookmarks that share a site's origin",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount_one": {
+        "message": "ブックマーク $count$ 件",
+        "description": "Bookmarks that share a site's origin (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave": {
+        "message": "アイコン $count$ 件を保存",
+        "description": "Button that saves the downloaded site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave_one": {
+        "message": "アイコン $count$ 件を保存",
+        "description": "Button that saves the downloaded site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "state_noSiteIconsFound": {
+        "message": "この範囲にブックマークはありません。",
+        "description": "Refresh Site Icons empty state"
+    },
+    "toast_siteIconsSaved": {
+        "message": "サイトアイコンを保存しました",
+        "description": "Toast title after saving site icons"
+    },
+    "toast_siteIconsSavedDesc": {
+        "message": "このデバイスにアイコン $count$ 件を保存しました",
+        "description": "Toast description after saving site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedDesc_one": {
+        "message": "このデバイスにアイコン $count$ 件を保存しました",
+        "description": "Toast description after saving site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedEvictedDesc": {
+        "message": "保存: $saved$ 件。保存容量の上限を超えないよう削除した古いアイコン: $evicted$ 件。",
+        "description": "Toast description when older icons were removed to stay within the cache limit",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "evicted": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "toast_siteIconsCleared": {
+        "message": "保存したアイコンを消去しました",
+        "description": "Toast title after clearing saved site icons"
+    },
+    "toast_siteIconsClearedDesc": {
+        "message": "ブックマークにはブラウザのアイコンが再び表示されます。",
+        "description": "Toast description after clearing saved site icons"
+    },
+    "settings_siteIconsEnabled": {
+        "message": "サイトアイコンの更新を有効化",
+        "description": "Site icons enabled label"
+    },
+    "settings_siteIconsEnabledDesc": {
+        "message": "各Webサイトのアイコンをダウンロードするツールを表示します。保存したアイコンはこのデバイスにのみ保存されます。",
+        "description": "Site icons enabled description"
+    },
+    "settings_siteIconsDefaultScope": {
+        "message": "既定の範囲",
+        "description": "Site icons default scope label"
+    },
+    "settings_siteIconsDefaultScopeDesc": {
+        "message": "サイトアイコンを更新するときの既定の範囲",
+        "description": "Site icons default scope description"
+    },
+    "settings_siteIconsPreferredSize": {
+        "message": "優先するアイコンサイズ",
+        "description": "Site icons preferred size label"
+    },
+    "settings_siteIconsPreferredSizeDesc": {
+        "message": "ページに複数のアイコンがある場合、このサイズに最も近いものをダウンロードします",
+        "description": "Site icons preferred size description"
+    },
+    "settings_siteIconsMaxIconKb": {
+        "message": "アイコンファイルの最大サイズ",
+        "description": "Site icons maximum file size label"
+    },
+    "settings_siteIconsMaxIconKbDesc": {
+        "message": "これより大きいアイコンファイルはダウンロードも保存もしません",
+        "description": "Site icons maximum file size description"
+    },
+    "settings_siteIconsMaxCacheKb": {
+        "message": "アイコンの保存容量上限",
+        "description": "Site icons storage limit label"
+    },
+    "settings_siteIconsMaxCacheKbDesc": {
+        "message": "このデバイスに保存するアイコンの合計サイズ。古いものから削除されます",
+        "description": "Site icons storage limit description"
     }
 }

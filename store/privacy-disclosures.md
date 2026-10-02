@@ -1,15 +1,16 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.2.0`, checked against the source on 2026-10-01, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
+What the extension does with data at version `0.2.0`, checked against the source on 2026-10-02, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 
 - No analytics, telemetry, crash reporting, ads, or accounts. A search of `apps/extension/src` for analytics and telemetry libraries found none; the only hard-coded external URLs are the default AI provider endpoints.
 - The developer runs no server for the extension. Nothing is sent to Bookmark Scout.
 - No content scripts. The extension does not read the pages you visit; it reads only the active tab's title and URL.
-- Network requests happen only after a user action, in two features:
+- Network requests happen only after a user action, in these features:
   - **AI features** (off by default): requests go from the browser straight to the provider endpoint the user configured (`src/services/ai-client.ts`).
   - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use. The dead-link repair option "archived copy" only builds a `https://web.archive.org/web/<URL>` link locally; it does not contact the Wayback Machine (`src/services/dead-link-repair.ts`).
+  - **Refresh Site Icons**: for each origin in scope, one GET for the first bookmarked page on it (only the `<head>` is read), then at most three icon files the page declares on the bookmark's own registrable domain, and the origin's `/favicon.ico`, until one is a real image under the size cap (`src/services/site-icons.ts`). Same transport as above: `credentials: 'omit'`, the same optional website access, and redirects the site answers with are followed. No third-party icon service is contacted.
 - AI provider credentials are stored with `local:` storage items only (`src/lib/ai-provider-storage.ts`) and are not synced.
 
 ## Data inventory
@@ -25,7 +26,8 @@ What the extension does with data at version `0.2.0`, checked against the source
 | Saved searches | `storage.local` | No |
 | Recent folders (for the right-click menu) | `storage.local` | No |
 | Recent searches | `storage.local`, can be turned off in Settings | No |
-| Scan results (duplicates, dead links, metadata, privacy scan, statistics) | Memory only, while the dialog is open | No |
+| Site icons (`bookmark-scout-site-icons`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No |
+| Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No |
 
 ## What each AI feature sends
 
@@ -59,7 +61,7 @@ The Chrome Web Store asks which user data the extension collects. Bookmark Scout
 | Location | No | Not collected |
 | Web history | Yes | Bookmark URLs and the active tab URL are sent to the user's AI provider when the user uses AI features |
 | User activity | No | No clicks, keystrokes, or usage are recorded or sent |
-| Website content | Yes | Bookmark titles and the active tab title are sent to the AI provider; page heads are read locally by the Metadata Fetcher |
+| Website content | Yes | Bookmark titles and the active tab title are sent to the AI provider; page heads are read locally by the Metadata Fetcher and Refresh Site Icons, and site icons are stored locally |
 
 Certifications (all true for this code):
 

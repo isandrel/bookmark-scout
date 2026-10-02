@@ -535,6 +535,18 @@ fetch_descriptions = true
 request_timeout_ms = 8000
 concurrency        = 4
 
+# Refresh Site Icons downloads each website's own icon into local storage. It reuses the
+# Metadata Fetcher's request timeout and concurrency.
+[tools.site_icons]
+enabled        = true
+default_scope  = "folder"
+# Icon size in pixels to prefer when a page lists several (16-256)
+preferred_size = 32
+# Largest icon file that is downloaded, in KB (1-512)
+max_icon_kb    = 64
+# Total size of all cached icons in local storage, in KB; the oldest are removed first (256-8192)
+max_cache_kb   = 4096
+
 [tools.privacy_scanner]
 enabled = true
 default_scope = "all"

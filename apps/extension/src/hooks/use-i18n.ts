@@ -67,6 +67,16 @@ export function getFormattingLocale(): string | undefined {
   }
 }
 
+/** A byte count in kilobytes with at most one decimal, e.g. "12.5 KB". */
+export function formatKilobytes(bytes: number): string {
+  const kilobytes = Math.round((bytes / 1024) * 10) / 10;
+  try {
+    return `${kilobytes.toLocaleString(getFormattingLocale())} KB`;
+  } catch {
+    return `${kilobytes} KB`;
+  }
+}
+
 /** Date and time in the extension's language, e.g. "2026/9/24 15:05:49" in Japanese. */
 export function formatDateTime(value: number | Date): string {
   const date = value instanceof Date ? value : new Date(value);

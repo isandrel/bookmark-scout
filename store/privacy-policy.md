@@ -23,6 +23,7 @@ Bookmark Scout works inside your browser. It has no account, no analytics, no ad
 - **Your bookmarks**, to show, search, edit, move, delete, import, and export them.
 - **The title and URL of the active tab**, so you can save the page you are viewing into a folder.
 - **Site icons from your browser's own icon cache** (Chrome and Edge), to show next to bookmarks. No network request is made for them.
+- **Site icons from the bookmarked websites**, only when you run Refresh Site Icons (see below).
 
 The extension does not read the content of the pages you visit and has no content scripts.
 
@@ -33,6 +34,7 @@ Everything is kept in your browser's extension storage:
 - **Settings** are kept in the browser's sync storage. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on and which provider and model you chose, but not your API key.
 - **AI provider settings**, including your API key, base URL, and any extra headers, are kept in local storage on this device only. They are not synced.
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
+- **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
 
 Uninstalling the extension removes the data it stored in this browser. Your bookmarks themselves stay in the browser.
 
@@ -49,9 +51,9 @@ If you also turn on Auto-recommend on Open (off by default), folder suggestions 
 
 Your API key is sent to that provider to authenticate the request. The provider handles the data under its own terms and privacy policy, which you accept with them directly. Bookmark Scout does not send this data anywhere else. If you point the extension at a model running on your own computer (for example Ollama), the data stays on your machine.
 
-### Dead link checks and title fetching
+### Dead link checks, title fetching, and site icons
 
-Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. The browser asks for your permission the first time you run them. Requests go directly to each website, without cookies, and the results stay in the extension. As with any visit, the website can see your IP address and that the page was requested.
+Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. The browser asks for your permission the first time you run one of these tools. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested.
 
 ### Exports
 
@@ -65,7 +67,7 @@ Nothing. The extension does not send data to the developer, and there is no tele
 
 Bookmark Scout asks for `bookmarks`, `tabs`, `storage`, and `contextMenus`, and in Chrome and Edge also `favicon` and `sidePanel`. Website access is optional and is never granted at install:
 
-- Access to all websites is requested when you first run Check Dead Links or Metadata Fetcher.
+- Access to all websites is requested when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons.
 - Access to one provider's site is requested when you click Verify Service or Refresh Models in the AI settings.
 
 Each permission is explained in the [permission list in the README](https://github.com/isandrel/bookmark-scout#-permissions).

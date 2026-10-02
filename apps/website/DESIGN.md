@@ -235,6 +235,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 ### Image behavior
 
 - Screenshots scale to the container width with `width` and `height` set to avoid layout shift.
+- PNG sources in `public/screenshots/` are the only committed images. `scripts/optimize-images.ts` (run before `next dev` and `next build`) writes AVIF and WebP variants at 640, 960, and 1280px to `public/screenshots/optimized/` (git-ignored). Components use `srcSet()` from `lib/images.ts` with a `sizes` value that matches the layout; the PNG is only a fallback. Each variant must stay under the byte budget in `lib/images.ts`.
 
 ## Iteration guide
 

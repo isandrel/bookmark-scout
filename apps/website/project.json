@@ -9,13 +9,13 @@
     ],
     "targets": {
         "dev": {
-            "command": "next dev",
+            "command": "bun scripts/optimize-images.ts && next dev",
             "options": {
                 "cwd": "apps/website"
             }
         },
         "build": {
-            "command": "next build",
+            "command": "bun scripts/optimize-images.ts && next build",
             "options": {
                 "cwd": "apps/website"
             }

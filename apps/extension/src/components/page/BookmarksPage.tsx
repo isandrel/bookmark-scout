@@ -118,9 +118,7 @@ export default function BookmarksPage() {
       domain: domains.map((domain) => ({
         value: domain,
         label: domain,
-        icon: () => (
-          <img src={getFaviconUrl(`https://${domain}/`)} alt="" className="mr-2 h-4 w-4" />
-        ),
+        icon: () => <SiteIcon url={`https://${domain}/`} className="mr-2" />,
       })),
     };
   }, [allData]);
