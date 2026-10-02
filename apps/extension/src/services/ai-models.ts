@@ -19,7 +19,14 @@ export type AIProviderConfig = {
   requires_api_key?: boolean;
   base_url?: string;
   supports_custom_model?: boolean;
+  /** Shape of the provider's model-list endpoint; `openai` when omitted. */
+  model_list?: ModelListStyle;
+  /** Extra connection fields shown in Options, e.g. `organization` or `resourceName`. */
+  extra_fields?: AIProviderExtraField[];
 };
+
+/** Provider-specific connection settings beyond the API key, Base URL, and headers. */
+export type AIProviderExtraField = 'organization' | 'project' | 'resourceName' | 'apiVersion';
 
 type TomlConfig = {
   ai: {
@@ -75,4 +82,12 @@ export function providerRequiresApiKey(provider: AIProvider): boolean {
 
 export function providerSupportsCustomModel(provider: AIProvider): boolean {
   return getProviderConfig(provider)?.supports_custom_model ?? false;
+}
+
+export function getProviderModelListStyle(provider: AIProvider): ModelListStyle {
+  return getProviderConfig(provider)?.model_list ?? 'openai';
+}
+
+export function getProviderExtraFields(provider: AIProvider): AIProviderExtraField[] {
+  return getProviderConfig(provider)?.extra_fields ?? [];
 }

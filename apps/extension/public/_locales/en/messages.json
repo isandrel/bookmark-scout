@@ -4206,5 +4206,85 @@
     "settings_siteIconsMaxCacheKbDesc": {
         "message": "Total size of saved icons on this device; the oldest are removed first",
         "description": "Site icons storage limit description"
+    },
+    "ai_connErrorInvalidKey": {
+        "message": "The provider rejected the API key. Check that it is correct and still active.",
+        "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorForbidden": {
+        "message": "The provider refused access. Check the key's permissions and project.",
+        "description": "Provider connection error: 403 from a remote provider"
+    },
+    "ai_connErrorNotFound": {
+        "message": "Nothing answered at this address. Check the Base URL.",
+        "description": "Provider connection error: 404, wrong Base URL"
+    },
+    "ai_connErrorRateLimited": {
+        "message": "The provider is reachable but is rate-limiting requests. Try again shortly.",
+        "description": "Provider connection error: 429"
+    },
+    "ai_connErrorOriginRejected": {
+        "message": "The local server refused requests from the extension. For Ollama, set OLLAMA_ORIGINS=chrome-extension://*,moz-extension://* and restart it. For LM Studio, turn on Enable CORS.",
+        "description": "Provider connection error: 403 from a local server such as Ollama"
+    },
+    "ai_connErrorUnreachable": {
+        "message": "Could not reach $1. Check the address and your connection, or start the local server.",
+        "description": "Provider connection error: network failure; $1 is the host"
+    },
+    "ai_connErrorTimeout": {
+        "message": "$1 did not answer within 8 seconds.",
+        "description": "Provider connection error: timeout; $1 is the host"
+    },
+    "ai_connErrorNotApi": {
+        "message": "The address answered, but not like an AI provider API. Check the Base URL.",
+        "description": "Provider connection error: response was not the expected JSON"
+    },
+    "ai_connErrorHttp": {
+        "message": "The provider answered with HTTP $1 ($2).",
+        "description": "Provider connection error: other HTTP status; $1 status, $2 host"
+    },
+    "error_aiModelListUnavailable": {
+        "message": "This provider has no model list. Enter the model or deployment name instead.",
+        "description": "Shown when refreshing models for a provider without a model list"
+    },
+    "toast_aiServiceRateLimited": {
+        "message": "$1 is reachable and accepted the key, but is rate-limiting requests right now.",
+        "description": "Verify result when the provider answered 429"
+    },
+    "toast_aiServiceModelMissing": {
+        "message": "Connected to $1, but $2 is not in its model list. Pick another model.",
+        "description": "Verify result when the selected model is not listed; $1 provider, $2 model"
+    },
+    "options_organization": {
+        "message": "Organization ID",
+        "description": "OpenAI organization field label"
+    },
+    "options_organizationDescription": {
+        "message": "Optional. Sent as the OpenAI-Organization header.",
+        "description": "OpenAI organization field description"
+    },
+    "options_project": {
+        "message": "Project ID",
+        "description": "OpenAI project field label"
+    },
+    "options_projectDescription": {
+        "message": "Optional. Sent as the OpenAI-Project header.",
+        "description": "OpenAI project field description"
+    },
+    "options_resourceName": {
+        "message": "Resource name",
+        "description": "Azure resource name field label"
+    },
+    "options_resourceNameDescription": {
+        "message": "The name in https://<name>.openai.azure.com. A Base URL, if set, is used instead.",
+        "description": "Azure resource name field description"
+    },
+    "options_apiVersion": {
+        "message": "API version",
+        "description": "Azure API version field label"
+    },
+    "options_apiVersionDescription": {
+        "message": "Optional. Leave empty to use the v1 API.",
+        "description": "Azure API version field description"
     }
 }

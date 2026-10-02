@@ -60,6 +60,12 @@ describe('AI provider endpoint validation', () => {
       'https://proxy.example.test/v1',
     );
     expect(getProviderEndpoint('ollama', '')).toBe('http://localhost:11434/api');
+    expect(getProviderEndpoint('google', undefined)).toBe(
+      'https://generativelanguage.googleapis.com/v1beta',
+    );
+    expect(getProviderEndpoint('azure', undefined, { resourceName: 'my-resource' })).toBe(
+      'https://my-resource.openai.azure.com/openai/v1',
+    );
   });
 });
 
@@ -74,20 +80,48 @@ describe('[mocked provider contract] native providers honor Base URL and Extra H
       extraHeaders: '{"X-Proxy":"yes"}',
     });
     createAIModel(await buildAISettingsFromProvider(provider, model, true));
-    expect(factory).toHaveBeenCalledWith({
-      apiKey,
-      baseURL: 'https://proxy.example.test/v1',
-      headers: { 'X-Proxy': 'yes' },
-    });
+    expect(factory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey,
+        baseURL: 'https://proxy.example.test/v1',
+        headers: expect.objectContaining({ 'X-Proxy': 'yes' }),
+      }),
+    );
   });
 
-  it('keeps the SDK default endpoint when no Base URL is configured', async () => {
+  it('uses the provider default endpoint when no Base URL is configured', async () => {
     await saveStoredAIProviderConfig('openai', { apiKey: 'sk-synthetic' });
     createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
-    expect(mocks.createOpenAI).toHaveBeenCalledWith({
-      apiKey: 'sk-synthetic',
-      baseURL: undefined,
-      headers: undefined,
+    expect(mocks.createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({
+        apiKey: 'sk-synthetic',
+        baseURL: 'https://api.openai.com/v1',
+        headers: undefined,
+      }),
+    );
+  });
+
+  it('sends Anthropic the browser-access header alongside extra headers', async () => {
+    await saveStoredAIProviderConfig('anthropic', {
+      apiKey: 'sk-ant-synthetic',
+      extraHeaders: '{"X-Proxy":"yes"}',
     });
+    createAIModel(await buildAISettingsFromProvider('anthropic', 'claude-sonnet-4-20250514', true));
+    expect(mocks.createAnthropic).toHaveBeenCalledWith(
+      expect.objectContaining({
+        headers: { 'anthropic-dangerous-direct-browser-access': 'true', 'X-Proxy': 'yes' },
+      }),
+    );
+  });
+
+  it('passes OpenAI organization and project from the extra fields', async () => {
+    await saveStoredAIProviderConfig('openai', {
+      apiKey: 'sk-synthetic',
+      options: { organization: ' org-synthetic ', project: '' },
+    });
+    createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
+    expect(mocks.createOpenAI).toHaveBeenCalledWith(
+      expect.objectContaining({ organization: 'org-synthetic', project: undefined }),
+    );
   });
 });

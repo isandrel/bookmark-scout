@@ -76,7 +76,7 @@
 
 ### ✅ 実装済み
 
-- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換プロバイダーによるスマートなフォルダ提案。新しいフォルダの提案は確認ダイアログで確認し、確定すると不足しているフォルダを作成してページを保存
+- [x] 🤖 **AIフォルダ推薦** — OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換プロバイダーによるスマートなフォルダ提案。新しいフォルダの提案は確認ダイアログで確認し、確定すると不足しているフォルダを作成してページを保存
 - [x] 🔍 **インスタント検索** — デバウンス検索とフォルダフィルタリングで素早く検索
 - [x] 📂 **ドラッグ＆ドロップ** — 直感的なドラッグ＆ドロップで整理
 - [x] ⚡ **クイック追加** — ワンクリックで任意のフォルダに保存
@@ -108,7 +108,7 @@
 > AIによる推薦とAIツールは**デフォルトで無効**であり、手動での有効化が必要です：
 >
 > 1. **設定 → AI** タブに移動
-> 2. AI機能を有効にし、使用するプロバイダーを選択（OpenAI、Anthropic、Google、Groq、Mistral、DeepSeek、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換エンドポイント）
+> 2. AI機能を有効にし、使用するプロバイダーを選択（OpenAI、Anthropic、Google、Groq、Mistral、DeepSeek、xAI、Azure OpenAI、OpenRouter、Ollama、CLIProxyAPI、またはカスタムOpenAI互換エンドポイント）
 > 3. 選択したプロバイダーで必要な場合は、自分のAPIキーを入力
 >
 > ⚠️ **注意:** AI機能では、ブックマークのタイトル、URL、フォルダパス、選択したブックマークコンテキストが設定済みプロバイダーに送信される場合があります。プロバイダーによってはAPI使用料が発生する可能性があります。結果は実験的であり、破壊的な整理変更を適用する前に確認してください。

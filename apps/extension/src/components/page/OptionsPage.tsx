@@ -279,8 +279,13 @@ const OptionsPage: React.FC = () => {
 
   const modelOptions = (() => {
     const detected = detectedModels[values.aiProvider];
-    return detected?.length
-      ? detected.map((id) => ({ value: id, label: id }))
+    // Keep the chosen model selectable even when the fetched list no longer offers it.
+    const listed =
+      detected?.length && values.aiModel && !detected.includes(values.aiModel)
+        ? [values.aiModel, ...detected]
+        : detected;
+    return listed?.length
+      ? listed.map((id) => ({ value: id, label: id }))
       : getModelsForProvider(values.aiProvider).map((model) => ({
           value: model.id,
           label: model.name,
@@ -292,9 +297,9 @@ const OptionsPage: React.FC = () => {
       provider={values.aiProvider}
       model={values.aiModel}
       visibleFields={visibleFields}
-      onModelsDetected={(provider, modelIds) => {
+      onModelsDetected={(provider, modelIds, options) => {
         setDetectedModels((current) => ({ ...current, [provider]: modelIds }));
-        if (!modelIds.includes(valuesRef.current.aiModel)) {
+        if (!options?.fromCache && !modelIds.includes(valuesRef.current.aiModel)) {
           setFieldValue('aiModel', modelIds[0]);
         }
       }}
