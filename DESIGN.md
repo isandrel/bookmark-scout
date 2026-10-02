@@ -6,7 +6,7 @@ Bookmark Scout is a Bun + Nx monorepo, and each app keeps its own design file ne
 | --- | --- | --- |
 | Marketing website | [`apps/website/DESIGN.md`](apps/website/DESIGN.md) | [`apps/website/AGENTS.md`](apps/website/AGENTS.md) |
 | Documentation site | [`apps/docs/DESIGN.md`](apps/docs/DESIGN.md) | [`apps/docs/AGENTS.md`](apps/docs/AGENTS.md) |
-| Browser extension | Not written yet; follow the existing shadcn/ui and Base UI patterns | [`apps/extension/AGENTS.md`](apps/extension/AGENTS.md) |
+| Browser extension | [`apps/extension/DESIGN.md`](apps/extension/DESIGN.md) | [`apps/extension/AGENTS.md`](apps/extension/AGENTS.md) |
 
 This file holds only what all surfaces share.
 
@@ -35,4 +35,4 @@ This file holds only what all surfaces share.
 - Values such as URLs, contact addresses, store links, license, and dates come from `config/site.config.toml` through `@bookmark-scout/config`, never from literals in components.
 - No third-party requests other than the configured analytics.
 - Visible focus, AA contrast, reduced motion respected, no horizontal scroll at 320px.
-- When a brand token changes, update this file and both app design files in the same change.
+- When a brand token changes, update this file and every app design file in the same change.

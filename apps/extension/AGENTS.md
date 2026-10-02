@@ -185,9 +185,10 @@ When working in AI-related files, check whether the logic already belongs in:
 
 ## UI and UX guidance
 
+- read `DESIGN.md` in this app before changing UI, and update it when tokens or shared components change
 - reuse existing UI primitives under `src/components/ui/` before creating new ones
 - follow current patterns for dialogs, sheets, toasts, tables, filtering, and drag-and-drop
-- maintain the existing product feel instead of introducing a separate design language for small enhancements
+- follow the tokens, components, and do's and don'ts in `DESIGN.md` instead of introducing a separate design language
 - keep component APIs small and understandable
 - keep theme tokens, Tailwind setup, and animations in `src/styles/theme.css`, the one stylesheet every entrypoint imports
 - give tests a `data-slot`, `data-testid`, or semantic class hook (`.folder-item`, `.bookmark-item`) instead of selecting on Tailwind utility classes, so restyling does not break E2E specs
