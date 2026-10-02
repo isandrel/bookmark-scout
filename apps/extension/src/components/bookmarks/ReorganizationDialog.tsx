@@ -58,13 +58,13 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
   const getIcon = () => {
     switch (op.type) {
       case 'create':
-        return <FolderPlus className="h-4 w-4 text-green-500" />;
+        return <FolderPlus className="h-4 w-4 text-success" />;
       case 'delete':
-        return <FolderMinus className="h-4 w-4 text-red-500" />;
+        return <FolderMinus className="h-4 w-4 text-destructive-text" />;
       case 'rename':
-        return <FolderPen className="h-4 w-4 text-yellow-500" />;
+        return <FolderPen className="h-4 w-4 text-warning" />;
       case 'move':
-        return <ArrowRight className="h-4 w-4 text-blue-500" />;
+        return <ArrowRight className="h-4 w-4 text-primary" />;
     }
   };
 
@@ -83,7 +83,7 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
         return (
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <span className="text-green-600 dark:text-green-400 font-medium">
+              <span className="text-success font-medium">
                 + {op.name}
               </span>
               {op.parentPath && (
@@ -98,7 +98,7 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
       case 'delete':
         return (
           <div className="flex flex-col gap-1">
-            <span className="text-red-600 dark:text-red-400 line-through">
+            <span className="text-destructive-text line-through">
               {op.folderPath}
             </span>
             <span className="text-xs text-muted-foreground">{op.reason}</span>
@@ -110,7 +110,7 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
             <div className="flex items-center gap-2">
               <span className="text-muted-foreground line-through">{op.oldName}</span>
               <ArrowRight className="h-3 w-3" />
-              <span className="text-yellow-600 dark:text-yellow-400 font-medium">
+              <span className="text-warning font-medium">
                 {op.newName}
               </span>
             </div>
@@ -136,13 +136,13 @@ function OperationItem({ op }: { op: ReorganizationOperation }) {
             <div className="flex flex-col gap-1 text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground text-xs w-10 flex-shrink-0">{t('ai_reorgFrom')}</span>
-                <span className="text-red-500 dark:text-red-400 truncate" title={fromPath}>
+                <span className="text-destructive-text truncate" title={fromPath}>
                   {fromPath}
                 </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-muted-foreground text-xs w-10 flex-shrink-0">{t('ai_reorgTo')}</span>
-                <span className="text-green-500 dark:text-green-400 truncate" title={toPath}>
+                <span className="text-success truncate" title={toPath}>
                   {toPath}
                 </span>
               </div>
@@ -214,7 +214,7 @@ export function ReorganizationDialog({
       <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-purple-500" />
+            <Sparkles className="h-5 w-5 text-ai" />
             {t('ai_reorganizationTitle')}
           </DialogTitle>
           <DialogDescription>
@@ -225,7 +225,7 @@ export function ReorganizationDialog({
         {isLoading ? (
           <div className="flex-1 flex items-center justify-center py-12">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-10 w-10 animate-spin text-purple-500" />
+              <Loader2 className="h-10 w-10 animate-spin text-ai" />
               <div className="text-center">
                 <p className="text-sm font-medium">
                   {activeStatus
@@ -242,10 +242,10 @@ export function ReorganizationDialog({
           </div>
         ) : errors.length > 0 ? (
           <div className="flex-1 flex items-center justify-center py-12">
-            <div className="px-4 py-3 rounded-lg bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 max-w-md">
+            <div className="px-4 py-3 rounded-lg bg-destructive-wash border border-destructive/40 max-w-md">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-red-800 dark:text-red-200">
+                <AlertCircle className="h-5 w-5 text-destructive-text flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-destructive-text">
                   <p className="font-medium mb-1">{t('error_generic')}</p>
                   {errors.map((err, i) => (
                     <p key={i}>{err}</p>
@@ -286,8 +286,8 @@ export function ReorganizationDialog({
               </div>
 
               {/* AI Summary */}
-              <div className="px-3 py-2 rounded-lg bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
-                <p className="text-sm text-purple-800 dark:text-purple-200">
+              <div className="px-3 py-2 rounded-lg bg-ai/10 border border-ai/30">
+                <p className="text-sm text-foreground">
                   {plan.summary}
                 </p>
               </div>
@@ -314,7 +314,7 @@ export function ReorganizationDialog({
         ) : (
           <div className="flex-1 flex items-center justify-center py-12">
             <div className="flex flex-col items-center gap-3 text-center">
-              <CheckCircle className="h-8 w-8 text-green-500" />
+              <CheckCircle className="h-8 w-8 text-success" />
               <p className="text-sm text-muted-foreground">
                 {t('ai_noChangesNeeded')}
               </p>

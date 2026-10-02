@@ -259,7 +259,7 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
                         ) : null}
                       </div>
                     ) : newUrl ? (
-                      <p className="break-all rounded-md bg-emerald-500/10 p-2 text-xs text-emerald-700 dark:text-emerald-300">
+                      <p className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
                         {t('tools_deadLinkRepairWillChange', newUrl)}
                       </p>
                     ) : null}

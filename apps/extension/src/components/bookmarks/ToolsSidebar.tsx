@@ -926,7 +926,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               <ToolSection title={t('tools_category_ai')}>
                 {toolSettings.aiContextPackerEnabled && (
                   <ToolCard
-                    icon={<FileText className="h-4 w-4 text-indigo-500" />}
+                    icon={<FileText className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_exportAI')}
                     description={t('tools_exportAIDesc')}
                     buttonLabel={t('action_export')}
@@ -940,7 +940,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
                 {toolSettings.autoTaggingEnabled && (
                   <ToolCard
-                    icon={<Tags className="h-4 w-4 text-indigo-500" />}
+                    icon={<Tags className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_autoTagging')}
                     description={t('tools_autoTaggingDesc')}
                     buttonLabel={t('action_analyze')}
@@ -956,7 +956,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
                 {toolSettings.summarizerEnabled && (
                   <ToolCard
-                    icon={<FileOutput className="h-4 w-4 text-indigo-500" />}
+                    icon={<FileOutput className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_summarizer')}
                     description={t('tools_summarizerDesc')}
                     buttonLabel={t('action_analyze')}
@@ -972,7 +972,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
                 {toolSettings.reorganizationEnabled && (
                   <ToolCard
-                    icon={<Sparkles className="h-4 w-4 text-purple-500" />}
+                    icon={<Sparkles className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_aiReorganize')}
                     description={
                       t('tools_aiReorganizeDesc')
@@ -1002,7 +1002,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
               <ToolSection title={t('tools_category_maintenance')}>
                 {toolSettings.duplicatesEnabled && (
                   <ToolCard
-                    icon={<Copy className="h-4 w-4 text-orange-500" />}
+                    icon={<Copy className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_findDuplicates')}
                     description={t('tools_findDuplicatesDesc')}
                     buttonLabel={t('action_scan')}
@@ -1016,7 +1016,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
                 {toolSettings.urlCleanerEnabled && (
                   <ToolCard
-                    icon={<Eraser className="h-4 w-4 text-orange-500" />}
+                    icon={<Eraser className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_cleanUrls')}
                     description={t('tools_cleanUrlsDesc')}
                     buttonLabel={t('action_clean')}
@@ -1030,7 +1030,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
                 {toolSettings.deadLinksEnabled && (
                   <ToolCard
-                    icon={<Link2Off className="h-4 w-4 text-orange-500" />}
+                    icon={<Link2Off className="h-4 w-4 text-muted-foreground" />}
                     title={t('tools_checkDeadLinks')}
                     description={t('tools_checkDeadLinksDesc')}
                     buttonLabel={t('action_scan')}
@@ -1050,7 +1050,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             <ToolSection title={t('tools_category_metadata')}>
               {toolSettings.metadataFetcherEnabled && (
                 <ToolCard
-                  icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
+                  icon={<RefreshCw className="h-4 w-4 text-muted-foreground" />}
                   title={t('tools_metadataFetcher')}
                   description={t('tools_metadataFetcherDesc')}
                   buttonLabel={t('action_scan')}
@@ -1064,7 +1064,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
               {toolSettings.siteIconsEnabled && (
                 <ToolCard
-                  icon={<ImageIcon className="h-4 w-4 text-blue-500" />}
+                  icon={<ImageIcon className="h-4 w-4 text-muted-foreground" />}
                   title={t('tools_siteIcons')}
                   description={t('tools_siteIconsDesc')}
                   buttonLabel={t('action_refresh')}
@@ -1100,7 +1100,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           {!toolSettingsLoading && toolSettings.privacyScannerEnabled && (
             <ToolSection title={t('tools_category_security')}>
               <ToolCard
-                icon={<ShieldAlert className="h-4 w-4 text-red-500" />}
+                icon={<ShieldAlert className="h-4 w-4 text-muted-foreground" />}
                 title={t('tools_privacyScanner')}
                 description={t('tools_privacyScannerDesc')}
                 buttonLabel={t('action_scan')}
@@ -1117,7 +1117,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           {!toolSettingsLoading && toolSettings.statisticsEnabled && (
             <ToolSection title={t('tools_category_analytics')}>
               <ToolCard
-                icon={<BarChart3 className="h-4 w-4 text-green-500" />}
+                icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
                 title={t('tools_statistics')}
                 description={t('tools_statisticsDesc')}
                 buttonLabel={t('action_view')}
@@ -1134,7 +1134,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           <ToolSection title={t('tools_category_data')}>
             {dataShowExport && (
               <ToolCard
-                icon={<Download className="h-4 w-4 text-emerald-500" />}
+                icon={<Download className="h-4 w-4 text-muted-foreground" />}
                 title={t('tools_export')}
                 description={t('tools_exportDesc')}
                 buttonLabel={t('action_export')}
@@ -1175,14 +1175,14 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             <div className="p-3 rounded-lg border bg-card space-y-2">
               <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
-                  <Upload className="h-4 w-4 text-emerald-500" />
+                  <Upload className="h-4 w-4 text-muted-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm font-medium truncate">
                       {t('tools_import')}
                     </h4>
-                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+                    <span className="inline-flex items-center gap-1 text-xs px-1.5 py-0.5 rounded-sm bg-muted text-muted-foreground">
                       <Folder className="h-3 w-3" />
                     </span>
                   </div>

@@ -80,7 +80,7 @@ export function ToolCard({
             <ScopeBadge scopeCapability={scopeCapability} />
           </div>
           <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{description}</p>
-          {notice ? <p className="mt-1 text-xs font-medium text-amber-600 dark:text-amber-400">{notice}</p> : null}
+          {notice ? <p className="mt-1 text-xs font-medium text-warning">{notice}</p> : null}
         </div>
       </div>
 
@@ -124,7 +124,7 @@ export function ToolCard({
 function ScopeBadge({ scopeCapability }: { scopeCapability: ScopeCapability }) {
   if (scopeCapability === 'folder') {
     return (
-      <span className="inline-flex items-center gap-1 rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:bg-blue-900 dark:text-blue-300">
+      <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
         <Folder className="h-3 w-3" />
       </span>
     );
@@ -132,14 +132,14 @@ function ScopeBadge({ scopeCapability }: { scopeCapability: ScopeCapability }) {
 
   if (scopeCapability === 'all') {
     return (
-      <span className="inline-flex items-center gap-1 rounded bg-green-100 px-1.5 py-0.5 text-xs text-green-700 dark:bg-green-900 dark:text-green-300">
+      <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
         <Globe className="h-3 w-3" />
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1 rounded bg-purple-100 px-1.5 py-0.5 text-xs text-purple-700 dark:bg-purple-900 dark:text-purple-300">
+    <span className="inline-flex items-center gap-1 rounded-sm bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
       <Folder className="h-3 w-3" />
       <span>/</span>
       <Globe className="h-3 w-3" />

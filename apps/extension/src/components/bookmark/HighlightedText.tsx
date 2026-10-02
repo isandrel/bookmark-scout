@@ -21,7 +21,7 @@ export function HighlightedText({ text, ranges, className }: HighlightedTextProp
     parts.push(
       <mark
         key={start}
-        className="rounded-sm bg-yellow-200/70 font-semibold text-inherit dark:bg-yellow-500/30"
+        className="rounded-sm bg-marker font-semibold text-marker-foreground"
       >
         {text.slice(start, end)}
       </mark>,

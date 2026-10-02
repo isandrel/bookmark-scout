@@ -34,7 +34,7 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
       <div
         className={cn(
           'flex w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
-          isSelected ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-muted',
+          isSelected ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground hover:bg-muted',
         )}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
       >
@@ -131,7 +131,7 @@ export function FolderTree({ items, selectedFolderId, onFolderSelect }: FolderTr
         className={cn(
           'flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm transition-colors',
           selectedFolderId === null
-            ? 'bg-primary text-primary-foreground'
+            ? 'bg-accent font-medium text-accent-foreground'
             : 'text-foreground hover:bg-muted',
         )}
       >

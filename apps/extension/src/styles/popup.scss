@@ -29,11 +29,11 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: rgb(37, 99, 235);
+  background-color: hsl(var(--primary));
   pointer-events: none;
   z-index: 1000;
   transition: all 0.2s ease;
-  box-shadow: 0 0 0 1px white;
+  box-shadow: 0 0 0 1px hsl(var(--background));
 
   &::before,
   &::after {
@@ -41,7 +41,7 @@
     position: absolute;
     width: 6px;
     height: 6px;
-    background-color: rgb(37, 99, 235);
+    background-color: hsl(var(--primary));
     border-radius: 50%;
     top: -2px;
   }

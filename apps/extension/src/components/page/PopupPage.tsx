@@ -568,7 +568,7 @@ function PopupPage() {
   if (error) {
     return (
       <div className="p-4">
-        <div className="text-red-500 mb-4">
+        <div className="text-destructive-text mb-4">
           {t('error_generic')}: {error}
         </div>
         <Button onClick={() => window.location.reload()}>{t('action_retry')}</Button>
@@ -648,9 +648,9 @@ function PopupPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium truncate flex-1 flex items-center gap-1.5">
                     {rec.type === 'new' ? (
-                      <FolderPlus className="h-4 w-4 text-violet-500 shrink-0" />
+                      <FolderPlus className="h-4 w-4 text-ai shrink-0" />
                     ) : (
-                      <Folder className="h-4 w-4 text-amber-500 shrink-0" />
+                      <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
                     )}
                     {rec.folderPath.replace(/^Bookmarks Bar\//, '')}
                   </span>

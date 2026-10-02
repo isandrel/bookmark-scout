@@ -279,7 +279,7 @@ export function BookmarkSearch({
             title={t('ai_folderRecommendation')}
             aria-label={t('ai_folderRecommendation')}
           >
-            <Sparkles className={`h-4 w-4 text-violet-500 ${isAILoading ? 'animate-pulse' : ''}`} />
+            <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
           </Button>
         )}
       </div>

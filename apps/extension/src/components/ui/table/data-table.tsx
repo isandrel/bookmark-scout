@@ -23,7 +23,7 @@ const STICKY_COLUMN_ID = 'actions';
 // being translucent; the variants mirror TableRow hover/selected and folder rows (`is-folder`).
 // Tailwind only sees literal class names, so the mixes are spelled out.
 const stickyColumnClass = cn(
-  'sticky right-0 z-10 border-l bg-background',
+  'sticky right-0 z-10 border-l bg-card',
   'group-hover:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:group-hover:bg-[color-mix(in_srgb,var(--color-muted)_70%,var(--color-background))]',
@@ -421,7 +421,7 @@ export function DataTable<TData extends RowData>({
       />
       {selectedRows.length > 0 &&
         renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
-      <div ref={tableFrameRef} className="rounded-md border">
+      <div ref={tableFrameRef} className="rounded-md border bg-card">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
           {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
@@ -439,7 +439,7 @@ export function DataTable<TData extends RowData>({
                         className={cn(
                           header.column.getCanResize() && 'relative truncate',
                           header.column.id === STICKY_COLUMN_ID &&
-                            'sticky right-0 z-10 border-l bg-background',
+                            'sticky right-0 z-10 border-l bg-card',
                         )}
                       >
                         {header.isPlaceholder

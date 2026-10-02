@@ -279,7 +279,7 @@ export function ImportPreviewDialog({
               {notice || planned?.error ? (
                 <div
                   role="alert"
-                  className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200"
+                  className="rounded-lg border border-warning/40 bg-warning-wash p-3 text-sm text-warning"
                 >
                   {notice ?? planned?.error}
                 </div>

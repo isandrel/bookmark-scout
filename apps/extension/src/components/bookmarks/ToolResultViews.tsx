@@ -117,7 +117,7 @@ export function DuplicateResultsView({
       {mixedUrlKeys.size > 0 ? (
         <div
           role="alert"
-          className="rounded-lg border border-amber-500/50 bg-amber-500/10 p-3 text-sm text-amber-900 dark:text-amber-200"
+          className="rounded-lg border border-warning/40 bg-warning-wash p-3 text-sm text-warning"
         >
           {tPlural('tools_duplicatesTitleOnlyWarning', mixedUrlKeys.size)}
         </div>
@@ -199,7 +199,7 @@ export function UrlCleanerResultsView({
             <div className="font-medium">{preview.title || t('bookmarks_untitled')}</div>
             <div className="text-xs text-muted-foreground">{preview.folderPath || t('tools_rootFolder')}</div>
             <div className="break-all rounded-md bg-muted/40 p-2 text-xs">{preview.originalUrl}</div>
-            <div className="break-all rounded-md bg-emerald-500/10 p-2 text-xs text-emerald-700 dark:text-emerald-300">
+            <div className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
               {preview.cleanedUrl}
             </div>
             <div className="flex flex-wrap gap-2">
