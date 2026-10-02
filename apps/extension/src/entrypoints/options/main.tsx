@@ -6,7 +6,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
       <ThemeProvider storageKey="bookmark-scout-theme">
-        <OptionsPage />
+        <LanguageRoot>
+          <OptionsPage />
+        </LanguageRoot>
       </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,

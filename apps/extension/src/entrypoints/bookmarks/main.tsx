@@ -11,7 +11,9 @@ createRoot(rootElement).render(
   <StrictMode>
     <ErrorBoundary>
       <ThemeProvider storageKey="bookmark-scout-theme">
-        <BookmarksPage />
+        <LanguageRoot>
+          <BookmarksPage />
+        </LanguageRoot>
       </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,

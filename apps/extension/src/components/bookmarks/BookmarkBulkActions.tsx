@@ -32,12 +32,14 @@ export function BookmarkBulkActions({
   const items = useMemo(() => pruneNestedSelection(modifiable, allData), [allData, modifiable]);
   // Selected items inside a selected folder travel with that folder instead of on their own.
   const nestedCount = modifiable.length - items.length;
+  const { value: language } = useSetting('language');
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const targets = useMemo(() => {
     const allowed = new Set(getMoveTargetFolders(items, allData).map((folder) => folder.id));
     return buildFolderOptions(allData, t('bookmarks_untitled')).filter((option) =>
       allowed.has(option.value),
     );
-  }, [allData, items]);
+  }, [allData, items, language]);
 
   const moveSelection = async () => {
     if (!targetId) return;

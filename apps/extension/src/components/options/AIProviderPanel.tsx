@@ -4,7 +4,7 @@
  */
 
 import { Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export type AIProviderPanelField = 'apiKey' | 'baseUrl' | 'customModel' | 'extraHeaders';
 
@@ -70,20 +70,50 @@ export function AIProviderPanel({
   const [errors, setErrors] = useState<ProviderFieldErrors>({});
   const [isVerifying, setIsVerifying] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
+  // Latest field text for the storage watcher, which outlives a single render.
+  const apiKeyRef = useRef(apiKey);
+  const baseUrlRef = useRef(baseUrl);
+  const customModelRef = useRef(customModel);
+  const extraHeadersRef = useRef(extraHeaders);
+  apiKeyRef.current = apiKey;
+  baseUrlRef.current = baseUrl;
+  customModelRef.current = customModel;
+  extraHeadersRef.current = extraHeaders;
+
+  // The stored values last shown, to tell untouched fields from ones being edited.
+  const shownRef = useRef<StoredAIProviderConfig>({});
 
   useEffect(() => {
     let active = true;
     setErrors({});
-    void getStoredAIProviderConfig(provider).then((stored) => {
-      if (!active) return;
-      setApiKey(stored.apiKey ?? '');
+    shownRef.current = {};
+    const show = (stored: StoredAIProviderConfig, keepEdits: boolean) => {
+      const shown = shownRef.current;
+      // A field the user is editing keeps their text; untouched fields follow the stored value.
+      const follow = (
+        field: keyof StoredAIProviderConfig,
+        setter: (value: string) => void,
+        current: string,
+      ) => {
+        if (!keepEdits || current === (shown[field] ?? '')) setter(stored[field] ?? '');
+      };
+      follow('apiKey', setApiKey, apiKeyRef.current);
+      follow('baseUrl', setBaseUrl, baseUrlRef.current);
+      follow('customModel', setCustomModel, customModelRef.current);
+      follow('extraHeaders', setExtraHeaders, extraHeadersRef.current);
       setSavedApiKey(stored.apiKey ?? '');
-      setBaseUrl(stored.baseUrl ?? '');
-      setCustomModel(stored.customModel ?? '');
-      setExtraHeaders(stored.extraHeaders ?? '');
+      shownRef.current = { ...stored };
+    };
+    void getStoredAIProviderConfig(provider).then((stored) => {
+      if (active) show(stored, false);
+    });
+    // Another Options tab, or a reset, can change the stored values while this one is open.
+    const unwatch = aiProviderConfigItem.watch((next) => {
+      if (active) show(next?.[provider] ?? {}, true);
     });
     return () => {
       active = false;
+      unwatch();
     };
   }, [provider]);
 
@@ -111,15 +141,9 @@ export function AIProviderPanel({
     if (error) return false;
     if (key === savedApiKey) return true;
 
+    // Saved silently like every other setting; the field itself shows the value.
     await saveStoredAIProviderConfig(provider, { apiKey: key });
     setSavedApiKey(key);
-    if (key) {
-      toast({
-        title: `✓ ${t('toast_apiKeySaved')}`,
-        description: t('toast_apiKeySavedDescription'),
-        variant: 'success',
-      });
-    }
     return true;
   };
 
