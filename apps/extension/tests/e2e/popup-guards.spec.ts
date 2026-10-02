@@ -304,9 +304,21 @@ test('folder chevrons share one column, empty folders have none, and a small pop
   const emptyRow = folderRow(page, 'E2E Chevron Empty');
   await expect(emptyRow).toBeVisible();
 
-  const barEdge = await chevronRightEdge(barRow);
-  expect(Math.abs((await chevronRightEdge(fullRow)) - barEdge)).toBeLessThanOrEqual(1);
-  expect(Math.abs((await chevronRightEdge(emptyRow)) - barEdge)).toBeLessThanOrEqual(1);
+  // Rows grow 1% on hover with a 150 ms transition, so the clicked row would be measured
+  // mid-scale. Move the pointer off the rows and wait until no row is scaled.
+  await page.mouse.move(0, 0);
+  for (const row of [barRow, fullRow, emptyRow]) {
+    await expect(row).toHaveCSS('scale', 'none');
+  }
+  await expect
+    .poll(async () => {
+      const barEdge = await chevronRightEdge(barRow);
+      return Math.max(
+        Math.abs((await chevronRightEdge(fullRow)) - barEdge),
+        Math.abs((await chevronRightEdge(emptyRow)) - barEdge),
+      );
+    })
+    .toBeLessThanOrEqual(1);
   await expect(emptyRow.locator('[data-folder-trigger] > div:last-child')).toHaveCSS(
     'visibility',
     'hidden',
