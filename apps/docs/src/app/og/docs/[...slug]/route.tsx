@@ -1,3 +1,4 @@
+import { DOCS_NAME } from "@bookmark-scout/config";
 import { generate as DefaultImage } from "fumadocs-ui/og";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
@@ -17,7 +18,7 @@ export async function GET(
     <DefaultImage
       title={page.data.title}
       description={page.data.description}
-      site="My App"
+      site={DOCS_NAME}
     />,
     {
       width: 1200,
