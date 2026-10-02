@@ -19,6 +19,7 @@ const {
   applyMetadataTitles,
   decodeHtml,
   fetchBookmarkMetadata,
+  isConfirmedDeadLink,
   isHtmlContentType,
   readHtmlHead,
   scanDeadLinks,
@@ -190,6 +191,66 @@ describe('dead-link scanning', () => {
       .items;
     expect(item).toMatchObject({ status: 'error', errorKind: 'network' });
     expect(JSON.stringify(item)).not.toContain('Failed to fetch');
+  });
+
+  it('classifies auth, rate-limit, HEAD-unsupported, and server errors apart from confirmed dead links', async () => {
+    fetchMock.mockImplementation(async (url: string) => response(Number(url.split('/').pop())));
+    const statuses = [404, 410, 401, 403, 407, 429, 405, 501, 500, 503, 400, 418];
+    const { items } = await scanDeadLinks(
+      tree(
+        Object.fromEntries(
+          statuses.map((status) => [`status-${status}`, `https://e2e.invalid/${status}`]),
+        ),
+      ),
+      deadLinkOptions,
+    );
+    expect(items.map((item) => [item.statusCode, item.category, isConfirmedDeadLink(item)])).toEqual([
+      [404, 'notFound', true],
+      [410, 'notFound', true],
+      [401, 'auth', false],
+      [403, 'auth', false],
+      [407, 'auth', false],
+      [429, 'rateLimited', false],
+      [405, 'methodRejected', false],
+      [501, 'methodRejected', false],
+      [500, 'serverError', false],
+      [503, 'serverError', false],
+      [400, 'httpError', false],
+      [418, 'httpError', false],
+    ]);
+  });
+
+  it('confirms refused connections and redirect loops as dead but not timeouts or successes', async () => {
+    fetchMock.mockImplementation(async (url: string, init: RequestInit) => {
+      if (url.endsWith('/ok')) return response(200);
+      if (url.endsWith('/moved')) return response(200, { redirectedTo: 'https://e2e.invalid/ok' });
+      if (url.endsWith('/loop') && init.redirect === 'manual') {
+        return { type: 'opaqueredirect', status: 0, body: null } as unknown as Response;
+      }
+      if (url.endsWith('/slow')) {
+        return new Promise((_, reject) =>
+          init.signal?.addEventListener('abort', () => reject(new DOMException('', 'AbortError'))),
+        );
+      }
+      throw new TypeError('Failed to fetch');
+    });
+    const { items } = await scanDeadLinks(
+      tree({
+        refused: 'https://e2e.invalid/refused',
+        loop: 'https://e2e.invalid/loop',
+        slow: 'https://e2e.invalid/slow',
+        ok: 'https://e2e.invalid/ok',
+        moved: 'https://e2e.invalid/moved',
+      }),
+      { ...deadLinkOptions, requestTimeoutMs: 50, concurrency: 5 },
+    );
+    expect(items.map((item) => [item.id, item.category, isConfirmedDeadLink(item)])).toEqual([
+      ['refused', 'unreachable', true],
+      ['loop', 'redirectLoop', true],
+      ['slow', 'timeout', false],
+      ['ok', undefined, false],
+      ['moved', undefined, false],
+    ]);
   });
 
   it('reports a redirect loop separately from a refused connection', async () => {
