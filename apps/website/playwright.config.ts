@@ -6,6 +6,7 @@ const port = Number(process.env.WEBSITE_TEST_PORT ?? 4173);
 export default defineConfig({
     testDir: "./tests/e2e",
     fullyParallel: true,
+    retries: process.env.CI ? 1 : 0,
     timeout: 30_000,
     reporter: "line",
     outputDir: "./test-results/playwright",

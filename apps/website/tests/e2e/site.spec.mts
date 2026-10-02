@@ -1,33 +1,41 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test as base } from "@playwright/test";
 import { CONTACT, LOCALES, SITE_URL, UMAMI_SCRIPT_URL } from "@bookmark-scout/config";
 import { INDEXABLE_ROUTES } from "../../lib/content/routes";
 
 const analyticsHost = UMAMI_SCRIPT_URL ? new URL(UMAMI_SCRIPT_URL).host : "";
 
-/** Records console errors and third-party requests; analytics is stubbed so tests stay offline. */
-async function watchPage(page: Page) {
-    const errors: string[] = [];
-    const thirdParty: string[] = [];
-    page.on("console", (message) => {
-        if (message.type() === "error") errors.push(message.text());
-    });
-    page.on("pageerror", (error) => errors.push(error.message));
-    await page.route("**/*", (route) => {
-        const url = new URL(route.request().url());
-        if (url.hostname === "localhost") return route.continue();
-        if (url.host === analyticsHost) return route.fulfill({ status: 204, body: "" });
-        thirdParty.push(url.href);
-        return route.abort();
-    });
-    return { errors, thirdParty };
-}
+type Watched = { errors: string[]; thirdParty: string[] };
+
+/**
+ * Every test runs offline: analytics is stubbed, other third-party requests are
+ * blocked and recorded, and console errors are collected.
+ */
+const test = base.extend<{ watched: Watched }>({
+    watched: [
+        async ({ page }, use) => {
+            const watched: Watched = { errors: [], thirdParty: [] };
+            page.on("console", (message) => {
+                if (message.type() === "error") watched.errors.push(message.text());
+            });
+            page.on("pageerror", (error) => watched.errors.push(error.message));
+            await page.route("**/*", (route) => {
+                const url = new URL(route.request().url());
+                if (url.hostname === "localhost") return route.continue();
+                if (url.host === analyticsHost) return route.fulfill({ status: 204, body: "" });
+                watched.thirdParty.push(url.href);
+                return route.abort();
+            });
+            await use(watched);
+        },
+        { auto: true },
+    ],
+});
 
 for (const locale of LOCALES) {
     for (const route of INDEXABLE_ROUTES) {
         const path = `/${locale}${route}/`;
 
-        test(`${path} renders cleanly`, async ({ page }) => {
-            const watched = await watchPage(page);
+        test(`${path} renders cleanly`, async ({ page, watched }) => {
             await page.goto(path);
 
             await expect(page.locator("html")).toHaveAttribute("lang", locale);
@@ -61,6 +69,8 @@ test("skip link moves focus to the main content", async ({ page, isMobile }) => 
 
 test("language links keep the current page", async ({ page }) => {
     await page.goto("/en/privacy/");
+    // Client-side navigation needs the router hydrated before the click.
+    await page.waitForLoadState("networkidle");
     const menu = page.locator("header details summary");
     if (await menu.isVisible()) await menu.click();
     await page.locator('header a[hreflang="ja"]:visible').first().click();
