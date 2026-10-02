@@ -399,6 +399,120 @@ export function MetadataResultsView({
   );
 }
 
+const SITE_ICON_SUMMARY: Array<{ key: string; labelKey: string }> = [
+  { key: 'updated', labelKey: 'tools_siteIconStatus_updated' },
+  { key: 'unchanged', labelKey: 'tools_siteIconStatus_unchanged' },
+  { key: 'noIcon', labelKey: 'tools_siteIconStatus_noIcon' },
+  { key: 'failed', labelKey: 'tools_siteIconStatus_failed' },
+  { key: 'skipped', labelKey: 'tools_siteIconStatus_skipped' },
+];
+
+function describeSiteIcon(item: SiteIconResultItem): string {
+  switch (item.status) {
+    case 'updated':
+      return t('tools_siteIconsNewFrom', item.iconUrl ?? '');
+    case 'unchanged':
+      return t('tools_siteIconsUnchanged');
+    case 'noIcon':
+      if (item.rejection === 'tooLarge') return t('tools_siteIconsTooLarge');
+      if (item.rejection === 'notImage') return t('tools_siteIconsNotImage');
+      return t('tools_siteIconsNotFound');
+    default:
+      if (item.errorKind === 'timeout') return t('tools_deadLinkTimedOut');
+      return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
+  }
+}
+
+export function SiteIconResultsView({
+  result,
+  isSaving,
+  onSave,
+}: {
+  result: SiteIconRefreshResult | null;
+  isSaving: boolean;
+  onSave: () => void;
+}) {
+  const counts = useMemo(() => {
+    const totals: Record<string, number> = {
+      updated: 0,
+      unchanged: 0,
+      noIcon: 0,
+      failed: 0,
+      skipped: result?.skippedBookmarks ?? 0,
+    };
+    for (const item of result?.items ?? []) totals[item.status] += 1;
+    return totals;
+  }, [result]);
+  const savable = counts.updated + counts.unchanged;
+
+  if (!result || (result.items.length === 0 && result.skippedBookmarks === 0)) {
+    return <EmptyState message={t('state_noSiteIconsFound')} />;
+  }
+
+  return (
+    <div className="space-y-4">
+      <dl data-testid="site-icons-summary" className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+        {SITE_ICON_SUMMARY.map(({ key, labelKey }) => (
+          <div key={key} data-status={key} className="rounded-lg border p-2">
+            <dt className="text-xs text-muted-foreground">{t(labelKey)}</dt>
+            <dd className="text-lg font-semibold">{counts[key]}</dd>
+          </div>
+        ))}
+      </dl>
+      {result.skippedBookmarks > 0 ? (
+        <p className="text-xs text-muted-foreground">
+          {tPlural('tools_siteIconsSkippedDesc', result.skippedBookmarks)}
+        </p>
+      ) : null}
+      <div className="space-y-3">
+        {result.items.map((item) => (
+          <div
+            key={item.origin}
+            data-origin={item.origin}
+            className="flex gap-3 rounded-lg border p-3 text-sm"
+          >
+            {item.icon ? (
+              <img src={item.icon} alt="" width={32} height={32} className="size-8 shrink-0" />
+            ) : (
+              <div className="size-8 shrink-0 rounded-md bg-muted" aria-hidden="true" />
+            )}
+            <div className="min-w-0 flex-1 space-y-1">
+              <div className="flex items-center justify-between gap-2">
+                <span className="break-all font-medium">{item.origin}</span>
+                <Badge
+                  variant={
+                    item.status === 'failed'
+                      ? 'destructive'
+                      : item.status === 'updated'
+                        ? 'default'
+                        : 'outline'
+                  }
+                >
+                  {t(`tools_siteIconStatus_${item.status}`)}
+                </Badge>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {tPlural('tools_siteIconsBookmarkCount', item.bookmarkCount)}
+              </div>
+              <div className="break-all text-xs text-muted-foreground">{describeSiteIcon(item)}</div>
+              {item.keepsCachedIcon && (item.status === 'failed' || item.status === 'noIcon') ? (
+                <div className="text-xs text-muted-foreground">{t('tools_siteIconsKeptCached')}</div>
+              ) : null}
+            </div>
+          </div>
+        ))}
+      </div>
+      {savable > 0 ? (
+        <div className="flex justify-end">
+          <Button onClick={onSave} disabled={isSaving}>
+            {isSaving ? t('action_saving') : tPlural('tools_siteIconsSave', savable)}
+          </Button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function PrivacyResultsView({ result }: { result: PrivacyScanResult | null }) {
   return result?.items.length ? (
     <div className="space-y-3">

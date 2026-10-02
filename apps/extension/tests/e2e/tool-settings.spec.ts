@@ -50,6 +50,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     urlCleanerEnabled: false,
     deadLinksEnabled: false,
     metadataFetcherEnabled: false,
+    siteIconsEnabled: false,
     privacyScannerEnabled: false,
     statisticsEnabled: false,
   });
@@ -65,6 +66,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     'URL Cleaner',
     'Check Dead Links',
     'Metadata Fetcher',
+    'Refresh Site Icons',
     'Privacy Scanner',
     'Bookmark Statistics',
   ]) {
@@ -83,10 +85,14 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     autoTaggingDefaultScope: 'all',
     reorganizationEnabled: true,
     reorganizationDryRunFirst: false,
+    siteIconsEnabled: true,
   });
 
   const statisticsCard = toolCard(page, 'Bookmark Statistics');
   await expect(statisticsCard).toBeVisible();
+  // The site icon card returns on its own; the Metadata Fetcher sharing its section stays hidden.
+  await expect(toolCard(page, 'Refresh Site Icons')).toBeVisible();
+  await expect(toolCard(page, 'Metadata Fetcher')).toHaveCount(0);
   await expect(statisticsCard.getByRole('combobox')).toContainText('All Bookmarks');
   await statisticsCard.getByRole('button', { name: 'View' }).click();
   const statistics = page.getByRole('dialog', { name: 'Bookmark Statistics' });

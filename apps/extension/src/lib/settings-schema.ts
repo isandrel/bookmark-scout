@@ -152,6 +152,13 @@ interface TomlConfig {
       request_timeout_ms: number;
       concurrency: number;
     };
+    site_icons: {
+      enabled: boolean;
+      default_scope: string;
+      preferred_size: number;
+      max_icon_kb: number;
+      max_cache_kb: number;
+    };
     privacy_scanner: {
       enabled: boolean;
       default_scope: string;
@@ -348,6 +355,12 @@ export const settingsSchema = z.object({
   metadataFetcherRequestTimeoutMs: z.number().min(1000).max(60000).default(config.tools.metadata_fetcher.request_timeout_ms),
   metadataFetcherConcurrency: z.number().min(1).max(20).default(config.tools.metadata_fetcher.concurrency),
 
+  siteIconsEnabled: z.boolean().default(config.tools.site_icons.enabled),
+  siteIconsDefaultScope: toolDefaultScope(config.tools.site_icons.default_scope),
+  siteIconsPreferredSize: z.number().int().min(16).max(256).default(config.tools.site_icons.preferred_size),
+  siteIconsMaxIconKb: z.number().int().min(1).max(512).default(config.tools.site_icons.max_icon_kb),
+  siteIconsMaxCacheKb: z.number().int().min(256).max(8192).default(config.tools.site_icons.max_cache_kb),
+
   privacyScannerEnabled: z.boolean().default(config.tools.privacy_scanner.enabled),
   privacyScannerDefaultScope: fixedToolScope('all'),
   privacyScannerScanTitles: z.boolean().default(config.tools.privacy_scanner.scan_titles),
@@ -490,6 +503,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         'metadataFetcherFetchDescriptions',
         'metadataFetcherRequestTimeoutMs',
         'metadataFetcherConcurrency',
+        'siteIconsEnabled',
+        'siteIconsDefaultScope',
+        'siteIconsPreferredSize',
+        'siteIconsMaxIconKb',
+        'siteIconsMaxCacheKb',
       ],
     },
     security: {
@@ -706,6 +724,11 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     metadataFetcherFetchDescriptions: { label: t('settings_metadataFetcherFetchDescriptions'), description: t('settings_metadataFetcherFetchDescriptionsDesc'), type: 'switch' },
     metadataFetcherRequestTimeoutMs: { label: t('settings_metadataFetcherRequestTimeoutMs'), description: t('settings_metadataFetcherRequestTimeoutMsDesc'), type: 'number', min: 1000, max: 60000, step: 500 },
     metadataFetcherConcurrency: { label: t('settings_metadataFetcherConcurrency'), description: t('settings_metadataFetcherConcurrencyDesc'), type: 'number', min: 1, max: 20, step: 1 },
+    siteIconsEnabled: { label: t('settings_siteIconsEnabled'), description: t('settings_siteIconsEnabledDesc'), type: 'switch' },
+    siteIconsDefaultScope: { label: t('settings_siteIconsDefaultScope'), description: t('settings_siteIconsDefaultScopeDesc'), type: 'select', options: scopeOptions() },
+    siteIconsPreferredSize: { label: t('settings_siteIconsPreferredSize'), description: t('settings_siteIconsPreferredSizeDesc'), type: 'number', min: 16, max: 256, step: 8, unit: 'px' },
+    siteIconsMaxIconKb: { label: t('settings_siteIconsMaxIconKb'), description: t('settings_siteIconsMaxIconKbDesc'), type: 'number', min: 1, max: 512, step: 1, unit: 'KB' },
+    siteIconsMaxCacheKb: { label: t('settings_siteIconsMaxCacheKb'), description: t('settings_siteIconsMaxCacheKbDesc'), type: 'number', min: 256, max: 8192, step: 256, unit: 'KB' },
     privacyScannerEnabled: { label: t('settings_privacyScannerEnabled'), description: t('settings_privacyScannerEnabledDesc'), type: 'switch' },
     privacyScannerDefaultScope: { label: t('settings_privacyScannerDefaultScope'), description: t('settings_privacyScannerDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
     privacyScannerScanTitles: { label: t('settings_privacyScannerScanTitles'), description: t('settings_privacyScannerScanTitlesDesc'), type: 'switch' },

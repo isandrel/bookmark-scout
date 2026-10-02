@@ -19,6 +19,7 @@ import {
   ShieldAlert,
   Download,
   Upload,
+  ImageIcon,
 } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import type { BookmarkTreeNode } from '@/types';
@@ -39,7 +40,8 @@ function ToolSection({ title, children }: ToolSectionProps) {
   );
 }
 
-type PendingNetworkTool = { tool: 'dead-links' | 'metadata'; scope: ToolScope };
+type NetworkTool = 'dead-links' | 'metadata' | 'site-icons';
+type PendingNetworkTool = { tool: NetworkTool; scope: ToolScope };
 
 interface ToolsSidebarProps {
   currentFolderId: string | null;
@@ -103,6 +105,12 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const [metadataLoading, setMetadataLoading] = useState(false);
   const [metadataResult, setMetadataResult] = useState<MetadataFetchResult | null>(null);
   const [metadataApplying, setMetadataApplying] = useState(false);
+  const [siteIconsDialogOpen, setSiteIconsDialogOpen] = useState(false);
+  const [siteIconsLoading, setSiteIconsLoading] = useState(false);
+  const [siteIconsResult, setSiteIconsResult] = useState<SiteIconRefreshResult | null>(null);
+  const [siteIconsSaving, setSiteIconsSaving] = useState(false);
+  const [siteIconsClearing, setSiteIconsClearing] = useState(false);
+  const siteIconCache = useSiteIconCacheSummary();
   const webHostAccess = useWebHostAccess();
   const [pendingNetworkTool, setPendingNetworkTool] = useState<PendingNetworkTool | null>(null);
   const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
@@ -150,6 +158,9 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   );
   const { value: metadataFetcherRequestTimeoutMs } = useSetting('metadataFetcherRequestTimeoutMs');
   const { value: metadataFetcherConcurrency } = useSetting('metadataFetcherConcurrency');
+  const { value: siteIconsPreferredSize } = useSetting('siteIconsPreferredSize');
+  const { value: siteIconsMaxIconKb } = useSetting('siteIconsMaxIconKb');
+  const { value: siteIconsMaxCacheKb } = useSetting('siteIconsMaxCacheKb');
   const { value: privacyScannerScanTitles } = useSetting('privacyScannerScanTitles');
   const { value: privacyScannerScanQueryParams } = useSetting('privacyScannerScanQueryParams');
   const { value: privacyScannerScanFragments } = useSetting('privacyScannerScanFragments');
@@ -398,8 +409,88 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
     }
   };
 
+  const runSiteIcons = async (scope: ToolScope) => {
+    setSiteIconsLoading(true);
+    try {
+      const cached = await getSiteIconCache();
+      const result = await refreshSiteIcons(
+        getTargetNodes(scope),
+        {
+          preferredSize: siteIconsPreferredSize,
+          maxIconBytes: siteIconsMaxIconKb * 1024,
+          // Icon refreshes share the Metadata Fetcher's network limits.
+          requestTimeoutMs: metadataFetcherRequestTimeoutMs,
+          concurrency: metadataFetcherConcurrency,
+        },
+        Object.fromEntries(Object.entries(cached).map(([origin, entry]) => [origin, entry.icon])),
+      );
+      setSiteIconsResult(result);
+      setSiteIconsDialogOpen(true);
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSiteIconsLoading(false);
+    }
+  };
+
+  const handleSaveSiteIcons = async () => {
+    if (!siteIconsResult) return;
+    setSiteIconsSaving(true);
+    try {
+      const outcome = await saveSiteIcons(getSavableSiteIcons(siteIconsResult), {
+        maxCacheBytes: siteIconsMaxCacheKb * 1024,
+      });
+      setSiteIconsDialogOpen(false);
+      toast({
+        title: t('toast_siteIconsSaved'),
+        description:
+          outcome.evicted > 0
+            ? t('toast_siteIconsSavedEvictedDesc', [String(outcome.saved), String(outcome.evicted)])
+            : tPlural('toast_siteIconsSavedDesc', outcome.saved),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSiteIconsSaving(false);
+    }
+  };
+
+  const handleClearSiteIcons = async () => {
+    setSiteIconsClearing(true);
+    try {
+      await clearSiteIconCache();
+      toast({
+        title: t('toast_siteIconsCleared'),
+        description: t('toast_siteIconsClearedDesc'),
+        variant: 'success',
+      });
+    } catch (error) {
+      toast({
+        title: t('toast_toolFailed'),
+        description: error instanceof Error ? error.message : t('error_unknown'),
+        variant: 'destructive',
+      });
+    } finally {
+      setSiteIconsClearing(false);
+    }
+  };
+
+  const networkToolRunners: Record<NetworkTool, (scope: ToolScope) => Promise<void>> = {
+    'dead-links': runDeadLinks,
+    metadata: runMetadata,
+    'site-icons': runSiteIcons,
+  };
   const runNetworkTool = (request: PendingNetworkTool) =>
-    request.tool === 'dead-links' ? runDeadLinks(request.scope) : runMetadata(request.scope);
+    networkToolRunners[request.tool](request.scope);
 
   // Network tools need optional host access; explain and ask before the first scan.
   const startNetworkTool = async (request: PendingNetworkTool) => {
@@ -673,7 +764,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       return;
     }
 
-    if (toolName === 'dead-links' || toolName === 'metadata') {
+    if (toolName === 'dead-links' || toolName === 'metadata' || toolName === 'site-icons') {
       await startNetworkTool({ tool: toolName, scope });
       return;
     }
@@ -954,19 +1045,54 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
             )}
 
           {/* Metadata & Content */}
-          {!toolSettingsLoading && toolSettings.metadataFetcherEnabled && (
+          {!toolSettingsLoading &&
+            (toolSettings.metadataFetcherEnabled || toolSettings.siteIconsEnabled) && (
             <ToolSection title={t('tools_category_metadata')}>
-              <ToolCard
-                icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
-                title={t('tools_metadataFetcher')}
-                description={t('tools_metadataFetcherDesc')}
-                buttonLabel={t('action_scan')}
-                onClick={(scope) => handleToolAction('metadata', scope)}
-                scopeCapability="both"
-                defaultScope={toolSettings.metadataFetcherDefaultScope}
-                currentFolderName={currentFolderName}
-                isLoading={metadataLoading}
-              />
+              {toolSettings.metadataFetcherEnabled && (
+                <ToolCard
+                  icon={<RefreshCw className="h-4 w-4 text-blue-500" />}
+                  title={t('tools_metadataFetcher')}
+                  description={t('tools_metadataFetcherDesc')}
+                  buttonLabel={t('action_scan')}
+                  onClick={(scope) => handleToolAction('metadata', scope)}
+                  scopeCapability="both"
+                  defaultScope={toolSettings.metadataFetcherDefaultScope}
+                  currentFolderName={currentFolderName}
+                  isLoading={metadataLoading}
+                />
+              )}
+
+              {toolSettings.siteIconsEnabled && (
+                <ToolCard
+                  icon={<ImageIcon className="h-4 w-4 text-blue-500" />}
+                  title={t('tools_siteIcons')}
+                  description={t('tools_siteIconsDesc')}
+                  buttonLabel={t('action_refresh')}
+                  onClick={(scope) => handleToolAction('site-icons', scope)}
+                  scopeCapability="both"
+                  defaultScope={toolSettings.siteIconsDefaultScope}
+                  currentFolderName={currentFolderName}
+                  isLoading={siteIconsLoading}
+                  controls={
+                    <>
+                      <span className="flex-1 text-xs text-muted-foreground">
+                        {tPlural('tools_siteIconsCached', siteIconCache.count, [
+                          formatKilobytes(siteIconCache.bytes),
+                        ])}
+                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 text-xs"
+                        onClick={handleClearSiteIcons}
+                        disabled={siteIconCache.count === 0 || siteIconsClearing}
+                      >
+                        {t('tools_siteIconsClear')}
+                      </Button>
+                    </>
+                  }
+                />
+              )}
             </ToolSection>
           )}
 
@@ -1191,6 +1317,19 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
           result={metadataResult}
           isApplying={metadataApplying}
           onApply={handleApplyMetadata}
+        />
+      </ToolResultsDialog>
+
+      <ToolResultsDialog
+        open={siteIconsDialogOpen}
+        onOpenChange={setSiteIconsDialogOpen}
+        title={t('tools_siteIcons')}
+        description={t('tools_siteIconsDialogDesc')}
+      >
+        <SiteIconResultsView
+          result={siteIconsResult}
+          isSaving={siteIconsSaving}
+          onSave={handleSaveSiteIcons}
         />
       </ToolResultsDialog>
 

@@ -221,7 +221,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       if (!rowUrl) return null;
       return (
         <div className="flex min-w-0 items-center gap-2">
-          <img src={getFaviconUrl(rowUrl)} alt="" className="h-4 w-4 shrink-0" />
+          <SiteIcon url={rowUrl} className="shrink-0" />
           <span className="block min-w-0 truncate" title={rowUrl}>
             {rowUrl}
           </span>
@@ -260,15 +260,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         row.original.type === ItemTypeEnum.Folder ? (
           <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
         ) : url ? (
-          <img
-            src={getFaviconUrl(url)}
-            alt=""
-            className="h-4 w-4 shrink-0 rounded-sm"
-            onError={(e) => {
-              // Fallback to generic link icon
-              e.currentTarget.style.display = 'none';
-            }}
-          />
+          <SiteIcon url={url} className="shrink-0 rounded-sm" />
         ) : (
           <Link className="h-4 w-4 text-muted-foreground shrink-0" />
         );

@@ -51,7 +51,7 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`) | Same manifest key. Whether Edge applies it to its Favorites page has not been checked. | **Not reachable.** Firefox has no bookmarks-page override, the key is absent, and no UI links to `bookmarks.html`. |
 | Options page | Yes | Yes | Yes |
 | Context menu save | Yes | Yes | Yes |
-| Site icons (favicons) | `_favicon` API | `_favicon` API | No. The `favicon` permission is Chromium-only. |
+| Site icons (favicons) | `_favicon` API, or icons saved by Refresh Site Icons | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
 | Optional website access | `optional_host_permissions` | `optional_host_permissions` | `optional_permissions` (added by the WXT hook) |
 
 As a result, the Firefox listing describes a smaller feature set: maintenance tools, import/export, saved searches, statistics, and the manager-only AI tools are not reachable in Firefox today.
@@ -60,7 +60,7 @@ As a result, the Firefox listing describes a smaller feature set: maintenance to
 
 - Chromium: unit tests and Playwright E2E tests cover popup, manager, settings, maintenance, reports, import/export, network tools (route-mocked and a real local server), and AI tools against mocked providers.
 - Edge: the same Playwright E2E suite runs against the Edge build (`nx run extension:test:e2e:edge`).
-- Firefox: a seven-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, network and AI tools, and favicons are not covered there.
+- Firefox: an eight-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, and network and AI tools are not covered there.
 - The Edge and Firefox CI jobs are not required checks yet.
 - Real AI providers and live network behavior are checked by hand, not by automated tests.
 
@@ -100,6 +100,8 @@ Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefo
 - Synthetic bookmarks only: public documentation sites, `example.com` and `example.org` placeholder URLs, and two deliberate duplicates for the Duplicate Cleaner.
 - Theme left at the default `system`; light and dark come from the emulated OS color scheme, so Options shows no "Modified" badges.
 - The runner opens the popup as a tab, so its "current tab" would be the popup itself. The capture script stubbed `tabs.query` for the active tab to return a public MDN page instead. No other behavior was changed.
-- Raw captures stay in `~/.cache/bookmark-scout-qa/store/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
+- Site icons are real: before capturing, the script ran **Refresh Site Icons** over all bookmarks and saved the results, in a copy of the build whose manifest grants the optional website access (as the E2E `grantWebHostAccess` fixture does, because the permission prompt cannot be answered headlessly). Icons came only from the bookmarked sites. Sites without a usable same-site icon (`developer.chrome.com`, `example.com`, `example.org`) keep the generic globe, as they would for a user.
+- Recaptured on 2026-10-02 from `main` after the Refresh Site Icons tool landed (#501). The same eight files are copied to `apps/website/public/screenshots/` and `apps/docs/public/screenshots/`; the website generates its AVIF and WebP variants from them at build time.
+- Raw captures stay in `~/.cache/bookmark-scout-qa/store-icons/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
 
 Screenshots show the English UI. Localized screenshots for `ja` and `ko` were not produced; the stores accept the English set for every locale.

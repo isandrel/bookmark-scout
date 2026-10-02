@@ -180,7 +180,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and favicons are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link, metadata, and site icon requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, saved site icons in the popup, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and the browser favicon cache are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 
@@ -206,7 +206,7 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
   - list recent runs: `rtk gh run list --limit 20`
   - inspect failed logs: `rtk gh run view <run-id> --log-failed`
   - watch reruns: `rtk gh run watch <run-id> --exit-status`
-- If a GitHub Pages deployment fails after build/upload with `Deployment failed, try again later`, treat it as likely transient and rerun the failed job before patching code.
+- The website and docs both deploy to Cloudflare Pages with `cloudflare/wrangler-action` (`deploy-website.yml`, `deploy-docs.yml`), using the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
 - If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lock`, then verify `rtk bun install --frozen-lockfile`.
 - Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
 
@@ -329,7 +329,7 @@ Update documentation when the change affects:
 
 Relevant locations include:
 
-- `README.md` and `translations/README.{ja,ko}.md`, which are generated: edit `templates/README*.md`, run `bun run generate:readme`, and commit both (the Lint job fails when they differ)
+- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/site.config.toml`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
 - `CONTRIBUTING.md`
 - `apps/docs/content/docs/`
 - website content under `apps/website/app/`

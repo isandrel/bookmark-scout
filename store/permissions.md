@@ -59,7 +59,7 @@ Code: `getCurrentTab` and `openBookmarkInNewTab` in `src/services/bookmarks.ts`,
 Shows each bookmark's site icon by reading it from the browser's own favicon cache through the chrome-extension://<id>/_favicon/ URL. No network request is made for icons.
 ```
 
-Code: `getFaviconUrl` in `src/services/bookmarks.ts`. In Firefox this permission is invalid, and how icons render there has not been checked.
+Code: `getFaviconUrl` and `getSiteIconUrl` in `src/services/bookmarks.ts`. In Firefox this permission is invalid and the `_favicon` URL is never used: bookmarks show icons saved by Refresh Site Icons, or a generic icon (covered by the Firefox smoke suite).
 
 ### `storage`
 
@@ -88,7 +88,7 @@ Code: `src/services/context-menu.ts`. The menu is registered for `link` contexts
 ### Optional host access: `http://*/*`, `https://*/*`
 
 ```text
-Not granted at install. Requested at click time in two cases. (1) When the user runs Check Dead Links or Metadata Fetcher, the browser asks for access to websites so the extension can request the bookmarked pages directly; bookmarks can point to any site, so a narrower pattern is not possible. Requests are sent without cookies, and only the page head is read for titles. If the user declines, nothing is scanned. (2) When the user clicks Verify Service or Refresh Models for an AI provider, the browser asks for access to that one provider origin only.
+Not granted at install. Requested at click time in two cases. (1) When the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, the browser asks for access to websites so the extension can request the bookmarked pages (and, for Refresh Site Icons, an icon file on each bookmarked site) directly; bookmarks can point to any site, so a narrower pattern is not possible. Requests are sent without cookies, and only the page head is read for titles and icon links. If the user declines, nothing is scanned. (2) When the user clicks Verify Service or Refresh Models for an AI provider, the browser asks for access to that one provider origin only.
 ```
 
 Code: `src/services/web-host-access.ts`, `requestProviderHostAccess` in `src/services/ai-settings.ts`, `requestWithTimeout` in `src/services/bookmark-network-tools.ts` (`credentials: 'omit'`).
