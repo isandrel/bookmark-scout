@@ -76,8 +76,8 @@ test('dropping a folder into its own subfolder explains why it failed', async ({
 
   await openPopup(page, extensionId);
   await page.getByPlaceholder('Search bookmarks...').fill('E2E Child Drop');
-  const parent = folderRow(page, 'E2E Parent Drag').locator('.cursor-grab');
-  const child = folderRow(page, 'E2E Child Drop').locator('.cursor-grab');
+  const parent = folderRow(page, 'E2E Parent Drag').locator('[data-slot="drag-handle"]');
+  const child = folderRow(page, 'E2E Child Drop').locator('[data-slot="drag-handle"]');
   await parent.dragTo(child);
 
   await expect(toastRegion(page)).toContainText(
@@ -117,7 +117,7 @@ test('popup follows bookmark changes made elsewhere and keeps expanded folders',
   await extensionWorker.evaluate(async (id) => chrome.bookmarks.remove(id), seeded.ids['Live Existing']);
   await expect(bookmarkRow(page, 'Live Existing')).toHaveCount(0);
   await expect(bookmarkRow(page, 'Live Renamed')).toBeVisible();
-  await expect(page.locator('.animate-pulse')).toHaveCount(0);
+  await expect(page.locator('[data-slot="skeleton"]')).toHaveCount(0);
 });
 
 test('an undo toast paused by hover closes when the undo window expires', async ({
@@ -276,7 +276,10 @@ test('long unbroken toast text wraps inside the toast', async ({
   await input.fill('W'.repeat(200));
   await input.press('Enter');
 
-  const description = toastRegion(page).locator('li').first().locator('div.opacity-90');
+  const description = toastRegion(page)
+    .locator('li')
+    .first()
+    .locator('[data-slot="toast-description"]');
   await expect(description).toContainText('WWWW');
   const overflow = await description.evaluate((node) => node.scrollWidth - node.clientWidth);
   expect(overflow).toBeLessThanOrEqual(1);

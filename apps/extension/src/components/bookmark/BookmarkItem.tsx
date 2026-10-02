@@ -141,6 +141,7 @@ export function BookmarkItem({
         data-popup-tree-row="bookmark"
         target="_blank"
         rel="noopener noreferrer"
+        data-slot="drag-handle"
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
         {/* Empty chevron slot, so the icon and title line up with folders at the same depth. */}

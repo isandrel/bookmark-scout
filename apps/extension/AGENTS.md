@@ -189,6 +189,8 @@ When working in AI-related files, check whether the logic already belongs in:
 - follow current patterns for dialogs, sheets, toasts, tables, filtering, and drag-and-drop
 - maintain the existing product feel instead of introducing a separate design language for small enhancements
 - keep component APIs small and understandable
+- keep theme tokens, Tailwind setup, and animations in `src/styles/theme.css`, the one stylesheet every entrypoint imports
+- give tests a `data-slot`, `data-testid`, or semantic class hook (`.folder-item`, `.bookmark-item`) instead of selecting on Tailwind utility classes, so restyling does not break E2E specs
 
 If a component becomes a container for too much logic, split responsibilities rather than continuing to grow it.
 

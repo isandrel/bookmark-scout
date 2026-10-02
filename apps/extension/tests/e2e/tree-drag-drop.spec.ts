@@ -20,7 +20,7 @@ async function openTree(page: Page, extensionId: string, surface: Surface) {
 
 /** The draggable, droppable part of a folder row. */
 function folderHandle(page: Page, title: string) {
-  return folderRow(page, title).locator('.cursor-grab');
+  return folderRow(page, title).locator('[data-slot="drag-handle"]');
 }
 
 /** The draggable, droppable part of a bookmark row. */

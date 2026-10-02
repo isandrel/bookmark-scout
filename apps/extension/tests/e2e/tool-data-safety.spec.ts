@@ -24,7 +24,7 @@ test('duplicate cleaner keeps the newest item it labels Keep and ignores case, p
   const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
   await expect(dialog.getByText(/^1 duplicate groups? found/)).toBeVisible();
   const keptRow = dialog.getByText('Keep', { exact: true }).locator('..');
-  const keptTitle = (await keptRow.locator('span.font-medium').textContent()) ?? '';
+  const keptTitle = (await keptRow.locator('[data-slot="tool-result-title"]').textContent()) ?? '';
   await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
 
   await expect
