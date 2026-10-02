@@ -2168,7 +2168,7 @@
         "description": "Metadata fetcher timeout label"
     },
     "settings_metadataFetcherRequestTimeoutMsDesc": {
-        "message": "Maximum time to wait for each metadata request",
+        "message": "Maximum time to wait for each metadata or site icon request",
         "description": "Metadata fetcher timeout description"
     },
     "settings_metadataFetcherConcurrency": {
@@ -2176,7 +2176,7 @@
         "description": "Metadata fetcher concurrency label"
     },
     "settings_metadataFetcherConcurrencyDesc": {
-        "message": "Number of concurrent requests used when fetching metadata",
+        "message": "Number of concurrent requests used when fetching metadata or refreshing site icons",
         "description": "Metadata fetcher concurrency description"
     },
     "settings_privacyScannerEnabled": {
@@ -3380,7 +3380,7 @@
         "description": "Title of the dialog asking for website access"
     },
     "tools_hostAccessDesc": {
-        "message": "Dead link checks and title suggestions request each bookmarked page. Most sites block these requests unless Bookmark Scout has access to websites. Your browser will ask you to confirm.",
+        "message": "Dead link checks, title suggestions, and site icon refreshes request each bookmarked page. Most sites block these requests unless Bookmark Scout has access to websites. Your browser will ask you to confirm.",
         "description": "Explains why the network tools need website access"
     },
     "tools_hostAccessPrivacy": {
@@ -3942,5 +3942,253 @@
     "tools_deadLinkRepairUndoneDesc": {
         "message": "Restored: $1. Could not restore: $2.",
         "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
+    },
+    "action_refresh": {
+        "message": "Refresh",
+        "description": "Refresh button label"
+    },
+    "tools_siteIcons": {
+        "message": "Refresh Site Icons",
+        "description": "Title for the Refresh Site Icons tool"
+    },
+    "tools_siteIconsDesc": {
+        "message": "Download each website's own icon so bookmarks show it, also in Firefox",
+        "description": "Refresh Site Icons tool description"
+    },
+    "tools_siteIconsDialogDesc": {
+        "message": "Icons were requested only from each bookmarked website. Nothing is stored until you save.",
+        "description": "Refresh Site Icons results dialog description"
+    },
+    "tools_siteIconsCached": {
+        "message": "$count$ icons saved ($size$)",
+        "description": "Number and size of saved site icons on the tool card",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "size": {
+                "content": "$2",
+                "example": "18.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsCached_one": {
+        "message": "$count$ icon saved ($size$)",
+        "description": "Number and size of saved site icons on the tool card (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "size": {
+                "content": "$2",
+                "example": "1.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsClear": {
+        "message": "Clear saved icons",
+        "description": "Button that deletes all saved site icons"
+    },
+    "tools_siteIconStatus_updated": {
+        "message": "Updated",
+        "description": "Site icon result status: a new or changed icon"
+    },
+    "tools_siteIconStatus_unchanged": {
+        "message": "Unchanged",
+        "description": "Site icon result status: same icon as already saved"
+    },
+    "tools_siteIconStatus_noIcon": {
+        "message": "No icon found",
+        "description": "Site icon result status: no usable icon"
+    },
+    "tools_siteIconStatus_failed": {
+        "message": "Failed",
+        "description": "Site icon result status: the site could not be reached"
+    },
+    "tools_siteIconStatus_skipped": {
+        "message": "Skipped",
+        "description": "Site icon result count: bookmarks that are not web links"
+    },
+    "tools_siteIconsNewFrom": {
+        "message": "Icon from $url$",
+        "description": "Where a newly downloaded site icon came from",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/favicon.ico"
+            }
+        }
+    },
+    "tools_siteIconsUnchanged": {
+        "message": "Same icon as the one already saved",
+        "description": "Site icon is the same as the saved one"
+    },
+    "tools_siteIconsTooLarge": {
+        "message": "The icon file is larger than the size limit",
+        "description": "Site icon rejected for exceeding the size limit"
+    },
+    "tools_siteIconsNotImage": {
+        "message": "The icon file is not an image",
+        "description": "Site icon rejected because it is not an image"
+    },
+    "tools_siteIconsNotFound": {
+        "message": "The site has no icon",
+        "description": "The site has no icon"
+    },
+    "tools_siteIconsKeptCached": {
+        "message": "The icon saved earlier is kept.",
+        "description": "A previously saved icon stays in use after a failed refresh"
+    },
+    "tools_siteIconsSkippedDesc": {
+        "message": "$count$ bookmarks are not web links and were skipped.",
+        "description": "Bookmarks skipped by Refresh Site Icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSkippedDesc_one": {
+        "message": "$count$ bookmark is not a web link and was skipped.",
+        "description": "Bookmarks skipped by Refresh Site Icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount": {
+        "message": "$count$ bookmarks",
+        "description": "Bookmarks that share a site's origin",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount_one": {
+        "message": "$count$ bookmark",
+        "description": "Bookmarks that share a site's origin (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave": {
+        "message": "Save $count$ icons",
+        "description": "Button that saves the downloaded site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave_one": {
+        "message": "Save $count$ icon",
+        "description": "Button that saves the downloaded site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "state_noSiteIconsFound": {
+        "message": "No bookmarks in this scope.",
+        "description": "Refresh Site Icons empty state"
+    },
+    "toast_siteIconsSaved": {
+        "message": "Site icons saved",
+        "description": "Toast title after saving site icons"
+    },
+    "toast_siteIconsSavedDesc": {
+        "message": "$count$ icons saved on this device",
+        "description": "Toast description after saving site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedDesc_one": {
+        "message": "$count$ icon saved on this device",
+        "description": "Toast description after saving site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedEvictedDesc": {
+        "message": "Saved: $saved$. Older icons removed to stay within the storage limit: $evicted$.",
+        "description": "Toast description when older icons were removed to stay within the cache limit",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "evicted": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "toast_siteIconsCleared": {
+        "message": "Saved icons cleared",
+        "description": "Toast title after clearing saved site icons"
+    },
+    "toast_siteIconsClearedDesc": {
+        "message": "Bookmarks show the browser's own icons again.",
+        "description": "Toast description after clearing saved site icons"
+    },
+    "settings_siteIconsEnabled": {
+        "message": "Enable Refresh Site Icons",
+        "description": "Site icons enabled label"
+    },
+    "settings_siteIconsEnabledDesc": {
+        "message": "Show the tool that downloads each website's icon. Saved icons are kept on this device only.",
+        "description": "Site icons enabled description"
+    },
+    "settings_siteIconsDefaultScope": {
+        "message": "Default Scope",
+        "description": "Site icons default scope label"
+    },
+    "settings_siteIconsDefaultScopeDesc": {
+        "message": "Default scope used when refreshing site icons",
+        "description": "Site icons default scope description"
+    },
+    "settings_siteIconsPreferredSize": {
+        "message": "Preferred Icon Size",
+        "description": "Site icons preferred size label"
+    },
+    "settings_siteIconsPreferredSizeDesc": {
+        "message": "When a page lists several icons, the one closest to this size is downloaded",
+        "description": "Site icons preferred size description"
+    },
+    "settings_siteIconsMaxIconKb": {
+        "message": "Maximum Icon File Size",
+        "description": "Site icons maximum file size label"
+    },
+    "settings_siteIconsMaxIconKbDesc": {
+        "message": "Larger icon files are not downloaded or saved",
+        "description": "Site icons maximum file size description"
+    },
+    "settings_siteIconsMaxCacheKb": {
+        "message": "Icon Storage Limit",
+        "description": "Site icons storage limit label"
+    },
+    "settings_siteIconsMaxCacheKbDesc": {
+        "message": "Total size of saved icons on this device; the oldest are removed first",
+        "description": "Site icons storage limit description"
     }
 }

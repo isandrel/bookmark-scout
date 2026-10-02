@@ -102,6 +102,24 @@ export function getFaviconUrl(pageUrl: string, size = 16): string {
   return url.toString();
 }
 
+/** Chrome and Edge serve icons from their own cache at `_favicon/`; Firefox has no such API. */
+export function hasBrowserFaviconCache(): boolean {
+  return import.meta.env.BROWSER !== 'firefox';
+}
+
+/**
+ * The icon to show for a bookmark: the icon saved by Refresh Site Icons for its origin, then the
+ * browser's icon cache (Chrome and Edge), else null so the caller shows its generic icon.
+ */
+export function getSiteIconUrl(
+  pageUrl: string,
+  size = 16,
+  cachedIcon?: string | null,
+): string | null {
+  if (cachedIcon) return cachedIcon;
+  return hasBrowserFaviconCache() ? getFaviconUrl(pageUrl, size) : null;
+}
+
 /**
  * Converts a Chrome bookmark node to our BookmarkTreeNode type.
  */

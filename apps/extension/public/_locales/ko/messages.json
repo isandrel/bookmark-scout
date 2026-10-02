@@ -2168,7 +2168,7 @@
         "description": "Metadata fetcher timeout label"
     },
     "settings_metadataFetcherRequestTimeoutMsDesc": {
-        "message": "각 메타데이터 요청을 기다리는 최대 시간",
+        "message": "각 메타데이터 요청과 사이트 아이콘 요청을 기다리는 최대 시간",
         "description": "Metadata fetcher timeout description"
     },
     "settings_metadataFetcherConcurrency": {
@@ -2176,7 +2176,7 @@
         "description": "Metadata fetcher concurrency label"
     },
     "settings_metadataFetcherConcurrencyDesc": {
-        "message": "메타데이터를 가져올 때 동시에 보낼 요청 수",
+        "message": "메타데이터를 가져오거나 사이트 아이콘을 새로 고칠 때 동시에 보낼 요청 수",
         "description": "Metadata fetcher concurrency description"
     },
     "settings_privacyScannerEnabled": {
@@ -3380,7 +3380,7 @@
         "description": "Title of the dialog asking for website access"
     },
     "tools_hostAccessDesc": {
-        "message": "끊어진 링크 검사와 제목 제안은 북마크한 각 페이지에 요청을 보냅니다. Bookmark Scout에 웹사이트 접근 권한이 없으면 대부분의 사이트가 이 요청을 차단합니다. 브라우저에서 확인을 요청합니다.",
+        "message": "끊어진 링크 검사, 제목 제안, 사이트 아이콘 새로 고침은 북마크한 각 페이지에 요청을 보냅니다. Bookmark Scout에 웹사이트 접근 권한이 없으면 대부분의 사이트가 이 요청을 차단합니다. 브라우저에서 확인을 요청합니다.",
         "description": "Explains why the network tools need website access"
     },
     "tools_hostAccessPrivacy": {
@@ -3942,5 +3942,253 @@
     "tools_deadLinkRepairUndoneDesc": {
         "message": "복원됨: $1. 복원 실패: $2.",
         "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
+    },
+    "action_refresh": {
+        "message": "새로 고침",
+        "description": "Refresh button label"
+    },
+    "tools_siteIcons": {
+        "message": "사이트 아이콘 새로 고침",
+        "description": "Title for the Refresh Site Icons tool"
+    },
+    "tools_siteIconsDesc": {
+        "message": "각 웹사이트의 아이콘을 내려받아 Firefox에서도 북마크에 표시합니다",
+        "description": "Refresh Site Icons tool description"
+    },
+    "tools_siteIconsDialogDesc": {
+        "message": "아이콘은 북마크한 각 웹사이트에만 요청했습니다. 저장하기 전에는 아무것도 저장되지 않습니다.",
+        "description": "Refresh Site Icons results dialog description"
+    },
+    "tools_siteIconsCached": {
+        "message": "저장된 아이콘 $count$개 ($size$)",
+        "description": "Number and size of saved site icons on the tool card",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "size": {
+                "content": "$2",
+                "example": "18.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsCached_one": {
+        "message": "저장된 아이콘 $count$개 ($size$)",
+        "description": "Number and size of saved site icons on the tool card (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            },
+            "size": {
+                "content": "$2",
+                "example": "1.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsClear": {
+        "message": "저장된 아이콘 지우기",
+        "description": "Button that deletes all saved site icons"
+    },
+    "tools_siteIconStatus_updated": {
+        "message": "업데이트됨",
+        "description": "Site icon result status: a new or changed icon"
+    },
+    "tools_siteIconStatus_unchanged": {
+        "message": "변경 없음",
+        "description": "Site icon result status: same icon as already saved"
+    },
+    "tools_siteIconStatus_noIcon": {
+        "message": "아이콘 없음",
+        "description": "Site icon result status: no usable icon"
+    },
+    "tools_siteIconStatus_failed": {
+        "message": "실패",
+        "description": "Site icon result status: the site could not be reached"
+    },
+    "tools_siteIconStatus_skipped": {
+        "message": "건너뜀",
+        "description": "Site icon result count: bookmarks that are not web links"
+    },
+    "tools_siteIconsNewFrom": {
+        "message": "아이콘 출처: $url$",
+        "description": "Where a newly downloaded site icon came from",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/favicon.ico"
+            }
+        }
+    },
+    "tools_siteIconsUnchanged": {
+        "message": "이미 저장된 아이콘과 같습니다",
+        "description": "Site icon is the same as the saved one"
+    },
+    "tools_siteIconsTooLarge": {
+        "message": "아이콘 파일이 크기 제한보다 큽니다",
+        "description": "Site icon rejected for exceeding the size limit"
+    },
+    "tools_siteIconsNotImage": {
+        "message": "아이콘 파일이 이미지가 아닙니다",
+        "description": "Site icon rejected because it is not an image"
+    },
+    "tools_siteIconsNotFound": {
+        "message": "사이트에 아이콘이 없습니다",
+        "description": "The site has no icon"
+    },
+    "tools_siteIconsKeptCached": {
+        "message": "이전에 저장한 아이콘을 그대로 사용합니다.",
+        "description": "A previously saved icon stays in use after a failed refresh"
+    },
+    "tools_siteIconsSkippedDesc": {
+        "message": "웹 링크가 아닌 북마크 $count$개를 건너뛰었습니다.",
+        "description": "Bookmarks skipped by Refresh Site Icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSkippedDesc_one": {
+        "message": "웹 링크가 아닌 북마크 $count$개를 건너뛰었습니다.",
+        "description": "Bookmarks skipped by Refresh Site Icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount": {
+        "message": "북마크 $count$개",
+        "description": "Bookmarks that share a site's origin",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount_one": {
+        "message": "북마크 $count$개",
+        "description": "Bookmarks that share a site's origin (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave": {
+        "message": "아이콘 $count$개 저장",
+        "description": "Button that saves the downloaded site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave_one": {
+        "message": "아이콘 $count$개 저장",
+        "description": "Button that saves the downloaded site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "state_noSiteIconsFound": {
+        "message": "이 범위에 북마크가 없습니다.",
+        "description": "Refresh Site Icons empty state"
+    },
+    "toast_siteIconsSaved": {
+        "message": "사이트 아이콘을 저장했습니다",
+        "description": "Toast title after saving site icons"
+    },
+    "toast_siteIconsSavedDesc": {
+        "message": "이 기기에 아이콘 $count$개를 저장했습니다",
+        "description": "Toast description after saving site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedDesc_one": {
+        "message": "이 기기에 아이콘 $count$개를 저장했습니다",
+        "description": "Toast description after saving site icons (singular)",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedEvictedDesc": {
+        "message": "저장됨: $saved$개. 저장 용량 제한을 넘지 않도록 삭제한 오래된 아이콘: $evicted$개.",
+        "description": "Toast description when older icons were removed to stay within the cache limit",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "evicted": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "toast_siteIconsCleared": {
+        "message": "저장된 아이콘을 지웠습니다",
+        "description": "Toast title after clearing saved site icons"
+    },
+    "toast_siteIconsClearedDesc": {
+        "message": "북마크에 브라우저 자체 아이콘이 다시 표시됩니다.",
+        "description": "Toast description after clearing saved site icons"
+    },
+    "settings_siteIconsEnabled": {
+        "message": "사이트 아이콘 새로 고침 사용",
+        "description": "Site icons enabled label"
+    },
+    "settings_siteIconsEnabledDesc": {
+        "message": "각 웹사이트의 아이콘을 내려받는 도구를 표시합니다. 저장된 아이콘은 이 기기에만 보관됩니다.",
+        "description": "Site icons enabled description"
+    },
+    "settings_siteIconsDefaultScope": {
+        "message": "기본 범위",
+        "description": "Site icons default scope label"
+    },
+    "settings_siteIconsDefaultScopeDesc": {
+        "message": "사이트 아이콘을 새로 고칠 때 사용할 기본 범위",
+        "description": "Site icons default scope description"
+    },
+    "settings_siteIconsPreferredSize": {
+        "message": "선호하는 아이콘 크기",
+        "description": "Site icons preferred size label"
+    },
+    "settings_siteIconsPreferredSizeDesc": {
+        "message": "페이지에 아이콘이 여러 개 있으면 이 크기에 가장 가까운 아이콘을 내려받습니다",
+        "description": "Site icons preferred size description"
+    },
+    "settings_siteIconsMaxIconKb": {
+        "message": "최대 아이콘 파일 크기",
+        "description": "Site icons maximum file size label"
+    },
+    "settings_siteIconsMaxIconKbDesc": {
+        "message": "이보다 큰 아이콘 파일은 내려받거나 저장하지 않습니다",
+        "description": "Site icons maximum file size description"
+    },
+    "settings_siteIconsMaxCacheKb": {
+        "message": "아이콘 저장 용량 제한",
+        "description": "Site icons storage limit label"
+    },
+    "settings_siteIconsMaxCacheKbDesc": {
+        "message": "이 기기에 저장하는 아이콘의 총 크기이며, 오래된 것부터 삭제됩니다",
+        "description": "Site icons storage limit description"
     }
 }

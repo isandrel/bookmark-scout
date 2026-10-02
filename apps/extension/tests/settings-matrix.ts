@@ -121,6 +121,12 @@ const networkRealServer = e2e(
   'dead-link checker reaches a real non-CORS server, falls back to GET, reports redirects, and skips bookmarklets',
 );
 
+const SITE_ICONS_UNIT = 'site-icons.test.ts';
+const siteIconsRefresh = e2e(
+  'tool-site-icons.spec.ts',
+  'site icon refresh dedupes origins, rejects oversized and non-image icons, and renders saved icons',
+);
+
 export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Appearance
   language: tested('lib/settings-storage.ts', [
@@ -364,6 +370,20 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
   metadataFetcherConcurrency: tested(TOOLS, [
     unit(SETTINGS_UNIT, 'metadata fetches never exceed the saved concurrency'),
+  ]),
+
+  // Site icons (requests reuse the Metadata Fetcher's timeout and concurrency)
+  siteIconsEnabled: tested(TOOLS, [toolFlags]),
+  siteIconsDefaultScope: tested(TOOLS, [siteIconsRefresh]),
+  siteIconsPreferredSize: tested(TOOLS, [
+    unit(SITE_ICONS_UNIT, 'prefers the declared icon closest to the saved preferred size'),
+  ]),
+  siteIconsMaxIconKb: tested(TOOLS, [
+    siteIconsRefresh,
+    unit(SITE_ICONS_UNIT, 'rejects icon files over the saved byte cap and files that are not images'),
+  ]),
+  siteIconsMaxCacheKb: tested(TOOLS, [
+    unit(SITE_ICONS_UNIT, 'evicts the oldest icons to stay within the saved cache limit'),
   ]),
 
   // Privacy scanner
