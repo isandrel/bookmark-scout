@@ -4,7 +4,7 @@
  * Features: Left sidebar (folders), collapsible right sidebar (tools), breadcrumb navigation.
  */
 
-import { Info, PanelLeft, PanelLeftClose, PanelRight, PanelRightClose, X } from 'lucide-react';
+import { CircleAlert, Info, PanelLeft, PanelLeftClose, PanelRight, PanelRightClose, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 const getBookmarkRowId = (bookmark: Bookmark) => bookmark.id;
@@ -162,13 +162,10 @@ export default function BookmarksPage() {
 
   if (error) {
     return (
-      <div className="flex h-[450px] w-full items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold text-destructive">
-            {t('error_generic')}
-          </h2>
-          <p className="text-sm text-muted-foreground">{error}</p>
-        </div>
+      <div className="flex h-screen w-full flex-col items-center justify-center gap-2 p-6 text-center">
+        <CircleAlert aria-hidden="true" className="size-6 text-destructive-text" />
+        <h2 className="text-lg font-semibold text-destructive-text">{t('error_generic')}</h2>
+        <p className="max-w-md text-sm text-muted-foreground [overflow-wrap:anywhere]">{error}</p>
       </div>
     );
   }
@@ -178,7 +175,7 @@ export default function BookmarksPage() {
       {/* Left Sidebar - Folders. Collapsed sidebars are inert so they leave the tab order. */}
       <aside
         className={cn(
-          'shrink-0 border-r bg-muted/30 transition-all duration-200 overflow-hidden',
+          'shrink-0 border-r transition-all duration-200 overflow-hidden',
           leftSidebarCollapsed ? 'w-0' : 'w-64'
         )}
         inert={leftSidebarCollapsed}
@@ -186,10 +183,8 @@ export default function BookmarksPage() {
         data-testid="folder-sidebar"
       >
         <div className="w-64 h-full overflow-y-auto">
-          <div className="p-2 border-b">
-            <h2 className="text-sm font-semibold px-2">
-              {t('bookmarks_root')}
-            </h2>
+          <div className="flex h-14 items-center border-b px-4">
+            <h2 className="text-sm font-semibold">{t('bookmarks_root')}</h2>
           </div>
           <FolderTree
             items={allData}
@@ -202,8 +197,8 @@ export default function BookmarksPage() {
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="border-b p-4">
-          <div className="flex items-center justify-between gap-4">
+        <header className="flex h-14 shrink-0 items-center border-b px-4">
+          <div className="flex w-full items-center justify-between gap-4">
             <div className="flex min-w-0 items-center gap-2">
               <Button
                 variant="ghost"
@@ -211,6 +206,9 @@ export default function BookmarksPage() {
                 onClick={toggleLeftSidebar}
                 className="shrink-0"
                 title={leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')}
+                aria-label={
+                  leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')
+                }
                 aria-expanded={!leftSidebarCollapsed}
               >
                 {leftSidebarCollapsed ? (
@@ -235,6 +233,7 @@ export default function BookmarksPage() {
               onClick={toggleRightSidebar}
               className="shrink-0"
               title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
+              aria-label={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
               aria-expanded={!rightSidebarCollapsed}
             >
               {rightSidebarCollapsed ? (
@@ -258,8 +257,7 @@ export default function BookmarksPage() {
               <span className="flex-1">{notice}</span>
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-6 w-6"
+                size="icon-xs"
                 aria-label={t('action_dismiss')}
                 onClick={dismissNotice}
               >
@@ -268,11 +266,16 @@ export default function BookmarksPage() {
             </div>
           )}
           {isLoading ? (
-            <div className="flex h-full items-center justify-center">
-              <div className="text-center">
-                <h2 className="text-lg font-semibold">
-                  {t('bookmarks_loading')}
-                </h2>
+            <div role="status" aria-label={t('bookmarks_loading')} className="space-y-3">
+              <div className="flex gap-2">
+                <Skeleton className="h-9 w-56" />
+                <Skeleton className="h-9 w-56" />
+              </div>
+              <div className="space-y-px overflow-hidden rounded-md border bg-card">
+                {Array.from({ length: 6 }, (_, index) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static placeholder rows.
+                  <Skeleton key={index} className="h-12 rounded-none" />
+                ))}
               </div>
             </div>
           ) : (
@@ -311,7 +314,7 @@ export default function BookmarksPage() {
       {/* Right Sidebar - Tools */}
       <aside
         className={cn(
-          'shrink-0 border-l bg-muted/30 transition-all duration-200 overflow-hidden',
+          'shrink-0 border-l transition-all duration-200 overflow-hidden',
           rightSidebarCollapsed ? 'w-0' : 'w-80'
         )}
         inert={rightSidebarCollapsed}

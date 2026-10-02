@@ -33,7 +33,7 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
     <div>
       <div
         className={cn(
-          'flex w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
+          'flex h-8 w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
           isSelected ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground hover:bg-muted',
         )}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
@@ -42,7 +42,7 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
           <button
             type="button"
             onClick={() => onToggle(node.id)}
-            className="rounded p-0.5 hover:bg-muted-foreground/20"
+            className="rounded-sm p-0.5 text-muted-foreground hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
             aria-expanded={isExpanded}
             aria-label={t(
               isExpanded ? 'bookmarks_collapseFolder' : 'bookmarks_expandFolder',
@@ -62,9 +62,11 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
           type="button"
           onClick={() => onSelect(node.id)}
           aria-current={isSelected ? 'page' : undefined}
-          className="flex min-w-0 flex-1 items-center gap-1 py-1.5 text-left"
+          className="flex h-full min-w-0 flex-1 items-center gap-1.5 rounded-sm text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
         >
-          <Folder className="h-4 w-4 shrink-0" />
+          <Folder
+            className={cn('h-4 w-4 shrink-0', isSelected ? 'text-primary' : 'text-muted-foreground')}
+          />
           <span className="truncate">{title}</span>
         </button>
       </div>
@@ -123,19 +125,21 @@ export function FolderTree({ items, selectedFolderId, onFolderSelect }: FolderTr
   }, []);
 
   return (
-    <div className="py-2" data-testid="folder-tree">
+    <div className="p-2" data-testid="folder-tree">
       <button
         type="button"
         onClick={() => onFolderSelect(null)}
         aria-current={selectedFolderId === null ? 'page' : undefined}
         className={cn(
-          'flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm transition-colors',
+          'flex h-8 w-full items-center gap-2 rounded-md px-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring',
           selectedFolderId === null
             ? 'bg-accent font-medium text-accent-foreground'
             : 'text-foreground hover:bg-muted',
         )}
       >
-        <Folder className="h-4 w-4" />
+        <Folder
+          className={cn('h-4 w-4', selectedFolderId === null ? 'text-primary' : 'text-muted-foreground')}
+        />
         <span>{t('bookmarks_root')}</span>
       </button>
 

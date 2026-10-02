@@ -31,12 +31,11 @@ type ToolSectionProps = {
 
 function ToolSection({ title, children }: ToolSectionProps) {
   return (
-    <div className="space-y-3">
-      <h3 className="px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-        {title}
-      </h3>
-      {children}
-    </div>
+    <section className="space-y-2">
+      <h3 className="px-1 text-xs font-semibold text-muted-foreground">{title}</h3>
+      {/* Tools are rows in one panel, separated by lines, not a stack of cards. */}
+      <div className="divide-y overflow-hidden rounded-lg border bg-card">{children}</div>
+    </section>
   );
 }
 
@@ -907,16 +906,16 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-2 border-b flex-shrink-0">
-        <h2 className="text-sm font-semibold px-2 flex items-center gap-2">
-          <Wrench className="h-4 w-4" />
+      <div className="flex h-14 flex-shrink-0 items-center border-b px-4">
+        <h2 className="flex items-center gap-2 text-sm font-semibold">
+          <Wrench className="h-4 w-4 text-muted-foreground" />
           {t('tools_title')}
         </h2>
       </div>
 
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-3 space-y-6">
+        <div className="space-y-5 p-3">
           {/* AI & Intelligence */}
           {!toolSettingsLoading &&
             (toolSettings.aiContextPackerEnabled ||
@@ -1172,7 +1171,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
 
             {/* Import Tool */}
             {dataShowImport && (
-            <div className="p-3 rounded-lg border bg-card space-y-2">
+            <div className="space-y-2 p-3">
               <div className="flex items-start gap-2">
                 <div className="flex-shrink-0 p-1.5 rounded-md bg-muted">
                   <Upload className="h-4 w-4 text-muted-foreground" />

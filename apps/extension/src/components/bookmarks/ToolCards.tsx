@@ -71,7 +71,7 @@ export function ToolCard({
   };
 
   return (
-    <div className="space-y-2 rounded-lg border bg-card p-3">
+    <div className="space-y-2 p-3">
       <div className="flex items-start gap-2">
         <div className="flex-shrink-0 rounded-md bg-muted p-1.5">{icon}</div>
         <div className="min-w-0 flex-1">
