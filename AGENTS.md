@@ -353,7 +353,7 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 
 ## Agent skills
 
-Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). `.claude/skills` is a symlink to that folder so Claude Code and other agents share one copy.
+Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
 - `extension-feature-test`: turning behaviors into unit and E2E coverage, with lessons from past audits.
 - `extension-live-smoke`: read-only checks of an installed extension with Computer Use, and its tool limits.
