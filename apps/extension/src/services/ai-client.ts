@@ -88,6 +88,9 @@ export function createAIModel(settings: AISettings): AnyLanguageModel {
         apiKey: settings.apiKey || undefined,
         baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) || '',
         headers: settings.extraHeaders,
+        // Send the JSON schema as response_format so structured results parse; without it the
+        // schema is dropped and models answer in prose.
+        supportsStructuredOutputs: true,
       });
       return compatible.chatModel(modelId) as unknown as AnyLanguageModel;
     }

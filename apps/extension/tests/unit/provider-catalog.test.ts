@@ -96,6 +96,7 @@ describe('[mocked provider contract] catalog providers', () => {
         name: 'togetherai',
         apiKey: 'synthetic-key',
         baseURL: 'https://api.together.xyz/v1',
+        supportsStructuredOutputs: true,
       }),
     );
     expect(mocks.chatModel).toHaveBeenCalledWith('meta-llama/x');
