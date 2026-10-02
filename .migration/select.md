@@ -27,7 +27,7 @@
 - `onValueChange` can emit `null` and passes event details; call sites guard `null`.
 - `collisionPadding` default changes from 10 to 5 px.
 - Items render `ItemText` as a `<div>` (Radix used a `<span>`).
-- Base UI renders a hidden `<input>` after the trigger. In `space-x-*` rows that input becomes the last child, so the trigger gains the end margin: the manager's "Rows per page" group sits 8 px further left (visual check). Not patched.
+- Base UI renders a hidden `<input>` after the trigger. In `space-x-*` rows that input becomes the last child, so the trigger gains the end margin: the manager's "Rows per page" group sat 8 px further left (visual check). Fixed afterwards in `fix/base-ui-followups`: that group uses `gap-2` instead of `space-x-2` (the hidden input is out of flow, so it gets no gap). Covered by `bookmark-manager-table.spec.ts` ("rows-per-page select keeps the gap the other pagination groups use"). Other selects sit in `space-y-1` blocks (`ImportPreviewDialog`), where the trigger gains a 4 px bottom margin that shifts nothing beside it; left alone.
 
 ## Verify by hand
 

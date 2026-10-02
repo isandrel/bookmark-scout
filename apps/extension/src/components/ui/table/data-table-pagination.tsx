@@ -17,7 +17,9 @@ export function DataTablePagination<TData extends RowData>({
         ])}
       </div>
       <div className="flex flex-wrap items-center gap-x-6 gap-y-2 lg:gap-x-8">
-        <div className="flex items-center space-x-2">
+        {/* gap, not space-x: Base UI's Select adds a hidden input after the trigger, and space-x
+            would give the trigger an end margin as a non-last child. */}
+        <div className="flex items-center gap-2">
           <p className="whitespace-nowrap text-sm font-medium">{t('table_rowsPerPage')}</p>
           <Select
             value={`${table.state.pagination.pageSize}`}
