@@ -11,7 +11,7 @@ Run scripts from the repository root. They use `/usr/bin/git` because a local ho
 
 ## Merge a queue of PRs
 
-The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. Every merge makes the other open PRs BEHIND, so PRs land one at a time.
+The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. Every merge makes the other open PRs BEHIND, so PRs land one at a time.
 
 1. List state: `gh pr list --state open --json number,title,headRefName,mergeStateStatus,autoMergeRequest`.
 2. Enable auto-merge on each PR you are allowed to merge: `gh pr merge <n> --auto --squash`. Leave PRs that an agent is still working on to that agent; `update-branch` adds a remote merge commit that rejects the agent's next push.
@@ -41,6 +41,16 @@ PRs can pass CI and still fail on `main` (flaky timing, or two PRs that conflict
 1. `gh run view <id> --log-failed` and find the failing spec.
 2. Reproduce on a worktree from `origin/main` with `--repeat-each=6`. If it passes locally, treat it as timing: replace one-shot measurements with `expect.poll` (for example after a sidebar transition) instead of adding sleeps.
 3. Ship the fix as its own small PR with auto-merge, then confirm `main` is green.
+
+## Changing required checks
+
+Only with the user's approval. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no path filters), or PRs that skip them can never merge.
+
+```bash
+gh api repos/isandrel/bookmark-scout/rulesets/11384898 > ~/.cache/ruleset-11384898-before-$(date +%Y%m%d-%H%M).json
+```
+
+Edit `rules[].parameters.required_status_checks` in a copy (keep `name`, `target`, `enforcement`, `conditions`, `bypass_actors`, `rules`) and `gh api -X PUT repos/isandrel/bookmark-scout/rulesets/11384898 --input <file>`. Restore from the backup the same way.
 
 ## Branch and worktree cleanup
 
