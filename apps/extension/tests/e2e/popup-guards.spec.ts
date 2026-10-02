@@ -5,6 +5,7 @@ import {
   childTitles,
   folderRow,
   openPopup,
+  otherBookmarksTitle,
   seedFolder,
   setSettings,
 } from './popup-helpers';
@@ -336,7 +337,7 @@ test('folder rows use a leading tree chevron that lines up per depth and rotates
   await folderRow(page, full.barTitle).click();
   await folderRow(page, 'E2E Chevron Full').click();
   const rowsByDepth = [
-    [full.barTitle, 'Other bookmarks'],
+    [full.barTitle, await otherBookmarksTitle(extensionWorker)],
     ['E2E Chevron Full', 'E2E Chevron Empty', 'E2E Chevron Long folder title'],
     ['Chevron Sub', 'Chevron Empty Sub'],
   ];
