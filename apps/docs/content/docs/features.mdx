@@ -1,150 +1,73 @@
 ---
 title: Features
-description: All features of Bookmark Scout
+description: Everything Bookmark Scout does today, by area, with links to the guide for each task.
 ---
 
-# Features
+A reference list of what ships now. For step-by-step instructions, follow the guide linked in each section. What is partial or planned is on [Project status](/status), and what works in each browser is on [Browser support](/browser-support).
 
-## ✅ Implemented
+## Where it runs
 
-### 🤖 AI Folder Recommendations
-Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or a custom OpenAI-compatible provider. AI recommendations analyze the current page title and URL to suggest bookmark folders.
-
-Choosing an existing folder saves the page there. Choosing a suggested new folder opens a review dialog with the full folder path and the page; **Create Folder and Save** creates only the missing folders and saves the page. If the page is already in that folder it is not saved twice, and if a bookmark already uses one of the folder names in the path, nothing is created and the conflict is reported. Cancelling changes nothing.
-
-AI features are disabled by default. Enable them in **Settings → AI**, select a provider, and enter an API key when the provider requires one.
-
-API keys, Base URL, and extra headers are stored only in the browser's local extension storage. Keys that do not match the provider's format and Base URLs that are not `http://` or `https://` are rejected and never saved. The configured Base URL and headers apply to every request, including **Verify Service**, which asks the browser for access to that provider's origin when you click it.
-
-### 🧠 AI Tools
-Use AI from the bookmarks manager to:
-
-- export selected bookmarks as Markdown or XML context for LLMs (this export works without AI enabled and sends nothing to a provider)
-- suggest tags for a folder
-- generate bookmark summaries
-- plan folder reorganization; with **Always Preview First** on (the default), the plan is previewed and applied only after you confirm it
-
-AI context exports include the tags and summaries saved for each bookmark when **Include Saved Tags** and **Include Saved Summaries** are on; bookmarks without saved metadata get no tag or summary lines. Suggested tags and summaries are shown for review and saved only when you choose **Save Suggested Tags** or **Save Suggested Summaries**, into the same local metadata.
-
-The tag count and style, summary length, and reorganization folder limits in Settings are sent to the provider as instructions; the provider's output is not checked against them.
-
-AI tools can send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. Review generated results before applying organization changes.
-
-### 🏷️ Tags and Summaries (partial)
-Add, edit, and clear tags and a summary for any bookmark in **Bookmark Details**, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: they are not synced, not searchable or filterable, and not included in bookmark exports. They are restored with an undone deletion and removed when the bookmark is deleted.
-
-### 🗑️ Delete with Confirmation and Undo
-Bookmarks and folders can be deleted from the popup, side panel, and bookmarks manager (single items or a table selection). **Confirm Before Delete** is on by default and shows a dialog naming the item; turn it off in **Settings → Behavior** to delete immediately. Either way, each deletion shows an Undo for 10 seconds that restores the item, its subtree, and its saved tags and summaries. Permanent folders such as the Bookmarks Bar cannot be deleted.
-
-### 🔍 Instant Search
-Quickly find bookmarks with debounced search and folder filtering. Search settings control the result limit, whether matching folders and their parents open automatically, and whether recent searches are remembered on this device. Clearing the search restores the folders you had open before searching. Whole-word matching treats spaces, punctuation, and script changes as word boundaries, so terms such as `C++` and Japanese words match. An invalid regular expression shows a warning and is searched as plain text. Permanent folders such as the Bookmarks Bar are containers and never match by name.
-
-### 📂 Drag & Drop
-Organize bookmarks and folders with intuitive drag-and-drop. Dropping beside an item in another folder moves it into that folder. Reordering changes the browser's saved order, which the popup only shows with the **Folders First** sort order; date and alphabetical sorting keep re-sorting the list, and the confirmation says so.
-
-The popup and side panel refresh automatically when bookmarks change elsewhere, such as in the bookmarks manager or the browser's own bookmark UI. Each deletion has its own Undo for 10 seconds. A restored item is recreated, so it gets a new date added and moves to the top under date sorting.
-
-### ⚡ Quick Add
-Save the current tab to any folder with one click.
-
-### 📱 Side Panel
-Access your bookmarks from the Chrome or Edge side panel. Firefox declares the same page as a sidebar, but only its content is tested there, not the sidebar itself.
-
-### 🗂️ Full Bookmarks Manager
-Bookmark Scout overrides Chrome's default bookmarks page with a custom manager that includes a folder tree, breadcrumb navigation, table-based bookmark browsing, and a right-side tools panel. Each table row's menu can open a link in a new tab, edit a bookmark's title and URL or a folder's name, and delete items with the same confirmation setting and short undo window as the popup. Permanent root folders such as the Bookmarks Bar cannot be edited or deleted.
-
-Drag the edge of a column header (or focus it and press the Left and Right arrow keys) to resize that column; double-click the edge to restore its default width. Widths are saved with the rest of the table view, and **Reset view** clears them.
-
-### ⌨️ Keyboard Shortcuts
-Core workflows work from the keyboard. Shortcuts never use Ctrl or Cmd, so browser shortcuts such as Ctrl/Cmd+L, T, W, N, R, and D keep working. They pause while you type in a text field (Escape in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
-
-In the popup and side panel (hover the search box for a reminder):
-
-| Key | Action |
+| Surface | What it is |
 | --- | --- |
-| `/` | Focus the search box |
-| `Esc` in the search box | Clear the search; press again to leave the box |
-| `↓` in the search box | Move to the first folder |
-| `↓` / `↑`, `Home` / `End` | Move between visible folders and bookmarks (`↑` on the first row returns to search) |
-| `→` / `←` | Open or close a folder; on an open folder `→` moves to its first item, and `←` moves to the parent folder |
-| `Enter` on a folder | Save the current page into that folder (a page already saved there is not duplicated) |
-| `Enter` on a bookmark | Open it in a new tab |
-| `Space` on a folder | Open or close it |
+| Popup | The toolbar button: search, the folder tree, saving, and AI folder recommendations |
+| Side panel | The same view in the Chrome or Edge side panel, which stays open while you browse |
+| Bookmarks manager | Replaces the browser's bookmarks page in Chrome and Edge: folder tree, breadcrumbs, a bookmark table, and the **Tools** sidebar |
+| Settings | The extension's options page, with eleven tabs. See [Settings](/settings) |
+| Right-click menu | **Save bookmark to...** on any link |
 
-In the bookmarks manager, press `?` or the keyboard button in the header to see this list:
+## Find
 
-| Key | Action |
-| --- | --- |
-| `/` | Focus the title filter |
-| `Backspace` or `Alt+↑` | Go to the parent folder |
-| `j` / `k` | Move to the next or previous table row (a folder row, or a bookmark row's actions menu) |
-| `Enter` on a folder row | Open the folder |
-| `s` | Open saved searches |
-| `?` | Show the keyboard shortcuts |
-| `Esc` | Close a dialog or menu |
+- Search titles and URLs as you type, with match case, whole word, and regular expression options, and highlighted matches. Matching folders open automatically.
+- Recent searches on this device, which you can clear or turn off.
+- Table filters in the manager for title, URL, type, folder, domain, and date added, with sorting by any column.
+- Saved searches: named filter sets that are evaluated against your bookmarks each time you open them. Up to 50, kept on this device.
 
-### 🔖 Saved Searches
-Save the manager's current filters as a named smart view: the title and URL filters, the type, parent folder, domain, and date-added filters, the column sort, and, when **Current folder only** is on, that folder. Open **Saved searches** in the table toolbar (or press `s`), name the search, and save it. Opening a saved search replaces the current filters and sort, and returns to its folder when it was limited to one. The saved search you are looking at is checked in the list. Each entry can be renamed or deleted; a deletion can be undone from the message that follows.
+Guide: [Search and saved searches](/guides/search).
 
-A saved search keeps only these filter definitions, never copies of bookmarks, so its results are worked out from your bookmarks every time and change as you add, edit, move, or delete bookmarks. If a folder it names was deleted, that folder is skipped, the other filters still apply, and a message says how many folders were skipped. Saved searches stay in this browser's local extension storage: they are not synced, because their filters can reveal bookmark contents and folder IDs differ between devices. Up to 50 can be kept.
+## Save and organize
 
-### ↕️ Configurable Sorting
-Choose date added, natural alphabetical, or folders-first ordering in Settings. The selection applies to bookmark tables and nested folder views without changing the browser's stored bookmark order. In the popup and side panel, **Group by Folders** lists subfolders before bookmarks at each level and applies the sort order within each group; turn it off to mix folders and bookmarks in one sorted list.
+- Save the current page into any folder, never twice into the same folder, with a **Recent** panel of folders you used.
+- Save links from the right-click menu into a recent folder or the Bookmarks Bar.
+- Create folders, drag and drop bookmarks and folders, and move several at once in the manager.
+- Sort by date added, natural alphabetical order, or folders first, without changing the browser's stored order.
+- Edit names and URLs, and add tags and a summary in **Bookmark Details**.
+- Delete with an optional confirmation and a 10-second undo that restores everything inside a folder.
+- In the manager, resize table columns by dragging or with the arrow keys; **Reset view** restores the layout.
 
-### ⚙️ Options Page
-Configure appearance, language, search behavior, delete confirmations, popup sizing, AI providers, AI models, maintenance tools, metadata tools, privacy scanning, statistics, import/export defaults, and context-menu behavior.
+Guide: [Save and organize](/guides/save-and-organize).
 
-### 🌙 Theme Settings
-Use system, light, or dark theme mode from the options page.
+## Clean up
 
-### 🔗 Duplicate Cleaner
-Scan all bookmarks for duplicates with configurable matching rules and remove extra copies after review. Before removing, each group is re-checked: if the bookmark marked Keep was deleted or now points elsewhere, the whole group is left untouched and reported. Title-only matching shows a warning when a group contains different URLs.
+- **Duplicate Cleaner**: finds duplicates with configurable matching, and removes the extra copies after a review, with undo.
+- **URL Cleaner**: strips tracking parameters such as `utm_source` after a preview.
+- **Check Dead Links**: separates confirmed dead links from ones that need a manual check, and repairs them by deleting, following a redirect, using a Wayback Machine link, or editing the URL, with undo.
+- **Metadata Fetcher**: suggests titles from the live pages, reading only the page head, and applies the ones you select. Descriptions are shown for review and never saved.
+- **Privacy Scanner**: flags URLs, and optionally titles, that contain tokens, sensitive parameters, email addresses, or UUIDs.
+- **Bookmark Statistics**: top domains and folders, protocols, duplicates, and how deep your folders go, for a folder or all bookmarks.
 
-### 🧹 URL Cleaner
-Preview and apply URL cleanup for tracking parameters, duplicate query parameters, sorted query parameters, and preserved parameter allowlists.
+Guides: [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
 
-### 💀 Dead Link Checker
-Scan selected bookmark scopes for unreachable links with configurable timeout, concurrency, retry, redirect, and success-status settings. Any `HEAD` error status (for example 403 or 404 from servers that do not support `HEAD`) is confirmed with a `GET`, redirects show their destination, redirect loops are reported as "Too many redirects", and non-web links such as bookmarklets are skipped. The first scan asks for optional website access, because most sites block cross-origin checks without it; declining scans nothing. Chrome logs one "Failed to load resource" line in the page's developer console for each failed request; extensions cannot suppress these, and the scan itself logs nothing.
+## Import and export
 
-Results separate **confirmed dead** links (404 or 410, connection refused or host not found, redirect loops) from links that **need a manual check** because they often still work in a browser: sign-in or access-denied responses (401, 403, 407), rate limits (429), servers that reject automated checks (405 or 501 for both `HEAD` and `GET`), server errors (5xx), other HTTP errors, and timeouts. A summary at the top counts each group.
+- Export to HTML, JSON, Markdown, or CSV, with a privacy review that can redact sensitive values from the file.
+- Import HTML or JSON after a preview of the target folder, counts, and duplicates, with undo.
+- Export and import the extension's settings as a JSON file.
 
-**Review repairs** opens a review of every failed, timed-out, or redirected link. For each one, choose:
+Guide: [Import and export](/guides/import-export).
 
-- **Keep as is** (the default, so nothing changes unless you pick something else)
-- **Delete bookmark**
-- **Use redirect target**, offered only when the scan saw a redirect
-- **Use archived copy (Wayback Machine)**, which points the bookmark at `https://web.archive.org/web/<original URL>`. The link is built locally and not checked, so the page may never have been archived.
-- **Edit URL**, which accepts only a valid `http` or `https` URL that differs from the current one
+## AI tools (optional)
 
-Nothing changes until you select **Apply**; the review shows how many bookmarks will be deleted, have their URL replaced, or be kept. Before each change, the bookmark is re-read: one that was deleted or now has a different URL since the scan is skipped and listed, so a stale scan never overwrites your newer edit. Skipped and failed items stay listed in the dialog next to the counts. **Undo** (in the notification, or in the dialog after a partial apply) restores deleted bookmarks within 10 seconds and puts replaced URLs back unless they were edited again.
+Off by default. Bring your own key for OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, or OpenRouter, or use Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint.
 
-### 🧾 Metadata Fetcher
-Fetch page titles (and optionally descriptions) for selected scopes, then review and apply only the titles you select. Descriptions appear in the review list only and are never saved; favicons are not fetched. Error pages never produce suggestions, and page character sets such as Shift_JIS are respected. Only the page head (at most 512 KB) is downloaded, non-HTML files such as PDFs are skipped, and the request timeout covers the whole download. Uses the same optional website access as the Dead Link Checker.
+- Folder recommendations in the popup, including a reviewed new folder path.
+- **Auto-Tagging** and **Content Summarizer** for the current folder, saved only after you review them.
+- **AI Folder Reorganization**, previewed before anything moves.
+- **AI Context Packer**, which exports bookmarks as Markdown or XML for an AI chat and works with AI turned off.
 
-### 🛡️ Privacy Scanner
-Detect sensitive query parameters, URL fragments, emails, and UUIDs in bookmark data.
+Tags and summaries stay on this device. They are not synced, searchable, or included in bookmark exports. Guide: [Set up AI tools](/guides/ai-tools).
 
-Bookmark exports and AI context packs use the same rules before downloading. When the file would contain sensitive parameters, fragment tokens, email-like or token-like values, or URL credentials, a review lists them and lets you export the original, export a redacted copy (values replaced with `REDACTED`), or cancel. Redaction changes only the downloaded file, never your bookmarks. Exports with nothing sensitive download directly.
+## Keyboard and language
 
-### 📊 Bookmark Statistics
-View domain, folder, protocol, duplicate, depth, and top-item statistics for a folder or all bookmarks. Sections turned off in settings are hidden, and untitled folders count as a level and appear as "Untitled".
-
-### 📤 Import/Export
-Export bookmarks as HTML, JSON, Markdown, or CSV. Import bookmark files from HTML or JSON. File names keep non-ASCII folder names. CSV files start with a UTF-8 byte order mark, and the Folder column joins folders with `/`, writing a `/` inside a folder name as `\/` and a backslash as `\\`.
-
-Importing opens a preview before anything is written. It shows the target folder, which defaults to the folder open in the manager and can be changed, how many bookmarks and folders will be created or skipped, and which URLs already exist in the target folder, elsewhere in your bookmarks, or earlier in the file. You choose whether to skip bookmarks that exist anywhere, skip only those already in the target folder, or import everything. If your bookmarks change while the preview is open, the preview is refreshed instead of applied. After the import, a message lists how many items were created, skipped, and failed, and the import can be undone for 10 seconds.
-
-### 🖱️ Context Menu Save
-Save links from the browser right-click menu into recent folders or the default Bookmarks Bar.
-
-### ⚙️ Settings Sync
-Extension settings are stored through `chrome.storage.sync`, so preferences can sync through the browser account where supported.
-
-### 🌍 i18n
-Multi-language support: English, Japanese, Korean.
-
-## 🚧 Roadmap
-
-- 🏷️ Search, filter, sync, and export for saved tags and summaries
-- 🧪 Broader Firefox runtime coverage (context menus, drag and drop, keyboard shortcuts, network and AI tools), and making the Edge and Firefox CI jobs required checks
-- 🛒 Chrome Web Store, Firefox Add-ons, and Edge Add-ons submission. Listing copy, permission justifications, privacy disclosures, a privacy policy draft, screenshots, and per-store checklists are prepared in the repository's [`store/`](https://github.com/isandrel/bookmark-scout/tree/main/store) folder; nothing has been submitted yet
+- Shortcuts in the popup, side panel, and manager that never use `Ctrl` or `Cmd`, with a `?` help dialog in the manager. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
+- System, light, or dark theme.
+- English, Japanese, and Korean.

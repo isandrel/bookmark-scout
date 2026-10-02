@@ -8,3 +8,181 @@
 @import "fumadocs-ui/css/neutral.css";
 /* biome-ignore lint/correctness/noInvalidPositionAtImportRule: Fumadocs applies the custom utility above during import. */
 @import "fumadocs-ui/css/preset.css";
+
+/*
+ * Brand tokens shared with the website (apps/website/app/globals.css):
+ * paper and ink, a compass-teal primary, violet used sparingly, and a marker
+ * yellow for matches and selection. Fumadocs reads the --color-fd-* variables,
+ * so the theme is applied by remapping them, not by replacing components.
+ */
+:root {
+  --bs-paper: #f4f7fb;
+  --bs-surface: #ffffff;
+  --bs-sunken: #e9eef5;
+  --bs-ink: #0f2135;
+  --bs-ink-soft: #4a5b70;
+  --bs-line: #d6dfea;
+  --bs-teal: #0b7a80;
+  --bs-teal-ink: #ffffff;
+  --bs-teal-wash: #e1eff1;
+  --bs-violet: #5b3fd6;
+  --bs-marker: #ffe27a;
+  --bs-marker-ink: #1b1600;
+  --bs-ribbon: linear-gradient(160deg, #2bb3b1 0%, #4f6ce0 48%, #8a3fd1 100%);
+}
+
+.dark {
+  --bs-paper: #0d1b2a;
+  --bs-surface: #132638;
+  --bs-sunken: #0a1622;
+  --bs-ink: #e8eff6;
+  --bs-ink-soft: #9fb2c6;
+  --bs-line: #23394f;
+  --bs-teal: #3cc4c9;
+  --bs-teal-ink: #04252a;
+  --bs-teal-wash: #143347;
+  --bs-violet: #a08bff;
+  --bs-marker: #f5cf4a;
+  --bs-marker-ink: #1b1600;
+}
+
+/*
+ * Fumadocs reads these variables at runtime. They are declared after its
+ * stylesheets (including neutral.css's `.dark` block) so the brand values win.
+ */
+:root,
+.dark {
+  --color-fd-background: var(--bs-paper);
+  --color-fd-foreground: var(--bs-ink);
+  --color-fd-muted: var(--bs-sunken);
+  --color-fd-muted-foreground: var(--bs-ink-soft);
+  --color-fd-popover: var(--bs-surface);
+  --color-fd-popover-foreground: var(--bs-ink);
+  --color-fd-card: var(--bs-surface);
+  --color-fd-card-foreground: var(--bs-ink);
+  --color-fd-border: var(--bs-line);
+  --color-fd-primary: var(--bs-teal);
+  --color-fd-primary-foreground: var(--bs-teal-ink);
+  --color-fd-secondary: var(--bs-sunken);
+  --color-fd-secondary-foreground: var(--bs-ink);
+  --color-fd-accent: var(--bs-teal-wash);
+  --color-fd-accent-foreground: var(--bs-ink);
+  --color-fd-ring: var(--bs-teal);
+  --color-fd-info: var(--bs-teal);
+}
+
+@theme inline {
+  --color-paper: var(--bs-paper);
+  --color-surface: var(--bs-surface);
+  --color-sunken: var(--bs-sunken);
+  --color-ink: var(--bs-ink);
+  --color-ink-soft: var(--bs-ink-soft);
+  --color-line: var(--bs-line);
+  --color-teal: var(--bs-teal);
+  --color-teal-ink: var(--bs-teal-ink);
+  --color-violet: var(--bs-violet);
+  --color-marker: var(--bs-marker);
+  --color-marker-ink: var(--bs-marker-ink);
+
+  --font-sans:
+    var(--font-instrument), "Hiragino Sans", "Apple SD Gothic Neo",
+    "Noto Sans JP", "Noto Sans KR", system-ui, sans-serif;
+  --font-display:
+    var(--font-bricolage), var(--font-instrument), "Hiragino Sans",
+    "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-mono:
+    var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+/* neutral.css tints the dark sidebar grey; keep it on the navy scale. */
+.dark #nd-sidebar {
+  --color-fd-muted: var(--bs-sunken);
+  --color-fd-secondary: var(--bs-surface);
+  --color-fd-muted-foreground: var(--bs-ink-soft);
+}
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+body {
+  background: var(--bs-paper);
+  color: var(--bs-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--bs-marker);
+  color: var(--bs-marker-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--bs-teal);
+  outline-offset: 2px;
+}
+
+mark {
+  background: var(--bs-marker);
+  color: var(--bs-marker-ink);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Sidebar section labels come from the `---Name---` separators in meta.json. */
+#nd-sidebar p {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--bs-ink);
+  letter-spacing: 0;
+}
+
+/* Page title: the display face at a confident size with tight tracking. */
+#nd-page h1 {
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 2.75rem);
+}
+
+.prose {
+  --tw-prose-links: var(--bs-teal);
+  --tw-prose-counters: var(--bs-teal);
+  --tw-prose-bullets: var(--bs-line);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.prose :where(h2, h3):not(:where(.not-prose *)) {
+  letter-spacing: -0.015em;
+}
+
+.prose :where(a):not(:where(.not-prose *, [data-card])) {
+  color: var(--bs-teal);
+  text-decoration-color: color-mix(in oklab, var(--bs-teal) 40%, transparent);
+  text-underline-offset: 3px;
+}
+
+.prose :where(a):not(:where(.not-prose *, [data-card])):hover {
+  text-decoration-color: currentColor;
+}
+
+.prose :where(ol > li):not(:where(.not-prose *))::marker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--bs-teal);
+}
+
+/* The ribbon shape from the extension icon; used once, on the docs home. */
+.bs-ribbon {
+  background: var(--bs-ribbon);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+}

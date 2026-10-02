@@ -1,47 +1,87 @@
-import { DOCS_NAME, DOCS_URL, GITHUB_URL, SITE_URL } from "@bookmark-scout/config";
-import type { Metadata } from "next";
+import { DOCS_NAME, DOCS_URL, GITHUB_URL } from "@bookmark-scout/config";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import { RootProvider } from "fumadocs-ui/provider/next";
+import type { Metadata, Viewport } from "next";
+import {
+  Bricolage_Grotesque,
+  Instrument_Sans,
+  JetBrains_Mono,
+} from "next/font/google";
+import Image from "next/image";
+import {
+  DOCS_DESCRIPTION,
+  NAV_LINKS,
+  NAV_TITLE,
+  THEME_COLORS,
+} from "@/lib/site";
 import { source } from "@/lib/source";
 import "./global.css";
-import { Inter } from "next/font/google";
 
-const inter = Inter({
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin"],
+  axes: ["opsz", "wdth"],
+});
+
+const body = Instrument_Sans({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+});
+
+const code = JetBrains_Mono({
+  variable: "--font-jetbrains",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(DOCS_URL),
   title: { default: DOCS_NAME, template: `%s | ${DOCS_NAME}` },
-  description:
-    "Install, use, and contribute to Bookmark Scout, a browser extension for searching, organizing, and cleaning up bookmarks.",
+  description: DOCS_DESCRIPTION,
+  icons: { icon: "/icon.png", apple: "/icon.png" },
   openGraph: { siteName: DOCS_NAME, type: "website" },
   twitter: { card: "summary_large_image" },
 };
 
-const docsOptions = {
-  tree: source.pageTree,
-  nav: {
-    title: `🔖 ${DOCS_NAME}`,
-  },
-  links: [
-    {
-      text: "Website",
-      url: SITE_URL,
-    },
-    {
-      text: "GitHub",
-      url: GITHUB_URL,
-    },
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
   ],
 };
 
+function NavTitle() {
+  return (
+    <span className="inline-flex items-center gap-2.5 font-display text-[1.0625rem] font-bold tracking-tight">
+      <Image
+        src="/icon.png"
+        alt=""
+        width={26}
+        height={26}
+        className="size-[26px]"
+        priority
+      />
+      {NAV_TITLE}
+    </span>
+  );
+}
+
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
-        <RootProvider>
-          <DocsLayout {...docsOptions}>{children}</DocsLayout>
+    <html
+      lang="en"
+      className={`${display.variable} ${body.variable} ${code.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="flex min-h-screen flex-col font-sans">
+        <RootProvider search={{ options: { type: "static" } }}>
+          <DocsLayout
+            tree={source.pageTree}
+            nav={{ title: <NavTitle /> }}
+            links={NAV_LINKS}
+            githubUrl={GITHUB_URL}
+          >
+            {children}
+          </DocsLayout>
         </RootProvider>
       </body>
     </html>

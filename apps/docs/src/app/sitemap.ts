@@ -5,11 +5,11 @@ import { source } from "@/lib/source";
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = source.getPages();
-
-  return pages.map((page) => ({
-    url: `${DOCS_URL}${page.url}`,
-    lastModified: new Date(),
+  return source.getPages().map((page) => ({
+    url: new URL(page.url, DOCS_URL).toString(),
+    lastModified: page.data.lastModified
+      ? new Date(page.data.lastModified)
+      : undefined,
     changeFrequency: "weekly",
     priority: page.url === "/" ? 1.0 : 0.8,
   }));

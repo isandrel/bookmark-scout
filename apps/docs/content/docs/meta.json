@@ -1,0 +1,22 @@
+{
+  "title": "Bookmark Scout Docs",
+  "description": "Install and use Bookmark Scout, a browser extension that searches, organizes, and cleans up your bookmarks inside your browser.",
+  "pages": [
+    "---Get started---",
+    "index",
+    "installation",
+    "browser-support",
+    "---Guides---",
+    "...guides",
+    "---Reference---",
+    "features",
+    "settings",
+    "permissions",
+    "---About---",
+    "privacy",
+    "faq",
+    "status",
+    "---Contribute---",
+    "contributing"
+  ]
+}

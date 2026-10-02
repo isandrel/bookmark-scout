@@ -1,0 +1,60 @@
+---
+title: Import and export
+description: Export bookmarks as HTML, JSON, Markdown, or CSV with a privacy review, and import HTML or JSON files after a preview that shows duplicates.
+---
+
+Both tools are in the **Tools** sidebar of the bookmarks manager, under **Data**.
+
+<Callout title="Firefox">
+The manager is not reachable in Firefox, so import and export are not available there.
+</Callout>
+
+## Export bookmarks
+
+<Steps>
+<Step>
+In **Export Bookmarks**, pick a **Format**: **HTML (Chrome)**, **JSON**, **Markdown**, or **CSV**.
+</Step>
+<Step>
+Choose the current folder or all bookmarks, and click **Export**.
+</Step>
+<Step>
+If the file would contain values that may be private, a review opens first. Choose **Export original**, **Export redacted**, or **Cancel**.
+</Step>
+</Steps>
+
+The review looks for sensitive query parameters, tokens in URL fragments, email-like and token-like values, and user names or passwords inside URLs. A redacted export replaces those values with `REDACTED` in the downloaded file only; your bookmarks do not change. Exports with nothing sensitive download directly.
+
+File details:
+
+- File names start with **Filename Prefix** (default `bookmarks_`) and keep non-ASCII folder names.
+- CSV files start with a UTF-8 byte order mark. The Folder column joins folders with `/`, and writes a `/` inside a folder name as `\/` and a backslash as `\\`.
+- **Include Dates** and **Include URLs**, and the indent sizes for each format, are on the **Data** tab of [Settings](/settings).
+
+Tags and summaries are not included in bookmark exports. To hand bookmarks with their tags and summaries to an AI tool, use **AI Context Packer**; see [Set up AI tools](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Import bookmarks
+
+<Steps>
+<Step>
+In **Import Bookmarks**, click **Import** and choose an HTML or JSON bookmark file, such as one exported from a browser.
+</Step>
+<Step>
+Review the **Import preview**. It shows the target folder, how many bookmarks and folders will be created or skipped, and which URLs already exist in the target folder, elsewhere in your bookmarks, or earlier in the same file.
+</Step>
+<Step>
+Change **Import into** if needed. It starts as the folder open in the manager.
+</Step>
+<Step>
+Choose how to handle **Duplicates**: skip bookmarks that already exist anywhere, skip only those already in the target folder, or import everything.
+</Step>
+<Step>
+Click **Import**. A message lists how many items were created, skipped, and failed, with **Undo** for 10 seconds.
+</Step>
+</Steps>
+
+Nothing is written until you click **Import**. If your bookmarks change while the preview is open, the preview is refreshed instead of applied.
+
+## Settings files are separate
+
+The **Export** and **Import** buttons at the bottom of the Settings page save and restore Bookmark Scout's settings as a JSON file. They do not touch bookmarks.

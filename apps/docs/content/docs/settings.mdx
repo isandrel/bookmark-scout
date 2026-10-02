@@ -1,0 +1,136 @@
+---
+title: Settings
+description: Every setting on Bookmark Scout's settings page, tab by tab, with its default and what it changes.
+---
+
+Open the settings page from the extension's **Options** entry, for example by right-clicking the toolbar icon in Chrome and choosing **Options**. Changes save as you make them.
+
+## Using the settings page
+
+- **Search settings...** at the top finds a setting in any tab and says how many match.
+- A changed setting is marked **Modified**, with a button to reset it to its default. **Reset All** resets every setting.
+- **Export** saves your settings as a JSON file, and **Import** restores them from one. Neither touches your bookmarks.
+- Settings are stored in the browser's sync storage, so they follow you to other devices when browser sync is on. The AI provider's API key, **Base URL**, and **Extra Headers JSON** are the exception: they stay on this device. See [Privacy](/privacy).
+
+## Appearance
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Language** | Auto (Browser) | English, Japanese, or Korean, or follow the browser |
+| **Theme** | System | System, Light, or Dark, applied to every open Bookmark Scout page |
+| **Show Favicons** | On | Show site icons next to bookmarks (Chrome and Edge) |
+| **Favicon Size** | 16px (Small) | 16, 24, or 32 pixels |
+
+## Search
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Search Delay** | 300 ms | How long to wait after you stop typing before the popup searches |
+| **Max Search Results** | 20 results | Most matches shown; a note says when there are more |
+| **Expand Folders on Search** | On | Open the folders that contain matches |
+| **Search History** | On | Remember recent searches on this device |
+
+See [Search and saved searches](/guides/search).
+
+## Behavior
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Sort Order** | Date Added | **Date Added**, **Alphabetical**, or **Folders First**. Changes only how Bookmark Scout shows bookmarks, never the browser's stored order |
+| **Group by Folders** | On | In the popup and side panel, list subfolders before bookmarks at each level |
+| **Confirm Before Delete** | On | Ask before deleting. Every deletion can be undone for 10 seconds either way |
+| **Default Folder Name** | New Folder | The name a new folder starts with |
+| **Recent Folders** | On | Show recently used folders in the popup and the right-click menu |
+| **Recent Folders Max** | 5 | How many recent folders to show |
+
+See [Save and organize](/guides/save-and-organize).
+
+## Advanced
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Popup Width** | 400 px | Browsers allow at most 800 px |
+| **Popup Height** | 500 px | Browsers allow at most 600 px |
+| **Truncate Length** | 50 characters | Shortens the page title in the popup's AI suggestions header |
+| **Toast Duration** | 4000 ms | How long messages stay open. Undo messages keep their own 10-second window |
+
+## AI
+
+AI is off by default. These settings matter only after you turn on **AI Features**.
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **AI Features** | Off | Turn on the AI tools and the popup's folder recommendations |
+| **Auto-recommend on Open** | Off | Ask for folder recommendations every time the popup opens |
+| **AI Provider** and **AI Model** | OpenAI, GPT-4o Mini | Which provider and model every AI tool uses |
+| **Max Recommendations** | 5 | Most folder recommendations to request |
+| **Max Categories** | No limit | Most top-level folders a reorganization plan may create |
+| **Min Items Per Folder** and **Max Items Per Folder** | 1 and No limit | Folder size targets for reorganization plans |
+
+Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model**, and **Extra Headers JSON**, with **Verify Service** and **Refresh Models**. The folder limits are sent to the provider as instructions, and its output is not checked against them. See [Set up AI tools](/guides/ai-tools).
+
+## AI Tools
+
+Each tool has an **Enable** switch (on by default). Turning one off hides it from the manager's **Tools** sidebar.
+
+| Tool | Settings and defaults |
+| --- | --- |
+| **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** 200; **Max Depth** 8; **Excerpt Length** 240 |
+| **Auto-Tagging** | **Minimum Tags** 2; **Maximum Tags** 5; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on |
+| **Content Summarizer** | **Summary Length** 160; **Include Domain Hint** on; **Merge Mode** Replace |
+| **AI Folder Reorganization** | **Always Preview First** on; **Minimum Confidence** 0.55 (moves below it are dropped); **Batch Size** 100 bookmarks per request |
+
+Auto-Tagging and Content Summarizer always work on the current folder, whatever their **Default Scope** says.
+
+## Maintenance
+
+| Tool | Settings and defaults |
+| --- | --- |
+| **Duplicate Cleaner** | **Match Strategy** Normalized URL; **Normalize www**, **Ignore Protocol**, and **Ignore Trailing Slash** on; **Keep Rule** Oldest; **Max Groups** 500. Always scans all bookmarks |
+| **URL Cleaner** | **Remove Fragments** off; **Sort Query Parameters** and **Deduplicate Query Parameters** on; **Preserve Parameters** and **Remove Parameters** lists |
+| **Check Dead Links** | **Request Timeout** 8000 ms; **Concurrency** 4; **Retry Count** 1; **Follow Redirects** on; **Success Status Codes** 200, 201, 202, 204, 301, 302, 307, 308 |
+
+Lists such as **Remove Parameters** take comma-separated values. The default lists are on [Clean up duplicates and tracking URLs](/guides/clean-up#strip-tracking-parameters). See also [Find and repair dead links](/guides/dead-links).
+
+## Metadata & Content
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Enable Metadata Fetcher** | On | Show **Metadata Fetcher** in the Tools sidebar |
+| **Overwrite Titles** | Off | Offer new titles for bookmarks that already have one |
+| **Fetch Descriptions** | On | Show page descriptions in the review. They are never saved |
+| **Request Timeout** | 8000 ms | Per page |
+| **Concurrency** | 4 | Pages requested at a time |
+
+## Security
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Enable Privacy Scanner** | On | Show **Privacy Scanner** in the Tools sidebar. It always scans all bookmarks |
+| **Scan Titles** | Off | Check titles as well as URLs |
+| **Scan Query Parameters** and **Scan Fragments** | On | Check those parts of each URL |
+| **Sensitive Parameters** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Parameter names to flag |
+| **Detect Emails** and **Detect UUIDs** | On | Flag email addresses and UUID-like values |
+
+## Analytics
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Enable Statistics** | On | Show **Bookmark Statistics** in the Tools sidebar |
+| **Include Domains**, **Include Folders**, **Include Duplicates**, **Include Protocols**, **Include Depth Breakdown** | On | Sections of the report; a section turned off is hidden |
+| **Top N Entries** | 10 | Length of the top domain and folder lists |
+
+## Data
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| **Show Export Tool** and **Show Import Tool** | On | Show them in the Tools sidebar |
+| **Default Export Format** | HTML | Format selected when the export tool opens |
+| **Filename Prefix** | `bookmarks_` | Start of every export file name |
+| **Max Filename Length** | 50 | Longest generated file name |
+| **JSON Indent Size**, **HTML Indent Size**, **Markdown Indent Size** | 2, 4, 2 | Spaces per level in each format |
+| **Include Dates** and **Include URLs** | On | Include them in exports |
+| **Context Menu** | On | Show **Save bookmark to...** when you right-click a link |
+| **Bookmark Name Source** | Link text | Name a right-click save after the link text, the page title, or the link URL |
+
+See [Import and export](/guides/import-export).

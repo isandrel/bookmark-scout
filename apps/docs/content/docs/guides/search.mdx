@@ -1,0 +1,67 @@
+---
+title: Search and saved searches
+description: Find any bookmark by title or URL from the popup or side panel, filter the manager's table, and keep filter combinations as named saved searches.
+---
+
+## Search from the popup or side panel
+
+<Steps>
+<Step>
+Click the Bookmark Scout icon in the toolbar. In Chrome and Edge you can also open Bookmark Scout in the browser's side panel, which stays open while you browse.
+</Step>
+<Step>
+Type in **Search bookmarks...** (or press `/` to jump there). Results appear as you type, inside their folders, with each match highlighted.
+</Step>
+<Step>
+Narrow the match with the three buttons inside the search box: **Match Case**, **Match Whole Word**, and **Use Regular Expression**.
+</Step>
+<Step>
+Click a bookmark, or move to it with the arrow keys and press `Enter`, to open it in a new tab.
+</Step>
+</Steps>
+
+<Screenshot name="popup" />
+
+Good to know:
+
+- Whole-word matching treats spaces, punctuation, and changes of script as word boundaries, so terms such as `C++` and Japanese words match.
+- An invalid regular expression shows a warning and is searched as plain text.
+- Permanent folders such as the Bookmarks Bar are containers and never match by name.
+- When there are more matches than the result limit, a note says how many are shown. Refine the search, or raise **Max Search Results** in [Settings](/settings).
+- Clearing the search (the clear button, or `Esc` in the search box) restores the folders you had open before.
+- Recent searches are remembered on this device. Clear them from the list under the search box, or turn off **Search History** in Settings.
+
+## Filter in the bookmarks manager
+
+The manager's table has more precise filters. In Chrome, open the browser's bookmarks page to reach it.
+
+- **Filter titles...** and **Filter URLs...** match text in those columns. Press `/` to jump to the title filter.
+- **Type**, **Parent ID**, **Domain**, and **Date Added** narrow the rows further.
+- **Current folder only** limits the filters to the folder you are in. When it is off, filters search all bookmarks.
+- Sort by any column from its header.
+
+## Save a search
+
+A saved search keeps the manager's current filters, sort, and folder scope under a name, so you can reopen the same view later.
+
+<Steps>
+<Step>
+Set at least one filter: title, URL, type, folder, domain, or date added.
+</Step>
+<Step>
+Click **Saved searches** in the table toolbar, or press `s`.
+</Step>
+<Step>
+Enter a name in **Name this search** and click **Save**.
+</Step>
+</Steps>
+
+To use one, open **Saved searches** and choose it. Its filters and sort replace the current ones, and if it was limited to one folder, the manager returns to that folder. Each entry can be renamed or deleted, and a deletion can be undone from the message that follows.
+
+A saved search stores the filter definitions, never copies of bookmarks, so its results always match your bookmarks as they are now. If a folder it names was deleted, that folder is skipped, the other filters still apply, and a message says how many folders were skipped.
+
+Saved searches stay in this browser's local extension storage and are not synced, because their filters can reveal what you bookmark and folder IDs differ between devices. You can keep up to 50.
+
+<Callout title="Firefox">
+The manager is not reachable in Firefox, so saved searches are not available there. Popup search works.
+</Callout>

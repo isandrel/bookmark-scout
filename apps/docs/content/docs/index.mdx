@@ -1,43 +1,28 @@
 ---
-title: Getting Started
-description: Quick start guide for Bookmark Scout
+title: Introduction
+description: Bookmark Scout is a browser extension for Chrome, Edge, and Firefox that searches, organizes, and cleans up the bookmarks you already have, inside your browser.
 ---
 
-# Getting Started
+<StartHere />
 
-Welcome to **Bookmark Scout** — a browser extension for searching, organizing, cleaning up, importing/exporting, and saving bookmarks. It includes opt-in AI tools for recommendations, tagging, summaries, context packing, and folder reorganization.
+## What you can do with it
 
-## Installation
+- **Find**: search every bookmark by title or URL from the toolbar popup or the side panel, and keep named searches in the bookmarks manager. See [Search and saved searches](/guides/search).
+- **Organize**: save the current page or a link into any folder, drag folders into shape, and delete with an undo. See [Save and organize](/guides/save-and-organize).
+- **Clean up**: remove duplicate bookmarks, strip tracking parameters, and find and repair dead links. See [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and repair dead links](/guides/dead-links).
+- **Move your library**: export to HTML, JSON, Markdown, or CSV, and import HTML or JSON after a preview. See [Import and export](/guides/import-export).
+- **Use AI, only if you want to**: AI tools are off by default. When you turn them on, you pick the provider and bring your own key. See [Set up AI tools](/guides/ai-tools).
 
-### From GitHub Releases
+<Screenshot name="manager" />
 
-Download the latest release from [GitHub Releases](https://github.com/isandrel/bookmark-scout/releases). Release assets are published separately for Chrome, Firefox, and Edge.
+## Where your data goes
 
-### Load in Chrome
+Bookmark Scout has no account and no server of its own. Your bookmarks stay in your browser. Data leaves the browser only when you use a feature that needs the network, such as checking dead links or an AI tool you turned on, and then it goes directly to the website or provider you chose. Read the [privacy summary](/privacy).
 
-1. Download `bookmark-scout-*-chrome.crx` or `bookmark-scout-*-chrome.zip`
-2. Open `chrome://extensions/`
-3. Enable **Developer mode** (top right)
-4. Drag the CRX into the page, or extract the ZIP and click **Load unpacked**
-5. Select the extracted folder when using the ZIP
+## Browsers
 
-For Firefox and Edge, see [Installation](/installation).
+Chrome is the primary target. Edge is also Chromium-based and runs the same end-to-end test suite. Firefox gets a smaller set of features, mainly because it cannot replace its bookmarks page with the Bookmark Scout manager. See [Browser support](/browser-support) for the details.
 
-## Key Features
+## Get help
 
-- 🔍 **Instant Search** — Find bookmarks quickly with folder filtering and debounced search
-- 📂 **Drag & Drop** — Move bookmarks and folders directly in the extension
-- ⚡ **Quick Add** — Save the current tab to a selected folder
-- 🗂️ **Bookmarks Manager** — Replace the default Chrome bookmarks page with a custom table-based manager
-- 🔖 **Saved Searches** — Keep filters, sort, and folder scope as named smart views
-- ⌨️ **Keyboard Shortcuts** — Search, navigate, and save without the mouse; press `?` for help
-- 🧰 **Maintenance Tools** — Clean duplicate bookmarks and tracking URLs, scan dead links and review repairs, fetch titles, scan for privacy issues, and view statistics
-- 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON after a preview
-- 🤖 **Opt-in AI Tools** — Use configured providers for recommendations, tagging, summaries, context packing, and reorganization plans
-
-## Next Steps
-
-- [Features](/features) — Explore all features
-- [Installation](/installation) — Detailed installation guide
-- [Project Status](/status) — See what is implemented and what is planned
-- [Contributing](/contributing) — Help improve Bookmark Scout
+Check the [FAQ and troubleshooting](/faq) page first. For anything else, email <Contact role="support" /> or open an issue on <RepoLink path="/issues">GitHub</RepoLink>.
