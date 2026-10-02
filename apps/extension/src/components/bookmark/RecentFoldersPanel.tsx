@@ -53,7 +53,7 @@ export function RecentFoldersPanel({
               aria-disabled={isPending || undefined}
               title={`Add to "${folder.title}"`}
             >
-              <Folder className="h-3 w-3 text-amber-500" />
+              <Folder className="h-3 w-3 text-muted-foreground" />
               <span className="truncate max-w-[120px]">{folder.title}</span>
             </Button>
           );

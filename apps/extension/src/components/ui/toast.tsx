@@ -32,10 +32,10 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border bg-background text-foreground',
+        default: 'border bg-popover text-popover-foreground',
         destructive:
-          'destructive group border-destructive bg-destructive text-destructive-foreground',
-        success: 'border-green-600/50 bg-green-50 text-green-900 dark:bg-green-950 dark:text-green-100 dark:border-green-800',
+          'destructive group border-destructive/40 bg-destructive-wash text-foreground',
+        success: 'border-success/40 bg-success-wash text-foreground',
       },
     },
     defaultVariants: {
@@ -108,7 +108,7 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
+      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100',
       className,
     )}
     toast-close=""
@@ -153,13 +153,13 @@ const ToastProgress = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null; duration?: number }
 >(({ className, variant, duration = TOAST_DURATION, ...props }, ref) => {
   const progressColors = {
-    default: 'bg-foreground/20',
-    destructive: 'bg-destructive-foreground/30',
-    success: 'bg-green-600/30 dark:bg-green-400/30',
+    default: 'bg-primary/50',
+    destructive: 'bg-destructive/50',
+    success: 'bg-success/50',
   };
 
   return (
-    <div className="w-full h-1 bg-black/5 dark:bg-white/5 overflow-hidden">
+    <div className="w-full h-1 bg-muted overflow-hidden">
       <div
         ref={ref}
         className={cn(

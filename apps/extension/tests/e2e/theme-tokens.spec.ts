@@ -2,10 +2,6 @@ import type { Locator, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { folderRow, openPopup, otherBookmarksTitle, setSettings } from './popup-helpers';
 
-// The folder icon's classes: a light color with a `dark:` override.
-const LIGHT_CLASS = 'text-amber-500';
-const DARK_VARIANT_CLASSES = `${LIGHT_CLASS} dark:text-amber-400`;
-
 type ColorScheme = 'light' | 'dark';
 
 type ThemeCase = {
@@ -24,7 +20,7 @@ const THEME_CASES: ThemeCase[] = [
 
 type ThemedPage = {
   path: string;
-  /** The element whose `dark:` class is checked; defaults to an injected probe. */
+  /** An element colored by a theme token; defaults to an injected `text-foreground` probe. */
   target?: (page: Page, otherFolderTitle: string) => Locator;
 };
 
@@ -39,31 +35,35 @@ const PAGES: ThemedPage[] = [
   { path: 'bookmarks.html' },
 ];
 
-/** Adds elements using classes Tailwind already generated, for pages without a stable `dark:` element. */
-async function injectProbes(page: Page) {
-  await page.evaluate(
-    ({ light, variant }) => {
-      for (const [id, className] of [
-        ['theme-reference', light],
-        ['theme-probe', variant],
-      ]) {
-        const element = document.createElement('span');
-        element.dataset.testid = id;
-        element.className = className;
-        element.textContent = id;
-        document.body.append(element);
-      }
-    },
-    { light: LIGHT_CLASS, variant: DARK_VARIANT_CLASSES },
-  );
+async function injectProbe(page: Page) {
+  await page.evaluate(() => {
+    const element = document.createElement('span');
+    element.dataset.testid = 'theme-probe';
+    element.className = 'text-foreground';
+    element.textContent = 'theme-probe';
+    document.body.append(element);
+  });
 }
 
-function color(locator: Locator) {
-  return locator.evaluate((element) => getComputedStyle(element).color);
+/** Relative luminance of an element's text and of the page background, from 0 to 1. */
+function luminance(locator: Locator) {
+  return locator.evaluate((element) => {
+    const toLuminance = (value: string) => {
+      const [r, g, b] = (value.match(/\d+(\.\d+)?/g) ?? []).slice(0, 3).map((channel) => {
+        const c = Number(channel) / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    return {
+      text: toLuminance(getComputedStyle(element).color),
+      background: toLuminance(getComputedStyle(document.body).backgroundColor),
+    };
+  });
 }
 
 for (const themeCase of THEME_CASES) {
-  test(`dark: variants follow the app theme: ${themeCase.name}`, async ({
+  test(`theme tokens follow the app theme: ${themeCase.name}`, async ({
     extensionId,
     extensionWorker,
     page,
@@ -81,15 +81,18 @@ for (const themeCase of THEME_CASES) {
       const html = page.locator('html');
       await expect(html, themedPage.path).toHaveClass(new RegExp(`\\b${themeCase.expected}\\b`));
 
-      await injectProbes(page);
-      const reference = page.getByTestId('theme-reference');
+      await injectProbe(page);
       const target = themedPage.target?.(page, otherFolderTitle) ?? page.getByTestId('theme-probe');
-      await expect(target).toHaveClass(new RegExp(DARK_VARIANT_CLASSES));
-      const lightColor = await color(reference);
-
+      // Dark themes put light text on a dark page; light themes the reverse.
       await expect
-        .poll(async () => (await color(target)) === lightColor, { message: themedPage.path })
-        .toBe(themeCase.expected === 'light');
+        .poll(
+          async () => {
+            const { text, background } = await luminance(target);
+            return text > background ? 'dark' : 'light';
+          },
+          { message: themedPage.path },
+        )
+        .toBe(themeCase.expected);
     }
   });
 }

@@ -26,7 +26,7 @@ export function RecommendedFolderDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FolderPlus className="h-5 w-5 text-violet-500" />
+            <FolderPlus className="h-5 w-5 text-ai" />
             {t('ai_newFolderReviewTitle')}
           </DialogTitle>
           <DialogDescription>{t('ai_newFolderReviewDescription')}</DialogDescription>

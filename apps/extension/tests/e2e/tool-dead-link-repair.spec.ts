@@ -89,7 +89,12 @@ async function openRepairReview(page: Page, extensionId: string, folderId: strin
 async function choose(page: Page, title: string, option: string) {
   const review = page.getByRole('dialog', { name: 'Review dead-link repairs' });
   await review.getByRole('combobox', { name: `Action for ${title}` }).click();
-  await page.getByRole('option', { name: option, exact: true }).click();
+  // A select that just closed keeps its emptied listbox mounted for a moment; use the open one.
+  await page
+    .getByRole('listbox')
+    .filter({ visible: true })
+    .getByRole('option', { name: option, exact: true })
+    .click();
 }
 
 test('dead-link scan separates confirmed dead links from ones that need a manual check', async ({

@@ -323,13 +323,13 @@ const OptionsPage: React.FC = () => {
     const Heading = headingLevel;
     if (categoryKey === 'ai') {
       return (
-        <div className="mb-6 rounded-xl border border-violet-500/20 bg-gradient-to-r from-violet-500/10 via-purple-500/10 to-fuchsia-500/10 p-4">
+        <div className="mb-6 rounded-lg border bg-card p-4">
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 p-2 text-white">
+            <div className="rounded-md bg-ai/10 p-2 text-ai">
               <Sparkles className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <Heading className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-lg font-semibold text-transparent">
+              <Heading className="text-lg font-semibold">
                 {category.label}
               </Heading>
               <p className="text-sm text-muted-foreground">{category.description}</p>
@@ -361,7 +361,9 @@ const OptionsPage: React.FC = () => {
           <CardHeader className="pb-4">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <CardTitle className="text-2xl font-bold">{t('settings_title')}</CardTitle>
+                <CardTitle className="font-display text-2xl font-semibold tracking-tight">
+                  {t('settings_title')}
+                </CardTitle>
                 <CardDescription>{t('settings_description')}</CardDescription>
               </div>
               <Button

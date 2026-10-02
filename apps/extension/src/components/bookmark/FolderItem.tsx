@@ -243,7 +243,7 @@ export function FolderItem({
             >
               <Folder
                 data-slot="folder-icon"
-                className="w-4 h-4 mr-2 shrink-0 text-amber-500 dark:text-amber-400"
+                className="w-4 h-4 mr-2 shrink-0 text-muted-foreground"
               />
               {node.title.trim() ? (
                 <HighlightedText

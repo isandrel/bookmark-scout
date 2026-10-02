@@ -26,7 +26,7 @@ This file holds only what all surfaces share.
 | Violet (small accents) | `#5b3fd6` | `#a08bff` |
 | Marker (search highlight) | `#ffe27a` | `#f5cf4a` |
 
-- **Type:** Bricolage Grotesque for display, Instrument Sans for body, JetBrains Mono for URLs and code. Self-hosted through `next/font`; Japanese and Korean fall back to system fonts.
+- **Type:** Bricolage Grotesque for display, Instrument Sans for body, JetBrains Mono for URLs and code. The website and docs self-host them through `next/font`; the extension bundles the `@fontsource-variable` woff2 files. Japanese and Korean fall back to system fonts.
 - **Theme:** follows the visitor's `prefers-color-scheme`.
 - **Voice:** plain, specific, sentence case. Describe what the extension does in each browser; never claim a feature a browser does not have.
 
