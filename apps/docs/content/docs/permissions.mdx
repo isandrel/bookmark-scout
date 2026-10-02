@@ -11,7 +11,7 @@ These are the permissions in the built extension for each browser. Bookmark Scou
 | --- | --- | --- |
 | `bookmarks` | All | Show and search your bookmarks, and create, edit, move, and delete them when you act in the popup, side panel, manager, or right-click menu |
 | `tabs` | All | Read the title and URL of the active tab so you can save the page you are on, and open bookmarks in a new tab. It does not read other tabs or track browsing |
-| `storage` | All | Save your settings, and on this device only, your AI provider settings, tags, summaries, saved searches, recent folders, and recent searches |
+| `storage` | All | Save your settings, and on this device only, your AI provider settings, tags, summaries, saved searches, recent folders, recent searches, and site icons saved with **Refresh Site Icons** |
 | `contextMenus` | All | Add **Save bookmark to...** to the right-click menu on links. Turn it off with **Context Menu** in [Settings](/settings#data) |
 | `favicon` | Chrome, Edge | Show each bookmark's site icon from the browser's own icon cache. No network request is made for icons |
 | `sidePanel` | Chrome, Edge | Provide the side panel view. Firefox declares the same page as a sidebar instead |
@@ -22,7 +22,7 @@ In Chrome and Edge the extension also replaces the browser's bookmarks page with
 
 The extension also declares access to `http://*/*` and `https://*/*`, but none of it is granted at install. The browser asks you at the moment you need it:
 
-- **Check Dead Links** and **Metadata Fetcher** ask for access to websites the first time you run them, because bookmarks can point to any site. Requests are sent without cookies, and only the page head is read for titles. If you decline, nothing is scanned. See [Find and repair dead links](/guides/dead-links).
+- **Check Dead Links**, **Metadata Fetcher**, and **Refresh Site Icons** ask for access to websites the first time you run them, because bookmarks can point to any site. Requests are sent without cookies, and only the page head is read for titles and icon links. If you decline, nothing is scanned. See [Find and repair dead links](/guides/dead-links) and [Refresh site icons](/guides/clean-up#refresh-site-icons).
 - **Verify Service** and **Refresh Models** in the AI settings ask for access to that one provider's address only. See [Set up AI tools](/guides/ai-tools).
 
 To take website access back, open the browser's page for the extension (for example `chrome://extensions/`, then **Details** on Bookmark Scout) and change its site access.

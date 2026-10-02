@@ -51,7 +51,7 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`) | Same manifest key. Whether Edge applies it to its Favorites page has not been checked. | **Not reachable.** Firefox has no bookmarks-page override, the key is absent, and no UI links to `bookmarks.html`. |
 | Options page | Yes | Yes | Yes |
 | Context menu save | Yes | Yes | Yes |
-| Site icons (favicons) | `_favicon` API | `_favicon` API | No. The `favicon` permission is Chromium-only. |
+| Site icons (favicons) | `_favicon` API, or icons saved by Refresh Site Icons | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
 | Optional website access | `optional_host_permissions` | `optional_host_permissions` | `optional_permissions` (added by the WXT hook) |
 
 As a result, the Firefox listing describes a smaller feature set: maintenance tools, import/export, saved searches, statistics, and the manager-only AI tools are not reachable in Firefox today.
@@ -60,7 +60,7 @@ As a result, the Firefox listing describes a smaller feature set: maintenance to
 
 - Chromium: unit tests and Playwright E2E tests cover popup, manager, settings, maintenance, reports, import/export, network tools (route-mocked and a real local server), and AI tools against mocked providers.
 - Edge: the same Playwright E2E suite runs against the Edge build (`nx run extension:test:e2e:edge`).
-- Firefox: a seven-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, network and AI tools, and favicons are not covered there.
+- Firefox: an eight-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, and network and AI tools are not covered there.
 - The Edge and Firefox CI jobs are not required checks yet.
 - Real AI providers and live network behavior are checked by hand, not by automated tests.
 

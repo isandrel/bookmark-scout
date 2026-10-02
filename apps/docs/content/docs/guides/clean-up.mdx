@@ -1,12 +1,12 @@
 ---
 title: Clean up duplicates and tracking URLs
-description: Remove duplicate bookmarks after a review, and strip tracking parameters such as utm_source from bookmark URLs with a preview first.
+description: Remove duplicate bookmarks after a review, strip tracking parameters such as utm_source from bookmark URLs with a preview first, and refresh missing site icons.
 ---
 
 Both tools live in the **Tools** sidebar of the bookmarks manager, under **Maintenance**. In Chrome, open the browser's bookmarks page, then click **Show tools** in the manager's header if the sidebar is hidden.
 
 <Callout title="Firefox">
-The manager is not reachable in Firefox, so these tools are not available there.
+Firefox has no menu entry for the manager, so these tools are reachable there only at the manager's extension URL (see [Refresh site icons](#refresh-site-icons)).
 </Callout>
 
 ## Remove duplicate bookmarks
@@ -64,6 +64,30 @@ The rules are on the **Maintenance** tab of Settings:
 - **Deduplicate Query Parameters** (on by default) removes repeated parameters.
 - **Sort Query Parameters** (on by default) sorts the remaining parameters alphabetically.
 - **Remove Fragments** (off by default) also removes parts such as `#section`.
+
+## Refresh site icons
+
+Bookmarks show the icon your browser has cached for each site. Sites you have not visited recently show a generic globe, and Firefox gives extensions no icon cache at all. **Refresh Site Icons**, under **Metadata & Content** in the Tools sidebar, downloads each site's own icon instead.
+
+<Steps>
+<Step>
+Choose the current folder or all bookmarks in the scope menu, and click **Refresh**. The first time, allow website access when asked; if you decline, nothing is requested.
+</Step>
+<Step>
+Review the results: how many icons are **Updated**, **Unchanged**, **No icon found**, or **Failed**, and how many bookmarks were **Skipped** because they are not web links.
+</Step>
+<Step>
+Click **Save** (for example **Save 12 icons**) to keep them, or close the dialog to keep nothing.
+</Step>
+</Steps>
+
+For each website (origin) in scope, the tool requests one bookmarked page without cookies, reads only its head, and downloads the icon the page lists that is closest to **Preferred Icon Size**, or the site's `/favicon.ico`. Only icon files on the bookmark's own domain are used, never a third-party icon service. Files over **Maximum Icon File Size** (64 KB) or that are not images are skipped.
+
+Saved icons are stored in this browser's local storage, not synced, and show in the popup, side panel, and manager. They take priority over the browser's cached icon. The card shows how many are saved; **Clear saved icons** deletes them all. When the total reaches **Icon Storage Limit** (4096 KB), the oldest icons are removed first. A site that fails on a later refresh keeps the icon saved earlier.
+
+<Callout title="Firefox">
+To run the tool in Firefox, open `about:debugging#/runtime/this-firefox`, copy the **Manifest URL** of Bookmark Scout, and replace `manifest.json` at its end with `bookmarks.html`. After you save icons there, the popup and side panel show them.
+</Callout>
 
 ## Related tools
 
