@@ -64,3 +64,16 @@ export async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
 }
+
+/**
+ * Title of the second permanent folder: "Other bookmarks" in Chromium, "Other favorites" in Edge.
+ * Read from the browser so assertions do not depend on one browser's folder names.
+ */
+export async function otherBookmarksTitle(worker: Worker): Promise<string> {
+  return worker.evaluate(async () => {
+    const [root] = await chrome.bookmarks.getTree();
+    const title = root.children?.[1]?.title;
+    if (!title) throw new Error('Second permanent bookmark folder not found');
+    return title;
+  });
+}
