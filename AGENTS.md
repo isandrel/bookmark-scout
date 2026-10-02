@@ -177,7 +177,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and favicons are not covered there. The Edge and Firefox CI jobs are not required checks. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link and metadata requests, and mocked-provider AI auto-tagging, summarization, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and favicons are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 
@@ -350,6 +350,10 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 4. make the smallest change that cleanly solves the request
 5. run targeted verification
 6. report files changed, commands run, and remaining risks or gaps
+
+## Design system
+
+`DESIGN.md` at the repository root describes how the website and docs look and feel: tokens, typography, components, and do's and don'ts, in the DESIGN.md format. Read it before changing UI in `apps/website` or `apps/docs`, and update it when tokens or shared components change.
 
 ## Agent skills
 
