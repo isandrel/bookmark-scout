@@ -329,7 +329,7 @@ Update documentation when the change affects:
 
 Relevant locations include:
 
-- `README.md`
+- `README.md` and `translations/README.{ja,ko}.md`, which are generated: edit `templates/README*.md`, run `bun run generate:readme`, and commit both (the Lint job fails when they differ)
 - `CONTRIBUTING.md`
 - `apps/docs/content/docs/`
 - website content under `apps/website/app/`

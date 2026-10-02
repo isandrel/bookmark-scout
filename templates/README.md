@@ -19,7 +19,7 @@
   <a href="https://github.com/{{GITHUB_REPO}}/stargazers"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="Stars"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/issues"><img src="https://img.shields.io/github/issues/{{GITHUB_REPO}}?style=flat-square" alt="Issues"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/pulls"><img src="https://img.shields.io/github/issues-pr/{{GITHUB_REPO}}?style=flat-square" alt="PRs"></a>
-  <a href="https://github.com/sponsors/{{AUTHOR_NAME}}"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
+  <a href="https://github.com/sponsors/isandrel"><img src="https://img.shields.io/badge/sponsor-❤-ea4aaa?style=flat-square" alt="Sponsor"></a>
   <img src="https://img.shields.io/badge/manifest-v3-blue?style=flat-square" alt="Manifest V3">
 </p>
 
@@ -87,27 +87,28 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 
 ### ✅ Implemented
 
-- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or custom OpenAI-compatible providers
+- [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
 - [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
 - [x] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page with a custom table-based manager
+- [x] ↕️ **Configurable Sorting** — Sort bookmark views by date added, natural alphabetical order, or folders first
 - [x] ⚙️ **Options Page** — Configure appearance, search, behavior, AI, maintenance, metadata, security, analytics, and data settings
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows
-- [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows, and `s` opens saved searches
+- [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
+- [x] 🗑️ **Delete Items** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
-- [x] 🧾 **Metadata Fetcher** — Fetch title, favicon, and description metadata
+- [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
-- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON
-- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context, suggest tags, summarize bookmarks, and plan folder reorganizations
-- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear bookmark tags and summaries locally, or apply reviewed AI suggestions
+- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
+- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
@@ -123,9 +124,15 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 >
 > ⚠️ **Note:** AI features may send bookmark titles, URLs, folder paths, and selected bookmark context to the configured provider. API usage may incur costs depending on your provider. Results are experimental and should be reviewed before applying destructive organization changes.
 
+### 🟡 Partial
+
+- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: not synced, not searchable, and not included in bookmark exports (AI context exports include them when enabled)
+- [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
+- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); both jobs are required checks. In Firefox, favicons do not load (no favicon API) and the manager opens only by its extension URL, because Firefox cannot replace the bookmarks page
+
 ### 🚧 Current Focus
 
-- [ ] 🧪 **Automated Tests** — Add dedicated unit/integration coverage for bookmark workflows
+- [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
 - [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package first needs an add-on ID and a data collection declaration
 
 ---
@@ -277,6 +284,8 @@ bookmark-scout/
 | `contextMenus` | Save links from the right-click menu |
 | Website access (optional) | Requested only when you run Check Dead Links or Metadata Fetcher |
 
+Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only.
+
 ---
 
 ## 🤝 Contributing
@@ -319,5 +328,5 @@ This project is licensed under the **GNU Affero General Public License v3.0** - 
 ---
 
 <p align="center">
-  Made with ❤️ by <a href="{{AUTHOR_URL}}">{{AUTHOR_NAME}}</a>
+  Made with ❤️ by <a href="{{AUTHOR_URL}}">isandrel</a>
 </p>

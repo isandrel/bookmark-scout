@@ -132,7 +132,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### 🚧 Current Focus
 
-- [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite, and make the Edge and Firefox CI jobs required once they are stable
+- [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
 - [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package first needs an add-on ID and a data collection declaration
 
 ---
