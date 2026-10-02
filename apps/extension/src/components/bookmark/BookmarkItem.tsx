@@ -130,7 +130,7 @@ export function BookmarkItem({
 
   return (
     <div
-      className={`group flex items-center justify-between h-8 py-1 px-2 hover:bg-accent focus-within:bg-accent rounded-md transition-all duration-150 hover:scale-[1.01] origin-left bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+      className={`group relative flex items-center h-8 py-1 px-2 hover:bg-accent focus-within:bg-accent rounded-md transition-colors duration-150 bookmark-item ${isDragging ? 'opacity-50' : ''}`}
     >
       <a
         ref={(el) => {
@@ -143,6 +143,8 @@ export function BookmarkItem({
         rel="noopener noreferrer"
         className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
       >
+        {/* Empty chevron slot, so the icon and title line up with folders at the same depth. */}
+        <span aria-hidden="true" data-slot="tree-indent" className="mr-1 size-4 shrink-0" />
         {favicon.show && (
           <img
             src={getFaviconUrl(node.url ?? '', favicon.size * 2)}
@@ -165,16 +167,22 @@ export function BookmarkItem({
           </span>
         )}
       </a>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-6 w-6 ml-2 shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-destructive hover:text-destructive hover:bg-destructive/10"
-        onClick={() => onDelete(node)}
-        title={t('popup_deleteBookmark')}
-        aria-label={t('popup_deleteBookmark')}
+      {/* Overlays the row's end only while hovered or focused, like the folder actions. */}
+      <div
+        data-slot="bookmark-actions"
+        className="pointer-events-none absolute inset-y-0 right-0 flex items-center rounded-r-md bg-accent px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
       >
-        <Trash2 className="h-3.5 w-3.5" />
-      </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="pointer-events-auto h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+          onClick={() => onDelete(node)}
+          title={t('popup_deleteBookmark')}
+          aria-label={t('popup_deleteBookmark')}
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+        </Button>
+      </div>
     </div>
   );
 }

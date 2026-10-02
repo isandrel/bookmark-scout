@@ -1,10 +1,11 @@
-import type { Locator, Worker } from '@playwright/test';
+import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import {
   bookmarkRow,
   childTitles,
   folderRow,
   openPopup,
+  otherBookmarksTitle,
   seedFolder,
   setSettings,
 } from './popup-helpers';
@@ -23,11 +24,39 @@ async function dropOnEdge(source: Locator, target: Locator, edge: 'top' | 'botto
   });
 }
 
-/** Right edge of a folder row's expand chevron, used to compare the chevron column. */
-async function chevronRightEdge(row: Locator) {
-  const box = await row.locator('[data-folder-trigger] > div:last-child').boundingBox();
-  if (!box) throw new Error('Chevron is not rendered');
-  return box.x + box.width;
+/** The disclosure chevron inside a folder row's trigger (not the Expand all button's icon). */
+function treeChevron(row: Locator) {
+  return row.locator('[data-folder-trigger] svg[class*="lucide-chevron"]');
+}
+
+/** One snapshot of a folder row's layout, so all edges come from the same frame. */
+async function folderGeometry(page: Page, title: string) {
+  return folderRow(page, title).evaluate((row, rowTitle) => {
+    const trigger = row.querySelector('[data-folder-trigger]');
+    const chevron = trigger?.querySelector('svg[class*="lucide-chevron"]');
+    const icon = row.querySelector('svg.text-amber-500');
+    const label = icon?.parentElement?.querySelector('span.truncate');
+    const actions = row.querySelector('[data-slot="folder-actions"]') ?? row.lastElementChild;
+    const rect = (element: Element | null | undefined) => {
+      if (!element) throw new Error(`Missing part of folder row "${rowTitle}"`);
+      return element.getBoundingClientRect();
+    };
+    const content = icon?.parentElement?.lastElementChild;
+    return {
+      title: rowTitle,
+      rowRight: rect(row).right,
+      triggerRight: rect(trigger).right,
+      chevronLeft: rect(chevron).left,
+      chevronRight: rect(chevron).right,
+      iconLeft: rect(icon).left,
+      titleLeft: rect(label).left,
+      contentRight: rect(content).right,
+      titleTruncated: label ? label.scrollWidth > label.clientWidth : false,
+      actionsLeft: rect(actions).left,
+      actionsRight: rect(actions).right,
+      actionsOpacity: actions ? getComputedStyle(actions).opacity : '',
+    };
+  }, title);
 }
 
 test.describe('saving the current page', () => {
@@ -286,47 +315,108 @@ test('regex search treats Unicode escapes the same with or without Whole Word', 
   );
 });
 
-test('folder chevrons share one column, empty folders have none, and a small popup is clamped', async ({
+test('folder rows use a leading tree chevron that lines up per depth and rotates open, with no blank gap', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
   const full = await seedFolder(extensionWorker, 'E2E Chevron Full', [
     { title: 'Chevron Sub', children: [{ title: 'Chevron Link', url: 'https://e2e.invalid/ch' }] },
+    { title: 'Chevron Empty Sub', children: [] },
+    { title: 'Chevron Top Link', url: 'https://e2e.invalid/top' },
   ]);
   await seedFolder(extensionWorker, 'E2E Chevron Empty', []);
+  await seedFolder(
+    extensionWorker,
+    'E2E Chevron Long folder title that keeps going well past the width of a narrow popup',
+    [{ title: 'Long Child', url: 'https://e2e.invalid/long' }],
+  );
   await setSettings(extensionWorker, { popupHeight: 250 });
 
   await openPopup(page, extensionId);
   await folderRow(page, full.barTitle).click();
-  const barRow = folderRow(page, full.barTitle);
-  const fullRow = folderRow(page, 'E2E Chevron Full');
-  const emptyRow = folderRow(page, 'E2E Chevron Empty');
-  await expect(emptyRow).toBeVisible();
+  await folderRow(page, 'E2E Chevron Full').click();
+  const rowsByDepth = [
+    [full.barTitle, await otherBookmarksTitle(extensionWorker)],
+    ['E2E Chevron Full', 'E2E Chevron Empty', 'E2E Chevron Long folder title'],
+    ['Chevron Sub', 'Chevron Empty Sub'],
+  ];
+  await expect(folderRow(page, 'Chevron Empty Sub')).toBeAttached();
 
-  // Rows grow 1% on hover with a 150 ms transition, so the clicked row would be measured
-  // mid-scale. Move the pointer off the rows and wait until no row is scaled.
+  // Measure at rest: no pointer over the tree and no row holding focus.
   await page.mouse.move(0, 0);
-  for (const row of [barRow, fullRow, emptyRow]) {
-    await expect(row).toHaveCSS('scale', 'none');
-  }
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+
   await expect
     .poll(async () => {
-      const barEdge = await chevronRightEdge(barRow);
-      return Math.max(
-        Math.abs((await chevronRightEdge(fullRow)) - barEdge),
-        Math.abs((await chevronRightEdge(emptyRow)) - barEdge),
+      const rows = await Promise.all(
+        rowsByDepth.flat().map((title) => folderGeometry(page, title)),
       );
+      const problems: string[] = [];
+      for (const row of rows) {
+        if (row.chevronRight > row.iconLeft) problems.push(`${row.title}: chevron after icon`);
+        if (Math.abs(row.rowRight - row.triggerRight) > 1) {
+          problems.push(`${row.title}: blank gap of ${row.rowRight - row.triggerRight}px`);
+        }
+        if (row.actionsOpacity !== '0') problems.push(`${row.title}: actions shown at rest`);
+      }
+      let offset = 0;
+      let previousColumn = Number.NEGATIVE_INFINITY;
+      for (const titles of rowsByDepth) {
+        const depthRows = rows.slice(offset, offset + titles.length);
+        offset += titles.length;
+        const columns = depthRows.map((row) => row.chevronLeft);
+        if (Math.max(...columns) - Math.min(...columns) > 1) {
+          problems.push(`chevrons at one depth differ: ${columns.join(', ')}`);
+        }
+        if (columns[0] <= previousColumn) problems.push('child chevrons are not indented');
+        previousColumn = columns[0];
+      }
+      return problems;
     })
-    .toBeLessThanOrEqual(1);
-  await expect(emptyRow.locator('[data-folder-trigger] > div:last-child')).toHaveCSS(
-    'visibility',
-    'hidden',
+    .toEqual([]);
+
+  // The long title and its count run to the row end, not to a reserved actions column.
+  const long = await folderGeometry(page, 'E2E Chevron Long folder title');
+  expect(long.contentRight).toBeGreaterThan(long.rowRight - 16);
+  expect(long.titleTruncated).toBe(true);
+
+  // Empty folders keep an invisible chevron slot; folders with children show it.
+  for (const title of ['E2E Chevron Empty', 'Chevron Empty Sub']) {
+    await expect(treeChevron(folderRow(page, title))).toHaveCSS('visibility', 'hidden');
+  }
+  await expect(treeChevron(folderRow(page, 'E2E Chevron Full'))).toHaveCSS('visibility', 'visible');
+
+  // Closed folders point right; open folders turn the chevron down.
+  await expect(treeChevron(folderRow(page, 'Chevron Sub')).locator('..')).toHaveCSS(
+    'rotate',
+    'none',
   );
-  await expect(fullRow.locator('[data-folder-trigger] > div:last-child')).toHaveCSS(
-    'visibility',
-    'visible',
+  await expect(treeChevron(folderRow(page, 'E2E Chevron Full')).locator('..')).toHaveCSS(
+    'rotate',
+    '90deg',
   );
+
+  // A bookmark's icon and title line up with the folder icon and title beside it.
+  const sub = await folderGeometry(page, 'Chevron Sub');
+  const link = await bookmarkRow(page, 'Chevron Top Link').evaluate((row) => {
+    const favicon = row.querySelector('img')?.getBoundingClientRect();
+    const title = row.querySelector('a > span.truncate')?.getBoundingClientRect();
+    return { iconLeft: favicon?.left ?? Number.NaN, titleLeft: title?.left ?? Number.NaN };
+  });
+  expect(Math.abs(link.iconLeft - sub.iconLeft)).toBeLessThanOrEqual(1);
+  expect(Math.abs(link.titleLeft - sub.titleLeft)).toBeLessThanOrEqual(1);
+
+  // Hovering shows the actions over the row's end without moving or scaling the row.
+  const fullRow = folderRow(page, 'E2E Chevron Full');
+  const before = await folderGeometry(page, 'E2E Chevron Full');
+  await fullRow.hover();
+  await expect(fullRow.locator('[data-slot="folder-actions"]')).toHaveCSS('opacity', '1');
+  await expect(fullRow).toHaveCSS('scale', 'none');
+  const hovered = await folderGeometry(page, 'E2E Chevron Full');
+  expect(Math.abs(hovered.chevronLeft - before.chevronLeft)).toBeLessThanOrEqual(0.5);
+  expect(hovered.actionsRight).toBeLessThanOrEqual(hovered.rowRight + 0.5);
+  expect(hovered.actionsLeft).toBeGreaterThan(hovered.iconLeft);
 
   await expect
     .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).height))

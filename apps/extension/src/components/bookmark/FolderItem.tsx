@@ -224,7 +224,7 @@ export function FolderItem({
       className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
     >
       {/* Actions sit beside the trigger, not inside it, so no button is nested in a button. */}
-      <div className="group flex items-center h-8 rounded-md hover:bg-accent focus-within:bg-accent folder-item transition-all duration-150 hover:scale-[1.01] origin-left">
+      <div className="group relative flex items-center h-8 rounded-md hover:bg-accent focus-within:bg-accent folder-item transition-colors duration-150">
         <div className="flex-1 min-w-0">
           <AccordionTrigger
             className="hover:no-underline py-1 px-2 h-8 rounded-md"
@@ -253,15 +253,21 @@ export function FolderItem({
                 </span>
               )}
               {itemCount > 0 && (
-                <span className="ml-2 text-xs text-muted-foreground tabular-nums">
+                <span className="ml-2 shrink-0 text-xs text-muted-foreground tabular-nums">
                   ({itemCount})
                 </span>
               )}
             </div>
           </AccordionTrigger>
         </div>
-        {/* Fixed width (room for all four buttons) keeps every chevron in the same column. */}
-        <div className="flex items-center justify-end gap-0.5 mr-1 w-[102px] shrink-0 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+        {/*
+          Overlays the row's end only while the row is hovered or holds focus, so it reserves no
+          blank space. Only the buttons take pointer events; the gaps fall through to the trigger.
+        */}
+        <div
+          data-slot="folder-actions"
+          className="pointer-events-none absolute inset-y-0 right-0 flex items-center gap-0.5 rounded-r-md bg-accent px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [&>button]:pointer-events-auto"
+        >
           {hasSubfolders && (
             <Button
               variant="ghost"
@@ -329,7 +335,8 @@ export function FolderItem({
           )}
         </div>
       </div>
-      <AccordionContent className="pl-6 py-0 accordion-content">
+      {/* One indent step is the chevron slot plus its gap, so children start under the folder icon. */}
+      <AccordionContent className="pl-5 py-0 accordion-content">
         {node.children?.map((child) =>
           child.isTemporary ? (
             <NewFolderInput
