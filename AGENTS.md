@@ -356,7 +356,7 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 
 ## Design system
 
-Each app keeps its design file next to its `AGENTS.md`: `apps/website/DESIGN.md` and `apps/docs/DESIGN.md` (tokens, typography, components, do's and don'ts, in the DESIGN.md format). The root `DESIGN.md` holds only the shared brand and links to them. Read the app's design file before changing its UI, and update it when tokens or shared components change.
+Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.md`, `apps/website/DESIGN.md`, and `apps/docs/DESIGN.md` (tokens, typography, components, do's and don'ts, in the DESIGN.md format). The root `DESIGN.md` holds only the shared brand and links to them. Read the app's design file before changing its UI, and update it when tokens or shared components change.
 
 ## Agent skills
 
