@@ -40,11 +40,12 @@
                     "firefoxIcons": {
                         "q": "Site icons are missing in Firefox",
                         "a": [
-                            "This is expected. Bookmark Scout reads site icons from the browser's own icon cache, which Chrome and Edge share with extensions and Firefox does not."
+                            "Bookmark Scout shows the browser's own cached icons, which Chrome and Edge share with extensions and Firefox does not. Sites you have not visited recently can show a generic globe in Chrome and Edge for the same reason.",
+                            "Run Refresh Site Icons in the manager's Tools sidebar to download each site's own icon. Saved icons stay on this device. In Firefox the manager opens only at its extension URL; the documentation explains how to find it."
                         ]
                     },
                     "websiteAccess": {
-                        "q": "Check Dead Links or Metadata Fetcher did not scan anything",
+                        "q": "Check Dead Links, Metadata Fetcher, or Refresh Site Icons did not scan anything",
                         "a": [
                             "These tools need access to websites, which Bookmark Scout does not get at install. The browser asks the first time you run them, and if you decline, nothing is scanned.",
                             "Run the tool again and allow access when the browser asks."

@@ -22,6 +22,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - AI folder recommendations, including reviewed creation of a suggested new folder path that saves the current page there
 - AI context packing with saved tags and summaries, tag suggestions, summaries, and folder reorganization (previewed before applying by default)
 - Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning with confirmed-dead and needs-a-manual-check results plus reviewed repairs (delete, redirect target, Wayback Machine copy, or edited URL, with undo), metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
+- Refresh Site Icons: downloads one icon per website from the bookmarked site itself (never a third-party icon service) after optional website access, saves reviewed icons in local storage with a size cap, and shows them in the popup, side panel, and manager ahead of the browser's icon cache; saved icons can be cleared
 - Privacy review with optional redaction before bookmark exports and AI context exports
 - Bookmark import from HTML or JSON, with a preview of the target folder, counts, and duplicates, a duplicate-handling choice, and undo
 - Bookmark export to HTML, JSON, Markdown, or CSV
@@ -30,7 +31,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Localized marketing site in English, Japanese, and Korean
 - Fumadocs documentation site
 - Unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, import/export, route-mocked and local-server network tools, and mocked-provider AI tools
-- The same Playwright suite in Microsoft Edge against the Edge build (`nx run extension:test:e2e:edge`), and a seven-test Firefox smoke suite against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, the side panel page, manager loading and filtering, a settings save, a JSON export and import round trip, and the statistics and privacy reports
+- The same Playwright suite in Microsoft Edge against the Edge build (`nx run extension:test:e2e:edge`), and an eight-test Firefox smoke suite against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, manager loading and filtering, a settings save, a JSON export and import round trip, and the statistics and privacy reports
 - A settings-to-behavior matrix (`apps/extension/tests/settings-matrix.ts`) that maps every setting to the code that reads it and a test that changes it
 
 ## Partial
@@ -38,7 +39,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Bookmark tags and summaries: editable in Bookmark Details and saved from reviewed AI suggestions, but stored only in local extension storage. They are not synced, searchable, or included in bookmark exports.
 - AI tool limits (tag count and style, summary length, reorganization folder limits) are sent to the provider as instructions; the output is not checked against them. Live provider compatibility is verified manually.
 - Firefox runtime coverage is a smoke suite, not the full suite. Playwright cannot open `moz-extension://` pages, so the Firefox tests drive the stock Firefox through geckodriver (Selenium) and install the build as a temporary add-on with a test-only add-on ID. They do not cover context-menu saves (the Chromium tests dispatch `contextMenus.onClicked` from the service worker; the Firefox build uses an MV2 background page that the harness cannot script), drag and drop, keyboard shortcuts, network tools, AI tools, or locales.
-- Firefox API differences: favicons do not load because Firefox has no `_favicon` service; the manager and Tools sidebar open only by their extension URL because Firefox cannot replace the bookmarks page; the side panel page is declared as a Firefox sidebar, and tests load that page in a tab because automation cannot open the sidebar itself.
+- Firefox API differences: the browser's icon cache is unavailable because Firefox has no `_favicon` service, so bookmarks show a generic icon unless **Refresh Site Icons** saved one; the manager and Tools sidebar open only by their extension URL because Firefox cannot replace the bookmarks page; the side panel page is declared as a Firefox sidebar, and tests load that page in a tab because automation cannot open the sidebar itself.
 - Four tool scope settings are fixed: Auto-Tagging and Content Summarizer always use the current folder; Duplicate Cleaner and Privacy Scanner always scan all bookmarks.
 
 ## Planned

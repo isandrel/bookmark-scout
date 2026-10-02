@@ -18,7 +18,7 @@ Open the settings page from the extension's **Options** entry, for example by ri
 | --- | --- | --- |
 | **Language** | Auto (Browser) | English, Japanese, or Korean, or follow the browser |
 | **Theme** | System | System, Light, or Dark, applied to every open Bookmark Scout page |
-| **Show Favicons** | On | Show site icons next to bookmarks (Chrome and Edge) |
+| **Show Favicons** | On | Show site icons next to bookmarks in the popup and side panel |
 | **Favicon Size** | 16px (Small) | 16, 24, or 32 pixels |
 
 ## Search
@@ -99,8 +99,13 @@ Lists such as **Remove Parameters** take comma-separated values. The default lis
 | **Enable Metadata Fetcher** | On | Show **Metadata Fetcher** in the Tools sidebar |
 | **Overwrite Titles** | Off | Offer new titles for bookmarks that already have one |
 | **Fetch Descriptions** | On | Show page descriptions in the review. They are never saved |
-| **Request Timeout** | 8000 ms | Per page |
-| **Concurrency** | 4 | Pages requested at a time |
+| **Request Timeout** | 8000 ms | Per page. Also used by **Refresh Site Icons** |
+| **Concurrency** | 4 | Pages requested at a time. Also used by **Refresh Site Icons** |
+| **Enable Refresh Site Icons** | On | Show **Refresh Site Icons** in the Tools sidebar |
+| **Default Scope** | Current folder | Scope the site icon refresh starts with |
+| **Preferred Icon Size** | 32px | When a page lists several icons, download the one closest to this size |
+| **Maximum Icon File Size** | 64 KB | Larger icon files are not downloaded or saved |
+| **Icon Storage Limit** | 4096 KB | Total size of saved icons on this device; the oldest are removed first |
 
 ## Security
 

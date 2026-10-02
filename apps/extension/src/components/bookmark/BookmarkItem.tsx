@@ -146,12 +146,9 @@ export function BookmarkItem({
         {/* Empty chevron slot, so the icon and title line up with folders at the same depth. */}
         <span aria-hidden="true" data-slot="tree-indent" className="mr-1 size-4 shrink-0" />
         {favicon.show && (
-          <img
-            src={getFaviconUrl(node.url ?? '', favicon.size * 2)}
-            alt=""
-            width={favicon.size}
-            height={favicon.size}
-            style={{ width: favicon.size, height: favicon.size }}
+          <SiteIcon
+            url={node.url ?? ''}
+            size={favicon.size}
             className="mr-2 shrink-0 rounded-sm bookmark-favicon"
           />
         )}

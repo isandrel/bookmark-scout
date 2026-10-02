@@ -105,6 +105,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
 - [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
+- [x] 🖼️ **Refresh Site Icons** — Download each bookmarked site's own icon (never from a third-party icon service), review the results, and keep them on this device so bookmarks show real icons even when the browser has none cached, and in Firefox
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
@@ -128,7 +129,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 - [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: not synced, not searchable, and not included in bookmark exports (AI context exports include them when enabled)
 - [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
-- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); both jobs are required checks. In Firefox, favicons do not load (no favicon API) and the manager opens only by its extension URL, because Firefox cannot replace the bookmarks page
+- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); both jobs are required checks. In Firefox, the browser's icon cache is unavailable (no favicon API), so bookmarks show icons saved with Refresh Site Icons or a generic icon, and the manager opens only by its extension URL, because Firefox cannot replace the bookmarks page
 
 ### 🚧 Current Focus
 
@@ -282,7 +283,7 @@ bookmark-scout/
 | `storage`      | Save user preferences                |
 | `sidePanel`    | Enable Chrome side panel             |
 | `contextMenus` | Save links from the right-click menu |
-| Website access (optional) | Requested only when you run Check Dead Links or Metadata Fetcher |
+| Website access (optional) | Requested only when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons |
 
 Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only.
 
