@@ -1,5 +1,6 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { setSettings } from './popup-helpers';
 
 // Website access is pre-granted, so Refresh and Verify never wait on the permission prompt.
@@ -16,11 +17,6 @@ async function seedProvider(worker: Worker, provider: string, config: Record<str
   );
 }
 
-async function openAIOptions(page: Page, extensionId: string) {
-  await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: 'AI', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Base URL' })).toBeVisible();
-}
 
 /** Serves an OpenAI-style model list, and counts requests that would spend tokens. */
 async function mockModelList(context: BrowserContext, status = 200, body: unknown = {}) {
@@ -142,31 +138,28 @@ test('[mocked provider contract] the provider picker searches the catalog and li
   });
 
   await openAIOptions(page, extensionId);
-  const provider = page.getByRole('combobox', { name: 'AI Provider' });
-  await provider.click();
+  await page.getByRole('button', { name: 'Add service' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Add an AI service' });
+  await dialog.getByRole('combobox', { name: 'Provider' }).click();
   await page.getByRole('combobox', { name: 'Search...' }).fill('togeth');
   await expect(page.getByRole('option')).toHaveCount(1);
   await page.getByRole('option', { name: 'Together AI', exact: true }).click();
-
-  await expect(provider).toHaveText('Together AI');
+  await dialog.getByRole('button', { name: 'Add service' }).click();
+  const service = page.getByTestId('ai-service').filter({ hasText: 'Together AI' });
   await expect
-    .poll(async () =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
-        return (stored['bookmark-scout-settings'] as { aiProvider?: string }).aiProvider;
-      }),
-    )
+    .poll(async () => (await readAIServices(page))?.services.at(-1)?.provider)
     .toBe('togetherai');
-  await expect(page.getByTestId('ai-provider-info')).toContainText('models.dev catalog');
-  await expect(page.getByRole('textbox', { name: 'Base URL' })).toHaveAttribute(
+  await expect(service.getByTestId('ai-provider-info')).toContainText('models.dev catalog');
+  await openMoreSettings(page);
+  await expect(service.getByRole('textbox', { name: 'Base URL' })).toHaveAttribute(
     'placeholder',
     'https://api.together.xyz/v1',
   );
 
-  const apiKey = page.getByLabel('API Key', { exact: true });
+  const apiKey = service.getByLabel('API Key', { exact: true });
   await apiKey.fill('synthetic-key');
   await apiKey.blur();
-  await page.getByRole('button', { name: 'Refresh Models' }).click();
-  await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText('together/model-a');
+  await service.getByRole('button', { name: 'Refresh Models' }).click();
+  await expect(service.getByRole('combobox', { name: 'AI Model' })).toHaveText('together/model-a');
   expect(authorization).toBe('Bearer synthetic-key');
 });

@@ -1,12 +1,26 @@
-export async function buildAISettingsFromProvider(
-  provider: AIProvider,
-  model: string,
-  enabled: boolean,
-): Promise<AISettings> {
-  const stored = await getStoredAIProviderConfig(provider);
-  const customModel = providerSupportsCustomModel(provider)
-    ? stored.customModel?.trim() || undefined
-    : undefined;
+/**
+ * Settings for one provider configuration. `configId` is the key of its credentials in
+ * `local:bookmark-scout-ai`: the provider id for the single-provider setup, or a service id.
+ */
+async function buildAISettings({
+  configId,
+  provider,
+  model,
+  enabled,
+  useStoredCustomModel,
+}: {
+  configId: string;
+  provider: AIProvider;
+  model: string;
+  enabled: boolean;
+  /** Services keep their model on the service itself, so only legacy reads use it. */
+  useStoredCustomModel: boolean;
+}): Promise<AISettings> {
+  const stored = await getStoredAIProviderConfig(configId);
+  const customModel =
+    useStoredCustomModel && providerSupportsCustomModel(provider)
+      ? stored.customModel?.trim() || undefined
+      : undefined;
   const finalModel = customModel || model || getDefaultModel(provider);
 
   const storedBaseUrl = stored.baseUrl?.trim();
@@ -30,6 +44,34 @@ export async function buildAISettingsFromProvider(
   }
 
   return settings;
+}
+
+export async function buildAISettingsFromProvider(
+  provider: AIProvider,
+  model: string,
+  enabled: boolean,
+): Promise<AISettings> {
+  return buildAISettings({ configId: provider, provider, model, enabled, useStoredCustomModel: true });
+}
+
+export async function buildAISettingsFromService(
+  service: AIService,
+  enabled: boolean,
+): Promise<AISettings> {
+  return buildAISettings({
+    configId: service.id,
+    provider: service.provider,
+    model: service.model,
+    enabled,
+    useStoredCustomModel: false,
+  });
+}
+
+/** Settings of the default AI service, which every AI tool uses. */
+export async function getActiveAISettings(enabled: boolean): Promise<AISettings> {
+  const service = await getDefaultAIService();
+  if (!service) throw new Error(t('error_aiNoService'));
+  return buildAISettingsFromService(service, enabled);
 }
 
 /** Only the extra fields this provider declares, trimmed, with empty values dropped. */

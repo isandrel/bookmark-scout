@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { addAIServiceInOptions, openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
@@ -22,11 +22,6 @@ test.use({ grantWebHostAccess: true });
 // Real models answer in seconds, not milliseconds.
 test.setTimeout(120_000);
 
-async function openAIOptions(page: Page, extensionId: string) {
-  await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: 'AI', exact: true }).click();
-  await expect(page.getByRole('textbox', { name: 'Base URL' })).toBeVisible();
-}
 
 test('[real local server] Refresh Models and Verify Service reach the local server', async ({
   extensionId,
@@ -36,44 +31,44 @@ test('[real local server] Refresh Models and Verify Service reach the local serv
   await setSettings(extensionWorker, { language: 'en', aiEnabled: true, aiProvider: 'openai' });
   await openAIOptions(page, extensionId);
 
-  const provider = page.getByRole('combobox', { name: 'AI Provider' });
-  await provider.click();
-  await page.getByRole('combobox', { name: 'Search...' }).fill('CLIProxy');
-  await page.getByRole('option', { name: 'CLIProxyAPI', exact: true }).click();
+  const service = await addAIServiceInOptions(page, {
+    search: 'CLIProxy',
+    provider: 'CLIProxyAPI',
+    name: 'Local CLIProxyAPI',
+  });
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
-        return (stored['bookmark-scout-settings'] as { aiProvider?: string }).aiProvider;
-      }),
-    )
+    .poll(async () => (await readAIServices(page))?.services.at(-1)?.provider)
     .toBe(PROVIDER);
 
-  const apiKey = page.getByLabel('API Key', { exact: true });
+  const apiKey = service.getByLabel('API Key', { exact: true });
   await apiKey.fill(KEY);
   await apiKey.blur();
   if (BASE_URL) {
-    const baseUrl = page.getByRole('textbox', { name: 'Base URL' });
+    await openMoreSettings(page);
+    const baseUrl = service.getByRole('textbox', { name: 'Base URL' });
     await baseUrl.fill(BASE_URL);
     await baseUrl.blur();
   }
 
-  await page.getByRole('button', { name: 'Refresh Models' }).click();
-  await expect(toastRegion(page).getByText(/^\d+ models found from CLIProxyAPI\.$/)).toBeVisible({
-    timeout: 15_000,
-  });
+  await service.getByRole('button', { name: 'Refresh Models' }).click();
+  await expect(
+    toastRegion(page).getByText(/^\d+ models found from Local CLIProxyAPI\.$/),
+  ).toBeVisible({ timeout: 15_000 });
 
   if (MODEL) {
-    await page.getByRole('combobox', { name: 'AI Model' }).click();
+    await service.getByRole('combobox', { name: 'AI Model' }).click();
+    await page.getByRole('combobox', { name: 'Search...' }).fill(MODEL);
     await page.getByRole('option', { name: MODEL, exact: true }).click();
-    await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText(MODEL);
+    await expect(service.getByRole('combobox', { name: 'AI Model' })).toHaveText(MODEL);
   }
-  await page.getByRole('button', { name: 'Verify Service' }).click();
+  await service.getByRole('button', { name: 'Verify Service' }).click();
   await expect(toastRegion(page).getByText('Service verified', { exact: true })).toBeVisible({
     timeout: 15_000,
   });
   if (MODEL) {
-    await expect(toastRegion(page).getByText('CLIProxyAPI responded successfully.')).toBeVisible();
+    await expect(
+      toastRegion(page).getByText('Local CLIProxyAPI responded successfully.'),
+    ).toBeVisible();
   }
 });
 

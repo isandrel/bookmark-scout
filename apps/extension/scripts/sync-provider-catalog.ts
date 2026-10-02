@@ -112,7 +112,8 @@ for (const id of Object.keys(source).sort()) {
   if (hasPlaceholder(entry.api) || UNAVAILABLE_PROVIDERS.has(id)) continue;
   providers[id] = {
     name: entry.name,
-    base_url: entry.api.replace(/\/+$/, ''),
+    // Local addresses are written as localhost, never 127.0.0.1.
+    base_url: entry.api.replace(/\/+$/, '').replace('://127.0.0.1', '://localhost'),
     ...(entry.doc && isHttpUrl(entry.doc) ? { doc: entry.doc } : {}),
     protocol,
     requires_api_key: !isLocal(entry.api),
@@ -130,6 +131,10 @@ function sanitizeLogo(svg: string): string | null {
 async function downloadLogos(ids: string[]): Promise<string[]> {
   await rm(LOGO_DIR, { recursive: true, force: true });
   await mkdir(LOGO_DIR, { recursive: true });
+  // models.dev answers unknown ids with a generic placeholder; a provider showing it has no logo.
+  const placeholder = await fetch(LOGO_URL('bookmark-scout-unknown-provider'))
+    .then((placeholderResponse) => (placeholderResponse.ok ? placeholderResponse.text() : ''))
+    .catch(() => '');
   const saved: string[] = [];
   const queue = [...ids];
   await Promise.all(
@@ -137,7 +142,9 @@ async function downloadLogos(ids: string[]): Promise<string[]> {
       for (let id = queue.shift(); id; id = queue.shift()) {
         const logoResponse = await fetch(LOGO_URL(id)).catch(() => null);
         if (!logoResponse?.ok) continue;
-        const logo = sanitizeLogo(await logoResponse.text());
+        const text = await logoResponse.text();
+        if (placeholder && text === placeholder) continue;
+        const logo = sanitizeLogo(text);
         if (!logo) continue;
         await writeFile(path.join(LOGO_DIR, `${id}.svg`), logo);
         saved.push(id);

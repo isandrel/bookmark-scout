@@ -4310,5 +4310,101 @@
     "options_providerDocs": {
         "message": "제공업체 문서",
         "description": "Link to the selected provider documentation"
+    },
+    "settings_aiProviderGroupLocal": {
+        "message": "로컬 서버",
+        "description": "Provider picker group: servers on this computer"
+    },
+    "settings_aiProviderGroupCustom": {
+        "message": "사용자 지정",
+        "description": "Provider picker group: endpoints the user fills in by hand"
+    },
+    "settings_aiProviderCustomAnthropic": {
+        "message": "사용자 지정 제공자 (Anthropic 호환)",
+        "description": "Name of the hand-written Anthropic-compatible provider"
+    },
+    "options_aiServices": {
+        "message": "AI 서비스",
+        "description": "Heading of the saved AI services list"
+    },
+    "options_aiServicesDescription": {
+        "message": "제공자를 원하는 만큼 저장할 수 있습니다. 모든 AI 도구는 기본 서비스를 사용합니다.",
+        "description": "Description of the AI services list"
+    },
+    "options_aiServiceAdd": {
+        "message": "서비스 추가",
+        "description": "Button that adds an AI service"
+    },
+    "options_aiServiceAddTitle": {
+        "message": "AI 서비스 추가",
+        "description": "Title of the add AI service dialog"
+    },
+    "options_aiServiceProvider": {
+        "message": "제공자",
+        "description": "Label of the provider picker when adding a service"
+    },
+    "options_aiServiceName": {
+        "message": "이름",
+        "description": "Label of an AI service name"
+    },
+    "options_aiServiceNameDescription": {
+        "message": "서비스 목록과 팝업에 표시됩니다.",
+        "description": "Description of an AI service name"
+    },
+    "options_aiServiceDefault": {
+        "message": "기본",
+        "description": "Badge on the default AI service"
+    },
+    "options_aiServiceSetDefault": {
+        "message": "기본으로 설정",
+        "description": "Menu action that makes a service the default"
+    },
+    "options_aiServiceEnabled": {
+        "message": "$1 사용",
+        "description": "Accessible name of the switch that turns a service on or off; $1 is its name"
+    },
+    "options_aiServiceEdit": {
+        "message": "$1 편집",
+        "description": "Accessible name of the button that expands a service editor"
+    },
+    "options_aiServiceActions": {
+        "message": "$1 작업",
+        "description": "Accessible name of a service menu"
+    },
+    "options_aiServiceDuplicate": {
+        "message": "복제",
+        "description": "Menu action that copies a service"
+    },
+    "options_aiServiceDelete": {
+        "message": "삭제",
+        "description": "Menu action and confirm button that delete a service"
+    },
+    "options_aiServiceDeleteTitle": {
+        "message": "$1을(를) 삭제할까요?",
+        "description": "Title of the delete service confirmation"
+    },
+    "options_aiServiceDeleteDescription": {
+        "message": "API 키와 설정이 이 기기에서 삭제됩니다.",
+        "description": "Body of the delete service confirmation"
+    },
+    "options_aiServiceCopyName": {
+        "message": "$1 (사본)",
+        "description": "Name of a duplicated service; $1 is the original name"
+    },
+    "options_aiServiceMore": {
+        "message": "추가 설정",
+        "description": "Toggle that shows Base URL, headers, and provider-specific fields"
+    },
+    "options_aiServiceEmpty": {
+        "message": "아직 AI 서비스가 없습니다. AI 도구를 사용하려면 추가하세요.",
+        "description": "Empty state of the AI services list"
+    },
+    "error_aiNoService": {
+        "message": "설정된 AI 서비스가 없습니다. 옵션에서 추가하세요.",
+        "description": "Error when an AI tool runs without any enabled service"
+    },
+    "popup_aiServiceSwitch": {
+        "message": "AI 서비스: $1",
+        "description": "Accessible name of the popup AI service switcher; $1 is the current service"
     }
 }

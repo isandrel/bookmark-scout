@@ -26,6 +26,20 @@ function settingRow(page: Page, key: string) {
   return page.locator(`[data-setting="${key}"]`);
 }
 
+/** Base URL, headers, and provider-specific fields sit under More settings. */
+async function openMoreSettings(page: Page) {
+  await page.getByRole('button', { name: 'More settings' }).click();
+}
+
+async function readServices(worker: Worker) {
+  return worker.evaluate(async () => {
+    const stored = await chrome.storage.local.get('bookmark-scout-ai-services');
+    return stored['bookmark-scout-ai-services'] as
+      | { services: { provider: string; model: string; name: string }[]; defaultServiceId?: string }
+      | undefined;
+  });
+}
+
 async function openOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await expect(page.getByRole('tab', { name: 'Appearance' })).toBeVisible();
@@ -57,7 +71,7 @@ test('non-default selects survive reload and never block saving other settings',
   await expect(page.getByText(/Invalid settings|invalid_/)).toHaveCount(0);
 });
 
-test('changing the AI provider selects that provider default model and saves', async ({
+test('adding an AI service selects that provider default model and saves', async ({
   extensionId,
   extensionWorker,
   page,
@@ -66,19 +80,29 @@ test('changing the AI provider selects that provider default model and saves', a
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
 
-  await page.getByRole('combobox', { name: 'AI Provider' }).click();
-  await page.getByRole('option', { name: 'Anthropic', exact: true }).click();
-  await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText('Claude Sonnet 4');
-  await expect
-    .poll(() => readSettings(extensionWorker))
-    .toMatchObject({ aiProvider: 'anthropic', aiModel: 'claude-sonnet-4-20250514' });
+  const addService = async (provider: string, name?: string) => {
+    await page.getByRole('button', { name: 'Add service' }).click();
+    const dialog = page.getByRole('dialog', { name: 'Add an AI service' });
+    await dialog.getByRole('combobox', { name: 'Provider' }).click();
+    await page.getByRole('option', { name: provider, exact: true }).click();
+    if (name) await dialog.getByLabel('Name').fill(name);
+    await dialog.getByRole('button', { name: 'Add service' }).click();
+    await expect(dialog).toHaveCount(0);
+  };
 
-  await page.getByRole('combobox', { name: 'AI Provider' }).click();
-  await page.getByRole('option', { name: 'Custom Provider', exact: true }).click();
+  await addService('Anthropic');
+  const anthropic = page.getByTestId('ai-service').filter({ hasText: 'Anthropic' });
+  await expect(anthropic.getByRole('combobox', { name: 'AI Model' })).toHaveText('Claude Sonnet 4');
   await expect
-    .poll(() => readSettings(extensionWorker))
-    .toMatchObject({ aiProvider: 'custom', aiModel: 'gpt-4o-mini' });
-  await expect(page.getByRole('combobox', { name: 'AI Model' })).toHaveText('Default Model');
+    .poll(async () => (await readServices(extensionWorker))?.services.at(-1))
+    .toMatchObject({ provider: 'anthropic', model: 'claude-sonnet-4-20250514', name: 'Anthropic' });
+
+  await addService('Custom Provider', 'Work proxy');
+  const custom = page.getByTestId('ai-service').filter({ hasText: 'Work proxy' });
+  await expect(custom.getByRole('combobox', { name: 'AI Model' })).toHaveText('Default Model');
+  await expect
+    .poll(async () => (await readServices(extensionWorker))?.services.at(-1))
+    .toMatchObject({ provider: 'custom', model: 'gpt-4o-mini', name: 'Work proxy' });
 });
 
 test('list settings accept commas and status codes are validated inline', async ({
@@ -225,6 +249,7 @@ test('rejected API keys and unsafe Base URLs are never persisted', async ({
     page.getByText("This doesn't look like an API key for OpenAI. It was not saved."),
   ).toBeVisible();
 
+  await openMoreSettings(page);
   const baseUrl = page.getByRole('textbox', { name: 'Base URL' });
   await baseUrl.fill('javascript:alert(1)');
   await baseUrl.blur();
@@ -442,7 +467,7 @@ test('resetting a list setting clears invalid text', async ({
     .toEqual(DEFAULT_SUCCESS_STATUSES);
 });
 
-test('settings search finds AI provider panel fields', async ({
+test('settings search finds AI service fields, including ones under More settings', async ({
   extensionId,
   extensionWorker,
   page,
@@ -493,6 +518,7 @@ test('an invalid Base URL does not block saving valid Extra Headers', async ({
       return (stored[key] ?? {}) as Record<string, Record<string, string>>;
     }, AI_KEY);
 
+  await openMoreSettings(page);
   await page.getByRole('textbox', { name: 'Base URL' }).fill('not a url');
   const headers = page.getByRole('textbox', { name: 'Extra Headers JSON' });
   await headers.fill('{"X-Test":"1"}');

@@ -65,7 +65,6 @@ const OptionsPage: React.FC = () => {
   const [inputErrors, setInputErrors] = useState<SettingsFieldErrors>({});
   // Bumped by Reset All so rows drop unsaved input text, such as an invalid list draft.
   const [formVersion, setFormVersion] = useState(0);
-  const [detectedModels, setDetectedModels] = useState<Partial<Record<AIProvider, string[]>>>({});
   const savedRef = useRef<Settings>(settings);
   const valuesRef = useRef<Settings>(values);
   valuesRef.current = values;
@@ -146,16 +145,7 @@ const OptionsPage: React.FC = () => {
   }, []);
 
   const setFieldValue = useCallback((fieldKey: keyof Settings, value: SettingValue) => {
-    setValues((current) => {
-      const next = { ...current, [fieldKey]: value } as Settings;
-      // A model that does not belong to the new provider would leave the Model select blank.
-      if (fieldKey === 'aiProvider' && value !== current.aiProvider) {
-        const provider = value as AIProvider;
-        const models = getModelsForProvider(provider).map((model) => model.id);
-        if (!models.includes(current.aiModel)) next.aiModel = getDefaultModel(provider);
-      }
-      return next;
-    });
+    setValues((current) => ({ ...current, [fieldKey]: value }) as Settings);
   }, []);
 
   const setInputError = useCallback((fieldKey: keyof Settings, message: string | undefined) => {
@@ -264,47 +254,13 @@ const OptionsPage: React.FC = () => {
       ]),
     ) as Record<string, (keyof Settings)[]>;
   }, [categories, searchQuery]);
-  // The AI provider panel's fields are not synced settings, so they are matched separately.
-  const aiPanelMatches = useMemo(() => {
-    const needle = searchQuery.trim().toLowerCase();
-    if (!needle) return [];
-    return getAIProviderPanelFields(values.aiProvider)
-      .filter(({ text }) => text.some((item) => item.toLowerCase().includes(needle)))
-      .map(({ field }) => field);
-  }, [searchQuery, values.aiProvider]);
+  // AI services are not synced settings, so their fields are matched separately.
+  const aiPanelFieldMatches = useMemo(() => matchAIServicesSearch(searchQuery), [searchQuery]);
+  const aiPanelMatches = aiPanelFieldMatches.length;
   const searchMatchCount = searchResults
     ? Object.values(searchResults).reduce((total, fields) => total + fields.length, 0) +
-      aiPanelMatches.length
+      aiPanelMatches
     : 0;
-
-  const modelOptions = (() => {
-    const detected = detectedModels[values.aiProvider];
-    // Keep the chosen model selectable even when the fetched list no longer offers it.
-    const listed =
-      detected?.length && values.aiModel && !detected.includes(values.aiModel)
-        ? [values.aiModel, ...detected]
-        : detected;
-    return listed?.length
-      ? listed.map((id) => ({ value: id, label: id }))
-      : getModelsForProvider(values.aiProvider).map((model) => ({
-          value: model.id,
-          label: model.name,
-        }));
-  })();
-
-  const renderAIProviderPanel = (visibleFields?: AIProviderPanelField[]) => (
-    <AIProviderPanel
-      provider={values.aiProvider}
-      model={values.aiModel}
-      visibleFields={visibleFields}
-      onModelsDetected={(provider, modelIds, options) => {
-        setDetectedModels((current) => ({ ...current, [provider]: modelIds }));
-        if (!options?.fromCache && !modelIds.includes(valuesRef.current.aiModel)) {
-          setFieldValue('aiModel', modelIds[0]);
-        }
-      }}
-    />
-  );
 
   const renderSettingsField = (fieldKey: keyof Settings) => (
     <SettingsFieldRow
@@ -312,7 +268,6 @@ const OptionsPage: React.FC = () => {
       fieldKey={fieldKey}
       value={values[fieldKey]}
       error={fieldErrors[fieldKey]}
-      selectOptions={fieldKey === 'aiModel' ? modelOptions : undefined}
       onChange={(value) => setFieldValue(fieldKey, value)}
       onInputError={(message) => setInputError(fieldKey, message)}
     />
@@ -413,7 +368,7 @@ const OptionsPage: React.FC = () => {
                 const count =
                   matches === undefined
                     ? undefined
-                    : matches + (key === 'ai' ? aiPanelMatches.length : 0);
+                    : matches + (key === 'ai' ? aiPanelMatches : 0);
                 return (
                   <TabsTrigger
                     key={key}
@@ -447,7 +402,7 @@ const OptionsPage: React.FC = () => {
                   Object.entries(searchResults)
                     .filter(
                       ([categoryKey, fields]) =>
-                        fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches.length > 0),
+                        fields.length > 0 || (categoryKey === 'ai' && aiPanelMatches > 0),
                     )
                     .map(([categoryKey, fields]) => (
                       <div key={categoryKey} data-search-category={categoryKey}>
@@ -455,8 +410,11 @@ const OptionsPage: React.FC = () => {
                         <div className="space-y-3">
                           {fields.map(renderSettingsField)}
                           {categoryKey === 'ai' &&
-                            aiPanelMatches.length > 0 &&
-                            renderAIProviderPanel(aiPanelMatches)}
+                            aiPanelMatches > 0 && (
+                              <AIServicesPanel
+                                showAdvanced={aiPanelFieldMatches.some((field) => field.advanced)}
+                              />
+                            )}
                         </div>
                       </div>
                     ))
@@ -467,8 +425,16 @@ const OptionsPage: React.FC = () => {
                 <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
                   {renderCategoryHeader(categoryKey)}
                   <div className="space-y-3">
-                    {category.fields.map(renderSettingsField)}
-                    {categoryKey === 'ai' && renderAIProviderPanel()}
+                    {categoryKey === 'ai' ? (
+                      // Services come right after the AI switch: they are what the switch turns on.
+                      <>
+                        {category.fields.slice(0, 1).map(renderSettingsField)}
+                        <AIServicesPanel />
+                        {category.fields.slice(1).map(renderSettingsField)}
+                      </>
+                    ) : (
+                      category.fields.map(renderSettingsField)
+                    )}
                   </div>
                 </TabsContent>
               ))
