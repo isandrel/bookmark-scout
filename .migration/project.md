@@ -68,8 +68,8 @@ Flagged, not patched (details in each component report):
 - separator: always `role="separator"` (Radix's default was decorative).
 - label: double click selects text (Radix prevented it).
 - tooltip: no `role="tooltip"` element; skip-delay window 400 ms (was 300 ms).
-- dialog/sheet: unmount a frame after closing; opening scrolls to the initially focused element (Bookmark Details opens scrolled down).
-- select: `onValueChange` can emit `null`; collision padding 5 px; hidden input shifts `space-x-*` rows by 8 px.
+- dialog/sheet: unmount a frame after closing; opening scrolls to the initially focused element. Bookmark Details opened scrolled down; fixed afterwards in `fix/base-ui-followups` (it focuses its popup instead).
+- select: `onValueChange` can emit `null`; collision padding 5 px; hidden input shifts `space-x-*` rows by 8 px. The rows-per-page group was fixed afterwards in `fix/base-ui-followups` (`gap-2`).
 - button: defaults to `type="button"`.
 - toast: focus shortcut F6 (was F8) and region name "Notifications (F6)"; no per-toast "Notification" prefix; polite instead of assertive announcements; the X button is `aria-hidden` until the stack is hovered or focused; viewport portalled to `<body>`.
 

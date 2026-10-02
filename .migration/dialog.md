@@ -17,7 +17,7 @@
 ## Behavior changes
 
 - After Escape or a close click, Base UI keeps the dialog mounted for about a frame while it checks for exit animations; the rest of the page stays `aria-hidden` until then. Two specs found the dialog's title instead of the tool card heading in that window (`settings-behavior.spec.ts`, `tool-reports.spec.ts`); the shared `toolCard()` helper now looks only inside the tools sidebar.
-- FLAG: Base UI scrolls the dialog to its initially focused element; Radix focused without scrolling. The manager's Bookmark Details dialog focuses "Copy URL" at the bottom, so it now opens scrolled down with its title out of view (visual check, `scrollTop` 155 vs 0). Not patched; `initialFocus` on that `DialogContent` (for example the popup itself) would keep the top in view.
+- Base UI scrolls the dialog to its initially focused element; Radix focused with `preventScroll`. The manager's Bookmark Details dialog focused "Copy URL" at the bottom (its tag inputs are disabled while metadata loads), so it opened scrolled down with its title out of view (`scrollTop` 155 to 563). Fixed afterwards in `fix/base-ui-followups`: that dialog sets `initialFocus` to its own popup, which Base UI focuses without scrolling; Tab then reaches the first control. Covered by `bookmark-manager-table.spec.ts` ("bookmark details open with the title in view"). The shared wrapper is unchanged: a probe over the E2E suite showed no other dialog scrolls on open, edit dialogs focus their first input, and the delete, export-review, and Duplicate Cleaner confirmations focus Cancel, as with Radix. Opened by keyboard, the Details popup shows the browser focus ring.
 - Focus return on close uses `finalFocus` instead of Radix's `onCloseAutoFocus`; the popup's delete dialog still returns focus to the row (E2E covered). Dialogs opened from a row menu now return focus to the menu trigger on close; with Radix focus fell back to `<body>`.
 - `modal` also accepts `'trap-focus'` (unused).
 
@@ -25,5 +25,5 @@
 
 - Popup: delete a folder with confirmation on; Cancel and Escape both return focus to the folder row.
 - Manager: open "Keyboard shortcuts" with the keyboard icon and with `?`; Escape closes it and focus returns to the icon.
-- Manager: open a bookmark's "View Details"; note that it opens scrolled to the footer buttons (new).
+- Manager: open a bookmark's "View Details" in a short window; it opens with the title in view, and Tab moves to the first control.
 - Click the backdrop of any tool dialog; it closes.

@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 type BookmarkDetailsDialogProps = {
   bookmark: Bookmark | null;
@@ -275,6 +275,8 @@ export function BookmarkDetailsDialog({
   onClose,
   onOpenFolder,
 }: BookmarkDetailsDialogProps) {
+  const popupRef = useRef<HTMLDivElement>(null);
+
   return (
     <Dialog
       open={bookmark !== null}
@@ -282,7 +284,14 @@ export function BookmarkDetailsDialog({
         if (!open) onClose();
       }}
     >
-      <DialogContent className="max-h-[85vh] overflow-y-auto">
+      {/* Base UI scrolls to the element it focuses on open. The first control sits below a long
+          read-only body, so focus the popup itself (without scrolling) to keep the title in view;
+          Tab still reaches the first control. */}
+      <DialogContent
+        ref={popupRef}
+        initialFocus={popupRef}
+        className="max-h-[85vh] overflow-y-auto"
+      >
         <DialogHeader>
           <DialogTitle>{t('bookmarks_detailsTitle')}</DialogTitle>
           <DialogDescription>{t('bookmarks_detailsDescription')}</DialogDescription>
