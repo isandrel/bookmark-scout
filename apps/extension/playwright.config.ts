@@ -31,6 +31,8 @@ export default defineConfig<ExtensionProjectOptions>({
       // geckodriver; see tests/e2e-firefox/fixtures.ts.
       name: 'firefox',
       testDir: './tests/e2e-firefox',
+      // No Playwright page exists here; the fixture saves its own failure screenshot.
+      use: { screenshot: 'off', trace: 'off' },
     },
   ],
 });
