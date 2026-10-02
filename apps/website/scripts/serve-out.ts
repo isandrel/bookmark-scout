@@ -1,6 +1,6 @@
 /// <reference types="bun" />
 /**
- * Serves the static export in `out/` the way GitHub Pages does (directory
+ * Serves the static export in `out/` the way Cloudflare Pages does (directory
  * index.html, 404.html fallback), for browser tests.
  *
  *   bun scripts/serve-out.ts [port]

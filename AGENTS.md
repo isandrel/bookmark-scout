@@ -206,7 +206,7 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
   - list recent runs: `rtk gh run list --limit 20`
   - inspect failed logs: `rtk gh run view <run-id> --log-failed`
   - watch reruns: `rtk gh run watch <run-id> --exit-status`
-- If a GitHub Pages deployment fails after build/upload with `Deployment failed, try again later`, treat it as likely transient and rerun the failed job before patching code.
+- The website and docs both deploy to Cloudflare Pages with `cloudflare/wrangler-action` (`deploy-website.yml`, `deploy-docs.yml`), using the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
 - If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lock`, then verify `rtk bun install --frozen-lockfile`.
 - Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
 

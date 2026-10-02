@@ -114,6 +114,12 @@ function checkSitemap() {
     }
 }
 
+/** Cloudflare Pages reads these from the output root. */
+function checkHostingFiles() {
+    if (!readOut("_redirects")?.includes(`/${DEFAULT_LOCALE}/`)) fail("_redirects: missing redirect to the default locale");
+    if (!readOut("_headers")?.includes("X-Content-Type-Options")) fail("_headers: missing security headers");
+}
+
 function checkRootRedirect() {
     const html = readOut("index.html");
     if (!html?.includes('http-equiv="refresh"')) fail("index.html: missing meta refresh to the default locale");
@@ -184,6 +190,7 @@ for (const locale of LOCALES) {
 }
 checkSitemap();
 checkRootRedirect();
+checkHostingFiles();
 checkSecurityTxt();
 checkMessageParity(messagesDir);
 for (const entry of readdirSync(messagesDir)) {
