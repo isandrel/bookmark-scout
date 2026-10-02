@@ -47,7 +47,7 @@ Settings save automatically. The API key, **Base URL**, and **Extra Headers JSON
 | Azure OpenAI | Required | Set **Resource name** (or a **Base URL**) and enter your deployment name as **Custom Model**. Azure has no deployment list, so **Refresh Models** is not shown. |
 | OpenRouter | Required | |
 | Ollama (Local) | Optional | Default address `http://localhost:11434/api`; requests stay on your machine |
-| CLIProxyAPI | Optional | Default address `http://localhost:8317/v1` |
+| CLIProxyAPI | Usually required | Runs on your machine and answers with your own Claude, Gemini, or Codex accounts. Default address `http://localhost:8317/v1`; enter one of the keys under `api-keys` in its `config.yaml`, then **Refresh Models** to see the models your accounts offer. |
 | Custom Provider | Optional | Any OpenAI-compatible endpoint, set with **Base URL** |
 | About 200 more | Usually required | Listed under **More providers (models.dev)**, for example Together AI, Fireworks AI, Cerebras, DeepInfra, and LM Studio. They have no built-in model list: click **Refresh Models** or enter a **Custom Model**. |
 
@@ -60,7 +60,8 @@ The **AI Provider** picker has a search box. The extra providers come from a cop
 Local servers must accept requests from the extension:
 
 - **Ollama:** set `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` and restart Ollama. Without it, Ollama answers 403 and Verify says the server refused the extension.
-- **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`, then use **Custom Provider** with the Base URL `http://localhost:1234/v1`.
+- **LM Studio:** turn on **Enable CORS** in the server settings, or start it with `lms server start --cors`, then choose **LMStudio** under **More providers**.
+- **CLIProxyAPI:** accepts the extension's requests as configured by default. Start it before you click **Verify Service**; if it is not running, Verify says it could not reach `localhost:8317`.
 
 ### When a check fails
 

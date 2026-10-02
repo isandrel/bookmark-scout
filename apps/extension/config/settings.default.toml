@@ -427,6 +427,8 @@ id          = "deepseek-r1"
 name        = "DeepSeek R1"
 description = "Reasoning (Local)"
 
+# CLIProxyAPI serves your own Claude, Gemini, and Codex accounts as an OpenAI-compatible API on
+# this machine. Its default config requires one of the keys under `api-keys` in config.yaml.
 [ai.providers.cliproxyapi]
 name                  = "CLIProxyAPI"
 default_model         = "gpt-4o-mini"
@@ -434,7 +436,7 @@ provider_kind         = "openai_compatible"
 requires_api_key      = false
 base_url              = "http://localhost:8317/v1"
 supports_custom_model = true
-api_key_placeholder   = "(Optional)"
+api_key_placeholder   = "Key from api-keys in config.yaml"
 
 [[ai.providers.cliproxyapi.models]]
 id          = "gpt-4o-mini"
