@@ -32,7 +32,7 @@ const PAGES: ThemedPage[] = [
   {
     path: 'popup.html',
     target: (page, otherFolderTitle) =>
-      folderRow(page, otherFolderTitle).locator(`svg.${LIGHT_CLASS}`),
+      folderRow(page, otherFolderTitle).locator('[data-slot="folder-icon"]'),
   },
   { path: 'sidepanel.html' },
   { path: 'options.html' },

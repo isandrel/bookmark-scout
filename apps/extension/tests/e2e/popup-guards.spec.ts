@@ -26,15 +26,15 @@ async function dropOnEdge(source: Locator, target: Locator, edge: 'top' | 'botto
 
 /** The disclosure chevron inside a folder row's trigger (not the Expand all button's icon). */
 function treeChevron(row: Locator) {
-  return row.locator('[data-folder-trigger] svg[class*="lucide-chevron"]');
+  return row.locator('[data-folder-trigger] [data-slot="accordion-chevron"]');
 }
 
 /** One snapshot of a folder row's layout, so all edges come from the same frame. */
 async function folderGeometry(page: Page, title: string) {
   return folderRow(page, title).evaluate((row, rowTitle) => {
     const trigger = row.querySelector('[data-folder-trigger]');
-    const chevron = trigger?.querySelector('svg[class*="lucide-chevron"]');
-    const icon = row.querySelector('svg.text-amber-500');
+    const chevron = trigger?.querySelector('[data-slot="accordion-chevron"]');
+    const icon = row.querySelector('[data-slot="folder-icon"]');
     const label = icon?.parentElement?.querySelector('span.truncate');
     const actions = row.querySelector('[data-slot="folder-actions"]') ?? row.lastElementChild;
     const rect = (element: Element | null | undefined) => {

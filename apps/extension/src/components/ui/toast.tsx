@@ -140,6 +140,7 @@ const ToastDescription = React.forwardRef<
   <ToastPrimitives.Description
     ref={ref}
     render={<div />}
+    data-slot="toast-description"
     className={cn('text-sm opacity-90 [overflow-wrap:anywhere]', className)}
     {...props}
   />

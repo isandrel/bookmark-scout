@@ -77,6 +77,9 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
     const context = await chromium.launchPersistentContext(testInfo.outputPath('user-data'), {
       channel: extensionBrowser,
       headless: true,
+      // Popups that are still animating out would sit over the next control and catch its click.
+      // Reduced motion shortens every animation to a single frame and covers that code path too.
+      reducedMotion: 'reduce',
       args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
     });
 
