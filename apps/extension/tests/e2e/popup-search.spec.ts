@@ -3,6 +3,7 @@ import {
   bookmarkRow,
   folderRow,
   openPopup,
+  otherBookmarksTitle,
   SEARCH_HISTORY_KEY,
   seedFolder,
   setSettings,
@@ -195,5 +196,5 @@ test('theme toggle follows the system theme and AI button hides when AI is off',
 
   await setSettings(extensionWorker, { aiEnabled: true });
   await expect(page.getByRole('button', { name: 'AI folder recommendation' })).toBeVisible();
-  await expect(folderRow(page, 'Other bookmarks')).toBeVisible();
+  await expect(folderRow(page, await otherBookmarksTitle(extensionWorker))).toBeVisible();
 });

@@ -1,5 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { otherBookmarksTitle } from './popup-helpers';
 
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const SEARCH_HISTORY_KEY = 'bookmark-scout-search-history';
@@ -77,7 +78,7 @@ test('renders permanent folders as the top level instead of the unnamed root', a
   const topLevel = topLevelFolders(page);
   await expect(topLevel.first()).toContainText(seeded.barTitle);
   await expect(topLevel).toHaveCount(2);
-  await expect(topLevel.nth(1)).toContainText(/other bookmarks/i);
+  await expect(topLevel.nth(1)).toContainText(await otherBookmarksTitle(extensionWorker));
   for (const text of await topLevel.allInnerTexts()) {
     expect(text.replace(/\(\d+\)/, '').trim()).not.toBe('');
   }
@@ -97,7 +98,10 @@ test('permanent folders hide delete but still accept new pages and folders', asy
   const bar = folderTrigger(page, seeded.barTitle);
   await bar.hover();
   await expect(bar.getByTitle('Delete folder')).toHaveCount(0);
-  await expect(folderTrigger(page, 'Other bookmarks').getByTitle('Delete folder')).toHaveCount(0);
+  const other = folderTrigger(page, await otherBookmarksTitle(extensionWorker));
+  await other.hover();
+  await expect(other.getByTitle('Add folder')).toBeVisible();
+  await expect(other.getByTitle('Delete folder')).toHaveCount(0);
 
   await bar.getByTitle('Add current page').click();
   await expect(page.getByText('Failed to add bookmark', { exact: false })).toHaveCount(0);

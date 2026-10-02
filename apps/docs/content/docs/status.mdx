@@ -32,23 +32,26 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - Localized marketing site in English, Japanese, and Korean
 - Fumadocs documentation site
 - Unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, import/export, route-mocked and local-server network tools, and mocked-provider AI tools
+- The same Playwright suite in Microsoft Edge against the Edge build (`nx run extension:test:e2e:edge`), and a seven-test Firefox smoke suite against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, the side panel page, manager loading and filtering, a settings save, a JSON export and import round trip, and the statistics and privacy reports
 - A settings-to-behavior matrix (`apps/extension/tests/settings-matrix.ts`) that maps every setting to the code that reads it and a test that changes it
 
 ## Partial
 
 - Bookmark tags and summaries: editable in Bookmark Details and saved from reviewed AI suggestions, but stored only in local extension storage. They are not synced, searchable, or included in bookmark exports.
 - AI tool limits (tag count and style, summary length, reorganization folder limits) are sent to the provider as instructions; the output is not checked against them. Live provider compatibility is verified manually.
-- Firefox and Edge receive build validation only; browser E2E tests run in Chromium. Firefox has no side panel, and the bookmarks manager and Tools sidebar are not reachable in the Firefox build because Firefox cannot replace the bookmarks page.
+- Firefox runtime coverage is a smoke suite, not the full suite. Playwright cannot open `moz-extension://` pages, so the Firefox tests drive the stock Firefox through geckodriver (Selenium) and install the build as a temporary add-on with a test-only add-on ID. They do not cover context-menu saves (the Chromium tests dispatch `contextMenus.onClicked` from the service worker; the Firefox build uses an MV2 background page that the harness cannot script), drag and drop, keyboard shortcuts, network tools, AI tools, or locales.
+- Firefox API differences: favicons do not load because Firefox has no `_favicon` service; the manager and Tools sidebar open only by their extension URL because Firefox cannot replace the bookmarks page; the side panel page is declared as a Firefox sidebar, and tests load that page in a tab because automation cannot open the sidebar itself.
+- The Edge and Firefox CI jobs are not required checks yet.
 - Four tool scope settings are fixed: Auto-Tagging and Content Summarizer always use the current folder; Duplicate Cleaner and Privacy Scanner always scan all bookmarks.
 
 ## Planned
 
 - Reviewed repair for dead links
-- Firefox and Edge browser tests, and automated context-menu and drag-and-drop flows
+- Broader Firefox runtime coverage, and making the Edge and Firefox CI jobs required once they are stable
 - Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in [`store/`](https://github.com/isandrel/bookmark-scout/tree/main/store); submission is manual and needs release approval, and the Firefox package first needs an add-on ID and a data collection declaration
 
 ## Known Documentation Rules
 
 - Update docs when feature status, installation paths, browser support, privacy expectations, or configuration changes.
 - AI features are opt-in and may send bookmark data to the selected provider.
-- CI runs extension unit and Chromium browser tests without manual setup. Firefox and Edge currently receive build validation.
+- CI runs extension unit and Chromium browser tests (required), plus the Edge suite and the Firefox smoke suite (not required yet), without manual setup. A passing build is not runtime coverage.
