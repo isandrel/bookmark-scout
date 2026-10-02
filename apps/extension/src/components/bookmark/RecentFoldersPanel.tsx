@@ -31,34 +31,32 @@ export function RecentFoldersPanel({
   }
 
   return (
-    <div className="border-b px-3 py-2">
-      <div className="flex items-center gap-1.5 mb-1.5">
+    <div className="flex flex-wrap items-center gap-1.5 border-b px-3 py-2">
+      <div className="mr-0.5 flex shrink-0 items-center gap-1.5">
         <Clock className="h-3 w-3 text-muted-foreground" />
         <span className="text-xs font-medium text-muted-foreground">
           {t('popup_recentFolders')}
         </span>
       </div>
-      <div className="flex flex-wrap gap-1.5">
-        {displayFolders.map((folder: RecentFolder) => {
-          const isPending = pendingFolderIds.includes(folder.id);
-          return (
-            <Button
-              key={folder.id}
-              variant="outline"
-              size="sm"
-              className="h-7 px-2 text-xs gap-1.5 hover:bg-accent aria-disabled:pointer-events-none aria-disabled:opacity-50"
-              onClick={() => {
-                if (!isPending) onAddToFolder(folder.id);
-              }}
-              aria-disabled={isPending || undefined}
-              title={`Add to "${folder.title}"`}
-            >
-              <Folder className="h-3 w-3 text-muted-foreground" />
-              <span className="truncate max-w-[120px]">{folder.title}</span>
-            </Button>
-          );
-        })}
-      </div>
+      {displayFolders.map((folder: RecentFolder) => {
+        const isPending = pendingFolderIds.includes(folder.id);
+        return (
+          <Button
+            key={folder.id}
+            variant="outline"
+            size="sm"
+            className="h-6 shrink-0 gap-1.5 rounded-full px-2.5 text-xs font-normal hover:bg-accent aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            onClick={() => {
+              if (!isPending) onAddToFolder(folder.id);
+            }}
+            aria-disabled={isPending || undefined}
+            title={`Add to "${folder.title}"`}
+          >
+            <Folder className="h-3 w-3 text-muted-foreground" />
+            <span className="truncate max-w-[120px]">{folder.title}</span>
+          </Button>
+        );
+      })}
     </div>
   );
 }

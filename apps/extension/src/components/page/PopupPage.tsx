@@ -8,7 +8,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Folder, FolderPlus } from 'lucide-react';
+import { BookmarkIcon, CircleAlert, Folder, FolderPlus, SearchX, Sparkles, X } from 'lucide-react';
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
@@ -567,10 +567,11 @@ function PopupPage() {
 
   if (error) {
     return (
-      <div className="p-4">
-        <div className="text-destructive-text mb-4">
+      <div className="flex h-full flex-col items-center justify-center gap-3 p-6 text-center">
+        <CircleAlert aria-hidden="true" className="size-6 text-destructive-text" />
+        <p role="alert" className="text-sm text-destructive-text [overflow-wrap:anywhere]">
           {t('error_generic')}: {error}
-        </div>
+        </p>
         <Button onClick={() => window.location.reload()}>{t('action_retry')}</Button>
       </div>
     );
@@ -621,20 +622,22 @@ function PopupPage() {
 
         {/* AI Recommendations Panel */}
         {aiRecommendations.length > 0 && (
-          <div className="border-b bg-muted/30 p-3 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">
-                {t('ai_suggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
+          <div className="space-y-1 border-b px-2 py-2">
+            <div className="flex items-center justify-between gap-2 px-1">
+              <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-muted-foreground">
+                <Sparkles aria-hidden="true" className="size-3.5 shrink-0 text-ai" />
+                <span className="truncate">
+                  {t('ai_suggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
+                </span>
               </span>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-5 px-1 text-xs"
+                size="icon-xs"
                 onClick={() => setAIRecommendations([])}
                 aria-label={t('action_close')}
                 title={t('action_close')}
               >
-                ×
+                <X className="size-3.5" />
               </Button>
             </div>
             {aiRecommendations.map((rec) => (
@@ -643,10 +646,10 @@ function PopupPage() {
                 type="button"
                 onClick={() => handleAddToFolder(rec)}
                 title={rec.reason}
-                className="w-full text-left p-2 rounded-md hover:bg-accent transition-colors border border-transparent hover:border-border"
+                className="flex h-8 w-full items-center rounded-md px-2 text-left transition-colors hover:bg-muted focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium truncate flex-1 flex items-center gap-1.5">
+                <div className="flex w-full items-center justify-between">
+                  <span className="text-sm truncate flex-1 flex items-center gap-1.5">
                     {rec.type === 'new' ? (
                       <FolderPlus className="h-4 w-4 text-ai shrink-0" />
                     ) : (
@@ -654,7 +657,7 @@ function PopupPage() {
                     )}
                     {rec.folderPath.replace(/^Bookmarks Bar\//, '')}
                   </span>
-                  <span className="text-xs text-muted-foreground ml-2">
+                  <span className="ml-2 font-mono text-xs tabular-nums text-muted-foreground">
                     {Math.round(rec.confidence * 100)}%
                   </span>
                 </div>
@@ -665,34 +668,49 @@ function PopupPage() {
 
         {/* Outside the scrolling tree so the notice stays visible while scrolling results. */}
         {!isLoading && isSearchLimited && (
-          <p className="shrink-0 border-b px-5 py-1.5 text-xs text-muted-foreground" role="status">
+          <p className="shrink-0 border-b px-4 py-1.5 text-xs text-muted-foreground" role="status">
             {t('search_resultsLimited', [String(maxSearchResults), String(totalSearchMatches)])}
           </p>
         )}
 
         <div className="flex-1 overflow-y-auto overflow-x-hidden">
           {isLoading ? (
-            <div className="p-3 space-y-1">
-              <Skeleton className="h-7 w-full rounded-md" />
-              <Skeleton className="h-7 w-11/12 ml-4 rounded-md" />
-              <Skeleton className="h-7 w-10/12 ml-4 rounded-md" />
-              <Skeleton className="h-7 w-full rounded-md" />
-              <Skeleton className="h-7 w-9/12 ml-4 rounded-md" />
+            <div className="space-y-1 p-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="ml-5 h-8 w-11/12" />
+              <Skeleton className="ml-5 h-8 w-10/12" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="ml-5 h-8 w-9/12" />
             </div>
           ) : displayFolders.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-              <div className="text-4xl mb-3">🔍</div>
-              <p className="text-sm text-muted-foreground">
+            <div className="flex h-full flex-col items-center justify-center gap-1 p-8 text-center">
+              {query ? (
+                <SearchX aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
+              ) : (
+                <BookmarkIcon aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
+              )}
+              <p className="text-sm text-foreground">
                 {query ? t('state_noBookmarksFound') : t('state_noBookmarksYet')}
               </p>
               {query && (
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('state_tryDifferentSearch')}
-                </p>
+                <>
+                  <p className="text-xs text-muted-foreground">{t('state_tryDifferentSearch')}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3"
+                    onClick={() => {
+                      clearQuery();
+                      inputRef.current?.focus();
+                    }}
+                  >
+                    {t('search_clear')}
+                  </Button>
+                </>
               )}
             </div>
           ) : (
-            <div className="p-3">
+            <div className="p-2">
               <Accordion
                 multiple
                 value={expandedFolders}
@@ -729,6 +747,7 @@ function PopupPage() {
             </div>
           )}
         </div>
+        {!isLoading && displayFolders.length > 0 && <PopupHintBar />}
       </div>
       <Dialog
         open={pendingDeletion !== null}

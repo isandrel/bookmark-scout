@@ -551,6 +551,26 @@
         "message": "최근",
         "description": "Recent folders panel title"
     },
+    "popup_hintLabel": {
+        "message": "키보드 단축키",
+        "description": "Accessible name of the popup footer that lists keyboard shortcuts"
+    },
+    "popup_hintSearch": {
+        "message": "검색",
+        "description": "Popup footer: the / key focuses search"
+    },
+    "popup_hintMove": {
+        "message": "이동",
+        "description": "Popup footer: arrow up and down move between rows"
+    },
+    "popup_hintExpand": {
+        "message": "폴더",
+        "description": "Popup footer: arrow left and right close or open a folder"
+    },
+    "popup_hintEnter": {
+        "message": "열기",
+        "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
     "state_noRecentFolders": {
         "message": "최근 폴더 없음",
         "description": "Empty state for recent folders"

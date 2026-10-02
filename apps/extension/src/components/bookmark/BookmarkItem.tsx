@@ -130,7 +130,7 @@ export function BookmarkItem({
 
   return (
     <div
-      className={`group relative flex items-center h-8 py-1 px-2 hover:bg-accent focus-within:bg-accent rounded-md transition-colors duration-150 bookmark-item ${isDragging ? 'opacity-50' : ''}`}
+      className={`group bookmark-item relative flex h-8 items-center rounded-md px-2 py-1 transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring ${isDragging ? 'opacity-50' : ''}`}
     >
       <a
         ref={(el) => {
@@ -142,7 +142,7 @@ export function BookmarkItem({
         target="_blank"
         rel="noopener noreferrer"
         data-slot="drag-handle"
-        className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing"
+        className="flex min-w-0 flex-1 cursor-grab items-center focus-visible:outline-none active:cursor-grabbing"
       >
         {/* Empty chevron slot, so the icon and title line up with folders at the same depth. */}
         <span aria-hidden="true" data-slot="tree-indent" className="mr-1 size-4 shrink-0" />
@@ -168,12 +168,12 @@ export function BookmarkItem({
       {/* Overlays the row's end only while hovered or focused, like the folder actions. */}
       <div
         data-slot="bookmark-actions"
-        className="pointer-events-none absolute inset-y-0 right-0 flex items-center rounded-r-md bg-accent px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+        className="pointer-events-none absolute inset-y-0.5 right-0.5 flex items-center rounded-r-sm bg-muted px-1 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:bg-accent group-focus-within:opacity-100"
       >
         <Button
           variant="ghost"
-          size="icon"
-          className="pointer-events-auto h-6 w-6 text-destructive hover:text-destructive hover:bg-destructive/10"
+          size="icon-xs"
+          className="pointer-events-auto text-destructive-text hover:bg-destructive-wash hover:text-destructive-text"
           onClick={() => onDelete(node)}
           title={t('popup_deleteBookmark')}
           aria-label={t('popup_deleteBookmark')}

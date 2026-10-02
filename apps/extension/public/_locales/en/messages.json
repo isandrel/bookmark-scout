@@ -551,6 +551,26 @@
         "message": "Recent",
         "description": "Recent folders panel title"
     },
+    "popup_hintLabel": {
+        "message": "Keyboard shortcuts",
+        "description": "Accessible name of the popup footer that lists keyboard shortcuts"
+    },
+    "popup_hintSearch": {
+        "message": "Search",
+        "description": "Popup footer: the / key focuses search"
+    },
+    "popup_hintMove": {
+        "message": "Move",
+        "description": "Popup footer: arrow up and down move between rows"
+    },
+    "popup_hintExpand": {
+        "message": "Folders",
+        "description": "Popup footer: arrow left and right close or open a folder"
+    },
+    "popup_hintEnter": {
+        "message": "Open",
+        "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
     "state_noRecentFolders": {
         "message": "No recent folders",
         "description": "Empty state for recent folders"
