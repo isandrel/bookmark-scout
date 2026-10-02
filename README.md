@@ -133,7 +133,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 ### 🚧 Current Focus
 
 - [ ] 🧪 **Browser Coverage** — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows
-- [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
+- [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package first needs an add-on ID and a data collection declaration
 
 ---
 
