@@ -114,3 +114,12 @@ test("root page redirects to the default locale", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL(/\/en\/$/);
 });
+
+test("tour screenshots load as AVIF or WebP at a fitting width", async ({ page }) => {
+    await page.goto("/en/");
+    const image = page.locator("#features picture img").first();
+    await image.scrollIntoViewIfNeeded();
+    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    const currentSrc = await image.evaluate((img: HTMLImageElement) => img.currentSrc);
+    expect(currentSrc).toMatch(/\/optimized\/.+-(640|960|1280)\.(avif|webp)$/);
+});

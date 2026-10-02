@@ -9,6 +9,9 @@ export type TourTab = {
     listsProviders: boolean;
 };
 
+/** Rendered width of a tour screenshot, for `sizes`: two thirds of the 1152px container on wide screens. */
+export const SCREENSHOT_SIZES = "(min-width: 1152px) 704px, (min-width: 1024px) 62vw, calc(100vw - 2rem)";
+
 export const SCREENSHOT_SIZE = { width: 1280, height: 800 } as const;
 
 export const TOUR_TABS: readonly TourTab[] = [
