@@ -1,4 +1,4 @@
-import { AUTHOR, CONTACT, DOCS_URL, GITHUB_URL, SITE_NAME } from "@bookmark-scout/config";
+import { AUTHOR, CONTACT, DOCS_URL, GITHUB_URL, LICENSE, SITE_NAME } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
@@ -21,12 +21,13 @@ export async function SiteFooter({ locale }: { locale: string }) {
             links: [
                 { href: GITHUB_URL, label: t("github") },
                 { href: `${DOCS_URL}/contributing`, label: t("contributing") },
-                { href: `${GITHUB_URL}/blob/main/LICENSE`, label: t("license") },
+                { href: LICENSE.url, label: t("license", { license: LICENSE.name }) },
             ],
         },
         {
             title: t("contact"),
             links: [
+                { href: `/${locale}/support/`, label: t("helpCenter"), internal: true },
                 { href: `mailto:${CONTACT.support}`, label: `${t("support")}: ${CONTACT.support}` },
                 { href: `mailto:${CONTACT.privacy}`, label: `${t("privacy")}: ${CONTACT.privacy}` },
                 { href: `mailto:${CONTACT.security}`, label: `${t("security")}: ${CONTACT.security}` },

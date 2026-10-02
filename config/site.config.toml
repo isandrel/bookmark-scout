@@ -15,6 +15,10 @@ url  = "https://github.com/isandrel"
 [github]
 url = "https://github.com/isandrel/bookmark-scout"
 
+[license]
+name = "AGPL-3.0"
+url  = "https://github.com/isandrel/bookmark-scout/blob/main/LICENSE"
+
 [locales]
 default   = "en"
 supported = ["en", "ja", "ko"]
@@ -26,6 +30,17 @@ supported = ["en", "ja", "ko"]
 privacy  = "privacy@bookmark-scout.com"
 security = "security@bookmark-scout.com"
 support  = "support@bookmark-scout.com"
+
+# Store listing URLs. Leave a value empty until that listing is live; the site then
+# shows the GitHub release download instead of a store link.
+[stores]
+chrome_web_store = ""
+edge_addons      = ""
+firefox_addons   = ""
+
+# Dates shown on legal pages (ISO 8601). Update when the policy text changes.
+[legal]
+privacy_effective_date = "2026-10-01"
 
 [docs]
 name = "Bookmark Scout Docs"

@@ -14,92 +14,6 @@
     "languages": "언어",
     "home": "Bookmark Scout 홈"
   },
-  "hero": {
-    "badge": "브라우저 확장 프로그램",
-    "manifestV3": "Manifest V3",
-    "title": "Bookmark Scout",
-    "description": "북마크를 검색, 정리, 정리(clean up), 가져오기/내보내기, 저장할 수 있는 브라우저 확장 프로그램입니다. 선택형 AI 도구와 멀티 프로바이더를 지원합니다.",
-    "viewOnGitHub": "GitHub에서 보기",
-    "documentation": "문서"
-  },
-  "features": {
-    "title": "기능",
-    "subtitle": "북마크를 효율적으로 관리하는 데 필요한 모든 것",
-    "aiRecommendations": {
-      "title": "선택형 AI 도구",
-      "description": "선택한 제공자를 사용한 폴더 추천, 태그, 요약, 재구성 계획: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama 또는 OpenAI 호환 엔드포인트. 기본값은 꺼짐입니다."
-    },
-    "instantSearch": {
-      "title": "즉시 검색",
-      "description": "디바운스 검색과 폴더 필터링으로 북마크를 즉시 검색"
-    },
-    "dragAndDrop": {
-      "title": "드래그 앤 드롭",
-      "description": "직관적인 드래그 앤 드롭으로 북마크와 폴더 정리"
-    },
-    "quickAdd": {
-      "title": "빠른 추가",
-      "description": "현재 탭을 클릭 한 번으로 원하는 폴더에 저장하거나, 오른쪽 클릭 메뉴에서 링크 저장"
-    },
-    "sidePanel": {
-      "title": "사이드 패널",
-      "description": "Chrome 또는 Edge 사이드 패널에서 북마크 탐색 및 검색"
-    },
-    "darkMode": {
-      "title": "라이트 & 다크 테마",
-      "description": "시스템 테마를 따르거나 라이트 또는 다크 선택"
-    },
-    "bookmarksManager": {
-      "title": "북마크 관리자",
-      "description": "Chrome 북마크 페이지를 폴더 트리, 경로 표시, 열 너비 조절 테이블, 도구 사이드바로 대체"
-    },
-    "maintenanceTools": {
-      "title": "유지 관리 도구",
-      "description": "중복 찾기, 추적 URL 정리, 깨진 링크 검사 및 복구 검토, 제목 가져오기, 개인정보 관련 URL 표시, 통계 보기"
-    },
-    "importExport": {
-      "title": "가져오기/내보내기",
-      "description": "HTML, JSON, Markdown, CSV로 내보내고, HTML 또는 JSON 가져오기는 쓰기 전에 미리보기"
-    },
-    "savedSearches": {
-      "title": "저장된 검색",
-      "description": "필터, 정렬, 폴더 범위를 이름 있는 스마트 뷰로 저장. 결과는 항상 현재 북마크를 반영"
-    },
-    "keyboardShortcuts": {
-      "title": "키보드 단축키",
-      "description": "브라우저 단축키를 가로채지 않고 키보드로 검색, 이동, 저장. ?를 눌러 도움말 보기"
-    },
-    "undoDelete": {
-      "title": "실행 취소 가능한 삭제",
-      "description": "삭제 전에 확인하고, 삭제는 10초 동안 실행 취소 가능"
-    }
-  },
-  "techStack": {
-    "title": "기술 스택",
-    "subtitle": "최고의 개발자 경험을 위해 최신 기술로 구축"
-  },
-  "installation": {
-    "title": "설치",
-    "subtitle": "몇 분 안에 시작하세요",
-    "step1": {
-      "title": "GitHub Releases에서 다운로드",
-      "description": "브라우저용 최신 CRX 또는 ZIP 에셋 다운로드",
-      "button": "최신 릴리스 다운로드"
-    },
-    "step2": {
-      "title": "확장 프로그램 파일 준비",
-      "description": "Chrome CRX를 바로 사용하거나 다운로드한 브라우저 아카이브 압축 해제"
-    },
-    "step3": {
-      "title": "Chrome에 로드",
-      "instructions": {
-        "1": "chrome://extensions/ 열기",
-        "2": "개발자 모드 활성화 (오른쪽 상단)",
-        "3": "CRX를 드래그하거나 압축해제된 확장 프로그램을 로드합니다 클릭",
-        "4": "ZIP을 사용하는 경우 압축 해제한 폴더 선택"
-      }
-    }
-  },
   "footer": {
     "tagline": "브라우저 안에서 북마크를 검색하고, 정리하고, 깔끔하게 관리하세요.",
     "product": "제품",
@@ -112,12 +26,237 @@
     "releases": "릴리스",
     "github": "소스 코드",
     "contributing": "기여하기",
-    "license": "라이선스 (AGPL-3.0)",
+    "license": "라이선스 ({license})",
     "support": "지원",
     "privacy": "개인정보",
     "security": "보안",
     "privacyPolicy": "개인정보 처리방침",
     "securityTxt": "security.txt",
-    "madeBy": "{author} 제작. 무료 오픈 소스입니다."
+    "madeBy": "{author} 제작. 무료 오픈 소스입니다.",
+    "helpCenter": "고객 지원 센터"
+  },
+  "home": {
+    "hero": {
+      "title": "저장한 모든 북마크를 검색 한 번으로.",
+      "description": "Bookmark Scout는 Chrome, Edge, Firefox용 브라우저 확장 프로그램으로, 이미 가진 북마크를 검색하고 정리하고 깔끔하게 다듬어 줍니다. 브라우저 안에서만 동작하며 계정도 자체 서버도 없습니다.",
+      "download": "GitHub에서 다운로드",
+      "install": "Bookmark Scout 설치",
+      "docs": "문서 읽기",
+      "license": "AGPL-3.0 라이선스의 무료 오픈 소스입니다.",
+      "demoNote": "이 데모는 가상의 북마크 37개를 검색합니다. 확장 프로그램은 브라우저 안에서 내 북마크를 검색합니다."
+    },
+    "demo": {
+      "label": "샘플 북마크 검색",
+      "placeholder": "북마크 검색",
+      "count": "{total, number}개 중 {count, number}개",
+      "results": "일치하는 북마크",
+      "more": "{count, number}개가 더 있습니다. 계속 입력하면 목록이 좁혀집니다.",
+      "emptyTitle": "“{query}”와 일치하는 북마크가 없습니다.",
+      "emptyHint": "제목의 일부, github 같은 사이트, 레시피 같은 폴더 이름으로 검색해 보세요. 글자 수를 줄여도 도움이 됩니다.",
+      "clear": "검색어 지우기",
+      "try": "예시",
+      "chips": [
+        "레시피",
+        "mdn",
+        "여행",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "개발 문서",
+        "css": "CSS",
+        "research": "연구 자료",
+        "recipes": "레시피",
+        "travel": "여행",
+        "japan": "일본",
+        "reading": "읽을거리",
+        "inbox": "미분류"
+      }
+    },
+    "tour": {
+      "title": "할 수 있는 일",
+      "lede": "Chrome 빌드의 실제 화면입니다. 시스템의 라이트 모드와 다크 모드 설정을 따릅니다.",
+      "tabsLabel": "Bookmark Scout의 주요 기능",
+      "firefoxNote": "Firefox에서는 툴바 팝업(검색, 폴더 트리, 저장, AI 폴더 추천)을 사용할 수 있습니다. 관리자, 정리 도구, 저장된 검색, 가져오기와 내보내기는 아직 지원하지 않습니다.",
+      "find": {
+        "tab": "찾기",
+        "heading": "툴바에서 바로 검색",
+        "caption": "툴바 팝업: 폴더 트리, 즉시 검색, 원하는 폴더에 한 번의 클릭으로 저장.",
+        "alt": "Bookmark Scout 팝업 두 개. 왼쪽은 레시피, 여행, 연구 자료, 개발 문서 폴더가 있는 폴더 트리, 오른쪽은 docs 검색 결과에서 일치하는 부분이 강조된 화면",
+        "points": [
+          "입력하는 즉시 모든 북마크를 검색하며, 대소문자 구분, 단어 단위, 정규식 옵션 지원",
+          "Chrome과 Edge에서는 같은 트리와 검색을 사이드 패널에 열어 둘 수 있음",
+          "검색 조건을 스마트 뷰로 저장해 언제나 최신 결과 표시",
+          "키보드로 폴더와 결과 사이를 이동하며, 브라우저의 Ctrl 및 Cmd 단축키는 그대로 사용 가능"
+        ]
+      },
+      "organize": {
+        "tab": "정리",
+        "heading": "페이지를 제자리에 저장",
+        "caption": "관리자는 Chrome의 북마크 페이지를 대신해 폴더 트리, 이동 경로, 정렬 가능한 표를 보여 줍니다.",
+        "alt": "Bookmark Scout 관리자. 폴더 트리 옆에 개발 문서 폴더가 유형, 폴더 경로, URL, 제목, 추가한 날짜 열이 있는 표로 표시됨",
+        "points": [
+          "현재 페이지를 한 번의 클릭으로 원하는 폴더에 저장하며, 같은 폴더에 중복 저장하지 않음",
+          "북마크와 폴더를 끌어서 폴더 트리 안에서 이동",
+          "마우스 오른쪽 메뉴에서 최근 사용한 폴더로 링크 저장",
+          "관리자 표에서 필터, 정렬, 열 너비 조절",
+          "HTML이나 JSON을 미리 본 뒤 가져오고, HTML, JSON, Markdown, CSV로 내보내기"
+        ]
+      },
+      "cleanUp": {
+        "tab": "정돈",
+        "heading": "몇 년 치 링크를 깔끔하게",
+        "caption": "중복 정리 도구는 삭제하기 전에 각 그룹과 남길 사본을 보여 줍니다.",
+        "alt": "중복 정리 대화 상자. 중복 북마크 그룹 두 개에 남길 사본이 표시되어 있고 아래에 중복 삭제 버튼이 있음",
+        "points": [
+          "중복 그룹을 확인한 뒤 남는 사본 삭제",
+          "URL의 추적 매개변수를 미리 보고 제거",
+          "끊긴 링크를 찾아 복구: 삭제, 리디렉션 대상 사용, 보관된 사본으로 연결, URL 직접 수정",
+          "페이지 제목을 가져와 고른 것만 적용",
+          "삭제 전에 확인하고, 10초 동안 실행 취소 가능"
+        ]
+      },
+      "ai": {
+        "tab": "AI(선택)",
+        "heading": "AI는 내가 고른 제공업체로, 쓰지 않아도 그만",
+        "caption": "설정에서 AI를 켜고 제공업체를 고른 뒤 필요하면 내 API 키를 입력하기 전까지 AI는 꺼져 있습니다.",
+        "alt": "Bookmark Scout 설정 페이지의 AI 탭. AI 기능이 꺼져 있고 제공업체와 모델 선택 메뉴가 있음",
+        "points": [
+          "보고 있는 페이지에 맞는 폴더 추천, 새 폴더 경로도 확인 후 생성",
+          "태그 후보와 짧은 요약을 확인한 뒤 저장",
+          "폴더 재구성 계획을 무엇이든 옮기기 전에 미리 보기",
+          "선택한 북마크를 AI 채팅용 Markdown이나 XML로 내보내기, AI 없이도 동작하며 아무것도 전송하지 않음"
+        ],
+        "providersTitle": "지원하는 제공업체",
+        "customProvider": "모든 OpenAI 호환 엔드포인트"
+      }
+    },
+    "privacy": {
+      "title": "북마크는 브라우저 밖으로 나가지 않습니다.",
+      "policyLink": "개인정보 처리방침 읽기",
+      "diagram": {
+        "browser": "내 브라우저",
+        "bookmarks": {
+          "name": "북마크",
+          "detail": "검색, 이동, 정리가 모두 여기서 이루어짐"
+        },
+        "settings": {
+          "name": "설정",
+          "detail": "브라우저 동기화가 켜져 있으면 브라우저 계정으로 동기화"
+        },
+        "keys": {
+          "name": "API 키, 태그, 저장된 검색",
+          "detail": "이 기기에만 저장"
+        },
+        "ai": {
+          "name": "내가 고른 AI 제공업체",
+          "detail": "AI를 켰을 때만. Ollama를 쓰면 내 컴퓨터 안에서 처리"
+        },
+        "websites": {
+          "name": "확인하는 웹사이트",
+          "detail": "끊긴 링크 확인과 제목 가져오기, 접근을 허용한 뒤에만"
+        },
+        "server": {
+          "name": "Bookmark Scout 서버",
+          "detail": "존재하지 않습니다. 개발자에게는 아무것도 전송되지 않습니다."
+        },
+        "legend": "점선 경로는 선택 사항입니다. 해당 기능을 사용할 때만 열립니다."
+      },
+      "facts": {
+        "noServer": {
+          "title": "계정도 서버도 없음",
+          "body": "가입할 필요가 없고 Bookmark Scout에는 자체 서버가 없습니다. 북마크는 브라우저 안에서 읽고 변경됩니다."
+        },
+        "noTelemetry": {
+          "title": "원격 측정 없음",
+          "body": "확장 프로그램은 개발자에게 아무것도 보내지 않습니다. 분석, 광고, 추적도 없습니다."
+        },
+        "aiOptIn": {
+          "title": "AI는 직접 켜기 전까지 꺼져 있음",
+          "body": "켠 뒤의 요청은 브라우저에서 내가 고른 제공업체로 바로 전송됩니다. 내 컴퓨터의 Ollama를 쓰면 밖으로 나가지 않습니다."
+        },
+        "exports": {
+          "title": "내보내기 전 개인정보 검토",
+          "body": "파일을 내려받기 전에 토큰, 이메일 주소 같은 민감한 값을 알려 주고, 저장하는 파일에서 가릴 수 있습니다."
+        }
+      }
+    },
+    "install": {
+      "title": "몇 단계면 설치 끝",
+      "lede": "브라우저를 고르세요. GitHub의 각 릴리스에는 Chrome, Edge, Firefox용 빌드가 있습니다.",
+      "tabsLabel": "브라우저",
+      "download": "GitHub에서 다운로드",
+      "storeComing": "{store} 등록을 준비 중입니다. 공개되기 전까지는 GitHub Releases의 빌드를 설치하세요.",
+      "manual": "GitHub Releases의 빌드를 직접 설치할 수도 있습니다.",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome 웹 스토어",
+        "storeButton": "Chrome에 추가",
+        "steps": {
+          "download": "최신 릴리스에서 <code>bookmark-scout-*-chrome.zip</code>을 내려받아 압축을 풉니다.",
+          "open": "<code>chrome://extensions</code>를 열고 오른쪽 위의 <b>개발자 모드</b>를 켭니다.",
+          "load": "<b>압축해제된 확장 프로그램을 로드합니다</b>를 클릭하고 압축을 푼 폴더를 선택합니다."
+        },
+        "crx": "릴리스에는 서명된 <code>.crx</code> 파일도 있어, 확장 프로그램 페이지로 끌어다 놓아 설치할 수도 있습니다."
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Edge 추가 기능",
+        "storeButton": "Edge에 추가",
+        "steps": {
+          "download": "최신 릴리스에서 <code>bookmark-scout-*-edge.zip</code>을 내려받아 압축을 풉니다.",
+          "open": "<code>edge://extensions</code>를 열고 <b>개발자 모드</b>를 켭니다.",
+          "load": "<b>압축 풀린 확장 로드</b>(Load unpacked)를 클릭하고 압축을 푼 폴더를 선택합니다."
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Firefox 부가 기능",
+        "storeButton": "Firefox에 추가",
+        "steps": {
+          "download": "최신 릴리스에서 <code>bookmark-scout-*-firefox.zip</code>을 내려받아 압축을 풉니다.",
+          "open": "<code>about:debugging#/runtime/this-firefox</code>를 엽니다.",
+          "load": "<b>임시 부가 기능 로드</b>를 클릭하고 압축을 푼 폴더의 <code>manifest.json</code>을 선택합니다."
+        },
+        "limits": "Firefox는 다시 시작하면 임시 부가 기능을 제거하므로, 다시 시작할 때마다 새로 로드해야 합니다. Firefox 버전은 툴바 팝업(검색, 폴더 트리, 저장, AI 폴더 추천)만 제공하며, 관리자와 그 도구는 아직 지원하지 않습니다."
+      }
+    },
+    "faq": {
+      "title": "자주 묻는 질문",
+      "items": {
+        "data": {
+          "q": "북마크가 어딘가로 전송되나요?",
+          "a": "아니요. 북마크는 브라우저 안에서 읽고 변경되며, 확장 프로그램은 개발자에게 아무것도 보내지 않습니다. 데이터는 선택 기능을 사용할 때만 브라우저 밖으로 나갑니다. AI 요청은 내가 고른 제공업체로 가고, 끊긴 링크 확인과 제목 가져오기는 웹사이트 접근을 허용한 뒤 북마크한 페이지에 요청합니다. 브라우저 동기화가 켜져 있으면 설정이 브라우저 계정으로 동기화됩니다. 자세한 내용은 <privacy>개인정보 처리방침</privacy>을 참고하세요."
+        },
+        "needAi": {
+          "q": "AI를 꼭 써야 하나요?",
+          "a": "아니요. 검색, 정리, 정돈, 가져오기와 내보내기는 모두 AI 없이 동작합니다. AI는 설정에서 켜기 전까지 꺼져 있습니다."
+        },
+        "providers": {
+          "q": "어떤 AI 제공업체를 쓸 수 있나요?",
+          "a": "{providers}를 사용할 수 있습니다. 제공업체가 요구하면 내 API 키를 입력하며, 사용료는 제공업체가 청구할 수 있습니다."
+        },
+        "changes": {
+          "q": "묻지 않고 북마크를 바꾸지는 않나요?",
+          "a": "바꾸지 않습니다. 중복 정리, URL 정리, 끊긴 링크 복구, 가져온 제목, AI 재구성, 가져오기는 모두 쓰기 전에 검토 화면을 보여 줍니다. 삭제는 기본적으로 확인을 요청하며, 삭제와 가져오기는 10초 동안 실행 취소할 수 있습니다."
+        },
+        "firefox": {
+          "q": "Firefox에서도 쓸 수 있나요?",
+          "a": "네, 기능은 더 적습니다. 툴바 팝업(검색, 폴더 트리, 저장, AI 폴더 추천)을 쓸 수 있고, 관리자, 정리 도구, 가져오기와 내보내기, 저장된 검색에는 Chrome이나 Edge가 필요합니다. Firefox 부가 기능에 등록되기 전까지는 임시 부가 기능으로 로드하므로 Firefox를 다시 시작하면 제거됩니다."
+        },
+        "stores": {
+          "q": "왜 아직 브라우저 스토어에 없나요?",
+          "a": "Chrome 웹 스토어, Edge 추가 기능, Firefox 부가 기능 등록을 준비 중이며, 각 스토어는 공개 전에 확장 프로그램을 심사합니다. 그때까지는 GitHub Releases에서 설치하세요."
+        },
+        "free": {
+          "q": "무료인가요?",
+          "a": "네. Bookmark Scout는 AGPL-3.0 라이선스의 무료 오픈 소스이며 광고도 유료 요금제도 없습니다. AI를 켜면 제공업체가 API 사용료를 청구할 수 있습니다."
+        },
+        "help": {
+          "q": "도움이 필요하면 어떻게 하나요?",
+          "a": "먼저 <support>지원 페이지</support>나 <docs>문서</docs>를 확인하세요. <github>GitHub</github>에 문제를 보고하거나 <email>{supportEmail}</email>로 메일을 보낼 수도 있습니다."
+        }
+      }
+    }
   }
 }

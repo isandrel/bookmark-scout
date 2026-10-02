@@ -1,0 +1,95 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "지원",
+            "description": "Bookmark Scout 지원: 자주 겪는 문제의 해결 방법, 버그 신고 방법, 지원, 개인정보, 보안 문의 이메일을 안내합니다."
+        },
+        "title": "지원",
+        "intro": "대부분의 답은 문서와 FAQ에 있습니다. 문제가 있으면 GitHub에 신고해 주세요. 공개하고 싶지 않은 내용은 이메일로 보내 주세요.",
+        "sections": {
+            "start-here": {
+                "title": "먼저 확인하기",
+                "items": {
+                    "docs": {
+                        "title": "문서 읽기",
+                        "body": "브라우저별 설치 방법, 기능 안내, 모든 설정에 대한 설명이 있습니다."
+                    },
+                    "faq": {
+                        "title": "FAQ 보기",
+                        "body": "데이터가 어디로 가는지, AI가 꼭 필요한지, Firefox에서 무엇이 되는지 짧게 답합니다."
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "자주 겪는 문제",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "Firefox를 다시 시작하면 Bookmark Scout가 사라집니다",
+                        "a": [
+                            "Firefox 부가 기능 사이트에 등록되기 전까지 Bookmark Scout는 Firefox에서 임시 부가 기능으로 실행되며, Firefox는 다시 시작할 때 임시 부가 기능을 제거합니다.",
+                            "다시 시작한 뒤 다시 불러오세요. <code>about:debugging#/runtime/this-firefox</code>를 열고 '임시 부가 기능 로드'를 누른 다음, 압축을 푼 폴더의 <code>manifest.json</code> 파일을 선택합니다."
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "Firefox에서 북마크 관리자를 찾을 수 없습니다",
+                        "a": [
+                            "Firefox는 확장 프로그램이 북마크 페이지를 대체하도록 허용하지 않아 Bookmark Scout 관리자와 도구 사이드바를 쓸 수 없습니다. 유지 관리 도구, 가져오기와 내보내기, 저장된 검색, 통계, 관리자 안의 AI 도구는 Chrome과 Edge에서 사용할 수 있습니다.",
+                            "Firefox에서는 툴바 팝업에서 검색, 페이지 저장, 폴더 관리를 할 수 있습니다."
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "Firefox에서 사이트 아이콘이 보이지 않습니다",
+                        "a": [
+                            "정상적인 동작입니다. Bookmark Scout는 브라우저 자체 아이콘 캐시에서 사이트 아이콘을 읽는데, Chrome과 Edge는 이 캐시를 확장 프로그램에 제공하지만 Firefox는 제공하지 않습니다."
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "'깨진 링크 확인'이나 '메타데이터 가져오기'가 아무것도 검사하지 않습니다",
+                        "a": [
+                            "이 도구들은 웹사이트 접근 권한이 필요하지만, 설치할 때는 이 권한을 받지 않습니다. 처음 실행할 때 브라우저가 권한을 요청하며, 거부하면 아무것도 검사하지 않습니다.",
+                            "도구를 다시 실행하고 브라우저가 요청하면 접근을 허용하세요."
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "AI 기능이 보이지 않거나 응답하지 않습니다",
+                        "a": [
+                            "AI 기능은 기본적으로 꺼져 있습니다. '설정'의 'AI'에서 켜고 제공업체를 고른 뒤 API 키를 입력하세요. 로컬 Ollama 서버는 키가 필요 없습니다.",
+                            "'서비스 확인'을 눌러 연결을 시험할 수 있습니다. 처음에는 브라우저가 해당 제공업체 사이트에 대한 접근 권한을 요청하니 허용해 주세요. 허용하지 않으면 확장 프로그램이 제공업체에 연결할 수 없습니다."
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "버그 신고",
+                "body": "버그 신고는 GitHub Issues에서 받습니다. 누구나 수정 과정을 확인할 수 있습니다. 이미 신고된 문제인지 먼저 기존 이슈를 검색해 주세요.",
+                "button": "GitHub에서 이슈 만들기",
+                "includeTitle": "신고에 포함하면 좋은 정보",
+                "include": {
+                    "browser": "사용 중인 브라우저와 버전(Chrome, Edge, Firefox).",
+                    "version": "Bookmark Scout 버전. 브라우저의 확장 프로그램 페이지에서 볼 수 있습니다.",
+                    "steps": "문제가 생기기까지의 단계. 팝업, 사이드 패널, 관리자 중 어디에서 시작했는지도 적어 주세요.",
+                    "result": "기대한 동작과 실제로 일어난 일, 오류 메시지가 있다면 그 내용.",
+                    "screenshot": "도움이 된다면 스크린샷. 공개하고 싶지 않은 북마크는 가려 주세요."
+                },
+                "privacyNote": "이슈는 공개됩니다. API 키는 절대 붙여 넣지 말고, 다른 사람에게 보이고 싶지 않은 북마크 제목이나 URL도 빼 주세요."
+            },
+            "email": {
+                "title": "이메일",
+                "channels": {
+                    "support": {
+                        "title": "확장 프로그램 사용 문의",
+                        "body": "설치나 사용법에 관해 공개적으로 묻기 어려운 질문은 이곳으로 보내 주세요."
+                    },
+                    "privacy": {
+                        "title": "개인정보 관련 문의와 요청",
+                        "body": "데이터 처리에 관한 질문은 이곳으로 보내 주세요. 확장 프로그램과 웹사이트가 데이터를 어떻게 다루는지는 <privacyPolicy>개인정보처리방침</privacyPolicy>에서 설명합니다."
+                    },
+                    "security": {
+                        "title": "보안 취약점",
+                        "body": "취약점은 공개 이슈가 아니라 이곳으로 비공개로 신고해 주세요. <securityPolicy>SECURITY.md</securityPolicy>와 <securityTxt>security.txt</securityTxt>도 참고하세요."
+                    }
+                }
+            }
+        }
+    }
+}

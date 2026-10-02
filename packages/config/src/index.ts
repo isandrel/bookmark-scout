@@ -34,6 +34,10 @@ export interface SiteConfig {
 	github: {
 		url: string;
 	};
+	license: {
+		name: string;
+		url: string;
+	};
 	locales: {
 		supported: string[];
 		default: string;
@@ -46,6 +50,14 @@ export interface SiteConfig {
 		privacy: string;
 		security: string;
 		support: string;
+	};
+	stores?: {
+		chrome_web_store?: string;
+		edge_addons?: string;
+		firefox_addons?: string;
+	};
+	legal: {
+		privacy_effective_date: string;
 	};
 	analytics?: {
 		website?: {
@@ -114,6 +126,9 @@ if (!config.author?.name) {
 if (!config.github?.url) {
 	throw new Error("config/site.config.toml: github.url is required");
 }
+if (!/^\d{4}-\d{2}-\d{2}$/.test(config.legal?.privacy_effective_date ?? "")) {
+	throw new Error("config/site.config.toml: legal.privacy_effective_date must be YYYY-MM-DD");
+}
 for (const role of ["privacy", "security", "support"] as const) {
 	if (!config.contact?.[role]?.includes("@")) {
 		throw new Error(`config/site.config.toml: contact.${role} must be an email address`);
@@ -145,6 +160,9 @@ export const AUTHOR = config.author;
 /** GitHub repository URL */
 export const GITHUB_URL = config.github.url;
 
+/** Project license (SPDX name and URL) */
+export const LICENSE = config.license;
+
 /** Supported locales */
 export const LOCALES = config.locales.supported;
 
@@ -156,6 +174,22 @@ export type Locale = (typeof LOCALES)[number];
 
 /** Role-based contact addresses (privacy, security, support) */
 export const CONTACT = config.contact;
+
+/** Store listing URLs; an empty string means the listing is not live yet */
+export const STORES = {
+	chrome: config.stores?.chrome_web_store ?? "",
+	edge: config.stores?.edge_addons ?? "",
+	firefox: config.stores?.firefox_addons ?? "",
+} as const;
+
+/** Browser keys that have a store listing */
+export type StoreBrowser = keyof typeof STORES;
+
+/** Latest GitHub release page, the download fallback while store listings are not live */
+export const RELEASES_URL = `${config.github.url}/releases/latest`;
+
+/** Privacy policy effective date (ISO 8601) */
+export const PRIVACY_EFFECTIVE_DATE = config.legal.privacy_effective_date;
 
 /** Docs site name */
 export const DOCS_NAME = config.docs?.name ?? "Docs";

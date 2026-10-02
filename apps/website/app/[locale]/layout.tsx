@@ -3,6 +3,7 @@ import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { routing } from "@/i18n/routing";
 import { SOCIAL_IMAGE } from "@/lib/assets";
+import { OG_LOCALES, SITE_KEYWORDS } from "@/lib/seo";
 import {
     SITE_META_TITLE,
     SITE_NAME,
@@ -64,20 +65,7 @@ export async function generateMetadata({
     return {
         title: { absolute: title, template: `%s | ${SITE_NAME}` },
         description,
-        keywords: [
-            "browser extension",
-            "chrome extension",
-            "firefox addon",
-            "edge extension",
-            "bookmarks",
-            "bookmark manager",
-            "productivity",
-            "bookmark search",
-            "bookmark organizer",
-            "drag and drop",
-            "bookmark cleanup",
-            "AI bookmark tools",
-        ],
+        keywords: [...SITE_KEYWORDS],
         alternates: {
             canonical: `${SITE_URL}/${locale}`,
             languages: {
@@ -92,7 +80,7 @@ export async function generateMetadata({
             description,
             siteName: SITE_NAME,
             type: "website",
-            locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
+            locale: OG_LOCALES[locale] ?? OG_LOCALES[routing.defaultLocale],
             url: `${SITE_URL}/${locale}`,
             images: [socialImage],
         },

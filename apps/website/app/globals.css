@@ -124,3 +124,13 @@ mark {
     animation: none;
   }
 }
+
+/* CJK line breaking: keep Japanese headings and Korean words from splitting mid-phrase. */
+:lang(ja) :is(h1, h2, h3) {
+  word-break: auto-phrase;
+}
+
+:lang(ko) body {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
