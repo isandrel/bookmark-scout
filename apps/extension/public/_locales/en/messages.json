@@ -3719,6 +3719,94 @@
         "message": "Top-level items removed: $1. Kept because they changed or could not be removed: $2.",
         "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
     },
+    "shortcuts_openSavedSearches": {
+        "message": "Open saved searches",
+        "description": "Keyboard shortcut description: s opens the saved searches menu"
+    },
+    "savedSearches_button": {
+        "message": "Saved searches",
+        "description": "Manager toolbar button and menu heading for saved searches (smart views)"
+    },
+    "savedSearches_buttonTitle": {
+        "message": "Save and reopen filter combinations (s)",
+        "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
+    },
+    "savedSearches_description": {
+        "message": "Saves the current filters, sort, and folder scope, not the bookmarks, so results always match your bookmarks as they are now. Kept on this device only.",
+        "description": "Explanation at the top of the saved searches menu"
+    },
+    "savedSearches_nameLabel": {
+        "message": "Name for the current search",
+        "description": "Accessible label of the input that names a new saved search"
+    },
+    "savedSearches_namePlaceholder": {
+        "message": "Name this search",
+        "description": "Placeholder of the input that names a new saved search"
+    },
+    "savedSearches_save": {
+        "message": "Save",
+        "description": "Button that saves a new saved search or a new name"
+    },
+    "savedSearches_saveHint": {
+        "message": "Opening a saved search replaces the current filters and sort.",
+        "description": "Hint under the saved search name input when the current search can be saved"
+    },
+    "savedSearches_needsFilter": {
+        "message": "Add a title, URL, type, folder, domain, or date filter to save this search.",
+        "description": "Hint shown when there is nothing to save because no filter is active"
+    },
+    "savedSearches_empty": {
+        "message": "No saved searches yet.",
+        "description": "Shown in the saved searches menu when none are saved"
+    },
+    "savedSearches_listLabel": {
+        "message": "Saved search list",
+        "description": "Accessible name of the list of saved searches"
+    },
+    "savedSearches_rename": {
+        "message": "Rename \"$1\"",
+        "description": "Accessible name of the button that renames a saved search; $1 is its name"
+    },
+    "savedSearches_renameLabel": {
+        "message": "New name for \"$1\"",
+        "description": "Accessible label of the input for a saved search new name; $1 is the current name"
+    },
+    "savedSearches_delete": {
+        "message": "Delete \"$1\"",
+        "description": "Accessible name of the button that deletes a saved search; $1 is its name"
+    },
+    "savedSearches_saved": {
+        "message": "Saved search \"$1\"",
+        "description": "Toast after saving a search; $1 is its name"
+    },
+    "savedSearches_deleted": {
+        "message": "Deleted saved search \"$1\"",
+        "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
+    },
+    "savedSearches_missingFoldersTitle": {
+        "message": "Some folders no longer exist",
+        "description": "Toast title when an opened saved search names folders that no longer exist"
+    },
+    "savedSearches_missingFolders": {
+        "message": "Folders skipped because they were deleted: $1. The other filters still apply.",
+        "description": "Toast description; $1 is how many folders of the saved search were skipped"
+    },
+    "savedSearches_errorEmptyName": {
+        "message": "Enter a name.",
+        "description": "Error when a saved search name is empty"
+    },
+    "savedSearches_errorDuplicateName": {
+        "message": "A saved search with this name already exists.",
+        "description": "Error when another saved search already uses the name"
+    },
+    "savedSearches_errorLimit": {
+        "message": "You can keep up to $1 saved searches. Delete one to save another.",
+        "description": "Error when the saved search limit is reached; $1 is the limit"
+    },
+    "savedSearches_errorGeneric": {
+        "message": "This search could not be saved.",
+        "description": "Error when a saved search could not be saved for another reason"
+    },
     "tools_deadLinkCategory_notFound": {
         "message": "Page not found",
         "description": "Dead link reason for HTTP 404 or 410"

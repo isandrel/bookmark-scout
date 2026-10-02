@@ -6,6 +6,7 @@
  * - Alt+ArrowUp or Backspace goes to the parent folder.
  * - `j` / `k` move focus to the next / previous table row (folder rows, or a bookmark row's
  *   actions menu); Enter on a folder row opens it, as before.
+ * - `s` opens the saved searches menu.
  *
  * Keys are ignored while typing, during IME composition, with Ctrl or Cmd held, and while a
  * dialog or menu is open.
@@ -19,6 +20,7 @@ export const MANAGER_SHORTCUT_BINDINGS = {
   parentFolder: [{ key: 'ArrowUp', alt: true }, { key: 'Backspace' }],
   nextRow: [{ key: 'j' }],
   previousRow: [{ key: 'k' }],
+  openSavedSearches: [{ key: 's' }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 const TABLE_ROW_SELECTOR = 'main table tbody tr';
@@ -55,6 +57,13 @@ function focusTitleFilter(): boolean {
   if (!input) return false;
   input.focus();
   input.select();
+  return true;
+}
+
+function openSavedSearches(): boolean {
+  const trigger = document.querySelector<HTMLElement>(`[${SAVED_SEARCHES_TRIGGER_ATTRIBUTE}]`);
+  if (!trigger) return false;
+  trigger.click();
   return true;
 }
 
@@ -103,6 +112,9 @@ export function useManagerShortcuts({
         case 'nextRow':
         case 'previousRow':
           if (moveRowFocus(action === 'nextRow' ? 1 : -1)) event.preventDefault();
+          break;
+        case 'openSavedSearches':
+          if (openSavedSearches()) event.preventDefault();
           break;
       }
     };

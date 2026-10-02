@@ -98,7 +98,8 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows, and `s` opens saved searches
+- [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
 - [x] 🗑️ **Delete Items** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
@@ -131,7 +132,6 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### 🚧 Current Focus
 
-- [ ] 🔖 **Saved Searches** — Save searches and smart bookmark views
 - [ ] 🧪 **Browser Coverage** — Run browser tests in Firefox and Edge, and automate context-menu and drag-and-drop flows
 - [ ] 🛒 **Store Distribution** — Prepare polished Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings
 

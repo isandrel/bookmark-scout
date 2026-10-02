@@ -125,6 +125,15 @@ export default function BookmarksPage() {
     };
   }, [allData]);
 
+  const savedSearchContext = useMemo<DataTableSavedSearchContext>(
+    () => ({
+      currentFolderId: currentFolder,
+      folderIds: new Set(allData.filter(isFolderRow).map((bookmark) => bookmark.id)),
+      onNavigateToFolder: navigateToFolder,
+    }),
+    [allData, currentFolder, navigateToFolder],
+  );
+
   const currentFolderName = useMemo(() => {
     if (!currentFolder) return undefined;
     const folder = allData.find((bookmark) => bookmark.id === currentFolder);
@@ -281,6 +290,7 @@ export default function BookmarksPage() {
               onPageIndexChange={rememberPageIndex}
               facetOptions={facetOptions}
               renderSelectionActions={renderSelectionActions}
+              savedSearchContext={savedSearchContext}
               isRowActivatable={isFolderRow}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';

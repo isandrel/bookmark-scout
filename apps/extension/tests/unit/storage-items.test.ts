@@ -4,6 +4,7 @@ import { aiProviderConfigItem, saveStoredAIProviderConfig } from '@/lib/ai-provi
 import { bookmarkMetadataItem } from '@/lib/bookmark-metadata-storage';
 import { bookmarkTableViewItem } from '@/lib/bookmark-table-view-storage';
 import { recentFoldersItem } from '@/lib/recent-folders-storage';
+import { savedSearchesItem } from '@/lib/saved-searches-storage';
 import { searchHistoryItem } from '@/lib/search-history-storage';
 import { settingsItem } from '@/lib/settings-storage';
 
@@ -15,6 +16,7 @@ const items = [
   ['AI provider config', aiProviderConfigItem, 'local', 'bookmark-scout-ai'],
   ['bookmark metadata', bookmarkMetadataItem, 'local', 'bookmark-scout-bookmark-metadata'],
   ['search history', searchHistoryItem, 'local', 'bookmark-scout-search-history'],
+  ['saved searches', savedSearchesItem, 'local', 'bookmark-scout-saved-searches'],
 ] as const;
 
 describe('storage items', () => {
