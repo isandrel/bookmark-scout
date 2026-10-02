@@ -1,35 +1,24 @@
-import { Fragment, type ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 /**
- * Remounts the page when the language setting changes, so every string, memoized label, and
- * toast is rebuilt in the new language without a manual reload. Also keeps `<html lang>` in step
- * with the language shown.
+ * Keeps `<html lang>` in step with the language shown. Strings themselves follow a language
+ * change without a reload: every page root reads settings, so a change re-renders the page,
+ * and `t()` reads the language set by the settings watcher. Re-rendering instead of remounting
+ * keeps open sidebars, dialogs, and typed text.
  */
 export function LanguageRoot({ children }: { children: ReactNode }) {
-  const languageRef = useRef<Settings['language'] | null>(null);
-  const [generation, setGeneration] = useState(0);
-
   useEffect(() => {
     let active = true;
-    const apply = (settings: Settings) => {
-      if (!active) return;
-      const previous = languageRef.current;
-      languageRef.current = settings.language;
-      document.documentElement.lang = getResolvedLanguage();
-      // The first value only records the language; remount on later changes.
-      if (previous !== null && previous !== settings.language) {
-        setGeneration((current) => current + 1);
-      }
+    const apply = () => {
+      if (active) document.documentElement.lang = getResolvedLanguage();
     };
     const unsubscribe = subscribeToSettings(apply);
-    void getSettings().then((settings) => {
-      if (languageRef.current === null) apply(settings);
-    });
+    void getSettings().then(apply);
     return () => {
       active = false;
       unsubscribe();
     };
   }, []);
 
-  return <Fragment key={generation}>{children}</Fragment>;
+  return children;
 }

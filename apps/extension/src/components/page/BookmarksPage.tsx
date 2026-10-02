@@ -67,6 +67,8 @@ export default function BookmarksPage() {
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
+  // Labels built in memos below must be rebuilt when the language changes.
+  const { value: language } = useSetting('language');
   const { pendingDeletion, requestDeletion, confirmDeletion, cancelDeletion } =
     useBookmarkDeletion(refresh);
   const columns = useMemo(
@@ -109,6 +111,7 @@ export default function BookmarksPage() {
     () => sortBookmarkItems(allData, sortOrder, sortAccessors),
     [allData, sortOrder, sortAccessors],
   );
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const facetOptions = useMemo(() => {
     const domains = [
       ...new Set(allData.map((bookmark) => getUrlDomain(bookmark.url)).filter(Boolean)),
@@ -121,7 +124,7 @@ export default function BookmarksPage() {
         icon: () => <SiteIcon url={`https://${domain}/`} className="mr-2" />,
       })),
     };
-  }, [allData]);
+  }, [allData, language]);
 
   const savedSearchContext = useMemo<DataTableSavedSearchContext>(
     () => ({
@@ -132,11 +135,12 @@ export default function BookmarksPage() {
     [allData, currentFolder, navigateToFolder],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const currentFolderName = useMemo(() => {
     if (!currentFolder) return undefined;
     const folder = allData.find((bookmark) => bookmark.id === currentFolder);
     return folder ? folder.title.trim() || t('bookmarks_untitled') : undefined;
-  }, [allData, currentFolder]);
+  }, [allData, currentFolder, language]);
 
   const renderSelectionActions = useCallback(
     (rows: Bookmark[], hiddenCount: number, clearSelection: () => void) => (
