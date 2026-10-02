@@ -88,13 +88,19 @@ async function openRepairReview(page: Page, extensionId: string, folderId: strin
 
 async function choose(page: Page, title: string, option: string) {
   const review = page.getByRole('dialog', { name: 'Review dead-link repairs' });
-  await review.getByRole('combobox', { name: `Action for ${title}` }).click();
-  // A select that just closed keeps its emptied listbox mounted for a moment; use the open one.
-  await page
-    .getByRole('listbox')
-    .filter({ visible: true })
-    .getByRole('option', { name: option, exact: true })
-    .click();
+  const combobox = review.getByRole('combobox', { name: `Action for ${title}` });
+  // Opening a select right after another one closes can race the first select's focus return,
+  // which closes the new popup again. Retry until the choice shows in the trigger.
+  await expect(async () => {
+    if ((await combobox.getAttribute('aria-expanded')) !== 'true') await combobox.click();
+    // A select that just closed keeps its emptied listbox mounted for a moment; use the open one.
+    await page
+      .getByRole('listbox')
+      .filter({ visible: true })
+      .getByRole('option', { name: option, exact: true })
+      .click({ timeout: 2_000 });
+    await expect(combobox).toContainText(option, { timeout: 1_000 });
+  }).toPass({ timeout: 15_000 });
 }
 
 test('dead-link scan separates confirmed dead links from ones that need a manual check', async ({

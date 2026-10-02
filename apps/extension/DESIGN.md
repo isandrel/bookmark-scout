@@ -160,7 +160,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 ## Layout
 
-- **Popup** (400x600 by default, adjustable from 300x300 to 800x600): search field, then recent folders as one row of chips, then the AI suggestion block when present, then the tree, then the hint bar. 8px gutters. Only the tree scrolls.
+- **Popup** (400x600 by default, adjustable from 300x300 to 800x600): search field, then recent folders as wrapping chips beside their label, then the AI suggestion block when present, then the tree, then the hint bar. 8px gutters. Only the tree scrolls.
 - **Side panel:** the popup layout at full height; the hint bar stays at the bottom.
 - **Manager:** the folder sidebar (256px), the table, and the tools sidebar (320px). Each sidebar collapses with `inert`. Panels are `surface` on `paper`, separated by 1px lines.
 - **Options:** a vertical category list on the left (a select below 640px), with the settings for the selected category on the right, and a sticky footer holding the save status, export, import, and reset.
@@ -227,7 +227,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 ## Responsive behavior
 
-- The popup reflows from 300px to 800px wide: chips scroll sideways in their own row, row titles truncate, and row actions overlay instead of wrapping.
+- The popup reflows from 300px to 800px wide: chips wrap onto another line, row titles truncate, row actions overlay instead of wrapping, and the hint bar drops its last hint below 360px.
 - Below 1100px the manager keeps one sidebar open so the table has room; below 768px both sidebars collapse.
 - Options switches the category list to a select below 640px.
 
