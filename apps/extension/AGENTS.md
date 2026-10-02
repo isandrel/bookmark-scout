@@ -185,9 +185,10 @@ When working in AI-related files, check whether the logic already belongs in:
 
 ## UI and UX guidance
 
+- read `DESIGN.md` in this app before changing UI, and update it when tokens or shared components change
 - reuse existing UI primitives under `src/components/ui/` before creating new ones
 - follow current patterns for dialogs, sheets, toasts, tables, filtering, and drag-and-drop
-- maintain the existing product feel instead of introducing a separate design language for small enhancements
+- follow the tokens, components, and do's and don'ts in `DESIGN.md` instead of introducing a separate design language
 - keep component APIs small and understandable
 
 If a component becomes a container for too much logic, split responsibilities rather than continuing to grow it.
