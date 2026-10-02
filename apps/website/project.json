@@ -31,6 +31,24 @@
             "options": {
                 "cwd": "apps/website"
             }
+        },
+        "verify": {
+            "command": "bun scripts/verify-build.ts",
+            "dependsOn": [
+                "build"
+            ],
+            "options": {
+                "cwd": "apps/website"
+            }
+        },
+        "test:e2e": {
+            "command": "bunx playwright test",
+            "dependsOn": [
+                "build"
+            ],
+            "options": {
+                "cwd": "apps/website"
+            }
         }
     }
 }

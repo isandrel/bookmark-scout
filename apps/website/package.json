@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verify": "bun scripts/verify-build.ts",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
-    "next": "16.3.6",
-    "next-intl": "^4.14.6",
+    "next": "16.3.8",
+    "next-intl": "^4.14.8",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "smol-toml": "^1.9.0"
@@ -18,11 +20,12 @@
   "devDependencies": {
     "@eslint/compat": "^2.1.1",
     "@tailwindcss/postcss": "^4.3.3",
+    "@types/bun": "1.4.2",
     "@types/node": "^26.6.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "eslint": "^10.11.0",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
