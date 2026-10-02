@@ -153,19 +153,23 @@ function relOf(value: string | undefined): SiteIconRel | null {
  * http(s) icons are kept. `mask-icon` and other rel values are not icons.
  */
 export function parseIconCandidates(html: string, pageUrl: string): SiteIconCandidate[] {
-  const source = html.replace(/<!--[\s\S]*?-->/g, '');
+  // Comments are matched as tokens and skipped, so tags inside them are never read.
+  const tags = [...html.matchAll(/<!--[\s\S]*?(?:-->|$)|<(base|link)\b([^>]*)>/gi)].flatMap(
+    (match) => (match[1] ? [{ name: match[1].toLowerCase(), attributes: match[2] }] : []),
+  );
   let base = pageUrl;
-  const baseTag = /<base\b([^>]*)>/i.exec(source);
+  const baseTag = tags.find((tag) => tag.name === 'base');
   if (baseTag) {
-    const href = parseAttributes(baseTag[1]).get('href');
+    const href = parseAttributes(baseTag.attributes).get('href');
     const resolved = href === undefined ? null : resolveWebUrl(href, pageUrl);
     if (resolved) base = resolved;
   }
 
   const candidates: SiteIconCandidate[] = [];
   const seen = new Set<string>();
-  for (const match of source.matchAll(/<link\b([^>]*)>/gi)) {
-    const attributes = parseAttributes(match[1]);
+  for (const tag of tags) {
+    if (tag.name !== 'link') continue;
+    const attributes = parseAttributes(tag.attributes);
     const rel = relOf(attributes.get('rel'));
     if (!rel) continue;
     const url = resolveWebUrl(attributes.get('href') ?? '', base);
@@ -285,12 +289,13 @@ export function sniffImageType(bytes: Uint8Array): string | null {
     return 'image/webp';
   }
   if (startsWithBytes(bytes, [0x42, 0x4d])) return 'image/bmp';
-  const text = new TextDecoder('utf-8')
-    .decode(bytes.subarray(0, 1024))
-    .replace(/^﻿/, '')
-    .replace(/<\?xml[\s\S]*?\?>|<!--[\s\S]*?-->|<!DOCTYPE[^>]*>/gi, '')
-    .trimStart();
-  return /^<svg[\s>]/i.test(text) ? 'image/svg+xml' : null;
+  let text = new TextDecoder('utf-8').decode(bytes.subarray(0, 1024)).replace(/^\ufeff/, '');
+  // Skip a leading XML declaration, comments, and doctype one token at a time.
+  const prolog = /^\s*(?:<\?xml[\s\S]*?\?>|<!--[\s\S]*?-->|<!DOCTYPE[^>]*>)/i;
+  for (let match = prolog.exec(text); match; match = prolog.exec(text)) {
+    text = text.slice(match[0].length);
+  }
+  return /^\s*<svg[\s>]/i.test(text) ? 'image/svg+xml' : null;
 }
 
 export function isImageContentType(contentType: string | null): boolean {

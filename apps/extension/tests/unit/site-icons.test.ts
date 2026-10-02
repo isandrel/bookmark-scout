@@ -98,6 +98,13 @@ describe('icon candidate parsing', () => {
     ]);
   });
 
+  it('ignores links inside an unterminated comment', () => {
+    expect(
+      parseIconCandidates('<link rel="icon" href="/a.png"><!-- <link rel="icon" href="/b.png">', 'https://a.test/')
+        .map((candidate) => candidate.url),
+    ).toEqual(['https://a.test/a.png']);
+  });
+
   it('resolves relative icons against the page when there is no base', () => {
     expect(
       parseIconCandidates('<link rel="icon" href="../img/i.svg" sizes="any">', 'https://a.test/x/y/z')
