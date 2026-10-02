@@ -69,7 +69,8 @@
     "subtitle": "Get started in minutes",
     "step1": {
       "title": "Download from GitHub Releases",
-      "description": "Download the latest CRX or ZIP asset for your browser"
+      "description": "Download the latest CRX or ZIP asset for your browser",
+      "button": "Download Latest Release"
     },
     "step2": {
       "title": "Prepare the extension files",

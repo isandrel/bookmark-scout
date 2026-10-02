@@ -69,7 +69,8 @@
     "subtitle": "数分で始められます",
     "step1": {
       "title": "GitHub Releasesからダウンロード",
-      "description": "ブラウザ用の最新CRXまたはZIPアセットをダウンロード"
+      "description": "ブラウザ用の最新CRXまたはZIPアセットをダウンロード",
+      "button": "最新リリースをダウンロード"
     },
     "step2": {
       "title": "拡張機能ファイルを準備",

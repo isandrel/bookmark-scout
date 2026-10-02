@@ -1,7 +1,7 @@
 import { JsonLd } from "@/components/JsonLd";
 import { routing } from "@/i18n/routing";
+import { SOCIAL_IMAGE } from "@/lib/assets";
 import {
-    SITE_DESCRIPTION,
     SITE_META_TITLE,
     SITE_NAME,
     SITE_URL,
@@ -11,7 +11,7 @@ import {
 } from "@bookmark-scout/config";
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "../globals.css";
@@ -31,11 +31,19 @@ export async function generateMetadata({
     params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
     const { locale } = await params;
-    await getMessages();
+    const t = await getTranslations({ locale, namespace: "metadata" });
+    const title = t("title");
+    const description = t("description");
+    const socialImage = {
+        url: SOCIAL_IMAGE.url,
+        width: SOCIAL_IMAGE.width,
+        height: SOCIAL_IMAGE.height,
+        alt: `${SITE_NAME} — ${SITE_META_TITLE}`,
+    };
 
     return {
-        title: `${SITE_NAME} | ${SITE_META_TITLE}`,
-        description: SITE_DESCRIPTION,
+        title: { absolute: title, template: `%s | ${SITE_NAME}` },
+        description,
         keywords: [
             "browser extension",
             "chrome extension",
@@ -53,31 +61,26 @@ export async function generateMetadata({
         alternates: {
             canonical: `${SITE_URL}/${locale}`,
             languages: {
-                en: `${SITE_URL}/en`,
-                ja: `${SITE_URL}/ja`,
-                ko: `${SITE_URL}/ko`,
+                ...Object.fromEntries(
+                    routing.locales.map((l) => [l, `${SITE_URL}/${l}`]),
+                ),
+                "x-default": `${SITE_URL}/${routing.defaultLocale}`,
             },
         },
         openGraph: {
-            title: SITE_NAME,
-            description: SITE_DESCRIPTION,
+            title,
+            description,
+            siteName: SITE_NAME,
             type: "website",
             locale: locale === "ja" ? "ja_JP" : locale === "ko" ? "ko_KR" : "en_US",
             url: `${SITE_URL}/${locale}`,
-            images: [
-                {
-                    url: "/icon.png",
-                    width: 128,
-                    height: 128,
-                    alt: SITE_NAME,
-                },
-            ],
+            images: [socialImage],
         },
         twitter: {
-            card: "summary",
-            title: SITE_NAME,
-            description: SITE_DESCRIPTION,
-            images: ["/icon.png"],
+            card: "summary_large_image",
+            title,
+            description,
+            images: [socialImage],
         },
     };
 }

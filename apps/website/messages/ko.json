@@ -69,7 +69,8 @@
     "subtitle": "몇 분 안에 시작하세요",
     "step1": {
       "title": "GitHub Releases에서 다운로드",
-      "description": "브라우저용 최신 CRX 또는 ZIP 에셋 다운로드"
+      "description": "브라우저용 최신 CRX 또는 ZIP 에셋 다운로드",
+      "button": "최신 릴리스 다운로드"
     },
     "step2": {
       "title": "확장 프로그램 파일 준비",
