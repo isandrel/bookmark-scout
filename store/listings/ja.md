@@ -6,7 +6,7 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 73 |
 | Firefox Add-ons summary | 114 |
-| Full description, Chrome and Edge | 1,664 |
+| Full description, Chrome and Edge | 1,720 |
 | Full description, Firefox | 962 |
 
 ## Name
@@ -73,7 +73,7 @@ Bookmark Scout（ブックマークスカウト）は、ブラウザを離れず
 メンテナンスツール
 • 重複クリーナー：重複グループを確認してから余分なコピーを削除
 • URLクリーナー：トラッキングパラメータの削除をプレビューして適用
-• リンク切れチェック：アクセスできないリンクを検出
+• リンク切れチェック：アクセスできないリンクを検出し、修復（削除、リダイレクト先の使用、アーカイブ版へのリンク、URL の編集）を確認してから適用、元に戻すも可能
 • メタデータ取得：ページタイトルを提案し、選んだものだけを適用
 • プライバシースキャナー：ブックマーク内の機密性の高いクエリパラメータ、URL フラグメント、メールアドレス、UUID を検出
 • 統計：ドメイン、フォルダ、階層の深さ、重複

@@ -9,7 +9,7 @@ What the extension does with data at version `0.2.0`, checked against the source
 - No content scripts. The extension does not read the pages you visit; it reads only the active tab's title and URL.
 - Network requests happen only after a user action, in two features:
   - **AI features** (off by default): requests go from the browser straight to the provider endpoint the user configured (`src/services/ai-client.ts`).
-  - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use.
+  - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use. The dead-link repair option "archived copy" only builds a `https://web.archive.org/web/<URL>` link locally; it does not contact the Wayback Machine (`src/services/dead-link-repair.ts`).
 - AI provider credentials are stored with `local:` storage items only (`src/lib/ai-provider-storage.ts`) and are not synced.
 
 ## Data inventory

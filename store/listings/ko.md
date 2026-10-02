@@ -6,7 +6,7 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | --- | --- |
 | Optional manifest description | 76 |
 | Firefox Add-ons summary | 107 |
-| Full description, Chrome and Edge | 1,695 |
+| Full description, Chrome and Edge | 1,757 |
 | Full description, Firefox | 983 |
 
 ## Name
@@ -73,7 +73,7 @@ Bookmark Scout(북마크 스카우트)는 브라우저를 떠나지 않고 북�
 유지 관리 도구
 • 중복 정리: 중복 그룹을 검토한 뒤 남는 사본 삭제
 • URL 정리: 추적 매개변수 제거를 미리 보고 적용
-• 깨진 링크 확인: 접속할 수 없는 링크 찾기
+• 깨진 링크 확인: 접속할 수 없는 링크를 찾고, 복구 방법(삭제, 리디렉션 대상 사용, 보관된 사본 연결, URL 편집)을 검토해 적용하며 실행 취소 가능
 • 메타데이터 가져오기: 페이지 제목을 제안하고 선택한 것만 적용
 • 개인정보 스캐너: 북마크에서 민감한 쿼리 매개변수, URL 프래그먼트, 이메일 주소, UUID 찾기
 • 통계: 도메인, 폴더, 깊이, 중복

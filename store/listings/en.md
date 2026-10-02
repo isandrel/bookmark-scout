@@ -56,7 +56,7 @@ import export bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 3,037 characters. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 3,146 characters. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout helps you find, file, and tidy your bookmarks without leaving the browser.
@@ -76,7 +76,7 @@ Bookmark Scout replaces the browser's Bookmarks page with a manager that has a f
 MAINTENANCE TOOLS
 • Duplicate Cleaner: review duplicate groups before removing extra copies
 • URL Cleaner: preview and remove tracking parameters
-• Dead Link Checker: find unreachable links
+• Dead Link Checker: find unreachable links, then review repairs (delete, use the redirect target, point to an archived copy, or edit the URL) with Undo
 • Metadata Fetcher: suggest page titles and apply only the ones you select
 • Privacy Scanner: find sensitive query parameters, URL fragments, email addresses, and UUIDs in bookmarks
 • Statistics: domains, folders, depth, and duplicates
