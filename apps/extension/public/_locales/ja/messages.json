@@ -3718,5 +3718,93 @@
     "tools_importUndoneDesc": {
         "message": "削除した最上位の項目: $1。変更されたか削除できなかったため残した項目: $2。",
         "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
+    },
+    "shortcuts_openSavedSearches": {
+        "message": "保存した検索を開く",
+        "description": "Keyboard shortcut description: s opens the saved searches menu"
+    },
+    "savedSearches_button": {
+        "message": "保存した検索",
+        "description": "Manager toolbar button and menu heading for saved searches (smart views)"
+    },
+    "savedSearches_buttonTitle": {
+        "message": "フィルターの組み合わせを保存して再度開きます (s)",
+        "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
+    },
+    "savedSearches_description": {
+        "message": "現在のフィルター、並べ替え、フォルダーの範囲を保存します。ブックマーク自体は保存しないため、結果は常に現在のブックマークに基づきます。このデバイスにのみ保存されます。",
+        "description": "Explanation at the top of the saved searches menu"
+    },
+    "savedSearches_nameLabel": {
+        "message": "現在の検索の名前",
+        "description": "Accessible label of the input that names a new saved search"
+    },
+    "savedSearches_namePlaceholder": {
+        "message": "この検索に名前を付ける",
+        "description": "Placeholder of the input that names a new saved search"
+    },
+    "savedSearches_save": {
+        "message": "保存",
+        "description": "Button that saves a new saved search or a new name"
+    },
+    "savedSearches_saveHint": {
+        "message": "保存した検索を開くと、現在のフィルターと並べ替えが置き換えられます。",
+        "description": "Hint under the saved search name input when the current search can be saved"
+    },
+    "savedSearches_needsFilter": {
+        "message": "保存するには、タイトル、URL、種類、フォルダー、ドメイン、日付のいずれかで絞り込んでください。",
+        "description": "Hint shown when there is nothing to save because no filter is active"
+    },
+    "savedSearches_empty": {
+        "message": "保存した検索はまだありません。",
+        "description": "Shown in the saved searches menu when none are saved"
+    },
+    "savedSearches_listLabel": {
+        "message": "保存した検索の一覧",
+        "description": "Accessible name of the list of saved searches"
+    },
+    "savedSearches_rename": {
+        "message": "「$1」の名前を変更",
+        "description": "Accessible name of the button that renames a saved search; $1 is its name"
+    },
+    "savedSearches_renameLabel": {
+        "message": "「$1」の新しい名前",
+        "description": "Accessible label of the input for a saved search new name; $1 is the current name"
+    },
+    "savedSearches_delete": {
+        "message": "「$1」を削除",
+        "description": "Accessible name of the button that deletes a saved search; $1 is its name"
+    },
+    "savedSearches_saved": {
+        "message": "検索「$1」を保存しました",
+        "description": "Toast after saving a search; $1 is its name"
+    },
+    "savedSearches_deleted": {
+        "message": "保存した検索「$1」を削除しました",
+        "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
+    },
+    "savedSearches_missingFoldersTitle": {
+        "message": "一部のフォルダーが見つかりません",
+        "description": "Toast title when an opened saved search names folders that no longer exist"
+    },
+    "savedSearches_missingFolders": {
+        "message": "削除されたためスキップしたフォルダー: $1。その他のフィルターは適用されています。",
+        "description": "Toast description; $1 is how many folders of the saved search were skipped"
+    },
+    "savedSearches_errorEmptyName": {
+        "message": "名前を入力してください。",
+        "description": "Error when a saved search name is empty"
+    },
+    "savedSearches_errorDuplicateName": {
+        "message": "同じ名前の保存した検索がすでにあります。",
+        "description": "Error when another saved search already uses the name"
+    },
+    "savedSearches_errorLimit": {
+        "message": "保存できる検索は最大 $1 件です。新しく保存するには、いずれかを削除してください。",
+        "description": "Error when the saved search limit is reached; $1 is the limit"
+    },
+    "savedSearches_errorGeneric": {
+        "message": "この検索を保存できませんでした。",
+        "description": "Error when a saved search could not be saved for another reason"
     }
 }
