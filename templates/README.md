@@ -101,7 +101,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 - [x] 🗑️ **Delete Items** — Remove bookmarks and folders with confirmation
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
 - [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
-- [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links
+- [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
 - [x] 🧾 **Metadata Fetcher** — Fetch title, favicon, and description metadata
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
