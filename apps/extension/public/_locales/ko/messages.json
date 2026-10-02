@@ -75,6 +75,14 @@
         "message": "오류",
         "description": "Error label"
     },
+    "error_boundaryTitle": {
+        "message": "문제가 발생했습니다",
+        "description": "Heading shown when a page crashes"
+    },
+    "error_boundaryFallback": {
+        "message": "예기치 않은 오류가 발생했습니다.",
+        "description": "Shown under the crash heading when the error has no message"
+    },
     "toast_folderCreated": {
         "message": "폴더가 생성되었습니다",
         "description": "Toast title for folder creation success"
@@ -234,10 +242,6 @@
     "state_noSettingsMatch": {
         "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
-    },
-    "toast_settingsSaved": {
-        "message": "설정이 저장되었습니다",
-        "description": "Toast title for settings save success"
     },
     "toast_preferencesUpdated": {
         "message": "환경 설정이 업데이트되었습니다",

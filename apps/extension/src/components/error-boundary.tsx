@@ -1,3 +1,4 @@
+import { CircleAlert } from 'lucide-react';
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface Props {
@@ -25,20 +26,18 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background">
-          <div className="text-center p-8">
-            <h2 className="text-2xl font-bold text-foreground mb-4">Something went wrong</h2>
-            <p className="text-muted-foreground mb-4">
-              {this.state.error?.message || 'An unexpected error occurred'}
-            </p>
-            <button
-              type="button"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-              onClick={() => this.setState({ hasError: false })}
-            >
-              Try again
-            </button>
-          </div>
+        <div
+          role="alert"
+          className="flex min-h-screen flex-col items-center justify-center gap-2 bg-background p-6 text-center"
+        >
+          <CircleAlert aria-hidden="true" className="size-6 text-destructive-text" />
+          <h2 className="text-lg font-semibold text-foreground">{t('error_boundaryTitle')}</h2>
+          <p className="max-w-md text-sm text-muted-foreground [overflow-wrap:anywhere]">
+            {this.state.error?.message || t('error_boundaryFallback')}
+          </p>
+          <Button className="mt-2" onClick={() => this.setState({ hasError: false })}>
+            {t('action_retry')}
+          </Button>
         </div>
       );
     }

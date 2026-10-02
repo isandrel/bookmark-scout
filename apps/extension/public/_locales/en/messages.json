@@ -75,6 +75,14 @@
         "message": "Error",
         "description": "Error label"
     },
+    "error_boundaryTitle": {
+        "message": "Something went wrong",
+        "description": "Heading shown when a page crashes"
+    },
+    "error_boundaryFallback": {
+        "message": "An unexpected error occurred.",
+        "description": "Shown under the crash heading when the error has no message"
+    },
     "toast_folderCreated": {
         "message": "Folder Created",
         "description": "Toast title for folder creation success"
@@ -234,10 +242,6 @@
     "state_noSettingsMatch": {
         "message": "No settings match your search in this category.",
         "description": "Empty settings search result"
-    },
-    "toast_settingsSaved": {
-        "message": "Settings saved",
-        "description": "Toast title for settings save success"
     },
     "toast_preferencesUpdated": {
         "message": "Your preferences have been updated.",

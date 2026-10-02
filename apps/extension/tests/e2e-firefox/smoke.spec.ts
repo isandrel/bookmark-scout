@@ -203,8 +203,13 @@ test('options saves a setting to sync storage and keeps it after reload', async 
 
   await expect.poll(async () => (await readSettings(extension)).showFavicons).toBe(false);
   await expect
-    .poll(async () => (await extension.find('[data-testid="settings-save-status"]')).getText())
-    .toBe('Settings saved');
+    // The status is empty and hidden after a successful save, so read it without a visibility wait.
+    .poll(() =>
+      extension.driver.executeScript<string>(
+        "return document.querySelector('[data-testid=\"settings-save-status\"]')?.textContent ?? 'missing'",
+      ),
+    )
+    .toBe('');
 
   await extension.driver.navigate().refresh();
   await expect
