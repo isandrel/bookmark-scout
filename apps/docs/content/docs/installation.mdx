@@ -78,8 +78,14 @@ bun run build
 # Lint extension source
 bunx nx run extension:lint
 
-# Build Chrome, install Playwright Chromium, and run all extension tests
+# Build Chrome, install Playwright Chromium, and run unit and Chromium E2E tests
 bun run test
+
+# Run the same E2E suite in Microsoft Edge against the Edge build
+bunx nx run extension:test:e2e:edge
+
+# Run the Firefox smoke suite against the Firefox build
+bunx nx run extension:test:e2e:firefox
 ```
 
-The command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs it on pushes and pull requests without manual browser setup. Network-dependent and AI provider flows are not yet covered by browser tests.
+`bun run test` runs unit tests and headless Chromium E2E tests for the popup, side panel, bookmarks manager, settings, maintenance tools, reports, import/export, keyboard shortcuts, saved searches, context-menu saves, drag and drop, route-mocked and local-server network tools, and AI tools against mocked providers. CI runs it on pushes and pull requests without manual browser setup, and also runs the Edge suite and the Firefox smoke suite (not required checks yet). Live websites and real AI providers are not covered by automated tests.

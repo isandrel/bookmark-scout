@@ -8,8 +8,9 @@ const techStack = [
     { name: "React 19", color: "#61DAFB", logo: "react" },
     { name: "TypeScript", color: "#3178C6", logo: "typescript" },
     { name: "WXT", color: "#646CFF", logo: "vite" },
-    { name: "Rolldown-Vite", color: "#646CFF", logo: "vite" },
+    { name: "Vite 8", color: "#646CFF", logo: "vite" },
     { name: "TailwindCSS 4", color: "#06B6D4", logo: "tailwindcss" },
+    { name: "Base UI", color: "#000000", logo: "mui" },
     { name: "Zustand", color: "#764ABC", logo: "redux" },
     { name: "Nx", color: "#143055", logo: "nx" },
     { name: "Bun", color: "#000000", logo: "bun" },
@@ -72,9 +73,19 @@ export default async function Home({
             description: t("features.importExport.description"),
         },
         {
-            icon: "🎯",
-            title: t("features.expandCollapse.title"),
-            description: t("features.expandCollapse.description"),
+            icon: "🔖",
+            title: t("features.savedSearches.title"),
+            description: t("features.savedSearches.description"),
+        },
+        {
+            icon: "⌨️",
+            title: t("features.keyboardShortcuts.title"),
+            description: t("features.keyboardShortcuts.description"),
+        },
+        {
+            icon: "↩️",
+            title: t("features.undoDelete.title"),
+            description: t("features.undoDelete.description"),
         },
     ];
 

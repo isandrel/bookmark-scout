@@ -20,8 +20,8 @@
     "title": "Features",
     "subtitle": "Everything you need to manage your bookmarks efficiently",
     "aiRecommendations": {
-      "title": "AI Folder Recommendations",
-      "description": "Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, OpenRouter, or Ollama"
+      "title": "Opt-in AI Tools",
+      "description": "Folder suggestions, tags, summaries, and reorganization plans from the provider you choose: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, or any OpenAI-compatible endpoint. Off by default."
     },
     "instantSearch": {
       "title": "Instant Search",
@@ -33,31 +33,39 @@
     },
     "quickAdd": {
       "title": "Quick Add",
-      "description": "Save the current tab to any folder with one click"
+      "description": "Save the current tab to any folder with one click, or save links from the right-click menu"
     },
     "sidePanel": {
       "title": "Side Panel",
-      "description": "Access your bookmarks from Chrome's side panel"
+      "description": "Browse and search bookmarks in the Chrome or Edge side panel"
     },
     "darkMode": {
-      "title": "Dark Mode",
-      "description": "Beautiful dark theme with smooth transitions"
+      "title": "Light & Dark Themes",
+      "description": "Follow your system theme or choose light or dark"
     },
     "bookmarksManager": {
       "title": "Bookmarks Manager",
-      "description": "Replace Chrome's default bookmarks page with a custom table, folder tree, breadcrumbs, and tools sidebar"
+      "description": "Replace Chrome's bookmarks page with a folder tree, breadcrumbs, a resizable table, and a tools sidebar"
     },
     "maintenanceTools": {
       "title": "Maintenance Tools",
-      "description": "Find duplicates, clean tracking URLs, scan dead links, inspect metadata, review privacy issues, and view statistics"
+      "description": "Find duplicates, clean tracking URLs, scan dead links and review repairs, fetch titles, flag privacy-sensitive URLs, and view statistics"
     },
     "importExport": {
       "title": "Import/Export",
-      "description": "Export HTML, JSON, Markdown, or CSV and import HTML or JSON bookmark files"
+      "description": "Export HTML, JSON, Markdown, or CSV, and preview HTML or JSON imports before anything is written"
     },
-    "expandCollapse": {
-      "title": "Expand/Collapse",
-      "description": "Quickly expand or collapse all nested folders"
+    "savedSearches": {
+      "title": "Saved Searches",
+      "description": "Save filters, sort, and folder scope as named smart views that always reflect your current bookmarks"
+    },
+    "keyboardShortcuts": {
+      "title": "Keyboard Shortcuts",
+      "description": "Search, navigate, and save from the keyboard without overriding browser shortcuts. Press ? for help"
+    },
+    "undoDelete": {
+      "title": "Delete with Undo",
+      "description": "Confirm before deleting, and undo any deletion for 10 seconds"
     }
   },
   "techStack": {
@@ -149,7 +157,7 @@
     },
     "sidePanel": {
       "title": "Side Panel",
-      "description": "Access your bookmarks directly from Chrome's side panel without leaving your current page. Perfect for research and reference work."
+      "description": "Access your bookmarks from the Chrome or Edge side panel without leaving your current page. Perfect for research and reference work."
     },
     "bookmarksManager": {
       "title": "Full Bookmarks Manager",
@@ -164,8 +172,8 @@
       "description": "Configure appearance, search, behavior, AI providers, AI tools, maintenance tools, metadata, security, analytics, data, and context-menu behavior."
     },
     "darkMode": {
-      "title": "Beautiful Dark Mode",
-      "description": "A stunning dark theme that's easy on the eyes. Features smooth transitions and carefully chosen colors for optimal readability."
+      "title": "Light & Dark Themes",
+      "description": "Choose light or dark, or follow your system theme. Carefully chosen colors keep text readable in both."
     },
     "expandCollapse": {
       "title": "Expand/Collapse All",
@@ -181,11 +189,11 @@
     },
     "maintenanceTools": {
       "title": "Maintenance Tools",
-      "description": "Clean duplicate bookmarks, remove tracking parameters, scan dead links, fetch metadata, inspect privacy-sensitive URLs, and collect bookmark statistics."
+      "description": "Clean duplicate bookmarks, remove tracking parameters, scan dead links and review repairs (delete, use the redirect target, use an archived copy, or edit the URL), fetch page titles, inspect privacy-sensitive URLs, and collect bookmark statistics."
     },
     "importExport": {
       "title": "Import/Export",
-      "description": "Export bookmarks as HTML, JSON, Markdown, or CSV. Import existing bookmark files from HTML or JSON."
+      "description": "Export bookmarks as HTML, JSON, Markdown, or CSV. Import HTML or JSON bookmark files after a preview that shows the target folder, counts, and duplicates, with undo afterward."
     },
     "aiTools": {
       "title": "AI Tools",
@@ -201,8 +209,8 @@
     },
     "roadmap": {
       "title": "Current Focus",
-      "tests": "Browser Coverage — Run browser tests in Firefox and Edge",
-      "storeDistribution": "Store Distribution — Polish Chrome Web Store, Firefox Add-ons, and Edge Add-ons listings"
+      "tests": "Browser Coverage — Broaden the Firefox tests and make the Edge and Firefox CI jobs required checks",
+      "storeDistribution": "Store Distribution — Submit to the Chrome Web Store, Firefox Add-ons, and Edge Add-ons (listing material is ready)"
     }
   },
   "contributingPage": {

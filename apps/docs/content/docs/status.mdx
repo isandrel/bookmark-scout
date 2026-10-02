@@ -23,7 +23,7 @@ This page summarizes the current repository status so roadmap docs do not drift 
 - AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, and custom OpenAI-compatible endpoints
 - AI folder recommendations, including reviewed creation of a suggested new folder path that saves the current page there
 - AI context packing with saved tags and summaries, tag suggestions, summaries, and folder reorganization (previewed before applying by default)
-- Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning, metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
+- Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning with confirmed-dead and needs-a-manual-check results plus reviewed repairs (delete, redirect target, Wayback Machine copy, or edited URL, with undo), metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
 - Privacy review with optional redaction before bookmark exports and AI context exports
 - Bookmark import from HTML or JSON, with a preview of the target folder, counts, and duplicates, a duplicate-handling choice, and undo
 - Bookmark export to HTML, JSON, Markdown, or CSV
@@ -46,7 +46,6 @@ This page summarizes the current repository status so roadmap docs do not drift 
 
 ## Planned
 
-- Reviewed repair for dead links
 - Broader Firefox runtime coverage, and making the Edge and Firefox CI jobs required once they are stable
 - Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in [`store/`](https://github.com/isandrel/bookmark-scout/tree/main/store); submission is manual and needs release approval, and the Firefox package first needs an add-on ID and a data collection declaration
 

@@ -20,8 +20,8 @@
     "title": "機能",
     "subtitle": "ブックマークを効率的に管理するために必要なすべて",
     "aiRecommendations": {
-      "title": "AIフォルダ推薦",
-      "description": "OpenAI、Anthropic、Google AI、Groq、Mistral、DeepSeek、OpenRouter、Ollamaに対応したスマートなフォルダ提案"
+      "title": "オプトイン AI ツール",
+      "description": "選択したプロバイダーによるフォルダ提案、タグ、要約、再編成プラン: OpenAI、Anthropic、Google、Groq、Mistral AI、DeepSeek、OpenRouter、Ollama、または任意の OpenAI 互換エンドポイント。初期設定はオフです。"
     },
     "instantSearch": {
       "title": "インスタント検索",
@@ -33,31 +33,39 @@
     },
     "quickAdd": {
       "title": "クイック追加",
-      "description": "ワンクリックで現在のタブを任意のフォルダに保存"
+      "description": "現在のタブをワンクリックで任意のフォルダに保存、または右クリックメニューからリンクを保存"
     },
     "sidePanel": {
       "title": "サイドパネル",
-      "description": "Chromeのサイドパネルからブックマークにアクセス"
+      "description": "Chrome または Edge のサイドパネルでブックマークを閲覧・検索"
     },
     "darkMode": {
-      "title": "ダークモード",
-      "description": "スムーズなトランジションを持つ美しいダークテーマ"
+      "title": "ライト & ダークテーマ",
+      "description": "システムのテーマに合わせるか、ライトまたはダークを選択"
     },
     "bookmarksManager": {
       "title": "ブックマークマネージャー",
-      "description": "Chrome標準のブックマークページを、テーブル、フォルダツリー、パンくず、ツールサイドバー付きのカスタム画面に置き換え"
+      "description": "Chrome のブックマークページを、フォルダツリー、パンくずリスト、列幅を変更できるテーブル、ツールサイドバーに置き換え"
     },
     "maintenanceTools": {
       "title": "メンテナンスツール",
-      "description": "重複検出、トラッキングURL整理、デッドリンク検査、メタデータ確認、プライバシー確認、統計表示に対応"
+      "description": "重複の検出、トラッキング URL のクリーンアップ、リンク切れのスキャンと修復レビュー、タイトル取得、プライバシーに関わる URL の検出、統計の表示"
     },
     "importExport": {
       "title": "インポート/エクスポート",
-      "description": "HTML、JSON、Markdown、CSVでエクスポートし、HTMLまたはJSONのブックマークファイルをインポート"
+      "description": "HTML、JSON、Markdown、CSV でエクスポートし、HTML または JSON のインポートは書き込み前にプレビュー"
     },
-    "expandCollapse": {
-      "title": "展開/折りたたみ",
-      "description": "ネストされたフォルダをすばやく展開または折りたたみ"
+    "savedSearches": {
+      "title": "保存済み検索",
+      "description": "フィルター、並べ替え、フォルダ範囲を名前付きのスマートビューとして保存。結果は常に現在のブックマークを反映"
+    },
+    "keyboardShortcuts": {
+      "title": "キーボードショートカット",
+      "description": "ブラウザのショートカットを妨げずに、キーボードで検索、移動、保存。? でヘルプを表示"
+    },
+    "undoDelete": {
+      "title": "元に戻せる削除",
+      "description": "削除前に確認し、削除は 10 秒間元に戻せます"
     }
   },
   "techStack": {
@@ -149,7 +157,7 @@
     },
     "sidePanel": {
       "title": "サイドパネル",
-      "description": "現在のページを離れることなくChromeのサイドパネルからブックマークに直接アクセス。リサーチや参照作業に最適。"
+      "description": "現在のページを離れずに、Chrome または Edge のサイドパネルからブックマークにアクセスできます。調べものや参照作業に最適です。"
     },
     "bookmarksManager": {
       "title": "フルブックマークマネージャー",
@@ -164,8 +172,8 @@
       "description": "外観、検索、動作、AIプロバイダー、AIツール、メンテナンス、メタデータ、セキュリティ、分析、データ、コンテキストメニュー動作を設定できます。"
     },
     "darkMode": {
-      "title": "美しいダークモード",
-      "description": "目に優しい美しいダークテーマ。スムーズなトランジションと最適な読みやすさのために慎重に選択された色を搭載。"
+      "title": "ライト & ダークテーマ",
+      "description": "ライトかダークを選ぶか、システムのテーマに合わせられます。どちらでも読みやすい配色です。"
     },
     "expandCollapse": {
       "title": "すべて展開/折りたたみ",
@@ -181,11 +189,11 @@
     },
     "maintenanceTools": {
       "title": "メンテナンスツール",
-      "description": "重複ブックマークの整理、トラッキングパラメータ削除、デッドリンク検査、メタデータ取得、プライバシー確認、統計収集に対応。"
+      "description": "重複ブックマークの整理、トラッキングパラメーターの削除、リンク切れのスキャンと修復レビュー(削除、リダイレクト先の使用、アーカイブ版の使用、URL の編集)、ページタイトルの取得、プライバシーに関わる URL の確認、ブックマーク統計の収集。"
     },
     "importExport": {
       "title": "インポート/エクスポート",
-      "description": "ブックマークをHTML、JSON、Markdown、CSVとしてエクスポートできます。既存のHTMLまたはJSONブックマークファイルもインポートできます。"
+      "description": "ブックマークを HTML、JSON、Markdown、CSV でエクスポート。HTML または JSON ファイルのインポートは、対象フォルダ、件数、重複を示すプレビューの後に実行し、後から元に戻せます。"
     },
     "aiTools": {
       "title": "AIツール",
@@ -201,8 +209,8 @@
     },
     "roadmap": {
       "title": "現在の注力領域",
-      "tests": "ブラウザテスト — FirefoxとEdgeでブラウザテストを実行",
-      "storeDistribution": "ストア配布 — Chrome Web Store、Firefox Add-ons、Edge Add-onsの掲載情報を整備"
+      "tests": "ブラウザカバレッジ — Firefox のテストを拡充し、Edge と Firefox の CI ジョブを必須チェックにする",
+      "storeDistribution": "ストア配布 — Chrome ウェブストア、Firefox Add-ons、Edge Add-ons への申請(掲載用素材は準備済み)"
     }
   },
   "contributingPage": {

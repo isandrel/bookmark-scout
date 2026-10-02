@@ -48,7 +48,9 @@ As a result, the Firefox listing describes a smaller feature set: maintenance to
 ## Test coverage behind the claims
 
 - Chromium: unit tests and Playwright E2E tests cover popup, manager, settings, maintenance, reports, import/export, network tools (route-mocked and a real local server), and AI tools against mocked providers.
-- Firefox and Edge: **build validation only.** No browser tests run in either browser.
+- Edge: the same Playwright E2E suite runs against the Edge build (`nx run extension:test:e2e:edge`).
+- Firefox: a seven-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, network and AI tools, and favicons are not covered there.
+- The Edge and Firefox CI jobs are not required checks yet.
 - Real AI providers and live network behavior are checked by hand, not by automated tests.
 
 The listings avoid claims that only Chromium testing supports when they are written for Firefox or Edge.
