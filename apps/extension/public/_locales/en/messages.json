@@ -1149,6 +1149,14 @@
         "message": "Reviewed summary suggestions were saved using your merge settings.",
         "description": "Toast description after applying generated summaries"
     },
+    "bookmarks_metadataPartlySaved": {
+        "message": "Some suggestions were not saved",
+        "description": "Toast title when some reviewed AI suggestions were not saved because their bookmark changed"
+    },
+    "bookmarks_metadataPartlySavedDesc": {
+        "message": "Saved: $1. Skipped because the bookmark was deleted or its URL changed since the scan: $2.",
+        "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
+    },
     "tools_category_ai": {
         "message": "AI & Intelligence",
         "description": "AI tools category"
@@ -1283,6 +1291,14 @@
             }
         }
     },
+    "toast_nothingToExport": {
+        "message": "Nothing to export",
+        "description": "Toast title when an export scope has no bookmarks, so no file is saved"
+    },
+    "toast_nothingToExportDesc": {
+        "message": "There are no bookmarks in this scope, so no file was saved.",
+        "description": "Toast description when an export scope has no bookmarks"
+    },
     "toast_importSuccess": {
         "message": "Import Complete",
         "description": "Toast title for successful bookmark import"
@@ -1348,10 +1364,6 @@
     "export_csvDateAdded": {
         "message": "Date Added",
         "description": "CSV header for bookmark date added column"
-    },
-    "ai_reorganizationTitle": {
-        "message": "AI Folder Reorganization",
-        "description": "Title for AI reorganization dialog"
     },
     "ai_reorganizationDesc": {
         "message": "Review the suggested changes before applying. No changes will be made until you approve.",
@@ -3145,6 +3157,10 @@
             }
         }
     },
+    "toast_duplicatesRestoredNote": {
+        "message": "Restored bookmarks count as newly added, so a keep rule based on date may keep a different copy next time.",
+        "description": "Shown after duplicate removal is undone: the browser recreates restored bookmarks with a new date added"
+    },
     "tools_duplicatesDialogDesc_one": {
         "message": "$groups$ duplicate group found across $bookmarks$ bookmarks",
         "description": "Duplicate dialog description (one group)",
@@ -3658,6 +3674,10 @@
     "tools_importOutcome": {
         "message": "Bookmarks created: $1. Folders created: $2. Skipped: $3. Failed: $4.",
         "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importItemFailed": {
+        "message": "Could not import \"$1\": $2",
+        "description": "An import entry the browser rejected: its title ($1) and the browser's error ($2)"
     },
     "tools_importUndone": {
         "message": "Import undone",

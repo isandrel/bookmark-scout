@@ -43,6 +43,33 @@ test('export uses the selected folder and saved preferences, and neutralizes CSV
   expect(csv).not.toContain('Outside Link');
 });
 
+test('exporting a folder without bookmarks says there is nothing to export and saves no file', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Empty Export', [
+    { title: 'Only a folder', children: [] },
+  ]);
+  const downloads: string[] = [];
+  page.on('download', (download) => downloads.push(download.suggestedFilename()));
+
+  for (const card of ['Export Bookmarks', 'AI Context Packer']) {
+    // A fresh page per card, so the first card's toast cannot satisfy the second check.
+    await openTools(page, extensionId, folder.folderId);
+    await toolCard(page, card).getByRole('button', { name: 'Export' }).click();
+    await expect(toastRegion(page).getByText('Nothing to export', { exact: true })).toBeVisible();
+    await expect(
+      toastRegion(page).getByText('There are no bookmarks in this scope, so no file was saved.', {
+        exact: true,
+      }),
+    ).toBeVisible();
+  }
+  // Neither export opened its privacy review.
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  expect(downloads).toEqual([]);
+});
+
 test('a CSV export keeps non-ASCII folder names in the filename and escapes / in folder paths', async ({
   extensionId,
   extensionWorker,
@@ -141,7 +168,7 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
   await preview.getByRole('combobox', { name: 'Duplicates' }).click();
   await page.getByRole('option', { name: 'Import everything, including duplicates' }).click();
   await preview.getByRole('button', { name: 'Import', exact: true }).click();
-  await expect(toastRegion(page).getByText('Import Complete', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Import Complete', { exact: true })).toBeVisible();
   const topLevel = (await childrenOf(extensionWorker, target.folderId)).map((item) => item.title);
   expect(topLevel).toEqual(exported.children.map((node) => node.title));
   expect(topLevel).not.toContain('Untitled');

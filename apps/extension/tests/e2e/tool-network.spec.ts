@@ -195,7 +195,7 @@ test.describe('with website access granted', () => {
       .getByRole('checkbox', { name: 'Apply suggested title for Other Original' })
       .click();
     await results.getByRole('button', { name: 'Apply 2 titles' }).click();
-    await expect(toastRegion(page).getByText('Titles updated', { exact: true })).toBeVisible();
+    await expect(toastRegion(page).getByText('✓ Titles updated', { exact: true })).toBeVisible();
     await expect
       .poll(async () =>
         (await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title),
@@ -261,7 +261,7 @@ test.describe('with website access granted', () => {
     }, folder.ids['Plain Original']);
     await results.getByRole('button', { name: 'Apply 1 title' }).click();
     await expect(
-      toastRegion(page).getByText('Some titles were not updated', { exact: true }),
+      toastRegion(page).getByText('× Some titles were not updated', { exact: true }),
     ).toBeVisible();
     expect((await childrenOf(extensionWorker, folder.folderId))[0].title).toBe('Renamed By User');
   });

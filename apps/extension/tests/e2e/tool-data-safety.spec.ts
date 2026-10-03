@@ -68,7 +68,7 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
   await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
 
   await expect(
-    toastRegion(page).getByText('Some duplicates were not removed', { exact: true }),
+    toastRegion(page).getByText('× Some duplicates were not removed', { exact: true }),
   ).toBeVisible();
   await expect(dialog.getByRole('status')).toContainText(/Removed: 1\. .*: 2\. Failed: 0\./);
   await expect
@@ -86,6 +86,41 @@ test('duplicate removal reports partial results, refreshes the dialog, and undo 
     .toBe(4);
   const restored = await childrenOf(extensionWorker, folder.folderId);
   expect(restored.map((item) => item.title)).toEqual(['A1', 'A3', 'B1', 'B2']);
+  // The undo is used up, so the outcome toast no longer offers it either.
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(0);
+});
+
+test('a partial duplicate removal withdraws Undo from the review and the toast when the undo window passes', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Dup Expiry', [
+    { title: 'A1', url: 'https://e2e.invalid/a' },
+    { title: 'A2', url: 'https://e2e.invalid/a' },
+    { title: 'B1', url: 'https://e2e.invalid/b' },
+    { title: 'B2', url: 'https://e2e.invalid/b' },
+  ]);
+  await setSettings(extensionWorker, { duplicatesKeepRule: 'first' });
+  await openTools(page, extensionId, folder.folderId);
+  await toolCard(page, 'Duplicate Cleaner').getByRole('button', { name: 'Scan' }).click();
+  const dialog = page.getByRole('dialog', { name: 'Duplicate Cleaner' });
+  await expect(dialog).toContainText('B2');
+  await extensionWorker.evaluate(async (id) => chrome.bookmarks.remove(id), folder.ids.B2);
+  await page.clock.install();
+  await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
+  await expect(dialog.getByRole('status').getByRole('button', { name: 'Undo' })).toBeVisible();
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(1);
+
+  // The deletion undo window is 10 seconds.
+  await page.clock.fastForward(11_000);
+  await expect(dialog.getByRole('status')).toContainText(/Removed: 1\. .*: 1\. Failed: 0\./);
+  await expect(dialog.getByRole('button', { name: 'Undo' })).toHaveCount(0);
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(0);
+  expect((await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title)).toEqual([
+    'A1',
+    'B1',
+  ]);
 });
 
 test('duplicate removal never deletes the last copy when the kept item was moved to another URL', async ({
@@ -110,7 +145,7 @@ test('duplicate removal never deletes the last copy when the kept item was moved
   await dialog.getByRole('button', { name: 'Remove duplicates' }).click();
 
   await expect(
-    toastRegion(page).getByText('Some duplicates were not removed', { exact: true }),
+    toastRegion(page).getByText('× Some duplicates were not removed', { exact: true }),
   ).toBeVisible();
   await expect(dialog.getByRole('status')).toContainText(
     'Removed: 0. Skipped because they changed or were already removed: 1. Failed: 0. 1 group was left untouched because the kept bookmark was changed or removed after the scan.',
@@ -185,7 +220,7 @@ test('URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmar
   await preview.getByRole('button', { name: 'Apply Changes' }).click();
 
   await expect(
-    toastRegion(page).getByText('Some URLs were not cleaned', { exact: true }),
+    toastRegion(page).getByText('× Some URLs were not cleaned', { exact: true }),
   ).toBeVisible();
   await expect
     .poll(async () =>

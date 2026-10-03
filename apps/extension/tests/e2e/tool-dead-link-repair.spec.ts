@@ -177,7 +177,7 @@ test('applies each reviewed repair only after Apply, and undo restores the batch
   expect(await childrenOf(extensionWorker, folder.folderId)).toEqual(original);
 
   await review.getByRole('button', { name: 'Apply 4 changes' }).click();
-  await expect(toastRegion(page).getByText('Repairs applied', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Repairs applied', { exact: true })).toBeVisible();
   await expect(
     toastRegion(page).getByText(
       'Deleted: 1. URLs replaced: 3. Skipped because they changed after the scan: 0. Failed: 0.',
@@ -198,7 +198,7 @@ test('applies each reviewed repair only after Apply, and undo restores the batch
     ]);
 
   await toastRegion(page).getByRole('button', { name: 'Undo' }).click();
-  await expect(toastRegion(page).getByText('Repairs undone', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Repairs undone', { exact: true })).toBeVisible();
   await expect
     .poll(async () =>
       (await childrenOf(extensionWorker, folder.folderId)).map((item) => [item.title, item.url]),
@@ -258,7 +258,7 @@ test('repairs skip bookmarks changed after the scan and report them', async ({
   await review.getByRole('button', { name: 'Apply 3 changes' }).click();
 
   await expect(
-    toastRegion(page).getByText('Some repairs were not applied', { exact: true }),
+    toastRegion(page).getByText('× Some repairs were not applied', { exact: true }),
   ).toBeVisible();
   const outcome = review.getByTestId('dead-link-repair-result');
   await expect(outcome).toContainText(
@@ -277,9 +277,10 @@ test('repairs skip bookmarks changed after the scan and report them', async ({
       ['Private', `${site.origin}/private`],
     ]);
 
-  // The dialog's undo restores only what this batch changed.
+  // The dialog's undo restores only what this batch changed, and the toast drops its own Undo.
   await review.getByRole('button', { name: 'Undo' }).click();
   await expect(review).toHaveCount(0);
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(0);
   await expect
     .poll(async () =>
       (await childrenOf(extensionWorker, folder.folderId)).map((item) => [item.title, item.url]),
@@ -291,4 +292,36 @@ test('repairs skip bookmarks changed after the scan and report them', async ({
       ['Renamed Page', `${site.origin}/old-page`],
       ['Private', `${site.origin}/private`],
     ]);
+});
+
+test('a partial repair withdraws Undo from the review and the toast when the undo window passes', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedBrokenLinks(extensionWorker, 'E2E Repair Expiry');
+  const review = await openRepairReview(page, extensionId, folder.folderId);
+  await choose(page, 'Missing', 'Delete bookmark');
+  await choose(page, 'Refused', 'Delete bookmark');
+  await extensionWorker.evaluate(async (id) => {
+    await chrome.bookmarks.update(id, { url: 'https://e2e.invalid/fixed-by-user' });
+  }, folder.ids.Missing);
+  await page.clock.install();
+  await review.getByRole('button', { name: 'Apply 2 changes' }).click();
+  await expect(review.getByTestId('dead-link-repair-result')).toBeVisible();
+  await expect(review.getByRole('button', { name: 'Undo' })).toBeVisible();
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(1);
+
+  // The deletion undo window is 10 seconds.
+  await page.clock.fastForward(11_000);
+  await expect(review.getByRole('button', { name: 'Undo' })).toHaveCount(0);
+  await expect(toastRegion(page).getByRole('button', { name: 'Undo' })).toHaveCount(0);
+  await expect(review.getByTestId('dead-link-repair-result')).toBeVisible();
+  expect((await childrenOf(extensionWorker, folder.folderId)).map((item) => item.title)).toEqual([
+    'Plain',
+    'Missing',
+    'Moved',
+    'Renamed Page',
+    'Private',
+  ]);
 });

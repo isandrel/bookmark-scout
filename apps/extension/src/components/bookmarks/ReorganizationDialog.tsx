@@ -122,7 +122,7 @@ export function ReorganizationDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-ai" />
-            {t('ai_reorganizationTitle')}
+            {t('tools_aiReorganize')}
           </DialogTitle>
           <DialogDescription>{t('ai_reorganizationDesc')}</DialogDescription>
         </DialogHeader>

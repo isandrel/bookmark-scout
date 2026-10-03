@@ -170,17 +170,12 @@ function SiteIconCacheControls() {
     setClearing(true);
     try {
       await clearSiteIconCache();
-      toast({
+      toast.success({
         title: t('toast_siteIconsCleared'),
         description: t('toast_siteIconsClearedDesc'),
-        variant: 'success',
       });
     } catch (error) {
-      toast({
-        title: t('toast_toolFailed'),
-        description: getErrorMessage(error),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('toast_toolFailed'), description: getErrorMessage(error) });
     } finally {
       setClearing(false);
     }

@@ -133,7 +133,7 @@ test('applying with "skip anywhere" creates only new items and prunes emptied fo
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
 
   await expect(dialog).toBeHidden();
-  await expect(toastRegion(page).getByText('Import Complete', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Import Complete', { exact: true })).toBeVisible();
   await expect(
     toastRegion(page).getByText(
       'Bookmarks created: 2. Folders created: 2. Skipped: 3. Failed: 0.',
@@ -243,7 +243,7 @@ test('a JSON import can target another folder and be undone', async ({
   expect(await subtreeOf(extensionWorker, targetId)).toEqual(targetBefore);
 
   await toastRegion(page).getByRole('button', { name: 'Undo' }).click();
-  await expect(toastRegion(page).getByText('Import undone', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Import undone', { exact: true })).toBeVisible();
   expect(await subtreeOf(extensionWorker, elsewhereId)).toEqual([
     { title: 'Elsewhere', url: 'https://e2e.invalid/elsewhere' },
   ]);
@@ -290,6 +290,17 @@ test('a partial import failure is reported with counts and the errors stay visib
   page,
 }) => {
   const { targetId } = await seedConflicts(extensionWorker);
+  // A URL can parse and still be rejected by the browser; simulate that for one entry.
+  await page.addInitScript(() => {
+    const create = chrome.bookmarks.create.bind(chrome.bookmarks);
+    Object.defineProperty(chrome.bookmarks, 'create', {
+      configurable: true,
+      value: (details: chrome.bookmarks.CreateDetails) =>
+        details.title === 'Rejected'
+          ? Promise.reject(new Error('Rejected by the browser.'))
+          : create(details),
+    });
+  });
   await openTools(page, extensionId, targetId);
   await page.locator('#bookmark-import-input').setInputFiles({
     name: 'partial.json',
@@ -297,6 +308,7 @@ test('a partial import failure is reported with counts and the errors stay visib
     buffer: Buffer.from(
       JSON.stringify([
         { title: 'Valid One', url: 'https://e2e.invalid/one' },
+        { title: 'Rejected', url: 'https://e2e.invalid/rejected' },
         { title: 'Broken', url: 'not a url' },
         { title: 'Valid Two', url: 'https://e2e.invalid/two' },
         { title: '<img src=x onerror=alert(1)><b>Markup</b>', url: 'https://e2e.invalid/existing' },
@@ -304,7 +316,12 @@ test('a partial import failure is reported with counts and the errors stay visib
     ),
   });
   const dialog = page.getByRole('dialog', { name: 'Import preview' });
-  await expectSummary(dialog, ['Bookmarks to create: 3', 'Items to skip: 1']);
+  // An entry whose URL cannot be stored is caught in the preview, not when importing.
+  await expectSummary(dialog, [
+    'Bookmarks to create: 3',
+    'Items to skip: 1',
+    'Invalid entries ignored: 1',
+  ]);
   // File titles are data: shown literally, never parsed as markup.
   await expect(
     dialog.getByText('<img src=x onerror=alert(1)><b>Markup</b>', { exact: true }),
@@ -312,14 +329,17 @@ test('a partial import failure is reported with counts and the errors stay visib
   await expect(dialog.locator('img, b')).toHaveCount(0);
   await dialog.getByRole('button', { name: 'Import', exact: true }).click();
 
-  const outcome = 'Bookmarks created: 2. Folders created: 0. Skipped: 1. Failed: 1.';
+  const outcome = 'Bookmarks created: 2. Folders created: 0. Skipped: 2. Failed: 1.';
   await expect(
-    toastRegion(page).getByText('Some items were not imported', { exact: true }),
+    toastRegion(page).getByText('× Some items were not imported', { exact: true }),
   ).toBeVisible();
   await expect(toastRegion(page).getByText(outcome, { exact: true })).toBeVisible();
   const result = dialog.getByTestId('import-result');
   await expect(result.getByText(outcome, { exact: true })).toBeVisible();
-  await expect(result.getByRole('listitem')).toHaveCount(1);
+  // The failure names the entry, so the user knows which one to fix.
+  await expect(result.getByRole('listitem')).toHaveText([
+    'Could not import "Rejected": Rejected by the browser.',
+  ]);
   expect(await subtreeOf(extensionWorker, targetId)).toEqual([
     { title: 'Existing', url: 'https://e2e.invalid/existing' },
     { title: 'Valid One', url: 'https://e2e.invalid/one' },
@@ -328,7 +348,7 @@ test('a partial import failure is reported with counts and the errors stay visib
 
   await dialog.getByRole('button', { name: 'Undo' }).click();
   await expect(dialog).toBeHidden();
-  await expect(toastRegion(page).getByText('Import undone', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Import undone', { exact: true })).toBeVisible();
   expect(await subtreeOf(extensionWorker, targetId)).toEqual([
     { title: 'Existing', url: 'https://e2e.invalid/existing' },
   ]);

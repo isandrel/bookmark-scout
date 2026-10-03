@@ -52,13 +52,13 @@ export function ReviewApplyDialog({
 }: ReviewApplyDialogProps) {
   const [applying, setApplying] = useState(false);
   const [outcome, setOutcome] = useState<ReviewApplyReport | null>(null);
-  const [undoHandler, setUndoHandler] = useState<(() => void) | null>(null);
+  const [undoOffer, setUndoOffer] = useState<UndoOffer | null>(null);
 
   // Every review starts fresh.
   useEffect(() => {
     if (!open) return;
     setOutcome(null);
-    setUndoHandler(null);
+    setUndoOffer(null);
   }, [open]);
 
   const reportFailure = (error: unknown) =>
@@ -75,22 +75,21 @@ export function ReviewApplyDialog({
       const report = await onApply();
       if (!report) return;
       const { undo } = report;
-      // One undo per apply, whether triggered from the toast or the dialog.
-      let undoUsed = false;
-      const runUndo = undo
-        ? () => {
-            if (undoUsed) return;
-            undoUsed = true;
-            setUndoHandler(null);
-            undo().then((reverted) => showToolOutcome(reverted), reportFailure);
-          }
+      // One undo per apply, shared by the toast and the dialog, and hidden in both once it is
+      // used or expires.
+      const offer: UndoOffer | undefined = undo
+        ? createUndoOffer({
+            expiresAt: report.undoExpiresAt,
+            revert: () => undo().then((reverted) => showToolOutcome(reverted), reportFailure),
+            onEnd: () => setUndoOffer((current) => (current === offer ? null : current)),
+          })
         : undefined;
-      showToolOutcome(report, runUndo);
+      showToolOutcome(report, offer);
       if (report.complete) {
         onClose();
       } else {
         setOutcome(report);
-        if (runUndo) setUndoHandler(() => runUndo);
+        if (offer) setUndoOffer(offer);
       }
     } catch (error) {
       reportFailure(error);
@@ -138,11 +137,11 @@ export function ReviewApplyDialog({
         <DialogFooter className="gap-2">
           {outcome ? (
             <>
-              {undoHandler ? (
+              {undoOffer ? (
                 <Button
                   variant="outline"
                   onClick={() => {
-                    undoHandler();
+                    void undoOffer.run();
                     onClose();
                   }}
                 >

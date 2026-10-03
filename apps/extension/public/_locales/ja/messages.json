@@ -1129,6 +1129,14 @@
         "message": "確認済みの要約候補をマージ設定に従って保存しました。",
         "description": "Toast description after applying generated summaries"
     },
+    "bookmarks_metadataPartlySaved": {
+        "message": "一部の提案は保存されませんでした",
+        "description": "Toast title when some reviewed AI suggestions were not saved because their bookmark changed"
+    },
+    "bookmarks_metadataPartlySavedDesc": {
+        "message": "保存: $1 件。スキャン後にブックマークが削除されたか URL が変わったためスキップ: $2 件。",
+        "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
+    },
     "tools_category_ai": {
         "message": "AI・インテリジェンス",
         "description": "AI tools category"
@@ -1263,6 +1271,14 @@
             }
         }
     },
+    "toast_nothingToExport": {
+        "message": "エクスポートする項目がありません",
+        "description": "Toast title when an export scope has no bookmarks, so no file is saved"
+    },
+    "toast_nothingToExportDesc": {
+        "message": "この範囲にブックマークがないため、ファイルは保存されませんでした。",
+        "description": "Toast description when an export scope has no bookmarks"
+    },
     "toast_importSuccess": {
         "message": "読み込み完了",
         "description": "Toast title for successful bookmark import"
@@ -1328,10 +1344,6 @@
     "export_csvDateAdded": {
         "message": "追加日",
         "description": "CSV header for bookmark date added column"
-    },
-    "ai_reorganizationTitle": {
-        "message": "AIフォルダ再整理",
-        "description": "Title for AI reorganization dialog"
     },
     "ai_reorganizationDesc": {
         "message": "適用する前に提案された変更を確認してください。承認するまで変更は行われません。",
@@ -3125,6 +3137,10 @@
             }
         }
     },
+    "toast_duplicatesRestoredNote": {
+        "message": "復元したブックマークは新しく追加されたものとして扱われるため、日付に基づく保持ルールでは次回は別のコピーが残る場合があります。",
+        "description": "Shown after duplicate removal is undone: the browser recreates restored bookmarks with a new date added"
+    },
     "tools_duplicatesDialogDesc_one": {
         "message": "$bookmarks$ 件のブックマークから $groups$ 個の重複グループが見つかりました",
         "description": "Duplicate dialog description (one group)",
@@ -3638,6 +3654,10 @@
     "tools_importOutcome": {
         "message": "作成したブックマーク: $1。作成したフォルダ: $2。スキップ: $3。失敗: $4。",
         "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importItemFailed": {
+        "message": "「$1」をインポートできませんでした: $2",
+        "description": "An import entry the browser rejected: its title ($1) and the browser's error ($2)"
     },
     "tools_importUndone": {
         "message": "インポートを取り消しました",

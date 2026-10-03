@@ -109,6 +109,7 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
           getBookmarkDisplayTitle(issue.title),
         ),
       })),
+      undoExpiresAt: applied.expiresAt,
       undo:
         applied.deleted + applied.replaced > 0
           ? async () => {

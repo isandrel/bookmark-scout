@@ -38,6 +38,8 @@ export type DeadLinkRepairOutcome = {
    * failed, so undo never overwrites a newer change.
    */
   undo: () => Promise<BookmarkChangesUndoResult>;
+  /** After this time (epoch milliseconds) undo is no longer offered. */
+  expiresAt: number;
 };
 
 /** Results the review lists: failures, timeouts, and redirects. */
@@ -108,5 +110,6 @@ export async function applyDeadLinkRepairs(
     failed: result.failed,
     issues: result.issues,
     undo: result.undo,
+    expiresAt: result.expiresAt,
   };
 }

@@ -154,6 +154,37 @@ export function selectAIContextBookmarks(
     .slice(0, options.maxItems);
 }
 
+/** What saving reviewed AI suggestions did. */
+export type ReviewedMetadataSaveResult = {
+  saved: number;
+  /** Suggestions for bookmarks deleted or pointed at another URL since the scan. */
+  skipped: number;
+};
+
+/**
+ * Saves reviewed tag or summary suggestions as bookmark metadata. Only results that map back to
+ * a bookmark in the request are saved, and only while that bookmark still exists with the URL
+ * the model saw, so a bookmark deleted since the scan never leaves an orphaned entry.
+ */
+export async function saveReviewedBookmarkMetadata<
+  Item extends { bookmarkId: string; url: string },
+>(
+  items: readonly Item[],
+  patch: (item: Item) => BookmarkMetadataPatch,
+  options: BookmarkMetadataMergeOptions,
+): Promise<ReviewedMetadataSaveResult> {
+  const reviewed = items.filter((item) => item.url);
+  const live = await Promise.all(reviewed.map((item) => getLiveBookmark(item.bookmarkId)));
+  const current = reviewed.filter((item, index) => live[index]?.url === item.url);
+  if (current.length > 0) {
+    await mergeStoredBookmarkMetadata(
+      Object.fromEntries(current.map((item) => [item.bookmarkId, patch(item)])),
+      options,
+    );
+  }
+  return { saved: current.length, skipped: reviewed.length - current.length };
+}
+
 export async function suggestBookmarkTags(
   nodes: BookmarkTreeNode[],
   settings: AISettings,

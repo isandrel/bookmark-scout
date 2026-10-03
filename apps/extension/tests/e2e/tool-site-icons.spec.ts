@@ -138,7 +138,7 @@ test.describe('with website access granted', () => {
     expect(await readSiteIcons(extensionWorker)).toBeNull();
 
     await results.getByRole('button', { name: 'Save 1 icon' }).click();
-    await expect(toastRegion(page).getByText('Site icons saved', { exact: true })).toBeVisible();
+    await expect(toastRegion(page).getByText('✓ Site icons saved', { exact: true })).toBeVisible();
     await expect(
       toastRegion(page).getByText('1 icon saved on this device', { exact: true }),
     ).toBeVisible();
@@ -299,7 +299,7 @@ test('clearing saved site icons restores browser icons in the manager and popup'
   const card = toolCard(page, 'Refresh Site Icons');
   await expect(card).toContainText('1 icon saved (0.1 KB)');
   await card.getByRole('button', { name: 'Clear saved icons' }).click();
-  await expect(toastRegion(page).getByText('Saved icons cleared', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('✓ Saved icons cleared', { exact: true })).toBeVisible();
 
   expect(await readSiteIcons(extensionWorker)).toBeNull();
   await expect(card).toContainText('0 icons saved (0 KB)');

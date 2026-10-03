@@ -12,19 +12,29 @@ export type ToolEnvironment = {
   saveFile: ToolRunDeps['saveFile'];
 };
 
-/** Shows a tool outcome as a toast; an undoable one keeps Undo for the deletion undo window. */
-export function showToolOutcome(outcome: ToolOutcome, onUndo?: () => void) {
-  toast({
-    title: outcome.title,
-    description: outcome.description,
-    variant: outcome.variant,
-    ...(onUndo
-      ? {
-          duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
-          action: <ToastAction onClick={onUndo}>{t('action_undo')}</ToastAction>,
-        }
-      : {}),
-  });
+/**
+ * Shows a tool outcome as a toast with the ✓ or × mark of its variant. An undoable one keeps
+ * Undo until the offer ends: used here or in the review, or expired.
+ */
+export function showToolOutcome(outcome: ToolOutcome, undo?: UndoOffer) {
+  const { title, description, variant } = outcome;
+  if (undo) {
+    undo.attach(
+      toast.withUndo({
+        title,
+        description,
+        variant: variant ?? 'success',
+        onUndo: undo.run,
+        duration: Math.max(0, undo.expiresAt - Date.now()),
+      }),
+    );
+  } else if (variant === 'success') {
+    toast.success({ title, description });
+  } else if (variant === 'destructive') {
+    toast.error({ title, description });
+  } else {
+    toast({ title, description });
+  }
 }
 
 /** Runs one tool for a component: the controller from `createToolRun` and its live state. */

@@ -1149,6 +1149,14 @@
         "message": "검토한 요약 추천을 병합 설정에 따라 저장했습니다.",
         "description": "Toast description after applying generated summaries"
     },
+    "bookmarks_metadataPartlySaved": {
+        "message": "일부 제안이 저장되지 않았습니다",
+        "description": "Toast title when some reviewed AI suggestions were not saved because their bookmark changed"
+    },
+    "bookmarks_metadataPartlySavedDesc": {
+        "message": "저장됨: $1개. 검사 후 북마크가 삭제되었거나 URL이 바뀌어 건너뜀: $2개.",
+        "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
+    },
     "tools_category_ai": {
         "message": "AI 및 인텔리전스",
         "description": "AI tools category"
@@ -1283,6 +1291,14 @@
             }
         }
     },
+    "toast_nothingToExport": {
+        "message": "내보낼 항목이 없습니다",
+        "description": "Toast title when an export scope has no bookmarks, so no file is saved"
+    },
+    "toast_nothingToExportDesc": {
+        "message": "이 범위에 북마크가 없어 파일을 저장하지 않았습니다.",
+        "description": "Toast description when an export scope has no bookmarks"
+    },
     "toast_importSuccess": {
         "message": "가져오기 완료",
         "description": "Toast title for successful bookmark import"
@@ -1348,10 +1364,6 @@
     "export_csvDateAdded": {
         "message": "추가한 날짜",
         "description": "CSV header for bookmark date added column"
-    },
-    "ai_reorganizationTitle": {
-        "message": "AI 폴더 재구성",
-        "description": "Title for AI reorganization dialog"
     },
     "ai_reorganizationDesc": {
         "message": "적용하기 전에 제안된 변경 사항을 검토하세요. 승인하기 전까지는 아무것도 변경되지 않습니다.",
@@ -3145,6 +3157,10 @@
             }
         }
     },
+    "toast_duplicatesRestoredNote": {
+        "message": "복원된 북마크는 새로 추가된 것으로 취급되므로, 날짜 기준 유지 규칙은 다음에 다른 사본을 남길 수 있습니다.",
+        "description": "Shown after duplicate removal is undone: the browser recreates restored bookmarks with a new date added"
+    },
     "tools_duplicatesDialogDesc_one": {
         "message": "$bookmarks$개의 북마크에서 $groups$개의 중복 그룹을 찾았습니다",
         "description": "Duplicate dialog description (one group)",
@@ -3658,6 +3674,10 @@
     "tools_importOutcome": {
         "message": "만든 북마크: $1. 만든 폴더: $2. 건너뜀: $3. 실패: $4.",
         "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importItemFailed": {
+        "message": "\"$1\"을(를) 가져오지 못했습니다: $2",
+        "description": "An import entry the browser rejected: its title ($1) and the browser's error ($2)"
     },
     "tools_importUndone": {
         "message": "가져오기를 취소했습니다",
