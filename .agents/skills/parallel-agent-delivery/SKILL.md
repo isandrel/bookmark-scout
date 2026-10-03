@@ -7,6 +7,13 @@ description: Plan and run several coding subagents in parallel on the Bookmark S
 
 ## Plan the split
 
+For a repository-wide refactor (config, duplicates, module design), run it in waves:
+1. A read-only audit, one agent per area, against a written rubric file they all read, returning findings as text (subagents cannot write report files; the orchestrator saves them).
+2. One foundation PR, by one agent, that adds the shared pieces every area will need (config loader with decentralized readers, helpers, storage and toast APIs), so later agents add files instead of editing one central file.
+3. One agent per area in parallel, each with its own config files, consuming the foundation.
+4. A final wave for the code that depends on several areas (pages, big components).
+Keep shared briefs (rules, interfaces, findings) in files under `~/.cache/` that every agent reads, so prompts stay short and survive a context reset; append each wave's interfaces and follow-ups to the same file as reports arrive.
+
 1. Group work by **file ownership**, not bug count. Each agent owns a set of files; tell every agent which neighbouring files it must not edit and who owns them. Areas that split cleanly here: popup and side panel (`PopupPage.tsx`, `components/bookmark/*`, `stores/bookmark-store.ts`), manager (`BookmarksPage.tsx`, `components/bookmarks/*` except tools, `components/ui/table/*`), Tools (`ToolsSidebar.tsx`, `ToolCards.tsx`, tool services), options and background (`OptionsPage.tsx`, settings and recent-folder storage, `services/context-menu.ts`).
 2. When two agents need the same new helper, prescribe its **exact path, name, and signature** in both prompts (for example `src/hooks/use-bookmark-events.ts` exporting `useBookmarkEvents(callback)`), so the second merge is a trivial conflict.
 3. Order inside each agent: security, then data loss, then broken core flows, then polish. Security and data-loss fixes go in their own commits.
