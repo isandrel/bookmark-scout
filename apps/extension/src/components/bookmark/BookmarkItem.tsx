@@ -10,7 +10,8 @@ export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
   const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
 
   return (
-    <div className="group bookmark-item relative flex h-8 items-center rounded-md px-2 py-1 transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
+    // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
+    <div className="group bookmark-item relative flex min-h-8 items-center rounded-md px-2 py-1 transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
       <a
         ref={rowRef(node, 'bookmark')}
         href={node.url}

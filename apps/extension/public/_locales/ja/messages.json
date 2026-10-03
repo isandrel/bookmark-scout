@@ -20,7 +20,7 @@
         "description": "Search input placeholder"
     },
     "shortcuts_popupHint": {
-        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア",
+        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア、Alt+↓ で最近の検索を表示",
         "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
     },
     "shortcuts_title": {
@@ -4826,5 +4826,25 @@
     "page_options": {
         "message": "オプション",
         "description": "Name of the options page, used in its tab title"
+    },
+    "search_placeholderShort": {
+        "message": "検索",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+    },
+    "ai_errorNoObject": {
+        "message": "AI の応答が想定した形式ではありませんでした。もう一度試すか、別のモデルを選んでください。",
+        "description": "AI error: the provider's answer did not match the expected structured format"
+    },
+    "ai_errorRetriesExhausted": {
+        "message": "$1 回試しましたが失敗しました。$2",
+        "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorRequestFailed": {
+        "message": "AI へのリクエストに失敗しました。もう一度試すか、オプションでサービスを確認してください。",
+        "description": "AI error with no more specific explanation"
+    },
+    "ai_newFolderPathNew": {
+        "message": "新規",
+        "description": "Badge after a folder in the reviewed path that does not exist yet and will be created"
     }
 }

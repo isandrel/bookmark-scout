@@ -1,0 +1,6 @@
+# AI folder suggestions panel in the popup and side panel. Read by
+# src/components/bookmark/AISuggestionsPanel.tsx.
+
+# Largest share of the popup's height the panel may take, from 0 to 1. More suggestions scroll
+# inside the panel, so the search box, the bookmark tree, and the key hints stay visible.
+max_height_fraction = 0.4

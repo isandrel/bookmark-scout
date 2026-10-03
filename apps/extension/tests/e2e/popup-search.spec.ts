@@ -163,6 +163,8 @@ test('search history ignores abandoned queries and supports the keyboard', async
   await search.press('Escape');
   await expect(history).toHaveCount(0);
 
+  await search.press('Alt+ArrowDown');
+  await expect(history).toBeVisible();
   await search.press('ArrowDown');
   await expect(history.getByRole('option', { name: 'Keyboard Target' })).toHaveAttribute(
     'aria-selected',
@@ -171,6 +173,50 @@ test('search history ignores abandoned queries and supports the keyboard', async
   await search.press('Enter');
   await expect(search).toHaveValue('Keyboard Target');
   await expect(bookmarkRow(page, 'Keyboard Target')).toBeVisible();
+});
+
+test('ArrowDown enters the tree even with search history, which Alt+ArrowDown opens', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E History Tree', []);
+  await extensionWorker.evaluate(
+    (key) => chrome.storage.local.set({ [key]: ['Older Query', 'Newer Query'] }),
+    SEARCH_HISTORY_KEY,
+  );
+
+  await openPopup(page, extensionId);
+  const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
+  const history = page.getByTestId('search-history');
+  await expect(search).toBeFocused();
+
+  // The key hints promise that ↓ moves into the tree.
+  await search.press('ArrowDown');
+  await expect(page.locator(`[data-folder-trigger="${seeded.barId}"]`)).toBeFocused();
+  await expect(history).toHaveCount(0);
+
+  await page.keyboard.press('ArrowUp');
+  await expect(search).toBeFocused();
+  await expect(search).toHaveAttribute('title', /Alt\+↓ shows recent searches/);
+  await search.press('Alt+ArrowDown');
+  await expect(history.getByRole('option')).toHaveText(['Older Query', 'Newer Query']);
+
+  // Clear is reachable from the keyboard, and the list stays open while it has focus.
+  await page.keyboard.press('Tab');
+  const clear = history.getByRole('button', { name: 'Clear', exact: true });
+  await expect(clear).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(history).toHaveCount(0);
+  await expect(search).toBeFocused();
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(
+        async (key) => (await chrome.storage.local.get(key))[key],
+        SEARCH_HISTORY_KEY,
+      ),
+    )
+    .toBeUndefined();
 });
 
 test('theme toggle follows the system theme and AI button hides when AI is off', async ({

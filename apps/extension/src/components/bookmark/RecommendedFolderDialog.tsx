@@ -1,25 +1,51 @@
-import { FolderPlus, Loader2 } from 'lucide-react';
+import { ChevronRight, FolderPlus, Loader2 } from 'lucide-react';
+import { useEffect } from 'react';
 
 type RecommendedFolderDialogProps = {
-  open: boolean;
   recommendation: FolderRecommendation | null;
+  /** The recommendation resolved against the current tree; the dialog is open while it is set. */
+  path: ResolvedFolderPath | null;
   bookmark: { title: string; url: string } | null;
   isSaving: boolean;
+  /** Why the last save failed, shown in the dialog where no toast can cover its buttons. */
+  error: string | null;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
 };
 
+/** Earlier outcome toasts sit over the dialog's buttons in a short popup; Undo toasts stay. */
+function useDismissInformationalToasts(open: boolean) {
+  const { toasts, dismiss } = useToast();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: only the toasts shown when it opens.
+  useEffect(() => {
+    if (!open) return;
+    for (const item of toasts) {
+      if (!item.action && item.open !== false) dismiss(item.id);
+    }
+  }, [open]);
+}
+
 export function RecommendedFolderDialog({
-  open,
   recommendation,
+  path,
   bookmark,
   isSaving,
+  error,
   onOpenChange,
   onConfirm,
 }: RecommendedFolderDialogProps) {
-  if (!recommendation || !bookmark) {
+  const open = Boolean(recommendation && path && bookmark);
+  useDismissInformationalToasts(open);
+
+  if (!recommendation || !path || !bookmark) {
     return null;
   }
+
+  // Each folder on its own, so a title that contains "/" cannot pass for two folders.
+  const segments = [
+    ...path.existingTitles.map((title) => ({ title, isNew: false })),
+    ...path.newTitles.map((title) => ({ title, isNew: true })),
+  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,7 +63,35 @@ export function RecommendedFolderDialog({
             <div className="text-xs font-medium text-muted-foreground">
               {t('ai_newFolderPathLabel')}
             </div>
-            <div className="mt-1 break-words font-medium">{recommendation.folderPath}</div>
+            <ol
+              aria-label={t('ai_newFolderPathLabel')}
+              data-testid="recommended-folder-path"
+              className="mt-1 flex flex-wrap items-center gap-x-1 gap-y-0.5 font-medium"
+            >
+              {segments.map((segment, index) => (
+                <li
+                  // Titles can repeat along a path, which is never reordered; the position is
+                  // the identity.
+                  key={index}
+                  data-slot="path-segment"
+                  data-new={segment.isNew ? '' : undefined}
+                  className="flex min-w-0 items-center gap-1"
+                >
+                  {index > 0 && (
+                    <ChevronRight
+                      aria-hidden="true"
+                      className="size-3.5 shrink-0 text-muted-foreground"
+                    />
+                  )}
+                  <span className="min-w-0 [overflow-wrap:anywhere]">{segment.title}</span>
+                  {segment.isNew && (
+                    <Badge variant="outline" className="shrink-0 px-1.5 py-0 text-[10px] text-ai">
+                      {t('ai_newFolderPathNew')}
+                    </Badge>
+                  )}
+                </li>
+              ))}
+            </ol>
           </div>
           <div className="rounded-md border bg-muted/30 p-3">
             <div className="text-xs font-medium text-muted-foreground">
@@ -47,6 +101,15 @@ export function RecommendedFolderDialog({
             <div className="mt-1 break-all text-xs text-muted-foreground">{bookmark.url}</div>
           </div>
           <p className="text-xs text-muted-foreground">{recommendation.reason}</p>
+          {error && (
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive/50 bg-destructive/10 p-3"
+            >
+              <p className="font-medium">{t('ai_newFolderFailed')}</p>
+              <p className="mt-1 text-xs">{error}</p>
+            </div>
+          )}
         </div>
 
         <DialogFooter className="gap-2 sm:gap-0">

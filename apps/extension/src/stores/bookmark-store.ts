@@ -56,7 +56,7 @@ async function buildMoveSuccessMessage(
   // Report where the item actually landed: moving down within a folder shifts the index by one.
   const position = (source.index ?? operation.targetIndex) + 1;
   return isMoveToOtherFolder(operation)
-    ? t('toast_itemMovedDesc', [title, getBookmarkDisplayTitle(targetFolderTitle)])
+    ? t('toast_itemMovedDesc', [title, await quoteToastItemTitle(targetFolderTitle)])
     : t('toast_itemReorderedDesc', [title, String(position)]);
 }
 
@@ -197,7 +197,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           try {
             const parentFolder = await getBookmark(folderId);
             const truncatedTitle = await quoteToastItemTitle(tab.title);
-            const folderTitle = getBookmarkDisplayTitle(parentFolder.title);
+            const folderTitle = await quoteToastItemTitle(parentFolder.title);
 
             // Saving the same page into the same folder twice only creates a duplicate.
             const siblings = tab.url ? await getBookmarkChildren(folderId) : [];
@@ -240,8 +240,8 @@ export const useBookmarkStore = create<BookmarkState>()(
             return {
               success: true,
               message: t('toast_folderCreatedDesc', [
-                name.trim(),
-                getBookmarkDisplayTitle(parentFolder.title),
+                await quoteToastItemTitle(name.trim()),
+                await quoteToastItemTitle(parentFolder.title),
               ]),
             };
           } catch (error) {
