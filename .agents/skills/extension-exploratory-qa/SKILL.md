@@ -47,6 +47,14 @@ Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmark
 - **User-reported UI bugs:** reproduce on current `main` before fixing. A user's screenshot once came from an installed build a version behind. Save before and after screenshots (popup and side panel, light and dark) under `~/.cache/bookmark-scout-qa/<topic>/`. For visual reviews of a UI change, see the `extension-ui-change` skill.
 - **Combined main:** after a batch of fix PRs lands, re-run the affected surfaces on the combined `main`. PRs that each pass CI can regress together (for example an empty templated toast).
 
+## Store and marketing screenshots
+
+The procedure lives in `store/README.md` ("How they were made"). Traps:
+- A fresh profile shows generic globe icons, because the browser's favicon cache is empty. Run Refresh Site Icons first in a copy of the build with optional website access pre-granted.
+- Stub `tabs.query` so the popup's "current tab" is a public page, not the extension page.
+- Keep the app theme on `system` and switch with `page.emulateMedia({ colorScheme })`.
+- Export 1280×800 24-bit RGB PNGs without alpha (Chrome rejects alpha): `magick mogrify -alpha off -type TrueColor -define png:color-type=2 *.png`. Use one image set for every store and copy the same file names to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`.
+
 ## Scaling out
 
 For a full pass, run one tester per surface in parallel, each with its own `RUN`: popup and side panel, manager, Tools, options and background. Subagents may be unable to write report files; have each return findings as text and save them to `$QA_DIR/$RUN/FINDINGS.md` from the orchestrating session. See the `parallel-agent-delivery` skill for turning findings into fixes.

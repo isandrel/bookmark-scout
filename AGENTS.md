@@ -39,6 +39,16 @@ Default expectations:
 - verify changes with the smallest relevant command set first
 - state uncertainty explicitly rather than guessing about behavior
 
+### Configurable, extensible, customizable, maintainable
+
+The maintainer reviews every change against these four words. Each has a concrete meaning here:
+
+- **Configurable:** tunable values (limits, timeouts, sizes, counts, retry policies, default URLs, model or provider defaults) live in config, never inline. Extension settings go in `apps/extension/config/settings.default.toml` with a comment and are validated by one config module; site and product values (URLs, contact addresses, store links, dates) come from `config/site.config.toml` through `@bookmark-scout/config`. Only true protocol constants stay in code.
+- **Extensible:** prefer data-driven rules over lists of special cases, so a new case is a new entry, not new code. Match by pattern, not by file name: CI scoping ignores `**/*.md`, not a list of notes files (`.github/ci-scopes.toml`). Providers, prompts, tools, and presets are table entries with one shared code path.
+- **Customizable:** when users will reasonably want a different value or behavior, expose it as a setting with a sensible default instead of choosing for them. Let users save several named variants where one is not enough (for example the prompt library), and keep stored data as ids rather than display text so it renders in the current language.
+- **Maintainable:** no hard-coded strings either. User-visible text, units, and labels go through `t()` (extension) or message files (website) in every locale; repeated marker strings become one named constant. Keep one obvious home for each concern, and update the matching `DESIGN.md`, docs, and skill when the shape changes.
+- **No duplicates:** search `lib/`, `hooks/`, `services/`, and `components/ui/` for an existing helper before writing one, and merge copies of logic that must change together into one function, component, or data table. Similar-looking code with different reasons to change can stay separate.
+
 ## Repository map
 
 ### Workspace root
@@ -153,7 +163,9 @@ When the changed behavior is covered by the extension test suite, also run the n
 
 - unit tests: `nx run extension:test:unit`
 - Chromium end-to-end tests: `nx run extension:test:e2e`
-- for browser-specific changes, the Edge or Firefox target: `nx run extension:test:e2e:edge`, `nx run extension:test:e2e:firefox`
+- for browser-specific changes, the Firefox target: `nx run extension:test:e2e:firefox`
+
+Run Chromium and Firefox end-to-end tests locally. Edge (`nx run extension:test:e2e:edge`) runs in CI as the required `Edge E2E` check; run it locally only when Edge is installed and the change is Edge-specific, and do not list "Edge not run locally" as a risk.
 
 ### Website changes
 
@@ -182,7 +194,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link, metadata, and site icon requests, and mocked-provider AI auto-tagging, summarization, page reading, request logging, opt-in, and provider-error paths (tests titled `[mocked provider contract]`). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, saved site icons in the popup, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and the browser favicon cache are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link, metadata, and site icon requests, and mocked-provider AI auto-tagging, summarization, page reading, request logging, opt-in, and provider-error paths (tests titled `[mocked provider contract]`), plus the Ask AI agent with a mocked streaming tool call and its error path, the prompt library, named AI services and the popup service switcher, live settings (language switch and a second Options tab), and dialog motion (no backdrop flash on close). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, saved site icons in the popup, side panel page, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and the browser favicon cache are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
 
 ## AI maintainer runbook
 
@@ -192,24 +204,24 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
 
 - Do not publish a release tag unless the user explicitly asks for release publication.
 - Before pushing a release tag, confirm:
-  - `main` is clean and synced: `rtk git status --short --branch`
-  - no PRs are open: `rtk gh pr list --state open`
+  - `main` is clean and synced: `git status --short --branch`
+  - no PRs are open: `gh pr list --state open`
   - latest relevant Actions for current `main` are green
-  - the remote tag does not already exist: `rtk git ls-remote --tags origin vX.Y.Z`
+  - the remote tag does not already exist: `git ls-remote --tags origin vX.Y.Z`
   - `apps/extension/package.json` `version` equals `X.Y.Z`; WXT writes it into the manifest and the release workflow rejects mismatched tags
-- If a local release tag points to an older commit, move it to the current passing `main` before pushing: `rtk git tag -f vX.Y.Z HEAD`.
-- Push the tag to trigger `Release Extension`: `rtk git push origin vX.Y.Z`.
-- Watch the workflow and verify uploaded release assets: `rtk gh run watch <run-id> --exit-status` and `rtk gh release view vX.Y.Z`.
+- If a local release tag points to an older commit, move it to the current passing `main` before pushing: `git tag -f vX.Y.Z HEAD`.
+- Push the tag to trigger `Release Extension`: `git push origin vX.Y.Z`.
+- Watch the workflow and verify uploaded release assets: `gh run watch <run-id> --exit-status` and `gh release view vX.Y.Z`.
 - Expected release assets are Chrome `.crx`, Chrome `.zip`, Firefox `.zip`, Edge `.zip`, and the Firefox review sources `.zip`.
 
 ### GitHub Actions troubleshooting
 
 - Inspect logs before changing code:
-  - list recent runs: `rtk gh run list --limit 20`
-  - inspect failed logs: `rtk gh run view <run-id> --log-failed`
-  - watch reruns: `rtk gh run watch <run-id> --exit-status`
+  - list recent runs: `gh run list --limit 20`
+  - inspect failed logs: `gh run view <run-id> --log-failed`
+  - watch reruns: `gh run watch <run-id> --exit-status`
 - The website and docs both deploy to Cloudflare Pages with `cloudflare/wrangler-action` (`deploy-website.yml`, `deploy-docs.yml`), using the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
-- If `bun install --frozen-lockfile` fails, run `rtk bun install`, commit the updated `bun.lock`, then verify `rtk bun install --frozen-lockfile`.
+- If `bun install --frozen-lockfile` fails, run `bun install`, commit the updated `bun.lock`, then verify `bun install --frozen-lockfile`.
 - CI skips jobs a pull request cannot affect. The rules live in `.github/ci-scopes.toml` as glob patterns: `ignore` (for example every `*.md`, `.agents/`, `backlog/`, `store/`), `shared` (workspace files that run every scope), and named `[scopes]` (`extension`, `sites`). A file that matches no pattern runs every scope. `scripts/ci-scopes.ts` applies the rules in the `Detect changes` job, and `scripts/ci-scopes.test.ts` covers them; extend the TOML, not the workflow, when paths change. Skipped jobs still report as passed, so required checks never block, and pushes to `main` always run everything.
 - Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
 
@@ -348,7 +360,10 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 - do not overwrite or revert user changes you did not make
 - mention unrelated issues separately instead of folding them into the same task
 - prefer additive or local edits over broad rewrites when both solve the problem
-- keep temporary scripts, screenshots, logs, and one-off reports out of the repository; use the session scratchpad or `~/.cache/bookmark-scout-*`
+- keep temporary scripts, screenshots, logs, and one-off reports out of the repository; put them in `~/.cache/bookmark-scout-<topic>/`. Session scratchpads get wiped and are shared between parallel agents, so use them only for throwaway output. Third-party tools and skills sometimes write reports into the working tree (a migration skill once committed `.migration/`); check `git status` for new top-level folders before committing
+- script repository files (TOML, JSON, Markdown) with Bun and the workspace's libraries (`smol-toml` for TOML), not the system `python3`, which may lack `tomllib`; one Python edit to the README generator overwrote the READMEs
+- after changing a generator or its templates, run it and check `git diff --exit-code` on its output before trusting it; the README templates once lagged months behind their output
+- do not add CI jobs that commit generated files back; generate locally (pre-commit hook) and let CI fail on drift
 - put one-time infrastructure setup (hosting projects, domains, DNS, secrets) in a local, idempotent script with `--dry-run`, not in CI
 
 ## Default agent workflow
@@ -366,7 +381,7 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 ## Agent skills
 
-Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
+Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
 - `extension-feature-test`: turning behaviors into unit and E2E coverage, with lessons from past audits.
 - `extension-live-smoke`: read-only checks of an installed extension with Computer Use, and its tool limits.
@@ -375,7 +390,10 @@ Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Sk
 - `parallel-agent-delivery`: splitting work across parallel agents and landing auto-merged PRs safely.
 - `extension-ui-change`: restyling extension surfaces with the phased PR plan, token audits, Base UI quirks, visual checks, and expected settings UX.
 - `extension-ai-feature`: adding AI providers, tools, and limits end to end: config, storage, logging, disclosures, and provider gotchas.
-- `website-docs-delivery`: verifying, screenshot-reviewing, and deploying the website and docs, with next-intl, Playwright, and Cloudflare Pages traps.
+- `website-docs-delivery`: verifying, screenshot-reviewing, and deploying the website and docs, with next-intl, Playwright, image pipeline, hosting cutover, and Cloudflare Pages traps, plus a marketing and SEO review reference.
+- `extension-store-release`: getting the builds, manifests, release assets, and listings ready for the Chrome Web Store, Firefox Add-ons, and Edge Add-ons, without submitting.
+- `feature-research-planning`: research-first planning for a new capability or redesign: map the code, research libraries and patterns online, present options with a recommended default.
+- `session-learnings`: mining past agent sessions into portable skill and `AGENTS.md` updates, with a transcript digest script.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 
