@@ -12,9 +12,6 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
-env:
-  PW_WORKERS: 3
-
 # Every job checks out the repository, then runs .github/actions/setup-workspace (Bun from
 # `packageManager` in package.json, `bun install --frozen-lockfile`). Job names are the required
 # checks of the main branch ruleset: renaming one blocks merges until the ruleset is updated.
