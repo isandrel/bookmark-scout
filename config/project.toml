@@ -1,0 +1,79 @@
+# Bookmark Scout project identity, shared by every app and the README.
+#
+# Read only through `@bookmark-scout/config` (packages/config), which validates it strictly:
+# an unknown key or a missing value fails every build. Site-only values (website and docs
+# URLs, hosting, analytics) live in config/web.toml.
+
+[project]
+name        = "Bookmark Scout"
+slug        = "bookmark-scout"
+description = "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools and multi-provider support."
+
+[author]
+name = "isandrel"
+url  = "https://github.com/isandrel"
+
+[repository]
+url            = "https://github.com/isandrel/bookmark-scout"
+default_branch = "main"
+
+# `url` is the license text; `file` is the copy in the repository.
+[license]
+spdx = "AGPL-3.0"
+url  = "https://www.gnu.org/licenses/agpl-3.0.html"
+file = "LICENSE"
+
+[locales]
+default   = "en"
+supported = ["en", "ja", "ko"]
+
+# Each language's own name, for language switchers.
+[locales.names]
+en = "English"
+ja = "日本語"
+ko = "한국어"
+
+# Open Graph locale codes.
+[locales.og]
+en = "en_US"
+ja = "ja_JP"
+ko = "ko_KR"
+
+[browsers]
+supported = ["chrome", "firefox", "edge"]
+
+[browsers.names]
+chrome  = "Chrome"
+firefox = "Firefox"
+edge    = "Edge"
+
+# Store listings, one per supported browser. Leave `url` empty until that listing is live;
+# the website and docs then point to the GitHub release instead.
+[stores.chrome]
+name = "Chrome Web Store"
+url  = ""
+
+[stores.firefox]
+name = "Firefox Add-ons"
+url  = ""
+
+[stores.edge]
+name = "Microsoft Edge Add-ons"
+url  = ""
+
+# Role-based addresses on the site domain (RFC 2142 style). Each one should be an
+# alias that forwards to a monitored inbox. Also create postmaster@ and abuse@,
+# which mail operators expect but the site does not need to publish.
+[contact]
+privacy  = "privacy@bookmark-scout.com"
+security = "security@bookmark-scout.com"
+support  = "support@bookmark-scout.com"
+
+# Dates shown on legal pages (ISO 8601). Update when the policy text changes.
+[legal]
+privacy_effective_date = "2026-10-02"
+
+# Price for structured data (schema.org Offer).
+[offer]
+price    = "0"
+currency = "USD"

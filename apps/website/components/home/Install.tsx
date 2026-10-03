@@ -1,6 +1,6 @@
 import { INSTALL_BROWSERS } from "@/lib/content/install";
 import { downloadTarget } from "@/lib/download";
-import { RELEASES_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import { DownloadButton, secondaryButtonClass } from "./DownloadButton";
 import { richTags } from "./rich";
@@ -40,11 +40,11 @@ export async function Install() {
                                     {index === 0 && (
                                         <div className="mt-4">
                                             {target.source === "store" ? (
-                                                <a href={RELEASES_URL} className={secondaryButtonClass}>
+                                                <a href={site.repo.releasesLatest} className={secondaryButtonClass}>
                                                     {t("download")}
                                                 </a>
                                             ) : (
-                                                <DownloadButton href={RELEASES_URL} label={t("download")} />
+                                                <DownloadButton href={site.repo.releasesLatest} label={t("download")} />
                                             )}
                                         </div>
                                     )}

@@ -9,13 +9,18 @@
     ],
     "targets": {
         "dev": {
-            "command": "bun scripts/optimize-images.ts && next dev",
+            "command": "bun scripts/generate-public-files.ts && bun scripts/optimize-images.ts && next dev",
             "options": {
                 "cwd": "apps/website"
             }
         },
         "build": {
-            "command": "bun scripts/optimize-images.ts && next build",
+            "command": "bun scripts/generate-public-files.ts && bun scripts/optimize-images.ts && next build",
+            "inputs": [
+                "production",
+                "^production",
+                "{workspaceRoot}/apps/extension/config/**/*"
+            ],
             "options": {
                 "cwd": "apps/website"
             }

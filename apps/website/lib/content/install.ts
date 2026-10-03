@@ -1,8 +1,7 @@
-import type { StoreBrowser } from "@bookmark-scout/config";
-
 /** Per-browser install steps. Copy lives in messages under `home.install.<id>`. */
 export type InstallBrowser = {
-    id: StoreBrowser;
+    /** A browser id from `[browsers] supported` in config/project.toml. */
+    id: string;
     /** Message keys under `home.install.<id>.steps`, in order. */
     steps: readonly string[];
     /** Optional message key under `home.install.<id>` shown after the steps. */

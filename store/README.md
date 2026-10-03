@@ -30,7 +30,7 @@ The stores link to two pages on the website, each published in English, Japanese
 | Privacy policy | <https://bookmark-scout.com/en/privacy/> | `/ja/privacy/`, `/ko/privacy/` | [`privacy-policy.md`](privacy-policy.md) and `apps/website/messages/privacy/` |
 | Support | <https://bookmark-scout.com/en/support/> | `/ja/support/`, `/ko/support/` | `apps/website/messages/support/` |
 
-Contact addresses come from `config/site.config.toml` (`[contact]`): `support@bookmark-scout.com` for help, `privacy@bookmark-scout.com` for privacy requests, and `security@bookmark-scout.com` for vulnerability reports.
+Contact addresses come from `config/project.toml` (`[contact]`): `support@bookmark-scout.com` for help, `privacy@bookmark-scout.com` for privacy requests, and `security@bookmark-scout.com` for vulnerability reports.
 
 ## Why a root `store/` folder
 

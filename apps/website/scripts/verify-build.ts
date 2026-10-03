@@ -9,7 +9,8 @@
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { DEFAULT_LOCALE, LOCALES, SITE_URL, UMAMI_ENABLED, UMAMI_SCRIPT_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
+import { LEGACY_DOCS_REDIRECTS } from "../lib/content/docs-redirects";
 import { INDEXABLE_ROUTES } from "../lib/content/routes";
 import { IMAGE_BYTE_BUDGET, IMAGE_FORMATS, IMAGE_SOURCE_DIRS, SCREENSHOT_WIDTHS, variantPath } from "../lib/images";
 
@@ -17,13 +18,20 @@ const appRoot = resolve(import.meta.dir, "..");
 const outDir = join(appRoot, "out");
 const messagesDir = join(appRoot, "messages");
 
+// Raw config values only: expected URLs are spelled out below rather than taken from the
+// site model's builders, so a builder bug cannot hide here.
+const SITE_URL = site.url.origin;
+const DOCS_URL = site.docs.origin;
+const LOCALES = site.locales.supported;
+const DEFAULT_LOCALE = site.locales.default;
+
 /** Hosts the built pages may load resources from, besides the site itself. */
 const allowedResourceHosts = new Set<string>(
-    UMAMI_ENABLED && UMAMI_SCRIPT_URL ? [new URL(UMAMI_SCRIPT_URL).host] : [],
+    site.analytics.enabled ? [new URL(site.analytics.scriptUrl).host] : [],
 );
 
 /** Warn when security.txt expires within this many days. */
-const securityTxtWarnDays = 30;
+const securityTxtWarnDays = site.securityTxt.warnDays;
 
 const failures: string[] = [];
 const warnings: string[] = [];
@@ -107,12 +115,37 @@ function checkSitemap() {
     }
     for (const locale of LOCALES) {
         for (const route of INDEXABLE_ROUTES) {
-            const loc = `${SITE_URL}/${locale}${route}`;
-            if (!sitemap.includes(`<loc>${loc}</loc>`) && !sitemap.includes(`<loc>${loc}/</loc>`)) {
-                fail(`sitemap.xml: missing ${loc}`);
-            }
+            const loc = pageUrl(locale, route);
+            if (!sitemap.includes(`<loc>${loc}</loc>`)) fail(`sitemap.xml: missing ${loc}`);
         }
     }
+    if (/<lastmod>[^<]*T\d{2}:\d{2}:\d{2}\.\d{3}Z<\/lastmod>/.test(sitemap)) {
+        fail("sitemap.xml: lastmod looks like the build time; use a content date or omit it");
+    }
+}
+
+/** The website's old /<locale>/docs/* pages forward to the docs site. */
+function checkLegacyDocsRedirects() {
+    for (const locale of LOCALES) {
+        for (const [path, target] of Object.entries(LEGACY_DOCS_REDIRECTS)) {
+            const label = `/${locale}/docs/${path ? `${path}/` : ""}`;
+            const html = readOut(join(locale, "docs", path, "index.html"));
+            const expected = `${DOCS_URL}${target}`;
+            if (!html) fail(`${label}: page missing from out/`);
+            else if (!html.includes(`content="0; url=${expected}"`)) fail(`${label}: should refresh to ${expected}`);
+        }
+    }
+}
+
+function checkManifest() {
+    const manifest = readOut("manifest.webmanifest");
+    if (!manifest) {
+        fail("manifest.webmanifest missing from out/");
+        return;
+    }
+    const parsed = JSON.parse(manifest) as { name?: string; theme_color?: string };
+    if (parsed.name !== site.name) fail(`manifest.webmanifest: name should be ${site.name}`);
+    if (parsed.theme_color !== site.theme.accent) fail(`manifest.webmanifest: theme_color should be ${site.theme.accent}`);
 }
 
 /** Every PNG source must ship AVIF and WebP variants within the byte budget. */
@@ -153,6 +186,10 @@ function checkSecurityTxt() {
         return;
     }
     if (!/^Contact: \S+/m.test(text)) fail("security.txt: missing Contact");
+    const securityContact = `Contact: mailto:${site.contact.address("security")}`;
+    if (!text.includes(securityContact)) fail(`security.txt: missing "${securityContact}"`);
+    const canonical = `Canonical: ${SITE_URL}/.well-known/security.txt`;
+    if (!text.includes(canonical)) fail(`security.txt: missing "${canonical}"`);
     const expires = /^Expires: (\S+)/m.exec(text)?.[1];
     const expiry = expires ? Date.parse(expires) : Number.NaN;
     if (Number.isNaN(expiry)) {
@@ -210,6 +247,8 @@ for (const locale of LOCALES) {
     for (const route of INDEXABLE_ROUTES) checkPage(locale, route);
 }
 checkSitemap();
+checkLegacyDocsRedirects();
+checkManifest();
 checkRootRedirect();
 checkHostingFiles();
 checkOptimizedImages();

@@ -52,7 +52,7 @@ Check Fumadocs built-ins before writing a feature by hand, in the current Fumado
 
 - **next-intl static export:**
   - Only one layout may render `<html>`. With both the root and `[locale]` layouts doing it, `/ja/` shipped `lang="en"`. The root layout passes children through, and root `not-found.tsx` renders its own `<html>`.
-  - Root `/` exported as a JavaScript-only `__next_error__` redirect. It is now a meta-refresh page plus `public/_redirects` (`/ /en/ 302`).
+  - Root `/` exported as a JavaScript-only `__next_error__` redirect. It is now a meta-refresh page plus a `_redirects` rule (`/ /en/ 302`) that `scripts/generate-public-files.ts` writes from config before each build.
   - Read `metadata.title` from messages per locale, and check that a title template does not double the site name.
 - **Docs metadata:** without `metadataBase`, `og:image` pointed at `http://localhost:3000`; `docs:verify` now catches this.
 - **Website E2E:**
@@ -62,13 +62,13 @@ Check Fumadocs built-ins before writing a feature by hand, in the current Fumado
   - `reuseExistingServer: !process.env.CI` means a local server already on the test port can serve an old build. Stop it before trusting a local run.
 - **Bun scripts** that need Bun types get `/// <reference types="bun" />` at the top of that file only, so Bun globals do not leak into the Next app.
 - **Docs Nx targets** come from `apps/docs/package.json` scripts plus its `"nx"` field (for example `verify` depends on `build`); there is no `project.json`.
-- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**`. A new shared input the sites read must be added to those filters.
+- **Deploy path filters:** `deploy-website.yml` and `deploy-docs.yml` trigger on their app plus `config/**` and `packages/config/**` (the website also on `apps/extension/config/**`, for its AI provider list). A new shared input the sites read must be added to those filters and to the `sites` scope in `.github/ci-scopes.toml`.
 
 ## Hosting (Cloudflare Pages)
 
 - Pages projects are named `bookmark-scout-<app>`, after the folder under `apps/`.
-- `public/_headers` and `public/_redirects` are Pages inputs. Zone-level Cloudflare settings can override `_headers`; confirm live headers with `curl -sI` after deploy.
-- A new host, CDN, analytics, or any third party that sees visitor requests is a privacy change: update `apps/website/messages/privacy/{en,ja,ko}.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` in `config/site.config.toml` in the same PR.
+- `public/_headers` and the generated `public/_redirects` are Pages inputs. Zone-level Cloudflare settings can override `_headers`; confirm live headers with `curl -sI` after deploy.
+- A new host, CDN, analytics, or any third party that sees visitor requests is a privacy change: update `apps/website/messages/privacy/{en,ja,ko}.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` in `config/project.toml` in the same PR.
 - Cutover order, so a working origin exists at every step:
   1. Deploy to the new host and check the `*.pages.dev` URL: content, `_headers`, and the `/` redirect.
   2. Back up DNS records to `~/.cache/`.

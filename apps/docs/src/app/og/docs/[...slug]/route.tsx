@@ -1,15 +1,15 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { DOCS_NAME } from "@bookmark-scout/config";
+import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
 import { getPageImage, source } from "@/lib/source";
 
 export const revalidate = false;
 
-/** Dark brand tokens from app/global.css; the card is always rendered on the navy paper. */
+/** Dark brand tokens from app/global.css (paper from config); the card is always on the navy paper. */
 const OG_COLORS = {
-  paper: "#0d1b2a",
+  paper: site.theme.dark,
   ink: "#e8eff6",
   inkSoft: "#9fb2c6",
   line: "#23394f",
@@ -20,7 +20,7 @@ const OG_COLORS = {
 const OG_SIZE = { width: 1200, height: 630 } as const;
 
 async function loadIcon(): Promise<string> {
-  const icon = await readFile(join(process.cwd(), "public", "icon.png"));
+  const icon = await readFile(join(process.cwd(), "public", PUBLIC_PATHS.icon));
   return `data:image/png;base64,${icon.toString("base64")}`;
 }
 
@@ -33,7 +33,7 @@ export async function GET(
   if (!page) notFound();
 
   const icon = await loadIcon();
-  const title = page.slugs.length === 0 ? DOCS_NAME : page.data.title;
+  const title = page.slugs.length === 0 ? site.docs.name : page.data.title;
 
   return new ImageResponse(
     <div
@@ -65,7 +65,7 @@ export async function GET(
         <span
           style={{ fontSize: 36, fontWeight: 700, color: OG_COLORS.inkSoft }}
         >
-          {DOCS_NAME}
+          {site.docs.name}
         </span>
       </div>
       <div

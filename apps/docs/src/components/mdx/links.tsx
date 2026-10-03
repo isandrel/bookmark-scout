@@ -1,20 +1,21 @@
 import type { ReactNode } from "react";
+import { copy } from "@/lib/copy";
 import {
   type ContactRole,
   contactAddress,
   contactHref,
   license,
   privacyEffectiveDate,
+  type RepoTarget,
   releasesUrl,
-  repoUrl,
+  repoHref,
   type SitePath,
-  type StoreBrowser,
   siteUrl,
   storeAvailability,
   storeListing,
 } from "@/lib/links";
 
-/** A mailto link for one of the role addresses in config/site.config.toml. */
+/** A mailto link for one of the role addresses in config/project.toml. */
 export function Contact({ role }: { role: ContactRole }) {
   return <a href={contactHref(role)}>{contactAddress(role)}</a>;
 }
@@ -22,7 +23,7 @@ export function Contact({ role }: { role: ContactRole }) {
 export function ReleaseLink({ children }: { children?: ReactNode }) {
   return (
     <a href={releasesUrl} rel="noreferrer">
-      {children ?? "the latest GitHub release"}
+      {children ?? copy.release.latest}
     </a>
   );
 }
@@ -52,23 +53,23 @@ export function SiteLink({
   return <a href={siteUrl(to)}>{children}</a>;
 }
 
-/** A link into the GitHub repository; without `path` it links to the repository itself. */
+/**
+ * A link into the GitHub repository: `file` for a file and `tree` for a folder on the default
+ * branch, `path` for any other page (such as `/issues`), and none for the repository itself.
+ */
 export function RepoLink({
-  path = "",
   children,
-}: {
-  path?: string;
-  children: ReactNode;
-}) {
+  ...target
+}: RepoTarget & { children: ReactNode }) {
   return (
-    <a href={repoUrl(path)} rel="noreferrer">
+    <a href={repoHref(target)} rel="noreferrer">
       {children}
     </a>
   );
 }
 
 /** States whether a store listing is live, and links to it only when it is. */
-export function StoreListing({ browser }: { browser: StoreBrowser }) {
+export function StoreListing({ browser }: { browser: string }) {
   const listing = storeListing(browser);
   if (!listing.live) return <p>{listing.text}</p>;
   return (

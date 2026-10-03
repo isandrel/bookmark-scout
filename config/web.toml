@@ -1,0 +1,47 @@
+# Website and docs hosting values, read by apps/website, apps/docs, and the README generator
+# through `@bookmark-scout/config`. Project identity (name, repository, locales, contact
+# addresses, store links) lives in config/project.toml. Unknown keys and missing values fail.
+
+[website]
+url = "https://bookmark-scout.com"
+# Custom domains attached to the Cloudflare Pages project. One-time setup, run locally:
+# `bun apps/website/scripts/setup-cloudflare.ts` creates the project, attaches these
+# domains, and points their DNS at <project>.pages.dev. CI only deploys.
+domains = ["bookmark-scout.com", "www.bookmark-scout.com"]
+
+# Umami Cloud analytics for the website. The privacy policy describes it and links these pages.
+[website.analytics]
+enabled     = true
+provider    = "umami"
+script_url  = "https://cloud.umami.is/script.js"
+website_id  = "878e552a-c74d-4ebf-b101-398993c55023"
+about_url   = "https://umami.is/"
+metrics_url = "https://docs.umami.is/docs/metric-definitions"
+
+# Brand colors the browser UI and web manifest use. They must match the paper and teal
+# tokens in apps/website/app/globals.css and apps/docs/src/app/global.css (a test checks).
+[website.theme]
+light  = "#f4f7fb"
+dark   = "#0d1b2a"
+accent = "#0b7a80"
+
+# The host that serves both sites, named in the privacy policy.
+[hosting]
+privacy_url = "https://www.cloudflare.com/privacypolicy/"
+
+[docs]
+name        = "Bookmark Scout Docs"
+url         = "https://docs.bookmark-scout.com"
+description = "Install and use Bookmark Scout, a browser extension that searches, organizes, and cleans up your bookmarks inside your browser."
+
+# Crawl hints for the docs sitemap.
+[docs.sitemap]
+change_frequency = "weekly"
+home_priority    = 1.0
+page_priority    = 0.8
+
+# The website's /.well-known/security.txt (RFC 9116), generated at build time.
+# Renew `expires` before it lapses; the website verify step warns `warn_days` ahead.
+[security_txt]
+expires   = "2027-09-30T00:00:00.000Z"
+warn_days = 30

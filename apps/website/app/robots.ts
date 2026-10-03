@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@bookmark-scout/config";
+import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 
 export const dynamic = "force-static";
 
@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
             userAgent: "*",
             allow: "/",
         },
-        sitemap: `${SITE_URL}/sitemap.xml`,
+        sitemap: site.url.asset(PUBLIC_PATHS.sitemap),
     };
 }

@@ -1,5 +1,5 @@
 import { docs } from "fumadocs-mdx:collections/server";
-import { DOCS_URL, GITHUB_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import { type InferPageType, llms, loader } from "fumadocs-core/source";
 import { lucideIconsPlugin } from "fumadocs-core/source/lucide-icons";
 import { absolutizeLinks, resolveMdxForText } from "@/lib/mdx-text";
@@ -14,7 +14,6 @@ export const source = loader({
 export type DocsPage = InferPageType<typeof source>;
 
 /** Where the MDX sources live in the repository, for "view on GitHub" links. */
-const CONTENT_BRANCH = "main";
 const CONTENT_DIR = "apps/docs/content/docs";
 
 export function getPageImage(page: DocsPage) {
@@ -37,13 +36,13 @@ export function getPageMarkdownUrl(page: DocsPage) {
 }
 
 export function getPageSourceUrl(page: DocsPage): string {
-  return `${GITHUB_URL}/blob/${CONTENT_BRANCH}/${CONTENT_DIR}/${page.path}`;
+  return site.repo.file(`${CONTENT_DIR}/${page.path}`);
 }
 
 export async function getLLMText(page: DocsPage): Promise<string> {
   const processed = await page.data.getText("processed");
 
-  return `# ${page.data.title} (${new URL(page.url, DOCS_URL).toString()})
+  return `# ${page.data.title} (${new URL(page.url, site.docs.origin).toString()})
 
 ${resolveMdxForText(processed)}`;
 }

@@ -5,7 +5,10 @@
             "{projectRoot}/**/*",
             "sharedGlobals"
         ],
-        "sharedGlobals": [],
+        "sharedGlobals": [
+            "{workspaceRoot}/config/**/*",
+            "{workspaceRoot}/packages/config/src/**/*"
+        ],
         "production": [
             "default",
             "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",

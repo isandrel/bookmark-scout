@@ -1,59 +1,55 @@
-import {
-  CONTACT,
-  GITHUB_URL,
-  LICENSE,
-  PRIVACY_EFFECTIVE_DATE,
-  RELEASES_URL,
-  SITE_URL,
-  STORES,
-} from "@bookmark-scout/config";
+import { type ContactRole, site } from "@bookmark-scout/config";
+import { copy } from "@/lib/copy";
 
-export type ContactRole = keyof typeof CONTACT;
-export type StoreBrowser = keyof typeof STORES;
+export type { ContactRole };
 
-/** Website routes the docs link to. Paths only; the origin comes from SITE_URL. */
-export const SITE_PATHS = {
-  home: "/",
-  privacy: "/en/privacy/",
-  support: "/en/support/",
+/** Website pages the docs link to, as routes of the site model. */
+const SITE_PAGES = {
+  home: () => site.url.home,
+  privacy: () => site.url.page(site.locales.default, "/privacy"),
+  support: () => site.url.page(site.locales.default, "/support"),
 } as const;
 
-export type SitePath = keyof typeof SITE_PATHS;
-
-export const STORE_NAMES: Record<StoreBrowser, string> = {
-  chrome: "the Chrome Web Store",
-  edge: "Microsoft Edge Add-ons",
-  firefox: "Firefox Add-ons",
-};
+export type SitePath = keyof typeof SITE_PAGES;
 
 export function siteUrl(page: SitePath): string {
-  return new URL(SITE_PATHS[page], SITE_URL).toString();
+  return SITE_PAGES[page]();
 }
 
-/** A path inside the GitHub repository, such as `/tree/main/store`. */
-export function repoUrl(path = ""): string {
-  return `${GITHUB_URL}${path}`;
+/**
+ * Where a `<RepoLink>` points: `file` is a file and `tree` a folder on the default branch,
+ * `path` any other repository page (such as `/issues`); none of them is the repository itself.
+ */
+export type RepoTarget = { path?: string; file?: string; tree?: string };
+
+export function repoHref({ path, file, tree }: RepoTarget = {}): string {
+  if (file) return site.repo.file(file);
+  if (tree) return site.repo.tree(tree);
+  return site.repo.url(path);
 }
 
 export function contactAddress(role: ContactRole): string {
-  return CONTACT[role];
+  return site.contact.address(role);
 }
 
 export function contactHref(role: ContactRole): string {
-  return `mailto:${CONTACT[role]}`;
+  return site.contact.mailto(role);
 }
 
-export const releasesUrl = RELEASES_URL;
+export const releasesUrl = site.repo.releasesLatest;
 
-export const license = { name: LICENSE.name, url: LICENSE.url } as const;
+export const license = {
+  name: site.license.spdx,
+  url: site.license.fileUrl,
+} as const;
 
-/** The privacy policy's effective date: ISO 8601 from config, and written out in English. */
+/** The privacy policy's effective date: ISO 8601 from config, written out in the docs' language. */
 export const privacyEffectiveDate = {
-  iso: PRIVACY_EFFECTIVE_DATE,
-  text: new Intl.DateTimeFormat("en-US", {
+  iso: site.legal.privacyEffectiveDate,
+  text: new Intl.DateTimeFormat(site.locales.default, {
     dateStyle: "long",
     timeZone: "UTC",
-  }).format(new Date(`${PRIVACY_EFFECTIVE_DATE}T00:00:00Z`)),
+  }).format(new Date(`${site.legal.privacyEffectiveDate}T00:00:00Z`)),
 } as const;
 
 export type StoreListing =
@@ -61,28 +57,30 @@ export type StoreListing =
   | { live: false; text: string };
 
 /** What to say about a browser's store listing, so pages never link to a listing that is not live. */
-export function storeListing(browser: StoreBrowser): StoreListing {
-  const url = STORES[browser];
-  const store = STORE_NAMES[browser];
-  if (url) {
-    return { live: true, url, text: `Install Bookmark Scout from ${store}.` };
-  }
-  return {
-    live: false,
-    text: `Bookmark Scout is not on ${store} yet. Install it from a GitHub release:`,
-  };
+export function storeListing(browser: string): StoreListing {
+  const store = site.store(browser);
+  return store.live
+    ? {
+        live: true,
+        url: store.url,
+        text: copy.store.listed(site.name, store.name),
+      }
+    : { live: false, text: copy.store.notListed(site.name, store.name) };
 }
 
-/** One sentence on which stores list the extension, derived from the STORES config. */
+/** One sentence on which stores list the extension, derived from the store config. */
 export function storeAvailability(): {
   text: string;
   links: { name: string; url: string }[];
 } {
-  const links = (Object.keys(STORES) as StoreBrowser[])
-    .filter((browser) => STORES[browser])
-    .map((browser) => ({ name: STORE_NAMES[browser], url: STORES[browser] }));
-  if (links.length === 0) {
-    return { text: "No browser store lists Bookmark Scout yet.", links };
-  }
-  return { text: "Bookmark Scout is listed on:", links };
+  const links = site.stores
+    .filter((store) => store.live)
+    .map((store) => ({ name: store.name, url: store.url }));
+  return {
+    text:
+      links.length === 0
+        ? copy.store.noneListed(site.name)
+        : copy.store.listedOn(site.name),
+    links,
+  };
 }
