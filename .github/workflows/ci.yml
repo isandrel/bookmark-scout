@@ -7,6 +7,41 @@ on:
     branches: [main]
 
 jobs:
+  # Decides which jobs a pull request needs. Required checks still report: a job skipped by its
+  # `if` counts as passed. Pushes to main always run everything.
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      extension: ${{ steps.filter.outputs.extension }}
+      sites: ${{ steps.filter.outputs.sites }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Match changed paths
+        id: filter
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+          NOTES: '(^|/)(AGENTS|DESIGN|README|CONTRIBUTING|CHANGELOG)\.md$'
+          # Files every app depends on: workspace setup, shared packages and config, and CI itself.
+          SHARED: '^(package\.json|bun\.lock|nx\.json|biome\.json|tsconfig[^/]*\.json|packages/|config/|\.github/workflows/ci\.yml)'
+        run: |
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "extension=true" >> "$GITHUB_OUTPUT"
+            echo "sites=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Agent, design, and readme notes build nothing; Lint still checks the generated READMEs.
+          changed=$(git diff --name-only "$BASE"...HEAD | grep -Ev "$NOTES" || true)
+          printf 'Changed files that need checks:\n%s\n' "$changed"
+          matches() { printf '%s\n' "$changed" | grep -Eq "$1" && echo true || echo false; }
+          echo "extension=$(matches "^apps/extension/|$SHARED")" >> "$GITHUB_OUTPUT"
+          echo "sites=$(matches "^apps/(website|docs)/|$SHARED")" >> "$GITHUB_OUTPUT"
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -38,25 +73,37 @@ jobs:
   build:
     name: Build Extension
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
     strategy:
       matrix:
         target: [chrome, firefox, edge]
+    # Conditions are per step, not on the job: a skipped matrix job would report one unnamed
+    # check instead of "Build Extension (chrome)" and the others the ruleset requires.
+    env:
+      RUN: ${{ needs.changes.outputs.extension }}
     steps:
+      - name: Skip, the extension is unchanged
+        if: env.RUN != 'true'
+        run: echo "No extension changes in this pull request."
+
       - name: Checkout
+        if: env.RUN == 'true'
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Bun
+        if: env.RUN == 'true'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
+        if: env.RUN == 'true'
         run: bun install
 
       - name: Build for ${{ matrix.target }}
+        if: env.RUN == 'true'
         run: |
           if [ "${{ matrix.target }}" = "chrome" ]; then
             bunx nx run extension:build:chrome
@@ -69,7 +116,8 @@ jobs:
   test:
     name: Extension Tests
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: needs.changes.outputs.extension == 'true'
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -105,7 +153,8 @@ jobs:
   e2e-edge:
     name: Edge E2E
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: needs.changes.outputs.extension == 'true'
     timeout-minutes: 25
     steps:
       - name: Checkout
@@ -146,7 +195,8 @@ jobs:
   e2e-firefox:
     name: Firefox E2E smoke
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: needs.changes.outputs.extension == 'true'
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -185,6 +235,8 @@ jobs:
   sites:
     name: Website and Docs
     runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.sites == 'true'
     timeout-minutes: 20
     steps:
       - name: Checkout
