@@ -22,7 +22,6 @@ function statusTone(entry: AIActivityEntry): string {
 }
 
 function ActivityRow({ entry }: { entry: AIActivityEntry }) {
-  const { toast } = useToast();
   const url = (() => {
     try {
       const parsed = new URL(entry.url);
@@ -44,7 +43,7 @@ function ActivityRow({ entry }: { entry: AIActivityEntry }) {
         2,
       ),
     );
-    toast({ title: t('aiActivity_copied') });
+    toast.success({ title: t('aiActivity_copied') });
   };
 
   return (

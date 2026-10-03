@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions } from './ai-helpers';
 import { setSettings } from './popup-helpers';
 
@@ -6,7 +6,7 @@ test.use({ grantWebHostAccess: true });
 
 const BASE_URL = 'https://provider.invalid/v1';
 
-test('[mocked provider contract] AI activity records a request with its key redacted, only while on', async ({
+test('[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on', async ({
   context,
   extensionId,
   extensionWorker,
@@ -20,9 +20,18 @@ test('[mocked provider contract] AI activity records a request with its key reda
   });
   await extensionWorker.evaluate(async (baseUrl) => {
     await chrome.storage.local.set({
-      'bookmark-scout-ai': { custom: { apiKey: 'synthetic-activity-key', baseUrl } },
+      'bookmark-scout-ai': {
+        custom: {
+          apiKey: 'synthetic-activity-key',
+          baseUrl,
+          // A gateway credential under a name no pattern knows, and one that a pattern catches.
+          extraHeaders:
+            '{"X-Tenant":"synthetic-tenant-value","X-Auth-Token":"synthetic-token-value"}',
+        },
+      },
     });
   }, BASE_URL);
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await context.route(`${BASE_URL}/models`, (route) =>
     route.fulfill({
       status: 200,
@@ -54,11 +63,18 @@ test('[mocked provider contract] AI activity records a request with its key reda
   await expect(entry).toContainText('Request headers');
   await expect(entry).toContainText('[redacted]');
   await expect(entry).toContainText('listed-model');
-  await expect(entry).not.toContainText('synthetic-activity-key');
+  await expect(entry).toContainText('"x-tenant": "[redacted]"');
+  const secrets = /synthetic-(activity-key|tenant-value|token-value)/;
+  await expect(entry).not.toContainText(secrets);
   const stored = await extensionWorker.evaluate(async () =>
     JSON.stringify(await chrome.storage.local.get('bookmark-scout-ai-activity')),
   );
-  expect(stored).not.toContain('synthetic-activity-key');
+  expect(stored).not.toMatch(secrets);
+  await entry.getByRole('button', { name: 'Copy as JSON' }).click();
+  await expect(toastRegion(page).getByText('✓ Request copied', { exact: true })).toBeVisible();
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toContain('"x-tenant": "[redacted]"');
+  expect(copied).not.toMatch(secrets);
 
   // Turning recording off deletes the log.
   await activity.getByRole('switch', { name: 'Record requests' }).click();
