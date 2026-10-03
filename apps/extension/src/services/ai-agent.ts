@@ -33,6 +33,22 @@ const WEB_SEARCH_TOOLS: Partial<Record<AIProvider, () => object>> = {
   xai: () => xai.tools.webSearch({}),
 };
 
+/** Names the Ask AI tools are registered under, which the chat shows as steps. */
+export const ASK_AI_TOOL_NAMES = {
+  searchBookmarks: 'searchBookmarks',
+  listFolders: 'listFolders',
+  getCurrentPage: 'getCurrentPage',
+  readPage: 'readPage',
+  webSearch: 'webSearch',
+} as const;
+
+/** Names providers report for their own web search call, besides the registered one. */
+export const ASK_AI_WEB_SEARCH_TOOL_NAMES: ReadonlySet<string> = new Set([
+  ASK_AI_TOOL_NAMES.webSearch,
+  'web_search',
+  'google_search',
+]);
+
 export function supportsWebSearch(provider: AIProvider): boolean {
   return provider in WEB_SEARCH_TOOLS;
 }
@@ -103,7 +119,7 @@ const TOOL_MESSAGES = {
 
 function createReadOnlyTools(readPages: boolean): ToolSet {
   const tools: ToolSet = {
-    searchBookmarks: tool({
+    [ASK_AI_TOOL_NAMES.searchBookmarks]: tool({
       description:
         "Search the user's bookmarks by keywords. Matches titles, URLs, folder names, saved tags, and saved summaries.",
       inputSchema: z.object({
@@ -114,12 +130,12 @@ function createReadOnlyTools(readPages: boolean): ToolSet {
         return searchBookmarksForAI(nodes, metadata, query);
       },
     }),
-    listFolders: tool({
+    [ASK_AI_TOOL_NAMES.listFolders]: tool({
       description: "List the paths of all the user's bookmark folders.",
       inputSchema: z.object({}),
       execute: async () => extractFolderPaths(await fetchBookmarkTree()).map((folder) => folder.path),
     }),
-    getCurrentPage: tool({
+    [ASK_AI_TOOL_NAMES.getCurrentPage]: tool({
       description: 'Get the title and URL of the page open in the active browser tab.',
       inputSchema: z.object({}),
       execute: async () => {
@@ -131,7 +147,7 @@ function createReadOnlyTools(readPages: boolean): ToolSet {
     }),
   };
   if (readPages) {
-    tools.readPage = tool({
+    tools[ASK_AI_TOOL_NAMES.readPage] = tool({
       description: 'Read the main text of a web page by its URL, as Markdown.',
       inputSchema: z.object({ url: z.string().url() }),
       execute: async ({ url }) => (await readPageText(url)) ?? { error: TOOL_MESSAGES.pageUnreadable },
@@ -159,7 +175,7 @@ export async function createAskAIAgent(options: AskAIOptions) {
     instructions: system,
     tools: {
       ...createReadOnlyTools(readPages),
-      ...(webSearch ? { webSearch: webSearch as ToolSet[string] } : {}),
+      ...(webSearch ? { [ASK_AI_TOOL_NAMES.webSearch]: webSearch as ToolSet[string] } : {}),
     },
     stopWhen: isStepCount(config.max_steps),
   });

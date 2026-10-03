@@ -897,10 +897,6 @@
         "message": "새 탭에서 열기",
         "description": "Bookmark row action that opens a link in a new tab"
     },
-    "table_delete": {
-        "message": "삭제",
-        "description": "Bookmark row action that deletes the item"
-    },
     "table_moveTop": {
         "message": "맨 위로 이동",
         "description": "Accessible label for moving a bookmark to the top of its folder"
@@ -2845,10 +2841,6 @@
         "message": "설정 $1개를 변경했습니다: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_andMore": {
-        "message": "외 $1개",
-        "description": "Suffix for truncated list"
-    },
     "action_switchToLight": {
         "message": "밝은 테마로 전환",
         "description": "Theme toggle accessible name"
@@ -3070,24 +3062,6 @@
     "toast_errorCreatingFolderDesc": {
         "message": "새 폴더를 만들지 못했습니다. 다시 시도해 주세요.",
         "description": "Toast description when creating a folder fails"
-    },
-    "toast_itemRemovedDesc": {
-        "message": "\"$title$\"을(를) 삭제했습니다",
-        "description": "Toast description after removing a bookmark or folder",
-        "placeholders": {
-            "title": {
-                "content": "$1",
-                "example": "News"
-            }
-        }
-    },
-    "toast_errorDeletingBookmarkDesc": {
-        "message": "북마크를 삭제하지 못했습니다. 다시 시도해 주세요.",
-        "description": "Toast description when deleting a bookmark fails"
-    },
-    "toast_errorDeletingFolderDesc": {
-        "message": "폴더를 삭제하지 못했습니다. 다시 시도해 주세요.",
-        "description": "Toast description when deleting a folder fails"
     },
     "toast_itemMovedDesc": {
         "message": "\"$title$\"을(를) \"$folder$\"(으)로 이동했습니다",
@@ -3977,6 +3951,10 @@
         "message": "$1 (사본)",
         "description": "Name of a duplicated item; $1 is the original name"
     },
+    "format_moreItems": {
+        "message": "그 외 $1개",
+        "description": "Last entry of a shortened list, counting the items left out; $1 is the count. The list words (\"and\") are added by the browser"
+    },
     "tools_siteIcons": {
         "message": "사이트 아이콘 새로 고침",
         "description": "Title for the Refresh Site Icons tool"
@@ -4796,6 +4774,10 @@
     "askAI_toolWebSearch": {
         "message": "웹을 검색함",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "도구를 사용함",
+        "description": "Ask AI step for a provider tool that has no description of its own"
     },
     "ai_promptAskAIDesc": {
         "message": "Ask AI 채팅에서 질문에 답합니다",

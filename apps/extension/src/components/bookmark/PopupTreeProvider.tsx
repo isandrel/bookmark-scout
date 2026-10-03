@@ -37,13 +37,8 @@ export function PopupTreeProvider({
   children,
   folders,
   onDrop,
-  instanceId,
   ...actions
-}: PopupTreeProps & {
-  children: ReactNode;
-  /** Shares one drag scope between several providers; see `useTreeDnd`. */
-  instanceId?: symbol;
-}) {
+}: PopupTreeProps & { children: ReactNode }) {
   const canModify = useMemo(() => {
     const rootIds = getBookmarkRootIds(folders);
     return (node: BookmarkTreeNode) =>
@@ -54,7 +49,7 @@ export function PopupTreeProvider({
     (node: BookmarkTreeNode) => node.children === undefined || canModify(node),
     [canModify],
   );
-  const dnd = useTreeDnd(onDrop, { instanceId, canMove });
+  const dnd = useTreeDnd(onDrop, { canMove });
 
   return (
     <PopupTreeContext.Provider value={{ ...actions, ...dnd, canModify }}>
@@ -63,13 +58,8 @@ export function PopupTreeProvider({
   );
 }
 
-/** The tree's context; null outside a `PopupTreeProvider`. */
-export function useOptionalPopupTree(): PopupTreeContextValue | null {
-  return useContext(PopupTreeContext);
-}
-
 export function usePopupTree(): PopupTreeContextValue {
-  const tree = useOptionalPopupTree();
+  const tree = useContext(PopupTreeContext);
   if (!tree) throw new Error('usePopupTree must be used inside a PopupTreeProvider');
   return tree;
 }

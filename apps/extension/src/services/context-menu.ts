@@ -43,7 +43,7 @@ function menuSettingsChanged(oldValue: unknown, newValue: unknown): boolean {
  * Read the context-menu preferences from the same sync area used by Options.
  */
 async function getContextMenuSettings(): Promise<ContextMenuSettings> {
-  const settings = toContextMenuSettings(await settingsItem.getValue());
+  const settings = toContextMenuSettings(await settingsValue.get());
   setLanguage(settings.language);
   return settings;
 }
@@ -359,10 +359,20 @@ function rebuildAfterStorageChange(): void {
 }
 
 function watchContextMenuStorage(): void {
-  settingsItem.watch((newValue, oldValue) => {
-    if (menuSettingsChanged(oldValue, newValue)) rebuildAfterStorageChange();
+  // The stored value only reports the new settings, so remember the ones seen last.
+  let previous: Settings | undefined;
+  void settingsValue
+    .get()
+    .then((settings) => {
+      previous ??= settings;
+    })
+    .catch(() => undefined);
+  settingsValue.watch((next) => {
+    const before = previous;
+    previous = next;
+    if (menuSettingsChanged(before, next)) rebuildAfterStorageChange();
   });
-  recentFoldersItem.watch(rebuildAfterStorageChange);
+  recentFoldersValue.watch(rebuildAfterStorageChange);
 }
 
 // =============================================================================

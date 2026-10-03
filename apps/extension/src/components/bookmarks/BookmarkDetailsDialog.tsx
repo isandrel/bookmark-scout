@@ -31,15 +31,6 @@ function DateValue({ value }: { value?: number }) {
   return <time dateTime={date.toISOString()}>{formatDateTime(date)}</time>;
 }
 
-function isWebUrl(url?: string): boolean {
-  if (!url) return false;
-  try {
-    return ['http:', 'https:'].includes(new URL(url).protocol);
-  } catch {
-    return false;
-  }
-}
-
 function BookmarkDetailsContent({
   bookmark,
   onClose,
@@ -78,7 +69,7 @@ function BookmarkDetailsContent({
     getStoredBookmarkMetadata([bookmark.id])
       .then((metadata) => {
         if (!active) return;
-        setTagsText(metadata[bookmark.id]?.tags?.join(', ') ?? '');
+        setTagsText(formatListSetting(metadata[bookmark.id]?.tags ?? []));
         setSummary(metadata[bookmark.id]?.summary ?? '');
       })
       .catch(() => {
@@ -106,10 +97,10 @@ function BookmarkDetailsContent({
     setMetadataSaving(true);
     setMetadataStatus('');
     try {
-      const tags = tagsText.split(',').map((tag) => tag.trim()).filter(Boolean);
+      const tags = parseListSetting(tagsText, 'string');
       await saveBookmarkMetadata(bookmark.id, { tags, summary });
       const stored = await getStoredBookmarkMetadata([bookmark.id]);
-      setTagsText(stored[bookmark.id]?.tags?.join(', ') ?? '');
+      setTagsText(formatListSetting(stored[bookmark.id]?.tags ?? []));
       setSummary(stored[bookmark.id]?.summary ?? '');
       setMetadataStatus(t('bookmarks_metadataSaved'));
     } catch {
@@ -138,7 +129,7 @@ function BookmarkDetailsContent({
     <>
       <dl className="space-y-4">
         <DetailField label={t('bookmarks_detailsName')} testId="bookmark-details-name">
-          {bookmark.title || t('bookmarks_untitled')}
+          {getBookmarkDisplayTitle(bookmark.title)}
         </DetailField>
         <DetailField label={t('bookmarks_detailsUrl')} testId="bookmark-details-url">
           <span className="break-all">{bookmark.url || t('bookmarks_detailsUnavailable')}</span>
@@ -150,8 +141,8 @@ function BookmarkDetailsContent({
               ? t('bookmarks_detailsLoadingPath')
               : [
                   t('bookmarks_root'),
-                  ...folderPath.map((name) => name || t('bookmarks_untitled')),
-                ].join(' / ')}
+                  ...folderPath.map(getBookmarkDisplayTitle),
+                ].join(FOLDER_PATH_SEPARATOR)}
         </DetailField>
         <DetailField label={t('bookmarks_detailsDateAdded')} testId="bookmark-details-added">
           <DateValue value={bookmark.dateAdded} />
@@ -238,7 +229,7 @@ function BookmarkDetailsContent({
         <Button type="button" variant="outline" size="sm" onClick={() => copyValue(bookmark.id)}>
           {t('bookmarks_detailsCopyId')}
         </Button>
-        {isWebUrl(bookmarkUrl) ? (
+        {bookmarkUrl && isWebUrl(bookmarkUrl) ? (
           // A real link with button styles: Base UI's Button would give an <a> role="button".
           <a
             className={buttonVariants({ variant: 'outline', size: 'sm' })}
