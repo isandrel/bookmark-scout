@@ -965,6 +965,14 @@
         "message": "URL을 입력하세요.",
         "description": "Validation message when a link URL is empty"
     },
+    "bookmarks_editUrlInvalid": {
+        "message": "https://example.com/처럼 스킴을 포함한 전체 URL을 입력하세요.",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "폴더 이름을 입력하세요.",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
     "bookmarks_openFailed": {
         "message": "북마크를 열 수 없습니다",
         "description": "Toast shown when a bookmark cannot be opened"

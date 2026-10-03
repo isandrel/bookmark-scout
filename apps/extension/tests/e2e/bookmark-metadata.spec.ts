@@ -83,11 +83,13 @@ test('saves, edits, and clears bookmark tags and summaries without AI', async ({
   await expect(dialog.getByTestId('bookmark-metadata-tags')).toHaveValue('research, tools');
   await expect(dialog.getByTestId('bookmark-metadata-summary')).toHaveValue('A private summary.');
 
-  await dialog.getByTestId('bookmark-metadata-tags').fill('reading');
+  // Japanese and Korean keyboards type their own commas; each separates tags too.
+  await dialog.getByTestId('bookmark-metadata-tags').fill('reading、読書，독서');
   await dialog.getByRole('button', { name: 'Save Metadata' }).click();
   await expect(dialog.getByText('Metadata saved.')).toBeVisible();
+  await expect(dialog.getByTestId('bookmark-metadata-tags')).toHaveValue('reading, 読書, 독서');
   expect((await readMetadata(extensionWorker))[bookmarkId]).toEqual({
-    tags: ['reading'],
+    tags: ['reading', '読書', '독서'],
     summary: 'A private summary.',
   });
 

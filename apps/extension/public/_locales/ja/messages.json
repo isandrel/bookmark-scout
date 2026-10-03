@@ -965,6 +965,14 @@
         "message": "URLを入力してください。",
         "description": "Validation message when a link URL is empty"
     },
+    "bookmarks_editUrlInvalid": {
+        "message": "https://example.com/ のように、スキームを含む完全なURLを入力してください。",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "フォルダ名を入力してください。",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
     "bookmarks_openFailed": {
         "message": "ブックマークを開けませんでした",
         "description": "Toast shown when a bookmark cannot be opened"

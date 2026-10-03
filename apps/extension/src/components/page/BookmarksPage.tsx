@@ -261,8 +261,10 @@ export default function BookmarksPage() {
           </div>
         </header>
 
-        {/* Content */}
-        <div className="min-w-0 flex-1 space-y-4 overflow-auto p-4">
+        {/* Content. Positioned, so absolutely positioned descendants (screen-reader-only labels)
+            are laid out inside this scroll area instead of stretching the page below the
+            viewport, which let the whole page scroll away to a blank screen. */}
+        <div className="relative min-w-0 flex-1 space-y-4 overflow-auto p-4">
           {notice && (
             <div
               role="status"

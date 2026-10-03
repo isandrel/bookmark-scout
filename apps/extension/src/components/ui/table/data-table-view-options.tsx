@@ -8,12 +8,18 @@ interface DataTableViewOptionsProps<TData extends RowData> {
   onResetView: () => void;
   /** Columns hidden because the table is too narrow; they cannot be turned on until it widens. */
   spaceHiddenColumnIds?: string[];
+  /**
+   * Column visibility the user chose. A column hidden for space shows this choice, so it reads
+   * as on while it waits for room, not as turned off.
+   */
+  columnVisibilityPreference?: Record<string, boolean>;
 }
 
 export function DataTableViewOptions<TData extends RowData>({
   table,
   onResetView,
   spaceHiddenColumnIds = [],
+  columnVisibilityPreference = {},
 }: DataTableViewOptionsProps<TData>) {
   const configurableColumns = table
     .getAllColumns()
@@ -79,7 +85,11 @@ export function DataTableViewOptions<TData extends RowData>({
               <div key={column.id} className="flex items-center gap-1">
                 <DropdownMenuCheckboxItem
                   className="min-w-0 flex-1"
-                  checked={column.getIsVisible()}
+                  checked={
+                    hiddenForSpace
+                      ? columnVisibilityPreference[column.id] !== false
+                      : column.getIsVisible()
+                  }
                   disabled={hiddenForSpace}
                   title={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}
                   aria-description={hiddenForSpace ? t('table_columnHiddenForSpace') : undefined}

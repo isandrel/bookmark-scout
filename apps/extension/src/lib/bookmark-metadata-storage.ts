@@ -10,6 +10,24 @@ export type BookmarkMetadataPatch = {
   summary?: string;
 };
 
+/**
+ * Characters that separate typed tags: the ASCII comma, plus the ideographic, full-width, and
+ * half-width ideographic commas that Japanese, Chinese, and Korean keyboards produce.
+ */
+const TAG_SEPARATOR_PATTERN = /[,、，､]/;
+
+/** Splits typed tags at any comma, trimmed, without blanks or repeats, in typed order. */
+export function parseBookmarkTags(text: string): string[] {
+  return [
+    ...new Set(
+      text
+        .split(TAG_SEPARATOR_PATTERN)
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
 export type BookmarkMetadataMergeOptions = {
   tagMode: 'append' | 'replace';
   summaryMode: 'append' | 'replace';
