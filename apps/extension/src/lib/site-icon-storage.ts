@@ -15,7 +15,9 @@ export type SiteIconEntry = {
 
 export type SiteIconCache = Record<string, SiteIconEntry>;
 
-export const siteIconCacheItem = storage.defineItem<SiteIconCache>(`local:${SITE_ICON_STORAGE_KEY}`);
+export const siteIconCacheItem = storage.defineItem<SiteIconCache>(
+  `local:${SITE_ICON_STORAGE_KEY}`,
+);
 
 /** Raster and SVG icon types the refresh stores; anything else in storage is dropped on read. */
 const SITE_ICON_DATA_URL_PATTERN =
@@ -68,7 +70,7 @@ export function fitSiteIconCache(
 }
 
 export function normalizeSiteIconCache(raw: unknown): SiteIconCache {
-  if (typeof raw !== 'object' || raw === null || Array.isArray(raw)) return {};
+  if (!isPlainObject(raw)) return {};
   const cache: SiteIconCache = {};
   for (const [origin, value] of Object.entries(raw)) {
     if (getSiteIconOrigin(origin) !== origin) continue;

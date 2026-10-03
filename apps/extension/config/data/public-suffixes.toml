@@ -1,0 +1,25 @@
+# A small approximation of the Public Suffix List, used only to group bookmarks by site in the
+# manager's domain filter (news.bbc.co.uk and www.bbc.co.uk both group under bbc.co.uk). A
+# suffix missing here falls back to the last two labels, which only affects grouping.
+
+# Second-level labels that act as public registries under two-letter country-code TLDs
+# (co.uk, or.jp, net.au).
+country_second_level_labels = [
+  "ac", "ad", "co", "com", "ed", "edu", "go", "gob", "gov", "govt", "gr", "gv", "id", "in",
+  "lg", "ltd", "me", "mil", "ne", "net", "nhs", "nic", "nom", "or", "org", "plc", "police",
+  "sch",
+]
+
+# Multi-label public suffixes the country-code rule does not cover, mostly shared hosting.
+extra_suffixes = [
+  "appspot.com",
+  "blogspot.com",
+  "cloudfront.net",
+  "github.io",
+  "gitlab.io",
+  "herokuapp.com",
+  "netlify.app",
+  "pages.dev",
+  "vercel.app",
+  "workers.dev",
+]

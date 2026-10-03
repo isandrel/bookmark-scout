@@ -1,0 +1,13 @@
+# What one saved search query may hold. Stored queries over these limits are dropped on read.
+
+# Longest title or URL filter text.
+text_max_length = 500
+
+# Most folders or domains in one filter.
+value_list_max_length = 200
+
+# Longest folder id or domain in a filter.
+value_max_length = 2048
+
+# Most sort columns.
+sorting_max_length = 10

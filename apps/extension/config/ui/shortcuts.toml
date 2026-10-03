@@ -1,0 +1,18 @@
+# Single-key shortcuts. Each action lists one or more bindings: `key` is the KeyboardEvent.key
+# value ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`. Ctrl and Cmd are never
+# used, so browser shortcuts keep working. Shortcuts pause while typing, during IME composition,
+# and while a dialog or menu is open. The manager's shortcuts help lists these same bindings.
+
+# Bookmark manager page.
+[manager]
+focus_filter = [{ key = "/" }]
+show_help = [{ key = "?" }]
+parent_folder = [{ key = "ArrowUp", alt = true }, { key = "Backspace" }]
+next_row = [{ key = "j" }]
+previous_row = [{ key = "k" }]
+open_saved_searches = [{ key = "s" }]
+
+# Popup and side panel. Arrow keys, Home, End, Enter, and Escape in the search box and the tree
+# follow the standard tree and combobox keyboard patterns and are not listed here.
+[popup]
+focus_search = [{ key = "/" }]

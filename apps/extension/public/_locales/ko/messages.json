@@ -4792,5 +4792,29 @@
     "prompt_varToday": {
         "message": "오늘 날짜(YYYY-MM-DD 형식)",
         "description": "Prompt variable description"
+    },
+    "meta_languageName": {
+        "message": "한국어",
+        "description": "This language's own name, shown in the Language setting. Do not translate into another language."
+    },
+    "unit_ms": {
+        "message": "ms",
+        "description": "Unit shown after a duration in milliseconds"
+    },
+    "unit_px": {
+        "message": "px",
+        "description": "Unit shown after a size in pixels"
+    },
+    "unit_chars": {
+        "message": "자",
+        "description": "Unit shown after a number of characters"
+    },
+    "unit_kb": {
+        "message": "KB",
+        "description": "Unit shown after a size in kilobytes"
+    },
+    "bookmarks_folderOptionWithId": {
+        "message": "$1 (#$2)",
+        "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
     }
 }

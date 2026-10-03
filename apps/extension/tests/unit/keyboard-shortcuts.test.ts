@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  ariaKeyShortcuts,
   canHandleShortcut,
   findShortcut,
   hasOpenOverlay,
@@ -7,8 +8,11 @@ import {
   isComposingEvent,
   isTypingTarget,
   matchesShortcut,
+  SHORTCUT_BINDINGS,
+  shortcutKeyCaps,
   type ShortcutKeyEvent,
 } from '@/lib/keyboard-shortcuts';
+import { readConfigToml } from '../config-files';
 
 const noOverlay = { querySelector: () => null };
 const withOverlay = { querySelector: () => ({}) as Element };
@@ -151,5 +155,41 @@ describe('canHandleShortcut and findShortcut', () => {
     expect(canHandleShortcut(keyEvent('/', { metaKey: true }), options)).toBe(false);
     expect(canHandleShortcut(keyEvent('/', { defaultPrevented: true }), options)).toBe(false);
     expect(canHandleShortcut(keyEvent('/'), options)).toBe(true);
+  });
+});
+
+describe('configured bindings', () => {
+  const options = { root: noOverlay };
+  const shortcuts = readConfigToml('ui/shortcuts.toml') as {
+    manager: Record<string, unknown>;
+    popup: Record<string, unknown>;
+  };
+
+  it('come from config/ui/shortcuts.toml', () => {
+    expect(SHORTCUT_BINDINGS.manager.parentFolder).toEqual(shortcuts.manager.parent_folder);
+    expect(SHORTCUT_BINDINGS.manager.openSavedSearches).toEqual(
+      shortcuts.manager.open_saved_searches,
+    );
+    expect(SHORTCUT_BINDINGS.popup.focusSearch).toEqual(shortcuts.popup.focus_search);
+  });
+
+  it('match the keys their bindings name', () => {
+    const [altUp, backspace] = SHORTCUT_BINDINGS.manager.parentFolder;
+    expect(
+      findShortcut(keyEvent(altUp.key, { altKey: true }), SHORTCUT_BINDINGS.manager, options),
+    ).toBe('parentFolder');
+    expect(findShortcut(keyEvent(backspace.key), SHORTCUT_BINDINGS.manager, options)).toBe(
+      'parentFolder',
+    );
+  });
+
+  it('print as key caps and aria-keyshortcuts', () => {
+    expect(SHORTCUT_BINDINGS.manager.parentFolder.map(shortcutKeyCaps)).toEqual([
+      ['Alt', '↑'],
+      ['Backspace'],
+    ]);
+    expect(shortcutKeyCaps({ key: 'Escape' })).toEqual(['Esc']);
+    expect(ariaKeyShortcuts(SHORTCUT_BINDINGS.manager.parentFolder)).toBe('Alt+ArrowUp Backspace');
+    expect(ariaKeyShortcuts([{ key: '?' }])).toBe('?');
   });
 });

@@ -33,10 +33,6 @@ const relatedSettingKeys: Partial<Record<keyof Settings, keyof Settings>> = {
   aiMinItemsPerFolder: 'aiMaxItemsPerFolder',
 };
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === 'object' && !Array.isArray(value);
-}
-
 function isSettingsKey(key: unknown): key is keyof Settings {
   return typeof key === 'string' && key in settingsSchema.shape;
 }
@@ -60,10 +56,6 @@ export function getSettingsErrorMessage(key: keyof Settings, issue?: z.core.$Zod
   return t('settings_errorInvalidOption');
 }
 
-function sameValue(left: unknown, right: unknown): boolean {
-  return JSON.stringify(left) === JSON.stringify(right);
-}
-
 /**
  * Validate `updates` against `current`. Invalid fields fall back to their current value and are
  * reported; every valid field is kept.
@@ -84,10 +76,10 @@ export function validateSettingsUpdate(
 
     let reverted = false;
     const revert = (key: keyof Settings, issue: z.core.$ZodIssue) => {
-      const changed = key in updates && !sameValue(candidate[key], current[key]);
+      const changed = key in updates && !isSameJson(candidate[key], current[key]);
       if (key in updates && !(key in errors)) errors[key] = getSettingsErrorMessage(key, issue);
       const fallback = changed ? current[key] : defaultSettings[key];
-      if (!sameValue(candidate[key], fallback)) {
+      if (!isSameJson(candidate[key], fallback)) {
         candidate[key] = fallback;
         reverted = true;
       }
@@ -116,7 +108,7 @@ export function validateSettingsUpdate(
  * Coerce stored data into valid settings, replacing only invalid fields with defaults.
  */
 export function sanitizeSettings(stored: unknown): Settings {
-  const input = isRecord(stored) ? stored : {};
+  const input = isPlainObject(stored) ? stored : {};
   return validateSettingsUpdate(defaultSettings, input).settings;
 }
 
@@ -133,7 +125,7 @@ export async function getSettings(): Promise<Settings> {
     setLanguage(settings.language);
     return settings;
   } catch (error) {
-    console.error('Error reading settings:', error);
+    settingsLogger.error({ error }, 'Error reading settings');
     return defaultSettings;
   }
 }
@@ -156,7 +148,7 @@ export async function saveValidSettings(
 ): Promise<{ settings: Settings; errors: SettingsFieldErrors }> {
   const current = await getSettings();
   const result = validateSettingsUpdate(current, updates);
-  if (!sameValue(result.settings, current)) await writeSettings(result.settings);
+  if (!isSameJson(result.settings, current)) await writeSettings(result.settings);
   return result;
 }
 
@@ -170,7 +162,7 @@ export function saveValidSettingsNow(
   updates: Partial<Settings>,
 ): { settings: Settings; errors: SettingsFieldErrors; saved: Promise<void> } {
   const result = validateSettingsUpdate(current, updates);
-  const saved = sameValue(result.settings, current)
+  const saved = isSameJson(result.settings, current)
     ? Promise.resolve()
     : writeSettings(result.settings);
   return { ...result, saved };
@@ -203,7 +195,7 @@ export async function importSettings(json: string): Promise<(keyof Settings)[]> 
   } catch {
     throw new Error(t('error_invalidSettingsFile'));
   }
-  if (!isRecord(parsed)) throw new Error(t('error_invalidSettingsFile'));
+  if (!isPlainObject(parsed)) throw new Error(t('error_invalidSettingsFile'));
 
   const updates = Object.fromEntries(Object.entries(parsed).filter(([key]) => isSettingsKey(key)));
   if (Object.keys(updates).length === 0) throw new Error(t('error_invalidSettingsFile'));
@@ -214,7 +206,7 @@ export async function importSettings(json: string): Promise<(keyof Settings)[]> 
 
   await writeSettings(settings);
   return (Object.keys(settings) as (keyof Settings)[]).filter(
-    (key) => !sameValue(settings[key], current[key]),
+    (key) => !isSameJson(settings[key], current[key]),
   );
 }
 

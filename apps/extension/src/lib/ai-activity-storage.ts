@@ -38,9 +38,12 @@ const activityConfig = readConfig(
 export const MAX_AI_ACTIVITY_ENTRIES = activityConfig.max_entries;
 export const MAX_AI_ACTIVITY_BODY_CHARS = activityConfig.max_body_chars;
 
-export const aiActivityItem = storage.defineItem<AIActivityEntry[]>('local:bookmark-scout-ai-activity', {
-  fallback: [],
-});
+export const aiActivityItem = storage.defineItem<AIActivityEntry[]>(
+  'local:bookmark-scout-ai-activity',
+  {
+    fallback: [],
+  },
+);
 
 /** Per device: whether AI requests are recorded. */
 export const aiActivityRecordingItem = storage.defineItem<boolean>(
@@ -69,11 +72,14 @@ export function redactHeaders(headers: HeadersInit | undefined): Record<string, 
   return redacted;
 }
 
+/** Query parameters some providers put API keys in; their values are never stored. */
+const SECRET_QUERY_PARAMS = ['key', 'api_key', 'apikey'];
+
 /** Removes API keys that some providers put in the query string. */
 export function redactUrl(url: string): string {
   try {
     const parsed = new URL(url);
-    for (const name of ['key', 'api_key', 'apikey']) {
+    for (const name of SECRET_QUERY_PARAMS) {
       if (parsed.searchParams.has(name)) parsed.searchParams.set(name, REDACTED_VALUE);
     }
     return parsed.toString();

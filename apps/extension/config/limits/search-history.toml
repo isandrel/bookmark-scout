@@ -1,0 +1,4 @@
+# Recent popup and side panel searches (local storage, never synced).
+
+# Most recent queries kept; older ones are dropped.
+max_entries = 10
