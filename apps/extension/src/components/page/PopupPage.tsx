@@ -1,10 +1,6 @@
 /**
- * PopupPage - Bookmark popup using Zustand store.
- *
- * Refactored from 1299 lines to ~140 lines using:
- * - Zustand for centralized state management
- * - Extracted components for UI
- * - Extracted services for Chrome API
+ * PopupPage - the popup and side panel: search, the bookmark tree, recent folders, and AI
+ * folder suggestions for the current page. Tree state lives in the bookmark store.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -12,22 +8,31 @@ import { BookmarkIcon, CircleAlert, Folder, FolderPlus, SearchX, Sparkles, X } f
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
-type PendingDeletion = { id: string; title: string; type: 'bookmark' | 'folder' };
+/** Id of the placeholder row that holds the new-folder input. */
+const NEW_FOLDER_PLACEHOLDER_ID = 'temp-folder';
 
 function focusFolderRow(folderId: string | undefined): void {
   if (!folderId) return;
   document
-    .querySelector<HTMLElement>(`[data-folder-trigger="${CSS.escape(folderId)}"]`)
+    .querySelector<HTMLElement>(`[${POPUP_TREE_FOLDER_ATTRIBUTE}="${CSS.escape(folderId)}"]`)
     ?.focus();
+}
+
+/**
+ * A suggested path as the user knows it: AI paths start with the permanent folder, and the
+ * bookmarks bar, where most folders live, goes without saying. Its title differs per browser
+ * and language, so it is read from the tree.
+ */
+function withoutBookmarksBar(path: string, folders: readonly BookmarkTreeNode[]): string {
+  const barTitle = findBookmarksBarFolder(folders)?.title;
+  const prefix = barTitle ? `${barTitle}${AI_FOLDER_PATH_SEPARATOR}` : undefined;
+  return prefix && path.startsWith(prefix) ? path.slice(prefix.length) : path;
 }
 
 function PopupPage() {
   const inputRef = useRef<HTMLInputElement>(null);
   // The control that opened a dialog or the new-folder input, to get focus back afterwards.
   const focusReturnRef = useRef<{ opener: HTMLElement | null; folderId?: string } | null>(null);
-  const { toast } = useToast();
-  const [instanceId] = useState(() => Symbol('bookmark-drag-instance'));
-  const [pendingDeletion, setPendingDeletion] = useState<PendingDeletion | null>(null);
 
   // Zustand store
   const {
@@ -38,22 +43,19 @@ function PopupPage() {
     query,
     debouncedQuery: activeQuery,
     expandedFolders,
-    draggedItem,
     creatingFolderId,
     newFolderName,
     fetchFolders,
+    refreshFolders,
     setQuery,
     setDebouncedQuery,
     setExpandedFolders,
     setSearchExpansion,
     addingToFolderIds,
-    setDraggedItem,
     setCreatingFolderId,
     setNewFolderName,
     addBookmarkToFolder,
     createFolder,
-    removeBookmark,
-    removeFolder,
     handleDrop,
     toggleExpandAllChildren,
     areAllChildrenExpanded,
@@ -91,6 +93,7 @@ function PopupPage() {
   const [pendingNewFolder, setPendingNewFolder] = useState<FolderRecommendation | null>(null);
   const [newFolderSaving, setNewFolderSaving] = useState(false);
   const autoTriggerExecutedRef = useRef(false);
+  const deletion = useBookmarkDeletion({ onChanged: refreshFolders });
 
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);
@@ -108,7 +111,6 @@ function PopupPage() {
   }, [fetchFolders]);
 
   // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
-  const refreshFolders = useBookmarkStore((state) => state.refreshFolders);
   useBookmarkEvents(refreshFolders);
   usePopupSize();
 
@@ -121,7 +123,7 @@ function PopupPage() {
   const handleAIRecommend = useCallback(async () => {
     setAILoading(true);
     setAIRecommendations([]);
-    
+
     try {
       // Get current tab info
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
@@ -133,7 +135,7 @@ function PopupPage() {
         });
         return;
       }
-      
+
       setCurrentTabInfo({ title: tab.title, url: tab.url });
 
       // The default AI service; before services are saved, the synced provider and model.
@@ -151,13 +153,13 @@ function PopupPage() {
     } catch (error) {
       toast({
         title: t('ai_recommendationFailed'),
-        description: error instanceof Error ? error.message : t('error_unknown'),
+        description: getErrorMessage(error),
         variant: 'destructive',
       });
     } finally {
       setAILoading(false);
     }
-  }, [aiEnabled, folders, toast, aiMaxRecommendations, aiReadPageContent]);
+  }, [aiEnabled, folders, aiMaxRecommendations, aiReadPageContent]);
 
   // Auto-trigger AI recommendations on popup open if setting is enabled
   useEffect(() => {
@@ -189,18 +191,21 @@ function PopupPage() {
         toast({ title: t('toast_nothingChanged'), description: result.message });
         return false;
       }
-      const note = result.success ? successNote?.(result) : undefined;
-      toast({
-        title: result.success ? `\u2713 ${successTitle}` : `\u00d7 ${errorTitle}`,
+      if (!result.success) {
+        toast.error({ title: errorTitle, description: result.message });
+        return false;
+      }
+      const note = successNote?.(result);
+      toast.success({
+        title: successTitle,
         description: note ? `${result.message} ${note}` : result.message,
-        variant: result.success ? 'success' : 'destructive',
       });
-      return result.success;
+      return true;
     },
-    [toast],
+    [],
   );
 
-  // Save the current page into a tree folder (its add button or Enter) and track it as recent.
+  /** Saves the current page into a folder and tracks the folder as recent; true when saved. */
   const handleSaveToFolder = useCallback(
     async (folderId: string) => {
       const success = await withToast(
@@ -212,10 +217,11 @@ function PopupPage() {
         try {
           const folder = await getBookmark(folderId);
           await addRecentFolder(folderId, folder.title);
-        } catch (e) {
-          console.error('Failed to track recent folder:', e);
+        } catch (error) {
+          bookmarkLogger.error({ error }, 'Failed to track recent folder');
         }
       }
+      return success;
     },
     [addBookmarkToFolder, withToast],
   );
@@ -235,33 +241,20 @@ function PopupPage() {
     onSaveToFolder: handleSaveToFolder,
   });
 
-  // Add bookmark to selected folder and track as recent
-  const handleAddToFolder = useCallback(async (rec: FolderRecommendation) => {
-    if (!currentTabInfo) return;
-    
-    if (rec.type === 'existing' && rec.folderId) {
-      const success = await withToast(
-        () => addBookmarkToFolder(rec.folderId || ''),
-        t('toast_bookmarkAdded'),
-        t('toast_errorAddingBookmark'),
-      );
-      // Track as recent folder if successful
-      if (success && rec.folderId) {
-        try {
-          const folder = await getBookmark(rec.folderId);
-          await addRecentFolder(rec.folderId, folder.title);
-        } catch (e) {
-          console.error('Failed to track recent folder:', e);
-        }
+  // Add bookmark to the suggested folder, or review a suggested new folder first
+  const handleAddToFolder = useCallback(
+    async (rec: FolderRecommendation) => {
+      if (!currentTabInfo) return;
+      if (rec.type !== 'existing' || !rec.folderId) {
+        setPendingNewFolder(rec);
+        return;
       }
-    } else {
-      setPendingNewFolder(rec);
-      return;
-    }
-    
-    setAIRecommendations([]);
-    setCurrentTabInfo(null);
-  }, [currentTabInfo, addBookmarkToFolder, withToast]);
+      await handleSaveToFolder(rec.folderId);
+      setAIRecommendations([]);
+      setCurrentTabInfo(null);
+    },
+    [currentTabInfo, handleSaveToFolder],
+  );
 
   const handleConfirmNewFolder = useCallback(async () => {
     if (!pendingNewFolder || !currentTabInfo) {
@@ -280,20 +273,19 @@ function PopupPage() {
       try {
         await addRecentFolder(
           result.folderId,
-          result.folderPath.split('/').at(-1) || pendingNewFolder.folderPath,
+          result.folderPath.split(AI_FOLDER_PATH_SEPARATOR).at(-1) || pendingNewFolder.folderPath,
         );
       } catch (error) {
-        console.error('Failed to track recent folder:', error);
+        bookmarkLogger.error({ error }, 'Failed to track recent folder');
       }
 
+      const duplicate = result.status === 'duplicate';
       toast({
-        title: result.status === 'duplicate'
-          ? t('ai_newFolderDuplicate')
-          : t('ai_newFolderSuccess'),
-        description: (result.status === 'duplicate'
-          ? t('ai_newFolderDuplicateDesc')
-          : t('ai_newFolderSuccessDesc')
-        ).replace('$1', result.folderPath),
+        title: duplicate ? t('ai_newFolderDuplicate') : t('ai_newFolderSuccess'),
+        description: t(
+          duplicate ? 'ai_newFolderDuplicateDesc' : 'ai_newFolderSuccessDesc',
+          result.folderPath,
+        ),
         variant: 'success',
       });
       setPendingNewFolder(null);
@@ -301,7 +293,7 @@ function PopupPage() {
       setCurrentTabInfo(null);
     } catch (error) {
       const description = error instanceof RecommendedFolderError && error.code === 'path-conflict'
-        ? t('ai_newFolderConflictDesc').replace('$1', error.segment ?? '')
+        ? t('ai_newFolderConflictDesc', error.segment ?? '')
         : t('ai_newFolderFailedDesc');
       toast({
         title: t('ai_newFolderFailed'),
@@ -311,7 +303,7 @@ function PopupPage() {
     } finally {
       setNewFolderSaving(false);
     }
-  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder, toast]);
+  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -322,7 +314,7 @@ function PopupPage() {
             ...node,
             children: [
               {
-                id: 'temp-folder',
+                id: NEW_FOLDER_PLACEHOLDER_ID,
                 parentId: node.id,
                 title: t('popup_newFolder'),
                 isOpen: false,
@@ -435,108 +427,20 @@ function PopupPage() {
     [handleDrop, sortOrder, withToast],
   );
 
-  const deleteItem = useCallback(
-    async ({ id, type }: PendingDeletion) => {
-      let snapshot: BookmarkDeletionSnapshot;
-      try {
-        snapshot = await captureBookmarkDeletion(id);
-      } catch (error) {
-        toast({
-          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
-          description: error instanceof Error ? error.message : t('error_unknown'),
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      const result = type === 'folder' ? await removeFolder(id) : await removeBookmark(id);
-      // The deleted row took the focused delete button with it; move focus to its folder.
-      restoreFocusAfterRender();
-      if (!result.success) {
-        toast({
-          title: `× ${type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark')}`,
-          description: result.message,
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      let undoUsed = false;
-      const deletedTitle = getBookmarkDisplayTitle(snapshot.node.title);
-      // Each deletion owns its toast and snapshot, so undoing one never affects another.
-      const undoToast = toast({
-        title: `✓ ${type === 'folder' ? t('toast_folderDeleted') : t('toast_bookmarkDeleted')}`,
-        description: t('toast_deleteUndoWindow', [
-          deletedTitle,
-          String(BOOKMARK_DELETION_UNDO_WINDOW_MS / 1000),
-        ]),
-        variant: 'success',
-        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
-        action: (
-          <ToastAction
-            onClick={async () => {
-              // A snapshot restores at most once, so repeated clicks cannot duplicate the tree.
-              if (undoUsed) return;
-              undoUsed = true;
-              try {
-                await restoreBookmarkDeletion(snapshot);
-                await useBookmarkStore.getState().refreshFolders();
-                toast({
-                  title: t('toast_deleteRestored'),
-                  description: t('toast_deleteRestoredDesc', deletedTitle),
-                  variant: 'success',
-                });
-              } catch (error) {
-                toast({
-                  title: t('toast_errorRestoringDeletion'),
-                  description:
-                    error instanceof BookmarkRestoreError && error.code === 'parent-missing'
-                      ? t('toast_restoreParentMissing')
-                      : error instanceof BookmarkRestoreError && error.code === 'expired'
-                        ? t('toast_restoreExpired')
-                        : error instanceof Error
-                          ? error.message
-                          : t('error_unknown'),
-                  variant: 'destructive',
-                });
-              }
-            }}
-          >
-            {t('action_undo')}
-          </ToastAction>
-        ),
-      });
-      // Hovering pauses the toast timer, but the undo window does not pause: close the toast
-      // when the snapshot expires so it never offers an Undo that can only fail.
-      setTimeout(undoToast.dismiss, Math.max(0, snapshot.expiresAt - Date.now()));
-    },
-    [removeBookmark, removeFolder, restoreFocusAfterRender, toast],
-  );
-
+  const { requestDeletion } = deletion;
   const handleDeleteRequest = useCallback(
-    async (node: BookmarkTreeNode, type: PendingDeletion['type']) => {
+    (node: BookmarkTreeNode, type: BookmarkDeletionTarget['type']) => {
       rememberFocus(node.parentId);
-      const deletion = { id: node.id, title: node.title, type };
-      const { confirmBeforeDelete } = await getSettings();
-      if (confirmBeforeDelete) {
-        setPendingDeletion(deletion);
-      } else {
-        await deleteItem(deletion);
-      }
+      // The deleted row takes the focused delete button with it; focus then moves to its folder.
+      void requestDeletion({
+        id: node.id,
+        title: node.title,
+        type,
+        onDone: restoreFocusAfterRender,
+      });
     },
-    [deleteItem, rememberFocus],
+    [rememberFocus, requestDeletion, restoreFocusAfterRender],
   );
-
-  const pendingDeletionTitle = pendingDeletion
-    ? getBookmarkDisplayTitle(pendingDeletion.title)
-    : '';
-
-  const confirmDeletion = useCallback(async () => {
-    if (!pendingDeletion) return;
-    const deletion = pendingDeletion;
-    setPendingDeletion(null);
-    await deleteItem(deletion);
-  }, [deleteItem, pendingDeletion]);
 
   const sortedFolders = useMemo(() => {
     const visibleFolders = creatingFolderId
@@ -560,8 +464,8 @@ function PopupPage() {
   // The search toggle reflects what is on screen, whether the user or the search opened it.
   const allResultsExpanded = useMemo(() => {
     const expanded = new Set(expandedFolders);
-    const folderIds = getAllFolderIds(getTopLevelBookmarkNodes(filteredFolders));
-    return folderIds.length > 0 && folderIds.every((id) => expanded.has(id));
+    const ids = folderIds(getTopLevelBookmarkNodes(filteredFolders));
+    return ids.length > 0 && ids.every((id) => expanded.has(id));
   }, [expandedFolders, filteredFolders]);
 
   if (error) {
@@ -614,22 +518,7 @@ function PopupPage() {
           <RecentFoldersPanel
             maxFolders={recentFoldersMax}
             pendingFolderIds={addingToFolderIds}
-            onAddToFolder={async (folderId) => {
-            const success = await withToast(
-              () => addBookmarkToFolder(folderId),
-              t('toast_bookmarkAdded'),
-              t('toast_errorAddingBookmark'),
-            );
-            // Track as recent if successful
-            if (success) {
-              try {
-                const folder = await getBookmark(folderId);
-                await addRecentFolder(folderId, folder.title);
-              } catch (e) {
-                console.error('Failed to track recent folder:', e);
-              }
-            }
-          }}
+            onAddToFolder={handleSaveToFolder}
           />
         )}
 
@@ -640,7 +529,7 @@ function PopupPage() {
               <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <Sparkles aria-hidden="true" className="size-3.5 shrink-0 text-ai" />
                 <span className="truncate">
-                  {t('ai_suggestionsFor')} {currentTabInfo?.title?.slice(0, truncateLength)}...
+                  {t('ai_suggestionsFor')} {truncateText(currentTabInfo?.title ?? '', truncateLength)}
                 </span>
               </span>
               <Button
@@ -668,10 +557,10 @@ function PopupPage() {
                     ) : (
                       <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
                     )}
-                    {rec.folderPath.replace(/^Bookmarks Bar\//, '')}
+                    {withoutBookmarksBar(rec.folderPath, folders)}
                   </span>
                   <span className="ml-2 font-mono text-xs tabular-nums text-muted-foreground">
-                    {Math.round(rec.confidence * 100)}%
+                    {formatPercent(rec.confidence)}
                   </span>
                 </div>
               </button>
@@ -724,82 +613,47 @@ function PopupPage() {
             </div>
           ) : (
             <div className="p-2">
-              <Accordion
-                multiple
-                value={expandedFolders}
-                onValueChange={(value) => setExpandedFolders([...value])}
-                onKeyDown={handleTreeKeyDown}
-                className="w-full accordion-container"
+              <PopupTreeProvider
+                folders={folders}
+                favicon={favicon}
+                newFolderName={newFolderName}
+                addingToFolderIds={addingToFolderIds}
+                areAllChildrenExpanded={areAllChildrenExpanded}
+                onDrop={handleDropWithToast}
+                onAddBookmark={handleSaveToFolder}
+                onAddFolder={handleAddFolder}
+                onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
+                onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
+                onCreateFolder={handleCreateFolder}
+                onCancelCreateFolder={handleCancelCreateFolder}
+                onNewFolderNameChange={setNewFolderName}
+                onToggleExpandAllChildren={toggleExpandAllChildren}
               >
-                {displayFolders.map((node) => (
-                  <FolderItem
-                    key={node.id}
-                    node={node}
-                    instanceId={instanceId}
-                    isDragging={draggedItem?.id === node.id}
-                    areAllChildrenExpanded={areAllChildrenExpanded}
-                    creatingFolderId={creatingFolderId}
-                    newFolderName={newFolderName}
-                    folders={folders}
-                    addingToFolderIds={addingToFolderIds}
-                    favicon={favicon}
-                    onDragStart={setDraggedItem}
-                    onDragEnd={() => setDraggedItem(null)}
-                    onDrop={handleDropWithToast}
-                    onAddBookmark={handleSaveToFolder}
-                    onAddFolder={handleAddFolder}
-                    onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
-                    onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
-                    onCreateFolder={handleCreateFolder}
-                    onCancelCreateFolder={handleCancelCreateFolder}
-                    onNewFolderNameChange={setNewFolderName}
-                    onToggleExpandAllChildren={toggleExpandAllChildren}
-                  />
-                ))}
-              </Accordion>
+                <Accordion
+                  multiple
+                  value={expandedFolders}
+                  onValueChange={(value) => setExpandedFolders([...value])}
+                  onKeyDown={handleTreeKeyDown}
+                  className="w-full accordion-container"
+                >
+                  {displayFolders.map((node) => (
+                    <FolderItem key={node.id} node={node} />
+                  ))}
+                </Accordion>
+              </PopupTreeProvider>
             </div>
           )}
         </div>
         {!isLoading && displayFolders.length > 0 && <PopupHintBar />}
       </div>
-      <Dialog
-        open={pendingDeletion !== null}
-        onOpenChange={(open) => {
-          if (!open) setPendingDeletion(null);
+      <BookmarkDeleteDialog
+        deletion={deletion}
+        finalFocus={() => {
+          // The dialog opens from code, so there is no trigger to return focus to.
+          restoreFocus(true);
+          return false;
         }}
-      >
-        <DialogContent
-          className="max-w-[calc(100%-2rem)]"
-          finalFocus={() => {
-            // The dialog opens from code, so there is no trigger to return focus to.
-            restoreFocus(true);
-            return false;
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>
-              {pendingDeletion?.type === 'folder'
-                ? t('popup_deleteFolder')
-                : t('popup_deleteBookmark')}
-            </DialogTitle>
-            <DialogDescription>
-              {pendingDeletion?.type === 'folder'
-                ? t('popup_confirmDeleteFolder', pendingDeletionTitle)
-                : t('popup_confirmDeleteBookmark', pendingDeletionTitle)}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setPendingDeletion(null)}>
-              {t('action_cancel')}
-            </Button>
-            <Button variant="destructive" onClick={confirmDeletion}>
-              {pendingDeletion?.type === 'folder'
-                ? t('popup_deleteFolder')
-                : t('popup_deleteBookmark')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      />
       <RecommendedFolderDialog
         open={pendingNewFolder !== null}
         recommendation={pendingNewFolder}

@@ -1,0 +1,10 @@
+# Bookmark manager page layout. Read by src/components/page/BookmarksPage.tsx.
+
+[manager]
+# Narrower windows than this, in pixels, leave the table too little room beside both the folder
+# and the tools sidebar, so opening one sidebar closes the other.
+both_sidebars_min_width = 1280
+
+# Whether each sidebar is open when the page loads.
+folders_open = true
+tools_open = false

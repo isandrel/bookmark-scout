@@ -14,7 +14,7 @@ export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
       <a
         ref={rowRef(node, 'bookmark')}
         href={node.url}
-        data-popup-tree-row="bookmark"
+        {...{ [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark' }}
         target="_blank"
         rel="noopener noreferrer"
         data-slot="drag-handle"

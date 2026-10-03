@@ -22,8 +22,6 @@ const DROP_CLASSES = {
 type RowRef = (element: HTMLElement | null) => (() => void) | undefined;
 
 type TreeDndOptions = {
-  /** Shares one drag scope between several trees on a page; each tree gets its own otherwise. */
-  instanceId?: symbol;
   /** Whether a row may be dragged and reordered; permanent and managed folders may not. */
   canMove?: (node: BookmarkTreeNode) => boolean;
 };
@@ -74,8 +72,8 @@ export function useTreeDnd(
   onDrop: (operation: DragOperation) => void,
   options: TreeDndOptions = {},
 ): TreeDnd {
-  const [ownInstanceId] = useState(() => Symbol('popup-tree-dnd'));
-  const instanceId = options.instanceId ?? ownInstanceId;
+  // Each tree is its own drag scope: rows only accept drags that started in the same tree.
+  const [instanceId] = useState(() => Symbol('popup-tree-dnd'));
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
   // Registrations outlive renders, so they read the latest callbacks through a ref.

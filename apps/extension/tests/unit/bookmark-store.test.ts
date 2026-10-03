@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage, t } from '@/hooks/use-i18n';
 import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
+import { saveSettings } from '@/lib/settings-storage';
 import { useBookmarkStore } from '@/stores/bookmark-store';
 
 type FakeNode = {
@@ -66,9 +67,11 @@ function deferred() {
 let bar: FakeNode;
 let folder: FakeNode;
 
-beforeEach(() => {
+beforeEach(async () => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
+  // Toasts read settings for the title length, and reading settings applies their language.
+  await saveSettings({ language: 'en' });
   setLanguage('en');
   nodes = new Map([['0', { id: '0', title: '', children: [] }]]);
   nextId = 1;

@@ -6,12 +6,24 @@
 
 import { CircleAlert, Info, PanelLeft, PanelLeftClose, PanelRight, PanelRightClose, X } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { z } from 'zod';
+
+const layout = readConfig(
+  'ui/layout',
+  z.strictObject({
+    manager: z.strictObject({
+      both_sidebars_min_width: z.number().int().positive(),
+      folders_open: z.boolean(),
+      tools_open: z.boolean(),
+    }),
+  }),
+).manager;
 
 const getBookmarkRowId = (bookmark: Bookmark) => bookmark.id;
 
 // Narrower than this, the folder and tools sidebars together leave the table too little room,
 // so opening one closes the other.
-const BOTH_SIDEBARS_QUERY = '(min-width: 1280px)';
+const BOTH_SIDEBARS_QUERY = `(min-width: ${layout.both_sidebars_min_width}px)`;
 const fitsBothSidebars = () => window.matchMedia(BOTH_SIDEBARS_QUERY).matches;
 const isFolderRow = (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder;
 
@@ -42,9 +54,9 @@ export default function BookmarksPage() {
     items: allData,
     onNavigate: navigateToFolder,
   });
-  const { toast } = useToast();
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(false);
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(true);
+  // Both open is narrowed to one by the effect below when the window is too small.
+  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(!layout.folders_open);
+  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(!layout.tools_open);
   const toggleLeftSidebar = () => {
     if (leftSidebarCollapsed && !fitsBothSidebars()) setRightSidebarCollapsed(true);
     setLeftSidebarCollapsed(!leftSidebarCollapsed);
@@ -69,8 +81,8 @@ export default function BookmarksPage() {
   const { value: sortOrder } = useSetting('sortOrder');
   // Labels built in memos below must be rebuilt when the language changes.
   const { value: language } = useSetting('language');
-  const { pendingDeletion, requestDeletion, confirmDeletion, cancelDeletion } =
-    useBookmarkDeletion(refresh);
+  const deletion = useBookmarkDeletion({ onChanged: refresh });
+  const { requestDeletion } = deletion;
   const columns = useMemo(
     () =>
       createColumns({
@@ -80,14 +92,10 @@ export default function BookmarksPage() {
           edit: setEditingBookmark,
           requestDeletion: (bookmark) => void requestDeletion(toDeletionTarget(bookmark)),
           reportError: (titleKey, actionError) =>
-            toast({
-              title: `× ${t(titleKey)}`,
-              description: actionError instanceof Error ? actionError.message : t('error_unknown'),
-              variant: 'destructive',
-            }),
+            toast.error({ title: t(titleKey), description: getErrorMessage(actionError) }),
         },
       }),
-    [requestDeletion, toast],
+    [requestDeletion],
   );
   const sortAccessors = useMemo(
     () => ({
@@ -139,7 +147,7 @@ export default function BookmarksPage() {
   const currentFolderName = useMemo(() => {
     if (!currentFolder) return undefined;
     const folder = allData.find((bookmark) => bookmark.id === currentFolder);
-    return folder ? folder.title.trim() || t('bookmarks_untitled') : undefined;
+    return folder ? getBookmarkDisplayTitle(folder.title) : undefined;
   }, [allData, currentFolder, language]);
 
   const renderSelectionActions = useCallback(
@@ -156,7 +164,7 @@ export default function BookmarksPage() {
           void requestDeletion({
             ...toDeletionTarget(first),
             items: items.map(toDeletionTarget),
-            onDeleted: clearSelection,
+            onDone: clearSelection,
           });
         }}
       />
@@ -343,11 +351,7 @@ export default function BookmarksPage() {
         onClose={() => setEditingBookmark(null)}
         onSaved={refresh}
       />
-      <BookmarkDeleteDialog
-        deletion={pendingDeletion}
-        onCancel={cancelDeletion}
-        onConfirm={confirmDeletion}
-      />
+      <BookmarkDeleteDialog deletion={deletion} />
       <Toaster />
     </div>
   );
