@@ -23,7 +23,6 @@ export function BookmarkBulkActions({
   onDelete,
   onClearSelection,
 }: BookmarkBulkActionsProps) {
-  const { toast } = useToast();
   const [moveOpen, setMoveOpen] = useState(false);
   const [targetId, setTargetId] = useState('');
   const [moving, setMoving] = useState(false);
@@ -50,18 +49,13 @@ export function BookmarkBulkActions({
         await moveBookmark(item.id, { parentId: targetId });
         moved += 1;
       }
-      toast({
-        title: `✓ ${moved === 1 ? t('bookmarks_bulkMovedOne') : t('bookmarks_bulkMoved', String(moved))}`,
-        variant: 'success',
+      toast.success({
+        title: moved === 1 ? t('bookmarks_bulkMovedOne') : t('bookmarks_bulkMoved', String(moved)),
       });
       setMoveOpen(false);
       onClearSelection();
     } catch (error) {
-      toast({
-        title: `× ${t('toast_errorMovingItem')}`,
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('toast_errorMovingItem'), description: getErrorMessage(error) });
     } finally {
       setMoving(false);
     }
@@ -101,7 +95,7 @@ export function BookmarkBulkActions({
         onClick={() => onDelete(items)}
       >
         <Trash2 />
-        {t('table_delete')}
+        {t('action_delete')}
       </Button>
       <Button variant="ghost" size="sm" className="h-8" onClick={onClearSelection}>
         <X />

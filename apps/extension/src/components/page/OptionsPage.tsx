@@ -24,6 +24,19 @@ import {
 } from 'lucide-react';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
+
+const optionsConfig = readConfig(
+  'ui/options',
+  z.strictObject({
+    autosave_delay_ms: z.number().int().nonnegative(),
+    import_change_preview_limit: z.number().int().positive(),
+    default_category: z
+      .string()
+      .refine((key) => key in getSettingsCategories(), 'not a settings category'),
+    settings_export_filename: z.string().min(1),
+  }),
+);
 
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
@@ -40,9 +53,6 @@ const tabIcons: Record<string, React.ReactNode> = {
   data: <HardDriveDownload className="h-4 w-4" />,
 };
 
-const AUTOSAVE_DELAY_MS = 400;
-const IMPORT_CHANGE_PREVIEW_LIMIT = 5;
-
 type SettingValue = Settings[keyof Settings];
 
 function matchesQuery(fieldKey: keyof Settings, query: string): boolean {
@@ -56,9 +66,8 @@ function matchesQuery(fieldKey: keyof Settings, query: string): boolean {
 const OptionsPage: React.FC = () => {
   const { settings, isLoading, resetToDefaults } = useSettings();
   const { resolvedTheme, setTheme } = useTheme();
-  const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeTab, setActiveTab] = useState('appearance');
+  const [activeTab, setActiveTab] = useState(optionsConfig.default_category);
   const [searchQuery, setSearchQuery] = useState('');
   const [values, setValues] = useState<Settings>(settings);
   const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
@@ -98,20 +107,16 @@ const OptionsPage: React.FC = () => {
           return next;
         });
       } catch (error) {
-        const message = error instanceof Error ? error.message : t('error_unknown');
+        const message = getErrorMessage(error);
         // Keep the edits and mark them unsaved so the footer never claims success.
         setSaveErrors((current) => ({
           ...current,
           ...Object.fromEntries(keys.map((key) => [key, message])),
         }));
-        toast({
-          title: `× ${t('toast_errorSavingSettings')}`,
-          description: message,
-          variant: 'destructive',
-        });
+        toast.error({ title: t('toast_errorSavingSettings'), description: message });
       }
     },
-    [toast],
+    [],
   );
 
   // Debounced autosave of changed fields only.
@@ -119,7 +124,7 @@ const OptionsPage: React.FC = () => {
     if (isLoading) return;
     const changes = getChangedSettings(savedRef.current, values);
     if (Object.keys(changes).length === 0) return;
-    const timeoutId = setTimeout(() => void persist(changes), AUTOSAVE_DELAY_MS);
+    const timeoutId = setTimeout(() => void persist(changes), optionsConfig.autosave_delay_ms);
     return () => clearTimeout(timeoutId);
   }, [values, isLoading, persist]);
 
@@ -131,7 +136,7 @@ const OptionsPage: React.FC = () => {
       if (Object.keys(changes).length === 0) return;
       const { settings: saved, saved: done } = saveValidSettingsNow(savedRef.current, changes);
       savedRef.current = saved;
-      done.catch((error) => console.error('Failed to save settings on page hide:', error));
+      done.catch((error) => settingsLogger.error({ error }, 'Failed to save settings on page hide'));
     };
     const flushWhenHidden = () => {
       if (document.visibilityState === 'hidden') flush();
@@ -172,41 +177,31 @@ const OptionsPage: React.FC = () => {
       setSaveErrors({});
       setInputErrors({});
       setFormVersion((version) => version + 1);
-      toast({
-        title: `✓ ${t('toast_settingsReset')}`,
+      toast.success({
+        title: t('toast_settingsReset'),
         description: t('toast_settingsResetDescription'),
-        variant: 'success',
       });
     } catch (error) {
-      toast({
-        title: `× ${t('toast_errorResettingSettings')}`,
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
+      toast.error({
+        title: t('toast_errorResettingSettings'),
+        description: getErrorMessage(error),
       });
     }
   };
 
   const handleExport = async () => {
     try {
-      const json = await exportSettings();
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bookmark-scout-settings.json';
-      a.click();
-      URL.revokeObjectURL(url);
-      toast({
-        title: `✓ ${t('toast_settingsExported')}`,
+      downloadExport(
+        await exportSettings(),
+        optionsConfig.settings_export_filename,
+        jsonFormat.mimeType,
+      );
+      toast.success({
+        title: t('toast_settingsExported'),
         description: t('toast_settingsExportedDescription'),
-        variant: 'success',
       });
     } catch (error) {
-      toast({
-        title: `× ${t('toast_exportFailed')}`,
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('toast_exportFailed'), description: getErrorMessage(error) });
     }
   };
 
@@ -217,26 +212,21 @@ const OptionsPage: React.FC = () => {
     try {
       const changed = await importSettings(await file.text());
       const meta = getSettingsFieldMeta();
-      const labels = changed.slice(0, IMPORT_CHANGE_PREVIEW_LIMIT).map((key) => meta[key].label);
-      const more = changed.length - labels.length;
-      toast({
-        title: `✓ ${t('toast_settingsImported')}`,
+      const labels = changed.map((key) => meta[key].label);
+      toast.success({
+        title: t('toast_settingsImported'),
         description:
           changed.length === 0
             ? t('toast_settingsImportedNoChanges')
             : t('toast_settingsImportedChanges', [
                 String(changed.length),
-                more > 0
-                  ? `${labels.join(', ')} ${t('toast_andMore', String(more))}`
-                  : labels.join(', '),
+                formatListPreview(labels, optionsConfig.import_change_preview_limit),
               ]),
-        variant: 'success',
       });
     } catch (error) {
-      toast({
-        title: `× ${t('toast_importFailed')}`,
-        description: error instanceof Error ? error.message : t('error_invalidSettingsFile'),
-        variant: 'destructive',
+      toast.error({
+        title: t('toast_importFailed'),
+        description: getErrorMessage(error, 'error_invalidSettingsFile'),
       });
     }
 
@@ -510,7 +500,7 @@ const OptionsPage: React.FC = () => {
             <input
               ref={fileInputRef}
               type="file"
-              accept=".json"
+              accept={`.${jsonFormat.extension}`}
               className="hidden"
               aria-label={t('action_import')}
               onChange={handleImport}

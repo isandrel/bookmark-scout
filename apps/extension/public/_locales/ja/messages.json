@@ -897,10 +897,6 @@
         "message": "新しいタブで開く",
         "description": "Bookmark row action that opens a link in a new tab"
     },
-    "table_delete": {
-        "message": "削除",
-        "description": "Bookmark row action that deletes the item"
-    },
     "table_moveTop": {
         "message": "先頭へ移動",
         "description": "Accessible label for moving a bookmark to the top of its folder"
@@ -2845,10 +2841,6 @@
         "message": "$1 件の設定を変更しました: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_andMore": {
-        "message": "ほか $1 件",
-        "description": "Suffix for truncated list"
-    },
     "action_switchToLight": {
         "message": "ライトテーマに切り替え",
         "description": "Theme toggle accessible name"
@@ -4782,6 +4774,10 @@
     "askAI_toolWebSearch": {
         "message": "ウェブを検索しました",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "ツールを使用しました",
+        "description": "Ask AI step for a provider tool that has no description of its own"
     },
     "ai_promptAskAIDesc": {
         "message": "Ask AI チャットで質問に答えます",

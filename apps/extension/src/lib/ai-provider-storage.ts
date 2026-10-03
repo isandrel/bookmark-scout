@@ -26,11 +26,6 @@ export const aiProviderConfigValue = defineStoredValue<Record<string, StoredAIPr
   empty: {},
 });
 
-/** @deprecated Watch `aiProviderConfigValue`; kept until AIServiceEditor moves. */
-export const aiProviderConfigItem = storage.defineItem<Record<string, StoredAIProviderConfig>>(
-  STORAGE_KEYS.aiProviders,
-);
-
 /** Fetched model lists, so the model picker keeps them across reloads. Local only. */
 export const aiModelListValue = defineStoredValue<Record<string, CachedModelList>>({
   key: STORAGE_KEYS.aiModelLists,

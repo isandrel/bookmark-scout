@@ -897,10 +897,6 @@
         "message": "새 탭에서 열기",
         "description": "Bookmark row action that opens a link in a new tab"
     },
-    "table_delete": {
-        "message": "삭제",
-        "description": "Bookmark row action that deletes the item"
-    },
     "table_moveTop": {
         "message": "맨 위로 이동",
         "description": "Accessible label for moving a bookmark to the top of its folder"
@@ -2845,10 +2841,6 @@
         "message": "설정 $1개를 변경했습니다: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_andMore": {
-        "message": "외 $1개",
-        "description": "Suffix for truncated list"
-    },
     "action_switchToLight": {
         "message": "밝은 테마로 전환",
         "description": "Theme toggle accessible name"
@@ -4782,6 +4774,10 @@
     "askAI_toolWebSearch": {
         "message": "웹을 검색함",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "도구를 사용함",
+        "description": "Ask AI step for a provider tool that has no description of its own"
     },
     "ai_promptAskAIDesc": {
         "message": "Ask AI 채팅에서 질문에 답합니다",
