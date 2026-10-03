@@ -1,5 +1,4 @@
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -11,6 +10,7 @@ import {
   type Page,
   type Worker,
 } from '@playwright/test';
+import { profileDir, removeTempDir, workerTempDir } from './temp-dirs';
 
 /** Chromium-family browsers: Playwright's bundled Chromium, or the installed Microsoft Edge. */
 export type ExtensionBrowser = 'chromium' | 'msedge';
@@ -62,7 +62,8 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
   grantWebHostAccess: [false, { option: true }],
   grantPermissions: [[], { option: true }],
   grantedBuild: [
-    async ({ extensionPath }, use) => {
+    async ({ extensionPath }, use, workerInfo) => {
+      // One copy per worker and permission set, removed when the worker ends.
       const copies = new Map<string, string>();
       await use(({ hosts, permissions }) => {
         const key = JSON.stringify({ hosts, permissions: [...permissions].sort() });
@@ -70,7 +71,7 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         if (cached) return cached;
         // Unpacked extensions cannot answer permission prompts headlessly, so the granted state is
         // simulated by declaring the optional permissions as install-time ones in a copy.
-        const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-granted-'));
+        const directory = workerTempDir(workerInfo, 'granted-build');
         cpSync(extensionPath, directory, { recursive: true });
         const manifestPath = path.join(directory, 'manifest.json');
         const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
@@ -88,7 +89,7 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         copies.set(key, directory);
         return directory;
       });
-      for (const directory of copies.values()) rmSync(directory, { recursive: true, force: true });
+      for (const directory of copies.values()) removeTempDir(directory);
     },
     { scope: 'worker' },
   ],
@@ -102,7 +103,8 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         ? grantedBuild({ hosts: grantWebHostAccess, permissions: grantPermissions })
         : extensionPath;
 
-    const context = await chromium.launchPersistentContext(testInfo.outputPath('user-data'), {
+    const userDataDir = profileDir(testInfo);
+    const context = await chromium.launchPersistentContext(userDataDir, {
       channel: extensionBrowser,
       headless: true,
       // Popups that are still animating out would sit over the next control and catch its click.
@@ -111,8 +113,13 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
       args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
     });
 
-    await use(context);
-    await context.close();
+    try {
+      await use(context);
+    } finally {
+      await context.close();
+      // About 10 MB per test; traces and screenshots are saved separately.
+      removeTempDir(userDataDir);
+    }
   },
   extensionWorker: async ({ context }, use) => {
     let [serviceWorker] = context.serviceWorkers();

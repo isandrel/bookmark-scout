@@ -14,7 +14,7 @@
         "build:edge": "wxt build -b edge",
         "test": "bun run test:unit && bun run test:e2e",
         "test:unit": "vitest run --config vitest.config.ts",
-        "test:e2e": "bun run build:chrome && playwright install --with-deps chromium && playwright test --config playwright.config.ts --project=chromium",
+        "test:e2e": "bun run build:chrome && playwright install --with-deps --no-shell chromium && playwright test --config playwright.config.ts --project=chromium",
         "test:e2e:edge": "bun run build:edge && playwright test --config playwright.config.ts --project=edge",
         "test:e2e:firefox": "bun run build:firefox && playwright test --config playwright.config.ts --project=firefox",
         "zip": "wxt zip -b chrome && wxt zip -b firefox && wxt zip -b edge",

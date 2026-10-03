@@ -75,6 +75,7 @@ bunx nx run extension:test:e2e
 - **Shared message files:** when agents edit the same `messages/*.json`, keep the orchestrator's own edits uncommitted until they finish, then commit with explicit paths.
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
+- **One full E2E suite on the machine at a time.** Each suite already runs up to 4 browser workers; when several agents need E2E, have them run the specs they touched (`playwright test <files>`) and leave the full suite to CI, or set `PW_WORKERS=2`.
 - **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.
 - **Usage limits.** Agents stop on session or weekly limits mid-task. After the reset, inspect each worktree and resume with SendMessage. If an agent reports it was stopped by the user and cannot be resumed, finish the work yourself from its worktree; fetch its remote branch first, because `gh pr update-branch` may have added a merge commit there and your push would be rejected.
 - **Stale agent notices.** A "didn't finish before the previous session ended" notice can arrive after the work already merged. Check the PR state before redoing anything.
