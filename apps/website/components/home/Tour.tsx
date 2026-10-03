@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { AI_PROVIDERS } from "@/lib/content/ai-providers";
-import { SCREENSHOT_SIZE, SCREENSHOT_SIZES, TOUR_TABS, type TourTab } from "@/lib/content/tour";
+import { SCREENSHOT_SIZES, TOUR_TABS, type TourTab } from "@/lib/content/tour";
+import { SCREENSHOT_SIZE } from "@bookmark-scout/config";
 import { IMAGE_FORMATS, srcSet } from "@/lib/images";
 import { Tabs, type TabItem } from "./Tabs";
 

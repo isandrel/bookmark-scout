@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun scripts/optimize-images.ts && next dev",
-    "build": "bun scripts/optimize-images.ts && next build",
+    "dev": "bun scripts/generate-public-files.ts && bun scripts/optimize-images.ts && next dev",
+    "build": "bun scripts/generate-public-files.ts && bun scripts/optimize-images.ts && next build",
     "start": "next start",
     "lint": "eslint",
     "verify": "bun scripts/verify-build.ts",

@@ -1,4 +1,5 @@
-import { DOCS_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
+import { copy } from "@/lib/copy";
 import {
   type ContactRole,
   contactAddress,
@@ -6,14 +7,15 @@ import {
   license,
   privacyEffectiveDate,
   releasesUrl,
-  repoUrl,
+  repoHref,
   type SitePath,
-  type StoreBrowser,
   siteUrl,
   storeAvailability,
   storeListing,
 } from "@/lib/links";
 import { SCREENSHOTS, type ScreenshotName } from "@/lib/screenshots";
+
+const DOCS_URL = site.docs.origin;
 
 /**
  * The docs' own MDX components read links and addresses from config. The processed
@@ -26,7 +28,7 @@ const replacements: [RegExp, (...groups: string[]) => string][] = [
     (role) =>
       `[${contactAddress(role as ContactRole)}](${contactHref(role as ContactRole)})`,
   ],
-  [/<ReleaseLink\s*\/>/g, () => `[the latest GitHub release](${releasesUrl})`],
+  [/<ReleaseLink\s*\/>/g, () => `[${copy.release.latest}](${releasesUrl})`],
   [
     /<ReleaseLink>([\s\S]*?)<\/ReleaseLink>/g,
     (text) => `[${text}](${releasesUrl})`,
@@ -36,14 +38,18 @@ const replacements: [RegExp, (...groups: string[]) => string][] = [
     (to, text) => `[${text}](${siteUrl(to as SitePath)})`,
   ],
   [
-    /<RepoLink\s+path="([^"]*)">([\s\S]*?)<\/RepoLink>/g,
-    (path, text) => `[${text}](${repoUrl(path)})`,
+    /<RepoLink((?:\s+(?:path|file|tree)="[^"]*")*)\s*>([\s\S]*?)<\/RepoLink>/g,
+    (attributes, text) =>
+      `[${text}](${repoHref({
+        path: attribute(attributes, "path"),
+        file: attribute(attributes, "file"),
+        tree: attribute(attributes, "tree"),
+      })})`,
   ],
-  [/<RepoLink>([\s\S]*?)<\/RepoLink>/g, (text) => `[${text}](${repoUrl()})`],
   [
     /<StoreListing\s+browser="(\w+)"\s*\/>/g,
     (browser) => {
-      const listing = storeListing(browser as StoreBrowser);
+      const listing = storeListing(browser);
       return listing.live ? `${listing.text} (${listing.url})` : listing.text;
     },
   ],

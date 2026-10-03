@@ -1,2 +1,0 @@
-# Cloudflare Pages redirects. The root page also has a meta refresh for other hosts.
-/  /en/  302

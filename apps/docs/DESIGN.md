@@ -143,7 +143,7 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 
 **`task-finder`** (`src/components/home/task-finder.tsx`): the one signature element. A `surface` panel with the ribbon in its top-left corner, a labeled search input in the display face, an `aria-live` status line, suggestion chips, and the Get started and Guides pages grouped by section. Typing filters every page by title, description, and section, highlights matches with `<mark>`, and Enter opens the first result. Page data comes from the page tree (`src/lib/doc-index.ts`), never a hand-written list.
 
-**`screenshot`** (`<Screenshot name="manager" />`): a store screenshot in a `surface` frame with Fumadocs `ImageZoom`; the light or dark capture shows by theme. Names and alt text are in `src/lib/screenshots.ts`.
+**`screenshot`** (`<Screenshot name="manager" />`): a store screenshot in a `surface` frame with Fumadocs `ImageZoom`; the light or dark capture shows by theme. Paths come from the shared manifest in `@bookmark-scout/config` (`SCREENSHOTS`); alt text is in `src/lib/screenshots.ts`.
 
 **Fumadocs MDX components**: `Steps` for real sequences (install, scans, imports), `Tabs` for per-browser instructions, `Callout` for Firefox limits and data warnings, tables for settings and results. `Accordion` is registered but unused, because FAQ answers are headings so they show in the table of contents and in search.
 

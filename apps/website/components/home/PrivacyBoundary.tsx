@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { BOUNDARY_INSIDE, BOUNDARY_OUTBOUND, PRIVACY_FACTS } from "@/lib/content/privacy-boundary";
+import { site } from "@bookmark-scout/config";
 import Link from "next/link";
 
 
@@ -73,7 +74,7 @@ export async function PrivacyBoundary({ locale }: { locale: string }) {
                             ))}
                         </dl>
                         <Link
-                            href={`/${locale}/privacy/`}
+                            href={site.url.path(locale, "/privacy")}
                             className="mt-8 inline-block font-semibold text-teal underline decoration-2 underline-offset-4 hover:decoration-teal/40"
                         >
                             {t("policyLink")}

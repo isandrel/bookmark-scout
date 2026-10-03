@@ -1,8 +1,13 @@
 import { expect, test as base } from "@playwright/test";
-import { CONTACT, LOCALES, SITE_URL, UMAMI_SCRIPT_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
+import { LEGACY_DOCS_REDIRECTS } from "../../lib/content/docs-redirects";
 import { INDEXABLE_ROUTES } from "../../lib/content/routes";
 
-const analyticsHost = UMAMI_SCRIPT_URL ? new URL(UMAMI_SCRIPT_URL).host : "";
+// Expected URLs are spelled out from raw config values, not the site model's builders.
+const SITE_URL = site.url.origin;
+const DOCS_URL = site.docs.origin;
+const LOCALES = site.locales.supported;
+const analyticsHost = site.analytics.enabled ? new URL(site.analytics.scriptUrl).host : "";
 
 type Watched = { errors: string[]; thirdParty: string[] };
 
@@ -105,9 +110,22 @@ test("tabs follow the ARIA tabs pattern", async ({ page, isMobile }) => {
 
 test("store-required pages publish the contact addresses", async ({ page }) => {
     await page.goto("/en/privacy/");
-    await expect(page.locator(`main a[href="mailto:${CONTACT.privacy}"]`).first()).toBeVisible();
+    await expect(page.locator(`main a[href="mailto:${site.contact.address("privacy")}"]`).first()).toBeVisible();
     await page.goto("/en/support/");
-    await expect(page.locator(`main a[href="mailto:${CONTACT.support}"]`).first()).toBeVisible();
+    await expect(page.locator(`main a[href="mailto:${site.contact.address("support")}"]`).first()).toBeVisible();
+});
+
+test("legacy docs pages forward to the docs site", async ({ request }) => {
+    for (const locale of LOCALES) {
+        for (const [path, target] of Object.entries(LEGACY_DOCS_REDIRECTS)) {
+            const url = `/${locale}/docs/${path ? `${path}/` : ""}`;
+            const response = await request.get(url);
+            expect(response.status(), url).toBe(200);
+            expect(await response.text(), url).toContain(`content="0; url=${DOCS_URL}${target}"`);
+        }
+    }
+    const missing = await request.get("/en/docs/no-such-page/");
+    expect(missing.status()).toBe(404);
 });
 
 test("root page redirects to the default locale", async ({ page }) => {

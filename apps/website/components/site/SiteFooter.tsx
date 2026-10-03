@@ -1,4 +1,5 @@
-import { AUTHOR, CONTACT, DOCS_URL, GITHUB_URL, LICENSE, SITE_NAME } from "@bookmark-scout/config";
+import { CONTACT_ROLES } from "@/lib/content/support-topics";
+import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
@@ -10,34 +11,35 @@ export async function SiteFooter({ locale }: { locale: string }) {
         {
             title: t("product"),
             links: [
-                { href: `/${locale}/#features`, label: t("features"), internal: true },
-                { href: `/${locale}/#install`, label: t("install"), internal: true },
-                { href: DOCS_URL, label: t("docs") },
-                { href: `${GITHUB_URL}/releases`, label: t("releases") },
+                { href: site.url.path(locale, "", "features"), label: t("features"), internal: true },
+                { href: site.url.path(locale, "", "install"), label: t("install"), internal: true },
+                { href: site.docs.url(), label: t("docs") },
+                { href: site.repo.releases, label: t("releases") },
             ],
         },
         {
             title: t("project"),
             links: [
-                { href: GITHUB_URL, label: t("github") },
-                { href: `${DOCS_URL}/contributing`, label: t("contributing") },
-                { href: LICENSE.url, label: t("license", { license: LICENSE.name }) },
+                { href: site.repo.url(), label: t("github") },
+                { href: site.docs.url("/contributing"), label: t("contributing") },
+                { href: site.license.fileUrl, label: t("license", { license: site.license.spdx }) },
             ],
         },
         {
             title: t("contact"),
             links: [
-                { href: `/${locale}/support/`, label: t("helpCenter"), internal: true },
-                { href: `mailto:${CONTACT.support}`, label: `${t("support")}: ${CONTACT.support}` },
-                { href: `mailto:${CONTACT.privacy}`, label: `${t("privacy")}: ${CONTACT.privacy}` },
-                { href: `mailto:${CONTACT.security}`, label: `${t("security")}: ${CONTACT.security}` },
+                { href: site.url.path(locale, "/support"), label: t("helpCenter"), internal: true },
+                ...CONTACT_ROLES.map((role) => ({
+                    href: site.contact.mailto(role),
+                    label: t("contactAddress", { role: t(role), address: site.contact.address(role) }),
+                })),
             ],
         },
         {
             title: t("legal"),
             links: [
-                { href: `/${locale}/privacy/`, label: t("privacyPolicy"), internal: true },
-                { href: "/.well-known/security.txt", label: t("securityTxt") },
+                { href: site.url.path(locale, "/privacy"), label: t("privacyPolicy"), internal: true },
+                { href: PUBLIC_PATHS.securityTxt, label: t("securityTxt") },
             ],
         },
     ];
@@ -46,7 +48,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
         <footer className="border-t border-line bg-sunken">
             <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:grid-cols-2 lg:grid-cols-[1.1fr_0.8fr_0.9fr_1.5fr_0.8fr]">
                 <div>
-                    <p className="font-display text-xl font-bold tracking-tight">{SITE_NAME}</p>
+                    <p className="font-display text-xl font-bold tracking-tight">{site.name}</p>
                     <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">{t("tagline")}</p>
                 </div>
                 {columns.map((column) => (
@@ -72,7 +74,7 @@ export async function SiteFooter({ locale }: { locale: string }) {
             </div>
             <div className="border-t border-line">
                 <p className="mx-auto max-w-6xl px-4 py-6 text-sm text-ink-soft sm:px-6">
-                    © {new Date().getFullYear()} {t("madeBy", { author: AUTHOR.name })}
+                    © {new Date().getFullYear()} {t("madeBy", { author: site.author.name })}
                 </p>
             </div>
         </footer>

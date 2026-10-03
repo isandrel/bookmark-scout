@@ -9,7 +9,11 @@
  */
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
-import { DOCS_NAME, DOCS_URL } from "@bookmark-scout/config";
+import { site, TITLE_SEPARATOR } from "@bookmark-scout/config";
+
+// Raw config values; the expected URLs below are spelled out rather than built by the site model.
+const DOCS_NAME = site.docs.name;
+const DOCS_URL = site.docs.origin;
 
 const outDir = join(resolve(import.meta.dir, ".."), "out");
 
@@ -77,9 +81,12 @@ function checkPage(path: string) {
   const title = decodeEntities(
     /<title>([^<]*)<\/title>/.exec(html)?.[1]?.trim() ?? "",
   );
-  if (title !== DOCS_NAME && !title.endsWith(` | ${DOCS_NAME}`)) {
+  if (
+    title !== DOCS_NAME &&
+    !title.endsWith(`${TITLE_SEPARATOR}${DOCS_NAME}`)
+  ) {
     fail(
-      `${path}: title "${title}" should be "${DOCS_NAME}" or end with " | ${DOCS_NAME}"`,
+      `${path}: title "${title}" should be "${DOCS_NAME}" or end with "${TITLE_SEPARATOR}${DOCS_NAME}"`,
     );
   }
 

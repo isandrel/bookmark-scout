@@ -1,4 +1,4 @@
-import { CONTACT, DOCS_URL, GITHUB_URL } from "@bookmark-scout/config";
+import { type ContactRole, PUBLIC_PATHS, site } from "@bookmark-scout/config";
 import { PRIVACY_LINKS } from "./privacy-sections";
 
 /**
@@ -9,8 +9,8 @@ export const SUPPORT_SECTIONS = ["start-here", "common-problems", "report-a-bug"
 
 /** Self-serve starting points. Copy: `sections.start-here.items.<id>` (`title`, `body`). */
 export const SUPPORT_START = [
-    { id: "docs", href: () => DOCS_URL },
-    { id: "faq", href: (locale: string) => `/${locale}/#faq` },
+    { id: "docs", href: () => site.docs.url() },
+    { id: "faq", href: (locale: string) => site.url.path(locale, "", "faq") },
 ] as const;
 
 /**
@@ -25,22 +25,18 @@ export const SUPPORT_PROBLEMS = [
     "aiSetup",
 ] as const;
 
-/** GitHub's issue form chooser (`.github/ISSUE_TEMPLATE/`). */
-export const ISSUE_CHOOSER_URL = `${GITHUB_URL}/issues/new/choose`;
-
 /** What a bug report should contain. Copy: `sections.report-a-bug.include.<id>`. */
 export const REPORT_DETAILS = ["browser", "version", "steps", "result", "screenshot"] as const;
 
-/** Role mailboxes in display order. Copy: `sections.email.channels.<id>` (`title`, `body`). */
-export const SUPPORT_CHANNELS = [
-    { id: "support", email: CONTACT.support },
-    { id: "privacy", email: CONTACT.privacy },
-    { id: "security", email: CONTACT.security },
-] as const;
+/**
+ * Role mailboxes in display order, on the support page and in the footer.
+ * Copy: `sections.email.channels.<role>` (`title`, `body`).
+ */
+export const CONTACT_ROLES: readonly ContactRole[] = ["support", "privacy", "security"];
 
 /** Link targets for tags in the email copy. `privacyPolicy` is locale-aware. */
 export const supportLinks = (locale: string) => ({
-    privacyPolicy: `/${locale}/privacy/`,
+    privacyPolicy: site.url.path(locale, "/privacy"),
     securityPolicy: PRIVACY_LINKS.securityPolicy,
-    securityTxt: "/.well-known/security.txt",
+    securityTxt: PUBLIC_PATHS.securityTxt,
 });

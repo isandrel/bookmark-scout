@@ -1,4 +1,5 @@
-import { ISSUE_CHOOSER_URL, REPORT_DETAILS } from "@/lib/content/support-topics";
+import { REPORT_DETAILS } from "@/lib/content/support-topics";
+import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 
 /** Where to report a bug and what to put in the report. */
@@ -9,7 +10,7 @@ export async function ReportBug({ locale }: { locale: string }) {
         <div className="max-w-[68ch] text-[1.0625rem] leading-[1.7]">
             <p>{t("body")}</p>
             <a
-                href={ISSUE_CHOOSER_URL}
+                href={site.repo.newIssue}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 font-semibold text-teal-ink transition-opacity hover:opacity-90"
             >
                 {t("button")}

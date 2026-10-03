@@ -1,7 +1,40 @@
 {
   "metadata": {
     "title": "Bookmark Scout - Modern Browser Bookmark Manager",
-    "description": "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools."
+    "description": "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools.",
+    "keywords": [
+      "browser extension",
+      "chrome extension",
+      "firefox addon",
+      "edge extension",
+      "bookmark manager",
+      "bookmark search",
+      "bookmark organizer",
+      "bookmark cleanup",
+      "duplicate bookmarks",
+      "dead links",
+      "AI bookmark tools"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "Instant bookmark search",
+      "Drag and drop organization",
+      "Quick bookmark saving",
+      "Side panel support (Chrome and Edge)",
+      "Saved searches",
+      "Keyboard shortcuts",
+      "Delete with undo",
+      "Dark mode",
+      "Custom bookmarks manager",
+      "Duplicate cleanup",
+      "Tracking parameter cleanup",
+      "Dead link scanning with reviewed repairs",
+      "Bookmark import and export",
+      "Privacy review with optional redaction before exports",
+      "Opt-in AI bookmark tools",
+      "Multi-language support"
+    ]
   },
   "nav": {
     "features": "Features",
@@ -30,6 +63,7 @@
     "support": "Support",
     "privacy": "Privacy",
     "security": "Security",
+    "contactAddress": "{role}: {address}",
     "privacyPolicy": "Privacy policy",
     "securityTxt": "security.txt",
     "madeBy": "Made by {author}. Free and open source.",
@@ -42,7 +76,7 @@
       "download": "Download from GitHub",
       "install": "Install Bookmark Scout",
       "docs": "Read the docs",
-      "license": "Free and open source under AGPL-3.0.",
+      "license": "Free and open source under {license}.",
       "demoNote": "This demo searches a made-up library of 37 bookmarks. The extension searches your own, inside your browser."
     },
     "demo": {
@@ -251,7 +285,7 @@
         },
         "free": {
           "q": "Is it free?",
-          "a": "Yes. Bookmark Scout is free and open source under AGPL-3.0, with no ads and no paid plan. If you turn on AI, your provider may charge for API usage."
+          "a": "Yes. Bookmark Scout is free and open source under {license}, with no ads and no paid plan. If you turn on AI, your provider may charge for API usage."
         },
         "help": {
           "q": "How do I get help?",

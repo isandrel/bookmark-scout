@@ -1,7 +1,6 @@
 import { AI_PROVIDERS } from "@/lib/content/ai-providers";
 import { FAQ_ITEMS } from "@/lib/content/faq";
-import { ANY_STORE_LIVE } from "@/lib/download";
-import { CONTACT, DOCS_URL, GITHUB_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { inlineLinkClass, richTags } from "./rich";
@@ -14,32 +13,32 @@ export async function Faq({ locale }: { locale: string }) {
         tTour("ai.customProvider"),
     ]);
     // The "why not in the stores" answer only applies while no listing is live.
-    const items = FAQ_ITEMS.filter((id) => id !== "stores" || !ANY_STORE_LIVE);
+    const items = FAQ_ITEMS.filter((id) => id !== "stores" || !site.anyStoreLive);
 
     const tags = {
         ...richTags,
         privacy: (chunks: React.ReactNode) => (
-            <Link href={`/${locale}/privacy/`} className={inlineLinkClass}>
+            <Link href={site.url.path(locale, "/privacy")} className={inlineLinkClass}>
                 {chunks}
             </Link>
         ),
         support: (chunks: React.ReactNode) => (
-            <Link href={`/${locale}/support/`} className={inlineLinkClass}>
+            <Link href={site.url.path(locale, "/support")} className={inlineLinkClass}>
                 {chunks}
             </Link>
         ),
         docs: (chunks: React.ReactNode) => (
-            <a href={DOCS_URL} className={inlineLinkClass}>
+            <a href={site.docs.url()} className={inlineLinkClass}>
                 {chunks}
             </a>
         ),
         github: (chunks: React.ReactNode) => (
-            <a href={`${GITHUB_URL}/issues`} className={inlineLinkClass}>
+            <a href={site.repo.issues} className={inlineLinkClass}>
                 {chunks}
             </a>
         ),
         email: (chunks: React.ReactNode) => (
-            <a href={`mailto:${CONTACT.support}`} className={`${inlineLinkClass} [overflow-wrap:anywhere]`}>
+            <a href={site.contact.mailto("support")} className={`${inlineLinkClass} [overflow-wrap:anywhere]`}>
                 {chunks}
             </a>
         ),
@@ -65,7 +64,12 @@ export async function Faq({ locale }: { locale: string }) {
                                 </svg>
                             </summary>
                             <p className="pb-6 leading-relaxed text-ink-soft">
-                                {t.rich(`items.${id}.a`, { ...tags, supportEmail: CONTACT.support, providers })}
+                                {t.rich(`items.${id}.a`, {
+                                    ...tags,
+                                    supportEmail: site.contact.address("support"),
+                                    license: site.license.spdx,
+                                    providers,
+                                })}
                             </p>
                         </details>
                     ))}

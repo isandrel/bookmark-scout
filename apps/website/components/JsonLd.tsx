@@ -1,47 +1,34 @@
-import { SOCIAL_IMAGE } from "@/lib/assets";
-import { AUTHOR, GITHUB_URL, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@bookmark-scout/config";
+import { site, SOCIAL_SCREENSHOT } from "@bookmark-scout/config";
+import { getTranslations } from "next-intl/server";
 
-export function JsonLd() {
+/** schema.org SoftwareApplication data, in the page's language. */
+export async function JsonLd({ locale }: { locale: string }) {
+    const t = await getTranslations({ locale });
+
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        name: SITE_NAME,
+        name: site.name,
         applicationCategory: "BrowserApplication",
-        operatingSystem: "Chrome, Firefox, Edge",
+        operatingSystem: site.browsers.supported.map((browser) => site.browsers.name(browser)).join(", "),
         offers: {
             "@type": "Offer",
-            price: "0",
-            priceCurrency: "USD",
+            price: site.offer.price,
+            priceCurrency: site.offer.currency,
         },
-        description: SITE_DESCRIPTION,
+        description: t("metadata.description"),
+        inLanguage: locale,
         author: {
             "@type": "Person",
-            name: AUTHOR.name,
-            url: AUTHOR.url,
+            name: site.author.name,
+            url: site.author.url,
         },
-        url: SITE_URL,
-        downloadUrl: `${GITHUB_URL}/releases/latest`,
-        screenshot: `${SITE_URL}${SOCIAL_IMAGE.url}`,
-        license: "https://www.gnu.org/licenses/agpl-3.0.html",
+        url: site.url.origin,
+        downloadUrl: site.repo.releasesLatest,
+        screenshot: site.url.asset(SOCIAL_SCREENSHOT.url),
+        license: site.license.url,
         isAccessibleForFree: true,
-        featureList: [
-            "Instant bookmark search",
-            "Drag and drop organization",
-            "Quick bookmark saving",
-            "Side panel support (Chrome and Edge)",
-            "Saved searches",
-            "Keyboard shortcuts",
-            "Delete with undo",
-            "Dark mode",
-            "Custom bookmarks manager",
-            "Duplicate cleanup",
-            "Tracking parameter cleanup",
-            "Dead link scanning with reviewed repairs",
-            "Bookmark import and export",
-            "Privacy review with optional redaction before exports",
-            "Opt-in AI bookmark tools",
-            "Multi-language support",
-        ],
+        featureList: t.raw("structuredData.features") as string[],
     };
 
     return (

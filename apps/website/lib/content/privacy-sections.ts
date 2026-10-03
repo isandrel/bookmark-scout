@@ -1,4 +1,4 @@
-import { CONTACT, GITHUB_URL, LICENSE } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 
 /**
  * Privacy policy sections in display order. Copy lives in messages under
@@ -27,17 +27,18 @@ export const PRIVACY_GLANCE = ["noServer", "noTelemetry", "aiOptIn", "developer"
  * Third-party pages are the sources the website section was checked against.
  */
 export const PRIVACY_LINKS = {
-    permissions: `${GITHUB_URL}#-permissions`,
-    securityPolicy: `${GITHUB_URL}/blob/main/SECURITY.md`,
-    source: GITHUB_URL,
-    license: LICENSE.url,
-    umami: "https://umami.is/",
-    umamiDocs: "https://docs.umami.is/docs/metric-definitions",
-    cloudflare: "https://www.cloudflare.com/privacypolicy/",
+    /** The README's permissions table. */
+    permissions: site.repo.url("#-permissions"),
+    securityPolicy: site.repo.file("SECURITY.md"),
+    source: site.repo.url(),
+    license: site.license.fileUrl,
+    umami: site.analytics.aboutUrl,
+    umamiDocs: site.analytics.metricsUrl,
+    cloudflare: site.hosting.privacyUrl,
 } as const;
 
 /** Email addresses passed to the policy copy as `{privacyEmail}` and `{securityEmail}`. */
 export const PRIVACY_EMAILS = {
-    privacyEmail: CONTACT.privacy,
-    securityEmail: CONTACT.security,
+    privacyEmail: site.contact.address("privacy"),
+    securityEmail: site.contact.address("security"),
 } as const;

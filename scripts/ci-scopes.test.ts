@@ -33,6 +33,13 @@ describe("ci scopes", () => {
     });
   });
 
+  it("runs the sites for extension config, which the website reads", () => {
+    expect(scopes("apps/extension/config/settings.default.toml")).toEqual({
+      extension: true,
+      sites: true,
+    });
+  });
+
   it("runs every scope for shared files and for files no rule lists", () => {
     for (const file of [
       "bun.lock",
