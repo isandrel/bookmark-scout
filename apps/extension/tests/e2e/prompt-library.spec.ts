@@ -86,7 +86,7 @@ test('the built-in prompt can be viewed and used as the start of a custom one', 
   await expect(editor.getByRole('textbox', { name: 'Prompt' })).toHaveValue(/\{\{maxTags\}\}/);
 });
 
-test('the prompt size counter shows binary kilobytes against the configured limit', async ({
+test('the prompt size counter and limit count the prompt as sync storage stores it', async ({
   extensionId,
   extensionWorker,
   page,
@@ -102,8 +102,40 @@ test('the prompt size counter shows binary kilobytes against the configured limi
   await row.getByRole('button', { name: 'Customize' }).click();
   const editor = page.getByRole('dialog', { name: /New prompt/ });
 
-  await editor.getByRole('textbox', { name: 'Prompt', exact: true }).fill('x'.repeat(2048));
-  await expect(editor.locator('#prompt-text-size')).toHaveText(`2 KB of ${kilobytes(maxBytes)}`);
+  const text = editor.getByRole('textbox', { name: 'Prompt', exact: true });
+  const size = editor.locator('#prompt-text-size');
+  // The prompt counts as it is stored: its text plus the name and other saved fields.
+  const limit = kilobytes(maxBytes).replace('.', '\\.');
+  await text.fill('x'.repeat(2048));
+  await expect(size).toHaveText(new RegExp(`^2\\.[1-2] KB of ${limit}$`));
+
+  // Quotes take two bytes each once stored, so this is over the limit although the text is not,
+  // and the counter, the error, and the limit all use the same unit.
+  await text.fill('"'.repeat(maxBytes - 10));
+  await expect(size).toHaveText(new RegExp(`^13\\.[7-8] KB of ${limit}$`));
+  await expect(size).toHaveClass(/text-destructive-text/);
+  await editor.getByRole('button', { name: 'Save prompt' }).click();
+  await expect(editor.getByRole('alert')).toHaveText(
+    `The prompt is too long to sync. Keep it within ${kilobytes(maxBytes)}.`,
+  );
+  await expect(editor).toBeVisible();
+  const stored = await extensionWorker.evaluate(async () =>
+    Object.keys(await chrome.storage.sync.get(null)).filter((key) =>
+      key.startsWith('bookmark-scout-prompt-'),
+    ),
+  );
+  expect(stored).toEqual([]);
+
+  // A storage failure, such as a full sync area, shows a localized message, not the browser's.
+  await text.fill('Short prompt');
+  await page.evaluate(() => {
+    (chrome.storage.sync as { set: unknown }).set = () =>
+      Promise.reject(new Error('QUOTA_BYTES quota exceeded'));
+  });
+  await editor.getByRole('button', { name: 'Save prompt' }).click();
+  await expect(editor.getByRole('alert')).toHaveText(
+    'The prompt could not be saved. Sync storage may be full; delete prompts you no longer use and try again.',
+  );
 });
 
 test('deleting a custom prompt asks first and returns the task to its default', async ({

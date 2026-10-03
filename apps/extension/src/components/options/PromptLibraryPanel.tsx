@@ -40,7 +40,8 @@ function PromptEditorDialog({
   }, [editor]);
 
   const task = editor ? PROMPT_TASKS[editor.task] : undefined;
-  const bytes = promptByteLength(system);
+  // Measured as sync storage stores the prompt, so the counter and the limit check agree with it.
+  const bytes = editor ? customPromptBytes({ id: editor.id, task: editor.task, name, system }) : 0;
   const unknown = editor ? findUnknownPromptVariables(editor.task, system) : [];
   const preview = useMemo(
     () =>
@@ -67,19 +68,25 @@ function PromptEditorDialog({
 
   const save = async () => {
     if (!editor) return;
-    const invalid = validateCustomPrompt(name, system);
+    const draft = { id: editor.id, task: editor.task, name, system };
+    const invalid = validateCustomPrompt(draft);
     if (invalid) {
       setError(invalid);
       return;
     }
     setSaving(true);
     try {
-      const saved = await saveCustomPrompt({ id: editor.id, task: editor.task, name, system });
+      const saved = await saveCustomPrompt(draft);
       // A new prompt is what the user wants to use, so it becomes the task's prompt.
       if (!editor.id) await setActivePrompt(editor.task, saved.id);
       onClose();
     } catch (saveError) {
-      setError(getErrorMessage(saveError));
+      // Browser storage errors are English and technical, such as a sync quota name.
+      setError(
+        saveError instanceof PromptValidationError
+          ? saveError.message
+          : t('prompt_errorSaveFailed'),
+      );
     } finally {
       setSaving(false);
     }
