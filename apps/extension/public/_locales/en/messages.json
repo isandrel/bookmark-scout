@@ -2861,6 +2861,10 @@
         "message": "Restored $1 items.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
     },
+    "toast_deleteSkippedDesc": {
+        "message": "Skipped because they changed or were already deleted: $1. Failed: $2.",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
+    },
     "bookmarks_deleteItems": {
         "message": "Delete $1 items",
         "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"

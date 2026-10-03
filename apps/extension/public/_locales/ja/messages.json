@@ -2861,6 +2861,10 @@
         "message": "$1件を復元しました。",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
     },
+    "toast_deleteSkippedDesc": {
+        "message": "変更済みまたは削除済みのためスキップ: $1 件。失敗: $2 件。",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
+    },
     "bookmarks_deleteItems": {
         "message": "$1件を削除",
         "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
