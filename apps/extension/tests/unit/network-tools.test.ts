@@ -1,34 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { BookmarkTreeNode } from '@/types';
-
-const live = vi.hoisted(() => ({ titles: new Map<string, string>() }));
-
-vi.mock('@/services/bookmarks', () => ({
-  getBookmark: vi.fn(async (id: string) => {
-    if (!live.titles.has(id)) throw new Error('Bookmark not found.');
-    return { id, title: live.titles.get(id) };
-  }),
-  updateBookmark: vi.fn(async (id: string, changes: { title: string }) => {
-    live.titles.set(id, changes.title);
-    return { id, title: changes.title };
-  }),
-}));
-
-const {
+import {
   applyMetadataTitles,
-  decodeHtml,
   fetchBookmarkMetadata,
+  fetchHtmlPage,
   isConfirmedDeadLink,
-  isHtmlContentType,
-  readHtmlHead,
   scanDeadLinks,
-} = await import(
-  '@/services/bookmark-network-tools'
-);
-const { WEB_HOST_ORIGINS, hasWebHostAccess, requestWebHostAccess } = await import(
-  '@/services/web-host-access'
-);
+} from '@/services/bookmark-network-tools';
+import {
+  hasWebHostAccess,
+  requestWebHostAccess,
+  WEB_HOST_ORIGINS,
+} from '@/services/web-host-access';
+import { installFakeBookmarks } from '../fake-bookmarks';
 
 const deadLinkOptions = {
   requestTimeoutMs: 1000,
@@ -346,51 +331,137 @@ describe('metadata fetching', () => {
       .items;
     expect(item).toMatchObject({ status: 'notHtml', statusCode: 200, changed: false });
     expect(pdf.state.cancelled).toBe(true);
-    expect(isHtmlContentType('application/xhtml+xml; charset=utf-8')).toBe(true);
-    expect(isHtmlContentType(null)).toBe(true);
-    expect(isHtmlContentType('text/htmlx')).toBe(false);
-  });
-
-  it('stops reading at the end of the head or at the byte cap', async () => {
-    const page = streamedResponse(['<head><title>T</title></he', 'ad><body>', 'x'.repeat(4096)]);
-    const head = new TextDecoder().decode(await readHtmlHead(page.response, 1024 * 1024));
-    expect(head).toBe('<head><title>T</title></head><body>');
-    expect(page.state.cancelled).toBe(true);
-
-    const endless = streamedResponse(Array.from({ length: 64 }, () => 'y'.repeat(1024)));
-    const capped = await readHtmlHead(endless.response, 10 * 1024);
-    expect(capped.byteLength).toBe(10 * 1024);
-    expect(endless.state.pulled).toBeLessThan(64 * 1024);
   });
 });
 
-describe('metadata helpers', () => {
-  it('decodes pages using the declared or sniffed charset', () => {
-    const sjis = new Uint8Array([0x93, 0xfa, 0x96, 0x7b, 0x8c, 0xea]).buffer;
-    expect(decodeHtml(sjis, 'text/html; charset=Shift_JIS')).toBe('日本語');
-    const meta = new Uint8Array([
-      ...new TextEncoder().encode('<meta charset="shift_jis"><title>'),
-      0x93,
-      0xfa,
-      ...new TextEncoder().encode('</title>'),
-    ]).buffer;
-    expect(decodeHtml(meta, 'text/html')).toContain('<title>日</title>');
-    expect(decodeHtml(new TextEncoder().encode('é').buffer as ArrayBuffer, null)).toBe('é');
+describe('fetchHtmlPage', () => {
+  const page = (response: Response) => vi.fn(async () => response);
+  const options = { timeoutMs: 1000, maxBytes: 1024 * 1024, until: 'head' as const };
+
+  it('stops reading at the end of the head, or at the byte cap', async () => {
+    const head = streamedResponse(['<head><title>T</title></he', 'ad><body>', 'x'.repeat(4096)]);
+    const result = await fetchHtmlPage('https://e2e.invalid/', {
+      ...options,
+      fetch: page(head.response),
+    });
+    expect(result).toEqual({
+      status: 200,
+      ok: true,
+      url: 'https://e2e.invalid/',
+      html: '<head><title>T</title></head><body>',
+    });
+    expect(head.state.cancelled).toBe(true);
+
+    const endless = streamedResponse(Array.from({ length: 64 }, () => 'y'.repeat(1024)));
+    const capped = await fetchHtmlPage('https://e2e.invalid/', {
+      ...options,
+      maxBytes: 10 * 1024,
+      until: 'end',
+      fetch: page(endless.response),
+    });
+    expect(capped.html).toHaveLength(10 * 1024);
+    expect(endless.state.pulled).toBeLessThan(64 * 1024);
+  });
+
+  it('reads the whole page until its end when asked to', async () => {
+    const full = streamedResponse(['<head></head><body>', 'text', '</body>']);
+    const result = await fetchHtmlPage('https://e2e.invalid/', {
+      ...options,
+      until: 'end',
+      fetch: page(full.response),
+    });
+    expect(result.html).toBe('<head></head><body>text</body>');
+  });
+
+  it.each([
+    ['application/xhtml+xml; charset=utf-8', true],
+    ['', true],
+    ['text/htmlx', false],
+    ['application/pdf', false],
+  ])('treats Content-Type %j as HTML: %s', async (contentType, isHtml) => {
+    const response = streamedResponse(['<title>T</title>'], { contentType });
+    if (!contentType) response.response.headers.delete('content-type');
+    const result = await fetchHtmlPage('https://e2e.invalid/', {
+      ...options,
+      fetch: page(response.response),
+    });
+    expect(result.html !== null).toBe(isHtml);
+  });
+
+  it('does not download error pages or pages the caller refuses after redirects', async () => {
+    const missing = new Response('<title>404 Not Found</title>', { status: 404 });
+    await expect(
+      fetchHtmlPage('https://e2e.invalid/', { ...options, fetch: page(missing) }),
+    ).resolves.toMatchObject({ status: 404, ok: false, html: null });
+
+    const redirected = streamedResponse(['<title>Router</title>']);
+    Object.defineProperty(redirected.response, 'url', { value: 'http://192.168.0.1/' });
+    const refused = await fetchHtmlPage('https://e2e.invalid/', {
+      ...options,
+      allowUrl: (url) => !url.includes('192.168.'),
+      fetch: page(redirected.response),
+    });
+    expect(refused).toMatchObject({ url: 'http://192.168.0.1/', html: null });
+    expect(redirected.state.cancelled).toBe(true);
+  });
+
+  it('decodes pages using the declared or sniffed charset', async () => {
+    const bytes = (...parts: Array<string | number[]>) =>
+      new Uint8Array(
+        parts.flatMap((part) =>
+          typeof part === 'string' ? [...new TextEncoder().encode(part)] : part,
+        ),
+      );
+    const decode = async (body: Uint8Array, contentType: string) =>
+      (
+        await fetchHtmlPage('https://e2e.invalid/', {
+          ...options,
+          until: 'end',
+          fetch: page(new Response(body, { headers: { 'content-type': contentType } })),
+        })
+      ).html;
+
+    expect(await decode(bytes([0x93, 0xfa, 0x96, 0x7b, 0x8c, 0xea]), 'text/html; charset=Shift_JIS')).toBe(
+      '日本語',
+    );
+    expect(
+      await decode(bytes('<meta charset="shift_jis"><title>', [0x93, 0xfa], '</title>'), 'text/html'),
+    ).toContain('<title>日</title>');
+    expect(await decode(bytes('é'), 'text/html')).toBe('é');
+  });
+
+  it('times out when the body stalls after the headers arrive', async () => {
+    const fetch = vi.fn(
+      async (_url: string, init?: RequestInit) =>
+        streamedResponse(['<html><head><title>Part'], { stall: true, signal: init?.signal })
+          .response,
+    );
+    await expect(
+      fetchHtmlPage('https://e2e.invalid/', { ...options, timeoutMs: 50, fetch }),
+    ).rejects.toThrow('Request timed out');
+  });
+});
+
+describe('applying metadata titles', () => {
+  beforeEach(() => {
+    fakeBrowser.reset();
+    vi.restoreAllMocks();
   });
 
   it('applies reviewed titles only to bookmarks unchanged since the scan', async () => {
-    live.titles = new Map([
-      ['1', 'Original'],
-      ['2', 'Renamed later'],
+    const bookmarks = installFakeBookmarks([
+      { id: '1', title: 'Original', url: 'https://e2e.invalid/1' },
+      { id: '2', title: 'Renamed later', url: 'https://e2e.invalid/2' },
     ]);
     await expect(
       applyMetadataTitles([
         { id: '1', title: 'Original', suggestedTitle: 'Suggested' },
         { id: '2', title: 'Original', suggestedTitle: 'Suggested' },
         { id: '3', title: 'Deleted', suggestedTitle: 'Suggested' },
+        { id: '1', title: 'Original' },
       ]),
-    ).resolves.toEqual({ updated: 1, skipped: 2, failed: 0 });
-    expect(live.titles.get('1')).toBe('Suggested');
-    expect(live.titles.get('2')).toBe('Renamed later');
+    ).resolves.toEqual({ updated: 1, skipped: 3, failed: 0 });
+    expect(bookmarks.get('1')?.title).toBe('Suggested');
+    expect(bookmarks.get('2')?.title).toBe('Renamed later');
   });
 });

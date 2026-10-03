@@ -123,18 +123,13 @@ export function extractPageText(doc: Document, maxChars = config.max_chars_per_p
 export async function readPageText(url: string): Promise<PageText | undefined> {
   if (!isReadablePageUrl(url)) return undefined;
   try {
-    const html = await requestWithTimeout(
-      url,
-      { method: 'GET', redirect: 'follow' },
-      config.timeout_ms,
-      async (response) => {
-        // A redirect can lead to a local host; that page is not read either.
-        if (!response.ok || !isHtmlContentType(response.headers.get('content-type'))) return null;
-        if (response.url && !isReadablePageUrl(response.url)) return null;
-        const bytes = await readResponseBytes(response, config.max_bytes);
-        return decodeHtml(bytes, response.headers.get('content-type'));
-      },
-    );
+    const { html } = await fetchHtmlPage(url, {
+      timeoutMs: config.timeout_ms,
+      maxBytes: config.max_bytes,
+      until: 'end',
+      // A redirect can lead to a local host; that page is not read either.
+      allowUrl: isReadablePageUrl,
+    });
     if (!html) return undefined;
     return extractPageText(new DOMParser().parseFromString(html, 'text/html'));
   } catch {
