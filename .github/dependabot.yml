@@ -1,20 +1,51 @@
 # Dependabot configuration for automated dependency updates
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# Weekly and grouped: every PR runs the full CI and makes the other open PRs BEHIND under the
+# strict up-to-date ruleset, so fewer, larger PRs land faster. The cooldown skips releases younger
+# than a few days, which are the ones most often yanked or followed by a fix.
 
 version: 2
 updates:
-  # Bun dependencies for the main extension
+  # Bun workspace (root bun.lock)
   - package-ecosystem: "bun"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 3
+      semver-major-days: 7
     commit-message:
       prefix: "📦 chore(deps)"
     labels:
       - "dependencies"
     open-pull-requests-limit: 10
+    # A dependency joins the first group that matches it, so the specific groups come first.
     groups:
-      # Group minor and patch updates together
+      # The AI SDK core and its providers must move together.
+      ai-sdk:
+        patterns:
+          - "@ai-sdk/*"
+          - "ai"
+          - "ollama-ai-provider-v2"
+      # Next.js, its ESLint config, and the docs framework built on it.
+      next-and-docs:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "fumadocs*"
+      # Build, lint, and test tooling.
+      tooling:
+        patterns:
+          - "@biomejs/*"
+          - "nx"
+          - "@nx/*"
+          - "vitest"
+          - "wxt"
+          - "@playwright/test"
+          - "playwright"
+      # Everything else: minor and patch updates together, major updates one per PR.
       minor-and-patch:
         patterns:
           - "*"
@@ -26,9 +57,16 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
+    cooldown:
+      default-days: 3
     commit-message:
       prefix: "📦 chore(deps)"
     labels:
       - "dependencies"
       - "github-actions"
+    groups:
+      github-actions:
+        patterns:
+          - "*"

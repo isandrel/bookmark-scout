@@ -19,7 +19,16 @@
             "inputs": [
                 "production",
                 "^production",
-                "{workspaceRoot}/apps/extension/config/**/*"
+                "{workspaceRoot}/apps/extension/config/**/*",
+                {
+                    "env": "NEXT_PUBLIC_BASE_PATH"
+                }
+            ],
+            "outputs": [
+                "{projectRoot}/out",
+                "{projectRoot}/public/_redirects",
+                "{projectRoot}/public/.well-known/security.txt",
+                "{projectRoot}/public/screenshots/optimized"
             ],
             "options": {
                 "cwd": "apps/website"

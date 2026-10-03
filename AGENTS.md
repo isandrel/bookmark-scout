@@ -150,6 +150,10 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 
 Use the smallest command set that exercises the code you changed.
 
+### Nx cache
+
+Nx caches `lint`, `typecheck`, `test:unit`, the extension `build:*` targets, and the website and docs builds (`targetDefaults` in `nx.json`; outputs in each `project.json`, or the `"nx"` field of `apps/docs/package.json`). The cache is shared by every checkout and worktree of the repository (under `~/.nx`), and a hit restores only the declared outputs, so a cached target that writes files must list all of them in `outputs`, and anything else it reads (an environment variable, a file outside its project) in `inputs`. Pass `--skip-nx-cache` to force a run. `.nxignore` keeps the Nx daemon from watching agent worktrees under `.claude/`.
+
 ## Verification policy
 
 Verification is required for substantive changes. At a minimum, run the narrowest relevant validation command for the affected area and report what you ran.
@@ -232,11 +236,14 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
 - The website and docs both deploy to Cloudflare Pages through the reusable `deploy-pages.yml` (build, `<app>:verify`, `wrangler pages deploy --branch`, one concurrency group per app), called by `deploy-website.yml` and `deploy-docs.yml` with the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
 - If `bun install --frozen-lockfile` fails, run `bun install`, commit the updated `bun.lock`, then verify `bun install --frozen-lockfile`.
 - CI skips jobs a pull request cannot affect. The rules live in `.github/ci-scopes.toml` as glob patterns: `ignore` (for example every `*.md`, `.agents/`, `backlog/`, `store/`), `shared` (workspace files that run every scope), and named `[scopes]` (`extension`, `sites`). A file that matches no pattern runs every scope. `scripts/ci-scopes.ts` applies the rules in the `Detect changes` job, and `scripts/ci-scopes.test.ts` covers them; extend the TOML, not the workflow, when paths change. Skipped jobs still report as passed, so required checks never block, and pushes to `main` always run everything.
+- The Chromium and Edge suites run as matrix shards (`Chromium E2E (i/N)`, `Edge E2E (i/N)`, N from the matrix size in `ci.yml`), each on the worker count from `apps/extension/playwright.config.ts`, with the unit tests in `Extension Unit Tests`. The required checks `Extension Tests` and `Edge E2E` are summary jobs (`.github/actions/require-jobs`) that pass when the extension scope is off, fail when scope detection produced no output, and otherwise fail unless every shard passed. Shard failure diagnostics upload as `playwright-failures-<browser>-<shard>`. The browser jobs do not wait for Lint.
+- CI, CodeQL, Dependency Review, and the labeler cancel a pull request's older run when a new push arrives; runs on `main`, releases, and deploys are never cancelled. The extension Playwright config retries a failed test once on CI only, so a test that passes on retry is reported as flaky: fix it rather than raising retries.
 - Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
 
 ### Dependency automation
 
 - Treat the root text lockfile `bun.lock` as the workspace lockfile source of truth. It replaced the binary `bun.lockb` so Dependabot can update it and conflicts can be read and merged.
+- Dependabot runs weekly with a cooldown and groups updates (`.github/dependabot.yml`): the AI SDK packages, Next.js and the docs framework, build and test tooling, the remaining minor and patch updates, and all GitHub Actions. Add a related package family to a group rather than letting it open one PR per package.
 - Avoid app-local `bun.lock` files unless an app truly installs independently in its workflow.
 - If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
 - Duplicate app-level Bun Dependabot entries can produce `Dependabot::Bun::FileUpdater::NoChangeError`; prefer a single root Bun updater unless the app has a separate lockfile and install workflow.

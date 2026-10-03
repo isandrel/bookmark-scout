@@ -35,6 +35,12 @@
   },
   "nx": {
     "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/out",
+          "{projectRoot}/.source"
+        ]
+      },
       "verify": {
         "dependsOn": [
           "build"
