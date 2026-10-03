@@ -4216,8 +4216,8 @@
         "description": "Provider connection error: network failure; $1 is the host"
     },
     "ai_connErrorTimeout": {
-        "message": "$1 から 8 秒以内に応答がありませんでした。",
-        "description": "Provider connection error: timeout; $1 is the host"
+        "message": "$1 から $2 秒以内に応答がありませんでした。",
+        "description": "Provider connection error: timeout; $1 is the host, $2 the timeout in seconds"
     },
     "ai_connErrorNotApi": {
         "message": "応答はありましたが、AI プロバイダーの API ではないようです。Base URL を確認してください。",
@@ -4522,5 +4522,77 @@
     "prompt_varIncludeDomainHint": {
         "message": "サイト名に触れるかどうか（true または false）",
         "description": "Variable description"
+    },
+    "aiActivity_title": {
+        "message": "AI アクティビティ",
+        "description": "Options: heading of the AI request log"
+    },
+    "aiActivity_description": {
+        "message": "直近 $1 件の AI リクエストを、送信内容と応答とともにこの端末に記録します。結果の確認や失敗した呼び出しの調査に使えます。リクエストにはブックマークのタイトルと URL が含まれます。API キーは保存されません。記録をオフにするとログは削除されます。",
+        "description": "Options: AI activity description; $1 is how many requests are kept"
+    },
+    "aiActivity_record": {
+        "message": "リクエストを記録",
+        "description": "Options: switch that turns AI request recording on"
+    },
+    "aiActivity_empty": {
+        "message": "AI リクエストはまだありません。AI ツールまたは「サービスを確認」を実行するとここに表示されます。",
+        "description": "Options: AI activity empty state"
+    },
+    "aiActivity_clear": {
+        "message": "ログを消去",
+        "description": "Options: button that deletes the AI request log"
+    },
+    "aiActivity_copy": {
+        "message": "JSON としてコピー",
+        "description": "Options: button that copies one AI request entry"
+    },
+    "aiActivity_copied": {
+        "message": "リクエストをコピーしました",
+        "description": "Toast after copying an AI request entry"
+    },
+    "aiActivity_failed": {
+        "message": "失敗",
+        "description": "Options: status badge of an AI request that got no response"
+    },
+    "aiActivity_requestHeaders": {
+        "message": "リクエストヘッダー",
+        "description": "Options: label of the recorded request headers"
+    },
+    "aiActivity_request": {
+        "message": "リクエスト",
+        "description": "Options: label of the recorded request body"
+    },
+    "aiActivity_response": {
+        "message": "レスポンス",
+        "description": "Options: label of the recorded response body"
+    },
+    "aiActivity_duration": {
+        "message": "$1 ms",
+        "description": "Options: AI request duration; $1 is milliseconds"
+    },
+    "aiActivity_truncated": {
+        "message": "残り $1 文字は記録されていません。",
+        "description": "Options: note under a cut-off body; $1 is the number of characters left out"
+    },
+    "aiActivity_sourceAI": {
+        "message": "AI リクエスト",
+        "description": "Options: AI activity source for a call with no named tool"
+    },
+    "aiActivity_sourceModelList": {
+        "message": "モデル一覧",
+        "description": "Options: AI activity source for fetching a provider model list"
+    },
+    "error_aiApiKeyRequired": {
+        "message": "Options > AI でこの AI サービスの API キーを追加してください。",
+        "description": "Error when an AI call needs an API key and none is saved"
+    },
+    "error_aiModelRequired": {
+        "message": "Options > AI でこの AI サービスのモデルを選択してください。",
+        "description": "Error when an AI call has no model selected"
+    },
+    "error_aiReorganizeEmptyScope": {
+        "message": "選択した範囲にブックマークがありません。「すべてのブックマーク」を選ぶか、ブックマークがあるフォルダーを選択してください。",
+        "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
     }
 }

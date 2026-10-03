@@ -103,6 +103,12 @@ Keep as many prompts per tool as you like and switch between them with the tool'
 
 Turn on **Auto-recommend on Open** to request folder recommendations every time the popup opens. Leave it off to send a request only when you click the button.
 
+## See what was sent
+
+To check exactly what a tool sent and what the provider answered, go to **Options**, then **AI**, and turn on **Record requests** under **AI activity**. Each AI call then shows its source, address, status, and time; open one to see the request headers and the request and response bodies, or copy it as JSON for a bug report.
+
+Recording is off by default. The log stays on this device and keeps only the most recent calls. API keys and other credential headers are replaced with `[redacted]` before anything is stored, but bookmark titles and URLs in the requests are kept, so turn recording off when you are done: that also deletes the log.
+
 ## Save a page with a folder recommendation
 
 Click the sparkle button in the popup. Choosing a suggested existing folder saves the page there. Choosing a suggested new folder opens **Review new folder** with the full path and the page; **Create Folder and Save** creates only the missing folders and saves the page. If the page is already in that folder it is not saved twice, and if a bookmark already uses one of the folder names in the path, nothing is created. **Cancel** changes nothing.

@@ -4216,8 +4216,8 @@
         "description": "Provider connection error: network failure; $1 is the host"
     },
     "ai_connErrorTimeout": {
-        "message": "$1 did not answer within 8 seconds.",
-        "description": "Provider connection error: timeout; $1 is the host"
+        "message": "$1 did not answer within $2 seconds.",
+        "description": "Provider connection error: timeout; $1 is the host, $2 the timeout in seconds"
     },
     "ai_connErrorNotApi": {
         "message": "The address answered, but not like an AI provider API. Check the Base URL.",
@@ -4522,5 +4522,77 @@
     "prompt_varIncludeDomainHint": {
         "message": "Whether to mention the site (true or false)",
         "description": "Variable description"
+    },
+    "aiActivity_title": {
+        "message": "AI activity",
+        "description": "Options: heading of the AI request log"
+    },
+    "aiActivity_description": {
+        "message": "Record the last $1 AI requests on this device, with what was sent and what came back, to check a result or debug a failed call. Requests include bookmark titles and URLs; API keys are never stored. Turning recording off deletes the log.",
+        "description": "Options: AI activity description; $1 is how many requests are kept"
+    },
+    "aiActivity_record": {
+        "message": "Record requests",
+        "description": "Options: switch that turns AI request recording on"
+    },
+    "aiActivity_empty": {
+        "message": "No AI requests yet. Run an AI tool or Verify Service and it shows here.",
+        "description": "Options: AI activity empty state"
+    },
+    "aiActivity_clear": {
+        "message": "Clear log",
+        "description": "Options: button that deletes the AI request log"
+    },
+    "aiActivity_copy": {
+        "message": "Copy as JSON",
+        "description": "Options: button that copies one AI request entry"
+    },
+    "aiActivity_copied": {
+        "message": "Request copied",
+        "description": "Toast after copying an AI request entry"
+    },
+    "aiActivity_failed": {
+        "message": "Failed",
+        "description": "Options: status badge of an AI request that got no response"
+    },
+    "aiActivity_requestHeaders": {
+        "message": "Request headers",
+        "description": "Options: label of the recorded request headers"
+    },
+    "aiActivity_request": {
+        "message": "Request",
+        "description": "Options: label of the recorded request body"
+    },
+    "aiActivity_response": {
+        "message": "Response",
+        "description": "Options: label of the recorded response body"
+    },
+    "aiActivity_duration": {
+        "message": "$1 ms",
+        "description": "Options: AI request duration; $1 is milliseconds"
+    },
+    "aiActivity_truncated": {
+        "message": "$1 more characters were not recorded.",
+        "description": "Options: note under a cut-off body; $1 is the number of characters left out"
+    },
+    "aiActivity_sourceAI": {
+        "message": "AI request",
+        "description": "Options: AI activity source for a call with no named tool"
+    },
+    "aiActivity_sourceModelList": {
+        "message": "Model list",
+        "description": "Options: AI activity source for fetching a provider model list"
+    },
+    "error_aiApiKeyRequired": {
+        "message": "Add an API key for this AI service in Options > AI.",
+        "description": "Error when an AI call needs an API key and none is saved"
+    },
+    "error_aiModelRequired": {
+        "message": "Choose a model for this AI service in Options > AI.",
+        "description": "Error when an AI call has no model selected"
+    },
+    "error_aiReorganizeEmptyScope": {
+        "message": "No bookmarks found in the selected scope. Select \"All Bookmarks\" or choose a folder with bookmarks.",
+        "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
     }
 }

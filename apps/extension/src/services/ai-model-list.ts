@@ -31,10 +31,7 @@ export class AIConnectionError extends Error {
   }
 }
 
-/** Model-list requests give up after this long, so a dead endpoint never hangs the panel. */
-export const MODEL_LIST_TIMEOUT_MS = 8000;
-/** Upper bound on paginated pages, so a misbehaving endpoint cannot loop forever. */
-const MAX_MODEL_LIST_PAGES = 20;
+const { limits } = aiRuntimeConfig;
 
 /** Anthropic only answers browser-origin requests that opt in with this header. */
 export const ANTHROPIC_BROWSER_ACCESS_HEADER = {
@@ -65,7 +62,9 @@ export function modelListHeaders(
   const apiKey = settings.apiKey.trim();
   switch (style) {
     case 'anthropic':
-      Object.assign(headers, ANTHROPIC_BROWSER_ACCESS_HEADER, { 'anthropic-version': '2023-06-01' });
+      Object.assign(headers, ANTHROPIC_BROWSER_ACCESS_HEADER, {
+        'anthropic-version': limits.anthropic_version,
+      });
       if (apiKey) headers['x-api-key'] = apiKey;
       break;
     case 'google':
@@ -88,12 +87,12 @@ function firstUrl(style: ModelListStyle, baseUrl: string): URL {
   switch (style) {
     case 'anthropic': {
       const url = joinUrl(baseUrl, 'models');
-      url.searchParams.set('limit', '1000');
+      url.searchParams.set('limit', String(limits.model_list_page_size));
       return url;
     }
     case 'google': {
       const url = joinUrl(baseUrl, 'models');
-      url.searchParams.set('pageSize', '1000');
+      url.searchParams.set('pageSize', String(limits.model_list_page_size));
       return url;
     }
     case 'ollama':
@@ -193,13 +192,18 @@ function connectionErrorForStatus(status: number, body: string, url: URL): AICon
   return new AIConnectionError('http_error', t('ai_connErrorHttp', [String(status), host]), status);
 }
 
-async function fetchJson(url: URL, headers: Record<string, string>, signal?: AbortSignal) {
+async function fetchJson(
+  url: URL,
+  headers: Record<string, string>,
+  signal: AbortSignal | undefined,
+  fetch: typeof globalThis.fetch,
+) {
   const controller = new AbortController();
   let timedOut = false;
   const timer = setTimeout(() => {
     timedOut = true;
     controller.abort();
-  }, MODEL_LIST_TIMEOUT_MS);
+  }, limits.model_list_timeout_ms);
   const abort = () => controller.abort();
   signal?.addEventListener('abort', abort, { once: true });
   try {
@@ -208,7 +212,10 @@ async function fetchJson(url: URL, headers: Record<string, string>, signal?: Abo
       response = await fetch(url, { headers, signal: controller.signal });
     } catch (error) {
       if (timedOut) {
-        throw new AIConnectionError('timeout', t('ai_connErrorTimeout', url.host));
+        throw new AIConnectionError(
+          'timeout',
+          t('ai_connErrorTimeout', [url.host, String(limits.model_list_timeout_ms / 1000)]),
+        );
       }
       if (signal?.aborted) throw error;
       // Network failures, refused ports, DNS errors, and CORS rejections all look the same here.
@@ -233,7 +240,7 @@ async function fetchJson(url: URL, headers: Record<string, string>, signal?: Abo
  */
 export async function listProviderModels(
   settings: AISettings,
-  options: { signal?: AbortSignal } = {},
+  options: { signal?: AbortSignal; source?: AIActivitySource } = {},
 ): Promise<DetectedAIModel[]> {
   const style = getProviderModelListStyle(settings.provider);
   const baseUrl = getProviderEndpoint(settings.provider, settings.baseUrl, settings.providerOptions);
@@ -241,10 +248,15 @@ export async function listProviderModels(
     throw new Error(t('error_aiModelListUnavailable'));
   }
   const headers = modelListHeaders(style, settings);
+  const fetch = createLoggingFetch({
+    source: options.source ?? 'modelList',
+    provider: settings.provider,
+  });
   const seen = new Map<string, DetectedAIModel>();
   let url: URL | undefined = firstUrl(style, baseUrl);
-  for (let page = 0; url && page < MAX_MODEL_LIST_PAGES; page += 1) {
-    const payload = await fetchJson(url, headers, options.signal);
+  // Bounded, so a misbehaving endpoint cannot page forever.
+  for (let page = 0; url && page < limits.model_list_max_pages; page += 1) {
+    const payload = await fetchJson(url, headers, options.signal, fetch);
     const parsed = parseModelPage(style, payload, url);
     if (!parsed) throw new AIConnectionError('not_api', t('ai_connErrorNotApi'));
     for (const model of parsed.models) if (!seen.has(model.id)) seen.set(model.id, model);

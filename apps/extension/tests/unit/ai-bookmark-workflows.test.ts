@@ -104,7 +104,7 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
       tagStyle: 'kebab-case',
     });
 
-    expect(mocks.createAIModel).toHaveBeenCalledWith(settings);
+    expect(mocks.createAIModel).toHaveBeenCalledWith(settings, 'autoTagging');
     expect(mocks.generateObject).toHaveBeenCalledOnce();
     const request = mocks.generateObject.mock.calls[0][0];
     expect(request.system).toContain('preserve bookmarkId/title exactly');
