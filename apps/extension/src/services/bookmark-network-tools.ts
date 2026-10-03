@@ -159,7 +159,7 @@ export type PrivacyScanResult = {
   items: PrivacyScanItem[];
 };
 
-type DeadLinkOptions = {
+export type DeadLinkOptions = {
   requestTimeoutMs: number;
   concurrency: number;
   retryCount: number;
@@ -167,14 +167,14 @@ type DeadLinkOptions = {
   successStatuses: number[];
 };
 
-type MetadataOptions = {
+export type MetadataOptions = {
   overwriteTitles: boolean;
   fetchDescriptions: boolean;
   requestTimeoutMs: number;
   concurrency: number;
 };
 
-type PrivacyOptions = {
+export type PrivacyScanOptions = {
   scanTitles: boolean;
   scanQueryParams: boolean;
   scanFragments: boolean;
@@ -530,7 +530,7 @@ export function findEmailValues(text: string): string[] {
 
 export function scanBookmarkPrivacy(
   nodes: BookmarkTreeNode[],
-  options: PrivacyOptions,
+  options: PrivacyScanOptions,
 ): PrivacyScanResult {
   const sensitiveParams = new Set(options.sensitiveParams.map((item) => item.toLowerCase()));
   const fragmentSensitive = new Set([...sensitiveParams, ...FRAGMENT_TOKEN_PARAMS]);

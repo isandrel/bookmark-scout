@@ -68,13 +68,6 @@ export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; pat
   return collectFolders(nodes).map(({ id, path }) => ({ id, path }));
 }
 
-/** The output rule for `count` recommendations; the app adds it after the editable prompt. */
-function folderRecommendationRule(count: number): string {
-  return `Return exactly ${count} folder recommendations ranked by confidence, best match first. Prefer existing folders; suggest a new folder only when no existing folder fits.
-
-Each recommendation should have a clear, brief reason.`;
-}
-
 /**
  * Recommends multiple folders for a bookmark using AI.
  * Returns up to maxRecommendations folder suggestions ranked by confidence.
@@ -103,16 +96,16 @@ export async function recommendFolders(
 
   const [page] = await addPageText([bookmark], readPage);
   const model = createAIModel(settings, 'folderRecommendation');
-  const { system } = await buildPrompt('folder_recommendation', { maxRecommendations });
+  const { system } = await buildPrompt(
+    'folder_recommendation',
+    { aiMaxRecommendations: maxRecommendations },
+    { hasPageText: Boolean(page.pageText) },
+  );
 
   const { object } = await generateObject({
     model,
     schema: recommendationsSchema,
-    system: withAppRules(
-      system,
-      folderRecommendationRule(maxRecommendations),
-      Boolean(page.pageText),
-    ),
+    system,
     prompt: JSON.stringify({
       title: bookmark.title,
       url: bookmark.url,
