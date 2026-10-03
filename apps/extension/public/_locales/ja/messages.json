@@ -4792,5 +4792,45 @@
     "prompt_varToday": {
         "message": "今日の日付（YYYY-MM-DD 形式）",
         "description": "Prompt variable description"
+    },
+    "error_bookmarksApiUnavailable": {
+        "message": "ブラウザーのブックマーク API を利用できません。",
+        "description": "Error when the browser bookmarks API cannot be used"
+    },
+    "error_bookmarkNotFound": {
+        "message": "ブックマークが見つかりません。",
+        "description": "Error when a bookmark no longer exists"
+    },
+    "error_bookmarkNoParent": {
+        "message": "親フォルダーがないため、この項目は復元できません。",
+        "description": "Error when an item without a parent folder cannot be deleted with undo"
+    },
+    "error_tabsApiUnavailable": {
+        "message": "ブラウザーのタブ API を利用できません。",
+        "description": "Error when the browser tabs API cannot be used"
+    },
+    "error_noActiveTab": {
+        "message": "アクティブなタブが見つかりません。",
+        "description": "Error when no browser tab is active"
+    },
+    "error_readFileFailed": {
+        "message": "ファイルを読み込めませんでした。",
+        "description": "Import error when the chosen file cannot be read"
+    },
+    "ai_recommendationNoFolders": {
+        "message": "既存のフォルダーがありません",
+        "description": "Reason shown for the only folder suggestion when there are no folders yet"
+    },
+    "ai_reorgPreviewRequired": {
+        "message": "整理の変更を適用する前にプレビューを確認してください",
+        "description": "Reorganization error when changes are applied before the preview is confirmed"
+    },
+    "ai_reorgTargetMissing": {
+        "message": "「$1」の移動先フォルダーが見つかりません",
+        "description": "Reorganization error; $1 is the bookmark or folder title"
+    },
+    "ai_reorgChangeFailed": {
+        "message": "「$1」を変更できませんでした: $2",
+        "description": "Reorganization error; $1 is the bookmark or folder title, $2 the browser's error"
     }
 }

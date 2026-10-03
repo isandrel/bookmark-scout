@@ -1,0 +1,17 @@
+# Refresh Site Icons: which of the icons a page declares to download. Lower scores win.
+# Read by src/services/site-icons.ts. The preferred size and the byte cap are user settings.
+
+# Declared icon files tried per site, best first, before falling back to /favicon.ico; bounds the
+# requests one site can cause when it lists many broken icons
+max_declared_icon_attempts = 3
+# Icon formats that score best; any other format adds uncommon_format_penalty
+preferred_formats = ["png", "svg", "ico"]
+# Added to the score of an icon whose format is not in preferred_formats
+uncommon_format_penalty = 1
+# Size in pixels assumed for an apple-touch-icon without `sizes`, as the convention says
+apple_touch_icon_default_size = 180
+# Score of an icon without `sizes`: worse than an exact match (0), better than one 2x too large (1)
+unknown_size_distance = 0.75
+# How many times worse a smaller icon scores than a larger one the same distance from the
+# preferred size, because upscaling looks worse than downscaling
+upscale_penalty = 2
