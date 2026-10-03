@@ -5,7 +5,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { settingsSchema } from '@/lib/settings-schema';
-import { createAIModel } from '@/services/ai-client';
+import { createAIModel } from '@/services/ai-client.lazy';
 import {
   getAvailableProviders,
   getProviderGroup,
@@ -139,7 +139,7 @@ describe('local and custom presets', () => {
 describe('[mocked provider contract] catalog providers', () => {
   it('call Chat Completions through the OpenAI-compatible package', async () => {
     await saveStoredAIProviderConfig('togetherai', { apiKey: 'synthetic-key' });
-    createAIModel(await buildAISettingsFromProvider('togetherai', 'meta-llama/x', true));
+    await createAIModel(await buildAISettingsFromProvider('togetherai', 'meta-llama/x', true));
     expect(mocks.createOpenAICompatible).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'togetherai',
@@ -158,7 +158,7 @@ describe('[mocked provider contract] catalog providers', () => {
     expect(anthropicCatalogId).toBeDefined();
     const id = anthropicCatalogId as string;
     await saveStoredAIProviderConfig(id, { apiKey: 'synthetic-key' });
-    createAIModel(await buildAISettingsFromProvider(id, 'some-model', true));
+    await createAIModel(await buildAISettingsFromProvider(id, 'some-model', true));
     expect(mocks.createAnthropic).toHaveBeenCalledWith(
       expect.objectContaining({
         baseURL: getProviderBaseUrl(id),

@@ -4,12 +4,11 @@ import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({
-  generateObject: vi.fn(),
+  generateAIObject: vi.fn(),
 }));
 
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: vi.fn(() => ({})),
+  generateAIObject: mocks.generateAIObject,
   validateAISettings: vi.fn(),
 }));
 
@@ -34,15 +33,15 @@ const bookmarkTree: BookmarkTreeNode[] = [
 describe('AI reorganization folder limit settings', () => {
   beforeEach(() => {
     fakeBrowser.reset();
-    mocks.generateObject.mockReset();
-    mocks.generateObject.mockResolvedValue({ object: { operations: [], summary: 'None' } });
+    mocks.generateAIObject.mockReset();
+    mocks.generateAIObject.mockResolvedValue({ object: { operations: [], summary: 'None' } });
   });
 
   it('sends the saved category and folder-size limits to the provider', async () => {
     await saveSettings({ aiMaxCategories: 4, aiMinItemsPerFolder: 2, aiMaxItemsPerFolder: 9 });
     await generateReorganizationPlan(bookmarkTree, aiSettings);
 
-    const request = mocks.generateObject.mock.calls[0][0];
+    const request = mocks.generateAIObject.mock.calls[0][0];
     expect(JSON.parse(request.prompt).config).toEqual({
       maxCategories: 4,
       minItemsPerFolder: 2,
@@ -53,14 +52,14 @@ describe('AI reorganization folder limit settings', () => {
 
     await saveSettings({ aiMaxCategories: 7 });
     await generateReorganizationPlan(bookmarkTree, aiSettings);
-    expect(JSON.parse(mocks.generateObject.mock.calls[1][0].prompt).config.maxCategories).toBe(7);
+    expect(JSON.parse(mocks.generateAIObject.mock.calls[1][0].prompt).config.maxCategories).toBe(7);
   });
 
   it('leaves unlimited limits out of the prompt and the request instead of sending -1', async () => {
     await saveSettings({ aiMaxCategories: -1, aiMinItemsPerFolder: 3, aiMaxItemsPerFolder: -1 });
     await generateReorganizationPlan(bookmarkTree, aiSettings);
 
-    const request = mocks.generateObject.mock.calls[0][0];
+    const request = mocks.generateAIObject.mock.calls[0][0];
     expect(JSON.parse(request.prompt).config).toEqual({ minItemsPerFolder: 3 });
     // "-1" on its own, not the "(0-1)" confidence range.
     expect(request.system).not.toMatch(/(^|[^0-9])-1\b/);
@@ -70,6 +69,6 @@ describe('AI reorganization folder limit settings', () => {
     // The default minimum of one goes without saying.
     await saveSettings({ aiMinItemsPerFolder: 1 });
     await generateReorganizationPlan(bookmarkTree, aiSettings);
-    expect(mocks.generateObject.mock.calls[1][0].system).not.toContain('bookmarks per folder');
+    expect(mocks.generateAIObject.mock.calls[1][0].system).not.toContain('bookmarks per folder');
   });
 });

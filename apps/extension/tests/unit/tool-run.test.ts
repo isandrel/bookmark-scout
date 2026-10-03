@@ -18,19 +18,14 @@ import { BOOKMARK_DELETION_UNDO_WINDOW_MS } from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
-// The AI tests stub the `ai` SDK: they check the run's contract, not live provider compatibility.
+// The AI tests stub the AI client's model call: they check the run's contract, not live provider
+// compatibility. Failures use the SDK's real error classes, so they are described as users see them.
 const mocks = vi.hoisted(() => ({
-  generateObject: vi.fn(),
-  createAIModel: vi.fn(() => ({ provider: 'synthetic' })),
+  generateAIObject: vi.fn(),
   validateAISettings: vi.fn(),
 }));
-// The SDK's error classes stay real, so AI errors are described as users see them.
-vi.mock('ai', async (importOriginal) => ({
-  ...(await importOriginal<typeof import('ai')>()),
-  generateObject: mocks.generateObject,
-}));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: mocks.createAIModel,
+  generateAIObject: mocks.generateAIObject,
   validateAISettings: mocks.validateAISettings,
 }));
 
@@ -80,7 +75,7 @@ const titles = () => bookmarks.childIds(FOLDER).map((id) => bookmarks.get(id)?.t
 beforeEach(async () => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
-  mocks.generateObject.mockReset();
+  mocks.generateAIObject.mockReset();
   // Services that read stored settings switch the language to it, so store English too.
   await saveSettings({ language: 'en' });
   setLanguage('en');
@@ -342,13 +337,13 @@ describe('AI tools', () => {
     const run = createToolRun(TOOL_DEFINITIONS.autoTagging, deps({ aiSettings }));
     await run.run('folder');
     expect(aiSettings).not.toHaveBeenCalled();
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateAIObject).not.toHaveBeenCalled();
     expect(notices[0].outcome.description).toBe('AI features are disabled');
   });
 
   it('[mocked provider contract] saves reviewed tags to bookmark metadata', async () => {
     settings = { ...settings, aiEnabled: true };
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: { items: [{ bookmarkId: '1', title: 'Paper', tags: ['research'], reason: 'r' }] },
     });
     const run = createToolRun(TOOL_DEFINITIONS.autoTagging, deps());
@@ -371,7 +366,7 @@ describe('AI tools', () => {
     ]);
     tree = await readTree();
     settings = { ...settings, aiEnabled: true };
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         items: ['1', '2', '3'].map((bookmarkId) => ({
           bookmarkId,
@@ -404,7 +399,7 @@ describe('AI tools', () => {
     ]);
     tree = await readTree();
     settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         operations: [
           {
@@ -446,7 +441,7 @@ describe('AI tools', () => {
     ]);
     tree = await readTree();
     settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         operations: [
           {
@@ -474,7 +469,7 @@ describe('AI tools', () => {
     await fakeBrowser.bookmarks.move('b2', { parentId: 'other' });
 
     await run.apply();
-    expect(mocks.generateObject).toHaveBeenCalledOnce();
+    expect(mocks.generateAIObject).toHaveBeenCalledOnce();
     const workId = bookmarks.childIds('bar').find((id) => bookmarks.get(id)?.title === 'Work');
     expect(workId && bookmarks.childIds(workId)).toEqual(['b1']);
     expect(bookmarks.childIds('other')).toEqual(['b2']);
@@ -497,7 +492,7 @@ describe('AI tools', () => {
     await run.undo();
     expect(bookmarks.childIds('bar')).toEqual(['b1']);
     expect(run.getState().notice).toBeNull();
-    expect(mocks.generateObject).toHaveBeenCalledOnce();
+    expect(mocks.generateAIObject).toHaveBeenCalledOnce();
     expect(notices[1].outcome).toMatchObject({
       title: 'Reorganization undone',
       description: 'Moved back: 1. Could not move back: 0.',
@@ -506,7 +501,7 @@ describe('AI tools', () => {
 
   it('[mocked provider contract] describes a provider rejection in the toast instead of raw SDK text', async () => {
     settings = { ...settings, aiEnabled: true };
-    mocks.generateObject.mockRejectedValue(
+    mocks.generateAIObject.mockRejectedValue(
       new APICallError({
         message: 'HTTP 401 raw provider text',
         url: 'https://provider.invalid/v1/chat/completions',
@@ -531,7 +526,7 @@ describe('AI tools', () => {
 
   it('shows reorganization failures inside the review instead of a toast', async () => {
     settings = { ...settings, aiEnabled: true };
-    mocks.generateObject.mockRejectedValue(new Error('provider down'));
+    mocks.generateAIObject.mockRejectedValue(new Error('provider down'));
     const run = createToolRun(TOOL_DEFINITIONS.reorganization, deps());
     await run.run('all');
     expect(run.getState()).toMatchObject({

@@ -4,14 +4,12 @@ import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-boo
 import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({
-  generateObject: vi.fn(),
-  createAIModel: vi.fn(() => ({ provider: 'synthetic' })),
+  generateAIObject: vi.fn(),
   validateAISettings: vi.fn(),
 }));
 
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: mocks.createAIModel,
+  generateAIObject: mocks.generateAIObject,
   validateAISettings: mocks.validateAISettings,
 }));
 
@@ -49,7 +47,7 @@ beforeEach(() => {
   });
 });
 
-// These tests stub the `ai` SDK: they verify our request/response contract, not live provider compatibility.
+// These tests stub the AI client's model call: they verify our request/response contract, not live provider compatibility.
 describe('provider-backed bookmark workflows (mocked provider contract)', () => {
   it('blocks auto-tagging and summarization before creating a provider when AI is disabled', async () => {
     const disabled = { ...settings, enabled: false };
@@ -68,12 +66,11 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
       }),
     ).rejects.toThrow('AI features are disabled');
 
-    expect(mocks.createAIModel).not.toHaveBeenCalled();
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateAIObject).not.toHaveBeenCalled();
   });
 
   it('sends a deterministic auto-tagging contract and trusts only requested bookmark identities', async () => {
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         items: [
           {
@@ -104,9 +101,9 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
       tagStyle: 'kebab-case',
     });
 
-    expect(mocks.createAIModel).toHaveBeenCalledWith(settings, 'autoTagging');
-    expect(mocks.generateObject).toHaveBeenCalledOnce();
-    const request = mocks.generateObject.mock.calls[0][0];
+    expect(mocks.generateAIObject).toHaveBeenCalledOnce();
+    const request = mocks.generateAIObject.mock.calls[0][0];
+    expect(request).toMatchObject({ settings, source: 'autoTagging' });
     expect(request.system).toContain('preserve bookmarkId/title exactly');
     expect(JSON.parse(request.prompt)).toEqual({
       bookmarks: [
@@ -136,7 +133,7 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
   });
 
   it('includes optional domain context and filters unknown or duplicate summarizer results', async () => {
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         items: [
           {
@@ -163,7 +160,7 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
       includeDomainHint: true,
     });
 
-    const request = mocks.generateObject.mock.calls[0][0];
+    const request = mocks.generateAIObject.mock.calls[0][0];
     expect(JSON.parse(request.prompt).bookmarks).toEqual([
       expect.objectContaining({ bookmarkId: 'first', domain: 'first.example' }),
       expect.objectContaining({ bookmarkId: 'second', domain: 'second.example' }),
@@ -179,7 +176,7 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
   });
 
   it('propagates a provider failure without returning a partial preview', async () => {
-    mocks.generateObject.mockRejectedValue(new Error('Synthetic provider unavailable'));
+    mocks.generateAIObject.mockRejectedValue(new Error('Synthetic provider unavailable'));
 
     await expect(
       summarizeBookmarksWithAI(nodes, settings, {
@@ -204,7 +201,6 @@ describe('provider-backed bookmark workflows (mocked provider contract)', () => 
       }),
     ).resolves.toEqual([]);
 
-    expect(mocks.createAIModel).not.toHaveBeenCalled();
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateAIObject).not.toHaveBeenCalled();
   });
 });

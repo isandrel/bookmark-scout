@@ -3,7 +3,6 @@
  * Uses the shared AI client for multi-provider support.
  */
 
-import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -94,15 +93,15 @@ export async function recommendFolders(
   }
 
   const [page] = await addPageText([bookmark], readPage);
-  const model = createAIModel(settings, 'folderRecommendation');
   const { system } = await buildPrompt(
     'folder_recommendation',
     { aiMaxRecommendations: maxRecommendations },
     { hasPageText: Boolean(page.pageText) },
   );
 
-  const { object } = await generateObject({
-    model,
+  const { object } = await generateAIObject({
+    settings,
+    source: 'folderRecommendation',
     schema: recommendationsSchema,
     system,
     prompt: JSON.stringify({

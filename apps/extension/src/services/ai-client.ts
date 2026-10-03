@@ -1,18 +1,9 @@
 /**
- * Shared AI client for multi-provider support.
+ * Shared AI client for multi-provider support: settings, checks, and the calls every AI feature
+ * makes. The AI SDK itself (provider factories and model wiring) lives in ai-client.lazy.ts and
+ * loads on the first AI call, so pages and users that never use AI do not download or parse it.
  */
 
-import { createAnthropic } from '@ai-sdk/anthropic';
-import { createAzure } from '@ai-sdk/azure';
-import { createDeepSeek } from '@ai-sdk/deepseek';
-import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { createGroq } from '@ai-sdk/groq';
-import { createMistral } from '@ai-sdk/mistral';
-import { createOpenAI } from '@ai-sdk/openai';
-import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
-import { createXai } from '@ai-sdk/xai';
-import { generateText } from 'ai';
-import { createOllama } from 'ollama-ai-provider-v2';
 import { z } from 'zod';
 
 const verifyConfig = readConfig(
@@ -56,60 +47,35 @@ export type DetectedAIModel = {
   name: string;
 };
 
-type AnyLanguageModel = ReturnType<ReturnType<typeof createOpenAI>>;
+/** One model call: the service to use and what makes the call, named in the AI activity log. */
+type AIModelRequest = {
+  settings: AISettings;
+  source: AIActivitySource;
+};
+
+export type AIObjectRequest<T> = AIModelRequest & {
+  schema: z.ZodType<T>;
+  system: string;
+  prompt: string;
+};
+
+export type AITextRequest = AIModelRequest & {
+  prompt: string;
+  maxOutputTokens?: number;
+};
 
 /**
- * A language model for the settings. `source` names what makes the calls (a tool name) in the
- * AI activity log, which records them when the user turned recording on.
+ * The AI SDK and provider factories, loaded on first use. Import the lazy module only through
+ * here or another lazy module, never statically from code every page loads.
  */
-export function createAIModel(
-  settings: AISettings,
-  source: AIActivitySource = 'ai',
-): AnyLanguageModel {
-  validateAISettings(settings);
+function loadAIRuntime() {
+  return import('./ai-client.lazy');
+}
 
-  const modelId = settings.customModel?.trim() || settings.model || getDefaultModel(settings.provider);
-  const kind = getProviderKind(settings.provider);
-  const fetch = createLoggingFetch({ source, provider: settings.provider, model: modelId });
-
-  switch (kind) {
-    case 'native':
-      return createNativeModel(settings, modelId, fetch);
-    case 'ollama': {
-      const ollama = createOllama({
-        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
-        headers: settings.extraHeaders,
-        fetch,
-      });
-      return ollama(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'anthropic_compatible': {
-      const compatible = createAnthropic({
-        apiKey: settings.apiKey,
-        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
-        headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
-        fetch,
-      });
-      return compatible(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'openai_compatible': {
-      // Chat Completions is the API that OpenAI-compatible servers share; the OpenAI package
-      // would call OpenAI's own Responses API, which most of them do not implement.
-      const compatible = createOpenAICompatible({
-        name: settings.provider,
-        apiKey: settings.apiKey || undefined,
-        baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider) || '',
-        headers: settings.extraHeaders,
-        // Send the JSON schema as response_format so structured results parse; without it the
-        // schema is dropped and models answer in prose.
-        supportsStructuredOutputs: true,
-        fetch,
-      });
-      return compatible.chatModel(modelId) as unknown as AnyLanguageModel;
-    }
-    default:
-      throw new Error(`Unsupported provider kind: ${kind satisfies never}`);
-  }
+/** A structured answer from the service in `request.settings`, checked against `schema`. */
+export async function generateAIObject<T>(request: AIObjectRequest<T>): Promise<{ object: T }> {
+  const runtime = await loadAIRuntime();
+  return runtime.requestAIObject(request);
 }
 
 export function validateAISettings(settings: AISettings): void {
@@ -142,9 +108,10 @@ export type AIServiceCheck = {
  */
 export async function verifyAIService(settings: AISettings): Promise<AIServiceCheck> {
   if (getProviderModelListStyle(settings.provider) === 'none') {
-    const model = createAIModel(settings, 'verifyService');
-    await generateText({
-      model,
+    const runtime = await loadAIRuntime();
+    await runtime.requestAIText({
+      settings,
+      source: 'verifyService',
       maxOutputTokens: verifyConfig.fallback_max_output_tokens,
       prompt: verifyConfig.fallback_prompt,
     });
@@ -160,86 +127,4 @@ export async function verifyAIService(settings: AISettings): Promise<AIServiceCh
     }
     throw error;
   }
-}
-
-/**
- * Native SDKs use their own endpoint unless the user configured a Base URL; extra headers always
- * apply so Verify Service and real calls hit the same configured endpoint.
- */
-function nativeProviderOptions(settings: AISettings, fetch: typeof globalThis.fetch) {
-  return {
-    apiKey: settings.apiKey,
-    baseURL: settings.baseUrl || undefined,
-    headers: settings.extraHeaders,
-    fetch,
-  };
-}
-
-const optionValue = (settings: AISettings, field: AIProviderExtraField) =>
-  settings.providerOptions?.[field]?.trim() || undefined;
-
-function createNativeModel(settings: AISettings, modelId: string, fetch: typeof globalThis.fetch) {
-  switch (settings.provider) {
-    case 'openai': {
-      const openai = createOpenAI({
-        ...nativeProviderOptions(settings, fetch),
-        organization: optionValue(settings, 'organization'),
-        project: optionValue(settings, 'project'),
-      });
-      return openai(modelId);
-    }
-    case 'anthropic': {
-      const anthropic = createAnthropic({
-        ...nativeProviderOptions(settings, fetch),
-        // Without it, Anthropic rejects requests that come from a browser origin.
-        headers: { ...ANTHROPIC_BROWSER_ACCESS_HEADER, ...settings.extraHeaders },
-      });
-      return anthropic(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'xai': {
-      const xai = createXai(nativeProviderOptions(settings, fetch));
-      return xai(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'azure': {
-      // The model id is the deployment name; a Base URL, when set, replaces the resource name.
-      const azure = createAzure({
-        ...nativeProviderOptions(settings, fetch),
-        resourceName: settings.baseUrl ? undefined : optionValue(settings, 'resourceName'),
-        apiVersion: optionValue(settings, 'apiVersion'),
-      });
-      return azure(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'google': {
-      const google = createGoogleGenerativeAI(nativeProviderOptions(settings, fetch));
-      return google(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'groq': {
-      const groq = createGroq(nativeProviderOptions(settings, fetch));
-      return groq(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'mistral': {
-      const mistral = createMistral(nativeProviderOptions(settings, fetch));
-      return mistral(modelId) as unknown as AnyLanguageModel;
-    }
-    case 'deepseek': {
-      const deepseek = createDeepSeek(nativeProviderOptions(settings, fetch));
-      return deepseek(modelId) as unknown as AnyLanguageModel;
-    }
-    default:
-      return createCompatibleFallback(settings, modelId, fetch);
-  }
-}
-
-function createCompatibleFallback(
-  settings: AISettings,
-  modelId: string,
-  fetch: typeof globalThis.fetch,
-) {
-  const compatible = createOpenAI({
-    apiKey: settings.apiKey || 'not-required',
-    baseURL: settings.baseUrl || getProviderBaseUrl(settings.provider),
-    headers: settings.extraHeaders,
-    fetch,
-  });
-  return compatible(modelId) as unknown as AnyLanguageModel;
 }

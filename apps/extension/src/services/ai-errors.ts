@@ -4,7 +4,23 @@
  * Last error: ..."), so they are never shown as they are.
  */
 
-import { AISDKError, APICallError, NoObjectGeneratedError, RetryError } from 'ai';
+import type { APICallError, RetryError } from 'ai';
+
+/**
+ * The SDK's `isInstance` checks without loading the SDK, which every page would then download:
+ * each SDK error carries a global `Symbol.for('vercel.ai.error.<name>')` marker, which the SDK
+ * provides so errors are recognized across package versions.
+ */
+const SDK_ERROR_MARKER = 'vercel.ai.error';
+
+function isSDKError(error: unknown, name?: string): error is Error {
+  const marker = Symbol.for(name ? `${SDK_ERROR_MARKER}.${name}` : SDK_ERROR_MARKER);
+  return typeof error === 'object' && error !== null && Reflect.get(error, marker) === true;
+}
+
+const isRetryError = (error: unknown): error is RetryError => isSDKError(error, 'AI_RetryError');
+const isAPICallError = (error: unknown): error is APICallError =>
+  isSDKError(error, 'AI_APICallError');
 
 /** Statuses with one meaning whatever the provider. */
 const STATUS_MESSAGES: Readonly<Record<number, MessageKey>> = {
@@ -32,23 +48,23 @@ function describeAPICallError(error: APICallError): string {
 
 /** A message for a failed AI request that the UI can show in the user's language. */
 export function describeAIError(error: unknown): string {
-  if (RetryError.isInstance(error)) {
+  if (isRetryError(error)) {
     const last = describeAIError(error.lastError);
     return error.reason === 'maxRetriesExceeded'
       ? t('ai_errorRetriesExhausted', [String(error.errors.length), last])
       : last;
   }
-  if (APICallError.isInstance(error)) return describeAPICallError(error);
-  if (NoObjectGeneratedError.isInstance(error)) return t('ai_errorNoObject');
-  if (AISDKError.isInstance(error)) return t('ai_errorRequestFailed');
+  if (isAPICallError(error)) return describeAPICallError(error);
+  if (isSDKError(error, 'AI_NoObjectGeneratedError')) return t('ai_errorNoObject');
+  if (isSDKError(error)) return t('ai_errorRequestFailed');
   // Errors the extension throws itself (settings checks, AIConnectionError) are localized already.
   return getErrorMessage(error);
 }
 
 /** The provider's own words for an HTTP answer `describeAIError` can only name by its status. */
 function unrecognizedStatusDetail(error: unknown): string | undefined {
-  const last = RetryError.isInstance(error) ? error.lastError : error;
-  if (!APICallError.isInstance(last) || last.statusCode === undefined) return undefined;
+  const last = isRetryError(error) ? error.lastError : error;
+  if (!isAPICallError(last) || last.statusCode === undefined) return undefined;
   if (STATUS_MESSAGES[last.statusCode]) return undefined;
   return last.message.trim() || undefined;
 }
