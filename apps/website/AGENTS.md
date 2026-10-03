@@ -100,7 +100,7 @@ Rules:
 
 ### Shared config and content data
 
-Values come from `config/site.config.toml` through `@bookmark-scout/config`: site URL, docs URL, GitHub URL, `RELEASES_URL`, `CONTACT` (support, privacy, security addresses), `STORES` (store listing URLs; empty until live), `LICENSE`, and `PRIVACY_EFFECTIVE_DATE`.
+Values come from `config/project.toml` and `config/web.toml` through the `site` model in `@bookmark-scout/config`: page URLs (`site.url.path(locale, route, anchor)` for links, `site.url.page(...)` and `site.url.alternates(route)` for metadata), repository URLs (`site.repo.url`, `site.repo.file`, `site.repo.releasesLatest`, `site.repo.newIssue`), `site.docs.url(path)`, `site.contact.mailto(role)`, `site.store(browser)` (store listings; not live until a URL is set), `site.license`, `site.locales`, and `site.legal.privacyEffectiveDate`. The package reads files with `node:fs`, so client components get these values as props.
 
 - never hardcode URLs, email addresses, dates, or store links in components
 - keep lists (demo bookmarks, tour tabs, install steps, FAQ, page sections, routes) in typed modules under `lib/content/`; copy stays in messages

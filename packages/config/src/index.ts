@@ -1,235 +1,76 @@
 /**
  * @bookmark-scout/config
  *
- * Centralized configuration for all Bookmark Scout apps.
- * Reads from config/site.config.toml at the monorepo root.
+ * The workspace config (`config/project.toml` and `config/web.toml`), validated once and
+ * exposed as a site model. Server and build code only: it reads files with `node:fs`, so
+ * client components receive values as props.
  *
  * @example
- * import { SITE_NAME, SITE_URL, AUTHOR, GITHUB_URL } from "@bookmark-scout/config";
+ * import { site } from "@bookmark-scout/config";
+ * site.url.page("ja", "/privacy"); // https://bookmark-scout.com/ja/privacy/
+ * site.repo.file("SECURITY.md");   // https://github.com/<owner>/<repo>/blob/main/SECURITY.md
  */
+import { createSite } from "./site";
+import { readWorkspaceConfig } from "./workspace";
 
-import { parse } from "smol-toml";
-import { readFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+export { ConfigError } from "./schema";
+export {
+	type ContactRole,
+	createSite,
+	joinUrl,
+	PUBLIC_PATHS,
+	type Site,
+	type StoreListing,
+	TITLE_SEPARATOR,
+	titleTemplate,
+	withSiteName,
+} from "./site";
+export {
+	CONFIG_DIR,
+	CONFIG_FILES,
+	findConfigDir,
+	type ProjectConfig,
+	parseProjectConfig,
+	parseWebConfig,
+	readWorkspaceConfig,
+	type WebConfig,
+	type WorkspaceConfig,
+} from "./workspace";
 
-// Get the directory of this file
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+/** The validated workspace config files. Prefer `site`; this is for generators that need raw values. */
+export const workspaceConfig = readWorkspaceConfig();
 
-/**
- * Site configuration schema
- */
-export interface SiteConfig {
-	site: {
-		name: string;
-		meta_title: string;
-		url: string;
-		description: string;
-	};
-	author: {
-		name: string;
-		url: string;
-	};
-	github: {
-		url: string;
-	};
-	license: {
-		name: string;
-		url: string;
-	};
-	locales: {
-		supported: string[];
-		default: string;
-	};
-	docs: {
-		name: string;
-		url: string;
-	};
-	contact: {
-		privacy: string;
-		security: string;
-		support: string;
-	};
-	hosting?: {
-		website_domains?: string[];
-	};
-	stores?: {
-		chrome_web_store?: string;
-		edge_addons?: string;
-		firefox_addons?: string;
-	};
-	legal: {
-		privacy_effective_date: string;
-	};
-	analytics?: {
-		website?: {
-			enabled: boolean;
-			provider: string;
-			website_id: string;
-			script_url: string;
-		};
-		docs?: {
-			enabled: boolean;
-			provider: string;
-			website_id: string;
-			script_url: string;
-		};
-	};
-}
+/** Every site value and URL builder. */
+export const site = createSite(workspaceConfig.project, workspaceConfig.web);
 
-/**
- * Find and read the config file from multiple possible locations
- */
-function findConfigFile(): string {
-	// Try multiple paths to find the config file
-	const possiblePaths = [
-		// From packages/config/src (development)
-		resolve(__dirname, "../../../config/site.config.toml"),
-		// From packages/config (built)
-		resolve(__dirname, "../../config/site.config.toml"),
-		// From apps/website (Next.js)
-		resolve(process.cwd(), "../../config/site.config.toml"),
-		// From apps/extension (WXT)
-		resolve(process.cwd(), "../../config/site.config.toml"),
-		// From monorepo root
-		resolve(process.cwd(), "config/site.config.toml"),
-	];
+export const SITE_NAME = site.name;
+export const SITE_URL = site.url.origin;
+export const LOCALES = site.locales.supported;
+export const DEFAULT_LOCALE = site.locales.default;
 
-	for (const configPath of possiblePaths) {
-		try {
-			const content = readFileSync(configPath, "utf-8");
-			return content;
-		} catch {
-			// Try next path
-		}
-	}
+// ----------------------------------------------------------------------------
+// Earlier flat exports, derived from `site` until every caller uses the model.
+// ----------------------------------------------------------------------------
 
-	throw new Error(
-		`Failed to read site configuration. ` +
-			`Make sure config/site.config.toml exists at the monorepo root. ` +
-			`Searched paths:\n${possiblePaths.map((p) => `  - ${p}`).join("\n")}`,
-	);
-}
-
-// Parse the config file
-const tomlContent = findConfigFile();
-const config = parse(tomlContent) as unknown as SiteConfig;
-
-// Validate required fields
-if (!config.site?.name) {
-	throw new Error("config/site.config.toml: site.name is required");
-}
-if (!config.site?.url) {
-	throw new Error("config/site.config.toml: site.url is required");
-}
-if (!config.author?.name) {
-	throw new Error("config/site.config.toml: author.name is required");
-}
-if (!config.github?.url) {
-	throw new Error("config/site.config.toml: github.url is required");
-}
-if (!/^\d{4}-\d{2}-\d{2}$/.test(config.legal?.privacy_effective_date ?? "")) {
-	throw new Error("config/site.config.toml: legal.privacy_effective_date must be YYYY-MM-DD");
-}
-for (const role of ["privacy", "security", "support"] as const) {
-	if (!config.contact?.[role]?.includes("@")) {
-		throw new Error(`config/site.config.toml: contact.${role} must be an email address`);
-	}
-}
-
-// ============================================================================
-// Exports
-// ============================================================================
-
-/** Full configuration object */
-export default config;
-
-/** Site name (e.g., "Bookmark Scout") */
-export const SITE_NAME = config.site.name;
-
-/** Site URL (e.g., "https://bookmark-scout.com") */
-export const SITE_URL = config.site.url;
-
-/** Site description */
-export const SITE_DESCRIPTION = config.site.description;
-
-/** Site meta title for SEO (short version without site name) */
-export const SITE_META_TITLE = config.site.meta_title;
-
-/** Author information */
-export const AUTHOR = config.author;
-
-/** GitHub repository URL */
-export const GITHUB_URL = config.github.url;
-
-/** Project license (SPDX name and URL) */
-export const LICENSE = config.license;
-
-/** Supported locales */
-export const LOCALES = config.locales.supported;
-
-/** Default locale */
-export const DEFAULT_LOCALE = config.locales.default;
-
-/** Locale type */
-export type Locale = (typeof LOCALES)[number];
-
-/** Role-based contact addresses (privacy, security, support) */
-export const CONTACT = config.contact;
-
-/** Custom domains attached to the website's Cloudflare Pages project */
-export const WEBSITE_DOMAINS: readonly string[] = config.hosting?.website_domains ?? [
-	new URL(config.site.url).host,
-];
-
-/** Store listing URLs; an empty string means the listing is not live yet */
-export const STORES = {
-	chrome: config.stores?.chrome_web_store ?? "",
-	edge: config.stores?.edge_addons ?? "",
-	firefox: config.stores?.firefox_addons ?? "",
+export const SITE_DESCRIPTION = site.description;
+export const AUTHOR = site.author;
+export const GITHUB_URL = site.repo.base;
+export const LICENSE = { name: site.license.spdx, url: site.license.fileUrl } as const;
+export const CONTACT = {
+	privacy: site.contact.address("privacy"),
+	security: site.contact.address("security"),
+	support: site.contact.address("support"),
 } as const;
-
-/** Browser keys that have a store listing */
-export type StoreBrowser = keyof typeof STORES;
-
-/** Latest GitHub release page, the download fallback while store listings are not live */
-export const RELEASES_URL = `${config.github.url}/releases/latest`;
-
-/** Privacy policy effective date (ISO 8601) */
-export const PRIVACY_EFFECTIVE_DATE = config.legal.privacy_effective_date;
-
-/** Docs site name */
-export const DOCS_NAME = config.docs?.name ?? "Docs";
-
-/** Docs site URL */
-export const DOCS_URL = config.docs?.url ?? "https://docs.bookmark-scout.com";
-
-// ============================================================================
-// Analytics Configuration
-// ============================================================================
-
-/** Analytics config for main website (bookmark-scout.com) */
-export const ANALYTICS_WEBSITE = config.analytics?.website ?? {
-	enabled: false,
-	provider: "umami",
-	website_id: "",
-	script_url: "",
-};
-
-/** Whether website analytics is enabled */
-export const UMAMI_ENABLED = ANALYTICS_WEBSITE.enabled;
-
-/** Umami website ID for main website */
-export const UMAMI_WEBSITE_ID = ANALYTICS_WEBSITE.website_id;
-
-/** Umami script URL */
-export const UMAMI_SCRIPT_URL = ANALYTICS_WEBSITE.script_url;
-
-/** Analytics config for docs site (docs.bookmark-scout.com) */
-export const ANALYTICS_DOCS = config.analytics?.docs ?? {
-	enabled: false,
-	provider: "umami",
-	website_id: "",
-	script_url: "",
-};
+export const WEBSITE_DOMAINS = site.domains;
+export const STORES: Readonly<Record<string, string>> = Object.fromEntries(
+	site.stores.map((listing) => [listing.browser, listing.url]),
+);
+export type StoreBrowser = string;
+export type Locale = string;
+export const RELEASES_URL = site.repo.releasesLatest;
+export const PRIVACY_EFFECTIVE_DATE = site.legal.privacyEffectiveDate;
+export const DOCS_NAME = site.docs.name;
+export const DOCS_URL = site.docs.origin;
+export const UMAMI_ENABLED = site.analytics.enabled;
+export const UMAMI_WEBSITE_ID = site.analytics.websiteId;
+export const UMAMI_SCRIPT_URL = site.analytics.scriptUrl;

@@ -37,7 +37,7 @@ describe("ci scopes", () => {
     for (const file of [
       "bun.lock",
       "packages/config/src/index.ts",
-      "config/site.config.toml",
+      "config/project.toml",
       ".github/workflows/ci.yml",
       "tsconfig.base.json",
     ]) {

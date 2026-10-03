@@ -32,7 +32,7 @@ This file holds only what all surfaces share.
 
 ## Shared rules
 
-- Values such as URLs, contact addresses, store links, license, and dates come from `config/site.config.toml` through `@bookmark-scout/config`, never from literals in components.
+- Values such as URLs, contact addresses, store links, license, and dates come from `config/project.toml` and `config/web.toml` through `@bookmark-scout/config`, never from literals in components.
 - No third-party requests other than the configured analytics.
 - Visible focus, AA contrast, reduced motion respected, no horizontal scroll at 320px.
 - When a brand token changes, update this file and every app design file in the same change.

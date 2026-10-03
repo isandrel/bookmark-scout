@@ -1,7 +1,7 @@
 bunx lint-staged
 
-# README.md and translations/ are generated from templates/ and the site config.
-# Regenerate and stage them whenever an input is part of the commit.
-if git diff --cached --name-only | grep -qE '^(templates/|config/site\.config\.toml$|scripts/generate-readme\.ts$)'; then
+# README.md and translations/ are generated from templates/, the workspace config, and the
+# installed package versions. Regenerate and stage them whenever an input is part of the commit.
+if git diff --cached --name-only | grep -qE '^(templates/|config/|packages/config/|scripts/generate-readme\.ts$|bun\.lock$|(apps/[^/]+/|packages/[^/]+/)?package\.json$)'; then
   bun run generate:readme >/dev/null && git add README.md translations
 fi

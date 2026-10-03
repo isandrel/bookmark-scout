@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/main/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} Logo" width="80" height="80">
+  <img src="https://raw.githubusercontent.com/{{GITHUB_REPO}}/{{DEFAULT_BRANCH}}/apps/extension/public/icon-128.png" alt="{{SITE_NAME}} Logo" width="80" height="80">
 </p>
 
 <h1 align="center">🔖 {{SITE_NAME}}</h1>
@@ -15,29 +15,27 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/{{GITHUB_REPO}}/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square" alt="ライセンス"></a>
+  <a href="{{LICENSE_FILE_URL}}"><img src="https://img.shields.io/badge/license-{{LICENSE_BADGE}}-blue?style=flat-square" alt="ライセンス"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/stargazers"><img src="https://img.shields.io/github/stars/{{GITHUB_REPO}}?style=flat-square" alt="スター"></a>
   <a href="https://github.com/{{GITHUB_REPO}}/releases"><img src="https://img.shields.io/github/v/release/{{GITHUB_REPO}}?style=flat-square" alt="リリース"></a>
   <a href="{{SITE_URL}}"><img src="https://img.shields.io/badge/website-live-brightgreen?style=flat-square" alt="ウェブサイト"></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-5.0-764ABC?style=flat-square" alt="Zustand">
-  <img src="https://img.shields.io/badge/shadcn%2Fui-0.9-000000?style=flat-square" alt="shadcn/ui">
-  <img src="https://img.shields.io/badge/Nx-23-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-2.3-60A5FA?style=flat-square" alt="Biome">
+  <img src="https://img.shields.io/badge/React-{{VERSION:react}}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-{{VERSION:wxt}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
+  <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-{{VERSION:zustand}}-764ABC?style=flat-square" alt="Zustand">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-{{VERSION:shadcn-ui}}-000000?style=flat-square" alt="shadcn/ui">
+  <img src="https://img.shields.io/badge/Nx-{{VERSION:nx}}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
+  <img src="https://img.shields.io/badge/Bun-{{VERSION:bun}}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+  <img src="https://img.shields.io/badge/Biome-{{VERSION:@biomejs/biome}}-60A5FA?style=flat-square" alt="Biome">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Chrome-対応-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
-  <img src="https://img.shields.io/badge/Firefox-対応-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
-  <img src="https://img.shields.io/badge/Edge-対応-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">
+{{BROWSER_BADGES:対応}}
   <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>
 
@@ -132,37 +130,37 @@
 
 |                                                   テクノロジー                                                    | バージョン | 説明                       |
 | :---------------------------------------------------------------------------------------------------------------: | :--------: | -------------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |    19.2    | UIライブラリ               |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |    6.0     | 型安全なJavaScript         |
-|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |     16     | ウェブサイトフレームワーク |
+|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |    {{VERSION:react}}    | UIライブラリ               |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |    {{VERSION:typescript}}     | 型安全なJavaScript         |
+|    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |     {{VERSION:next}}     | ウェブサイトフレームワーク |
 
 ### ビルド＆ツール
 
 |                                          テクノロジー                                           | バージョン | 説明                       |
 | :---------------------------------------------------------------------------------------------: | :--------: | -------------------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |    0.20    | 拡張機能フレームワーク     |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |     7      | ビルドツール               |
-|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |     23     | モノレポ管理               |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |    1.3     | JavaScriptランタイム       |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |    2.3     | リンティング＆フォーマット |
+|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |    {{VERSION:wxt}}    | 拡張機能フレームワーク     |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |     {{VERSION:vite}}      | ビルドツール               |
+|    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |     {{VERSION:nx}}     | モノレポ管理               |
+|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |    {{VERSION:bun}}     | JavaScriptランタイム       |
+|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |    {{VERSION:@biomejs/biome}}     | リンティング＆フォーマット |
 
 ### UI＆スタイリング
 
 |                                                     テクノロジー                                                     | バージョン | 説明                        |
 | :------------------------------------------------------------------------------------------------------------------: | :--------: | --------------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |    4.1     | ユーティリティファーストCSS |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |    0.9     | Base UIベースコンポーネント   |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |    1.8     | ヘッドレスUIプリミティブ    |
-| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |   12.23    | アニメーションライブラリ    |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |    1.8     | アイコンライブラリ          |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |    {{VERSION:tailwindcss}}     | ユーティリティファーストCSS |
+|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |    {{VERSION:shadcn-ui}}     | Base UIベースコンポーネント   |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |    {{VERSION:@base-ui/react}}     | ヘッドレスUIプリミティブ    |
+| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |   {{VERSION:framer-motion}}    | アニメーションライブラリ    |
+|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |    {{VERSION:lucide-react}}     | アイコンライブラリ          |
 
 ### 状態＆データ
 
 |                                                      テクノロジー                                                      | バージョン | 説明               |
 | :--------------------------------------------------------------------------------------------------------------------: | :--------: | ------------------ |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |    5.0     | 状態管理           |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |    8.21    | ヘッドレステーブル |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |    2.x     | ドラッグ＆ドロップ |
+|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |    {{VERSION:zustand}}     | 状態管理           |
+|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |    {{VERSION:@tanstack/react-table}}    | ヘッドレステーブル |
+| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |    {{VERSION:@atlaskit/pragmatic-drag-and-drop}}     | ドラッグ＆ドロップ |
 
 ### デプロイ＆インフラ
 
@@ -255,7 +253,8 @@ bookmark-scout/
 ├── packages/
 │   └── config/             # 共有設定
 ├── config/
-│   └── site.config.toml    # 中央設定ファイル
+│   ├── project.toml        # 全アプリ共通のプロジェクト情報
+│   └── web.toml            # ウェブサイトとドキュメントのホスティング
 └── templates/              # READMEテンプレート
 ```
 
@@ -314,5 +313,5 @@ gh pr create --title "feat: 素晴らしい機能を追加"
 ---
 
 <p align="center">
-  <a href="{{AUTHOR_URL}}">isandrel</a> が ❤️ を込めて作成
+  <a href="{{AUTHOR_URL}}">{{AUTHOR_NAME}}</a> が ❤️ を込めて作成
 </p>

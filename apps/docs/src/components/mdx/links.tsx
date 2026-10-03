@@ -14,7 +14,7 @@ import {
   storeListing,
 } from "@/lib/links";
 
-/** A mailto link for one of the role addresses in config/site.config.toml. */
+/** A mailto link for one of the role addresses in config/project.toml. */
 export function Contact({ role }: { role: ContactRole }) {
   return <a href={contactHref(role)}>{contactAddress(role)}</a>;
 }

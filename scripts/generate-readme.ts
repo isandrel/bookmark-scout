@@ -1,101 +1,138 @@
 #!/usr/bin/env bun
+/// <reference types="bun" />
 /**
- * Generate README.md files from templates
+ * Generates README.md and translations/README.<locale>.md from templates/.
  *
- * Reads config/site.config.toml and replaces placeholders in templates/ files
- * to generate the final README.md files.
+ * Values come from the workspace config through `@bookmark-scout/config`, and library
+ * versions from the installed packages, so the READMEs never hold a hand-typed copy.
  *
- * Usage: bun run scripts/generate-readme.ts
+ *   bun run generate:readme
+ *
+ * Placeholders:
+ *   {{NAME}}                 a value from `readmeValues()`
+ *   {{VERSION:<package>}}    the installed package's release line ("bun" reads packageManager)
+ *   {{BROWSER_BADGES:<label>}} one shields.io badge per supported browser, labelled <label>
+ *
+ * A placeholder that cannot be filled fails the run.
  */
+import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
+import { type Site, site } from "@bookmark-scout/config";
 
-import { parse } from "smol-toml";
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+const rootDir = resolve(import.meta.dir, "..");
+const templatesDir = join(rootDir, "templates");
+const translationsDir = join(rootDir, "translations");
 
-// Get the directory of this script
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const rootDir = resolve(__dirname, "..");
+/** Workspace folders whose `node_modules` may hold a package, root first. */
+const PACKAGE_DIRS = [".", "apps/extension", "apps/website", "apps/docs", "packages/config"];
 
-// Read config
-const configPath = resolve(rootDir, "config/site.config.toml");
-const tomlContent = readFileSync(configPath, "utf-8");
-
-interface SiteConfig {
-    site: { name: string; url: string; description: string };
-    author: { name: string; url: string };
-    github: { url: string };
-    locales: { supported: string[]; default: string };
-    docs: { name: string; url: string };
-}
-
-const config = parse(tomlContent) as unknown as SiteConfig;
-
-// Define placeholder mappings
-const placeholders: Record<string, string> = {
-    "{{SITE_NAME}}": config.site.name,
-    "{{SITE_URL}}": config.site.url,
-    "{{SITE_DESCRIPTION}}": config.site.description,
-    "{{AUTHOR_NAME}}": config.author.name,
-    "{{AUTHOR_URL}}": config.author.url,
-    "{{GITHUB_URL}}": config.github.url,
-    "{{DOCS_URL}}": config.docs?.url ?? "https://docs.bookmark-scout.com",
-    // Derived values
-    "{{GITHUB_REPO}}": config.github.url.replace("https://github.com/", ""),
+/** shields.io colors and logos for the browser badges. README presentation only. */
+const BROWSER_BADGE_STYLES: Record<string, { color: string; logo: string }> = {
+	chrome: { color: "4285F4", logo: "googlechrome" },
+	firefox: { color: "FF7139", logo: "firefox" },
+	edge: { color: "0078D7", logo: "microsoftedge" },
 };
 
-/**
- * Replace all placeholders in content
- */
-function replacePlaceholders(content: string): string {
-    let result = content;
-    for (const [placeholder, value] of Object.entries(placeholders)) {
-        result = result.replaceAll(placeholder, value);
-    }
-    return result;
+const PLACEHOLDER = /\{\{([A-Z_]+)(?::([^}]+))?\}\}/g;
+
+/** Escapes text for a shields.io static badge path segment. */
+export function badgeText(text: string): string {
+	return text.replaceAll("-", "--").replaceAll("_", "__").replaceAll(" ", "%20");
 }
 
 /**
- * Process a template file and generate the output file
+ * The version shown for a library: the major version, or `0.minor` before 1.0. Minor and
+ * patch updates then leave the READMEs unchanged, so dependency PRs do not need a regenerate.
  */
-function processTemplate(templatePath: string, outputPath: string): void {
-    console.log(`Processing: ${templatePath} -> ${outputPath}`);
-    const template = readFileSync(templatePath, "utf-8");
-    const output = replacePlaceholders(template);
-    writeFileSync(outputPath, output, "utf-8");
-    console.log(`  ✓ Generated ${outputPath}`);
+export function releaseLine(version: string): string {
+	const match = /^(\d+)\.(\d+)/.exec(version);
+	if (!match) throw new Error(`Cannot read a version from "${version}"`);
+	const [, major, minor] = match;
+	return major === "0" ? `0.${minor}` : (major as string);
 }
 
-// Process all templates in templates/ folder
-const templatesDir = resolve(rootDir, "templates");
-const translationsDir = resolve(rootDir, "translations");
-
-try {
-    const files = readdirSync(templatesDir);
-    for (const file of files) {
-        if (file.endsWith(".md")) {
-            const templatePath = resolve(templatesDir, file);
-
-            // Determine output path
-            let outputPath: string;
-            if (file === "README.md") {
-                // Main README goes to root
-                outputPath = resolve(rootDir, "README.md");
-            } else if (file.startsWith("README.") && file.endsWith(".md")) {
-                // Translated READMEs go to translations/
-                outputPath = resolve(translationsDir, file);
-            } else {
-                // Other templates go to root
-                outputPath = resolve(rootDir, file);
-            }
-
-            processTemplate(templatePath, outputPath);
-        }
-    }
-} catch (error) {
-    console.error("Error processing templates:", error);
-    process.exit(1);
+/** Installed version of a workspace package, or of Bun from the root `packageManager`. */
+export function installedVersion(name: string, root = rootDir): string {
+	if (name === "bun") {
+		const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { packageManager?: string };
+		const version = /^bun@(.+)$/.exec(manifest.packageManager ?? "")?.[1];
+		if (!version) throw new Error('package.json: set "packageManager": "bun@<version>"');
+		return version;
+	}
+	for (const dir of PACKAGE_DIRS) {
+		const file = join(root, dir, "node_modules", name, "package.json");
+		if (existsSync(file)) return (JSON.parse(readFileSync(file, "utf8")) as { version: string }).version;
+	}
+	throw new Error(`Package "${name}" is not installed; run bun install`);
 }
 
-console.log("\n✅ README generation complete!");
+export function readmeValues(model: Site = site): Record<string, string> {
+	return {
+		SITE_NAME: model.name,
+		SITE_DESCRIPTION: model.description,
+		SITE_URL: model.url.origin,
+		DOCS_URL: model.docs.origin,
+		AUTHOR_NAME: model.author.name,
+		AUTHOR_URL: model.author.url,
+		GITHUB_URL: model.repo.base,
+		GITHUB_REPO: model.repo.slug,
+		DEFAULT_BRANCH: model.repo.defaultBranch,
+		LICENSE_SPDX: model.license.spdx,
+		LICENSE_BADGE: badgeText(model.license.spdx),
+		LICENSE_FILE_URL: model.license.fileUrl,
+	};
+}
+
+export function browserBadges(label: string, model: Site = site): string {
+	return model.browsers.supported
+		.map((browser) => {
+			const style = BROWSER_BADGE_STYLES[browser];
+			if (!style) throw new Error(`No README badge style for browser "${browser}"; add it to BROWSER_BADGE_STYLES`);
+			const name = model.browsers.name(browser);
+			return `  <img src="https://img.shields.io/badge/${badgeText(name)}-${badgeText(label)}-${style.color}?style=flat-square&logo=${style.logo}&logoColor=white" alt="${name}">`;
+		})
+		.join("\n");
+}
+
+type RenderContext = {
+	values: Record<string, string>;
+	version: (name: string) => string;
+	browserBadges: (label: string) => string;
+};
+
+/** Fills every placeholder in `template`; throws listing any it cannot fill. */
+export function render(template: string, context: RenderContext, label = "template"): string {
+	const unknown = new Set<string>();
+	const output = template.replace(PLACEHOLDER, (match, name: string, argument?: string) => {
+		if (name === "VERSION" && argument) return releaseLine(context.version(argument));
+		if (name === "BROWSER_BADGES" && argument) return context.browserBadges(argument);
+		const value = argument === undefined ? context.values[name] : undefined;
+		if (value === undefined) {
+			unknown.add(match);
+			return match;
+		}
+		return value;
+	});
+	if (unknown.size > 0) throw new Error(`${label}: unknown placeholders ${[...unknown].join(", ")}`);
+	return output;
+}
+
+/** `README.md` goes to the root; `README.<locale>.md` to translations/; anything else to the root. */
+export function outputPathFor(file: string): string {
+	if (file !== "README.md" && file.startsWith("README.")) return join(translationsDir, file);
+	return join(rootDir, file);
+}
+
+if (import.meta.main) {
+	const context: RenderContext = {
+		values: readmeValues(),
+		version: (name) => installedVersion(name),
+		browserBadges: (label) => browserBadges(label),
+	};
+	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
+		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`);
+		const target = outputPathFor(file);
+		writeFileSync(target, output, "utf8");
+		console.log(`templates/${file} -> ${target.slice(rootDir.length + 1)}`);
+	}
+}

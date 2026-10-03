@@ -14,7 +14,7 @@ Pages live in `content/docs/` as MDX. The sidebar order and sections come from `
 | About | `privacy.mdx`, `faq.mdx`, `status.mdx` |
 | Contribute | `contributing.mdx` |
 
-Links to the website, the repository, releases, stores, and contact addresses come from `config/site.config.toml` through MDX components such as `<Contact role="support" />`; see `AGENTS.md`.
+Links to the website, the repository, releases, stores, and contact addresses come from `config/project.toml` and `config/web.toml` through MDX components such as `<Contact role="support" />`; see `AGENTS.md`.
 
 The build also writes `llms.txt`, `llms-full.txt`, and a Markdown copy of each page under `llms.mdx/`.
 
