@@ -25,14 +25,22 @@ export type ExtensionProjectOptions = {
 type ExtensionFixtures = {
   /** Loads a copy whose manifest pre-grants the optional web host access the network tools request. */
   grantWebHostAccess: boolean;
+  /**
+   * Optional API permissions (such as `tabs` or `contextMenus`) the loaded copy has from install,
+   * because headless tests cannot answer the browser's permission prompt.
+   */
+  grantPermissions: readonly string[];
   context: BrowserContext;
   extensionId: string;
   extensionWorker: Worker;
 };
 
+type PermissionGrants = { hosts: boolean; permissions: readonly string[] };
+
 type WorkerFixtures = ExtensionProjectOptions & {
   extensionPath: string;
-  hostAccessExtensionPath: string;
+  /** A copy of the build with the given optional permissions granted at install, one per set. */
+  grantedBuild: (grants: PermissionGrants) => string;
 };
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -52,27 +60,47 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
     { scope: 'worker' },
   ],
   grantWebHostAccess: [false, { option: true }],
-  hostAccessExtensionPath: [
+  grantPermissions: [[], { option: true }],
+  grantedBuild: [
     async ({ extensionPath }, use) => {
-      // Unpacked extensions cannot answer the permission prompt headlessly, so the granted state is
-      // simulated by declaring the optional origins as install-time host permissions in a copy.
-      const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-host-access-'));
-      cpSync(extensionPath, directory, { recursive: true });
-      const manifestPath = path.join(directory, 'manifest.json');
-      const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-      manifest.host_permissions = manifest.optional_host_permissions;
-      writeFileSync(manifestPath, JSON.stringify(manifest));
-      await use(directory);
-      rmSync(directory, { recursive: true, force: true });
+      const copies = new Map<string, string>();
+      await use(({ hosts, permissions }) => {
+        const key = JSON.stringify({ hosts, permissions: [...permissions].sort() });
+        const cached = copies.get(key);
+        if (cached) return cached;
+        // Unpacked extensions cannot answer permission prompts headlessly, so the granted state is
+        // simulated by declaring the optional permissions as install-time ones in a copy.
+        const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-granted-'));
+        cpSync(extensionPath, directory, { recursive: true });
+        const manifestPath = path.join(directory, 'manifest.json');
+        const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+        const optional: string[] = manifest.optional_permissions ?? [];
+        const notOptional = permissions.filter((permission) => !optional.includes(permission));
+        if (notOptional.length > 0) {
+          throw new Error(`Not optional in this build: ${notOptional.join(', ')}`);
+        }
+        manifest.permissions = [...manifest.permissions, ...permissions];
+        manifest.optional_permissions = optional.filter(
+          (permission) => !permissions.includes(permission),
+        );
+        if (hosts) manifest.host_permissions = manifest.optional_host_permissions;
+        writeFileSync(manifestPath, JSON.stringify(manifest));
+        copies.set(key, directory);
+        return directory;
+      });
+      for (const directory of copies.values()) rmSync(directory, { recursive: true, force: true });
     },
     { scope: 'worker' },
   ],
   context: async (
-    { extensionBrowser, extensionPath, grantWebHostAccess, hostAccessExtensionPath },
+    { extensionBrowser, extensionPath, grantWebHostAccess, grantPermissions, grantedBuild },
     use,
     testInfo,
   ) => {
-    const loadPath = grantWebHostAccess ? hostAccessExtensionPath : extensionPath;
+    const loadPath =
+      grantWebHostAccess || grantPermissions.length > 0
+        ? grantedBuild({ hosts: grantWebHostAccess, permissions: grantPermissions })
+        : extensionPath;
 
     const context = await chromium.launchPersistentContext(testInfo.outputPath('user-data'), {
       channel: extensionBrowser,

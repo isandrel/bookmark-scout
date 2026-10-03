@@ -7,7 +7,7 @@
 These must be resolved, by a code change and a new release, before a first AMO listing:
 
 - [x] **Add-on ID.** `bookmark-scout@isandrel.github.io` in `browser_specific_settings.gecko.id` (`apps/extension/manifest.config.ts`). It cannot change after the first upload. The Firefox smoke suite installs the build with this ID.
-- [x] **Data collection declaration.** `browser_specific_settings.gecko.data_collection_permissions` is declared (see [`../privacy-disclosures.md`](../privacy-disclosures.md#firefox-add-ons-data-collection-declaration)), with `strict_min_version` 140.0 for desktop and 142.0 for Android, the first versions that support it. The linter reports no manifest warnings.
+- [x] **Data collection declaration.** `browser_specific_settings.gecko.data_collection_permissions` declares `required: ["none"]` and the AI categories as `optional`, which the extension requests when the user turns on AI (see [`../privacy-disclosures.md`](../privacy-disclosures.md#firefox-add-ons-data-collection-declaration)), with `strict_min_version` 140.0 for desktop and 142.0 for Android, the first versions that support it. The linter reports no manifest warnings.
 - [x] **Scope decision.** The popup and side panel have an **Open bookmark manager** button, so the manager and Tools sidebar are reachable in Firefox. The Firefox description in [`../listings/en.md`](../listings/en.md) stays short until the manual checks below cover the manager tools.
 - [x] The Chromium-only `favicon` and `sidePanel` permissions are left out of the Firefox manifest, and the broad `_favicon/*` `web_accessible_resources` entry is gone.
 
@@ -36,7 +36,10 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Popup: instant search with match case, whole word, and regex.
 - [ ] Folder tree: drag and drop, expand and collapse all, new folder.
 - [ ] Save the current page to a folder; saving it again into the same folder does nothing.
-- [ ] Right-click a link: save it into a recent folder.
+- [ ] Install shows "Read and modify bookmarks" and that the extension doesn't require data collection.
+- [ ] Right-click a link: no save menu until Context Menu is turned on in Settings; then save a link into a recent folder.
+- [ ] Turning on AI asks Firefox's data collection consent; declining leaves AI off. Withdrawing it in `about:addons` → Permissions turns AI off.
+- [ ] Saving the current page from the sidebar asks for tab access ("Access browser tabs"); the popup saves without asking.
 - [ ] Keyboard shortcuts in the popup.
 - [ ] **Open bookmark manager** in the popup opens the manager in a new tab. Before the description claims the manager tools, run Duplicate Cleaner, Check Dead Links (allow website access when asked), and an import there.
 - [ ] Delete with confirmation and Undo.
@@ -72,7 +75,9 @@ Linter notes:
 - DANGEROUS_EVAL: Zod 4 probes `Function('')` inside try/catch to detect JIT support. The extension CSP blocks it and Zod uses its non-JIT path.
 - UNSAFE_VAR_ASSIGNMENT: React DOM's dangerouslySetInnerHTML support code. The extension source never uses dangerouslySetInnerHTML or innerHTML. The "document().write" call is the Markdown parser (mdast-util-from-markdown) writing to its own tokenizer, not to a DOM document.
 
-AI features are off by default and need the user's own provider key (Settings > AI); a local Ollama server works without a key. Website access (http/https) is an optional permission requested only when the user runs a feature that needs it.
+AI features are off by default and need the user's own provider key (Settings > AI); a local Ollama server works without a key. The data collection categories are optional: Firefox asks for them when the user turns on AI (or clicks Verify Service, for authenticationInfo only), and the extension sends nothing to a provider without that consent. Nothing is ever sent to the developer. Check Dead Links, Metadata Fetcher, and Refresh Site Icons declare no data collection: each request goes only to the bookmarked site itself, without cookies.
+
+At install the extension asks only for bookmarks, storage, activeTab, and contextMenus (Firefox does not allow contextMenus as optional; the menu appears only after the user turns it on). tabs and website access (http/https) are optional and requested only when the user runs a feature that needs them.
 ```
 
 ## 5. Submit and follow up

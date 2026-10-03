@@ -138,14 +138,22 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Bookmark Scout는 <code>bookmarks</code>, <code>tabs</code>, <code>storage</code>, <code>contextMenus</code> 권한을 요청하며, Chrome과 Edge에서는 <code>favicon</code>과 <code>sidePanel</code>도 사용합니다. 웹사이트 접근 권한은 선택 사항이며 설치할 때는 부여되지 않습니다."
+                        "text": "설치할 때 Bookmark Scout는 <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> 권한만 요청하며, Chrome과 Edge에서는 <code>sidePanel</code>, Firefox에서는 나중에 요청할 수 없는 <code>contextMenus</code>도 사용합니다. 그 밖의 권한은 모두 선택 사항이며, 해당 기능을 켜거나 실행할 때만 요청됩니다."
                     },
                     {
                         "type": "ul",
                         "items": [
-                            "모든 웹사이트에 대한 접근 권한은 '깨진 링크 확인', '메타데이터 가져오기', '사이트 아이콘 새로 고침' 중 하나를 처음 실행할 때 요청됩니다.",
-                            "제공업체 사이트 한 곳에 대한 접근 권한은 AI 설정에서 '서비스 확인' 또는 '모델 새로 고침'을 누를 때 요청됩니다."
+                            "탭 접근 권한(<code>tabs</code>)은 사이드 패널에서 현재 페이지를 저장하거나 폴더 추천을 요청할 때 요청됩니다. 툴바 팝업에서는 필요하지 않습니다.",
+                            "마우스 오른쪽 버튼 메뉴(<code>contextMenus</code>, Chrome과 Edge)는 설정에서 컨텍스트 메뉴를 켤 때 요청됩니다.",
+                            "브라우저 아이콘 캐시(<code>favicon</code>, Chrome과 Edge)는 설정에서 '브라우저 아이콘 캐시 사용'을 켤 때 요청됩니다.",
+                            "모든 웹사이트에 대한 접근 권한은 '깨진 링크 확인', '메타데이터 가져오기', '사이트 아이콘 새로 고침' 중 하나를 처음 실행하거나 '페이지 내용 읽기'를 켤 때 요청됩니다.",
+                            "제공업체 사이트 한 곳에 대한 접근 권한은 AI 설정에서 '서비스 확인' 또는 '모델 새로 고침'을 누를 때 요청됩니다.",
+                            "Firefox에서는 AI를 켜거나 '서비스 확인'을 누를 때 AI 제공업체와의 데이터 공유에 대한 동의를 요청합니다."
                         ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "허용하지 않으면 해당 기능은 꺼진 상태로 유지됩니다. 권한은 브라우저의 확장 프로그램 설정에서 언제든지 취소할 수 있으며, 취소하면 그 권한이 필요한 기능이 꺼집니다."
                     },
                     {
                         "type": "p",

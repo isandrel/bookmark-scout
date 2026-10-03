@@ -1,7 +1,8 @@
 # Defaults for the right-click menu (Options > Data).
 
-# Enable right-click context menu for quick bookmark saving
-enabled = true
+# Enable right-click context menu for quick bookmark saving. Off by default: Chrome and Edge
+# grant the optional `contextMenus` permission only when the user turns it on.
+enabled = false
 
 # Source for bookmark title when saving via context menu
 # Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)

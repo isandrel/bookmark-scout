@@ -127,20 +127,17 @@ export function isValidProviderExtraHeaders(value: string): boolean {
 }
 
 /**
- * Ask for access to one provider origin at click time so the request is not blocked by CORS.
- * Resolves false when the browser does not allow the request; the call may still succeed if the
- * provider sends CORS headers, so callers continue either way.
+ * Ask, at click time, for access to one provider origin (so the request is not blocked by CORS)
+ * and, in Firefox, for consent to send the API key (`aiProviderCheck`), in one prompt. Resolves
+ * false when the browser does not allow it; the call may still succeed if the provider sends CORS
+ * headers, so callers continue either way, and the provider fetch stops without the consent.
  */
-export async function requestProviderHostAccess(baseUrl: string | undefined): Promise<boolean> {
-  if (!baseUrl || !isValidProviderBaseUrl(baseUrl)) return false;
-  const origins = [`${new URL(baseUrl).origin}/*`];
-  try {
-    // Call request directly (no awaited contains first) so the click's user gesture is kept;
-    // Chrome resolves true without prompting when access was already granted.
-    return await browser.permissions.request({ origins });
-  } catch {
-    return false;
-  }
+export function requestProviderHostAccess(baseUrl: string | undefined): Promise<boolean> {
+  const origins =
+    baseUrl && isValidProviderBaseUrl(baseUrl) ? [`${new URL(baseUrl).origin}/*`] : [];
+  // Called directly (no awaited contains first) so the click's user gesture is kept; the browser
+  // resolves true without prompting when everything was already granted.
+  return requestPermission('aiProviderCheck', origins);
 }
 
 /**

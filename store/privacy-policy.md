@@ -2,7 +2,7 @@
 
 > **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 2, 2026
+**Effective date:** October 3, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.2.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in Japanese and Korean. If a translation differs from the English version, the English version applies.
@@ -67,10 +67,16 @@ Nothing. The extension does not send data to the developer, and there is no tele
 
 ## Permissions
 
-Bookmark Scout asks for `bookmarks`, `tabs`, `storage`, and `contextMenus`, and in Chrome and Edge also `favicon` and `sidePanel`. Website access is optional and is never granted at install:
+At install, Bookmark Scout asks only for `bookmarks`, `storage`, and `activeTab`, plus `sidePanel` in Chrome and Edge and `contextMenus` in Firefox, which does not let extensions ask for it later. Everything else is optional and requested only when you turn on or run the feature that needs it:
 
-- Access to all websites is requested when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons.
-- Access to one provider's site is requested when you click Verify Service or Refresh Models in the AI settings.
+- Access to your tabs (`tabs`), when you save the current page or ask for folder suggestions from the side panel. The toolbar popup does not need it.
+- The right-click menu (`contextMenus`, Chrome and Edge), when you turn on Context Menu in Settings.
+- The browser's icon cache (`favicon`, Chrome and Edge), when you turn on Use the browser's icon cache in Settings.
+- Access to all websites, when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turn on Read page content.
+- Access to one provider's site, when you click Verify Service or Refresh Models in the AI settings.
+- In Firefox, your consent to share data with your AI provider, when you turn on AI or click Verify Service.
+
+If you decline, the feature stays off. You can withdraw a permission in the browser's extension settings at any time, and the feature that needs it turns off.
 
 Each permission is explained in the [permission list in the README](https://github.com/isandrel/bookmark-scout#-permissions).
 

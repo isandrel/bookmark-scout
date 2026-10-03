@@ -60,6 +60,10 @@ async function folderGeometry(page: Page, title: string) {
 }
 
 test.describe('saving the current page', () => {
+  // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+  // so these tests grant the optional tabs permission to read the current page.
+  test.use({ grantPermissions: ['tabs'] });
+
   test('a double click or two clicks in one tick on "Add current page" save once', async ({
     extensionId,
     extensionWorker,
@@ -400,7 +404,8 @@ test('folder rows use a leading tree chevron that lines up per depth and rotates
   // A bookmark's icon and title line up with the folder icon and title beside it.
   const sub = await folderGeometry(page, 'Chevron Sub');
   const link = await bookmarkRow(page, 'Chevron Top Link').evaluate((row) => {
-    const favicon = row.querySelector('img')?.getBoundingClientRect();
+    // The site icon: an image, or the generic globe while no icon is available.
+    const favicon = row.querySelector('[data-icon-source]')?.getBoundingClientRect();
     const title = row.querySelector('a > span.truncate')?.getBoundingClientRect();
     return { iconLeft: favicon?.left ?? Number.NaN, titleLeft: title?.left ?? Number.NaN };
   });

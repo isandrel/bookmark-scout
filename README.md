@@ -110,7 +110,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
-- [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders
+- [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on Context Menu in Settings
 - [x] 🌍 **i18n** — English, Japanese, and Korean language support
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
 - [x] ⚙️ **Settings Sync** — Sync extension preferences with `chrome.storage.sync`
@@ -276,17 +276,20 @@ bookmark-scout/
 
 ## 🔐 Permissions
 
-| Permission     | Purpose                              |
-| -------------- | ------------------------------------ |
-| `bookmarks`    | Read and write bookmarks             |
-| `tabs`         | Get current tab info for quick-add   |
-| `favicon`      | Display website favicons             |
-| `storage`      | Save user preferences                |
-| `sidePanel`    | Enable Chrome side panel             |
-| `contextMenus` | Save links from the right-click menu |
-| Website access (optional) | Requested only when you run Check Dead Links, Metadata Fetcher, or Refresh Site Icons |
+Bookmark Scout asks at install only for what it cannot work without. Everything else is optional and asked for when you turn on or run the feature that needs it.
 
-Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only.
+| Permission     | When                                  | Purpose                              |
+| -------------- | ------------------------------------- | ------------------------------------ |
+| `bookmarks`    | Install                               | Read and write bookmarks             |
+| `storage`      | Install                               | Save user preferences                |
+| `activeTab`    | Install                               | Read the current tab when you click the toolbar button |
+| `sidePanel`    | Install (Chrome, Edge)                | Enable the side panel                |
+| `tabs`         | Saving the current page from the side panel | Read the active tab's title and URL |
+| `contextMenus` | Turning on Context Menu (install in Firefox) | Save links from the right-click menu |
+| `favicon`      | Turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |
+| Website access | Running Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turning on Read page content | Request bookmarked pages without cookies |
+
+Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only. In Firefox, turning on AI first asks for your consent to share the data your AI provider needs.
 
 ---
 

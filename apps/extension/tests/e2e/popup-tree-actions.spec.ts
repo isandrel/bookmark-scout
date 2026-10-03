@@ -9,6 +9,11 @@ import {
   setSettings,
 } from './popup-helpers';
 
+// The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+// so these tests grant the optional tabs permission to read the current page, and
+// favicon for the icon cache the favicon test turns on.
+test.use({ grantPermissions: ['tabs', 'favicon'] });
+
 async function dropOnLowerEdge(source: Locator, target: Locator) {
   const box = await target.boundingBox();
   if (!box) throw new Error('Drop target is not visible');
@@ -204,6 +209,7 @@ test('popup applies favicon, new folder name, and popup size settings', async ({
     { title: 'Favicon Link', url: 'https://e2e.invalid/favicon' },
   ]);
   await setSettings(extensionWorker, {
+    browserIconCache: true,
     faviconSize: 32,
     defaultNewFolderName: 'Reading List',
     popupWidth: 500,

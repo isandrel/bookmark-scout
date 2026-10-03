@@ -50,9 +50,10 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | Side panel | `side_panel` | `side_panel` | `sidebar_action` is declared, but the docs say Firefox has no side panel and nothing tests it. Do not claim it. |
 | Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`), and opens in a new tab from **Open bookmark manager** in the popup and side panel | Same manifest key and button. Whether Edge applies the override to its Favorites page has not been checked. | Opens in a new tab from **Open bookmark manager** in the popup. Firefox has no bookmarks-page override, so the key is absent. |
 | Options page | Yes | Yes | Yes |
-| Context menu save | Yes | Yes | Yes |
-| Site icons (favicons) | `_favicon` API, or icons saved by Refresh Site Icons | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
+| Context menu save | After the user turns on Context Menu (off by default; asks for the optional `contextMenus`) | Same | After the user turns on Context Menu (`contextMenus` is granted at install; Firefox cannot make it optional) |
+| Site icons (favicons) | Icons saved by Refresh Site Icons, and the `_favicon` cache once the user turns on Use the browser's icon cache (optional `favicon`) | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
 | Optional website access | `optional_host_permissions` | `optional_host_permissions` | `optional_permissions` (added by the WXT hook) |
+| Other optional permissions | `tabs` (side panel saves), `favicon`, `contextMenus` | Same | `tabs`; AI data collection consent (`data_collection_permissions`, optional) |
 
 The Firefox listing still describes a smaller feature set: the manager is reachable from the popup, but its maintenance, network, and AI tools have not been checked by hand in Firefox (see the AMO checklist).
 

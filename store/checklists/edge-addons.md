@@ -23,8 +23,9 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 - [ ] **Bookmarks page override.** Open the browser's Favorites manager (`edge://favorites`, Ctrl+Shift+O). Record whether Edge shows the Bookmark Scout manager. If it does not, the manager and Tools sidebar are unreachable in Edge: use a reduced description (the Firefox text minus the Firefox-specific lines) and leave out the manager screenshots.
 - [ ] Popup: search, folder tree, save the current page, delete and Undo.
 - [ ] Side panel opens.
-- [ ] Bookmark icons render (`favicon` API).
-- [ ] Right-click a link: the save menu appears.
+- [ ] Bookmark icons from the browser cache render after turning on Use the browser's icon cache and allowing it (optional `favicon`).
+- [ ] Right-click a link: the save menu appears after turning on Context Menu in Settings.
+- [ ] Saving the current page from the side panel asks for tab access; declining saves nothing.
 - [ ] Check Dead Links asks for website access on first run (if the manager is reachable).
 - [ ] Options: AI is off by default.
 - [ ] Settings sync when Edge sync is on.
@@ -58,7 +59,7 @@ No account or login is required. Click the toolbar icon to open the popup. The e
 
 AI features are off by default and need the reviewer's own provider API key (Settings > AI); a local Ollama server works without a key. All other features work without AI.
 
-Website access (http/https) is an optional permission requested only when the user runs Check Dead Links or Metadata Fetcher, or clicks Verify Service for an AI provider (that origin only).
+At install the extension asks only for bookmarks, storage, activeTab, and sidePanel. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Context Menu in Settings (off by default), favicon when the user turns on "Use the browser's icon cache", and website access (http/https) when the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, turns on Read page content, or clicks Verify Service for an AI provider (that origin only).
 
 Source code: https://github.com/isandrel/bookmark-scout (AGPL-3.0).
 ```

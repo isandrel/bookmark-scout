@@ -1,6 +1,10 @@
 import type { BrowserContext } from '@playwright/test';
 import { expect, test } from './fixtures';
 
+// The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+// so these tests grant the optional tabs permission to read the current page.
+test.use({ grantPermissions: ['tabs'] });
+
 const SERVICES = {
   services: [
     { id: 'custom-work', name: 'Work proxy', provider: 'custom', model: 'work-model', enabled: true },

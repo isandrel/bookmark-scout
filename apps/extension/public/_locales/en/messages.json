@@ -439,6 +439,14 @@
         "message": "Display website icons next to bookmarks",
         "description": "Show favicons setting description"
     },
+    "settings_browserIconCache": {
+        "message": "Use the browser's icon cache",
+        "description": "Setting label: show site icons from the browser's own icon cache (Chrome and Edge)"
+    },
+    "settings_browserIconCacheDesc": {
+        "message": "Show the icons your browser has already saved for sites that have no icon from Refresh Site Icons. Turning this on asks for permission to read site icons.",
+        "description": "Setting description for the browser icon cache"
+    },
     "settings_faviconSize": {
         "message": "Favicon Size",
         "description": "Favicon size setting label"
@@ -1558,7 +1566,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "Show right-click menu for quick bookmark saving",
+        "message": "Add \"Save bookmark to...\" to the right-click menu on links. Off until you turn it on.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -1610,7 +1618,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "Enable AI-powered bookmark workflows",
+        "message": "Enable AI-powered bookmark workflows. In Firefox, turning this on asks to share the data your AI provider needs.",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {
@@ -3434,6 +3442,42 @@
     "tools_hostAccessPrivacy": {
         "message": "Access is used only when you run these tools. Requests are sent without cookies, and you can revoke access in the browser's extension settings.",
         "description": "Privacy note in the website access dialog"
+    },
+    "permission_deniedTitle": {
+        "message": "Permission not granted",
+        "description": "Toast title when the user declines a browser permission a feature asked for"
+    },
+    "permission_contextMenuDenied": {
+        "message": "The right-click menu stays off. Turn on Context Menu again to allow it.",
+        "description": "Toast text when the right-click menu permission is declined"
+    },
+    "permission_currentTabTitle": {
+        "message": "Allow access to the current tab?",
+        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
+    },
+    "permission_currentTabDesc": {
+        "message": "To save the page you are on, or to suggest a folder for it, Bookmark Scout reads the title and URL of the active tab. The toolbar popup can do that without asking; the side panel stays open while you switch tabs, so it needs this permission.",
+        "description": "Why saving the current page from the side panel needs the tab permission"
+    },
+    "permission_currentTabDetail": {
+        "message": "Your browser's prompt names it access to your tabs or browsing history. Bookmark Scout reads only the active tab's title and URL, only when you ask, and stores nothing else.",
+        "description": "What the tab permission is used for, shown in the explanation dialog"
+    },
+    "permission_currentTabDenied": {
+        "message": "Nothing was saved. Open the toolbar popup on the page instead, or allow tab access when asked.",
+        "description": "Toast text when the tab permission is declined or missing"
+    },
+    "permission_browserIconsDenied": {
+        "message": "Bookmarks keep showing icons saved by Refresh Site Icons, or a generic icon.",
+        "description": "Toast text when the favicon permission is declined"
+    },
+    "permission_aiDenied": {
+        "message": "AI features stay off. Turning on AI asks your browser to let the extension share the data your AI provider needs.",
+        "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
+    },
+    "permission_aiProviderCheckDenied": {
+        "message": "Nothing was sent. Your browser asks before the extension shares your API key with the provider.",
+        "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
     },
     "tools_hostAccessDenied": {
         "message": "Website access not granted",

@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { BookmarkTreeNode } from '@/types';
 import {
   fetchBookmarkMetadata,
@@ -7,11 +6,6 @@ import {
   isConfirmedDeadLink,
   scanDeadLinks,
 } from '@/services/bookmark-network-tools';
-import {
-  hasWebHostAccess,
-  requestWebHostAccess,
-  WEB_HOST_ORIGINS,
-} from '@/services/web-host-access';
 
 const deadLinkOptions = {
   requestTimeoutMs: 1000,
@@ -40,42 +34,6 @@ function response(status: number, init: { redirectedTo?: string } = {}) {
     body: { cancel: vi.fn(async () => undefined) },
   } as unknown as Response;
 }
-
-describe('web host access', () => {
-  afterEach(() => {
-    fakeBrowser.reset();
-  });
-
-  it('requests exactly the optional web origins and reports the user decision', async () => {
-    const request = vi.fn(async () => true);
-    fakeBrowser.permissions.request = request;
-    await expect(requestWebHostAccess()).resolves.toBe(true);
-    expect(request).toHaveBeenCalledWith({ origins: WEB_HOST_ORIGINS });
-
-    fakeBrowser.permissions.request = vi.fn(async () => false);
-    await expect(requestWebHostAccess()).resolves.toBe(false);
-  });
-
-  it('treats a rejected or throwing request as denied', async () => {
-    fakeBrowser.permissions.request = vi.fn(async () => {
-      throw new Error('This function must be called during a user gesture');
-    });
-    await expect(requestWebHostAccess()).resolves.toBe(false);
-    fakeBrowser.permissions.request = vi.fn(() => {
-      throw new Error('unsupported');
-    });
-    await expect(requestWebHostAccess()).resolves.toBe(false);
-  });
-
-  it('checks the granted state without prompting', async () => {
-    fakeBrowser.permissions.contains = vi.fn(async () => true);
-    await expect(hasWebHostAccess()).resolves.toBe(true);
-    fakeBrowser.permissions.contains = vi.fn(async () => {
-      throw new Error('boom');
-    });
-    await expect(hasWebHostAccess()).resolves.toBe(false);
-  });
-});
 
 describe('dead-link scanning', () => {
   const fetchMock = vi.fn();

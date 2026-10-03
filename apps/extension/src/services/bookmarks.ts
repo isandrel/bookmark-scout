@@ -107,22 +107,20 @@ export function getFaviconUrl(pageUrl: string, size: number = defaultSettings.fa
   return url.toString();
 }
 
-/** Chrome and Edge serve icons from their own cache at `_favicon/`; Firefox has no such API. */
-export function hasBrowserFaviconCache(): boolean {
-  return import.meta.env.BROWSER !== 'firefox';
-}
-
 /**
  * The icon to show for a bookmark: the icon saved by Refresh Site Icons for its origin, then the
- * browser's icon cache (Chrome and Edge), else null so the caller shows its generic icon.
+ * browser's icon cache when `useBrowserCache` (Chrome and Edge, with the Use the browser's icon
+ * cache setting on and the optional `favicon` permission granted), else null so the caller shows
+ * its generic icon.
  */
 export function getSiteIconUrl(
   pageUrl: string,
   size: number = defaultSettings.faviconSize,
   cachedIcon?: string | null,
+  useBrowserCache = false,
 ): string | null {
   if (cachedIcon) return cachedIcon;
-  return hasBrowserFaviconCache() ? getFaviconUrl(pageUrl, size) : null;
+  return useBrowserCache ? getFaviconUrl(pageUrl, size) : null;
 }
 
 /**
@@ -735,11 +733,14 @@ export async function openBookmarkManager(): Promise<void> {
 }
 
 /**
- * Gets the current active tab information.
+ * Gets the current active tab information. Its URL is readable through the toolbar popup's
+ * activeTab or the optional `tabs` permission; without either it throws
+ * `PermissionRequiredError('currentTab')`, so nothing is saved with an empty URL.
  */
 export async function getCurrentTab(): Promise<Browser.tabs.Tab> {
   if (!browser?.tabs) throw new Error(t('error_tabsApiUnavailable'));
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
   if (!tab) throw new Error(t('error_noActiveTab'));
+  if (!tab.url) throw new PermissionRequiredError('currentTab');
   return tab;
 }

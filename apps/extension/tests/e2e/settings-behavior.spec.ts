@@ -6,6 +6,10 @@ import { readFile } from 'node:fs/promises';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, folderRow, openPopup, seedFolder as seedPopupFolder } from './popup-helpers';
+
+// The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+// so these tests grant the optional tabs permission to read the current page.
+test.use({ grantPermissions: ['tabs'] });
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 async function downloadContextPack(page: Page) {

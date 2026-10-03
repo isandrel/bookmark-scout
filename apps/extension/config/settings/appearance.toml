@@ -10,5 +10,9 @@ theme = "system"
 # Whether to display favicon icons next to bookmarks
 show_favicons = true
 
+# Chrome and Edge: also show icons from the browser's own icon cache, for sites without an icon
+# saved by Refresh Site Icons. Needs the optional `favicon` permission, asked for when turned on.
+browser_icon_cache = false
+
 # Size of favicon icons in pixels: 16, 24, or 32
 favicon_size = 16

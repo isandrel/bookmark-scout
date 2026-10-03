@@ -33,7 +33,9 @@ type ToolEntryProps = {
 function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: ToolEntryProps) {
   const { state, run, apply, undo, close } = useToolRun(tool, environment);
   const { settings } = environment;
-  const aiOff = Boolean(tool.requiresAI) && !settings.aiEnabled;
+  // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed.
+  const aiEnabled = useEffectiveSetting('aiEnabled');
+  const aiOff = Boolean(tool.requiresAI) && !aiEnabled;
   const Review = TOOL_REVIEWS[tool.id] as
     | ((props: ToolReviewProps<ToolId>) => React.ReactNode)
     | undefined;
@@ -82,7 +84,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { folders, refresh } = useBookmarks();
   const { settings, isLoading } = useSettings();
   const exportPrivacyReview = useExportPrivacyReview();
-  const hostAccess = useWebHostAccessGate();
+  const hostAccess = usePermissionGate('webAccess');
   const environment: ToolEnvironment = {
     settings,
     folders,
@@ -116,7 +118,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
                       tool={tool}
                       environment={environment}
                       currentFolderName={currentFolderName}
-                      runWithAccess={hostAccess.runWithAccess}
+                      runWithAccess={(start) => void hostAccess.run(start)}
                     />
                   ))}
                 </ToolSection>
@@ -135,42 +137,8 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         )}
       </div>
 
-      <WebHostAccessDialog {...hostAccess.dialogProps} />
+      <PermissionDialog {...hostAccess.dialogProps} />
       <ExportPrivacyReviewDialog {...exportPrivacyReview.dialogProps} />
     </div>
-  );
-}
-
-/** Explains the optional website access before the first network scan. */
-function WebHostAccessDialog({
-  open,
-  onAllow,
-  onCancel,
-}: {
-  open: boolean;
-  onAllow: () => void;
-  onCancel: () => void;
-}) {
-  return (
-    <Dialog
-      open={open}
-      onOpenChange={(next) => {
-        if (!next) onCancel();
-      }}
-    >
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t('tools_hostAccessTitle')}</DialogTitle>
-          <DialogDescription>{t('tools_hostAccessDesc')}</DialogDescription>
-        </DialogHeader>
-        <p className="text-sm text-muted-foreground">{t('tools_hostAccessPrivacy')}</p>
-        <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
-            {t('action_notNow')}
-          </Button>
-          <Button onClick={onAllow}>{t('action_allowAccess')}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
   );
 }

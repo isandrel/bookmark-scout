@@ -1,14 +1,19 @@
 import { site } from '@bookmark-scout/config';
 import type { ConfigEnv, FirefoxDataCollectionPermissions, UserManifest } from 'wxt';
 import type { Browser } from 'wxt/browser';
+import {
+  getFirefoxDataCollectionPermissions,
+  getManifestApiPermissions,
+  type PermissionBrowser,
+  WEB_ORIGINS,
+} from './src/lib/permission-catalog';
 
 /**
  * The manifest for each browser build, as a pure function so `tests/unit/manifest-config.test.ts`
- * can check what every store receives. `wxt.config.ts` uses it. Store reviewers read the result,
- * so keep `store/permissions.md` in step with any change here.
+ * can check what every store receives. `wxt.config.ts` uses it. Which permissions are required
+ * or optional comes from `src/lib/permission-catalog.ts`, the table the runtime requests from.
+ * Store reviewers read the result, so keep `store/permissions.md` in step with any change.
  */
-
-type BuildBrowser = ConfigEnv['browser'];
 
 /** Permanent AMO add-on ID. It cannot change once a version is published on addons.mozilla.org. */
 export const FIREFOX_ADDON_ID = 'bookmark-scout@isandrel.github.io';
@@ -26,42 +31,19 @@ export const FIREFOX_STRICT_MIN_VERSION = '140.0';
 export const FIREFOX_ANDROID_STRICT_MIN_VERSION = '142.0';
 
 /**
- * Nothing goes to the developer. When the user turns AI on, bookmark titles, URLs, and folder
- * paths (bookmarksInfo), the active tab's URL (browsingActivity) and title (websiteContent), and
- * the user's provider API key (authenticationInfo) go to the AI provider the user chose. Declared
- * as required until the extension asks for these at first use; see store/privacy-disclosures.md.
+ * Nothing at install and nothing to the developer. When the user turns on an AI feature, Firefox
+ * asks for the categories it sends to the AI provider the user chose; see
+ * store/privacy-disclosures.md.
  */
-export const FIREFOX_DATA_COLLECTION_PERMISSIONS = {
-  required: ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'],
-} satisfies FirefoxDataCollectionPermissions;
-
-/** Website access for the network tools, page reading, and the AI Verify Service check. */
-export const OPTIONAL_WEB_ORIGINS = ['http://*/*', 'https://*/*'];
-
-/** Firefox rejects Chromium-only permissions as invalid (`MANIFEST_PERMISSIONS`). */
-const CHROMIUM_ONLY: readonly BuildBrowser[] = ['chrome', 'edge'];
-
-/** Each API permission and the browsers it is declared for; a missing list means every browser. */
-const API_PERMISSIONS: Record<string, readonly BuildBrowser[] | undefined> = {
-  bookmarks: undefined,
-  tabs: undefined,
-  favicon: CHROMIUM_ONLY,
-  storage: undefined,
-  sidePanel: CHROMIUM_ONLY,
-  contextMenus: undefined,
-};
-
-function permissionsFor(browser: BuildBrowser): string[] {
-  return Object.entries(API_PERMISSIONS)
-    .filter(([, browsers]) => !browsers || browsers.includes(browser))
-    .map(([permission]) => permission);
-}
+export const FIREFOX_DATA_COLLECTION_PERMISSIONS =
+  getFirefoxDataCollectionPermissions() satisfies FirefoxDataCollectionPermissions;
 
 /**
  * There is no `web_accessible_resources` entry: the extension's own pages read `_favicon/` without
  * one, and declaring it for `<all_urls>` would only let web pages load icons through the extension.
  */
 export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserManifest {
+  const { permissions, optional } = getManifestApiPermissions(browser as PermissionBrowser);
   return {
     name: '__MSG_extName__',
     description: '__MSG_extDescription__',
@@ -81,10 +63,11 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
         48: 'icon-48.png',
       },
     },
-    permissions: permissionsFor(browser) as UserManifest['permissions'],
-    // Requested at click time only, never at install: website access for the dead-link and
-    // metadata tools, and per-origin access for the AI provider Verify Service check.
-    optional_host_permissions: OPTIONAL_WEB_ORIGINS,
+    permissions: permissions as UserManifest['permissions'],
+    optional_permissions: optional as UserManifest['optional_permissions'],
+    // Requested at click time only, never at install: website access for the network tools and
+    // page reading, and per-origin access for the AI provider Verify Service check.
+    optional_host_permissions: [...WEB_ORIGINS],
     ...(browser === 'firefox'
       ? {
           browser_specific_settings: {
@@ -107,7 +90,7 @@ export function createManifest({ browser }: Pick<ConfigEnv, 'browser'>): UserMan
 export function adaptManifestV2(manifest: Browser.runtime.Manifest): void {
   manifest.optional_permissions = [
     ...(manifest.optional_permissions ?? []),
-    ...OPTIONAL_WEB_ORIGINS,
+    ...WEB_ORIGINS,
   ] as typeof manifest.optional_permissions;
   delete manifest.optional_host_permissions;
 }

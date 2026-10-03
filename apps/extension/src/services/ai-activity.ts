@@ -1,7 +1,8 @@
 /**
  * A fetch for AI provider SDKs and model listing that records each call in the AI activity log
  * when recording is on. It never changes the request or response, and recording failures never
- * reach the caller.
+ * reach the caller. Every provider call goes through it, so it is also where a call without the
+ * user's consent stops: in Firefox, data sharing for the source's permission feature.
  */
 
 /** What can make an AI call, mapped to the message key that names it in the activity log. */
@@ -17,6 +18,21 @@ export const AI_ACTIVITY_SOURCES = {
 } as const satisfies Record<string, MessageKey>;
 
 export type AIActivitySource = keyof typeof AI_ACTIVITY_SOURCES;
+
+/**
+ * The permission feature each source needs: Verify Service and the model list send only the API
+ * key; everything else may send bookmarks or the current page.
+ */
+const AI_ACTIVITY_PERMISSIONS: Record<AIActivitySource, PermissionFeature> = {
+  ai: 'ai',
+  verifyService: 'aiProviderCheck',
+  modelList: 'aiProviderCheck',
+  autoTagging: 'ai',
+  summarizer: 'ai',
+  reorganization: 'ai',
+  folderRecommendation: 'ai',
+  askAI: 'ai',
+};
 
 export type AIActivityContext = {
   source: AIActivitySource;
@@ -58,6 +74,7 @@ async function configuredExtraHeaderNames(): Promise<string[]> {
 
 export function createLoggingFetch(context: AIActivityContext): typeof fetch {
   return async (input, init) => {
+    await assertPermission(AI_ACTIVITY_PERMISSIONS[context.source]);
     if (!(await aiActivityRecordingValue.get().catch(() => false))) {
       return fetch(input, init);
     }

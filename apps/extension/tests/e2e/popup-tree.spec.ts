@@ -2,6 +2,10 @@ import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { otherBookmarksTitle } from './popup-helpers';
 
+// The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+// so these tests grant the optional tabs permission to read the current page.
+test.use({ grantPermissions: ['tabs'] });
+
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const SEARCH_HISTORY_KEY = 'bookmark-scout-search-history';
 
