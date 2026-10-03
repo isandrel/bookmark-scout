@@ -75,6 +75,7 @@ const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
   ArrowDown: '↓',
   ArrowLeft: '←',
   ArrowRight: '→',
+  Enter: '↵',
   Escape: 'Esc',
 };
 

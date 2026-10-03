@@ -40,7 +40,7 @@ function requestUrl(input: RequestInfo | URL): string {
 
 export function createLoggingFetch(context: AIActivityContext): typeof fetch {
   return async (input, init) => {
-    if (!(await aiActivityRecordingItem.getValue().catch(() => false))) {
+    if (!(await aiActivityRecordingValue.get().catch(() => false))) {
       return fetch(input, init);
     }
     const started = performance.now();

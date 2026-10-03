@@ -45,9 +45,6 @@ export const recentFoldersValue = defineStoredValue<RecentFolder[]>({
   empty: [],
 });
 
-/** @deprecated Watch `recentFoldersValue` instead; kept until services/context-menu.ts moves. */
-export const recentFoldersItem = storage.defineItem<RecentFolder[]>(STORAGE_KEYS.recentFolders);
-
 async function readRecentFolders(): Promise<RecentFolder[]> {
   try {
     return await recentFoldersValue.get();

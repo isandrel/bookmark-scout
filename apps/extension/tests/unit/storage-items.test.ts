@@ -3,24 +3,22 @@ import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
-  aiActivityRecordingItem,
   aiActivityRecordingValue,
   aiActivityValue,
 } from '@/lib/ai-activity-storage';
 import {
   aiModelListValue,
-  aiProviderConfigItem,
   aiProviderConfigValue,
   saveStoredAIProviderConfig,
 } from '@/lib/ai-provider-storage';
 import { aiServicesValue } from '@/lib/ai-services-storage';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { bookmarkTableViewValue } from '@/lib/bookmark-table-view-storage';
-import { recentFoldersItem, recentFoldersValue } from '@/lib/recent-folders-storage';
+import { recentFoldersValue } from '@/lib/recent-folders-storage';
 import { savedSearchesValue } from '@/lib/saved-searches-storage';
 import { searchHistoryValue } from '@/lib/search-history-storage';
 import { defaultSettings } from '@/lib/settings-schema';
-import { settingsItem, settingsValue } from '@/lib/settings-storage';
+import { settingsValue } from '@/lib/settings-storage';
 import { siteIconCacheValue } from '@/lib/site-icon-storage';
 import { STORAGE_KEYS, THEME_CACHE_STORAGE_KEY } from '@/lib/storage-keys';
 import { appRoot } from '../config-files';
@@ -39,14 +37,6 @@ const values = [
   ['search history', searchHistoryValue, STORAGE_KEYS.searchHistory],
   ['saved searches', savedSearchesValue, STORAGE_KEYS.savedSearches],
   ['site icons', siteIconCacheValue, STORAGE_KEYS.siteIcons],
-] as const;
-
-// WXT items still read by services and components that have not moved to the stored values.
-const legacyItems = [
-  ['settings item', settingsItem, STORAGE_KEYS.settings],
-  ['recent folders item', recentFoldersItem, STORAGE_KEYS.recentFolders],
-  ['AI provider config item', aiProviderConfigItem, STORAGE_KEYS.aiProviders],
-  ['AI activity recording item', aiActivityRecordingItem, STORAGE_KEYS.aiActivityRecording],
 ] as const;
 
 function sourceFiles(dir: string): string[] {
@@ -109,10 +99,6 @@ describe('storage items', () => {
     await value.clear();
     expect(await fakeBrowser.storage[area].get()).toEqual({});
     expect(await fakeBrowser.storage[otherArea].get()).toEqual({ [key]: { probe: true } });
-  });
-
-  it.each(legacyItems)('%s keeps its storage area and key', (_name, item, storageKey) => {
-    expect(item.key).toBe(storageKey);
   });
 
   it('writes plain values without WXT version metadata', async () => {

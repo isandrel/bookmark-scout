@@ -154,6 +154,27 @@ test('list settings accept commas and status codes are validated inline', async 
     .toEqual([200]);
 });
 
+test('a setting error uses the dark-mode-safe error text color', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en', theme: 'dark' });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  const row = settingRow(page, 'defaultNewFolderName');
+  await row.getByRole('textbox').fill('');
+  const alert = row.getByRole('alert');
+  await expect(alert).toBeVisible();
+  const status = page.getByTestId('settings-save-status');
+  await expect(status).toHaveText('1 settings not saved');
+
+  // The footer status uses the error text token; in dark mode the fill token is too dark for text.
+  const color = (locator: typeof alert) =>
+    locator.evaluate((element) => getComputedStyle(element).color);
+  expect(await color(alert)).toBe(await color(status));
+});
+
 test('invalid text shows a localized inline error and is not silently saved', async ({
   extensionId,
   extensionWorker,

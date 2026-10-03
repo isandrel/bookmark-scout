@@ -52,12 +52,6 @@ export const aiActivityRecordingValue = defineStoredValue<boolean>({
   empty: false,
 });
 
-/** @deprecated Read `aiActivityRecordingValue`; kept until services/ai-activity.ts moves. */
-export const aiActivityRecordingItem = storage.defineItem<boolean>(
-  STORAGE_KEYS.aiActivityRecording,
-  { fallback: false },
-);
-
 /** Stored in place of a credential. */
 export const REDACTED_VALUE = '[redacted]';
 

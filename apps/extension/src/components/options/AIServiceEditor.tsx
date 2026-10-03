@@ -201,8 +201,8 @@ export function AIServiceEditor({
       if (active && cached?.models.length) setDetectedModels(cached.models.map((m) => m.id));
     });
     // Another Options tab, or a reset, can change the stored values while this one is open.
-    const unwatch = aiProviderConfigItem.watch((next) => {
-      if (active) show(next?.[service.id] ?? {}, true);
+    const unwatch = aiProviderConfigValue.watch((next) => {
+      if (active) show(next[service.id] ?? {}, true);
     });
     return () => {
       active = false;

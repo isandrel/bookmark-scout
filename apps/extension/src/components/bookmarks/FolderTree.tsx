@@ -27,7 +27,7 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
   const isExpanded = expandedIds.has(node.id);
   const isSelected = selectedId === node.id;
   const hasChildren = node.children.length > 0;
-  const title = node.title.trim() || t('bookmarks_untitled');
+  const title = getBookmarkDisplayTitle(node.title);
 
   return (
     <div>

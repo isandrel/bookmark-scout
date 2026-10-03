@@ -26,8 +26,10 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 /** Per device: whether Ask AI adds the provider's web search. */
-const webSearchItem = storage.defineItem<boolean>('local:bookmark-scout-ask-ai-web-search', {
-  fallback: false,
+const webSearchValue = defineStoredValue<boolean>({
+  key: STORAGE_KEYS.askAiWebSearch,
+  parse: (raw) => raw === true,
+  empty: false,
 });
 
 /** Builds the agent per message, so the current service and settings always apply. */
@@ -40,7 +42,7 @@ class AskAITransport implements ChatTransport<UIMessage> {
       agent,
       sendSources: true,
       // The stream hides errors by default; the provider's own message says what to fix.
-      onError: (error) => (error instanceof Error ? error.message : String(error)),
+      onError: (error) => getErrorMessage(error),
     }) as unknown as ChatTransport<UIMessage>;
     return transport.sendMessages(options);
   }
@@ -60,22 +62,20 @@ function hostOf(url: unknown): string {
 
 /** What a tool call did, in words, from its name and input. */
 function describeTool(name: string, input: unknown): string {
-  const args = (input ?? {}) as Record<string, unknown>;
+  const args = isPlainObject(input) ? input : {};
+  if (ASK_AI_WEB_SEARCH_TOOL_NAMES.has(name)) return t('askAI_toolWebSearch');
   switch (name) {
-    case 'searchBookmarks':
+    case ASK_AI_TOOL_NAMES.searchBookmarks:
       return t('askAI_toolSearchBookmarks', String(args.query ?? ''));
-    case 'listFolders':
+    case ASK_AI_TOOL_NAMES.listFolders:
       return t('askAI_toolListFolders');
-    case 'getCurrentPage':
+    case ASK_AI_TOOL_NAMES.getCurrentPage:
       return t('askAI_toolCurrentPage');
-    case 'readPage':
+    case ASK_AI_TOOL_NAMES.readPage:
       return t('askAI_toolReadPage', hostOf(args.url));
-    case 'webSearch':
-    case 'web_search':
-    case 'google_search':
-      return t('askAI_toolWebSearch');
     default:
-      return name;
+      // A provider's own tool; its internal name means nothing to the user.
+      return t('askAI_toolOther');
   }
 }
 
@@ -170,7 +170,7 @@ export function AskAIPanel({ onClose }: { onClose: () => void }) {
   const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
   const provider = service?.provider;
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
-  const [webSearch, setWebSearch] = useState(false);
+  const { value: webSearch } = useStoredValue(webSearchValue);
   const webSearchRef = useRef(false);
   webSearchRef.current = canSearchWeb && webSearch;
   const [transport] = useState(() => new AskAITransport(() => ({ webSearch: webSearchRef.current })));
@@ -182,7 +182,6 @@ export function AskAIPanel({ onClose }: { onClose: () => void }) {
   const busy = status === 'submitted' || status === 'streaming';
 
   useEffect(() => {
-    void webSearchItem.getValue().then(setWebSearch).catch(() => undefined);
     inputRef.current?.focus();
   }, []);
 
@@ -324,9 +323,9 @@ export function AskAIPanel({ onClose }: { onClose: () => void }) {
               title={t('askAI_webSearch')}
               className={webSearch ? 'bg-ai/10 text-ai hover:bg-ai/15 hover:text-ai' : ''}
               onClick={() => {
-                const next = !webSearch;
-                setWebSearch(next);
-                void webSearchItem.setValue(next).catch(() => undefined);
+                void webSearchValue.set(!webSearch).catch((error) => {
+                  aiLogger.error({ error }, 'Failed to save the web search choice');
+                });
               }}
             >
               <Globe className="h-4 w-4" />

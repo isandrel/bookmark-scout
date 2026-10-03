@@ -36,7 +36,7 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
 
       {path.map((item, index) => {
         const isLast = index === path.length - 1;
-        const title = item.title.trim() || t('bookmarks_untitled');
+        const title = getBookmarkDisplayTitle(item.title);
         return (
           <div key={item.id} className="flex shrink-0 items-center gap-1">
             <ChevronRight className="h-4 w-4 text-muted-foreground/50" />

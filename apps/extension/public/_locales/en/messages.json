@@ -897,10 +897,6 @@
         "message": "Open in new tab",
         "description": "Bookmark row action that opens a link in a new tab"
     },
-    "table_delete": {
-        "message": "Delete",
-        "description": "Bookmark row action that deletes the item"
-    },
     "table_moveTop": {
         "message": "Move to top",
         "description": "Accessible label for moving a bookmark to the top of its folder"
@@ -2845,10 +2841,6 @@
         "message": "$1 settings changed: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_andMore": {
-        "message": "and $1 more",
-        "description": "Suffix for truncated list"
-    },
     "action_switchToLight": {
         "message": "Switch to light theme",
         "description": "Theme toggle accessible name"
@@ -4782,6 +4774,10 @@
     "askAI_toolWebSearch": {
         "message": "Searched the web",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "Used a tool",
+        "description": "Ask AI step for a provider tool that has no description of its own"
     },
     "ai_promptAskAIDesc": {
         "message": "Answers questions in the Ask AI chat",
