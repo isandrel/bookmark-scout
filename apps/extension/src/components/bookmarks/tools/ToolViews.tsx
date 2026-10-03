@@ -10,8 +10,8 @@ export type ToolReviewProps<Id extends ToolId> = {
   apply: (selection: ToolSelections[Id]) => Promise<void>;
   undo: () => void;
   close: () => void;
-  /** Reloads the page's tree after a review changed bookmarks on its own. */
-  onChanged: () => Promise<void>;
+  /** The page's tree, and its reload for reviews that change bookmarks on their own. */
+  environment: ToolEnvironment;
 };
 
 /** The results dialog every review but reorganization uses, titled after the tool. */
@@ -55,7 +55,7 @@ function DeadLinksReview(props: ToolReviewProps<'deadLinks'>) {
       <DeadLinkRepairDialog
         result={repair}
         onClose={() => setRepair(null)}
-        onChanged={props.onChanged}
+        onChanged={props.environment.refresh}
       />
     </>
   );
@@ -84,7 +84,7 @@ export const TOOL_REVIEWS: {
       />
     </ReviewDialog>
   ),
-  reorganization: ({ state, apply, close }) => (
+  reorganization: ({ state, apply, close, environment }) => (
     <ReorganizationDialog
       open={state.open}
       onOpenChange={(open) => {
@@ -95,6 +95,7 @@ export const TOOL_REVIEWS: {
       errors={state.errors}
       onApply={() => apply()}
       onCancel={close}
+      bookmarksBarTitle={findBookmarksBarFolder(environment.folders)?.title}
     />
   ),
   duplicates: (props) => {

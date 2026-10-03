@@ -1349,68 +1349,6 @@
         "message": "Failed to analyze bookmarks",
         "description": "Reorganization error when analysis fails without details"
     },
-    "ai_reorgStatusCollecting": {
-        "message": "Collecting bookmarks...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusCollectingDesc": {
-        "message": "Gathering folder structure and bookmark data",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusSending": {
-        "message": "Sending to AI...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusSendingDesc": {
-        "message": "Preparing request for AI analysis",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusWaiting": {
-        "message": "AI is analyzing your bookmarks...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusWaitingDesc": {
-        "message": "This may take 10-30 seconds",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusProcessing": {
-        "message": "Processing suggestions...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusProcessingDesc": {
-        "message": "Building reorganization plan",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgNewFolders": {
-        "message": "New folders: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "2"
-            }
-        }
-    },
-    "ai_reorgFoldersToRemove": {
-        "message": "Folders to remove: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
-    "ai_reorgRenames": {
-        "message": "Renames: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
     "ai_reorgMoves": {
         "message": "Bookmark moves: $count$",
         "description": "Reorganization summary badge",
@@ -1431,31 +1369,9 @@
             }
         }
     },
-    "ai_reorgOp_create": {
-        "message": "Create",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_delete": {
-        "message": "Delete",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_rename": {
-        "message": "Rename",
-        "description": "Reorganization operation type"
-    },
     "ai_reorgOp_move": {
         "message": "Move",
         "description": "Reorganization operation type"
-    },
-    "ai_reorgInFolder": {
-        "message": "in $path$",
-        "description": "Parent folder of a folder to create",
-        "placeholders": {
-            "path": {
-                "content": "$1",
-                "example": "Work/Projects"
-            }
-        }
     },
     "ai_reorgFrom": {
         "message": "From:",

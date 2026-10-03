@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { searchBookmarksForAI, supportsWebSearch } from '@/services/ai-agent';
-import { formatToday, getPromptPreviewVariables, PROMPT_TASKS } from '@/services/prompt-config';
+import { formatToday, getPromptVariables, PROMPT_TASKS } from '@/services/prompt-config';
 import type { BookmarkTreeNode } from '@/types';
 
 const node = (id: string, title: string, url?: string, children?: BookmarkTreeNode[]) =>
@@ -46,6 +46,6 @@ describe('Ask AI setup', () => {
   it('has an editable prompt that knows today', () => {
     expect(PROMPT_TASKS.ask_ai.system).toContain('{{today}}');
     expect(formatToday(new Date('2026-10-02T12:00:00Z'))).toBe('2026-10-02');
-    expect(getPromptPreviewVariables('ask_ai', {} as Settings).today).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(getPromptVariables('ask_ai', {} as Settings).today).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 });

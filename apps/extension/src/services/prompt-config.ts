@@ -138,14 +138,6 @@ export function getPromptVariables<T extends PromptTaskId>(
   return variables(settings);
 }
 
-/**
- * The values each task's tool would fill in with the current settings, for prompt previews.
- * @deprecated Call {@link getPromptVariables}.
- */
-export function getPromptPreviewVariables(taskId: PromptTaskId, settings: Settings): PromptVariables {
-  return getPromptVariables(taskId, settings);
-}
-
 /** Today's date in ISO form, which every model reads the same way. */
 export function formatToday(date = new Date()): string {
   return date.toISOString().slice(0, 10);

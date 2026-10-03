@@ -44,7 +44,7 @@ function PromptEditorDialog({
   const unknown = editor ? findUnknownPromptVariables(editor.task, system) : [];
   const preview = useMemo(
     () =>
-      editor ? interpolatePrompt(system, getPromptPreviewVariables(editor.task, settings)) : '',
+      editor ? interpolatePrompt(system, getPromptVariables(editor.task, settings)) : '',
     [editor, system, settings],
   );
 
@@ -216,7 +216,7 @@ function BuiltInPromptDialog({
                   {t('prompt_previewDescription')}
                 </p>
                 <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-xs">
-                  {interpolatePrompt(task.system, getPromptPreviewVariables(taskId, settings))}
+                  {interpolatePrompt(task.system, getPromptVariables(taskId, settings))}
                 </pre>
               </details>
             )}
