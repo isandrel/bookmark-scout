@@ -6,6 +6,8 @@
  * IME composition is in progress, and while a dialog or menu owns the keyboard.
  */
 
+import { z } from 'zod';
+
 /** The parts of a keyboard event the guards read, so they can be tested without a DOM. */
 export type ShortcutKeyEvent = {
   key: string;
@@ -26,6 +28,70 @@ export type ShortcutBinding = {
   /** Required Shift state. Ignored for punctuation, whose Shift state depends on the layout. */
   shift?: boolean;
 };
+
+const bindingsSchema = z
+  .array(
+    z.strictObject({
+      key: z.string().min(1),
+      alt: z.boolean().optional(),
+      shift: z.boolean().optional(),
+    }),
+  )
+  .min(1);
+
+const shortcutsConfig = readConfig(
+  'ui/shortcuts',
+  z.strictObject({
+    manager: z.strictObject({
+      focus_filter: bindingsSchema,
+      show_help: bindingsSchema,
+      parent_folder: bindingsSchema,
+      next_row: bindingsSchema,
+      previous_row: bindingsSchema,
+      open_saved_searches: bindingsSchema,
+    }),
+    popup: z.strictObject({ focus_search: bindingsSchema }),
+  }),
+);
+
+/** Bindings per action, from config/ui/shortcuts.toml; the help dialog lists the same ones. */
+export const SHORTCUT_BINDINGS = {
+  manager: {
+    focusFilter: shortcutsConfig.manager.focus_filter,
+    showHelp: shortcutsConfig.manager.show_help,
+    parentFolder: shortcutsConfig.manager.parent_folder,
+    nextRow: shortcutsConfig.manager.next_row,
+    previousRow: shortcutsConfig.manager.previous_row,
+    openSavedSearches: shortcutsConfig.manager.open_saved_searches,
+  },
+  popup: {
+    focusSearch: shortcutsConfig.popup.focus_search,
+  },
+} as const satisfies Record<string, Record<string, readonly ShortcutBinding[]>>;
+
+/** Key caps as printed on keyboards, for keys whose `KeyboardEvent.key` name is not. */
+const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
+  ArrowUp: '↑',
+  ArrowDown: '↓',
+  ArrowLeft: '←',
+  ArrowRight: '→',
+  Escape: 'Esc',
+};
+
+/** Modifier names, which `aria-keyshortcuts` and printed key caps share. */
+function bindingModifiers(binding: ShortcutBinding): string[] {
+  return [...(binding.alt ? ['Alt'] : []), ...(binding.shift ? ['Shift'] : [])];
+}
+
+/** The keys to press for `binding`, modifiers first, e.g. `['Alt', '↑']`. Not translated. */
+export function shortcutKeyCaps(binding: ShortcutBinding): string[] {
+  return [...bindingModifiers(binding), KEY_CAP_LABELS[binding.key] ?? binding.key];
+}
+
+/** An `aria-keyshortcuts` value for the bindings, e.g. `Alt+ArrowUp Backspace`. */
+export function ariaKeyShortcuts(bindings: readonly ShortcutBinding[]): string {
+  return bindings.map((binding) => [...bindingModifiers(binding), binding.key].join('+')).join(' ');
+}
 
 export type ShortcutGuardOptions = {
   /** Handle the key even when it comes from a text field (used for Escape). */
@@ -49,6 +115,9 @@ const NON_TEXT_INPUT_TYPES = new Set([
   'submit',
 ]);
 const TEXT_ROLES = new Set(['textbox', 'searchbox', 'combobox', 'spinbutton']);
+
+/** keyCode of an IME's keydown; Chrome reports it for the keydown that ends a composition. */
+const IME_PROCESS_KEY_CODE = 229;
 
 // Base UI mounts dialogs, popovers (role dialog), menus, and select lists only while they are open.
 // Toasts would also match (Base UI gives them role dialog), so the Toast wrapper renders them as
@@ -83,8 +152,7 @@ export function isTypingTarget(target: EventTarget | null | undefined): boolean 
 
 /** True while an IME is composing text; its Enter and arrows belong to the IME. */
 export function isComposingEvent(event: ShortcutKeyEvent): boolean {
-  // Chrome reports keyCode 229 for the keydown that ends a composition.
-  return event.isComposing === true || event.keyCode === 229;
+  return event.isComposing === true || event.keyCode === IME_PROCESS_KEY_CODE;
 }
 
 /** Ctrl and Cmd combinations belong to the browser and the operating system. */

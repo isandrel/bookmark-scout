@@ -198,6 +198,15 @@ describe('connection error classification', () => {
     expect(error.message).toContain('OLLAMA_ORIGINS');
   });
 
+  it('treats a server on the local network like one on this computer', async () => {
+    const error = await failWith(json({}, 403), {
+      provider: 'ollama',
+      apiKey: '',
+      baseUrl: 'http://192.168.1.20:11434/api',
+    });
+    expect(error.code).toBe('origin_rejected');
+  });
+
   it('times out when the provider never answers', async () => {
     vi.useFakeTimers();
     fetchMock.mockImplementationOnce(

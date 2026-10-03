@@ -1,22 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-const live = vi.hoisted(() => ({ urls: new Map<string, string>(), failUpdate: new Set<string>() }));
-
-vi.mock('@/services/bookmarks', () => ({
-  getBookmark: vi.fn(async (id: string) => {
-    if (!live.urls.has(id)) throw new Error('Bookmark not found.');
-    return { id, url: live.urls.get(id) };
-  }),
-  updateBookmark: vi.fn(async (id: string, changes: { url: string }) => {
-    if (live.failUpdate.has(id)) throw new Error('boom');
-    live.urls.set(id, changes.url);
-    return { id, url: changes.url };
-  }),
-}));
-
-const { applyUrlCleanerPreviews, cleanBookmarkUrl, previewCleanUrls } = await import(
-  '@/services/bookmark-tooling'
-);
+import { fakeBrowser } from 'wxt/testing/fake-browser';
+import {
+  applyUrlCleanerPreviews,
+  cleanBookmarkUrl,
+  previewCleanUrls,
+} from '@/services/bookmark-tooling';
+import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 const options = {
   removeHash: false,
@@ -81,13 +70,16 @@ describe('applying URL cleaner previews', () => {
     removedParams: ['utm_source'],
   });
 
+  let bookmarks: FakeBookmarks;
   beforeEach(() => {
-    live.urls = new Map([
-      ['1', 'https://e2e.invalid/a?utm_source=x'],
-      ['2', 'https://e2e.invalid/edited'],
-      ['4', 'https://e2e.invalid/d?utm_source=x'],
+    fakeBrowser.reset();
+    vi.restoreAllMocks();
+    bookmarks = installFakeBookmarks([
+      { id: '1', title: '1', url: 'https://e2e.invalid/a?utm_source=x' },
+      { id: '2', title: '2', url: 'https://e2e.invalid/edited' },
+      { id: '4', title: '4', url: 'https://e2e.invalid/d?utm_source=x' },
     ]);
-    live.failUpdate = new Set(['4']);
+    bookmarks.fail.update.add('4');
   });
 
   it('updates unchanged bookmarks and skips edited or deleted ones', async () => {
@@ -98,7 +90,7 @@ describe('applying URL cleaner previews', () => {
       preview('4', 'https://e2e.invalid/d?utm_source=x'),
     ]);
     expect(result).toEqual({ updated: 1, skipped: 2, failed: 1 });
-    expect(live.urls.get('1')).toBe('https://e2e.invalid/a');
-    expect(live.urls.get('2')).toBe('https://e2e.invalid/edited');
+    expect(bookmarks.get('1')?.url).toBe('https://e2e.invalid/a');
+    expect(bookmarks.get('2')?.url).toBe('https://e2e.invalid/edited');
   });
 });

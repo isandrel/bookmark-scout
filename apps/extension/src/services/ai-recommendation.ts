@@ -50,40 +50,22 @@ const singleRecommendationSchema = z.object({
 });
 
 /**
- * Schema for multiple recommendations.
+ * Schema for multiple recommendations. It accepts as many as the setting allows at most, so any
+ * value the user picks validates; the result is cut to the requested count afterwards.
  */
 const recommendationsSchema = z.object({
-  recommendations: z.array(singleRecommendationSchema).min(1).max(5),
+  recommendations: z
+    .array(singleRecommendationSchema)
+    .min(1)
+    .max(SETTING_NUMBER_BOUNDS.aiMaxRecommendations.max),
 });
 
 /**
  * Extracts folder paths from bookmark tree.
  * Returns array of "Parent/Child/Grandchild" formatted paths.
  */
-export function extractFolderPaths(
-  nodes: BookmarkTreeNode[],
-  parentPath = ''
-): { id: string; path: string }[] {
-  const result: { id: string; path: string }[] = [];
-
-  for (const node of nodes) {
-    // Skip if it's a bookmark (has URL)
-    if (node.url) continue;
-
-    const currentPath = parentPath ? `${parentPath}/${node.title}` : node.title;
-
-    // Skip root nodes without titles
-    if (node.title) {
-      result.push({ id: node.id, path: currentPath });
-    }
-
-    // Recurse into children
-    if (node.children) {
-      result.push(...extractFolderPaths(node.children, node.title ? currentPath : ''));
-    }
-  }
-
-  return result;
+export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; path: string }[] {
+  return collectFolders(nodes).map(({ id, path }) => ({ id, path }));
 }
 
 /**
@@ -94,7 +76,7 @@ export async function recommendFolders(
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
   settings: AISettings,
-  maxRecommendations = 3,
+  maxRecommendations: number = defaultSettings.aiMaxRecommendations,
   /** Send the page's readable text too; needs website access. */
   readPage = false,
 ): Promise<FolderRecommendation[]> {
@@ -106,29 +88,24 @@ export async function recommendFolders(
   if (folderPaths.length === 0) {
     return [{
       type: 'new',
-      folderPath: 'Bookmarks',
+      folderPath: t('bookmarks_root'),
       confidence: 1,
-      reason: 'No existing folders found',
+      reason: t('ai_recommendationNoFolders'),
     }];
   }
 
   const [page] = await addPageText([bookmark], readPage);
   const model = createAIModel(settings, 'folderRecommendation');
-  const { system } = await buildPrompt('folder_recommendation', { maxRecommendations });
+  const { system } = await buildPrompt(
+    'folder_recommendation',
+    { aiMaxRecommendations: maxRecommendations },
+    { hasPageText: Boolean(page.pageText) },
+  );
 
   const { object } = await generateObject({
     model,
     schema: recommendationsSchema,
-    system: withAppRules(
-      system,
-      `Return exactly ${maxRecommendations} folder recommendations ranked by confidence. Include a mix of:
-1. Best matching existing folder
-2. Second best existing folder
-3. Suggest a new folder if appropriate, or third best existing
-
-Each recommendation should have a clear, brief reason.`,
-      Boolean(page.pageText),
-    ),
+    system,
     prompt: JSON.stringify({
       title: bookmark.title,
       url: bookmark.url,
@@ -149,46 +126,30 @@ Each recommendation should have a clear, brief reason.`,
   });
 }
 
-/**
- * Legacy single recommendation (deprecated, use recommendFolders).
- */
-export async function recommendFolder(
-  bookmark: { title: string; url: string },
-  folders: BookmarkTreeNode[],
-  settings: AISettings
-): Promise<FolderRecommendation> {
-  const recommendations = await recommendFolders(bookmark, folders, settings);
-  return recommendations[0];
-}
-
 export async function createRecommendedFolderBookmark(
   recommendation: FolderRecommendation,
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
 ): Promise<RecommendedFolderBookmarkResult> {
   const pathSegments = getRecommendedPathSegments(recommendation);
-  const topLevelFolders = getTopLevelFolders(folders);
+  const topLevelFolders = getTopLevelBookmarkNodes(folders).filter((node) => !node.url);
   const createdFolderIds: string[] = [];
 
-  let currentFolder = topLevelFolders.find((folder) =>
-    sameTitle(folder.title, pathSegments[0]),
-  );
-  let segmentIndex = currentFolder ? 1 : 0;
-
-  if (!currentFolder) {
-    currentFolder = topLevelFolders[0];
-  }
-  if (!currentFolder) {
+  const matchingRoot = topLevelFolders.find((folder) => sameTitle(folder.title, pathSegments[0]));
+  let segmentIndex = matchingRoot ? 1 : 0;
+  const startFolder = matchingRoot ?? topLevelFolders[0];
+  if (!startFolder) {
     throw new RecommendedFolderError('no-writable-root');
   }
-  const folderPath = segmentIndex === 0
-    ? [currentFolder.title, ...pathSegments].join('/')
-    : pathSegments.join('/');
+  let currentFolder: BookmarkTreeNode = startFolder;
+  const folderPath = (
+    segmentIndex === 0 ? [currentFolder.title, ...pathSegments] : pathSegments
+  ).join(AI_FOLDER_PATH_SEPARATOR);
 
   try {
     for (; segmentIndex < pathSegments.length; segmentIndex += 1) {
       const segment = pathSegments[segmentIndex];
-      const children = currentFolder.children ?? [];
+      const children: BookmarkTreeNode[] = currentFolder.children ?? [];
       const matchingFolder = children.find(
         (child) => !child.url && sameTitle(child.title, segment),
       );
@@ -220,7 +181,7 @@ export async function createRecommendedFolderBookmark(
 
     const children = await getBookmarkChildren(currentFolder.id);
     const duplicate = children.find(
-      (child) => child.url && normalizeUrl(child.url) === normalizeUrl(bookmark.url),
+      (child) => child.url && comparableUrl(child.url) === comparableUrl(bookmark.url),
     );
     if (duplicate) {
       return {
@@ -234,7 +195,7 @@ export async function createRecommendedFolderBookmark(
 
     const createdBookmark = await createBookmark({
       parentId: currentFolder.id,
-      title: bookmark.title || 'New Bookmark',
+      title: bookmark.title || t('popup_newBookmark'),
       url: bookmark.url,
     });
 
@@ -261,7 +222,7 @@ function getRecommendedPathSegments(recommendation: FolderRecommendation) {
   const folderSegments = parsePath(recommendation.folderPath);
   const parentSegments = parsePath(recommendation.parentPath ?? '');
   const segments = parentSegments.length > 0 && folderSegments.length === 1
-    ? [...parentSegments, folderSegments.at(-1) ?? '']
+    ? [...parentSegments, folderSegments[folderSegments.length - 1] ?? '']
     : folderSegments;
 
   if (
@@ -275,24 +236,17 @@ function getRecommendedPathSegments(recommendation: FolderRecommendation) {
 }
 
 function parsePath(path: string) {
-  return path.split('/').map((segment) => segment.trim()).filter(Boolean);
-}
-
-function getTopLevelFolders(nodes: BookmarkTreeNode[]) {
-  const roots = nodes.length === 1 && !nodes[0].title && nodes[0].children
-    ? nodes[0].children
-    : nodes;
-  return roots.filter((node) => !node.url);
+  return path
+    .split(AI_FOLDER_PATH_SEPARATOR)
+    .map((segment) => segment.trim())
+    .filter(Boolean);
 }
 
 function sameTitle(left: string, right: string) {
   return left.trim().localeCompare(right.trim(), undefined, { sensitivity: 'accent' }) === 0;
 }
 
-function normalizeUrl(url: string) {
-  try {
-    return new URL(url).toString();
-  } catch {
-    return url.trim();
-  }
+/** The URL as the parser normalizes it, or the trimmed text when it does not parse. */
+function comparableUrl(url: string) {
+  return safeNormalizeUrl(url) ?? url.trim();
 }

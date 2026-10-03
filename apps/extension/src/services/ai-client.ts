@@ -13,6 +13,15 @@ import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { createXai } from '@ai-sdk/xai';
 import { generateText } from 'ai';
 import { createOllama } from 'ollama-ai-provider-v2';
+import { z } from 'zod';
+
+const verifyConfig = readConfig(
+  'ai/verify',
+  z.strictObject({
+    fallback_prompt: z.string().min(1),
+    fallback_max_output_tokens: z.number().int().positive(),
+  }),
+);
 
 export type AIProvider =
   | 'openai'
@@ -45,13 +54,6 @@ export type AISettings = {
 export type DetectedAIModel = {
   id: string;
   name: string;
-};
-
-export const defaultAISettings: AISettings = {
-  enabled: false,
-  provider: 'openai',
-  model: 'gpt-4o-mini',
-  apiKey: '',
 };
 
 type AnyLanguageModel = ReturnType<ReturnType<typeof createOpenAI>>;
@@ -141,7 +143,11 @@ export type AIServiceCheck = {
 export async function verifyAIService(settings: AISettings): Promise<AIServiceCheck> {
   if (getProviderModelListStyle(settings.provider) === 'none') {
     const model = createAIModel(settings, 'verifyService');
-    await generateText({ model, maxOutputTokens: 8, prompt: 'Reply with exactly: ok' });
+    await generateText({
+      model,
+      maxOutputTokens: verifyConfig.fallback_max_output_tokens,
+      prompt: verifyConfig.fallback_prompt,
+    });
     return { models: [] };
   }
   try {

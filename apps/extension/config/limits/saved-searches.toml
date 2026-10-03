@@ -1,0 +1,11 @@
+# The bookmark manager's saved searches (local storage, never synced). What one saved query may
+# hold is in saved-search-query.toml.
+
+# Most saved searches a profile keeps; saving another fails with a "limit reached" message.
+max_searches = 50
+
+# Longest saved search name, in characters; longer names are cut.
+name_max_length = 80
+
+# Longest stored saved search id; a stored entry with a longer id is dropped.
+id_max_length = 100

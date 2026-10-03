@@ -1,43 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BookmarkTreeNode } from '@/types';
-
-type FakeNode = { id: string; parentId: string; title: string; url?: string };
-
-const browserState = vi.hoisted(() => ({
-  nodes: [] as FakeNode[],
-  next: 1,
-  calls: 0,
-}));
-
-vi.mock('@/services/bookmarks', () => ({
-  createBookmark: vi.fn(async (details: { parentId: string; title: string; url?: string }) => {
-    browserState.calls += 1;
-    if (details.url?.startsWith('bad:')) throw new Error('Invalid URL.');
-    if (details.title === 'Broken Folder') throw new Error('Cannot create folder.');
-    const node = { id: `n${browserState.next++}`, ...details };
-    browserState.nodes.push(node);
-    return node;
-  }),
-  deleteBookmark: vi.fn(async (id: string) => {
-    const remove = (targetId: string) => {
-      for (const child of browserState.nodes.filter((node) => node.parentId === targetId)) {
-        remove(child.id);
-      }
-      browserState.nodes = browserState.nodes.filter((node) => node.id !== targetId);
-    };
-    remove(id);
-  }),
-  getBookmarkSubTree: vi.fn(async (id: string) => {
-    const build = (node: FakeNode): { id: string; children: unknown[] } => ({
-      id: node.id,
-      children: browserState.nodes.filter((child) => child.parentId === node.id).map(build),
-    });
-    const node = browserState.nodes.find((item) => item.id === id);
-    return node ? [build(node)] : [];
-  }),
-}));
-
-const {
+import { fakeBrowser } from 'wxt/testing/fake-browser';
+import {
   applyImportPlan,
   isSameImportPlan,
   jsonImportFormat,
@@ -45,13 +8,21 @@ const {
   parseBookmarks,
   planImport,
   undoImport,
-} = await import('@/services/bookmark-import');
+} from '@/services/bookmark-import';
+import type { BookmarkTreeNode } from '@/types';
+import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+
+/** The browser side: an empty import target folder. */
+let bookmarks: FakeBookmarks;
 
 beforeEach(() => {
-  browserState.nodes = [];
-  browserState.next = 1;
-  browserState.calls = 0;
+  fakeBrowser.reset();
+  vi.restoreAllMocks();
+  bookmarks = installFakeBookmarks([{ id: 'target', title: 'Target' }]);
 });
+
+const titles = (folderId: string) =>
+  bookmarks.childIds(folderId).map((id) => bookmarks.get(id)?.title);
 
 /** Root > Bookmarks bar > Target (A, Sub > B), Other bookmarks (C), Managed (read-only). */
 function browserTree(): BookmarkTreeNode[] {
@@ -274,7 +245,8 @@ describe('import plan (dry run)', () => {
 
   it('never calls the browser while planning', () => {
     planImport(file(), browserTree(), 'target', 'import-all');
-    expect(browserState.calls).toBe(0);
+    expect(fakeBrowser.bookmarks.create).not.toHaveBeenCalled();
+    expect(bookmarks.writes).toEqual([]);
   });
 
   it('detects a stale preview when the tree changed', () => {
@@ -296,6 +268,8 @@ describe('import plan (dry run)', () => {
 
 describe('applying an import plan', () => {
   it('creates planned items, counts skips, and reports a partial failure', async () => {
+    bookmarks.fail.create.add('Rejected');
+    bookmarks.fail.create.add('Broken Folder');
     const plan = planImport(
       parseJson([
         { title: 'Ok', url: 'https://e2e.invalid/ok' },
@@ -316,13 +290,11 @@ describe('applying an import plan', () => {
       skipped: 2,
       failed: 3,
     });
-    expect(outcome.errors).toEqual(['Invalid URL.', 'Cannot create folder.']);
-    expect(browserState.nodes.map(({ title, parentId }) => [title, parentId])).toEqual([
-      ['Ok', 'target'],
-      ['Folder', 'target'],
-      ['Inner', 'n2'],
-    ]);
-    expect(outcome.createdRootIds).toEqual(['n1', 'n2']);
+    expect(outcome.errors).toEqual(['create failed: Rejected', 'create failed: Broken Folder']);
+    expect(titles('target')).toEqual(['Ok', 'Folder']);
+    const [, folderId] = bookmarks.childIds('target');
+    expect(titles(folderId)).toEqual(['Inner']);
+    expect(outcome.createdRootIds).toEqual(bookmarks.childIds('target'));
   });
 
   it('undo removes created items but keeps an imported folder the user added to', async () => {
@@ -337,10 +309,11 @@ describe('applying an import plan', () => {
       'import-all',
     );
     const outcome = await applyImportPlan(plan);
-    const other = browserState.nodes.find((node) => node.title === 'Other');
-    browserState.nodes.push({ id: 'user', parentId: other?.id ?? '', title: 'Mine' });
+    const otherId = bookmarks.childIds('target')[2];
+    await fakeBrowser.bookmarks.create({ parentId: otherId, title: 'Mine' });
 
     expect(await undoImport(outcome)).toEqual({ removed: 2, failed: 1 });
-    expect(browserState.nodes.map((node) => node.title)).toEqual(['Other', 'Mine']);
+    expect(titles('target')).toEqual(['Other']);
+    expect(titles(otherId)).toEqual(['Mine']);
   });
 });

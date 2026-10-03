@@ -3,10 +3,21 @@
  * Centralizes all browser bookmarks API interactions.
  */
 
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
+const undoConfig = readConfig(
+  'bookmarks/undo',
+  z.strictObject({ deletion_undo_window_ms: z.number().int().positive() }),
+);
+
 /** How long a deletion can be undone from the popup or side panel. */
-export const BOOKMARK_DELETION_UNDO_WINDOW_MS = 10_000;
+export const BOOKMARK_DELETION_UNDO_WINDOW_MS = undoConfig.deletion_undo_window_ms;
+
+/** Chrome 134+ and Edge mark the bookmarks bar with this `folderType`. */
+const BOOKMARKS_BAR_FOLDER_TYPE = 'bookmarks-bar';
+/** Firefox's bookmarks toolbar has a fixed GUID and no `folderType`. */
+const FIREFOX_TOOLBAR_FOLDER_ID = 'toolbar_____';
 
 export type RecoverableBookmarkNode = {
   title: string;
@@ -83,18 +94,12 @@ function toRecoverableNode(
   };
 }
 
-function collectSubtreeIds(node: Browser.bookmarks.BookmarkTreeNode, ids: string[] = []): string[] {
-  ids.push(node.id);
-  for (const child of node.children ?? []) collectSubtreeIds(child, ids);
-  return ids;
-}
-
 /**
  * Gets the favicon URL for a given page URL using Chrome's favicon API.
  * @param pageUrl - The URL of the page to get the favicon for
- * @param size - The size of the favicon (default: 16)
+ * @param size - The size of the favicon (default: the favicon size setting's default)
  */
-export function getFaviconUrl(pageUrl: string, size = 16): string {
+export function getFaviconUrl(pageUrl: string, size: number = defaultSettings.faviconSize): string {
   // The _favicon path is a Chromium feature, so it is not one of the typed public paths.
   const url = new URL(browser.runtime.getURL('/_favicon/' as '/'));
   url.searchParams.set('pageUrl', pageUrl);
@@ -113,7 +118,7 @@ export function hasBrowserFaviconCache(): boolean {
  */
 export function getSiteIconUrl(
   pageUrl: string,
-  size = 16,
+  size: number = defaultSettings.faviconSize,
   cachedIcon?: string | null,
 ): string | null {
   if (cachedIcon) return cachedIcon;
@@ -140,7 +145,7 @@ function processNode(node: Browser.bookmarks.BookmarkTreeNode): BookmarkTreeNode
 }
 
 function requireBookmarksApi(): typeof browser.bookmarks {
-  if (!browser?.bookmarks) throw new Error('Chrome bookmarks API not available.');
+  if (!browser?.bookmarks) throw new Error(t('error_bookmarksApiUnavailable'));
   return browser.bookmarks;
 }
 
@@ -154,12 +159,35 @@ export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
 }
 
 /**
+ * The bookmarks bar (Firefox: bookmarks toolbar) among the permanent folders of `tree`, found by
+ * what each browser reports instead of a browser-specific id: Chrome's and Edge's `folderType`,
+ * then Firefox's toolbar GUID, then the first permanent folder, where older Chrome versions
+ * without `folderType` keep the bar.
+ */
+export function findBookmarksBarFolder<T extends Pick<BookmarkTreeNode, 'id' | 'parentId'> & {
+  folderType?: string;
+  children?: T[];
+}>(tree: readonly T[]): T | undefined {
+  const permanent = tree.filter(isBookmarkTreeRoot).flatMap((root) => root.children ?? []);
+  return (
+    permanent.find((folder) => folder.folderType === BOOKMARKS_BAR_FOLDER_TYPE) ??
+    permanent.find((folder) => folder.id === FIREFOX_TOOLBAR_FOLDER_ID) ??
+    permanent[0]
+  );
+}
+
+/** Id of the bookmarks bar in this browser, or undefined when the tree has no folders. */
+export async function getBookmarksBarId(): Promise<string | undefined> {
+  return findBookmarksBarFolder(await requireBookmarksApi().getTree())?.id;
+}
+
+/**
  * Gets a single bookmark by ID.
  * @param id - The bookmark ID
  */
 export async function getBookmark(id: string): Promise<Browser.bookmarks.BookmarkTreeNode> {
   const [result] = await requireBookmarksApi().get(id);
-  if (!result) throw new Error('Bookmark not found.');
+  if (!result) throw new Error(t('error_bookmarkNotFound'));
   return result;
 }
 
@@ -275,11 +303,11 @@ export async function captureBookmarkDeletion(
 ): Promise<BookmarkDeletionSnapshot> {
   const [node] = await getBookmarkSubTree(id);
   if (!node?.parentId) {
-    throw new Error('Bookmark cannot be recovered without its parent folder.');
+    throw new Error(t('error_bookmarkNoParent'));
   }
 
   // Tags and summaries are keyed by browser ID, which changes when the tree is recreated.
-  const metadataById = await getStoredBookmarkMetadata(collectSubtreeIds(node)).catch(
+  const metadataById = await getStoredBookmarkMetadata(subtreeIds(node)).catch(
     () => ({}) as StoredBookmarkMetadataById,
   );
   const expiresAt = now + BOOKMARK_DELETION_UNDO_WINDOW_MS;
@@ -326,20 +354,17 @@ export async function restoreBookmarkDeletion(
   now: number = Date.now(),
 ): Promise<Browser.bookmarks.BookmarkTreeNode> {
   if (now > snapshot.expiresAt) {
-    throw new BookmarkRestoreError('The undo window for this deletion has expired.', 'expired');
+    throw new BookmarkRestoreError(t('toast_restoreExpired'), 'expired');
   }
 
-  let siblings: Browser.bookmarks.BookmarkTreeNode[];
-  try {
-    const [parent] = await getBookmarkSubTree(snapshot.parentId);
-    if (!parent || parent.url) throw new Error('Original parent is not a folder.');
-    siblings = parent.children ?? [];
-  } catch {
-    throw new BookmarkRestoreError(
-      'The original parent folder no longer exists.',
-      'parent-missing',
-    );
+  const parent = await getBookmarkSubTree(snapshot.parentId).then(
+    ([node]) => node,
+    () => undefined,
+  );
+  if (!parent || parent.url) {
+    throw new BookmarkRestoreError(t('toast_restoreParentMissing'), 'parent-missing');
   }
+  const siblings = parent.children ?? [];
 
   // Other deletions may have been undone since, so place the item by the remembered order;
   // otherwise clamp the captured index so the browser accepts it.
@@ -382,7 +407,7 @@ export async function restoreBookmarkDeletion(
       }
     }
     throw new BookmarkRestoreError(
-      error instanceof Error ? error.message : 'Failed to restore bookmark deletion.',
+      getErrorMessage(error, 'toast_errorRestoringDeletion'),
       'restore-failed',
     );
   }
@@ -412,6 +437,187 @@ export async function getBookmarkSubTree(
   return requireBookmarksApi().getSubTree(id);
 }
 
+/** The bookmark or folder (with its subtree) as it is now, or undefined if it no longer exists. */
+export async function getLiveBookmark(
+  id: string,
+): Promise<Browser.bookmarks.BookmarkTreeNode | undefined> {
+  return getBookmarkSubTree(id).then(
+    ([node]) => node,
+    () => undefined,
+  );
+}
+
+// ============================================================================
+// Reviewed batch changes
+// ============================================================================
+
+/** The bookmark fields a reviewed change compares or writes. */
+export type BookmarkFields = { title?: string; url?: string };
+
+/**
+ * One change a tool proposed and the user reviewed. Right before it is written, the live
+ * bookmark is read again: if it no longer exists, differs from `expect`, or fails `check`, the
+ * change is skipped, so a stale review never overwrites or deletes a newer edit.
+ */
+export type BookmarkChange = {
+  id: string;
+  /** The title the user reviewed, reported back in `issues`. */
+  title: string;
+  /** Values the live bookmark must still have. */
+  expect?: BookmarkFields;
+  /** Any further condition on the live bookmark (with its subtree), such as a duplicate key. */
+  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean;
+} & (
+  | { kind: 'update'; set: BookmarkFields }
+  | {
+      kind: 'remove';
+      /** Keep a snapshot so undo can recreate it; on by default. */
+      undoable?: boolean;
+    }
+);
+
+export type BookmarkChangeIssue = {
+  id: string;
+  title: string;
+  /** `changed`: deleted or edited since the review, so it was skipped. */
+  reason: 'changed' | 'failed';
+};
+
+export type BookmarkChangesUndoResult = { restored: number; failed: number };
+
+export type BookmarkChangesResult = {
+  applied: number;
+  /** Changes left out because the bookmark changed since the review. */
+  skipped: number;
+  /** Changes the browser rejected. */
+  failed: number;
+  /** One entry per skipped or failed change, in the order given. */
+  issues: BookmarkChangeIssue[];
+  /** Snapshots of the removed bookmarks, in removal order; `undo` restores them. */
+  deletions: BookmarkDeletionSnapshot[];
+  /** After this time (epoch milliseconds) removed bookmarks can no longer be restored. */
+  expiresAt: number;
+  /**
+   * Reverts what was applied, once: updates first (newest first), each only while the bookmark
+   * still has the written values, then removals (newest first, so captured sibling positions
+   * stay valid). A later call returns the first call's result.
+   */
+  undo(): Promise<BookmarkChangesUndoResult>;
+};
+
+type AppliedUpdate = { id: string; previous: BookmarkFields; written: BookmarkFields };
+
+function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields = {}) {
+  return (Object.keys(fields) as (keyof BookmarkFields)[]).every(
+    (field) => fields[field] === undefined || node[field] === fields[field],
+  );
+}
+
+function pickFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields) {
+  return Object.fromEntries(
+    (Object.keys(fields) as (keyof BookmarkFields)[]).map((field) => [field, node[field]]),
+  ) as BookmarkFields;
+}
+
+/** Restores deletion snapshots newest first; one failure does not stop the others. */
+export async function restoreBookmarkDeletions(
+  snapshots: readonly BookmarkDeletionSnapshot[],
+): Promise<BookmarkChangesUndoResult> {
+  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
+  for (const snapshot of [...snapshots].reverse()) {
+    try {
+      await restoreBookmarkDeletion(snapshot);
+      result.restored += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
+}
+
+async function revertUpdates(updates: readonly AppliedUpdate[]): Promise<BookmarkChangesUndoResult> {
+  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
+  for (const update of [...updates].reverse()) {
+    const live = await getLiveBookmark(update.id);
+    // A bookmark edited again since is left alone, so undo never overwrites a newer change.
+    if (!live || !matchesFields(live, update.written)) {
+      result.failed += 1;
+      continue;
+    }
+    try {
+      await updateBookmark(update.id, update.previous);
+      result.restored += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
+}
+
+/**
+ * Writes reviewed changes one by one, in order, re-checking each against the live bookmark
+ * first. Every change is attempted; a skipped or failed one never stops the rest.
+ */
+export async function applyBookmarkChanges(
+  changes: readonly BookmarkChange[],
+  now: number = Date.now(),
+): Promise<BookmarkChangesResult> {
+  const issues: BookmarkChangeIssue[] = [];
+  const deletions: BookmarkDeletionSnapshot[] = [];
+  const updates: AppliedUpdate[] = [];
+  let applied = 0;
+
+  for (const change of changes) {
+    const live = await getLiveBookmark(change.id);
+    if (!live || !matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+      issues.push({ id: change.id, title: change.title, reason: 'changed' });
+      continue;
+    }
+    try {
+      if (change.kind === 'update') {
+        const previous = pickFields(live, change.set);
+        await updateBookmark(change.id, change.set);
+        updates.push({ id: change.id, previous, written: change.set });
+      } else if (change.undoable === false) {
+        await deleteBookmark(change.id);
+      } else {
+        const snapshot = await captureBookmarkDeletion(change.id, now);
+        await deleteBookmark(change.id);
+        deletions.push(snapshot);
+      }
+      applied += 1;
+    } catch {
+      issues.push({ id: change.id, title: change.title, reason: 'failed' });
+    }
+  }
+
+  let undone: Promise<BookmarkChangesUndoResult> | undefined;
+  const undo = () => {
+    undone ??= (async () => {
+      const reverted = await revertUpdates(updates);
+      const restored = await restoreBookmarkDeletions(deletions);
+      return {
+        restored: reverted.restored + restored.restored,
+        failed: reverted.failed + restored.failed,
+      };
+    })();
+    return undone;
+  };
+
+  return {
+    applied,
+    skipped: issues.filter((issue) => issue.reason === 'changed').length,
+    failed: issues.filter((issue) => issue.reason === 'failed').length,
+    issues,
+    deletions,
+    expiresAt: Math.min(
+      now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+      ...deletions.map((deletion) => deletion.expiresAt),
+    ),
+    undo,
+  };
+}
+
 /**
  * Opens a bookmark URL in a new foreground tab.
  */
@@ -423,27 +629,8 @@ export async function openBookmarkInNewTab(url: string): Promise<void> {
  * Gets the current active tab information.
  */
 export async function getCurrentTab(): Promise<Browser.tabs.Tab> {
-  if (!browser?.tabs) throw new Error('Chrome tabs API not available.');
+  if (!browser?.tabs) throw new Error(t('error_tabsApiUnavailable'));
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-  if (!tab) throw new Error('No active tab found.');
+  if (!tab) throw new Error(t('error_noActiveTab'));
   return tab;
-}
-
-/**
- * Truncates a string to a specified length.
- * @param text - The text to truncate
- * @param length - Maximum length (default: 50)
- */
-export function truncate(text?: string, length = 50): string {
-  if (!text) return '';
-  return text.length > length ? `${text.slice(0, length)}...` : text;
-}
-
-/**
- * Formats a timestamp to a locale string.
- * @param timestamp - The timestamp in milliseconds
- */
-export function formatDate(timestamp?: number): string {
-  if (!timestamp) return '';
-  return new Date(timestamp).toLocaleString();
 }

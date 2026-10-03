@@ -1,4 +1,20 @@
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+
+const htmlConfig = readConfig(
+  'network/html',
+  z.strictObject({ head_max_bytes: z.number().int().positive() }),
+);
+
+const privacyConfig = readConfig(
+  'privacy/detection',
+  z.strictObject({
+    fragment_token_params: z.array(z.string().min(1)),
+    token_patterns: z.array(z.string().min(1)).min(1),
+    ambiguous_token_prefixes: z.array(z.string().min(1)),
+    asset_extensions: z.array(z.string().regex(/^[a-z0-9]+$/i)).min(1),
+  }),
+);
 
 export type DeadLinkStatus = 'ok' | 'redirect' | 'error' | 'timeout' | 'invalid' | 'skipped';
 
@@ -31,15 +47,30 @@ const CONFIRMED_DEAD_CATEGORIES: ReadonlySet<DeadLinkCategory> = new Set([
   'redirectLoop',
 ]);
 
+/**
+ * Failure categories of specific HTTP statuses. `methodRejected`: HEAD and the GET fallback
+ * were both rejected, so the server refuses automated checks.
+ */
+const HTTP_FAILURE_CATEGORIES: ReadonlyMap<number, DeadLinkCategory> = new Map([
+  [404, 'notFound'],
+  [410, 'notFound'],
+  [401, 'auth'],
+  [403, 'auth'],
+  [407, 'auth'],
+  [429, 'rateLimited'],
+  [405, 'methodRejected'],
+  [501, 'methodRejected'],
+]);
+
+/** Statuses from here up are server errors when no specific category applies. */
+const SERVER_ERROR_MIN_STATUS = 500;
+
 /** Classifies a non-success HTTP status. A HEAD error has already been retried with GET. */
 export function classifyHttpFailure(statusCode: number): DeadLinkCategory {
-  if (statusCode === 404 || statusCode === 410) return 'notFound';
-  if (statusCode === 401 || statusCode === 403 || statusCode === 407) return 'auth';
-  if (statusCode === 429) return 'rateLimited';
-  // HEAD and the GET fallback were both rejected: the server refuses automated checks.
-  if (statusCode === 405 || statusCode === 501) return 'methodRejected';
-  if (statusCode >= 500) return 'serverError';
-  return 'httpError';
+  return (
+    HTTP_FAILURE_CATEGORIES.get(statusCode) ??
+    (statusCode >= SERVER_ERROR_MIN_STATUS ? 'serverError' : 'httpError')
+  );
 }
 
 const TRANSPORT_FAILURE_CATEGORIES: Record<NetworkErrorKind, DeadLinkCategory> = {
@@ -128,7 +159,7 @@ export type PrivacyScanResult = {
   items: PrivacyScanItem[];
 };
 
-type DeadLinkOptions = {
+export type DeadLinkOptions = {
   requestTimeoutMs: number;
   concurrency: number;
   retryCount: number;
@@ -136,14 +167,14 @@ type DeadLinkOptions = {
   successStatuses: number[];
 };
 
-type MetadataOptions = {
+export type MetadataOptions = {
   overwriteTitles: boolean;
   fetchDescriptions: boolean;
   requestTimeoutMs: number;
   concurrency: number;
 };
 
-type PrivacyOptions = {
+export type PrivacyScanOptions = {
   scanTitles: boolean;
   scanQueryParams: boolean;
   scanFragments: boolean;
@@ -159,13 +190,26 @@ class RequestTimeoutError extends Error {
   }
 }
 
+const WEB_URL_PROTOCOLS: ReadonlySet<string> = new Set(['http:', 'https:']);
+
 /** Only web URLs are requested; bookmarklets, data:, and browser-internal URLs are skipped. */
-export function isWebUrl(url: string): boolean {
+export function isWebUrl(url: string | URL): boolean {
   try {
-    const { protocol } = new URL(url);
-    return protocol === 'http:' || protocol === 'https:';
+    return WEB_URL_PROTOCOLS.has(new URL(url).protocol);
   } catch {
     return false;
+  }
+}
+
+/**
+ * Decodes a percent-encoded URL component, or returns it unchanged when the encoding is broken.
+ * `plusAsSpace` decodes `+` as a space, as in query strings.
+ */
+export function decodeUrlComponent(value: string, plusAsSpace = false): string {
+  try {
+    return decodeURIComponent(plusAsSpace ? value.replace(/\+/g, ' ') : value);
+  } catch {
+    return value;
   }
 }
 
@@ -288,10 +332,12 @@ export async function scanDeadLinks(
 }
 
 const CHARSET_PATTERN = /charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i;
+/** HTML requires a `<meta charset>` within the first 1024 bytes; twice that tolerates sloppy pages. */
+const CHARSET_SNIFF_BYTES = 2048;
 
 /** Decodes a page using the Content-Type charset, then a `<meta>` charset, then UTF-8. */
-export function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
-  const sniffed = new TextDecoder('latin1').decode(bytes.slice(0, 2048));
+function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
+  const sniffed = new TextDecoder('latin1').decode(bytes.slice(0, CHARSET_SNIFF_BYTES));
   const charset =
     contentType?.match(CHARSET_PATTERN)?.[1] ??
     sniffed.match(/<meta[^>]+charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i)?.[1];
@@ -325,21 +371,12 @@ export async function fetchBookmarkMetadata(
     }
 
     try {
-      const page = await requestWithTimeout(
-        url,
-        { method: 'GET', redirect: 'follow' },
-        options.requestTimeoutMs,
-        async (response) => {
-          const contentType = response.headers.get('content-type');
-          // Error pages ("404 Not Found") must never become title suggestions, and files such
-          // as PDFs or archives are never downloaded.
-          if (!response.ok || !isHtmlContentType(contentType)) {
-            return { status: response.status, ok: response.ok, html: null };
-          }
-          const bytes = await readHtmlHead(response, METADATA_MAX_BYTES);
-          return { status: response.status, ok: true, html: decodeHtml(bytes, contentType) };
-        },
-      );
+      // Error pages ("404 Not Found") must never become title suggestions.
+      const page = await fetchHtmlPage(url, {
+        timeoutMs: options.requestTimeoutMs,
+        maxBytes: METADATA_MAX_BYTES,
+        until: 'head',
+      });
       if (!page.ok) {
         return {
           ...base,
@@ -397,41 +434,32 @@ export async function fetchBookmarkMetadata(
 export async function applyMetadataTitles(
   items: Array<Pick<MetadataFetchResultItem, 'id' | 'title' | 'suggestedTitle'>>,
 ): Promise<MetadataApplyResult> {
-  const result: MetadataApplyResult = { updated: 0, skipped: 0, failed: 0 };
-  for (const item of items) {
-    if (!item.suggestedTitle) {
-      result.skipped += 1;
-      continue;
-    }
-    let currentTitle: string | undefined;
-    try {
-      currentTitle = (await getBookmark(item.id)).title;
-    } catch {
-      currentTitle = undefined;
-    }
-    if (currentTitle !== item.title) {
-      result.skipped += 1;
-      continue;
-    }
-    try {
-      await updateBookmark(item.id, { title: item.suggestedTitle });
-      result.updated += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
+  const changes: BookmarkChange[] = items.flatMap(({ id, title, suggestedTitle }) =>
+    suggestedTitle
+      ? [{ kind: 'update', id, title, expect: { title }, set: { title: suggestedTitle } }]
+      : [],
+  );
+  const { applied, skipped, failed } = await applyBookmarkChanges(changes);
+  // Items without a suggestion have nothing to apply.
+  return { updated: applied, skipped: skipped + items.length - changes.length, failed };
 }
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
-export const FRAGMENT_TOKEN_PARAMS = ['access_token', 'id_token', 'refresh_token', 'token', 'code'];
-const TOKEN_CANDIDATE_PATTERN =
-  /(?:^|[^A-Za-z0-9_])(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|xox[abprs]-[A-Za-z0-9-]{10,})/g;
+export const FRAGMENT_TOKEN_PARAMS: readonly string[] = privacyConfig.fragment_token_params;
+const TOKEN_CANDIDATE_PATTERN = new RegExp(
+  `(?:^|[^A-Za-z0-9_])(${privacyConfig.token_patterns.join('|')})`,
+  'g',
+);
+
+/** Generated keys mix upper case, lower case, and digits; slugs rarely do. */
+function looksGenerated(text: string): boolean {
+  return /[A-Z]/.test(text) && /[a-z]/.test(text) && /\d/.test(text);
+}
 
 /**
- * True when a query or fragment value contains an API or access token. `sk-` is also a common
- * slug prefix (`sk-telecom-annual-report-2024`), so it counts only when the rest looks random:
- * upper case, lower case, and digits together, as in generated keys.
+ * True when a query or fragment value contains an API or access token. Some prefixes (`sk-`) are
+ * also common in slugs (`sk-telecom-annual-report-2024`), so a match with one of them counts
+ * only when the rest looks generated.
  */
 export function containsTokenValue(value: string): boolean {
   return findTokenValues(value).length > 0;
@@ -442,40 +470,38 @@ export function findTokenValues(value: string): string[] {
   return [...value.matchAll(TOKEN_CANDIDATE_PATTERN)]
     .map(([, candidate]) => candidate)
     .filter((candidate) => {
-      if (!candidate.startsWith('sk-')) return true;
-      const body = candidate.slice(3);
-      return /[A-Z]/.test(body) && /[a-z]/.test(body) && /\d/.test(body);
+      const prefix = privacyConfig.ambiguous_token_prefixes.find((item) =>
+        candidate.startsWith(item),
+      );
+      return prefix === undefined || looksGenerated(candidate.slice(prefix.length));
     });
 }
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@([A-Z0-9-]+(?:\.[A-Z0-9-]+)*\.[A-Z]{2,})/gi;
 /** `logo@2x.png`-style asset names look like emails but are not. */
 const RETINA_SUFFIX_PATTERN = /^\d+(?:\.\d+)?x\./i;
-const ASSET_EXTENSION_PATTERN = /\.(?:png|jpe?g|gif|svg|webp|avif|ico|bmp|css|js|mjs|json|html?)$/i;
+const ASSET_EXTENSION_PATTERN = new RegExp(
+  `\\.(?:${privacyConfig.asset_extensions.join('|')})$`,
+  'i',
+);
 const UUID_PATTERN = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/i;
 
 const SEVERITY_RANK: Record<PrivacySeverity, number> = { low: 0, medium: 1, high: 2 };
 
-function findingSeverity(finding: PrivacyFinding): PrivacySeverity {
-  switch (finding.kind) {
-    case 'sensitiveParam':
-    case 'sensitiveFragmentParam':
-    case 'tokenPattern':
-      return 'high';
-    case 'credentials':
-      return finding.withPassword ? 'high' : 'medium';
-    case 'email':
-      return 'medium';
-    default:
-      return 'low';
-  }
-}
+/** How serious each finding is. */
+const FINDING_SEVERITY: Record<PrivacyFinding['kind'], PrivacySeverity> = {
+  sensitiveParam: 'high',
+  sensitiveFragmentParam: 'high',
+  tokenPattern: 'high',
+  credentials: 'high',
+  email: 'medium',
+  fragment: 'low',
+  uuid: 'low',
+};
 
-function safeDecode(value: string): string {
-  try {
-    return decodeURIComponent(value.replace(/\+/g, ' '));
-  } catch {
-    return value;
-  }
+function findingSeverity(finding: PrivacyFinding): PrivacySeverity {
+  // Credentials without a password are only a user name.
+  if (finding.kind === 'credentials' && !finding.withPassword) return 'medium';
+  return FINDING_SEVERITY[finding.kind];
 }
 
 /** Splits a fragment into route-style params (`#/cb?access_token=…`, `#access_token=…`). */
@@ -504,7 +530,7 @@ export function findEmailValues(text: string): string[] {
 
 export function scanBookmarkPrivacy(
   nodes: BookmarkTreeNode[],
-  options: PrivacyOptions,
+  options: PrivacyScanOptions,
 ): PrivacyScanResult {
   const sensitiveParams = new Set(options.sensitiveParams.map((item) => item.toLowerCase()));
   const fragmentSensitive = new Set([...sensitiveParams, ...FRAGMENT_TOKEN_PARAMS]);
@@ -557,7 +583,7 @@ export function scanBookmarkPrivacy(
     withoutUserInfo.username = '';
     withoutUserInfo.password = '';
     const titleText = options.scanTitles ? bookmark.node.title : '';
-    const combinedText = `${safeDecode(withoutUserInfo.href)} ${titleText}`;
+    const combinedText = `${decodeUrlComponent(withoutUserInfo.href, true)} ${titleText}`;
 
     if (options.emailDetection && containsEmail(combinedText)) {
       add({ kind: 'email' });
@@ -602,6 +628,7 @@ export async function requestWithTimeout<T>(
   init: RequestInit,
   timeoutMs: number,
   consume: (response: Response) => Promise<T>,
+  fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -629,28 +656,67 @@ export async function requestWithTimeout<T>(
 }
 
 /** Upper bound on bytes read from one page; titles and descriptions live in the `<head>`. */
-export const METADATA_MAX_BYTES = 512 * 1024;
+export const METADATA_MAX_BYTES = htmlConfig.head_max_bytes;
 const HEAD_END_PATTERN = /<\/head\s*>|<body[\s>]/i;
 const HTML_CONTENT_TYPE_PATTERN = /^\s*(?:text\/html|application\/xhtml\+xml)\s*(?:;|$)/i;
 
 /** True when a Content-Type is missing (sniffed later) or declares an HTML document. */
-export function isHtmlContentType(contentType: string | null): boolean {
+function isHtmlContentType(contentType: string | null): boolean {
   return !contentType?.trim() || HTML_CONTENT_TYPE_PATTERN.test(contentType);
 }
 
+export type HtmlPage = {
+  /** HTTP status of the final response. */
+  status: number;
+  ok: boolean;
+  /** The URL after redirects. */
+  url: string;
+  /** The decoded page; null for error statuses and non-HTML files, which are not downloaded. */
+  html: string | null;
+};
+
+export type FetchHtmlPageOptions = {
+  /** Covers the headers and the body, so a page that stalls mid-download cannot hang a tool. */
+  timeoutMs: number;
+  /** Bytes read at most. */
+  maxBytes: number;
+  /** `head` stops at the end of `<head>` (or the start of `<body>`); `end` reads the whole page. */
+  until: 'head' | 'end';
+  /** A page whose final URL (after redirects) fails this is not downloaded; `html` is null. */
+  allowUrl?: (url: string) => boolean;
+  /** Defaults to the global fetch. */
+  fetch?: typeof globalThis.fetch;
+};
+
 /**
- * Reads a page body only until the end of its `<head>` (or `<body>` start) or `maxBytes`,
- * whichever comes first, then stops the download.
+ * Downloads a web page without cookies, following redirects, and decodes it by its declared
+ * charset. Throws on a timeout (see {@link classifyFailure}) and on network failures.
  */
-export function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
-  return readResponseBytes(response, maxBytes, HEAD_END_PATTERN);
+export function fetchHtmlPage(url: string, options: FetchHtmlPageOptions): Promise<HtmlPage> {
+  return requestWithTimeout(
+    url,
+    { method: 'GET', redirect: 'follow' },
+    options.timeoutMs,
+    async (response) => {
+      const page = { status: response.status, ok: response.ok, url: response.url || url };
+      const contentType = response.headers.get('content-type');
+      const allowed = options.allowUrl?.(page.url) ?? true;
+      if (!response.ok || !allowed || !isHtmlContentType(contentType)) {
+        return { ...page, html: null };
+      }
+      const stopAt = options.until === 'head' ? HEAD_END_PATTERN : undefined;
+      const bytes = await readResponseBytes(response, options.maxBytes, stopAt);
+      return { ...page, html: decodeHtml(bytes, contentType) };
+    },
+    options.fetch,
+  );
 }
 
 /**
  * Reads a body up to `maxBytes`, or until `stopAt` matches the text read so far, then stops the
  * download.
  */
-export async function readResponseBytes(
+async function readResponseBytes(
   response: Response,
   maxBytes: number,
   stopAt?: RegExp,

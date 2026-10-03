@@ -18,6 +18,7 @@ const config = readConfig(
     concurrency: z.number().int().positive(),
     skip_private_hosts: z.boolean(),
     private_host_suffixes: z.array(z.string().min(1)),
+    drop_elements: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)),
   }),
 );
 
@@ -90,7 +91,7 @@ function createTurndown(): TurndownService {
   const turndown = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' });
   // Keep link and image text only: addresses cost tokens and say little about the topic.
   turndown.addRule('linkText', { filter: 'a', replacement: (content) => content });
-  turndown.remove(['img', 'picture', 'video', 'audio', 'iframe', 'script', 'style']);
+  turndown.remove(config.drop_elements as TurndownService.Filter);
   return turndown;
 }
 
@@ -122,18 +123,13 @@ export function extractPageText(doc: Document, maxChars = config.max_chars_per_p
 export async function readPageText(url: string): Promise<PageText | undefined> {
   if (!isReadablePageUrl(url)) return undefined;
   try {
-    const html = await requestWithTimeout(
-      url,
-      { method: 'GET', redirect: 'follow' },
-      config.timeout_ms,
-      async (response) => {
-        // A redirect can lead to a local host; that page is not read either.
-        if (!response.ok || !isHtmlContentType(response.headers.get('content-type'))) return null;
-        if (response.url && !isReadablePageUrl(response.url)) return null;
-        const bytes = await readResponseBytes(response, config.max_bytes);
-        return decodeHtml(bytes, response.headers.get('content-type'));
-      },
-    );
+    const { html } = await fetchHtmlPage(url, {
+      timeoutMs: config.timeout_ms,
+      maxBytes: config.max_bytes,
+      until: 'end',
+      // A redirect can lead to a local host; that page is not read either.
+      allowUrl: isReadablePageUrl,
+    });
     if (!html) return undefined;
     return extractPageText(new DOMParser().parseFromString(html, 'text/html'));
   } catch {

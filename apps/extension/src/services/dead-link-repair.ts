@@ -2,8 +2,12 @@
  * Reviewed repairs for dead-link scan results. Nothing changes until the user applies a plan;
  * each change is re-checked against the live bookmark first, and an applied batch can be undone.
  */
+import { z } from 'zod';
 
-const WAYBACK_PREFIX = 'https://web.archive.org/web/';
+const config = readConfig(
+  'network/dead-link-repair',
+  z.strictObject({ archive_url_prefix: z.string().url() }),
+);
 
 export type DeadLinkRepairChoice = 'keep' | 'delete' | 'redirect' | 'archive' | 'edit';
 
@@ -19,14 +23,10 @@ export type DeadLinkRepairItem = {
 
 export type DeadLinkRepairSummary = { keep: number; delete: number; replace: number };
 
-export type DeadLinkRepairIssue = {
-  id: string;
-  title: string;
-  /** `changed`: deleted, moved to another URL, or otherwise edited since the scan. */
-  reason: 'changed' | 'failed';
-};
+/** `changed`: deleted, moved to another URL, or otherwise edited since the scan. */
+export type DeadLinkRepairIssue = BookmarkChangeIssue;
 
-type ReplacedUrl = { id: string; previousUrl: string; newUrl: string };
+export type DeadLinkUndoResult = BookmarkChangesUndoResult;
 
 export type DeadLinkRepairOutcome = {
   deleted: number;
@@ -34,12 +34,9 @@ export type DeadLinkRepairOutcome = {
   skipped: number;
   failed: number;
   issues: DeadLinkRepairIssue[];
-  /** What {@link undoDeadLinkRepairs} reverts, in the order it was applied. */
-  deletions: BookmarkDeletionSnapshot[];
-  replacements: ReplacedUrl[];
+  /** Puts replaced URLs back, then restores deleted bookmarks; see {@link undoDeadLinkRepairs}. */
+  undo: () => Promise<DeadLinkUndoResult>;
 };
-
-export type DeadLinkUndoResult = { restored: number; failed: number };
 
 /** Results the review lists: failures, timeouts, and redirects. */
 export function isDeadLinkRepairCandidate(item: Pick<DeadLinkResultItem, 'status'>): boolean {
@@ -51,7 +48,7 @@ export function isDeadLinkRepairCandidate(item: Pick<DeadLinkResultItem, 'status
  * requested, so it can point at a page that was never archived.
  */
 export function buildArchiveUrl(url: string): string {
-  return `${WAYBACK_PREFIX}${url}`;
+  return `${config.archive_url_prefix}${url}`;
 }
 
 /** Replacement URLs must be web links; bookmarklets and browser pages cannot be chosen here. */
@@ -82,12 +79,12 @@ export function summarizeDeadLinkRepairs(items: DeadLinkRepairItem[]): DeadLinkR
   return summary;
 }
 
-async function readCurrentUrl(id: string): Promise<string | undefined> {
-  try {
-    return (await getBookmark(id)).url;
-  } catch {
-    return undefined;
-  }
+/** The bookmark change a reviewed choice makes; only for actionable items. */
+function toBookmarkChange(item: DeadLinkRepairItem): BookmarkChange {
+  const base = { id: item.id, title: item.title, expect: { url: item.scannedUrl } };
+  return item.choice === 'delete'
+    ? { ...base, kind: 'remove' }
+    : { ...base, kind: 'update', set: { url: resolveRepairUrl(item) } };
 }
 
 /**
@@ -97,75 +94,28 @@ async function readCurrentUrl(id: string): Promise<string | undefined> {
 export async function applyDeadLinkRepairs(
   items: DeadLinkRepairItem[],
 ): Promise<DeadLinkRepairOutcome> {
-  const outcome: DeadLinkRepairOutcome = {
-    deleted: 0,
-    replaced: 0,
-    skipped: 0,
-    failed: 0,
-    issues: [],
-    deletions: [],
-    replacements: [],
+  const actionable = items.filter(isActionableRepair);
+  const result = await applyBookmarkChanges(actionable.map(toBookmarkChange));
+  const notApplied = new Set(result.issues.map((issue) => issue.id));
+  const applied = actionable.filter((item) => !notApplied.has(item.id));
+  const deleted = applied.filter((item) => item.choice === 'delete').length;
+  return {
+    deleted,
+    replaced: applied.length - deleted,
+    skipped: result.skipped,
+    failed: result.failed,
+    issues: result.issues,
+    undo: result.undo,
   };
-  const report = (item: DeadLinkRepairItem, reason: DeadLinkRepairIssue['reason']) => {
-    if (reason === 'changed') outcome.skipped += 1;
-    else outcome.failed += 1;
-    outcome.issues.push({ id: item.id, title: item.title, reason });
-  };
-
-  for (const item of items) {
-    if (!isActionableRepair(item)) continue;
-    if ((await readCurrentUrl(item.id)) !== item.scannedUrl) {
-      report(item, 'changed');
-      continue;
-    }
-    try {
-      if (item.choice === 'delete') {
-        const snapshot = await captureBookmarkDeletion(item.id);
-        await deleteBookmark(item.id);
-        outcome.deletions.push(snapshot);
-        outcome.deleted += 1;
-      } else {
-        const newUrl = resolveRepairUrl(item) as string;
-        await updateBookmark(item.id, { url: newUrl });
-        outcome.replacements.push({ id: item.id, previousUrl: item.scannedUrl, newUrl });
-        outcome.replaced += 1;
-      }
-    } catch {
-      report(item, 'failed');
-    }
-  }
-  return outcome;
 }
 
 /**
- * Reverts an applied batch: restores deleted bookmarks (within the deletion undo window) and
- * puts replaced URLs back. A URL edited again since the repair is left alone and counted as
+ * Reverts an applied batch: puts replaced URLs back, then restores deleted bookmarks (within the
+ * deletion undo window). A URL edited again since the repair is left alone and counted as
  * failed, so undo never overwrites a newer change.
  */
-export async function undoDeadLinkRepairs(
-  outcome: Pick<DeadLinkRepairOutcome, 'deletions' | 'replacements'>,
+export function undoDeadLinkRepairs(
+  outcome: Pick<DeadLinkRepairOutcome, 'undo'>,
 ): Promise<DeadLinkUndoResult> {
-  const result: DeadLinkUndoResult = { restored: 0, failed: 0 };
-  for (const replacement of [...outcome.replacements].reverse()) {
-    try {
-      if ((await readCurrentUrl(replacement.id)) !== replacement.newUrl) {
-        result.failed += 1;
-        continue;
-      }
-      await updateBookmark(replacement.id, { url: replacement.previousUrl });
-      result.restored += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  // Reverse deletion order keeps the captured sibling indexes valid.
-  for (const snapshot of [...outcome.deletions].reverse()) {
-    try {
-      await restoreBookmarkDeletion(snapshot);
-      result.restored += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
+  return outcome.undo();
 }

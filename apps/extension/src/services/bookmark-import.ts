@@ -38,6 +38,24 @@ export interface ImportFormat {
 // Built-in Format Parsers
 // ============================================================================
 
+/** Parsed nodes get ids with this prefix; they are never browser bookmark ids. */
+const IMPORTED_ID_PREFIX = 'imported-';
+
+/** A fresh id source for one parse, unique within the file and across parses. */
+function createImportIdGenerator(): () => string {
+  const started = Date.now();
+  let counter = 0;
+  return () => `${IMPORTED_ID_PREFIX}${started}-${++counter}`;
+}
+
+/** Netscape files store dates as Unix seconds. */
+function parseNetscapeDate(value: string | null): number {
+  // Not a `cond ? x * MS_PER_SECOND : y` ternary: WXT's auto-import skips an identifier right
+  // before `:` as if it were an object key, which leaves it undefined at runtime.
+  if (!value) return Date.now();
+  return parseInt(value, 10) * MS_PER_SECOND;
+}
+
 /**
  * Chrome/Netscape HTML format parser
  */
@@ -51,8 +69,7 @@ export const htmlImportFormat: ImportFormat = {
     const result: BookmarkTreeNode[] = [];
     let skipped = 0;
 
-    let idCounter = 0;
-    const generateId = () => `imported-${Date.now()}-${++idCounter}`;
+    const generateId = createImportIdGenerator();
 
     const parseNode = (element: Element, parentId?: string): BookmarkTreeNode | null => {
       // Handle <A> tags (bookmarks)
@@ -62,7 +79,7 @@ export const htmlImportFormat: ImportFormat = {
           skipped += 1;
           return null;
         }
-        const title = element.textContent?.trim() || t('bookmarks_untitled');
+        const title = getBookmarkDisplayTitle(element.textContent?.trim());
         const dateAdded = element.getAttribute('ADD_DATE');
 
         return {
@@ -70,13 +87,13 @@ export const htmlImportFormat: ImportFormat = {
           parentId,
           title,
           url,
-          dateAdded: dateAdded ? parseInt(dateAdded, 10) * 1000 : Date.now(),
+          dateAdded: parseNetscapeDate(dateAdded),
         };
       }
 
       // Handle <H3> tags (folders)
       if (element.tagName === 'H3') {
-        const title = element.textContent?.trim() || t('bookmarks_untitled');
+        const title = getBookmarkDisplayTitle(element.textContent?.trim());
         const dateAdded = element.getAttribute('ADD_DATE');
         const id = generateId();
 
@@ -107,7 +124,7 @@ export const htmlImportFormat: ImportFormat = {
           id,
           parentId,
           title,
-          dateAdded: dateAdded ? parseInt(dateAdded, 10) * 1000 : Date.now(),
+          dateAdded: parseNetscapeDate(dateAdded),
           children: children.length > 0 ? children : undefined,
         };
       }
@@ -144,9 +161,8 @@ export const jsonImportFormat: ImportFormat = {
   extensions: ['json'],
   mimeTypes: ['application/json'],
   parse(content: string): ParsedImport {
-    let idCounter = 0;
     let skipped = 0;
-    const generateId = () => `imported-${Date.now()}-${++idCounter}`;
+    const generateId = createImportIdGenerator();
 
     let parsed: unknown;
     try {
@@ -155,12 +171,9 @@ export const jsonImportFormat: ImportFormat = {
       throw new Error(t('error_invalidJsonFormat'));
     }
 
-    const isRecord = (value: unknown): value is Record<string, unknown> =>
-      typeof value === 'object' && value !== null && !Array.isArray(value);
-
     // Invalid entries are skipped and counted so one bad item never rejects the whole file.
     const parseRawNode = (raw: unknown, parentId?: string): BookmarkTreeNode | null => {
-      if (!isRecord(raw)) {
+      if (!isPlainObject(raw)) {
         skipped += 1;
         return null;
       }
@@ -179,7 +192,7 @@ export const jsonImportFormat: ImportFormat = {
       const node: BookmarkTreeNode = {
         id,
         parentId,
-        title: typeof raw.title === 'string' && raw.title ? raw.title : t('bookmarks_untitled'),
+        title: getBookmarkDisplayTitle(typeof raw.title === 'string' ? raw.title : undefined),
         url,
         dateAdded: typeof raw.dateAdded === 'number' ? raw.dateAdded : undefined,
         dateGroupModified:
@@ -203,7 +216,7 @@ export const jsonImportFormat: ImportFormat = {
     let bookmarks: BookmarkTreeNode[];
     if (Array.isArray(parsed)) {
       bookmarks = parseList(parsed);
-    } else if (isRecord(parsed) && Array.isArray(parsed.children) && !parsed.url) {
+    } else if (isPlainObject(parsed) && Array.isArray(parsed.children) && !parsed.url) {
       // An exported container: its children are the top-level entries.
       bookmarks = parseList(parsed.children);
     } else {
@@ -352,15 +365,6 @@ export type ImportApplyOutcome = {
   createdRootIds: string[];
 };
 
-function findTreeNode(nodes: readonly BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
-  for (const node of nodes) {
-    if (node.id === id) return node;
-    const found = findTreeNode(node.children ?? [], id);
-    if (found) return found;
-  }
-  return null;
-}
-
 function collectTreeUrls(nodes: readonly BookmarkTreeNode[], urls: Set<string>): Set<string> {
   for (const node of nodes) {
     if (node.url) urls.add(node.url);
@@ -379,9 +383,9 @@ export function listImportTargets(tree: readonly BookmarkTreeNode[]): ImportTarg
     for (const node of nodes) {
       if (node.url) continue;
       const isRoot = !node.parentId;
-      const nodePath = isRoot ? path : [...path, node.title.trim() || t('bookmarks_untitled')];
+      const nodePath = isRoot ? path : [...path, getBookmarkDisplayTitle(node.title.trim())];
       if (!isRoot && !node.unmodifiable) {
-        targets.push({ id: node.id, label: nodePath.join(' / ') });
+        targets.push({ id: node.id, label: nodePath.join(FOLDER_PATH_SEPARATOR) });
       }
       visit(node.children ?? [], nodePath);
     }
@@ -400,7 +404,7 @@ export function planImport(
   targetFolderId: string,
   strategy: ImportDuplicateStrategy,
 ): ImportPlan {
-  const target = findTreeNode(tree, targetFolderId);
+  const target = findNode(tree, targetFolderId);
   if (!target || target.url || !target.parentId || target.unmodifiable) {
     throw new Error(t('tools_importTargetMissing'));
   }
@@ -487,12 +491,6 @@ function countPlanned(node: ImportPlanNode): number {
   return 1 + (node.children ?? []).reduce((total, child) => total + countPlanned(child), 0);
 }
 
-function collectSubtreeIds(node: { id: string; children?: { id: string }[] }, ids: string[] = []) {
-  ids.push(node.id);
-  for (const child of node.children ?? []) collectSubtreeIds(child, ids);
-  return ids;
-}
-
 /**
  * Creates the items a plan marks `create`. Every item is attempted; failures are counted (a
  * failed folder counts its planned subtree) rather than reported as success.
@@ -546,22 +544,18 @@ export async function undoImport(
   outcome: Pick<ImportApplyOutcome, 'createdIds' | 'createdRootIds'>,
 ): Promise<{ removed: number; failed: number }> {
   const created = new Set(outcome.createdIds);
-  let removed = 0;
-  let failed = 0;
-  for (const id of outcome.createdRootIds) {
-    try {
-      const [node] = await getBookmarkSubTree(id);
-      if (!node || collectSubtreeIds(node).some((itemId) => !created.has(itemId))) {
-        failed += 1;
-        continue;
-      }
-      await deleteBookmark(id);
-      removed += 1;
-    } catch {
-      failed += 1;
-    }
-  }
-  return { removed, failed };
+  const result = await applyBookmarkChanges(
+    outcome.createdRootIds.map((id) => ({
+      kind: 'remove',
+      id,
+      title: '',
+      // Undoing an import is itself not undone; the user can import the file again.
+      undoable: false,
+      check: (live) => subtreeIds(live).every((itemId) => created.has(itemId)),
+    })),
+  );
+  // An item that changed since the import counts as not removed, like a browser failure.
+  return { removed: result.applied, failed: result.skipped + result.failed };
 }
 
 /**
@@ -571,7 +565,7 @@ export function readFile(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.onerror = () => reject(new Error(t('error_readFileFailed')));
     reader.readAsText(file);
   });
 }

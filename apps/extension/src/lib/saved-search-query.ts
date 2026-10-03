@@ -7,11 +7,21 @@
 import type { ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import { z } from 'zod';
 
+const queryLimits = readConfig(
+  'limits/saved-search-query',
+  z.strictObject({
+    text_max_length: z.number().int().positive(),
+    value_list_max_length: z.number().int().positive(),
+    value_max_length: z.number().int().positive(),
+    sorting_max_length: z.number().int().positive(),
+  }),
+);
+
 /** Longest title or URL filter text a saved search keeps. */
-export const SAVED_SEARCH_TEXT_MAX_LENGTH = 500;
-const VALUE_LIST_MAX_LENGTH = 200;
-const VALUE_MAX_LENGTH = 2048;
-const SORTING_MAX_LENGTH = 10;
+export const SAVED_SEARCH_TEXT_MAX_LENGTH = queryLimits.text_max_length;
+const VALUE_LIST_MAX_LENGTH = queryLimits.value_list_max_length;
+const VALUE_MAX_LENGTH = queryLimits.value_max_length;
+const SORTING_MAX_LENGTH = queryLimits.sorting_max_length;
 
 const textSchema = z.string().trim().min(1).max(SAVED_SEARCH_TEXT_MAX_LENGTH);
 const valueListSchema = z
@@ -196,7 +206,7 @@ export function hasSavedSearchFilters(query: SavedSearchQuery): boolean {
 
 /** Whether two queries select and order the same results. */
 export function isSameSavedSearchQuery(left: SavedSearchQuery, right: SavedSearchQuery): boolean {
-  return JSON.stringify(normalizeQuery(left)) === JSON.stringify(normalizeQuery(right));
+  return isSameJson(normalizeQuery(left), normalizeQuery(right));
 }
 
 export type ResolvedSavedSearch = {

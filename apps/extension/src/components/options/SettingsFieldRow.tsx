@@ -189,7 +189,7 @@ function NumberStepper({
       </NumberField.Root>
       {meta.unit && (
         <span className="w-8 text-xs text-muted-foreground" aria-hidden="true">
-          {getSettingUnitLabel(meta.unit)}
+          {meta.unit}
         </span>
       )}
     </div>
@@ -385,9 +385,8 @@ export function SettingsFieldRow({
           );
         }
         const position = meta.unlimited ? toUnlimitedSliderValue(numeric) : numeric;
-        const unit = meta.unit ? getSettingUnitLabel(meta.unit) : '';
         const display =
-          meta.unlimited && numeric === -1 ? t('settings_noLimit') : `${numeric}${unit}`;
+          meta.unlimited && numeric === -1 ? t('settings_noLimit') : `${numeric}${meta.unit ?? ''}`;
         return (
           <div className="flex w-full items-center gap-3 sm:w-[240px]">
             <Slider

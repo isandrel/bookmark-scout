@@ -58,7 +58,8 @@ const autoTaggingSchema = z.object({
     z.object({
       bookmarkId: z.string(),
       title: z.string(),
-      tags: z.array(z.string()).min(1).max(20),
+      // As many tags as the setting allows at most; the prompt asks for the configured range.
+      tags: z.array(z.string()).min(1).max(SETTING_NUMBER_BOUNDS.autoTaggingMaxTags.max),
       reason: z.string(),
     }),
   ),
@@ -73,6 +74,56 @@ const summarizerSchema = z.object({
     }),
   ),
 });
+
+type BookmarkInput = { bookmarkId: string; title: string; url: string };
+
+/**
+ * Sends a batch of bookmarks to the model in one request and maps each answer back to its
+ * bookmark: answers for unknown ids and repeated answers are dropped.
+ */
+async function generateForBookmarks<
+  Input extends BookmarkInput,
+  Task extends 'auto_tagging' | 'summarization',
+  Item extends { bookmarkId: string },
+  Result,
+>(request: {
+  inputs: Input[];
+  settings: AISettings;
+  source: AIActivitySource;
+  task: Task;
+  promptSettings: PromptSettings<Task>;
+  readPages: boolean;
+  schema: z.ZodType<{ items: Item[] }>;
+  toResult: (input: Input, item: Item) => Result;
+}): Promise<Result[]> {
+  if (request.inputs.length === 0) {
+    return [];
+  }
+
+  const items = await addPageText(request.inputs, request.readPages);
+  const model = createAIModel(request.settings, request.source) as CompatibleModel;
+  const { system } = await buildPrompt(request.task, request.promptSettings, {
+    hasPageText: items.some((item) => item.pageText),
+  });
+
+  const { object } = await generateObject({
+    model,
+    schema: request.schema,
+    system,
+    prompt: JSON.stringify({ bookmarks: items }),
+  });
+
+  const inputs = new Map(request.inputs.map((input) => [input.bookmarkId, input]));
+  const answered = new Set<string>();
+  return object.items.flatMap((item) => {
+    const input = inputs.get(item.bookmarkId);
+    if (!input || answered.has(input.bookmarkId)) {
+      return [];
+    }
+    answered.add(input.bookmarkId);
+    return [request.toResult(input, item)];
+  });
+}
 
 export function buildAIContextPack(
   nodes: BookmarkTreeNode[],
@@ -110,53 +161,30 @@ export async function suggestBookmarkTags(
 ): Promise<AutoTaggingResultItem[]> {
   validateAISettings(settings);
 
-  const bookmarks = flattenBookmarks(nodes).map((bookmark) => ({
-    bookmarkId: bookmark.node.id,
-    title: bookmark.node.title,
-    url: bookmark.node.url ?? '',
-    folderPath: bookmark.pathLabel,
-  }));
-
-  if (bookmarks.length === 0) {
-    return [];
-  }
-
-  const items = await addPageText(bookmarks, Boolean(options.readPages));
-  const model = createAIModel(settings, 'autoTagging') as CompatibleModel;
-  const { system } = await buildPrompt('auto_tagging', {
-    minTags: options.minTags,
-    maxTags: options.maxTags,
-    tagStyle: options.tagStyle,
-  });
-
-  const { object } = await generateObject({
-    model,
+  return generateForBookmarks({
+    inputs: flattenBookmarks(nodes).map((bookmark) => ({
+      bookmarkId: bookmark.node.id,
+      title: bookmark.node.title,
+      url: bookmark.node.url ?? '',
+      folderPath: bookmark.pathLabel,
+    })),
+    settings,
+    source: 'autoTagging',
+    task: 'auto_tagging',
+    promptSettings: {
+      autoTaggingMinTags: options.minTags,
+      autoTaggingMaxTags: options.maxTags,
+      autoTaggingTagStyle: options.tagStyle,
+    },
+    readPages: Boolean(options.readPages),
     schema: autoTaggingSchema,
-    system: withAppRules(
-      system,
-      'Return exactly one item per bookmark and preserve bookmarkId/title exactly.',
-      items.some((item) => item.pageText),
-    ),
-    prompt: JSON.stringify({ bookmarks: items }),
-  });
-
-  const seenBookmarkIds = new Set<string>();
-  return object.items.flatMap((item) => {
-    const source = bookmarks.find((bookmark) => bookmark.bookmarkId === item.bookmarkId);
-    if (!source || seenBookmarkIds.has(source.bookmarkId)) {
-      return [];
-    }
-
-    seenBookmarkIds.add(source.bookmarkId);
-    return [
-      {
-        bookmarkId: source.bookmarkId,
-        title: source.title,
-        url: source.url,
-        tags: item.tags,
-        reason: item.reason,
-      },
-    ];
+    toResult: (input, item) => ({
+      bookmarkId: input.bookmarkId,
+      title: input.title,
+      url: input.url,
+      tags: item.tags,
+      reason: item.reason,
+    }),
   });
 }
 
@@ -167,63 +195,40 @@ export async function summarizeBookmarksWithAI(
 ): Promise<SummarizerResultItem[]> {
   validateAISettings(settings);
 
-  const bookmarks = flattenBookmarks(nodes).map((bookmark) => ({
-    bookmarkId: bookmark.node.id,
-    title: bookmark.node.title,
-    url: bookmark.node.url ?? '',
-    domain: options.includeDomainHint ? bookmark.hostname ?? '' : '',
-    folderPath: bookmark.pathLabel,
-  }));
-
-  if (bookmarks.length === 0) {
-    return [];
-  }
-
-  const items = await addPageText(bookmarks, Boolean(options.readPages));
-  const model = createAIModel(settings, 'summarizer') as CompatibleModel;
-  const { system } = await buildPrompt('summarization', {
-    summaryLength: options.summaryLength,
-    includeDomainHint: options.includeDomainHint ? 'true' : 'false',
-  });
-
-  const { object } = await generateObject({
-    model,
+  return generateForBookmarks({
+    inputs: flattenBookmarks(nodes).map((bookmark) => ({
+      bookmarkId: bookmark.node.id,
+      title: bookmark.node.title,
+      url: bookmark.node.url ?? '',
+      domain: options.includeDomainHint ? bookmark.hostname ?? '' : '',
+      folderPath: bookmark.pathLabel,
+    })),
+    settings,
+    source: 'summarizer',
+    task: 'summarization',
+    promptSettings: {
+      summarizerSummaryLength: options.summaryLength,
+      summarizerIncludeDomainHint: options.includeDomainHint,
+    },
+    readPages: Boolean(options.readPages),
     schema: summarizerSchema,
-    system: withAppRules(
-      system,
-      'Return exactly one item per bookmark and preserve bookmarkId/title exactly.',
-      items.some((item) => item.pageText),
-    ),
-    prompt: JSON.stringify({ bookmarks: items }),
-  });
-
-  const seenBookmarkIds = new Set<string>();
-  return object.items.flatMap((item) => {
-    const source = bookmarks.find((bookmark) => bookmark.bookmarkId === item.bookmarkId);
-    if (!source || seenBookmarkIds.has(source.bookmarkId)) {
-      return [];
-    }
-
-    seenBookmarkIds.add(source.bookmarkId);
-    return [
-      {
-        bookmarkId: source.bookmarkId,
-        title: source.title,
-        url: source.url,
-        summary: item.summary,
-      },
-    ];
+    toResult: (input, item) => ({
+      bookmarkId: input.bookmarkId,
+      title: input.title,
+      url: input.url,
+      summary: item.summary,
+    }),
   });
 }
 
+/** @deprecated Saves a file the same way as exports; call {@link downloadExport}. */
 export function downloadTextFile(content: string, filename: string, mimeType: string) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
+  downloadExport(content, filename, mimeType);
+}
+
+/** A bookmark's folder path in a context pack; bookmarks outside any folder read as the root. */
+function contextFolderLabel(bookmark: FlatBookmark): string {
+  return bookmark.pathLabel || t('tools_rootFolder');
 }
 
 function buildMarkdownContext(
@@ -235,12 +240,12 @@ function buildMarkdownContext(
 
   bookmarks.forEach((bookmark, index) => {
     const metadata = metadataByBookmarkId[bookmark.node.id];
-    lines.push(`## ${index + 1}. ${bookmark.node.title || 'Untitled'}`);
+    lines.push(`## ${index + 1}. ${getBookmarkDisplayTitle(bookmark.node.title)}`);
     if (bookmark.node.url) {
       lines.push(`- URL: ${bookmark.node.url}`);
     }
     if (options.includeFolderPath) {
-      lines.push(`- Folder: ${bookmark.pathLabel || 'Root'}`);
+      lines.push(`- Folder: ${contextFolderLabel(bookmark)}`);
     }
     if (options.includeDates && bookmark.node.dateAdded) {
       lines.push(`- Added: ${new Date(bookmark.node.dateAdded).toISOString()}`);
@@ -266,9 +271,11 @@ function buildXmlContext(
     .map((bookmark) => {
       const metadata = metadataByBookmarkId[bookmark.node.id];
       const fields = [
-        `<title>${escapeXml(bookmark.node.title || 'Untitled')}</title>`,
+        `<title>${escapeXml(getBookmarkDisplayTitle(bookmark.node.title))}</title>`,
         bookmark.node.url ? `<url>${escapeXml(bookmark.node.url)}</url>` : '',
-        options.includeFolderPath ? `<folder>${escapeXml(bookmark.pathLabel || 'Root')}</folder>` : '',
+        options.includeFolderPath
+          ? `<folder>${escapeXml(contextFolderLabel(bookmark))}</folder>`
+          : '',
         options.includeDates && bookmark.node.dateAdded
           ? `<dateAdded>${new Date(bookmark.node.dateAdded).toISOString()}</dateAdded>`
           : '',
@@ -295,11 +302,7 @@ function truncateForContext(text: string, maxLength: number) {
   return `${text.slice(0, maxLength - 3)}...`;
 }
 
+/** HTML escaping plus `'`, which XML attribute values may be quoted with. */
 function escapeXml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+  return escapeHtml(value).replace(/'/g, '&apos;');
 }

@@ -1,12 +1,24 @@
 import * as React from 'react';
+import { z } from 'zod';
 
 import type { ToastActionElement, ToastProps } from '@/components/ui/toast';
+
+const toastConfig = readConfig(
+  'ui/toasts',
+  z.strictObject({
+    remove_delay_ms: z.number().int().nonnegative(),
+    title_max_chars: z.number().int().positive(),
+  }),
+);
 
 // Toasts with an action (Undo) are never dropped: each deletion must stay recoverable for its
 // whole undo window, however many arrive at once. They leave only when their own timer ends or
 // they are dismissed. An informational toast replaces the previous informational one. The
 // Toaster keeps a long stack compact.
-const TOAST_REMOVE_DELAY = 500;
+const TOAST_REMOVE_DELAY = toastConfig.remove_delay_ms;
+
+/** Longest bookmark or folder title a toast quotes; longer titles are cut with `truncateText`. */
+export const TOAST_TITLE_MAX_CHARS = toastConfig.title_max_chars;
 
 type ToasterToast = ToastProps & {
   id: string;

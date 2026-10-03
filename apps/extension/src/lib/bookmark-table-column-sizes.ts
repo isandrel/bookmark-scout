@@ -1,9 +1,19 @@
+import { z } from 'zod';
+
 /** Saved widths in pixels, keyed by column id. Only columns the user resized are present. */
 export type BookmarkColumnSizing = Record<string, number>;
 
 type ColumnSizeLimits = { size: number; minSize: number; maxSize: number };
 
-const MAX_COLUMN_WIDTH = 1200;
+const columnLimits = readConfig(
+  'limits/table-columns',
+  z.strictObject({
+    max_column_width: z.number().int().positive(),
+    column_resize_step: z.number().int().positive(),
+  }),
+);
+
+const MAX_COLUMN_WIDTH = columnLimits.max_column_width;
 
 // Widths come from each column's `size` in the column registry (components/ui/table/columns.tsx).
 // The registry is read inside these functions, never at module load, because it imports lib
@@ -18,7 +28,7 @@ function getResizableLimits(columnId: string): ColumnSizeLimits | undefined {
 export const FILL_COLUMN_ID = 'title';
 
 /** Pixels one ArrowLeft/ArrowRight press on a resize handle changes a column by. */
-export const COLUMN_RESIZE_KEYBOARD_STEP = 10;
+export const COLUMN_RESIZE_KEYBOARD_STEP = columnLimits.column_resize_step;
 
 type ColumnSizeDef = {
   size?: number;
@@ -54,7 +64,7 @@ export function clampBookmarkColumnSize(columnId: string, width: number): number
 /** Validates saved widths: drops unknown, fixed, and non-numeric entries and clamps the rest. */
 export function parseBookmarkColumnSizing(value: unknown): BookmarkColumnSizing {
   const sizing: BookmarkColumnSizing = {};
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return sizing;
+  if (!isPlainObject(value)) return sizing;
   for (const [id, width] of Object.entries(value)) {
     if (typeof width !== 'number') continue;
     const clamped = clampBookmarkColumnSize(id, width);

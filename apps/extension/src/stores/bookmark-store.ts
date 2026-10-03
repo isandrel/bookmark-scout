@@ -7,8 +7,6 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
 
-const TITLE_TRUNCATE_LENGTH = 30;
-
 /** Outcome of a bookmark operation, with a localized description for the toast. */
 export type BookmarkOperationResult = {
   success: boolean;
@@ -46,10 +44,7 @@ async function runOnce(
 }
 
 function truncateBookmarkTitle(title: string | undefined): string {
-  const displayTitle = getBookmarkDisplayTitle(title);
-  return displayTitle.length > TITLE_TRUNCATE_LENGTH
-    ? `${displayTitle.slice(0, TITLE_TRUNCATE_LENGTH)}...`
-    : displayTitle;
+  return truncateText(getBookmarkDisplayTitle(title), TOAST_TITLE_MAX_CHARS);
 }
 
 function isMoveToOtherFolder(operation: DragOperation): boolean {
@@ -67,34 +62,6 @@ function buildMoveSuccessMessage(
   return isMoveToOtherFolder(operation)
     ? t('toast_itemMovedDesc', [title, getBookmarkDisplayTitle(targetFolderTitle)])
     : t('toast_itemReorderedDesc', [title, String(position)]);
-}
-
-function findNodeById(nodes: readonly BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
-  for (const node of nodes) {
-    if (node.id === id) {
-      return node;
-    }
-
-    if (node.children) {
-      const foundNode = findNodeById(node.children, id);
-
-      if (foundNode) {
-        return foundNode;
-      }
-    }
-  }
-
-  return null;
-}
-
-function collectChildFolderIds(node: BookmarkTreeNode, ids: string[] = []): string[] {
-  for (const child of node.children ?? []) {
-    if (child.children) {
-      ids.push(child.id);
-      collectChildFolderIds(child, ids);
-    }
-  }
-  return ids;
 }
 
 interface BookmarkState {
@@ -157,8 +124,8 @@ export const useBookmarkStore = create<BookmarkState>()(
       error: null,
       query: '',
       debouncedQuery: '',
-      searchOptions: { matchCase: false, wholeWord: false, useRegex: false },
-      expandFoldersOnSearch: true,
+      searchOptions: { ...DEFAULT_SEARCH_OPTIONS },
+      expandFoldersOnSearch: defaultSettings.expandFoldersOnSearch,
       expandedFolders: [],
       preSearchExpandedFolders: null,
       searchExpansion: null,
@@ -189,7 +156,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           set({ folders: data, filteredFolders: data });
           if (get().debouncedQuery) get().applyFilter();
         } catch (error) {
-          console.error('Failed to refresh bookmarks:', error);
+          bookmarkLogger.error({ error }, 'Failed to refresh bookmarks');
         }
       },
 
@@ -229,7 +196,7 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           tab = await getCurrentTab();
         } catch (error) {
-          console.error('Failed to add bookmark:', error);
+          bookmarkLogger.error({ error }, 'Failed to add bookmark');
           return { success: false, message: t('toast_errorAddingBookmarkDesc') };
         }
 
@@ -264,7 +231,7 @@ export const useBookmarkStore = create<BookmarkState>()(
               message: t('toast_bookmarkAddedDesc', [truncatedTitle, folderTitle]),
             };
           } catch (error) {
-            console.error('Failed to add bookmark:', error);
+            bookmarkLogger.error({ error }, 'Failed to add bookmark');
             return { success: false, message: t('toast_errorAddingBookmarkDesc') };
           } finally {
             set((state) => ({
@@ -288,7 +255,7 @@ export const useBookmarkStore = create<BookmarkState>()(
               ]),
             };
           } catch (error) {
-            console.error('Failed to create folder:', error);
+            bookmarkLogger.error({ error }, 'Failed to create folder');
             return { success: false, message: t('toast_errorCreatingFolderDesc') };
           }
         }),
@@ -304,7 +271,7 @@ export const useBookmarkStore = create<BookmarkState>()(
             message: t('toast_itemRemovedDesc', truncateBookmarkTitle(bookmark.title)),
           };
         } catch (error) {
-          console.error('Failed to delete bookmark:', error);
+          bookmarkLogger.error({ error }, 'Failed to delete bookmark');
           return { success: false, message: t('toast_errorDeletingBookmarkDesc') };
         }
       },
@@ -320,15 +287,15 @@ export const useBookmarkStore = create<BookmarkState>()(
             message: t('toast_itemRemovedDesc', truncateBookmarkTitle(folder.title)),
           };
         } catch (error) {
-          console.error('Failed to delete folder:', error);
+          bookmarkLogger.error({ error }, 'Failed to delete folder');
           return { success: false, message: t('toast_errorDeletingFolderDesc') };
         }
       },
 
       handleDrop: async (operation) => {
         // Browsers reject moving a folder into itself or its own subtree with a generic error.
-        const source = findNodeById(get().folders, operation.sourceId);
-        if (source?.children && findNodeById([source], operation.targetParentId)) {
+        const source = findNode(get().folders, operation.sourceId);
+        if (source?.children && findNode([source], operation.targetParentId)) {
           return { success: false, message: t('toast_cannotMoveIntoDescendant') };
         }
 
@@ -359,22 +326,22 @@ export const useBookmarkStore = create<BookmarkState>()(
 
           return { success: true, message };
         } catch (error) {
-          console.error('Failed to move item:', error);
+          bookmarkLogger.error({ error }, 'Failed to move item');
           return { success: false, message: t('toast_errorMovingItemDesc') };
         }
       },
 
       // Folder expansion helpers
-      getAllChildFolderIds: (node) => collectChildFolderIds(node),
+      getAllChildFolderIds: (node) => folderIds(node.children ?? []),
 
       toggleExpandAllChildren: (node, e) => {
         e.stopPropagation();
         const { folders, expandedFolders, setExpandedFolders } = get();
 
-        const originalNode = findNodeById(folders, node.id);
+        const originalNode = findNode(folders, node.id);
         if (!originalNode) return;
 
-        const childFolderIds = collectChildFolderIds(originalNode);
+        const childFolderIds = folderIds(originalNode.children ?? []);
         if (get().areAllChildrenExpanded(node)) {
           // Collapse the subfolders but leave the folder itself open.
           const collapsed = new Set(childFolderIds);
@@ -387,10 +354,10 @@ export const useBookmarkStore = create<BookmarkState>()(
       areAllChildrenExpanded: (node) => {
         const { folders, expandedFolders } = get();
 
-        const originalNode = findNodeById(folders, node.id);
+        const originalNode = findNode(folders, node.id);
         if (!originalNode) return false;
 
-        const childFolderIds = collectChildFolderIds(originalNode);
+        const childFolderIds = folderIds(originalNode.children ?? []);
         const expanded = new Set(expandedFolders);
         return (
           childFolderIds.length > 0 &&
@@ -426,7 +393,7 @@ export const useBookmarkStore = create<BookmarkState>()(
         // and win over the automatic expansion so they work while expandFoldersOnSearch is on.
         const searchExpansion =
           expansionOverride === 'expand'
-            ? getAllFolderIds(filtered)
+            ? folderIds(filtered)
             : expansionOverride === 'collapse'
               ? []
               : expandFoldersOnSearch

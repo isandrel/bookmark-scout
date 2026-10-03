@@ -1,0 +1,7 @@
+# Verify Service for providers without a model list, which are checked with one tiny prompt
+# instead. Read by src/services/ai-client.ts. Model-list checks are in model-list.toml.
+
+# The prompt sent; its answer is not checked, only that the provider answers
+fallback_prompt = "Reply with exactly: ok"
+# Output tokens the answer may use, kept small so the check costs next to nothing
+fallback_max_output_tokens = 8

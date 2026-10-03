@@ -107,12 +107,8 @@ function parseExtraHeaders(rawHeaders?: string) {
  * paths) is rejected before it is stored or used.
  */
 export function isValidProviderBaseUrl(value: string): boolean {
-  try {
-    const url = new URL(value.trim());
-    return (url.protocol === 'https:' || url.protocol === 'http:') && url.hostname.length > 0;
-  } catch {
-    return false;
-  }
+  const trimmed = value.trim();
+  return isWebUrl(trimmed) && new URL(trimmed).hostname.length > 0;
 }
 
 /**
@@ -123,10 +119,7 @@ export function isValidProviderExtraHeaders(value: string): boolean {
   try {
     const parsed = JSON.parse(value) as unknown;
     return (
-      parsed !== null &&
-      typeof parsed === 'object' &&
-      !Array.isArray(parsed) &&
-      Object.values(parsed).every((header) => typeof header === 'string')
+      isPlainObject(parsed) && Object.values(parsed).every((header) => typeof header === 'string')
     );
   } catch {
     return false;
