@@ -1,39 +1,28 @@
 /**
  * FolderItem component.
- * Renders a folder with drag-and-drop, accordion, and action buttons.
+ * Renders a folder of the popup tree with drag-and-drop, accordion, and action buttons. Shared
+ * state and actions come from `PopupTreeProvider`.
  */
 
-import {
-  draggable,
-  dropTargetForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { BookmarkPlus, ChevronsDown, ChevronsUp, Folder, FolderPlus, Trash2 } from 'lucide-react';
-import { useRef } from 'react';
-import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
+import type { BookmarkTreeNode } from '@/types';
 
-interface FolderItemProps {
-  node: BookmarkTreeNode;
-  instanceId: symbol;
-  isDragging: boolean;
-  areAllChildrenExpanded: (node: BookmarkTreeNode) => boolean;
-  creatingFolderId: string | null;
-  newFolderName: string;
-  folders: BookmarkTreeNode[];
-  /** Folders the current page is being saved into; their add button is disabled meanwhile. */
-  addingToFolderIds: readonly string[];
-  favicon: FaviconDisplay;
-  onDragStart: (node: BookmarkTreeNode) => void;
-  onDragEnd: () => void;
-  onDrop: (operation: DragOperation) => void;
-  onAddBookmark: (folderId: string) => void;
-  onAddFolder: (folderId: string) => void;
-  onDeleteFolder: (node: BookmarkTreeNode) => void;
-  onDeleteBookmark: (node: BookmarkTreeNode) => void;
-  onCreateFolder: () => void;
-  onCancelCreateFolder: () => void;
-  onNewFolderNameChange: (name: string) => void;
-  onToggleExpandAllChildren: (node: BookmarkTreeNode, e: React.MouseEvent) => void;
-}
+/**
+ * Props PopupPage still passes to each top-level folder. Without a provider around it, a folder
+ * builds one from them; the drag props are superseded by the provider's own drag state.
+ * @deprecated Render `PopupTreeProvider` once around the tree and pass only `node`.
+ */
+type LegacyFolderItemProps = PopupTreeProps & {
+  instanceId?: symbol;
+  isDragging?: boolean;
+  creatingFolderId?: string | null;
+  onDragStart?: (node: BookmarkTreeNode) => void;
+  onDragEnd?: () => void;
+};
+
+type FolderItemProps =
+  | { node: BookmarkTreeNode }
+  | ({ node: BookmarkTreeNode } & LegacyFolderItemProps);
 
 /**
  * A held Enter repeats keydown, and each repeat would activate the focused button again: after
@@ -43,171 +32,54 @@ function ignoreKeyRepeat(event: React.KeyboardEvent<HTMLButtonElement>) {
   if (event.repeat) event.preventDefault();
 }
 
-export function FolderItem({
-  node,
-  instanceId,
-  isDragging,
-  areAllChildrenExpanded,
-  creatingFolderId,
-  newFolderName,
-  folders,
-  addingToFolderIds,
-  favicon,
-  onDragStart,
-  onDragEnd,
-  onDrop,
-  onAddBookmark,
-  onAddFolder,
-  onDeleteFolder,
-  onDeleteBookmark,
-  onCreateFolder,
-  onCancelCreateFolder,
-  onNewFolderNameChange,
-  onToggleExpandAllChildren,
-}: FolderItemProps) {
-  const elementRef = useRef<HTMLDivElement>(null);
-  // Browsers reject moving or deleting permanent root folders and any change to managed nodes.
-  const isPermanent = isPermanentBookmarkFolder(node, getBookmarkRootIds(folders));
-  const canModify = !isPermanent && !node.unmodifiable;
+export function FolderItem(props: FolderItemProps) {
+  const tree = useOptionalPopupTree();
+  if (tree || !('folders' in props)) return <FolderRow node={props.node} />;
+  const {
+    node,
+    isDragging: _isDragging,
+    creatingFolderId: _creatingFolderId,
+    onDragStart: _onDragStart,
+    onDragEnd: _onDragEnd,
+    ...treeProps
+  } = props;
+  return (
+    <PopupTreeProvider {...treeProps}>
+      <FolderRow node={node} />
+    </PopupTreeProvider>
+  );
+}
+
+/** The new-folder input shown in place of a temporary node. */
+function NewFolderRow() {
+  const { newFolderName, onNewFolderNameChange, onCreateFolder, onCancelCreateFolder } =
+    usePopupTree();
+  return (
+    <NewFolderInput
+      value={newFolderName}
+      onChange={onNewFolderNameChange}
+      onSubmit={onCreateFolder}
+      onCancel={onCancelCreateFolder}
+    />
+  );
+}
+
+function FolderRow({ node }: { node: BookmarkTreeNode }) {
+  const {
+    canModify,
+    rowRef,
+    draggingId,
+    addingToFolderIds,
+    areAllChildrenExpanded,
+    onAddBookmark,
+    onAddFolder,
+    onDeleteFolder,
+    onToggleExpandAllChildren,
+  } = usePopupTree();
+
+  if (node.isTemporary) return <NewFolderRow />;
+
   const canAddChildren = !isBookmarkTreeRoot(node) && !node.unmodifiable;
-
-  // Handle temporary folder (new folder being created)
-  if (node.isTemporary) {
-    return (
-      <NewFolderInput
-        value={newFolderName}
-        onChange={onNewFolderNameChange}
-        onSubmit={onCreateFolder}
-        onCancel={onCancelCreateFolder}
-      />
-    );
-  }
-
-  const setupDragDrop = (element: HTMLDivElement | null) => {
-    if (!element) return;
-
-    // 3-zone detection: top 25% | center 50% | bottom 25%.
-    // Permanent folders cannot be reordered, so they only accept drops into themselves.
-    const getDropZone = (clientY: number): 'top' | 'center' | 'bottom' => {
-      if (!canModify) return 'center';
-      const rect = element.getBoundingClientRect();
-      const percentY = (clientY - rect.top) / rect.height;
-      if (percentY < 0.25) return 'top';
-      if (percentY > 0.75) return 'bottom';
-      return 'center';
-    };
-
-    const cleanup = canModify ? draggable({
-      element,
-      onDragStart: () => {
-        onDragStart(node);
-        element.classList.add('dragging');
-      },
-      onDrag: () => {
-        onDragEnd();
-        element.classList.remove('dragging');
-      },
-      getInitialData: () => ({
-        type: 'folder',
-        node,
-        instanceId,
-      }),
-    }) : () => {};
-
-    const dropTargetCleanup = dropTargetForElements({
-      element,
-      onDrag: ({ source, location }) => {
-        const sourceData = source.data as { node: BookmarkTreeNode };
-        if (sourceData.node.id !== node.id) {
-          const existingIndicator = element.querySelector('.drop-indicator');
-          if (existingIndicator) existingIndicator.remove();
-
-          const dropZone = getDropZone(location.current.input.clientY);
-
-          if (dropZone === 'center') {
-            // Highlight folder for drop-INTO
-            element.classList.add('drop-target');
-            element.classList.add('drop-into-folder');
-          } else {
-            // Show indicator line for reorder
-            element.classList.add('drop-target');
-            element.classList.remove('drop-into-folder');
-            
-            const indicator = document.createElement('div');
-            indicator.className = 'drop-indicator';
-            if (dropZone === 'top') {
-              indicator.style.top = '-1px';
-            } else {
-              indicator.style.bottom = '-1px';
-            }
-            element.appendChild(indicator);
-          }
-        }
-      },
-      onDragLeave: () => {
-        element.classList.remove('drop-target');
-        element.classList.remove('drop-into-folder');
-        element.querySelector('.drop-indicator')?.remove();
-      },
-      onDrop: ({ source, location }) => {
-        const sourceData = source.data as { type: 'folder' | 'bookmark'; node: BookmarkTreeNode };
-        if (sourceData.node.id !== node.id) {
-          // Use the drop position itself: onDrag may not have fired for a quick drop.
-          const dropZone = getDropZone(location.current.input.clientY);
-          const isFolder = node.children !== undefined;
-
-          // Determine if we're dropping INTO the folder (center zone) or beside it (edge zones)
-          const isDroppingIntoFolder = isFolder && dropZone === 'center';
-
-          let operationType: DragOperation['type'];
-          let targetParentId: string;
-          let targetIndex: number;
-
-          if (isDroppingIntoFolder) {
-            // Dropping INTO the folder - item becomes child of this folder
-            operationType = sourceData.type === 'folder' ? 'folder-move' : 'bookmark-move';
-            targetParentId = node.id; // The folder we're dropping into
-            targetIndex = node.children?.length ?? 0; // Append to end of folder
-          } else if (dropZone === 'top' || dropZone === 'bottom') {
-            // Dropping beside the folder (reorder within same parent)
-            operationType = sourceData.type === 'folder' ? 'folder-reorder' : 'bookmark-reorder';
-            targetParentId = node.parentId || 'root';
-            targetIndex = dropZone === 'bottom' ? (node.index || 0) + 1 : node.index || 0;
-          } else {
-            // Fallback: treat as move into folder if it's a folder
-            operationType = sourceData.type === 'folder' ? 'folder-move' : 'bookmark-move';
-            targetParentId = isFolder ? node.id : (node.parentId || 'root');
-            targetIndex = isFolder ? (node.children?.length ?? 0) : (node.index || 0);
-          }
-
-          onDrop({
-            type: operationType,
-            sourceId: sourceData.node.id,
-            sourceParentId: sourceData.node.parentId || 'root',
-            sourceIndex: sourceData.node.index || 0,
-            targetId: node.id,
-            targetParentId,
-            targetIndex,
-          });
-        }
-
-        element.classList.remove('drop-target');
-        element.classList.remove('drop-into-folder');
-        element.querySelector('.drop-indicator')?.remove();
-      },
-      getData: () => ({
-        type: 'folder',
-        node,
-        instanceId,
-      }),
-    });
-
-    return () => {
-      cleanup();
-      dropTargetCleanup();
-    };
-  };
-
   // Count total items in folder (folders + bookmarks)
   const itemCount = node.children?.length ?? 0;
   const hasSubfolders = node.children?.some((child) => child.children !== undefined) ?? false;
@@ -218,11 +90,7 @@ export function FolderItem({
     : t('popup_expandAllSubfolders');
 
   return (
-    <AccordionItem
-      key={node.id}
-      value={node.id}
-      className={`border-none accordion-item ${isDragging ? 'opacity-50' : ''}`}
-    >
+    <AccordionItem value={node.id} className="border-none accordion-item">
       {/* Actions sit beside the trigger, not inside it, so no button is nested in a button. */}
       <div className="group folder-item relative flex h-8 items-center rounded-md transition-colors duration-150 hover:bg-muted focus-within:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-ring">
         <div className="flex-1 min-w-0">
@@ -234,12 +102,12 @@ export function FolderItem({
             hideIndicator={itemCount === 0}
           >
             <div
-              ref={(el) => {
-                elementRef.current = el;
-                setupDragDrop(el);
-              }}
+              ref={rowRef(node, 'folder')}
               data-slot="drag-handle"
-              className="flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative"
+              className={cn(
+                'flex items-center flex-1 min-w-0 cursor-grab active:cursor-grabbing relative',
+                draggingId === node.id && 'dragging',
+              )}
             >
               <Folder
                 data-slot="folder-icon"
@@ -320,7 +188,7 @@ export function FolderItem({
               </Button>
             </>
           )}
-          {canModify && (
+          {canModify(node) && (
             <Button
               variant="ghost"
               size="icon-xs"
@@ -340,50 +208,10 @@ export function FolderItem({
       {/* One indent step is the chevron slot plus its gap, so children start under the folder icon. */}
       <AccordionContent className="pl-5 py-0 accordion-content">
         {node.children?.map((child) =>
-          child.isTemporary ? (
-            <NewFolderInput
-              key={child.id}
-              value={newFolderName}
-              onChange={onNewFolderNameChange}
-              onSubmit={onCreateFolder}
-              onCancel={onCancelCreateFolder}
-            />
-          ) : child.children ? (
-            <FolderItem
-              key={child.id}
-              node={child}
-              instanceId={instanceId}
-              isDragging={false}
-              areAllChildrenExpanded={areAllChildrenExpanded}
-              creatingFolderId={creatingFolderId}
-              newFolderName={newFolderName}
-              folders={folders}
-              addingToFolderIds={addingToFolderIds}
-              favicon={favicon}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              onDrop={onDrop}
-              onAddBookmark={onAddBookmark}
-              onAddFolder={onAddFolder}
-              onDeleteFolder={onDeleteFolder}
-              onDeleteBookmark={onDeleteBookmark}
-              onCreateFolder={onCreateFolder}
-              onCancelCreateFolder={onCancelCreateFolder}
-              onNewFolderNameChange={onNewFolderNameChange}
-              onToggleExpandAllChildren={onToggleExpandAllChildren}
-            />
+          child.children || child.isTemporary ? (
+            <FolderRow key={child.id} node={child} />
           ) : (
-            <BookmarkItem
-              key={child.id}
-              node={child}
-              instanceId={instanceId}
-              isDragging={false}
-              favicon={favicon}
-              onDelete={onDeleteBookmark}
-              onDragStart={onDragStart}
-              onDragEnd={onDragEnd}
-              onDrop={onDrop}
-            />
+            <BookmarkItem key={child.id} node={child} />
           ),
         )}
       </AccordionContent>

@@ -1,3 +1,4 @@
+import { readConfigToml } from '../config-files';
 import { expect, test } from './fixtures';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
@@ -83,4 +84,24 @@ test('the built-in prompt can be viewed and used as the start of a custom one', 
   await viewer.getByRole('button', { name: 'Customize' }).click();
   const editor = page.getByRole('dialog', { name: /New prompt/ });
   await expect(editor.getByRole('textbox', { name: 'Prompt' })).toHaveValue(/\{\{maxTags\}\}/);
+});
+
+test('the prompt size counter shows binary kilobytes against the configured limit', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const { prompt_max_bytes: maxBytes } = readConfigToml('ai/prompt-library.toml') as {
+    prompt_max_bytes: number;
+  };
+  const kilobytes = (bytes: number) => `${Math.round((bytes / 1024) * 10) / 10} KB`;
+  await setSettings(extensionWorker, { language: 'en' });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  const row = page.getByTestId('prompt-task').filter({ hasText: 'Auto-Tagging' });
+  await row.getByRole('button', { name: 'Customize' }).click();
+  const editor = page.getByRole('dialog', { name: /New prompt/ });
+
+  await editor.getByRole('textbox', { name: 'Prompt', exact: true }).fill('x'.repeat(2048));
+  await expect(editor.locator('#prompt-text-size')).toHaveText(`2 KB of ${kilobytes(maxBytes)}`);
 });

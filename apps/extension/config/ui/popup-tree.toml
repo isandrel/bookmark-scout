@@ -1,0 +1,9 @@
+# Drag and drop in the popup and side panel bookmark tree. Read by
+# src/components/bookmark/tree-drop.ts. Fractions are of a row's height, measured from its top.
+
+# A drop this close to a folder row's top or bottom edge reorders beside the folder; a drop
+# between the two bands moves the item into the folder
+folder_edge_fraction = 0.25
+
+# A drop above this point of a bookmark row goes before it, and below it goes after it
+bookmark_split_fraction = 0.5
