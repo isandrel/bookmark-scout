@@ -150,6 +150,10 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 
 Use the smallest command set that exercises the code you changed.
 
+### Nx cache
+
+Nx caches `lint`, `typecheck`, `test:unit`, the extension `build:*` targets, and the website and docs builds (`targetDefaults` in `nx.json`; outputs in each `project.json`, or the `"nx"` field of `apps/docs/package.json`). The cache is shared by every checkout and worktree of the repository (under `~/.nx`), and a hit restores only the declared outputs, so a cached target that writes files must list all of them in `outputs`, and anything else it reads (an environment variable, a file outside its project) in `inputs`. Pass `--skip-nx-cache` to force a run. `.nxignore` keeps the Nx daemon from watching agent worktrees under `.claude/`.
+
 ## Verification policy
 
 Verification is required for substantive changes. At a minimum, run the narrowest relevant validation command for the affected area and report what you ran.

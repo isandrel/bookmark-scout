@@ -2,10 +2,10 @@ import { cpSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  type BrowserContext,
+  test as base,
   chromium,
   expect,
-  test as base,
-  type BrowserContext,
   type Locator,
   type Page,
   type Worker,
