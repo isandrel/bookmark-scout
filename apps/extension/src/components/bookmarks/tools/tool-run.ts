@@ -36,9 +36,69 @@ export type ToolRunDeps = {
     request: ToolFileRequest & { onError(error: unknown): void },
     write: (nodes: BookmarkTreeNode[]) => void,
   ): void;
-  /** Shows an outcome; `onUndo` is set while the outcome can be reverted. */
-  notify(outcome: ToolOutcome, onUndo?: () => void): void;
+  /** Shows an outcome; `undo` is set while the outcome can be reverted. */
+  notify(outcome: ToolOutcome, undo?: UndoOffer): void;
 };
+
+/**
+ * One undo offered from a toast and a dialog at once. It reverts at most once and never after
+ * `expiresAt`; when it is used or expires, every place that offers it hides its Undo.
+ */
+export type UndoOffer = {
+  /** Epoch milliseconds after which Undo is no longer offered. */
+  expiresAt: number;
+  /** Reverts once, unless the offer already ended; resolves when the revert finished. */
+  run(): Promise<void>;
+  /** The toast offering this undo; it closes when the offer ends. */
+  attach(toast: { dismiss(): void }): void;
+};
+
+/** Why an undo offer ended: Undo was pressed, or its window passed. */
+export type UndoOfferEnd = 'used' | 'expired';
+
+/**
+ * Creates the undo a toast and a dialog share. `expiresAt` defaults to the bookmark undo window
+ * from now, the time the undo toast stays open.
+ */
+export function createUndoOffer({
+  revert,
+  expiresAt = Date.now() + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+  onEnd,
+}: {
+  /** Handles its own errors. */
+  revert: () => Promise<void>;
+  expiresAt?: number;
+  onEnd?: (reason: UndoOfferEnd) => void;
+}): UndoOffer {
+  let ended = false;
+  let undoToast: { dismiss(): void } | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const end = (reason: UndoOfferEnd) => {
+    if (ended) return;
+    ended = true;
+    clearTimeout(timer);
+    undoToast?.dismiss();
+    onEnd?.(reason);
+  };
+  timer = setTimeout(() => end('expired'), Math.max(0, expiresAt - Date.now()));
+  return {
+    expiresAt,
+    async run() {
+      if (ended) return;
+      // A timer can fire late in a background tab, so the clock decides.
+      if (Date.now() > expiresAt) {
+        end('expired');
+        return;
+      }
+      end('used');
+      await revert();
+    },
+    attach(next) {
+      undoToast = next;
+      if (ended) next.dismiss();
+    },
+  };
+}
 
 export type ToolRun<Result, Selection> = {
   getState(): ToolRunState<Result>;
@@ -67,7 +127,7 @@ export function createToolRun<Result, Selection>(
 ): ToolRun<Result, Selection> {
   let state: ToolRunState<Result> = IDLE;
   let scope: BookmarkToolScope = 'all';
-  let pendingUndo: (() => Promise<void>) | null = null;
+  let pendingUndo: UndoOffer | null = null;
   const listeners = new Set<() => void>();
 
   const update = (changes: Partial<ToolRunState<Result>>) => {
@@ -105,27 +165,31 @@ export function createToolRun<Result, Selection>(
 
   const rescan = async () => tool.scan(context(await deps.freshNodes(scope)));
 
-  /** Wraps an outcome's undo so the review and the toast share one revert. */
-  const offerUndo = (revert: () => Promise<ToolOutcome>) => {
-    let used = false;
-    const undoOnce = async () => {
-      if (used) return;
-      used = true;
-      if (pendingUndo === undoOnce) {
+  /** Wraps an outcome's undo so the review and the toast share one revert until it expires. */
+  const offerUndo = (revert: () => Promise<ToolOutcome>, expiresAt?: number) => {
+    const offer = createUndoOffer({
+      expiresAt,
+      revert: async () => {
+        try {
+          const outcome = await revert();
+          if (tool.changesBookmarks) await deps.refresh();
+          if (state.open && state.phase === 'review') update({ result: await rescan() });
+          deps.notify(outcome);
+        } catch (error) {
+          reportFailure(error, 'toast_toolFailed');
+        }
+      },
+      onEnd: (reason) => {
+        if (pendingUndo !== offer) return;
         pendingUndo = null;
-        update({ notice: null });
-      }
-      try {
-        const outcome = await revert();
-        if (tool.changesBookmarks) await deps.refresh();
-        if (state.open && state.phase === 'review') update({ result: await rescan() });
-        deps.notify(outcome);
-      } catch (error) {
-        reportFailure(error, 'toast_toolFailed');
-      }
-    };
-    pendingUndo = undoOnce;
-    return undoOnce;
+        // An expired undo leaves the outcome readable without its Undo.
+        update({
+          notice: reason === 'used' || !state.notice ? null : { ...state.notice, canUndo: false },
+        });
+      },
+    });
+    pendingUndo = offer;
+    return offer;
   };
 
   const applyResult = async (result: Result, selection: Selection, reviewed: boolean) => {
@@ -143,7 +207,7 @@ export function createToolRun<Result, Selection>(
       update({ phase: state.open ? 'review' : 'idle', result, errors: outcome.errors });
       return;
     }
-    const undo = outcome.undo ? offerUndo(outcome.undo) : undefined;
+    const undo = outcome.undo ? offerUndo(outcome.undo, outcome.undoExpiresAt) : undefined;
     if (outcome.keepOpen && state.open) {
       update({
         phase: 'review',
@@ -217,7 +281,7 @@ export function createToolRun<Result, Selection>(
       }
     },
     async undo() {
-      await pendingUndo?.();
+      await pendingUndo?.run();
     },
     close() {
       update({

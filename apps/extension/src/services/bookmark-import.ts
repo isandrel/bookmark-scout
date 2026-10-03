@@ -48,6 +48,19 @@ function createImportIdGenerator(): () => string {
   return () => `${IMPORTED_ID_PREFIX}${started}-${++counter}`;
 }
 
+/**
+ * A URL the browser can store. Anything else would only fail when the import is applied, so the
+ * parsers drop it as an invalid entry the preview counts.
+ */
+function isImportableUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Netscape files store dates as Unix seconds. */
 function parseNetscapeDate(value: string | null): number {
   // Not a `cond ? x * MS_PER_SECOND : y` ternary: WXT's auto-import skips an identifier right
@@ -75,7 +88,7 @@ export const htmlImportFormat: ImportFormat = {
       // Handle <A> tags (bookmarks)
       if (element.tagName === 'A') {
         const url = element.getAttribute('HREF')?.trim();
-        if (!url) {
+        if (!url || !isImportableUrl(url)) {
           skipped += 1;
           return null;
         }
@@ -179,7 +192,7 @@ export const jsonImportFormat: ImportFormat = {
       }
       const url = typeof raw.url === 'string' && raw.url.trim() ? raw.url.trim() : undefined;
       const rawChildren = Array.isArray(raw.children) ? raw.children : undefined;
-      if (raw.url !== undefined && !url) {
+      if (raw.url !== undefined && (!url || !isImportableUrl(url))) {
         skipped += 1;
         return null;
       }
@@ -537,7 +550,10 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       }
     } catch (err) {
       outcome.failed += countPlanned(node);
-      outcome.errors.push(err instanceof Error ? err.message : t('error_unknown'));
+      // Named, so the user can tell which entry of the file to fix.
+      outcome.errors.push(
+        t('tools_importItemFailed', [getBookmarkDisplayTitle(node.title), getErrorMessage(err)]),
+      );
     }
   };
 

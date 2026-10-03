@@ -341,7 +341,7 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
 
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
-  await expect(toastRegion(page).getByText('Tool failed', { exact: true })).toBeVisible();
+  await expect(toastRegion(page).getByText('× Tool failed', { exact: true })).toBeVisible();
   await expect(
     toastRegion(page).getByText('Synthetic provider rejected the key', { exact: true }),
   ).toBeVisible();

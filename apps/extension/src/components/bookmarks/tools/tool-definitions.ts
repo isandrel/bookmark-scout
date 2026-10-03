@@ -42,6 +42,8 @@ export type ToolOutcome = {
   errors?: string[];
   /** Reverts the change and resolves with what to report about the revert. */
   undo?: () => Promise<ToolOutcome>;
+  /** When `undo` stops working (epoch milliseconds); the bookmark undo window by default. */
+  undoExpiresAt?: number;
 };
 
 /** A file to save after the export privacy review (see `useExportPrivacyReview`). */
@@ -178,20 +180,23 @@ function reportChanges(counts: ChangeCounts, keys: ChangeMessageKeys): ToolOutco
       };
 }
 
-const metadataSaved = (descriptionKey: string): ToolOutcome => ({
-  title: t('bookmarks_metadataSaved'),
-  description: t(descriptionKey),
-  variant: 'success',
-});
+/** The report for saved AI suggestions, naming how many were skipped as stale. */
+function reportMetadataSaved(
+  { saved, skipped }: ReviewedMetadataSaveResult,
+  descriptionKey: string,
+): ToolOutcome {
+  return skipped === 0
+    ? { title: t('bookmarks_metadataSaved'), description: t(descriptionKey), variant: 'success' }
+    : {
+        title: t('bookmarks_metadataPartlySaved'),
+        description: t('bookmarks_metadataPartlySavedDesc', [String(saved), String(skipped)]),
+        variant: 'destructive',
+      };
+}
 
-/** Only results that map back to a reviewed bookmark in the request are saved. */
-function metadataPatches<Item extends { bookmarkId: string; url: string }>(
-  items: readonly Item[],
-  patch: (item: Item) => BookmarkMetadataPatch,
-): Record<string, BookmarkMetadataPatch> {
-  return Object.fromEntries(
-    items.filter((item) => item.url).map((item) => [item.bookmarkId, patch(item)]),
-  );
+/** What an export reports when its scope holds no bookmarks, instead of writing an empty file. */
+export function nothingToExportOutcome(): ToolOutcome {
+  return { title: t('toast_nothingToExport'), description: t('toast_nothingToExportDesc') };
 }
 
 export const TOOL_DEFINITIONS: ToolDefinitions = {
@@ -212,6 +217,10 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async apply({ nodes, metadata }, _selection, context) {
       const options = context.options.aiContextPacker;
       const reviewNodes = selectAIContextBookmarks(nodes, options).map((item) => item.node);
+      if (reviewNodes.length === 0) {
+        context.notify(nothingToExportOutcome());
+        return undefined;
+      }
       context.saveFile({ nodes, reviewNodes, includeUrls: true }, (reviewed) => {
         const packed = buildAIContextPack(reviewed, options, metadata);
         const file = AI_CONTEXT_PACK_FILES[packed.format];
@@ -219,6 +228,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         context.notify({
           title: t('toast_aiContextPacked'),
           description: tPlural('toast_aiContextPackedDesc', packed.itemCount),
+          variant: 'success',
         });
       });
       return undefined;
@@ -239,15 +249,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       return suggestBookmarkTags(nodes, await aiSettings(), options.autoTagging);
     },
     async apply(items, _selection, { settings }) {
-      await mergeStoredBookmarkMetadata(
-        metadataPatches(items, (item) => ({ tags: item.tags })),
-        {
-          tagMode: settings.autoTaggingMergeMode,
-          summaryMode: 'replace',
-          dedupeTags: settings.autoTaggingDedupeTags,
-        },
-      );
-      return metadataSaved('bookmarks_metadataGeneratedTagsSaved');
+      const saved = await saveReviewedBookmarkMetadata(items, (item) => ({ tags: item.tags }), {
+        tagMode: settings.autoTaggingMergeMode,
+        summaryMode: 'replace',
+        dedupeTags: settings.autoTaggingDedupeTags,
+      });
+      return reportMetadataSaved(saved, 'bookmarks_metadataGeneratedTagsSaved');
     },
   },
   summarizer: {
@@ -265,11 +272,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
       return summarizeBookmarksWithAI(nodes, await aiSettings(), options.summarizer);
     },
     async apply(items, _selection, { settings }) {
-      await mergeStoredBookmarkMetadata(
-        metadataPatches(items, (item) => ({ summary: item.summary })),
+      const saved = await saveReviewedBookmarkMetadata(
+        items,
+        (item) => ({ summary: item.summary }),
         { tagMode: 'replace', summaryMode: settings.summarizerMergeMode, dedupeTags: true },
       );
-      return metadataSaved('bookmarks_metadataGeneratedSummariesSaved');
+      return reportMetadataSaved(saved, 'bookmarks_metadataGeneratedSummariesSaved');
     },
   },
   reorganization: {
@@ -293,7 +301,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async apply(plan, _selection, { reviewed }) {
       const result = await applyReorganizationPlan(plan, { previewConfirmed: reviewed });
       if (!result.success) return { title: t('error_generic'), errors: result.errors };
-      return { title: t('toast_reorganizeSuccess'), description: t('toast_reorganizeSuccessDesc') };
+      return {
+        title: t('toast_reorganizeSuccess'),
+        description: t('toast_reorganizeSuccessDesc'),
+        variant: 'success',
+      };
     },
   },
   duplicates: {
@@ -331,16 +343,20 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         variant: complete ? 'success' : 'destructive',
         // A partial run stays open so the user sees what is left next to the counts.
         keepOpen: !complete,
+        undoExpiresAt: removal.expiresAt,
         undo:
           removal.removed > 0
             ? async () => {
                 const { restored, failed } = await removal.undo();
                 return {
                   title: failed ? t('toast_errorRestoringDeletion') : t('toast_deleteRestored'),
-                  description: t('toast_duplicatesRestoredDesc', [
-                    String(restored),
-                    String(failed),
-                  ]),
+                  description: [
+                    t('toast_duplicatesRestoredDesc', [String(restored), String(failed)]),
+                    // The browser recreates them with new ids and dates.
+                    restored > 0 ? t('toast_duplicatesRestoredNote') : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' '),
                   variant: failed ? 'destructive' : 'success',
                 };
               }

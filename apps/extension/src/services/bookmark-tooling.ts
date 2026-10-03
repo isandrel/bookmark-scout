@@ -76,6 +76,8 @@ export type DuplicateRemovalResult = {
   failed: number;
   /** Restores the removed bookmarks, once. */
   undo: () => Promise<BookmarkChangesUndoResult>;
+  /** After this time (epoch milliseconds) the removed bookmarks can no longer be restored. */
+  expiresAt: number;
 };
 
 export type UrlCleanerOptions = {
@@ -455,6 +457,7 @@ export async function removeDuplicateExtras(
     skippedGroups,
     failed: result.failed,
     undo: result.undo,
+    expiresAt: result.expiresAt,
   };
 }
 

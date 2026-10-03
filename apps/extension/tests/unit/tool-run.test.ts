@@ -2,13 +2,18 @@ import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { TOOL_DEFINITIONS, type ToolOutcome } from '@/components/bookmarks/tools/tool-definitions';
-import { createToolRun, type ToolRunDeps } from '@/components/bookmarks/tools/tool-run';
+import {
+  createToolRun,
+  type ToolRunDeps,
+  type UndoOffer,
+} from '@/components/bookmarks/tools/tool-run';
 import { setLanguage } from '@/hooks/use-i18n';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
 import type { AISettings } from '@/services/ai-client';
 import { getScopedNodes } from '@/services/bookmark-tooling';
+import { BOOKMARK_DELETION_UNDO_WINDOW_MS } from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -34,7 +39,7 @@ const aiService: AISettings = {
   baseUrl: 'https://provider.invalid/v1',
 };
 
-type Notice = { outcome: ToolOutcome; onUndo?: () => void };
+type Notice = { outcome: ToolOutcome; undo?: UndoOffer };
 
 let bookmarks: FakeBookmarks;
 let tree: BookmarkTreeNode[];
@@ -60,7 +65,7 @@ function deps(overrides: Partial<ToolRunDeps> = {}): ToolRunDeps {
     },
     aiSettings: async () => aiService,
     saveFile: (_request, write) => write(_request.nodes),
-    notify: (outcome, onUndo) => notices.push({ outcome, onUndo }),
+    notify: (outcome, undo) => notices.push({ outcome, undo }),
     ...overrides,
   };
 }
@@ -106,18 +111,81 @@ describe('duplicates', () => {
       variant: 'success',
     });
 
-    removal.onUndo?.();
-    removal.onUndo?.();
+    void removal.undo?.run();
+    void removal.undo?.run();
     await vi.waitFor(() => expect(notices).toHaveLength(2));
     expect(titles()).toEqual(['A1', 'A2', 'A3', 'B1']);
     expect(notices[1].outcome).toMatchObject({
       title: 'Deletion undone',
-      description: 'Restored: 2. Could not restore: 0.',
+      description:
+        'Restored: 2. Could not restore: 0. Restored bookmarks count as newly added, so a keep ' +
+        'rule based on date may keep a different copy next time.',
     });
-    expect(notices[1].onUndo).toBeUndefined();
+    expect(notices[1].undo).toBeUndefined();
     // The dialog's Undo shares the toast's single revert.
     await run.undo();
     expect(notices).toHaveLength(2);
+  });
+
+  it('closes the toast when Undo is used from the review', async () => {
+    const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
+    await run.run('folder');
+    await fakeBrowser.bookmarks.update('a2', { url: 'https://e2e.invalid/edited' });
+    await run.apply();
+    const undoToast = { dismiss: vi.fn() };
+    notices[0].undo?.attach(undoToast);
+
+    await run.undo();
+    expect(undoToast.dismiss).toHaveBeenCalledOnce();
+    expect(titles()).toEqual(['A1', 'A2', 'A3', 'B1']);
+  });
+
+  describe('when the undo window passes', () => {
+    beforeEach(() => {
+      vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+    });
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    const applyPartially = async () => {
+      const run = createToolRun(TOOL_DEFINITIONS.duplicates, deps());
+      await run.run('folder');
+      await fakeBrowser.bookmarks.update('a2', { url: 'https://e2e.invalid/edited' });
+      await run.apply();
+      expect(run.getState().notice).toMatchObject({ canUndo: true });
+      return run;
+    };
+
+    it('hides Undo in the review and the toast and never reverts', async () => {
+      const run = await applyPartially();
+      const undoToast = { dismiss: vi.fn() };
+      notices[0].undo?.attach(undoToast);
+
+      vi.advanceTimersByTime(BOOKMARK_DELETION_UNDO_WINDOW_MS + 1);
+      // The partial outcome stays readable without its Undo.
+      expect(run.getState().notice).toEqual({
+        message: 'Removed: 1. Skipped because they changed or were already removed: 1. Failed: 0.',
+        canUndo: false,
+      });
+      expect(undoToast.dismiss).toHaveBeenCalledOnce();
+
+      await run.undo();
+      await notices[0].undo?.run();
+      expect(titles()).toEqual(['A1', 'A2', 'B1']);
+      // No "could not undo" report either.
+      expect(notices).toHaveLength(1);
+    });
+
+    it('checks the clock when a late timer has not fired yet', async () => {
+      const run = await applyPartially();
+      vi.setSystemTime(Date.now() + BOOKMARK_DELETION_UNDO_WINDOW_MS + 1);
+
+      await run.undo();
+      expect(titles()).toEqual(['A1', 'A2', 'B1']);
+      expect(run.getState().notice).toMatchObject({ canUndo: false });
+      expect(notices).toHaveLength(1);
+    });
   });
 
   it('keeps a partial removal open, rescanned, with an undo notice', async () => {
@@ -152,7 +220,7 @@ describe('duplicates', () => {
 
     await run.apply();
     expect(run.getState().notice).toMatchObject({ canUndo: false });
-    expect(notices[0].onUndo).toBeUndefined();
+    expect(notices[0].undo).toBeUndefined();
   });
 });
 
@@ -179,7 +247,7 @@ describe('URL cleaner', () => {
       description: 'Updated: 1. Skipped because they changed after the preview: 1. Failed: 1.',
       variant: 'destructive',
     });
-    expect(notices[0].onUndo).toBeUndefined();
+    expect(notices[0].undo).toBeUndefined();
   });
 });
 
@@ -289,6 +357,39 @@ describe('AI tools', () => {
     expect(run.getState()).toMatchObject({ phase: 'done', open: false, result: null });
   });
 
+  it('[mocked provider contract] skips suggestions for bookmarks deleted or moved since the scan', async () => {
+    seed([
+      { id: '1', title: 'Paper', url: 'https://e2e.invalid/paper' },
+      { id: '2', title: 'Gone', url: 'https://e2e.invalid/gone' },
+      { id: '3', title: 'Moved', url: 'https://e2e.invalid/moved' },
+    ]);
+    tree = await readTree();
+    settings = { ...settings, aiEnabled: true };
+    mocks.generateObject.mockResolvedValue({
+      object: {
+        items: ['1', '2', '3'].map((bookmarkId) => ({
+          bookmarkId,
+          title: bookmarkId,
+          summary: `About ${bookmarkId}`,
+        })),
+      },
+    });
+    const run = createToolRun(TOOL_DEFINITIONS.summarizer, deps());
+    await run.run('folder');
+    expect(run.getState().result).toHaveLength(3);
+    await fakeBrowser.bookmarks.remove('2');
+    await fakeBrowser.bookmarks.update('3', { url: 'https://e2e.invalid/elsewhere' });
+
+    await run.apply();
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({ '1': { summary: 'About 1' } });
+    expect(notices[0].outcome).toEqual({
+      title: 'Some suggestions were not saved',
+      description:
+        'Saved: 1. Skipped because the bookmark was deleted or its URL changed since the scan: 2.',
+      variant: 'destructive',
+    });
+  });
+
   it('[mocked provider contract] reorganization shows its review while scanning and moves on apply', async () => {
     installFakeBookmarks([
       { id: 'bar', title: 'Bar' },
@@ -366,6 +467,22 @@ describe('AI context pack', () => {
     expect(clicked).toEqual(['bookmark-context.md']);
     expect(notices[0].outcome.title).toBe('AI context exported');
     expect(run.getState()).toMatchObject({ phase: 'done', open: false });
+  });
+
+  it('reports nothing to export for a scope without bookmarks instead of saving a file', async () => {
+    seed([]);
+    tree = await readTree();
+    const saveFile = vi.fn<ToolRunDeps['saveFile']>();
+    const run = createToolRun(TOOL_DEFINITIONS.aiContextPacker, deps({ saveFile }));
+    await run.run('folder');
+
+    expect(saveFile).not.toHaveBeenCalled();
+    expect(notices.map((notice) => notice.outcome)).toEqual([
+      {
+        title: 'Nothing to export',
+        description: 'There are no bookmarks in this scope, so no file was saved.',
+      },
+    ]);
   });
 });
 

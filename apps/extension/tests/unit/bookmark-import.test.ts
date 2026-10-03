@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { setLanguage } from '@/hooks/use-i18n';
 import {
   applyImportPlan,
   isSameImportPlan,
@@ -17,6 +18,7 @@ let bookmarks: FakeBookmarks;
 beforeEach(() => {
   fakeBrowser.reset();
   vi.restoreAllMocks();
+  setLanguage('en');
   bookmarks = installFakeBookmarks([{ id: 'target', title: 'Target' }]);
 });
 
@@ -83,6 +85,19 @@ describe('JSON import parsing', () => {
     expect(result.bookmarks.map((node) => node.title)).toEqual(['Good', 'Folder']);
     expect(result.bookmarks[1].children?.map((node) => node.title)).toEqual(['Child']);
     expect(result).toMatchObject({ bookmarkCount: 2, folderCount: 1, skipped: 6 });
+  });
+
+  it('counts entries whose URL the browser cannot store as invalid', () => {
+    const result = parseJson([
+      { title: 'Good', url: 'https://e2e.invalid/good' },
+      { title: 'Broken', url: 'not a url' },
+      { title: 'Folder', children: [{ title: 'Half', url: 'https//missing-colon' }] },
+    ]);
+    expect(result.bookmarks.map((node) => node.title)).toEqual(['Good', 'Folder']);
+    expect(result.bookmarks[1].children).toEqual([]);
+    expect(result).toMatchObject({ bookmarkCount: 1, folderCount: 1, skipped: 2 });
+    const plan = planImport(result, browserTree(), 'target', 'import-all');
+    expect(plan.counts).toMatchObject({ bookmarksToCreate: 1, invalid: 2 });
   });
 
   it('unwraps an exported container without adding a level', () => {
@@ -289,7 +304,11 @@ describe('applying an import plan', () => {
       skipped: 2,
       failed: 3,
     });
-    expect(outcome.errors).toEqual(['create failed: Rejected', 'create failed: Broken Folder']);
+    // Each error names its entry, so the user can tell which one to fix.
+    expect(outcome.errors).toEqual([
+      'Could not import "Rejected": create failed: Rejected',
+      'Could not import "Broken Folder": create failed: Broken Folder',
+    ]);
     expect(titles('target')).toEqual(['Ok', 'Folder']);
     const [, folderId] = bookmarks.childIds('target');
     expect(titles(folderId)).toEqual(['Inner']);

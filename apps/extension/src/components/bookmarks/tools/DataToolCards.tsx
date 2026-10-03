@@ -27,15 +27,15 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
     if (scopeNodes.length === 0) return;
     setIsExporting(true);
     const reportExportError = (error: unknown) =>
-      toast({
-        title: t('toast_exportFailed'),
-        description: getErrorMessage(error),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('toast_exportFailed'), description: getErrorMessage(error) });
 
     try {
       const format = exportFormats[exportFormat] ?? exportFormats.html;
       const root = buildExportRoot(scopeNodes);
+      if (countExportedBookmarks(root) === 0) {
+        showToolOutcome(nothingToExportOutcome());
+        return;
+      }
       const writeExport = (children: BookmarkTreeNode[]) => {
         const exportRoot = { ...root, children };
         const content = exportBookmarks(exportRoot, format, {
@@ -54,7 +54,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
           maxLength: settings.exportFilenameMaxLength,
         });
         downloadExport(content, filename, format.mimeType);
-        toast({
+        toast.success({
           title: t('toast_exportSuccess'),
           description: tPlural('toast_exportSuccessDesc', countExportedBookmarks(exportRoot), [
             getFormatName(format),
@@ -139,11 +139,7 @@ export function ImportToolCard({ environment }: DataToolProps) {
       // Nothing is written until the user reviews and applies the preview.
       setImportSource({ fileName: file.name, parsed });
     } catch (error) {
-      toast({
-        title: t('toast_importFailed'),
-        description: getErrorMessage(error),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('toast_importFailed'), description: getErrorMessage(error) });
     } finally {
       setIsImporting(false);
       // The same file can be picked again.
