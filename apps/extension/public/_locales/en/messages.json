@@ -24,8 +24,36 @@
         "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
     },
     "shortcuts_popupHint": {
-        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search, $1 shows recent searches",
-        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts; $1 is the recent-searches key, such as Alt+↓ (⌥+↓ on Apple keyboards)"
+        "message": "Shortcuts: $1",
+        "description": "Tooltip on the popup search box; $1 is the list of shortcut hints, each built from shortcuts_hintItem"
+    },
+    "shortcuts_hintItem": {
+        "message": "$1 $2",
+        "description": "One popup shortcut hint: $1 is the key or keys (such as / or ↓ ↑), $2 is what they do (a shortcuts_popupHint* action)"
+    },
+    "shortcuts_popupHintSearch": {
+        "message": "search",
+        "description": "Popup shortcut action: focus the search box"
+    },
+    "shortcuts_popupHintMove": {
+        "message": "move through folders and bookmarks",
+        "description": "Popup shortcut action: move between the visible folders and bookmarks"
+    },
+    "shortcuts_popupHintOpenClose": {
+        "message": "open or close a folder",
+        "description": "Popup shortcut action: open or close the focused folder"
+    },
+    "shortcuts_popupHintSave": {
+        "message": "save the current page to the focused folder",
+        "description": "Popup shortcut action: save the current page into the focused folder"
+    },
+    "shortcuts_popupHintClear": {
+        "message": "clear the search",
+        "description": "Popup shortcut action: clear the search"
+    },
+    "shortcuts_popupHintRecent": {
+        "message": "show recent searches",
+        "description": "Popup shortcut action: show recent searches"
     },
     "shortcuts_title": {
         "message": "Keyboard shortcuts",
