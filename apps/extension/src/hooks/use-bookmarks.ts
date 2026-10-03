@@ -31,8 +31,8 @@ export function useBookmarks(): UseBookmarksReturn {
       const data = await fetchBookmarkTree();
       setFolders(data);
     } catch (err) {
-      console.error('Error fetching bookmarks:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch bookmarks');
+      bookmarkLogger.error({ err }, 'Error fetching bookmarks');
+      setError(getErrorMessage(err, 'error_failedToLoadBookmarks'));
     } finally {
       setIsLoading(false);
     }

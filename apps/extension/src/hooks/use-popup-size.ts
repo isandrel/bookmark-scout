@@ -5,6 +5,9 @@
 
 import { useEffect } from 'react';
 
+/** CSS variables popup.html sizes itself with; its inline defaults are unit-tested. */
+export const POPUP_SIZE_CSS_VARS = { width: '--popup-width', height: '--popup-height' } as const;
+
 /** The popupWidth/popupHeight bounds from config/settings/advanced.toml. */
 export const POPUP_SIZE_LIMITS = {
   width: SETTING_NUMBER_BOUNDS.popupWidth,
@@ -28,7 +31,7 @@ export function usePopupSize(): void {
     if (isLoading) return;
     const { width, height } = clampPopupSize(popupWidth, popupHeight);
     const root = document.documentElement.style;
-    root.setProperty('--popup-width', `${width}px`);
-    root.setProperty('--popup-height', `${height}px`);
+    root.setProperty(POPUP_SIZE_CSS_VARS.width, `${width}px`);
+    root.setProperty(POPUP_SIZE_CSS_VARS.height, `${height}px`);
   }, [isLoading, popupWidth, popupHeight]);
 }

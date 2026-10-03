@@ -62,7 +62,7 @@ export function fromUnlimitedSliderValue(position: number): number {
 export function getChangedSettings(saved: Settings, values: Settings): Partial<Settings> {
   return Object.fromEntries(
     (Object.keys(values) as (keyof Settings)[])
-      .filter((key) => JSON.stringify(values[key]) !== JSON.stringify(saved[key]))
+      .filter((key) => !isSameJson(values[key], saved[key]))
       .map((key) => [key, values[key]]),
   ) as Partial<Settings>;
 }

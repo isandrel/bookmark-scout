@@ -3,7 +3,12 @@
  * Queries can reveal bookmark contents, so they stay in local storage and are never synced.
  */
 
-export const MAX_SEARCH_HISTORY_ENTRIES = 10;
+import { z } from 'zod';
+
+export const MAX_SEARCH_HISTORY_ENTRIES = readConfig(
+  'limits/search-history',
+  z.strictObject({ max_entries: z.number().int().positive() }),
+).max_entries;
 
 export const searchHistoryItem = storage.defineItem<string[]>(
   'local:bookmark-scout-search-history',

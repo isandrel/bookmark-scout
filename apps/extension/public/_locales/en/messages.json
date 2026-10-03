@@ -4832,5 +4832,29 @@
     "ai_reorgChangeFailed": {
         "message": "Could not change \"$1\": $2",
         "description": "Reorganization error; $1 is the bookmark or folder title, $2 the browser's error"
+    },
+    "meta_languageName": {
+        "message": "English",
+        "description": "This language's own name, shown in the Language setting. Do not translate into another language."
+    },
+    "unit_ms": {
+        "message": "ms",
+        "description": "Unit shown after a duration in milliseconds"
+    },
+    "unit_px": {
+        "message": "px",
+        "description": "Unit shown after a size in pixels"
+    },
+    "unit_chars": {
+        "message": "chars",
+        "description": "Unit shown after a number of characters"
+    },
+    "unit_kb": {
+        "message": "KB",
+        "description": "Unit shown after a size in kilobytes"
+    },
+    "bookmarks_folderOptionWithId": {
+        "message": "$1 (#$2)",
+        "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
     }
 }

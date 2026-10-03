@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { setLanguage } from '@/hooks/use-i18n';
-import { POPUP_SIZE_LIMITS } from '@/hooks/use-popup-size';
+import { POPUP_SIZE_CSS_VARS, POPUP_SIZE_LIMITS } from '@/hooks/use-popup-size';
 import {
   defaultSettings,
   getSettingsFieldMeta,
@@ -76,8 +76,8 @@ describe('popup size', () => {
   it('opens popup.html at the configured default size and minimums', () => {
     const html = readFileSync(path.join(appRoot, 'src/entrypoints/popup/index.html'), 'utf8');
     const { popupWidth, popupHeight } = SETTING_NUMBER_BOUNDS;
-    expect(html).toContain(`--popup-width: ${popupWidth.default}px;`);
-    expect(html).toContain(`--popup-height: ${popupHeight.default}px;`);
+    expect(html).toContain(`${POPUP_SIZE_CSS_VARS.width}: ${popupWidth.default}px;`);
+    expect(html).toContain(`${POPUP_SIZE_CSS_VARS.height}: ${popupHeight.default}px;`);
     expect(html).toContain(`min-width: ${popupWidth.min}px;`);
     expect(html).toContain(`min-height: ${popupHeight.min}px;`);
   });

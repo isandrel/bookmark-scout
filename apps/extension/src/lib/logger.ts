@@ -5,12 +5,15 @@
 
 import pino from 'pino';
 
+/** Release builds log `info` and above; development builds also log `debug`. */
+const LOG_LEVELS = { production: 'info', development: 'debug' } as const;
+
 // Create browser-compatible logger
 const logger = pino({
   browser: {
     asObject: true,
   },
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  level: process.env.NODE_ENV === 'production' ? LOG_LEVELS.production : LOG_LEVELS.development,
 });
 
 // Named child loggers for different modules

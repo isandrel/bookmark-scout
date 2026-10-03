@@ -76,12 +76,14 @@ async function mergeUnlocked(
 
   for (const [bookmarkId, patch] of Object.entries(patches)) {
     const current = stored[bookmarkId] ?? {};
-    const tags = patch.tags === undefined
-      ? current.tags ?? []
-      : mergeTags(current.tags ?? [], patch.tags, options.tagMode, options.dedupeTags);
-    const summary = patch.summary === undefined
-      ? current.summary ?? ''
-      : mergeSummary(current.summary ?? '', patch.summary, options.summaryMode);
+    const tags =
+      patch.tags === undefined
+        ? (current.tags ?? [])
+        : mergeTags(current.tags ?? [], patch.tags, options.tagMode, options.dedupeTags);
+    const summary =
+      patch.summary === undefined
+        ? (current.summary ?? '')
+        : mergeSummary(current.summary ?? '', patch.summary, options.summaryMode);
     const normalized = normalizeMetadata({ tags, summary });
 
     if (normalized) {
@@ -134,13 +136,13 @@ async function reconcileUnlocked(validBookmarkIds: string[]): Promise<void> {
 
 async function readAllBookmarkMetadata(): Promise<StoredBookmarkMetadataById> {
   const raw: unknown = await bookmarkMetadataItem.getValue();
-  if (!isRecord(raw)) {
+  if (!isPlainObject(raw)) {
     return {};
   }
 
   return Object.fromEntries(
     Object.entries(raw).flatMap(([bookmarkId, value]) => {
-      if (!isRecord(value)) {
+      if (!isPlainObject(value)) {
         return [];
       }
       const normalized = normalizeMetadata(value);
@@ -206,8 +208,4 @@ function mergeSummary(currentSummary: string, nextSummary: string, mode: 'append
     return next;
   }
   return next ? `${current}\n\n${next}` : current;
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }

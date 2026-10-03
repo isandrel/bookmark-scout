@@ -7,9 +7,7 @@ createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       <ThemeProvider storageKey="bookmark-scout-theme">
         <LanguageRoot>
-          <SidebarProvider>
-            <PopupPage />
-          </SidebarProvider>
+          <PopupPage />
         </LanguageRoot>
       </ThemeProvider>
     </ErrorBoundary>

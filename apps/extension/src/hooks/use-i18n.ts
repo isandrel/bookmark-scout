@@ -14,21 +14,37 @@ export type BundledMessage = {
   placeholders?: Record<string, { content: string }>;
 };
 
-// Bundled messages map
-const messagesMap: Record<string, Record<string, BundledMessage>> = {
-  en: messagesEn,
-  ja: messagesJa,
-  ko: messagesKo,
-};
+const bundledMessages = { en: messagesEn, ja: messagesJa, ko: messagesKo };
+
+/** A language the extension ships messages for; adding a locale file here adds it everywhere. */
+export type SupportedLocale = keyof typeof bundledMessages;
+
+const messagesMap: Record<SupportedLocale, Record<string, BundledMessage>> = bundledMessages;
+
+/** Bundled locales in the order the Language setting lists them. */
+export const SUPPORTED_LOCALES = Object.keys(messagesMap) as SupportedLocale[];
+
+/** Shown when the browser language is not bundled; the manifest's `default_locale` (unit-tested). */
+export const FALLBACK_LOCALE: SupportedLocale = 'en';
+
+/** The Language setting's value for "follow the browser". */
+export const AUTO_LANGUAGE = 'auto';
+
+export type LanguagePreference = typeof AUTO_LANGUAGE | SupportedLocale;
 
 // Current language setting (updated by settings storage)
-let currentLanguage: 'auto' | 'en' | 'ja' | 'ko' = 'auto';
+let currentLanguage: LanguagePreference = AUTO_LANGUAGE;
 
 /**
  * Set the current language. Called by settings storage on load/change.
  */
-export function setLanguage(language: 'auto' | 'en' | 'ja' | 'ko') {
+export function setLanguage(language: LanguagePreference) {
   currentLanguage = language;
+}
+
+/** A language's own name ("日本語"), from that locale's `meta_languageName` message. */
+export function getLanguageName(locale: SupportedLocale): string {
+  return messagesMap[locale].meta_languageName?.message ?? locale;
 }
 
 /**
@@ -42,16 +58,16 @@ export function getLanguage() {
  * The bundled language actually shown: the explicit setting, or for 'auto' the browser UI
  * language when it is one of the bundled locales, otherwise English.
  */
-export function getResolvedLanguage(): 'en' | 'ja' | 'ko' {
-  if (currentLanguage !== 'auto') return currentLanguage;
+export function getResolvedLanguage(): SupportedLocale {
+  if (currentLanguage !== AUTO_LANGUAGE) return currentLanguage;
   try {
     const uiLanguage = browser.i18n.getUILanguage().toLowerCase();
-    if (uiLanguage.startsWith('ja')) return 'ja';
-    if (uiLanguage.startsWith('ko')) return 'ko';
+    const match = SUPPORTED_LOCALES.find((locale) => uiLanguage.startsWith(locale));
+    if (match) return match;
   } catch {
-    // Non-extension environments (tests) fall back to English.
+    // Non-extension environments (tests) fall back to the default locale.
   }
-  return 'en';
+  return FALLBACK_LOCALE;
 }
 
 /**
@@ -59,7 +75,7 @@ export function getResolvedLanguage(): 'en' | 'ja' | 'ko' {
  * (undefined outside the extension, which means the runtime default).
  */
 export function getFormattingLocale(): string | undefined {
-  if (currentLanguage !== 'auto') return currentLanguage;
+  if (currentLanguage !== AUTO_LANGUAGE) return currentLanguage;
   try {
     return browser.i18n.getUILanguage() || undefined;
   } catch {
@@ -70,11 +86,13 @@ export function getFormattingLocale(): string | undefined {
 /** A byte count in kilobytes with at most one decimal, e.g. "12.5 KB". */
 export function formatKilobytes(bytes: number): string {
   const kilobytes = Math.round((bytes / BYTES_PER_KB) * 10) / 10;
+  let value: string;
   try {
-    return `${kilobytes.toLocaleString(getFormattingLocale())} KB`;
+    value = kilobytes.toLocaleString(getFormattingLocale());
   } catch {
-    return `${kilobytes} KB`;
+    value = String(kilobytes);
   }
+  return `${value} ${t('unit_kb')}`;
 }
 
 /** Date and time in the extension's language, e.g. "2026/9/24 15:05:49" in Japanese. */
@@ -123,7 +141,7 @@ export function formatBundledMessage(
 export function t(key: MessageKey, substitutions?: string | string[]): string {
   try {
     // Use bundled messages when specific language is selected
-    if (currentLanguage !== 'auto') {
+    if (currentLanguage !== AUTO_LANGUAGE) {
       const entry = messagesMap[currentLanguage]?.[key];
       if (entry) {
         return formatBundledMessage(entry, substitutions);
@@ -152,12 +170,4 @@ export function getErrorMessage(error: unknown, fallbackKey: MessageKey = 'error
 export function tPlural(key: MessageKey, count: number, extra: string[] = []): string {
   const substitutions = [String(count), ...extra];
   return t(count === 1 ? `${key}_one` : key, substitutions);
-}
-
-/**
- * Hook for using i18n in React components
- * Returns the t function for translations
- */
-export function useI18n() {
-  return { t };
 }
