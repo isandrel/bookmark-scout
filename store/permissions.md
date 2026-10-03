@@ -48,7 +48,7 @@ Code: `apps/extension/src/services/bookmarks.ts` and the background listeners in
 ### `tabs`
 
 ```text
-Reads the title and URL of the active tab so the popup and side panel can save the page the user is viewing into a chosen folder without saving it twice in the same folder. If the user has turned on AI folder suggestions, the same title and URL are what the suggestion is based on. The extension also opens bookmarks in a new tab. It does not read other tabs or track browsing.
+Reads the title and URL of the active tab so the popup and side panel can save the page the user is viewing into a chosen folder without saving it twice in the same folder. If the user has turned on AI, the same title and URL are what folder suggestions are based on, and Ask AI can look them up when the user asks about the current page. The extension also opens bookmarks in a new tab. It does not read other tabs or track browsing.
 ```
 
 Code: `getCurrentTab` and `openBookmarkInNewTab` in `src/services/bookmarks.ts`, `PopupPage.tsx`. `activeTab` alone is not enough because the side panel stays open across tab switches and is not opened by the toolbar button.

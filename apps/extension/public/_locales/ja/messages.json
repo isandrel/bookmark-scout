@@ -4700,5 +4700,97 @@
     "prompt_viewBuiltIn": {
         "message": "$1 の組み込みプロンプトを表示",
         "description": "Prompt library: button label; $1 is the tool name"
+    },
+    "askAI_title": {
+        "message": "AI に質問",
+        "description": "Title of the Ask AI chat"
+    },
+    "askAI_open": {
+        "message": "ブックマークやこのページについて AI に質問",
+        "description": "Popup button that opens the Ask AI chat"
+    },
+    "askAI_back": {
+        "message": "ブックマークに戻る",
+        "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_newChat": {
+        "message": "新しいチャット",
+        "description": "Ask AI: button that clears the conversation"
+    },
+    "askAI_placeholder": {
+        "message": "ブックマーク、このページ、その他なんでも質問",
+        "description": "Ask AI: message box placeholder and label"
+    },
+    "askAI_send": {
+        "message": "送信",
+        "description": "Ask AI: send button"
+    },
+    "askAI_stop": {
+        "message": "停止",
+        "description": "Ask AI: stop button while answering"
+    },
+    "askAI_webSearch": {
+        "message": "ウェブを検索",
+        "description": "Ask AI: toggle for the provider web search"
+    },
+    "askAI_empty": {
+        "message": "ブックマーク、表示中のページ、その他なんでも質問できます。チャットは保存されず、閉じると終了します。",
+        "description": "Ask AI: empty state"
+    },
+    "askAI_suggestionPage": {
+        "message": "このページは何について書かれていますか？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionRelated": {
+        "message": "このページに関連するブックマークはどれですか？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionFolders": {
+        "message": "ブックマークのフォルダーはどのように整理されていますか？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_readPageOff": {
+        "message": "Ask AI にページを読ませるには、オプションの AI で「ページの内容を読む」をオンにしてください。",
+        "description": "Ask AI: hint when page reading is off"
+    },
+    "askAI_thinking": {
+        "message": "考え中…",
+        "description": "Ask AI: waiting for the first answer"
+    },
+    "askAI_retry": {
+        "message": "再試行",
+        "description": "Ask AI: retry after an error"
+    },
+    "askAI_sources": {
+        "message": "出典",
+        "description": "Ask AI: heading for web sources"
+    },
+    "askAI_toolSearchBookmarks": {
+        "message": "ブックマークで「$1」を検索しました",
+        "description": "Ask AI tool step; $1 is the search query"
+    },
+    "askAI_toolListFolders": {
+        "message": "フォルダー一覧を確認しました",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolCurrentPage": {
+        "message": "現在のページを確認しました",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolReadPage": {
+        "message": "$1 を読みました",
+        "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolWebSearch": {
+        "message": "ウェブを検索しました",
+        "description": "Ask AI tool step"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "Ask AI チャットで質問に答えます",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "今日の日付（YYYY-MM-DD 形式）",
+        "description": "Prompt variable description"
     }
 }

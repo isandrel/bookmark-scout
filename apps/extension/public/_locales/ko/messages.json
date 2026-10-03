@@ -4700,5 +4700,97 @@
     "prompt_viewBuiltIn": {
         "message": "$1의 기본 제공 프롬프트 보기",
         "description": "Prompt library: button label; $1 is the tool name"
+    },
+    "askAI_title": {
+        "message": "AI에게 묻기",
+        "description": "Title of the Ask AI chat"
+    },
+    "askAI_open": {
+        "message": "북마크나 이 페이지에 대해 AI에게 묻기",
+        "description": "Popup button that opens the Ask AI chat"
+    },
+    "askAI_back": {
+        "message": "북마크로 돌아가기",
+        "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_newChat": {
+        "message": "새 채팅",
+        "description": "Ask AI: button that clears the conversation"
+    },
+    "askAI_placeholder": {
+        "message": "북마크, 이 페이지, 무엇이든 물어보세요",
+        "description": "Ask AI: message box placeholder and label"
+    },
+    "askAI_send": {
+        "message": "보내기",
+        "description": "Ask AI: send button"
+    },
+    "askAI_stop": {
+        "message": "중지",
+        "description": "Ask AI: stop button while answering"
+    },
+    "askAI_webSearch": {
+        "message": "웹 검색",
+        "description": "Ask AI: toggle for the provider web search"
+    },
+    "askAI_empty": {
+        "message": "북마크, 보고 있는 페이지, 그 밖의 무엇이든 물어보세요. 채팅은 저장되지 않으며 닫으면 끝납니다.",
+        "description": "Ask AI: empty state"
+    },
+    "askAI_suggestionPage": {
+        "message": "이 페이지는 무엇에 관한 내용인가요?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionRelated": {
+        "message": "이 페이지와 관련된 북마크는 무엇인가요?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionFolders": {
+        "message": "북마크 폴더는 어떻게 정리되어 있나요?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_readPageOff": {
+        "message": "Ask AI가 페이지를 읽게 하려면 옵션의 AI에서 페이지 내용 읽기를 켜세요.",
+        "description": "Ask AI: hint when page reading is off"
+    },
+    "askAI_thinking": {
+        "message": "생각 중…",
+        "description": "Ask AI: waiting for the first answer"
+    },
+    "askAI_retry": {
+        "message": "다시 시도",
+        "description": "Ask AI: retry after an error"
+    },
+    "askAI_sources": {
+        "message": "출처",
+        "description": "Ask AI: heading for web sources"
+    },
+    "askAI_toolSearchBookmarks": {
+        "message": "북마크에서 “$1” 검색함",
+        "description": "Ask AI tool step; $1 is the search query"
+    },
+    "askAI_toolListFolders": {
+        "message": "폴더 목록을 확인함",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolCurrentPage": {
+        "message": "현재 페이지를 확인함",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolReadPage": {
+        "message": "$1 읽음",
+        "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolWebSearch": {
+        "message": "웹을 검색함",
+        "description": "Ask AI tool step"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "Ask AI 채팅에서 질문에 답합니다",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "오늘 날짜(YYYY-MM-DD 형식)",
+        "description": "Prompt variable description"
     }
 }

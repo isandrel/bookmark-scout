@@ -99,6 +99,7 @@ Keep as many prompts per tool as you like and switch between them with the tool'
 | **Auto-Tagging** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text |
 | **Content Summarizer** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text |
 | **AI Folder Reorganization** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the scope you choose |
+| **Ask AI** | Popup and side panel, the chat button next to the search box (shown only when AI is on) | Your messages and the conversation so far, and what it looks up: matching bookmarks, folder names, the current page's title and URL, and with **Read page content** on, the text of pages it reads |
 | **AI Context Packer** | Manager, Tools, **AI & Intelligence** | Nothing. It saves a file on your computer and works with AI turned off. |
 
 Turn on **Auto-recommend on Open** to request folder recommendations every time the popup opens. Leave it off to send a request only when you click the button.
@@ -111,6 +112,15 @@ Titles and URLs do not always say what a page is about. Turn on **Read page cont
 - Each page sends up to about 3,000 characters, and one tool run reads up to 40 pages. Later bookmarks in a large folder are sent with their title and URL only, as are pages that do not load.
 - Pages on your local network, such as `localhost`, private IP addresses, and `.local` names, are never read, so intranet pages do not reach a cloud provider.
 - Page text comes from the web and could contain instructions aimed at the AI. Bookmark Scout tells the model to treat it only as data, and you still review every suggestion before it is saved.
+
+## Ask AI
+
+Click the chat button next to the search box in the popup or side panel to ask about your bookmarks, the page you are on, or anything else. It uses your default AI service; switch services from the menu in its header.
+
+- To answer, the AI can search your bookmarks, list your folders, check the current page, and, with **Read page content** on, read a web page. It can only read; it never adds, moves, or deletes bookmarks. Each step it takes appears in the chat.
+- OpenAI, Anthropic, Google Gemini, and xAI can also search the web. Turn it on with the globe button next to the message box; it stays off until you do, and the provider runs the search itself.
+- The conversation is kept only while the chat is open. **New chat** clears it, and closing the popup ends it.
+- The instructions it follows are the **Ask AI** prompt in the prompt library, so you can view or replace them like any other prompt.
 
 ## See what was sent
 
