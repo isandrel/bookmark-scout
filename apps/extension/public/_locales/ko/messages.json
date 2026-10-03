@@ -2725,22 +2725,6 @@
         "message": "제한 없음",
         "description": "Slider value meaning unlimited"
     },
-    "settings_unitMilliseconds": {
-        "message": "ms",
-        "description": "Unit shown next to a setting in milliseconds"
-    },
-    "settings_unitPixels": {
-        "message": "px",
-        "description": "Unit shown next to a setting in pixels"
-    },
-    "settings_unitCharacters": {
-        "message": "자",
-        "description": "Unit shown next to a setting counted in characters; keep it short"
-    },
-    "settings_unitKilobytes": {
-        "message": "KB",
-        "description": "Unit shown next to a setting in kilobytes"
-    },
     "settings_modified": {
         "message": "변경됨",
         "description": "Badge for settings changed from default"
