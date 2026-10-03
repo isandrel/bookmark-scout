@@ -81,57 +81,23 @@ function AddServiceDialog({
               emptyText={t('select_noMatches')}
             />
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="ai-service-add-name" className="text-sm font-medium">
-              {t('options_aiServiceName')}
-            </Label>
-            <Input
-              id="ai-service-add-name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder={getLocalizedProviderName(provider)}
-              autoComplete="off"
-            />
-          </div>
+          <Field id="ai-service-add-name" label={t('options_aiServiceName')}>
+            {(control) => (
+              <Input
+                {...control}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder={getLocalizedProviderName(provider)}
+                autoComplete="off"
+              />
+            )}
+          </Field>
         </div>
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('action_cancel')}
           </Button>
           <Button onClick={() => void add()}>{t('options_aiServiceAdd')}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
-function DeleteServiceDialog({
-  service,
-  onClose,
-}: {
-  service: AIService | null;
-  onClose: () => void;
-}) {
-  return (
-    <Dialog open={service !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t('options_aiServiceDeleteTitle', service?.name ?? '')}</DialogTitle>
-          <DialogDescription>{t('options_aiServiceDeleteDescription')}</DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="gap-2">
-          <Button variant="outline" onClick={onClose}>
-            {t('action_cancel')}
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              if (service) void deleteAIService(service.id);
-              onClose();
-            }}
-          >
-            {t('action_delete')}
-          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -148,24 +114,18 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
   const openId = expandedId ?? state.defaultServiceId ?? null;
 
   return (
-    <section
-      aria-labelledby="ai-services-heading"
-      className="space-y-3 rounded-lg border bg-card p-4"
+    <OptionsPanel
+      id="ai-services"
       data-testid="ai-services"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div className="min-w-0">
-          <h3 id="ai-services-heading" className="text-base font-medium">
-            {t('options_aiServices')}
-          </h3>
-          <p className="text-sm text-muted-foreground">{t('options_aiServicesDescription')}</p>
-        </div>
+      title={t('options_aiServices')}
+      description={t('options_aiServicesDescription')}
+      actions={
         <Button variant="outline" onClick={() => setAdding(true)}>
           <Plus className="h-4 w-4" />
           {t('options_aiServiceAdd')}
         </Button>
-      </div>
-
+      }
+    >
       {!isLoading && state.services.length === 0 && (
         <p className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
           {t('options_aiServiceEmpty')}
@@ -266,8 +226,21 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
         })}
       </ul>
 
-      <AddServiceDialog open={adding} onOpenChange={setAdding} onAdded={(s) => setExpandedId(s.id)} />
-      <DeleteServiceDialog service={deleting} onClose={() => setDeleting(null)} />
-    </section>
+      <AddServiceDialog
+        open={adding}
+        onOpenChange={setAdding}
+        onAdded={(s) => setExpandedId(s.id)}
+      />
+      <ConfirmDialog
+        open={deleting !== null}
+        onOpenChange={(open) => !open && setDeleting(null)}
+        title={t('options_aiServiceDeleteTitle', deleting?.name ?? '')}
+        description={t('options_aiServiceDeleteDescription')}
+        confirmLabel={t('action_delete')}
+        onConfirm={() => {
+          if (deleting) void deleteAIService(deleting.id);
+        }}
+      />
+    </OptionsPanel>
   );
 }

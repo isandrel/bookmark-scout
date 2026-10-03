@@ -29,7 +29,7 @@ type ListSettingInputProps = {
   kind: 'string' | 'number';
   value: SettingValue;
   placeholder: string;
-  describedBy: string;
+  describedBy?: string;
   labelledBy: string;
   invalid: boolean;
   onChange: (value: SettingValue) => void;
@@ -144,7 +144,7 @@ function NumberStepper({
   meta: SettingsFieldMeta;
   value: number;
   labelledBy: string;
-  describedBy: string;
+  describedBy?: string;
   invalid: boolean;
   onChange: (value: number) => void;
 }) {
@@ -205,16 +205,16 @@ type SettingsGroupRowProps = {
 /** Related on/off settings as one checklist; each option still saves to its own setting. */
 export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowProps) {
   const meta = getSettingsFieldMeta();
-  const changed = group.fields.filter(
-    (fieldKey) => values[fieldKey] !== defaultSettings[fieldKey],
-  );
+  const changed = group.fields.filter((fieldKey) => values[fieldKey] !== defaultSettings[fieldKey]);
   const labelId = `setting-group-${group.id}-label`;
 
   return (
     <div
       data-setting-group={group.id}
       className={`flex flex-col gap-3 rounded-lg border bg-card p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
-        changed.length > 0 ? 'border-primary/50 bg-primary/5' : 'border-transparent hover:border-border'
+        changed.length > 0
+          ? 'border-primary/50 bg-primary/5'
+          : 'border-transparent hover:border-border'
       }`}
     >
       <div className="min-w-0 flex-1 space-y-3 sm:pr-4">
@@ -288,15 +288,15 @@ export function SettingsFieldRow({
   const meta = getSettingsFieldMeta()[fieldKey];
   const defaultValue = defaultSettings[fieldKey];
   const isChanged = JSON.stringify(value) !== JSON.stringify(defaultValue);
-  const controlId = getSettingControlId(fieldKey);
-  const labelId = `${controlId}-label`;
-  const descriptionId = `${controlId}-description`;
-  const errorId = `${controlId}-error`;
-  const describedBy = error ? `${descriptionId} ${errorId}` : descriptionId;
   // Remounts the list input on reset so unsaved, invalid text does not outlive the reset.
   const [resetCount, setResetCount] = useState(0);
 
-  const renderControl = () => {
+  const renderControl = ({
+    id: controlId,
+    'aria-labelledby': labelId,
+    'aria-describedby': describedBy,
+    'aria-invalid': invalid,
+  }: FieldControlProps) => {
     switch (meta.type) {
       case 'switch':
         return (
@@ -321,7 +321,7 @@ export function SettingsFieldRow({
               id={controlId}
               aria-labelledby={labelId}
               aria-describedby={describedBy}
-              aria-invalid={Boolean(error)}
+              aria-invalid={Boolean(invalid)}
               className="w-full sm:w-[220px]"
               value={String(value)}
               options={options.map((option) => ({
@@ -353,7 +353,7 @@ export function SettingsFieldRow({
               id={controlId}
               aria-labelledby={labelId}
               aria-describedby={describedBy}
-              aria-invalid={Boolean(error)}
+              aria-invalid={Boolean(invalid)}
               className="w-full sm:w-[220px]"
             >
               <SelectValue />
@@ -379,7 +379,7 @@ export function SettingsFieldRow({
               value={numeric}
               labelledBy={labelId}
               describedBy={describedBy}
-              invalid={Boolean(error)}
+              invalid={Boolean(invalid)}
               onChange={onChange}
             />
           );
@@ -421,7 +421,7 @@ export function SettingsFieldRow({
               placeholder={meta.label}
               describedBy={describedBy}
               labelledBy={labelId}
-              invalid={Boolean(error)}
+              invalid={Boolean(invalid)}
               onChange={onChange}
               onInputError={onInputError}
             />
@@ -434,7 +434,7 @@ export function SettingsFieldRow({
             onChange={(event) => onChange(event.target.value)}
             aria-labelledby={labelId}
             aria-describedby={describedBy}
-            aria-invalid={Boolean(error)}
+            aria-invalid={Boolean(invalid)}
             className="w-full sm:w-[220px]"
             placeholder={meta.label}
           />
@@ -456,34 +456,27 @@ export function SettingsFieldRow({
             : 'border-transparent hover:border-border'
       }`}
     >
-      <div className="min-w-0 flex-1 space-y-1 sm:pr-4">
-        <div className="flex flex-wrap items-center gap-2">
-          <Label id={labelId} htmlFor={controlId} className="text-base font-medium">
-            {meta.label}
-          </Label>
-          {isChanged && <ModifiedBadge />}
-        </div>
-        <p id={descriptionId} className="text-sm text-muted-foreground">
-          {meta.description}
-        </p>
-        {error && (
-          <p id={errorId} role="alert" className="text-sm text-destructive">
-            {error}
-          </p>
-        )}
-      </div>
-      <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
-        {renderControl()}
-        <ResetSlot
-          visible={isChanged || Boolean(error)}
-          label={t('settings_resetFieldToDefault', meta.label)}
-          onReset={() => {
-            onInputError(undefined);
-            setResetCount((count) => count + 1);
-            onChange(defaultValue);
-          }}
-        />
-      </div>
+      <Field
+        id={getSettingControlId(fieldKey)}
+        layout="setting"
+        label={meta.label}
+        description={meta.description}
+        error={error}
+        badge={isChanged && <ModifiedBadge />}
+        actions={
+          <ResetSlot
+            visible={isChanged || Boolean(error)}
+            label={t('settings_resetFieldToDefault', meta.label)}
+            onReset={() => {
+              onInputError(undefined);
+              setResetCount((count) => count + 1);
+              onChange(defaultValue);
+            }}
+          />
+        }
+      >
+        {renderControl}
+      </Field>
     </div>
   );
 }
