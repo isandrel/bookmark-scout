@@ -4,9 +4,13 @@
  */
 
 import { useEffect, useRef } from 'react';
+import { z } from 'zod';
 
 /** Bulk operations (imports, undo of a folder) fire many events; coalesce them into one refresh. */
-const BOOKMARK_EVENT_DEBOUNCE_MS = 150;
+const BOOKMARK_EVENT_DEBOUNCE_MS = readConfig(
+  'ui/timing',
+  z.strictObject({ bookmark_event_debounce_ms: z.number().int().nonnegative() }),
+).bookmark_event_debounce_ms;
 
 type BookmarkEvent = {
   addListener: (callback: () => void) => void;

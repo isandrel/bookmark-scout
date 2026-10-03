@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 /** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
-export const RECENT_FOLDERS_STORAGE_LIMIT = 10;
+export const RECENT_FOLDERS_STORAGE_LIMIT = SETTING_NUMBER_BOUNDS.recentFoldersMax.max;
 
 export interface RecentFolder {
   id: string;
@@ -48,7 +48,7 @@ async function readRecentFolders(): Promise<RecentFolder[]> {
   try {
     return normalizeRecentFolders(await recentFoldersItem.getValue());
   } catch (error) {
-    console.error('Error reading recent folders:', error);
+    bookmarkLogger.error({ error }, 'Error reading recent folders');
     return [];
   }
 }
@@ -83,9 +83,9 @@ async function reconcileWithBookmarks(folders: RecentFolder[]): Promise<RecentFo
 export async function getRecentFolders(limit?: number): Promise<RecentFolder[]> {
   const stored = await readRecentFolders();
   const reconciled = await reconcileWithBookmarks(stored);
-  if (JSON.stringify(reconciled) !== JSON.stringify(stored)) {
+  if (!isSameJson(reconciled, stored)) {
     await writeRecentFolders(reconciled).catch((error) => {
-      console.error('Error pruning recent folders:', error);
+      bookmarkLogger.error({ error }, 'Error pruning recent folders');
     });
   }
   return limit === undefined ? reconciled : reconciled.slice(0, Math.max(0, limit));

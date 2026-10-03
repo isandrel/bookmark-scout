@@ -9,9 +9,18 @@
 
 import { z } from 'zod';
 
+const savedSearchLimits = readConfig(
+  'limits/saved-searches',
+  z.strictObject({
+    max_searches: z.number().int().positive(),
+    name_max_length: z.number().int().positive(),
+    id_max_length: z.number().int().positive(),
+  }),
+);
+
 export const SAVED_SEARCHES_STORAGE_KEY = 'bookmark-scout-saved-searches';
-export const MAX_SAVED_SEARCHES = 50;
-export const SAVED_SEARCH_NAME_MAX_LENGTH = 80;
+export const MAX_SAVED_SEARCHES = savedSearchLimits.max_searches;
+export const SAVED_SEARCH_NAME_MAX_LENGTH = savedSearchLimits.name_max_length;
 
 export type SavedSearch = {
   id: string;
@@ -36,7 +45,7 @@ export const savedSearchesItem = storage.defineItem<SavedSearchesPayload>(
 const nameSchema = z.string().trim().min(1).max(SAVED_SEARCH_NAME_MAX_LENGTH);
 
 const savedSearchSchema = z.object({
-  id: z.string().min(1).max(100),
+  id: z.string().min(1).max(savedSearchLimits.id_max_length),
   name: nameSchema,
   createdAt: z.number().finite(),
   query: z.unknown(),
@@ -77,7 +86,7 @@ export async function getSavedSearches(): Promise<SavedSearch[]> {
   try {
     return parseSavedSearches(await savedSearchesItem.getValue());
   } catch (error) {
-    console.error('Error reading saved searches:', error);
+    uiLogger.error({ error }, 'Error reading saved searches');
     return [];
   }
 }

@@ -2,7 +2,13 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { formatBundledMessage } from '@/hooks/use-i18n';
+import { parse } from 'smol-toml';
+import {
+  FALLBACK_LOCALE,
+  formatBundledMessage,
+  getLanguageName,
+  SUPPORTED_LOCALES,
+} from '@/hooks/use-i18n';
 
 type LocaleMessage = {
   message: string;
@@ -11,7 +17,7 @@ type LocaleMessage = {
 };
 
 const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const locales = ['en', 'ja', 'ko'] as const;
+const locales = SUPPORTED_LOCALES;
 
 function readLocale(locale: string): { raw: string; messages: Record<string, LocaleMessage> } {
   const raw = readFileSync(path.join(appRoot, 'public/_locales', locale, 'messages.json'), 'utf8');
@@ -122,5 +128,22 @@ describe('plural message variants', () => {
     expect(formatBundledMessage(byLocale.en.messages.tools_urlCleanerDialogDesc_one, '1')).toBe(
       '1 bookmark can be cleaned',
     );
+  });
+});
+
+describe('bundled locales', () => {
+  const project = parse(readFileSync(path.join(appRoot, '../../config/project.toml'), 'utf8')) as {
+    locales: { default: string; supported: string[]; names: Record<string, string> };
+  };
+
+  it('are the workspace locales, with the workspace default as the fallback', () => {
+    expect([...SUPPORTED_LOCALES]).toEqual(project.locales.supported);
+    expect(FALLBACK_LOCALE).toBe(project.locales.default);
+  });
+
+  it('name each language in its own words, as the workspace config does', () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(getLanguageName(locale)).toBe(project.locales.names[locale]);
+    }
   });
 });

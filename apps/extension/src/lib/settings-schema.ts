@@ -127,7 +127,7 @@ export type Theme = z.infer<typeof themeSchema>;
 export const sortOrderSchema = z.enum(['date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
 
-export const languageSchema = z.enum(['auto', 'en', 'ja', 'ko']);
+export const languageSchema = z.enum([AUTO_LANGUAGE, ...SUPPORTED_LOCALES]);
 export type Language = z.infer<typeof languageSchema>;
 
 export const faviconSizeSchema = z.literal([16, 24, 32]);
@@ -180,7 +180,24 @@ type FieldDefinition<S extends z.ZodType = z.ZodType> = {
 
 type NumberFieldDefinition = FieldDefinition<z.ZodType<number>> & { bounds: NumberSetting };
 
-type FieldExtras = Pick<SettingsFieldMeta, 'unit' | 'control' | 'requiresWebHostAccess'>;
+/** Units a numeric setting can show, as locale keys so they follow the language. */
+const UNIT_MESSAGE_KEYS = {
+  ms: 'unit_ms',
+  px: 'unit_px',
+  chars: 'unit_chars',
+  kb: 'unit_kb',
+} as const;
+
+type SettingUnit = keyof typeof UNIT_MESSAGE_KEYS;
+
+type FieldExtras = Pick<SettingsFieldMeta, 'control' | 'requiresWebHostAccess'> & {
+  unit?: SettingUnit;
+};
+
+/** Field meta for `extras`, with the unit localized when the meta is read. */
+function extrasMeta({ unit, ...extras }: FieldExtras): Partial<SettingsFieldMeta> {
+  return unit ? { ...extras, unit: t(UNIT_MESSAGE_KEYS[unit]) } : extras;
+}
 
 /** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
 function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description'> {
@@ -195,7 +212,7 @@ function switchField(
   const value = configValue(path, z.boolean());
   return {
     schema: z.boolean().default(value),
-    meta: () => ({ ...fieldLabels(stem), type: 'switch', ...extras }),
+    meta: () => ({ ...fieldLabels(stem), type: 'switch', ...extrasMeta(extras) }),
   };
 }
 
@@ -226,7 +243,7 @@ function numberField(path: string, stem: string, extras: FieldExtras = {}): Numb
       max: bounds.max,
       step: bounds.step,
       ...(bounds.unlimited ? { unlimited: true } : {}),
-      ...extras,
+      ...extrasMeta(extras),
     }),
   };
 }
@@ -313,7 +330,9 @@ function scopeField<S extends ScopeValue>(
 function scopeField(tool: string, stem: string, capability: ScopeValue | 'both'): FieldDefinition {
   const scopes = capability === 'both' ? toolScopeSchema.options : [capability];
   const fallback =
-    capability === 'both' ? configValue(`tools.${tool}.default_scope`, toolScopeSchema) : capability;
+    capability === 'both'
+      ? configValue(`tools.${tool}.default_scope`, toolScopeSchema)
+      : capability;
   const schema =
     capability === 'both'
       ? toolScopeSchema.catch(fallback).default(fallback)
@@ -363,9 +382,7 @@ const aiModelField: FieldDefinition<z.ZodDefault<z.ZodString>> = {
 
 const fields = {
   language: enumField('appearance.language', 'language', languageSchema, (value) =>
-    value === 'auto'
-      ? t('settings_languageAuto')
-      : { en: 'English', ja: '日本語', ko: '한국어' }[value],
+    value === AUTO_LANGUAGE ? t('settings_languageAuto') : getLanguageName(value),
   ),
   theme: enumField(
     'appearance.theme',
@@ -687,10 +704,10 @@ const fields = {
     unit: 'px',
   }),
   siteIconsMaxIconKb: numberField('tools.site_icons.max_icon_kb', 'siteIconsMaxIconKb', {
-    unit: 'KB',
+    unit: 'kb',
   }),
   siteIconsMaxCacheKb: numberField('tools.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
-    unit: 'KB',
+    unit: 'kb',
   }),
 
   privacyScannerEnabled: switchField('tools.privacy_scanner.enabled', 'privacyScannerEnabled'),

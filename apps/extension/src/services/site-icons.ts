@@ -378,24 +378,6 @@ async function downloadIcon(
   }
 }
 
-type PageHead = { finalUrl: string; html: string | null };
-
-/** Loads the page's `<head>`; error pages and non-HTML responses yield no HTML. */
-async function loadPageHead(pageUrl: string, timeoutMs: number): Promise<PageHead> {
-  return requestWithTimeout(
-    pageUrl,
-    { method: 'GET', redirect: 'follow' },
-    timeoutMs,
-    async (response) => {
-      const finalUrl = response.url || pageUrl;
-      const contentType = response.headers.get('content-type');
-      if (!response.ok || !isHtmlContentType(contentType)) return { finalUrl, html: null };
-      const bytes = await readHtmlHead(response, METADATA_MAX_BYTES);
-      return { finalUrl, html: decodeHtml(bytes, contentType) };
-    },
-  );
-}
-
 type OriginGroup = { origin: string; pageUrl: string; bookmarkCount: number };
 
 /** Groups web bookmarks by origin, keeping the first bookmarked page of each. */
@@ -427,15 +409,20 @@ async function refreshOrigin(
   cachedIcon: string | undefined,
 ): Promise<SiteIconResultItem> {
   const keepsCachedIcon = Boolean(cachedIcon);
-  let page: PageHead;
+  let page: HtmlPage;
   try {
-    page = await loadPageHead(group.pageUrl, options.requestTimeoutMs);
+    // Error pages and non-HTML responses yield no HTML, and the site's /favicon.ico is tried.
+    page = await fetchHtmlPage(group.pageUrl, {
+      timeoutMs: options.requestTimeoutMs,
+      maxBytes: METADATA_MAX_BYTES,
+      until: 'head',
+    });
   } catch (error) {
     const errorKind = await classifyFailure(error, group.pageUrl, options.requestTimeoutMs);
     return { ...group, status: 'failed', errorKind, keepsCachedIcon };
   }
 
-  const candidates = page.html ? parseIconCandidates(page.html, page.finalUrl) : [];
+  const candidates = page.html ? parseIconCandidates(page.html, page.url) : [];
   let rejection: SiteIconRejection | undefined;
   for (const iconUrl of selectIconUrls(candidates, group.pageUrl, options.preferredSize)) {
     const download = await downloadIcon(iconUrl, options);

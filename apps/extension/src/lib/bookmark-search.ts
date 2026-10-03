@@ -6,6 +6,13 @@ export type SearchOptions = {
   useRegex: boolean;
 };
 
+/** Plain, case-insensitive substring search: what a page starts with. */
+export const DEFAULT_SEARCH_OPTIONS: Readonly<SearchOptions> = {
+  matchCase: false,
+  wholeWord: false,
+  useRegex: false,
+};
+
 /** Start and end offsets of one highlighted match inside a title. */
 export type SearchMatchRange = readonly [start: number, end: number];
 
@@ -177,16 +184,12 @@ export function getSearchExpandedFolderIds(nodes: readonly BookmarkTreeNode[]): 
   );
 }
 
-export function getAllFolderIds(nodes: readonly BookmarkTreeNode[]): string[] {
-  return nodes.flatMap((node) =>
-    node.children ? [node.id, ...getAllFolderIds(node.children)] : [],
-  );
-}
+/** @deprecated Use `folderIds` from lib/bookmark-tree; kept until PopupPage switches to it. */
+export const getAllFolderIds = folderIds;
 
 export function countSearchMatches(nodes: readonly BookmarkTreeNode[]): number {
   return nodes.reduce(
-    (count, node) =>
-      count + (node.isSearchMatch ? 1 : 0) + countSearchMatches(node.children ?? []),
+    (count, node) => count + (node.isSearchMatch ? 1 : 0) + countSearchMatches(node.children ?? []),
     0,
   );
 }

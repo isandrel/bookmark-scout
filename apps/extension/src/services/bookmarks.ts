@@ -437,6 +437,187 @@ export async function getBookmarkSubTree(
   return requireBookmarksApi().getSubTree(id);
 }
 
+/** The bookmark or folder (with its subtree) as it is now, or undefined if it no longer exists. */
+export async function getLiveBookmark(
+  id: string,
+): Promise<Browser.bookmarks.BookmarkTreeNode | undefined> {
+  return getBookmarkSubTree(id).then(
+    ([node]) => node,
+    () => undefined,
+  );
+}
+
+// ============================================================================
+// Reviewed batch changes
+// ============================================================================
+
+/** The bookmark fields a reviewed change compares or writes. */
+export type BookmarkFields = { title?: string; url?: string };
+
+/**
+ * One change a tool proposed and the user reviewed. Right before it is written, the live
+ * bookmark is read again: if it no longer exists, differs from `expect`, or fails `check`, the
+ * change is skipped, so a stale review never overwrites or deletes a newer edit.
+ */
+export type BookmarkChange = {
+  id: string;
+  /** The title the user reviewed, reported back in `issues`. */
+  title: string;
+  /** Values the live bookmark must still have. */
+  expect?: BookmarkFields;
+  /** Any further condition on the live bookmark (with its subtree), such as a duplicate key. */
+  check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean;
+} & (
+  | { kind: 'update'; set: BookmarkFields }
+  | {
+      kind: 'remove';
+      /** Keep a snapshot so undo can recreate it; on by default. */
+      undoable?: boolean;
+    }
+);
+
+export type BookmarkChangeIssue = {
+  id: string;
+  title: string;
+  /** `changed`: deleted or edited since the review, so it was skipped. */
+  reason: 'changed' | 'failed';
+};
+
+export type BookmarkChangesUndoResult = { restored: number; failed: number };
+
+export type BookmarkChangesResult = {
+  applied: number;
+  /** Changes left out because the bookmark changed since the review. */
+  skipped: number;
+  /** Changes the browser rejected. */
+  failed: number;
+  /** One entry per skipped or failed change, in the order given. */
+  issues: BookmarkChangeIssue[];
+  /** Snapshots of the removed bookmarks, in removal order; `undo` restores them. */
+  deletions: BookmarkDeletionSnapshot[];
+  /** After this time (epoch milliseconds) removed bookmarks can no longer be restored. */
+  expiresAt: number;
+  /**
+   * Reverts what was applied, once: updates first (newest first), each only while the bookmark
+   * still has the written values, then removals (newest first, so captured sibling positions
+   * stay valid). A later call returns the first call's result.
+   */
+  undo(): Promise<BookmarkChangesUndoResult>;
+};
+
+type AppliedUpdate = { id: string; previous: BookmarkFields; written: BookmarkFields };
+
+function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields = {}) {
+  return (Object.keys(fields) as (keyof BookmarkFields)[]).every(
+    (field) => fields[field] === undefined || node[field] === fields[field],
+  );
+}
+
+function pickFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields) {
+  return Object.fromEntries(
+    (Object.keys(fields) as (keyof BookmarkFields)[]).map((field) => [field, node[field]]),
+  ) as BookmarkFields;
+}
+
+/** Restores deletion snapshots newest first; one failure does not stop the others. */
+export async function restoreBookmarkDeletions(
+  snapshots: readonly BookmarkDeletionSnapshot[],
+): Promise<BookmarkChangesUndoResult> {
+  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
+  for (const snapshot of [...snapshots].reverse()) {
+    try {
+      await restoreBookmarkDeletion(snapshot);
+      result.restored += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
+}
+
+async function revertUpdates(updates: readonly AppliedUpdate[]): Promise<BookmarkChangesUndoResult> {
+  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
+  for (const update of [...updates].reverse()) {
+    const live = await getLiveBookmark(update.id);
+    // A bookmark edited again since is left alone, so undo never overwrites a newer change.
+    if (!live || !matchesFields(live, update.written)) {
+      result.failed += 1;
+      continue;
+    }
+    try {
+      await updateBookmark(update.id, update.previous);
+      result.restored += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
+}
+
+/**
+ * Writes reviewed changes one by one, in order, re-checking each against the live bookmark
+ * first. Every change is attempted; a skipped or failed one never stops the rest.
+ */
+export async function applyBookmarkChanges(
+  changes: readonly BookmarkChange[],
+  now: number = Date.now(),
+): Promise<BookmarkChangesResult> {
+  const issues: BookmarkChangeIssue[] = [];
+  const deletions: BookmarkDeletionSnapshot[] = [];
+  const updates: AppliedUpdate[] = [];
+  let applied = 0;
+
+  for (const change of changes) {
+    const live = await getLiveBookmark(change.id);
+    if (!live || !matchesFields(live, change.expect) || (change.check && !change.check(live))) {
+      issues.push({ id: change.id, title: change.title, reason: 'changed' });
+      continue;
+    }
+    try {
+      if (change.kind === 'update') {
+        const previous = pickFields(live, change.set);
+        await updateBookmark(change.id, change.set);
+        updates.push({ id: change.id, previous, written: change.set });
+      } else if (change.undoable === false) {
+        await deleteBookmark(change.id);
+      } else {
+        const snapshot = await captureBookmarkDeletion(change.id, now);
+        await deleteBookmark(change.id);
+        deletions.push(snapshot);
+      }
+      applied += 1;
+    } catch {
+      issues.push({ id: change.id, title: change.title, reason: 'failed' });
+    }
+  }
+
+  let undone: Promise<BookmarkChangesUndoResult> | undefined;
+  const undo = () => {
+    undone ??= (async () => {
+      const reverted = await revertUpdates(updates);
+      const restored = await restoreBookmarkDeletions(deletions);
+      return {
+        restored: reverted.restored + restored.restored,
+        failed: reverted.failed + restored.failed,
+      };
+    })();
+    return undone;
+  };
+
+  return {
+    applied,
+    skipped: issues.filter((issue) => issue.reason === 'changed').length,
+    failed: issues.filter((issue) => issue.reason === 'failed').length,
+    issues,
+    deletions,
+    expiresAt: Math.min(
+      now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
+      ...deletions.map((deletion) => deletion.expiresAt),
+    ),
+    undo,
+  };
+}
+
 /**
  * Opens a bookmark URL in a new foreground tab.
  */

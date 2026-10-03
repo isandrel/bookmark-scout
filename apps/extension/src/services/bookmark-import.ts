@@ -544,22 +544,18 @@ export async function undoImport(
   outcome: Pick<ImportApplyOutcome, 'createdIds' | 'createdRootIds'>,
 ): Promise<{ removed: number; failed: number }> {
   const created = new Set(outcome.createdIds);
-  let removed = 0;
-  let failed = 0;
-  for (const id of outcome.createdRootIds) {
-    try {
-      const [node] = await getBookmarkSubTree(id);
-      if (!node || subtreeIds(node).some((itemId) => !created.has(itemId))) {
-        failed += 1;
-        continue;
-      }
-      await deleteBookmark(id);
-      removed += 1;
-    } catch {
-      failed += 1;
-    }
-  }
-  return { removed, failed };
+  const result = await applyBookmarkChanges(
+    outcome.createdRootIds.map((id) => ({
+      kind: 'remove',
+      id,
+      title: '',
+      // Undoing an import is itself not undone; the user can import the file again.
+      undoable: false,
+      check: (live) => subtreeIds(live).every((itemId) => created.has(itemId)),
+    })),
+  );
+  // An item that changed since the import counts as not removed, like a browser failure.
+  return { removed: result.applied, failed: result.skipped + result.failed };
 }
 
 /**

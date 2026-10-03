@@ -1,55 +1,26 @@
 /**
  * Small, dependency-free approximation of the Public Suffix List for grouping bookmarks by
  * site. It covers the common second-level registries under country-code TLDs (bbc.co.uk,
- * nhk.or.jp, abc.net.au) and a few popular shared hosting suffixes. Exotic suffixes fall back
- * to the last two labels, which only affects how domain chips are grouped.
+ * nhk.or.jp, abc.net.au) and a few popular shared hosting suffixes, listed in
+ * config/data/public-suffixes.toml. Exotic suffixes fall back to the last two labels, which only
+ * affects how domain chips are grouped.
  */
 
-/** Second-level labels that act as public registries under two-letter country-code TLDs. */
-const COUNTRY_SECOND_LEVEL_LABELS = new Set([
-  'ac',
-  'ad',
-  'co',
-  'com',
-  'ed',
-  'edu',
-  'go',
-  'gob',
-  'gov',
-  'govt',
-  'gr',
-  'gv',
-  'id',
-  'in',
-  'lg',
-  'ltd',
-  'me',
-  'mil',
-  'ne',
-  'net',
-  'nhs',
-  'nic',
-  'nom',
-  'or',
-  'org',
-  'plc',
-  'police',
-  'sch',
-]);
+import { z } from 'zod';
 
-/** Multi-label public suffixes that the country-code rule does not cover. */
-const EXTRA_PUBLIC_SUFFIXES = new Set([
-  'appspot.com',
-  'blogspot.com',
-  'cloudfront.net',
-  'github.io',
-  'gitlab.io',
-  'herokuapp.com',
-  'netlify.app',
-  'pages.dev',
-  'vercel.app',
-  'workers.dev',
-]);
+const publicSuffixes = readConfig(
+  'data/public-suffixes',
+  z.strictObject({
+    country_second_level_labels: z.array(z.string().regex(/^[a-z0-9-]+$/)),
+    extra_suffixes: z.array(z.string().regex(/^[a-z0-9-]+\.[a-z0-9-]+$/)),
+  }),
+);
+
+/** Second-level labels that act as public registries under two-letter country-code TLDs. */
+const COUNTRY_SECOND_LEVEL_LABELS = new Set(publicSuffixes.country_second_level_labels);
+
+/** Two-label public suffixes that the country-code rule does not cover. */
+const EXTRA_PUBLIC_SUFFIXES = new Set(publicSuffixes.extra_suffixes);
 
 function isIpAddress(hostname: string): boolean {
   return /^\d{1,3}(\.\d{1,3}){3}$/.test(hostname) || hostname.includes(':');

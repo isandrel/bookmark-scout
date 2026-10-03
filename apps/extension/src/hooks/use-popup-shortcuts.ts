@@ -1,7 +1,8 @@
 /**
  * Keyboard shortcuts for the popup and side panel.
  *
- * - `/` focuses the search box; Escape in it clears the query, then leaves the box.
+ * - focusSearch (`SHORTCUT_BINDINGS.popup`, `/` by default) focuses the search box; Escape in
+ *   it clears the query, then leaves the box.
  * - ArrowDown in the search box moves into the tree; ArrowUp on the first row moves back.
  * - In the tree, ArrowUp/ArrowDown/Home/End move between visible folders and bookmarks,
  *   ArrowRight opens a folder (or enters it), ArrowLeft closes it (or goes to its parent), and
@@ -16,7 +17,11 @@ import {
 } from 'react';
 
 /** Marks tree rows: `folder` on folder triggers, `bookmark` on bookmark links. */
-const POPUP_TREE_ROW_ATTRIBUTE = 'data-popup-tree-row';
+export const POPUP_TREE_ROW_ATTRIBUTE = 'data-popup-tree-row';
+/** The folder id on a folder row's trigger. */
+export const POPUP_TREE_FOLDER_ATTRIBUTE = 'data-folder-trigger';
+/** Present on folder rows that can hold bookmarks, where Enter saves the current page. */
+export const POPUP_TREE_CAN_SAVE_ATTRIBUTE = 'data-can-save';
 const TREE_ROW_SELECTOR = `[${POPUP_TREE_ROW_ATTRIBUTE}]`;
 
 const POPUP_TREE_BINDINGS = {
@@ -27,10 +32,6 @@ const POPUP_TREE_BINDINGS = {
   expand: [{ key: 'ArrowRight' }],
   collapse: [{ key: 'ArrowLeft' }],
   activate: [{ key: 'Enter' }],
-} as const satisfies Record<string, readonly ShortcutBinding[]>;
-
-const FOCUS_SEARCH_BINDINGS = {
-  focusSearch: [{ key: '/' }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 const SEARCH_INPUT_BINDINGS = {
@@ -92,7 +93,7 @@ export function usePopupShortcuts({ searchInputRef, onClearQuery }: PopupShortcu
         return;
       }
 
-      if (findShortcut(event, FOCUS_SEARCH_BINDINGS) === 'focusSearch') {
+      if (findShortcut(event, SHORTCUT_BINDINGS.popup) === 'focusSearch') {
         event.preventDefault();
         input.focus();
         input.select();
@@ -129,7 +130,7 @@ export function usePopupTreeKeys({
       if (!action) return;
 
       const isFolder = row.getAttribute(POPUP_TREE_ROW_ATTRIBUTE) === 'folder';
-      const folderId = row.getAttribute('data-folder-trigger');
+      const folderId = row.getAttribute(POPUP_TREE_FOLDER_ATTRIBUTE);
       const isOpen = row.getAttribute('aria-expanded') === 'true';
       const rows = getVisibleTreeRows();
       const index = rows.indexOf(row);
@@ -171,7 +172,7 @@ export function usePopupTreeKeys({
           break;
         case 'activate':
           // Folders that cannot hold bookmarks keep Enter's native toggle; bookmark links open.
-          if (!isFolder || !folderId || !row.hasAttribute('data-can-save')) break;
+          if (!isFolder || !folderId || !row.hasAttribute(POPUP_TREE_CAN_SAVE_ATTRIBUTE)) break;
           event.preventDefault();
           // A held Enter repeats keydown; one press saves once.
           if (!event.repeat) onSaveToFolder(folderId);
