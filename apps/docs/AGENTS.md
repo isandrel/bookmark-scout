@@ -88,7 +88,7 @@ Rules:
 
 ### No hard-coded values
 
-- Never write URLs for the website, repository, releases, or stores, contact addresses, the license, or the privacy date as literals in MDX or app code. They come from `config/site.config.toml` through `@bookmark-scout/config`.
+- Never write URLs for the website, repository, releases, or stores, contact addresses, the license, or the privacy date as literals in MDX or app code. They come from `config/project.toml` and `config/web.toml` through `@bookmark-scout/config`.
 - In MDX, use the config components: `<Contact role="support" />`, `<ReleaseLink />`, `<SiteLink to="privacy">...</SiteLink>`, `<RepoLink path="/issues">...</RepoLink>`, `<StoreListing browser="chrome" />`, `<StoreAvailability />`, `<License />`, `<PrivacyEffectiveDate />`.
 - A new config component needs three changes: the component in `src/components/mdx/`, its registration in `src/mdx-components.tsx`, and a Markdown replacement in `src/lib/mdx-text.ts` so LLM text stays readable.
 - Keep link and navigation lists as typed data in `src/lib/` (`site.ts`, `links.ts`), not inline in components.

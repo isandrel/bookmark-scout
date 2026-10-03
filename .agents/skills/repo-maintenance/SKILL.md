@@ -29,7 +29,7 @@ Watch for:
 
 Until October 2026 the repo used the binary `bun.lockb`, which Dependabot did not update: every Bun PR failed Extension Tests in about 10 seconds with `error: lockfile had changes, but lockfile is frozen`, and each merge made the others conflict on the lockfile. The repo now uses the text `bun.lock`, which Dependabot updates. If a Bun PR still fails that way, or conflicts on `bun.lock`, use the script below. Never commit `bun.lockb` again; it would become a second, stale lockfile.
 
-Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lock` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, and pushes a normal commit. It stops if any file other than `bun.lock` conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
+Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lock` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, regenerates the READMEs (their version badges show installed major versions, so a major bump changes them), and pushes a normal commit. It stops if any file other than `bun.lock` or the generated READMEs conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
 
 Watch for:
 - **CI coverage of website and docs.** The required `Website and Docs` job runs website lint, `website:verify`, `website:test:e2e`, `docs:types:check`, `docs:build` and the docs `verify`, but not the docs Biome lint. For a docs dependency bump, also run `bunx biome check src scripts` in `apps/docs`.

@@ -33,16 +33,16 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-5.0-764ABC?style=flat-square" alt="Zustand">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-0.21-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square" alt="Zustand">
   <img src="https://img.shields.io/badge/shadcn%2Fui-0.9-000000?style=flat-square" alt="shadcn/ui">
   <img src="https://img.shields.io/badge/Nx-23-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-2.3-60A5FA?style=flat-square" alt="Biome">
+  <img src="https://img.shields.io/badge/Bun-1-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+  <img src="https://img.shields.io/badge/Biome-2-60A5FA?style=flat-square" alt="Biome">
 </p>
 
 <p align="center">
@@ -144,37 +144,37 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 |                                                    Technology                                                     | Version | Description          |
 | :---------------------------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  19.2   | UI library           |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   6.0   | Type-safe JavaScript |
+|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |  19   | UI library           |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |   6   | Type-safe JavaScript |
 |    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |   16    | Website framework    |
 
 ### Build & Tooling
 
 |                                           Technology                                            | Version | Description          |
 | :---------------------------------------------------------------------------------------------: | :-----: | -------------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  0.20   | Extension framework  |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    7    | Build tool           |
+|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  |  0.21   | Extension framework  |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |    8    | Build tool           |
 |    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |   23    | Monorepo management  |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   1.3   | JavaScript runtime   |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   2.3   | Linting & formatting |
+|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   |   1   | JavaScript runtime   |
+|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             |   2   | Linting & formatting |
 
 ### UI & Styling
 
 |                                                      Technology                                                      | Version | Description            |
 | :------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   4.1   | Utility-first CSS      |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |   4   | Utility-first CSS      |
 |                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |   0.9   | Base UI-based components |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   1.8   | Headless UI primitives |
-| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |  12.23  | Animation library      |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   1.8   | Icon library           |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |   1   | Headless UI primitives |
+| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |  13  | Animation library      |
+|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |   1   | Icon library           |
 
 ### State & Data
 
 |                                                       Technology                                                       | Version | Description            |
 | :--------------------------------------------------------------------------------------------------------------------: | :-----: | ---------------------- |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   5.0   | State management       |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  8.21   | Headless table library |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   2.x   | Drag & drop            |
+|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       |   5   | State management       |
+|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                |  9   | Headless table library |
+| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) |   4   | Drag & drop            |
 
 ### Deploy & Infrastructure
 
@@ -267,7 +267,8 @@ bookmark-scout/
 ├── packages/
 │   └── config/             # Shared configuration
 ├── config/
-│   └── site.config.toml    # Central config file
+│   ├── project.toml        # Project identity shared by every app
+│   └── web.toml            # Website and docs hosting
 └── templates/              # README templates
 ```
 

@@ -22,16 +22,16 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-19.2-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-6.0-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/WXT-0.20-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
-  <img src="https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/TailwindCSS-4.1-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
-  <img src="https://img.shields.io/badge/Zustand-5.0-764ABC?style=flat-square" alt="Zustand">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/WXT-0.21-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/TailwindCSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
+  <img src="https://img.shields.io/badge/Zustand-5-764ABC?style=flat-square" alt="Zustand">
   <img src="https://img.shields.io/badge/shadcn%2Fui-0.9-000000?style=flat-square" alt="shadcn/ui">
   <img src="https://img.shields.io/badge/Nx-23-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
-  <img src="https://img.shields.io/badge/Bun-1.3-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
-  <img src="https://img.shields.io/badge/Biome-2.3-60A5FA?style=flat-square" alt="Biome">
+  <img src="https://img.shields.io/badge/Bun-1-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
+  <img src="https://img.shields.io/badge/Biome-2-60A5FA?style=flat-square" alt="Biome">
 </p>
 
 <p align="center">
@@ -132,37 +132,37 @@
 
 |                                                       기술                                                        | 버전 | 설명                   |
 | :---------------------------------------------------------------------------------------------------------------: | :--: | ---------------------- |
-|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         | 19.2 | UI 라이브러리          |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) | 6.0  | 타입 안전한 JavaScript |
+|        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         | 19 | UI 라이브러리          |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) | 6  | 타입 안전한 JavaScript |
 |    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |  16  | 웹사이트 프레임워크    |
 
 ### 빌드 & 도구
 
 |                                              기술                                               | 버전 | 설명              |
 | :---------------------------------------------------------------------------------------------: | :--: | ----------------- |
-|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  | 0.20 | 확장 프레임워크   |
-| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |  7   | 빌드 도구         |
+|  ![WXT](https://img.shields.io/badge/WXT-646CFF?style=for-the-badge&logo=vite&logoColor=white)  | 0.21 | 확장 프레임워크   |
+| ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white) |  8   | 빌드 도구         |
 |    ![Nx](https://img.shields.io/badge/Nx-143055?style=for-the-badge&logo=nx&logoColor=white)    |  23  | 모노레포 관리     |
-|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   | 1.3  | JavaScript 런타임 |
-|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             | 2.3  | 린팅 & 포맷팅     |
+|  ![Bun](https://img.shields.io/badge/Bun-000000?style=for-the-badge&logo=bun&logoColor=white)   | 1  | JavaScript 런타임 |
+|             ![Biome](https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge)             | 2  | 린팅 & 포맷팅     |
 
 ### UI & 스타일링
 
 |                                                         기술                                                         | 버전  | 설명                   |
 | :------------------------------------------------------------------------------------------------------------------: | :---: | ---------------------- |
-| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |  4.1  | 유틸리티 우선 CSS      |
+| ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |  4  | 유틸리티 우선 CSS      |
 |                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |  0.9  | Base UI 기반 컴포넌트    |
-|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |  1.8  | 헤드리스 UI 프리미티브 |
-| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  | 12.23 | 애니메이션 라이브러리  |
-|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |  1.8  | 아이콘 라이브러리      |
+|       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |  1  | 헤드리스 UI 프리미티브 |
+| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  | 13 | 애니메이션 라이브러리  |
+|                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |  1  | 아이콘 라이브러리      |
 
 ### 상태 & 데이터
 
 |                                                          기술                                                          | 버전 | 설명            |
 | :--------------------------------------------------------------------------------------------------------------------: | :--: | --------------- |
-|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       | 5.0  | 상태 관리       |
-|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                | 8.21 | 헤드리스 테이블 |
-| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) | 2.x  | 드래그 앤 드롭  |
+|                      ![Zustand](https://img.shields.io/badge/Zustand-764ABC?style=for-the-badge)                       | 5  | 상태 관리       |
+|               ![TanStack Table](https://img.shields.io/badge/TanStack_Table-FF4154?style=for-the-badge)                | 9 | 헤드리스 테이블 |
+| ![Pragmatic DnD](https://img.shields.io/badge/Pragmatic_DnD-0052CC?style=for-the-badge&logo=atlassian&logoColor=white) | 4  | 드래그 앤 드롭  |
 
 ### 배포 & 인프라
 
@@ -255,7 +255,8 @@ bookmark-scout/
 ├── packages/
 │   └── config/             # 공유 설정
 ├── config/
-│   └── site.config.toml    # 중앙 설정 파일
+│   ├── project.toml        # 모든 앱이 공유하는 프로젝트 정보
+│   └── web.toml            # 웹사이트와 문서 호스팅
 └── templates/              # README 템플릿
 ```
 

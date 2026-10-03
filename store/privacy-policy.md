@@ -1,6 +1,6 @@
 # Bookmark Scout Privacy Policy
 
-> **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/site.config.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
+> **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
 **Effective date:** October 2, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.2.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`

@@ -67,11 +67,14 @@ jobs:
       - name: Run lint
         run: bunx nx run extension:lint
 
+      - name: Test the workspace config and scripts
+        run: bun test packages scripts
+
       - name: Check generated READMEs match templates
         run: |
           bun run generate:readme
           git diff --exit-code -- README.md translations/ || {
-            echo "::error::README files differ from templates/. Edit templates/*.md, run 'bun run generate:readme', and commit both."
+            echo "::error::README files differ from their inputs (templates/, config/, installed package versions). Run 'bun run generate:readme' and commit the result."
             exit 1
           }
 

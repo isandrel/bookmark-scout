@@ -43,7 +43,7 @@ Default expectations:
 
 The maintainer reviews every change against these four words. Each has a concrete meaning here:
 
-- **Configurable:** tunable values (limits, timeouts, sizes, counts, retry policies, default URLs, model or provider defaults) live in config, never inline. Extension settings go in `apps/extension/config/settings.default.toml` with a comment and are validated by one config module; site and product values (URLs, contact addresses, store links, dates) come from `config/site.config.toml` through `@bookmark-scout/config`. Only true protocol constants stay in code.
+- **Configurable:** tunable values (limits, timeouts, sizes, counts, retry policies, default URLs, model or provider defaults) live in config, never inline. Extension settings go in `apps/extension/config/settings.default.toml` with a comment and are validated by one config module; project and site values (URLs, contact addresses, store links, dates) come from `config/project.toml` (identity shared by every app and the README) and `config/web.toml` (website and docs hosting) through `@bookmark-scout/config`, whose `site` model builds every URL (`site.url.page(locale, route)`, `site.repo.file(path)`, `site.docs.url(path)`). Only true protocol constants stay in code.
 - **Layered, single source of truth:** every value is defined once, at the lowest level that owns it, and every other place derives it (import, generate, or validate against it) instead of copying it. A test or loader check should fail when a copy drifts.
   1. **Workspace** (`config/`): project identity shared by every app and the README: name, slug, description, repository, license, locales, supported browsers, store links, contact addresses, legal dates. Site-only hosting and analytics values live beside it and are read by the website and docs only.
   2. **App** (`apps/<app>/config/`): that app's defaults and tunables, split into files by domain (for the extension: user-setting defaults with their bounds, AI, network, UI, limits, data). One loader per app reads every file once, validates it strictly (unknown keys and two files claiming the same key are errors), and is the only code that touches the raw files. App config may reference workspace values but never redefines them.
@@ -351,7 +351,7 @@ Update documentation when the change affects:
 
 Relevant locations include:
 
-- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/site.config.toml`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
+- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Templates use placeholders for config values (`{{SITE_URL}}`), library versions (`{{VERSION:react}}`, the installed major version or `0.minor`), and the supported-browser badges (`{{BROWSER_BADGES:<label>}}`); an unknown placeholder fails the run. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
 - `CONTRIBUTING.md`
 - `apps/docs/content/docs/`
 - website content under `apps/website/app/`

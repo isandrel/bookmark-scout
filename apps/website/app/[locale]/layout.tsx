@@ -5,7 +5,6 @@ import { routing } from "@/i18n/routing";
 import { SOCIAL_IMAGE } from "@/lib/assets";
 import { OG_LOCALES, SITE_KEYWORDS } from "@/lib/seo";
 import {
-    SITE_META_TITLE,
     SITE_NAME,
     SITE_URL,
     UMAMI_ENABLED,
@@ -59,7 +58,7 @@ export async function generateMetadata({
         url: SOCIAL_IMAGE.url,
         width: SOCIAL_IMAGE.width,
         height: SOCIAL_IMAGE.height,
-        alt: `${SITE_NAME} — ${SITE_META_TITLE}`,
+        alt: title,
     };
 
     return {
