@@ -1,19 +1,11 @@
-import {
-  cpSync,
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from 'node:fs';
-import { tmpdir } from 'node:os';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test as base, expect } from '@playwright/test';
 import { Builder, By, until, type WebDriver, type WebElement } from 'selenium-webdriver';
 import firefox from 'selenium-webdriver/firefox.js';
 import { FIREFOX_ADDON_ID } from '../../manifest.config';
+import { removeTempDir, workerTempDir } from '../e2e/temp-dirs';
 
 /**
  * Firefox end-to-end fixtures.
@@ -74,11 +66,11 @@ type FirefoxWorkerFixtures = {
 export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
   addonPath: [
     // biome-ignore lint/correctness/noEmptyPattern: Playwright requires destructuring fixture arguments.
-    async ({}, use) => {
+    async ({}, use, workerInfo) => {
       if (!existsSync(firefoxBuild)) {
         throw new Error(`Built extension not found at ${firefoxBuild}`);
       }
-      const directory = mkdtempSync(path.join(tmpdir(), 'bookmark-scout-firefox-'));
+      const directory = workerTempDir(workerInfo, 'firefox-build');
       cpSync(firefoxBuild, directory, { recursive: true });
       const manifestPath = path.join(directory, 'manifest.json');
       const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
@@ -87,8 +79,11 @@ export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
         throw new Error(`Firefox build has add-on ID ${builtId}, expected ${ADDON_ID}`);
       }
       writeFileSync(path.join(directory, API_PAGE), '<!doctype html><title>E2E API</title>');
-      await use(directory);
-      rmSync(directory, { recursive: true, force: true });
+      try {
+        await use(directory);
+      } finally {
+        removeTempDir(directory);
+      }
     },
     { scope: 'worker' },
   ],
@@ -192,7 +187,9 @@ export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
           });
         }
       }
+      // geckodriver deletes its temporary Firefox profile on quit.
       await driver.quit();
+      removeTempDir(downloadDirectory);
     }
   },
 });
