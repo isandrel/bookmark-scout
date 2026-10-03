@@ -22,7 +22,7 @@ bunx nx run docs:build && bun run --cwd apps/docs verify
 
 - For type errors in website code, also run `bunx tsc --noEmit -p .` in `apps/website`.
 - Builds rewrite `apps/website/next-env.d.ts`; restore it with `git checkout apps/website/next-env.d.ts` before committing.
-- CI's `Website and Docs` job does not run the docs Biome lint, so run it locally for docs code and docs dependency bumps.
+- CI's `Website and Docs` job also runs the docs Biome lint (`bunx biome check src scripts` in `apps/docs`); run it locally first.
 - Run Biome from `apps/docs`; from the repo root it can pick up an unrelated Biome config further up the tree.
 
 ## Visual review

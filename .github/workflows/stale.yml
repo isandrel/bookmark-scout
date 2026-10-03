@@ -15,16 +15,20 @@ permissions:
 jobs:
   stale:
     runs-on: ubuntu-latest
+    # One place for the timings; the messages below quote them.
+    env:
+      DAYS_BEFORE_STALE: 60
+      DAYS_BEFORE_CLOSE: 14
     steps:
       - uses: actions/stale@v11
         with:
           stale-issue-message: |
             👋 This issue has been automatically marked as stale because it has not had recent activity.
-            It will be closed in 14 days if no further activity occurs.
+            It will be closed in ${{ env.DAYS_BEFORE_CLOSE }} days if no further activity occurs.
             Thank you for your contributions!
           stale-pr-message: |
             👋 This PR has been automatically marked as stale because it has not had recent activity.
-            It will be closed in 14 days if no further activity occurs.
+            It will be closed in ${{ env.DAYS_BEFORE_CLOSE }} days if no further activity occurs.
             Feel free to reopen if you'd like to continue working on it!
           close-issue-message: |
             🔒 This issue has been automatically closed due to inactivity.
@@ -32,8 +36,8 @@ jobs:
           close-pr-message: |
             🔒 This PR has been automatically closed due to inactivity.
             Feel free to reopen if you'd like to continue working on it!
-          days-before-stale: 60
-          days-before-close: 14
+          days-before-stale: ${{ env.DAYS_BEFORE_STALE }}
+          days-before-close: ${{ env.DAYS_BEFORE_CLOSE }}
           stale-issue-label: 'stale'
           stale-pr-label: 'stale'
           exempt-issue-labels: 'pinned,security,critical'
