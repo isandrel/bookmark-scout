@@ -467,6 +467,8 @@ test('each repeated deletion keeps its own undo and missing parents fail safely'
   await expect.poll(titles).toEqual(['First Deleted', 'Second Deleted', 'Conflict Parent']);
 
   await deleteBookmark('Conflict Child');
+  // Remove the parent only once the deletion has finished, or it races the deletion itself.
+  await expect(undoFor('Conflict Child')).toBeVisible();
   await extensionWorker.evaluate(
     async (id) => new Promise<void>((resolve) => chrome.bookmarks.removeTree(id, () => resolve())),
     folder.ids['Conflict Parent'],
