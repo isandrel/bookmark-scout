@@ -7,18 +7,12 @@ import { type ReactNode, useEffect } from 'react';
  * keeps open sidebars, dialogs, and typed text.
  */
 export function LanguageRoot({ children }: { children: ReactNode }) {
+  // Reading settings has already applied the language when this value changes.
+  const { value: language, isLoading } = useSetting('language');
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `language` re-runs it; the resolved language comes from the settings read.
   useEffect(() => {
-    let active = true;
-    const apply = () => {
-      if (active) document.documentElement.lang = getResolvedLanguage();
-    };
-    const unsubscribe = subscribeToSettings(apply);
-    void getSettings().then(apply);
-    return () => {
-      active = false;
-      unsubscribe();
-    };
-  }, []);
+    if (!isLoading) document.documentElement.lang = getResolvedLanguage();
+  }, [isLoading, language]);
 
   return children;
 }

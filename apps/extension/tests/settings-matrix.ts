@@ -167,7 +167,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   groupByFolders: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'groupByFolders lists folders before links under date and alphabetical order'),
   ]),
-  confirmBeforeDelete: tested(POPUP, [
+  confirmBeforeDelete: tested('hooks/use-bookmark-deletion.tsx', [
     e2e(
       'bookmark-workflows.spec.ts',
       'confirms bookmark and folder deletion, and cancels without changing the tree',
@@ -187,8 +187,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Advanced
   popupWidth: tested('hooks/use-popup-size.ts', [popupDisplay]),
   popupHeight: tested('hooks/use-popup-size.ts', [popupDisplay]),
-  truncateLength: tested(POPUP, [popupAi],
-    'Only the page title in the popup AI suggestions header is truncated.'),
+  truncateLength: tested(POPUP, [
+    popupAi,
+    unit('bookmark-deletion-flow.test.ts', 'quotes titles cut at the truncateLength setting'),
+  ], 'Shortens the page title in the popup AI suggestions header and titles quoted in toasts.'),
   toastDurationMs: tested('components/ui/toaster.tsx', [
     e2e(SETTINGS_E2E, 'toast duration setting controls how long popup toasts stay open'),
   ], 'Undo toasts keep their own fixed undo window.'),

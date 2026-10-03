@@ -897,10 +897,6 @@
         "message": "新しいタブで開く",
         "description": "Bookmark row action that opens a link in a new tab"
     },
-    "table_delete": {
-        "message": "削除",
-        "description": "Bookmark row action that deletes the item"
-    },
     "table_moveTop": {
         "message": "先頭へ移動",
         "description": "Accessible label for moving a bookmark to the top of its folder"
@@ -2845,10 +2841,6 @@
         "message": "$1 件の設定を変更しました: $2",
         "description": "Import toast listing changed settings"
     },
-    "toast_andMore": {
-        "message": "ほか $1 件",
-        "description": "Suffix for truncated list"
-    },
     "action_switchToLight": {
         "message": "ライトテーマに切り替え",
         "description": "Theme toggle accessible name"
@@ -3070,24 +3062,6 @@
     "toast_errorCreatingFolderDesc": {
         "message": "新しいフォルダを作成できませんでした。もう一度お試しください。",
         "description": "Toast description when creating a folder fails"
-    },
-    "toast_itemRemovedDesc": {
-        "message": "「$title$」を削除しました",
-        "description": "Toast description after removing a bookmark or folder",
-        "placeholders": {
-            "title": {
-                "content": "$1",
-                "example": "News"
-            }
-        }
-    },
-    "toast_errorDeletingBookmarkDesc": {
-        "message": "ブックマークを削除できませんでした。もう一度お試しください。",
-        "description": "Toast description when deleting a bookmark fails"
-    },
-    "toast_errorDeletingFolderDesc": {
-        "message": "フォルダを削除できませんでした。もう一度お試しください。",
-        "description": "Toast description when deleting a folder fails"
     },
     "toast_itemMovedDesc": {
         "message": "「$title$」を「$folder$」に移動しました",
@@ -3977,6 +3951,10 @@
         "message": "$1（コピー）",
         "description": "Name of a duplicated item; $1 is the original name"
     },
+    "format_moreItems": {
+        "message": "ほか $1 件",
+        "description": "Last entry of a shortened list, counting the items left out; $1 is the count. The list words (\"and\") are added by the browser"
+    },
     "tools_siteIcons": {
         "message": "サイトアイコンを更新",
         "description": "Title for the Refresh Site Icons tool"
@@ -4796,6 +4774,10 @@
     "askAI_toolWebSearch": {
         "message": "ウェブを検索しました",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "ツールを使用しました",
+        "description": "Ask AI step for a provider tool that has no description of its own"
     },
     "ai_promptAskAIDesc": {
         "message": "Ask AI チャットで質問に答えます",

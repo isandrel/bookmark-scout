@@ -6,7 +6,7 @@
 
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'next-themes';
 import type { ThemeProviderProps } from 'next-themes';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 
 /**
  * Applies the synced setting and keeps next-themes' localStorage cache out of cross-page sync.
@@ -15,26 +15,19 @@ import { useCallback, useEffect, useRef } from 'react';
  */
 function SettingsThemeSync({ storageKey }: { storageKey: string }) {
   const { setTheme } = useNextTheme();
-  const setThemeRef = useRef(setTheme);
-  setThemeRef.current = setTheme;
+  const { value: theme, isLoading } = useSetting('theme');
 
   useEffect(() => {
-    let active = true;
-    const apply = (settings: Settings) => {
-      if (active) setThemeRef.current(settings.theme);
-    };
-    void getSettings().then(apply);
-    const unsubscribe = subscribeToSettings(apply);
+    if (!isLoading) setTheme(theme);
+  }, [isLoading, setTheme, theme]);
+
+  useEffect(() => {
     // Capture runs before next-themes' own listener on window.
     const ignoreCacheEvent = (event: StorageEvent) => {
       if (event.key === storageKey) event.stopImmediatePropagation();
     };
     window.addEventListener('storage', ignoreCacheEvent, { capture: true });
-    return () => {
-      active = false;
-      unsubscribe();
-      window.removeEventListener('storage', ignoreCacheEvent, { capture: true });
-    };
+    return () => window.removeEventListener('storage', ignoreCacheEvent, { capture: true });
   }, [storageKey]);
 
   return null;
@@ -69,7 +62,7 @@ export function useTheme() {
       if (!parsed.success) return;
       applyTheme(parsed.data);
       void saveSettings({ theme: parsed.data }).catch((error) => {
-        console.error('Failed to save theme setting:', error);
+        settingsLogger.error({ error }, 'Failed to save theme setting');
       });
     },
     [applyTheme],

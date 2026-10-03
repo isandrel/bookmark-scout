@@ -121,12 +121,12 @@ async function stubRecommendation(
   return () => requestCount;
 }
 
-async function openReview(
+/** Opens the popup over the fixture page and asks for folder suggestions. */
+async function openSuggestions(
   page: Page,
   context: BrowserContext,
   worker: Worker,
   extensionId: string,
-  folderPath: string,
 ) {
   await context.route('https://current.e2e.invalid/article', (route) =>
     route.fulfill({
@@ -146,6 +146,17 @@ async function openReview(
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
   await worker.evaluate((id) => chrome.tabs.update(id, { active: true }), targetTabId);
   await popup.getByTitle('AI folder recommendation').click();
+  return popup;
+}
+
+async function openReview(
+  page: Page,
+  context: BrowserContext,
+  worker: Worker,
+  extensionId: string,
+  folderPath: string,
+) {
+  const popup = await openSuggestions(page, context, worker, extensionId);
   await popup.getByRole('button', { name: folderPath }).click();
   const dialog = popup.getByRole('dialog', { name: 'Review new folder' });
   await expect(dialog).toContainText('E2E AI Current Page');
@@ -261,4 +272,33 @@ test('reports a path conflict without creating a folder or bookmark', async ({
   expect(state?.childFolders).toEqual([]);
   expect(state?.urls).toEqual(['https://e2e.invalid/path-conflict']);
   expect(requestCount()).toBe(1);
+});
+
+test('names suggestions without the bookmarks bar and quotes a short page title whole', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await configureStubProvider(extensionWorker);
+  // Each browser and language names the bar differently ("Bookmarks bar", "Favorites bar").
+  const barTitle = await extensionWorker.evaluate(async () => {
+    const [root] = await chrome.bookmarks.getTree();
+    const permanent = root.children ?? [];
+    return (permanent.find((folder) => folder.folderType === 'bookmarks-bar') ?? permanent[0])
+      .title;
+  });
+  await stubRecommendation(context, {
+    folderPath: `${barTitle}/E2E Bar Suggestion`,
+    parentPath: barTitle,
+    reason: 'Bar prefix fixture',
+  });
+
+  const popup = await openSuggestions(page, context, extensionWorker, extensionId);
+  const suggestion = popup.getByRole('button', { name: /E2E Bar Suggestion/ });
+  await expect(suggestion).toContainText('E2E Bar Suggestion');
+  await expect(suggestion).not.toContainText(barTitle);
+  await expect(popup.getByText(/^AI Suggestions for:/)).toHaveText(
+    'AI Suggestions for: E2E AI Current Page',
+  );
 });

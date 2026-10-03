@@ -8,46 +8,11 @@ import { BookmarkPlus, ChevronsDown, ChevronsUp, Folder, FolderPlus, Trash2 } fr
 import type { BookmarkTreeNode } from '@/types';
 
 /**
- * Props PopupPage still passes to each top-level folder. Without a provider around it, a folder
- * builds one from them; the drag props are superseded by the provider's own drag state.
- * @deprecated Render `PopupTreeProvider` once around the tree and pass only `node`.
- */
-type LegacyFolderItemProps = PopupTreeProps & {
-  instanceId?: symbol;
-  isDragging?: boolean;
-  creatingFolderId?: string | null;
-  onDragStart?: (node: BookmarkTreeNode) => void;
-  onDragEnd?: () => void;
-};
-
-type FolderItemProps =
-  | { node: BookmarkTreeNode }
-  | ({ node: BookmarkTreeNode } & LegacyFolderItemProps);
-
-/**
  * A held Enter repeats keydown, and each repeat would activate the focused button again: after
  * a new folder is saved, focus returns here and the still-held key would reopen the input.
  */
 function ignoreKeyRepeat(event: React.KeyboardEvent<HTMLButtonElement>) {
   if (event.repeat) event.preventDefault();
-}
-
-export function FolderItem(props: FolderItemProps) {
-  const tree = useOptionalPopupTree();
-  if (tree || !('folders' in props)) return <FolderRow node={props.node} />;
-  const {
-    node,
-    isDragging: _isDragging,
-    creatingFolderId: _creatingFolderId,
-    onDragStart: _onDragStart,
-    onDragEnd: _onDragEnd,
-    ...treeProps
-  } = props;
-  return (
-    <PopupTreeProvider {...treeProps}>
-      <FolderRow node={node} />
-    </PopupTreeProvider>
-  );
 }
 
 /** The new-folder input shown in place of a temporary node. */
@@ -64,7 +29,8 @@ function NewFolderRow() {
   );
 }
 
-function FolderRow({ node }: { node: BookmarkTreeNode }) {
+/** A folder with everything inside it; render it inside a `PopupTreeProvider`. */
+export function FolderItem({ node }: { node: BookmarkTreeNode }) {
   const {
     canModify,
     rowRef,
@@ -96,9 +62,11 @@ function FolderRow({ node }: { node: BookmarkTreeNode }) {
         <div className="flex-1 min-w-0">
           <AccordionTrigger
             className="h-8 rounded-md px-2 py-1 hover:no-underline focus-visible:outline-none"
-            data-folder-trigger={node.id}
-            data-popup-tree-row="folder"
-            data-can-save={canAddChildren || undefined}
+            {...{
+              [POPUP_TREE_FOLDER_ATTRIBUTE]: node.id,
+              [POPUP_TREE_ROW_ATTRIBUTE]: 'folder',
+              [POPUP_TREE_CAN_SAVE_ATTRIBUTE]: canAddChildren || undefined,
+            }}
             hideIndicator={itemCount === 0}
           >
             <div
@@ -209,7 +177,7 @@ function FolderRow({ node }: { node: BookmarkTreeNode }) {
       <AccordionContent className="pl-5 py-0 accordion-content">
         {node.children?.map((child) =>
           child.children || child.isTemporary ? (
-            <FolderRow key={child.id} node={child} />
+            <FolderItem key={child.id} node={child} />
           ) : (
             <BookmarkItem key={child.id} node={child} />
           ),

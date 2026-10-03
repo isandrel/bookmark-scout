@@ -15,7 +15,6 @@ function BookmarkEditForm({
   onClose: () => void;
   onSaved: () => void | Promise<void>;
 }) {
-  const { toast } = useToast();
   const isLink = bookmark.type === ItemTypeEnum.Link;
   const [title, setTitle] = useState(bookmark.title);
   const [url, setUrl] = useState(bookmark.url ?? '');
@@ -49,14 +48,10 @@ function BookmarkEditForm({
         urlChanged ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
       );
       await onSaved();
-      toast({ title: `✓ ${t('bookmarks_editSaved')}`, variant: 'success' });
+      toast.success({ title: t('bookmarks_editSaved') });
       onClose();
     } catch (error) {
-      toast({
-        title: `× ${t('bookmarks_editFailed')}`,
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('bookmarks_editFailed'), description: getErrorMessage(error) });
     } finally {
       setSaving(false);
     }

@@ -1,0 +1,13 @@
+# Options page. Read by src/components/page/OptionsPage.tsx.
+
+# Milliseconds after the last edit before changed settings are saved.
+autosave_delay_ms = 400
+
+# Settings named in the toast after an import; the rest are counted as "and N more".
+import_change_preview_limit = 5
+
+# Category shown when the page opens; a key of the settings categories in lib/settings-schema.ts.
+default_category = "appearance"
+
+# File name of a settings export.
+settings_export_filename = "bookmark-scout-settings.json"

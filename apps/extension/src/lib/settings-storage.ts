@@ -122,9 +122,6 @@ export const settingsValue = defineStoredValue<Settings>({
   empty: defaultSettings,
 });
 
-/** @deprecated Read `settingsValue`; kept until services/context-menu.ts moves. */
-export const settingsItem = storage.defineItem<Settings>(STORAGE_KEYS.settings);
-
 /**
  * Get settings from sync storage; defaults when storage cannot be read.
  */
