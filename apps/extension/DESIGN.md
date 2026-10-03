@@ -138,7 +138,7 @@ The brand tokens map onto the shadcn variables in `:root` and `.dark`:
 | `--primary`, `--ring` | `teal` |
 | `--primary-foreground` | `teal-ink` |
 | `--border`, `--input` | `line` |
-| `--destructive`, `--destructive-text` | `danger` (fill and text use the same token in both themes) |
+| `--destructive`, `--destructive-text` | `danger`. Light theme: one color for fill and text. Dark theme: `--destructive` stays dark enough for white text on it, and `--destructive-text` is lighter so red text stays readable. Use `text-destructive-text` for text, never `text-destructive` |
 
 - `teal` is the only action color: the primary button, links, the focus ring, the selected row's icon, and toggles that are on. Never use it as a section background.
 - `teal-wash` marks the active or selected row. Row text on it stays `ink`, because teal text on the wash is under 4.5:1.
@@ -238,7 +238,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 ## Responsive behavior
 
 - The popup reflows from 300px to 800px wide: chips wrap onto another line, row titles truncate, row actions overlay instead of wrapping, and the hint bar drops its last hint below 360px.
-- Below 1100px the manager keeps one sidebar open so the table has room; below 768px both sidebars collapse.
+- Below the width in `config/ui/layout.toml` (`both_sidebars_min_width`, 1280px, measured in #460 as the room the table needs) the manager keeps only one sidebar open. There is no separate narrow-screen rule.
 - Options wraps the category list into rows above the settings below 640px.
 
 ## Iteration guide
