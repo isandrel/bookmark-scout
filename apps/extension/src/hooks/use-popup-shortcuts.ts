@@ -4,6 +4,7 @@
  * - focusSearch (`SHORTCUT_BINDINGS.popup`, `/` by default) focuses the search box; Escape in
  *   it clears the query, then leaves the box.
  * - ArrowDown in the search box moves into the tree; ArrowUp on the first row moves back.
+ *   Alt+ArrowDown opens the recent searches instead.
  * - In the tree, ArrowUp/ArrowDown/Home/End move between visible folders and bookmarks,
  *   ArrowRight opens a folder (or enters it), ArrowLeft closes it (or goes to its parent), and
  *   Enter on a folder saves the current page into it. Enter on a bookmark opens it natively.
@@ -39,6 +40,14 @@ export const POPUP_TREE_BINDINGS = {
 export const POPUP_SEARCH_INPUT_BINDINGS = {
   escape: [{ key: 'Escape' }],
   enterTree: [{ key: 'ArrowDown' }],
+} as const satisfies Record<string, readonly ShortcutBinding[]>;
+
+/**
+ * Opens the recent searches from the empty search box (the combobox pattern's Alt+ArrowDown), so
+ * a plain ArrowDown always reaches the tree. Once open, ArrowUp and ArrowDown move through them.
+ */
+export const POPUP_SEARCH_HISTORY_BINDINGS = {
+  open: [{ key: 'ArrowDown', alt: true }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 /** Closing folders keep their content mounted while they animate; those rows are not visible. */

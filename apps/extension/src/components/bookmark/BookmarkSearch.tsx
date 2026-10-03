@@ -17,7 +17,71 @@ import {
   WholeWord,
   X,
 } from 'lucide-react';
-import { useEffect, useId, useRef, useState } from 'react';
+import { type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+
+/** Space between the typed text and the buttons inside the search box, in CSS pixels. */
+const CONTROLS_GAP_PX = 4;
+
+/** Runs `measure` now and whenever one of `elements` changes size. */
+function observeSizes(elements: readonly (Element | null | undefined)[], measure: () => void) {
+  measure();
+  if (typeof ResizeObserver === 'undefined') return undefined;
+  const observer = new ResizeObserver(measure);
+  for (const element of elements) if (element) observer.observe(element);
+  return () => observer.disconnect();
+}
+
+/**
+ * The search box's text stops before its buttons, however many are shown, and the placeholder
+ * shortens when the popup is too narrow for all of it instead of being cut off mid-word.
+ */
+function useSearchBoxFit(
+  boxRef: RefObject<HTMLDivElement | null>,
+  controlsRef: RefObject<HTMLDivElement | null>,
+  inputRef: RefObject<HTMLInputElement | null> | undefined,
+  placeholders: { full: string; short: string },
+) {
+  const [reservedRight, setReservedRight] = useState<number>();
+  const [fullFits, setFullFits] = useState(true);
+
+  useLayoutEffect(
+    () =>
+      observeSizes([boxRef.current, controlsRef.current], () => {
+        const box = boxRef.current;
+        const controls = controlsRef.current;
+        if (box && controls) {
+          setReservedRight(box.clientWidth - controls.offsetLeft + CONTROLS_GAP_PX);
+        }
+      }),
+    [boxRef, controlsRef],
+  );
+
+  const { full } = placeholders;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the padding changes with reservedRight.
+  useLayoutEffect(
+    () =>
+      observeSizes([inputRef?.current], () => {
+        const input = inputRef?.current;
+        const context = document.createElement('canvas').getContext('2d');
+        if (!input || !context) return;
+        const style = getComputedStyle(input);
+        context.font = style.font;
+        // Firefox's clientWidth of an input already leaves out the padding; the border box does
+        // not differ between browsers.
+        const px = (value: string) => Number.parseFloat(value) || 0;
+        const free =
+          input.getBoundingClientRect().width -
+          px(style.borderLeftWidth) -
+          px(style.borderRightWidth) -
+          px(style.paddingLeft) -
+          px(style.paddingRight);
+        setFullFits(context.measureText(full).width <= free);
+      }),
+    [full, inputRef, reservedRight],
+  );
+
+  return { reservedRight, placeholder: fullFits ? full : placeholders.short };
+}
 
 interface BookmarkSearchProps {
   query: string;
@@ -58,7 +122,13 @@ export function BookmarkSearch({
 }: BookmarkSearchProps) {
   const { resolvedTheme, setTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const historyRef = useRef<HTMLDivElement>(null);
   const historyListId = useId();
+  const { reservedRight, placeholder } = useSearchBoxFit(containerRef, controlsRef, inputRef, {
+    full: t('popup_searchPlaceholder'),
+    short: t('search_placeholderShort'),
+  });
   const [isFocused, setIsFocused] = useState(false);
   // History opens on user interaction, not on the automatic focus when the popup opens.
   const [historyRequested, setHistoryRequested] = useState(false);
@@ -83,23 +153,39 @@ export function BookmarkSearch({
     setActiveHistoryIndex(-1);
   };
 
+  const closeHistory = () => {
+    setHistoryRequested(false);
+    setActiveHistoryIndex(-1);
+  };
+
+  // A plain ArrowDown is left to the page, which moves into the tree; the history list takes the
+  // arrow keys only while it is open.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showHistory) {
+      const opensHistory =
+        !query &&
+        searchHistory.length > 0 &&
+        findShortcut(e.nativeEvent, POPUP_SEARCH_HISTORY_BINDINGS, { allowWhileTyping: true });
+      if (opensHistory) {
+        e.preventDefault();
+        setHistoryRequested(true);
+        setActiveHistoryIndex(-1);
+      } else if (e.key === 'Enter') {
+        onCommitQuery?.(query);
+      }
+      return;
+    }
     if (e.key === 'ArrowDown') {
-      if (query || searchHistory.length === 0) return;
       e.preventDefault();
-      setHistoryRequested(true);
-      setActiveHistoryIndex((index) =>
-        showHistory ? Math.min(index + 1, searchHistory.length - 1) : 0,
-      );
-    } else if (e.key === 'ArrowUp' && showHistory) {
+      setActiveHistoryIndex((index) => Math.min(index + 1, searchHistory.length - 1));
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActiveHistoryIndex((index) => Math.max(index - 1, -1));
-    } else if (e.key === 'Escape' && showHistory) {
+    } else if (e.key === 'Escape') {
       e.preventDefault();
-      setHistoryRequested(false);
-      setActiveHistoryIndex(-1);
+      closeHistory();
     } else if (e.key === 'Enter') {
-      if (showHistory && activeHistoryIndex >= 0) {
+      if (activeHistoryIndex >= 0) {
         e.preventDefault();
         chooseHistoryEntry(searchHistory[activeHistoryIndex]);
         return;
@@ -107,6 +193,11 @@ export function BookmarkSearch({
       onCommitQuery?.(query);
     }
   };
+
+  /** Focus on the input or inside the history list keeps the list open. */
+  const keepsHistoryOpen = (next: EventTarget | null) =>
+    next === inputRef?.current ||
+    (next instanceof Node && Boolean(historyRef.current?.contains(next)));
 
   const optionButtonClass = (active: boolean) =>
     `rounded-sm p-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
@@ -118,7 +209,8 @@ export function BookmarkSearch({
   return (
     <div className="p-2 border-b shrink-0">
       <div className="flex items-center gap-1">
-        <div ref={containerRef} className="relative flex-1">
+        {/* A size container is a stacking context, so it is lifted for the history list. */}
+        <div ref={containerRef} className="@container relative z-20 min-w-0 flex-1">
           <Search
             aria-hidden="true"
             className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -126,7 +218,7 @@ export function BookmarkSearch({
           <Input
             ref={inputRef}
             type="text"
-            placeholder={t('popup_searchPlaceholder')}
+            placeholder={placeholder}
             aria-label={t('popup_searchPlaceholder')}
             aria-keyshortcuts={ariaKeyShortcuts(SHORTCUT_BINDINGS.popup.focusSearch)}
             title={t('shortcuts_popupHint')}
@@ -149,17 +241,19 @@ export function BookmarkSearch({
             onMouseDown={() => setHistoryRequested(true)}
             onFocus={() => setIsFocused(true)}
             onBlur={(e) => {
-              setIsFocused(false);
               setActiveHistoryIndex(-1);
+              if (!keepsHistoryOpen(e.relatedTarget)) setIsFocused(false);
               // Moving to one of the search box's own controls does not settle the query.
               if (containerRef.current?.contains(e.relatedTarget as Node | null)) return;
               onCommitQuery?.(query);
             }}
             onKeyDown={handleKeyDown}
+            style={{ paddingRight: reservedRight }}
             className="search-input h-10 w-full border-transparent bg-muted pl-8 pr-[6.5rem] text-sm focus-visible:border-input focus-visible:bg-card focus-visible:ring-offset-0"
           />
           {showHistory && (
             <div
+              ref={historyRef}
               className="absolute left-0 right-0 top-full z-20 mt-1 rounded-md border bg-popover p-1 shadow-md"
               data-testid="search-history"
             >
@@ -167,12 +261,25 @@ export function BookmarkSearch({
                 <span className="text-xs font-medium text-muted-foreground">
                   {t('search_recentSearches')}
                 </span>
+                {/* Tab from the search box reaches it; the list stays open while it has focus. */}
                 <button
                   type="button"
-                  tabIndex={-1}
                   onMouseDown={keepInputFocus}
-                  onClick={() => onClearHistory?.()}
-                  className="text-xs text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    onClearHistory?.();
+                    // The list closes with its last entry; keep the keyboard in the search box.
+                    inputRef?.current?.focus();
+                  }}
+                  onBlur={(e) => {
+                    if (!keepsHistoryOpen(e.relatedTarget)) setIsFocused(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Escape') return;
+                    e.preventDefault();
+                    closeHistory();
+                    inputRef?.current?.focus();
+                  }}
+                  className="rounded-sm px-1 text-xs text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {t('search_clearHistory')}
                 </button>
@@ -201,10 +308,14 @@ export function BookmarkSearch({
               </div>
             </div>
           )}
-          <div className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+          <div
+            ref={controlsRef}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 flex items-center gap-0.5"
+          >
             {!query && !isFocused && (
-              // The search box takes focus on open, so the hint shows once focus moves away.
-              <Kbd aria-hidden="true" className="mr-1">
+              // The search box takes focus on open, so the hint shows once focus moves away. A
+              // narrow box keeps its room for the placeholder.
+              <Kbd aria-hidden="true" className="mr-1 @max-[15rem]:hidden">
                 {shortcutKeyCaps(SHORTCUT_BINDINGS.popup.focusSearch[0]).join('+')}
               </Kbd>
             )}

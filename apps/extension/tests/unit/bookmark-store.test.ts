@@ -178,6 +178,23 @@ describe('createFolder', () => {
   });
 });
 
+describe('toast messages', () => {
+  const LONG = 'A folder name far longer than the truncate length';
+
+  it('cut folder names at truncateLength like page titles', async () => {
+    await saveSettings({ language: 'en', truncateLength: 20 });
+    const longFolder = addNode(bar.id, LONG);
+    const { addBookmarkToFolder, createFolder } = useBookmarkStore.getState();
+
+    const saved = await addBookmarkToFolder(longFolder.id);
+    expect(saved.message).toBe('"Current Page" added to "A folder name far lo..."');
+    const created = await createFolder(longFolder.id, LONG);
+    expect(created.message).toBe(
+      'New folder "A folder name far lo..." added in "A folder name far lo..."',
+    );
+  });
+});
+
 describe('handleDrop', () => {
   let ids: string[];
 

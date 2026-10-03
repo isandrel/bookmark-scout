@@ -422,3 +422,88 @@ test('folder rows use a leading tree chevron that lines up per depth and rotates
     .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).height))
     .toBe('300px');
 });
+
+test('the delete confirmation closes when its bookmark is deleted elsewhere', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Deleted Elsewhere', [
+    { title: 'Gone Elsewhere', url: 'https://e2e.invalid/gone-elsewhere' },
+  ]);
+  await setSettings(extensionWorker, { confirmBeforeDelete: true });
+
+  await openPopup(page, extensionId);
+  await page.getByPlaceholder('Search bookmarks...').fill('Gone Elsewhere');
+  const row = bookmarkRow(page, 'Gone Elsewhere');
+  await row.hover();
+  await row.getByRole('button', { name: 'Delete bookmark' }).click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toContainText('Delete "Gone Elsewhere"?');
+
+  // Confirming could only fail with a browser error now.
+  await extensionWorker.evaluate((id) => chrome.bookmarks.remove(id), seeded.ids['Gone Elsewhere']);
+  await expect(dialog).toHaveCount(0);
+});
+
+test('hint bar key caps draw every arrow and Enter at the same size', async ({
+  extensionId,
+  page,
+}) => {
+  await openPopup(page, extensionId);
+  const glyphs = await page
+    .getByTestId('popup-hint-bar')
+    .locator('kbd')
+    .evaluateAll((caps) =>
+      caps
+        .filter((cap) => /^[↑↓←→↵]$/.test(cap.textContent ?? ''))
+        .map((cap) => {
+          // How long the arrow is drawn: the icon's size, or the ink of a glyph drawn as text.
+          const icon = cap.querySelector('svg')?.getBoundingClientRect();
+          if (icon) return { key: cap.textContent, length: Math.max(icon.width, icon.height) };
+          const context = document.createElement('canvas').getContext('2d');
+          if (!context) return { key: cap.textContent, length: Number.NaN };
+          context.font = getComputedStyle(cap).font;
+          const ink = context.measureText(cap.textContent ?? '');
+          const width = ink.actualBoundingBoxLeft + ink.actualBoundingBoxRight;
+          const height = ink.actualBoundingBoxAscent + ink.actualBoundingBoxDescent;
+          return { key: cap.textContent, length: Math.max(width, height) };
+        }),
+    );
+  expect(glyphs.map((glyph) => glyph.key)).toEqual(['↑', '↓', '←', '→', '↵']);
+  // ← → ↵ once fell back to another font and came out a third shorter than ↑ ↓.
+  for (const glyph of glyphs) {
+    expect(Math.abs(glyph.length - glyphs[0].length), glyph.key ?? '').toBeLessThanOrEqual(0.5);
+  }
+});
+
+test('large site icons in neighbouring bookmark rows do not touch', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await seedFolder(
+    extensionWorker,
+    'E2E Icon Gap',
+    ['One', 'Two', 'Three'].map((name) => ({
+      title: `Icon Gap ${name}`,
+      url: `https://e2e.invalid/icon-gap-${name.toLowerCase()}`,
+    })),
+  );
+  await setSettings(extensionWorker, { faviconSize: 32 });
+
+  await openPopup(page, extensionId);
+  await page.getByPlaceholder('Search bookmarks...').fill('Icon Gap');
+  const icons = page.locator('.bookmark-item .bookmark-favicon');
+  await expect(icons).toHaveCount(3);
+  const boxes = await icons.evaluateAll((elements) =>
+    elements.map((element) => {
+      const box = element.getBoundingClientRect();
+      return { top: box.top, bottom: box.bottom, height: box.height };
+    }),
+  );
+  for (const [index, box] of boxes.entries()) {
+    expect(box.height).toBe(32);
+    if (index > 0) expect(box.top - boxes[index - 1].bottom).toBeGreaterThanOrEqual(4);
+  }
+});
