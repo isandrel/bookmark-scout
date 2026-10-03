@@ -31,7 +31,10 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
   - `Select` values can be `null`, and `Select` renders a hidden input after its trigger, so use `gap-*` rather than `space-x-*` around it.
   - Base UI `Button` sets `role=button`; render links as a styled `<a>`.
   - A dialog scrolls to whatever it focuses when it opens. If fields are disabled while loading, focus falls to a footer button; focus the dialog itself instead.
-  - Closing dialogs flashed their backdrop for one frame. The fix sets `--tw-animation-fill-mode: forwards` on `[data-closed]` (PR #518, `fix/extension-dialog-exit-flash`).
+  - Closing dialogs flashed their backdrop for one frame. The fix sets `--tw-animation-fill-mode: forwards` on `[data-closed]` (PR #518).
+- **Radix-era motion classes.** shadcn's dialog classes such as `data-open:slide-in-from-left-1/2` and `slide-in-from-top-[48%]` assume Radix's translate-based centering. Once animations really ran, dialogs slid in from the left. Remove them so dialogs fade and zoom in place, and audit every `slide-*` and `zoom-*` class copied from Radix-era shadcn.
+- **No `scrollIntoView` in the popup or side panel.** It also scrolls the document and cuts off the header. Set `list.scrollTop = list.scrollHeight` on the scroll container. Chat-style views are `flex h-full min-h-0 flex-col` with a `min-h-0 flex-1 overflow-y-auto` list; check them at real popup sizes, where the composer once sat off-screen.
+- **Legacy stylesheets.** Delete old rules that fight the new tokens (for example `popup.scss` hover and lift rules) but keep their class names on the elements: E2E specs use them as hooks.
 - **Formatting:** `biome check --write` across the app reformatted about 60 unrelated files. Format only the files you touched. Biome rejects `aria-label` on a plain `div`; give it a role or use a semantic element.
 - **Type check:** there is no Nx typecheck target and `main` already has `tsc` errors. Compare your files against the baseline instead of claiming a clean check:
   ```bash
@@ -42,6 +45,10 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 ## Settings UX the user expects
 
 - Settings autosave and apply live. No "saved" toast or status text; show failures only.
+- Controls never move under the cursor. Reserve fixed space for the per-row reset button (it once appeared and pushed the switch left), and test that the switch does not move.
+- Counts use a −/value/+ stepper that also accepts typing, not a slider. Out-of-range values snap to the nearest allowed value on blur, and an empty field means "No limit". Sliders are only for 0–1 values.
+- Group related on/off settings into checklists. Show Verify and Refresh results inline under their buttons, not in a corner toast.
+- When making settings apply live, find every read-once site: `getSettings()` in one-shot effects, module-level constants, and background startup. Guard the hook's initial async read so it cannot overwrite a newer value the storage watcher already delivered. Panels that watch storage from another tab keep text the user is still typing. `<html lang>` follows the language.
 - A language change re-renders the page and does not remount it. Remounting closed the Tools sidebar and reset open forms. Memos that depend on `t()` carry a `biome-ignore lint/correctness/useExhaustiveDependencies` comment explaining the language dependency.
 - Tests that waited for a "saved" message read storage with `expect.poll` instead.
 
@@ -49,6 +56,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 
 - Keep one screenshot step file per surface under `~/.cache/bookmark-scout-qa/<topic>/` (for example `popup.ts`, `manager.ts`, `options.ts`) and run them with the `extension-exploratory-qa` runner.
 - Set the theme by writing `bookmark-scout-settings` in `chrome.storage.sync` from `sw.evaluate`; capture light, dark, and a narrow width.
+- Also capture keyboard focus and a short page. Two bugs showed only there: a row-actions overlay covering the focus ring's right edge (fixed with a 2px inset), and an Options footer floating mid-screen on short pages (fixed with a full-height column).
 - The popup's width comes from settings (`src/hooks/use-popup-size.ts`), not the viewport. To see the 300px layout, set the popup size in settings; a 300px viewport alone does not.
 - When the user sends a screen recording, extract frames and build a contact sheet, then sample densely around the bug:
   ```bash
@@ -56,3 +64,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
   ffmpeg -i f%02d.png -vf "scale=640:-1,tile=4x6" -frames:v 1 sheet.png
   ffmpeg -ss 18.6 -t 1.4 -i rec.mov -vf fps=20 burst%02d.png
   ```
+
+## Planning a redesign from references
+
+Use the `feature-research-planning` skill. Specific to UI work: read reference repositories with `gh api repos/<owner>/<repo>/contents/<path>` (decode the base64 `content`) rather than web fetching, and inventory the current surfaces with a read-only subagent in parallel. The inventory alone found real bugs (animations silently off, two drifted token files) before any design work. `DESIGN.md` follows the Stitch DESIGN.md format: nine sections, YAML tokens referenced as `{colors.x}`.

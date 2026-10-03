@@ -1,12 +1,15 @@
 #!/usr/bin/env zsh
-# Usage: cleanup-branches.sh [--apply] [--include-no-pr]
+# Usage: cleanup-branches.sh [--apply] [--include-no-pr] [--bundle-unpushed]
 # Dry run by default. Deletes worktrees, local and remote branches whose PR is merged or closed.
+# Branches with commits that exist on no remote are kept unless --bundle-unpushed is passed, which
+# saves each one to a git bundle under ~/.cache first.
 set -u
-apply=false; include_no_pr=false
+apply=false; include_no_pr=false; bundle_unpushed=false
 for arg in "$@"; do
   case $arg in
     --apply) apply=true ;;
     --include-no-pr) include_no_pr=true ;;
+    --bundle-unpushed) bundle_unpushed=true ;;
   esac
 done
 root=$(/usr/bin/git rev-parse --show-toplevel)
@@ -24,11 +27,26 @@ done < <(gh pr list --state all --limit 500 --json headRefName,state --jq '.[] |
 
 keep="^(main|HEAD|origin${KEEP_EXTRA:+|$KEEP_EXTRA})$"
 run() { if $apply; then "$@"; else echo "would run: $*"; fi; }
+# Commits on a branch that no remote branch contains: an agent's unpushed work.
+unpushed() { /usr/bin/git rev-list --count "$1" --not --remotes 2>/dev/null || echo 0; }
+# Returns 0 when the branch may go: nothing unpushed, or bundled first.
+safe_to_drop() {
+  local br=$1 n
+  n=$(unpushed "$br")
+  (( n == 0 )) && return 0
+  if ! $bundle_unpushed; then
+    echo "keep (unpushed: $n commit(s)): $br"; return 1
+  fi
+  local file=~/.cache/bookmark-scout-unpushed-${br//\//-}-$(date +%Y%m%d-%H%M).bundle
+  run /usr/bin/git bundle create -q "$file" "$br" --not --remotes
+  echo "bundled $n unpushed commit(s) of $br to $file"
+}
 
 # Worktrees: remove clean ones whose branch is not kept.
 /usr/bin/git worktree list --porcelain | awk '/^worktree /{w=$2} /^branch /{sub("refs/heads/","",$2); print w" "$2}' \
   | grep '/.claude/worktrees/' | while read -r wt br; do
     if [[ ${pr_state[$br]:-} == OPEN ]] || [[ $br =~ $keep ]]; then continue; fi
+    safe_to_drop "$br" || continue
     /usr/bin/git -C "$wt" checkout -q -- apps/website/next-env.d.ts 2>/dev/null || true
     if [[ -n $(/usr/bin/git -C "$wt" status --porcelain) ]]; then
       echo "keep dirty worktree: $wt ($br)"; continue
@@ -43,6 +61,7 @@ for br in $(/usr/bin/git branch --format='%(refname:short)'); do
   [[ $br =~ $keep ]] && continue
   echo "$in_worktree" | grep -qx "$br" && { echo "keep (checked out): $br"; continue; }
   state=${pr_state[$br]:-NONE}
+  [[ $state == OPEN ]] || safe_to_drop "$br" || continue
   case $state in
     MERGED|CLOSED) run /usr/bin/git branch -q -D "$br" ;;
     OPEN) ;;

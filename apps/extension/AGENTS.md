@@ -183,11 +183,15 @@ Featured, local, and custom providers are defined one per file in `config/ai/pro
 
 When working in AI-related files, check whether the logic already belongs in:
 
-- `src/services/ai-client.ts`
-- `src/services/ai-models.ts`
-- `src/services/ai-prompts.ts`
-- `src/services/ai-recommendation.ts`
-- `src/services/ai-reorganization.ts`
+- `src/services/ai-client.ts`: provider factories and model wiring
+- `src/services/ai-models.ts`: featured providers and catalog lookup
+- `src/services/ai-model-list.ts`: model lists, Verify, and error classification
+- `src/services/ai-settings.ts`: named services and `getActiveAISettings` (the default service; never read the legacy `aiProvider`/`aiModel`)
+- `src/services/ai-activity.ts`: the logging fetch every provider call goes through
+- `src/services/ai-agent.ts` and `src/services/ai-bookmark-tools.ts`: the Ask AI agent and its read-only tools
+- `src/services/page-reader.ts`: page reading
+- `src/services/prompt-config.ts` and `src/lib/prompt-library-storage.ts`: prompt tasks, `buildPrompt`, and saved prompts
+- `src/services/ai-recommendation.ts` and `src/services/ai-reorganization.ts`: folder suggestions and reorganization
 
 ## UI and UX guidance
 
@@ -213,6 +217,10 @@ Any new or changed user-facing extension string must be reflected in:
 - `public/_locales/ko/messages.json`
 
 Do not leave new extension copy localized in only one language without explicitly noting the gap.
+
+- Keep the custom translation hook (`src/hooks/use-i18n.ts`). `@wxt-dev/i18n` follows only the browser language and would remove the in-app Language setting (auto, en, ja, ko).
+- Thrown errors that reach the UI, units, and log source names shown to users need locale keys too, not English literals.
+- Reuse an existing key when the same concept already has one (prompt tasks reuse the tool title keys such as `tools_autoTagging`); near-duplicate keys drift apart ("Auto Tagging" versus "Auto-Tagging").
 
 ## Formatting and type discipline
 
