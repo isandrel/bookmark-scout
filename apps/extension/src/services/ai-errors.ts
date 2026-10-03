@@ -44,3 +44,21 @@ export function describeAIError(error: unknown): string {
   // Errors the extension throws itself (settings checks, AIConnectionError) are localized already.
   return getErrorMessage(error);
 }
+
+/** The provider's own words for an HTTP answer `describeAIError` can only name by its status. */
+function unrecognizedStatusDetail(error: unknown): string | undefined {
+  const last = RetryError.isInstance(error) ? error.lastError : error;
+  if (!APICallError.isInstance(last) || last.statusCode === undefined) return undefined;
+  if (STATUS_MESSAGES[last.statusCode]) return undefined;
+  return last.message.trim() || undefined;
+}
+
+/**
+ * `describeAIError`, plus the provider's own message when the status alone says nothing useful
+ * (an HTTP 400 for an unknown model, say), for chats where the user can act on it.
+ */
+export function describeAIErrorWithDetail(error: unknown): string {
+  const description = describeAIError(error);
+  const detail = unrecognizedStatusDetail(error);
+  return detail ? t('ai_errorProviderDetail', [description, detail]) : description;
+}

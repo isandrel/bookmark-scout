@@ -43,7 +43,14 @@ export const aiProviderFileSchema = z.strictObject({
   provider_kind: z.enum(AI_PROVIDER_KINDS),
   requires_api_key: z.boolean(),
   api_key_pattern: z.string().optional(),
-  api_key_placeholder: z.string().optional(),
+  /**
+   * The key's format, such as "sk-...", shown as the placeholder. Never prose, which would not be
+   * translated: without a format the editor shows a localized "Required" or "Optional".
+   */
+  api_key_placeholder: z
+    .string()
+    .regex(/^\S*\.\.\.$/, 'must be a key format ending in "...", such as "sk-..."')
+    .optional(),
   base_url: z.url().optional(),
   supports_custom_model: z.boolean().optional(),
   /** `openai` when omitted. */

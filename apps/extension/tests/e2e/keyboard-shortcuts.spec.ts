@@ -268,6 +268,33 @@ test.describe('manager keyboard shortcuts', () => {
     await expect(helpButton).toBeFocused();
   });
 
+  test('on Apple platforms the hints print ⌥ and ⌫, drawn as icons like the arrows', async ({
+    extensionId,
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(Navigator.prototype, 'platform', { get: () => 'MacIntel' });
+      Object.defineProperty(Navigator.prototype, 'userAgentData', {
+        get: () => ({ platform: 'macOS', brands: [], mobile: false }),
+      });
+    });
+    await openPopup(page, extensionId);
+    await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toHaveAttribute(
+      'title',
+      /⌥\+↓ shows recent searches/,
+    );
+
+    await page.goto(managerUrl(extensionId));
+    await page.keyboard.press('Shift+?');
+    const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
+    // The bundled fonts lack these symbols; as text they fell back to a smaller system glyph.
+    for (const key of ['⌥', '↑', '⌫']) {
+      const keyCap = dialog.locator('kbd', { hasText: key });
+      await expect(keyCap.locator('[data-slot="kbd-icon"]'), key).toBeVisible();
+    }
+    await expect(dialog.locator('kbd', { hasText: 'j' }).locator('[data-slot="kbd-icon"]')).toHaveCount(0);
+  });
+
   test('Backspace and Alt+ArrowUp go to the parent folder, then to the root', async ({
     extensionId,
     extensionWorker,

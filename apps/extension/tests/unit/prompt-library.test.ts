@@ -42,6 +42,32 @@ describe('prompt variables', () => {
     );
   });
 
+  it('fills unlimited folder limits with a phrase, never -1, even in a custom prompt', async () => {
+    const unlimited = { aiMaxCategories: -1, aiMinItemsPerFolder: 2, aiMaxItemsPerFolder: -1 };
+    expect(getPromptVariables('folder_reorganization', unlimited)).toEqual({
+      maxCategories: 'no limit',
+      minItemsPerFolder: 2,
+      maxItemsPerFolder: 'no limit',
+    });
+    expect(
+      getPromptVariables('folder_reorganization', {
+        ...unlimited,
+        aiMaxCategories: 5,
+        aiMaxItemsPerFolder: 40,
+      }),
+    ).toMatchObject({ maxCategories: 5, maxItemsPerFolder: 40 });
+
+    const saved = await saveCustomPrompt({
+      task: 'folder_reorganization',
+      name: 'Old limits',
+      system: 'Use {{maxCategories}} top-level folders and {{maxItemsPerFolder}} bookmarks each.',
+    });
+    await setActivePrompt('folder_reorganization', saved.id);
+    const { system } = await buildPrompt('folder_reorganization', unlimited);
+    expect(system).toContain('Use no limit top-level folders and no limit bookmarks each.');
+    expect(system).not.toMatch(/(^|[^0-9])-1\b/);
+  });
+
   it('leaves no placeholder unfilled in any built-in prompt and its rules', async () => {
     for (const taskId of PROMPT_TASK_IDS) {
       const { system } = await buildPrompt(taskId, defaultSettings, { hasPageText: true });

@@ -293,7 +293,7 @@ test('network tools explain and request website access, and scan nothing when it
   await toolCard(page, 'Metadata Fetcher').getByRole('button', { name: 'Scan' }).click();
   await prompt.getByRole('button', { name: 'Allow access' }).click();
   await expect(
-    toastRegion(page).getByText('Website access not granted', { exact: true }),
+    toastRegion(page).getByText('× Website access not granted', { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Metadata Fetcher' })).toHaveCount(0);
   expect(site.requests).toEqual([]);

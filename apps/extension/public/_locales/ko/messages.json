@@ -24,8 +24,8 @@
         "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
     },
     "shortcuts_popupHint": {
-        "message": "단축키: / 검색, ↓ ↑ 폴더와 북마크 이동, → ← 폴더 열기 또는 닫기, Enter 현재 페이지를 포커스된 폴더에 저장, Esc 검색 지우기, Alt+↓ 최근 검색 보기",
-        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
+        "message": "단축키: / 검색, ↓ ↑ 폴더와 북마크 이동, → ← 폴더 열기 또는 닫기, Enter 현재 페이지를 포커스된 폴더에 저장, Esc 검색 지우기, $1 최근 검색 보기",
+        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts; $1 is the recent-searches key, such as Alt+↓ (⌥+↓ on Apple keyboards)"
     },
     "shortcuts_title": {
         "message": "키보드 단축키",
@@ -632,6 +632,10 @@
     "ai_errorRetriesExhausted": {
         "message": "$1번 시도했지만 실패했습니다. $2",
         "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorProviderDetail": {
+        "message": "$1 제공업체 메시지: \"$2\"",
+        "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
         "message": "AI 요청에 실패했습니다. 다시 시도하거나 옵션에서 서비스를 확인하세요.",
@@ -2769,6 +2773,10 @@
         "message": "선택 사항",
         "description": "Placeholder of the API key field for a provider that works without a key"
     },
+    "options_apiKeyRequiredPlaceholder": {
+        "message": "필수",
+        "description": "Placeholder of the API key field for a provider that needs a key and has no known key format"
+    },
     "options_apiKey": {
         "message": "API 키",
         "description": "API key field label"
@@ -4508,7 +4516,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxCategories": {
-        "message": "최상위 폴더 한도, -1은 무제한(최대 카테고리)",
+        "message": "최상위 폴더 한도, 무제한이면 그렇다고 표시됩니다(최대 카테고리)",
         "description": "Variable description"
     },
     "prompt_varMinItemsPerFolder": {
@@ -4516,7 +4524,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxItemsPerFolder": {
-        "message": "폴더당 최대 북마크 수, -1은 무제한",
+        "message": "폴더당 최대 북마크 수, 무제한이면 그렇다고 표시됩니다",
         "description": "Variable description"
     },
     "prompt_varMinTags": {

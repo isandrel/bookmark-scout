@@ -262,7 +262,7 @@ test('site icon refresh asks for website access and requests nothing when it is 
   await expect(prompt).toContainText('site icon refreshes request each bookmarked page');
   await prompt.getByRole('button', { name: 'Allow access' }).click();
   await expect(
-    toastRegion(page).getByText('Website access not granted', { exact: true }),
+    toastRegion(page).getByText('× Website access not granted', { exact: true }),
   ).toBeVisible();
   await expect(page.getByRole('dialog', { name: 'Refresh Site Icons' })).toHaveCount(0);
   expect(requests).toEqual([]);

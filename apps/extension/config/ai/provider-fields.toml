@@ -1,10 +1,10 @@
 # Example values shown as placeholders in the AI service editor (Options > AI). Read by
-# src/components/options/AIServiceEditor.tsx. A provider can show its own key format with
-# `api_key_placeholder` in config/ai/providers/<id>.toml (a format such as "sk-...", never prose,
-# which would not be translated); without one, a provider whose key is optional shows a localized
-# "Optional". The endpoint placeholder is the provider's own endpoint when it has one.
+# src/components/options/AIServiceEditor.tsx. The API key placeholder is the provider's own key
+# format, `api_key_placeholder` in config/ai/providers/<id>.toml (such as "sk-...", never prose,
+# which would not be translated); without one it is a localized "Required" or "Optional", from the
+# provider's `requires_api_key`. The endpoint placeholder is the provider's own endpoint when it
+# has one.
 
-api_key = "sk-..."
 base_url = "https://api.example.com/v1"
 extra_headers = '{"HTTP-Referer":"https://example.com"}'
 

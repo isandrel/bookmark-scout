@@ -64,6 +64,7 @@ const prompts = readConfig(
   'ai/prompts',
   z
     .strictObject({
+      variables: z.strictObject({ no_limit: z.string().min(1) }),
       rules: z.record(z.string(), z.string().min(1)),
       tasks: z.strictObject(
         Object.fromEntries(
@@ -95,6 +96,12 @@ const prompts = readConfig(
 // Variables: one table for previews and runs
 // ============================================================================
 
+/** A limit setting is unlimited at -1, the only value below its minimum of 1. */
+const hasLimit = (value: number) => value > 0;
+
+/** A limit as a prompt reads it: the number, or a phrase while there is none (never "-1"). */
+const limitVariable = (value: number) => (hasLimit(value) ? value : prompts.variables.no_limit);
+
 /**
  * What each task fills in, from the settings it runs with. Prompt previews pass the stored
  * settings and tools pass the values they run with, so a preview always shows what is sent.
@@ -106,9 +113,9 @@ const PROMPT_VARIABLES = {
   folder_reorganization: (
     settings: Pick<Settings, 'aiMaxCategories' | 'aiMinItemsPerFolder' | 'aiMaxItemsPerFolder'>,
   ) => ({
-    maxCategories: settings.aiMaxCategories,
+    maxCategories: limitVariable(settings.aiMaxCategories),
     minItemsPerFolder: settings.aiMinItemsPerFolder,
-    maxItemsPerFolder: settings.aiMaxItemsPerFolder,
+    maxItemsPerFolder: limitVariable(settings.aiMaxItemsPerFolder),
   }),
   auto_tagging: (
     settings: Pick<Settings, 'autoTaggingMinTags' | 'autoTaggingMaxTags' | 'autoTaggingTagStyle'>,
@@ -128,9 +135,6 @@ const PROMPT_VARIABLES = {
 
 /** The settings a task's variables are made from; full Settings always fit. */
 export type PromptSettings<T extends PromptTaskId> = Parameters<(typeof PROMPT_VARIABLES)[T]>[0];
-
-/** A limit setting is unlimited at -1, the only value below its minimum of 1. */
-const hasLimit = (value: number) => value > 0;
 
 /** Rules in config/ai/prompts.toml that state the reorganization folder limits. */
 const REORGANIZATION_LIMIT_RULES = {

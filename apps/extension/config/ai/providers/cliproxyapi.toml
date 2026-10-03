@@ -5,7 +5,6 @@ order = 190
 default_model = "gpt-4o-mini"
 provider_kind = "openai_compatible"
 requires_api_key = false
-api_key_placeholder = "Key from api-keys in config.yaml"
 base_url = "http://localhost:8317/v1"
 supports_custom_model = true
 group = "local"

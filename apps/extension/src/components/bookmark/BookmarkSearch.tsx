@@ -221,7 +221,7 @@ export function BookmarkSearch({
             placeholder={placeholder}
             aria-label={t('popup_searchPlaceholder')}
             aria-keyshortcuts={ariaKeyShortcuts(SHORTCUT_BINDINGS.popup.focusSearch)}
-            title={t('shortcuts_popupHint')}
+            title={popupShortcutsHint()}
             role="combobox"
             aria-expanded={showHistory}
             aria-controls={showHistory ? historyListId : undefined}

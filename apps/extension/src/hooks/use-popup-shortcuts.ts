@@ -50,6 +50,14 @@ export const POPUP_SEARCH_HISTORY_BINDINGS = {
   open: [{ key: 'ArrowDown', alt: true }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
+/** The popup's shortcuts tooltip, naming the recent-searches key as this platform prints it. */
+export function popupShortcutsHint(): string {
+  return t(
+    'shortcuts_popupHint',
+    shortcutKeyCaps(POPUP_SEARCH_HISTORY_BINDINGS.open[0]).join('+'),
+  );
+}
+
 /** Closing folders keep their content mounted while they animate; those rows are not visible. */
 function isInsideClosedFolder(row: HTMLElement): boolean {
   for (let element = row.parentElement; element; element = element.parentElement) {

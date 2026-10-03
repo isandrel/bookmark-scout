@@ -23,7 +23,6 @@ import { AI_PROVIDER_EXTRA_FIELDS } from '@/lib/config/ai-provider-schema';
 const fieldExamples = readConfig(
   'ai/provider-fields',
   z.strictObject({
-    api_key: z.string(),
     base_url: z.string(),
     extra_headers: z.string(),
     extra_fields: z.record(z.enum(AI_PROVIDER_EXTRA_FIELDS), z.string()),
@@ -437,9 +436,11 @@ export function AIServiceEditor({
                 onBlur={() => void saveFields()}
                 placeholder={
                   providerConfig?.api_key_placeholder ||
-                  (providerRequiresApiKey(provider)
-                    ? fieldExamples.api_key
-                    : t('options_apiKeyOptionalPlaceholder'))
+                  t(
+                    providerRequiresApiKey(provider)
+                      ? 'options_apiKeyRequiredPlaceholder'
+                      : 'options_apiKeyOptionalPlaceholder',
+                  )
                 }
                 className="pr-9"
               />

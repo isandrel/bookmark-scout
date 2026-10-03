@@ -6,6 +6,11 @@
 # (listed in prompt-config.ts) in both. Changing a default prompt changes what every user without
 # a custom prompt sends.
 
+[variables]
+# What a limit variable such as {{maxCategories}} reads while its setting has no limit (-1), so a
+# custom prompt never tells the model "at most -1"
+no_limit = "no limit"
+
 [rules]
 # Added whenever items carry text read from the web page: the text comes from arbitrary websites
 # and may try to steer the model
