@@ -39,24 +39,34 @@
                 "build:firefox",
                 "build:edge"
             ],
+            "cache": false,
             "options": {
                 "cwd": "apps/extension"
             }
         },
         "build:chrome": {
             "command": "wxt build -b chrome",
+            "outputs": [
+                "{projectRoot}/dist/chrome-mv3"
+            ],
             "options": {
                 "cwd": "apps/extension"
             }
         },
         "build:firefox": {
             "command": "wxt build -b firefox",
+            "outputs": [
+                "{projectRoot}/dist/firefox-mv2"
+            ],
             "options": {
                 "cwd": "apps/extension"
             }
         },
         "build:edge": {
             "command": "wxt build -b edge",
+            "outputs": [
+                "{projectRoot}/dist/edge-mv3"
+            ],
             "options": {
                 "cwd": "apps/extension"
             }
