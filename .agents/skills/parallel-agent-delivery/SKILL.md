@@ -21,11 +21,12 @@ Keep shared briefs (rules, interfaces, findings) in files under `~/.cache/` that
 5. Make every prompt self-contained: branch name, the "Configurable, extensible, customizable, maintainable" rules from the root `AGENTS.md` (agents follow the brief, not the user's past corrections), the findings or `backlog/tasks/` file to read, the verification commands below, commit and PR rules, and the required final report (PR URL, merge status, per-bug outcome, verification results, and **user-visible behavior changes or deviations from the brief**). Agents have changed behavior on their own (Enter on a folder saving the page, saved searches moved to local storage); the report section lets you ask the user before it ships.
 6. Bump dependencies before dispatching, not while agents run, and restart any shared dev server afterwards. A mid-flight Next.js bump made the dev server return 500 to running agents until it was restarted.
 7. When the user asks to wrap up ("finish what's in hand"), land only this session's in-flight work: no new agents, spin-off tasks, or follow-up PRs.
-8. For a migration or codemod, record a baseline on `origin/main` first (lint warning count, unit and E2E totals, the list of `tsc` errors) and diff against it, so existing failures are not blamed on the change.
+8. For a migration or codemod, record a baseline on `origin/main` first (lint warning count, unit and E2E totals; the type check must stay at zero errors) and diff against it, so existing failures are not blamed on the change.
 
 Verification for extension changes, from the repository root (in worktrees, export `NX_DAEMON=false` first):
 ```bash
 bunx nx run extension:lint
+bunx nx run extension:typecheck
 bunx nx run extension:test:unit
 bunx nx run extension:build:chrome
 bunx nx run extension:build:firefox

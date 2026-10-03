@@ -135,6 +135,12 @@
             "options": {
                 "cwd": "apps/extension"
             }
+        },
+        "typecheck": {
+            "command": "wxt prepare && tsc -p .",
+            "options": {
+                "cwd": "apps/extension"
+            }
         }
     }
 }

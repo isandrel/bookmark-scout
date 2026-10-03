@@ -105,22 +105,12 @@ export function formatPercent(ratio: number): string {
   }
 }
 
-/**
- * `Intl.ListFormat`, which every supported browser has; the app's TypeScript `lib` (ES2015)
- * predates its type, so the constructor is typed here.
- */
-const ListFormat = (
-  Intl as unknown as {
-    ListFormat: new (locale?: string) => { format: (items: readonly string[]) => string };
-  }
-).ListFormat;
-
 /** Items joined as a list in the extension's language, e.g. "A, B, and C" or "A、B、C". */
 export function formatList(items: readonly string[]): string {
   try {
-    return new ListFormat(getFormattingLocale()).format(items);
+    return new Intl.ListFormat(getFormattingLocale()).format(items);
   } catch {
-    return new ListFormat().format(items);
+    return new Intl.ListFormat().format(items);
   }
 }
 
@@ -189,7 +179,12 @@ export function t(key: MessageKey, substitutions?: string | string[]): string {
     }
 
     // Default: use browser.i18n.getMessage (auto-detects from browser)
-    const message = browser.i18n.getMessage(key, substitutions);
+    // WXT types getMessage with the generated key union; keys here are checked against every
+    // locale by tests/unit/locale-messages.test.ts instead.
+    const message = browser.i18n.getMessage(
+      key as Parameters<typeof browser.i18n.getMessage>[0],
+      substitutions,
+    );
     return message || key;
   } catch {
     // Fallback for non-extension environments (like tests)
