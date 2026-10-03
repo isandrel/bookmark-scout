@@ -117,7 +117,7 @@ export function DataTable<TData extends RowData>({
     DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder,
   );
   const [pagination, setPagination] = React.useState<PaginationState>({
-    pageIndex: 0,
+    pageIndex: initialPageIndex,
     pageSize: DEFAULT_BOOKMARK_TABLE_VIEW.pageSize,
   });
   const [browserOrder, setBrowserOrder] = React.useState(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
@@ -150,7 +150,8 @@ export function DataTable<TData extends RowData>({
       setSorting(view.sorting);
       setColumnVisibility(view.columnVisibility);
       setColumnOrder(view.columnOrder);
-      setPagination({ pageIndex: 0, pageSize: view.pageSize });
+      // The page restored from history (a reload or Back) was saved with this page size.
+      setPagination((previous) => ({ ...previous, pageSize: view.pageSize }));
       setBrowserOrder(view.browserOrder);
       setColumnSizing(view.columnSizing);
       setSavedColumnSizing(view.columnSizing);
@@ -195,10 +196,20 @@ export function DataTable<TData extends RowData>({
   // open) with nothing selected. The page is read when the key changes, not tracked.
   const initialPageIndexRef = React.useRef(initialPageIndex);
   initialPageIndexRef.current = initialPageIndex;
-  // biome-ignore lint/correctness/useExhaustiveDependencies: resetKey is the trigger.
+  // Focus that navigation took away (the activated row or breadcrumb is gone) moves to a row of
+  // the new folder once its page shows: the row of the folder just left, or the first row.
+  const lastResetKeyRef = React.useRef(resetKey);
+  const pendingRowFocusRef = React.useRef<{ rowId: string | null; pageIndex: number } | null>(null);
   React.useEffect(() => {
     setPagination((previous) => ({ ...previous, pageIndex: initialPageIndexRef.current }));
     setRowSelection({});
+    if (lastResetKeyRef.current !== resetKey) {
+      pendingRowFocusRef.current = {
+        rowId: lastResetKeyRef.current ?? null,
+        pageIndex: initialPageIndexRef.current,
+      };
+      lastResetKeyRef.current = resetKey;
+    }
   }, [resetKey]);
 
   const onPageIndexChangeRef = React.useRef(onPageIndexChange);
@@ -358,13 +369,37 @@ export function DataTable<TData extends RowData>({
     },
   });
 
-  // Keep the page in range when refreshes or deletions shrink the list.
+  // Keep the page in range when refreshes or deletions shrink the list. Not before the saved view
+  // loads: the restored page may only exist at the saved page size.
   const pageCount = table.getPageCount();
   React.useEffect(() => {
+    if (!isTableViewLoaded) return;
     if (pagination.pageIndex > 0 && pagination.pageIndex >= pageCount) {
       setPagination((previous) => ({ ...previous, pageIndex: Math.max(0, pageCount - 1) }));
     }
-  }, [pageCount, pagination.pageIndex]);
+  }, [isTableViewLoaded, pageCount, pagination.pageIndex]);
+
+  React.useEffect(() => {
+    const pending = pendingRowFocusRef.current;
+    if (!pending) return;
+    // Wait for the page the folder opens on (clamped like the page itself).
+    if (pagination.pageIndex !== Math.min(pending.pageIndex, Math.max(0, pageCount - 1))) return;
+    pendingRowFocusRef.current = null;
+    // Focus the user put somewhere else, such as the folder tree, stays there.
+    const active = document.activeElement;
+    if (active && active !== document.body) return;
+    const rows = Array.from(
+      tableFrameRef.current?.querySelectorAll<HTMLElement>('tbody tr[data-row-id]') ?? [],
+    );
+    const previous = rows.find((row) => row.dataset.rowId === pending.rowId);
+    for (const row of previous ? [previous, ...rows] : rows) {
+      const target = getTableRowFocusTarget(row);
+      if (target) {
+        target.focus();
+        return;
+      }
+    }
+  });
 
   // Selection is keyed by bookmark ID and belongs to the rows the table can show: the current
   // folder, or every bookmark while filters search all of them. A refresh keeps selected rows that
@@ -382,19 +417,18 @@ export function DataTable<TData extends RowData>({
       return Object.fromEntries(keptIds.map((id) => [id, true]));
     });
   }, [displayedRowsById]);
-  const selectedRows = Object.keys(rowSelection)
-    .filter((id) => rowSelection[id])
-    .map((id) => displayedRowsById.get(id))
-    .filter((row): row is TData => row !== undefined);
   // Bulk actions only touch selected rows the current filters show (on any page), matching the
   // footer count; selected rows hidden by a filter are reported but never moved or deleted.
-  const filteredRows = table.getFilteredRowModel().rows;
+  // Visible rows come in display order (filtered and sorted), so a bulk move keeps the order the
+  // user sees; object keys would put numeric bookmark IDs in ascending order instead.
+  const shownRows = table.getPrePaginatedRowModel().rows;
+  const shownRowIds = new Set(shownRows.map((row) => row.id));
+  const selectedRows = [
+    ...shownRows.map((row) => row.original),
+    ...displayedData.filter((row) => !shownRowIds.has(getRowId(row))),
+  ].filter((row) => rowSelection[getRowId(row)]);
   const { visible: visibleSelectedRows, hiddenCount: hiddenSelectedCount } =
-    partitionSelectionByVisibility(
-      selectedRows,
-      new Set(filteredRows.map((row) => row.id)),
-      getRowId,
-    );
+    partitionSelectionByVisibility(selectedRows, shownRowIds, getRowId);
   const clearSelection = React.useCallback(() => setRowSelection({}), []);
 
   return (
@@ -409,6 +443,7 @@ export function DataTable<TData extends RowData>({
         browserOrder={browserOrder}
         onBrowserOrderChange={handleBrowserOrderChange}
         spaceHiddenColumnIds={spaceHiddenColumnIds}
+        columnVisibilityPreference={columnVisibility}
         savedSearches={
           savedSearchContext
             ? { currentQuery: currentSavedSearchQuery, onApply: applySavedSearch }
@@ -456,6 +491,7 @@ export function DataTable<TData extends RowData>({
                   return (
                     <TableRow
                       key={row.id}
+                      data-row-id={row.id}
                       data-state={row.getIsSelected() && 'selected'}
                       className={rowClassName?.(row.original)}
                       tabIndex={activatable ? 0 : undefined}

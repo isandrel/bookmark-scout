@@ -42,7 +42,8 @@ export function DataTablePagination<TData extends RowData>({
         <div className="flex min-w-[100px] items-center justify-center whitespace-nowrap text-sm font-medium">
           {t('table_pageOf', [
             String(table.state.pagination.pageIndex + 1),
-            String(table.getPageCount()),
+            // An empty list still shows its one (empty) page, not "Page 1 of 0".
+            String(Math.max(1, table.getPageCount())),
           ])}
         </div>
         <div className="flex items-center space-x-2">

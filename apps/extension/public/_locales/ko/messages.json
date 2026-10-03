@@ -965,6 +965,14 @@
         "message": "URL을 입력하세요.",
         "description": "Validation message when a link URL is empty"
     },
+    "bookmarks_editUrlInvalid": {
+        "message": "https://example.com/처럼 스킴을 포함한 전체 URL을 입력하세요.",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "폴더 이름을 입력하세요.",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
     "bookmarks_openFailed": {
         "message": "북마크를 열 수 없습니다",
         "description": "Toast shown when a bookmark cannot be opened"
@@ -2872,6 +2880,10 @@
     "toast_itemsRestoredDesc": {
         "message": "$1개 항목을 복원했습니다.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "변경되었거나 이미 삭제되어 건너뜀: $1개. 실패: $2개.",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
     },
     "bookmarks_deleteItems": {
         "message": "$1개 항목 삭제",

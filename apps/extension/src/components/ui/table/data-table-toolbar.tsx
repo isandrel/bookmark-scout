@@ -22,6 +22,8 @@ interface DataTableToolbarProps<TData extends RowData> {
   onBrowserOrderChange: (enabled: boolean) => void;
   /** Columns hidden because the table is too narrow. */
   spaceHiddenColumnIds?: string[];
+  /** Column visibility the user chose, which columns hidden for space keep. */
+  columnVisibilityPreference?: Record<string, boolean>;
   /** Shows the saved searches menu. */
   savedSearches?: {
     currentQuery: SavedSearchQuery;
@@ -53,6 +55,7 @@ export function DataTableToolbar<TData extends RowData>({
   browserOrder,
   onBrowserOrderChange,
   spaceHiddenColumnIds,
+  columnVisibilityPreference,
   savedSearches,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.state.columnFilters.length > 0;
@@ -191,6 +194,7 @@ export function DataTableToolbar<TData extends RowData>({
         table={table}
         onResetView={onResetView}
         spaceHiddenColumnIds={spaceHiddenColumnIds}
+        columnVisibilityPreference={columnVisibilityPreference}
       />
     </div>
   );
