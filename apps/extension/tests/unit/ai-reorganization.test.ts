@@ -14,14 +14,12 @@ import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 const mocks = vi.hoisted(() => ({
-  generateObject: vi.fn(),
-  createAIModel: vi.fn(() => ({})),
+  generateAIObject: vi.fn(),
   validateAISettings: vi.fn(),
 }));
 
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: mocks.createAIModel,
+  generateAIObject: mocks.generateAIObject,
   validateAISettings: mocks.validateAISettings,
 }));
 vi.mock('@/lib/logger', () => ({
@@ -125,12 +123,12 @@ describe('AI reorganization safety settings', () => {
     await expect(
       generateReorganizationPlan(bookmarkTree, { ...aiSettings, enabled: false }),
     ).rejects.toThrow('AI features are disabled');
-    expect(mocks.generateObject).not.toHaveBeenCalled();
+    expect(mocks.generateAIObject).not.toHaveBeenCalled();
   });
 
   it('batches synthetic provider requests, filters low-confidence moves, and never mutates during preview', async () => {
     const bookmarks = installFakeBookmarks([]);
-    mocks.generateObject
+    mocks.generateAIObject
       .mockResolvedValueOnce({
         object: {
           operations: [
@@ -153,8 +151,8 @@ describe('AI reorganization safety settings', () => {
       batchSize: 2,
     });
 
-    expect(mocks.generateObject).toHaveBeenCalledTimes(2);
-    const requestSizes = mocks.generateObject.mock.calls.map(([request]) => {
+    expect(mocks.generateAIObject).toHaveBeenCalledTimes(2);
+    const requestSizes = mocks.generateAIObject.mock.calls.map(([request]) => {
       return JSON.parse(request.prompt).bookmarks.length;
     });
     expect(requestSizes).toEqual([2, 1]);
@@ -183,7 +181,7 @@ describe('AI reorganization safety settings', () => {
 
 describe('planning target folders', () => {
   it('keeps existing targets, plans missing folders under the deepest existing one, and drops no-op moves', async () => {
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         operations: [
           suggest('b1', 'Bookmarks Bar/Target'),
@@ -241,7 +239,7 @@ describe('planning target folders', () => {
   });
 
   it('creates new categories inside the folder a folder-scoped run covers', async () => {
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: { operations: [suggest('b1', 'Ideas'), suggest('b2', 'Source')], summary: '' },
     });
 

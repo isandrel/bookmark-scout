@@ -1,7 +1,7 @@
-import { generateObject } from 'ai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { z } from 'zod';
 import { SETTING_NUMBER_BOUNDS } from '@/lib/settings-schema';
+import { generateAIObject } from '@/services/ai-client';
 import {
   createRecommendedFolderBookmark,
   type RecommendedFolderError,
@@ -18,9 +18,8 @@ vi.mock('@/services/bookmarks', async (importOriginal) => ({
   deleteBookmark: vi.fn(),
   getBookmarkChildren: vi.fn(),
 }));
-vi.mock('ai', () => ({ generateObject: vi.fn() }));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: vi.fn(() => ({})),
+  generateAIObject: vi.fn(),
   validateAISettings: vi.fn(),
 }));
 
@@ -65,13 +64,14 @@ describe('[mocked provider contract] folder recommendations', () => {
     }));
 
   it.each([1, 3, 7, 10])('asks for and accepts %i recommendations', async (count) => {
-    vi.mocked(generateObject).mockResolvedValue({
+    vi.mocked(generateAIObject).mockResolvedValue({
       object: { recommendations: suggestions(count) },
     } as never);
 
     const result = await recommendFolders(bookmark, folders, settings, count);
 
-    const [request] = vi.mocked(generateObject).mock.lastCall ?? [];
+    const [request] = vi.mocked(generateAIObject).mock.lastCall ?? [];
+    expect(request).toMatchObject({ settings, source: 'folderRecommendation' });
     const { schema, system } = request as unknown as { schema: z.ZodType; system: string };
     expect(schema.safeParse({ recommendations: suggestions(count) }).success).toBe(true);
     expect(system).toContain(`Return exactly ${count} folder recommendations`);
@@ -83,13 +83,13 @@ describe('[mocked provider contract] folder recommendations', () => {
 
   it('accepts more suggestions than the largest setting and keeps the requested count', async () => {
     const extra = SETTING_NUMBER_BOUNDS.aiMaxRecommendations.max + 2;
-    vi.mocked(generateObject).mockResolvedValue({
+    vi.mocked(generateAIObject).mockResolvedValue({
       object: { recommendations: suggestions(extra) },
     } as never);
 
     const result = await recommendFolders(bookmark, folders, settings, 3);
 
-    const [request] = vi.mocked(generateObject).mock.lastCall ?? [];
+    const [request] = vi.mocked(generateAIObject).mock.lastCall ?? [];
     const { schema } = request as unknown as { schema: z.ZodType };
     // A provider that ignores the count once failed the whole request.
     expect(schema.safeParse({ recommendations: suggestions(extra) }).success).toBe(true);

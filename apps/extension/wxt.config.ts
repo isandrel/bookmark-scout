@@ -10,8 +10,18 @@ export default defineConfig({
     outDir: 'dist',
 
     // WXT already scans components/, composables/, hooks/, and utils/ (top level only).
+    // `*.lazy.ts(x)` files are loaded on first use with import(); an auto-import would make them
+    // static and put them (the AI SDK, for one) in the chunk every page loads.
     imports: {
-        dirs: ['components/**', 'lib', 'services', 'stores', '!**/index.ts'],
+        dirs: [
+            'components/**',
+            'lib',
+            'services',
+            'stores',
+            '!**/index.ts',
+            '!**/*.lazy.ts',
+            '!**/*.lazy.tsx',
+        ],
     },
 
     // Per-browser keys (permissions, the Firefox add-on ID and data collection declaration) live

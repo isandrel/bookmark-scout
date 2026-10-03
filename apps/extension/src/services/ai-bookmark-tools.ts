@@ -1,8 +1,5 @@
-import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
-
-type CompatibleModel = Parameters<typeof generateObject>[0]['model'];
 
 export type AIContextFormat = 'markdown' | 'xml';
 
@@ -101,13 +98,13 @@ async function generateForBookmarks<
   }
 
   const items = await addPageText(request.inputs, request.readPages);
-  const model = createAIModel(request.settings, request.source) as CompatibleModel;
   const { system } = await buildPrompt(request.task, request.promptSettings, {
     hasPageText: items.some((item) => item.pageText),
   });
 
-  const { object } = await generateObject({
-    model,
+  const { object } = await generateAIObject({
+    settings: request.settings,
+    source: request.source,
     schema: request.schema,
     system,
     prompt: JSON.stringify({ bookmarks: items }),

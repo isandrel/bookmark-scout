@@ -3,12 +3,11 @@ import type { BookmarkTreeNode } from '@/types';
 import type { AISettings } from '@/services/ai-client';
 
 const mocks = vi.hoisted(() => ({
-  generateObject: vi.fn(),
+  generateAIObject: vi.fn(),
 }));
 
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
 vi.mock('@/services/ai-client', () => ({
-  createAIModel: vi.fn(() => ({})),
+  generateAIObject: mocks.generateAIObject,
   validateAISettings: vi.fn(),
 }));
 
@@ -34,15 +33,15 @@ const nodes: BookmarkTreeNode[] = [
 
 describe('AI tool prompt settings (mocked provider contract)', () => {
   beforeEach(() => {
-    mocks.generateObject.mockReset();
-    mocks.generateObject.mockResolvedValue({ object: { items: [] } });
+    mocks.generateAIObject.mockReset();
+    mocks.generateAIObject.mockResolvedValue({ object: { items: [] } });
   });
 
   it('puts the saved tag count and tag style into the auto-tagging prompt', async () => {
     await suggestBookmarkTags(nodes, settings, { minTags: 1, maxTags: 3, tagStyle: 'snake_case' });
     await suggestBookmarkTags(nodes, settings, { minTags: 4, maxTags: 8, tagStyle: 'kebab-case' });
 
-    const [first, second] = mocks.generateObject.mock.calls.map(([request]) => request.system);
+    const [first, second] = mocks.generateAIObject.mock.calls.map(([request]) => request.system);
     expect(first).toContain('Suggest 1-3 tags per bookmark');
     expect(first).toContain('Write every tag in snake_case style');
     expect(second).toContain('Suggest 4-8 tags per bookmark');
@@ -54,7 +53,7 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
     await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 60, includeDomainHint: false });
     await summarizeBookmarksWithAI(nodes, settings, { summaryLength: 400, includeDomainHint: false });
 
-    const [first, second] = mocks.generateObject.mock.calls.map(([request]) => request.system);
+    const [first, second] = mocks.generateAIObject.mock.calls.map(([request]) => request.system);
     expect(first).toContain('Keep summary under 60 characters');
     expect(second).toContain('Keep summary under 400 characters');
     expect(first).not.toContain('{{');
@@ -67,7 +66,7 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
       confidence: 0.9,
       reason: 'Fixture',
     });
-    mocks.generateObject.mockResolvedValue({
+    mocks.generateAIObject.mockResolvedValue({
       object: {
         recommendations: [recommendation('Research'), recommendation('Other'), recommendation('Third')],
       },
@@ -80,7 +79,7 @@ describe('AI tool prompt settings (mocked provider contract)', () => {
       2,
     );
 
-    expect(mocks.generateObject.mock.calls[0][0].system).toContain(
+    expect(mocks.generateAIObject.mock.calls[0][0].system).toContain(
       'Return exactly 2 folder recommendations',
     );
     expect(result.map((item) => item.folderPath)).toEqual(['Research', 'Other']);
