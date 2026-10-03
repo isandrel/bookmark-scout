@@ -1,3 +1,4 @@
+import { APICallError } from 'ai';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
@@ -23,7 +24,11 @@ const mocks = vi.hoisted(() => ({
   createAIModel: vi.fn(() => ({ provider: 'synthetic' })),
   validateAISettings: vi.fn(),
 }));
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
+// The SDK's error classes stay real, so AI errors are described as users see them.
+vi.mock('ai', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('ai')>()),
+  generateObject: mocks.generateObject,
+}));
 vi.mock('@/services/ai-client', () => ({
   createAIModel: mocks.createAIModel,
   validateAISettings: mocks.validateAISettings,
@@ -166,6 +171,7 @@ describe('duplicates', () => {
       // The partial outcome stays readable without its Undo.
       expect(run.getState().notice).toEqual({
         message: 'Removed: 1. Skipped because they changed or were already removed: 1. Failed: 0.',
+        notes: [],
         canUndo: false,
       });
       expect(undoToast.dismiss).toHaveBeenCalledOnce();
@@ -391,14 +397,11 @@ describe('AI tools', () => {
   });
 
   it('[mocked provider contract] reorganization shows its review while scanning and moves on apply', async () => {
-    installFakeBookmarks([
+    bookmarks = installFakeBookmarks([
       { id: 'bar', title: 'Bar' },
       { id: 'work', parentId: 'bar', title: 'Work' },
       { id: 'b1', parentId: 'bar', title: 'Report', url: 'https://e2e.invalid/report' },
     ]);
-    const move = vi
-      .spyOn(fakeBrowser.bookmarks, 'move')
-      .mockImplementation(async (id) => ({ id, title: '' }) as Browser.bookmarks.BookmarkTreeNode);
     tree = await readTree();
     settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
     mocks.generateObject.mockResolvedValue({
@@ -422,9 +425,108 @@ describe('AI tools', () => {
     expect(run.getState()).toMatchObject({ phase: 'review', open: true });
 
     await run.apply();
-    expect(move).toHaveBeenCalledWith('b1', { parentId: 'work' });
-    expect(notices[0].outcome.title).toBe('Reorganization Complete');
+    expect(bookmarks.childIds('work')).toEqual(['b1']);
+    expect(notices[0].outcome).toMatchObject({
+      title: 'Reorganization Complete',
+      description: 'Moved: 1. New folders: 0.',
+      variant: 'success',
+    });
     expect(run.getState()).toMatchObject({ phase: 'done', open: false });
+
+    await notices[0].undo?.run();
+    expect(bookmarks.childIds('bar')).toEqual(['work', 'b1']);
+  });
+
+  it('[mocked provider contract] reorganization keeps a partial outcome in the review without asking the AI again', async () => {
+    bookmarks = installFakeBookmarks([
+      { id: 'bar', title: 'Bar' },
+      { id: 'other', title: 'Other' },
+      { id: 'b1', parentId: 'bar', title: 'Report', url: 'https://e2e.invalid/report' },
+      { id: 'b2', parentId: 'bar', title: 'Recipe', url: 'https://e2e.invalid/recipe' },
+    ]);
+    tree = await readTree();
+    settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
+    mocks.generateObject.mockResolvedValue({
+      object: {
+        operations: [
+          {
+            bookmarkId: 'b1',
+            bookmarkTitle: 'Report',
+            toFolderPath: 'Bar/Work',
+            confidence: 0.9,
+            reason: 'w',
+          },
+          {
+            bookmarkId: 'b2',
+            bookmarkTitle: 'Recipe',
+            toFolderPath: 'Bar/Food',
+            confidence: 0.9,
+            reason: 'f',
+          },
+        ],
+        summary: 'Two new folders',
+      },
+    });
+    const run = createToolRun(TOOL_DEFINITIONS.reorganization, deps());
+    await run.run('all');
+    const plan = run.getState().result;
+    // The user moves one bookmark elsewhere after the preview.
+    await fakeBrowser.bookmarks.move('b2', { parentId: 'other' });
+
+    await run.apply();
+    expect(mocks.generateObject).toHaveBeenCalledOnce();
+    const workId = bookmarks.childIds('bar').find((id) => bookmarks.get(id)?.title === 'Work');
+    expect(workId && bookmarks.childIds(workId)).toEqual(['b1']);
+    expect(bookmarks.childIds('other')).toEqual(['b2']);
+    expect(run.getState()).toMatchObject({
+      phase: 'review',
+      open: true,
+      result: plan,
+      notice: {
+        message:
+          'Moved: 1. New folders: 1. Skipped because they changed after the preview: 1. Failed: 0.',
+        notes: ['Recipe: changed after the preview; left where it is'],
+        canUndo: true,
+      },
+    });
+    expect(notices[0].outcome).toMatchObject({
+      title: 'Some moves were not applied',
+      variant: 'destructive',
+    });
+
+    await run.undo();
+    expect(bookmarks.childIds('bar')).toEqual(['b1']);
+    expect(run.getState().notice).toBeNull();
+    expect(mocks.generateObject).toHaveBeenCalledOnce();
+    expect(notices[1].outcome).toMatchObject({
+      title: 'Reorganization undone',
+      description: 'Moved back: 1. Could not move back: 0.',
+    });
+  });
+
+  it('[mocked provider contract] describes a provider rejection in the toast instead of raw SDK text', async () => {
+    settings = { ...settings, aiEnabled: true };
+    mocks.generateObject.mockRejectedValue(
+      new APICallError({
+        message: 'HTTP 401 raw provider text',
+        url: 'https://provider.invalid/v1/chat/completions',
+        requestBodyValues: {},
+        statusCode: 401,
+      }),
+    );
+    const run = createToolRun(TOOL_DEFINITIONS.summarizer, deps());
+    await run.run('folder');
+    expect(notices[0].outcome).toEqual({
+      title: 'Tool failed',
+      description: 'The provider rejected the API key. Check that it is correct and still active.',
+      variant: 'destructive',
+    });
+
+    const reorganization = createToolRun(TOOL_DEFINITIONS.reorganization, deps());
+    await reorganization.run('all');
+    expect(reorganization.getState().errors).toEqual([
+      'The provider rejected the API key. Check that it is correct and still active.',
+    ]);
   });
 
   it('shows reorganization failures inside the review instead of a toast', async () => {

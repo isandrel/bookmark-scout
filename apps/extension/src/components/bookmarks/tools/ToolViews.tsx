@@ -84,7 +84,7 @@ export const TOOL_REVIEWS: {
       />
     </ReviewDialog>
   ),
-  reorganization: ({ state, apply, close, environment }) => (
+  reorganization: ({ state, apply, undo, close, environment }) => (
     <ReorganizationDialog
       open={state.open}
       onOpenChange={(open) => {
@@ -93,6 +93,8 @@ export const TOOL_REVIEWS: {
       plan={state.result}
       isLoading={state.phase === 'scanning'}
       errors={state.errors}
+      notice={state.notice}
+      onUndo={undo}
       onApply={() => apply()}
       onCancel={close}
       bookmarksBarTitle={findBookmarksBarFolder(environment.folders)?.title}

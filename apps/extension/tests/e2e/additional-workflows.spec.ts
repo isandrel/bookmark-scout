@@ -342,9 +342,14 @@ test('[mocked provider contract] summarizer surfaces a route-mocked provider err
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Content Summarizer').getByRole('button', { name: 'Analyze' }).click();
   await expect(toastRegion(page).getByText('× Tool failed', { exact: true })).toBeVisible();
+  // The provider's raw text is replaced by a localized, actionable message.
   await expect(
-    toastRegion(page).getByText('Synthetic provider rejected the key', { exact: true }),
+    toastRegion(page).getByText(
+      'The provider rejected the API key. Check that it is correct and still active.',
+      { exact: true },
+    ),
   ).toBeVisible();
+  await expect(toastRegion(page).getByText('Synthetic provider rejected the key')).toHaveCount(0);
   await expect(page.getByRole('dialog', { name: 'Content Summarizer' })).toHaveCount(0);
   expect(providerCalls).toBe(1);
 });
@@ -490,4 +495,94 @@ test('network tools report route-mocked transport failures without mutating book
     return chrome.bookmarks.getChildren(id);
   }, folderId);
   expect(storedBookmark.title).toBe('Offline Original');
+});
+
+test('[mocked provider contract] reorganization creates suggested folders, skips moves made stale, and undoes the rest', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folderId = await seedFolder(extensionWorker, 'E2E Reorg', [
+    { title: 'Quarterly Report', url: 'https://e2e.invalid/report' },
+    { title: 'Pasta Recipe', url: 'https://e2e.invalid/recipe' },
+  ]);
+  const elsewhereId = await seedFolder(extensionWorker, 'E2E Reorg Elsewhere', []);
+  const children = (id: string) =>
+    extensionWorker.evaluate(
+      async (parentId) => (await chrome.bookmarks.getChildren(parentId)).map((item) => item.title),
+      id,
+    );
+  const [report, recipe] = await extensionWorker.evaluate(
+    async (id) => chrome.bookmarks.getChildren(id),
+    folderId,
+  );
+  await useMockCustomProvider(extensionWorker);
+  await setSettings(extensionWorker, {
+    reorganizationEnabled: true,
+    reorganizationDryRunFirst: true,
+    reorganizationMinConfidence: 0.5,
+  });
+  await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {
+    if (route.request().method() === 'OPTIONS') {
+      await route.fulfill({ status: 204, headers: MOCK_PROVIDER_CORS_HEADERS });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      headers: MOCK_PROVIDER_CORS_HEADERS,
+      body: mockChatCompletionBody({
+        operations: [
+          {
+            bookmarkId: report.id,
+            bookmarkTitle: report.title,
+            toFolderPath: 'E2E Reorg/Work',
+            confidence: 0.9,
+            reason: 'Work document',
+          },
+          {
+            bookmarkId: recipe.id,
+            bookmarkTitle: recipe.title,
+            toFolderPath: 'E2E Reorg/Food',
+            confidence: 0.9,
+            reason: 'Cooking',
+          },
+        ],
+        summary: 'Split work and food',
+      }),
+    });
+  });
+
+  await openTools(page, extensionId, folderId);
+  await toolCard(page, 'AI Folder Reorganization').getByRole('button', { name: 'Analyze' }).click();
+  const dialog = page.getByRole('dialog', { name: 'AI Folder Reorganization' });
+  await expect(dialog.getByText('New folders: 2', { exact: true })).toBeVisible();
+  // The user files one bookmark elsewhere after the preview.
+  await extensionWorker.evaluate(
+    async ({ id, parentId }) => chrome.bookmarks.move(id, { parentId }),
+    { id: recipe.id, parentId: elsewhereId },
+  );
+  await dialog.getByRole('button', { name: 'Apply Changes' }).click();
+
+  const result = dialog.getByTestId('reorganization-result');
+  await expect(result).toContainText(
+    'Moved: 1. New folders: 1. Skipped because they changed after the preview: 1. Failed: 0.',
+  );
+  await expect(result.getByRole('listitem')).toHaveText([
+    'Pasta Recipe: changed after the preview; left where it is',
+  ]);
+  await expect(
+    toastRegion(page).getByText('× Some moves were not applied', { exact: true }),
+  ).toBeVisible();
+  await expect(dialog.getByRole('button', { name: 'Apply Changes' })).toHaveCount(0);
+  expect(await children(folderId)).toEqual(['Work']);
+  expect(await children(elsewhereId)).toEqual(['Pasta Recipe']);
+
+  await dialog.getByRole('button', { name: 'Undo' }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(
+    toastRegion(page).getByText('✓ Reorganization undone', { exact: true }),
+  ).toBeVisible();
+  await expect.poll(() => children(folderId)).toEqual(['Quarterly Report']);
+  expect(await children(elsewhereId)).toEqual(['Pasta Recipe']);
 });

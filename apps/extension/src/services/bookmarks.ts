@@ -454,21 +454,36 @@ export async function getLiveBookmark(
 /** The bookmark fields a reviewed change compares or writes. */
 export type BookmarkFields = { title?: string; url?: string };
 
+/** Values a reviewed change expects the live bookmark to still have, including its folder. */
+export type BookmarkExpectation = BookmarkFields & { parentId?: string };
+
+/** Where a reviewed move goes: an existing folder, or folders found or created inside it. */
+export type BookmarkMoveTarget = {
+  /** An existing folder. */
+  parentId: string;
+  /**
+   * Folder titles under `parentId`, outermost first. Each is reused when a folder with that title
+   * is already there and created otherwise; created folders are removed again by undo.
+   */
+  createPath?: readonly string[];
+};
+
 /**
  * One change a tool proposed and the user reviewed. Right before it is written, the live
  * bookmark is read again: if it no longer exists, differs from `expect`, or fails `check`, the
- * change is skipped, so a stale review never overwrites or deletes a newer edit.
+ * change is skipped, so a stale review never overwrites, moves, or deletes a newer edit.
  */
 export type BookmarkChange = {
   id: string;
   /** The title the user reviewed, reported back in `issues`. */
   title: string;
   /** Values the live bookmark must still have. */
-  expect?: BookmarkFields;
+  expect?: BookmarkExpectation;
   /** Any further condition on the live bookmark (with its subtree), such as a duplicate key. */
   check?: (live: Browser.bookmarks.BookmarkTreeNode) => boolean;
 } & (
   | { kind: 'update'; set: BookmarkFields }
+  | { kind: 'move'; to: BookmarkMoveTarget }
   | {
       kind: 'remove';
       /** Keep a snapshot so undo can recreate it; on by default. */
@@ -495,20 +510,26 @@ export type BookmarkChangesResult = {
   issues: BookmarkChangeIssue[];
   /** Snapshots of the removed bookmarks, in removal order; `undo` restores them. */
   deletions: BookmarkDeletionSnapshot[];
+  /** Folders created for moves (see `BookmarkMoveTarget.createPath`). */
+  foldersCreated: number;
   /** After this time (epoch milliseconds) removed bookmarks can no longer be restored. */
   expiresAt: number;
   /**
    * Reverts what was applied, once: updates first (newest first), each only while the bookmark
-   * still has the written values, then removals (newest first, so captured sibling positions
-   * stay valid). A later call returns the first call's result.
+   * still has the written values; then moves (newest first), each only while the bookmark is
+   * still in the folder it was moved to; then created folders that are still empty; then
+   * removals (newest first, so captured sibling positions stay valid). A later call returns the
+   * first call's result.
    */
   undo(): Promise<BookmarkChangesUndoResult>;
 };
 
 type AppliedUpdate = { id: string; previous: BookmarkFields; written: BookmarkFields };
 
-function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkFields = {}) {
-  return (Object.keys(fields) as (keyof BookmarkFields)[]).every(
+type AppliedMove = { id: string; from: { parentId: string; index?: number }; to: string };
+
+function matchesFields(node: Browser.bookmarks.BookmarkTreeNode, fields: BookmarkExpectation = {}) {
+  return (Object.keys(fields) as (keyof BookmarkExpectation)[]).every(
     (field) => fields[field] === undefined || node[field] === fields[field],
   );
 }
@@ -554,6 +575,60 @@ async function revertUpdates(updates: readonly AppliedUpdate[]): Promise<Bookmar
   return result;
 }
 
+async function revertMoves(moves: readonly AppliedMove[]): Promise<BookmarkChangesUndoResult> {
+  const result: BookmarkChangesUndoResult = { restored: 0, failed: 0 };
+  for (const move of [...moves].reverse()) {
+    const live = await getLiveBookmark(move.id);
+    // A bookmark moved again since is left where the user put it.
+    if (live?.parentId !== move.to) {
+      result.failed += 1;
+      continue;
+    }
+    try {
+      const siblings = await getBookmarkChildren(move.from.parentId);
+      await moveBookmark(move.id, {
+        parentId: move.from.parentId,
+        ...(typeof move.from.index === 'number'
+          ? { index: Math.min(move.from.index, siblings.length) }
+          : {}),
+      });
+      result.restored += 1;
+    } catch {
+      result.failed += 1;
+    }
+  }
+  return result;
+}
+
+/** Removes created folders newest first, only while nothing was put in them since. */
+async function removeCreatedFolders(ids: readonly string[]): Promise<void> {
+  for (const id of [...ids].reverse()) {
+    const children = await getBookmarkChildren(id).catch(() => undefined);
+    if (children?.length !== 0) continue;
+    await deleteBookmark(id).catch(() => undefined);
+  }
+}
+
+/**
+ * Finds or creates each folder of a move target and returns the innermost one. Folders created
+ * on the way are added to `created`.
+ */
+async function resolveMoveTarget(target: BookmarkMoveTarget, created: string[]): Promise<string> {
+  let parentId = target.parentId;
+  for (const title of target.createPath ?? []) {
+    const siblings = await getBookmarkChildren(parentId);
+    const existing = siblings.find((sibling) => !sibling.url && sibling.title === title);
+    if (existing) {
+      parentId = existing.id;
+      continue;
+    }
+    const folder = await createBookmark({ parentId, title });
+    created.push(folder.id);
+    parentId = folder.id;
+  }
+  return parentId;
+}
+
 /**
  * Writes reviewed changes one by one, in order, re-checking each against the live bookmark
  * first. Every change is attempted; a skipped or failed one never stops the rest.
@@ -565,6 +640,10 @@ export async function applyBookmarkChanges(
   const issues: BookmarkChangeIssue[] = [];
   const deletions: BookmarkDeletionSnapshot[] = [];
   const updates: AppliedUpdate[] = [];
+  const moves: AppliedMove[] = [];
+  const createdFolders: string[] = [];
+  // Moves that share a target find or create its folders once.
+  const moveTargets = new Map<string, Promise<string>>();
   let applied = 0;
 
   for (const change of changes) {
@@ -578,6 +657,21 @@ export async function applyBookmarkChanges(
         const previous = pickFields(live, change.set);
         await updateBookmark(change.id, change.set);
         updates.push({ id: change.id, previous, written: change.set });
+      } else if (change.kind === 'move') {
+        if (!live.parentId) throw new Error(t('error_bookmarkNoParent'));
+        const key = JSON.stringify([change.to.parentId, ...(change.to.createPath ?? [])]);
+        let target = moveTargets.get(key);
+        if (!target) {
+          target = resolveMoveTarget(change.to, createdFolders);
+          moveTargets.set(key, target);
+        }
+        const parentId = await target;
+        await moveBookmark(change.id, { parentId });
+        moves.push({
+          id: change.id,
+          from: { parentId: live.parentId, index: live.index },
+          to: parentId,
+        });
       } else if (change.undoable === false) {
         await deleteBookmark(change.id);
       } else {
@@ -595,10 +689,12 @@ export async function applyBookmarkChanges(
   const undo = () => {
     undone ??= (async () => {
       const reverted = await revertUpdates(updates);
+      const movedBack = await revertMoves(moves);
+      await removeCreatedFolders(createdFolders);
       const restored = await restoreBookmarkDeletions(deletions);
       return {
-        restored: reverted.restored + restored.restored,
-        failed: reverted.failed + restored.failed,
+        restored: reverted.restored + movedBack.restored + restored.restored,
+        failed: reverted.failed + movedBack.failed + restored.failed,
       };
     })();
     return undone;
@@ -610,6 +706,7 @@ export async function applyBookmarkChanges(
     failed: issues.filter((issue) => issue.reason === 'failed').length,
     issues,
     deletions,
+    foldersCreated: createdFolders.length,
     expiresAt: Math.min(
       now + BOOKMARK_DELETION_UNDO_WINDOW_MS,
       ...deletions.map((deletion) => deletion.expiresAt),

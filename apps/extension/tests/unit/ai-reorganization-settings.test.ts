@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import type { BookmarkTreeNode } from '@/types';
 import type { AISettings } from '@/services/ai-client';
+import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({
   generateObject: vi.fn(),
@@ -54,5 +54,22 @@ describe('AI reorganization folder limit settings', () => {
     await saveSettings({ aiMaxCategories: 7 });
     await generateReorganizationPlan(bookmarkTree, aiSettings);
     expect(JSON.parse(mocks.generateObject.mock.calls[1][0].prompt).config.maxCategories).toBe(7);
+  });
+
+  it('leaves unlimited limits out of the prompt and the request instead of sending -1', async () => {
+    await saveSettings({ aiMaxCategories: -1, aiMinItemsPerFolder: 3, aiMaxItemsPerFolder: -1 });
+    await generateReorganizationPlan(bookmarkTree, aiSettings);
+
+    const request = mocks.generateObject.mock.calls[0][0];
+    expect(JSON.parse(request.prompt).config).toEqual({ minItemsPerFolder: 3 });
+    // "-1" on its own, not the "(0-1)" confidence range.
+    expect(request.system).not.toMatch(/(^|[^0-9])-1\b/);
+    expect(request.system).not.toContain('top-level categories');
+    expect(request.system).toContain('Aim for at least 3 bookmarks per folder.');
+
+    // The default minimum of one goes without saying.
+    await saveSettings({ aiMinItemsPerFolder: 1 });
+    await generateReorganizationPlan(bookmarkTree, aiSettings);
+    expect(mocks.generateObject.mock.calls[1][0].system).not.toContain('bookmarks per folder');
   });
 });

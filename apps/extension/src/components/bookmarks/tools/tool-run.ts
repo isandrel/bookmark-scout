@@ -16,8 +16,8 @@ export type ToolRunState<Result> = {
   result: Result | null;
   /** Problems shown inside the review (reorganization). */
   errors: string[];
-  /** A partial apply's outcome, shown above the rescanned review while undo is offered. */
-  notice: { message: string; canUndo: boolean } | null;
+  /** A partial apply's outcome, shown above the review; `canUndo` while undo is offered. */
+  notice: { message: string; notes: string[]; canUndo: boolean } | null;
 };
 
 /** What a run needs from the page; tests pass fakes. */
@@ -135,12 +135,12 @@ export function createToolRun<Result, Selection>(
     for (const listener of listeners) listener();
   };
 
-  const reportFailure = (error: unknown, titleKey: string, fallbackKey?: string) =>
-    deps.notify({
-      title: t(titleKey),
-      description: getErrorMessage(error, fallbackKey),
-      variant: 'destructive',
-    });
+  const reportFailure = (titleKey: string, description: string) =>
+    deps.notify({ title: t(titleKey), description, variant: 'destructive' });
+
+  /** A failed scan as the user reads it: an AI tool's scan is an AI request. */
+  const describeScanError = (error: unknown) =>
+    tool.requiresAI ? describeAIError(error) : getErrorMessage(error, tool.scanFailureKey);
 
   const context = (nodes: BookmarkTreeNode[]): ToolContext => {
     const settings = deps.settings();
@@ -156,7 +156,10 @@ export function createToolRun<Result, Selection>(
       },
       saveFile: (request, write) =>
         deps.saveFile(
-          { ...request, onError: (error) => reportFailure(error, 'toast_toolFailed') },
+          {
+            ...request,
+            onError: (error) => reportFailure('toast_toolFailed', getErrorMessage(error)),
+          },
           write,
         ),
       notify: (outcome) => deps.notify(outcome),
@@ -164,6 +167,9 @@ export function createToolRun<Result, Selection>(
   };
 
   const rescan = async () => tool.scan(context(await deps.freshNodes(scope)));
+  /** The result to review after a change: rescanned, or kept when the tool says so. */
+  const resultAfterChange = async (current: Result) =>
+    tool.keepResultAfterApply ? current : rescan();
 
   /** Wraps an outcome's undo so the review and the toast share one revert until it expires. */
   const offerUndo = (revert: () => Promise<ToolOutcome>, expiresAt?: number) => {
@@ -173,10 +179,13 @@ export function createToolRun<Result, Selection>(
         try {
           const outcome = await revert();
           if (tool.changesBookmarks) await deps.refresh();
-          if (state.open && state.phase === 'review') update({ result: await rescan() });
+          const { open, phase, result } = state;
+          if (open && phase === 'review' && result !== null) {
+            update({ result: await resultAfterChange(result) });
+          }
           deps.notify(outcome);
         } catch (error) {
-          reportFailure(error, 'toast_toolFailed');
+          reportFailure('toast_toolFailed', getErrorMessage(error));
         }
       },
       onEnd: (reason) => {
@@ -211,8 +220,12 @@ export function createToolRun<Result, Selection>(
     if (outcome.keepOpen && state.open) {
       update({
         phase: 'review',
-        result: await rescan(),
-        notice: { message: outcome.description ?? outcome.title, canUndo: Boolean(undo) },
+        result: await resultAfterChange(result),
+        notice: {
+          message: outcome.description ?? outcome.title,
+          notes: outcome.notes ?? [],
+          canUndo: Boolean(undo),
+        },
       });
     } else {
       update({ phase: 'done', open: false, result: null, notice: null });
@@ -229,7 +242,7 @@ export function createToolRun<Result, Selection>(
       return;
     }
     update({ phase: state.open ? 'review' : 'idle' });
-    reportFailure(error, tool.applyFailureTitleKey ?? 'toast_toolFailed');
+    reportFailure(tool.applyFailureTitleKey ?? 'toast_toolFailed', getErrorMessage(error));
   };
 
   return {
@@ -249,11 +262,11 @@ export function createToolRun<Result, Selection>(
         if (tool.reviewWhileScanning) {
           update({
             phase: state.open ? 'review' : 'idle',
-            errors: [getErrorMessage(error, tool.scanFailureKey)],
+            errors: [describeScanError(error)],
           });
         } else {
           update({ phase: 'idle' });
-          reportFailure(error, 'toast_toolFailed', tool.scanFailureKey);
+          reportFailure('toast_toolFailed', describeScanError(error));
         }
         return;
       }
