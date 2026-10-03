@@ -160,7 +160,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 ## Layout
 
-- **Popup** (400x600 by default, adjustable from 300x300 to 800x600): search field, then recent folders as wrapping chips beside their label, then the AI suggestion block when present, then the tree, then the hint bar. 8px gutters. Only the tree scrolls.
+- **Popup** (400x600 by default, adjustable from 300x300 to 800x600): search field, then recent folders as wrapping chips beside their label, then the AI suggestion block when present, then the tree, then the hint bar. 8px gutters. The tree scrolls, and so does the AI suggestion block, which takes at most a share of the height (`config/ui/popup-suggestions.toml`) so the tree and hint bar stay on screen.
 - **Side panel:** the popup layout at full height; the hint bar stays at the bottom.
 - **Manager:** the folder sidebar (256px), the table, and the tools sidebar (320px). Each sidebar collapses with `inert`. Panels are `surface` on `paper`, separated by 1px lines.
 - **Options:** search and a vertical category list on the left (wrapping into rows above the settings below 640px), the settings for the selected category on the right, and a sticky footer holding export, import, reset, and a failed-save message when there is one. Settings save as they change; there is no Save button and no success message. Each row keeps a fixed slot for its reset button, so a control never moves when the button appears or disappears. Whole numbers use a − / value / + stepper that also takes typing and clamps to the range on commit; a slider is used only for fractional values such as a confidence. Related on/off settings appear together as one checklist row with a single reset. Results of an action on the page, such as Refresh Models or Verify Service, show inline under the button that ran it, not as a toast.
@@ -180,13 +180,13 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 ## Components
 
-**`search-field`** (`BookmarkSearch`): sunken fill, Search icon, placeholder in `ink-soft`, and a keycap hint (`/`, which focuses the field) at the end that hides while typing. Option toggles (case, whole word, regex) are 24px ghost icon buttons with `aria-pressed`. Search history opens as a listbox under the field.
+**`search-field`** (`BookmarkSearch`): sunken fill, Search icon, placeholder in `ink-soft`, and a keycap hint (`/`, which focuses the field) at the end that hides while typing. Option toggles (case, whole word, regex) are 24px ghost icon buttons with `aria-pressed`. Search history opens as a listbox under the field on click or `Alt+↓`; a plain `↓` always moves into the tree. The text stops before the option toggles, and when the field is too narrow for the full placeholder it shows a short one and drops the keycap hint.
 
-**`tree-row`** (`FolderItem`, `BookmarkItem`): a 32px row in this order: chevron slot (16px), icon (favicon or folder), title, then a count in metadata type. Hover is `sunken`, keyboard-active is `teal-wash` with a teal icon, and focus-visible adds a 2px teal ring inset. Children indent by the chevron slot plus its gap.
+**`tree-row`** (`FolderItem`, `BookmarkItem`): a 32px row (a bookmark row grows with a larger favicon size so icons never touch) in this order: chevron slot (16px), icon (favicon or folder), title, then a count in metadata type. Hover is `sunken`, keyboard-active is `teal-wash` with a teal icon, and focus-visible adds a 2px teal ring inset. Children indent by the chevron slot plus its gap.
 
 **`row-actions`**: icon buttons (24px) overlaid at the row's end on the row's current fill, shown on hover and focus-within, and never reserving width when hidden. Each one has an `aria-label` and a tooltip.
 
-**`keycap`**: shortcut glyphs in a 20px sunken box with a 1px line. Use the platform's modifier (⌘ on macOS, Ctrl elsewhere). Used in the hint bar, tooltips, and the shortcuts help dialog.
+**`keycap`**: shortcut glyphs in a 20px sunken box with a 1px line. Arrow and Enter keys are drawn as 12px lucide icons (the bundled fonts lack some arrows, which then fell back to a smaller system glyph); the glyph stays as screen-reader text. Use the platform's modifier (⌘ on macOS, Ctrl elsewhere). Used in the hint bar, tooltips, and the shortcuts help dialog.
 
 **`hint-bar`**: the popup footer: `/ search`, `↑↓ navigate`, `←→ close or open folder`, and `↵ open`, or `↵ save here` while a folder row is active. It only shows shortcuts that exist in `use-popup-shortcuts.ts`.
 

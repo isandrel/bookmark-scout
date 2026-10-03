@@ -1,5 +1,6 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
+import { setSettings } from './popup-helpers';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -34,8 +35,8 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
   );
 }
 
-async function configureStubProvider(worker: Worker) {
-  await worker.evaluate(async () => {
+async function configureStubProvider(worker: Worker, settings: Record<string, unknown> = {}) {
+  await worker.evaluate(async (overrides) => {
     await chrome.storage.sync.set({
       'bookmark-scout-settings': {
         aiEnabled: true,
@@ -44,6 +45,7 @@ async function configureStubProvider(worker: Worker) {
         aiMaxRecommendations: 1,
         aiAutoTriggerOnOpen: false,
         recentFoldersEnabled: false,
+        ...overrides,
       },
     });
     await chrome.storage.local.set({
@@ -54,30 +56,45 @@ async function configureStubProvider(worker: Worker) {
         },
       },
     });
-  });
+  }, settings);
 }
 
-async function stubRecommendation(
+type StubRecommendation = {
+  type?: 'new' | 'existing';
+  folderPath: string;
+  parentPath: string;
+  reason: string;
+};
+
+function stubRecommendation(context: BrowserContext, recommendation: StubRecommendation) {
+  return stubRecommendations(context, [recommendation]);
+}
+
+async function stubRecommendations(
   context: BrowserContext,
-  recommendation: {
-    folderPath: string;
-    parentPath: string;
-    reason: string;
-  },
+  recommendations: StubRecommendation[],
+  { status = 200 }: { status?: number } = {},
 ) {
   let requestCount = 0;
   const text = JSON.stringify({
-    recommendations: [
-      {
-        type: 'new',
-        confidence: 0.95,
-        ...recommendation,
-      },
-    ],
+    recommendations: recommendations.map((recommendation) => ({
+      type: 'new',
+      confidence: 0.95,
+      ...recommendation,
+    })),
   });
 
   await context.route('https://e2e.invalid/v1/**', async (route) => {
     requestCount += 1;
+    if (status !== 200) {
+      await route.fulfill({
+        status,
+        contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' },
+        body: JSON.stringify({ error: { message: 'Synthetic provider failure' } }),
+      });
+      return;
+    }
     const url = route.request().url();
     if (url.endsWith('/responses')) {
       await route.fulfill({
@@ -127,6 +144,8 @@ async function openSuggestions(
   context: BrowserContext,
   worker: Worker,
   extensionId: string,
+  /** The popup's size, set in settings and as the viewport, as in the real toolbar popup. */
+  size?: { width: number; height: number },
 ) {
   await context.route('https://current.e2e.invalid/article', (route) =>
     route.fulfill({
@@ -143,6 +162,10 @@ async function openSuggestions(
   if (targetTabId === undefined) throw new Error('Target tab not found');
 
   const popup = await context.newPage();
+  if (size) {
+    await setSettings(worker, { popupWidth: size.width, popupHeight: size.height });
+    await popup.setViewportSize(size);
+  }
   await popup.goto(`chrome-extension://${extensionId}/popup.html`);
   await worker.evaluate((id) => chrome.tabs.update(id, { active: true }), targetTabId);
   await popup.getByTitle('AI folder recommendation').click();
@@ -281,13 +304,7 @@ test('names suggestions without the bookmarks bar and quotes a short page title 
   page,
 }) => {
   await configureStubProvider(extensionWorker);
-  // Each browser and language names the bar differently ("Bookmarks bar", "Favorites bar").
-  const barTitle = await extensionWorker.evaluate(async () => {
-    const [root] = await chrome.bookmarks.getTree();
-    const permanent = root.children ?? [];
-    return (permanent.find((folder) => folder.folderType === 'bookmarks-bar') ?? permanent[0])
-      .title;
-  });
+  const barTitle = await readBarTitle(extensionWorker);
   await stubRecommendation(context, {
     folderPath: `${barTitle}/E2E Bar Suggestion`,
     parentPath: barTitle,
@@ -301,4 +318,214 @@ test('names suggestions without the bookmarks bar and quotes a short page title 
   await expect(popup.getByText(/^AI Suggestions for:/)).toHaveText(
     'AI Suggestions for: E2E AI Current Page',
   );
+});
+
+/** Each browser and language names the bar differently ("Bookmarks bar", "Favorites bar"). */
+function readBarTitle(worker: Worker) {
+  return worker.evaluate(async () => {
+    const [root] = await chrome.bookmarks.getTree();
+    const permanent = root.children ?? [];
+    return (permanent.find((folder) => folder.folderType === 'bookmarks-bar') ?? permanent[0])
+      .title;
+  });
+}
+
+for (const { width, height, count } of [
+  { width: 400, height: 500, count: 10 },
+  { width: 300, height: 300, count: 5 },
+]) {
+  test(`${count} suggestions in a ${width}x${height} popup scroll inside their panel`, async ({
+    context,
+    extensionId,
+    extensionWorker,
+    page,
+  }) => {
+    await configureStubProvider(extensionWorker, { aiMaxRecommendations: count });
+    const barTitle = await readBarTitle(extensionWorker);
+    await stubRecommendations(
+      context,
+      Array.from({ length: count }, (_, index) => ({
+        type: 'existing' as const,
+        // Two digits, so no name is the start of another.
+        folderPath: `${barTitle}/E2E Suggestion ${String(index + 1).padStart(2, '0')}`,
+        parentPath: '',
+        reason: `Layout fixture ${index + 1}`,
+      })),
+    );
+
+    const popup = await openSuggestions(page, context, extensionWorker, extensionId, {
+      width,
+      height,
+    });
+    const last = popup.getByRole('button', {
+      name: `E2E Suggestion ${String(count).padStart(2, '0')}`,
+    });
+    await expect(last).toBeAttached();
+    await popup.mouse.move(0, 0);
+
+    // The tree and key hints keep their room; the suggestions scroll on their own.
+    const hints = popup.getByTestId('popup-hint-bar');
+    await expect(hints).toBeInViewport({ ratio: 1 });
+    await expect(popup.locator('.folder-item').first()).toBeInViewport({ ratio: 1 });
+    await expect(last).not.toBeInViewport();
+    await popup.getByRole('button', { name: 'E2E Suggestion 01' }).hover();
+    await popup.mouse.wheel(0, 2_000);
+    await expect(last).toBeInViewport({ ratio: 1 });
+    await expect(hints).toBeInViewport({ ratio: 1 });
+
+    // The search box placeholder is shown whole, never cut off mid-word.
+    const search = popup.getByRole('combobox', { name: 'Search bookmarks...' });
+    await expect
+      .poll(() =>
+        search.evaluate((input: HTMLInputElement) => {
+          const style = getComputedStyle(input);
+          const context2d = document.createElement('canvas').getContext('2d');
+          if (!context2d) return Number.NaN;
+          context2d.font = style.font;
+          const free =
+            input.clientWidth -
+            Number.parseFloat(style.paddingLeft) -
+            Number.parseFloat(style.paddingRight);
+          return free - context2d.measureText(input.placeholder).width;
+        }),
+      )
+      .toBeGreaterThanOrEqual(0);
+  });
+}
+
+test('reviews a path through a folder whose title contains "/" as separate folders', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const parentId = await seedFolder(extensionWorker, 'E2E Slash Parent', [
+    { title: 'CI/CD', children: [] },
+  ]);
+  await configureStubProvider(extensionWorker);
+  const barTitle = await readBarTitle(extensionWorker);
+  await stubRecommendation(context, {
+    folderPath: `${barTitle}/E2E Slash Parent/CI/CD/Pipelines`,
+    parentPath: '',
+    reason: 'Slash title fixture',
+  });
+
+  const { popup, dialog } = await openReview(
+    page,
+    context,
+    extensionWorker,
+    extensionId,
+    'E2E Slash Parent/CI/CD/Pipelines',
+  );
+  const segments = dialog
+    .getByTestId('recommended-folder-path')
+    .locator('[data-slot=path-segment]');
+  await expect(segments).toHaveText([barTitle, 'E2E Slash Parent', 'CI/CD', /^Pipelines\s*new$/]);
+  await expect(segments.last()).toHaveAttribute('data-new', '');
+  await expect(segments.nth(2)).not.toHaveAttribute('data-new');
+
+  await dialog.getByRole('button', { name: 'Create Folder and Save' }).click();
+  await expect
+    .poll(() => getFolderState(extensionWorker, parentId, ['CI/CD', 'Pipelines']))
+    .toMatchObject({ urls: ['https://current.e2e.invalid/article'] });
+  // No "CI" folder with a "CD" folder inside was made from the title.
+  expect((await getFolderState(extensionWorker, parentId, []))?.childFolders).toEqual(['CI/CD']);
+  const toast = toastRegion(popup);
+  await expect(toast.getByText('✓ Bookmark saved', { exact: true })).toBeVisible();
+  await expect(
+    toast.getByText(
+      `Created or reused "${barTitle} / E2E Slash Parent / CI/CD / Pipelines" and saved the current page.`,
+      { exact: true },
+    ),
+  ).toBeVisible();
+});
+
+test('an earlier toast does not cover the review dialog buttons', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await seedFolder(extensionWorker, 'E2E Toast Target', []);
+  await configureStubProvider(extensionWorker, {
+    aiMaxRecommendations: 2,
+    toastDurationMs: 10_000,
+  });
+  const barTitle = await readBarTitle(extensionWorker);
+  await stubRecommendations(context, [
+    {
+      type: 'existing',
+      folderPath: `${barTitle}/E2E Toast Target`,
+      parentPath: '',
+      reason: 'Existing fixture',
+    },
+    {
+      folderPath: `${barTitle}/E2E Toast Target/Fresh`,
+      parentPath: '',
+      // A long reason makes the dialog as tall as the popup, as with long page titles.
+      reason: 'A long reason for the new folder. '.repeat(8),
+    },
+  ]);
+
+  const popup = await openSuggestions(page, context, extensionWorker, extensionId, {
+    width: 400,
+    height: 500,
+  });
+  // The name ends with the confidence, which tells the two paths apart.
+  const suggestion = (path: string) =>
+    popup.getByRole('button', { name: new RegExp(`^${path}\\s*\\d`) });
+  await suggestion('E2E Toast Target').click();
+  await expect(toastRegion(popup).getByText('✓ Bookmark Added', { exact: true })).toBeVisible();
+
+  await popup.getByTitle('AI folder recommendation').click();
+  await suggestion('E2E Toast Target/Fresh').click();
+  const dialog = popup.getByRole('dialog', { name: 'Review new folder' });
+  await expect(dialog).toBeVisible();
+  // A modal dialog makes the rest of the page ignore the pointer, so hit tests see through the
+  // toast; compare the boxes instead.
+  const overlaps = async () => {
+    const buttons = await Promise.all(
+      ['Create Folder and Save', 'Cancel'].map((name) =>
+        dialog.getByRole('button', { name, exact: true }).boundingBox(),
+      ),
+    );
+    const toasts = await Promise.all(
+      (await toastRegion(popup).getByRole('status', { includeHidden: true }).all()).map((toast) =>
+        toast.boundingBox(),
+      ),
+    );
+    return buttons.flatMap((button) =>
+      toasts.filter(
+        (toast) =>
+          button &&
+          toast &&
+          toast.x < button.x + button.width &&
+          button.x < toast.x + toast.width &&
+          toast.y < button.y + button.height &&
+          button.y < toast.y + toast.height,
+      ),
+    ).length;
+  };
+  // Well before the toast would have timed out on its own.
+  await expect.poll(overlaps, { timeout: 3_000 }).toBe(0);
+});
+
+test('[mocked provider contract] a rejected request explains the error in a failure toast', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await configureStubProvider(extensionWorker);
+  await stubRecommendations(context, [], { status: 401 });
+
+  const popup = await openSuggestions(page, context, extensionWorker, extensionId);
+  const toast = toastRegion(popup);
+  await expect(toast.getByText('× AI Recommendation Failed', { exact: true })).toBeVisible();
+  await expect(
+    toast.getByText(
+      'The provider rejected the API key. Check that it is correct and still active.',
+      { exact: true },
+    ),
+  ).toBeVisible();
 });
