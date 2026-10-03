@@ -263,6 +263,15 @@ body {
   color: hsl(var(--marker-foreground));
 }
 
+/*
+ * Exit animations hold their last frame until Base UI removes the element. With the default fill
+ * mode, a closing dialog backdrop snapped back to full opacity for a frame between the end of its
+ * fade and its removal, which showed as a dark flash.
+ */
+[data-closed] {
+  --tw-animation-fill-mode: forwards;
+}
+
 ::-webkit-scrollbar {
   width: 5px;
 }
