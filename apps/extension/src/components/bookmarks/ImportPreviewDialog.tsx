@@ -6,11 +6,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
-/** Conflicts listed in the preview; the rest are summarized as a count. */
-const MAX_LISTED_CONFLICTS = 50;
-/** Distinct browser error messages shown after a partial import. */
-const MAX_LISTED_ERRORS = 5;
-
 export type ImportPreviewSource = { fileName: string; parsed: ImportResult };
 
 type ImportPreviewDialogProps = {
@@ -44,20 +39,25 @@ function describeOutcome(outcome: ImportApplyOutcome): string {
   ]);
 }
 
+function outcomeTitle(outcome: ImportApplyOutcome): string {
+  if (outcome.failed === 0) return t('toast_importSuccess');
+  return outcome.bookmarksCreated + outcome.foldersCreated === 0
+    ? t('toast_importFailed')
+    : t('toast_importPartial');
+}
+
 export function ImportPreviewDialog({
   source,
   defaultTargetId,
   onClose,
   onChanged,
 }: ImportPreviewDialogProps) {
-  const { toast } = useToast();
   const [tree, setTree] = useState<BookmarkTreeNode[] | null>(null);
   const [targetId, setTargetId] = useState('');
-  const [strategy, setStrategy] = useState<ImportDuplicateStrategy>('skip-anywhere');
+  const [strategy, setStrategy] = useState<ImportDuplicateStrategy>(
+    DEFAULT_IMPORT_DUPLICATE_STRATEGY,
+  );
   const [notice, setNotice] = useState<string | null>(null);
-  const [applying, setApplying] = useState(false);
-  const [result, setResult] = useState<ImportApplyOutcome | null>(null);
-  const [undoHandler, setUndoHandler] = useState<(() => void) | null>(null);
 
   // Each new file starts from a fresh read of the tree and the default target.
   useEffect(() => {
@@ -65,9 +65,7 @@ export function ImportPreviewDialog({
     let cancelled = false;
     setTree(null);
     setNotice(null);
-    setResult(null);
-    setUndoHandler(null);
-    setStrategy('skip-anywhere');
+    setStrategy(DEFAULT_IMPORT_DUPLICATE_STRATEGY);
     fetchBookmarkTree()
       .then((fresh) => {
         if (cancelled) return;
@@ -78,7 +76,7 @@ export function ImportPreviewDialog({
         );
       })
       .catch((error: unknown) => {
-        if (!cancelled) setNotice(error instanceof Error ? error.message : t('error_unknown'));
+        if (!cancelled) setNotice(getErrorMessage(error));
       });
     return () => {
       cancelled = true;
@@ -91,91 +89,60 @@ export function ImportPreviewDialog({
     try {
       return { plan: planImport(source.parsed, tree, targetId, strategy), error: null };
     } catch (error) {
-      return { plan: null, error: error instanceof Error ? error.message : t('error_unknown') };
+      return { plan: null, error: getErrorMessage(error) };
     }
   }, [source, tree, targetId, strategy]);
   const plan = planned?.plan ?? null;
   const targetLabel = targets.find((target) => target.id === targetId)?.label ?? '';
   const plannedItems = plan ? plan.counts.bookmarksToCreate + plan.counts.foldersToCreate : 0;
 
-  const undo = async (outcome: ImportApplyOutcome) => {
-    const { removed, failed } = await undoImport(outcome);
-    await onChanged();
-    toast({
-      title: failed ? t('tools_importUndoPartial') : t('tools_importUndone'),
-      description: t('tools_importUndoneDesc', [String(removed), String(failed)]),
-      variant: failed ? 'destructive' : 'success',
-    });
-  };
-
-  const handleApply = async () => {
-    if (!source || !plan) return;
-    setApplying(true);
+  const apply = async (): Promise<ReviewApplyReport | undefined> => {
+    if (!source || !plan) return undefined;
     setNotice(null);
+    // Re-plan against the live tree so the import never applies a stale preview.
+    const fresh = await fetchBookmarkTree();
+    let freshPlan: ImportPlan;
     try {
-      // Re-plan against the live tree so the import never applies a stale preview.
-      const fresh = await fetchBookmarkTree();
-      let freshPlan: ImportPlan;
-      try {
-        freshPlan = planImport(source.parsed, fresh, plan.targetFolderId, plan.strategy);
-      } catch (error) {
-        setTree(fresh);
-        setNotice(error instanceof Error ? error.message : t('error_unknown'));
-        return;
-      }
-      if (!isSameImportPlan(plan, freshPlan)) {
-        setTree(fresh);
-        setNotice(t('tools_importPreviewChanged'));
-        return;
-      }
-
-      const outcome = await applyImportPlan(freshPlan);
-      await onChanged();
-      const created = outcome.bookmarksCreated + outcome.foldersCreated;
-      // One undo per import, whether triggered from the toast or the dialog.
-      let undoUsed = false;
-      const runUndo = () => {
-        if (undoUsed) return;
-        undoUsed = true;
-        setUndoHandler(null);
-        void undo(outcome);
-      };
-      toast({
-        title:
-          outcome.failed === 0
-            ? t('toast_importSuccess')
-            : created === 0
-              ? t('toast_importFailed')
-              : t('toast_importPartial'),
-        description: describeOutcome(outcome),
-        variant: outcome.failed === 0 ? 'success' : 'destructive',
-        duration: BOOKMARK_DELETION_UNDO_WINDOW_MS,
-        action:
-          outcome.createdRootIds.length > 0 ? (
-            <ToastAction onClick={runUndo}>
-              {t('action_undo')}
-            </ToastAction>
-          ) : undefined,
-      });
-      if (outcome.failed === 0) {
-        onClose();
-      } else {
-        // Keep the dialog open so the failures stay readable next to the counts.
-        setResult(outcome);
-        setUndoHandler(() => runUndo);
-      }
+      freshPlan = planImport(source.parsed, fresh, plan.targetFolderId, plan.strategy);
     } catch (error) {
-      toast({
-        title: t('toast_importFailed'),
-        description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
-      });
-    } finally {
-      setApplying(false);
+      setTree(fresh);
+      setNotice(getErrorMessage(error));
+      return undefined;
     }
+    if (!isSameImportPlan(plan, freshPlan)) {
+      setTree(fresh);
+      setNotice(t('tools_importPreviewChanged'));
+      return undefined;
+    }
+
+    const outcome = await applyImportPlan(freshPlan);
+    await onChanged();
+    return {
+      title: outcomeTitle(outcome),
+      description: describeOutcome(outcome),
+      variant: outcome.failed === 0 ? 'success' : 'destructive',
+      // Keep the dialog open so the failures stay readable next to the counts.
+      complete: outcome.failed === 0,
+      details: [...new Set(outcome.errors)]
+        .slice(0, TOOL_LIST_LIMITS.importErrors)
+        .map((error) => ({ key: error, text: error })),
+      undo:
+        outcome.createdRootIds.length > 0
+          ? async () => {
+              const { removed, failed } = await outcome.undo();
+              await onChanged();
+              return {
+                title: failed ? t('tools_importUndoPartial') : t('tools_importUndone'),
+                description: t('tools_importUndoneDesc', [String(removed), String(failed)]),
+                variant: failed ? 'destructive' : 'success',
+              };
+            }
+          : undefined,
+    };
   };
 
   const conflicts = plan?.conflicts ?? [];
+  const listedConflicts = conflicts.slice(0, TOOL_LIST_LIMITS.importConflicts);
   const summaryLines = plan
     ? [
         t('tools_importPreviewBookmarks', String(plan.counts.bookmarksToCreate)),
@@ -191,188 +158,137 @@ export function ImportPreviewDialog({
     : [];
 
   return (
-    <Dialog
+    <ReviewApplyDialog
       open={source !== null}
-      onOpenChange={(open) => {
-        if (!open && !applying) onClose();
-      }}
+      onClose={onClose}
+      title={t('tools_importPreviewTitle')}
+      description={t('tools_importPreviewDesc', source?.fileName ?? '')}
+      className="max-h-[85vh] overflow-hidden sm:max-w-2xl"
+      onApply={apply}
+      applyLabel={t('action_import')}
+      applyingLabel={t('tools_importing')}
+      canApply={plan !== null && plannedItems > 0}
+      failureTitle={t('toast_importFailed')}
+      outcomeTestId="import-result"
     >
-      <DialogContent className="max-h-[85vh] overflow-hidden sm:max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{t('tools_importPreviewTitle')}</DialogTitle>
-          <DialogDescription>
-            {t('tools_importPreviewDesc', source?.fileName ?? '')}
-          </DialogDescription>
-        </DialogHeader>
+      {(applying) => (
+        <div className="space-y-4">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('tools_importTarget')}
+              </span>
+              <Select
+                // An empty id means nothing is chosen yet, so the placeholder shows.
+                value={targetId || null}
+                onValueChange={(value) => setTargetId(value ?? '')}
+                items={targets.map((target) => ({ value: target.id, label: target.label }))}
+                disabled={applying}
+              >
+                <SelectTrigger aria-label={t('tools_importTarget')}>
+                  <SelectValue placeholder={t('tools_importTarget')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {targets.map((target) => (
+                    <SelectItem key={target.id} value={target.id}>
+                      {target.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1">
+              <span className="text-xs font-medium text-muted-foreground">
+                {t('tools_importStrategy')}
+              </span>
+              <Select
+                value={strategy}
+                onValueChange={(value) => {
+                  if (value !== null) setStrategy(value as ImportDuplicateStrategy);
+                }}
+                items={IMPORT_DUPLICATE_STRATEGIES.map((option) => ({
+                  value: option,
+                  label: t(STRATEGY_LABEL_KEYS[option]),
+                }))}
+                disabled={applying}
+              >
+                <SelectTrigger aria-label={t('tools_importStrategy')}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {IMPORT_DUPLICATE_STRATEGIES.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {t(STRATEGY_LABEL_KEYS[option])}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
-        <div className="max-h-[60vh] space-y-4 overflow-y-auto pr-1">
-          {result ? (
+          {notice || planned?.error ? (
             <div
               role="alert"
-              data-testid="import-result"
-              className="space-y-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm"
+              className="rounded-lg border border-warning/40 bg-warning-wash p-3 text-sm text-warning"
             >
-              <p>{describeOutcome(result)}</p>
-              <ul className="list-disc space-y-1 pl-5 text-xs">
-                {[...new Set(result.errors)].slice(0, MAX_LISTED_ERRORS).map((error) => (
-                  <li key={error} className="break-words">
-                    {error}
+              {notice ?? planned?.error}
+            </div>
+          ) : null}
+
+          {plan ? (
+            <div
+              data-testid="import-preview-summary"
+              className="space-y-1 rounded-lg border p-3 text-sm"
+            >
+              <p className="font-medium">{t('tools_importPreviewTargetLine', targetLabel)}</p>
+              {summaryLines.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+              {plannedItems === 0 ? (
+                <p className="text-muted-foreground">{t('tools_importNothingToCreate')}</p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {plan && conflicts.length > 0 ? (
+            <div className="space-y-2" data-testid="import-preview-conflicts">
+              <p className="text-sm font-medium">
+                {t('tools_importPreviewConflicts', [
+                  String(plan.counts.duplicatesInTarget),
+                  String(plan.counts.duplicatesElsewhere),
+                  String(plan.counts.duplicatesInFile),
+                ])}
+              </p>
+              <ul className="space-y-2">
+                {listedConflicts.map((conflict, index) => (
+                  <li
+                    // Titles and URLs can repeat, so the position disambiguates.
+                    key={`${conflict.url}-${index}`}
+                    className="rounded-md bg-muted/40 p-2 text-sm"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium">{getBookmarkDisplayTitle(conflict.title)}</span>
+                      <Badge variant="outline">{t(CONFLICT_LABEL_KEYS[conflict.kind])}</Badge>
+                      <Badge variant={conflict.skipped ? 'secondary' : 'default'}>
+                        {conflict.skipped ? t('tools_importWillSkip') : t('tools_importWillImport')}
+                      </Badge>
+                    </div>
+                    <p className="break-all text-xs text-muted-foreground">{conflict.url}</p>
                   </li>
                 ))}
               </ul>
+              {conflicts.length > listedConflicts.length ? (
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    'bookmarks_bulkPreviewMore',
+                    String(conflicts.length - listedConflicts.length),
+                  )}
+                </p>
+              ) : null}
             </div>
-          ) : (
-            <>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {t('tools_importTarget')}
-                  </span>
-                  <Select
-                    // An empty id means nothing is chosen yet, so the placeholder shows.
-                    value={targetId || null}
-                    onValueChange={(value) => setTargetId(value ?? '')}
-                    items={targets.map((target) => ({ value: target.id, label: target.label }))}
-                    disabled={applying}
-                  >
-                    <SelectTrigger aria-label={t('tools_importTarget')}>
-                      <SelectValue placeholder={t('tools_importTarget')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {targets.map((target) => (
-                        <SelectItem key={target.id} value={target.id}>
-                          {target.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-xs font-medium text-muted-foreground">
-                    {t('tools_importStrategy')}
-                  </span>
-                  <Select
-                    value={strategy}
-                    onValueChange={(value) => {
-                      if (value !== null) setStrategy(value as ImportDuplicateStrategy);
-                    }}
-                    items={IMPORT_DUPLICATE_STRATEGIES.map((option) => ({
-                      value: option,
-                      label: t(STRATEGY_LABEL_KEYS[option]),
-                    }))}
-                    disabled={applying}
-                  >
-                    <SelectTrigger aria-label={t('tools_importStrategy')}>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {IMPORT_DUPLICATE_STRATEGIES.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {t(STRATEGY_LABEL_KEYS[option])}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {notice || planned?.error ? (
-                <div
-                  role="alert"
-                  className="rounded-lg border border-warning/40 bg-warning-wash p-3 text-sm text-warning"
-                >
-                  {notice ?? planned?.error}
-                </div>
-              ) : null}
-
-              {plan ? (
-                <div
-                  data-testid="import-preview-summary"
-                  className="space-y-1 rounded-lg border p-3 text-sm"
-                >
-                  <p className="font-medium">{t('tools_importPreviewTargetLine', targetLabel)}</p>
-                  {summaryLines.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
-                  {plannedItems === 0 ? (
-                    <p className="text-muted-foreground">{t('tools_importNothingToCreate')}</p>
-                  ) : null}
-                </div>
-              ) : null}
-
-              {plan && conflicts.length > 0 ? (
-                <div className="space-y-2" data-testid="import-preview-conflicts">
-                  <p className="text-sm font-medium">
-                    {t('tools_importPreviewConflicts', [
-                      String(plan.counts.duplicatesInTarget),
-                      String(plan.counts.duplicatesElsewhere),
-                      String(plan.counts.duplicatesInFile),
-                    ])}
-                  </p>
-                  <ul className="space-y-2">
-                    {conflicts.slice(0, MAX_LISTED_CONFLICTS).map((conflict, index) => (
-                      <li
-                        // Titles and URLs can repeat, so the position disambiguates.
-                        key={`${conflict.url}-${index}`}
-                        className="rounded-md bg-muted/40 p-2 text-sm"
-                      >
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-medium">
-                            {conflict.title || t('bookmarks_untitled')}
-                          </span>
-                          <Badge variant="outline">{t(CONFLICT_LABEL_KEYS[conflict.kind])}</Badge>
-                          <Badge variant={conflict.skipped ? 'secondary' : 'default'}>
-                            {conflict.skipped
-                              ? t('tools_importWillSkip')
-                              : t('tools_importWillImport')}
-                          </Badge>
-                        </div>
-                        <p className="break-all text-xs text-muted-foreground">{conflict.url}</p>
-                      </li>
-                    ))}
-                  </ul>
-                  {conflicts.length > MAX_LISTED_CONFLICTS ? (
-                    <p className="text-xs text-muted-foreground">
-                      {t(
-                        'bookmarks_bulkPreviewMore',
-                        String(conflicts.length - MAX_LISTED_CONFLICTS),
-                      )}
-                    </p>
-                  ) : null}
-                </div>
-              ) : null}
-            </>
-          )}
+          ) : null}
         </div>
-
-        <DialogFooter className="gap-2">
-          {result ? (
-            <>
-              {undoHandler && result.createdRootIds.length > 0 ? (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    undoHandler();
-                    onClose();
-                  }}
-                >
-                  {t('action_undo')}
-                </Button>
-              ) : null}
-              <Button onClick={onClose}>{t('action_close')}</Button>
-            </>
-          ) : (
-            <>
-              <Button variant="outline" onClick={onClose} disabled={applying}>
-                {t('action_cancel')}
-              </Button>
-              <Button onClick={handleApply} disabled={!plan || plannedItems === 0 || applying}>
-                {applying ? t('tools_importing') : t('action_import')}
-              </Button>
-            </>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      )}
+    </ReviewApplyDialog>
   );
 }

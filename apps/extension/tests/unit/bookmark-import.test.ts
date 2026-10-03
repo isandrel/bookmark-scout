@@ -7,7 +7,6 @@ import {
   listImportTargets,
   parseBookmarks,
   planImport,
-  undoImport,
 } from '@/services/bookmark-import';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
@@ -312,7 +311,9 @@ describe('applying an import plan', () => {
     const otherId = bookmarks.childIds('target')[2];
     await fakeBrowser.bookmarks.create({ parentId: otherId, title: 'Mine' });
 
-    expect(await undoImport(outcome)).toEqual({ removed: 2, failed: 1 });
+    expect(await outcome.undo()).toEqual({ removed: 2, failed: 1 });
+    // Undo runs once; a second call reports the first result without touching bookmarks.
+    expect(await outcome.undo()).toEqual({ removed: 2, failed: 1 });
     expect(titles('target')).toEqual(['Other']);
     expect(titles(otherId)).toEqual(['Mine']);
   });
