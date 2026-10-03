@@ -19,7 +19,7 @@ What the extension does with data at version `0.2.0`, checked against the source
 | Data | Stored where | Leaves the device? |
 | --- | --- | --- |
 | Bookmarks (titles, URLs, folders) | The browser's own bookmark store | Only as described under "AI features", "Network tools", and "Exports" below. Browser bookmark sync is the browser's feature, not the extension's. |
-| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions, or when the user turned on both AI and Auto-recommend on Open (both off by default) |
+| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions, when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page |
 | Settings (`bookmark-scout-settings`), including the AI on/off switch, provider name, and model name | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
 | Bookmark table view (`bookmark-scout-table-view`): visible columns, order, widths, page size, sort | `storage.sync` | Same as settings. Contains no bookmark content. |
 | AI provider settings (`bookmark-scout-ai`): API key, Base URL, extra headers, per provider | `storage.local` | The key and headers are sent only to the configured provider, as request authentication |
@@ -42,6 +42,7 @@ Only when AI is turned on and the user starts the feature (or turned on Auto-rec
 | AI Folder Reorganization | Titles, URLs, and folder paths of the bookmarks in the chosen scope |
 | Verify Service | A fixed test prompt, no bookmark data |
 | Refresh Models | A model-list request with the API key, no bookmark data |
+| Ask AI (popup, side panel) | The user's messages and the conversation so far, plus what the model looks up with read-only tools: matching bookmarks (title, URL, folder path, saved tags and summary), folder paths, the active tab's title and URL, and with Read page content on, the main text of pages it reads. With the web search toggle on (off by default), the provider also searches the web itself. The conversation is kept in memory only and is gone when the panel closes (`src/services/ai-agent.ts`). |
 | AI Context Packer | Nothing. It downloads a file; it never contacts a provider. |
 
 Ollama and custom endpoints can point to a server on the user's own machine, in which case nothing leaves the device.

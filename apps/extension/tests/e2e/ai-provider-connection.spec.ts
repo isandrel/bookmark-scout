@@ -1,5 +1,5 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { setSettings } from './popup-helpers';
 
@@ -60,7 +60,7 @@ test('[mocked provider contract] Refresh Models lists models and keeps them afte
   await openAIOptions(page, extensionId);
   await page.getByRole('button', { name: 'Refresh Models' }).click();
   await expect(
-    page.getByTestId('ai-service-status').getByText('2 models found from Custom Provider.'),
+    toastRegion(page).getByText('2 models found from Custom Provider.'),
   ).toBeVisible();
   expect(seen.authorization).toBe('Bearer synthetic-key');
 
@@ -93,7 +93,7 @@ test('[mocked provider contract] Verify Service checks the model list instead of
   await openAIOptions(page, extensionId);
   await page.getByRole('button', { name: 'Verify Service' }).click();
   await expect(
-    page.getByTestId('ai-service-status').getByText(
+    toastRegion(page).getByText(
       'Connected to Custom Provider, but gpt-4o-mini is not in its model list. Pick another model.',
     ),
   ).toBeVisible();
@@ -114,7 +114,7 @@ test('[mocked provider contract] Verify Service explains a rejected key', async 
   await openAIOptions(page, extensionId);
   await page.getByRole('button', { name: 'Verify Service' }).click();
   await expect(
-    page.getByTestId('ai-service-status').getByText(
+    toastRegion(page).getByText(
       'The provider rejected the API key. Check that it is correct and still active.',
     ),
   ).toBeVisible();

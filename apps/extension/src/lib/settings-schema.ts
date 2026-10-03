@@ -24,8 +24,6 @@ export type SettingsFieldMeta = {
   unlimited?: boolean;
   /** Comma-separated list input; values are parsed when the input is committed. */
   list?: 'string' | 'number';
-  /** Numbers use a stepper; a slider suits only fractional values such as a confidence. */
-  control?: 'slider';
   /** Turning the switch on first asks for website access; it stays off if the user declines. */
   requiresWebHostAccess?: boolean;
 };
@@ -708,7 +706,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     reorganizationEnabled: { label: t('settings_reorganizationEnabled'), description: t('settings_reorganizationEnabledDesc'), type: 'switch' },
     reorganizationDefaultScope: { label: t('settings_reorganizationDefaultScope'), description: t('settings_reorganizationDefaultScopeDesc'), type: 'select', options: scopeOptions() },
     reorganizationDryRunFirst: { label: t('settings_reorganizationDryRunFirst'), description: t('settings_reorganizationDryRunFirstDesc'), type: 'switch' },
-    reorganizationMinConfidence: { label: t('settings_reorganizationMinConfidence'), description: t('settings_reorganizationMinConfidenceDesc'), type: 'number', min: 0, max: 1, step: 0.05, control: 'slider' },
+    reorganizationMinConfidence: { label: t('settings_reorganizationMinConfidence'), description: t('settings_reorganizationMinConfidenceDesc'), type: 'number', min: 0, max: 1, step: 0.05 },
     reorganizationBatchSize: { label: t('settings_reorganizationBatchSize'), description: t('settings_reorganizationBatchSizeDesc'), type: 'number', min: 1, max: 1000, step: 10 },
     duplicatesEnabled: { label: t('settings_duplicatesEnabled'), description: t('settings_duplicatesEnabledDesc'), type: 'switch' },
     duplicatesDefaultScope: { label: t('settings_duplicatesDefaultScope'), description: t('settings_duplicatesDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
@@ -801,83 +799,4 @@ function mergeModeOptions() {
 
 export function getSettingsFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
   return buildFieldMeta();
-}
-
-export type SettingsFieldGroup = {
-  id: string;
-  label: string;
-  description: string;
-  /** On/off settings shown together as one checklist; each keeps its own stored value. */
-  fields: readonly (keyof Settings)[];
-};
-
-/** Related switches that read better as one checklist than as separate rows. */
-export function getSettingsFieldGroups(): SettingsFieldGroup[] {
-  return [
-    {
-      id: 'exportInclude',
-      label: t('settings_groupExportInclude'),
-      description: t('settings_groupExportIncludeDesc'),
-      fields: ['exportIncludeDates', 'exportIncludeUrls'],
-    },
-    {
-      id: 'aiContextPackerInclude',
-      label: t('settings_groupAiContextPackerInclude'),
-      description: t('settings_groupAiContextPackerIncludeDesc'),
-      fields: [
-        'aiContextPackerIncludeFolderPath',
-        'aiContextPackerIncludeDates',
-        'aiContextPackerIncludeTags',
-        'aiContextPackerIncludeSummaries',
-      ],
-    },
-    {
-      id: 'duplicatesMatching',
-      label: t('settings_groupDuplicatesMatching'),
-      description: t('settings_groupDuplicatesMatchingDesc'),
-      fields: ['duplicatesNormalizeWww', 'duplicatesIgnoreProtocol', 'duplicatesIgnoreTrailingSlash'],
-    },
-    {
-      id: 'urlCleanerRules',
-      label: t('settings_groupUrlCleanerRules'),
-      description: t('settings_groupUrlCleanerRulesDesc'),
-      fields: ['urlCleanerRemoveHash', 'urlCleanerSortQueryParams', 'urlCleanerDedupeQueryParams'],
-    },
-    {
-      id: 'metadataFetcherOptions',
-      label: t('settings_groupMetadataFetcherOptions'),
-      description: t('settings_groupMetadataFetcherOptionsDesc'),
-      fields: ['metadataFetcherOverwriteTitles', 'metadataFetcherFetchDescriptions'],
-    },
-    {
-      id: 'privacyScannerChecks',
-      label: t('settings_groupPrivacyScannerChecks'),
-      description: t('settings_groupPrivacyScannerChecksDesc'),
-      fields: [
-        'privacyScannerScanTitles',
-        'privacyScannerScanQueryParams',
-        'privacyScannerScanFragments',
-        'privacyScannerEmailDetection',
-        'privacyScannerUuidDetection',
-      ],
-    },
-    {
-      id: 'statisticsInclude',
-      label: t('settings_groupStatisticsInclude'),
-      description: t('settings_groupStatisticsIncludeDesc'),
-      fields: [
-        'statisticsIncludeDomains',
-        'statisticsIncludeFolders',
-        'statisticsIncludeDuplicates',
-        'statisticsIncludeProtocols',
-        'statisticsIncludeDepthBreakdown',
-      ],
-    },
-    {
-      id: 'dataShow',
-      label: t('settings_groupDataShow'),
-      description: t('settings_groupDataShowDesc'),
-      fields: ['dataShowExport', 'dataShowImport'],
-    },
-  ];
 }

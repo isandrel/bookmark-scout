@@ -293,26 +293,6 @@ const OptionsPage: React.FC = () => {
     />
   );
 
-  /** Renders settings in order; members of a checklist group render once, as the group. */
-  const renderSettingsFields = (fields: readonly (keyof Settings)[]) => {
-    const groups = getSettingsFieldGroups();
-    const renderedGroups = new Set<string>();
-    return fields.flatMap((fieldKey) => {
-      const group = groups.find((candidate) => candidate.fields.includes(fieldKey));
-      if (!group) return [renderSettingsField(fieldKey)];
-      if (renderedGroups.has(group.id)) return [];
-      renderedGroups.add(group.id);
-      return [
-        <SettingsGroupRow
-          key={`${group.id}-${formVersion}`}
-          group={group}
-          values={values}
-          onChange={changeSettingsField}
-        />,
-      ];
-    });
-  };
-
   const renderCategoryHeader = (categoryKey: string, headingLevel: 'h2' | 'h3' = 'h3') => {
     const category = categories[categoryKey];
     const Heading = headingLevel;
@@ -448,7 +428,7 @@ const OptionsPage: React.FC = () => {
                       <div key={categoryKey} data-search-category={categoryKey}>
                         {renderCategoryHeader(categoryKey, 'h2')}
                         <div className="space-y-3">
-                          {renderSettingsFields(fields)}
+                          {fields.map(renderSettingsField)}
                           {categoryKey === 'ai' &&
                             aiPanelMatches > 0 && (
                               <AIServicesPanel
@@ -468,18 +448,18 @@ const OptionsPage: React.FC = () => {
                     {categoryKey === 'ai' ? (
                       // Services come right after the AI switch: they are what the switch turns on.
                       <>
-                        {renderSettingsFields(category.fields.slice(0, 1))}
+                        {category.fields.slice(0, 1).map(renderSettingsField)}
                         <AIServicesPanel />
-                        {renderSettingsFields(category.fields.slice(1))}
+                        {category.fields.slice(1).map(renderSettingsField)}
                         <AIActivityPanel />
                       </>
                     ) : categoryKey === 'aiTools' ? (
                       <>
                         <PromptLibraryPanel />
-                        {renderSettingsFields(category.fields)}
+                        {category.fields.map(renderSettingsField)}
                       </>
                     ) : (
-                      renderSettingsFields(category.fields)
+                      category.fields.map(renderSettingsField)
                     )}
                   </div>
                 </TabsContent>

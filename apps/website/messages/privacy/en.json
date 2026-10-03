@@ -94,7 +94,8 @@
                         "items": [
                             "Folder suggestions: the current page's title and URL, and the names of your bookmark folders.",
                             "Auto-Tagging, Content Summarizer, and AI Folder Reorganization: the titles, URLs, and folder paths of the bookmarks in the scope you chose.",
-                            "Only if you turn on Read page content (off by default): folder suggestions, Auto-Tagging, and Content Summarizer also download each page by its URL, without your cookies, and send its main text. Pages on your local network are never downloaded. AI Folder Reorganization never sends page content."
+                            "Only if you turn on Read page content (off by default): folder suggestions, Auto-Tagging, and Content Summarizer also download each page by its URL, without your cookies, and send its main text. Pages on your local network are never downloaded. AI Folder Reorganization never sends page content.",
+                            "Ask AI: your messages and the conversation so far, plus what the AI looks up to answer: matching bookmarks (titles, URLs, folder paths, saved tags and summaries), your folder names, the current page's title and URL, and, only with Read page content on, the text of pages it reads. If you turn on its web search (off by default), the provider also searches the web. The conversation is not saved; it ends when you close it."
                         ]
                     },
                     {

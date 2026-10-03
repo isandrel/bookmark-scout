@@ -2,8 +2,7 @@
  * One labeled setting row on the Options page: control, description, inline error, and reset.
  */
 
-import { NumberField } from '@base-ui/react/number-field';
-import { Minus, Plus, RotateCcw } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 
 type SettingValue = Settings[keyof Settings];
@@ -80,200 +79,6 @@ function ListSettingInput({
       className="w-full sm:w-[220px]"
       placeholder={placeholder}
     />
-  );
-}
-
-/**
- * The reset button's slot is always there, so a control never moves when its value returns to
- * the default and the button disappears; the pointer stays on the control.
- */
-function ResetSlot({
-  visible,
-  label,
-  onReset,
-}: {
-  visible: boolean;
-  label: string;
-  onReset: () => void;
-}) {
-  return (
-    <span className="flex h-8 w-8 shrink-0">
-      {visible && (
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground hover:text-primary"
-          onClick={onReset}
-          title={t('settings_resetToDefault')}
-          aria-label={label}
-        >
-          <RotateCcw className="h-3.5 w-3.5" />
-        </Button>
-      )}
-    </span>
-  );
-}
-
-function ModifiedBadge() {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
-      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-      {t('settings_modified')}
-    </span>
-  );
-}
-
-const stepperButtonClass =
-  'flex h-full w-8 shrink-0 items-center justify-center text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:pointer-events-none disabled:opacity-40';
-
-/**
- * A number with − and + buttons. Typing works too: the value is clamped to the allowed range when
- * the field is committed. For "no limit" settings, an empty field means no limit.
- */
-function NumberStepper({
-  id,
-  meta,
-  value,
-  labelledBy,
-  describedBy,
-  invalid,
-  onChange,
-}: {
-  id: string;
-  meta: SettingsFieldMeta;
-  value: number;
-  labelledBy: string;
-  describedBy: string;
-  invalid: boolean;
-  onChange: (value: number) => void;
-}) {
-  const unlimited = meta.unlimited && value === -1;
-  return (
-    <div className="flex items-center gap-2">
-      <NumberField.Root
-        id={id}
-        value={unlimited ? null : value}
-        min={meta.min}
-        max={meta.max}
-        step={meta.step}
-        onValueChange={(next) => {
-          if (next === null) {
-            if (meta.unlimited) onChange(-1);
-            return;
-          }
-          onChange(next);
-        }}
-      >
-        <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring">
-          <NumberField.Decrement
-            className={stepperButtonClass}
-            aria-label={t('settings_decrease', meta.label)}
-          >
-            <Minus className="h-3.5 w-3.5" />
-          </NumberField.Decrement>
-          <NumberField.Input
-            aria-labelledby={labelledBy}
-            aria-describedby={describedBy}
-            aria-invalid={invalid}
-            placeholder={meta.unlimited ? t('settings_noLimit') : undefined}
-            className="h-full w-20 border-x border-input bg-transparent text-center text-sm tabular-nums outline-none placeholder:text-xs placeholder:text-muted-foreground"
-          />
-          <NumberField.Increment
-            className={stepperButtonClass}
-            aria-label={t('settings_increase', meta.label)}
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </NumberField.Increment>
-        </NumberField.Group>
-      </NumberField.Root>
-      {meta.unit && (
-        <span className="w-8 text-xs text-muted-foreground" aria-hidden="true">
-          {meta.unit}
-        </span>
-      )}
-    </div>
-  );
-}
-
-type SettingsGroupRowProps = {
-  group: SettingsFieldGroup;
-  values: Settings;
-  onChange: (fieldKey: keyof Settings, value: SettingValue) => void;
-};
-
-/** Related on/off settings as one checklist; each option still saves to its own setting. */
-export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowProps) {
-  const meta = getSettingsFieldMeta();
-  const changed = group.fields.filter(
-    (fieldKey) => values[fieldKey] !== defaultSettings[fieldKey],
-  );
-  const labelId = `setting-group-${group.id}-label`;
-
-  return (
-    <div
-      data-setting-group={group.id}
-      className={`flex flex-col gap-3 rounded-lg border bg-card p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
-        changed.length > 0 ? 'border-primary/50 bg-primary/5' : 'border-transparent hover:border-border'
-      }`}
-    >
-      <div className="min-w-0 flex-1 space-y-3 sm:pr-4">
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span id={labelId} className="text-base font-medium">
-              {group.label}
-            </span>
-            {changed.length > 0 && <ModifiedBadge />}
-          </div>
-          <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
-            {group.description}
-          </p>
-        </div>
-        <fieldset
-          aria-describedby={`${labelId}-description`}
-          className="m-0 grid min-w-0 gap-2 border-0 p-0 sm:grid-cols-2"
-        >
-          <legend className="sr-only">{group.label}</legend>
-          {group.fields.map((fieldKey) => {
-            const controlId = getSettingControlId(fieldKey);
-            return (
-              <label
-                key={fieldKey}
-                htmlFor={controlId}
-                data-setting={fieldKey}
-                className="flex cursor-pointer items-start gap-2.5 rounded-md border border-transparent px-2 py-1.5 hover:border-border hover:bg-muted/50"
-              >
-                <Checkbox
-                  id={controlId}
-                  checked={values[fieldKey] as boolean}
-                  onCheckedChange={(checked) => onChange(fieldKey, checked === true)}
-                  aria-describedby={`${controlId}-description`}
-                  className="mt-0.5"
-                />
-                <span className="min-w-0">
-                  <span className="block text-sm font-medium">{meta[fieldKey].label}</span>
-                  <span
-                    id={`${controlId}-description`}
-                    className="block text-xs text-muted-foreground"
-                  >
-                    {meta[fieldKey].description}
-                  </span>
-                </span>
-              </label>
-            );
-          })}
-        </fieldset>
-      </div>
-      <div className="flex justify-end sm:shrink-0">
-        <ResetSlot
-          visible={changed.length > 0}
-          label={t('settings_resetFieldToDefault', group.label)}
-          onReset={() => {
-            for (const fieldKey of changed) onChange(fieldKey, defaultSettings[fieldKey]);
-          }}
-        />
-      </div>
-    </div>
   );
 }
 
@@ -371,19 +176,6 @@ export function SettingsFieldRow({
 
       case 'number': {
         const numeric = value as number;
-        if (meta.control !== 'slider') {
-          return (
-            <NumberStepper
-              id={controlId}
-              meta={meta}
-              value={numeric}
-              labelledBy={labelId}
-              describedBy={describedBy}
-              invalid={Boolean(error)}
-              onChange={onChange}
-            />
-          );
-        }
         const position = meta.unlimited ? toUnlimitedSliderValue(numeric) : numeric;
         const display =
           meta.unlimited && numeric === -1 ? t('settings_noLimit') : `${numeric}${meta.unit ?? ''}`;
@@ -460,7 +252,12 @@ export function SettingsFieldRow({
           <Label id={labelId} htmlFor={controlId} className="text-base font-medium">
             {meta.label}
           </Label>
-          {isChanged && <ModifiedBadge />}
+          {isChanged && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+              {t('settings_modified')}
+            </span>
+          )}
         </div>
         <p id={descriptionId} className="text-sm text-muted-foreground">
           {meta.description}
@@ -473,15 +270,23 @@ export function SettingsFieldRow({
       </div>
       <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
         {renderControl()}
-        <ResetSlot
-          visible={isChanged || Boolean(error)}
-          label={t('settings_resetFieldToDefault', meta.label)}
-          onReset={() => {
-            onInputError(undefined);
-            setResetCount((count) => count + 1);
-            onChange(defaultValue);
-          }}
-        />
+        {(isChanged || error) && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 shrink-0 text-muted-foreground hover:text-primary"
+            onClick={() => {
+              onInputError(undefined);
+              setResetCount((count) => count + 1);
+              onChange(defaultValue);
+            }}
+            title={t('settings_resetToDefault')}
+            aria-label={t('settings_resetFieldToDefault', meta.label)}
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+          </Button>
+        )}
       </div>
     </div>
   );

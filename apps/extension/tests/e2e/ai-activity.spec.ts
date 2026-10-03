@@ -1,4 +1,4 @@
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions } from './ai-helpers';
 import { setSettings } from './popup-helpers';
 
@@ -38,7 +38,7 @@ test('[mocked provider contract] AI activity records a request with its key reda
 
   // Off by default: a check leaves no trace.
   await page.getByRole('button', { name: 'Verify Service' }).click();
-  await expect(page.getByTestId('ai-service-status').getByText('Custom Provider responded successfully.')).toBeVisible();
+  await expect(toastRegion(page).getByText('Custom Provider responded successfully.')).toBeVisible();
   await expect(entries).toHaveCount(0);
 
   await activity.getByRole('switch', { name: 'Record requests' }).click();

@@ -4607,88 +4607,96 @@
         "message": "This setting needs website access to read pages. It stays off.",
         "description": "Toast when the user declines website access for a setting"
     },
-    "settings_groupExportInclude": {
-        "message": "Include in Exports",
-        "description": "Settings group: export fields"
+    "askAI_title": {
+        "message": "Ask AI",
+        "description": "Title of the Ask AI chat"
     },
-    "settings_groupExportIncludeDesc": {
-        "message": "Bookmark details that exports include by default",
-        "description": "Settings group description"
+    "askAI_open": {
+        "message": "Ask AI about your bookmarks or this page",
+        "description": "Popup button that opens the Ask AI chat"
     },
-    "settings_groupAiContextPackerInclude": {
-        "message": "Include in AI Context",
-        "description": "Settings group: AI Context Packer fields"
+    "askAI_back": {
+        "message": "Back to bookmarks",
+        "description": "Ask AI: button that closes the chat"
     },
-    "settings_groupAiContextPackerIncludeDesc": {
-        "message": "Details added to each bookmark in AI context exports",
-        "description": "Settings group description"
+    "askAI_newChat": {
+        "message": "New chat",
+        "description": "Ask AI: button that clears the conversation"
     },
-    "settings_groupDuplicatesMatching": {
-        "message": "Duplicate Matching",
-        "description": "Settings group: duplicate finder URL rules"
+    "askAI_placeholder": {
+        "message": "Ask about your bookmarks, this page, or anything",
+        "description": "Ask AI: message box placeholder and label"
     },
-    "settings_groupDuplicatesMatchingDesc": {
-        "message": "Differences to ignore when deciding that two URLs are the same",
-        "description": "Settings group description"
+    "askAI_send": {
+        "message": "Send",
+        "description": "Ask AI: send button"
     },
-    "settings_groupUrlCleanerRules": {
-        "message": "Cleanup Rules",
-        "description": "Settings group: URL cleaner rules"
+    "askAI_stop": {
+        "message": "Stop",
+        "description": "Ask AI: stop button while answering"
     },
-    "settings_groupUrlCleanerRulesDesc": {
-        "message": "Changes the URL cleaner makes besides removing tracking parameters",
-        "description": "Settings group description"
+    "askAI_webSearch": {
+        "message": "Search the web",
+        "description": "Ask AI: toggle for the provider web search"
     },
-    "settings_groupMetadataFetcherOptions": {
-        "message": "Fetch Options",
-        "description": "Settings group: metadata fetcher options"
+    "askAI_empty": {
+        "message": "Ask about your bookmarks, the page you are on, or anything else. The chat is not saved; it ends when you close it.",
+        "description": "Ask AI: empty state"
     },
-    "settings_groupMetadataFetcherOptionsDesc": {
-        "message": "What the metadata fetcher reads and replaces",
-        "description": "Settings group description"
+    "askAI_suggestionPage": {
+        "message": "What is this page about?",
+        "description": "Ask AI: suggested question"
     },
-    "settings_groupPrivacyScannerChecks": {
-        "message": "Checks",
-        "description": "Settings group: privacy scanner checks"
+    "askAI_suggestionRelated": {
+        "message": "Which of my bookmarks relate to this page?",
+        "description": "Ask AI: suggested question"
     },
-    "settings_groupPrivacyScannerChecksDesc": {
-        "message": "Where the privacy scanner looks and what it flags",
-        "description": "Settings group description"
+    "askAI_suggestionFolders": {
+        "message": "How are my bookmark folders organized?",
+        "description": "Ask AI: suggested question"
     },
-    "settings_groupStatisticsInclude": {
-        "message": "Report Sections",
-        "description": "Settings group: statistics sections"
+    "askAI_readPageOff": {
+        "message": "To let Ask AI read pages, turn on Read page content in Options, AI.",
+        "description": "Ask AI: hint when page reading is off"
     },
-    "settings_groupStatisticsIncludeDesc": {
-        "message": "Sections shown in bookmark statistics",
-        "description": "Settings group description"
+    "askAI_thinking": {
+        "message": "Thinking…",
+        "description": "Ask AI: waiting for the first answer"
     },
-    "settings_groupDataShow": {
-        "message": "Sidebar Tools",
-        "description": "Settings group: data tools shown in sidebar"
+    "askAI_retry": {
+        "message": "Try again",
+        "description": "Ask AI: retry after an error"
     },
-    "settings_groupDataShowDesc": {
-        "message": "Data tools shown in the manager sidebar",
-        "description": "Settings group description"
+    "askAI_sources": {
+        "message": "Sources",
+        "description": "Ask AI: heading for web sources"
     },
-    "settings_decrease": {
-        "message": "Decrease $1",
-        "description": "Stepper button label; $1 is the setting name"
+    "askAI_toolSearchBookmarks": {
+        "message": "Searched your bookmarks for “$1”",
+        "description": "Ask AI tool step; $1 is the search query"
     },
-    "settings_increase": {
-        "message": "Increase $1",
-        "description": "Stepper button label; $1 is the setting name"
+    "askAI_toolListFolders": {
+        "message": "Listed your folders",
+        "description": "Ask AI tool step"
     },
-    "prompt_builtInTitle": {
-        "message": "Built-in prompt",
-        "description": "Prompt library: title of the read-only built-in prompt view"
+    "askAI_toolCurrentPage": {
+        "message": "Checked the current page",
+        "description": "Ask AI tool step"
     },
-    "prompt_builtInDescription": {
-        "message": "The prompt this tool uses by default. Click Customize to start your own copy from it.",
-        "description": "Prompt library: built-in prompt view description"
+    "askAI_toolReadPage": {
+        "message": "Read $1",
+        "description": "Ask AI tool step; $1 is the site host"
     },
-    "prompt_viewBuiltIn": {
-        "message": "View the built-in prompt for $1",
-        "description": "Prompt library: button label; $1 is the tool name"
+    "askAI_toolWebSearch": {
+        "message": "Searched the web",
+        "description": "Ask AI tool step"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "Answers questions in the Ask AI chat",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "Today's date, as YYYY-MM-DD",
+        "description": "Prompt variable description"
     }
 }

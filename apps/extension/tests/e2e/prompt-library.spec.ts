@@ -64,23 +64,3 @@ test('[mocked provider contract] a custom prompt saved in Options is what auto-t
   expect(bodies[0]).toContain('CUSTOM PROMPT: at most 3');
   expect(bodies[0]).not.toContain('You are a bookmark tagging assistant');
 });
-
-test('the built-in prompt can be viewed and used as the start of a custom one', async ({
-  extensionId,
-  extensionWorker,
-  page,
-}) => {
-  await setSettings(extensionWorker, { language: 'en', autoTaggingMaxTags: 4 });
-  await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
-
-  await page.getByRole('button', { name: 'View the built-in prompt for Auto-Tagging' }).click();
-  const viewer = page.getByRole('dialog', { name: /Built-in prompt/ });
-  await expect(viewer.getByTestId('built-in-prompt')).toContainText('{{maxTags}}');
-  await viewer.getByText('Preview with current settings').click();
-  await expect(viewer).toContainText('Suggest 2-4 tags per bookmark');
-
-  await viewer.getByRole('button', { name: 'Customize' }).click();
-  const editor = page.getByRole('dialog', { name: /New prompt/ });
-  await expect(editor.getByRole('textbox', { name: 'Prompt' })).toHaveValue(/\{\{maxTags\}\}/);
-});
