@@ -555,6 +555,16 @@
         "message": "最近",
         "description": "Recent folders panel title"
     },
+    "popup_addToFolderTitle": {
+        "message": "「$folder$」に追加",
+        "description": "Tooltip and accessible name for a recent folder chip that saves the current page into that folder",
+        "placeholders": {
+            "folder": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
     "popup_hintLabel": {
         "message": "キーボードショートカット",
         "description": "Accessible name of the popup footer that lists keyboard shortcuts"

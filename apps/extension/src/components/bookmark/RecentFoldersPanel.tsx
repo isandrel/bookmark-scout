@@ -40,6 +40,8 @@ export function RecentFoldersPanel({
       </div>
       {displayFolders.map((folder: RecentFolder) => {
         const isPending = pendingFolderIds.includes(folder.id);
+        // The chip shows only the folder name, so the label also says what clicking does.
+        const addLabel = t('popup_addToFolderTitle', folder.title);
         return (
           <Button
             key={folder.id}
@@ -50,7 +52,8 @@ export function RecentFoldersPanel({
               if (!isPending) onAddToFolder(folder.id);
             }}
             aria-disabled={isPending || undefined}
-            title={`Add to "${folder.title}"`}
+            title={addLabel}
+            aria-label={addLabel}
           >
             <Folder className="h-3 w-3 text-muted-foreground" />
             <span className="truncate max-w-[120px]">{folder.title}</span>

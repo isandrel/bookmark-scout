@@ -115,12 +115,12 @@ test.describe('saving the current page', () => {
     );
 
     await openPopup(page, extensionId);
-    const doubleChip = page.getByTitle('Add to "E2E Recent Double"');
+    const doubleChip = page.getByRole('button', { name: 'Add to "E2E Recent Double"', exact: true });
     await doubleChip.dblclick();
     await expect.poll(() => childCount(extensionWorker, doubled.folderId)).toBe(1);
     await expect(doubleChip).not.toHaveAttribute('aria-disabled');
 
-    const tickChip = page.getByTitle('Add to "E2E Recent Tick"');
+    const tickChip = page.getByRole('button', { name: 'Add to "E2E Recent Tick"', exact: true });
     await tickChip.evaluate((button) => {
       (button as HTMLButtonElement).click();
       (button as HTMLButtonElement).click();
