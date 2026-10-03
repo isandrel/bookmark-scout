@@ -138,7 +138,7 @@ test('list settings accept commas and status codes are validated inline', async 
   await expect(page.getByTestId('settings-save-status')).toHaveText('1 settings not saved');
 
   // An invalid field does not block other edits.
-  await page.getByRole('switch', { name: 'Remove Fragments' }).click();
+  await page.getByRole('checkbox', { name: /Remove Fragments/ }).click();
   await expect
     .poll(() => readSettings(extensionWorker))
     .toMatchObject({
@@ -283,15 +283,22 @@ test('settings search shows matches from every tab and controls have accessible 
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
-  await expect(page.getByRole('slider', { name: 'Max Categories' })).toBeVisible();
-  await expect(settingRow(page, 'aiMaxCategories')).toContainText('No limit');
+  await expect(page.getByRole('textbox', { name: 'Max Categories' })).toHaveAttribute(
+    'placeholder',
+    'No limit',
+  );
 
   const unnamed = await page.evaluate(() =>
-    [...document.querySelectorAll('[role="switch"], [role="combobox"], [role="slider"], button')]
+    [
+      ...document.querySelectorAll(
+        '[role="switch"], [role="checkbox"], [role="combobox"], [role="slider"], input:not([aria-hidden="true"]), button',
+      ),
+    ]
       .filter((element) => {
         const labelledBy = element.getAttribute('aria-labelledby');
         const name =
           element.getAttribute('aria-label') ||
+          (element instanceof HTMLInputElement && element.labels?.[0]?.textContent) ||
           (labelledBy && document.getElementById(labelledBy)?.textContent) ||
           element.textContent;
         return !name?.trim();
@@ -492,16 +499,77 @@ test('settings search finds AI service fields, including ones under More setting
   }
 });
 
-test('unlimited sliders announce "No limit"', async ({ extensionId, extensionWorker, page }) => {
+test('number steppers step, accept typing, and leave an unlimited field empty for "No limit"', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
   await setSettings(extensionWorker, { language: 'en', aiMaxCategories: -1 });
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
-  const slider = page.getByRole('slider', { name: 'Max Categories' });
-  await expect(slider).toHaveAttribute('aria-valuetext', 'No limit');
-  await slider.focus();
-  await slider.press('ArrowRight');
-  await expect(slider).toHaveAttribute('aria-valuetext', '1');
+  const field = page.getByRole('textbox', { name: 'Max Categories' });
+  await expect(field).toHaveValue('');
+  await expect(field).toHaveAttribute('placeholder', 'No limit');
+
+  await page.getByRole('button', { name: 'Increase Max Categories' }).click();
+  await expect(field).toHaveValue('1');
   await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(1);
+
+  await field.fill('12');
+  await field.blur();
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(12);
+
+  await field.fill('');
+  await field.blur();
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(-1);
+
+  // Values outside the range are clamped when the field is committed.
+  const recent = page.getByRole('textbox', { name: 'Max Recommendations' });
+  await recent.fill('99');
+  await recent.blur();
+  await expect(recent).toHaveValue('10');
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).aiMaxRecommendations)
+    .toBe(10);
+});
+
+test('changing a switch back to its default keeps it under the pointer', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  const toggle = page.getByRole('switch', { name: 'Confirm Before Delete' });
+  const before = await toggle.boundingBox();
+  await toggle.click();
+  await expect(page.getByRole('button', { name: /Reset Confirm Before Delete/ })).toBeVisible();
+  expect(await toggle.boundingBox()).toEqual(before);
+  await toggle.click();
+  await expect(page.getByRole('button', { name: /Reset Confirm Before Delete/ })).toHaveCount(0);
+  expect(await toggle.boundingBox()).toEqual(before);
+});
+
+test('related switches are one checklist that saves each option and resets together', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  const group = page.getByRole('group', { name: 'Include in AI Context' });
+  await expect(group.getByRole('checkbox')).toHaveCount(4);
+  await group.getByRole('checkbox', { name: /Include Dates/ }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).aiContextPackerIncludeDates)
+    .toBe(false);
+
+  await page.getByRole('button', { name: 'Reset Include in AI Context to default' }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).aiContextPackerIncludeDates)
+    .toBe(true);
 });
 
 test('an invalid Base URL does not block saving valid Extra Headers', async ({

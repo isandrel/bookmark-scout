@@ -4616,5 +4616,89 @@
     "settings_hostAccessDeniedDesc": {
         "message": "이 설정으로 페이지를 읽으려면 웹사이트 접근 권한이 필요합니다. 꺼진 상태로 유지됩니다.",
         "description": "Toast when the user declines website access for a setting"
+    },
+    "settings_groupExportInclude": {
+        "message": "내보내기에 포함",
+        "description": "Settings group: export fields"
+    },
+    "settings_groupExportIncludeDesc": {
+        "message": "내보내기에 기본으로 포함할 북마크 정보",
+        "description": "Settings group description"
+    },
+    "settings_groupAiContextPackerInclude": {
+        "message": "AI 컨텍스트에 포함",
+        "description": "Settings group: AI Context Packer fields"
+    },
+    "settings_groupAiContextPackerIncludeDesc": {
+        "message": "AI 컨텍스트 내보내기에서 각 북마크에 추가할 정보",
+        "description": "Settings group description"
+    },
+    "settings_groupDuplicatesMatching": {
+        "message": "중복 판단",
+        "description": "Settings group: duplicate finder URL rules"
+    },
+    "settings_groupDuplicatesMatchingDesc": {
+        "message": "두 URL을 같다고 판단할 때 무시할 차이",
+        "description": "Settings group description"
+    },
+    "settings_groupUrlCleanerRules": {
+        "message": "정리 규칙",
+        "description": "Settings group: URL cleaner rules"
+    },
+    "settings_groupUrlCleanerRulesDesc": {
+        "message": "추적 매개변수 제거 외에 URL 정리 도구가 하는 변경",
+        "description": "Settings group description"
+    },
+    "settings_groupMetadataFetcherOptions": {
+        "message": "가져오기 옵션",
+        "description": "Settings group: metadata fetcher options"
+    },
+    "settings_groupMetadataFetcherOptionsDesc": {
+        "message": "메타데이터 가져오기가 읽고 바꾸는 항목",
+        "description": "Settings group description"
+    },
+    "settings_groupPrivacyScannerChecks": {
+        "message": "검사 항목",
+        "description": "Settings group: privacy scanner checks"
+    },
+    "settings_groupPrivacyScannerChecksDesc": {
+        "message": "개인정보 검사기가 살펴볼 위치와 표시할 항목",
+        "description": "Settings group description"
+    },
+    "settings_groupStatisticsInclude": {
+        "message": "보고서 항목",
+        "description": "Settings group: statistics sections"
+    },
+    "settings_groupStatisticsIncludeDesc": {
+        "message": "북마크 통계에 표시할 섹션",
+        "description": "Settings group description"
+    },
+    "settings_groupDataShow": {
+        "message": "사이드바 도구",
+        "description": "Settings group: data tools shown in sidebar"
+    },
+    "settings_groupDataShowDesc": {
+        "message": "관리자 사이드바에 표시할 데이터 도구",
+        "description": "Settings group description"
+    },
+    "settings_decrease": {
+        "message": "$1 줄이기",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "settings_increase": {
+        "message": "$1 늘리기",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "prompt_builtInTitle": {
+        "message": "기본 제공 프롬프트",
+        "description": "Prompt library: title of the read-only built-in prompt view"
+    },
+    "prompt_builtInDescription": {
+        "message": "이 도구가 기본으로 사용하는 프롬프트입니다. 사용자 지정을 클릭하면 이를 바탕으로 나만의 사본을 만들 수 있습니다.",
+        "description": "Prompt library: built-in prompt view description"
+    },
+    "prompt_viewBuiltIn": {
+        "message": "$1의 기본 제공 프롬프트 보기",
+        "description": "Prompt library: button label; $1 is the tool name"
     }
 }
