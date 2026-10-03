@@ -198,7 +198,7 @@ test('ArrowDown enters the tree even with search history, which Alt+ArrowDown op
 
   await page.keyboard.press('ArrowUp');
   await expect(search).toBeFocused();
-  await expect(search).toHaveAttribute('title', /Alt\+↓ shows recent searches/);
+  await expect(search).toHaveAttribute('title', /(Alt|⌥)\+↓ shows recent searches/);
   await search.press('Alt+ArrowDown');
   await expect(history.getByRole('option')).toHaveText(['Older Query', 'Newer Query']);
 

@@ -41,8 +41,9 @@ class AskAITransport implements ChatTransport<UIMessage> {
     const transport = new DirectChatTransport({
       agent,
       sendSources: true,
-      // The stream hides errors by default; the provider's own message says what to fix.
-      onError: (error) => getErrorMessage(error),
+      // The stream hides errors by default; say what to fix in the user's language, keeping the
+      // provider's own words when its status alone is not specific.
+      onError: (error) => describeAIErrorWithDetail(error),
     }) as unknown as ChatTransport<UIMessage>;
     return transport.sendMessages(options);
   }

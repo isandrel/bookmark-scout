@@ -126,7 +126,7 @@ Click the chat button next to the search box in the popup or side panel to ask a
 
 To check exactly what a tool sent and what the provider answered, go to **Options**, then **AI**, and turn on **Record requests** under **AI activity**. Each AI call then shows its source, address, status, and time; open one to see the request headers and the request and response bodies, or copy it as JSON for a bug report.
 
-Recording is off by default. The log stays on this device and keeps only the most recent calls. API keys and other credential headers are replaced with `[redacted]` before anything is stored, but bookmark titles and URLs in the requests are kept, so turn recording off when you are done: that also deletes the log.
+Recording is off by default. The log stays on this device and keeps only the most recent calls. API keys, headers whose names suggest a credential (such as ones containing `key`, `token`, `secret`, `auth`, or `cookie`), and every header you set in **Extra Headers JSON** are replaced with `[redacted]` before anything is stored, but bookmark titles and URLs in the requests are kept, so turn recording off when you are done: that also deletes the log.
 
 ## Save a page with a folder recommendation
 
@@ -142,7 +142,11 @@ The tag count and style, summary length, and reorganization limits in Settings a
 
 ## Reorganize folders
 
-**AI Folder Reorganization** asks the provider for a new folder plan. With **Always Preview First** on (the default), the plan opens as a list of folders to create, rename, and remove and bookmarks to move, and nothing changes until you click **Apply Changes**.
+**AI Folder Reorganization** asks the provider which folder each bookmark belongs in. With **Always Preview First** on (the default), the plan opens as a list of bookmark moves, with moves into new folders marked and counted, and nothing changes until you click **Apply Changes**.
+
+- **Apply Changes** moves the bookmarks and creates the new folders the plan names. If a folder with that name already exists in the same place, it is used instead.
+- A bookmark you moved, gave a new URL, or deleted after the preview is skipped and left where it is, so the plan never overrides a newer change. When only part of the plan applies, the message counts the moved bookmarks, new folders, and skipped and failed items, and names the skipped bookmarks.
+- Click **Undo** in the message or in the review to move the bookmarks back and remove the new folders that are still empty. A bookmark you moved again in the meantime stays where you put it.
 
 ## Export context for an AI chat
 

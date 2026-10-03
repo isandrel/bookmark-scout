@@ -24,10 +24,9 @@ export function useWebHostAccessGate() {
     const granted = await permission;
     await webHostAccess.recheck();
     if (!granted) {
-      toast({
+      toast.error({
         title: t('tools_hostAccessDenied'),
         description: t('tools_hostAccessDeniedDesc'),
-        variant: 'destructive',
       });
       return;
     }

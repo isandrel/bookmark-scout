@@ -1,9 +1,9 @@
-import { APICallError, NoObjectGeneratedError, RetryError } from 'ai';
+import { AISDKError, APICallError, NoObjectGeneratedError, RetryError } from 'ai';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveSettings } from '@/lib/settings-storage';
-import { describeAIError } from '@/services/ai-errors';
+import { describeAIError, describeAIErrorWithDetail } from '@/services/ai-errors';
 
 const URL_ = 'https://api.e2e.invalid/v1/chat/completions';
 
@@ -67,6 +67,38 @@ describe('describeAIError', () => {
     setLanguage('ja');
     expect(describeAIError(apiError(500))).toBe(
       'プロバイダーが HTTP 500 を返しました（api.e2e.invalid）。',
+    );
+  });
+});
+
+describe('describeAIErrorWithDetail', () => {
+  it('uses only the localized message when the status already says what to fix', () => {
+    expect(describeAIErrorWithDetail(apiError(401))).toBe(
+      'The provider rejected the API key. Check that it is correct and still active.',
+    );
+    expect(describeAIErrorWithDetail(apiError())).not.toContain('raw provider text');
+  });
+
+  it("keeps the provider's own message after a status that only names the code", () => {
+    expect(describeAIErrorWithDetail(apiError(400))).toBe(
+      'The provider answered with HTTP 400 (api.e2e.invalid). The provider said: "HTTP 400 raw provider text"',
+    );
+  });
+
+  it("keeps the last attempt's provider message after the retries ran out", () => {
+    const error = new RetryError({
+      message: 'Failed after 2 attempts.',
+      reason: 'maxRetriesExceeded',
+      errors: [apiError(500), apiError(500)],
+    });
+    expect(describeAIErrorWithDetail(error)).toBe(
+      'Gave up after 2 attempts. The provider answered with HTTP 500 (api.e2e.invalid). The provider said: "HTTP 500 raw provider text"',
+    );
+  });
+
+  it('never shows raw SDK text for other SDK errors', () => {
+    expect(describeAIErrorWithDetail(new AISDKError({ name: 'AI_Test', message: 'raw' }))).toBe(
+      'The AI request failed. Try again, or check the service in Options.',
     );
   });
 });

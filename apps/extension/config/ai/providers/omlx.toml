@@ -4,7 +4,6 @@ order = 110
 default_model = ""
 provider_kind = "openai_compatible"
 requires_api_key = false
-api_key_placeholder = "(Optional)"
 base_url = "http://localhost:8000/v1"
 supports_custom_model = true
 group = "local"

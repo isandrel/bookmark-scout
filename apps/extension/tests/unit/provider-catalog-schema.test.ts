@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { aiProviderFileSchema } from '@/lib/config/ai-provider-schema';
 import {
   catalogIdSchema,
   catalogProviderSchema,
@@ -55,5 +56,26 @@ describe('provider catalog schema', () => {
   it('rejects unknown fields and control characters in names', () => {
     expect(catalogProviderSchema.safeParse({ ...provider, extra: 1 }).success).toBe(false);
     expect(catalogProviderSchema.safeParse({ ...provider, name: 'a\u0000b' }).success).toBe(false);
+  });
+});
+
+describe('provider file schema', () => {
+  const file = {
+    name: 'Example AI',
+    order: 1,
+    default_model: '',
+    provider_kind: 'openai_compatible',
+    requires_api_key: true,
+  };
+  const withPlaceholder = (api_key_placeholder: string) =>
+    aiProviderFileSchema.safeParse({ ...file, api_key_placeholder }).success;
+
+  it('takes a key format as the API key placeholder, never untranslated prose', () => {
+    for (const format of ['sk-...', 'sk-or-...', 'gsk_...', 'AI...', '...']) {
+      expect(withPlaceholder(format), format).toBe(true);
+    }
+    for (const prose of ['(Optional)', 'Required', 'Azure API key', 'Optional custom API key']) {
+      expect(withPlaceholder(prose), prose).toBe(false);
+    }
   });
 });

@@ -20,7 +20,7 @@ export function PopupHintBar() {
   return (
     <section
       aria-label={t('popup_hintLabel')}
-      title={t('shortcuts_popupHint')}
+      title={popupShortcutsHint()}
       data-testid="popup-hint-bar"
       className="flex h-7 shrink-0 items-center gap-2.5 overflow-hidden border-t px-3 text-xs text-muted-foreground"
     >

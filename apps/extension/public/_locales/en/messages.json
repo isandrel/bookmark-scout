@@ -24,8 +24,8 @@
         "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
     },
     "shortcuts_popupHint": {
-        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search, Alt+↓ shows recent searches",
-        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
+        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search, $1 shows recent searches",
+        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts; $1 is the recent-searches key, such as Alt+↓ (⌥+↓ on Apple keyboards)"
     },
     "shortcuts_title": {
         "message": "Keyboard shortcuts",
@@ -632,6 +632,10 @@
     "ai_errorRetriesExhausted": {
         "message": "Gave up after $1 attempts. $2",
         "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorProviderDetail": {
+        "message": "$1 The provider said: \"$2\"",
+        "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
         "message": "The AI request failed. Try again, or check the service in Options.",
@@ -2769,6 +2773,10 @@
         "message": "Optional",
         "description": "Placeholder of the API key field for a provider that works without a key"
     },
+    "options_apiKeyRequiredPlaceholder": {
+        "message": "Required",
+        "description": "Placeholder of the API key field for a provider that needs a key and has no known key format"
+    },
     "options_apiKey": {
         "message": "API Key",
         "description": "API key field label"
@@ -4508,7 +4516,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxCategories": {
-        "message": "Top-level folder limit, -1 for none (Max Categories)",
+        "message": "Top-level folder limit, or a note that there is none (Max Categories)",
         "description": "Variable description"
     },
     "prompt_varMinItemsPerFolder": {
@@ -4516,7 +4524,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxItemsPerFolder": {
-        "message": "Most bookmarks per folder, -1 for none",
+        "message": "Most bookmarks per folder, or a note that there is none",
         "description": "Variable description"
     },
     "prompt_varMinTags": {

@@ -147,7 +147,7 @@ test('Options lists saved services and Set as default moves the badge', async ({
   await expect(page.getByRole('button', { name: 'Add service' })).toBeFocused();
 });
 
-test('an optional API key field says so in the Options language', async ({
+test('an API key field shows the key format, or says required or optional in the Options language', async ({
   extensionId,
   extensionWorker,
   page,
@@ -159,4 +159,33 @@ test('an optional API key field says so in the Options language', async ({
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
   await expect(page.getByLabel('APIキー', { exact: true })).toHaveAttribute('placeholder', '任意');
+
+  // Providers once showed English prose here ("(Optional)", "Required", "Azure API key").
+  const cases = [
+    { language: 'ja', label: 'APIキー', provider: 'ollama', placeholder: '任意' },
+    { language: 'ja', label: 'APIキー', provider: 'jan', placeholder: '必須' },
+    { language: 'ko', label: 'API 키', provider: 'azure', placeholder: '필수' },
+    { language: 'ko', label: 'API 키', provider: 'cliproxyapi', placeholder: '선택 사항' },
+    { language: 'ko', label: 'API 키', provider: 'openai', placeholder: 'sk-...' },
+  ];
+  for (const { language, label, provider, placeholder } of cases) {
+    await extensionWorker.evaluate(
+      async ({ language, provider }) => {
+        await chrome.storage.sync.set({ 'bookmark-scout-settings': { language } });
+        await chrome.storage.local.set({
+          'bookmark-scout-ai-services': {
+            services: [{ id: provider, name: provider, provider, model: 'm', enabled: true }],
+            defaultServiceId: provider,
+          },
+        });
+      },
+      { language, provider },
+    );
+    await page.reload();
+    await page.getByRole('tab', { name: 'AI', exact: true }).click();
+    await expect(page.getByLabel(label, { exact: true }), provider).toHaveAttribute(
+      'placeholder',
+      placeholder,
+    );
+  }
 });

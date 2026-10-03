@@ -4,7 +4,6 @@ order = 210
 default_model = ""
 provider_kind = "anthropic_compatible"
 requires_api_key = false
-api_key_placeholder = "Optional custom API key"
 base_url = "https://api.anthropic.com/v1"
 supports_custom_model = true
 model_list = "anthropic"

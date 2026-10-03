@@ -20,8 +20,8 @@
         "description": "Search input placeholder"
     },
     "shortcuts_popupHint": {
-        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア、Alt+↓ で最近の検索を表示",
-        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
+        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア、$1 で最近の検索を表示",
+        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts; $1 is the recent-searches key, such as Alt+↓ (⌥+↓ on Apple keyboards)"
     },
     "shortcuts_title": {
         "message": "キーボードショートカット",
@@ -2749,6 +2749,10 @@
         "message": "任意",
         "description": "Placeholder of the API key field for a provider that works without a key"
     },
+    "options_apiKeyRequiredPlaceholder": {
+        "message": "必須",
+        "description": "Placeholder of the API key field for a provider that needs a key and has no known key format"
+    },
     "options_apiKey": {
         "message": "APIキー",
         "description": "API key field label"
@@ -4488,7 +4492,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxCategories": {
-        "message": "トップレベルフォルダの上限、-1 で無制限（最大カテゴリ数）",
+        "message": "トップレベルフォルダの上限。無制限ならその旨が入ります（最大カテゴリ数）",
         "description": "Variable description"
     },
     "prompt_varMinItemsPerFolder": {
@@ -4496,7 +4500,7 @@
         "description": "Variable description"
     },
     "prompt_varMaxItemsPerFolder": {
-        "message": "フォルダあたりの最大ブックマーク数、-1 で無制限",
+        "message": "フォルダあたりの最大ブックマーク数。無制限ならその旨が入ります",
         "description": "Variable description"
     },
     "prompt_varMinTags": {
@@ -4866,6 +4870,10 @@
     "ai_errorRetriesExhausted": {
         "message": "$1 回試しましたが失敗しました。$2",
         "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorProviderDetail": {
+        "message": "$1プロバイダーからのメッセージ：「$2」",
+        "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
     },
     "ai_errorRequestFailed": {
         "message": "AI へのリクエストに失敗しました。もう一度試すか、オプションでサービスを確認してください。",

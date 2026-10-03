@@ -115,6 +115,10 @@ const reorgLimits = unit(
   'ai-reorganization-settings.test.ts',
   'sends the saved category and folder-size limits to the provider',
 );
+const unlimitedPromptVariables = unit(
+  'prompt-library.test.ts',
+  'fills unlimited folder limits with a phrase, never -1, even in a custom prompt',
+);
 const recentFoldersMenu = unit(
   'context-menu.test.ts',
   'hides recent folders when the setting is disabled and restores them live',
@@ -218,12 +222,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
     unit('page-reader.test.ts', 'leaves items unchanged when page reading is off or website access is missing'),
   ], 'Also read by Auto-Tagging and Content Summarizer in services/tool-options.ts.'),
-  aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits],
-    'Prompt-level limit; provider compliance is not verified. -1 is sent to the prompt as-is.'),
+  aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits, unlimitedPromptVariables],
+    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.'),
   aiMinItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],
     'Prompt-level target; provider compliance is not verified.'),
-  aiMaxItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],
-    'Prompt-level limit; provider compliance is not verified. -1 is sent to the prompt as-is.'),
+  aiMaxItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits, unlimitedPromptVariables],
+    'Prompt-level limit; provider compliance is not verified. Unlimited (-1) is left out of the rules and request, and its {{variable}} reads as a phrase.'),
 
   // Export
   exportFilenamePrefix: tested(DATA_TOOLS, [exportPreferences]),

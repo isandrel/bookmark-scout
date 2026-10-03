@@ -136,16 +136,21 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
     });
     await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl } } });
   }, BASE_URL);
+  // 4xx answers are not retried by the SDK, so each error reaches the chat.
+  const failures = [
+    { status: 401, message: 'Invalid API key' },
+    { status: 400, message: 'The model `ask-model` does not exist' },
+  ];
   let calls = 0;
   await context.route(`${BASE_URL}/**`, async (route) => {
+    const failure = failures[calls];
     calls += 1;
-    if (calls === 1) {
+    if (failure) {
       await route.fulfill({
-        // Not retried by the SDK, so the error reaches the chat.
-        status: 401,
+        status: failure.status,
         headers: { 'access-control-allow-origin': '*' },
         contentType: 'application/json',
-        body: JSON.stringify({ error: { message: 'Invalid API key' } }),
+        body: JSON.stringify({ error: { message: failure.message } }),
       });
       return;
     }
@@ -156,7 +161,15 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
   const chat = page.getByTestId('ask-ai');
   await chat.getByRole('button', { name: 'What is this page about?' }).click();
-  await expect(chat.getByRole('alert')).toContainText('Invalid API key');
+  // A status with one meaning gets the localized explanation instead of the raw SDK text.
+  const alert = chat.getByRole('alert');
+  await expect(alert).toContainText('The provider rejected the API key.');
+  await expect(alert).not.toContainText('Invalid API key');
+  await chat.getByRole('button', { name: 'Try again' }).click();
+  // A bare status keeps the provider's own explanation.
+  await expect(alert).toContainText(
+    'The provider answered with HTTP 400 (ask.e2e.invalid). The provider said: "The model `ask-model` does not exist"',
+  );
   await chat.getByRole('button', { name: 'Try again' }).click();
   await expect(chat.getByText('Recovered answer')).toBeVisible();
 });
