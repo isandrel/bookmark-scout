@@ -23,6 +23,7 @@ In Chrome and Edge the extension also replaces the browser's bookmarks page with
 The extension also declares access to `http://*/*` and `https://*/*`, but none of it is granted at install. The browser asks you at the moment you need it:
 
 - **Check Dead Links**, **Metadata Fetcher**, and **Refresh Site Icons** ask for access to websites the first time you run them, because bookmarks can point to any site. Requests are sent without cookies, and only the page head is read for titles and icon links. If you decline, nothing is scanned. See [Find and repair dead links](/guides/dead-links) and [Refresh site icons](/guides/clean-up#refresh-site-icons).
+- **Read page content** in the AI settings asks for access to websites when you turn it on, so AI tools can download pages, without cookies, and send their main text to your AI provider. Pages on your local network are never read. See [Read page content](/guides/ai-tools#read-page-content).
 - **Verify Service** and **Refresh Models** in the AI settings ask for access to that one provider's address only. See [Set up AI tools](/guides/ai-tools).
 
 To take website access back, open the browser's page for the extension (for example `chrome://extensions/`, then **Details** on Bookmark Scout) and change its site access.

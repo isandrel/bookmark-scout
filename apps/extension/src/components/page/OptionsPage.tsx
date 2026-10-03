@@ -262,13 +262,33 @@ const OptionsPage: React.FC = () => {
       aiPanelMatches
     : 0;
 
+  const changeSettingsField = (fieldKey: keyof Settings, value: SettingValue) => {
+    if (value !== true || !getSettingsFieldMeta()[fieldKey].requiresWebHostAccess) {
+      setFieldValue(fieldKey, value);
+      return;
+    }
+    // Ask inside the click so the browser treats the request as user-initiated; the switch
+    // only turns on once access is granted.
+    void requestWebHostAccess().then((granted) => {
+      if (granted) {
+        setFieldValue(fieldKey, value);
+        return;
+      }
+      toast({
+        title: t('tools_hostAccessDenied'),
+        description: t('settings_hostAccessDeniedDesc'),
+        variant: 'destructive',
+      });
+    });
+  };
+
   const renderSettingsField = (fieldKey: keyof Settings) => (
     <SettingsFieldRow
       key={`${fieldKey}-${formVersion}`}
       fieldKey={fieldKey}
       value={values[fieldKey]}
       error={fieldErrors[fieldKey]}
-      onChange={(value) => setFieldValue(fieldKey, value)}
+      onChange={(value) => changeSettingsField(fieldKey, value)}
       onInputError={(message) => setInputError(fieldKey, message)}
     />
   );

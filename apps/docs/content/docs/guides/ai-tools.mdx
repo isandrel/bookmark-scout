@@ -95,13 +95,22 @@ Keep as many prompts per tool as you like and switch between them with the tool'
 
 | Tool | Where | Sends to the provider |
 | --- | --- | --- |
-| Folder recommendations | Popup, the sparkle button next to the search box (shown only when AI is on) | The current page's title and URL, and your bookmark folder names |
-| **Auto-Tagging** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder |
-| **Content Summarizer** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder |
+| Folder recommendations | Popup, the sparkle button next to the search box (shown only when AI is on) | The current page's title and URL, and your bookmark folder names. With **Read page content** on, also the page's main text |
+| **Auto-Tagging** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text |
+| **Content Summarizer** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the current folder, and with **Read page content** on, each page's main text |
 | **AI Folder Reorganization** | Manager, Tools, **AI & Intelligence** | Titles, URLs, and folder paths of the bookmarks in the scope you choose |
 | **AI Context Packer** | Manager, Tools, **AI & Intelligence** | Nothing. It saves a file on your computer and works with AI turned off. |
 
 Turn on **Auto-recommend on Open** to request folder recommendations every time the popup opens. Leave it off to send a request only when you click the button.
+
+## Read page content
+
+Titles and URLs do not always say what a page is about. Turn on **Read page content** in **Options**, then **AI**, and folder recommendations, **Auto-Tagging**, and **Content Summarizer** also send the main text of each page. Turning it on asks for access to websites; if you decline, it stays off.
+
+- Bookmark Scout downloads each page itself, without your cookies, so you get the logged-out version of a site. It keeps the article text without menus, scripts, images, or link addresses.
+- Each page sends up to about 3,000 characters, and one tool run reads up to 40 pages. Later bookmarks in a large folder are sent with their title and URL only, as are pages that do not load.
+- Pages on your local network, such as `localhost`, private IP addresses, and `.local` names, are never read, so intranet pages do not reach a cloud provider.
+- Page text comes from the web and could contain instructions aimed at the AI. Bookmark Scout tells the model to treat it only as data, and you still review every suggestion before it is saved.
 
 ## See what was sent
 

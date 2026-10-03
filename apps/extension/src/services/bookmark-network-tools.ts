@@ -642,7 +642,19 @@ export function isHtmlContentType(contentType: string | null): boolean {
  * Reads a page body only until the end of its `<head>` (or `<body>` start) or `maxBytes`,
  * whichever comes first, then stops the download.
  */
-export async function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
+export function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
+  return readResponseBytes(response, maxBytes, HEAD_END_PATTERN);
+}
+
+/**
+ * Reads a body up to `maxBytes`, or until `stopAt` matches the text read so far, then stops the
+ * download.
+ */
+export async function readResponseBytes(
+  response: Response,
+  maxBytes: number,
+  stopAt?: RegExp,
+): Promise<ArrayBuffer> {
   const reader = response.body?.getReader();
   if (!reader) return new ArrayBuffer(0);
   const chunks: Uint8Array[] = [];
@@ -657,9 +669,11 @@ export async function readHtmlHead(response: Response, maxBytes: number): Promis
       const chunk = value.subarray(0, maxBytes - total);
       chunks.push(chunk);
       total += chunk.byteLength;
-      const text = tail + scanner.decode(chunk);
-      if (HEAD_END_PATTERN.test(text)) break;
-      tail = text.slice(-16);
+      if (stopAt) {
+        const text = tail + scanner.decode(chunk);
+        if (stopAt.test(text)) break;
+        tail = text.slice(-16);
+      }
     }
   } finally {
     reader.cancel().catch(() => undefined);

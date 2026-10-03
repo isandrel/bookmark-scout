@@ -24,6 +24,8 @@ export type SettingsFieldMeta = {
   unlimited?: boolean;
   /** Comma-separated list input; values are parsed when the input is committed. */
   list?: 'string' | 'number';
+  /** Turning the switch on first asks for website access; it stays off if the user declines. */
+  requiresWebHostAccess?: boolean;
 };
 
 type SettingsCategoryMeta = {
@@ -66,6 +68,7 @@ interface TomlConfig {
     auto_trigger_on_open: boolean;
     max_categories?: number;
     min_items_per_folder?: number;
+    read_page_content: boolean;
     max_items_per_folder?: number;
     providers?: Record<string, unknown>;
   };
@@ -278,6 +281,7 @@ export const settingsSchema = z.object({
   aiModel: z.string().default(config.ai.model),
   aiMaxRecommendations: z.number().min(1).max(10).default(config.tools.auto_tagging.max_tags),
   aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
+  aiReadPageContent: z.boolean().default(config.ai.read_page_content),
   aiMaxCategories: limitOrUnlimited(100).default(config.ai.max_categories ?? -1),
   aiMinItemsPerFolder: z.number().min(1).default(config.ai.min_items_per_folder ?? 1),
   aiMaxItemsPerFolder: limitOrUnlimited(500).default(config.ai.max_items_per_folder ?? -1),
@@ -434,7 +438,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       label: t('settings_ai'),
       description: t('settings_aiDesc'),
       // The provider and model live on AI services (AIServicesPanel), not in these synced fields.
-      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiMaxRecommendations', 'aiMaxCategories', 'aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
+      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiReadPageContent', 'aiMaxRecommendations', 'aiMaxCategories', 'aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
     },
     aiTools: {
       label: t('settings_aiTools'),
@@ -655,6 +659,7 @@ function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
     },
     aiMaxRecommendations: { label: t('settings_aiMaxRecommendations'), description: t('settings_aiMaxRecommendationsDesc'), type: 'number', min: 1, max: 10, step: 1 },
     aiAutoTriggerOnOpen: { label: t('settings_aiAutoTrigger'), description: t('settings_aiAutoTriggerDesc'), type: 'switch' },
+    aiReadPageContent: { label: t('settings_aiReadPageContent'), description: t('settings_aiReadPageContentDesc'), type: 'switch', requiresWebHostAccess: true },
     aiMaxCategories: { label: t('settings_aiMaxCategories'), description: t('settings_aiMaxCategoriesDesc'), type: 'number', min: 1, max: 100, step: 1, unlimited: true },
     aiMinItemsPerFolder: { label: t('settings_aiMinItemsPerFolder'), description: t('settings_aiMinItemsPerFolderDesc'), type: 'number', min: 1, max: 100, step: 1 },
     aiMaxItemsPerFolder: { label: t('settings_aiMaxItemsPerFolder'), description: t('settings_aiMaxItemsPerFolderDesc'), type: 'number', min: 1, max: 500, step: 1, unlimited: true },

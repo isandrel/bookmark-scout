@@ -45,7 +45,8 @@ Uninstalling the extension removes the data it stored in this browser. Your book
 AI features run only after you turn them on in Settings and choose a provider. When you use one, the extension sends the data that feature needs directly from your browser to the provider endpoint you configured:
 
 - Folder suggestions: the current page's title and URL, and the names of your bookmark folders.
-- Auto-Tagging, Content Summarizer, and AI Folder Reorganization: the titles, URLs, and folder paths of the bookmarks in the scope you chose. No page content is fetched.
+- Auto-Tagging, Content Summarizer, and AI Folder Reorganization: the titles, URLs, and folder paths of the bookmarks in the scope you chose.
+- Only if you turn on Read page content (off by default): folder suggestions, Auto-Tagging, and Content Summarizer also download each page by its URL, without your cookies, and send its main text. Pages on your local network are never downloaded. AI Folder Reorganization never sends page content.
 
 If you also turn on Auto-recommend on Open (off by default), folder suggestions run each time you open the popup or side panel.
 

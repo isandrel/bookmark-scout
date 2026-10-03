@@ -94,7 +94,9 @@ export async function recommendFolders(
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
   settings: AISettings,
-  maxRecommendations = 3
+  maxRecommendations = 3,
+  /** Send the page's readable text too; needs website access. */
+  readPage = false,
 ): Promise<FolderRecommendation[]> {
   validateAISettings(settings);
 
@@ -110,23 +112,28 @@ export async function recommendFolders(
     }];
   }
 
+  const [page] = await addPageText([bookmark], readPage);
   const model = createAIModel(settings, 'folderRecommendation');
   const { system } = await buildPrompt('folder_recommendation', { maxRecommendations });
 
   const { object } = await generateObject({
     model,
     schema: recommendationsSchema,
-    system: `${system}
-
-Return exactly ${maxRecommendations} folder recommendations ranked by confidence. Include a mix of:
+    system: withAppRules(
+      system,
+      `Return exactly ${maxRecommendations} folder recommendations ranked by confidence. Include a mix of:
 1. Best matching existing folder
-2. Second best existing folder  
+2. Second best existing folder
 3. Suggest a new folder if appropriate, or third best existing
 
 Each recommendation should have a clear, brief reason.`,
+      Boolean(page.pageText),
+    ),
     prompt: JSON.stringify({
       title: bookmark.title,
       url: bookmark.url,
+      pageTitle: page.pageTitle,
+      pageText: page.pageText,
       folders: folderPaths,
     }),
   });
