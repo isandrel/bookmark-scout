@@ -336,7 +336,7 @@ const CHARSET_PATTERN = /charset\s*=\s*["']?([A-Za-z0-9_\-:.]+)/i;
 const CHARSET_SNIFF_BYTES = 2048;
 
 /** Decodes a page using the Content-Type charset, then a `<meta>` charset, then UTF-8. */
-export function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
+function decodeHtml(bytes: ArrayBuffer, contentType: string | null): string {
   const sniffed = new TextDecoder('latin1').decode(bytes.slice(0, CHARSET_SNIFF_BYTES));
   const charset =
     contentType?.match(CHARSET_PATTERN)?.[1] ??
@@ -371,21 +371,12 @@ export async function fetchBookmarkMetadata(
     }
 
     try {
-      const page = await requestWithTimeout(
-        url,
-        { method: 'GET', redirect: 'follow' },
-        options.requestTimeoutMs,
-        async (response) => {
-          const contentType = response.headers.get('content-type');
-          // Error pages ("404 Not Found") must never become title suggestions, and files such
-          // as PDFs or archives are never downloaded.
-          if (!response.ok || !isHtmlContentType(contentType)) {
-            return { status: response.status, ok: response.ok, html: null };
-          }
-          const bytes = await readHtmlHead(response, METADATA_MAX_BYTES);
-          return { status: response.status, ok: true, html: decodeHtml(bytes, contentType) };
-        },
-      );
+      // Error pages ("404 Not Found") must never become title suggestions.
+      const page = await fetchHtmlPage(url, {
+        timeoutMs: options.requestTimeoutMs,
+        maxBytes: METADATA_MAX_BYTES,
+        until: 'head',
+      });
       if (!page.ok) {
         return {
           ...base,
@@ -443,30 +434,14 @@ export async function fetchBookmarkMetadata(
 export async function applyMetadataTitles(
   items: Array<Pick<MetadataFetchResultItem, 'id' | 'title' | 'suggestedTitle'>>,
 ): Promise<MetadataApplyResult> {
-  const result: MetadataApplyResult = { updated: 0, skipped: 0, failed: 0 };
-  for (const item of items) {
-    if (!item.suggestedTitle) {
-      result.skipped += 1;
-      continue;
-    }
-    let currentTitle: string | undefined;
-    try {
-      currentTitle = (await getBookmark(item.id)).title;
-    } catch {
-      currentTitle = undefined;
-    }
-    if (currentTitle !== item.title) {
-      result.skipped += 1;
-      continue;
-    }
-    try {
-      await updateBookmark(item.id, { title: item.suggestedTitle });
-      result.updated += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
+  const changes: BookmarkChange[] = items.flatMap(({ id, title, suggestedTitle }) =>
+    suggestedTitle
+      ? [{ kind: 'update', id, title, expect: { title }, set: { title: suggestedTitle } }]
+      : [],
+  );
+  const { applied, skipped, failed } = await applyBookmarkChanges(changes);
+  // Items without a suggestion have nothing to apply.
+  return { updated: applied, skipped: skipped + items.length - changes.length, failed };
 }
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
@@ -653,6 +628,7 @@ export async function requestWithTimeout<T>(
   init: RequestInit,
   timeoutMs: number,
   consume: (response: Response) => Promise<T>,
+  fetch: typeof globalThis.fetch = globalThis.fetch,
 ): Promise<T> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -685,23 +661,62 @@ const HEAD_END_PATTERN = /<\/head\s*>|<body[\s>]/i;
 const HTML_CONTENT_TYPE_PATTERN = /^\s*(?:text\/html|application\/xhtml\+xml)\s*(?:;|$)/i;
 
 /** True when a Content-Type is missing (sniffed later) or declares an HTML document. */
-export function isHtmlContentType(contentType: string | null): boolean {
+function isHtmlContentType(contentType: string | null): boolean {
   return !contentType?.trim() || HTML_CONTENT_TYPE_PATTERN.test(contentType);
 }
 
+export type HtmlPage = {
+  /** HTTP status of the final response. */
+  status: number;
+  ok: boolean;
+  /** The URL after redirects. */
+  url: string;
+  /** The decoded page; null for error statuses and non-HTML files, which are not downloaded. */
+  html: string | null;
+};
+
+export type FetchHtmlPageOptions = {
+  /** Covers the headers and the body, so a page that stalls mid-download cannot hang a tool. */
+  timeoutMs: number;
+  /** Bytes read at most. */
+  maxBytes: number;
+  /** `head` stops at the end of `<head>` (or the start of `<body>`); `end` reads the whole page. */
+  until: 'head' | 'end';
+  /** A page whose final URL (after redirects) fails this is not downloaded; `html` is null. */
+  allowUrl?: (url: string) => boolean;
+  /** Defaults to the global fetch. */
+  fetch?: typeof globalThis.fetch;
+};
+
 /**
- * Reads a page body only until the end of its `<head>` (or `<body>` start) or `maxBytes`,
- * whichever comes first, then stops the download.
+ * Downloads a web page without cookies, following redirects, and decodes it by its declared
+ * charset. Throws on a timeout (see {@link classifyFailure}) and on network failures.
  */
-export function readHtmlHead(response: Response, maxBytes: number): Promise<ArrayBuffer> {
-  return readResponseBytes(response, maxBytes, HEAD_END_PATTERN);
+export function fetchHtmlPage(url: string, options: FetchHtmlPageOptions): Promise<HtmlPage> {
+  return requestWithTimeout(
+    url,
+    { method: 'GET', redirect: 'follow' },
+    options.timeoutMs,
+    async (response) => {
+      const page = { status: response.status, ok: response.ok, url: response.url || url };
+      const contentType = response.headers.get('content-type');
+      const allowed = options.allowUrl?.(page.url) ?? true;
+      if (!response.ok || !allowed || !isHtmlContentType(contentType)) {
+        return { ...page, html: null };
+      }
+      const stopAt = options.until === 'head' ? HEAD_END_PATTERN : undefined;
+      const bytes = await readResponseBytes(response, options.maxBytes, stopAt);
+      return { ...page, html: decodeHtml(bytes, contentType) };
+    },
+    options.fetch,
+  );
 }
 
 /**
  * Reads a body up to `maxBytes`, or until `stopAt` matches the text read so far, then stops the
  * download.
  */
-export async function readResponseBytes(
+async function readResponseBytes(
   response: Response,
   maxBytes: number,
   stopAt?: RegExp,

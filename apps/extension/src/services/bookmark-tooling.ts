@@ -75,6 +75,8 @@ export type DuplicateRemovalResult = {
   skippedGroups: number;
   failed: number;
   snapshots: BookmarkDeletionSnapshot[];
+  /** Restores the removed bookmarks, once. */
+  undo: () => Promise<BookmarkChangesUndoResult>;
 };
 
 type UrlCleanerOptions = {
@@ -307,26 +309,16 @@ export type UrlCleanerApplyResult = {
 export async function applyUrlCleanerPreviews(
   previews: UrlCleanerPreview[],
 ): Promise<UrlCleanerApplyResult> {
-  const result: UrlCleanerApplyResult = { updated: 0, skipped: 0, failed: 0 };
-  for (const preview of previews) {
-    let currentUrl: string | undefined;
-    try {
-      currentUrl = (await getBookmark(preview.id)).url;
-    } catch {
-      currentUrl = undefined;
-    }
-    if (currentUrl !== preview.originalUrl) {
-      result.skipped += 1;
-      continue;
-    }
-    try {
-      await updateBookmark(preview.id, { url: preview.cleanedUrl });
-      result.updated += 1;
-    } catch {
-      result.failed += 1;
-    }
-  }
-  return result;
+  const { applied, skipped, failed } = await applyBookmarkChanges(
+    previews.map((preview) => ({
+      kind: 'update',
+      id: preview.id,
+      title: preview.title,
+      expect: { url: preview.originalUrl },
+      set: { url: preview.cleanedUrl },
+    })),
+  );
+  return { updated: applied, skipped, failed };
 }
 
 export function collectBookmarkStatistics(
@@ -446,72 +438,48 @@ export async function removeDuplicateExtras(
   groups: DuplicateGroup[],
   match: DuplicateMatchOptions,
 ): Promise<DuplicateRemovalResult> {
-  const result: DuplicateRemovalResult = {
-    removed: 0,
-    skipped: 0,
-    skippedGroups: 0,
-    failed: 0,
-    snapshots: [],
-  };
-  const readCurrent = async (id: string) => {
-    try {
-      return await getBookmark(id);
-    } catch {
-      return null;
-    }
-  };
+  const changes: BookmarkChange[] = [];
+  let skippedExtras = 0;
+  let skippedGroups = 0;
 
   for (const group of groups) {
     const [keeper, ...extras] = group.items;
-    const currentKeeper = keeper ? await readCurrent(keeper.node.id) : null;
-    if (!currentKeeper || buildDuplicateKey(currentKeeper, match) !== group.key) {
-      result.skipped += extras.length;
-      result.skippedGroups += 1;
+    const liveKeeper = keeper ? await getLiveBookmark(keeper.node.id) : undefined;
+    if (!liveKeeper || buildDuplicateKey(liveKeeper, match) !== group.key) {
+      skippedExtras += extras.length;
+      skippedGroups += 1;
       continue;
     }
-
     for (const extra of extras) {
-      const current = await readCurrent(extra.node.id);
-      if (
-        !current ||
-        current.url !== extra.node.url ||
-        buildDuplicateKey(current, match) !== group.key
-      ) {
-        result.skipped += 1;
-        continue;
-      }
-      try {
-        const snapshot = await captureBookmarkDeletion(extra.node.id);
-        await deleteBookmark(extra.node.id);
-        result.snapshots.push(snapshot);
-        result.removed += 1;
-      } catch {
-        result.failed += 1;
-      }
+      changes.push({
+        kind: 'remove',
+        id: extra.node.id,
+        title: extra.node.title,
+        expect: { url: extra.node.url },
+        check: (live) => buildDuplicateKey(live, match) === group.key,
+      });
     }
   }
 
-  return result;
+  const result = await applyBookmarkChanges(changes);
+  return {
+    removed: result.applied,
+    skipped: skippedExtras + result.skipped,
+    skippedGroups,
+    failed: result.failed,
+    snapshots: result.deletions,
+    undo: result.undo,
+  };
 }
 
 /**
- * Restores bookmarks removed by {@link removeDuplicateExtras}. Snapshots are replayed in
- * reverse deletion order so captured sibling indexes stay valid.
+ * Restores bookmarks removed by {@link removeDuplicateExtras}.
+ * @deprecated Call the removal result's `undo`.
  */
 export async function restoreDuplicateExtras(
   snapshots: BookmarkDeletionSnapshot[],
 ): Promise<{ restored: number; failed: number }> {
-  let restored = 0;
-  let failed = 0;
-  for (const snapshot of [...snapshots].reverse()) {
-    try {
-      await restoreBookmarkDeletion(snapshot);
-      restored += 1;
-    } catch {
-      failed += 1;
-    }
-  }
-  return { restored, failed };
+  return restoreBookmarkDeletions(snapshots);
 }
 
 function buildDuplicateKey(
