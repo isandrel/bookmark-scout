@@ -2689,6 +2689,10 @@
         "message": "$1 はAPIキーなしで利用できます。",
         "description": "Optional API key description"
     },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "任意",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
     "options_apiKey": {
         "message": "APIキー",
         "description": "API key field label"
@@ -4404,8 +4408,12 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "プロンプトが長すぎて同期できません。$1 バイト未満にしてください。",
+        "message": "プロンプトが長すぎて同期できません。$1 以内にしてください。",
         "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "プロンプトを保存できませんでした。同期ストレージがいっぱいの可能性があります。使わないプロンプトを削除してから、もう一度お試しください。",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
     },
     "prompt_varMaxRecommendations": {
         "message": "フォルダー候補の数（最大推薦数）",

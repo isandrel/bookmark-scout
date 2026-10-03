@@ -2689,6 +2689,10 @@
         "message": "$1 can run without an API key.",
         "description": "Optional API key description"
     },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "Optional",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
     "options_apiKey": {
         "message": "API Key",
         "description": "API key field label"
@@ -4404,8 +4408,12 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "The prompt is too long to sync. Keep it under $1 bytes.",
+        "message": "The prompt is too long to sync. Keep it within $1.",
         "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "The prompt could not be saved. Sync storage may be full; delete prompts you no longer use and try again.",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
     },
     "prompt_varMaxRecommendations": {
         "message": "Number of folder suggestions (Max Recommendations)",

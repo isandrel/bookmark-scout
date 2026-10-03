@@ -29,7 +29,10 @@ export type PromptLibrary = {
   active: Partial<Record<PromptTaskId, string>>;
 };
 
-/** Leaves room under sync's 8,192-byte item quota for the key and the other fields. */
+/**
+ * Largest saved prompt, measured as sync storage measures an item (`syncItemBytes`), so a prompt
+ * within it never hits the browser's 8,192-byte item quota.
+ */
 export const MAX_PROMPT_BYTES = readConfig(
   'ai/prompt-library',
   z.strictObject({ prompt_max_bytes: z.number().int().positive().max(8192) }),
@@ -73,18 +76,57 @@ function promptValue(id: string): StoredValue<CustomPrompt | null> {
   return value;
 }
 
-/** UTF-8 size, which is what sync storage counts; Japanese or Korean text uses 3 bytes a char. */
-export function promptByteLength(text: string): number {
-  return new TextEncoder().encode(text).length;
+/** Characters Chrome's JSON writer escapes as `\uXXXX` although JSON.stringify keeps them. */
+const CHROME_ESCAPED_CHARS = /[<\u2028\u2029]/g;
+const ESCAPE_LENGTH = '\\u003C'.length;
+
+/**
+ * Bytes sync storage counts for one item: the key plus the value's JSON in UTF-8. Quotes and
+ * backslashes take 2 bytes, Japanese or Korean text 3 a character, and `<` 6, because Chrome
+ * escapes it (and the line and paragraph separators) as `\uXXXX`.
+ */
+export function syncItemBytes(key: string, value: unknown): number {
+  const json = JSON.stringify(value) ?? '';
+  const escapes = [...json.matchAll(CHROME_ESCAPED_CHARS)].reduce(
+    (extra, [char]) => extra + ESCAPE_LENGTH - new TextEncoder().encode(char).length,
+    0,
+  );
+  return new TextEncoder().encode(key + json).length + escapes;
+}
+
+/** A prompt being edited: not saved yet when it has no id. */
+export type CustomPromptDraft = Pick<CustomPrompt, 'task' | 'name' | 'system'> & { id?: string };
+
+function newPromptId(): string {
+  return crypto.randomUUID().slice(0, 12);
+}
+
+/** The item a draft is stored as; `updatedAt` is the time of the save. */
+function toStoredPrompt(draft: CustomPromptDraft, id: string, updatedAt: number): CustomPrompt {
+  return { id, task: draft.task, name: draft.name.trim(), system: draft.system, updatedAt };
+}
+
+/** Sync storage key of a prompt item, without the `sync:` area prefix. */
+function promptSyncKey(id: string): string {
+  return `${STORAGE_KEYS.promptPrefix}${id}`.replace(/^sync:/, '');
+}
+
+/**
+ * Bytes the prompt takes in sync storage once saved, as the browser counts them. A new prompt is
+ * measured with an id of the length it will get.
+ */
+export function customPromptBytes(draft: CustomPromptDraft): number {
+  const id = draft.id ?? 'x'.repeat(newPromptId().length);
+  return syncItemBytes(promptSyncKey(id), toStoredPrompt(draft, id, Date.now()));
 }
 
 export class PromptValidationError extends Error {}
 
-export function validateCustomPrompt(name: string, system: string): string | undefined {
-  if (!name.trim()) return t('prompt_errorNameRequired');
-  if (!system.trim()) return t('prompt_errorTextRequired');
-  if (promptByteLength(system) > MAX_PROMPT_BYTES) {
-    return t('prompt_errorTooLong', String(MAX_PROMPT_BYTES));
+export function validateCustomPrompt(draft: CustomPromptDraft): string | undefined {
+  if (!draft.name.trim()) return t('prompt_errorNameRequired');
+  if (!draft.system.trim()) return t('prompt_errorTextRequired');
+  if (customPromptBytes(draft) > MAX_PROMPT_BYTES) {
+    return t('prompt_errorTooLong', formatKilobytes(MAX_PROMPT_BYTES));
   }
   return undefined;
 }
@@ -109,23 +151,15 @@ export async function getActivePromptText(task: PromptTaskId): Promise<string | 
   return prompt?.task === task && prompt.system.trim() ? prompt.system : undefined;
 }
 
-function newPromptId(): string {
-  return crypto.randomUUID().slice(0, 12);
-}
-
-/** Creates or updates a prompt. Throws PromptValidationError when it cannot be saved. */
-export async function saveCustomPrompt(
-  prompt: Omit<CustomPrompt, 'id' | 'updatedAt'> & { id?: string },
-): Promise<CustomPrompt> {
-  const error = validateCustomPrompt(prompt.name, prompt.system);
+/**
+ * Creates or updates a prompt. Throws PromptValidationError when it cannot be saved; a failed
+ * storage write rejects with the browser's own error.
+ */
+export async function saveCustomPrompt(prompt: CustomPromptDraft): Promise<CustomPrompt> {
+  const id = prompt.id ?? newPromptId();
+  const error = validateCustomPrompt({ ...prompt, id });
   if (error) throw new PromptValidationError(error);
-  const saved: CustomPrompt = {
-    id: prompt.id ?? newPromptId(),
-    task: prompt.task,
-    name: prompt.name.trim(),
-    system: prompt.system,
-    updatedAt: Date.now(),
-  };
+  const saved = toStoredPrompt(prompt, id, Date.now());
   await promptValue(saved.id).set(saved);
   await indexValue.update((index) =>
     index.ids.includes(saved.id) ? index : { ...index, ids: [...index.ids, saved.id] },
