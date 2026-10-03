@@ -27,6 +27,8 @@ export type AutoTaggingOptions = {
   minTags: number;
   maxTags: number;
   tagStyle: 'kebab-case' | 'snake_case' | 'lowercase';
+  /** Send each page's readable text too; needs website access. */
+  readPages?: boolean;
 };
 
 export type AutoTaggingResultItem = {
@@ -40,6 +42,8 @@ export type AutoTaggingResultItem = {
 export type SummarizerOptions = {
   summaryLength: number;
   includeDomainHint: boolean;
+  /** Send each page's readable text too; needs website access. */
+  readPages?: boolean;
 };
 
 export type SummarizerResultItem = {
@@ -117,6 +121,7 @@ export async function suggestBookmarkTags(
     return [];
   }
 
+  const items = await addPageText(bookmarks, Boolean(options.readPages));
   const model = createAIModel(settings, 'autoTagging') as CompatibleModel;
   const { system } = await buildPrompt('auto_tagging', {
     minTags: options.minTags,
@@ -127,8 +132,12 @@ export async function suggestBookmarkTags(
   const { object } = await generateObject({
     model,
     schema: autoTaggingSchema,
-    system: `${system}\n\nReturn exactly one item per bookmark and preserve bookmarkId/title exactly.`,
-    prompt: JSON.stringify({ bookmarks }),
+    system: withAppRules(
+      system,
+      'Return exactly one item per bookmark and preserve bookmarkId/title exactly.',
+      items.some((item) => item.pageText),
+    ),
+    prompt: JSON.stringify({ bookmarks: items }),
   });
 
   const seenBookmarkIds = new Set<string>();
@@ -170,6 +179,7 @@ export async function summarizeBookmarksWithAI(
     return [];
   }
 
+  const items = await addPageText(bookmarks, Boolean(options.readPages));
   const model = createAIModel(settings, 'summarizer') as CompatibleModel;
   const { system } = await buildPrompt('summarization', {
     summaryLength: options.summaryLength,
@@ -179,8 +189,12 @@ export async function summarizeBookmarksWithAI(
   const { object } = await generateObject({
     model,
     schema: summarizerSchema,
-    system: `${system}\n\nReturn exactly one item per bookmark and preserve bookmarkId/title exactly.`,
-    prompt: JSON.stringify({ bookmarks }),
+    system: withAppRules(
+      system,
+      'Return exactly one item per bookmark and preserve bookmarkId/title exactly.',
+      items.some((item) => item.pageText),
+    ),
+    prompt: JSON.stringify({ bookmarks: items }),
   });
 
   const seenBookmarkIds = new Set<string>();

@@ -177,6 +177,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
   const { value: aiContextPackerMaxDepth } = useSetting('aiContextPackerMaxDepth');
   const { value: aiContextPackerExcerptLength } = useSetting('aiContextPackerExcerptLength');
   const { value: autoTaggingMinTags } = useSetting('autoTaggingMinTags');
+  const { value: aiReadPageContent } = useSetting('aiReadPageContent');
   const { value: autoTaggingMaxTags } = useSetting('autoTaggingMaxTags');
   const { value: autoTaggingTagStyle } = useSetting('autoTaggingTagStyle');
   const { value: autoTaggingMergeMode } = useSetting('autoTaggingMergeMode');
@@ -642,6 +643,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
         minTags: autoTaggingMinTags,
         maxTags: autoTaggingMaxTags,
         tagStyle: autoTaggingTagStyle,
+        readPages: aiReadPageContent,
       });
       setAutoTaggingResult(result);
       setAutoTaggingDialogOpen(true);
@@ -663,6 +665,7 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       const result = await summarizeBookmarksWithAI(getTargetNodes(scope), settings, {
         summaryLength: summarizerSummaryLength,
         includeDomainHint: summarizerIncludeDomainHint,
+        readPages: aiReadPageContent,
       });
       setSummarizerResult(result);
       setSummarizerDialogOpen(true);
