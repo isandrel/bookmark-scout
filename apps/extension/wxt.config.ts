@@ -1,3 +1,4 @@
+import { site } from '@bookmark-scout/config';
 import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
@@ -17,7 +18,8 @@ export default defineConfig({
     manifest: {
         name: '__MSG_extName__',
         description: '__MSG_extDescription__',
-        default_locale: 'en',
+        // The workspace default locale (config/project.toml); _locales must contain it.
+        default_locale: site.locales.default,
         icons: {
             16: 'icon-16.png',
             32: 'icon-32.png',
@@ -61,7 +63,7 @@ export default defineConfig({
     // Sources are zipped from the workspace root because dependencies and the
     // lockfile live there; reviewers rebuild with SOURCE_CODE_REVIEW.md.
     zip: {
-        name: 'bookmark-scout',
+        name: site.slug,
         artifactTemplate: '{{name}}-v{{packageVersion}}-{{browser}}.zip',
         sourcesTemplate: '{{name}}-v{{packageVersion}}-sources.zip',
         sourcesRoot: path.resolve(__dirname, '../..'),
@@ -73,6 +75,10 @@ export default defineConfig({
             'tsconfig.base.json',
             'apps/*/package.json',
             'packages/*/package.json',
+            // wxt.config.ts reads the project slug and default locale through packages/config.
+            'packages/config/src/**',
+            'config/project.toml',
+            'config/web.toml',
             'apps/extension/**',
         ],
         excludeSources: [
@@ -81,6 +87,7 @@ export default defineConfig({
             'apps/extension/test-results/**',
             'apps/extension/playwright.config.ts',
             'apps/extension/vitest.config.ts',
+            'packages/config/src/**/*.test.ts',
         ],
     },
 

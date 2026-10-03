@@ -4872,5 +4872,21 @@
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
         "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
+    },
+    "page_title": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+    },
+    "page_sidePanel": {
+        "message": "Side Panel",
+        "description": "Name of the side panel page, used in its tab title"
+    },
+    "page_bookmarks": {
+        "message": "Bookmarks",
+        "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_options": {
+        "message": "Options",
+        "description": "Name of the options page, used in its tab title"
     }
 }

@@ -106,6 +106,7 @@
         "zod": "^4.6.5",
       },
       "devDependencies": {
+        "@bookmark-scout/config": "workspace:*",
         "@types/turndown": "^5.0.6",
         "linkedom": "^0.18.13",
         "sass": "^1.105.0",
