@@ -33,7 +33,7 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 - `src/app/api/search/`: the static search index
 - `src/components/mdx/`: MDX components that read config (`Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, `PrivacyEffectiveDate`) and `Screenshot`
 - `src/components/home/`: the docs home's task finder
-- `src/lib/`: source loading (`source.ts`), link helpers (`links.ts`), site constants (`site.ts`), the page index (`doc-index.ts`), screenshots (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
+- `src/lib/`: source loading (`source.ts`), link helpers (`links.ts`), site constants (`site.ts`), UI copy outside MDX (`copy.ts`), the page index (`doc-index.ts`), screenshot alt text over the shared manifest in `@bookmark-scout/config` (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
 - `src/mdx-components.tsx`: component mapping for MDX; register new MDX components here
 - `source.config.ts`: MDX and collection configuration
 - `scripts/verify-build.ts`: checks the static export in `out/`
@@ -89,7 +89,7 @@ Rules:
 ### No hard-coded values
 
 - Never write URLs for the website, repository, releases, or stores, contact addresses, the license, or the privacy date as literals in MDX or app code. They come from `config/project.toml` and `config/web.toml` through `@bookmark-scout/config`.
-- In MDX, use the config components: `<Contact role="support" />`, `<ReleaseLink />`, `<SiteLink to="privacy">...</SiteLink>`, `<RepoLink path="/issues">...</RepoLink>`, `<StoreListing browser="chrome" />`, `<StoreAvailability />`, `<License />`, `<PrivacyEffectiveDate />`.
+- In MDX, use the config components: `<Contact role="support" />`, `<ReleaseLink />`, `<SiteLink to="privacy">...</SiteLink>`, `<RepoLink path="/issues">...</RepoLink>` (or `file="CONTRIBUTING.md"` for a file and `tree="store"` for a folder on the default branch; never write the branch name), `<StoreListing browser="chrome" />`, `<StoreAvailability />`, `<License />`, `<PrivacyEffectiveDate />`.
 - A new config component needs three changes: the component in `src/components/mdx/`, its registration in `src/mdx-components.tsx`, and a Markdown replacement in `src/lib/mdx-text.ts` so LLM text stays readable.
 - Keep link and navigation lists as typed data in `src/lib/` (`site.ts`, `links.ts`), not inline in components.
 

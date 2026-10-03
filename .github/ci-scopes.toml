@@ -39,4 +39,5 @@ shared = [
 # Build Extension, Extension Tests, Edge E2E, Firefox E2E smoke
 extension = ["apps/extension/**"]
 # Website and Docs
-sites = ["apps/website/**", "apps/docs/**"]
+# The website also reads the extension's AI provider list from apps/extension/config.
+sites = ["apps/website/**", "apps/docs/**", "apps/extension/config/**"]

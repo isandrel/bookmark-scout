@@ -118,6 +118,8 @@ export function createSite(project: ProjectConfig, web: WebConfig) {
 		url: {
 			/** Website origin without a trailing slash, such as https://bookmark-scout.com. */
 			origin,
+			/** The website root, which redirects to the default locale. */
+			home: `${origin}/`,
 			path,
 			page,
 			/** hreflang alternates for a route: one URL per locale plus `x-default`. */

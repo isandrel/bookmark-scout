@@ -3,7 +3,7 @@
  * One-time Cloudflare Pages setup for the website, run locally. Safe to re-run.
  *
  * 1. Creates the Pages project if it does not exist (needs Account > Cloudflare Pages: Edit).
- * 2. Attaches each domain in `[hosting] website_domains` to the project (same permission).
+ * 2. Attaches each domain in `[website] domains` (config/web.toml) to the project (same permission).
  * 3. Points each domain's DNS at `<project>.pages.dev` with a proxied CNAME, removing A and
  *    AAAA records for that name (needs Zone > DNS: Edit and Zone: Read).
  *
@@ -12,7 +12,7 @@
  *
  * Deploys themselves run in CI (`.github/workflows/deploy-website.yml`).
  */
-import { WEBSITE_DOMAINS } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 
 const { CLOUDFLARE_API_TOKEN: token, CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_PROJECT_NAME: project } =
     process.env;
@@ -57,7 +57,7 @@ if (!info.success) {
     await write(
         `create project ${project}`,
         `/accounts/${account}/pages/projects`,
-        { method: "POST", body: JSON.stringify({ name: project, production_branch: "main" }) },
+        { method: "POST", body: JSON.stringify({ name: project, production_branch: site.repo.defaultBranch }) },
         pagesPermission,
     );
     info = await api<{ subdomain: string }>(projectPath);
@@ -72,7 +72,7 @@ if (!domains.success && !dryRun) {
     process.exit(1);
 }
 const attached = new Map((domains.result ?? []).map((domain) => [domain.name, domain.status]));
-for (const domain of WEBSITE_DOMAINS) {
+for (const domain of site.domains) {
     if (attached.has(domain)) {
         console.log(`  ${domain}: ${attached.get(domain)}`);
         continue;
@@ -86,7 +86,7 @@ for (const domain of WEBSITE_DOMAINS) {
 }
 
 console.log("DNS");
-for (const domain of WEBSITE_DOMAINS) {
+for (const domain of site.domains) {
     // The zone is the longest suffix of the domain that Cloudflare knows about.
     const labels = domain.split(".");
     let zoneId: string | undefined;

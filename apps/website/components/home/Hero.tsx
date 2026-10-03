@@ -1,17 +1,15 @@
-import { DOCS_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import { ContourLines } from "./ContourLines";
-import { ANY_STORE_LIVE } from "@/lib/download";
-import { RELEASES_URL } from "@bookmark-scout/config";
 import { DownloadButton, secondaryButtonClass } from "./DownloadButton";
 import { SearchDemo } from "./SearchDemo";
 
 export async function Hero({ locale }: { locale: string }) {
     const t = await getTranslations("home.hero");
     // With a live store listing, send visitors to the per-browser install tabs instead.
-    const primary = ANY_STORE_LIVE
-        ? { href: `/${locale}/#install`, label: t("install") }
-        : { href: RELEASES_URL, label: t("download") };
+    const primary = site.anyStoreLive
+        ? { href: site.url.path(locale, "", "install"), label: t("install") }
+        : { href: site.repo.releasesLatest, label: t("download") };
 
     return (
         <section aria-labelledby="hero-title" className="overflow-hidden">
@@ -28,11 +26,11 @@ export async function Hero({ locale }: { locale: string }) {
                     </p>
                     <div className="mt-8 flex flex-wrap gap-3">
                         <DownloadButton href={primary.href} label={primary.label} />
-                        <a href={DOCS_URL} className={secondaryButtonClass}>
+                        <a href={site.docs.url()} className={secondaryButtonClass}>
                             {t("docs")}
                         </a>
                     </div>
-                    <p className="mt-4 text-sm text-ink-soft">{t("license")}</p>
+                    <p className="mt-4 text-sm text-ink-soft">{t("license", { license: site.license.spdx })}</p>
                 </div>
 
                 <div className="relative mt-12 sm:mt-14">

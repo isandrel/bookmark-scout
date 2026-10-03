@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, type KeyboardEvent, useId, useMemo, useState } from "react";
+import { copy } from "@/lib/copy";
 import type { DocEntry } from "@/lib/doc-index";
 
 type TaskFinderProps = {
@@ -79,8 +80,8 @@ export function TaskFinder({
 
   const status =
     tokens.length === 0
-      ? `Pick a task, or type to filter all ${entries.length} pages. Enter opens the first match.`
-      : `${results.length} of ${entries.length} pages`;
+      ? copy.finder.idle(entries.length)
+      : copy.finder.count(results.length, entries.length);
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter" && results[0]) {
@@ -95,7 +96,7 @@ export function TaskFinder({
 
   return (
     <section
-      aria-label="Find a page"
+      aria-label={copy.finder.region}
       className="relative mt-8 rounded-2xl border border-fd-border bg-fd-card"
     >
       <span
@@ -106,7 +107,7 @@ export function TaskFinder({
       <div className="border-b border-fd-border px-5 pt-7 pb-4 sm:px-8">
         <div className="flex items-center gap-3">
           <label htmlFor={inputId} className="sr-only">
-            Search the docs by task
+            {copy.finder.label}
           </label>
           <Search
             aria-hidden
@@ -119,7 +120,7 @@ export function TaskFinder({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="What do you want to do?"
+            placeholder={copy.finder.placeholder}
             autoComplete="off"
             spellCheck={false}
             aria-controls={listId}
@@ -194,8 +195,7 @@ export function TaskFinder({
           </ul>
         ) : (
           <p className="px-3 py-4 text-fd-muted-foreground sm:px-4">
-            No page matches “{query.trim()}”. Try fewer words, or use Search at
-            the top of the page to search inside every page.
+            {copy.finder.noMatch(query.trim())}
           </p>
         )}
       </div>

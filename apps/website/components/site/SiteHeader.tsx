@@ -1,16 +1,21 @@
-import { DOCS_URL, GITHUB_URL, SITE_NAME } from "@bookmark-scout/config";
+import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
-import { LanguageSwitcher } from "./LanguageSwitcher";
+import { type LanguageLink, LanguageSwitcher } from "./LanguageSwitcher";
+
+const LANGUAGES: LanguageLink[] = site.locales.supported.map((locale) => ({
+    locale,
+    name: site.locales.name(locale),
+}));
 
 export async function SiteHeader({ locale }: { locale: string }) {
     const t = await getTranslations({ locale, namespace: "nav" });
     const links = [
-        { href: `/${locale}/#features`, label: t("features"), external: false },
-        { href: `/${locale}/privacy/`, label: t("privacy"), external: false },
-        { href: `/${locale}/#install`, label: t("install"), external: false },
-        { href: DOCS_URL, label: t("docs"), external: true },
-        { href: GITHUB_URL, label: t("github"), external: true },
+        { href: site.url.path(locale, "", "features"), label: t("features"), external: false },
+        { href: site.url.path(locale, "/privacy"), label: t("privacy"), external: false },
+        { href: site.url.path(locale, "", "install"), label: t("install"), external: false },
+        { href: site.docs.url(), label: t("docs"), external: true },
+        { href: site.repo.url(), label: t("github"), external: true },
     ];
 
     const linkList = (className: string) => (
@@ -40,10 +45,10 @@ export async function SiteHeader({ locale }: { locale: string }) {
                 {t("skip")}
             </a>
             <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-                <Link href={`/${locale}/`} aria-label={t("home")} className="flex shrink-0 items-center gap-2.5">
+                <Link href={site.url.path(locale)} aria-label={t("home")} className="flex shrink-0 items-center gap-2.5">
                     {/* eslint-disable-next-line @next/next/no-img-element -- static export, icon is already 128px */}
-                    <img src="/icon.png" alt="" width={28} height={28} className="size-7" />
-                    <span className="font-display text-lg font-bold tracking-tight">{SITE_NAME}</span>
+                    <img src={PUBLIC_PATHS.icon} alt="" width={28} height={28} className="size-7" />
+                    <span className="font-display text-lg font-bold tracking-tight">{site.name}</span>
                 </Link>
 
                 <nav aria-label={t("menu")} className="hidden lg:block">
@@ -51,7 +56,7 @@ export async function SiteHeader({ locale }: { locale: string }) {
                 </nav>
 
                 <div className="hidden lg:block">
-                    <LanguageSwitcher currentLocale={locale} label={t("languages")} />
+                    <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} />
                 </div>
 
                 <details className="group relative lg:hidden">
@@ -63,7 +68,7 @@ export async function SiteHeader({ locale }: { locale: string }) {
                     </summary>
                     <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-line bg-surface p-4 shadow-xl shadow-ink/10">
                         {linkList("mb-4 flex flex-col gap-3 border-b border-line pb-4")}
-                        <LanguageSwitcher currentLocale={locale} label={t("languages")} />
+                        <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} />
                     </div>
                 </details>
             </div>

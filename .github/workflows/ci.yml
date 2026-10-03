@@ -68,7 +68,7 @@ jobs:
         run: bunx nx run extension:lint
 
       - name: Test the workspace config and scripts
-        run: bun test packages scripts
+        run: bun test packages scripts apps/website/lib
 
       - name: Check generated READMEs match templates
         run: |

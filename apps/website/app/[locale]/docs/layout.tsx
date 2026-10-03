@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-// These pages mirror docs.bookmark-scout.com, which is the canonical documentation.
+// These pages forward to the docs site, which is the canonical documentation.
 // Keep them out of search results so they do not compete with the docs site.
 export const metadata: Metadata = {
     robots: { index: false, follow: true },

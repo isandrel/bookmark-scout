@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { SITE_URL, AUTHOR } from "@bookmark-scout/config";
+import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 
 // `<html>` and `<body>` are rendered by `app/[locale]/layout.tsx` so each locale
 // gets the correct `lang` attribute. This layout only holds metadata shared by every route.
+// The web manifest comes from `app/manifest.ts`, which Next.js links automatically.
 export const metadata: Metadata = {
-    metadataBase: new URL(SITE_URL),
-    authors: [{ name: AUTHOR.name, url: AUTHOR.url }],
-    creator: AUTHOR.name,
-    publisher: AUTHOR.name,
+    metadataBase: new URL(site.url.origin),
+    authors: [{ name: site.author.name, url: site.author.url }],
+    creator: site.author.name,
+    publisher: site.author.name,
     robots: {
         index: true,
         follow: true,
@@ -20,10 +21,9 @@ export const metadata: Metadata = {
         },
     },
     icons: {
-        icon: "/icon.png",
-        apple: "/icon.png",
+        icon: PUBLIC_PATHS.icon,
+        apple: PUBLIC_PATHS.icon,
     },
-    manifest: "/manifest.json",
     category: "technology",
 };
 

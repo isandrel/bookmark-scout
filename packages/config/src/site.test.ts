@@ -2,6 +2,7 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { SCREENSHOTS } from "./screenshots";
 import { createSite, joinUrl, titleTemplate, withSiteName } from "./site";
 import { findConfigDir, parseProjectConfig, parseWebConfig, readWorkspaceConfig } from "./workspace";
 
@@ -224,6 +225,20 @@ describe("strict loading", () => {
 	test("the repository's own config files are valid", () => {
 		const config = readWorkspaceConfig();
 		expect(config.project.locales.supported).toContain(config.project.locales.default);
+	});
+});
+
+describe("screenshots", () => {
+	// Both sites serve the captures from their own public/ folder; the copies must not drift.
+	test("every capture exists, byte for byte, in the website and docs public folders", () => {
+		const root = join(findConfigDir(), "..");
+		for (const pair of Object.values(SCREENSHOTS)) {
+			for (const path of [pair.light, pair.dark]) {
+				const website = readFileSync(join(root, "apps/website/public", path));
+				const docs = readFileSync(join(root, "apps/docs/public", path));
+				expect(docs.equals(website), path).toBe(true);
+			}
+		}
 	});
 });
 

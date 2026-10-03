@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+// No `@bookmark-scout/config` import here: the browser tests load this file as CommonJS.
+
 /** Every indexable page, rendered once per locale. `""` is the locale home. No trailing slash. */
 export const INDEXABLE_ROUTES = ["", "/privacy", "/support"] as const;
 

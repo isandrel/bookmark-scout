@@ -1,4 +1,4 @@
-import { DOCS_NAME } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import {
   DocsBody,
   DocsDescription,
@@ -33,7 +33,7 @@ export default async function Page(props: PageProps<"/[[...slug]]">) {
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{isHome ? DOCS_NAME : page.data.title}</DocsTitle>
+      <DocsTitle>{isHome ? site.docs.name : page.data.title}</DocsTitle>
       <DocsDescription className="mb-0">
         {page.data.description}
       </DocsDescription>
@@ -75,11 +75,11 @@ export async function generateMetadata(
   const isHome = page.slugs.length === 0;
 
   return {
-    title: isHome ? { absolute: DOCS_NAME } : page.data.title,
+    title: isHome ? { absolute: site.docs.name } : page.data.title,
     description: page.data.description,
     alternates: { canonical: page.url },
     openGraph: {
-      title: isHome ? DOCS_NAME : page.data.title,
+      title: isHome ? site.docs.name : page.data.title,
       description: page.data.description,
       url: page.url,
       images: getPageImage(page).url,

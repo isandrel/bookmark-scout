@@ -5,7 +5,7 @@ import { PrivacyGlance } from "@/components/privacy/PrivacyGlance";
 import { PrivacyToc } from "@/components/privacy/PrivacyToc";
 import { PRIVACY_EMAILS, PRIVACY_LINKS, PRIVACY_SECTIONS } from "@/lib/content/privacy-sections";
 import { localizedPageMetadata } from "@/lib/page-metadata";
-import { LICENSE, PRIVACY_EFFECTIVE_DATE } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
@@ -28,14 +28,14 @@ export default async function PrivacyPage({ params }: PageProps) {
     const t = await getTranslations({ locale, namespace: "privacyPage" });
 
     // The config date is a calendar date; format it in UTC so no time zone shifts the day.
-    const effectiveDate = new Date(`${PRIVACY_EFFECTIVE_DATE}T00:00:00Z`);
+    const effectiveDate = new Date(`${site.legal.privacyEffectiveDate}T00:00:00Z`);
     const formattedDate = new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
         effectiveDate,
     );
     const tags = proseTags({
         links: PRIVACY_LINKS,
         emails: PRIVACY_EMAILS,
-        values: { licenseName: LICENSE.name },
+        values: { licenseName: site.license.spdx },
     });
 
     return (
@@ -43,7 +43,7 @@ export default async function PrivacyPage({ params }: PageProps) {
             <LongformHeader
                 title={t("title")}
                 meta={
-                    <time dateTime={PRIVACY_EFFECTIVE_DATE}>{t("effective", { date: formattedDate })}</time>
+                    <time dateTime={site.legal.privacyEffectiveDate}>{t("effective", { date: formattedDate })}</time>
                 }
                 intro={t("intro")}
                 note={t("translationNote")}

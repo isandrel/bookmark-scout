@@ -15,6 +15,13 @@ import { readWorkspaceConfig } from "./workspace";
 
 export { ConfigError } from "./schema";
 export {
+	SCREENSHOT_SIZE,
+	SCREENSHOTS,
+	type ScreenshotName,
+	type ScreenshotPair,
+	SOCIAL_SCREENSHOT,
+} from "./screenshots";
+export {
 	type ContactRole,
 	createSite,
 	joinUrl,
@@ -37,40 +44,6 @@ export {
 	type WorkspaceConfig,
 } from "./workspace";
 
-/** The validated workspace config files. Prefer `site`; this is for generators that need raw values. */
-export const workspaceConfig = readWorkspaceConfig();
-
-/** Every site value and URL builder. */
-export const site = createSite(workspaceConfig.project, workspaceConfig.web);
-
-export const SITE_NAME = site.name;
-export const SITE_URL = site.url.origin;
-export const LOCALES = site.locales.supported;
-export const DEFAULT_LOCALE = site.locales.default;
-
-// ----------------------------------------------------------------------------
-// Earlier flat exports, derived from `site` until every caller uses the model.
-// ----------------------------------------------------------------------------
-
-export const SITE_DESCRIPTION = site.description;
-export const AUTHOR = site.author;
-export const GITHUB_URL = site.repo.base;
-export const LICENSE = { name: site.license.spdx, url: site.license.fileUrl } as const;
-export const CONTACT = {
-	privacy: site.contact.address("privacy"),
-	security: site.contact.address("security"),
-	support: site.contact.address("support"),
-} as const;
-export const WEBSITE_DOMAINS = site.domains;
-export const STORES: Readonly<Record<string, string>> = Object.fromEntries(
-	site.stores.map((listing) => [listing.browser, listing.url]),
-);
-export type StoreBrowser = string;
-export type Locale = string;
-export const RELEASES_URL = site.repo.releasesLatest;
-export const PRIVACY_EFFECTIVE_DATE = site.legal.privacyEffectiveDate;
-export const DOCS_NAME = site.docs.name;
-export const DOCS_URL = site.docs.origin;
-export const UMAMI_ENABLED = site.analytics.enabled;
-export const UMAMI_WEBSITE_ID = site.analytics.websiteId;
-export const UMAMI_SCRIPT_URL = site.analytics.scriptUrl;
+/** Every site value and URL builder, from the validated workspace config files. */
+const workspace = readWorkspaceConfig();
+export const site = createSite(workspace.project, workspace.web);

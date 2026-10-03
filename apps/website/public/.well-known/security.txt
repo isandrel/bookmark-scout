@@ -1,7 +1,0 @@
-# Bookmark Scout security contact (RFC 9116). Renew Expires before it lapses.
-Contact: mailto:security@bookmark-scout.com
-Contact: https://github.com/isandrel/bookmark-scout/security/advisories/new
-Expires: 2027-09-30T00:00:00.000Z
-Preferred-Languages: en, ja, ko
-Canonical: https://bookmark-scout.com/.well-known/security.txt
-Policy: https://github.com/isandrel/bookmark-scout/blob/main/SECURITY.md

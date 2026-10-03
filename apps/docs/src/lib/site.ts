@@ -1,15 +1,15 @@
-import { SITE_NAME, SITE_URL } from "@bookmark-scout/config";
+import { site } from "@bookmark-scout/config";
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
+import { copy } from "@/lib/copy";
 
-export const DOCS_DESCRIPTION =
-  "Install and use Bookmark Scout, a browser extension that searches, organizes, and cleans up your bookmarks inside your browser.";
+export const DOCS_DESCRIPTION = site.docs.description;
 
-export const NAV_TITLE = SITE_NAME;
+export const NAV_TITLE = site.name;
 
 /** Header links. GitHub is added by the layout's `githubUrl` option. */
 export const NAV_LINKS: LinkItemType[] = [
-  { text: "Website", url: SITE_URL, external: true },
+  { text: copy.nav.website, url: site.url.origin, external: true },
 ];
 
-/** Browser UI colors; match the paper background tokens in app/global.css. */
-export const THEME_COLORS = { light: "#f4f7fb", dark: "#0d1b2a" } as const;
+/** Browser UI colors from config/web.toml; a test checks they match app/global.css. */
+export const THEME_COLORS = site.theme;
