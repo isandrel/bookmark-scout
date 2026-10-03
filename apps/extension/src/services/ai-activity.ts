@@ -38,6 +38,24 @@ function requestUrl(input: RequestInfo | URL): string {
   return input.toString();
 }
 
+/**
+ * Names of the extra headers configured on any AI service. They are often credentials under a
+ * name no pattern recognizes (a tenant or gateway key), so their values are never recorded.
+ */
+async function configuredExtraHeaderNames(): Promise<string[]> {
+  const configs = await aiProviderConfigValue.get().catch(() => ({}));
+  return Object.values(configs).flatMap((config: StoredAIProviderConfig | undefined) => {
+    const raw = config?.extraHeaders;
+    if (typeof raw !== 'string' || !raw.trim()) return [];
+    try {
+      const parsed: unknown = JSON.parse(raw);
+      return isPlainObject(parsed) ? Object.keys(parsed) : [];
+    } catch {
+      return [];
+    }
+  });
+}
+
 export function createLoggingFetch(context: AIActivityContext): typeof fetch {
   return async (input, init) => {
     if (!(await aiActivityRecordingValue.get().catch(() => false))) {
@@ -50,7 +68,10 @@ export function createLoggingFetch(context: AIActivityContext): typeof fetch {
       at: Date.now(),
       method: init?.method ?? (input instanceof Request ? input.method : 'GET'),
       url: redactUrl(requestUrl(input)),
-      requestHeaders: redactHeaders(init?.headers ?? (input instanceof Request ? input.headers : undefined)),
+      requestHeaders: redactHeaders(
+        init?.headers ?? (input instanceof Request ? input.headers : undefined),
+        await configuredExtraHeaderNames(),
+      ),
       requestBody: request.body,
       requestBodyOmitted: request.omitted,
     };
