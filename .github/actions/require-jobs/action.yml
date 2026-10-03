@@ -1,0 +1,57 @@
+name: Require jobs
+description: >-
+  Turns several jobs, such as matrix shards, into one required check. Run it in a job with
+  `if: always()` that `needs` the scope detection job and the jobs to check, and pass
+  `toJSON(needs)`. Passes when the scope is off (the jobs were skipped on purpose), fails when scope
+  detection produced no output, and otherwise fails unless every other needed job succeeded.
+  Skipped, failed, and cancelled jobs all fail it, so a cancelled run never reports as passed.
+
+inputs:
+  needs:
+    description: The calling job's `needs` context as JSON (`toJSON(needs)`).
+    required: true
+  scope:
+    description: Scope from .github/ci-scopes.toml that gates the checked jobs, such as extension.
+    required: true
+  scopes-job:
+    description: Id of the job whose `scopes` output holds the scope decisions.
+    default: changes
+
+runs:
+  using: composite
+  steps:
+    - name: Check the needed jobs
+      shell: bash
+      env:
+        NEEDS: ${{ inputs.needs }}
+        SCOPE: ${{ inputs.scope }}
+        SCOPES_JOB: ${{ inputs.scopes-job }}
+      run: |
+        scopes=$(jq -r --arg job "$SCOPES_JOB" '.[$job].outputs.scopes // empty' <<<"$NEEDS")
+        if [ -z "$scopes" ]; then
+          echo "::error::$SCOPES_JOB produced no scopes output, so the checked jobs cannot be trusted."
+          exit 1
+        fi
+        enabled=$(jq -r --arg scope "$SCOPE" '.[$scope]' <<<"$scopes")
+        case "$enabled" in
+          false)
+            echo "Nothing in the $SCOPE scope changed; the checked jobs were skipped on purpose."
+            exit 0
+            ;;
+          true) ;;
+          *)
+            echo "::error::Scope '$SCOPE' is not in the $SCOPES_JOB output: $scopes"
+            exit 1
+            ;;
+        esac
+        # The scope job's own result is ignored: it sets its output before its last step runs.
+        failed=0
+        while read -r job result; do
+          echo "$job: $result"
+          if [ "$result" != success ]; then
+            echo "::error::$job ended with '$result'."
+            failed=1
+          fi
+        done < <(jq -r --arg job "$SCOPES_JOB" \
+          'to_entries[] | select(.key != $job) | "\(.key) \(.value.result)"' <<<"$NEEDS")
+        exit "$failed"

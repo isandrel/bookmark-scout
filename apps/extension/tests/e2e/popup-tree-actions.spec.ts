@@ -130,7 +130,8 @@ test('an undo toast paused by hover closes when the undo window expires', async 
   extensionWorker,
   page,
 }) => {
-  test.setTimeout(45_000);
+  // Waits out the whole undo window, so the browser start and page load must fit in what is left.
+  // A 45 s budget, below the suite's 60 s, timed out loading the popup on a busy Edge runner.
   await seedFolder(extensionWorker, 'E2E Late Undo', [
     { title: 'Late Undo Target', url: 'https://e2e.invalid/late' },
   ]);

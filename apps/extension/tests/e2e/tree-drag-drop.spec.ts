@@ -18,6 +18,16 @@ async function openTree(page: Page, extensionId: string, surface: Surface) {
   await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
 }
 
+/**
+ * Types a search and waits until the filtered tree has rendered (its matches are highlighted).
+ * The filter applies after a debounce; measuring rows before it lands once dropped a folder in
+ * the wrong place when the tree re-rendered mid-drag under load.
+ */
+async function searchTree(page: Page, query: string) {
+  await page.getByPlaceholder('Search bookmarks...').fill(query);
+  await expect(page.locator('mark').first()).toBeVisible();
+}
+
 /** The draggable, droppable part of a folder row. */
 function folderHandle(page: Page, title: string) {
   return folderRow(page, title).locator('[data-slot="drag-handle"]');
@@ -86,7 +96,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       ]);
 
       await openTree(page, extensionId, surface);
-      await page.getByPlaceholder('Search bookmarks...').fill('DnD Move');
+      await searchTree(page, 'DnD Move');
       await pointerDrag(
         page,
         bookmarkHandle(page, 'DnD Move Traveller'),
@@ -118,7 +128,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       ]);
 
       await openTree(page, extensionId, surface);
-      await page.getByPlaceholder('Search bookmarks...').fill('DnD Marker');
+      await searchTree(page, 'DnD Marker');
       const source = bookmarkHandle(page, 'DnD Marker Traveller');
       const target = folderHandle(page, 'DnD Marker Destination');
       await expect(source).toBeVisible();
@@ -162,7 +172,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       const moverBefore = await subtree(extensionWorker, moverId);
 
       await openTree(page, extensionId, surface);
-      await page.getByPlaceholder('Search bookmarks...').fill('DnD Nest');
+      await searchTree(page, 'DnD Nest');
       await pointerDrag(
         page,
         folderHandle(page, 'DnD Nest Mover'),
@@ -203,7 +213,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       };
 
       await openTree(page, extensionId, surface);
-      await page.getByPlaceholder('Search bookmarks...').fill('Order ');
+      await searchTree(page, 'Order ');
       await expect(rows).toHaveText(['Order A', 'Order B', 'Order C', 'Order D']);
 
       // Before a later sibling: move up.
@@ -248,7 +258,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       };
 
       await openTree(page, extensionId, surface);
-      await page.getByPlaceholder('Search bookmarks...').fill('Shelf');
+      await searchTree(page, 'Shelf');
       await expect(shelfRows).toHaveCount(3);
 
       await drag('Shelf Three', 'Shelf One', 'before', ['Shelf Three', 'Shelf One', 'Shelf Two']);
@@ -299,7 +309,7 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       for (const [target, zone] of attempts) {
         // A fresh page per attempt: an informational toast replaces the previous one.
         await openTree(page, extensionId, surface);
-        await page.getByPlaceholder('Search bookmarks...').fill('Cycle');
+        await searchTree(page, 'Cycle');
         await expect(bookmarkRow(page, 'Cycle Deep Link')).toBeVisible();
 
         await pointerDrag(page, folderHandle(page, 'Cycle Parent'), target, zone);

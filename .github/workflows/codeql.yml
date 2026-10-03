@@ -9,6 +9,11 @@ on:
     # Run weekly on Sundays at midnight UTC
     - cron: '0 0 * * 0'
 
+# A new push to a pull request cancels its older run; pushes and scheduled runs are never cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   actions: read
   contents: read

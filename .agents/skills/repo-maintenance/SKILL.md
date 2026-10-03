@@ -22,6 +22,9 @@ The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs,
 Watch for:
 - **Merge state lags.** A PR can still show as conflicting a minute after a successful merge-and-push. Check again before resolving twice.
 - **Flaky check on an unrelated PR:** rerun, do not change code. Edge E2E sometimes times out on its first test from a cold browser start. Rerun only the failed jobs with `gh run rerun <run-id> --failed`, check history with `gh run list --workflow ci.yml --limit 15 --json headBranch,conclusion`, and fix the test only if the same failure repeats.
+- **Sharded suites.** `Extension Tests` and `Edge E2E` are summary jobs; the failure is in a shard (`Chromium E2E (2/3)`, `Edge E2E (1/3)`) or in `Extension Unit Tests`. Read that job's log and its `playwright-failures-<browser>-<shard>` artifact. `gh run rerun <id> --failed` reruns the failed shard and then the summary.
+- **Retries.** The extension suite retries once on CI only. A test that passed on retry shows as `flaky` in the shard log: treat it as a bug to fix (see "Red main after a merge"), never raise `retries` or lower the worker count to hide it without finding the cause.
+- **Superseded runs are cancelled.** CI, CodeQL, Dependency Review, and the labeler cancel a PR's older run on a new push; a cancelled run on an old commit needs no action.
 - **CodeQL is required, so false positives still block.** Rewrite the code rather than arguing: when decoding HTML entities, decode `&amp;` last; avoid one-pass regex HTML sanitizers. Then reply on the CodeQL thread and resolve it.
 - **Dependency Review:** an "Unknown License" warning on a package whose real license is on the allowlist needs no action. A license that is not on the allowlist (for example OFL-1.1 fonts) blocks the PR; add it to `.github/workflows/dependency-review.yml` with the user's agreement and ship the license text.
 
@@ -51,6 +54,10 @@ PRs can pass CI and still fail on `main` (flaky timing, or two PRs that conflict
 ## Changing required checks
 
 Only with the user's approval. A new job meant to gate merges must become required in the same rollout, or auto-merge ignores it. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no workflow-level path filters), or PRs that skip them can never merge. Skipping inside the workflow is fine: CI's `Detect changes` job (rules in `.github/ci-scopes.toml`) gates jobs with `if`, and a job skipped that way reports as passed. Skip matrix jobs per step, because a skipped matrix job reports one check under its unexpanded name, and keep `!cancelled()` in each `if`, so a failed detection runs the jobs instead of skipping them as passed.
+
+To shard or split a required job without touching the ruleset, keep its name on a summary job: `needs` the scope job and the shards, `if: always()`, and run `.github/actions/require-jobs` with `needs: ${{ toJSON(needs) }}` and the scope name. It passes when the scope is off, fails when the scope output is missing, and fails on any skipped, failed, or cancelled shard, so a cancelled run never reports the check as passed. The shards themselves are not required and may skip at job level. Name shards so they never equal a required check name, and give each shard's failure artifact a unique name.
+
+Concurrency groups that cancel superseded runs belong only on `pull_request` events: key the group on the PR number for pull requests and on `github.run_id` otherwise, so pushes to `main`, scheduled runs, releases, and deploys never cancel or replace each other (a shared group with `cancel-in-progress: false` still drops a pending run).
 
 ```bash
 id=$(gh api 'repos/{owner}/{repo}/rulesets' --jq '.[] | select(.name == "Protect Main Branch") | .id')

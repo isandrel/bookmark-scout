@@ -75,7 +75,7 @@
             }
         },
         "test:e2e": {
-            "command": "playwright install --with-deps chromium && playwright test --config playwright.config.ts --project=chromium",
+            "command": "playwright install --with-deps --no-shell chromium && playwright test --config playwright.config.ts --project=chromium",
             "dependsOn": [
                 "build:chrome"
             ],
