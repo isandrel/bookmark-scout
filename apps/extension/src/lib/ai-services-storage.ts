@@ -145,7 +145,7 @@ export async function duplicateAIService(id: string): Promise<AIService | undefi
   const state = await getAIServicesState();
   const source = state.services.find((service) => service.id === id);
   if (!source) return undefined;
-  const copy = await addAIService(source.provider, t('options_aiServiceCopyName', source.name));
+  const copy = await addAIService(source.provider, t('format_copyName', source.name));
   await updateAIService(copy.id, { model: source.model, enabled: source.enabled });
   const config = await getStoredAIProviderConfig(source.id);
   if (Object.keys(config).length > 0) await saveStoredAIProviderConfig(copy.id, config);

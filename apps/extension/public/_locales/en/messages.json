@@ -4397,10 +4397,6 @@
         "message": "Its API key and settings are removed from this device.",
         "description": "Body of the delete service confirmation"
     },
-    "options_aiServiceCopyName": {
-        "message": "$1 (copy)",
-        "description": "Name of a duplicated service; $1 is the original name"
-    },
     "options_aiServiceMore": {
         "message": "More settings",
         "description": "Toggle that shows Base URL, headers, and provider-specific fields"
