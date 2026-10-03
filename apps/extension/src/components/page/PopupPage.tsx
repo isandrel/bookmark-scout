@@ -4,7 +4,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { BookmarkIcon, CircleAlert, Folder, FolderPlus, SearchX, Sparkles, X } from 'lucide-react';
+import { BookmarkIcon, CircleAlert, SearchX } from 'lucide-react';
 import type { BookmarkTreeNode, DragOperation, FaviconDisplay } from '@/types';
 import '@/styles/popup.scss';
 
@@ -18,15 +18,23 @@ function focusFolderRow(folderId: string | undefined): void {
     ?.focus();
 }
 
-/**
- * A suggested path as the user knows it: AI paths start with the permanent folder, and the
- * bookmarks bar, where most folders live, goes without saying. Its title differs per browser
- * and language, so it is read from the tree.
- */
-function withoutBookmarksBar(path: string, folders: readonly BookmarkTreeNode[]): string {
-  const barTitle = findBookmarksBarFolder(folders)?.title;
-  const prefix = barTitle ? `${barTitle}${AI_FOLDER_PATH_SEPARATOR}` : undefined;
-  return prefix && path.startsWith(prefix) ? path.slice(prefix.length) : path;
+function describeRecommendedFolderError(error: unknown): string {
+  return error instanceof RecommendedFolderError && error.code === 'path-conflict'
+    ? t('ai_newFolderConflictDesc', error.segment ?? '')
+    : t('ai_newFolderFailedDesc');
+}
+
+/** The recommendation resolved against the current tree, or null when it no longer resolves. */
+function tryResolveFolderPath(
+  recommendation: FolderRecommendation | null,
+  folders: readonly BookmarkTreeNode[],
+): ResolvedFolderPath | null {
+  if (!recommendation) return null;
+  try {
+    return resolveRecommendedFolderPath(recommendation, folders);
+  } catch {
+    return null;
+  }
 }
 
 function PopupPage() {
@@ -92,6 +100,12 @@ function PopupPage() {
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
   const [pendingNewFolder, setPendingNewFolder] = useState<FolderRecommendation | null>(null);
   const [newFolderSaving, setNewFolderSaving] = useState(false);
+  const [newFolderError, setNewFolderError] = useState<string | null>(null);
+  // Follows the tree, so the review shows where the folders really go when it changes meanwhile.
+  const pendingFolderPath = useMemo(
+    () => tryResolveFolderPath(pendingNewFolder, folders),
+    [folders, pendingNewFolder],
+  );
   const autoTriggerExecutedRef = useRef(false);
   const deletion = useBookmarkDeletion({ onChanged: refreshFolders });
 
@@ -114,6 +128,9 @@ function PopupPage() {
   useBookmarkEvents(refreshFolders);
   usePopupSize();
 
+  // Its title differs per browser and language, so it is read from the tree.
+  const barTitle = useMemo(() => findBookmarksBarFolder(folders)?.title, [folders]);
+
   const favicon = useMemo<FaviconDisplay>(
     () => ({ show: showFavicons, size: faviconSize }),
     [showFavicons, faviconSize],
@@ -128,10 +145,9 @@ function PopupPage() {
       // Get current tab info
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (!tab?.title || !tab?.url) {
-        toast({
+        toast.error({
           title: t('toast_cannotGetCurrentPage'),
           description: t('toast_pleaseOpenWebpage'),
-          variant: 'destructive',
         });
         return;
       }
@@ -151,11 +167,7 @@ function PopupPage() {
 
       setAIRecommendations(recommendations);
     } catch (error) {
-      toast({
-        title: t('ai_recommendationFailed'),
-        description: getErrorMessage(error),
-        variant: 'destructive',
-      });
+      toast.error({ title: t('ai_recommendationFailed'), description: describeAIError(error) });
     } finally {
       setAILoading(false);
     }
@@ -246,6 +258,17 @@ function PopupPage() {
     async (rec: FolderRecommendation) => {
       if (!currentTabInfo) return;
       if (rec.type !== 'existing' || !rec.folderId) {
+        // A path that cannot be saved fails here rather than after a review.
+        try {
+          resolveRecommendedFolderPath(rec, folders);
+        } catch (error) {
+          toast.error({
+            title: t('ai_newFolderFailed'),
+            description: describeRecommendedFolderError(error),
+          });
+          return;
+        }
+        setNewFolderError(null);
         setPendingNewFolder(rec);
         return;
       }
@@ -253,7 +276,7 @@ function PopupPage() {
       setAIRecommendations([]);
       setCurrentTabInfo(null);
     },
-    [currentTabInfo, handleSaveToFolder],
+    [currentTabInfo, folders, handleSaveToFolder],
   );
 
   const handleConfirmNewFolder = useCallback(async () => {
@@ -262,6 +285,7 @@ function PopupPage() {
     }
 
     setNewFolderSaving(true);
+    setNewFolderError(null);
     try {
       const result = await createRecommendedFolderBookmark(
         pendingNewFolder,
@@ -271,39 +295,35 @@ function PopupPage() {
       await fetchFolders();
 
       try {
-        await addRecentFolder(
-          result.folderId,
-          result.folderPath.split(AI_FOLDER_PATH_SEPARATOR).at(-1) || pendingNewFolder.folderPath,
-        );
+        await addRecentFolder(result.folderId, result.folderTitles.at(-1) ?? '');
       } catch (error) {
         bookmarkLogger.error({ error }, 'Failed to track recent folder');
       }
 
-      const duplicate = result.status === 'duplicate';
-      toast({
-        title: duplicate ? t('ai_newFolderDuplicate') : t('ai_newFolderSuccess'),
-        description: t(
-          duplicate ? 'ai_newFolderDuplicateDesc' : 'ai_newFolderSuccessDesc',
-          result.folderPath,
-        ),
-        variant: 'success',
-      });
+      const path = result.folderTitles
+        .map((title) => truncateText(getBookmarkDisplayTitle(title), truncateLength))
+        .join(FOLDER_PATH_SEPARATOR);
+      if (result.status === 'duplicate') {
+        // Nothing changed, like saving a page into a folder that already has it.
+        toast({
+          title: t('ai_newFolderDuplicate'),
+          description: t('ai_newFolderDuplicateDesc', path),
+        });
+      } else {
+        toast.success({
+          title: t('ai_newFolderSuccess'),
+          description: t('ai_newFolderSuccessDesc', path),
+        });
+      }
       setPendingNewFolder(null);
       setAIRecommendations([]);
       setCurrentTabInfo(null);
     } catch (error) {
-      const description = error instanceof RecommendedFolderError && error.code === 'path-conflict'
-        ? t('ai_newFolderConflictDesc', error.segment ?? '')
-        : t('ai_newFolderFailedDesc');
-      toast({
-        title: t('ai_newFolderFailed'),
-        description,
-        variant: 'destructive',
-      });
+      setNewFolderError(describeRecommendedFolderError(error));
     } finally {
       setNewFolderSaving(false);
     }
-  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder]);
+  }, [currentTabInfo, fetchFolders, folders, pendingNewFolder, truncateLength]);
 
   // Add temporary folder to tree
   const addTemporaryFolder = useCallback(
@@ -436,6 +456,8 @@ function PopupPage() {
         id: node.id,
         title: node.title,
         type,
+        // A bookmark whose URL changed since it was chosen is skipped, not deleted.
+        ...(node.url !== undefined ? { url: node.url } : {}),
         onDone: restoreFocusAfterRender,
       });
     },
@@ -524,48 +546,14 @@ function PopupPage() {
 
         {/* AI Recommendations Panel */}
         {aiRecommendations.length > 0 && (
-          <div className="space-y-1 border-b px-2 py-2">
-            <div className="flex items-center justify-between gap-2 px-1">
-              <span className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <Sparkles aria-hidden="true" className="size-3.5 shrink-0 text-ai" />
-                <span className="truncate">
-                  {t('ai_suggestionsFor')} {truncateText(currentTabInfo?.title ?? '', truncateLength)}
-                </span>
-              </span>
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => setAIRecommendations([])}
-                aria-label={t('action_close')}
-                title={t('action_close')}
-              >
-                <X className="size-3.5" />
-              </Button>
-            </div>
-            {aiRecommendations.map((rec) => (
-              <button
-                key={rec.folderPath}
-                type="button"
-                onClick={() => handleAddToFolder(rec)}
-                title={rec.reason}
-                className="flex h-8 w-full items-center rounded-md px-2 text-left transition-colors hover:bg-muted focus-visible:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
-              >
-                <div className="flex w-full items-center justify-between">
-                  <span className="text-sm truncate flex-1 flex items-center gap-1.5">
-                    {rec.type === 'new' ? (
-                      <FolderPlus className="h-4 w-4 text-ai shrink-0" />
-                    ) : (
-                      <Folder className="h-4 w-4 text-muted-foreground shrink-0" />
-                    )}
-                    {withoutBookmarksBar(rec.folderPath, folders)}
-                  </span>
-                  <span className="ml-2 font-mono text-xs tabular-nums text-muted-foreground">
-                    {formatPercent(rec.confidence)}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
+          <AISuggestionsPanel
+            recommendations={aiRecommendations}
+            pageTitle={currentTabInfo?.title ?? ''}
+            barTitle={barTitle}
+            truncateLength={truncateLength}
+            onSelect={handleAddToFolder}
+            onClose={() => setAIRecommendations([])}
+          />
         )}
 
         {/* Outside the scrolling tree so the notice stays visible while scrolling results. */}
@@ -655,10 +643,11 @@ function PopupPage() {
         }}
       />
       <RecommendedFolderDialog
-        open={pendingNewFolder !== null}
         recommendation={pendingNewFolder}
+        path={pendingFolderPath}
         bookmark={currentTabInfo}
         isSaving={newFolderSaving}
+        error={newFolderError}
         onOpenChange={(open) => {
           if (!open && !newFolderSaving) {
             setPendingNewFolder(null);
