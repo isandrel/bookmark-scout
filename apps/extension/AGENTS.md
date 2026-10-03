@@ -150,6 +150,19 @@ WXT auto-imports every export from `components/**`, `hooks/`, `utils/`, `lib/`, 
 - export names must be unique across the scanned directories; `wxt prepare` warns on duplicates
 - do not add `index.ts` barrels in scanned directories; they are excluded from scanning
 - generated declarations live in `.wxt/types/imports.d.ts` and refresh on `wxt prepare`, `dev`, and `build`
+- auto-import can miss a use that lint, `tsc`, and unit tests accept (an identifier right before `:` in a ternary once became a runtime `ReferenceError` that broke HTML import); after a build, run `bun .agents/skills/extension-feature-test/scripts/scan-unresolved-imports.ts apps/extension dist/chrome-mv3`
+
+### Shared building blocks
+
+Use these before writing a new helper; each replaced several copies. Their file headers document the details.
+
+- **Config:** add `config/<area>/<name>.toml` and read it once with `readConfig('<area>/<name>', z.strictObject({...}))` in the module that owns it (`src/lib/app-config.ts`); a unit test fails on unread or doubly read files. User-setting defaults and bounds live in `config/settings/**` and are defined once in `src/lib/settings-schema.ts`.
+- **Storage:** `defineStoredValue` and `useStoredValue` (`src/lib/stored-value.ts`) for every stored key, registered in `STORAGE_KEYS` (`src/lib/storage-keys.ts`); `useSettings`/`useSetting` share one subscription per page.
+- **Bookmark changes:** `applyBookmarkChanges` (`src/services/bookmarks.ts`) applies reviewed edits and removals, skips items that changed since the preview, and returns counts plus a single-use `undo()`.
+- **Network:** `fetchHtmlPage` (`src/services/bookmark-network-tools.ts`) for any page fetch with a timeout and byte cap.
+- **AI prompts and tools:** `getPromptVariables`/`buildPrompt` (`src/services/prompt-config.ts`) for both preview and runtime; `getToolOptions`/`getToolScopeCapability` (`src/services/tool-options.ts`).
+- **UI:** `toast.success`/`toast.error`/`toast.withUndo` (`src/hooks/use-toast.ts`), `getErrorMessage` (`src/hooks/use-i18n.ts`), `Field`, `ConfirmDialog`, `MaskIcon` (`src/components/ui/`), `OptionsPanel`, `mountExtensionPage` for entry pages, `SHORTCUT_BINDINGS` with `shortcutKeyCaps` for any shortcut shown in the UI.
+- **Small helpers:** `src/lib/bookmark-tree.ts` (tree walks, display titles, the bookmarks-bar folder lives in `services/bookmarks.ts`), `src/lib/units.ts`, `isPlainObject`/`isSameJson` in `src/lib/utils.ts`, `truncateText`.
 
 ### Bookmark operations
 
