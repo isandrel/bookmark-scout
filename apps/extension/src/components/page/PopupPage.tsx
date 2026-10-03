@@ -68,6 +68,8 @@ function PopupPage() {
   const { value: aiEnabled } = useSetting('aiEnabled');
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
   const { value: aiReadPageContent } = useSetting('aiReadPageContent');
+  // In memory only: reopening the popup starts on the bookmarks, with no chat history.
+  const [askAIOpen, setAskAIOpen] = useState(false);
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
@@ -574,6 +576,19 @@ function PopupPage() {
     );
   }
 
+  if (askAIOpen && aiEnabled) {
+    return (
+      <div className="flex h-full w-full min-h-0 flex-col overflow-hidden">
+        <AskAIPanel
+          onClose={() => {
+            setAskAIOpen(false);
+            requestAnimationFrame(() => inputRef.current?.focus());
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-full w-full min-h-0 overflow-hidden">
       <div className="flex flex-col h-full overflow-hidden">
@@ -586,6 +601,7 @@ function PopupPage() {
           isAIEnabled={aiEnabled}
           isAILoading={aiLoading}
           onAIRecommend={handleAIRecommend}
+          onAskAI={() => setAskAIOpen(true)}
           searchOptions={searchOptions}
           onSearchOptionsChange={setSearchOptions}
           searchHistory={searchHistory.history}

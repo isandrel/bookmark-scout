@@ -13,6 +13,7 @@ export const AI_ACTIVITY_SOURCES = {
   summarizer: 'tools_summarizer',
   reorganization: 'tools_aiReorganize',
   folderRecommendation: 'ai_folderRecommendation',
+  askAI: 'askAI_title',
 } as const satisfies Record<string, MessageKey>;
 
 export type AIActivitySource = keyof typeof AI_ACTIVITY_SOURCES;

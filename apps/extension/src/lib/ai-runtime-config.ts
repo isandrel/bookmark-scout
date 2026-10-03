@@ -1,7 +1,7 @@
 /**
- * Tunable limits for AI requests, page reading, the prompt library, and the AI activity log, read
- * once from the [ai.limits], [ai.page_reading], and [ai.activity] tables of
- * config/settings.default.toml and validated here.
+ * Tunable limits for AI requests, page reading, the Ask AI agent, the prompt library, and the AI
+ * activity log, read once from the [ai.limits], [ai.page_reading], [ai.agent], and [ai.activity]
+ * tables of config/settings.default.toml and validated here.
  */
 import { parse } from 'smol-toml';
 import { z } from 'zod';
@@ -23,6 +23,11 @@ const aiRuntimeConfigSchema = z.object({
     concurrency: z.number().int().positive(),
     skip_private_hosts: z.boolean(),
     private_host_suffixes: z.array(z.string().min(1)),
+  }),
+  agent: z.object({
+    max_steps: z.number().int().positive(),
+    max_bookmark_results: z.number().int().positive(),
+    web_search_max_uses: z.number().int().positive(),
   }),
   activity: z.object({
     max_entries: z.number().int().positive(),

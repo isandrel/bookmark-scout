@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronUp,
   History,
+  MessageCircle,
   Moon,
   Regex,
   Search,
@@ -26,6 +27,8 @@ interface BookmarkSearchProps {
   onToggleExpandAll: () => void;
   inputRef?: React.RefObject<HTMLInputElement | null>;
   onAIRecommend?: () => void;
+  /** Opens the Ask AI chat. */
+  onAskAI?: () => void;
   isAIEnabled?: boolean;
   isAILoading?: boolean;
   searchOptions: SearchOptions;
@@ -44,6 +47,7 @@ export function BookmarkSearch({
   onToggleExpandAll,
   inputRef,
   onAIRecommend,
+  onAskAI,
   isAIEnabled = false,
   isAILoading = false,
   searchOptions,
@@ -291,6 +295,18 @@ export function BookmarkSearch({
             aria-label={t('ai_folderRecommendation')}
           >
             <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
+          </Button>
+        )}
+        {isAIEnabled && onAskAI && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0"
+            onClick={onAskAI}
+            title={t('askAI_open')}
+            aria-label={t('askAI_open')}
+          >
+            <MessageCircle className="h-4 w-4 text-ai" />
           </Button>
         )}
         {isAIEnabled && onAIRecommend && <AIServiceSwitcher />}

@@ -4700,5 +4700,97 @@
     "prompt_viewBuiltIn": {
         "message": "View the built-in prompt for $1",
         "description": "Prompt library: button label; $1 is the tool name"
+    },
+    "askAI_title": {
+        "message": "Ask AI",
+        "description": "Title of the Ask AI chat"
+    },
+    "askAI_open": {
+        "message": "Ask AI about your bookmarks or this page",
+        "description": "Popup button that opens the Ask AI chat"
+    },
+    "askAI_back": {
+        "message": "Back to bookmarks",
+        "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_newChat": {
+        "message": "New chat",
+        "description": "Ask AI: button that clears the conversation"
+    },
+    "askAI_placeholder": {
+        "message": "Ask about your bookmarks, this page, or anything",
+        "description": "Ask AI: message box placeholder and label"
+    },
+    "askAI_send": {
+        "message": "Send",
+        "description": "Ask AI: send button"
+    },
+    "askAI_stop": {
+        "message": "Stop",
+        "description": "Ask AI: stop button while answering"
+    },
+    "askAI_webSearch": {
+        "message": "Search the web",
+        "description": "Ask AI: toggle for the provider web search"
+    },
+    "askAI_empty": {
+        "message": "Ask about your bookmarks, the page you are on, or anything else. The chat is not saved; it ends when you close it.",
+        "description": "Ask AI: empty state"
+    },
+    "askAI_suggestionPage": {
+        "message": "What is this page about?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionRelated": {
+        "message": "Which of my bookmarks relate to this page?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionFolders": {
+        "message": "How are my bookmark folders organized?",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_readPageOff": {
+        "message": "To let Ask AI read pages, turn on Read page content in Options, AI.",
+        "description": "Ask AI: hint when page reading is off"
+    },
+    "askAI_thinking": {
+        "message": "Thinking…",
+        "description": "Ask AI: waiting for the first answer"
+    },
+    "askAI_retry": {
+        "message": "Try again",
+        "description": "Ask AI: retry after an error"
+    },
+    "askAI_sources": {
+        "message": "Sources",
+        "description": "Ask AI: heading for web sources"
+    },
+    "askAI_toolSearchBookmarks": {
+        "message": "Searched your bookmarks for “$1”",
+        "description": "Ask AI tool step; $1 is the search query"
+    },
+    "askAI_toolListFolders": {
+        "message": "Listed your folders",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolCurrentPage": {
+        "message": "Checked the current page",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolReadPage": {
+        "message": "Read $1",
+        "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolWebSearch": {
+        "message": "Searched the web",
+        "description": "Ask AI tool step"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "Answers questions in the Ask AI chat",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "Today's date, as YYYY-MM-DD",
+        "description": "Prompt variable description"
     }
 }
