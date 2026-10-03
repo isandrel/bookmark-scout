@@ -20,8 +20,36 @@
         "description": "Search input placeholder"
     },
     "shortcuts_popupHint": {
-        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア、$1 で最近の検索を表示",
-        "description": "Tooltip on the popup search box listing the popup keyboard shortcuts; $1 is the recent-searches key, such as Alt+↓ (⌥+↓ on Apple keyboards)"
+        "message": "ショートカット: $1",
+        "description": "Tooltip on the popup search box; $1 is the list of shortcut hints, each built from shortcuts_hintItem"
+    },
+    "shortcuts_hintItem": {
+        "message": "$1 で$2",
+        "description": "One popup shortcut hint: $1 is the key or keys (such as / or ↓ ↑), $2 is what they do (a shortcuts_popupHint* action)"
+    },
+    "shortcuts_popupHintSearch": {
+        "message": "検索",
+        "description": "Popup shortcut action: focus the search box"
+    },
+    "shortcuts_popupHintMove": {
+        "message": "フォルダとブックマークを移動",
+        "description": "Popup shortcut action: move between the visible folders and bookmarks"
+    },
+    "shortcuts_popupHintOpenClose": {
+        "message": "フォルダを開閉",
+        "description": "Popup shortcut action: open or close the focused folder"
+    },
+    "shortcuts_popupHintSave": {
+        "message": "現在のページをフォーカス中のフォルダに保存",
+        "description": "Popup shortcut action: save the current page into the focused folder"
+    },
+    "shortcuts_popupHintClear": {
+        "message": "検索をクリア",
+        "description": "Popup shortcut action: clear the search"
+    },
+    "shortcuts_popupHintRecent": {
+        "message": "最近の検索を表示",
+        "description": "Popup shortcut action: show recent searches"
     },
     "shortcuts_title": {
         "message": "キーボードショートカット",

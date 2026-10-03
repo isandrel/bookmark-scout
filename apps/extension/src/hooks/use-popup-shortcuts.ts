@@ -50,12 +50,38 @@ export const POPUP_SEARCH_HISTORY_BINDINGS = {
   open: [{ key: 'ArrowDown', alt: true }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
-/** The popup's shortcuts tooltip, naming the recent-searches key as this platform prints it. */
+/**
+ * What the popup's shortcuts tooltip lists, in order. Keys always come from the bindings above
+ * (and config/ui/shortcuts.toml), so the tooltip follows any change to them; adding a shortcut
+ * means one entry here and one action message.
+ */
+const POPUP_SHORTCUT_HINTS: readonly {
+  bindings: readonly ShortcutBinding[];
+  actionKey: MessageKey;
+}[] = [
+  { bindings: SHORTCUT_BINDINGS.popup.focusSearch, actionKey: 'shortcuts_popupHintSearch' },
+  {
+    bindings: [...POPUP_TREE_BINDINGS.next, ...POPUP_TREE_BINDINGS.previous],
+    actionKey: 'shortcuts_popupHintMove',
+  },
+  {
+    bindings: [...POPUP_TREE_BINDINGS.expand, ...POPUP_TREE_BINDINGS.collapse],
+    actionKey: 'shortcuts_popupHintOpenClose',
+  },
+  { bindings: POPUP_TREE_BINDINGS.activate, actionKey: 'shortcuts_popupHintSave' },
+  { bindings: POPUP_SEARCH_INPUT_BINDINGS.escape, actionKey: 'shortcuts_popupHintClear' },
+  { bindings: POPUP_SEARCH_HISTORY_BINDINGS.open, actionKey: 'shortcuts_popupHintRecent' },
+];
+
+/** The popup's shortcuts tooltip, with every key printed the way this platform labels it. */
 export function popupShortcutsHint(): string {
-  return t(
-    'shortcuts_popupHint',
-    shortcutKeyCaps(POPUP_SEARCH_HISTORY_BINDINGS.open[0]).join('+'),
+  const items = POPUP_SHORTCUT_HINTS.map(({ bindings, actionKey }) =>
+    t('shortcuts_hintItem', [
+      bindings.map((binding) => shortcutKeyCaps(binding).join('+')).join(' '),
+      t(actionKey),
+    ]),
   );
+  return t('shortcuts_popupHint', formatList(items));
 }
 
 /** Closing folders keep their content mounted while they animate; those rows are not visible. */

@@ -281,7 +281,7 @@ test.describe('manager keyboard shortcuts', () => {
     await openPopup(page, extensionId);
     await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toHaveAttribute(
       'title',
-      /⌥\+↓ shows recent searches/,
+      /⌥\+↓ show recent searches/,
     );
 
     await page.goto(managerUrl(extensionId));
