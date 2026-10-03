@@ -453,7 +453,9 @@ const fields = {
   aiMaxItemsPerFolder: numberField('ai.max_items_per_folder', 'aiMaxItemsPerFolder'),
 
   exportFilenamePrefix: textField('export.filename_prefix', 'exportFilenamePrefix'),
-  exportFilenameMaxLength: numberField('export.filename_max_length', 'exportFilenameMaxLength'),
+  exportFilenameMaxLength: numberField('export.filename_max_length', 'exportFilenameMaxLength', {
+    unit: 'chars',
+  }),
   exportJsonIndentSize: numberField('export.json_indent_size', 'exportJsonIndentSize'),
   exportHtmlIndentSpaces: numberField('export.html_indent_spaces', 'exportHtmlIndentSpaces'),
   exportMarkdownIndentSpaces: numberField(
@@ -515,6 +517,7 @@ const fields = {
   aiContextPackerExcerptLength: numberField(
     'tools.ai_context_packer.excerpt_length',
     'aiContextPackerExcerptLength',
+    { unit: 'chars' },
   ),
 
   autoTaggingEnabled: switchField('tools.auto_tagging.enabled', 'autoTaggingEnabled'),
@@ -548,6 +551,7 @@ const fields = {
   summarizerSummaryLength: numberField(
     'tools.summarizer.summary_length',
     'summarizerSummaryLength',
+    { unit: 'chars' },
   ),
   summarizerIncludeDomainHint: switchField(
     'tools.summarizer.include_domain_hint',
@@ -657,6 +661,7 @@ const fields = {
   deadLinksRequestTimeoutMs: numberField(
     'tools.dead_links.request_timeout_ms',
     'deadLinksRequestTimeoutMs',
+    { unit: 'ms' },
   ),
   deadLinksConcurrency: numberField('tools.dead_links.concurrency', 'deadLinksConcurrency'),
   deadLinksRetryCount: numberField('tools.dead_links.retry_count', 'deadLinksRetryCount'),
@@ -688,6 +693,7 @@ const fields = {
   metadataFetcherRequestTimeoutMs: numberField(
     'tools.metadata_fetcher.request_timeout_ms',
     'metadataFetcherRequestTimeoutMs',
+    { unit: 'ms' },
   ),
   metadataFetcherConcurrency: numberField(
     'tools.metadata_fetcher.concurrency',

@@ -129,4 +129,34 @@ test('Options lists saved services and Set as default moves the badge', async ({
   await page.getByRole('menuitem', { name: 'Delete' }).click();
   await page.getByRole('dialog', { name: 'Delete Work proxy?' }).getByRole('button', { name: 'Delete' }).click();
   await expect(page.getByTestId('ai-service')).toHaveCount(1);
+  // The menu that opened the dialog went with the row, so focus moves to the next service.
+  await expect(page.getByRole('button', { name: 'Edit Home proxy' })).toBeFocused();
+
+  // Cancel still returns focus to the menu button.
+  await home.getByRole('button', { name: 'Actions for Home proxy' }).click();
+  await page.getByRole('menuitem', { name: 'Delete' }).click();
+  const confirmHome = page.getByRole('dialog', { name: 'Delete Home proxy?' });
+  await confirmHome.getByRole('button', { name: 'Cancel' }).click();
+  await expect(home.getByRole('button', { name: 'Actions for Home proxy' })).toBeFocused();
+
+  // With no service left, focus moves to Add service.
+  await home.getByRole('button', { name: 'Actions for Home proxy' }).click();
+  await page.getByRole('menuitem', { name: 'Delete' }).click();
+  await confirmHome.getByRole('button', { name: 'Delete' }).click();
+  await expect(page.getByTestId('ai-service')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Add service' })).toBeFocused();
+});
+
+test('an optional API key field says so in the Options language', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await extensionWorker.evaluate(async (services) => {
+    await chrome.storage.sync.set({ 'bookmark-scout-settings': { language: 'ja' } });
+    await chrome.storage.local.set({ 'bookmark-scout-ai-services': services });
+  }, SERVICES);
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  await expect(page.getByLabel('APIキー', { exact: true })).toHaveAttribute('placeholder', '任意');
 });

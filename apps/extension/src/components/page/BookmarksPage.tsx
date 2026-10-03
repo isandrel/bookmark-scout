@@ -32,6 +32,7 @@ function toDeletionTarget(bookmark: Bookmark): BookmarkDeletionTarget {
     id: bookmark.id,
     title: bookmark.title,
     type: bookmark.type === ItemTypeEnum.Folder ? 'folder' : 'bookmark',
+    ...(bookmark.url !== undefined ? { url: bookmark.url } : {}),
   };
 }
 
@@ -160,11 +161,14 @@ export default function BookmarksPage() {
         onDelete={(items) => {
           const [first] = items;
           if (!first) return;
-          // Cancelling the confirmation keeps the selection; it clears once items are deleted.
+          // Cancelling the confirmation keeps the selection, and so does a deletion that left
+          // items behind; deleted rows drop out of it on refresh. A complete deletion clears it.
           void requestDeletion({
             ...toDeletionTarget(first),
             items: items.map(toDeletionTarget),
-            onDone: clearSelection,
+            onDone: ({ skipped, failed }) => {
+              if (skipped === 0 && failed === 0) clearSelection();
+            },
           });
         }}
       />
@@ -257,8 +261,10 @@ export default function BookmarksPage() {
           </div>
         </header>
 
-        {/* Content */}
-        <div className="min-w-0 flex-1 space-y-4 overflow-auto p-4">
+        {/* Content. Positioned, so absolutely positioned descendants (screen-reader-only labels)
+            are laid out inside this scroll area instead of stretching the page below the
+            viewport, which let the whole page scroll away to a blank screen. */}
+        <div className="relative min-w-0 flex-1 space-y-4 overflow-auto p-4">
           {notice && (
             <div
               role="status"

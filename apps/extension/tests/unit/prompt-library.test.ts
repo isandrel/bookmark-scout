@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { setLanguage } from '@/hooks/use-i18n';
+import { formatKilobytes, setLanguage } from '@/hooks/use-i18n';
 import {
   MAX_PROMPT_BYTES,
   PromptValidationError,
+  customPromptBytes,
   deleteCustomPrompt,
   getPromptLibrary,
-  promptByteLength,
   saveCustomPrompt,
   setActivePrompt,
+  syncItemBytes,
+  validateCustomPrompt,
 } from '@/lib/prompt-library-storage';
 import { defaultSettings } from '@/lib/settings-schema';
 import {
@@ -111,12 +113,40 @@ describe('prompt library', () => {
     ]);
   });
 
-  it('measures size in UTF-8 bytes and rejects prompts too large to sync', async () => {
-    expect(promptByteLength('あ')).toBe(3);
-    const japanese = 'あ'.repeat(Math.floor(MAX_PROMPT_BYTES / 3) + 1);
-    await expect(
-      saveCustomPrompt({ task: 'auto_tagging', name: 'Long', system: japanese }),
-    ).rejects.toBeInstanceOf(PromptValidationError);
+  it('measures a sync item the way Chrome counts it against the 8,192-byte item quota', () => {
+    // The longest string Chrome 2026-10 accepted in `{ k: { s } }` for each character.
+    const browserMaxima: [string, number][] = [
+      ['x', 8183],
+      ['"', 4091],
+      ['\\', 4091],
+      ['\n', 4091],
+      ['<', 1363],
+      ['\u0001', 1363],
+      ['\u2028', 1363],
+      ['あ', 2727],
+      ['\u{1F600}', 2045],
+    ];
+    for (const [char, max] of browserMaxima) {
+      expect(syncItemBytes('k', { s: char.repeat(max) }), char).toBeLessThanOrEqual(8192);
+      expect(syncItemBytes('k', { s: char.repeat(max + 1) }), char).toBeGreaterThan(8192);
+    }
+  });
+
+  it('counts the prompt as it is stored and rejects one too large to sync', async () => {
+    const draft = { task: 'auto_tagging' as const, name: 'Quotes', system: 'Say "hi" <b>' };
+    const saved = await saveCustomPrompt(draft);
+    const key = `bookmark-scout-prompt-${saved.id}`;
+    const stored = (await fakeBrowser.storage.sync.get(key))[key];
+    expect(customPromptBytes(draft)).toBe(syncItemBytes(key, stored));
+
+    // Under the limit as UTF-8 text, but escaped quotes double it in storage.
+    const quotes = '"'.repeat(MAX_PROMPT_BYTES - 10);
+    expect(validateCustomPrompt({ ...draft, system: quotes })).toBe(
+      `The prompt is too long to sync. Keep it within ${formatKilobytes(MAX_PROMPT_BYTES)}.`,
+    );
+    await expect(saveCustomPrompt({ ...draft, system: quotes })).rejects.toBeInstanceOf(
+      PromptValidationError,
+    );
     await expect(
       saveCustomPrompt({ task: 'auto_tagging', name: ' ', system: 'x' }),
     ).rejects.toThrow('Enter a name.');

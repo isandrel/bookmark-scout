@@ -122,6 +122,8 @@ const OptionsPage: React.FC = () => {
   // Debounced autosave of changed fields only.
   useEffect(() => {
     if (isLoading) return;
+    // A field back at its saved value (reset, or the saved text typed again) has nothing to save.
+    setSaveErrors((current) => dropSettledErrors(current, savedRef.current, values));
     const changes = getChangedSettings(savedRef.current, values);
     if (Object.keys(changes).length === 0) return;
     const timeoutId = setTimeout(() => void persist(changes), optionsConfig.autosave_delay_ms);
@@ -264,10 +266,9 @@ const OptionsPage: React.FC = () => {
         setFieldValue(fieldKey, value);
         return;
       }
-      toast({
+      toast.error({
         title: t('tools_hostAccessDenied'),
         description: t('settings_hostAccessDeniedDesc'),
-        variant: 'destructive',
       });
     });
   };
@@ -422,7 +423,7 @@ const OptionsPage: React.FC = () => {
             {searchResults ? (
               <section aria-live="polite" className="space-y-6">
                 <p className="text-sm text-muted-foreground">
-                  {t('settings_searchResultsCount', String(searchMatchCount))}
+                  {tPlural('settings_searchResultsCount', searchMatchCount)}
                 </p>
                 {searchMatchCount === 0 ? (
                   <div className="py-8 text-center text-muted-foreground">
@@ -525,7 +526,7 @@ const OptionsPage: React.FC = () => {
               {errorCount > 0 && (
                 <span className="flex items-center">
                   <TriangleAlert className="mr-2 h-3 w-3" />
-                  {t('settings_statusNotSaved', String(errorCount))}
+                  {tPlural('settings_statusNotSaved', errorCount)}
                 </span>
               )}
             </output>

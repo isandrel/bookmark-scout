@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "No settings match your search in this category.",
+        "message": "No settings match your search.",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -964,6 +964,14 @@
     "bookmarks_editUrlRequired": {
         "message": "Enter a URL.",
         "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_editUrlInvalid": {
+        "message": "Enter a complete URL, including its scheme, such as https://example.com/.",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "Enter a folder name.",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
     },
     "bookmarks_openFailed": {
         "message": "Could not open bookmark",
@@ -2737,6 +2745,10 @@
         "message": "$1 can run without an API key.",
         "description": "Optional API key description"
     },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "Optional",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
     "options_apiKey": {
         "message": "API Key",
         "description": "API key field label"
@@ -2813,9 +2825,17 @@
         "message": "$1 matching settings in all tabs",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "$1 matching setting in all tabs",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "$1 settings not saved",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "$1 setting not saved",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "That folder doesn't exist anymore. Showing the nearest folder that does.",
@@ -2908,6 +2928,10 @@
     "toast_itemsRestoredDesc": {
         "message": "Restored $1 items.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "Skipped because they changed or were already deleted: $1. Failed: $2.",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
     },
     "bookmarks_deleteItems": {
         "message": "Delete $1 items",
@@ -4452,8 +4476,12 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "The prompt is too long to sync. Keep it under $1 bytes.",
+        "message": "The prompt is too long to sync. Keep it within $1.",
         "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "The prompt could not be saved. Sync storage may be full; delete prompts you no longer use and try again.",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
     },
     "prompt_varMaxRecommendations": {
         "message": "Number of folder suggestions (Max Recommendations)",

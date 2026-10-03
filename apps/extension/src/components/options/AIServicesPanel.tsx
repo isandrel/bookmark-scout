@@ -4,7 +4,7 @@
  */
 
 import { ChevronDown, Copy, MoreHorizontal, Plus, Star, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 type ProviderOption = SearchableSelectOption;
 
@@ -109,9 +109,26 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<AIService | null>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+  // Set when a delete is confirmed: the service whose row takes focus, or null for none left.
+  const focusAfterDeleteRef = useRef<string | null | undefined>(undefined);
 
   // The default service's editor starts open, so a single setup reads like before.
   const openId = expandedId ?? state.defaultServiceId ?? null;
+
+  /** After a delete, the menu that opened the dialog is gone; focus the next row instead. */
+  const focusAfterDialog = () => {
+    const id = focusAfterDeleteRef.current;
+    focusAfterDeleteRef.current = undefined;
+    if (id === undefined) return true;
+    const row = id
+      ? listRef.current?.querySelector<HTMLElement>(
+          `[data-service-id="${CSS.escape(id)}"] [aria-controls]`,
+        )
+      : null;
+    return row ?? addButtonRef.current ?? true;
+  };
 
   return (
     <OptionsPanel
@@ -121,7 +138,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
       title={t('options_aiServices')}
       description={t('options_aiServicesDescription')}
       actions={
-        <Button variant="outline" onClick={() => setAdding(true)}>
+        <Button ref={addButtonRef} variant="outline" onClick={() => setAdding(true)}>
           <Plus className="h-4 w-4" />
           {t('options_aiServiceAdd')}
         </Button>
@@ -133,7 +150,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
         </p>
       )}
 
-      <ul className="divide-y overflow-hidden rounded-md border">
+      <ul ref={listRef} className="divide-y overflow-hidden rounded-md border">
         {state.services.map((service) => {
           const isDefault = service.id === state.defaultServiceId;
           const isOpen = service.id === openId;
@@ -238,8 +255,13 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
         title={t('options_aiServiceDeleteTitle', deleting?.name ?? '')}
         description={t('options_aiServiceDeleteDescription')}
         confirmLabel={t('action_delete')}
+        finalFocus={focusAfterDialog}
         onConfirm={() => {
-          if (deleting) void deleteAIService(deleting.id);
+          if (!deleting) return;
+          const index = state.services.findIndex((service) => service.id === deleting.id);
+          const neighbor = state.services[index + 1] ?? state.services[index - 1];
+          focusAfterDeleteRef.current = neighbor?.id ?? null;
+          void deleteAIService(deleting.id);
         }}
       />
     </OptionsPanel>

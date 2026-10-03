@@ -58,6 +58,43 @@ export function fromUnlimitedSliderValue(position: number): number {
   return position <= 0 ? -1 : position;
 }
 
+/**
+ * The value a number field commits: out-of-range numbers snap to the nearest bound. For "no
+ * limit" settings, an empty field and -1 both mean no limit and commit -1, as the descriptions
+ * say. Returns undefined when there is nothing to commit (an empty field without a no-limit value).
+ */
+export function commitNumberSetting(
+  value: number | null,
+  {
+    min = -Infinity,
+    max = Infinity,
+    unlimited = false,
+  }: Pick<SettingsFieldMeta, 'min' | 'max' | 'unlimited'>,
+): number | undefined {
+  if (value === null || Number.isNaN(value)) return unlimited ? -1 : undefined;
+  if (unlimited && value === -1) return -1;
+  return Math.min(max, Math.max(min, value));
+}
+
+/**
+ * Save errors without the fields whose form value is back to the saved one, such as after a
+ * reset or retyping the saved text: nothing is left unsaved there. Returns `errors` itself when
+ * nothing changes.
+ */
+export function dropSettledErrors(
+  errors: SettingsFieldErrors,
+  saved: Settings,
+  values: Settings,
+): SettingsFieldErrors {
+  const settled = (Object.keys(errors) as (keyof Settings)[]).filter((key) =>
+    isSameJson(values[key], saved[key]),
+  );
+  if (settled.length === 0) return errors;
+  const next = { ...errors };
+  for (const key of settled) delete next[key];
+  return next;
+}
+
 /** Keys that changed between the last persisted settings and the form values. */
 export function getChangedSettings(saved: Settings, values: Settings): Partial<Settings> {
   return Object.fromEntries(

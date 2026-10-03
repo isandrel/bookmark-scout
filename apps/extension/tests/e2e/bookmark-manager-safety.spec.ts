@@ -275,7 +275,10 @@ test('cancelling a bulk delete keeps the selection and the confirmation lists th
   await page.getByRole('checkbox', { name: 'Select "Cancel B"' }).check();
   await bulk.getByRole('button', { name: 'Delete' }).click();
   const confirm = page.getByRole('dialog', { name: 'Delete 2 items' });
-  await expect(confirm.getByTestId('bulk-item-preview')).toHaveText(/Cancel A.*Cancel B/);
+  // Listed in table order, which the default date sort leaves open for same-time bookmarks.
+  const preview = confirm.getByTestId('bulk-item-preview').locator('li');
+  await expect(preview).toHaveCount(2);
+  expect((await preview.allTextContents()).sort()).toEqual(['Cancel A', 'Cancel B']);
   await confirm.getByRole('button', { name: 'Cancel' }).click();
   await expect(confirm).toHaveCount(0);
 
@@ -524,6 +527,17 @@ test('Back returns to the table page that was open', async ({
 
   await page.goBack();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
+  await expect(page.getByText('Page 2 of 2')).toBeVisible();
+
+  // A reload keeps that page too; the saved table view loading afterwards must not reset it.
+  // The saved view hides Date Added, so its header disappearing shows the view has loaded.
+  await extensionWorker.evaluate(() =>
+    chrome.storage.sync.set({
+      'bookmark-scout-table-view': { version: 1, columnVisibility: { dateAdded: false } },
+    }),
+  );
+  await page.reload();
+  await expect(page.getByRole('columnheader', { name: 'Date Added' })).toHaveCount(0);
   await expect(page.getByText('Page 2 of 2')).toBeVisible();
 
   // Going forward opens the subfolder on its own first page again.

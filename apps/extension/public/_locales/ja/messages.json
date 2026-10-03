@@ -20,7 +20,7 @@
         "description": "Search input placeholder"
     },
     "shortcuts_popupHint": {
-        "message": "ショートカット: / で検索、↓ ↑ でフォルダーとブックマークを移動、→ ← でフォルダーを開閉、Enter で現在のページをフォーカス中のフォルダーに保存、Esc で検索をクリア",
+        "message": "ショートカット: / で検索、↓ ↑ でフォルダとブックマークを移動、→ ← でフォルダを開閉、Enter で現在のページをフォーカス中のフォルダに保存、Esc で検索をクリア",
         "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
     },
     "shortcuts_title": {
@@ -40,7 +40,7 @@
         "description": "Keyboard shortcut description: / focuses the title filter"
     },
     "shortcuts_parentFolder": {
-        "message": "親フォルダーに移動",
+        "message": "親フォルダに移動",
         "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
     },
     "shortcuts_nextPreviousRow": {
@@ -48,7 +48,7 @@
         "description": "Keyboard shortcut description: j and k move between table rows"
     },
     "shortcuts_openFolder": {
-        "message": "フォーカス中のフォルダーを開く",
+        "message": "フォーカス中のフォルダを開く",
         "description": "Keyboard shortcut description: Enter opens the focused folder row"
     },
     "shortcuts_showHelp": {
@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "このカテゴリには一致する設定がありません",
+        "message": "検索に一致する設定がありません",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -582,7 +582,7 @@
         "description": "Popup footer: arrow up and down move between rows"
     },
     "popup_hintExpand": {
-        "message": "フォルダー",
+        "message": "フォルダ",
         "description": "Popup footer: arrow left and right close or open a folder"
     },
     "popup_hintEnter": {
@@ -965,6 +965,14 @@
         "message": "URLを入力してください。",
         "description": "Validation message when a link URL is empty"
     },
+    "bookmarks_editUrlInvalid": {
+        "message": "https://example.com/ のように、スキームを含む完全なURLを入力してください。",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "フォルダ名を入力してください。",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
     "bookmarks_openFailed": {
         "message": "ブックマークを開けませんでした",
         "description": "Toast shown when a bookmark cannot be opened"
@@ -1002,7 +1010,7 @@
         "description": "Bookmark details URL label"
     },
     "bookmarks_detailsFolderPath": {
-        "message": "フォルダーパス",
+        "message": "フォルダパス",
         "description": "Bookmark details folder path label"
     },
     "bookmarks_detailsDateAdded": {
@@ -1022,7 +1030,7 @@
         "description": "Fallback for unavailable bookmark details"
     },
     "bookmarks_detailsPathUnavailable": {
-        "message": "フォルダーパスを取得できません",
+        "message": "フォルダパスを取得できません",
         "description": "Error shown when the bookmark folder path cannot be loaded"
     },
     "bookmarks_detailsLoadingPath": {
@@ -1042,7 +1050,7 @@
         "description": "Button that opens a bookmark URL"
     },
     "bookmarks_detailsOpenFolder": {
-        "message": "フォルダーを開く",
+        "message": "フォルダを開く",
         "description": "Button that navigates to a bookmark folder"
     },
     "bookmarks_detailsCopied": {
@@ -2666,7 +2674,7 @@
         "description": "Fallback bookmark title from context menu"
     },
     "contextMenu_recentFolders": {
-        "message": "最近のフォルダー",
+        "message": "最近のフォルダ",
         "description": "Context menu recent folders submenu"
     },
     "contextMenu_aiSuggestions": {
@@ -2674,7 +2682,7 @@
         "description": "Context menu AI suggestions submenu"
     },
     "contextMenu_defaultFolders": {
-        "message": "既定のフォルダー",
+        "message": "既定のフォルダ",
         "description": "Context menu default folders submenu"
     },
     "settings_noLimit": {
@@ -2736,6 +2744,10 @@
     "options_apiKeyOptionalDescription": {
         "message": "$1 はAPIキーなしで利用できます。",
         "description": "Optional API key description"
+    },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "任意",
+        "description": "Placeholder of the API key field for a provider that works without a key"
     },
     "options_apiKey": {
         "message": "APIキー",
@@ -2813,9 +2825,17 @@
         "message": "すべてのタブで一致する設定: $1 件",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "すべてのタブで一致する設定: $1 件",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "$1 件の設定が未保存です",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "$1 件の設定が未保存です",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "そのフォルダは存在しません。最も近い既存のフォルダを表示しています。",
@@ -2908,6 +2928,10 @@
     "toast_itemsRestoredDesc": {
         "message": "$1件を復元しました。",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "変更済みまたは削除済みのためスキップ: $1 件。失敗: $2 件。",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
     },
     "bookmarks_deleteItems": {
         "message": "$1件を削除",
@@ -3696,7 +3720,7 @@
         "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
     },
     "savedSearches_description": {
-        "message": "現在のフィルター、並べ替え、フォルダーの範囲を保存します。ブックマーク自体は保存しないため、結果は常に現在のブックマークに基づきます。このデバイスにのみ保存されます。",
+        "message": "現在のフィルター、並べ替え、フォルダの範囲を保存します。ブックマーク自体は保存しないため、結果は常に現在のブックマークに基づきます。このデバイスにのみ保存されます。",
         "description": "Explanation at the top of the saved searches menu"
     },
     "savedSearches_nameLabel": {
@@ -3716,7 +3740,7 @@
         "description": "Hint under the saved search name input when the current search can be saved"
     },
     "savedSearches_needsFilter": {
-        "message": "保存するには、タイトル、URL、種類、フォルダー、ドメイン、日付のいずれかで絞り込んでください。",
+        "message": "保存するには、タイトル、URL、種類、フォルダ、ドメイン、日付のいずれかで絞り込んでください。",
         "description": "Hint shown when there is nothing to save because no filter is active"
     },
     "savedSearches_empty": {
@@ -3748,11 +3772,11 @@
         "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
     },
     "savedSearches_missingFoldersTitle": {
-        "message": "一部のフォルダーが見つかりません",
+        "message": "一部のフォルダが見つかりません",
         "description": "Toast title when an opened saved search names folders that no longer exist"
     },
     "savedSearches_missingFolders": {
-        "message": "削除されたためスキップしたフォルダー: $1。その他のフィルターは適用されています。",
+        "message": "削除されたためスキップしたフォルダ: $1。その他のフィルターは適用されています。",
         "description": "Toast description; $1 is how many folders of the saved search were skipped"
     },
     "savedSearches_errorEmptyName": {
@@ -4452,23 +4476,27 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "プロンプトが長すぎて同期できません。$1 バイト未満にしてください。",
+        "message": "プロンプトが長すぎて同期できません。$1 以内にしてください。",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorSaveFailed": {
+        "message": "プロンプトを保存できませんでした。同期ストレージがいっぱいの可能性があります。使わないプロンプトを削除してから、もう一度お試しください。",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
+    },
     "prompt_varMaxRecommendations": {
-        "message": "フォルダー候補の数（最大推薦数）",
+        "message": "フォルダ候補の数（最大推薦数）",
         "description": "Variable description"
     },
     "prompt_varMaxCategories": {
-        "message": "トップレベルフォルダーの上限、-1 で無制限（最大カテゴリ数）",
+        "message": "トップレベルフォルダの上限、-1 で無制限（最大カテゴリ数）",
         "description": "Variable description"
     },
     "prompt_varMinItemsPerFolder": {
-        "message": "フォルダーあたりの最小ブックマーク数",
+        "message": "フォルダあたりの最小ブックマーク数",
         "description": "Variable description"
     },
     "prompt_varMaxItemsPerFolder": {
-        "message": "フォルダーあたりの最大ブックマーク数、-1 で無制限",
+        "message": "フォルダあたりの最大ブックマーク数、-1 で無制限",
         "description": "Variable description"
     },
     "prompt_varMinTags": {
@@ -4560,7 +4588,7 @@
         "description": "Error when an AI call has no model selected"
     },
     "error_aiReorganizeEmptyScope": {
-        "message": "選択した範囲にブックマークがありません。「すべてのブックマーク」を選ぶか、ブックマークがあるフォルダーを選択してください。",
+        "message": "選択した範囲にブックマークがありません。「すべてのブックマーク」を選ぶか、ブックマークがあるフォルダを選択してください。",
         "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
     },
     "settings_aiReadPageContent": {
@@ -4568,7 +4596,7 @@
         "description": "Settings: switch that lets AI tools read page text"
     },
     "settings_aiReadPageContentDesc": {
-        "message": "フォルダーの提案、自動タグ付け、コンテンツ要約で、タイトルと URL に加えて各ページの本文も送信し、結果の精度を高めます。ページは Cookie なしでダウンロードされ、ローカルネットワーク上のページは読み込まれません。オンにするとウェブサイトへのアクセス許可を求めます。",
+        "message": "フォルダの提案、自動タグ付け、コンテンツ要約で、タイトルと URL に加えて各ページの本文も送信し、結果の精度を高めます。ページは Cookie なしでダウンロードされ、ローカルネットワーク上のページは読み込まれません。オンにするとウェブサイトへのアクセス許可を求めます。",
         "description": "Settings: description of Read page content"
     },
     "settings_hostAccessDeniedDesc": {
@@ -4704,7 +4732,7 @@
         "description": "Ask AI: suggested question"
     },
     "askAI_suggestionFolders": {
-        "message": "ブックマークのフォルダーはどのように整理されていますか？",
+        "message": "ブックマークのフォルダはどのように整理されていますか？",
         "description": "Ask AI: suggested question"
     },
     "askAI_readPageOff": {
@@ -4728,7 +4756,7 @@
         "description": "Ask AI tool step; $1 is the search query"
     },
     "askAI_toolListFolders": {
-        "message": "フォルダー一覧を確認しました",
+        "message": "フォルダ一覧を確認しました",
         "description": "Ask AI tool step"
     },
     "askAI_toolCurrentPage": {
@@ -4764,7 +4792,7 @@
         "description": "Error when a bookmark no longer exists"
     },
     "error_bookmarkNoParent": {
-        "message": "親フォルダーがないため、この項目は復元できません。",
+        "message": "親フォルダがないため、この項目は復元できません。",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
     },
     "error_tabsApiUnavailable": {
@@ -4780,7 +4808,7 @@
         "description": "Import error when the chosen file cannot be read"
     },
     "ai_recommendationNoFolders": {
-        "message": "既存のフォルダーがありません",
+        "message": "既存のフォルダがありません",
         "description": "Reason shown for the only folder suggestion when there are no folders yet"
     },
     "ai_reorgPreviewRequired": {
