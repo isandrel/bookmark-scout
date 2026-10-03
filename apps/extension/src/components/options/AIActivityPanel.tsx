@@ -131,20 +131,12 @@ export function AIActivityPanel() {
   const [busy, setBusy] = useState(false);
 
   return (
-    <section
-      aria-labelledby="ai-activity-heading"
-      className="space-y-3 rounded-lg border bg-card p-4"
+    <OptionsPanel
+      id="ai-activity"
       data-testid="ai-activity"
-    >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h3 id="ai-activity-heading" className="text-base font-medium">
-            {t('aiActivity_title')}
-          </h3>
-          <p id="ai-activity-description" className="text-sm text-muted-foreground">
-            {t('aiActivity_description', String(MAX_AI_ACTIVITY_ENTRIES))}
-          </p>
-        </div>
+      title={t('aiActivity_title')}
+      description={t('aiActivity_description', String(MAX_AI_ACTIVITY_ENTRIES))}
+      actions={
         <div className="flex items-center gap-2">
           <Label htmlFor="ai-activity-recording" className="text-sm">
             {t('aiActivity_record')}
@@ -160,8 +152,8 @@ export function AIActivityPanel() {
             }}
           />
         </div>
-      </div>
-
+      }
+    >
       {recording && entries.length === 0 && (
         <p className="rounded-md border border-dashed p-4 text-center text-sm text-muted-foreground">
           {t('aiActivity_empty')}
@@ -182,6 +174,6 @@ export function AIActivityPanel() {
           </div>
         </>
       )}
-    </section>
+    </OptionsPanel>
   );
 }

@@ -96,58 +96,61 @@ function PromptEditorDialog({
           <DialogDescription>{t('prompt_editorDescription')}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="prompt-name" className="text-sm font-medium">
-              {t('prompt_name')}
-            </Label>
-            <Input
-              id="prompt-name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              autoComplete="off"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="prompt-text" className="text-sm font-medium">
-              {t('prompt_text')}
-            </Label>
-            {task && task.variables.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-xs text-muted-foreground">{t('prompt_variables')}</span>
-                {task.variables.map((variable) => (
-                  <button
-                    key={variable.name}
-                    type="button"
-                    onClick={() => insertVariable(variable.name)}
-                    title={t(variable.descriptionKey)}
-                    className="rounded-full border bg-card px-2 py-0.5 font-mono text-xs hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    {`{{${variable.name}}}`}
-                  </button>
-                ))}
-              </div>
+          <Field id="prompt-name" label={t('prompt_name')}>
+            {(control) => (
+              <Input
+                {...control}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                autoComplete="off"
+              />
             )}
-            <textarea
-              id="prompt-text"
-              ref={textRef}
-              value={system}
-              onChange={(event) => setSystem(event.target.value)}
-              rows={14}
-              spellCheck={false}
-              aria-describedby="prompt-text-size"
-              className="w-full resize-y rounded-md border border-input bg-card px-3 py-2 font-mono text-xs leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-            <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
-              <span id="prompt-text-size" className={bytes > MAX_PROMPT_BYTES ? 'text-destructive-text' : ''}>
-                {t('prompt_size', [formatKilobytes(bytes), formatKilobytes(MAX_PROMPT_BYTES)])}
-              </span>
-              {unknown.length > 0 && (
-                <span className="text-warning">
-                  {t('prompt_unknownVariables', unknown.map((v) => `{{${v}}}`).join(', '))}
-                </span>
-              )}
-            </div>
-          </div>
+          </Field>
+          <Field id="prompt-text" label={t('prompt_text')}>
+            {(control) => (
+              <>
+                {task && task.variables.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">{t('prompt_variables')}</span>
+                    {task.variables.map((variable) => (
+                      <button
+                        key={variable.name}
+                        type="button"
+                        onClick={() => insertVariable(variable.name)}
+                        title={t(variable.descriptionKey)}
+                        className="rounded-full border bg-card px-2 py-0.5 font-mono text-xs hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        {`{{${variable.name}}}`}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <textarea
+                  {...control}
+                  ref={textRef}
+                  value={system}
+                  onChange={(event) => setSystem(event.target.value)}
+                  rows={14}
+                  spellCheck={false}
+                  aria-describedby="prompt-text-size"
+                  className="w-full resize-y rounded-md border border-input bg-card px-3 py-2 font-mono text-xs leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+                <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
+                  <span
+                    id="prompt-text-size"
+                    className={bytes > MAX_PROMPT_BYTES ? 'text-destructive-text' : ''}
+                  >
+                    {t('prompt_size', [formatKilobytes(bytes), formatKilobytes(MAX_PROMPT_BYTES)])}
+                  </span>
+                  {unknown.length > 0 && (
+                    <span className="text-warning">
+                      {t('prompt_unknownVariables', unknown.map((v) => `{{${v}}}`).join(', '))}
+                    </span>
+                  )}
+                </div>
+              </>
+            )}
+          </Field>
           <details className="rounded-md border bg-muted/40 px-3 py-2">
             <summary className="cursor-pointer text-sm font-medium">{t('prompt_preview')}</summary>
             <p className="mt-1 text-xs text-muted-foreground">{t('prompt_previewDescription')}</p>
@@ -206,8 +209,12 @@ function BuiltInPromptDialog({
             </pre>
             {task.variables.length > 0 && (
               <details className="rounded-md border bg-muted/40 px-3 py-2">
-                <summary className="cursor-pointer text-sm font-medium">{t('prompt_preview')}</summary>
-                <p className="mt-1 text-xs text-muted-foreground">{t('prompt_previewDescription')}</p>
+                <summary className="cursor-pointer text-sm font-medium">
+                  {t('prompt_preview')}
+                </summary>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {t('prompt_previewDescription')}
+                </p>
                 <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-xs">
                   {interpolatePrompt(task.system, getPromptPreviewVariables(taskId, settings))}
                 </pre>
@@ -292,7 +299,9 @@ function PromptTaskRow({
                 size="icon-sm"
                 aria-label={t('prompt_editNamed', active.name)}
                 title={t('prompt_editNamed', active.name)}
-                onClick={() => onEdit({ task: taskId, id: active.id, name: active.name, system: active.system })}
+                onClick={() =>
+                  onEdit({ task: taskId, id: active.id, name: active.name, system: active.system })
+                }
               >
                 <Pencil className="h-4 w-4" />
               </Button>
@@ -332,7 +341,9 @@ function PromptTaskRow({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => startFrom({ name: t('prompt_newName', t(task.nameKey)), system: task.system })}
+                onClick={() =>
+                  startFrom({ name: t('prompt_newName', t(task.nameKey)), system: task.system })
+                }
               >
                 <Plus className="h-4 w-4" />
                 {t('prompt_customize')}
@@ -352,17 +363,12 @@ export function PromptLibraryPanel() {
   const [viewing, setViewing] = useState<PromptTaskId | null>(null);
 
   return (
-    <section
-      aria-labelledby="prompt-library-heading"
-      className="space-y-3 rounded-lg border bg-card p-4"
+    <OptionsPanel
+      id="prompt-library"
       data-testid="prompt-library"
+      title={t('prompt_libraryTitle')}
+      description={t('prompt_libraryDescription')}
     >
-      <div>
-        <h3 id="prompt-library-heading" className="text-base font-medium">
-          {t('prompt_libraryTitle')}
-        </h3>
-        <p className="text-sm text-muted-foreground">{t('prompt_libraryDescription')}</p>
-      </div>
       <ul className="divide-y overflow-hidden rounded-md border">
         {PROMPT_TASK_IDS.map((taskId) => (
           <PromptTaskRow
@@ -382,31 +388,23 @@ export function PromptLibraryPanel() {
         onCustomize={(taskId) => {
           const task = PROMPT_TASKS[taskId];
           setViewing(null);
-          setEditor({ task: taskId, name: t('prompt_newName', t(task.nameKey)), system: task.system });
+          setEditor({
+            task: taskId,
+            name: t('prompt_newName', t(task.nameKey)),
+            system: task.system,
+          });
         }}
       />
-      <Dialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>{t('prompt_deleteTitle', deleting?.name ?? '')}</DialogTitle>
-            <DialogDescription>{t('prompt_deleteDescription')}</DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setDeleting(null)}>
-              {t('action_cancel')}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                if (deleting) void deleteCustomPrompt(deleting.id);
-                setDeleting(null);
-              }}
-            >
-              {t('action_delete')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </section>
+      <ConfirmDialog
+        open={deleting !== null}
+        onOpenChange={(open) => !open && setDeleting(null)}
+        title={t('prompt_deleteTitle', deleting?.name ?? '')}
+        description={t('prompt_deleteDescription')}
+        confirmLabel={t('action_delete')}
+        onConfirm={() => {
+          if (deleting) void deleteCustomPrompt(deleting.id);
+        }}
+      />
+    </OptionsPanel>
   );
 }
