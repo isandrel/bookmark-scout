@@ -29,9 +29,11 @@ keep="^(main|HEAD|origin${KEEP_EXTRA:+|$KEEP_EXTRA})$"
 run() { if $apply; then "$@"; else echo "would run: $*"; fi; }
 # Commits on a branch that no remote branch contains: an agent's unpushed work.
 unpushed() { /usr/bin/git rev-list --count "$1" --not --remotes 2>/dev/null || echo 0; }
-# Returns 0 when the branch may go: nothing unpushed, or bundled first.
+typeset -A bundled
+# Returns 0 when the branch may go: nothing unpushed, or bundled first (once per branch).
 safe_to_drop() {
   local br=$1 n
+  [[ -n ${bundled[$br]:-} ]] && return 0
   n=$(unpushed "$br")
   (( n == 0 )) && return 0
   if ! $bundle_unpushed; then
@@ -39,13 +41,20 @@ safe_to_drop() {
   fi
   local file=~/.cache/bookmark-scout-unpushed-${br//\//-}-$(date +%Y%m%d-%H%M).bundle
   run /usr/bin/git bundle create -q "$file" "$br" --not --remotes
-  echo "bundled $n unpushed commit(s) of $br to $file"
+  $apply && echo "bundled $n unpushed commit(s) of $br to $file"
+  bundled[$br]=$file
 }
 
-# Worktrees: remove clean ones whose branch is not kept.
-/usr/bin/git worktree list --porcelain | awk '/^worktree /{w=$2} /^branch /{sub("refs/heads/","",$2); print w" "$2}' \
-  | grep '/.claude/worktrees/' | while read -r wt br; do
+# Worktrees: remove clean ones whose branch is not kept. Locked ones belong to an agent that may
+# still be running; they are reported, never forced.
+/usr/bin/git worktree list --porcelain | awk 'BEGIN{RS=""} {w=""; b=""; l=0
+    for (i=1;i<=NF;i++) { if ($i=="worktree") w=$(i+1); if ($i=="branch") { b=$(i+1); sub("refs/heads/","",b) }; if ($i=="locked") l=1 }
+    if (b!="") print w" "b" "l }' \
+  | grep '/.claude/worktrees/' | while read -r wt br locked; do
     if [[ ${pr_state[$br]:-} == OPEN ]] || [[ $br =~ $keep ]]; then continue; fi
+    if [[ $locked == 1 ]]; then
+      echo "keep locked worktree (unlock with 'git worktree unlock' once its agent has finished): $wt ($br)"; continue
+    fi
     safe_to_drop "$br" || continue
     /usr/bin/git -C "$wt" checkout -q -- apps/website/next-env.d.ts 2>/dev/null || true
     if [[ -n $(/usr/bin/git -C "$wt" status --porcelain) ]]; then
