@@ -181,6 +181,33 @@ test.describe('popup keyboard shortcuts', () => {
       ),
     ).toBe(1);
   });
+
+  for (const surface of ['popup', 'sidepanel'] as const) {
+    test(`${surface}: Ctrl+B and Cmd+B reach the browser and leave no cookie`, async ({
+      extensionId,
+      page,
+    }) => {
+      await page.goto(`chrome-extension://${extensionId}/${surface}.html`);
+      await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+      // Registered after the page's own listeners, so it sees whether any of them claimed the key.
+      await page.evaluate(() => {
+        const seen: boolean[] = [];
+        (window as unknown as { seenPrevented: boolean[] }).seenPrevented = seen;
+        window.addEventListener('keydown', (event) => {
+          if (event.key === 'b') seen.push(event.defaultPrevented);
+        });
+      });
+
+      await page.keyboard.press('Control+b');
+      await page.keyboard.press('Meta+b');
+
+      const prevented = await page.evaluate(
+        () => (window as unknown as { seenPrevented: boolean[] }).seenPrevented,
+      );
+      expect(prevented).toEqual([false, false]);
+      expect(await page.evaluate(() => document.cookie)).toBe('');
+    });
+  }
 });
 
 test.describe('manager keyboard shortcuts', () => {
