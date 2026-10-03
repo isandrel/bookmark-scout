@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
+import { setLanguage } from '@/hooks/use-i18n';
 import {
   buildFolderOptions,
   buildManagerFolderTree,
@@ -20,6 +21,8 @@ import {
   hostnameMatchesDomain,
   isScriptUrl,
 } from '@/lib/url-domain';
+
+beforeAll(() => setLanguage('en'));
 
 const folder = (id: string, parentId: string, title: string, folderPath: string, index = 0) =>
   ({ id, parentId, title, folderPath, index, type: 'folder' }) satisfies ManagerItem;

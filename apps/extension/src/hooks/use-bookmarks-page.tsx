@@ -7,6 +7,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
 
+/** The manager page's query parameter for the open folder: `bookmarks.html?id=<folder id>`. */
+export const FOLDER_QUERY_PARAM = 'id';
+
 const processNode = (
   node: BookmarkTreeNode,
   folderPath: string,
@@ -35,7 +38,9 @@ function flattenBookmarks(
 ): Bookmark[] {
   const bookmarks: Bookmark[] = [];
   for (const node of nodes) {
-    const folderPath = ancestorTitles.length ? ancestorTitles.join(' / ') : t('bookmarks_root');
+    const folderPath = ancestorTitles.length
+      ? ancestorTitles.join(FOLDER_PATH_SEPARATOR)
+      : t('bookmarks_root');
     bookmarks.push(processNode(node, folderPath, isPermanentBookmarkFolder(node, rootIds)));
     if (node.children) {
       const childBookmarks = flattenBookmarks(node.children, rootIds, [
@@ -57,15 +62,15 @@ export function readPageIndexFromHistory(state: unknown): number {
 }
 
 function readFolderIdFromUrl(): string | null {
-  return new URLSearchParams(window.location.search).get('id') || null;
+  return new URLSearchParams(window.location.search).get(FOLDER_QUERY_PARAM) || null;
 }
 
 function folderUrl(folderId: string | null): string {
   const url = new URL(window.location.href);
   if (folderId) {
-    url.searchParams.set('id', folderId);
+    url.searchParams.set(FOLDER_QUERY_PARAM, folderId);
   } else {
-    url.searchParams.delete('id');
+    url.searchParams.delete(FOLDER_QUERY_PARAM);
   }
   return url.toString();
 }
@@ -150,7 +155,7 @@ export function useBookmarkNavigation() {
       previousParentsRef.current = new Map(bookmarks.map((item) => [item.id, item.parentId]));
       hasLoadedRef.current = true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load bookmarks');
+      setError(getErrorMessage(err, 'error_failedToLoadBookmarks'));
     } finally {
       setIsLoading(false);
     }

@@ -17,8 +17,6 @@ export type ManagerItem = {
   isRootFolder?: boolean;
 };
 
-const FOLDER_TYPE = 'folder';
-
 export type FolderResolution = {
   /** The folder to show; null is the manager root. */
   folderId: string | null;
@@ -39,9 +37,9 @@ export function resolveManagerFolder(
   if (requestedId === null || requestedId === rootId) return { folderId: null, status: 'ok' };
 
   const byId = new Map(items.map((item) => [item.id, item]));
-  const isFolder = (id: string | undefined) => byId.get(id ?? '')?.type === FOLDER_TYPE;
+  const isFolder = (id: string | undefined) => byId.get(id ?? '')?.type === ItemTypeEnum.Folder;
   const requested = byId.get(requestedId);
-  if (requested?.type === FOLDER_TYPE) return { folderId: requestedId, status: 'ok' };
+  if (requested?.type === ItemTypeEnum.Folder) return { folderId: requestedId, status: 'ok' };
   if (requested) {
     return {
       folderId: isFolder(requested.parentId) ? (requested.parentId ?? null) : null,
@@ -62,7 +60,7 @@ export function resolveManagerFolder(
 /** Full path of a folder, e.g. "Bookmarks bar / News / Tech". */
 export function getFolderFullPath(folder: ManagerItem, untitledLabel: string): string {
   const title = folder.title.trim() || untitledLabel;
-  return folder.isRootFolder ? title : `${folder.folderPath} / ${title}`;
+  return folder.isRootFolder ? title : `${folder.folderPath}${FOLDER_PATH_SEPARATOR}${title}`;
 }
 
 export type FolderOption = { value: string; label: string };
@@ -72,7 +70,7 @@ export function buildFolderOptions(
   items: readonly ManagerItem[],
   untitledLabel: string,
 ): FolderOption[] {
-  const folders = items.filter((item) => item.type === FOLDER_TYPE);
+  const folders = items.filter((item) => item.type === ItemTypeEnum.Folder);
   const labels = folders.map((folder) => getFolderFullPath(folder, untitledLabel));
   const counts = new Map<string, number>();
   for (const label of labels) counts.set(label, (counts.get(label) ?? 0) + 1);
@@ -80,7 +78,10 @@ export function buildFolderOptions(
     const label = labels[index];
     return {
       value: folder.id,
-      label: (counts.get(label) ?? 0) > 1 ? `${label} (#${folder.id})` : label,
+      label:
+        (counts.get(label) ?? 0) > 1
+          ? t('bookmarks_folderOptionWithId', [label, folder.id])
+          : label,
     };
   });
 }
@@ -91,7 +92,7 @@ export type ManagerFolderNode = { id: string; title: string; children: ManagerFo
 export function buildManagerFolderTree(items: readonly ManagerItem[]): ManagerFolderNode[] {
   const childrenByParent = new Map<string, ManagerItem[]>();
   for (const item of items) {
-    if (item.type !== FOLDER_TYPE || !item.parentId) continue;
+    if (item.type !== ItemTypeEnum.Folder || !item.parentId) continue;
     const siblings = childrenByParent.get(item.parentId) ?? [];
     siblings.push(item);
     childrenByParent.set(item.parentId, siblings);
@@ -104,7 +105,7 @@ export function buildManagerFolderTree(items: readonly ManagerItem[]): ManagerFo
       .map(toNode),
   });
   return items
-    .filter((item) => item.type === FOLDER_TYPE && item.isRootFolder)
+    .filter((item) => item.type === ItemTypeEnum.Folder && item.isRootFolder)
     .sort((left, right) => (left.index ?? 0) - (right.index ?? 0))
     .map(toNode);
 }
@@ -183,7 +184,7 @@ export function getMoveTargetFolders(
   const sharedParentId = parentIds.size === 1 ? [...parentIds][0] : undefined;
   return items.filter(
     (item) =>
-      item.type === FOLDER_TYPE &&
+      item.type === ItemTypeEnum.Folder &&
       item.id !== sharedParentId &&
       !ids.has(item.id) &&
       !hasAncestorIn(item, ids, byId),

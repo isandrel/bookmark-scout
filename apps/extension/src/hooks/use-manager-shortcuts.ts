@@ -1,27 +1,19 @@
 /**
- * Keyboard shortcuts for the bookmark manager page.
+ * Keyboard shortcuts for the bookmark manager page, bound in config/ui/shortcuts.toml
+ * (`SHORTCUT_BINDINGS.manager`):
  *
- * - `/` focuses the title filter.
- * - `?` opens the keyboard shortcuts help dialog.
- * - Alt+ArrowUp or Backspace goes to the parent folder.
- * - `j` / `k` move focus to the next / previous table row (folder rows, or a bookmark row's
- *   actions menu); Enter on a folder row opens it, as before.
- * - `s` opens the saved searches menu.
+ * - focusFilter focuses the title filter.
+ * - showHelp opens the keyboard shortcuts help dialog.
+ * - parentFolder goes to the parent folder.
+ * - nextRow / previousRow move focus to the next / previous table row (folder rows, or a
+ *   bookmark row's actions menu); Enter on a folder row opens it, as before.
+ * - openSavedSearches opens the saved searches menu.
  *
  * Keys are ignored while typing, during IME composition, with Ctrl or Cmd held, and while a
  * dialog or menu is open.
  */
 
 import { useEffect, useRef, useState } from 'react';
-
-export const MANAGER_SHORTCUT_BINDINGS = {
-  focusFilter: [{ key: '/' }],
-  showHelp: [{ key: '?' }],
-  parentFolder: [{ key: 'ArrowUp', alt: true }, { key: 'Backspace' }],
-  nextRow: [{ key: 'j' }],
-  previousRow: [{ key: 'k' }],
-  openSavedSearches: [{ key: 's' }],
-} as const satisfies Record<string, readonly ShortcutBinding[]>;
 
 const TABLE_ROW_SELECTOR = 'main table tbody tr';
 
@@ -85,7 +77,7 @@ export function useManagerShortcuts({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const action = findShortcut(event, MANAGER_SHORTCUT_BINDINGS);
+      const action = findShortcut(event, SHORTCUT_BINDINGS.manager);
       if (!action) return;
 
       switch (action) {
