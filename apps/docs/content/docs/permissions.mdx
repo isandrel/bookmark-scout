@@ -3,20 +3,30 @@ title: Permissions
 description: Each browser permission Bookmark Scout asks for, why it needs it, and the optional website access it requests only when you run a tool.
 ---
 
-These are the permissions in the built extension for each browser. Bookmark Scout has no content scripts, so it never reads the pages you visit.
+These are the permissions in the built extension for each browser. Bookmark Scout has no content scripts, so it never reads the pages you visit. It asks at install only for what it cannot work without; everything else is asked for when you turn on or run the feature that needs it.
 
 ## Granted at install
 
 | Permission | Browsers | Why |
 | --- | --- | --- |
 | `bookmarks` | All | Show and search your bookmarks, and create, edit, move, and delete them when you act in the popup, side panel, manager, or right-click menu |
-| `tabs` | All | Read the title and URL of the active tab so you can save the page you are on, and open bookmarks in a new tab. It does not read other tabs or track browsing |
 | `storage` | All | Save your settings, and on this device only, your AI provider settings, tags, summaries, saved searches, recent folders, recent searches, and site icons saved with **Refresh Site Icons** |
-| `contextMenus` | All | Add **Save bookmark to...** to the right-click menu on links. Turn it off with **Context Menu** in [Settings](/settings#data) |
-| `favicon` | Chrome, Edge | Show each bookmark's site icon from the browser's own icon cache. No network request is made for icons |
+| `activeTab` | All | When you click the toolbar button or the right-click menu, read that tab's title and URL, so you can save the page you are on. No other tabs, no history |
 | `sidePanel` | Chrome, Edge | Provide the side panel view. Firefox declares the same page as a sidebar instead |
+| `contextMenus` | Firefox | Firefox does not let extensions ask for it later. The menu still appears only after you turn on **Context Menu** |
 
 In Chrome and Edge the extension also replaces the browser's bookmarks page with the Bookmark Scout manager. That is a page override, not a permission. Firefox does not allow it, so there the manager opens from **Open bookmark manager** in the popup; see [Browser support](/browser-support).
+
+## Asked for when you need it
+
+| Permission | Browsers | Asked for when |
+| --- | --- | --- |
+| `tabs` | All | You save the current page, or ask for folder suggestions, from the side panel. A short explanation comes first. The toolbar popup never needs it |
+| `contextMenus` | Chrome, Edge | You turn on **Context Menu** in [Settings](/settings#data). It is off by default, and Chrome grants it without a prompt |
+| `favicon` | Chrome, Edge | You turn on **Use the browser's icon cache** in [Settings](/settings#appearance), to show icons the browser has already saved |
+| Data sharing consent | Firefox | You turn on **AI Features** or **Read page content**, or click **Verify Service**. Firefox asks before the extension sends anything to your AI provider |
+
+If you decline, the feature stays off and nothing is sent. If you take a permission back later in the browser's extension settings, the feature turns off; turning it on again asks again.
 
 ## Optional website access
 
@@ -26,7 +36,7 @@ The extension also declares access to `http://*/*` and `https://*/*`, but none o
 - **Read page content** in the AI settings asks for access to websites when you turn it on, so AI tools can download pages, without cookies, and send their main text to your AI provider. Pages on your local network are never read. See [Read page content](/guides/ai-tools#read-page-content).
 - **Verify Service** and **Refresh Models** in the AI settings ask for access to that one provider's address only. See [Set up AI tools](/guides/ai-tools).
 
-To take website access back, open the browser's page for the extension (for example `chrome://extensions/`, then **Details** on Bookmark Scout) and change its site access.
+To take access back, open the browser's page for the extension (for example `chrome://extensions/`, then **Details** on Bookmark Scout, or **Permissions** in Firefox's `about:addons`) and change its site access or permissions.
 
 ## What is not requested
 

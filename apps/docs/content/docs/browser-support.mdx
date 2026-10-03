@@ -16,8 +16,8 @@ This table comes from the manifests of the built extension for each browser.
 | Bookmarks manager and Tools sidebar | Replaces the browser's bookmarks page, and opens from **Open bookmark manager** in the popup and side panel | Opens from **Open bookmark manager**. Whether Edge also applies the override to its Favorites page has not been checked. | Opens from **Open bookmark manager** in the popup. Firefox cannot replace its bookmarks page. |
 | Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Yes, in the manager. Automated tests cover import and export and the reports; the other tools are checked by hand. |
 | Settings page | Yes | Yes | Yes |
-| Right-click menu to save links | Yes | Yes | Yes |
-| Site icons next to bookmarks | Yes, from the browser's icon cache, or icons saved with **Refresh Site Icons** | Yes | Only icons saved with **Refresh Site Icons**, which runs in the manager. Firefox has no favicon API for extensions, so other bookmarks show a generic icon. |
+| Right-click menu to save links | Yes, after you turn on **Context Menu** (asks for permission) | Same | Yes, after you turn on **Context Menu** |
+| Site icons next to bookmarks | Icons saved with **Refresh Site Icons**, and from the browser's icon cache once you turn on **Use the browser's icon cache** | Same | Only icons saved with **Refresh Site Icons**, which runs in the manager. Firefox has no favicon API for extensions, so other bookmarks show a generic icon. |
 | Optional website access for dead-link checks, title fetching, and site icon refreshes | Requested when you run the tool | Same | Same |
 
 ## What is tested

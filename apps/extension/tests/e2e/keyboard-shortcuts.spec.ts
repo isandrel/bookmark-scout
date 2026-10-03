@@ -24,6 +24,10 @@ function focusedRowIndex(page: Page) {
 }
 
 test.describe('popup keyboard shortcuts', () => {
+  // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+  // so these tests grant the optional tabs permission to read the current page.
+  test.use({ grantPermissions: ['tabs'] });
+
   test('/ focuses search, Escape clears then leaves it, and the hint names the keys', async ({
     extensionId,
     page,

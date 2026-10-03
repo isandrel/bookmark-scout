@@ -1,6 +1,10 @@
 /**
  * Context menu service for right-click quick bookmark adding.
  * Uses a provider-based architecture for extensibility.
+ *
+ * The menu exists only while the Context Menu setting is on and the `contextMenu` permission is
+ * granted (optional in Chrome and Edge, where `browser.contextMenus` is undefined until then).
+ * A grant or revoke rebuilds it, and the click listener is added once the API appears.
  */
 
 // Type for bookmark naming setting
@@ -183,7 +187,7 @@ class ContextMenuManager {
    * Clear all menu items.
    */
   private async clearMenu(): Promise<void> {
-    await browser.contextMenus.removeAll();
+    await browser.contextMenus?.removeAll();
   }
 
   /**
@@ -201,7 +205,7 @@ class ContextMenuManager {
 
     // A failed settings read must not recreate the menu or permit a save.
     const settings = await getContextMenuSettings();
-    if (!settings.enabled) return;
+    if (!settings.enabled || !(await canShowMenu())) return;
 
     // Recreate root
     browser.contextMenus.create({
@@ -230,7 +234,7 @@ class ContextMenuManager {
 
     // Settings can change while a provider is loading. The queued storage-change
     // rebuild will also run, but avoid showing a menu that has already been disabled.
-    if (!(await getContextMenuSettings()).enabled) {
+    if (!(await getContextMenuSettings()).enabled || !(await canShowMenu())) {
       await this.clearMenu();
       return;
     }
@@ -315,7 +319,7 @@ class ContextMenuManager {
 
     try {
       const settings = await getContextMenuSettings();
-      if (!settings.enabled) {
+      if (!settings.enabled || !(await canShowMenu())) {
         return { success: false, code: 'disabled' };
       }
       const bookmarkTitle = getBookmarkTitle(settings.naming, info, tab);
@@ -347,8 +351,27 @@ class ContextMenuManager {
   }
 }
 
+/** The menu API is present and the optional permission granted (always, in Firefox). */
+async function canShowMenu(): Promise<boolean> {
+  return Boolean(browser.contextMenus) && (await hasPermission('contextMenu'));
+}
+
 // Singleton instance
 export const contextMenuManager = new ContextMenuManager();
+
+let clickListenerAdded = false;
+
+/** Saves the clicked link; added once `browser.contextMenus` exists (after a grant in Chrome). */
+function listenForMenuClicks(): void {
+  if (clickListenerAdded || !browser.contextMenus) return;
+  clickListenerAdded = true;
+  browser.contextMenus.onClicked.addListener(async (info, tab) => {
+    const result = await contextMenuManager.handleClick(info, tab);
+    if (!result.success && result.code !== 'disabled') {
+      console.error('[ContextMenu] Failed to save bookmark:', result.code, result.error ?? '');
+    }
+  });
+}
 
 let storageWatchersRegistered = false;
 
@@ -443,8 +466,14 @@ export async function initializeContextMenu(): Promise<void> {
   contextMenuManager.registerProvider(recentFoldersProvider);
   contextMenuManager.registerProvider(bookmarksBarProvider);
 
+  listenForMenuClicks();
   if (!storageWatchersRegistered) {
     watchContextMenuStorage();
+    // A grant adds the API and a revoke removes the menu, so either one rebuilds it.
+    watchPermissions(() => {
+      listenForMenuClicks();
+      rebuildAfterStorageChange();
+    });
     storageWatchersRegistered = true;
   }
 

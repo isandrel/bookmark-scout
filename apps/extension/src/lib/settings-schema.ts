@@ -25,8 +25,6 @@ export type SettingsFieldMeta = {
   list?: 'string' | 'number';
   /** Numbers use a stepper; a slider suits only fractional values such as a confidence. */
   control?: 'slider';
-  /** Turning the switch on first asks for website access; it stays off if the user declines. */
-  requiresWebHostAccess?: boolean;
 };
 
 type SettingsCategoryMeta = {
@@ -190,7 +188,7 @@ const UNIT_MESSAGE_KEYS = {
 
 type SettingUnit = keyof typeof UNIT_MESSAGE_KEYS;
 
-type FieldExtras = Pick<SettingsFieldMeta, 'control' | 'requiresWebHostAccess'> & {
+type FieldExtras = Pick<SettingsFieldMeta, 'control'> & {
   unit?: SettingUnit;
 };
 
@@ -396,6 +394,7 @@ const fields = {
       })[value],
   ),
   showFavicons: switchField('appearance.show_favicons', 'showFavicons'),
+  browserIconCache: switchField('appearance.browser_icon_cache', 'browserIconCache'),
   faviconSize: literalField(
     'appearance.favicon_size',
     'faviconSize',
@@ -445,9 +444,7 @@ const fields = {
   aiModel: aiModelField,
   aiMaxRecommendations: numberField('ai.max_recommendations', 'aiMaxRecommendations'),
   aiAutoTriggerOnOpen: switchField('ai.auto_trigger_on_open', 'aiAutoTrigger'),
-  aiReadPageContent: switchField('ai.read_page_content', 'aiReadPageContent', {
-    requiresWebHostAccess: true,
-  }),
+  aiReadPageContent: switchField('ai.read_page_content', 'aiReadPageContent'),
   aiMaxCategories: numberField('ai.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField('ai.min_items_per_folder', 'aiMinItemsPerFolder'),
   aiMaxItemsPerFolder: numberField('ai.max_items_per_folder', 'aiMaxItemsPerFolder'),
@@ -837,7 +834,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
     appearance: {
       label: t('settings_appearance'),
       description: t('settings_appearanceDesc'),
-      fields: ['language', 'theme', 'showFavicons', 'faviconSize'],
+      fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
     },
     search: {
       label: t('settings_search'),
@@ -1002,8 +999,38 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
   };
 }
 
-export function getSettingsCategories() {
-  return buildCategories();
+/**
+ * Switches that turn on a feature needing a permission the browser may not have granted
+ * (`lib/permission-catalog.ts`). Options asks for it when the switch is turned on (it stays off
+ * if the user declines), and the feature counts as off while the permission is missing.
+ */
+export const SETTING_PERMISSIONS = {
+  aiEnabled: 'ai',
+  aiReadPageContent: 'pageReading',
+  browserIconCache: 'browserIcons',
+  contextMenuEnabled: 'contextMenu',
+} as const satisfies Partial<Record<keyof Settings, PermissionFeature>>;
+
+/** The permission feature a setting turns on, if any. */
+export function getSettingPermission(key: keyof Settings): PermissionFeature | undefined {
+  return (SETTING_PERMISSIONS as Partial<Record<keyof Settings, PermissionFeature>>)[key];
+}
+
+/** False for a setting whose feature this browser lacks (the icon cache in Firefox). */
+function isSettingSupported(key: keyof Settings): boolean {
+  const feature = getSettingPermission(key);
+  return (
+    !feature || isPermissionFeatureSupported(feature, import.meta.env.BROWSER as PermissionBrowser)
+  );
+}
+
+export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
+  return Object.fromEntries(
+    Object.entries(buildCategories()).map(([id, category]) => [
+      id,
+      { ...category, fields: category.fields.filter(isSettingSupported) },
+    ]),
+  );
 }
 
 const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {

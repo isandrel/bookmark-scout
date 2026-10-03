@@ -212,6 +212,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`confirm-dialog`** (`ConfirmDialog`): a dialog that asks before an action. It has a title, an optional explanation, and Cancel beside a confirm button, which is `destructive` by default. Use it for every "Delete …?" prompt instead of assembling a dialog by hand.
 
+**`permission-dialog`** (`PermissionDialog`, opened by `usePermissionGate`): explains an optional permission before the browser's own prompt, for features whose prompt does not say why (website access, tab access). Title, a sentence on why, a muted sentence on what is read and how to take it back, then **Not now** and **Allow access**; the browser request runs from **Allow access**. The copy comes from the feature's entry in `src/lib/permission-catalog.ts`.
+
 **`field`** (`Field`): a label with its description and an inline error, wired to the control through ids and `aria-*`. The `stacked` layout is for dialogs and editors, and the `setting` layout is for an Options row with the control and its reset button on the right.
 
 **`options-panel`** (`OptionsPanel`): a boxed Options section with a heading, a description, optional actions on the right, and the content below, such as AI services, AI activity, or the prompt library.

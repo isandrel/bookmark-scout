@@ -243,6 +243,41 @@ test('options saves a setting to sync storage and keeps it after reload', async 
     .toBe('false');
 });
 
+test('AI waits for data collection consent, and there is no browser icon cache setting', async ({
+  extension,
+}) => {
+  // Firefox 140+ reports built-in data collection consent; nothing is granted at install.
+  const consent = await extension.call(async (browser) => {
+    const permissions = browser.permissions as unknown as {
+      getAll: () => Promise<{ data_collection?: string[] }>;
+      contains: (request: { data_collection: string[] }) => Promise<boolean>;
+    };
+    return {
+      granted: (await permissions.getAll()).data_collection ?? null,
+      bookmarks: await permissions.contains({ data_collection: ['bookmarksInfo'] }),
+    };
+  }, null);
+  expect(consent).toEqual({ granted: [], bookmarks: false });
+
+  // A synced "AI on" without consent (for example from before consent existed) counts as off.
+  await setSettings(extension, { language: 'en', aiEnabled: true });
+  await extension.open('options.html');
+  // Appearance opens first. Firefox has no icon cache for extensions, so that setting is absent.
+  await extension.find('[data-setting="showFavicons"]');
+  expect(
+    await extension.driver.executeScript<boolean>(
+      'return document.querySelector(\'[data-setting="browserIconCache"]\') !== null',
+    ),
+  ).toBe(false);
+
+  await extension.driver
+    .findElement(By.xpath('//button[@role="tab" and normalize-space()="AI"]'))
+    .click();
+  const aiSwitch = await extension.find('[data-setting="aiEnabled"] [role="switch"]');
+  await expect.poll(() => aiSwitch.getAttribute('aria-checked')).toBe('false');
+  expect((await readSettings(extension)).aiEnabled).toBe(true);
+});
+
 test('JSON export downloads the folder and importing it restores a deleted bookmark', async ({
   extension,
 }, testInfo) => {

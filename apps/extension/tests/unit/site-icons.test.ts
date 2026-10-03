@@ -338,10 +338,12 @@ describe('site icon rendering', () => {
     expect(lookupSiteIcon(state, 'javascript:void(0)')).toBeUndefined();
   });
 
-  it('prefers a saved icon over the browser icon cache', () => {
-    expect(getSiteIconUrl('https://a.test/', 32, PNG_DATA_URL)).toBe(PNG_DATA_URL);
-    const browserIcon = getSiteIconUrl('https://a.test/', 32, undefined);
+  it('prefers a saved icon over the browser icon cache, which is used only when allowed', () => {
+    expect(getSiteIconUrl('https://a.test/', 32, PNG_DATA_URL, true)).toBe(PNG_DATA_URL);
+    const browserIcon = getSiteIconUrl('https://a.test/', 32, undefined, true);
     expect(browserIcon).toContain('/_favicon/');
     expect(browserIcon).toContain('size=32');
+    expect(getSiteIconUrl('https://a.test/', 32, undefined, false)).toBeNull();
+    expect(getSiteIconUrl('https://a.test/', 32, PNG_DATA_URL, false)).toBe(PNG_DATA_URL);
   });
 });

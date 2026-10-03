@@ -254,22 +254,23 @@ const OptionsPage: React.FC = () => {
       aiPanelMatches
     : 0;
 
+  // A switch whose permission is missing shows as off, though the synced value may be on.
+  const shownValues = useEffectiveSettings(values);
+
   const changeSettingsField = (fieldKey: keyof Settings, value: SettingValue) => {
-    if (value !== true || !getSettingsFieldMeta()[fieldKey].requiresWebHostAccess) {
+    const feature = getSettingPermission(fieldKey);
+    if (value !== true || !feature) {
       setFieldValue(fieldKey, value);
       return;
     }
     // Ask inside the click so the browser treats the request as user-initiated; the switch
-    // only turns on once access is granted.
-    void requestWebHostAccess().then((granted) => {
+    // only turns on once the permission is granted.
+    void requestPermission(feature).then((granted) => {
       if (granted) {
         setFieldValue(fieldKey, value);
         return;
       }
-      toast.error({
-        title: t('tools_hostAccessDenied'),
-        description: t('settings_hostAccessDeniedDesc'),
-      });
+      notifyPermissionDenied(feature);
     });
   };
 
@@ -277,7 +278,7 @@ const OptionsPage: React.FC = () => {
     <SettingsFieldRow
       key={`${fieldKey}-${formVersion}`}
       fieldKey={fieldKey}
-      value={values[fieldKey]}
+      value={shownValues[fieldKey]}
       error={fieldErrors[fieldKey]}
       onChange={(value) => changeSettingsField(fieldKey, value)}
       onInputError={(message) => setInputError(fieldKey, message)}
@@ -297,7 +298,7 @@ const OptionsPage: React.FC = () => {
         <SettingsGroupRow
           key={`${group.id}-${formVersion}`}
           group={group}
-          values={values}
+          values={shownValues}
           onChange={changeSettingsField}
         />,
       ];

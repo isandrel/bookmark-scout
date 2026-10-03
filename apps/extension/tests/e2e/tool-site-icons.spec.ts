@@ -5,6 +5,10 @@ import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, openPopup } from './popup-helpers';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
+// Bookmarks without a saved icon show the browser's icon cache, which needs the optional favicon
+// permission and Use the browser's icon cache (set in the tests that compare the two).
+test.use({ grantPermissions: ['favicon'] });
+
 const SITE_ICONS_KEY = 'bookmark-scout-site-icons';
 // A real 1x1 PNG, so the browser decodes it instead of falling back to the generic icon.
 const PNG = Buffer.from(
@@ -76,7 +80,11 @@ test.describe('with website access granted', () => {
     await seedFolder(extensionWorker, 'E2E Site Icons Outside', [
       { title: 'Icons Outside', url: 'https://icons-outside.e2e.invalid/' },
     ]);
-    await setSettings(extensionWorker, { siteIconsDefaultScope: 'folder', siteIconsMaxIconKb: 1 });
+    await setSettings(extensionWorker, {
+      browserIconCache: true,
+      siteIconsDefaultScope: 'folder',
+      siteIconsMaxIconKb: 1,
+    });
     const requests = await mockSites(page, {
       'https://icons-a.e2e.invalid/one': {
         body:
@@ -278,6 +286,7 @@ test('clearing saved site icons restores browser icons in the manager and popup'
   const folder = await seedFolder(extensionWorker, 'E2E Saved Site Icons', [
     { title: 'Saved Icon Link', url: 'https://icons-saved.e2e.invalid/page' },
   ]);
+  await setSettings(extensionWorker, { browserIconCache: true });
   await extensionWorker.evaluate(
     async ({ key, icon }) => {
       await chrome.storage.local.set({

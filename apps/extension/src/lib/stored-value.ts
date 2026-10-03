@@ -202,7 +202,10 @@ export function useStoredValue<T, S>(
   select: (value: T) => S = identity as (value: T) => S,
 ): StoredSnapshot<S> {
   const live = liveValueOf(storedValue);
-  const value = useSyncExternalStore(live.subscribe, () => select(live.getSnapshot().value));
-  const isLoading = useSyncExternalStore(live.subscribe, () => live.getSnapshot().isLoading);
+  const readValue = () => select(live.getSnapshot().value);
+  const readLoading = () => live.getSnapshot().isLoading;
+  // The same snapshot serves server rendering (unit tests render components to a string).
+  const value = useSyncExternalStore(live.subscribe, readValue, readValue);
+  const isLoading = useSyncExternalStore(live.subscribe, readLoading, readLoading);
   return { value, isLoading };
 }

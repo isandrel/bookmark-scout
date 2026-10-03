@@ -15,17 +15,19 @@ Follow the release runbook in the root `AGENTS.md` ("Release publishing"). Relea
 - [ ] `main` is clean and green, and the tag does not exist yet: `git ls-remote --tags origin vX.Y.Z`.
 - [ ] The `Release Extension` workflow for `vX.Y.Z` finished green.
 - [ ] Download `bookmark-scout-vX.Y.Z-chrome.zip` from the GitHub release. Upload this ZIP, not the `.crx`; the store signs packages itself.
-- [ ] Unzip it and confirm `manifest.json` has `"version": "X.Y.Z"` and the same `permissions`, `optional_host_permissions`, and `chrome_url_overrides` as [`../permissions.md`](../permissions.md). If anything changed, update the justifications first.
+- [ ] Unzip it and confirm `manifest.json` has `"version": "X.Y.Z"` and the same `permissions`, `optional_permissions`, `optional_host_permissions`, and `chrome_url_overrides` as [`../permissions.md`](../permissions.md). If anything changed, update the justifications first.
 
 ## 2. Manual smoke test of the exact ZIP
 
 Automated Chromium tests cover most flows, but test the uploaded artifact once in a fresh Chrome profile with synthetic bookmarks:
 
-- [ ] Popup: search, folder tree, save the current page, delete and Undo.
-- [ ] Side panel opens from Chrome's side panel menu.
+- [ ] Install shows only "Read and change your bookmarks".
+- [ ] Popup: search, folder tree, save the current page (no prompt: the toolbar button grants `activeTab`), delete and Undo.
+- [ ] Side panel opens from Chrome's side panel menu. Saving the current page there explains tab access, then Chrome asks "Read your browsing history"; declining saves nothing.
 - [ ] `chrome://bookmarks` opens the Bookmark Scout manager; the Tools sidebar opens.
 - [ ] Check Dead Links asks for website access on first run, and declining scans nothing.
-- [ ] Right-click a link: the save menu appears.
+- [ ] Right-click a link: no save menu until Context Menu is turned on in Settings; turning it on adds the menu without a prompt.
+- [ ] Turning on Use the browser's icon cache asks to read site icons; icons from the cache appear only after allowing it.
 - [ ] Options: AI is off by default; AI tools in the Tools sidebar say to turn on AI.
 
 ## 3. Store listing tab
@@ -44,7 +46,7 @@ Automated Chromium tests cover most flows, but test the uploaded artifact once i
 All answers are in [`../privacy-disclosures.md`](../privacy-disclosures.md) and [`../permissions.md`](../permissions.md).
 
 - [ ] Single purpose description pasted.
-- [ ] One justification per permission: `bookmarks`, `tabs`, `favicon`, `storage`, `sidePanel`, `contextMenus`, and the optional host permissions.
+- [ ] One justification per permission: `bookmarks`, `storage`, `activeTab`, `sidePanel`, the optional `tabs`, `favicon`, and `contextMenus`, and the optional host permissions.
 - [ ] Remote code: "No".
 - [ ] Data usage categories chosen by the maintainer (suggested: Authentication information, Web history, Website content).
 - [ ] The three certifications checked.
@@ -59,7 +61,7 @@ No account or login is required. Install, then click the toolbar icon to open th
 
 AI features are off by default and need the reviewer's own provider API key (Settings > AI). They can be reviewed with a local Ollama server, which needs no key. All other features work without AI.
 
-Website access (http/https) is an optional permission requested only when the user runs Check Dead Links or Metadata Fetcher, or clicks Verify Service for an AI provider (that origin only). It is never requested at install.
+At install the extension asks only for bookmarks, storage, activeTab, and sidePanel. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Context Menu in Settings (off by default), favicon when the user turns on "Use the browser's icon cache", and website access (http/https) when the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, turns on Read page content, or clicks Verify Service for an AI provider (that origin only).
 
 Source code: https://github.com/isandrel/bookmark-scout (AGPL-3.0).
 ```

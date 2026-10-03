@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
 import { createBookmark } from '@/services/bookmarks';
+import { installFakePermissions } from '../fake-permissions';
 
 vi.mock('@/services/bookmarks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/services/bookmarks')>()),
@@ -53,15 +54,16 @@ let bookmarkTree: TreeFixture;
 
 let menus: Map<string, Browser.contextMenus.CreateProperties>;
 let contextMenu: typeof import('@/services/context-menu');
+let permissions: ReturnType<typeof installFakePermissions>;
 
 async function getStoredSettings(): Promise<Record<string, unknown>> {
   const result = await fakeBrowser.storage.sync.get(SETTINGS_KEY);
   return (result[SETTINGS_KEY] as Record<string, unknown> | undefined) ?? {};
 }
 
-/** Seeds settings before the storage listener is registered. */
+/** Seeds settings before the storage listener is registered, with the menu on unless given. */
 async function seedSettings(settings: Record<string, unknown>) {
-  await fakeBrowser.storage.sync.set({ [SETTINGS_KEY]: settings });
+  await fakeBrowser.storage.sync.set({ [SETTINGS_KEY]: { contextMenuEnabled: true, ...settings } });
 }
 
 async function setSettings(updates: Record<string, unknown>) {
@@ -85,11 +87,16 @@ beforeEach(async () => {
   vi.spyOn(fakeBrowser.contextMenus, 'removeAll').mockImplementation(async () => {
     menus.clear();
   });
+  vi.spyOn(fakeBrowser.contextMenus.onClicked, 'addListener').mockImplementation(() => undefined);
   vi.spyOn(fakeBrowser.bookmarks, 'get').mockImplementation((async (id: string) => [
     { id, title: 'Bookmarks Bar', syncing: false },
   ]) as typeof fakeBrowser.bookmarks.get);
   bookmarkTree = chromeTree;
   vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockImplementation(async () => bookmarkTree);
+
+  // The menu is off by default and needs the optional contextMenus permission (Chrome, Edge).
+  permissions = installFakePermissions({ permissions: ['contextMenus'] });
+  await seedSettings({ contextMenuEnabled: true });
 
   vi.mocked(getRecentFolders).mockResolvedValue([]);
   vi.mocked(addRecentFolder).mockResolvedValue();
@@ -104,6 +111,35 @@ beforeEach(async () => {
 });
 
 describe('context menu settings', () => {
+  it('is off on a fresh install', async () => {
+    await fakeBrowser.storage.sync.remove(SETTINGS_KEY);
+    await contextMenu.initializeContextMenu();
+    expect(menus.size).toBe(0);
+  });
+
+  it('builds the menu only while its permission is granted and removes it on revoke', async () => {
+    permissions.revoke({ permissions: ['contextMenus'] });
+    await contextMenu.initializeContextMenu();
+    expect(menus.size).toBe(0);
+
+    permissions.grant({ permissions: ['contextMenus'] });
+    await vi.waitFor(() => expect(menus.has(MENU_ID)).toBe(true));
+
+    permissions.revoke({ permissions: ['contextMenus'] });
+    await vi.waitFor(() => expect(menus.size).toBe(0));
+    const click: Browser.contextMenus.OnClickData = {
+      menuItemId: MENU_ID,
+      linkUrl: 'https://example.test/story',
+      editable: false,
+      pageUrl: 'https://example.test',
+    };
+    const blocked = await contextMenu.contextMenuManager.handleClick(click, { title: 'Page' });
+    expect(blocked).toEqual({ success: false, code: 'disabled' });
+    expect(createBookmark).not.toHaveBeenCalled();
+    // The synced setting stays on, so another device that has the permission keeps its menu.
+    expect(await getStoredSettings()).toMatchObject({ contextMenuEnabled: true });
+  });
+
   it('starts without a menu when the saved setting is disabled', async () => {
     await seedSettings({ contextMenuEnabled: false });
     await contextMenu.initializeContextMenu();

@@ -75,9 +75,10 @@ function PopupPage() {
 
   // Get configurable settings
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
-  const { value: aiEnabled } = useSetting('aiEnabled');
+  // Off while the setting is off or, in Firefox, while data sharing for AI is not allowed.
+  const aiEnabled = useEffectiveSetting('aiEnabled');
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
-  const { value: aiReadPageContent } = useSetting('aiReadPageContent');
+  const aiReadPageContent = useEffectiveSetting('aiReadPageContent');
   // In memory only: reopening the popup starts on the bookmarks, with no chat history.
   const [askAIOpen, setAskAIOpen] = useState(false);
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
@@ -136,15 +137,18 @@ function PopupPage() {
     [showFavicons, faviconSize],
   );
 
-  // AI Recommendation handler
+  // Reading the current page: the toolbar popup has activeTab, the side panel needs `tabs`.
+  const currentTabGate = usePermissionGate('currentTab', { tryFirst: true });
+  const runWithCurrentTab = currentTabGate.run;
+
+  // AI Recommendation handler. Throws PermissionRequiredError when the current tab is unreadable.
   const handleAIRecommend = useCallback(async () => {
     setAILoading(true);
     setAIRecommendations([]);
 
     try {
-      // Get current tab info
-      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-      if (!tab?.title || !tab?.url) {
+      const tab = await getCurrentTab();
+      if (!tab.title || !tab.url) {
         toast.error({
           title: t('toast_cannotGetCurrentPage'),
           description: t('toast_pleaseOpenWebpage'),
@@ -167,6 +171,7 @@ function PopupPage() {
 
       setAIRecommendations(recommendations);
     } catch (error) {
+      if (error instanceof PermissionRequiredError) throw error;
       toast.error({ title: t('ai_recommendationFailed'), description: describeAIError(error) });
     } finally {
       setAILoading(false);
@@ -185,7 +190,8 @@ function PopupPage() {
       folders.length > 0
     ) {
       autoTriggerExecutedRef.current = true;
-      handleAIRecommend();
+      // Without access to the current tab there is nothing to suggest for; it never asks unprompted.
+      handleAIRecommend().catch(() => undefined);
     }
   }, [aiAutoTriggerLoading, isLoading, aiEnabled, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
 
@@ -244,6 +250,27 @@ function PopupPage() {
     });
   }, []);
 
+  /** Saves the current page into a folder, asking for tab access first where the page lacks it. */
+  const saveCurrentPage = useCallback(
+    async (folderId: string): Promise<boolean> => {
+      try {
+        const saved = await runWithCurrentTab(async () => {
+          await getCurrentTab();
+          return handleSaveToFolder(folderId);
+        });
+        return saved ?? false;
+      } catch (error) {
+        toast.error({ title: t('toast_errorAddingBookmark'), description: getErrorMessage(error) });
+        return false;
+      }
+    },
+    [handleSaveToFolder, runWithCurrentTab],
+  );
+
+  const recommendForCurrentPage = useCallback(() => {
+    runWithCurrentTab(handleAIRecommend).catch(() => undefined);
+  }, [handleAIRecommend, runWithCurrentTab]);
+
   const clearQuery = useCallback(() => setQuery(''), [setQuery]);
   usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery });
   const setFolderExpanded = useCallback(
@@ -256,7 +283,7 @@ function PopupPage() {
   const handleTreeKeyDown = usePopupTreeKeys({
     searchInputRef: inputRef,
     setFolderExpanded,
-    onSaveToFolder: handleSaveToFolder,
+    onSaveToFolder: saveCurrentPage,
   });
 
   // Add bookmark to the suggested folder, or review a suggested new folder first
@@ -278,11 +305,11 @@ function PopupPage() {
         setPendingNewFolder(rec);
         return;
       }
-      await handleSaveToFolder(rec.folderId);
+      await saveCurrentPage(rec.folderId);
       setAIRecommendations([]);
       setCurrentTabInfo(null);
     },
-    [currentTabInfo, folders, handleSaveToFolder],
+    [currentTabInfo, folders, saveCurrentPage],
   );
 
   const handleConfirmNewFolder = useCallback(async () => {
@@ -532,7 +559,7 @@ function PopupPage() {
           inputRef={inputRef}
           isAIEnabled={aiEnabled}
           isAILoading={aiLoading}
-          onAIRecommend={handleAIRecommend}
+          onAIRecommend={recommendForCurrentPage}
           onAskAI={() => setAskAIOpen(true)}
           onOpenManager={handleOpenManager}
           searchOptions={searchOptions}
@@ -547,7 +574,7 @@ function PopupPage() {
           <RecentFoldersPanel
             maxFolders={recentFoldersMax}
             pendingFolderIds={addingToFolderIds}
-            onAddToFolder={handleSaveToFolder}
+            onAddToFolder={saveCurrentPage}
           />
         )}
 
@@ -615,7 +642,7 @@ function PopupPage() {
                 addingToFolderIds={addingToFolderIds}
                 areAllChildrenExpanded={areAllChildrenExpanded}
                 onDrop={handleDropWithToast}
-                onAddBookmark={handleSaveToFolder}
+                onAddBookmark={saveCurrentPage}
                 onAddFolder={handleAddFolder}
                 onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
                 onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
@@ -662,6 +689,7 @@ function PopupPage() {
         }}
         onConfirm={handleConfirmNewFolder}
       />
+      <PermissionDialog {...currentTabGate.dialogProps} />
       <Toaster />
     </div>
   );

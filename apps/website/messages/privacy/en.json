@@ -138,14 +138,22 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Bookmark Scout asks for <code>bookmarks</code>, <code>tabs</code>, <code>storage</code>, and <code>contextMenus</code>, and in Chrome and Edge also <code>favicon</code> and <code>sidePanel</code>. Website access is optional and is never granted at install:"
+                        "text": "At install, Bookmark Scout asks only for <code>bookmarks</code>, <code>storage</code>, and <code>activeTab</code>, plus <code>sidePanel</code> in Chrome and Edge and <code>contextMenus</code> in Firefox, which does not let extensions ask for it later. Everything else is optional and requested only when you turn on or run the feature that needs it:"
                     },
                     {
                         "type": "ul",
                         "items": [
-                            "Access to all websites is requested when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons.",
-                            "Access to one provider's site is requested when you click Verify Service or Refresh Models in the AI settings."
+                            "Access to your tabs (<code>tabs</code>), when you save the current page or ask for folder suggestions from the side panel. The toolbar popup does not need it.",
+                            "The right-click menu (<code>contextMenus</code>, Chrome and Edge), when you turn on Context Menu in Settings.",
+                            "The browser's icon cache (<code>favicon</code>, Chrome and Edge), when you turn on Use the browser's icon cache in Settings.",
+                            "Access to all websites, when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turn on Read page content.",
+                            "Access to one provider's site, when you click Verify Service or Refresh Models in the AI settings.",
+                            "In Firefox, your consent to share data with your AI provider, when you turn on AI or click Verify Service."
                         ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "If you decline, the feature stays off. You can withdraw a permission in the browser's extension settings at any time, and the feature that needs it turns off."
                     },
                     {
                         "type": "p",

@@ -439,6 +439,14 @@
         "message": "북마크 옆에 웹사이트 아이콘 표시",
         "description": "Show favicons setting description"
     },
+    "settings_browserIconCache": {
+        "message": "브라우저 아이콘 캐시 사용",
+        "description": "Setting label: show site icons from the browser's own icon cache (Chrome and Edge)"
+    },
+    "settings_browserIconCacheDesc": {
+        "message": "'사이트 아이콘 새로 고침'으로 저장한 아이콘이 없는 사이트에 브라우저가 이미 저장한 아이콘을 표시합니다. 켜면 사이트 아이콘을 읽을 권한을 요청합니다.",
+        "description": "Setting description for the browser icon cache"
+    },
     "settings_faviconSize": {
         "message": "파비콘 크기",
         "description": "Favicon size setting label"
@@ -1558,7 +1566,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "마우스 오른쪽 버튼 메뉴로 북마크를 빠르게 저장합니다",
+        "message": "링크의 마우스 오른쪽 버튼 메뉴에 '북마크 저장 위치...'를 추가합니다. 켜기 전까지는 꺼져 있습니다.",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -1610,7 +1618,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "AI 기반 북마크 워크플로를 활성화합니다",
+        "message": "AI 기반 북마크 워크플로를 활성화합니다. Firefox에서는 켜면 AI 제공자에게 필요한 데이터 공유 허용을 요청합니다.",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {
@@ -3434,6 +3442,42 @@
     "tools_hostAccessPrivacy": {
         "message": "접근 권한은 이 도구를 실행할 때만 사용됩니다. 요청은 쿠키 없이 전송되며 브라우저의 확장 프로그램 설정에서 언제든지 취소할 수 있습니다.",
         "description": "Privacy note in the website access dialog"
+    },
+    "permission_deniedTitle": {
+        "message": "권한이 허용되지 않았습니다",
+        "description": "Toast title when the user declines a browser permission a feature asked for"
+    },
+    "permission_contextMenuDenied": {
+        "message": "마우스 오른쪽 버튼 메뉴는 꺼진 상태로 유지됩니다. 허용하려면 컨텍스트 메뉴를 다시 켜세요.",
+        "description": "Toast text when the right-click menu permission is declined"
+    },
+    "permission_currentTabTitle": {
+        "message": "현재 탭에 대한 접근을 허용할까요?",
+        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
+    },
+    "permission_currentTabDesc": {
+        "message": "보고 있는 페이지를 저장하거나 그 페이지에 맞는 폴더를 추천하려면 Bookmark Scout가 활성 탭의 제목과 URL을 읽어야 합니다. 툴바 팝업은 묻지 않고 이 작업을 할 수 있지만, 사이드 패널은 탭을 전환해도 열려 있으므로 이 권한이 필요합니다.",
+        "description": "Why saving the current page from the side panel needs the tab permission"
+    },
+    "permission_currentTabDetail": {
+        "message": "브라우저 확인 창에는 탭 또는 방문 기록에 대한 접근으로 표시됩니다. Bookmark Scout는 요청할 때만 활성 탭의 제목과 URL을 읽으며, 그 밖의 정보는 저장하지 않습니다.",
+        "description": "What the tab permission is used for, shown in the explanation dialog"
+    },
+    "permission_currentTabDenied": {
+        "message": "저장되지 않았습니다. 대신 해당 페이지에서 툴바 팝업을 열거나, 요청이 표시되면 탭 접근을 허용하세요.",
+        "description": "Toast text when the tab permission is declined or missing"
+    },
+    "permission_browserIconsDenied": {
+        "message": "북마크에는 '사이트 아이콘 새로 고침'으로 저장한 아이콘이나 일반 아이콘이 계속 표시됩니다.",
+        "description": "Toast text when the favicon permission is declined"
+    },
+    "permission_aiDenied": {
+        "message": "AI 기능은 꺼진 상태로 유지됩니다. AI를 켜면 AI 제공자에게 필요한 데이터를 공유할지 브라우저가 확인합니다.",
+        "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
+    },
+    "permission_aiProviderCheckDenied": {
+        "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
+        "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
     },
     "tools_hostAccessDenied": {
         "message": "웹사이트 접근이 허용되지 않았습니다",

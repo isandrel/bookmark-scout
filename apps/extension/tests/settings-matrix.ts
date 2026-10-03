@@ -144,6 +144,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('options-settings.spec.ts', 'theme is one synced setting applied live in every open page'),
   ]),
   showFavicons: tested(POPUP, [popupDisplay]),
+  browserIconCache: tested('hooks/use-site-icon.ts', [
+    e2e('favicon-access.spec.ts', "Use the browser's icon cache shows cached icons only once it is on and allowed"),
+    unit('site-icons.test.ts', 'prefers a saved icon over the browser icon cache, which is used only when allowed'),
+  ], 'Chrome and Edge only; Options hides it in Firefox, which has no icon cache.'),
   faviconSize: tested(POPUP, [popupDisplay]),
 
   // Search
@@ -243,6 +247,8 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Context menu
   contextMenuEnabled: tested('services/context-menu.ts', [
     unit('context-menu.test.ts', 'removes the menu when disabled, rejects stale clicks, and restores it when enabled'),
+    unit('context-menu.test.ts', 'builds the menu only while its permission is granted and removes it on revoke'),
+    e2e('permission-requests.spec.ts', 'turning on Context Menu asks for the permission, builds the menu, and a revoke turns it off'),
   ]),
   contextMenuBookmarkNaming: tested('services/context-menu.ts', [
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),

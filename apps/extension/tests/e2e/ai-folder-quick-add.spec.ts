@@ -2,6 +2,10 @@ import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { setSettings } from './popup-helpers';
 
+// The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
+// so these tests grant the optional tabs permission to read the current page.
+test.use({ grantPermissions: ['tabs'] });
+
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {

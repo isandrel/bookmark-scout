@@ -3,7 +3,7 @@ import type { Browser } from 'wxt/browser';
 import { adaptManifestV2, createManifest, FIREFOX_ADDON_ID } from '../../manifest.config';
 
 describe('manifest config', () => {
-  it('gives the Firefox build its permanent add-on ID and data collection declaration', () => {
+  it('gives the Firefox build its permanent add-on ID and asks for no data at install', () => {
     const manifest = createManifest({ browser: 'firefox' });
 
     expect(FIREFOX_ADDON_ID).toBe('bookmark-scout@isandrel.github.io');
@@ -11,7 +11,8 @@ describe('manifest config', () => {
       id: 'bookmark-scout@isandrel.github.io',
       strict_min_version: '140.0',
       data_collection_permissions: {
-        required: ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'],
+        required: ['none'],
+        optional: ['authenticationInfo', 'bookmarksInfo', 'browsingActivity', 'websiteContent'],
       },
     });
     expect(manifest.browser_specific_settings?.gecko_android).toEqual({
@@ -23,24 +24,17 @@ describe('manifest config', () => {
     expect(createManifest({ browser })).not.toHaveProperty('browser_specific_settings');
   });
 
-  it('declares the Chromium-only permissions for Chrome and Edge only', () => {
-    expect(createManifest({ browser: 'chrome' }).permissions).toEqual([
-      'bookmarks',
-      'tabs',
-      'favicon',
-      'storage',
-      'sidePanel',
-      'contextMenus',
-    ]);
-    expect(createManifest({ browser: 'edge' }).permissions).toEqual(
-      createManifest({ browser: 'chrome' }).permissions,
-    );
-    expect(createManifest({ browser: 'firefox' }).permissions).toEqual([
-      'bookmarks',
-      'tabs',
-      'storage',
-      'contextMenus',
-    ]);
+  it('asks at install only for what the extension cannot work without', () => {
+    for (const browser of ['chrome', 'edge']) {
+      const manifest = createManifest({ browser });
+      expect(manifest.permissions).toEqual(['bookmarks', 'storage', 'activeTab', 'sidePanel']);
+      expect(manifest.optional_permissions).toEqual(['tabs', 'favicon', 'contextMenus']);
+      expect(manifest.optional_host_permissions).toEqual(['http://*/*', 'https://*/*']);
+    }
+    // Firefox cannot make contextMenus optional and has no favicon or sidePanel permission.
+    const firefox = createManifest({ browser: 'firefox' });
+    expect(firefox.permissions).toEqual(['bookmarks', 'storage', 'activeTab', 'contextMenus']);
+    expect(firefox.optional_permissions).toEqual(['tabs']);
   });
 
   it('exposes no extension resources to web pages', () => {
@@ -59,7 +53,7 @@ describe('manifest config', () => {
 
     adaptManifestV2(manifest);
 
-    expect(manifest.optional_permissions).toEqual(['http://*/*', 'https://*/*']);
+    expect(manifest.optional_permissions).toEqual(['tabs', 'http://*/*', 'https://*/*']);
     expect(manifest).not.toHaveProperty('optional_host_permissions');
   });
 });

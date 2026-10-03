@@ -166,7 +166,7 @@ export type AskAIOptions = {
 export async function createAskAIAgent(options: AskAIOptions) {
   const appSettings = await getSettings();
   const settings = await getActiveAISettings(appSettings.aiEnabled);
-  const readPages = appSettings.aiReadPageContent && (await hasWebHostAccess());
+  const readPages = appSettings.aiReadPageContent && (await hasPermission('pageReading'));
   const webSearch = options.webSearch ? WEB_SEARCH_TOOLS[settings.provider]?.() : undefined;
   const { system } = await buildPrompt('ask_ai', {});
 

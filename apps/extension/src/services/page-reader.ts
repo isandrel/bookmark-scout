@@ -146,7 +146,7 @@ export async function addPageText<Item extends { url: string }>(
   items: Item[],
   enabled: boolean,
 ): Promise<(Item & { pageTitle?: string; pageText?: string })[]> {
-  if (!enabled || !(await hasWebHostAccess())) return items;
+  if (!enabled || !(await hasPermission('pageReading'))) return items;
   const pages = await readPagesText(items.map((item) => item.url));
   return items.map((item) => {
     const page = pages.get(item.url);

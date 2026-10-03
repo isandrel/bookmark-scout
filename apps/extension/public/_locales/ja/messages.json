@@ -435,6 +435,14 @@
         "message": "ブックマークの横にウェブサイトアイコンを表示",
         "description": "Show favicons setting description"
     },
+    "settings_browserIconCache": {
+        "message": "ブラウザのアイコンキャッシュを使う",
+        "description": "Setting label: show site icons from the browser's own icon cache (Chrome and Edge)"
+    },
+    "settings_browserIconCacheDesc": {
+        "message": "「サイトアイコンを更新」で保存したアイコンがないサイトに、ブラウザが保存済みのアイコンを表示します。オンにすると、サイトのアイコンを読み取る権限を求められます。",
+        "description": "Setting description for the browser icon cache"
+    },
     "settings_faviconSize": {
         "message": "ファビコンサイズ",
         "description": "Favicon size setting label"
@@ -1534,7 +1542,7 @@
         "description": "Context menu enabled setting label"
     },
     "settings_contextMenuEnabledDesc": {
-        "message": "右クリックメニューからすばやくブックマークを保存します",
+        "message": "リンクの右クリックメニューに「ブックマークの保存先...」を追加します。オンにするまではオフです。",
         "description": "Context menu enabled setting description"
     },
     "settings_contextMenuNaming": {
@@ -1586,7 +1594,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "AIを使ったブックマークワークフローを有効にします",
+        "message": "AIを使ったブックマークワークフローを有効にします。Firefox では、オンにすると AI プロバイダーに必要なデータの共有の許可を求められます。",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {
@@ -3410,6 +3418,42 @@
     "tools_hostAccessPrivacy": {
         "message": "アクセス権はこれらのツールを実行したときにのみ使用されます。リクエストはCookieなしで送信され、ブラウザの拡張機能設定からいつでも取り消せます。",
         "description": "Privacy note in the website access dialog"
+    },
+    "permission_deniedTitle": {
+        "message": "権限が許可されませんでした",
+        "description": "Toast title when the user declines a browser permission a feature asked for"
+    },
+    "permission_contextMenuDenied": {
+        "message": "右クリックメニューはオフのままです。許可するには、もう一度コンテキストメニューをオンにしてください。",
+        "description": "Toast text when the right-click menu permission is declined"
+    },
+    "permission_currentTabTitle": {
+        "message": "現在のタブへのアクセスを許可しますか？",
+        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
+    },
+    "permission_currentTabDesc": {
+        "message": "表示中のページを保存したり、そのページのフォルダーを提案したりするには、Bookmark Scout がアクティブなタブのタイトルと URL を読み取ります。ツールバーのポップアップは許可なしでこれができますが、サイドパネルはタブを切り替えても開いたままなので、この権限が必要です。",
+        "description": "Why saving the current page from the side panel needs the tab permission"
+    },
+    "permission_currentTabDetail": {
+        "message": "ブラウザの確認画面では、タブまたは閲覧履歴へのアクセスとして表示されます。Bookmark Scout が読み取るのは、操作したときのアクティブなタブのタイトルと URL だけで、それ以外は保存しません。",
+        "description": "What the tab permission is used for, shown in the explanation dialog"
+    },
+    "permission_currentTabDenied": {
+        "message": "保存されませんでした。代わりにそのページでツールバーのポップアップを開くか、確認されたときにタブへのアクセスを許可してください。",
+        "description": "Toast text when the tab permission is declined or missing"
+    },
+    "permission_browserIconsDenied": {
+        "message": "ブックマークには、「サイトアイコンを更新」で保存したアイコンか汎用アイコンが引き続き表示されます。",
+        "description": "Toast text when the favicon permission is declined"
+    },
+    "permission_aiDenied": {
+        "message": "AI 機能はオフのままです。AI をオンにすると、AI プロバイダーに必要なデータの共有を許可するようブラウザが確認します。",
+        "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
+    },
+    "permission_aiProviderCheckDenied": {
+        "message": "何も送信されませんでした。拡張機能が API キーをプロバイダーと共有する前に、ブラウザが確認します。",
+        "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
     },
     "tools_hostAccessDenied": {
         "message": "Webサイトへのアクセスが許可されませんでした",

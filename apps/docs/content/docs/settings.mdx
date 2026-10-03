@@ -19,6 +19,7 @@ Open the settings page from the extension's **Options** entry, for example by ri
 | **Language** | Auto (Browser) | English, Japanese, or Korean, or follow the browser |
 | **Theme** | System | System, Light, or Dark, applied to every open Bookmark Scout page |
 | **Show Favicons** | On | Show site icons next to bookmarks in the popup and side panel |
+| **Use the browser's icon cache** | Off | Chrome and Edge: also show icons the browser has already cached, for sites without one saved by **Refresh Site Icons**. Turning it on asks for permission to read site icons. Not shown in Firefox, which has no icon cache for extensions |
 | **Favicon Size** | 16px (Small) | 16, 24, or 32 pixels |
 
 ## Search
@@ -60,7 +61,7 @@ AI is off by default. These settings matter only after you turn on **AI Features
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| **AI Features** | Off | Turn on the AI tools and the popup's folder recommendations |
+| **AI Features** | Off | Turn on the AI tools and the popup's folder recommendations. In Firefox, turning it on asks for your consent to share the data your AI provider needs |
 | **Auto-recommend on Open** | Off | Ask for folder recommendations every time the popup opens |
 | **Read page content** | Off | Send the main text of each page, not only its title and URL, to folder recommendations, Auto-Tagging, and Content Summarizer. Asks for website access when turned on |
 | **AI Provider** and **AI Model** | OpenAI, GPT-4o Mini | Which provider and model every AI tool uses |
@@ -136,7 +137,7 @@ Lists such as **Remove Parameters** take comma-separated values. The default lis
 | **Max Filename Length** | 50 | Longest generated file name |
 | **JSON Indent Size**, **HTML Indent Size**, **Markdown Indent Size** | 2, 4, 2 | Spaces per level in each format |
 | **Include Dates** and **Include URLs** | On | Include them in exports |
-| **Context Menu** | On | Show **Save bookmark to...** when you right-click a link |
+| **Context Menu** | Off | Show **Save bookmark to...** when you right-click a link. In Chrome and Edge, turning it on adds the optional right-click menu permission, without a prompt |
 | **Bookmark Name Source** | Link text | Name a right-click save after the link text, the page title, or the link URL |
 
 See [Import and export](/guides/import-export).

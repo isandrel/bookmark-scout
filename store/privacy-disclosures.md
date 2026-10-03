@@ -1,12 +1,13 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.2.0`, checked against the source on 2026-10-02, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
+What the extension does with data at version `0.2.0`, checked against the source on 2026-10-03, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 
 - No analytics, telemetry, crash reporting, ads, or accounts. A search of `apps/extension/src` for analytics and telemetry libraries found none; the only hard-coded external URLs are the default AI provider endpoints.
 - The developer runs no server for the extension. Nothing is sent to Bookmark Scout.
-- No content scripts. The extension does not read the pages you visit in their tabs; it reads only the active tab's title and URL. With the opt-in Read page content setting, AI tools download a page again by its URL, without cookies (see below).
+- No content scripts. The extension does not read the pages you visit in their tabs; it reads only the active tab's title and URL, when the user saves the page or asks for a folder suggestion: through `activeTab` from the toolbar popup, or through the optional `tabs` permission, asked for from the side panel. With the opt-in Read page content setting, AI tools download a page again by its URL, without cookies (see below).
+- Every permission a browser lets an extension ask for later is optional and asked for when the user first turns on or runs the feature that needs it (`store/permissions.md`). In Firefox, AI features also ask for data collection consent first (below).
 - Network requests happen only after a user action, in these features:
   - **AI features** (off by default): requests go from the browser straight to the provider endpoint the user configured (`src/services/ai-client.ts`).
   - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use. The dead-link repair option "archived copy" only builds a `https://web.archive.org/web/<URL>` link locally; it does not contact the Wayback Machine (`src/services/dead-link-repair.ts`).
@@ -79,15 +80,32 @@ Required once any data category above is checked. Use `https://bookmark-scout.co
 
 ## Firefox Add-ons: data collection declaration
 
-New Firefox extensions must declare `browser_specific_settings.gecko.data_collection_permissions` in the manifest, and Firefox shows the declaration to the user at install. The Firefox build declares option B today (`apps/extension/manifest.config.ts`): `required: ["authenticationInfo", "bookmarksInfo", "browsingActivity", "websiteContent"]`, for the AI provider the user chooses. Nothing goes to the developer. The maintainer chose option A instead (each category asked for when the user first turns on the feature that sends it); [`plans/2026-10-03-dynamic-permissions.md`](../plans/2026-10-03-dynamic-permissions.md) describes that change. Options considered:
+New Firefox extensions must declare `browser_specific_settings.gecko.data_collection_permissions` in the manifest, and Firefox shows the declaration at install. Nothing goes to the developer, but the AI features send data to a provider the user picks, which Mozilla counts as collection. The maintainer chose to ask for it at first use rather than at install (option A below). The Firefox build declares (generated from `apps/extension/src/lib/permission-catalog.ts`):
+
+```json
+"data_collection_permissions": {
+  "required": ["none"],
+  "optional": ["authenticationInfo", "bookmarksInfo", "browsingActivity", "websiteContent"]
+}
+```
+
+So the install prompt says the extension does not require data collection, and Firefox asks with `permissions.request({ data_collection: [...] })`, from the user's click, when a feature first needs a category:
+
+| Feature | Categories | Asked for when | Sent where |
+| --- | --- | --- | --- |
+| AI features: folder suggestions, Ask AI, Auto-Tagging, Content Summarizer, AI Folder Reorganization | `authenticationInfo` (the user's API key), `bookmarksInfo` (bookmark titles, URLs, folder paths), `browsingActivity` (the current page's URL), `websiteContent` (the current page's title, and page text with Read page content) | The user turns on **Enable AI**, or Read page content | The AI provider the user configured |
+| Verify Service, Refresh Models | `authenticationInfo` | The button click, in the same prompt as access to that provider's site | The same provider |
+| Check Dead Links, Metadata Fetcher, Refresh Site Icons | None: each request goes only to the bookmarked site itself, without cookies | Not applicable | Not applicable |
+
+If the user declines, the setting stays off and nothing is sent. Every provider request goes through `createLoggingFetch` (`src/services/ai-activity.ts`), which refuses to send without the consent, so withdrawing it in `about:addons` stops AI at once. Users who turned AI on before this change are asked again when they next turn it on. Mozilla does not say whether requests to the bookmarked site itself count as collection; the reviewer notes explain why the network tools declare none.
+
+Options considered:
 
 | Option | Manifest value | Trade-off |
 | --- | --- | --- |
-| A. Optional AI data | `required: ["none"]`, `optional: ["bookmarksInfo", "browsingActivity"]` | Matches "AI is off by default". Needs code that requests the optional data permission when the user turns on AI, and handles a refusal. |
-| B. Declare up front | `required: ["bookmarksInfo", "browsingActivity"]` | No code change beyond the manifest, but every user sees it at install although AI is off by default. |
-| C. Declare none | `required: ["none"]` | Only defensible if Mozilla does not count user-directed requests to a user-chosen provider as collection. Check Mozilla's guidance before choosing it. |
-
-The category names above follow Mozilla's documentation as remembered on this date. Verify them against the current list at the link `addons-linter` prints (`https://mzl.la/firefox-builtin-data-consent`) before editing the manifest.
+| A. Optional AI data (chosen) | `required: ["none"]`, the AI categories as `optional` | Matches "AI is off by default". Needs the runtime request and refusal handling, which the extension has. |
+| B. Declare up front | The AI categories as `required` | No code change beyond the manifest, but every user sees it at install although AI is off by default. |
+| C. Declare none | `required: ["none"]` only | Not defensible: Mozilla counts data sent to a provider the user picks as collection. |
 
 AMO listing fields:
 

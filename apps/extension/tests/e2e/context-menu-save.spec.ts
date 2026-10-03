@@ -57,8 +57,9 @@ async function recordMenu(worker: Worker) {
       }) as MenusApi['removeAll'];
     }
   });
-  // Rebuild once so the recorder sees the whole menu, not only items created after this point.
-  await setSettings(worker, { language: 'en' });
+  // Turn the menu on (it is off by default) and rebuild once, so the recorder sees the whole
+  // menu, not only items created after this point.
+  await setSettings(worker, { language: 'en', contextMenuEnabled: true });
 }
 
 async function menuEntries(worker: Worker): Promise<MenuEntry[]> {
@@ -155,6 +156,13 @@ async function recentFolderIds(worker: Worker): Promise<string[]> {
 }
 
 test.describe('context menu save', () => {
+  // The optional contextMenus permission, which Options asks for when the menu is turned on.
+  test.use({ grantPermissions: ['contextMenus'] });
+  // The menu is off by default; these tests start with it turned on.
+  test.beforeEach(async ({ extensionWorker }) => {
+    await setSettings(extensionWorker, { contextMenuEnabled: true });
+  });
+
   test('a fresh profile offers only the Bookmarks Bar, which saves the link there', async ({
     extensionWorker,
   }) => {
