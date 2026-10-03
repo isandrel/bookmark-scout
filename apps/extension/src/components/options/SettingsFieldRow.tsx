@@ -129,7 +129,9 @@ const stepperButtonClass =
 
 /**
  * A number with − and + buttons. Typing works too: the value is clamped to the allowed range when
- * the field is committed. For "no limit" settings, an empty field means no limit.
+ * the field is committed. For "no limit" settings, an empty field or -1 means no limit; the field
+ * then lets a typed value outside the range through, so -1 reaches `commitNumberSetting` instead
+ * of being clamped to the minimum.
  */
 function NumberStepper({
   id,
@@ -157,12 +159,10 @@ function NumberStepper({
         min={meta.min}
         max={meta.max}
         step={meta.step}
+        allowOutOfRange={meta.unlimited}
         onValueChange={(next) => {
-          if (next === null) {
-            if (meta.unlimited) onChange(-1);
-            return;
-          }
-          onChange(next);
+          const committed = commitNumberSetting(next, meta);
+          if (committed !== undefined) onChange(committed);
         }}
       >
         <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring">
@@ -188,7 +188,11 @@ function NumberStepper({
         </NumberField.Group>
       </NumberField.Root>
       {meta.unit && (
-        <span className="w-8 text-xs text-muted-foreground" aria-hidden="true">
+        <span
+          data-slot="setting-unit"
+          className="min-w-8 text-xs whitespace-nowrap text-muted-foreground"
+          aria-hidden="true"
+        >
           {meta.unit}
         </span>
       )}
