@@ -7,7 +7,6 @@ const toastConfig = readConfig(
   'ui/toasts',
   z.strictObject({
     remove_delay_ms: z.number().int().nonnegative(),
-    title_max_chars: z.number().int().positive(),
   }),
 );
 
@@ -17,8 +16,14 @@ const toastConfig = readConfig(
 // Toaster keeps a long stack compact.
 const TOAST_REMOVE_DELAY = toastConfig.remove_delay_ms;
 
-/** Longest bookmark or folder title a toast quotes; longer titles are cut with `truncateText`. */
-export const TOAST_TITLE_MAX_CHARS = toastConfig.title_max_chars;
+/**
+ * A bookmark or folder title as a toast quotes it: "Untitled" when blank, and cut at the
+ * `truncateLength` setting like every other shortened title.
+ */
+export async function quoteToastItemTitle(title: string | null | undefined): Promise<string> {
+  const { truncateLength } = await getSettings();
+  return truncateText(getBookmarkDisplayTitle(title), truncateLength);
+}
 
 type ToasterToast = ToastProps & {
   id: string;

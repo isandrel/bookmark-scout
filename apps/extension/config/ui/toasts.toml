@@ -1,8 +1,6 @@
-# Toast notifications. How long a toast stays open is the user's toast_duration_ms setting
-# (config/settings/advanced.toml); these values are fixed.
+# Toast notifications. How long a toast stays open is the user's toast_duration_ms setting, and
+# how long a quoted bookmark title may grow is the truncate_length setting (both in
+# config/settings/advanced.toml); this value is fixed.
 
 # Milliseconds a dismissed toast stays mounted so its exit animation can finish.
 remove_delay_ms = 500
-
-# Longest bookmark or folder title quoted in a popup toast before it is cut with "...".
-title_max_chars = 30

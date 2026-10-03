@@ -3071,24 +3071,6 @@
         "message": "Failed to create new folder. Please try again.",
         "description": "Toast description when creating a folder fails"
     },
-    "toast_itemRemovedDesc": {
-        "message": "\"$title$\" has been removed",
-        "description": "Toast description after removing a bookmark or folder",
-        "placeholders": {
-            "title": {
-                "content": "$1",
-                "example": "News"
-            }
-        }
-    },
-    "toast_errorDeletingBookmarkDesc": {
-        "message": "Failed to delete bookmark. Please try again.",
-        "description": "Toast description when deleting a bookmark fails"
-    },
-    "toast_errorDeletingFolderDesc": {
-        "message": "Failed to delete folder. Please try again.",
-        "description": "Toast description when deleting a folder fails"
-    },
     "toast_itemMovedDesc": {
         "message": "\"$title$\" moved to \"$folder$\"",
         "description": "Toast description after moving an item into another folder",
@@ -3976,6 +3958,10 @@
     "format_copyName": {
         "message": "$1 (copy)",
         "description": "Name of a duplicated item; $1 is the original name"
+    },
+    "format_moreItems": {
+        "message": "$1 more",
+        "description": "Last entry of a shortened list, counting the items left out; $1 is the count. The list words (\"and\") are added by the browser"
     },
     "tools_siteIcons": {
         "message": "Refresh Site Icons",

@@ -184,9 +184,6 @@ export function getSearchExpandedFolderIds(nodes: readonly BookmarkTreeNode[]): 
   );
 }
 
-/** @deprecated Use `folderIds` from lib/bookmark-tree; kept until PopupPage switches to it. */
-export const getAllFolderIds = folderIds;
-
 export function countSearchMatches(nodes: readonly BookmarkTreeNode[]): number {
   return nodes.reduce(
     (count, node) => count + (node.isSearchMatch ? 1 : 0) + countSearchMatches(node.children ?? []),

@@ -43,20 +43,16 @@ async function runOnce(
   }
 }
 
-function truncateBookmarkTitle(title: string | undefined): string {
-  return truncateText(getBookmarkDisplayTitle(title), TOAST_TITLE_MAX_CHARS);
-}
-
 function isMoveToOtherFolder(operation: DragOperation): boolean {
   return operation.type.endsWith('-move') || operation.sourceParentId !== operation.targetParentId;
 }
 
-function buildMoveSuccessMessage(
+async function buildMoveSuccessMessage(
   operation: DragOperation,
   source: Pick<Browser.bookmarks.BookmarkTreeNode, 'title' | 'index'>,
   targetFolderTitle: string | null,
-): string {
-  const title = truncateBookmarkTitle(source.title);
+): Promise<string> {
+  const title = await quoteToastItemTitle(source.title);
   // Report where the item actually landed: moving down within a folder shifts the index by one.
   const position = (source.index ?? operation.targetIndex) + 1;
   return isMoveToOtherFolder(operation)
@@ -79,7 +75,6 @@ interface BookmarkState {
   preSearchExpandedFolders: string[] | null;
   /** Expand all / Collapse all chosen during a search; overrides the automatic expansion. */
   searchExpansion: SearchExpansion;
-  draggedItem: BookmarkTreeNode | null;
   creatingFolderId: string | null;
   newFolderName: string;
   /** Folders the current page is being saved into; their add controls are disabled. */
@@ -95,15 +90,12 @@ interface BookmarkState {
   setSearchExpansion: (expansion: SearchExpansion) => void;
   setSearchOptions: (options: Partial<SearchOptions>) => void;
   setExpandFoldersOnSearch: (expand: boolean) => void;
-  setDraggedItem: (item: BookmarkTreeNode | null) => void;
   setCreatingFolderId: (id: string | null) => void;
   setNewFolderName: (name: string) => void;
 
   // Bookmark operations
   addBookmarkToFolder: (folderId: string) => Promise<BookmarkOperationResult>;
   createFolder: (parentId: string, name: string) => Promise<BookmarkOperationResult>;
-  removeBookmark: (bookmarkId: string) => Promise<BookmarkOperationResult>;
-  removeFolder: (folderId: string) => Promise<BookmarkOperationResult>;
   handleDrop: (operation: DragOperation) => Promise<BookmarkOperationResult>;
 
   // Folder expansion helpers
@@ -129,7 +121,6 @@ export const useBookmarkStore = create<BookmarkState>()(
       expandedFolders: [],
       preSearchExpandedFolders: null,
       searchExpansion: null,
-      draggedItem: null,
       creatingFolderId: null,
       newFolderName: '',
       addingToFolderIds: [],
@@ -186,7 +177,6 @@ export const useBookmarkStore = create<BookmarkState>()(
         set({ expandFoldersOnSearch });
         if (get().debouncedQuery) get().applyFilter();
       },
-      setDraggedItem: (draggedItem) => set({ draggedItem }),
       setCreatingFolderId: (creatingFolderId) => set({ creatingFolderId }),
       setNewFolderName: (newFolderName) => set({ newFolderName }),
 
@@ -206,7 +196,7 @@ export const useBookmarkStore = create<BookmarkState>()(
           set((state) => ({ addingToFolderIds: [...state.addingToFolderIds, folderId] }));
           try {
             const parentFolder = await getBookmark(folderId);
-            const truncatedTitle = truncateBookmarkTitle(tab.title);
+            const truncatedTitle = await quoteToastItemTitle(tab.title);
             const folderTitle = getBookmarkDisplayTitle(parentFolder.title);
 
             // Saving the same page into the same folder twice only creates a duplicate.
@@ -260,38 +250,6 @@ export const useBookmarkStore = create<BookmarkState>()(
           }
         }),
 
-      removeBookmark: async (bookmarkId) => {
-        try {
-          const bookmark = await getBookmark(bookmarkId);
-          await deleteBookmark(bookmarkId);
-          await get().refreshFolders();
-
-          return {
-            success: true,
-            message: t('toast_itemRemovedDesc', truncateBookmarkTitle(bookmark.title)),
-          };
-        } catch (error) {
-          bookmarkLogger.error({ error }, 'Failed to delete bookmark');
-          return { success: false, message: t('toast_errorDeletingBookmarkDesc') };
-        }
-      },
-
-      removeFolder: async (folderId) => {
-        try {
-          const folder = await getBookmark(folderId);
-          await deleteBookmark(folderId);
-          await get().refreshFolders();
-
-          return {
-            success: true,
-            message: t('toast_itemRemovedDesc', truncateBookmarkTitle(folder.title)),
-          };
-        } catch (error) {
-          bookmarkLogger.error({ error }, 'Failed to delete folder');
-          return { success: false, message: t('toast_errorDeletingFolderDesc') };
-        }
-      },
-
       handleDrop: async (operation) => {
         // Browsers reject moving a folder into itself or its own subtree with a generic error.
         const source = findNode(get().folders, operation.sourceId);
@@ -318,7 +276,7 @@ export const useBookmarkStore = create<BookmarkState>()(
             ? await getBookmark(operation.targetParentId)
             : null;
 
-          const message = buildMoveSuccessMessage(
+          const message = await buildMoveSuccessMessage(
             operation,
             sourceItem,
             targetFolder?.title ?? null,

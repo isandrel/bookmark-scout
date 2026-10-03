@@ -25,4 +25,4 @@ The referenced tests run in CI, so a supported setting whose behavior regresses 
 
 - `unsupported`: `autoTaggingDefaultScope`, `summarizerDefaultScope` (always the current folder), `duplicatesDefaultScope`, and `privacyScannerDefaultScope` (always all bookmarks). Options offers one value for each.
 - Prompt-level only: AI tag count and style, summary length, and reorganization folder limits are sent to the provider; provider compliance is not verified.
-- Partly covered: `recentFoldersEnabled` and `recentFoldersMax` are asserted for the context menu, not the popup panel; `truncateLength` only shortens the page title in the popup AI suggestions header.
+- Partly covered: `recentFoldersEnabled` and `recentFoldersMax` are asserted for the context menu, not the popup panel; `truncateLength` shortens the page title in the popup AI suggestions header and the bookmark titles quoted in toasts.

@@ -95,6 +95,45 @@ export function formatKilobytes(bytes: number): string {
   return `${value} ${t('unit_kb')}`;
 }
 
+/** A 0–1 ratio as a whole percentage in the extension's language, e.g. "85%". */
+export function formatPercent(ratio: number): string {
+  const options: Intl.NumberFormatOptions = { style: 'percent', maximumFractionDigits: 0 };
+  try {
+    return new Intl.NumberFormat(getFormattingLocale(), options).format(ratio);
+  } catch {
+    return new Intl.NumberFormat(undefined, options).format(ratio);
+  }
+}
+
+/**
+ * `Intl.ListFormat`, which every supported browser has; the app's TypeScript `lib` (ES2015)
+ * predates its type, so the constructor is typed here.
+ */
+const ListFormat = (
+  Intl as unknown as {
+    ListFormat: new (locale?: string) => { format: (items: readonly string[]) => string };
+  }
+).ListFormat;
+
+/** Items joined as a list in the extension's language, e.g. "A, B, and C" or "A、B、C". */
+export function formatList(items: readonly string[]): string {
+  try {
+    return new ListFormat(getFormattingLocale()).format(items);
+  } catch {
+    return new ListFormat().format(items);
+  }
+}
+
+/**
+ * The first `limit` items as a list, with the rest counted as its last entry, e.g.
+ * "A, B, and 3 more".
+ */
+export function formatListPreview(items: readonly string[], limit: number): string {
+  const shown = items.slice(0, limit);
+  const more = items.length - shown.length;
+  return formatList(more > 0 ? [...shown, t('format_moreItems', String(more))] : shown);
+}
+
 /** Date and time in the extension's language, e.g. "2026/9/24 15:05:49" in Japanese. */
 export function formatDateTime(value: number | Date): string {
   const date = value instanceof Date ? value : new Date(value);
