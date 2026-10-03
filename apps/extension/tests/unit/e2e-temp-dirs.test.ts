@@ -2,8 +2,9 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import type { FullConfig, TestInfo, WorkerInfo } from '@playwright/test';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import checkTempDirsRemoved, {
+  hasFailedAttempts,
   leftoverTempDirs,
   profileDir,
   removeTempDir,
@@ -39,26 +40,42 @@ describe('E2E scratch folders', () => {
     const profile = profileDir(testInfo);
     mkdirSync(profile, { recursive: true });
     writeFileSync(path.join(profile, 'Preferences'), '{}');
-    // Failure artifacts next to a profile are not scratch and stay.
-    writeFileSync(path.join(outputDir, 'some-test-chromium', 'trace.zip'), '');
 
     expect(leftoverTempDirs(outputDir).sort()).toEqual([copy, profile].sort());
     removeTempDir(copy);
     removeTempDir(profile);
     expect(leftoverTempDirs(outputDir)).toEqual([]);
     expect(() => checkTempDirsRemoved(config)).not.toThrow();
-    expect(existsSync(path.join(outputDir, 'some-test-chromium', 'trace.zip'))).toBe(true);
   });
 
-  it('fails the run on a leaked folder and removes it', () => {
+  it('fails a run without failed attempts on a leaked folder, and removes it', () => {
     const { workerInfo, testInfo, config } = setUp();
     const copy = workerTempDir(workerInfo, 'granted-build');
     const profile = profileDir(testInfo);
     mkdirSync(profile, { recursive: true });
 
+    expect(hasFailedAttempts(outputDir)).toBe(false);
     expect(() => checkTempDirsRemoved(config)).toThrow(/left 2 scratch folder/);
     expect(existsSync(copy)).toBe(false);
     expect(existsSync(profile)).toBe(false);
+  });
+
+  it('only reports leftovers after a failed attempt, which can skip its teardown', () => {
+    const { testInfo, config } = setUp();
+    const profile = profileDir(testInfo);
+    mkdirSync(profile, { recursive: true });
+    // A browser launch that hung until the test timeout leaves its profile and a trace.
+    const failedAttempt = path.join(outputDir, 'some-test-chromium', 'trace.zip');
+    writeFileSync(failedAttempt, '');
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    expect(hasFailedAttempts(outputDir)).toBe(true);
+    expect(() => checkTempDirsRemoved(config)).not.toThrow();
+    expect(warn).toHaveBeenCalledWith(expect.stringMatching(/left 1 scratch folder/));
+    expect(existsSync(profile)).toBe(false);
+    // Failure artifacts are diagnostics, not scratch, and stay.
+    expect(existsSync(failedAttempt)).toBe(true);
+    warn.mockRestore();
   });
 
   it('accepts an output folder that does not exist yet', () => {

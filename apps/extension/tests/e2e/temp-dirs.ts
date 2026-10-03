@@ -45,17 +45,34 @@ export function leftoverTempDirs(outputDir: string): string[] {
   return leftovers;
 }
 
+/** Files Playwright or the fixtures save only for a failed attempt. */
+const FAILURE_ARTIFACT = /^(error-context\.md|trace\.zip|test-failed-\d+\.png|failure\.png)$/;
+
+/** Whether any attempt in this output folder failed, including one that passed on retry. */
+export function hasFailedAttempts(outputDir: string): boolean {
+  if (!existsSync(outputDir)) return false;
+  return readdirSync(outputDir, { withFileTypes: true }).some(
+    (entry) =>
+      entry.isDirectory() &&
+      readdirSync(path.join(outputDir, entry.name)).some((file) => FAILURE_ARTIFACT.test(file)),
+  );
+}
+
 /**
- * Global teardown: fails the run when a fixture left a scratch folder behind, after removing it,
- * so a leak is caught in CI instead of filling the disk.
+ * Global teardown: removes every scratch folder left behind, and fails a run in which no attempt
+ * failed, because there teardown should have removed them all: a leak is caught in CI instead of
+ * filling the disk. An attempt that timed out (a browser launch that hung) can skip its teardown,
+ * so after failed attempts the leftovers are only reported, and a retry that passed still passes.
  */
 export default function checkTempDirsRemoved(config: FullConfig): void {
-  const outputDirs = new Set(config.projects.map((project) => project.outputDir));
-  const leftovers = [...outputDirs].flatMap(leftoverTempDirs);
+  const outputDirs = [...new Set(config.projects.map((project) => project.outputDir))];
+  const leftovers = outputDirs.flatMap(leftoverTempDirs);
+  if (leftovers.length === 0) return;
   for (const directory of leftovers) removeTempDir(directory);
-  if (leftovers.length > 0) {
-    throw new Error(
-      `E2E fixtures left ${leftovers.length} scratch folder(s) behind:\n${leftovers.join('\n')}`,
-    );
+  const message = `E2E fixtures left ${leftovers.length} scratch folder(s) behind:\n${leftovers.join('\n')}`;
+  if (outputDirs.some(hasFailedAttempts)) {
+    console.warn(`${message}\nRemoved; a failed attempt can skip its teardown.`);
+    return;
   }
+  throw new Error(message);
 }

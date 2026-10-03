@@ -32,7 +32,7 @@ export default defineConfig<ExtensionProjectOptions>({
   // One retry absorbs a cold-start timeout on a CI runner; a test that needs it shows as flaky in
   // the report. Locally a failure fails at once.
   retries: isCI ? 1 : 0,
-  // Fails the run when a fixture left a browser profile or build copy behind.
+  // Removes profiles and build copies a fixture left behind; fails a clean run that left any.
   globalTeardown: './tests/e2e/temp-dirs.ts',
   timeout: 60_000,
   expect: {

@@ -104,20 +104,25 @@ export const test = base.extend<ExtensionFixtures, WorkerFixtures>({
         : extensionPath;
 
     const userDataDir = profileDir(testInfo);
-    const context = await chromium.launchPersistentContext(userDataDir, {
-      channel: extensionBrowser,
-      headless: true,
-      // Popups that are still animating out would sit over the next control and catch its click.
-      // Reduced motion shortens every animation to a single frame and covers that code path too.
-      reducedMotion: 'reduce',
-      args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
-    });
+    // The profile is about 10 MB per test; traces and screenshots are saved separately.
+    const context = await chromium
+      .launchPersistentContext(userDataDir, {
+        channel: extensionBrowser,
+        headless: true,
+        // Popups still animating out would sit over the next control and catch its click.
+        // Reduced motion shortens every animation to a single frame and covers that path too.
+        reducedMotion: 'reduce',
+        args: [`--disable-extensions-except=${loadPath}`, `--load-extension=${loadPath}`],
+      })
+      .catch((error: unknown) => {
+        removeTempDir(userDataDir);
+        throw error;
+      });
 
     try {
       await use(context);
     } finally {
       await context.close();
-      // About 10 MB per test; traces and screenshots are saved separately.
       removeTempDir(userDataDir);
     }
   },
