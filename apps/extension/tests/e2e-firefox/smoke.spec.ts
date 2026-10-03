@@ -137,6 +137,32 @@ test('side panel page renders the bookmark tree and searches', async ({ extensio
   await extension.findByText('.bookmark-item', 'Sidebar Match');
 });
 
+test('popup and side panel open the bookmark manager in a new tab', async ({ extension }) => {
+  // Firefox cannot replace its bookmarks page, so this button is the way into the manager.
+  const { driver } = extension;
+  for (const page of ['popup.html', 'sidepanel.html']) {
+    await extension.open(page);
+    const before = await driver.getAllWindowHandles();
+    await (await extension.find('button[aria-label="Open bookmark manager"]')).click();
+
+    let opened: string | undefined;
+    await driver.wait(async () => {
+      const handles = await driver.getAllWindowHandles();
+      opened = handles.find((handle) => !before.includes(handle));
+      return opened !== undefined;
+    }, 10_000);
+    const origin = await driver.getWindowHandle();
+    await driver.switchTo().window(opened as string);
+    await driver.wait(
+      async () => (await driver.getCurrentUrl()) === extension.url('bookmarks.html'),
+      10_000,
+    );
+    await extension.find('button[title="Show tools"]');
+    await driver.close();
+    await driver.switchTo().window(origin);
+  }
+});
+
 test('popup shows saved site icons and a generic icon instead of a broken browser icon', async ({
   extension,
 }) => {

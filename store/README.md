@@ -48,19 +48,19 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | --- | --- | --- | --- |
 | Toolbar popup | Yes | Yes | Yes |
 | Side panel | `side_panel` | `side_panel` | `sidebar_action` is declared, but the docs say Firefox has no side panel and nothing tests it. Do not claim it. |
-| Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`) | Same manifest key. Whether Edge applies it to its Favorites page has not been checked. | **Not reachable.** Firefox has no bookmarks-page override, the key is absent, and no UI links to `bookmarks.html`. |
+| Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`), and opens in a new tab from **Open bookmark manager** in the popup and side panel | Same manifest key and button. Whether Edge applies the override to its Favorites page has not been checked. | Opens in a new tab from **Open bookmark manager** in the popup. Firefox has no bookmarks-page override, so the key is absent. |
 | Options page | Yes | Yes | Yes |
 | Context menu save | Yes | Yes | Yes |
 | Site icons (favicons) | `_favicon` API, or icons saved by Refresh Site Icons | Same | Only icons saved by Refresh Site Icons, which runs in the manager. The `favicon` permission is Chromium-only. |
 | Optional website access | `optional_host_permissions` | `optional_host_permissions` | `optional_permissions` (added by the WXT hook) |
 
-As a result, the Firefox listing describes a smaller feature set: maintenance tools, import/export, saved searches, statistics, and the manager-only AI tools are not reachable in Firefox today.
+The Firefox listing still describes a smaller feature set: the manager is reachable from the popup, but its maintenance, network, and AI tools have not been checked by hand in Firefox (see the AMO checklist).
 
 ## Test coverage behind the claims
 
 - Chromium: unit tests and Playwright E2E tests cover popup, manager, settings, maintenance, reports, import/export, network tools (route-mocked and a real local server), and AI tools against mocked providers.
 - Edge: the same Playwright E2E suite runs against the Edge build (`nx run extension:test:e2e:edge`).
-- Firefox: an eight-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, and network and AI tools are not covered there.
+- Firefox: a nine-test smoke suite runs against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, opening the manager from the popup and side panel, manager loading, a settings save, a JSON export and import round trip, and the statistics and privacy reports. Context menus, drag and drop, and network and AI tools are not covered there.
 - The Edge and Firefox CI jobs are required checks for merging into `main`.
 - Real AI providers and live network behavior are checked by hand, not by automated tests.
 
@@ -92,7 +92,7 @@ All curated screenshots are 1280x800 24-bit RGB PNGs without alpha, so one set w
 | `08-options-ai-dark.png` | Options, AI tab, dark theme |
 | `promo-small-440x280.png` | Small promo tile (Chrome, Edge) |
 
-Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefox: 01, 04, 05, 08 (the popup and options only; the manager is not reachable there). Edge: all eight, after the Edge manager check in the Edge checklist.
+Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefox: 01, 04, 05, 08 (the popup and options, which the Firefox description covers). Edge: all eight, after the Edge manager check in the Edge checklist.
 
 ### How they were made
 

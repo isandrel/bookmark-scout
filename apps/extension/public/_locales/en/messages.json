@@ -231,6 +231,14 @@
         "message": "Collapse all",
         "description": "Collapse all button tooltip"
     },
+    "popup_openManager": {
+        "message": "Open bookmark manager",
+        "description": "Popup and side panel button that opens the bookmark manager in a new tab"
+    },
+    "popup_openManagerFailed": {
+        "message": "Couldn't open the bookmark manager",
+        "description": "Error toast title when the bookmark manager tab could not be opened"
+    },
     "popup_enterFolderName": {
         "message": "Enter folder name...",
         "description": "New folder input placeholder"

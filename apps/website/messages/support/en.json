@@ -33,15 +33,15 @@
                     "firefoxManager": {
                         "q": "I can't find the bookmarks manager in Firefox",
                         "a": [
-                            "Firefox does not let extensions replace its bookmarks page, so the Bookmark Scout manager and its Tools sidebar are not available there. The maintenance tools, import and export, saved searches, statistics, and the AI tools in the manager work in Chrome and Edge.",
-                            "In Firefox, use the toolbar popup to search, save pages, and manage folders."
+                            "Firefox does not let extensions replace its bookmarks page, so the Bookmark Scout manager does not open from Firefox's own bookmarks menu.",
+                            "Click Open bookmark manager (the books icon) at the top of the toolbar popup. The manager opens in a new tab, with the Tools sidebar, saved searches, and import and export."
                         ]
                     },
                     "firefoxIcons": {
                         "q": "Site icons are missing in Firefox",
                         "a": [
                             "Bookmark Scout shows the browser's own cached icons, which Chrome and Edge share with extensions and Firefox does not. Sites you have not visited recently can show a generic globe in Chrome and Edge for the same reason.",
-                            "Run Refresh Site Icons in the manager's Tools sidebar to download each site's own icon. Saved icons stay on this device. In Firefox the manager opens only at its extension URL; the documentation explains how to find it."
+                            "Run Refresh Site Icons in the manager's Tools sidebar to download each site's own icon. Saved icons stay on this device. In Firefox, open the manager with Open bookmark manager in the toolbar popup."
                         ]
                     },
                     "websiteAccess": {

@@ -8,6 +8,7 @@ import {
   ChevronDown,
   ChevronUp,
   History,
+  LibraryBig,
   MessageCircle,
   Moon,
   Regex,
@@ -33,7 +34,8 @@ function observeSizes(elements: readonly (Element | null | undefined)[], measure
 
 /**
  * The search box's text stops before its buttons, however many are shown, and the placeholder
- * shortens when the popup is too narrow for all of it instead of being cut off mid-word.
+ * shortens when the popup is too narrow for all of it instead of being cut off mid-word. When
+ * even the short one does not fit, the Search icon and the field's label are enough.
  */
 function useSearchBoxFit(
   boxRef: RefObject<HTMLDivElement | null>,
@@ -42,7 +44,7 @@ function useSearchBoxFit(
   placeholders: { full: string; short: string },
 ) {
   const [reservedRight, setReservedRight] = useState<number>();
-  const [fullFits, setFullFits] = useState(true);
+  const [fits, setFits] = useState<'full' | 'short' | 'none'>('full');
 
   useLayoutEffect(
     () =>
@@ -56,7 +58,7 @@ function useSearchBoxFit(
     [boxRef, controlsRef],
   );
 
-  const { full } = placeholders;
+  const { full, short } = placeholders;
   // biome-ignore lint/correctness/useExhaustiveDependencies: the padding changes with reservedRight.
   useLayoutEffect(
     () =>
@@ -75,12 +77,13 @@ function useSearchBoxFit(
           px(style.borderRightWidth) -
           px(style.paddingLeft) -
           px(style.paddingRight);
-        setFullFits(context.measureText(full).width <= free);
+        const fitsText = (text: string) => context.measureText(text).width <= free;
+        setFits(fitsText(full) ? 'full' : fitsText(short) ? 'short' : 'none');
       }),
-    [full, inputRef, reservedRight],
+    [full, short, inputRef, reservedRight],
   );
 
-  return { reservedRight, placeholder: fullFits ? full : placeholders.short };
+  return { reservedRight, placeholder: { full, short, none: '' }[fits] };
 }
 
 interface BookmarkSearchProps {
@@ -93,6 +96,8 @@ interface BookmarkSearchProps {
   onAIRecommend?: () => void;
   /** Opens the Ask AI chat. */
   onAskAI?: () => void;
+  /** Opens the bookmark manager in a new tab. */
+  onOpenManager?: () => void;
   isAIEnabled?: boolean;
   isAILoading?: boolean;
   searchOptions: SearchOptions;
@@ -112,6 +117,7 @@ export function BookmarkSearch({
   inputRef,
   onAIRecommend,
   onAskAI,
+  onOpenManager,
   isAIEnabled = false,
   isAILoading = false,
   searchOptions,
@@ -383,6 +389,18 @@ export function BookmarkSearch({
             ) : (
               <ChevronDown className="h-4 w-4" />
             )}
+          </Button>
+        )}
+        {onOpenManager && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="shrink-0"
+            onClick={onOpenManager}
+            title={t('popup_openManager')}
+            aria-label={t('popup_openManager')}
+          >
+            <LibraryBig className="h-4 w-4" />
           </Button>
         )}
         <Button

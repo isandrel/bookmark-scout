@@ -12,7 +12,7 @@ Use this when reviewing or rewriting the website, docs, or store listings agains
 
 ## Claims
 
-- Check every feature claim, including structured data, against the per-browser surface table in `store/README.md`. Firefox has no bookmarks manager page, so manager and maintenance claims do not apply there.
+- Check every feature claim, including structured data, against the per-browser surface table in `store/README.md`. Firefox cannot replace its bookmarks page; the manager opens from a popup button there, and its tools are not covered by Firefox tests, so check manager and maintenance claims against that table.
 - Values such as URLs, store links, contact addresses, versions, and dates come from `config/project.toml` and `config/web.toml`, never literals in copy.
 
 ## Structured data and previews
