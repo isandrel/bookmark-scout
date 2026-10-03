@@ -13,8 +13,8 @@ This table comes from the manifests of the built extension for each browser.
 | --- | --- | --- | --- |
 | Toolbar popup with search and saving | Yes | Yes | Yes |
 | Side panel | Yes | Yes | Not supported. The page is declared as a Firefox sidebar, but nothing tests it there. |
-| Bookmarks manager and Tools sidebar | Replaces the browser's bookmarks page | Declared the same way. Whether Edge applies it to its Favorites page has not been checked. | Not reachable. Firefox cannot replace its bookmarks page and no menu links to the manager. |
-| Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Not reachable, because they live in the manager |
+| Bookmarks manager and Tools sidebar | Replaces the browser's bookmarks page, and opens from **Open bookmark manager** in the popup and side panel | Opens from **Open bookmark manager**. Whether Edge also applies the override to its Favorites page has not been checked. | Opens from **Open bookmark manager** in the popup. Firefox cannot replace its bookmarks page. |
+| Saved searches, maintenance tools, import and export, statistics, manager AI tools | Yes | Yes | Yes, in the manager. Automated tests cover import and export and the reports; the other tools are checked by hand. |
 | Settings page | Yes | Yes | Yes |
 | Right-click menu to save links | Yes | Yes | Yes |
 | Site icons next to bookmarks | Yes, from the browser's icon cache, or icons saved with **Refresh Site Icons** | Yes | Only icons saved with **Refresh Site Icons**, which runs in the manager. Firefox has no favicon API for extensions, so other bookmarks show a generic icon. |
@@ -24,7 +24,7 @@ This table comes from the manifests of the built extension for each browser.
 
 - **Chrome (Chromium)**: unit tests and end-to-end tests for the popup, side panel, manager, settings, maintenance tools, reports, import and export, keyboard shortcuts, saved searches, context-menu saves, drag and drop, network tools, and AI tools against mocked providers.
 - **Edge**: the same end-to-end suite runs against the Edge build.
-- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, the manager page, a settings save, a JSON export and import round trip, and the statistics and privacy reports, and saved site icons in the popup. Context menus, drag and drop, keyboard shortcuts, and network and AI tools (including **Refresh Site Icons** itself) are not covered.
+- **Firefox**: a smoke suite covers popup search and folder creation, the side panel page loaded in a tab, opening the manager from the popup and side panel, the manager page, a settings save, a JSON export and import round trip, and the statistics and privacy reports, and saved site icons in the popup. Context menus, drag and drop, keyboard shortcuts, and network and AI tools (including **Refresh Site Icons** itself) are not covered.
 
 The Edge suite and the Firefox smoke suite are required CI checks, like the Chromium suite. Real AI providers and live websites are checked by hand, not by automated tests.
 

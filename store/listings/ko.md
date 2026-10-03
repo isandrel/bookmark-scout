@@ -7,7 +7,7 @@ Translation of [`en.md`](en.md). The structure, store limits, and verification n
 | Optional manifest description | 76 |
 | Firefox Add-ons summary | 107 |
 | Full description, Chrome and Edge | 1,757 |
-| Full description, Firefox | 983 |
+| Full description, Firefox | 961 |
 
 ## Name
 
@@ -128,7 +128,7 @@ Bookmark Scout(북마크 스카우트)는 브라우저를 떠나지 않고 북�
 
 영어, 일본어, 한국어를 지원합니다. 라이트, 다크, 시스템 테마를 선택할 수 있습니다.
 
-북마크 관리자, 유지 관리 도구, 가져오기/내보내기는 현재 Firefox에서 사용할 수 없습니다.
+북마크 관리자는 툴바 팝업에서 새 탭으로 열 수 있습니다.
 ```
 
 ## Category

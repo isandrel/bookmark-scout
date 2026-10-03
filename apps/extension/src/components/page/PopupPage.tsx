@@ -238,6 +238,12 @@ function PopupPage() {
     [addBookmarkToFolder, withToast],
   );
 
+  const handleOpenManager = useCallback(() => {
+    openBookmarkManager().catch((error) => {
+      toast.error({ title: t('popup_openManagerFailed'), description: getErrorMessage(error) });
+    });
+  }, []);
+
   const clearQuery = useCallback(() => setQuery(''), [setQuery]);
   usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery });
   const setFolderExpanded = useCallback(
@@ -528,6 +534,7 @@ function PopupPage() {
           isAILoading={aiLoading}
           onAIRecommend={handleAIRecommend}
           onAskAI={() => setAskAIOpen(true)}
+          onOpenManager={handleOpenManager}
           searchOptions={searchOptions}
           onSearchOptionsChange={setSearchOptions}
           searchHistory={searchHistory.history}

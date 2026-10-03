@@ -111,7 +111,7 @@
       "title": "What you can do with it",
       "lede": "Real screenshots from the Chrome build. They follow your system's light or dark setting.",
       "tabsLabel": "Jobs Bookmark Scout does",
-      "firefoxNote": "In Firefox, Bookmark Scout has the toolbar popup: search, the folder tree, saving, and AI folder suggestions. The manager, cleanup tools, saved searches, and import and export are not available there yet.",
+      "firefoxNote": "Firefox cannot replace its bookmarks page, so in Firefox the manager, with its cleanup tools, saved searches, and import and export, opens from a button in the toolbar popup.",
       "find": {
         "tab": "Find",
         "heading": "Search from the toolbar",
@@ -253,7 +253,7 @@
           "open": "Open <code>about:debugging#/runtime/this-firefox</code>.",
           "load": "Click <b>Load Temporary Add-on</b> and select <code>manifest.json</code> in the extracted folder."
         },
-        "limits": "Firefox removes a temporary add-on when it restarts, so you load it again after each restart. The Firefox version has the toolbar popup with search, the folder tree, saving, and AI folder suggestions; the manager and its tools are not available there yet."
+        "limits": "Firefox removes a temporary add-on when it restarts, so you load it again after each restart. In Firefox, the manager and its tools open from the Open bookmark manager button in the toolbar popup."
       }
     },
     "faq": {
@@ -277,7 +277,7 @@
         },
         "firefox": {
           "q": "Does it work in Firefox?",
-          "a": "Yes, with a smaller feature set: the toolbar popup with search, the folder tree, saving, and AI folder suggestions. The manager, cleanup tools, import and export, and saved searches need Chrome or Edge. Until the Firefox Add-ons listing is ready, Firefox loads it as a temporary add-on, which is removed when Firefox restarts."
+          "a": "Yes. Firefox cannot replace its bookmarks page, so the manager, with its cleanup tools, import and export, and saved searches, opens from a button in the toolbar popup. Until the Firefox Add-ons listing is ready, Firefox loads it as a temporary add-on, which is removed when Firefox restarts."
         },
         "stores": {
           "q": "Why is it not in the browser stores yet?",

@@ -231,6 +231,14 @@
         "message": "모두 접기",
         "description": "Collapse all button tooltip"
     },
+    "popup_openManager": {
+        "message": "북마크 관리자 열기",
+        "description": "Popup and side panel button that opens the bookmark manager in a new tab"
+    },
+    "popup_openManagerFailed": {
+        "message": "북마크 관리자를 열 수 없습니다",
+        "description": "Error toast title when the bookmark manager tab could not be opened"
+    },
     "popup_enterFolderName": {
         "message": "폴더 이름 입력...",
         "description": "New folder input placeholder"

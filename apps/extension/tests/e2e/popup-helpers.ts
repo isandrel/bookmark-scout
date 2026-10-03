@@ -62,7 +62,8 @@ export function bookmarkRow(page: Page, title: string) {
 
 export async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
-  await expect(page.getByPlaceholder('Search bookmarks...')).toBeVisible();
+  // By its label: a header full of buttons (AI on) shortens the placeholder.
+  await expect(page.getByRole('combobox', { name: 'Search bookmarks...' })).toBeVisible();
 }
 
 /**

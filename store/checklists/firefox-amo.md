@@ -8,7 +8,7 @@ These must be resolved, by a code change and a new release, before a first AMO l
 
 - [x] **Add-on ID.** `bookmark-scout@isandrel.github.io` in `browser_specific_settings.gecko.id` (`apps/extension/manifest.config.ts`). It cannot change after the first upload. The Firefox smoke suite installs the build with this ID.
 - [x] **Data collection declaration.** `browser_specific_settings.gecko.data_collection_permissions` is declared (see [`../privacy-disclosures.md`](../privacy-disclosures.md#firefox-add-ons-data-collection-declaration)), with `strict_min_version` 140.0 for desktop and 142.0 for Android, the first versions that support it. The linter reports no manifest warnings.
-- [ ] **Scope decision.** The bookmarks manager and Tools sidebar are not reachable in the Firefox build (no override, no link). Either ship with the reduced Firefox description in [`../listings/en.md`](../listings/en.md), or add an entry point first.
+- [x] **Scope decision.** The popup and side panel have an **Open bookmark manager** button, so the manager and Tools sidebar are reachable in Firefox. The Firefox description in [`../listings/en.md`](../listings/en.md) stays short until the manual checks below cover the manager tools.
 - [x] The Chromium-only `favicon` and `sidePanel` permissions are left out of the Firefox manifest, and the broad `_favicon/*` `web_accessible_resources` entry is gone.
 
 ## 0. Approval
@@ -31,13 +31,14 @@ Follow the release runbook in the root `AGENTS.md`.
 
 ## 2. Manual smoke test in Firefox
 
-The required `Firefox E2E smoke` CI check covers popup search and folder creation, saved site icons, the side panel page, manager loading, a settings save, JSON export and import, and the statistics and privacy reports. It does not cover context menus, drag and drop, network and AI tools, or the real sidebar, so every other claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
+The required `Firefox E2E smoke` CI check covers popup search and folder creation, saved site icons, the side panel page, opening the manager from the popup and side panel, manager loading, a settings save, JSON export and import, and the statistics and privacy reports. It does not cover context menus, drag and drop, network and AI tools, or the real sidebar, so every other claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
 
 - [ ] Popup: instant search with match case, whole word, and regex.
 - [ ] Folder tree: drag and drop, expand and collapse all, new folder.
 - [ ] Save the current page to a folder; saving it again into the same folder does nothing.
 - [ ] Right-click a link: save it into a recent folder.
 - [ ] Keyboard shortcuts in the popup.
+- [ ] **Open bookmark manager** in the popup opens the manager in a new tab. Before the description claims the manager tools, run Duplicate Cleaner, Check Dead Links (allow website access when asked), and an import there.
 - [ ] Delete with confirmation and Undo.
 - [ ] Options: themes, language, AI off by default.
 - [ ] AI folder suggestions with a test provider (for example local Ollama), if the description keeps them.

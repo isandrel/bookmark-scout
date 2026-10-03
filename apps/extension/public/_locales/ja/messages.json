@@ -227,6 +227,14 @@
         "message": "すべて折りたたむ",
         "description": "Collapse all button tooltip"
     },
+    "popup_openManager": {
+        "message": "ブックマークマネージャーを開く",
+        "description": "Popup and side panel button that opens the bookmark manager in a new tab"
+    },
+    "popup_openManagerFailed": {
+        "message": "ブックマークマネージャーを開けませんでした",
+        "description": "Error toast title when the bookmark manager tab could not be opened"
+    },
     "popup_enterFolderName": {
         "message": "フォルダ名を入力...",
         "description": "New folder input placeholder"

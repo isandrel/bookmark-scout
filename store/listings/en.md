@@ -107,7 +107,7 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. 1,674 characters. It leaves out the bookmarks manager, the Tools sidebar, and site icons, which the Firefox build does not provide today (see `../README.md`).
+AMO descriptions accept limited Markdown; this text is plain. 1,645 characters (2026-10-03). It does not describe the tools inside the bookmarks manager, which opens from the popup's Open bookmark manager button but has not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`).
 
 ```text
 Bookmark Scout helps you find and file your bookmarks without leaving the browser.
@@ -133,7 +133,7 @@ PRIVACY
 
 Available in English, Japanese, and Korean. Light, dark, and system themes.
 
-The bookmarks manager, maintenance tools, and import/export are not yet available in Firefox.
+The bookmarks manager opens in a new tab from the toolbar popup.
 ```
 
 ## Chrome Web Store single purpose

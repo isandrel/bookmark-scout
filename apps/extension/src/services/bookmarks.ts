@@ -722,6 +722,18 @@ export async function openBookmarkInNewTab(url: string): Promise<void> {
   await browser.tabs.create({ url, active: true });
 }
 
+/** The manager page, which Chrome and Edge also show as their Bookmarks page. */
+export const BOOKMARK_MANAGER_PATH = '/bookmarks.html';
+
+/**
+ * Opens the bookmark manager in a new foreground tab. Firefox cannot replace its bookmarks page,
+ * so this is the only way in there. A new tab needs no permission; finding an open manager tab to
+ * reuse would need `tabs`.
+ */
+export async function openBookmarkManager(): Promise<void> {
+  await browser.tabs.create({ url: browser.runtime.getURL(BOOKMARK_MANAGER_PATH), active: true });
+}
+
 /**
  * Gets the current active tab information.
  */
