@@ -977,10 +977,6 @@
         "message": "フォルダのパス",
         "description": "Column showing the containing folder path"
     },
-    "bookmarks_untitled": {
-        "message": "無題",
-        "description": "Default name for untitled bookmarks"
-    },
     "bookmarks_loading": {
         "message": "ブックマークを読み込み中...",
         "description": "Loading message for bookmarks page"

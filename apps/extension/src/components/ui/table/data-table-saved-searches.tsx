@@ -171,7 +171,7 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
           <p
             id="savedSearchSaveHint"
             role={saveError ? 'alert' : undefined}
-            className={cn('text-xs', saveError ? 'text-destructive' : 'text-muted-foreground')}
+            className={cn('text-xs', saveError ? 'text-destructive-text' : 'text-muted-foreground')}
           >
             {saveError ?? (canSave ? t('savedSearches_saveHint') : t('savedSearches_needsFilter'))}
           </p>
@@ -214,7 +214,7 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
                       </Button>
                     </div>
                     {renaming.error && (
-                      <p role="alert" className="text-xs text-destructive">
+                      <p role="alert" className="text-xs text-destructive-text">
                         {renaming.error}
                       </p>
                     )}

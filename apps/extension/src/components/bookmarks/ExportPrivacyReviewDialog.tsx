@@ -50,7 +50,7 @@ export function ExportPrivacyReviewDialog({
           {items?.map((item) => (
             <li key={item.id} className="space-y-1 rounded-lg border p-3">
               <div className="text-sm font-medium break-words">
-                {item.title.trim() || t('bookmarks_untitled')}
+                {getBookmarkDisplayTitle(item.title)}
               </div>
               <div className="text-xs text-muted-foreground break-all">{item.url}</div>
               <ul className="list-disc space-y-0.5 pl-5 text-xs">

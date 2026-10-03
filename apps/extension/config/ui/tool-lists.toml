@@ -1,0 +1,11 @@
+# How many items reviews list before summarizing the rest as a count. Read by
+# src/components/bookmarks/tools/tool-lists.ts.
+
+# Duplicate and conflicting entries listed in the import preview
+import_conflicts = 50
+
+# Distinct browser error messages listed after a partial import
+import_errors = 5
+
+# Items named in the bulk move and bulk delete confirmations
+bulk_preview_items = 8

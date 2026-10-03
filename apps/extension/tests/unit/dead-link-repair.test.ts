@@ -7,7 +7,6 @@ import {
   isDeadLinkRepairCandidate,
   resolveRepairUrl,
   summarizeDeadLinkRepairs,
-  undoDeadLinkRepairs,
 } from '@/services/dead-link-repair';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -127,7 +126,7 @@ describe('applying dead-link repairs', () => {
       item('del', 'delete'),
       item('edit', 'edit', 'https://e2e.invalid/fixed'),
     ]);
-    await expect(undoDeadLinkRepairs(outcome)).resolves.toEqual({ restored: 2, failed: 0 });
+    await expect(outcome.undo()).resolves.toEqual({ restored: 2, failed: 0 });
     expect(urls().map(([, url]) => url)).toEqual([
       'https://e2e.invalid/del',
       'https://e2e.invalid/edit',

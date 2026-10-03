@@ -977,10 +977,6 @@
         "message": "Folder Path",
         "description": "Column showing the containing folder path"
     },
-    "bookmarks_untitled": {
-        "message": "Untitled",
-        "description": "Default name for untitled bookmarks"
-    },
     "bookmarks_loading": {
         "message": "Loading bookmarks...",
         "description": "Loading message for bookmarks page"

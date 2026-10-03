@@ -309,6 +309,9 @@ export const IMPORT_DUPLICATE_STRATEGIES: readonly ImportDuplicateStrategy[] = [
   'import-all',
 ];
 
+/** The strategy a new import preview starts with: never create a URL the browser already has. */
+export const DEFAULT_IMPORT_DUPLICATE_STRATEGY: ImportDuplicateStrategy = 'skip-anywhere';
+
 /** Where an imported URL already exists. `in-target` includes the target's subfolders. */
 export type ImportConflictKind = 'in-target' | 'elsewhere' | 'in-file';
 
@@ -363,7 +366,15 @@ export type ImportApplyOutcome = {
   createdIds: string[];
   /** IDs of the created items directly inside the target folder. */
   createdRootIds: string[];
+  /**
+   * Removes what the import created, once. A top-level item is removed only while its subtree
+   * holds nothing but imported items, so bookmarks added to an imported folder are never
+   * deleted. A later call returns the first call's result.
+   */
+  undo(): Promise<ImportUndoResult>;
 };
+
+export type ImportUndoResult = { removed: number; failed: number };
 
 function collectTreeUrls(nodes: readonly BookmarkTreeNode[], urls: Set<string>): Set<string> {
   for (const node of nodes) {
@@ -496,7 +507,7 @@ function countPlanned(node: ImportPlanNode): number {
  * failed folder counts its planned subtree) rather than reported as success.
  */
 export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutcome> {
-  const outcome: ImportApplyOutcome = {
+  const outcome: Omit<ImportApplyOutcome, 'undo'> = {
     bookmarksCreated: 0,
     foldersCreated: 0,
     skipped: plan.counts.bookmarksToSkip + plan.counts.foldersToSkip + plan.counts.invalid,
@@ -533,16 +544,13 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
   for (const node of plan.nodes) {
     await createNode(node, plan.targetFolderId, true);
   }
-  return outcome;
+  let undone: Promise<ImportUndoResult> | undefined;
+  return { ...outcome, undo: () => (undone ??= removeImported(outcome)) };
 }
 
-/**
- * Removes what an import created. A top-level item is removed only while its subtree holds
- * nothing but imported items, so bookmarks added to an imported folder are never deleted.
- */
-export async function undoImport(
+async function removeImported(
   outcome: Pick<ImportApplyOutcome, 'createdIds' | 'createdRootIds'>,
-): Promise<{ removed: number; failed: number }> {
+): Promise<ImportUndoResult> {
   const created = new Set(outcome.createdIds);
   const result = await applyBookmarkChanges(
     outcome.createdRootIds.map((id) => ({

@@ -13,7 +13,7 @@ export type ToolEnvironment = {
 };
 
 /** Shows a tool outcome as a toast; an undoable one keeps Undo for the deletion undo window. */
-function notifyWithToast(outcome: ToolOutcome, onUndo?: () => void) {
+export function showToolOutcome(outcome: ToolOutcome, onUndo?: () => void) {
   toast({
     title: outcome.title,
     description: outcome.description,
@@ -48,7 +48,7 @@ export function useToolRun<Result, Selection>(
       refresh: () => environmentRef.current.refresh(),
       aiSettings: () => getActiveAISettings(true),
       saveFile: (request, write) => environmentRef.current.saveFile(request, write),
-      notify: notifyWithToast,
+      notify: showToolOutcome,
     }),
   );
   const state = useSyncExternalStore(run.subscribe, run.getState);

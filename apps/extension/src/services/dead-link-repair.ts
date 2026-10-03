@@ -26,16 +26,18 @@ export type DeadLinkRepairSummary = { keep: number; delete: number; replace: num
 /** `changed`: deleted, moved to another URL, or otherwise edited since the scan. */
 export type DeadLinkRepairIssue = BookmarkChangeIssue;
 
-export type DeadLinkUndoResult = BookmarkChangesUndoResult;
-
 export type DeadLinkRepairOutcome = {
   deleted: number;
   replaced: number;
   skipped: number;
   failed: number;
   issues: DeadLinkRepairIssue[];
-  /** Puts replaced URLs back, then restores deleted bookmarks; see {@link undoDeadLinkRepairs}. */
-  undo: () => Promise<DeadLinkUndoResult>;
+  /**
+   * Reverts the batch once: puts replaced URLs back, then restores deleted bookmarks (within the
+   * deletion undo window). A URL edited again since the repair is left alone and counted as
+   * failed, so undo never overwrites a newer change.
+   */
+  undo: () => Promise<BookmarkChangesUndoResult>;
 };
 
 /** Results the review lists: failures, timeouts, and redirects. */
@@ -107,15 +109,4 @@ export async function applyDeadLinkRepairs(
     issues: result.issues,
     undo: result.undo,
   };
-}
-
-/**
- * Reverts an applied batch: puts replaced URLs back, then restores deleted bookmarks (within the
- * deletion undo window). A URL edited again since the repair is left alone and counted as
- * failed, so undo never overwrites a newer change.
- */
-export function undoDeadLinkRepairs(
-  outcome: Pick<DeadLinkRepairOutcome, 'undo'>,
-): Promise<DeadLinkUndoResult> {
-  return outcome.undo();
 }

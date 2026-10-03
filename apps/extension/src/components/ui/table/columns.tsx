@@ -142,7 +142,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         disabled={!row.getCanSelect()}
         onClick={stopRowClick}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label={t('table_selectRow', row.original.title.trim() || t('bookmarks_untitled'))}
+        aria-label={t('table_selectRow', getBookmarkDisplayTitle(row.original.title.trim()))}
       />
     ),
     enableSorting: false,
@@ -268,7 +268,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
             </span>
           ) : (
             <span className="min-w-0 truncate italic text-muted-foreground">
-              {t('bookmarks_untitled')}
+              {t('popup_untitled')}
             </span>
           )}
         </div>
