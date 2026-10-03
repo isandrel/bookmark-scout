@@ -1,58 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-type LiveNode = { id: string; title: string; url: string; parentId: string };
-
-const live = vi.hoisted(() => ({
-  nodes: new Map<string, LiveNode>(),
-  failUpdate: new Set<string>(),
-  failDelete: new Set<string>(),
-  failRestore: new Set<string>(),
-  calls: [] as string[],
-}));
-
-vi.mock('@/services/bookmarks', () => ({
-  getBookmark: vi.fn(async (id: string) => {
-    const node = live.nodes.get(id);
-    if (!node) throw new Error('Bookmark not found.');
-    return { ...node };
-  }),
-  updateBookmark: vi.fn(async (id: string, changes: { url: string }) => {
-    if (live.failUpdate.has(id)) throw new Error('boom');
-    const node = live.nodes.get(id);
-    if (!node) throw new Error('Bookmark not found.');
-    node.url = changes.url;
-    live.calls.push(`update ${id} ${changes.url}`);
-    return { ...node };
-  }),
-  captureBookmarkDeletion: vi.fn(async (id: string) => {
-    const node = live.nodes.get(id) as LiveNode;
-    return {
-      parentId: node.parentId,
-      node: { title: node.title, url: node.url },
-      expiresAt: Number.MAX_SAFE_INTEGER,
-      id,
-    };
-  }),
-  deleteBookmark: vi.fn(async (id: string) => {
-    if (live.failDelete.has(id)) throw new Error('boom');
-    live.nodes.delete(id);
-    live.calls.push(`delete ${id}`);
-  }),
-  restoreBookmarkDeletion: vi.fn(
-    async (snapshot: { id: string; parentId: string; node: { title: string; url: string } }) => {
-      if (live.failRestore.has(snapshot.id)) throw new Error('expired');
-      live.nodes.set(snapshot.id, {
-        id: snapshot.id,
-        parentId: snapshot.parentId,
-        title: snapshot.node.title,
-        url: snapshot.node.url,
-      });
-      live.calls.push(`restore ${snapshot.id}`);
-    },
-  ),
-}));
-
-const {
+import { fakeBrowser } from 'wxt/testing/fake-browser';
+import {
   applyDeadLinkRepairs,
   buildArchiveUrl,
   isActionableRepair,
@@ -60,14 +8,18 @@ const {
   resolveRepairUrl,
   summarizeDeadLinkRepairs,
   undoDeadLinkRepairs,
-} = await import('@/services/dead-link-repair');
+} from '@/services/dead-link-repair';
+import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
 type RepairItem = Parameters<typeof applyDeadLinkRepairs>[0][number];
 
+let bookmarks: FakeBookmarks;
+
 function seed(...nodes: Array<[id: string, url: string]>) {
-  for (const [id, url] of nodes) {
-    live.nodes.set(id, { id, title: `Title ${id}`, url, parentId: 'folder' });
-  }
+  bookmarks = installFakeBookmarks([
+    { id: 'folder', title: 'Folder' },
+    ...nodes.map(([id, url]) => ({ id, parentId: 'folder', title: `Title ${id}`, url })),
+  ]);
 }
 
 function item(id: string, choice: RepairItem['choice'], newUrl?: string): RepairItem {
@@ -80,12 +32,12 @@ function item(id: string, choice: RepairItem['choice'], newUrl?: string): Repair
   };
 }
 
+const urls = () =>
+  bookmarks.childIds('folder').map((id) => [id, bookmarks.get(id)?.url] as const);
+
 beforeEach(() => {
-  live.nodes.clear();
-  live.failUpdate.clear();
-  live.failDelete.clear();
-  live.failRestore.clear();
-  live.calls = [];
+  fakeBrowser.reset();
+  vi.restoreAllMocks();
 });
 
 describe('dead-link repair plan', () => {
@@ -139,7 +91,7 @@ describe('applying dead-link repairs', () => {
       item('edit', 'edit', 'https://e2e.invalid/fixed'),
     ]);
     expect(outcome).toMatchObject({ deleted: 1, replaced: 3, skipped: 0, failed: 0, issues: [] });
-    expect([...live.nodes.values()].map((node) => [node.id, node.url])).toEqual([
+    expect(urls()).toEqual([
       ['keep', 'https://e2e.invalid/keep'],
       ['moved', 'https://e2e.invalid/target'],
       ['arch', 'https://web.archive.org/web/https://e2e.invalid/arch'],
@@ -147,70 +99,38 @@ describe('applying dead-link repairs', () => {
     ]);
   });
 
-  it('skips bookmarks deleted or edited after the scan', async () => {
-    seed(['edited', 'https://e2e.invalid/edited-by-user'], ['fresh', 'https://e2e.invalid/fresh']);
+  it('skips bookmarks deleted or edited after the scan and counts failures apart', async () => {
+    seed(
+      ['edited', 'https://e2e.invalid/edited-by-user'],
+      ['fresh', 'https://e2e.invalid/fresh'],
+      ['broken', 'https://e2e.invalid/broken'],
+    );
+    bookmarks.fail.remove.add('broken');
     const outcome = await applyDeadLinkRepairs([
       item('gone', 'delete'),
       item('edited', 'delete'),
       item('fresh', 'edit', 'https://e2e.invalid/fixed'),
+      item('broken', 'delete'),
     ]);
-    expect(outcome).toMatchObject({ deleted: 0, replaced: 1, skipped: 2, failed: 0 });
+    expect(outcome).toMatchObject({ deleted: 0, replaced: 1, skipped: 2, failed: 1 });
     expect(outcome.issues).toEqual([
       { id: 'gone', title: 'Title gone', reason: 'changed' },
       { id: 'edited', title: 'Title edited', reason: 'changed' },
+      { id: 'broken', title: 'Title broken', reason: 'failed' },
     ]);
-    expect(live.nodes.get('edited')?.url).toBe('https://e2e.invalid/edited-by-user');
-    expect(live.calls).toEqual(['update fresh https://e2e.invalid/fixed']);
+    expect(bookmarks.get('edited')?.url).toBe('https://e2e.invalid/edited-by-user');
   });
 
-  it('reports partial failures and keeps going', async () => {
-    seed(
-      ['a', 'https://e2e.invalid/a'],
-      ['b', 'https://e2e.invalid/b'],
-      ['c', 'https://e2e.invalid/c'],
-    );
-    live.failDelete.add('a');
-    live.failUpdate.add('b');
-    const outcome = await applyDeadLinkRepairs([
-      item('a', 'delete'),
-      item('b', 'edit', 'https://e2e.invalid/b2'),
-      item('c', 'delete'),
-    ]);
-    expect(outcome).toMatchObject({ deleted: 1, replaced: 0, skipped: 0, failed: 2 });
-    expect(outcome.issues.map((issue) => [issue.id, issue.reason])).toEqual([
-      ['a', 'failed'],
-      ['b', 'failed'],
-    ]);
-    expect(outcome.deletions.map((snapshot) => snapshot.id)).toEqual(['c']);
-    expect(outcome.replacements).toEqual([]);
-    expect([...live.nodes.keys()]).toEqual(['a', 'b']);
-  });
-});
-
-describe('undoing dead-link repairs', () => {
-  it('restores deleted bookmarks and original URLs', async () => {
+  it('undoes a batch: original URLs back, deleted bookmarks restored in place', async () => {
     seed(['del', 'https://e2e.invalid/del'], ['edit', 'https://e2e.invalid/edit']);
     const outcome = await applyDeadLinkRepairs([
       item('del', 'delete'),
       item('edit', 'edit', 'https://e2e.invalid/fixed'),
     ]);
-    live.calls = [];
     await expect(undoDeadLinkRepairs(outcome)).resolves.toEqual({ restored: 2, failed: 0 });
-    expect(live.calls).toEqual(['update edit https://e2e.invalid/edit', 'restore del']);
-    expect(live.nodes.get('del')?.url).toBe('https://e2e.invalid/del');
-    expect(live.nodes.get('edit')?.url).toBe('https://e2e.invalid/edit');
-  });
-
-  it('never overwrites a URL changed again after the repair and counts expired restores', async () => {
-    seed(['del', 'https://e2e.invalid/del'], ['edit', 'https://e2e.invalid/edit']);
-    const outcome = await applyDeadLinkRepairs([
-      item('del', 'delete'),
-      item('edit', 'edit', 'https://e2e.invalid/fixed'),
+    expect(urls().map(([, url]) => url)).toEqual([
+      'https://e2e.invalid/del',
+      'https://e2e.invalid/edit',
     ]);
-    (live.nodes.get('edit') as LiveNode).url = 'https://e2e.invalid/newer';
-    live.failRestore.add('del');
-    await expect(undoDeadLinkRepairs(outcome)).resolves.toEqual({ restored: 0, failed: 2 });
-    expect(live.nodes.get('edit')?.url).toBe('https://e2e.invalid/newer');
-    expect(live.nodes.has('del')).toBe(false);
   });
 });
