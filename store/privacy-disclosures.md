@@ -1,6 +1,6 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.2.0`, checked against the source on 2026-10-03, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
+What the extension does with data at version `0.3.0`, checked against the source on 2026-10-03, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 

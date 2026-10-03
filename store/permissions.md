@@ -11,7 +11,7 @@ NX_DAEMON=false bunx nx run extension:build:edge
 
 Rebuild and compare before each submission. If a permission is added or removed, update this file, `README.md` (Permissions), and the privacy documents.
 
-## Built manifests at version 0.2.0
+## Built manifests at version 0.3.0
 
 Every permission that a browser lets an extension ask for later is optional and requested only when the user turns on or runs the feature that needs it. The table of permissions and features is `apps/extension/src/lib/permission-catalog.ts`; the manifests and the runtime requests both read it.
 
