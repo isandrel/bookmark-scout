@@ -22,7 +22,7 @@ export type FakeBookmarks = {
   /** Ids of the folder's children, in order. */
   childIds(id: string): string[];
   /** Calls that fail with an error, by method and id. */
-  fail: Record<'update' | 'remove' | 'create', Set<string>>;
+  fail: Record<'update' | 'remove' | 'create' | 'move', Set<string>>;
   /** `<method> <id>` for every write, in order. */
   writes: string[];
 };
@@ -33,7 +33,12 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
   type Stored = { id: string; parentId?: string; title: string; url?: string; children?: string[] };
   const nodes = new Map<string, Stored>([[FAKE_ROOT_ID, { id: FAKE_ROOT_ID, title: '', children: [] }]]);
   let nextId = 1000;
-  const fail = { update: new Set<string>(), remove: new Set<string>(), create: new Set<string>() };
+  const fail = {
+    update: new Set<string>(),
+    remove: new Set<string>(),
+    create: new Set<string>(),
+    move: new Set<string>(),
+  };
   const writes: string[] = [];
 
   const need = (id: string) => {
@@ -104,6 +109,20 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
     if (changes.title !== undefined) node.title = changes.title;
     if (changes.url !== undefined) node.url = changes.url;
     writes.push(`update ${id}`);
+    return toNode(node);
+  });
+  vi.spyOn(api, 'move').mockImplementation(async (id, destination) => {
+    if (fail.move.has(id)) throw new Error('move failed');
+    const node = need(id);
+    const from = need(node.parentId ?? FAKE_ROOT_ID);
+    const to = need(destination.parentId ?? node.parentId ?? FAKE_ROOT_ID);
+    if (!to.children) throw new Error('Parent is not a folder.');
+    from.children?.splice(from.children.indexOf(id), 1);
+    const index = destination.index ?? to.children.length;
+    if (index > to.children.length) throw new Error('Index out of bounds.');
+    to.children.splice(index, 0, id);
+    node.parentId = to.id;
+    writes.push(`move ${id}`);
     return toNode(node);
   });
   vi.spyOn(api, 'removeTree').mockImplementation(async (id: string) => {

@@ -1289,9 +1289,29 @@
         "message": "再整理が完了しました",
         "description": "Toast title after applying an AI reorganization"
     },
-    "toast_reorganizeSuccessDesc": {
-        "message": "ブックマークを再整理しました",
-        "description": "Toast description after applying an AI reorganization"
+    "toast_reorganizeAppliedDesc": {
+        "message": "移動: $1 件。新しいフォルダ: $2 件。",
+        "description": "Toast description after applying an AI reorganization: bookmarks moved ($1) and new folders created ($2)"
+    },
+    "toast_reorganizePartial": {
+        "message": "一部の移動は適用されませんでした",
+        "description": "Toast title when some reorganization moves were skipped or failed"
+    },
+    "toast_reorganizePartialDesc": {
+        "message": "移動: $1 件。新しいフォルダ: $2 件。プレビュー後に変更されたためスキップ: $3 件。失敗: $4 件。",
+        "description": "Partial reorganization outcome: moved ($1), new folders ($2), skipped because the bookmark changed after the preview ($3), failed ($4)"
+    },
+    "toast_reorganizeUndone": {
+        "message": "整理を元に戻しました",
+        "description": "Toast title after undoing an AI reorganization"
+    },
+    "toast_reorganizeUndoPartial": {
+        "message": "一部の移動は元に戻せませんでした",
+        "description": "Toast title when undoing an AI reorganization could not move every bookmark back"
+    },
+    "toast_reorganizeUndoneDesc": {
+        "message": "元に戻した移動: $1 件。元に戻せなかった移動: $2 件。",
+        "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
     "error_importFailed": {
         "message": "読み込みに失敗しました: $1",
@@ -1371,6 +1391,10 @@
             }
         }
     },
+    "ai_reorgNewFolders": {
+        "message": "新しいフォルダ: $1",
+        "description": "Reorganization summary badge: how many folders applying the plan creates"
+    },
     "ai_reorgViewOperations": {
         "message": "操作を表示（$count$）",
         "description": "Toggle for the reorganization operation list",
@@ -1384,6 +1408,18 @@
     "ai_reorgOp_move": {
         "message": "移動",
         "description": "Reorganization operation type"
+    },
+    "ai_reorgNewFolder": {
+        "message": "新しいフォルダ",
+        "description": "Badge on a reorganization move whose target folder is created when the plan is applied"
+    },
+    "ai_reorgIssueChanged": {
+        "message": "$1: プレビュー後に変更されたため、そのままにしました",
+        "description": "A reorganization move skipped because its bookmark was moved, edited, or deleted after the preview ($1 is its title)"
+    },
+    "ai_reorgIssueFailed": {
+        "message": "$1: 移動できませんでした",
+        "description": "A reorganization move the browser rejected ($1 is the bookmark title)"
     },
     "ai_reorgFrom": {
         "message": "移動元:",
@@ -4750,14 +4786,6 @@
     "ai_reorgPreviewRequired": {
         "message": "整理の変更を適用する前にプレビューを確認してください",
         "description": "Reorganization error when changes are applied before the preview is confirmed"
-    },
-    "ai_reorgTargetMissing": {
-        "message": "「$1」の移動先フォルダーが見つかりません",
-        "description": "Reorganization error; $1 is the bookmark or folder title"
-    },
-    "ai_reorgChangeFailed": {
-        "message": "「$1」を変更できませんでした: $2",
-        "description": "Reorganization error; $1 is the bookmark or folder title, $2 the browser's error"
     },
     "meta_languageName": {
         "message": "日本語",

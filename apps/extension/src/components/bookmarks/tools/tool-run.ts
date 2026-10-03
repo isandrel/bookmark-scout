@@ -16,8 +16,8 @@ export type ToolRunState<Result> = {
   result: Result | null;
   /** Problems shown inside the review (reorganization). */
   errors: string[];
-  /** A partial apply's outcome, shown above the rescanned review while undo is offered. */
-  notice: { message: string; canUndo: boolean } | null;
+  /** A partial apply's outcome, shown above the review; `canUndo` while undo is offered. */
+  notice: { message: string; notes: string[]; canUndo: boolean } | null;
 };
 
 /** What a run needs from the page; tests pass fakes. */
@@ -164,6 +164,9 @@ export function createToolRun<Result, Selection>(
   };
 
   const rescan = async () => tool.scan(context(await deps.freshNodes(scope)));
+  /** The result to review after a change: rescanned, or kept when the tool says so. */
+  const resultAfterChange = async (current: Result) =>
+    tool.keepResultAfterApply ? current : rescan();
 
   /** Wraps an outcome's undo so the review and the toast share one revert until it expires. */
   const offerUndo = (revert: () => Promise<ToolOutcome>, expiresAt?: number) => {
@@ -173,7 +176,10 @@ export function createToolRun<Result, Selection>(
         try {
           const outcome = await revert();
           if (tool.changesBookmarks) await deps.refresh();
-          if (state.open && state.phase === 'review') update({ result: await rescan() });
+          const { open, phase, result } = state;
+          if (open && phase === 'review' && result !== null) {
+            update({ result: await resultAfterChange(result) });
+          }
           deps.notify(outcome);
         } catch (error) {
           reportFailure(error, 'toast_toolFailed');
@@ -211,8 +217,12 @@ export function createToolRun<Result, Selection>(
     if (outcome.keepOpen && state.open) {
       update({
         phase: 'review',
-        result: await rescan(),
-        notice: { message: outcome.description ?? outcome.title, canUndo: Boolean(undo) },
+        result: await resultAfterChange(result),
+        notice: {
+          message: outcome.description ?? outcome.title,
+          notes: outcome.notes ?? [],
+          canUndo: Boolean(undo),
+        },
       });
     } else {
       update({ phase: 'done', open: false, result: null, notice: null });

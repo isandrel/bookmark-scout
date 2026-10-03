@@ -36,8 +36,13 @@ export type ToolOutcome = {
   description?: string;
   /** Left out for a neutral notice. */
   variant?: 'success' | 'destructive';
-  /** Keep the review open, rescanned from the live tree, with this outcome shown above it. */
+  /**
+   * Keep the review open with this outcome shown above it, rescanned from the live tree unless
+   * the tool keeps its result (`keepResultAfterApply`).
+   */
   keepOpen?: boolean;
+  /** Lines the review lists under the outcome while it stays open, such as skipped items. */
+  notes?: string[];
   /** Problems to show inside the review instead of announcing the outcome. */
   errors?: string[];
   /** Reverts the change and resolves with what to report about the revert. */
@@ -95,6 +100,11 @@ export type ToolDefinition<Result = unknown, Selection = void> = {
   reviewWhileScanning?: boolean;
   /** Apply right after the scan instead of waiting for a review. */
   autoApply?(settings: Settings): boolean;
+  /**
+   * Keep showing the reviewed result after an apply or undo instead of scanning again, for a
+   * scan that is costly (an AI request).
+   */
+  keepResultAfterApply?: boolean;
   /** Message when a scan fails without one of its own. */
   scanFailureKey?: string;
   /** Toast title when applying fails. */
@@ -298,13 +308,44 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     async scan({ nodes, options, aiSettings }) {
       return generateReorganizationPlan(nodes, await aiSettings(), options.reorganization);
     },
+    // A rescan would ask the AI again, so a partial outcome is shown with the reviewed plan.
+    keepResultAfterApply: true,
     async apply(plan, _selection, { reviewed }) {
       const result = await applyReorganizationPlan(plan, { previewConfirmed: reviewed });
-      if (!result.success) return { title: t('error_generic'), errors: result.errors };
+      if (result.status === 'blocked') return { title: t('error_generic'), errors: [result.error] };
+      const { applied, foldersCreated, skipped, failed } = result;
+      const complete = isComplete({ applied, skipped, failed });
+      const counts = [applied, foldersCreated, skipped, failed].map(String);
       return {
-        title: t('toast_reorganizeSuccess'),
-        description: t('toast_reorganizeSuccessDesc'),
-        variant: 'success',
+        title: complete ? t('toast_reorganizeSuccess') : t('toast_reorganizePartial'),
+        description: complete
+          ? t('toast_reorganizeAppliedDesc', counts.slice(0, 2))
+          : t('toast_reorganizePartialDesc', counts),
+        variant: complete ? 'success' : 'destructive',
+        // A partial run stays open so the user sees which moves were left out.
+        keepOpen: !complete,
+        notes: result.issues.map((issue) =>
+          t(issue.reason === 'changed' ? 'ai_reorgIssueChanged' : 'ai_reorgIssueFailed', [
+            getBookmarkDisplayTitle(issue.title),
+          ]),
+        ),
+        undoExpiresAt: result.expiresAt,
+        undo:
+          applied > 0
+            ? async () => {
+                const undone = await result.undo();
+                return {
+                  title: undone.failed
+                    ? t('toast_reorganizeUndoPartial')
+                    : t('toast_reorganizeUndone'),
+                  description: t('toast_reorganizeUndoneDesc', [
+                    String(undone.restored),
+                    String(undone.failed),
+                  ]),
+                  variant: undone.failed ? 'destructive' : 'success',
+                };
+              }
+            : undefined,
       };
     },
   },

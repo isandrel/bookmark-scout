@@ -1289,9 +1289,29 @@
         "message": "Reorganization Complete",
         "description": "Toast title after applying an AI reorganization"
     },
-    "toast_reorganizeSuccessDesc": {
-        "message": "Bookmarks reorganized successfully",
-        "description": "Toast description after applying an AI reorganization"
+    "toast_reorganizeAppliedDesc": {
+        "message": "Moved: $1. New folders: $2.",
+        "description": "Toast description after applying an AI reorganization: bookmarks moved ($1) and new folders created ($2)"
+    },
+    "toast_reorganizePartial": {
+        "message": "Some moves were not applied",
+        "description": "Toast title when some reorganization moves were skipped or failed"
+    },
+    "toast_reorganizePartialDesc": {
+        "message": "Moved: $1. New folders: $2. Skipped because they changed after the preview: $3. Failed: $4.",
+        "description": "Partial reorganization outcome: moved ($1), new folders ($2), skipped because the bookmark changed after the preview ($3), failed ($4)"
+    },
+    "toast_reorganizeUndone": {
+        "message": "Reorganization undone",
+        "description": "Toast title after undoing an AI reorganization"
+    },
+    "toast_reorganizeUndoPartial": {
+        "message": "Some moves were not undone",
+        "description": "Toast title when undoing an AI reorganization could not move every bookmark back"
+    },
+    "toast_reorganizeUndoneDesc": {
+        "message": "Moved back: $1. Could not move back: $2.",
+        "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
     "error_importFailed": {
         "message": "Import failed: $1",
@@ -1371,6 +1391,10 @@
             }
         }
     },
+    "ai_reorgNewFolders": {
+        "message": "New folders: $1",
+        "description": "Reorganization summary badge: how many folders applying the plan creates"
+    },
     "ai_reorgViewOperations": {
         "message": "View operations ($count$)",
         "description": "Toggle for the reorganization operation list",
@@ -1384,6 +1408,18 @@
     "ai_reorgOp_move": {
         "message": "Move",
         "description": "Reorganization operation type"
+    },
+    "ai_reorgNewFolder": {
+        "message": "New folder",
+        "description": "Badge on a reorganization move whose target folder is created when the plan is applied"
+    },
+    "ai_reorgIssueChanged": {
+        "message": "$1: changed after the preview; left where it is",
+        "description": "A reorganization move skipped because its bookmark was moved, edited, or deleted after the preview ($1 is its title)"
+    },
+    "ai_reorgIssueFailed": {
+        "message": "$1: could not be moved",
+        "description": "A reorganization move the browser rejected ($1 is the bookmark title)"
     },
     "ai_reorgFrom": {
         "message": "From:",
@@ -4750,14 +4786,6 @@
     "ai_reorgPreviewRequired": {
         "message": "Preview must be confirmed before applying reorganization changes",
         "description": "Reorganization error when changes are applied before the preview is confirmed"
-    },
-    "ai_reorgTargetMissing": {
-        "message": "Cannot find the target folder for \"$1\"",
-        "description": "Reorganization error; $1 is the bookmark or folder title"
-    },
-    "ai_reorgChangeFailed": {
-        "message": "Could not change \"$1\": $2",
-        "description": "Reorganization error; $1 is the bookmark or folder title, $2 the browser's error"
     },
     "meta_languageName": {
         "message": "English",

@@ -1,6 +1,6 @@
 /**
  * AI-powered Folder Reorganization Service
- * Analyzes bookmarks and suggests moving them into existing folders.
+ * Analyzes bookmarks and suggests moving them into existing folders or new ones.
  */
 
 import { generateObject } from 'ai';
@@ -26,15 +26,21 @@ export interface FolderInfo {
   bookmarkCount: number;
 }
 
-/** Move a bookmark to another folder */
+/** Move a bookmark to another folder, creating the folder when the model suggested a new one. */
 export interface MoveBookmarkOp {
   type: 'move';
   bookmarkId: string;
   bookmarkTitle: string;
   bookmarkUrl: string;
+  /** The folder the bookmark was in when the plan was made; the move is skipped once it left. */
+  fromFolderId: string;
   fromFolderPath: string;
+  /** The full target path, including folders the move creates. */
   toFolderPath: string;
-  toFolderId?: string;
+  /** The existing target folder, or the existing folder `newFolderTitles` are created in. */
+  toFolderId: string;
+  /** Folders to create under `toFolderId`, outermost first; empty when the target exists. */
+  newFolderTitles: string[];
   confidence: number;
   reason: string;
 }
@@ -74,12 +80,13 @@ export type ApplyReorganizationOptions = {
   previewConfirmed?: boolean;
 };
 
-export type ApplyReorganizationResult = {
-  success: boolean;
-  errors: string[];
-  applied: number;
-  skipped: number;
-};
+/**
+ * What applying a plan did: `blocked` when the preview had to be confirmed first, otherwise the
+ * moves' counts, issues, and single-use undo from `applyBookmarkChanges`.
+ */
+export type ApplyReorganizationResult =
+  | { status: 'blocked'; error: string }
+  | ({ status: 'applied' } & BookmarkChangesResult);
 
 /** Reorganization limits from the setting defaults; callers override them with stored values. */
 function getReorgConfig(): ReorganizationConfig {
@@ -202,6 +209,77 @@ export function findFolderByPath(
   return folders.find(f => f.path === path);
 }
 
+type PlannedTarget = Pick<MoveBookmarkOp, 'toFolderId' | 'toFolderPath' | 'newFolderTitles'>;
+
+/**
+ * Where a suggested path lands: the folder with that path, or the deepest existing folder on it
+ * with the rest of the path to create inside. A path that starts with no existing folder is
+ * created inside `newRoot`. Undefined for an empty path.
+ */
+function planTargetFolder(
+  path: string,
+  folders: FolderInfo[],
+  newRoot: FolderInfo | undefined,
+): PlannedTarget | undefined {
+  const segments = path
+    .split(AI_FOLDER_PATH_SEPARATOR)
+    .map((segment) => segment.trim())
+    .filter(Boolean);
+  if (segments.length === 0) return undefined;
+  for (let depth = segments.length; depth > 0; depth -= 1) {
+    const prefix = segments.slice(0, depth).join(AI_FOLDER_PATH_SEPARATOR);
+    const folder = findFolderByPath(folders, prefix);
+    if (folder) {
+      const newFolderTitles = segments.slice(depth);
+      return {
+        toFolderId: folder.id,
+        toFolderPath: [folder.path, ...newFolderTitles].join(AI_FOLDER_PATH_SEPARATOR),
+        newFolderTitles,
+      };
+    }
+  }
+  if (!newRoot) return undefined;
+  return {
+    toFolderId: newRoot.id,
+    toFolderPath: [newRoot.path, ...segments].join(AI_FOLDER_PATH_SEPARATOR),
+    newFolderTitles: segments,
+  };
+}
+
+/** How many folders applying the plan creates; every new level counts once. */
+export function countPlannedNewFolders(plan: Pick<ReorganizationPlan, 'operations'>): number {
+  const folders = new Set<string>();
+  for (const op of plan.operations) {
+    op.newFolderTitles.forEach((_title, index) => {
+      folders.add(JSON.stringify([op.toFolderId, ...op.newFolderTitles.slice(0, index + 1)]));
+    });
+  }
+  return folders.size;
+}
+
+/**
+ * The folder new top-level categories go into: the folder the scope is, or the bookmarks bar
+ * when the scope is the whole tree.
+ */
+function findNewFolderRoot(
+  scope: BookmarkTreeNode[],
+  folders: FolderInfo[],
+): FolderInfo | undefined {
+  const scopeFolder = scope.find((node) => !node.url && !isBookmarkTreeRoot(node));
+  const id = scopeFolder?.id ?? findBookmarksBarFolder(scope)?.id;
+  return folders.find((folder) => folder.id === id);
+}
+
+/** The folder limits sent to the model; unlimited ones (-1) are left out. */
+function limitsForRequest(cfg: ReorganizationConfig) {
+  const limits = {
+    maxCategories: cfg.maxCategories,
+    minItemsPerFolder: cfg.minItemsPerFolder,
+    maxItemsPerFolder: cfg.maxItemsPerFolder,
+  };
+  return Object.fromEntries(Object.entries(limits).filter(([, value]) => value > 0));
+}
+
 // ============================================================================
 // Main Service
 // ============================================================================
@@ -263,11 +341,7 @@ export async function generateReorganizationPlan(
         path: folder.path,
         bookmarkCount: folder.bookmarkCount,
       })),
-      config: {
-        maxCategories: cfg.maxCategories,
-        minItemsPerFolder: cfg.minItemsPerFolder,
-        maxItemsPerFolder: cfg.maxItemsPerFolder,
-      },
+      config: limitsForRequest(cfg),
     };
     const { object } = await generateObject({
       model,
@@ -285,6 +359,7 @@ export async function generateReorganizationPlan(
     'AI returned operations',
   );
 
+  const newFolderRoot = findNewFolderRoot(bookmarks, allFolders);
   const seenBookmarkIds = new Set<string>();
   let excludedLowConfidence = 0;
   const operations: ReorganizationOperation[] = batchResults.flatMap(
@@ -305,8 +380,11 @@ export async function generateReorganizationPlan(
           return [];
         }
 
-        const targetFolder = findFolderByPath(allFolders, op.toFolderPath);
-        if (bookmark.currentFolderPath === op.toFolderPath) {
+        const target = planTargetFolder(op.toFolderPath, allFolders, newFolderRoot);
+        if (
+          !target ||
+          (target.newFolderTitles.length === 0 && target.toFolderId === bookmark.currentFolderId)
+        ) {
           return [];
         }
 
@@ -317,9 +395,9 @@ export async function generateReorganizationPlan(
             bookmarkId: op.bookmarkId,
             bookmarkTitle: bookmark.title,
             bookmarkUrl: bookmark.url,
+            fromFolderId: bookmark.currentFolderId,
             fromFolderPath: bookmark.currentFolderPath,
-            toFolderPath: op.toFolderPath,
-            toFolderId: targetFolder?.id,
+            ...target,
             confidence: op.confidence,
             reason: op.reason,
           } satisfies MoveBookmarkOp,
@@ -356,7 +434,10 @@ export async function generateReorganizationPlan(
 }
 
 /**
- * Apply a reorganization plan (with user confirmation).
+ * Applies a reorganization plan the user confirmed, in plan order. Each move is skipped when its
+ * bookmark was deleted, edited, or moved since the preview, so a stale plan never overrides a
+ * newer change; suggested folders that do not exist yet are created as part of the same
+ * undoable change set.
  */
 export async function applyReorganizationPlan(
   plan: ReorganizationPlan,
@@ -366,39 +447,21 @@ export async function applyReorganizationPlan(
   const config = resolveReorgConfig({
     dryRunFirst: plan.safety.dryRunFirst,
     minConfidence: plan.safety.minConfidence,
-    batchSize: plan.safety.batchSize,
   });
-  const errors: string[] = [];
-  const operations = plan.operations.filter(
-    (operation) => operation.confidence >= config.minConfidence,
-  );
-  const skipped = plan.operations.length - operations.length;
-  let applied = 0;
-
   if (config.dryRunFirst && !previewConfirmed) {
-    return {
-      success: false,
-      errors: [t('ai_reorgPreviewRequired')],
-      applied,
-      skipped,
-    };
+    return { status: 'blocked', error: t('ai_reorgPreviewRequired') };
   }
 
-  // Preserve operation order while limiting each mutation batch to the configured size.
-  for (const operationBatch of chunkItems(operations, config.batchSize)) {
-    for (const op of operationBatch) {
-      if (!op.toFolderId) {
-        errors.push(t('ai_reorgTargetMissing', op.bookmarkTitle));
-        continue;
-      }
-      try {
-        await moveBookmark(op.bookmarkId, { parentId: op.toFolderId });
-        applied += 1;
-      } catch (err) {
-        errors.push(t('ai_reorgChangeFailed', [op.bookmarkTitle, getErrorMessage(err)]));
-      }
-    }
-  }
-
-  return { success: errors.length === 0, errors, applied, skipped };
+  const changes = plan.operations
+    .filter((operation) => operation.confidence >= config.minConfidence)
+    .map(
+      (op): BookmarkChange => ({
+        kind: 'move',
+        id: op.bookmarkId,
+        title: op.bookmarkTitle,
+        expect: { parentId: op.fromFolderId, url: op.bookmarkUrl },
+        to: { parentId: op.toFolderId, createPath: op.newFolderTitles },
+      }),
+    );
+  return { status: 'applied', ...(await applyBookmarkChanges(changes)) };
 }

@@ -9,6 +9,7 @@ import {
   CheckCircle,
   ChevronDown,
   Code2,
+  FolderPlus,
   Loader2,
   Sparkles,
 } from 'lucide-react';
@@ -24,6 +25,10 @@ interface ReorganizationDialogProps {
   onApply: () => Promise<void>;
   onCancel: () => void;
   errors?: string[];
+  /** A partial apply's outcome; it replaces the plan, and Apply is no longer offered. */
+  notice?: { message: string; notes: string[]; canUndo: boolean } | null;
+  /** Reverts the applied moves; shown while `notice.canUndo`. */
+  onUndo?: () => void;
   /**
    * The bookmarks bar's title in this browser. Plan paths start with it, so it is left out of
    * the shown paths.
@@ -54,6 +59,11 @@ function OperationItem({
           <Badge variant="outline" className="text-xs">
             {t('ai_reorgOp_move')}
           </Badge>
+          {op.newFolderTitles.length > 0 ? (
+            <Badge variant="secondary" className="text-xs">
+              {t('ai_reorgNewFolder')}
+            </Badge>
+          ) : null}
         </div>
         <div className="flex flex-col gap-2">
           <div className="font-medium truncate" title={op.bookmarkTitle}>
@@ -103,9 +113,12 @@ export function ReorganizationDialog({
   onApply,
   onCancel,
   errors = [],
+  notice,
+  onUndo,
   bookmarksBarTitle,
 }: ReorganizationDialogProps) {
   const [isApplying, setIsApplying] = useState(false);
+  const newFolders = plan ? countPlannedNewFolders(plan) : 0;
 
   const handleApply = async () => {
     setIsApplying(true);
@@ -148,6 +161,24 @@ export function ReorganizationDialog({
               </div>
             </div>
           </div>
+        ) : notice ? (
+          <div
+            role="alert"
+            data-testid="reorganization-result"
+            className="space-y-2 rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm"
+          >
+            <p>{notice.message}</p>
+            {notice.notes.length > 0 ? (
+              <ul className="max-h-64 list-disc space-y-1 overflow-y-auto pl-5 text-xs">
+                {notice.notes.map((note, index) => (
+                  // Two bookmarks can share a title, so the position disambiguates.
+                  <li key={`${note}-${index}`} className="break-words">
+                    {note}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
         ) : plan ? (
           <ScrollArea className="flex-1 min-h-0">
             <div className="space-y-4 pr-4">
@@ -158,6 +189,12 @@ export function ReorganizationDialog({
                     <ArrowRight className="h-3 w-3" />
                     {t('ai_reorgMoves', String(plan.operations.length))}
                   </Badge>
+                  {newFolders > 0 ? (
+                    <Badge variant="outline" className="gap-1">
+                      <FolderPlus className="h-3 w-3" />
+                      {t('ai_reorgNewFolders', String(newFolders))}
+                    </Badge>
+                  ) : null}
                 </div>
               )}
 
@@ -240,10 +277,27 @@ export function ReorganizationDialog({
         )}
 
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={onCancel} disabled={isApplying}>
-            {t('action_cancel')}
-          </Button>
-          {plan && plan.operations.length > 0 && (
+          {notice ? (
+            <>
+              {notice.canUndo && onUndo ? (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    onUndo();
+                    onCancel();
+                  }}
+                >
+                  {t('action_undo')}
+                </Button>
+              ) : null}
+              <Button onClick={onCancel}>{t('action_close')}</Button>
+            </>
+          ) : (
+            <Button variant="outline" onClick={onCancel} disabled={isApplying}>
+              {t('action_cancel')}
+            </Button>
+          )}
+          {!notice && plan && plan.operations.length > 0 && (
             <Button onClick={handleApply} disabled={isApplying}>
               {isApplying ? (
                 <>

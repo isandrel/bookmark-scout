@@ -129,6 +129,40 @@ const PROMPT_VARIABLES = {
 /** The settings a task's variables are made from; full Settings always fit. */
 export type PromptSettings<T extends PromptTaskId> = Parameters<(typeof PROMPT_VARIABLES)[T]>[0];
 
+/** A limit setting is unlimited at -1, the only value below its minimum of 1. */
+const hasLimit = (value: number) => value > 0;
+
+/** Rules in config/ai/prompts.toml that state the reorganization folder limits. */
+const REORGANIZATION_LIMIT_RULES = {
+  maxCategories: 'reorganization_max_categories',
+  folderSize: 'reorganization_folder_size',
+  minFolderSize: 'reorganization_min_folder_size',
+} as const;
+
+for (const rule of Object.values(REORGANIZATION_LIMIT_RULES)) {
+  if (!(rule in prompts.rules)) throw new Error(`config/ai/prompts.toml: rules.${rule} is missing`);
+}
+
+/**
+ * Rules a task adds only for some settings, after its fixed rules: a limit that is unlimited is
+ * left out instead of telling the model "at most -1".
+ */
+const SETTING_RULES: {
+  [T in PromptTaskId]?: (settings: PromptSettings<T>) => string[];
+} = {
+  folder_reorganization: (settings) => {
+    const rules: string[] = [];
+    if (hasLimit(settings.aiMaxCategories)) rules.push(REORGANIZATION_LIMIT_RULES.maxCategories);
+    if (hasLimit(settings.aiMaxItemsPerFolder)) {
+      rules.push(REORGANIZATION_LIMIT_RULES.folderSize);
+    } else if (settings.aiMinItemsPerFolder > 1) {
+      // At least one bookmark per folder goes without saying.
+      rules.push(REORGANIZATION_LIMIT_RULES.minFolderSize);
+    }
+    return rules;
+  },
+};
+
 /** The values a task fills into its {{variables}}. */
 export function getPromptVariables<T extends PromptTaskId>(
   taskId: T,
@@ -241,8 +275,12 @@ export async function buildPrompt<T extends PromptTaskId>(
   options: BuildPromptOptions = {},
 ): Promise<{ system: string }> {
   const prompt = (await getActivePromptText(taskId)) ?? PROMPT_TASKS[taskId].system;
+  const settingRules = SETTING_RULES[taskId] as
+    | ((settings: PromptSettings<T>) => string[])
+    | undefined;
   const rules = [
     ...prompts.tasks[taskId].rules,
+    ...(settingRules?.(settings) ?? []),
     ...(options.hasPageText ? ['page_text'] : []),
   ].map((name) => prompts.rules[name]);
   const variables = getPromptVariables(taskId, settings);
