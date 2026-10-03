@@ -7,6 +7,11 @@ type OptionsPanelProps = Omit<ComponentProps<'section'>, 'id' | 'title'> & {
   description: ReactNode;
   /** Controls beside the heading, such as an Add button or an on/off switch. */
   actions?: ReactNode;
+  /**
+   * `beside` (default) keeps small actions, such as a switch, next to the text and narrows the
+   * text. `wrap` moves wide actions, such as a labeled button, under the text when both don't fit.
+   */
+  actionsLayout?: 'beside' | 'wrap';
 };
 
 /** A boxed section of an Options page with a heading, a description, and optional actions. */
@@ -15,18 +20,20 @@ export function OptionsPanel({
   title,
   description,
   actions,
+  actionsLayout = 'beside',
   children,
   ...props
 }: OptionsPanelProps) {
   const headingId = `${id}-heading`;
+  const wrap = actionsLayout === 'wrap';
   return (
     <section
       aria-labelledby={headingId}
       className="space-y-3 rounded-lg border bg-card p-4"
       {...props}
     >
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
+      <div className={cn('flex flex-wrap items-start justify-between', wrap ? 'gap-2' : 'gap-3')}>
+        <div className={cn('min-w-0', !wrap && 'flex-1')}>
           <h3 id={headingId} className="text-base font-medium">
             {title}
           </h3>

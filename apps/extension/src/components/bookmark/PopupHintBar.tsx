@@ -1,10 +1,13 @@
-/** Keys and labels from `use-popup-shortcuts.ts`; list only shortcuts that exist there. */
-const HINTS = [
-  { keys: ['/'], label: 'popup_hintSearch' },
+/**
+ * Shortcuts of `use-popup-shortcuts.ts`; list only ones that exist there. The search key is the
+ * configured binding; the tree keys follow the standard tree pattern and are fixed.
+ */
+const HINTS: readonly { keys: readonly string[]; label: MessageKey }[] = [
+  { keys: shortcutKeyCaps(SHORTCUT_BINDINGS.popup.focusSearch[0]), label: 'popup_hintSearch' },
   { keys: ['↑', '↓'], label: 'popup_hintMove' },
   { keys: ['←', '→'], label: 'popup_hintExpand' },
   { keys: ['↵'], label: 'popup_hintEnter' },
-] as const;
+];
 
 /** Popup and side panel footer that names the tree's keyboard shortcuts. */
 export function PopupHintBar() {

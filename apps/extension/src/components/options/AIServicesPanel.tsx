@@ -116,6 +116,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
   return (
     <OptionsPanel
       id="ai-services"
+      actionsLayout="wrap"
       data-testid="ai-services"
       title={t('options_aiServices')}
       description={t('options_aiServicesDescription')}
