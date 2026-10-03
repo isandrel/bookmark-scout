@@ -58,14 +58,15 @@ export function getBookmarkTitle(
   info: Browser.contextMenus.OnClickData & { linkText?: string },
   tab?: Browser.tabs.Tab,
 ): string {
-  const untitled = t('contextMenu_untitled');
   switch (namingSource) {
     case 'page_title':
-      return tab?.title || untitled;
+      return getBookmarkDisplayTitle(tab?.title);
     case 'link_url':
-      return info.linkUrl || untitled;
+      return getBookmarkDisplayTitle(info.linkUrl);
     default:
-      return info.linkText?.trim() || info.selectionText?.trim() || tab?.title || untitled;
+      return getBookmarkDisplayTitle(
+        info.linkText?.trim() || info.selectionText?.trim() || tab?.title,
+      );
   }
 }
 
@@ -101,6 +102,27 @@ export interface ContextMenuProvider {
 
 const MENU_PREFIX = 'bookmark-scout';
 const SEPARATOR = '::';
+const ROOT_MENU_ID = `${MENU_PREFIX}${SEPARATOR}root`;
+const EMPTY_MENU_ID = `${MENU_PREFIX}${SEPARATOR}empty`;
+/** Every item is offered on links only. */
+const MENU_CONTEXTS: Browser.contextMenus.CreateProperties['contexts'] = ['link'];
+
+/** Submenu label key and icon per item type; unknown types use the type name. */
+const CATEGORY_MENUS: Record<ContextMenuItem['type'], { labelKey: MessageKey; icon: string }> = {
+  recent: { labelKey: 'contextMenu_recentFolders', icon: '📁' },
+  ai: { labelKey: 'contextMenu_aiSuggestions', icon: '✨' },
+  static: { labelKey: 'contextMenu_defaultFolders', icon: '📚' },
+};
+
+/**
+ * Why a click saved nothing. `disabled` is expected (a click on a menu that the setting has just
+ * turned off), so callers do not report it as a failure.
+ */
+export type ContextMenuClickErrorCode = 'invalid-item' | 'no-link' | 'disabled' | 'save-failed';
+
+export type ContextMenuClickResult =
+  | { success: true; folderTitle: string; bookmarkTitle: string }
+  | { success: false; code: ContextMenuClickErrorCode; error?: string };
 
 export function createMenuItemId(type: string, folderId: string): string {
   return `${MENU_PREFIX}${SEPARATOR}${type}${SEPARATOR}${folderId}`;
@@ -183,9 +205,9 @@ class ContextMenuManager {
 
     // Recreate root
     browser.contextMenus.create({
-      id: `${MENU_PREFIX}${SEPARATOR}root`,
+      id: ROOT_MENU_ID,
       title: t('contextMenu_saveToFolder'),
-      contexts: ['link'],
+      contexts: MENU_CONTEXTS,
     });
 
     // Group items by type
@@ -213,13 +235,6 @@ class ContextMenuManager {
       return;
     }
 
-    // Category labels and icons
-    const categoryLabels: Record<string, { label: string; icon: string }> = {
-      recent: { label: `📁 ${t('contextMenu_recentFolders')}`, icon: '📁' },
-      ai: { label: `✨ ${t('contextMenu_aiSuggestions')}`, icon: '✨' },
-      static: { label: `📚 ${t('contextMenu_defaultFolders')}`, icon: '📚' },
-    };
-
     // Track if we have any items
     let hasItems = false;
     // Menu ids must be unique; a repeated folder would otherwise fail with "duplicate id".
@@ -230,15 +245,16 @@ class ContextMenuManager {
       if (items.length === 0) continue;
       hasItems = true;
 
-      const categoryInfo = categoryLabels[type] || { label: type, icon: '' };
+      const category = CATEGORY_MENUS[type as ContextMenuItem['type']];
+      const icon = category?.icon ?? '';
 
       // For categories with only one item (like Bookmarks Bar), add directly
       if (type === 'static' && items.length === 1) {
         browser.contextMenus.create({
           id: createMenuItemId(type, items[0].folderId),
-          title: `${categoryInfo.icon} ${items[0].folderTitle}`,
-          parentId: `${MENU_PREFIX}${SEPARATOR}root`,
-          contexts: ['link'],
+          title: `${icon} ${items[0].folderTitle}`,
+          parentId: ROOT_MENU_ID,
+          contexts: MENU_CONTEXTS,
         });
         continue;
       }
@@ -247,9 +263,9 @@ class ContextMenuManager {
       const categoryId = `${MENU_PREFIX}${SEPARATOR}category${SEPARATOR}${type}`;
       browser.contextMenus.create({
         id: categoryId,
-        title: categoryInfo.label,
-        parentId: `${MENU_PREFIX}${SEPARATOR}root`,
-        contexts: ['link'],
+        title: category ? `${icon} ${t(category.labelKey)}` : type,
+        parentId: ROOT_MENU_ID,
+        contexts: MENU_CONTEXTS,
       });
 
       // Add items to the category submenu
@@ -261,7 +277,7 @@ class ContextMenuManager {
           id,
           title: item.folderTitle,
           parentId: categoryId,
-          contexts: ['link'],
+          contexts: MENU_CONTEXTS,
         });
       }
     }
@@ -269,10 +285,10 @@ class ContextMenuManager {
     // If no items, show a disabled placeholder
     if (!hasItems) {
       browser.contextMenus.create({
-        id: `${MENU_PREFIX}${SEPARATOR}empty`,
+        id: EMPTY_MENU_ID,
         title: t('contextMenu_noFolders'),
-        parentId: `${MENU_PREFIX}${SEPARATOR}root`,
-        contexts: ['link'],
+        parentId: ROOT_MENU_ID,
+        contexts: MENU_CONTEXTS,
         enabled: false,
       });
     }
@@ -284,28 +300,23 @@ class ContextMenuManager {
   async handleClick(
     info: Browser.contextMenus.OnClickData,
     tab?: Browser.tabs.Tab,
-  ): Promise<{
-    success: boolean;
-    folderTitle?: string;
-    bookmarkTitle?: string;
-    error?: string;
-  }> {
+  ): Promise<ContextMenuClickResult> {
     const parsed = parseMenuItemId(info.menuItemId as string);
     if (!parsed) {
-      return { success: false, error: 'Invalid menu item' };
+      return { success: false, code: 'invalid-item' };
     }
 
     const { folderId } = parsed;
     const linkUrl = info.linkUrl;
 
     if (!linkUrl) {
-      return { success: false, error: 'No link URL' };
+      return { success: false, code: 'no-link' };
     }
 
     try {
       const settings = await getContextMenuSettings();
       if (!settings.enabled) {
-        return { success: false, error: 'Context menu is disabled' };
+        return { success: false, code: 'disabled' };
       }
       const bookmarkTitle = getBookmarkTitle(settings.naming, info, tab);
 
@@ -317,7 +328,7 @@ class ContextMenuManager {
       });
 
       // Get folder title for feedback
-      const [folder] = await browser.bookmarks.get(folderId);
+      const folder = await getBookmark(folderId);
 
       // Update recent folders
       await addRecentFolder(folderId, folder.title);
@@ -331,10 +342,7 @@ class ContextMenuManager {
         bookmarkTitle: bookmark.title,
       };
     } catch (error) {
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      };
+      return { success: false, code: 'save-failed', error: getErrorMessage(error) };
     }
   }
 }
@@ -379,7 +387,7 @@ export const recentFoldersProvider: ContextMenuProvider = {
         folderId: folder.id,
         folderTitle: folder.title,
         type: 'recent' as const,
-        icon: '📁',
+        icon: CATEGORY_MENUS.recent.icon,
       }));
     } catch (error) {
       console.error('[ContextMenu] Failed to get recent folders:', error);
@@ -389,22 +397,25 @@ export const recentFoldersProvider: ContextMenuProvider = {
 };
 
 /**
- * Provider for static "Bookmarks Bar" option.
+ * Provider for static "Bookmarks Bar" option. The folder is looked up in the tree, because its id
+ * differs by browser (Firefox calls it the bookmarks toolbar).
  */
 export const bookmarksBarProvider: ContextMenuProvider = {
   id: 'bookmarks-bar',
   priority: 100, // Lower priority = appears last
 
   async getItems(): Promise<ContextMenuItem[]> {
+    const folderId = await getBookmarksBarId();
+    if (!folderId) return [];
     const title = t('contextMenu_bookmarksBar');
     return [
       {
         id: 'static-bookmarks-bar',
         title,
-        folderId: '1', // Chrome's Bookmarks Bar folder ID
+        folderId,
         folderTitle: title,
         type: 'static' as const,
-        icon: '📚',
+        icon: CATEGORY_MENUS.static.icon,
       },
     ];
   },

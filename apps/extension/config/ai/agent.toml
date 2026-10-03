@@ -4,5 +4,9 @@
 max_steps = 8
 # Bookmarks returned by one bookmark search
 max_bookmark_results = 20
+# Bookmark search score per query word found in the title
+search_title_weight = 2
+# Bookmark search score per query word found in the URL, folder path, saved tags, or summary
+search_text_weight = 1
 # Web searches per answer at most, where the provider lets the limit be set (Anthropic)
 web_search_max_uses = 3

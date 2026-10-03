@@ -4,7 +4,22 @@
  * Uses config-driven settings and i18n for all user-facing text.
  */
 
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+
+const FILENAME_PLACEHOLDERS = ['prefix', 'scope', 'date', 'extension'] as const;
+
+const config = readConfig(
+  'data/export',
+  z.strictObject({
+    filename_pattern: z
+      .string()
+      .refine((pattern) => pattern.includes('{extension}'), 'must contain {extension}'),
+  }),
+);
+
+/** Id of the container node an export wraps the exported entries in; never a browser id. */
+const EXPORT_ROOT_ID = 'export-root';
 
 // ============================================================================
 // Export Format Interface (Strategy Pattern)
@@ -25,7 +40,7 @@ export interface ExportOptions {
 
 export interface ExportFormat {
   /** i18n key for format name */
-  nameKey: string;
+  nameKey: MessageKey;
   /** File extension (without dot) */
   extension: string;
   /** MIME type for download */
@@ -43,12 +58,14 @@ export interface ExportFormat {
 // Built-in Format Strategies
 // ============================================================================
 
-const escapeHtml = (text: string): string =>
-  text
+/** Escapes text for HTML element content and double-quoted attribute values. */
+export function escapeHtml(text: string): string {
+  return text
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
 
 /**
  * Chrome/Netscape HTML format - compatible with browser import
@@ -66,20 +83,20 @@ export const htmlFormat: ExportFormat = {
 
       if (n.url) {
         const dateAttr =
-          includeDates && n.dateAdded ? ` ADD_DATE="${Math.floor(n.dateAdded / 1000)}"` : '';
+          includeDates && n.dateAdded ? ` ADD_DATE="${Math.floor(n.dateAdded / MS_PER_SECOND)}"` : '';
         return `${nodeIndent}<DT><A HREF="${escapeHtml(n.url)}"${dateAttr}>${escapeHtml(n.title)}</A>\n`;
       }
 
       const dateAttr =
         includeDates && n.dateGroupModified
-          ? ` ADD_DATE="${Math.floor(n.dateGroupModified / 1000)}"`
+          ? ` ADD_DATE="${Math.floor(n.dateGroupModified / MS_PER_SECOND)}"`
           : '';
       const children = n.children?.map((c) => renderNode(c, depth + 1)).join('') ?? '';
       return `${nodeIndent}<DT><H3${dateAttr}>${escapeHtml(n.title)}</H3>\n${nodeIndent}<DL><p>\n${children}${nodeIndent}</DL><p>\n`;
     };
 
     const content = root.children?.map((c) => renderNode(c, 1)).join('') ?? '';
-    const htmlTitle = escapeHtml(t('export_htmlTitle') || 'Bookmarks');
+    const htmlTitle = escapeHtml(t('export_htmlTitle'));
 
     return `<!DOCTYPE NETSCAPE-Bookmark-file-1>
 <!-- This is an automatically generated file.
@@ -227,10 +244,10 @@ export const csvFormat: ExportFormat = {
     const includeUrls = options?.includeUrls ?? defaultSettings.exportIncludeUrls;
     const rows: string[][] = [
       [
-        t('export_csvTitle') || 'Title',
-        ...(includeUrls ? [t('export_csvUrl') || 'URL'] : []),
-        t('export_csvFolder') || 'Folder',
-        ...(includeDates ? [t('export_csvDateAdded') || 'Date Added'] : []),
+        t('export_csvTitle'),
+        ...(includeUrls ? [t('export_csvUrl')] : []),
+        t('export_csvFolder'),
+        ...(includeDates ? [t('export_csvDateAdded')] : []),
       ],
     ];
 
@@ -274,33 +291,12 @@ export const exportFormats: Record<string, ExportFormat> = {
  * Get format display name using i18n
  */
 export function getFormatName(format: ExportFormat): string {
-  return t(format.nameKey as Parameters<typeof t>[0]) || format.nameKey;
+  return t(format.nameKey);
 }
 
 // ============================================================================
 // Export Functions
 // ============================================================================
-
-/**
- * Get a subtree from a bookmark tree by folder ID
- */
-export function getSubtree(
-  root: BookmarkTreeNode,
-  folderId: string
-): BookmarkTreeNode | null {
-  if (root.id === folderId) {
-    return root;
-  }
-
-  if (root.children) {
-    for (const child of root.children) {
-      const found = getSubtree(child, folderId);
-      if (found) return found;
-    }
-  }
-
-  return null;
-}
 
 /**
  * Export bookmarks to a string in the specified format
@@ -341,7 +337,7 @@ export function buildExportRoot(scopeNodes: BookmarkTreeNode[]): BookmarkTreeNod
   const children = scopeNodes.flatMap((node) =>
     !node.url && !node.parentId && !node.title ? (node.children ?? []) : [node],
   );
-  return { id: 'export-root', title: t('export_htmlTitle') || 'Bookmarks', children };
+  return { id: EXPORT_ROOT_ID, title: t('export_htmlTitle'), children };
 }
 
 /** Whether an export in `format` writes bookmark URLs, given the `includeUrls` setting. */
@@ -357,7 +353,8 @@ export function countExportedBookmarks(root: BookmarkTreeNode): number {
 }
 
 /**
- * Generate a filename for export: `<prefix><scope>_<local YYYY-MM-DD>.<ext>`
+ * Generate a filename for export from the configured pattern, by default
+ * `<prefix><scope>_<local YYYY-MM-DD>.<ext>`.
  */
 export function generateFilename(
   folderName: string,
@@ -381,5 +378,14 @@ export function generateFilename(
   const safePrefix = prefix.replace(/[\\/:*?"<>|]/g, '_');
   const pad = (value: number) => String(value).padStart(2, '0');
   const date = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-  return `${safePrefix}${sanitized}_${date}.${format.extension}`;
+  const values: Record<(typeof FILENAME_PLACEHOLDERS)[number], string> = {
+    prefix: safePrefix,
+    scope: sanitized,
+    date,
+    extension: format.extension,
+  };
+  return FILENAME_PLACEHOLDERS.reduce(
+    (name, placeholder) => name.split(`{${placeholder}}`).join(values[placeholder]),
+    config.filename_pattern,
+  );
 }

@@ -15,3 +15,5 @@ concurrency = 4
 skip_private_hosts = true
 # Host names ending in these labels count as local, in addition to private IP addresses
 private_host_suffixes = ["localhost", "local", "internal", "lan", "home.arpa"]
+# Elements dropped from the readable text: media and code cost tokens and say little about the topic
+drop_elements = ["img", "picture", "video", "audio", "iframe", "script", "style"]

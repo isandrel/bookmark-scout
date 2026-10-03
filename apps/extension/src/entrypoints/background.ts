@@ -3,10 +3,6 @@
  * Handles context menu initialization and event listeners.
  */
 
-function collectBookmarkIds(node: Browser.bookmarks.BookmarkTreeNode): string[] {
-  return [node.id, ...(node.children?.flatMap(collectBookmarkIds) ?? [])];
-}
-
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
   // Handle context menu clicks
@@ -17,13 +13,13 @@ export default defineBackground(() => {
       console.log('[Background] Bookmark saved from context menu');
       // Note: Toast notifications would need to be shown in content script or popup
       // For now, we log success
-    } else if (result.error !== 'Context menu is disabled') {
-      console.error('[Background] Failed to save bookmark:', result.error);
+    } else if (result.code !== 'disabled') {
+      console.error('[Background] Failed to save bookmark:', result.code, result.error ?? '');
     }
   });
 
   browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
-    const removedIds = collectBookmarkIds(removeInfo.node);
+    const removedIds = subtreeIds(removeInfo.node);
     void removeStoredBookmarkMetadata(removedIds).catch((error) => {
       console.error('[Background] Failed to remove bookmark metadata:', error);
     });

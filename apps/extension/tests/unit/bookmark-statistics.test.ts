@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import { collectBookmarkStatistics, getScopedNodes } from '@/services/bookmark-tooling';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -105,9 +106,10 @@ describe('bookmark statistics', () => {
     });
     expect(stats.deepestLevel).toBe(2);
     expect(stats.depthBreakdown).toEqual([{ level: 2, count: 3 }]);
+    const untitledLabel = `Bookmarks Bar / ${getBookmarkDisplayTitle('')}`;
     expect(stats.topFolders).toEqual([
-      { label: 'Bookmarks Bar / bookmarks_untitled', count: 2 },
-      { label: 'Bookmarks Bar / bookmarks_untitled', count: 1 },
+      { label: untitledLabel, count: 2 },
+      { label: untitledLabel, count: 1 },
     ]);
     expect(
       collectBookmarkStatistics(getScopedNodes(untitled, '20', 'folder'), options).deepestLevel,

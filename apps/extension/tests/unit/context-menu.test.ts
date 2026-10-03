@@ -3,7 +3,10 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
 import { createBookmark } from '@/services/bookmarks';
 
-vi.mock('@/services/bookmarks', () => ({ createBookmark: vi.fn() }));
+vi.mock('@/services/bookmarks', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/services/bookmarks')>()),
+  createBookmark: vi.fn(),
+}));
 vi.mock('@/lib/recent-folders-storage', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/recent-folders-storage')>()),
   addRecentFolder: vi.fn(),
@@ -12,6 +15,41 @@ vi.mock('@/lib/recent-folders-storage', async (importOriginal) => ({
 
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const MENU_ID = 'bookmark-scout::static::1';
+
+type TreeFixture = Browser.bookmarks.BookmarkTreeNode[];
+
+const folder = (id: string, parentId: string, title: string, folderType?: string) =>
+  ({ id, parentId, title, syncing: false, children: [], ...(folderType ? { folderType } : {}) }) as
+    Browser.bookmarks.BookmarkTreeNode;
+
+/** Chrome 134+: permanent folders carry `folderType`. */
+const chromeTree: TreeFixture = [
+  {
+    id: '0',
+    title: '',
+    syncing: false,
+    children: [
+      folder('1', '0', 'Bookmarks bar', 'bookmarks-bar'),
+      folder('2', '0', 'Other bookmarks', 'other'),
+    ],
+  },
+];
+
+/** Firefox: fixed GUIDs, no `folderType`, and the menu folder comes before the toolbar. */
+const firefoxTree: TreeFixture = [
+  {
+    id: 'root________',
+    title: '',
+    syncing: false,
+    children: [
+      folder('menu________', 'root________', 'Bookmarks Menu'),
+      folder('toolbar_____', 'root________', 'Bookmarks Toolbar'),
+      folder('unfiled_____', 'root________', 'Other Bookmarks'),
+    ],
+  },
+];
+
+let bookmarkTree: TreeFixture;
 
 let menus: Map<string, Browser.contextMenus.CreateProperties>;
 let contextMenu: typeof import('@/services/context-menu');
@@ -50,6 +88,8 @@ beforeEach(async () => {
   vi.spyOn(fakeBrowser.bookmarks, 'get').mockImplementation((async (id: string) => [
     { id, title: 'Bookmarks Bar', syncing: false },
   ]) as typeof fakeBrowser.bookmarks.get);
+  bookmarkTree = chromeTree;
+  vi.spyOn(fakeBrowser.bookmarks, 'getTree').mockImplementation(async () => bookmarkTree);
 
   vi.mocked(getRecentFolders).mockResolvedValue([]);
   vi.mocked(addRecentFolder).mockResolvedValue();
@@ -91,7 +131,7 @@ describe('context menu settings', () => {
     const blocked = await contextMenu.contextMenuManager.handleClick(click, {
       title: 'Page title',
     });
-    expect(blocked).toEqual({ success: false, error: 'Context menu is disabled' });
+    expect(blocked).toEqual({ success: false, code: 'disabled' });
     expect(createBookmark).not.toHaveBeenCalled();
 
     await setSettings({ contextMenuEnabled: true });
@@ -175,6 +215,49 @@ describe('context menu settings', () => {
     await rebuilding;
 
     expect(menus.size).toBe(0);
+  });
+});
+
+describe('context menu bookmarks bar item', () => {
+  it('saves to the bookmarks bar the browser reports, not a fixed id', async () => {
+    bookmarkTree = firefoxTree;
+    await contextMenu.initializeContextMenu();
+    const firefoxMenuId = 'bookmark-scout::static::toolbar_____';
+    expect(menus.has(firefoxMenuId)).toBe(true);
+    expect(menus.has(MENU_ID)).toBe(false);
+
+    const result = await contextMenu.contextMenuManager.handleClick(
+      {
+        menuItemId: firefoxMenuId,
+        linkUrl: 'https://example.test/story',
+        editable: false,
+        pageUrl: 'https://example.test',
+      },
+      { title: 'Page title' } as Browser.tabs.Tab,
+    );
+    expect(result.success).toBe(true);
+    expect(createBookmark).toHaveBeenCalledWith(
+      expect.objectContaining({ parentId: 'toolbar_____' }),
+    );
+  });
+
+  it('finds the bar by folderType, the Firefox toolbar id, then the first permanent folder', async () => {
+    const { findBookmarksBarFolder } = await import('@/services/bookmarks');
+    const legacyChrome = [
+      { id: '0', title: '', children: [folder('1', '0', 'Bar'), folder('2', '0', 'Other')] },
+    ];
+    const reordered = [
+      {
+        id: '0',
+        title: '',
+        children: [folder('2', '0', 'Other', 'other'), folder('9', '0', 'Bar', 'bookmarks-bar')],
+      },
+    ];
+    expect(findBookmarksBarFolder(chromeTree)?.id).toBe('1');
+    expect(findBookmarksBarFolder(reordered)?.id).toBe('9');
+    expect(findBookmarksBarFolder(firefoxTree)?.id).toBe('toolbar_____');
+    expect(findBookmarksBarFolder(legacyChrome)?.id).toBe('1');
+    expect(findBookmarksBarFolder([])).toBeUndefined();
   });
 });
 

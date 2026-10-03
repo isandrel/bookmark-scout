@@ -1,0 +1,6 @@
+# Reading web pages for the network tools (Metadata Fetcher, Refresh Site Icons).
+# Read by src/services/bookmark-network-tools.ts.
+
+# Bytes read from one page at most when only its <head> is needed (titles, descriptions, icon
+# links); reading stops earlier at the end of the <head>
+head_max_bytes = 524288
