@@ -1,6 +1,6 @@
 import { site } from '@bookmark-scout/config';
 import { defineConfig } from 'wxt';
-import react from '@vitejs/plugin-react-swc';
+import react from '@vitejs/plugin-react';
 import path from 'node:path';
 import { adaptManifestV2, createManifest } from './manifest.config';
 
