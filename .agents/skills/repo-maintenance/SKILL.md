@@ -7,11 +7,11 @@ description: Keep the Bookmark Scout GitHub repository healthy and get PRs merge
 
 Most maintenance here goes wrong in the same few ways: PRs sit BEHIND forever, Dependabot PRs fail the same lockfile check, a flaky test turns `main` red after a merge, or cleanup deletes work that was still needed. Each section below names the failure, why it happens, and the bundled script that handles it.
 
-Run scripts from the repository root. They use `/usr/bin/git` because a local hook rewrites plain `git` and breaks inside worktrees. Keep helper scripts here or in `~/.cache/`; the session scratchpad gets wiped.
+Run scripts from the repository root. They call `/usr/bin/git` directly so a shell alias or hook that wraps `git` cannot change their behavior inside worktrees. Keep helper scripts here or in `~/.cache/`; the session scratchpad gets wiped.
 
 ## Merge a queue of PRs
 
-The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Website and Docs`, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. Every merge makes the other open PRs BEHIND, so PRs land one at a time.
+The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Website and Docs`, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. This is the one place the list is kept; when in doubt, read the ruleset itself (see "Changing required checks"). Every merge makes the other open PRs BEHIND, so PRs land one at a time.
 
 1. List state: `gh pr list --state open --json number,title,headRefName,mergeStateStatus,autoMergeRequest`.
 2. Enable auto-merge on each PR you are allowed to merge: `gh pr merge <n> --auto --squash`. Leave PRs that an agent is still working on to that agent; `update-branch` adds a remote merge commit that rejects the agent's next push.
@@ -50,13 +50,26 @@ PRs can pass CI and still fail on `main` (flaky timing, or two PRs that conflict
 
 ## Changing required checks
 
-Only with the user's approval. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no workflow-level path filters), or PRs that skip them can never merge. Skipping inside the workflow is fine: CI's `Detect changes` job (rules in `.github/ci-scopes.toml`) gates jobs with `if`, and a job skipped that way reports as passed. Skip matrix jobs per step, because a skipped matrix job reports one check under its unexpanded name, and keep `!cancelled()` in each `if`, so a failed detection runs the jobs instead of skipping them as passed.
+Only with the user's approval. A new job meant to gate merges must become required in the same rollout, or auto-merge ignores it. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no workflow-level path filters), or PRs that skip them can never merge. Skipping inside the workflow is fine: CI's `Detect changes` job (rules in `.github/ci-scopes.toml`) gates jobs with `if`, and a job skipped that way reports as passed. Skip matrix jobs per step, because a skipped matrix job reports one check under its unexpanded name, and keep `!cancelled()` in each `if`, so a failed detection runs the jobs instead of skipping them as passed.
 
 ```bash
-gh api repos/isandrel/bookmark-scout/rulesets/11384898 > ~/.cache/ruleset-11384898-before-$(date +%Y%m%d-%H%M).json
+id=$(gh api 'repos/{owner}/{repo}/rulesets' --jq '.[] | select(.name == "Protect Main Branch") | .id')
+gh api "repos/{owner}/{repo}/rulesets/$id" > ~/.cache/ruleset-$id-before-$(date +%Y%m%d-%H%M).json
 ```
 
-Edit `rules[].parameters.required_status_checks` in a copy (keep `name`, `target`, `enforcement`, `conditions`, `bypass_actors`, `rules`) and `gh api -X PUT repos/isandrel/bookmark-scout/rulesets/11384898 --input <file>`. Restore from the backup the same way.
+`gh api` fills `{owner}/{repo}` from the current checkout's remote, so nothing here depends on one fork. Edit `rules[].parameters.required_status_checks` in a copy (keep `name`, `target`, `enforcement`, `conditions`, `bypass_actors`, `rules`) and `gh api -X PUT "repos/{owner}/{repo}/rulesets/$id" --input <file>`. Restore from the backup the same way.
+
+## CI scopes
+
+Which jobs a PR runs comes from `.github/ci-scopes.toml` (glob patterns), applied by `scripts/ci-scopes.ts`. Extend the TOML with patterns, never with lists of file names. Before adding a broad `ignore` glob, check nothing builds from those files (for `**/*.md`: `rg "\.md(\?raw)?['\"]" apps scripts packages`; only the README templates are read, and Lint covers them). To test a change:
+
+```bash
+bun test scripts/ci-scopes.test.ts
+gh pr diff <n> --name-only | bun scripts/ci-scopes.ts
+bun scripts/ci-scopes.ts --all
+```
+
+A PR that touches `ci.yml` or the scope rules runs every job, so the first real skip shows only on the next PR; say so rather than claiming it works.
 
 ## Branch and worktree cleanup
 
@@ -64,7 +77,7 @@ Only with the user's approval. `scripts/cleanup-branches.sh` (dry run by default
 
 - Saves every ref to `~/.cache/bookmark-scout-branch-backup-<time>.txt` first. Restore with `git branch <name> <sha>` until git garbage-collects.
 - Maps each branch to its PR state with `gh pr list --state all`. Squash merges hide ancestry, so do not rely on `git branch --merged`.
-- Keeps `main`, open PR heads, and branches checked out in a worktree that has uncommitted changes. Pass extra branches to keep with `KEEP_EXTRA='name1|name2'`.
+- Keeps `main`, open PR heads, branches checked out in a worktree that has uncommitted changes, and branches with commits that exist on no remote (an agent's unpushed work) unless `--bundle-unpushed` is passed, which first saves each such branch to `~/.cache/bookmark-scout-unpushed-<branch>-<time>.bundle` (restore with `git fetch <bundle> <branch>:<branch>`). Pass extra branches to keep with `KEEP_EXTRA='name1|name2'`.
 - Removes clean worktrees under `.claude/worktrees/` first (slow: each has `node_modules`). `apps/website/next-env.d.ts` is regenerated by builds; discard it rather than treating the worktree as dirty.
 - Deletes local branches whose PR is merged or closed, plus `worktree-agent-*` branches. Lists branches without a PR for review instead of deleting them, unless `--include-no-pr` is passed.
 - Deletes remote branches whose PR is merged or closed, one name per argument (zsh does not word-split a newline-joined variable).

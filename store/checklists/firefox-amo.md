@@ -27,11 +27,11 @@ Follow the release runbook in the root `AGENTS.md`.
   - `bookmark-scout-vX.Y.Z-sources.zip` (source code for review)
 - [ ] Unzip the add-on and confirm `manifest.json` has `"version": "X.Y.Z"`, the expected permissions, and the `gecko` block.
 - [ ] `bunx addons-linter bookmark-scout-vX.Y.Z-firefox.zip` reports 0 errors. Known warnings and their explanations are in [`../permissions.md`](../permissions.md#linter-results).
-- [ ] Reproduce the build from the sources ZIP in an empty folder with [`apps/extension/SOURCE_CODE_REVIEW.md`](../../apps/extension/SOURCE_CODE_REVIEW.md) (`bun install --frozen-lockfile`, then `bun run build:firefox` in `apps/extension`), and compare `dist/firefox-mv2` with the add-on ZIP. AMO reviewers will do the same.
+- [ ] Reproduce the build from the sources ZIP in an empty folder with [`apps/extension/SOURCE_CODE_REVIEW.md`](../../apps/extension/SOURCE_CODE_REVIEW.md) (`bun install --frozen-lockfile`, then `bun run build:firefox` in `apps/extension`), and compare `dist/firefox-mv2` with the add-on ZIP from the CI release, not with a local developer build: clean rebuilds from the sources ZIP match each other byte for byte, but a build in a developer checkout differs in minified identifier names. AMO reviewers will do the same.
 
 ## 2. Manual smoke test in Firefox
 
-Firefox has **no automated browser tests**; CI only builds it. Every claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
+The required `Firefox E2E smoke` CI check covers popup search and folder creation, saved site icons, the side panel page, manager loading, a settings save, JSON export and import, and the statistics and privacy reports. It does not cover context menus, drag and drop, network and AI tools, or the real sidebar, so every other claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
 
 - [ ] Popup: instant search with match case, whole word, and regex.
 - [ ] Folder tree: drag and drop, expand and collapse all, new folder.

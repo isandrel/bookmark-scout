@@ -17,7 +17,7 @@ cd apps/extension
 bun run build:firefox
 ```
 
-The unpacked Firefox build is written to `apps/extension/dist/firefox-mv2/`. It matches the submitted add-on package.
+The unpacked Firefox build is written to `apps/extension/dist/firefox-mv2/`. A clean rebuild from the sources ZIP should match the add-on package from the CI release; compare against that file, not a build from a developer checkout.
 
 ## Notes
 

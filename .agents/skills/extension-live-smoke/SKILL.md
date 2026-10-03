@@ -14,7 +14,7 @@ description: Inspect an installed browser extension with Computer Use when expli
 
 ## "My browser still shows the old UI"
 
-Usually the build is stale, not the code. The browser loads `apps/extension/dist/chrome-mv3` exactly as last built (once a day older than the merged code), and `dist/chrome-mv3-dev` only updates while `bun run dev` runs. Fix, with the user's go-ahead: `bun install && bunx nx run extension:build:chrome` in the main checkout, reload the extension in `chrome://extensions`, then reopen the popup and any open extension pages.
+Usually the build is stale, not the code. The browser loads `apps/extension/dist/chrome-mv3` exactly as last built (once a day older than the merged code), and `dist/chrome-mv3-dev` only updates while `bun run dev` runs. Also check which branch the main checkout is on: another agent session once switched it to a docs branch, so a rebuild there would show the wrong code. Fix, with the user's go-ahead: in the main checkout, `git branch --show-current` (switch to `main` if needed), `git pull --ff-only`, `bun install --frozen-lockfile && bunx nx run extension:build:chrome`, reload the extension in `chrome://extensions`, then reopen the popup and any open extension pages.
 
 ## Known tool limits
 

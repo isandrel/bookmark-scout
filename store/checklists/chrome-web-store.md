@@ -12,7 +12,7 @@
 Follow the release runbook in the root `AGENTS.md` ("Release publishing"). Releasing is its own approval gate.
 
 - [ ] `apps/extension/package.json` `version` is `X.Y.Z` and is higher than the version currently published on the Chrome Web Store.
-- [ ] `main` is clean and green, and the tag does not exist yet: `rtk git ls-remote --tags origin vX.Y.Z`.
+- [ ] `main` is clean and green, and the tag does not exist yet: `git ls-remote --tags origin vX.Y.Z`.
 - [ ] The `Release Extension` workflow for `vX.Y.Z` finished green.
 - [ ] Download `bookmark-scout-vX.Y.Z-chrome.zip` from the GitHub release. Upload this ZIP, not the `.crx`; the store signs packages itself.
 - [ ] Unzip it and confirm `manifest.json` has `"version": "X.Y.Z"` and the same `permissions`, `optional_host_permissions`, and `chrome_url_overrides` as [`../permissions.md`](../permissions.md). If anything changed, update the justifications first.

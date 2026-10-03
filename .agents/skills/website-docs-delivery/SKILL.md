@@ -5,11 +5,11 @@ description: Change, verify, visually review, and ship the Bookmark Scout market
 
 # Website and docs delivery
 
-Read `apps/website/AGENTS.md` or `apps/docs/AGENTS.md` and the matching `DESIGN.md` first.
+Read `apps/website/AGENTS.md` or `apps/docs/AGENTS.md` and the matching `DESIGN.md` first. For a content, marketing, SEO, or store-copy review, also read `references/marketing-review.md`. For a redesign, write the plan in `plans/` and critique it against generic defaults before dispatching builders (the critique replaced three equal columns with tabs and a fact grid with a data-boundary diagram).
 
 ## Full local check
 
-Run from the repository root unless noted. Write logs and exit codes to the session scratchpad, not the repo.
+Run from the repository root unless noted. Write logs and exit codes to `~/.cache/bookmark-scout-<topic>/`, not the repo or a session scratchpad (scratchpads get wiped).
 
 ```bash
 bun install --frozen-lockfile
@@ -30,12 +30,23 @@ bunx nx run docs:build && bun run --cwd apps/docs verify
 Use headless Playwright, not the built-in browser pane: the pane scaled 1280px screenshots wrongly in two separate reviews.
 
 1. Serve the export: `bun apps/website/scripts/serve-out.ts 4180` (after `website:build`).
-2. Write the screenshot script in the scratchpad, never in the repo. Import Playwright by absolute path so it resolves from outside the workspace, and run it with `bun`:
+2. Write the screenshot script under `~/.cache/bookmark-scout-<topic>/`, never in the repo. Import Playwright by absolute path so it resolves from outside the workspace, and run it with `bun`:
    ```ts
    import { chromium } from '<repo>/node_modules/@playwright/test/index.mjs';
    ```
 3. In the script, route `/umami/` requests to a 204, use `reducedMotion: 'reduce'` and `fullPage: true`, and capture 375px and 1280px in light and dark, for every locale touched.
-4. Split tall captures before viewing them: `sips -c 2600 1280 --cropOffset 0 0 in.png --out top.png`.
+4. Split tall captures before viewing them, for example with ImageMagick: `magick in.png -crop 1280x2600 +repage part-%d.png`.
+5. Mark each finding as confirmed (checked in the built `out/` HTML, for example `grep -o '<html[^>]*>' out/ja/index.html`) or inferred (read from source). Several real bugs, such as `lang="en"` on `/ja/`, only show in the export.
+
+## Images
+
+- Commit only the PNG sources in `apps/website/public/screenshots/`. `scripts/optimize-images.ts` (sharp) generates AVIF and WebP variants into the git-ignored `optimized/` folder on `bun run images` or the build. Widths and the byte budget live in `lib/images.ts`, and `website:verify` fails any variant over budget. Build-time sharp is used because the Next image optimizer does not work in a static export.
+- To replace a screenshot, overwrite the PNG under the same name.
+- Measure before optimizing: compare each file's bytes with its rendered width (1280px PNGs in a 700px slot once cost 796 KB instead of 160 KB). Assert in E2E that the browser really picks AVIF or WebP; markup alone does not prove it.
+
+## Docs features
+
+Check Fumadocs built-ins before writing a feature by hand, in the current Fumadocs docs and in the installed `node_modules/fumadocs-*` source (the site can be ahead of the pinned version): `llms()` from `fumadocs-core/source` (llms.txt, full text, per-page Markdown), page actions such as `MarkdownCopyButton` and `ViewOptionsPopover`, and the Steps, Tabs, Callout, Cards, and Accordion MDX components.
 
 ## Known traps
 
@@ -57,10 +68,19 @@ Use headless Playwright, not the built-in browser pane: the pane scaled 1280px s
 
 - Pages projects are named `bookmark-scout-<app>`, after the folder under `apps/`.
 - `public/_headers` and `public/_redirects` are Pages inputs. Zone-level Cloudflare settings can override `_headers`; confirm live headers with `curl -sI` after deploy.
+- A new host, CDN, analytics, or any third party that sees visitor requests is a privacy change: update `apps/website/messages/privacy/{en,ja,ko}.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` in `config/site.config.toml` in the same PR.
+- Cutover order, so a working origin exists at every step:
+  1. Deploy to the new host and check the `*.pages.dev` URL: content, `_headers`, and the `/` redirect.
+  2. Back up DNS records to `~/.cache/`.
+  3. Switch the apex and `www`.
+  4. Wait out 522 responses (the custom domain is still initializing; recheck after about 20 minutes). A 526 means SSL "Full (strict)" in front of an origin without a valid certificate.
+  5. Confirm the live apex serves the new content (grep for a known new string).
+  6. Only then disable the old host.
 - One-time infrastructure (projects, domains, DNS) goes in a local, idempotent script with `--dry-run` that names any missing token permission (`apps/website/scripts/setup-cloudflare.ts`), never in CI. Probe tokens read-only first and back up DNS records to `~/.cache/` before changing them.
-- Status codes seen during cutover: 526 means SSL "Full (strict)" in front of an origin without a valid certificate; 522 right after a DNS change usually means the custom domain is still initializing, so recheck after about 20 minutes.
 
 ## After merge
 
 1. Find the deploy runs for the merge SHA: `gh run list --workflow deploy-website.yml` and `gh run list --workflow deploy-docs.yml`. A transient Cloudflare API error gets a rerun, not a code change.
 2. Check live status codes with `curl -s -o /dev/null -w '%{http_code}'` for `/`, `/en/`, `/en/privacy/`, `/en/support/`, `/ja/`, `/.well-known/security.txt`, the `www` host, and the docs `/` and `/llms.txt`.
+3. Check content too, not only status: grep each changed page for a known new string and confirm an optimized image variant is served.
+4. Before blaming your merge for a red workflow or a broken page, check whether the failure predates it (`gh run list`, the hosting platform's state).
