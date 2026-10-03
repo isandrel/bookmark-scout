@@ -4,7 +4,7 @@
  * devices; the app's own output rules are added after them, so a prompt cannot break parsing.
  */
 
-import { Copy, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Copy, Eye, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const DEFAULT_VALUE = 'default';
@@ -177,16 +177,75 @@ function PromptEditorDialog({
   );
 }
 
+/** Read-only view of a task's built-in prompt, with its variables filled in from the settings. */
+function BuiltInPromptDialog({
+  taskId,
+  onClose,
+  onCustomize,
+}: {
+  taskId: PromptTaskId | null;
+  onClose: () => void;
+  onCustomize: (taskId: PromptTaskId) => void;
+}) {
+  const { settings } = useSettings();
+  const task = taskId ? PROMPT_TASKS[taskId] : undefined;
+  return (
+    <Dialog open={taskId !== null} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            {t('prompt_builtInTitle')}
+            {task ? ` · ${t(task.nameKey)}` : ''}
+          </DialogTitle>
+          <DialogDescription>{t('prompt_builtInDescription')}</DialogDescription>
+        </DialogHeader>
+        {task && taskId && (
+          <div className="space-y-3">
+            <pre
+              data-testid="built-in-prompt"
+              className="max-h-80 overflow-auto rounded-md border bg-muted/40 p-3 font-mono text-xs leading-relaxed whitespace-pre-wrap"
+            >
+              {task.system}
+            </pre>
+            {task.variables.length > 0 && (
+              <details className="rounded-md border bg-muted/40 px-3 py-2">
+                <summary className="cursor-pointer text-sm font-medium">{t('prompt_preview')}</summary>
+                <p className="mt-1 text-xs text-muted-foreground">{t('prompt_previewDescription')}</p>
+                <pre className="mt-2 max-h-64 overflow-auto whitespace-pre-wrap font-mono text-xs">
+                  {interpolatePrompt(task.system, getPromptPreviewVariables(taskId, settings))}
+                </pre>
+              </details>
+            )}
+          </div>
+        )}
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={onClose}>
+            {t('action_close')}
+          </Button>
+          {taskId && (
+            <Button onClick={() => onCustomize(taskId)}>
+              <Plus className="h-4 w-4" />
+              {t('prompt_customize')}
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function PromptTaskRow({
   taskId,
   library,
   onEdit,
   onDelete,
+  onView,
 }: {
   taskId: PromptTaskId;
   library: PromptLibrary;
   onEdit: (editor: EditorState) => void;
   onDelete: (prompt: CustomPrompt) => void;
+  onView: (taskId: PromptTaskId) => void;
 }) {
   const task = PROMPT_TASKS[taskId];
   const prompts = library.prompts.filter((prompt) => prompt.task === taskId);
@@ -263,14 +322,25 @@ function PromptTaskRow({
               </Button>
             </>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => startFrom({ name: t('prompt_newName', t(task.nameKey)), system: task.system })}
-            >
-              <Plus className="h-4 w-4" />
-              {t('prompt_customize')}
-            </Button>
+            <>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label={t('prompt_viewBuiltIn', t(task.nameKey))}
+                title={t('prompt_viewBuiltIn', t(task.nameKey))}
+                onClick={() => onView(taskId)}
+              >
+                <Eye className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => startFrom({ name: t('prompt_newName', t(task.nameKey)), system: task.system })}
+              >
+                <Plus className="h-4 w-4" />
+                {t('prompt_customize')}
+              </Button>
+            </>
           )}
         </div>
       </div>
@@ -282,6 +352,7 @@ export function PromptLibraryPanel() {
   const { library } = usePromptLibrary();
   const [editor, setEditor] = useState<EditorState | null>(null);
   const [deleting, setDeleting] = useState<CustomPrompt | null>(null);
+  const [viewing, setViewing] = useState<PromptTaskId | null>(null);
 
   return (
     <section
@@ -303,10 +374,20 @@ export function PromptLibraryPanel() {
             library={library}
             onEdit={setEditor}
             onDelete={setDeleting}
+            onView={setViewing}
           />
         ))}
       </ul>
       <PromptEditorDialog editor={editor} onClose={() => setEditor(null)} />
+      <BuiltInPromptDialog
+        taskId={viewing}
+        onClose={() => setViewing(null)}
+        onCustomize={(taskId) => {
+          const task = PROMPT_TASKS[taskId];
+          setViewing(null);
+          setEditor({ task: taskId, name: t('prompt_newName', t(task.nameKey)), system: task.system });
+        }}
+      />
       <Dialog open={deleting !== null} onOpenChange={(open) => !open && setDeleting(null)}>
         <DialogContent className="max-w-md">
           <DialogHeader>

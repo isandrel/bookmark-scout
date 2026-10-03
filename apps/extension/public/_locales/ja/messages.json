@@ -555,6 +555,16 @@
         "message": "最近",
         "description": "Recent folders panel title"
     },
+    "popup_addToFolderTitle": {
+        "message": "「$folder$」に追加",
+        "description": "Tooltip and accessible name for a recent folder chip that saves the current page into that folder",
+        "placeholders": {
+            "folder": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
     "popup_hintLabel": {
         "message": "キーボードショートカット",
         "description": "Accessible name of the popup footer that lists keyboard shortcuts"
@@ -4606,5 +4616,89 @@
     "settings_hostAccessDeniedDesc": {
         "message": "この設定でページを読むにはウェブサイトへのアクセスが必要です。オフのままになります。",
         "description": "Toast when the user declines website access for a setting"
+    },
+    "settings_groupExportInclude": {
+        "message": "エクスポートに含める項目",
+        "description": "Settings group: export fields"
+    },
+    "settings_groupExportIncludeDesc": {
+        "message": "エクスポートに既定で含めるブックマークの情報",
+        "description": "Settings group description"
+    },
+    "settings_groupAiContextPackerInclude": {
+        "message": "AI コンテキストに含める項目",
+        "description": "Settings group: AI Context Packer fields"
+    },
+    "settings_groupAiContextPackerIncludeDesc": {
+        "message": "AI コンテキストのエクスポートで各ブックマークに加える情報",
+        "description": "Settings group description"
+    },
+    "settings_groupDuplicatesMatching": {
+        "message": "重複の判定",
+        "description": "Settings group: duplicate finder URL rules"
+    },
+    "settings_groupDuplicatesMatchingDesc": {
+        "message": "2 つの URL を同じとみなすときに無視する違い",
+        "description": "Settings group description"
+    },
+    "settings_groupUrlCleanerRules": {
+        "message": "クリーンアップのルール",
+        "description": "Settings group: URL cleaner rules"
+    },
+    "settings_groupUrlCleanerRulesDesc": {
+        "message": "トラッキングパラメーターの削除以外に URL クリーナーが行う変更",
+        "description": "Settings group description"
+    },
+    "settings_groupMetadataFetcherOptions": {
+        "message": "取得オプション",
+        "description": "Settings group: metadata fetcher options"
+    },
+    "settings_groupMetadataFetcherOptionsDesc": {
+        "message": "メタデータ取得で読み取る内容と置き換える内容",
+        "description": "Settings group description"
+    },
+    "settings_groupPrivacyScannerChecks": {
+        "message": "チェック項目",
+        "description": "Settings group: privacy scanner checks"
+    },
+    "settings_groupPrivacyScannerChecksDesc": {
+        "message": "プライバシースキャナーが調べる場所と検出する内容",
+        "description": "Settings group description"
+    },
+    "settings_groupStatisticsInclude": {
+        "message": "レポートの項目",
+        "description": "Settings group: statistics sections"
+    },
+    "settings_groupStatisticsIncludeDesc": {
+        "message": "ブックマーク統計に表示するセクション",
+        "description": "Settings group description"
+    },
+    "settings_groupDataShow": {
+        "message": "サイドバーのツール",
+        "description": "Settings group: data tools shown in sidebar"
+    },
+    "settings_groupDataShowDesc": {
+        "message": "マネージャーのサイドバーに表示するデータツール",
+        "description": "Settings group description"
+    },
+    "settings_decrease": {
+        "message": "$1 を減らす",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "settings_increase": {
+        "message": "$1 を増やす",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "prompt_builtInTitle": {
+        "message": "組み込みプロンプト",
+        "description": "Prompt library: title of the read-only built-in prompt view"
+    },
+    "prompt_builtInDescription": {
+        "message": "このツールが既定で使うプロンプトです。「カスタマイズ」をクリックすると、これをもとに自分用のコピーを作成できます。",
+        "description": "Prompt library: built-in prompt view description"
+    },
+    "prompt_viewBuiltIn": {
+        "message": "$1 の組み込みプロンプトを表示",
+        "description": "Prompt library: button label; $1 is the tool name"
     }
 }

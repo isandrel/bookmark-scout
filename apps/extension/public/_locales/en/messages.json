@@ -555,6 +555,16 @@
         "message": "Recent",
         "description": "Recent folders panel title"
     },
+    "popup_addToFolderTitle": {
+        "message": "Add to \"$folder$\"",
+        "description": "Tooltip and accessible name for a recent folder chip that saves the current page into that folder",
+        "placeholders": {
+            "folder": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
     "popup_hintLabel": {
         "message": "Keyboard shortcuts",
         "description": "Accessible name of the popup footer that lists keyboard shortcuts"
@@ -4606,5 +4616,89 @@
     "settings_hostAccessDeniedDesc": {
         "message": "This setting needs website access to read pages. It stays off.",
         "description": "Toast when the user declines website access for a setting"
+    },
+    "settings_groupExportInclude": {
+        "message": "Include in Exports",
+        "description": "Settings group: export fields"
+    },
+    "settings_groupExportIncludeDesc": {
+        "message": "Bookmark details that exports include by default",
+        "description": "Settings group description"
+    },
+    "settings_groupAiContextPackerInclude": {
+        "message": "Include in AI Context",
+        "description": "Settings group: AI Context Packer fields"
+    },
+    "settings_groupAiContextPackerIncludeDesc": {
+        "message": "Details added to each bookmark in AI context exports",
+        "description": "Settings group description"
+    },
+    "settings_groupDuplicatesMatching": {
+        "message": "Duplicate Matching",
+        "description": "Settings group: duplicate finder URL rules"
+    },
+    "settings_groupDuplicatesMatchingDesc": {
+        "message": "Differences to ignore when deciding that two URLs are the same",
+        "description": "Settings group description"
+    },
+    "settings_groupUrlCleanerRules": {
+        "message": "Cleanup Rules",
+        "description": "Settings group: URL cleaner rules"
+    },
+    "settings_groupUrlCleanerRulesDesc": {
+        "message": "Changes the URL cleaner makes besides removing tracking parameters",
+        "description": "Settings group description"
+    },
+    "settings_groupMetadataFetcherOptions": {
+        "message": "Fetch Options",
+        "description": "Settings group: metadata fetcher options"
+    },
+    "settings_groupMetadataFetcherOptionsDesc": {
+        "message": "What the metadata fetcher reads and replaces",
+        "description": "Settings group description"
+    },
+    "settings_groupPrivacyScannerChecks": {
+        "message": "Checks",
+        "description": "Settings group: privacy scanner checks"
+    },
+    "settings_groupPrivacyScannerChecksDesc": {
+        "message": "Where the privacy scanner looks and what it flags",
+        "description": "Settings group description"
+    },
+    "settings_groupStatisticsInclude": {
+        "message": "Report Sections",
+        "description": "Settings group: statistics sections"
+    },
+    "settings_groupStatisticsIncludeDesc": {
+        "message": "Sections shown in bookmark statistics",
+        "description": "Settings group description"
+    },
+    "settings_groupDataShow": {
+        "message": "Sidebar Tools",
+        "description": "Settings group: data tools shown in sidebar"
+    },
+    "settings_groupDataShowDesc": {
+        "message": "Data tools shown in the manager sidebar",
+        "description": "Settings group description"
+    },
+    "settings_decrease": {
+        "message": "Decrease $1",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "settings_increase": {
+        "message": "Increase $1",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "prompt_builtInTitle": {
+        "message": "Built-in prompt",
+        "description": "Prompt library: title of the read-only built-in prompt view"
+    },
+    "prompt_builtInDescription": {
+        "message": "The prompt this tool uses by default. Click Customize to start your own copy from it.",
+        "description": "Prompt library: built-in prompt view description"
+    },
+    "prompt_viewBuiltIn": {
+        "message": "View the built-in prompt for $1",
+        "description": "Prompt library: button label; $1 is the tool name"
     }
 }

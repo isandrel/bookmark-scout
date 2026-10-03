@@ -1,5 +1,5 @@
 import { addAIServiceInOptions, openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
-import { expect, test, toastRegion } from './fixtures';
+import { expect, test } from './fixtures';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 /**
@@ -52,7 +52,7 @@ test('[real local server] Refresh Models and Verify Service reach the local serv
 
   await service.getByRole('button', { name: 'Refresh Models' }).click();
   await expect(
-    toastRegion(page).getByText(/^\d+ models found from Local CLIProxyAPI\.$/),
+    page.getByTestId('ai-service-status').getByText(/^\d+ models found from Local CLIProxyAPI\.$/),
   ).toBeVisible({ timeout: 15_000 });
 
   if (MODEL) {
@@ -62,12 +62,12 @@ test('[real local server] Refresh Models and Verify Service reach the local serv
     await expect(service.getByRole('combobox', { name: 'AI Model' })).toHaveText(MODEL);
   }
   await service.getByRole('button', { name: 'Verify Service' }).click();
-  await expect(toastRegion(page).getByText('Service verified', { exact: true })).toBeVisible({
+  await expect(page.getByTestId('ai-service-status').getByText('Service verified', { exact: true })).toBeVisible({
     timeout: 15_000,
   });
   if (MODEL) {
     await expect(
-      toastRegion(page).getByText('Local CLIProxyAPI responded successfully.'),
+      page.getByTestId('ai-service-status').getByText('Local CLIProxyAPI responded successfully.'),
     ).toBeVisible();
   }
 });

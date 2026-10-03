@@ -4,7 +4,17 @@
  * never logged. Every field saves when it loses focus, like the rest of Options.
  */
 
-import { ChevronRight, ExternalLink, Eye, EyeOff, RefreshCw, Wifi } from 'lucide-react';
+import {
+  CircleAlert,
+  CircleCheck,
+  ChevronRight,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  RefreshCw,
+  TriangleAlert,
+  Wifi,
+} from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 /** Labels, descriptions, and placeholders of provider-specific connection fields. */
@@ -70,6 +80,39 @@ const toFields = (stored: StoredAIProviderConfig): StoredFields => ({
   extraHeaders: stored.extraHeaders ?? '',
 });
 
+type ConnectionStatusValue = {
+  tone: 'success' | 'warning' | 'error';
+  title: string;
+  description: string;
+};
+
+const CONNECTION_STATUS_STYLES = {
+  success: { icon: CircleCheck, className: 'border-success/30 bg-success-wash text-success' },
+  warning: { icon: TriangleAlert, className: 'border-warning/30 bg-warning-wash text-warning' },
+  error: { icon: CircleAlert, className: 'border-destructive/30 bg-destructive-wash text-destructive-text' },
+} as const;
+
+/** The result of Refresh Models or Verify Service, shown next to the buttons that produced it. */
+function ConnectionStatus({ status }: { status: ConnectionStatusValue | null }) {
+  return (
+    <div role="status" aria-live="polite" data-testid="ai-service-status">
+      {status &&
+        (() => {
+          const { icon: Icon, className } = CONNECTION_STATUS_STYLES[status.tone];
+          return (
+            <div className={`flex items-start gap-2 rounded-md border px-3 py-2 text-sm ${className}`}>
+              <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="min-w-0 [overflow-wrap:anywhere]">
+                <p className="font-medium">{status.title}</p>
+                <p className="text-foreground/80">{status.description}</p>
+              </div>
+            </div>
+          );
+        })()}
+    </div>
+  );
+}
+
 export function AIServiceEditor({
   service,
   showAdvanced = false,
@@ -78,7 +121,6 @@ export function AIServiceEditor({
   /** Opens More settings, e.g. when a settings search matched one of its fields. */
   showAdvanced?: boolean;
 }) {
-  const { toast } = useToast();
   const { provider } = service;
   const providerConfig = getProviderConfig(provider);
   const providerName = getLocalizedProviderName(provider);
@@ -95,6 +137,11 @@ export function AIServiceEditor({
   const [showApiKey, setShowApiKey] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isVerifying, setIsVerifying] = useState(false);
+  const [status, setStatus] = useState<ConnectionStatusValue | null>(null);
+  // A result describes the provider as it was checked; switching providers makes it stale. A model
+  // change does not, since Refresh Models itself picks a model.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: clears on a provider change only
+  useEffect(() => setStatus(null), [provider]);
   const [isDetecting, setIsDetecting] = useState(false);
   const [moreOpen, setMoreOpen] = useState(showAdvanced);
   // A settings search that matches a field under More settings opens it.
@@ -250,6 +297,7 @@ export function AIServiceEditor({
   };
 
   const verifyConnection = async () => {
+    setStatus(null);
     setIsVerifying(true);
     try {
       const settings = await prepareRequest();
@@ -268,24 +316,29 @@ export function AIServiceEditor({
       }
       const label = service.name;
       if (check.rateLimited) {
-        toast({ title: t('toast_aiServiceVerified'), description: t('toast_aiServiceRateLimited', label) });
+        setStatus({
+          tone: 'success',
+          title: t('toast_aiServiceVerified'),
+          description: t('toast_aiServiceRateLimited', label),
+        });
       } else if (check.modelListed === false) {
-        toast({
+        setStatus({
+          tone: 'warning',
           title: t('toast_aiServiceVerified'),
           description: t('toast_aiServiceModelMissing', [label, settings.model]),
         });
       } else {
-        toast({
+        setStatus({
+          tone: 'success',
           title: t('toast_aiServiceVerified'),
           description: t('toast_aiServiceVerifiedDescription', label),
-          variant: 'success',
         });
       }
     } catch (error) {
-      toast({
+      setStatus({
+        tone: 'error',
         title: t('toast_aiServiceVerifyFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
       });
     } finally {
       setIsVerifying(false);
@@ -293,6 +346,7 @@ export function AIServiceEditor({
   };
 
   const refreshModels = async () => {
+    setStatus(null);
     setIsDetecting(true);
     try {
       const settings = await prepareRequest();
@@ -300,16 +354,16 @@ export function AIServiceEditor({
       const models = await listProviderModels(settings);
       if (models.length === 0) throw new Error(t('error_aiNoModels'));
       await rememberModels(settings, models);
-      toast({
+      setStatus({
+        tone: 'success',
         title: t('toast_aiModelsRefreshed'),
         description: t('toast_aiModelsRefreshedDescription', [String(models.length), service.name]),
-        variant: 'success',
       });
     } catch (error) {
-      toast({
+      setStatus({
+        tone: 'error',
         title: t('toast_aiModelsRefreshFailed'),
         description: error instanceof Error ? error.message : t('error_unknown'),
-        variant: 'destructive',
       });
     } finally {
       setIsDetecting(false);
@@ -438,6 +492,7 @@ export function AIServiceEditor({
             {isVerifying ? t('options_verifyingService') : t('options_verifyService')}
           </Button>
         </div>
+        <ConnectionStatus status={status} />
         {providerSupportsCustomModel(provider) && (
           <div className="flex flex-wrap items-center gap-2 pt-1">
             <Label htmlFor={`${idPrefix}-customModel`} className="text-xs text-muted-foreground">
