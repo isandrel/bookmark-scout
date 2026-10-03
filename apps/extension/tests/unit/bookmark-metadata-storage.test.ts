@@ -3,6 +3,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
   getStoredBookmarkMetadata,
   mergeStoredBookmarkMetadata,
+  parseBookmarkTags,
   reconcileStoredBookmarkMetadata,
   removeStoredBookmarkMetadata,
   saveBookmarkMetadata,
@@ -44,6 +45,20 @@ describe('bookmark metadata storage', () => {
     await removeStoredBookmarkMetadata(['b1']);
     expect(await getStoredBookmarkMetadata(['b1'])).toEqual({});
     expect(await readRawMetadata()).toBeUndefined();
+  });
+
+  it('splits typed tags at ASCII and Japanese, Chinese, and Korean commas', () => {
+    expect(parseBookmarkTags('AI, ai ,  , x, タグ、タグ2, 태그，둘､三')).toEqual([
+      'AI',
+      'ai',
+      'x',
+      'タグ',
+      'タグ2',
+      '태그',
+      '둘',
+      '三',
+    ]);
+    expect(parseBookmarkTags('  ')).toEqual([]);
   });
 
   it('drops a record that is saved empty', async () => {

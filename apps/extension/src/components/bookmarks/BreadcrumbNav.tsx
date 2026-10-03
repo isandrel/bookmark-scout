@@ -1,10 +1,12 @@
 /**
  * Breadcrumb navigation for BookmarksPage.
- * Shows the current folder path and allows clicking ancestors.
+ * Shows the current folder path and allows clicking ancestors. When the path is too long for the
+ * header, ancestors shrink and truncate first and the end of the path stays in view, so the
+ * current folder is always visible.
  */
 
 import { ChevronRight, Home } from 'lucide-react';
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useRef } from 'react';
 
 type BreadcrumbNavProps = {
   items: Bookmark[];
@@ -18,10 +20,19 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
     () => getManagerFolderAncestors(items, currentFolderId),
     [items, currentFolderId],
   );
+  const navRef = useRef<HTMLElement>(null);
+
+  // A path that still overflows after truncating scrolls to its end: the current folder.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the path is the trigger.
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (nav) nav.scrollLeft = nav.scrollWidth;
+  }, [path]);
 
   return (
     <nav
-      className="flex items-center gap-1 overflow-x-auto text-sm text-muted-foreground"
+      ref={navRef}
+      className="flex min-w-0 items-center gap-1 overflow-x-auto text-sm text-muted-foreground"
       aria-label={t('bookmarks_breadcrumb')}
       data-testid="breadcrumb"
     >
@@ -38,8 +49,13 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
         const isLast = index === path.length - 1;
         const title = getBookmarkDisplayTitle(item.title);
         return (
-          <div key={item.id} className="flex shrink-0 items-center gap-1">
-            <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+          // Ancestors give up their width first (down to a few letters); the current folder
+          // keeps its own.
+          <div
+            key={item.id}
+            className={cn('flex items-center gap-1', isLast ? 'shrink-0' : 'min-w-12 shrink')}
+          >
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground/50" />
             {isLast ? (
               <span
                 className="max-w-[200px] truncate px-2 py-1 font-medium text-foreground"
@@ -51,7 +67,8 @@ export function BreadcrumbNav({ items, currentFolderId, onNavigate }: Breadcrumb
               <button
                 type="button"
                 onClick={() => onNavigate(item.id)}
-                className="max-w-[150px] truncate rounded-md px-2 py-1 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
+                title={title}
+                className="min-w-0 max-w-[150px] truncate rounded-md px-2 py-1 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring"
               >
                 {title}
               </button>

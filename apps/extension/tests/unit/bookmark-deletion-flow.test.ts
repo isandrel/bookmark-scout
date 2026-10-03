@@ -40,6 +40,8 @@ beforeEach(async () => {
     { id: 'a', parentId: 'f', title: 'A', url: 'https://e2e.invalid/a' },
     { id: 'b', parentId: 'f', title: 'B', url: 'https://e2e.invalid/b' },
     { id: 'c', parentId: 'f', title: 'C', url: 'https://e2e.invalid/c' },
+    { id: 'd', parentId: 'f', title: 'D', url: 'https://e2e.invalid/d' },
+    { id: 'e', parentId: 'f', title: 'E', url: 'https://e2e.invalid/e' },
   ]);
 });
 
@@ -54,9 +56,13 @@ describe('deleteBookmarksWithUndo', () => {
     const onChanged = vi.fn();
     const remove = vi.fn((id: string) => browser.bookmarks.remove(id));
 
-    expect(await deleteBookmarksWithUndo([target('b')], { onChanged, remove })).toBe(1);
+    expect(await deleteBookmarksWithUndo([target('b')], { onChanged, remove })).toEqual({
+      deleted: 1,
+      skipped: 0,
+      failed: 0,
+    });
     expect(remove).toHaveBeenCalledWith('b');
-    expect(bookmarks.childIds('f')).toEqual(['a', 'c']);
+    expect(bookmarks.childIds('f')).toEqual(['a', 'c', 'd', 'e']);
     expect(onChanged).toHaveBeenCalledTimes(1);
 
     const [undo] = currentToasts();
@@ -68,34 +74,91 @@ describe('deleteBookmarksWithUndo', () => {
     });
 
     await pressUndo(undo);
-    expect(bookmarks.childIds('f')).toHaveLength(3);
+    expect(bookmarks.childIds('f')).toHaveLength(5);
     expect(bookmarks.get(bookmarks.childIds('f')[1])?.title).toBe('B');
     expect(onChanged).toHaveBeenCalledTimes(2);
-    expect(currentToasts()[0]).toMatchObject({ description: 'Restored "B".' });
+    // The restore is an outcome toast with the success mark, like every other one.
+    expect(currentToasts()[0]).toMatchObject({
+      title: '✓ Deletion undone',
+      description: 'Restored "B".',
+      variant: 'success',
+    });
   });
 
-  it('stops at the first failure, reports it, and offers Undo for what was deleted', async () => {
+  it('reports a failed restore as an error toast', async () => {
+    await deleteBookmarksWithUndo([target('b')], { onChanged: vi.fn() });
+    const [undo] = currentToasts();
+    bookmarks.fail.create.add('B');
+
+    await pressUndo(undo);
+    expect(currentToasts()[0]).toMatchObject({
+      title: '× Could not undo deletion',
+      variant: 'destructive',
+    });
+  });
+
+  it('keeps deleting past a failure and offers Undo for what was deleted', async () => {
     bookmarks.fail.remove.add('b');
-    const deleted = await deleteBookmarksWithUndo([target('a'), target('b'), target('c')], {
+    const outcome = await deleteBookmarksWithUndo([target('a'), target('b'), target('c')], {
       onChanged: vi.fn(),
     });
 
-    expect(deleted).toBe(1);
-    expect(bookmarks.childIds('f')).toEqual(['b', 'c']);
-    // Both stay: the failure is not hidden behind the Undo toast.
-    const [failure, undo] = currentToasts();
-    expect(failure).toMatchObject({ title: '× Error Deleting Bookmark', variant: 'destructive' });
-    expect(undo.description).toBe('Deleted "A". Undo within 10 seconds.');
+    expect(outcome).toEqual({ deleted: 2, skipped: 0, failed: 1 });
+    expect(bookmarks.childIds('f')).toEqual(['b', 'd', 'e']);
+    // One toast carries both the Undo and the counts, so the failure is never hidden.
+    const [undo] = currentToasts();
+    expect(undo).toMatchObject({
+      title: '× 2 items deleted',
+      description:
+        'Deleted 2 items. Undo within 10 seconds. Skipped because they changed or were already deleted: 0. Failed: 1.',
+      variant: 'destructive',
+    });
+
+    await pressUndo(undo);
+    expect(bookmarks.childIds('f').map((id) => bookmarks.get(id)?.title)).toEqual([
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+    ]);
   });
 
-  it('deletes nothing when an item cannot be captured for undo', async () => {
-    const deleted = await deleteBookmarksWithUndo([target('a'), target('missing')], {
-      onChanged: vi.fn(),
-    });
+  it('skips items deleted or changed since they were chosen and deletes the rest', async () => {
+    await browser.bookmarks.remove('b');
+    await browser.bookmarks.update('c', { title: 'C renamed' });
+    const outcome = await deleteBookmarksWithUndo(
+      [
+        target('a'),
+        target('b'),
+        target('c'),
+        { ...target('d'), url: 'https://e2e.invalid/d-old' },
+        target('e'),
+      ],
+      { onChanged: vi.fn() },
+    );
 
-    expect(deleted).toBe(0);
-    expect(bookmarks.childIds('f')).toEqual(['a', 'b', 'c']);
-    expect(currentToasts()[0]).toMatchObject({ variant: 'destructive' });
+    expect(outcome).toEqual({ deleted: 2, skipped: 3, failed: 0 });
+    // The renamed bookmark and the one whose URL changed are left alone.
+    expect(bookmarks.childIds('f')).toEqual(['c', 'd']);
+    expect(currentToasts()[0]).toMatchObject({
+      title: '× 2 items deleted',
+      description:
+        'Deleted 2 items. Undo within 10 seconds. Skipped because they changed or were already deleted: 3. Failed: 0.',
+    });
+  });
+
+  it('deletes nothing and says why when every item changed since it was chosen', async () => {
+    await browser.bookmarks.remove('a');
+    const outcome = await deleteBookmarksWithUndo([target('a')], { onChanged: vi.fn() });
+
+    expect(outcome).toEqual({ deleted: 0, skipped: 1, failed: 0 });
+    expect(bookmarks.childIds('f')).toEqual(['b', 'c', 'd', 'e']);
+    expect(currentToasts()[0]).toMatchObject({
+      title: '× Error Deleting Bookmark',
+      description: 'Skipped because they changed or were already deleted: 1. Failed: 0.',
+      variant: 'destructive',
+    });
   });
 
   it('closes the Undo toast when the undo window ends', async () => {

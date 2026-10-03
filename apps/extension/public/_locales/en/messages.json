@@ -965,6 +965,14 @@
         "message": "Enter a URL.",
         "description": "Validation message when a link URL is empty"
     },
+    "bookmarks_editUrlInvalid": {
+        "message": "Enter a complete URL, including its scheme, such as https://example.com/.",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "Enter a folder name.",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
     "bookmarks_openFailed": {
         "message": "Could not open bookmark",
         "description": "Toast shown when a bookmark cannot be opened"
@@ -2860,6 +2868,10 @@
     "toast_itemsRestoredDesc": {
         "message": "Restored $1 items.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "Skipped because they changed or were already deleted: $1. Failed: $2.",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
     },
     "bookmarks_deleteItems": {
         "message": "Delete $1 items",
