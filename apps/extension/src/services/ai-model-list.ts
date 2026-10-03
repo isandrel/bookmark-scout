@@ -4,10 +4,10 @@
  * here; which shape a provider uses is configured per provider in config/ai/providers/.
  */
 import { z } from 'zod';
-import type { MODEL_LIST_STYLES } from '@/lib/config/ai-provider-schema';
+import type { MODEL_LIST_STYLES as MODEL_LIST_STYLE_NAMES } from '@/lib/config/ai-provider-schema';
 
 /** Response shapes of provider model-list endpoints. `none` means the provider has no list. */
-export type ModelListStyle = (typeof MODEL_LIST_STYLES)[number];
+export type ModelListStyle = (typeof MODEL_LIST_STYLE_NAMES)[number];
 
 export type AIConnectionErrorCode =
   | 'invalid_key'
@@ -52,15 +52,114 @@ type ModelPage = { models: DetectedAIModel[]; next?: URL };
 
 type JsonRecord = Record<string, unknown>;
 
-const isRecord = (value: unknown): value is JsonRecord =>
-  value !== null && typeof value === 'object' && !Array.isArray(value);
+/** How one response shape is requested and read. */
+type ModelListStyleSpec = {
+  /** Path of the list under the provider's base URL. */
+  path: string;
+  /** Query parameter that asks for the configured page size, for paginated lists. */
+  pageSizeParam?: string;
+  /** Auth and version headers in the provider's own style. */
+  headers: (apiKey: string, settings: AISettings) => Record<string, string>;
+  /** One page of models, or null when the payload is not this shape. */
+  parse: (payload: JsonRecord, requestUrl: URL) => ModelPage | null;
+};
+
+const bearer = (apiKey: string): Record<string, string> =>
+  apiKey ? { Authorization: `Bearer ${apiKey}` } : {};
+
+const stringField = (item: JsonRecord, key: string) =>
+  typeof item[key] === 'string' && item[key] ? (item[key] as string) : undefined;
+
+/** Records in `list` read with `read`; other entries are ignored. */
+const readModels = (list: unknown[], read: (item: JsonRecord) => DetectedAIModel | undefined) =>
+  list.filter(isPlainObject).flatMap((item) => {
+    const model = read(item);
+    return model ? [model] : [];
+  });
+
+/** The same URL with one query parameter set, for the next page of a list. */
+function nextPage(requestUrl: URL, param: string, value: string | undefined): URL | undefined {
+  if (!value) return undefined;
+  const next = new URL(requestUrl);
+  next.searchParams.set(param, value);
+  return next;
+}
+
+/** Model-list request and response per style; `none` providers have no list. */
+export const MODEL_LIST_STYLES: Record<Exclude<ModelListStyle, 'none'>, ModelListStyleSpec> = {
+  openai: {
+    path: 'models',
+    headers: (apiKey, settings) => {
+      const { organization, project } = settings.providerOptions ?? {};
+      return {
+        ...bearer(apiKey),
+        ...(organization ? { 'OpenAI-Organization': organization } : {}),
+        ...(project ? { 'OpenAI-Project': project } : {}),
+      };
+    },
+    parse: (payload) => {
+      if (!Array.isArray(payload.data)) return null;
+      const models = readModels(payload.data, (item) => {
+        const id = stringField(item, 'id');
+        return id ? { id, name: stringField(item, 'name') ?? id } : undefined;
+      });
+      return { models };
+    },
+  },
+  anthropic: {
+    path: 'models',
+    pageSizeParam: 'limit',
+    headers: (apiKey) => ({
+      ...ANTHROPIC_BROWSER_ACCESS_HEADER,
+      'anthropic-version': limits.anthropic_version,
+      ...(apiKey ? { 'x-api-key': apiKey } : {}),
+    }),
+    parse: (payload, requestUrl) => {
+      if (!Array.isArray(payload.data)) return null;
+      const models = readModels(payload.data, (item) => {
+        const id = stringField(item, 'id');
+        return id ? { id, name: stringField(item, 'display_name') ?? id } : undefined;
+      });
+      const lastId = payload.has_more === true ? stringField(payload, 'last_id') : undefined;
+      return { models, next: nextPage(requestUrl, 'after_id', lastId) };
+    },
+  },
+  google: {
+    path: 'models',
+    pageSizeParam: 'pageSize',
+    headers: (apiKey): Record<string, string> => (apiKey ? { 'x-goog-api-key': apiKey } : {}),
+    parse: (payload, requestUrl) => {
+      if (!Array.isArray(payload.models)) return null;
+      const models = readModels(payload.models, (item) => {
+        const name = stringField(item, 'name');
+        const methods = Array.isArray(item.supportedGenerationMethods)
+          ? item.supportedGenerationMethods
+          : [];
+        // Embedding and image-only models cannot answer prompts.
+        if (!name || !methods.includes('generateContent')) return undefined;
+        const id = name.replace(/^models\//, '');
+        return { id, name: stringField(item, 'displayName') ?? id };
+      });
+      const token = stringField(payload, 'nextPageToken');
+      return { models, next: nextPage(requestUrl, 'pageToken', token) };
+    },
+  },
+  ollama: {
+    path: 'tags',
+    headers: bearer,
+    parse: (payload) => {
+      if (!Array.isArray(payload.models)) return null;
+      const models = readModels(payload.models, (item) => {
+        const id = stringField(item, 'name') ?? stringField(item, 'model');
+        return id ? { id, name: id } : undefined;
+      });
+      return { models };
+    },
+  },
+};
 
 function joinUrl(baseUrl: string, path: string): URL {
   return new URL(path, baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`);
-}
-
-function isLocalHost(url: URL): boolean {
-  return ['localhost', '127.0.0.1', '[::1]', '::1'].includes(url.hostname);
 }
 
 /** Request headers for the model list: auth in the provider's own style plus the extra headers. */
@@ -69,51 +168,17 @@ export function modelListHeaders(
   settings: AISettings,
 ): Record<string, string> {
   const headers: Record<string, string> = { Accept: 'application/json', ...settings.extraHeaders };
-  const apiKey = settings.apiKey.trim();
-  switch (style) {
-    case 'anthropic':
-      Object.assign(headers, ANTHROPIC_BROWSER_ACCESS_HEADER, {
-        'anthropic-version': limits.anthropic_version,
-      });
-      if (apiKey) headers['x-api-key'] = apiKey;
-      break;
-    case 'google':
-      if (apiKey) headers['x-goog-api-key'] = apiKey;
-      break;
-    case 'openai':
-    case 'ollama':
-      if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
-      break;
-    case 'none':
-      break;
-  }
-  const { organization, project } = settings.providerOptions ?? {};
-  if (style === 'openai' && organization) headers['OpenAI-Organization'] = organization;
-  if (style === 'openai' && project) headers['OpenAI-Project'] = project;
-  return headers;
+  if (style === 'none') return headers;
+  return { ...headers, ...MODEL_LIST_STYLES[style].headers(settings.apiKey.trim(), settings) };
 }
 
-function firstUrl(style: ModelListStyle, baseUrl: string): URL {
-  switch (style) {
-    case 'anthropic': {
-      const url = joinUrl(baseUrl, 'models');
-      url.searchParams.set('limit', String(limits.model_list_page_size));
-      return url;
-    }
-    case 'google': {
-      const url = joinUrl(baseUrl, 'models');
-      url.searchParams.set('pageSize', String(limits.model_list_page_size));
-      return url;
-    }
-    case 'ollama':
-      return joinUrl(baseUrl, 'tags');
-    default:
-      return joinUrl(baseUrl, 'models');
+function firstUrl(spec: ModelListStyleSpec, baseUrl: string): URL {
+  const url = joinUrl(baseUrl, spec.path);
+  if (spec.pageSizeParam) {
+    url.searchParams.set(spec.pageSizeParam, String(limits.model_list_page_size));
   }
+  return url;
 }
-
-const stringField = (item: JsonRecord, key: string) =>
-  typeof item[key] === 'string' && item[key] ? (item[key] as string) : undefined;
 
 /** Parses one page of a model-list response; returns null when it is not that provider's shape. */
 export function parseModelPage(
@@ -121,85 +186,38 @@ export function parseModelPage(
   payload: unknown,
   requestUrl: URL,
 ): ModelPage | null {
-  if (!isRecord(payload)) return null;
-  switch (style) {
-    case 'openai': {
-      if (!Array.isArray(payload.data)) return null;
-      const models = payload.data.filter(isRecord).flatMap((item) => {
-        const id = stringField(item, 'id');
-        return id ? [{ id, name: stringField(item, 'name') ?? id }] : [];
-      });
-      return { models };
-    }
-    case 'anthropic': {
-      if (!Array.isArray(payload.data)) return null;
-      const models = payload.data.filter(isRecord).flatMap((item) => {
-        const id = stringField(item, 'id');
-        return id ? [{ id, name: stringField(item, 'display_name') ?? id }] : [];
-      });
-      const lastId = stringField(payload, 'last_id');
-      let next: URL | undefined;
-      if (payload.has_more === true && lastId) {
-        next = new URL(requestUrl);
-        next.searchParams.set('after_id', lastId);
-      }
-      return { models, next };
-    }
-    case 'google': {
-      if (!Array.isArray(payload.models)) return null;
-      const models = payload.models.filter(isRecord).flatMap((item) => {
-        const name = stringField(item, 'name');
-        const methods = Array.isArray(item.supportedGenerationMethods)
-          ? item.supportedGenerationMethods
-          : [];
-        // Embedding and image-only models cannot answer prompts.
-        if (!name || !methods.includes('generateContent')) return [];
-        const id = name.replace(/^models\//, '');
-        return [{ id, name: stringField(item, 'displayName') ?? id }];
-      });
-      const token = stringField(payload, 'nextPageToken');
-      let next: URL | undefined;
-      if (token) {
-        next = new URL(requestUrl);
-        next.searchParams.set('pageToken', token);
-      }
-      return { models, next };
-    }
-    case 'ollama': {
-      if (!Array.isArray(payload.models)) return null;
-      const models = payload.models.filter(isRecord).flatMap((item) => {
-        const id = stringField(item, 'name') ?? stringField(item, 'model');
-        return id ? [{ id, name: id }] : [];
-      });
-      return { models };
-    }
-    case 'none':
-      return null;
-  }
+  if (style === 'none' || !isPlainObject(payload)) return null;
+  return MODEL_LIST_STYLES[style].parse(payload, requestUrl);
 }
 
 /** Some providers answer a bad key with 400 instead of 401. */
-function looksLikeInvalidKey(body: string): boolean {
-  return /API_KEY_INVALID|invalid[ _-]?api[ _-]?key|incorrect api key|invalid x-api-key/i.test(body);
-}
+const INVALID_KEY_PATTERN =
+  /API_KEY_INVALID|invalid[ _-]?api[ _-]?key|incorrect api key|invalid x-api-key/i;
+
+/** Statuses with one meaning whatever the provider; others are handled below. */
+const STATUS_ERRORS: Readonly<Record<number, { code: AIConnectionErrorCode; key: MessageKey }>> = {
+  401: { code: 'invalid_key', key: 'ai_connErrorInvalidKey' },
+  404: { code: 'not_found', key: 'ai_connErrorNotFound' },
+  429: { code: 'rate_limited', key: 'ai_connErrorRateLimited' },
+};
 
 function connectionErrorForStatus(status: number, body: string, url: URL): AIConnectionError {
-  const host = url.host;
-  if (status === 401) return new AIConnectionError('invalid_key', t('ai_connErrorInvalidKey'), status);
-  if (status === 400 && looksLikeInvalidKey(body)) {
+  const known = STATUS_ERRORS[status];
+  if (known) return new AIConnectionError(known.code, t(known.key), status);
+  if (status === 400 && INVALID_KEY_PATTERN.test(body)) {
     return new AIConnectionError('invalid_key', t('ai_connErrorInvalidKey'), status);
   }
   if (status === 403) {
     // Ollama and LM Studio reject extension origins with 403 until they are allowed.
-    return isLocalHost(url)
+    return isPrivateHost(url.hostname)
       ? new AIConnectionError('origin_rejected', t('ai_connErrorOriginRejected'), status)
       : new AIConnectionError('forbidden', t('ai_connErrorForbidden'), status);
   }
-  if (status === 404) return new AIConnectionError('not_found', t('ai_connErrorNotFound'), status);
-  if (status === 429) {
-    return new AIConnectionError('rate_limited', t('ai_connErrorRateLimited'), status);
-  }
-  return new AIConnectionError('http_error', t('ai_connErrorHttp', [String(status), host]), status);
+  return new AIConnectionError(
+    'http_error',
+    t('ai_connErrorHttp', [String(status), url.host]),
+    status,
+  );
 }
 
 async function fetchJson(
@@ -224,7 +242,10 @@ async function fetchJson(
       if (timedOut) {
         throw new AIConnectionError(
           'timeout',
-          t('ai_connErrorTimeout', [url.host, String(limits.model_list_timeout_ms / 1000)]),
+          t('ai_connErrorTimeout', [
+            url.host,
+            String(limits.model_list_timeout_ms / MS_PER_SECOND),
+          ]),
         );
       }
       if (signal?.aborted) throw error;
@@ -263,7 +284,7 @@ export async function listProviderModels(
     provider: settings.provider,
   });
   const seen = new Map<string, DetectedAIModel>();
-  let url: URL | undefined = firstUrl(style, baseUrl);
+  let url: URL | undefined = firstUrl(MODEL_LIST_STYLES[style], baseUrl);
   // Bounded, so a misbehaving endpoint cannot page forever.
   for (let page = 0; url && page < limits.model_list_max_pages; page += 1) {
     const payload = await fetchJson(url, headers, options.signal, fetch);

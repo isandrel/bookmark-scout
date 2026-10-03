@@ -123,7 +123,8 @@ describe('config ownership', () => {
         return owners.length === 1 ? [] : [`${file}: read by ${owners.length} modules`];
       });
     expect(problems).toEqual([]);
-  });
+    // Importing every owner module afresh takes several seconds on a busy machine.
+  }, 30_000);
 
   it('keeps config/ to TOML files plus the generated provider catalog', () => {
     expect(listConfigFiles().filter((file) => !file.endsWith('.toml'))).toEqual([
