@@ -8,11 +8,18 @@
  */
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { z } from 'zod';
 import {
   AI_PROVIDERS_CONFIG_PATH,
   aiProviderFilesSchema,
 } from '../src/lib/config/ai-provider-schema';
 import { createConfigReader, loadAppConfig } from '../src/lib/config/loader';
+import {
+  type CatalogProvider,
+  catalogIdSchema,
+  catalogProviderSchema,
+  providerCatalogSchema,
+} from '../src/lib/config/provider-catalog-schema';
 
 const SOURCE_URL = 'https://models.dev/api.json';
 const CONFIG_DIR = path.resolve(import.meta.dir, '../config');
@@ -60,23 +67,13 @@ const OPENAI_COMPATIBLE_ENDPOINTS: Record<string, string> = {
   deepinfra: 'https://api.deepinfra.com/v1/openai',
 };
 
-type ModelsDevProvider = {
-  id?: string;
-  name?: string;
-  api?: string;
-  doc?: string;
-  npm?: string;
-};
-
-export type CatalogProvider = {
-  name: string;
-  base_url: string;
-  doc?: string;
-  protocol: CatalogProtocol;
-  requires_api_key: boolean;
-  /** Omitted when the provider has an OpenAI- or Anthropic-style model list. */
-  model_list?: 'none';
-};
+/** The fields read from each models.dev entry; everything else is dropped. */
+const modelsDevProviderSchema = z.object({
+  name: z.string().optional(),
+  api: z.string().optional(),
+  doc: z.string().optional(),
+  npm: z.string().optional(),
+});
 
 const isHttpUrl = (value: string) => {
   try {
@@ -110,11 +107,19 @@ const isLocal = (value: string) =>
 
 const response = await fetch(SOURCE_URL);
 if (!response.ok) throw new Error(`models.dev answered ${response.status}`);
-const source = (await response.json()) as Record<string, ModelsDevProvider>;
+// models.dev is untrusted input: ids become file names and every value is written to the repo, so
+// each entry is validated and anything that does not fit the catalog schema is skipped.
+const source = z.record(z.string(), z.unknown()).parse(await response.json());
+const skipped: string[] = [];
 
 const providers: Record<string, CatalogProvider> = {};
 for (const id of Object.keys(source).sort()) {
-  const entry = { ...source[id] };
+  const parsedEntry = modelsDevProviderSchema.safeParse(source[id]);
+  if (!catalogIdSchema.safeParse(id).success || !parsedEntry.success) {
+    skipped.push(id);
+    continue;
+  }
+  const entry = { ...parsedEntry.data };
   if (!entry.api && OPENAI_COMPATIBLE_ENDPOINTS[id]) {
     entry.api = OPENAI_COMPATIBLE_ENDPOINTS[id];
     entry.npm = '@ai-sdk/openai-compatible';
@@ -122,7 +127,7 @@ for (const id of Object.keys(source).sort()) {
   const protocol = entry.npm ? PROTOCOL_BY_PACKAGE[entry.npm] : undefined;
   if (!protocol || !entry.api || !isHttpUrl(entry.api) || !entry.name) continue;
   if (hasPlaceholder(entry.api) || UNAVAILABLE_PROVIDERS.has(id)) continue;
-  providers[id] = {
+  const candidate = catalogProviderSchema.safeParse({
     name: entry.name,
     // Local addresses are written as localhost, never 127.0.0.1.
     base_url: entry.api.replace(/\/+$/, '').replace('://127.0.0.1', '://localhost'),
@@ -130,7 +135,9 @@ for (const id of Object.keys(source).sort()) {
     protocol,
     requires_api_key: !isLocal(entry.api),
     ...(NO_MODEL_LIST.has(id) ? { model_list: 'none' as const } : {}),
-  };
+  });
+  if (candidate.success) providers[id] = candidate.data;
+  else skipped.push(id);
 }
 
 /** Keeps only path geometry: no scripts, event handlers, links, or embedded images. */
@@ -138,6 +145,13 @@ function sanitizeLogo(svg: string): string | null {
   if (!svg.trimStart().startsWith('<svg') || svg.length > MAX_LOGO_BYTES) return null;
   if (/<(script|foreignObject|image|use|a)\b|\son\w+=|javascript:|href=/i.test(svg)) return null;
   return svg;
+}
+
+/** The logo file for an id, or null if the id is not a safe file name inside LOGO_DIR. */
+function logoPath(id: string): string | null {
+  if (!catalogIdSchema.safeParse(id).success) return null;
+  const file = path.resolve(LOGO_DIR, `${id}.svg`);
+  return path.dirname(file) === LOGO_DIR ? file : null;
 }
 
 async function downloadLogos(ids: string[]): Promise<string[]> {
@@ -152,13 +166,15 @@ async function downloadLogos(ids: string[]): Promise<string[]> {
   await Promise.all(
     Array.from({ length: 8 }, async () => {
       for (let id = queue.shift(); id; id = queue.shift()) {
+        const file = logoPath(id);
+        if (!file) continue;
         const logoResponse = await fetch(LOGO_URL(id)).catch(() => null);
         if (!logoResponse?.ok) continue;
         const text = await logoResponse.text();
         if (placeholder && text === placeholder) continue;
         const logo = sanitizeLogo(text);
         if (!logo) continue;
-        await writeFile(path.join(LOGO_DIR, `${id}.svg`), logo);
+        await writeFile(file, logo);
         saved.push(id);
       }
     }),
@@ -171,13 +187,16 @@ const logos = await downloadLogos([
 ]);
 const logoFiles = await readdir(LOGO_DIR);
 
-const output = {
+// The same schema the extension validates the bundled file with on load.
+const output = providerCatalogSchema.parse({
   source: 'https://models.dev (MIT License, https://github.com/sst/models.dev)',
-  /** Provider ids with a logo in public/provider-logos/. */
   logos,
   providers,
-};
+});
 await writeFile(OUTPUT, `${JSON.stringify(output, null, 2)}\n`);
+if (skipped.length) {
+  console.warn(`Skipped ${skipped.length} entries that failed validation: ${skipped.join(', ')}`);
+}
 console.log(
   `Wrote ${Object.keys(providers).length} providers and ${logoFiles.length} logos to ${path.relative(process.cwd(), OUTPUT)}`,
 );

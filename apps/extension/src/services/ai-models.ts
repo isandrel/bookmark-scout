@@ -1,9 +1,10 @@
 import {
-  AI_PROVIDERS_CONFIG_PATH,
   type AI_PROVIDER_EXTRA_FIELDS,
   type AI_PROVIDER_KINDS,
+  AI_PROVIDERS_CONFIG_PATH,
   aiProviderFilesSchema,
 } from '@/lib/config/ai-provider-schema';
+import { providerCatalogSchema } from '@/lib/config/provider-catalog-schema';
 import providerCatalog from '../../config/provider-catalog.json';
 
 export type AIModel = {
@@ -49,17 +50,8 @@ const providerFiles = Object.entries(
   readConfig(AI_PROVIDERS_CONFIG_PATH, aiProviderFilesSchema),
 ).sort(([, left], [, right]) => left.order - right.order);
 
-type CatalogEntry = {
-  name: string;
-  base_url: string;
-  doc?: string;
-  protocol: 'openai' | 'anthropic';
-  requires_api_key: boolean;
-  model_list?: 'none';
-};
-
-type ProviderCatalog = { logos: string[]; providers: Record<string, CatalogEntry> };
-const catalog = providerCatalog as ProviderCatalog;
+/** Validated once on load, like the TOML config: a bad snapshot fails here, not in the picker. */
+const catalog = providerCatalogSchema.parse(providerCatalog);
 
 /**
  * Providers from the bundled models.dev snapshot, as provider configs. They have no built-in
