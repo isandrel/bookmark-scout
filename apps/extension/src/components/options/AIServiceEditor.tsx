@@ -5,9 +5,9 @@
  */
 
 import {
+  ChevronRight,
   CircleAlert,
   CircleCheck,
-  ChevronRight,
   ExternalLink,
   Eye,
   EyeOff,
@@ -31,19 +31,21 @@ const fieldExamples = readConfig(
 );
 
 /** Labels and descriptions of provider-specific connection fields. */
-const EXTRA_FIELD_COPY: Record<AIProviderExtraField, { label: MessageKey; description: MessageKey }> =
-  {
-    organization: {
-      label: 'options_organization',
-      description: 'options_organizationDescription',
-    },
-    project: { label: 'options_project', description: 'options_projectDescription' },
-    resourceName: {
-      label: 'options_resourceName',
-      description: 'options_resourceNameDescription',
-    },
-    apiVersion: { label: 'options_apiVersion', description: 'options_apiVersionDescription' },
-  };
+const EXTRA_FIELD_COPY: Record<
+  AIProviderExtraField,
+  { label: MessageKey; description: MessageKey }
+> = {
+  organization: {
+    label: 'options_organization',
+    description: 'options_organizationDescription',
+  },
+  project: { label: 'options_project', description: 'options_projectDescription' },
+  resourceName: {
+    label: 'options_resourceName',
+    description: 'options_resourceNameDescription',
+  },
+  apiVersion: { label: 'options_apiVersion', description: 'options_apiVersionDescription' },
+};
 
 /** A field of the AI services panel and the text settings search matches it by. */
 export type AIServicesSearchField = { advanced: boolean; text: string[] };
@@ -90,7 +92,10 @@ type ConnectionStatusValue = {
 const CONNECTION_STATUS_STYLES = {
   success: { icon: CircleCheck, className: 'border-success/30 bg-success-wash text-success' },
   warning: { icon: TriangleAlert, className: 'border-warning/30 bg-warning-wash text-warning' },
-  error: { icon: CircleAlert, className: 'border-destructive/30 bg-destructive-wash text-destructive-text' },
+  error: {
+    icon: CircleAlert,
+    className: 'border-destructive/30 bg-destructive-wash text-destructive-text',
+  },
 } as const;
 
 /** The result of Refresh Models or Verify Service, shown next to the buttons that produced it. */
@@ -101,7 +106,9 @@ function ConnectionStatus({ status }: { status: ConnectionStatusValue | null }) 
         (() => {
           const { icon: Icon, className } = CONNECTION_STATUS_STYLES[status.tone];
           return (
-            <div className={`flex items-start gap-2 rounded-md border px-3 py-2 text-sm ${className}`}>
+            <div
+              className={`flex items-start gap-2 rounded-md border px-3 py-2 text-sm ${className}`}
+            >
               <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />
               <div className="min-w-0 [overflow-wrap:anywhere]">
                 <p className="font-medium">{status.title}</p>
@@ -246,7 +253,8 @@ export function AIServiceEditor({
     const baseUrl = fields.baseUrl.trim();
     const nextErrors: FieldErrors = {
       apiKey: validateApiKey(apiKey),
-      baseUrl: baseUrl && !isValidProviderBaseUrl(baseUrl) ? t('options_baseUrlInvalid') : undefined,
+      baseUrl:
+        baseUrl && !isValidProviderBaseUrl(baseUrl) ? t('options_baseUrlInvalid') : undefined,
       extraHeaders: isValidProviderExtraHeaders(fields.extraHeaders)
         ? undefined
         : t('options_extraHeadersInvalid'),
@@ -371,35 +379,6 @@ export function AIServiceEditor({
     }
   };
 
-  const fieldError = (id: string, message?: string) =>
-    message ? (
-      <p id={id} role="alert" className="text-sm text-destructive-text">
-        {message}
-      </p>
-    ) : null;
-
-  const describedBy = (id: string, error?: string) =>
-    error ? `${id}-description ${id}-error` : `${id}-description`;
-
-  const textField = (
-    key: keyof StoredFields | 'name',
-    label: string,
-    description: string,
-    input: React.ReactNode,
-    error?: string,
-  ) => (
-    <div className="space-y-1.5">
-      <Label htmlFor={`${idPrefix}-${key}`} className="text-sm font-medium">
-        {label}
-      </Label>
-      {input}
-      <p id={`${idPrefix}-${key}-description`} className="text-xs text-muted-foreground">
-        {description}
-      </p>
-      {fieldError(`${idPrefix}-${key}-error`, error)}
-    </div>
-  );
-
   return (
     <div className="space-y-4" data-testid="ai-service-editor">
       {(isCatalogProvider(provider) || docUrl) && (
@@ -420,52 +399,59 @@ export function AIServiceEditor({
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
-        {textField(
-          'name',
-          t('options_aiServiceName'),
-          t('options_aiServiceNameDescription'),
-          <Input
-            id={`${idPrefix}-name`}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            onBlur={saveName}
-            aria-describedby={`${idPrefix}-name-description`}
-            autoComplete="off"
-          />,
-        )}
-        {textField(
-          'apiKey',
-          t('options_apiKey'),
-          providerRequiresApiKey(provider)
-            ? t('options_apiKeyDescription')
-            : t('options_apiKeyOptionalDescription', providerName),
-          <div className="relative">
+        <Field
+          id={`${idPrefix}-name`}
+          label={t('options_aiServiceName')}
+          description={t('options_aiServiceNameDescription')}
+        >
+          {(control) => (
             <Input
-              id={`${idPrefix}-apiKey`}
-              type={showApiKey ? 'text' : 'password'}
+              {...control}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              onBlur={saveName}
               autoComplete="off"
-              value={fields.apiKey}
-              onChange={(event) => setFields((current) => ({ ...current, apiKey: event.target.value }))}
-              onBlur={() => void saveFields()}
-              aria-describedby={describedBy(`${idPrefix}-apiKey`, errors.apiKey)}
-              aria-invalid={Boolean(errors.apiKey)}
-              placeholder={providerConfig?.api_key_placeholder || fieldExamples.api_key}
-              className="pr-9"
             />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              className="absolute right-1 top-1/2 -translate-y-1/2"
-              onClick={() => setShowApiKey(!showApiKey)}
-              aria-label={showApiKey ? t('options_hideApiKey') : t('options_showApiKey')}
-              aria-pressed={showApiKey}
-            >
-              {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </Button>
-          </div>,
-          errors.apiKey,
-        )}
+          )}
+        </Field>
+        <Field
+          id={`${idPrefix}-apiKey`}
+          label={t('options_apiKey')}
+          description={
+            providerRequiresApiKey(provider)
+              ? t('options_apiKeyDescription')
+              : t('options_apiKeyOptionalDescription', providerName)
+          }
+          error={errors.apiKey}
+        >
+          {(control) => (
+            <div className="relative">
+              <Input
+                {...control}
+                type={showApiKey ? 'text' : 'password'}
+                autoComplete="off"
+                value={fields.apiKey}
+                onChange={(event) =>
+                  setFields((current) => ({ ...current, apiKey: event.target.value }))
+                }
+                onBlur={() => void saveFields()}
+                placeholder={providerConfig?.api_key_placeholder || fieldExamples.api_key}
+                className="pr-9"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                className="absolute right-1 top-1/2 -translate-y-1/2"
+                onClick={() => setShowApiKey(!showApiKey)}
+                aria-label={showApiKey ? t('options_hideApiKey') : t('options_showApiKey')}
+                aria-pressed={showApiKey}
+              >
+                {showApiKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+            </div>
+          )}
+        </Field>
       </div>
 
       <div className="space-y-1.5">
@@ -534,64 +520,66 @@ export function AIServiceEditor({
           {t('options_aiServiceMore')}
         </CollapsibleTrigger>
         <CollapsibleContent className="mt-3 space-y-4 border-l pl-4">
-          {textField(
-            'baseUrl',
-            t('options_baseUrl'),
-            t('options_baseUrlDescription'),
-            <Input
-              id={`${idPrefix}-baseUrl`}
-              type="url"
-              value={fields.baseUrl}
-              onChange={(event) => setFields((current) => ({ ...current, baseUrl: event.target.value }))}
-              onBlur={() => void saveFields()}
-              aria-describedby={describedBy(`${idPrefix}-baseUrl`, errors.baseUrl)}
-              aria-invalid={Boolean(errors.baseUrl)}
-              placeholder={getProviderEndpoint(provider, undefined, options) || fieldExamples.base_url}
-            />,
-            errors.baseUrl,
-          )}
-          {extraFields.map((field) => {
-            const copy = EXTRA_FIELD_COPY[field];
-            const id = `${idPrefix}-option-${field}`;
-            return (
-              <div key={field} className="space-y-1.5">
-                <Label htmlFor={id} className="text-sm font-medium">
-                  {t(copy.label)}
-                </Label>
+          <Field
+            id={`${idPrefix}-baseUrl`}
+            label={t('options_baseUrl')}
+            description={t('options_baseUrlDescription')}
+            error={errors.baseUrl}
+          >
+            {(control) => (
+              <Input
+                {...control}
+                type="url"
+                value={fields.baseUrl}
+                onChange={(event) =>
+                  setFields((current) => ({ ...current, baseUrl: event.target.value }))
+                }
+                onBlur={() => void saveFields()}
+                placeholder={
+                  getProviderEndpoint(provider, undefined, options) || fieldExamples.base_url
+                }
+              />
+            )}
+          </Field>
+          {extraFields.map((field) => (
+            <Field
+              key={field}
+              id={`${idPrefix}-option-${field}`}
+              label={t(EXTRA_FIELD_COPY[field].label)}
+              description={t(EXTRA_FIELD_COPY[field].description)}
+            >
+              {(control) => (
                 <Input
-                  id={id}
+                  {...control}
                   value={options[field] ?? ''}
                   onChange={(event) =>
                     setOptions((current) => ({ ...current, [field]: event.target.value }))
                   }
                   onBlur={() => void saveFields()}
-                  aria-describedby={`${id}-description`}
                   autoComplete="off"
                   placeholder={fieldExamples.extra_fields[field]}
                 />
-                <p id={`${id}-description`} className="text-xs text-muted-foreground">
-                  {t(copy.description)}
-                </p>
-              </div>
-            );
-          })}
-          {textField(
-            'extraHeaders',
-            t('options_extraHeaders'),
-            t('options_extraHeadersDescription'),
-            <Input
-              id={`${idPrefix}-extraHeaders`}
-              value={fields.extraHeaders}
-              onChange={(event) =>
-                setFields((current) => ({ ...current, extraHeaders: event.target.value }))
-              }
-              onBlur={() => void saveFields()}
-              aria-describedby={describedBy(`${idPrefix}-extraHeaders`, errors.extraHeaders)}
-              aria-invalid={Boolean(errors.extraHeaders)}
-              placeholder={fieldExamples.extra_headers}
-            />,
-            errors.extraHeaders,
-          )}
+              )}
+            </Field>
+          ))}
+          <Field
+            id={`${idPrefix}-extraHeaders`}
+            label={t('options_extraHeaders')}
+            description={t('options_extraHeadersDescription')}
+            error={errors.extraHeaders}
+          >
+            {(control) => (
+              <Input
+                {...control}
+                value={fields.extraHeaders}
+                onChange={(event) =>
+                  setFields((current) => ({ ...current, extraHeaders: event.target.value }))
+                }
+                onBlur={() => void saveFields()}
+                placeholder={fieldExamples.extra_headers}
+              />
+            )}
+          </Field>
         </CollapsibleContent>
       </Collapsible>
     </div>

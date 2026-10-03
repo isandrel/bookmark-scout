@@ -105,3 +105,31 @@ test('the prompt size counter shows binary kilobytes against the configured limi
   await editor.getByRole('textbox', { name: 'Prompt', exact: true }).fill('x'.repeat(2048));
   await expect(editor.locator('#prompt-text-size')).toHaveText(`2 KB of ${kilobytes(maxBytes)}`);
 });
+
+test('deleting a custom prompt asks first and returns the task to its default', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  const row = page.getByTestId('prompt-task').filter({ hasText: 'Auto-Tagging' });
+  await row.getByRole('button', { name: 'Customize' }).click();
+  const editor = page.getByRole('dialog', { name: /New prompt/ });
+  await editor.getByLabel('Name').fill('Short lived');
+  await editor.getByRole('button', { name: 'Save prompt' }).click();
+  await expect(row.getByRole('combobox')).toHaveText('Short lived');
+
+  // Cancel keeps the prompt.
+  await row.getByRole('button', { name: 'Delete Short lived' }).click();
+  const confirm = page.getByRole('dialog', { name: 'Delete Short lived?' });
+  await confirm.getByRole('button', { name: 'Cancel' }).click();
+  await expect(confirm).toHaveCount(0);
+  await expect(row.getByRole('combobox')).toHaveText('Short lived');
+
+  await row.getByRole('button', { name: 'Delete Short lived' }).click();
+  await confirm.getByRole('button', { name: 'Delete', exact: true }).click();
+  await expect(confirm).toHaveCount(0);
+  await expect(row.getByRole('combobox')).toHaveText('Default (built in)');
+});

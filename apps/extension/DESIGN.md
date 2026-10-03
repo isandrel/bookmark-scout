@@ -208,6 +208,14 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`dialog`**, **`toast`**, **`table`**: the existing primitives in `src/components/ui/`, themed by tokens only. Dialogs open in place with a fade and a slight zoom; they do not slide in from an edge.
 
+**`confirm-dialog`** (`ConfirmDialog`): a dialog that asks before an action. It has a title, an optional explanation, and Cancel beside a confirm button, which is `destructive` by default. Use it for every "Delete …?" prompt instead of assembling a dialog by hand.
+
+**`field`** (`Field`): a label with its description and an inline error, wired to the control through ids and `aria-*`. The `stacked` layout is for dialogs and editors, and the `setting` layout is for an Options row with the control and its reset button on the right.
+
+**`options-panel`** (`OptionsPanel`): a boxed Options section with a heading, a description, optional actions on the right, and the content below, such as AI services, AI activity, or the prompt library.
+
+**`mask-icon`** (`MaskIcon`): a one-color image, such as a provider logo, drawn as a CSS mask in the current text color.
+
 ## Do's and don'ts
 
 ### Do

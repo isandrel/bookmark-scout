@@ -128,7 +128,7 @@ export function BookmarkSearch({
             type="text"
             placeholder={t('popup_searchPlaceholder')}
             aria-label={t('popup_searchPlaceholder')}
-            aria-keyshortcuts="/"
+            aria-keyshortcuts={ariaKeyShortcuts(SHORTCUT_BINDINGS.popup.focusSearch)}
             title={t('shortcuts_popupHint')}
             role="combobox"
             aria-expanded={showHistory}
@@ -205,7 +205,7 @@ export function BookmarkSearch({
             {!query && !isFocused && (
               // The search box takes focus on open, so the hint shows once focus moves away.
               <Kbd aria-hidden="true" className="mr-1">
-                /
+                {shortcutKeyCaps(SHORTCUT_BINDINGS.popup.focusSearch[0]).join('+')}
               </Kbd>
             )}
             <button
