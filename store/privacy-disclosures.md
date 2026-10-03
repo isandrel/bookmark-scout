@@ -79,7 +79,7 @@ Required once any data category above is checked. Use `https://bookmark-scout.co
 
 ## Firefox Add-ons: data collection declaration
 
-`addons-linter` reports `MISSING_DATA_COLLECTION_PERMISSIONS`: new Firefox extensions must declare `browser_specific_settings.gecko.data_collection_permissions` in the manifest, and Firefox shows the declaration to the user at install. The Firefox build has no such key and no add-on ID today, so **the Firefox package cannot be submitted as a new listing until a manifest change lands.** That change is out of scope here (it touches `wxt.config.ts` and needs a release). Options for the maintainer:
+New Firefox extensions must declare `browser_specific_settings.gecko.data_collection_permissions` in the manifest, and Firefox shows the declaration to the user at install. The Firefox build declares option B today (`apps/extension/manifest.config.ts`): `required: ["authenticationInfo", "bookmarksInfo", "browsingActivity", "websiteContent"]`, for the AI provider the user chooses. Nothing goes to the developer. The maintainer chose option A instead (each category asked for when the user first turns on the feature that sends it); [`plans/2026-10-03-dynamic-permissions.md`](../plans/2026-10-03-dynamic-permissions.md) describes that change. Options considered:
 
 | Option | Manifest value | Trade-off |
 | --- | --- | --- |

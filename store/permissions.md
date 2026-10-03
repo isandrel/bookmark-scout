@@ -1,6 +1,6 @@
 # Permission Justifications
 
-Derived on 2026-10-01 from the built manifests, not from `wxt.config.ts` alone:
+Derived on 2026-10-03 from the built manifests, which `apps/extension/manifest.config.ts` generates per browser (checked by `tests/unit/manifest-config.test.ts`):
 
 ```bash
 NX_DAEMON=false bunx nx run extension:build:chrome
@@ -16,14 +16,14 @@ Rebuild and compare before each submission. If a permission is added or removed,
 | Key | Chrome `chrome-mv3` | Edge `edge-mv3` | Firefox `firefox-mv2` |
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
-| `permissions` | `bookmarks`, `tabs`, `favicon`, `storage`, `sidePanel`, `contextMenus` | Same as Chrome | Same list (`favicon` and `sidePanel` are not valid in Firefox; see linter results) |
+| `permissions` | `bookmarks`, `tabs`, `favicon`, `storage`, `sidePanel`, `contextMenus` | Same as Chrome | `bookmarks`, `tabs`, `storage`, `contextMenus` (the Chromium-only `favicon` and `sidePanel` are left out) |
 | Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*` | Same as Chrome | `optional_permissions`: `http://*/*`, `https://*/*` |
 | Host permissions at install | None | None | None |
 | `chrome_url_overrides` | `bookmarks` → `bookmarks.html` | Same as Chrome | Absent |
 | Side panel or sidebar | `side_panel.default_path` | Same as Chrome | `sidebar_action.default_panel` |
-| `web_accessible_resources` | `_favicon/*` for `<all_urls>`, any extension ID | Same as Chrome | `_favicon/*` |
+| `web_accessible_resources` | None | None | None |
 | Content scripts | None | None | None |
-| `browser_specific_settings.gecko` | Not applicable | Not applicable | **Absent** (no add-on ID, no `data_collection_permissions`) |
+| `browser_specific_settings.gecko` | Not applicable | Not applicable | `id`: `bookmark-scout@isandrel.github.io`, `strict_min_version`: `140.0`, `data_collection_permissions` (see [`privacy-disclosures.md`](privacy-disclosures.md#firefox-add-ons-data-collection-declaration)); `gecko_android.strict_min_version`: `142.0` |
 
 ## Chrome Web Store single purpose
 
@@ -59,7 +59,7 @@ Code: `getCurrentTab` and `openBookmarkInNewTab` in `src/services/bookmarks.ts`,
 Shows each bookmark's site icon by reading it from the browser's own favicon cache through the chrome-extension://<id>/_favicon/ URL. No network request is made for icons.
 ```
 
-Code: `getFaviconUrl` and `getSiteIconUrl` in `src/services/bookmarks.ts`. In Firefox this permission is invalid and the `_favicon` URL is never used: bookmarks show icons saved by Refresh Site Icons, or a generic icon (covered by the Firefox smoke suite).
+Code: `getFaviconUrl` and `getSiteIconUrl` in `src/services/bookmarks.ts`. The extension's own pages load these icons without any `web_accessible_resources` entry, so web pages cannot load icons through the extension (`tests/e2e/favicon-access.spec.ts`). Firefox has no such permission, so the Firefox manifest leaves it out and the `_favicon` URL is never used there: bookmarks show icons saved by Refresh Site Icons, or a generic icon (covered by the Firefox smoke suite).
 
 ### `storage`
 
@@ -97,29 +97,22 @@ Code: `src/services/web-host-access.ts`, `requestProviderHostAccess` in `src/ser
 
 Not a permission, but reviewers check it. The `chrome_url_overrides.bookmarks` key replaces the browser's Bookmarks page with the Bookmark Scout manager. The listing says so in its own paragraph, as the Chrome Web Store expects for page overrides.
 
-### `web_accessible_resources: _favicon/*` (Chrome and Edge)
-
-Declared for `<all_urls>` and any extension ID. The extension's own pages do not need it to load favicons, and it lets web pages request favicon images through the extension's ID. A reviewer may ask why it is there. **Decision for the maintainer:** keep it with a justification, or remove it in a separate change after checking that icons still load in the popup, side panel, and manager.
-
 ## Remote code (Chrome Web Store)
 
 Answer "No, I am not using remote code." All JavaScript ships in the package. The only network calls are user-triggered requests to bookmarked pages and to the user's chosen AI provider API, and their responses are treated as data.
 
 ## Linter results
 
-`bunx addons-linter@latest apps/extension/dist/firefox-mv2` on 2026-10-01 reported 0 errors, 0 notices, and 8 warnings:
+`bunx addons-linter@latest --output json apps/extension/dist/firefox-mv2` on 2026-10-03 reported 0 errors, 0 notices, and 8 warnings. The four manifest warnings of 2026-10-01 (`MANIFEST_PERMISSIONS` for `favicon` and `sidePanel`, `MISSING_DATA_COLLECTION_PERMISSIONS`, `MISSING_ADDON_ID`) are fixed. What remains is third-party library code:
 
 | Code | Where | Meaning and action |
 | --- | --- | --- |
-| `MANIFEST_PERMISSIONS` | `favicon` | Chromium-only permission. Harmless in Firefox but flagged. Consider dropping it from the Firefox manifest in the WXT hook. |
-| `MANIFEST_PERMISSIONS` | `sidePanel` | Chromium-only permission. Same as above. |
-| `MISSING_DATA_COLLECTION_PERMISSIONS` | manifest | **Blocking for a new AMO listing.** New Firefox extensions must declare `browser_specific_settings.gecko.data_collection_permissions`. See [`privacy-disclosures.md`](privacy-disclosures.md#firefox-add-ons-data-collection-declaration). |
-| `MISSING_ADDON_ID` | manifest | Choose a permanent add-on ID (for example `bookmark-scout@bookmark-scout.com`) and set `browser_specific_settings.gecko.id`. It cannot be changed after the first upload. |
-| `DANGEROUS_EVAL` (2) | `background.js`, `chunks/client-*.js` | Zod 4's capability probe `Function('')` inside `try`/`catch`. The extension CSP blocks it, and Zod falls back to its non-JIT path. Explain in reviewer notes. |
-| `UNSAFE_VAR_ASSIGNMENT` (2) | `chunks/client-*.js` | React DOM's `dangerouslySetInnerHTML` support. The extension source never uses `dangerouslySetInnerHTML` or `innerHTML` (checked with `grep`). Explain in reviewer notes. |
+| `DANGEROUS_EVAL` (2) | `background.js`, `chunks/theme-*.js` | Zod 4's capability probe `Function('')` inside `try`/`catch`. The extension CSP blocks it, and Zod falls back to its non-JIT path. Explain in reviewer notes. |
+| `UNSAFE_VAR_ASSIGNMENT` (5) | `chunks/theme-*.js`, `chunks/PopupPage-*.js` | React DOM's `dangerouslySetInnerHTML` support. The extension source never uses `dangerouslySetInnerHTML` or `innerHTML` (checked with `grep`). Explain in reviewer notes. |
+| `UNSAFE_VAR_ASSIGNMENT` (1) | `chunks/PopupPage-*.js` | "Unsafe call to `document().write`": the Markdown parser behind the Ask AI answers (`mdast-util-from-markdown`) calls `write` on its own tokenizer object, not on a DOM document. Explain in reviewer notes. |
 
 Chrome and Edge have no equivalent offline linter; their review is manual.
 
-## Package size note
+## Package size
 
-Every build ships `icon-original.png` (5.1 MB, copied from `apps/extension/public/`), which no manifest key or source file references. It is the largest file in each package. Removing it is a separate change; it does not affect permissions.
+The 5.1 MB source icon (`icon-original.png`), which no manifest key or source file references, moved from `apps/extension/public/` to `store/assets/`, so it is no longer copied into every package or into the Firefox sources ZIP.
