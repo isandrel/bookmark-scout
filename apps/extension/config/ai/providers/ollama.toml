@@ -1,0 +1,31 @@
+name = "Ollama (Local)"
+order = 100
+default_model = "llama3"
+provider_kind = "ollama"
+requires_api_key = false
+api_key_placeholder = "(Optional)"
+base_url = "http://localhost:11434/api"
+supports_custom_model = true
+model_list = "ollama"
+group = "local"
+logo = "ollama-cloud"
+
+[[models]]
+id = "llama3"
+name = "Llama 3"
+description = "Meta's Llama 3"
+
+[[models]]
+id = "mistral"
+name = "Mistral"
+description = "Mistral 7B"
+
+[[models]]
+id = "gemma"
+name = "Gemma"
+description = "Google's Gemma"
+
+[[models]]
+id = "deepseek-r1"
+name = "DeepSeek R1"
+description = "Reasoning (Local)"

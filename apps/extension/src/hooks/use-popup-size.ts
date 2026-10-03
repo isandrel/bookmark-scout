@@ -5,10 +5,10 @@
 
 import { useEffect } from 'react';
 
-/** Chrome and Edge cap extension popups at 800x600 px; smaller than 300 px is unusable. */
+/** The popupWidth/popupHeight bounds from config/settings/advanced.toml. */
 export const POPUP_SIZE_LIMITS = {
-  width: { min: 300, max: 800 },
-  height: { min: 300, max: 600 },
+  width: SETTING_NUMBER_BOUNDS.popupWidth,
+  height: SETTING_NUMBER_BOUNDS.popupHeight,
 } as const;
 
 export function clampPopupSize(width: number, height: number): { width: number; height: number } {

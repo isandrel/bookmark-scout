@@ -1,0 +1,19 @@
+# Defaults for Options > Behavior.
+
+# Default sort order: "date", "alphabetical", or "folders"
+sort_order = "date"
+
+# Organize bookmarks by folder structure
+group_by_folders = true
+
+# Show confirmation dialog before deleting items
+confirm_before_delete = true
+
+# Default name for newly created folders
+default_new_folder_name = { default = "New Folder", min_length = 1, max_length = 100 }
+
+# Maximum number of recent folders to show for quick select
+recent_folders_max = { default = 5, min = 1, max = 10, step = 1 }
+
+# Enable recent folders quick select panel
+recent_folders_enabled = true

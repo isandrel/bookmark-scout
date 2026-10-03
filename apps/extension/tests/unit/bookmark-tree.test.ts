@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+  FOLDER_PATH_SEPARATOR,
+  findNode,
+  folderIds,
   getBookmarkRootIds,
   getTopLevelBookmarkNodes,
   isBookmarkTreeRoot,
   isPermanentBookmarkFolder,
+  subtreeIds,
 } from '@/lib/bookmark-tree';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -91,5 +95,43 @@ describe('permanent folder detection', () => {
   it('treats user folders as modifiable', () => {
     const rootIds = getBookmarkRootIds(chromeTree);
     expect(isPermanentBookmarkFolder({ id: '10', parentId: '2' }, rootIds)).toBe(false);
+  });
+});
+
+describe('tree walking helpers', () => {
+  const tree: BookmarkTreeNode[] = [
+    {
+      id: 'a',
+      title: 'A',
+      children: [
+        { id: 'b', parentId: 'a', title: 'B', url: 'https://b.example' },
+        {
+          id: 'c',
+          parentId: 'a',
+          title: 'C',
+          children: [{ id: 'd', parentId: 'c', title: 'D', url: 'https://d.example' }],
+        },
+        { id: 'e', parentId: 'a', title: 'Empty', children: [] },
+      ],
+    },
+  ];
+
+  it('finds a node at any depth, or undefined', () => {
+    expect(findNode(tree, 'd')?.title).toBe('D');
+    expect(findNode(tree, 'a')?.title).toBe('A');
+    expect(findNode(tree, 'missing')).toBeUndefined();
+  });
+
+  it('lists a subtree parents first, including the node itself', () => {
+    expect(subtreeIds(tree[0])).toEqual(['a', 'b', 'c', 'd', 'e']);
+    expect(subtreeIds({ id: 'b' })).toEqual(['b']);
+  });
+
+  it('lists folders only, empty folders included', () => {
+    expect(folderIds(tree)).toEqual(['a', 'c', 'e']);
+  });
+
+  it('joins folder paths with one separator', () => {
+    expect(['Bookmarks bar', 'Work'].join(FOLDER_PATH_SEPARATOR)).toBe('Bookmarks bar / Work');
   });
 });

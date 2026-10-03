@@ -1,0 +1,18 @@
+name = "DeepSeek"
+order = 60
+default_model = "deepseek-chat"
+provider_kind = "native"
+requires_api_key = true
+api_key_placeholder = "sk-..."
+base_url = "https://api.deepseek.com/v1"
+logo = "deepseek"
+
+[[models]]
+id = "deepseek-chat"
+name = "DeepSeek V3"
+description = "General Chat"
+
+[[models]]
+id = "deepseek-reasoner"
+name = "DeepSeek R1"
+description = "Reasoning"

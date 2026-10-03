@@ -1,0 +1,22 @@
+# URL Cleaner tool. `default_scope` is "folder" or "all".
+enabled = true
+default_scope = "folder"
+remove_hash = false
+sort_query_params = true
+dedupe_query_params = true
+preserve_params = [ "id", "page", "q", "p", "lang" ]
+remove_params = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "utm_id",
+  "gclid",
+  "fbclid",
+  "mc_cid",
+  "mc_eid",
+  "ref",
+  "ref_src",
+  "si",
+]

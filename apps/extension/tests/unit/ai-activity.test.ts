@@ -12,8 +12,9 @@ import {
   redactUrl,
   truncateBody,
 } from '@/lib/ai-activity-storage';
-import { aiRuntimeConfig } from '@/lib/ai-runtime-config';
+import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
 import { AI_ACTIVITY_SOURCES, createLoggingFetch } from '@/services/ai-activity';
+import { readConfigToml } from '../config-files';
 
 const entry = (index: number) => ({
   at: index,
@@ -34,9 +35,11 @@ afterEach(() => {
 
 describe('AI runtime config', () => {
   it('reads the limits from the TOML config', () => {
-    expect(MAX_AI_ACTIVITY_ENTRIES).toBe(aiRuntimeConfig.activity.max_entries);
-    expect(MAX_AI_ACTIVITY_BODY_CHARS).toBe(aiRuntimeConfig.activity.max_body_chars);
-    expect(aiRuntimeConfig.limits.prompt_max_bytes).toBeLessThanOrEqual(8192);
+    const activity = readConfigToml('ai/activity.toml');
+    expect(MAX_AI_ACTIVITY_ENTRIES).toBe(activity.max_entries);
+    expect(MAX_AI_ACTIVITY_BODY_CHARS).toBe(activity.max_body_chars);
+    expect(MAX_PROMPT_BYTES).toBe(readConfigToml('ai/prompt-library.toml').prompt_max_bytes);
+    expect(MAX_PROMPT_BYTES).toBeLessThanOrEqual(8192);
   });
 });
 

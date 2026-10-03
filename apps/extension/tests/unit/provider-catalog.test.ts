@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
@@ -17,7 +19,7 @@ import {
 } from '@/services/ai-models';
 import { buildAISettingsFromProvider } from '@/services/ai-settings';
 import providerCatalog from '../../config/provider-catalog.json';
-import settingsToml from '../../config/settings.default.toml?raw';
+import { configRoot, listConfigFiles, readConfigToml } from '../config-files';
 
 const mocks = vi.hoisted(() => ({
   chatModel: vi.fn((model: string) => ({ model })),
@@ -108,8 +110,21 @@ describe('local and custom presets', () => {
   });
 
   it('writes local addresses as localhost, never 127.0.0.1', () => {
-    expect(settingsToml).not.toContain('127.0.0.1');
-    expect(JSON.stringify(providerCatalog)).not.toContain('127.0.0.1');
+    const files = listConfigFiles();
+    expect(files).toContain('provider-catalog.json');
+    const offenders = files.filter((file) =>
+      readFileSync(path.join(configRoot, file), 'utf8').includes('127.0.0.1'),
+    );
+    expect(offenders).toEqual([]);
+  });
+
+  it('gives every provider file logo a bundled catalog logo', () => {
+    const logos = new Set((providerCatalog as { logos: string[] }).logos);
+    const missing = listConfigFiles()
+      .filter((file) => file.startsWith('ai/providers/'))
+      .map((file) => readConfigToml(file).logo)
+      .filter((logo) => logo !== undefined && !logos.has(logo as string));
+    expect(missing).toEqual([]);
   });
 
   it('keeps hand-written OpenAI- and Anthropic-compatible providers', () => {

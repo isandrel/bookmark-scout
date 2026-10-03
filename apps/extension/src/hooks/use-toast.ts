@@ -169,6 +169,67 @@ function toast({ ...props }: Toast) {
   };
 }
 
+/** Glyph each outcome variant puts before a text title. */
+const TOAST_TITLE_ICONS = { success: '✓', destructive: '×' } as const;
+
+type OutcomeVariant = keyof typeof TOAST_TITLE_ICONS;
+
+/** Toast options without the variant, which the helper sets. */
+type OutcomeToast = Omit<Toast, 'variant'>;
+
+function withTitleIcon(variant: OutcomeVariant, title: React.ReactNode): React.ReactNode {
+  return typeof title === 'string' ? `${TOAST_TITLE_ICONS[variant]} ${title}` : title;
+}
+
+/** A success toast; a text title gets the ✓ glyph. */
+toast.success = (props: OutcomeToast) =>
+  toast({ ...props, title: withTitleIcon('success', props.title), variant: 'success' });
+
+/** A failure toast; a text title gets the × glyph. */
+toast.error = (props: OutcomeToast) =>
+  toast({ ...props, title: withTitleIcon('destructive', props.title), variant: 'destructive' });
+
+export type UndoToastOptions = {
+  title: string;
+  description?: React.ReactNode;
+  /** Runs at most once, however often Undo is pressed; handle its errors inside. */
+  onUndo: () => void | Promise<void>;
+  /** `success` unless the change only partly worked. */
+  variant?: OutcomeVariant;
+  /** How long Undo is offered; the bookmark undo window unless the caller's window differs. */
+  duration?: number;
+};
+
+/** An outcome toast with an Undo action that stays for the whole undo window. */
+toast.withUndo = ({
+  title,
+  description,
+  onUndo,
+  variant = 'success',
+  duration = BOOKMARK_DELETION_UNDO_WINDOW_MS,
+}: UndoToastOptions) => {
+  let undone = false;
+  const action = React.createElement(
+    ToastAction,
+    {
+      onClick: () => {
+        // A snapshot restores at most once, so repeated clicks cannot duplicate the change.
+        if (undone) return;
+        undone = true;
+        void onUndo();
+      },
+    },
+    t('action_undo'),
+  );
+  return toast({
+    title: withTitleIcon(variant, title),
+    description,
+    variant,
+    duration,
+    action: action as ToastActionElement,
+  });
+};
+
 function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 

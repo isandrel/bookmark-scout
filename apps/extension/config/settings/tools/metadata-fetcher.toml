@@ -1,0 +1,7 @@
+# Metadata Fetcher tool. `default_scope` is "folder" or "all".
+enabled = true
+default_scope = "folder"
+overwrite_titles = false
+fetch_descriptions = true
+request_timeout_ms = { default = 8000, min = 1000, max = 60000, step = 500 }
+concurrency = { default = 4, min = 1, max = 20, step = 1 }

@@ -1,0 +1,8 @@
+# Dead Link Checker tool. `default_scope` is "folder" or "all".
+enabled = true
+default_scope = "folder"
+request_timeout_ms = { default = 8000, min = 1000, max = 60000, step = 500 }
+concurrency = { default = 4, min = 1, max = 20, step = 1 }
+retry_count = { default = 1, min = 0, max = 10, step = 1 }
+follow_redirects = true
+success_statuses = [ 200, 201, 202, 204, 301, 302, 307, 308 ]

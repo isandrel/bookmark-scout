@@ -6,28 +6,40 @@
  *
  * Usage: bun run catalog:sync (from apps/extension)
  */
-import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import {
+  AI_PROVIDERS_CONFIG_PATH,
+  aiProviderFilesSchema,
+} from '../src/lib/config/ai-provider-schema';
+import { createConfigReader, loadAppConfig } from '../src/lib/config/loader';
 
 const SOURCE_URL = 'https://models.dev/api.json';
-const OUTPUT = path.resolve(import.meta.dir, '../config/provider-catalog.json');
+const CONFIG_DIR = path.resolve(import.meta.dir, '../config');
+const OUTPUT = path.join(CONFIG_DIR, 'provider-catalog.json');
 const LOGO_DIR = path.resolve(import.meta.dir, '../public/provider-logos');
 const LOGO_URL = (id: string) => `https://models.dev/logos/${id}.svg`;
 /** Logos are one-color SVGs drawn as CSS masks; anything larger is not a simple logo. */
 const MAX_LOGO_BYTES = 16_384;
-/** Featured providers from settings.default.toml whose models.dev logo id matches. */
-const FEATURED_LOGO_IDS = [
-  'openai',
-  'anthropic',
-  'google',
-  'groq',
-  'mistral',
-  'deepseek',
-  'xai',
-  'azure',
-  'openrouter',
-  'ollama-cloud',
-];
+
+/** models.dev logo ids named by `logo` in config/ai/providers/*.toml. */
+async function providerFileLogoIds(): Promise<string[]> {
+  const dir = path.join(CONFIG_DIR, AI_PROVIDERS_CONFIG_PATH);
+  const names = (await readdir(dir)).filter((name) => name.endsWith('.toml'));
+  const files = Object.fromEntries(
+    await Promise.all(
+      names.map(async (name) => [
+        `${AI_PROVIDERS_CONFIG_PATH}/${name}`,
+        await readFile(path.join(dir, name), 'utf8'),
+      ]),
+    ),
+  );
+  const providers = createConfigReader(loadAppConfig(files)).read(
+    AI_PROVIDERS_CONFIG_PATH,
+    aiProviderFilesSchema,
+  );
+  return Object.values(providers).flatMap((provider) => (provider.logo ? [provider.logo] : []));
+}
 
 /** AI SDK packages whose protocol the extension can speak against any base URL. */
 const PROTOCOL_BY_PACKAGE: Record<string, CatalogProtocol> = {
@@ -154,7 +166,9 @@ async function downloadLogos(ids: string[]): Promise<string[]> {
   return saved.sort();
 }
 
-const logos = await downloadLogos([...new Set([...FEATURED_LOGO_IDS, ...Object.keys(providers)])]);
+const logos = await downloadLogos([
+  ...new Set([...(await providerFileLogoIds()), ...Object.keys(providers)]),
+]);
 const logoFiles = await readdir(LOGO_DIR);
 
 const output = {

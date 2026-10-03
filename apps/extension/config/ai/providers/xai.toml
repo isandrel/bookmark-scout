@@ -1,0 +1,19 @@
+name = "xAI"
+order = 70
+default_model = "grok-4.3"
+provider_kind = "native"
+requires_api_key = true
+api_key_pattern = "^xai-"
+api_key_placeholder = "xai-..."
+base_url = "https://api.x.ai/v1"
+logo = "xai"
+
+[[models]]
+id = "grok-4.3"
+name = "Grok 4.3"
+description = "Cost-effective"
+
+[[models]]
+id = "grok-4.7"
+name = "Grok 4.7"
+description = "Most capable"

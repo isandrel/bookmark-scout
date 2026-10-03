@@ -1,0 +1,14 @@
+name = "Custom Provider"
+order = 200
+default_model = "gpt-4o-mini"
+provider_kind = "openai_compatible"
+requires_api_key = false
+api_key_placeholder = "Optional custom API key"
+base_url = "https://api.openai.com/v1"
+supports_custom_model = true
+group = "custom"
+
+[[models]]
+id = "gpt-4o-mini"
+name = "Default Model"
+description = "Replace with your provider's model id"

@@ -1,11 +1,13 @@
 /**
  * Lists a provider's models through its own REST endpoint and classifies connection failures.
  * The AI SDK has no model-listing API for direct providers, so each response shape is adapted
- * here; which shape a provider uses is configured per provider in settings.default.toml.
+ * here; which shape a provider uses is configured per provider in config/ai/providers/.
  */
+import { z } from 'zod';
+import type { MODEL_LIST_STYLES } from '@/lib/config/ai-provider-schema';
 
 /** Response shapes of provider model-list endpoints. `none` means the provider has no list. */
-export type ModelListStyle = 'openai' | 'anthropic' | 'google' | 'ollama' | 'none';
+export type ModelListStyle = (typeof MODEL_LIST_STYLES)[number];
 
 export type AIConnectionErrorCode =
   | 'invalid_key'
@@ -31,7 +33,15 @@ export class AIConnectionError extends Error {
   }
 }
 
-const { limits } = aiRuntimeConfig;
+const limits = readConfig(
+  'ai/model-list',
+  z.strictObject({
+    model_list_timeout_ms: z.number().int().positive(),
+    model_list_max_pages: z.number().int().positive(),
+    model_list_page_size: z.number().int().positive(),
+    anthropic_version: z.string().min(1),
+  }),
+);
 
 /** Anthropic only answers browser-origin requests that opt in with this header. */
 export const ANTHROPIC_BROWSER_ACCESS_HEADER = {

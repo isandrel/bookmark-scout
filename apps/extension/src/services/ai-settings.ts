@@ -152,7 +152,7 @@ export async function requestProviderHostAccess(baseUrl: string | undefined): Pr
 
 /**
  * The endpoint a provider request will reach: the configured Base URL, else the provider's default
- * from settings.default.toml. Azure builds its default from the resource name.
+ * from config/ai/providers/ or the catalog. Azure builds its default from the resource name.
  */
 export function getProviderEndpoint(
   provider: AIProvider,

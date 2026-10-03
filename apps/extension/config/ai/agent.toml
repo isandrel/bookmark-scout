@@ -1,0 +1,8 @@
+# Ask AI chat in the popup and side panel. Read by src/services/ai-agent.ts.
+
+# Model calls in one answer at most, counting each round of tool use
+max_steps = 8
+# Bookmarks returned by one bookmark search
+max_bookmark_results = 20
+# Web searches per answer at most, where the provider lets the limit be set (Anthropic)
+web_search_max_uses = 3

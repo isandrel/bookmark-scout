@@ -1,0 +1,16 @@
+# Azure lists base models, not your deployments, so there is no model list: enter the deployment
+# name as the custom model.
+name = "Azure OpenAI"
+order = 80
+default_model = "gpt-4o-mini"
+provider_kind = "native"
+requires_api_key = true
+api_key_placeholder = "Azure API key"
+supports_custom_model = true
+model_list = "none"
+extra_fields = ["resourceName", "apiVersion"]
+logo = "azure"
+
+[[models]]
+id = "gpt-4o-mini"
+name = "gpt-4o-mini (deployment name)"

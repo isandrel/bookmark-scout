@@ -1,0 +1,43 @@
+name = "Mistral AI"
+order = 50
+default_model = "mistral-large-latest"
+provider_kind = "native"
+requires_api_key = true
+api_key_placeholder = "..."
+base_url = "https://api.mistral.ai/v1"
+logo = "mistral"
+
+[[models]]
+id = "mistral-large-latest"
+name = "Mistral Large 3"
+description = "Flagship 675B MoE"
+
+[[models]]
+id = "mistral-small-latest"
+name = "Mistral Small 3.2"
+description = "Efficient 24B"
+
+[[models]]
+id = "codestral-latest"
+name = "Codestral"
+description = "Code Specialist"
+
+[[models]]
+id = "ministral-3b-latest"
+name = "Ministral 3B"
+description = "Edge deployment"
+
+[[models]]
+id = "ministral-8b-latest"
+name = "Ministral 8B"
+description = "Compact & fast"
+
+[[models]]
+id = "pixtral-12b-2409"
+name = "Pixtral 12B"
+description = "Multimodal 12B"
+
+[[models]]
+id = "pixtral-large-latest"
+name = "Pixtral Large"
+description = "Multimodal 124B"

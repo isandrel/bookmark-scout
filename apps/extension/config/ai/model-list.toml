@@ -1,0 +1,10 @@
+# Model lists and Verify Service checks. Read by src/services/ai-model-list.ts.
+
+# Model-list and Verify Service requests give up after this many milliseconds
+model_list_timeout_ms = 8000
+# Most pages read from a paginated model list (Anthropic, Gemini)
+model_list_max_pages = 20
+# Models requested per page from paginated model lists
+model_list_page_size = 1000
+# anthropic-version header sent when listing Anthropic models
+anthropic_version = "2023-06-01"

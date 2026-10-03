@@ -1,0 +1,13 @@
+# Defaults for Options > Advanced.
+
+# Popup window size in pixels. Chrome and Edge cap extension popups at 800x600, so larger stored
+# values snap to the limit (clamp) instead of resetting. src/entrypoints/popup/index.html opens at
+# the defaults and minimums; a unit test keeps it in step with these values.
+popup_width = { default = 400, min = 300, max = 800, step = 50, clamp = true }
+popup_height = { default = 500, min = 300, max = 600, step = 50, clamp = true }
+
+# Maximum characters before truncating bookmark titles
+truncate_length = { default = 50, min = 20, max = 200, step = 10 }
+
+# Duration in milliseconds before toast notifications auto-dismiss
+toast_duration_ms = { default = 4000, min = 2000, max = 10000, step = 500 }

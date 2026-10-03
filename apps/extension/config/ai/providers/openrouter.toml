@@ -1,0 +1,59 @@
+name = "OpenRouter"
+order = 90
+default_model = "openai/gpt-4o-mini"
+provider_kind = "openai_compatible"
+requires_api_key = true
+api_key_pattern = "^sk-or-"
+api_key_placeholder = "sk-or-..."
+base_url = "https://openrouter.ai/api/v1"
+logo = "openrouter"
+
+[[models]]
+id = "openai/gpt-4o-mini"
+name = "GPT-4o Mini"
+description = "OpenAI via OR"
+
+[[models]]
+id = "openai/gpt-4o"
+name = "GPT-4o"
+description = "OpenAI flagship"
+
+[[models]]
+id = "anthropic/claude-sonnet-4"
+name = "Claude Sonnet 4"
+description = "Anthropic via OR"
+
+[[models]]
+id = "anthropic/claude-opus-4"
+name = "Claude Opus 4"
+description = "Most intelligent"
+
+[[models]]
+id = "google/gemini-2.5-flash"
+name = "Gemini 2.5 Flash"
+description = "Google via OR"
+
+[[models]]
+id = "google/gemini-2.5-pro"
+name = "Gemini 2.5 Pro"
+description = "Google flagship"
+
+[[models]]
+id = "deepseek/deepseek-chat"
+name = "DeepSeek V3"
+description = "DeepSeek via OR"
+
+[[models]]
+id = "deepseek/deepseek-r1"
+name = "DeepSeek R1"
+description = "Reasoning via OR"
+
+[[models]]
+id = "meta-llama/llama-4-maverick"
+name = "Llama 4 Maverick"
+description = "Meta's latest"
+
+[[models]]
+id = "qwen/qwen-2.5-72b"
+name = "Qwen 2.5 72B"
+description = "Alibaba via OR"

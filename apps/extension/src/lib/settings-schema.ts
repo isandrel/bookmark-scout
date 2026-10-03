@@ -1,11 +1,10 @@
 /**
- * Settings schema using Zod.
- * Reads default values from TOML config so runtime defaults stay configurable.
+ * Settings schema using Zod. Defaults and numeric bounds come from config/settings/**.toml, and
+ * each setting is defined once below: its zod schema and its Options field meta are both derived
+ * from that one definition, so a bound or option list cannot drift between validation and the UI.
  */
 
 import { z } from 'zod';
-import { parse } from 'smol-toml';
-import settingsToml from '../../config/settings.default.toml?raw';
 
 type SettingsFieldType = 'switch' | 'select' | 'number' | 'text';
 
@@ -36,171 +35,91 @@ type SettingsCategoryMeta = {
   fields: readonly (keyof Settings)[];
 };
 
-interface TomlConfig {
-  appearance: {
-    language: string;
-    theme: string;
-    show_favicons: boolean;
-    favicon_size: number;
-  };
-  search: {
-    debounce_ms: number;
-    max_results: number;
-    expand_folders_on_search: boolean;
-    search_history: boolean;
-  };
-  behavior: {
-    sort_order: string;
-    group_by_folders: boolean;
-    confirm_before_delete: boolean;
-    default_new_folder_name: string;
-    recent_folders_max: number;
-    recent_folders_enabled: boolean;
-  };
-  advanced: {
-    popup_width: number;
-    popup_height: number;
-    truncate_length: number;
-    toast_duration_ms: number;
-  };
-  ai: {
-    enabled: boolean;
-    provider: string;
-    model: string;
-    auto_trigger_on_open: boolean;
-    max_categories?: number;
-    min_items_per_folder?: number;
-    read_page_content: boolean;
-    max_items_per_folder?: number;
-    providers?: Record<string, unknown>;
-  };
-  export: {
-    filename_prefix: string;
-    filename_max_length: number;
-    json_indent_size: number;
-    html_indent_spaces: number;
-    markdown_indent_spaces: number;
-    include_dates_by_default: boolean;
-    include_urls_by_default: boolean;
-  };
-  context_menu: {
-    enabled: boolean;
-    bookmark_naming: string;
-  };
-  tools: {
-    ai_context_packer: {
-      enabled: boolean;
-      default_scope: string;
-      output_format: string;
-      include_folder_path: boolean;
-      include_dates: boolean;
-      include_tags: boolean;
-      include_summaries: boolean;
-      max_items: number;
-      max_depth: number;
-      excerpt_length: number;
-    };
-    auto_tagging: {
-      enabled: boolean;
-      default_scope: string;
-      min_tags: number;
-      max_tags: number;
-      tag_style: string;
-      merge_mode: string;
-      dedupe_tags: boolean;
-    };
-    summarizer: {
-      enabled: boolean;
-      default_scope: string;
-      summary_length: number;
-      include_domain_hint: boolean;
-      merge_mode: string;
-    };
-    reorganization: {
-      enabled: boolean;
-      default_scope: string;
-      dry_run_first: boolean;
-      min_confidence: number;
-      batch_size: number;
-    };
-    duplicates: {
-      enabled: boolean;
-      default_scope: string;
-      match_strategy: string;
-      normalize_www: boolean;
-      ignore_protocol: boolean;
-      ignore_trailing_slash: boolean;
-      keep_rule: string;
-      max_groups: number;
-    };
-    url_cleaner: {
-      enabled: boolean;
-      default_scope: string;
-      remove_hash: boolean;
-      sort_query_params: boolean;
-      dedupe_query_params: boolean;
-      preserve_params: string[];
-      remove_params: string[];
-    };
-    dead_links: {
-      enabled: boolean;
-      default_scope: string;
-      request_timeout_ms: number;
-      concurrency: number;
-      retry_count: number;
-      follow_redirects: boolean;
-      success_statuses: number[];
-    };
-    metadata_fetcher: {
-      enabled: boolean;
-      default_scope: string;
-      overwrite_titles: boolean;
-      fetch_descriptions: boolean;
-      request_timeout_ms: number;
-      concurrency: number;
-    };
-    site_icons: {
-      enabled: boolean;
-      default_scope: string;
-      preferred_size: number;
-      max_icon_kb: number;
-      max_cache_kb: number;
-    };
-    privacy_scanner: {
-      enabled: boolean;
-      default_scope: string;
-      scan_titles: boolean;
-      scan_query_params: boolean;
-      scan_fragments: boolean;
-      sensitive_params: string[];
-      email_detection: boolean;
-      uuid_detection: boolean;
-    };
-    statistics: {
-      enabled: boolean;
-      default_scope: string;
-      include_domains: boolean;
-      include_folders: boolean;
-      include_duplicates: boolean;
-      include_protocols: boolean;
-      include_depth_breakdown: boolean;
-      top_n: number;
-    };
-    data: {
-      show_export: boolean;
-      show_import: boolean;
-      default_export_format: string;
-    };
-  };
+// ============================================================================
+// Config: config/settings/**.toml
+// ============================================================================
+
+/**
+ * A numeric setting in the TOML: `{ default, min, max, step }`, plus `integer` (whole numbers
+ * only), `unlimited` (-1 means no limit), and `clamp` (out-of-range values snap to the nearest
+ * bound instead of resetting to the default).
+ */
+const numberSettingSchema = z
+  .strictObject({
+    default: z.number(),
+    min: z.number(),
+    max: z.number(),
+    step: z.number().positive(),
+    integer: z.boolean().optional(),
+    unlimited: z.boolean().optional(),
+    clamp: z.boolean().optional(),
+  })
+  .superRefine((setting, ctx) => {
+    if (setting.min > setting.max) {
+      ctx.addIssue({ code: 'custom', message: 'min is greater than max' });
+    }
+    const unlimitedDefault = setting.unlimited === true && setting.default === -1;
+    if (!unlimitedDefault && (setting.default < setting.min || setting.default > setting.max)) {
+      ctx.addIssue({ code: 'custom', message: 'default is outside min..max' });
+    }
+    if (setting.integer && !Number.isInteger(setting.default)) {
+      ctx.addIssue({ code: 'custom', message: 'default must be a whole number' });
+    }
+  });
+
+export type NumberSetting = z.output<typeof numberSettingSchema>;
+
+/** A text setting with length limits: `{ default, min_length, max_length }`. */
+const textSettingSchema = z
+  .strictObject({
+    default: z.string(),
+    min_length: z.number().int().nonnegative(),
+    max_length: z.number().int().positive(),
+  })
+  .refine(
+    (setting) =>
+      setting.default.length >= setting.min_length && setting.default.length <= setting.max_length,
+    'default is outside min_length..max_length',
+  );
+
+/** Every settings file, as one tree; each key is checked by the definition that reads it. */
+const settingsConfig = readConfig('settings', z.record(z.string(), z.unknown()));
+const readSettingsPaths = new Set<string>();
+
+/** Validated value at `path` under config/settings (e.g. `search.debounce_ms`). */
+function configValue<S extends z.ZodType>(path: string, schema: S): z.output<S> {
+  if (readSettingsPaths.has(path)) throw new Error(`settings.${path} is read twice`);
+  readSettingsPaths.add(path);
+  const value = path
+    .split('.')
+    .reduce<unknown>((node, key) => (isPlainObject(node) ? node[key] : undefined), settingsConfig);
+  const result = schema.safeParse(value);
+  if (!result.success) {
+    const issues = result.error.issues.map((issue) => issue.message).join('; ');
+    throw new Error(`Invalid config settings.${path}: ${issues}`);
+  }
+  return result.data;
 }
 
-const config = parse(settingsToml) as TomlConfig;
+/** Fails on any settings key no definition reads, so a typo in the TOML is a load error. */
+function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''): void {
+  for (const [key, value] of Object.entries(node)) {
+    const path = `${prefix}${key}`;
+    if (readSettingsPaths.has(path)) continue;
+    if (isPlainObject(value) && !('default' in value)) {
+      assertEverySettingsKeyRead(value, `${path}.`);
+    } else {
+      throw new Error(`Unknown config key settings.${path}`);
+    }
+  }
+}
 
-// Featured providers from the TOML plus the bundled models.dev catalog.
-const configuredProviderIds = getAvailableProviders().map((provider) => provider.id);
-const aiProviderSchema = configuredProviderIds.length > 0
-  ? z.enum(configuredProviderIds as [AIProvider, ...AIProvider[]])
-  : z.enum(['openai']);
+// ============================================================================
+// Value types shared with the rest of the extension
+// ============================================================================
+
+// Featured providers from config/ai/providers plus the bundled models.dev catalog.
+const aiProviderSchema = z.enum(getAvailableProviders().map((provider) => provider.id));
 
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
@@ -211,22 +130,15 @@ export type SortOrder = z.infer<typeof sortOrderSchema>;
 export const languageSchema = z.enum(['auto', 'en', 'ja', 'ko']);
 export type Language = z.infer<typeof languageSchema>;
 
-export const faviconSizeSchema = z.union([z.literal(16), z.literal(24), z.literal(32)]);
+export const faviconSizeSchema = z.literal([16, 24, 32]);
 export type FaviconSize = z.infer<typeof faviconSizeSchema>;
 
-export const maxSearchResultsSchema = z.union([
-  z.literal(10),
-  z.literal(20),
-  z.literal(50),
-  z.literal(100),
-]);
+export const maxSearchResultsSchema = z.literal([10, 20, 50, 100]);
 
-const selectableScopeSchema = z.enum(['folder', 'all']);
-const toolDefaultScope = (value: string) => {
-  const fallback = value === 'all' ? 'all' : 'folder';
-  return selectableScopeSchema.catch(fallback).default(fallback);
-};
-const fixedToolScope = (scope: 'folder' | 'all') => z.literal(scope).catch(scope).default(scope);
+export const httpStatusCodeSchema = z.number().int().min(100).max(599);
+
+const toolScopeSchema = z.enum(['folder', 'all']);
+const contextMenuNamingSchema = z.enum(['link_text', 'page_title', 'link_url']);
 const aiContextFormatSchema = z.enum(['markdown', 'xml']);
 const mergeModeSchema = z.enum(['append', 'replace']);
 const tagStyleSchema = z.enum(['kebab-case', 'snake_case', 'lowercase']);
@@ -237,174 +149,646 @@ const duplicateMatchStrategySchema = z.enum([
   'title_only',
 ]);
 const duplicateKeepRuleSchema = z.enum(['oldest', 'newest', 'first']);
-/** Browser popups are capped at 800x600, so larger stored values are clamped. */
-export const POPUP_MAX_WIDTH = 800;
-export const POPUP_MAX_HEIGHT = 600;
+const exportFormatSchema = z.enum(['html', 'json', 'markdown', 'csv']);
+
+/**
+ * Which scopes each tool can run on. A tool limited to one scope has no `default_scope` in its
+ * config file and always stores that scope.
+ */
+export const TOOL_SCOPE_CAPABILITIES = {
+  aiContextPacker: 'both',
+  autoTagging: 'folder',
+  summarizer: 'folder',
+  reorganization: 'both',
+  duplicates: 'all',
+  urlCleaner: 'both',
+  deadLinks: 'both',
+  metadataFetcher: 'both',
+  siteIcons: 'both',
+  privacyScanner: 'all',
+  statistics: 'both',
+} as const satisfies Record<string, z.infer<typeof toolScopeSchema> | 'both'>;
+
+// ============================================================================
+// One definition per setting
+// ============================================================================
+
+type FieldDefinition<S extends z.ZodType = z.ZodType> = {
+  schema: S;
+  meta: () => SettingsFieldMeta;
+};
+
+type NumberFieldDefinition = FieldDefinition<z.ZodType<number>> & { bounds: NumberSetting };
+
+type FieldExtras = Pick<SettingsFieldMeta, 'unit' | 'control' | 'requiresWebHostAccess'>;
+
+/** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
+function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description'> {
+  return { label: t(`settings_${stem}`), description: t(`settings_${stem}Desc`) };
+}
+
+function switchField(
+  path: string,
+  stem: string,
+  extras: FieldExtras = {},
+): FieldDefinition<z.ZodDefault<z.ZodBoolean>> {
+  const value = configValue(path, z.boolean());
+  return {
+    schema: z.boolean().default(value),
+    meta: () => ({ ...fieldLabels(stem), type: 'switch', ...extras }),
+  };
+}
+
 /** Out-of-range sizes snap to the nearest limit instead of resetting to the default. */
 const clampedNumber = (min: number, max: number) => (value: unknown) =>
   typeof value === 'number' && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : value;
-const limitOrUnlimited = (max: number) =>
-  z
-    .number()
-    .int()
-    .max(max)
-    .refine((value) => value === -1 || value >= 1);
-export const httpStatusCodeSchema = z.number().int().min(100).max(599);
 
-export const settingsSchema = z.object({
-  language: languageSchema.default(config.appearance.language as Language),
-  theme: themeSchema.default(config.appearance.theme as Theme),
-  showFavicons: z.boolean().default(config.appearance.show_favicons),
-  faviconSize: faviconSizeSchema.default(config.appearance.favicon_size as FaviconSize),
+function numberSchema(bounds: NumberSetting): z.ZodType<number> {
+  const base = bounds.integer ? z.number().int() : z.number();
+  const ranged = bounds.unlimited
+    ? base.max(bounds.max).refine((value) => value === -1 || value >= bounds.min)
+    : base.min(bounds.min).max(bounds.max);
+  const schema = bounds.clamp
+    ? z.preprocess(clampedNumber(bounds.min, bounds.max), ranged)
+    : ranged;
+  return schema.default(bounds.default);
+}
 
-  searchDebounceMs: z.number().min(50).max(1000).default(config.search.debounce_ms),
-  maxSearchResults: maxSearchResultsSchema.default(config.search.max_results as 10 | 20 | 50 | 100),
-  expandFoldersOnSearch: z.boolean().default(config.search.expand_folders_on_search),
-  searchHistory: z.boolean().default(config.search.search_history),
+function numberField(path: string, stem: string, extras: FieldExtras = {}): NumberFieldDefinition {
+  const bounds = configValue(path, numberSettingSchema);
+  return {
+    bounds,
+    schema: numberSchema(bounds),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'number',
+      min: bounds.min,
+      max: bounds.max,
+      step: bounds.step,
+      ...(bounds.unlimited ? { unlimited: true } : {}),
+      ...extras,
+    }),
+  };
+}
 
-  sortOrder: sortOrderSchema.default(config.behavior.sort_order as SortOrder),
-  groupByFolders: z.boolean().default(config.behavior.group_by_folders),
-  confirmBeforeDelete: z.boolean().default(config.behavior.confirm_before_delete),
-  defaultNewFolderName: z.string().min(1).max(100).default(config.behavior.default_new_folder_name),
-  recentFoldersMax: z.number().min(1).max(10).default(config.behavior.recent_folders_max),
-  recentFoldersEnabled: z.boolean().default(config.behavior.recent_folders_enabled),
+function textField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.ZodString>> {
+  const setting = configValue(path, z.union([z.string(), textSettingSchema]));
+  const schema =
+    typeof setting === 'string'
+      ? z.string().default(setting)
+      : z.string().min(setting.min_length).max(setting.max_length).default(setting.default);
+  return { schema, meta: () => ({ ...fieldLabels(stem), type: 'text' }) };
+}
 
-  popupWidth: z
-    .preprocess(clampedNumber(300, POPUP_MAX_WIDTH), z.number().min(300).max(POPUP_MAX_WIDTH))
-    .default(config.advanced.popup_width),
-  popupHeight: z
-    .preprocess(clampedNumber(300, POPUP_MAX_HEIGHT), z.number().min(300).max(POPUP_MAX_HEIGHT))
-    .default(config.advanced.popup_height),
-  truncateLength: z.number().min(20).max(200).default(config.advanced.truncate_length),
-  toastDurationMs: z.number().min(2000).max(10000).default(config.advanced.toast_duration_ms),
+function listField<S extends z.ZodArray<z.ZodType<string | number>>>(
+  path: string,
+  stem: string,
+  schema: S,
+  list: 'string' | 'number',
+): FieldDefinition<z.ZodDefault<S>> {
+  const value = configValue(path, schema);
+  return {
+    schema: schema.default(value as z.util.NoUndefined<z.output<S>>),
+    meta: () => ({ ...fieldLabels(stem), type: 'text', list }),
+  };
+}
 
-  aiEnabled: z.boolean().default(config.ai.enabled),
-  aiProvider: aiProviderSchema.default(config.ai.provider as AIProvider),
-  aiModel: z.string().default(config.ai.model),
-  aiMaxRecommendations: z.number().min(1).max(10).default(config.tools.auto_tagging.max_tags),
-  aiAutoTriggerOnOpen: z.boolean().default(config.ai.auto_trigger_on_open),
-  aiReadPageContent: z.boolean().default(config.ai.read_page_content),
-  aiMaxCategories: limitOrUnlimited(100).default(config.ai.max_categories ?? -1),
-  aiMinItemsPerFolder: z.number().min(1).default(config.ai.min_items_per_folder ?? 1),
-  aiMaxItemsPerFolder: limitOrUnlimited(500).default(config.ai.max_items_per_folder ?? -1),
+type OptionValues = Readonly<Record<string, string>>;
 
-  exportFilenamePrefix: z.string().default(config.export.filename_prefix),
-  exportFilenameMaxLength: z.number().min(10).max(100).default(config.export.filename_max_length),
-  exportJsonIndentSize: z.number().min(1).max(8).default(config.export.json_indent_size),
-  exportHtmlIndentSpaces: z.number().min(1).max(8).default(config.export.html_indent_spaces),
-  exportMarkdownIndentSpaces: z.number().min(1).max(8).default(config.export.markdown_indent_spaces),
-  exportIncludeDates: z.boolean().default(config.export.include_dates_by_default),
-  exportIncludeUrls: z.boolean().default(config.export.include_urls_by_default),
+/** A select whose options are the values of `schema`, labelled by `label`. */
+function enumField<T extends OptionValues>(
+  path: string,
+  stem: string,
+  schema: z.ZodEnum<T>,
+  label: (value: T[keyof T]) => string,
+): FieldDefinition<z.ZodDefault<z.ZodEnum<T>>> {
+  const value = configValue(path, schema);
+  return {
+    schema: schema.default(value as z.util.NoUndefined<T[keyof T]>),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'select',
+      options: schema.options.map((option) => ({ value: option, label: label(option) })),
+    }),
+  };
+}
 
-  contextMenuEnabled: z.boolean().default(config.context_menu.enabled),
-  contextMenuBookmarkNaming: z.enum(['link_text', 'page_title', 'link_url']).default(
-    config.context_menu.bookmark_naming as 'link_text' | 'page_title' | 'link_url',
+function literalField<T extends number>(
+  path: string,
+  stem: string,
+  schema: z.ZodLiteral<T>,
+  label: (value: T) => string,
+): FieldDefinition<z.ZodDefault<z.ZodLiteral<T>>> {
+  const value = configValue(path, schema);
+  return {
+    schema: schema.default(value as z.util.NoUndefined<T>),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'select',
+      options: [...schema.values].map((option) => ({ value: option, label: label(option) })),
+    }),
+  };
+}
+
+type ScopeValue = z.infer<typeof toolScopeSchema>;
+
+const scopeLabel = (scope: ScopeValue) =>
+  scope === 'folder' ? t('settings_scopeFolder') : t('settings_scopeAll');
+
+/**
+ * A tool's default scope: selectable (from `default_scope` in its config file) when the tool
+ * supports both scopes, otherwise fixed. Unsupported or malformed saved scopes fall back without
+ * failing the other settings.
+ */
+function scopeField(
+  tool: string,
+  stem: string,
+  capability: 'both',
+): FieldDefinition<z.ZodDefault<z.ZodCatch<typeof toolScopeSchema>>>;
+function scopeField<S extends ScopeValue>(
+  tool: string,
+  stem: string,
+  capability: S,
+): FieldDefinition<z.ZodDefault<z.ZodCatch<z.ZodLiteral<S>>>>;
+function scopeField(tool: string, stem: string, capability: ScopeValue | 'both'): FieldDefinition {
+  const scopes = capability === 'both' ? toolScopeSchema.options : [capability];
+  const fallback =
+    capability === 'both' ? configValue(`tools.${tool}.default_scope`, toolScopeSchema) : capability;
+  const schema =
+    capability === 'both'
+      ? toolScopeSchema.catch(fallback).default(fallback)
+      : z.literal(fallback).catch(fallback).default(fallback);
+  return {
+    schema,
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'select',
+      options: scopes.map((scope) => ({ value: scope, label: scopeLabel(scope) })),
+    }),
+  };
+}
+
+const sameAsValue = (value: string) => value;
+const mergeModeLabel = (mode: z.infer<typeof mergeModeSchema>) =>
+  mode === 'append' ? t('settings_mergeAppend') : t('settings_mergeReplace');
+
+const aiProviderField: FieldDefinition<z.ZodDefault<typeof aiProviderSchema>> = {
+  schema: aiProviderSchema.default(configValue('ai.provider', aiProviderSchema)),
+  meta: () => ({
+    ...fieldLabels('aiProvider'),
+    type: 'select',
+    searchable: true,
+    options: getAvailableProviders().map((provider) => ({
+      value: provider.id,
+      label: getLocalizedProviderName(provider.id),
+      iconUrl: getProviderLogoUrl(provider.id),
+      group: t(providerGroupLabelKeys[getProviderGroup(provider.id)]),
+    })),
+  }),
+};
+
+const aiModelField: FieldDefinition<z.ZodDefault<z.ZodString>> = {
+  schema: z.string().default(configValue('ai.model', z.string())),
+  meta: () => ({
+    ...fieldLabels('aiModel'),
+    type: 'select',
+    options: getAvailableProviders().flatMap((provider) =>
+      getModelsForProvider(provider.id).map((model) => ({
+        value: model.id,
+        label: `${model.name} (${getLocalizedProviderName(provider.id)})`,
+      })),
+    ),
+  }),
+};
+
+const fields = {
+  language: enumField('appearance.language', 'language', languageSchema, (value) =>
+    value === 'auto'
+      ? t('settings_languageAuto')
+      : { en: 'English', ja: '日本語', ko: '한국어' }[value],
+  ),
+  theme: enumField(
+    'appearance.theme',
+    'theme',
+    themeSchema,
+    (value) =>
+      ({
+        system: t('settings_themeSystem'),
+        light: t('settings_themeLight'),
+        dark: t('settings_themeDark'),
+      })[value],
+  ),
+  showFavicons: switchField('appearance.show_favicons', 'showFavicons'),
+  faviconSize: literalField(
+    'appearance.favicon_size',
+    'faviconSize',
+    faviconSizeSchema,
+    (value) =>
+      ({
+        16: t('settings_faviconSmall'),
+        24: t('settings_faviconMedium'),
+        32: t('settings_faviconLarge'),
+      })[value],
   ),
 
-  aiContextPackerEnabled: z.boolean().default(config.tools.ai_context_packer.enabled),
-  aiContextPackerDefaultScope: toolDefaultScope(config.tools.ai_context_packer.default_scope),
-  aiContextPackerOutputFormat: aiContextFormatSchema.default(config.tools.ai_context_packer.output_format as 'markdown' | 'xml'),
-  aiContextPackerIncludeFolderPath: z.boolean().default(config.tools.ai_context_packer.include_folder_path),
-  aiContextPackerIncludeDates: z.boolean().default(config.tools.ai_context_packer.include_dates),
-  aiContextPackerIncludeTags: z.boolean().default(config.tools.ai_context_packer.include_tags),
-  aiContextPackerIncludeSummaries: z.boolean().default(config.tools.ai_context_packer.include_summaries),
-  aiContextPackerMaxItems: z.number().min(1).max(2000).default(config.tools.ai_context_packer.max_items),
-  aiContextPackerMaxDepth: z.number().min(1).max(20).default(config.tools.ai_context_packer.max_depth),
-  aiContextPackerExcerptLength: z.number().min(40).max(2000).default(config.tools.ai_context_packer.excerpt_length),
-
-  autoTaggingEnabled: z.boolean().default(config.tools.auto_tagging.enabled),
-  autoTaggingDefaultScope: fixedToolScope('folder'),
-  autoTaggingMinTags: z.number().min(1).max(20).default(config.tools.auto_tagging.min_tags),
-  autoTaggingMaxTags: z.number().min(1).max(20).default(config.tools.auto_tagging.max_tags),
-  autoTaggingTagStyle: tagStyleSchema.default(config.tools.auto_tagging.tag_style as 'kebab-case' | 'snake_case' | 'lowercase'),
-  autoTaggingMergeMode: mergeModeSchema.default(config.tools.auto_tagging.merge_mode as 'append' | 'replace'),
-  autoTaggingDedupeTags: z.boolean().default(config.tools.auto_tagging.dedupe_tags),
-
-  summarizerEnabled: z.boolean().default(config.tools.summarizer.enabled),
-  summarizerDefaultScope: fixedToolScope('folder'),
-  summarizerSummaryLength: z.number().min(40).max(1000).default(config.tools.summarizer.summary_length),
-  summarizerIncludeDomainHint: z.boolean().default(config.tools.summarizer.include_domain_hint),
-  summarizerMergeMode: mergeModeSchema.default(config.tools.summarizer.merge_mode as 'append' | 'replace'),
-
-  reorganizationEnabled: z.boolean().default(config.tools.reorganization.enabled),
-  reorganizationDefaultScope: toolDefaultScope(config.tools.reorganization.default_scope),
-  reorganizationDryRunFirst: z.boolean().default(config.tools.reorganization.dry_run_first),
-  reorganizationMinConfidence: z.number().min(0).max(1).default(config.tools.reorganization.min_confidence),
-  reorganizationBatchSize: z.number().min(1).max(1000).default(config.tools.reorganization.batch_size),
-
-  duplicatesEnabled: z.boolean().default(config.tools.duplicates.enabled),
-  duplicatesDefaultScope: fixedToolScope('all'),
-  duplicatesMatchStrategy: duplicateMatchStrategySchema.default(config.tools.duplicates.match_strategy as z.infer<typeof duplicateMatchStrategySchema>),
-  duplicatesNormalizeWww: z.boolean().default(config.tools.duplicates.normalize_www),
-  duplicatesIgnoreProtocol: z.boolean().default(config.tools.duplicates.ignore_protocol),
-  duplicatesIgnoreTrailingSlash: z.boolean().default(config.tools.duplicates.ignore_trailing_slash),
-  duplicatesKeepRule: duplicateKeepRuleSchema.default(config.tools.duplicates.keep_rule as z.infer<typeof duplicateKeepRuleSchema>),
-  duplicatesMaxGroups: z.number().min(1).max(5000).default(config.tools.duplicates.max_groups),
-
-  urlCleanerEnabled: z.boolean().default(config.tools.url_cleaner.enabled),
-  urlCleanerDefaultScope: toolDefaultScope(config.tools.url_cleaner.default_scope),
-  urlCleanerRemoveHash: z.boolean().default(config.tools.url_cleaner.remove_hash),
-  urlCleanerSortQueryParams: z.boolean().default(config.tools.url_cleaner.sort_query_params),
-  urlCleanerDedupeQueryParams: z.boolean().default(config.tools.url_cleaner.dedupe_query_params),
-  urlCleanerPreserveParams: z.array(z.string()).default(config.tools.url_cleaner.preserve_params),
-  urlCleanerRemoveParams: z.array(z.string()).default(config.tools.url_cleaner.remove_params),
-
-  deadLinksEnabled: z.boolean().default(config.tools.dead_links.enabled),
-  deadLinksDefaultScope: toolDefaultScope(config.tools.dead_links.default_scope),
-  deadLinksRequestTimeoutMs: z.number().min(1000).max(60000).default(config.tools.dead_links.request_timeout_ms),
-  deadLinksConcurrency: z.number().min(1).max(20).default(config.tools.dead_links.concurrency),
-  deadLinksRetryCount: z.number().min(0).max(10).default(config.tools.dead_links.retry_count),
-  deadLinksFollowRedirects: z.boolean().default(config.tools.dead_links.follow_redirects),
-  deadLinksSuccessStatuses: z.array(httpStatusCodeSchema).min(1).default(config.tools.dead_links.success_statuses),
-
-  metadataFetcherEnabled: z.boolean().default(config.tools.metadata_fetcher.enabled),
-  metadataFetcherDefaultScope: toolDefaultScope(config.tools.metadata_fetcher.default_scope),
-  metadataFetcherOverwriteTitles: z.boolean().default(config.tools.metadata_fetcher.overwrite_titles),
-  metadataFetcherFetchDescriptions: z.boolean().default(config.tools.metadata_fetcher.fetch_descriptions),
-  metadataFetcherRequestTimeoutMs: z.number().min(1000).max(60000).default(config.tools.metadata_fetcher.request_timeout_ms),
-  metadataFetcherConcurrency: z.number().min(1).max(20).default(config.tools.metadata_fetcher.concurrency),
-
-  siteIconsEnabled: z.boolean().default(config.tools.site_icons.enabled),
-  siteIconsDefaultScope: toolDefaultScope(config.tools.site_icons.default_scope),
-  siteIconsPreferredSize: z.number().int().min(16).max(256).default(config.tools.site_icons.preferred_size),
-  siteIconsMaxIconKb: z.number().int().min(1).max(512).default(config.tools.site_icons.max_icon_kb),
-  siteIconsMaxCacheKb: z.number().int().min(256).max(8192).default(config.tools.site_icons.max_cache_kb),
-
-  privacyScannerEnabled: z.boolean().default(config.tools.privacy_scanner.enabled),
-  privacyScannerDefaultScope: fixedToolScope('all'),
-  privacyScannerScanTitles: z.boolean().default(config.tools.privacy_scanner.scan_titles),
-  privacyScannerScanQueryParams: z.boolean().default(config.tools.privacy_scanner.scan_query_params),
-  privacyScannerScanFragments: z.boolean().default(config.tools.privacy_scanner.scan_fragments),
-  privacyScannerSensitiveParams: z.array(z.string()).default(config.tools.privacy_scanner.sensitive_params),
-  privacyScannerEmailDetection: z.boolean().default(config.tools.privacy_scanner.email_detection),
-  privacyScannerUuidDetection: z.boolean().default(config.tools.privacy_scanner.uuid_detection),
-
-  statisticsEnabled: z.boolean().default(config.tools.statistics.enabled),
-  statisticsDefaultScope: toolDefaultScope(config.tools.statistics.default_scope),
-  statisticsIncludeDomains: z.boolean().default(config.tools.statistics.include_domains),
-  statisticsIncludeFolders: z.boolean().default(config.tools.statistics.include_folders),
-  statisticsIncludeDuplicates: z.boolean().default(config.tools.statistics.include_duplicates),
-  statisticsIncludeProtocols: z.boolean().default(config.tools.statistics.include_protocols),
-  statisticsIncludeDepthBreakdown: z.boolean().default(config.tools.statistics.include_depth_breakdown),
-  statisticsTopN: z.number().min(1).max(100).default(config.tools.statistics.top_n),
-
-  dataShowExport: z.boolean().default(config.tools.data.show_export),
-  dataShowImport: z.boolean().default(config.tools.data.show_import),
-  dataDefaultExportFormat: z.enum(['html', 'json', 'markdown', 'csv']).default(
-    config.tools.data.default_export_format as 'html' | 'json' | 'markdown' | 'csv',
+  searchDebounceMs: numberField('search.debounce_ms', 'searchDelay', { unit: 'ms' }),
+  maxSearchResults: literalField(
+    'search.max_results',
+    'maxResults',
+    maxSearchResultsSchema,
+    (value) => t('settings_results', String(value)),
   ),
-}).superRefine((value, ctx) => {
+  expandFoldersOnSearch: switchField('search.expand_folders_on_search', 'expandFolders'),
+  searchHistory: switchField('search.search_history', 'searchHistory'),
+
+  sortOrder: enumField(
+    'behavior.sort_order',
+    'sortOrder',
+    sortOrderSchema,
+    (value) =>
+      ({
+        date: t('settings_sortDate'),
+        alphabetical: t('settings_sortAlphabetical'),
+        folders: t('settings_sortFolders'),
+      })[value],
+  ),
+  groupByFolders: switchField('behavior.group_by_folders', 'groupByFolders'),
+  confirmBeforeDelete: switchField('behavior.confirm_before_delete', 'confirmDelete'),
+  defaultNewFolderName: textField('behavior.default_new_folder_name', 'defaultFolderName'),
+  recentFoldersMax: numberField('behavior.recent_folders_max', 'recentFoldersMax'),
+  recentFoldersEnabled: switchField('behavior.recent_folders_enabled', 'recentFoldersEnabled'),
+
+  popupWidth: numberField('advanced.popup_width', 'popupWidth', { unit: 'px' }),
+  popupHeight: numberField('advanced.popup_height', 'popupHeight', { unit: 'px' }),
+  truncateLength: numberField('advanced.truncate_length', 'truncateLength', { unit: 'chars' }),
+  toastDurationMs: numberField('advanced.toast_duration_ms', 'toastDuration', { unit: 'ms' }),
+
+  aiEnabled: switchField('ai.enabled', 'aiEnabled'),
+  aiProvider: aiProviderField,
+  aiModel: aiModelField,
+  aiMaxRecommendations: numberField('ai.max_recommendations', 'aiMaxRecommendations'),
+  aiAutoTriggerOnOpen: switchField('ai.auto_trigger_on_open', 'aiAutoTrigger'),
+  aiReadPageContent: switchField('ai.read_page_content', 'aiReadPageContent', {
+    requiresWebHostAccess: true,
+  }),
+  aiMaxCategories: numberField('ai.max_categories', 'aiMaxCategories'),
+  aiMinItemsPerFolder: numberField('ai.min_items_per_folder', 'aiMinItemsPerFolder'),
+  aiMaxItemsPerFolder: numberField('ai.max_items_per_folder', 'aiMaxItemsPerFolder'),
+
+  exportFilenamePrefix: textField('export.filename_prefix', 'exportFilenamePrefix'),
+  exportFilenameMaxLength: numberField('export.filename_max_length', 'exportFilenameMaxLength'),
+  exportJsonIndentSize: numberField('export.json_indent_size', 'exportJsonIndentSize'),
+  exportHtmlIndentSpaces: numberField('export.html_indent_spaces', 'exportHtmlIndentSpaces'),
+  exportMarkdownIndentSpaces: numberField(
+    'export.markdown_indent_spaces',
+    'exportMarkdownIndentSpaces',
+  ),
+  exportIncludeDates: switchField('export.include_dates_by_default', 'exportIncludeDates'),
+  exportIncludeUrls: switchField('export.include_urls_by_default', 'exportIncludeUrls'),
+
+  contextMenuEnabled: switchField('context_menu.enabled', 'contextMenuEnabled'),
+  contextMenuBookmarkNaming: enumField(
+    'context_menu.bookmark_naming',
+    'contextMenuNaming',
+    contextMenuNamingSchema,
+    (value) =>
+      ({
+        link_text: t('settings_namingLinkText'),
+        page_title: t('settings_namingPageTitle'),
+        link_url: t('settings_namingLinkUrl'),
+      })[value],
+  ),
+
+  aiContextPackerEnabled: switchField('tools.ai_context_packer.enabled', 'aiContextPackerEnabled'),
+  aiContextPackerDefaultScope: scopeField(
+    'ai_context_packer',
+    'aiContextPackerDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.aiContextPacker,
+  ),
+  aiContextPackerOutputFormat: enumField(
+    'tools.ai_context_packer.output_format',
+    'aiContextPackerOutputFormat',
+    aiContextFormatSchema,
+    (value) => ({ markdown: 'Markdown', xml: 'XML' })[value],
+  ),
+  aiContextPackerIncludeFolderPath: switchField(
+    'tools.ai_context_packer.include_folder_path',
+    'aiContextPackerIncludeFolderPath',
+  ),
+  aiContextPackerIncludeDates: switchField(
+    'tools.ai_context_packer.include_dates',
+    'aiContextPackerIncludeDates',
+  ),
+  aiContextPackerIncludeTags: switchField(
+    'tools.ai_context_packer.include_tags',
+    'aiContextPackerIncludeTags',
+  ),
+  aiContextPackerIncludeSummaries: switchField(
+    'tools.ai_context_packer.include_summaries',
+    'aiContextPackerIncludeSummaries',
+  ),
+  aiContextPackerMaxItems: numberField(
+    'tools.ai_context_packer.max_items',
+    'aiContextPackerMaxItems',
+  ),
+  aiContextPackerMaxDepth: numberField(
+    'tools.ai_context_packer.max_depth',
+    'aiContextPackerMaxDepth',
+  ),
+  aiContextPackerExcerptLength: numberField(
+    'tools.ai_context_packer.excerpt_length',
+    'aiContextPackerExcerptLength',
+  ),
+
+  autoTaggingEnabled: switchField('tools.auto_tagging.enabled', 'autoTaggingEnabled'),
+  autoTaggingDefaultScope: scopeField(
+    'auto_tagging',
+    'autoTaggingDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.autoTagging,
+  ),
+  autoTaggingMinTags: numberField('tools.auto_tagging.min_tags', 'autoTaggingMinTags'),
+  autoTaggingMaxTags: numberField('tools.auto_tagging.max_tags', 'autoTaggingMaxTags'),
+  autoTaggingTagStyle: enumField(
+    'tools.auto_tagging.tag_style',
+    'autoTaggingTagStyle',
+    tagStyleSchema,
+    sameAsValue,
+  ),
+  autoTaggingMergeMode: enumField(
+    'tools.auto_tagging.merge_mode',
+    'autoTaggingMergeMode',
+    mergeModeSchema,
+    mergeModeLabel,
+  ),
+  autoTaggingDedupeTags: switchField('tools.auto_tagging.dedupe_tags', 'autoTaggingDedupeTags'),
+
+  summarizerEnabled: switchField('tools.summarizer.enabled', 'summarizerEnabled'),
+  summarizerDefaultScope: scopeField(
+    'summarizer',
+    'summarizerDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.summarizer,
+  ),
+  summarizerSummaryLength: numberField(
+    'tools.summarizer.summary_length',
+    'summarizerSummaryLength',
+  ),
+  summarizerIncludeDomainHint: switchField(
+    'tools.summarizer.include_domain_hint',
+    'summarizerIncludeDomainHint',
+  ),
+  summarizerMergeMode: enumField(
+    'tools.summarizer.merge_mode',
+    'summarizerMergeMode',
+    mergeModeSchema,
+    mergeModeLabel,
+  ),
+
+  reorganizationEnabled: switchField('tools.reorganization.enabled', 'reorganizationEnabled'),
+  reorganizationDefaultScope: scopeField(
+    'reorganization',
+    'reorganizationDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.reorganization,
+  ),
+  reorganizationDryRunFirst: switchField(
+    'tools.reorganization.dry_run_first',
+    'reorganizationDryRunFirst',
+  ),
+  reorganizationMinConfidence: numberField(
+    'tools.reorganization.min_confidence',
+    'reorganizationMinConfidence',
+    { control: 'slider' },
+  ),
+  reorganizationBatchSize: numberField(
+    'tools.reorganization.batch_size',
+    'reorganizationBatchSize',
+  ),
+
+  duplicatesEnabled: switchField('tools.duplicates.enabled', 'duplicatesEnabled'),
+  duplicatesDefaultScope: scopeField(
+    'duplicates',
+    'duplicatesDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.duplicates,
+  ),
+  duplicatesMatchStrategy: enumField(
+    'tools.duplicates.match_strategy',
+    'duplicatesMatchStrategy',
+    duplicateMatchStrategySchema,
+    (value) =>
+      ({
+        exact_url: t('settings_duplicatesMatchExactUrl'),
+        normalized_url: t('settings_duplicatesMatchNormalizedUrl'),
+        title_url: t('settings_duplicatesMatchTitleUrl'),
+        title_only: t('settings_duplicatesMatchTitleOnly'),
+      })[value],
+  ),
+  duplicatesNormalizeWww: switchField('tools.duplicates.normalize_www', 'duplicatesNormalizeWww'),
+  duplicatesIgnoreProtocol: switchField(
+    'tools.duplicates.ignore_protocol',
+    'duplicatesIgnoreProtocol',
+  ),
+  duplicatesIgnoreTrailingSlash: switchField(
+    'tools.duplicates.ignore_trailing_slash',
+    'duplicatesIgnoreTrailingSlash',
+  ),
+  duplicatesKeepRule: enumField(
+    'tools.duplicates.keep_rule',
+    'duplicatesKeepRule',
+    duplicateKeepRuleSchema,
+    (value) =>
+      ({
+        oldest: t('settings_duplicatesKeepOldest'),
+        newest: t('settings_duplicatesKeepNewest'),
+        first: t('settings_duplicatesKeepFirst'),
+      })[value],
+  ),
+  duplicatesMaxGroups: numberField('tools.duplicates.max_groups', 'duplicatesMaxGroups'),
+
+  urlCleanerEnabled: switchField('tools.url_cleaner.enabled', 'urlCleanerEnabled'),
+  urlCleanerDefaultScope: scopeField(
+    'url_cleaner',
+    'urlCleanerDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.urlCleaner,
+  ),
+  urlCleanerRemoveHash: switchField('tools.url_cleaner.remove_hash', 'urlCleanerRemoveHash'),
+  urlCleanerSortQueryParams: switchField(
+    'tools.url_cleaner.sort_query_params',
+    'urlCleanerSortQueryParams',
+  ),
+  urlCleanerDedupeQueryParams: switchField(
+    'tools.url_cleaner.dedupe_query_params',
+    'urlCleanerDedupeQueryParams',
+  ),
+  urlCleanerPreserveParams: listField(
+    'tools.url_cleaner.preserve_params',
+    'urlCleanerPreserveParams',
+    z.array(z.string()),
+    'string',
+  ),
+  urlCleanerRemoveParams: listField(
+    'tools.url_cleaner.remove_params',
+    'urlCleanerRemoveParams',
+    z.array(z.string()),
+    'string',
+  ),
+
+  deadLinksEnabled: switchField('tools.dead_links.enabled', 'deadLinksEnabled'),
+  deadLinksDefaultScope: scopeField(
+    'dead_links',
+    'deadLinksDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.deadLinks,
+  ),
+  deadLinksRequestTimeoutMs: numberField(
+    'tools.dead_links.request_timeout_ms',
+    'deadLinksRequestTimeoutMs',
+  ),
+  deadLinksConcurrency: numberField('tools.dead_links.concurrency', 'deadLinksConcurrency'),
+  deadLinksRetryCount: numberField('tools.dead_links.retry_count', 'deadLinksRetryCount'),
+  deadLinksFollowRedirects: switchField(
+    'tools.dead_links.follow_redirects',
+    'deadLinksFollowRedirects',
+  ),
+  deadLinksSuccessStatuses: listField(
+    'tools.dead_links.success_statuses',
+    'deadLinksSuccessStatuses',
+    z.array(httpStatusCodeSchema).min(1),
+    'number',
+  ),
+
+  metadataFetcherEnabled: switchField('tools.metadata_fetcher.enabled', 'metadataFetcherEnabled'),
+  metadataFetcherDefaultScope: scopeField(
+    'metadata_fetcher',
+    'metadataFetcherDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.metadataFetcher,
+  ),
+  metadataFetcherOverwriteTitles: switchField(
+    'tools.metadata_fetcher.overwrite_titles',
+    'metadataFetcherOverwriteTitles',
+  ),
+  metadataFetcherFetchDescriptions: switchField(
+    'tools.metadata_fetcher.fetch_descriptions',
+    'metadataFetcherFetchDescriptions',
+  ),
+  metadataFetcherRequestTimeoutMs: numberField(
+    'tools.metadata_fetcher.request_timeout_ms',
+    'metadataFetcherRequestTimeoutMs',
+  ),
+  metadataFetcherConcurrency: numberField(
+    'tools.metadata_fetcher.concurrency',
+    'metadataFetcherConcurrency',
+  ),
+
+  siteIconsEnabled: switchField('tools.site_icons.enabled', 'siteIconsEnabled'),
+  siteIconsDefaultScope: scopeField(
+    'site_icons',
+    'siteIconsDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.siteIcons,
+  ),
+  siteIconsPreferredSize: numberField('tools.site_icons.preferred_size', 'siteIconsPreferredSize', {
+    unit: 'px',
+  }),
+  siteIconsMaxIconKb: numberField('tools.site_icons.max_icon_kb', 'siteIconsMaxIconKb', {
+    unit: 'KB',
+  }),
+  siteIconsMaxCacheKb: numberField('tools.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
+    unit: 'KB',
+  }),
+
+  privacyScannerEnabled: switchField('tools.privacy_scanner.enabled', 'privacyScannerEnabled'),
+  privacyScannerDefaultScope: scopeField(
+    'privacy_scanner',
+    'privacyScannerDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.privacyScanner,
+  ),
+  privacyScannerScanTitles: switchField(
+    'tools.privacy_scanner.scan_titles',
+    'privacyScannerScanTitles',
+  ),
+  privacyScannerScanQueryParams: switchField(
+    'tools.privacy_scanner.scan_query_params',
+    'privacyScannerScanQueryParams',
+  ),
+  privacyScannerScanFragments: switchField(
+    'tools.privacy_scanner.scan_fragments',
+    'privacyScannerScanFragments',
+  ),
+  privacyScannerSensitiveParams: listField(
+    'tools.privacy_scanner.sensitive_params',
+    'privacyScannerSensitiveParams',
+    z.array(z.string()),
+    'string',
+  ),
+  privacyScannerEmailDetection: switchField(
+    'tools.privacy_scanner.email_detection',
+    'privacyScannerEmailDetection',
+  ),
+  privacyScannerUuidDetection: switchField(
+    'tools.privacy_scanner.uuid_detection',
+    'privacyScannerUuidDetection',
+  ),
+
+  statisticsEnabled: switchField('tools.statistics.enabled', 'statisticsEnabled'),
+  statisticsDefaultScope: scopeField(
+    'statistics',
+    'statisticsDefaultScope',
+    TOOL_SCOPE_CAPABILITIES.statistics,
+  ),
+  statisticsIncludeDomains: switchField(
+    'tools.statistics.include_domains',
+    'statisticsIncludeDomains',
+  ),
+  statisticsIncludeFolders: switchField(
+    'tools.statistics.include_folders',
+    'statisticsIncludeFolders',
+  ),
+  statisticsIncludeDuplicates: switchField(
+    'tools.statistics.include_duplicates',
+    'statisticsIncludeDuplicates',
+  ),
+  statisticsIncludeProtocols: switchField(
+    'tools.statistics.include_protocols',
+    'statisticsIncludeProtocols',
+  ),
+  statisticsIncludeDepthBreakdown: switchField(
+    'tools.statistics.include_depth_breakdown',
+    'statisticsIncludeDepthBreakdown',
+  ),
+  statisticsTopN: numberField('tools.statistics.top_n', 'statisticsTopN'),
+
+  dataShowExport: switchField('tools.data.show_export', 'dataShowExport'),
+  dataShowImport: switchField('tools.data.show_import', 'dataShowImport'),
+  dataDefaultExportFormat: enumField(
+    'tools.data.default_export_format',
+    'dataDefaultExportFormat',
+    exportFormatSchema,
+    (value) => ({ html: 'HTML', json: 'JSON', markdown: 'Markdown', csv: 'CSV' })[value],
+  ),
+} satisfies Record<string, FieldDefinition>;
+
+assertEverySettingsKeyRead(settingsConfig);
+
+type SettingsFields = typeof fields;
+type SettingsKey = keyof SettingsFields;
+
+const settingsShape = Object.fromEntries(
+  Object.entries(fields).map(([key, field]) => [key, field.schema]),
+) as { [K in SettingsKey]: SettingsFields[K]['schema'] };
+
+export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) => {
   if (value.autoTaggingMinTags > value.autoTaggingMaxTags) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       path: ['autoTaggingMinTags'],
       message: 'Minimum tags cannot exceed maximum tags',
     });
   }
 
-  if (value.aiMinItemsPerFolder > 0 && value.aiMaxItemsPerFolder > 0 && value.aiMinItemsPerFolder > value.aiMaxItemsPerFolder) {
+  if (
+    value.aiMinItemsPerFolder > 0 &&
+    value.aiMaxItemsPerFolder > 0 &&
+    value.aiMinItemsPerFolder > value.aiMaxItemsPerFolder
+  ) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: 'custom',
       path: ['aiMinItemsPerFolder'],
       message: 'Minimum items per folder cannot exceed maximum items per folder',
     });
@@ -413,6 +797,17 @@ export const settingsSchema = z.object({
 
 export type Settings = z.infer<typeof settingsSchema>;
 export const defaultSettings: Settings = settingsSchema.parse({});
+
+type NumberSettingKey = {
+  [K in SettingsKey]: SettingsFields[K] extends NumberFieldDefinition ? K : never;
+}[SettingsKey];
+
+/** Default, bounds, and step of every numeric setting, as configured. */
+export const SETTING_NUMBER_BOUNDS = Object.fromEntries(
+  Object.entries(fields).flatMap(([key, field]) =>
+    'bounds' in field ? [[key, field.bounds]] : [],
+  ),
+) as Readonly<Record<NumberSettingKey, NumberSetting>>;
 
 function buildCategories(): Record<string, SettingsCategoryMeta> {
   return {
@@ -429,7 +824,14 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
     behavior: {
       label: t('settings_behavior'),
       description: t('settings_behaviorDesc'),
-      fields: ['sortOrder', 'groupByFolders', 'confirmBeforeDelete', 'defaultNewFolderName', 'recentFoldersEnabled', 'recentFoldersMax'],
+      fields: [
+        'sortOrder',
+        'groupByFolders',
+        'confirmBeforeDelete',
+        'defaultNewFolderName',
+        'recentFoldersEnabled',
+        'recentFoldersMax',
+      ],
     },
     advanced: {
       label: t('settings_advanced'),
@@ -440,7 +842,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       label: t('settings_ai'),
       description: t('settings_aiDesc'),
       // The provider and model live on AI services (AIServicesPanel), not in these synced fields.
-      fields: ['aiEnabled', 'aiAutoTriggerOnOpen', 'aiReadPageContent', 'aiMaxRecommendations', 'aiMaxCategories', 'aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
+      fields: [
+        'aiEnabled',
+        'aiAutoTriggerOnOpen',
+        'aiReadPageContent',
+        'aiMaxRecommendations',
+        'aiMaxCategories',
+        'aiMinItemsPerFolder',
+        'aiMaxItemsPerFolder',
+      ],
     },
     aiTools: {
       label: t('settings_aiTools'),
@@ -573,198 +983,6 @@ export function getSettingsCategories() {
   return buildCategories();
 }
 
-function buildFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
-  return {
-    language: {
-      label: t('settings_language'),
-      description: t('settings_languageDesc'),
-      type: 'select',
-      options: [
-        { value: 'auto', label: t('settings_languageAuto') },
-        { value: 'en', label: 'English' },
-        { value: 'ja', label: '日本語' },
-        { value: 'ko', label: '한국어' },
-      ],
-    },
-    theme: {
-      label: t('settings_theme'),
-      description: t('settings_themeDesc'),
-      type: 'select',
-      options: [
-        { value: 'system', label: t('settings_themeSystem') },
-        { value: 'light', label: t('settings_themeLight') },
-        { value: 'dark', label: t('settings_themeDark') },
-      ],
-    },
-    showFavicons: { label: t('settings_showFavicons'), description: t('settings_showFaviconsDesc'), type: 'switch' },
-    faviconSize: {
-      label: t('settings_faviconSize'),
-      description: t('settings_faviconSizeDesc'),
-      type: 'select',
-      options: [
-        { value: 16, label: t('settings_faviconSmall') },
-        { value: 24, label: t('settings_faviconMedium') },
-        { value: 32, label: t('settings_faviconLarge') },
-      ],
-    },
-    searchDebounceMs: { label: t('settings_searchDelay'), description: t('settings_searchDelayDesc'), type: 'number', min: 50, max: 1000, step: 50, unit: 'ms' },
-    maxSearchResults: {
-      label: t('settings_maxResults'),
-      description: t('settings_maxResultsDesc'),
-      type: 'select',
-      options: [10, 20, 50, 100].map((value) => ({ value, label: t('settings_results', String(value)) })),
-    },
-    expandFoldersOnSearch: { label: t('settings_expandFolders'), description: t('settings_expandFoldersDesc'), type: 'switch' },
-    searchHistory: { label: t('settings_searchHistory'), description: t('settings_searchHistoryDesc'), type: 'switch' },
-    sortOrder: {
-      label: t('settings_sortOrder'),
-      description: t('settings_sortOrderDesc'),
-      type: 'select',
-      options: [
-        { value: 'date', label: t('settings_sortDate') },
-        { value: 'alphabetical', label: t('settings_sortAlphabetical') },
-        { value: 'folders', label: t('settings_sortFolders') },
-      ],
-    },
-    groupByFolders: { label: t('settings_groupByFolders'), description: t('settings_groupByFoldersDesc'), type: 'switch' },
-    confirmBeforeDelete: { label: t('settings_confirmDelete'), description: t('settings_confirmDeleteDesc'), type: 'switch' },
-    defaultNewFolderName: { label: t('settings_defaultFolderName'), description: t('settings_defaultFolderNameDesc'), type: 'text' },
-    recentFoldersMax: { label: t('settings_recentFoldersMax'), description: t('settings_recentFoldersMaxDesc'), type: 'number', min: 1, max: 10, step: 1 },
-    recentFoldersEnabled: { label: t('settings_recentFoldersEnabled'), description: t('settings_recentFoldersEnabledDesc'), type: 'switch' },
-    popupWidth: { label: t('settings_popupWidth'), description: t('settings_popupWidthDesc'), type: 'number', min: 300, max: POPUP_MAX_WIDTH, step: 50, unit: 'px' },
-    popupHeight: { label: t('settings_popupHeight'), description: t('settings_popupHeightDesc'), type: 'number', min: 300, max: POPUP_MAX_HEIGHT, step: 50, unit: 'px' },
-    truncateLength: { label: t('settings_truncateLength'), description: t('settings_truncateLengthDesc'), type: 'number', min: 20, max: 200, step: 10, unit: 'chars' },
-    toastDurationMs: { label: t('settings_toastDuration'), description: t('settings_toastDurationDesc'), type: 'number', min: 2000, max: 10000, step: 500, unit: 'ms' },
-    aiEnabled: { label: t('settings_aiEnabled'), description: t('settings_aiEnabledDesc'), type: 'switch' },
-    aiProvider: {
-      label: t('settings_aiProvider'),
-      description: t('settings_aiProviderDesc'),
-      type: 'select',
-      searchable: true,
-      options: getAvailableProviders().map((provider) => ({
-        value: provider.id,
-        label: getLocalizedProviderName(provider.id),
-        iconUrl: getProviderLogoUrl(provider.id),
-        group: t(providerGroupLabelKeys[getProviderGroup(provider.id)]),
-      })),
-    },
-    aiModel: {
-      label: t('settings_aiModel'),
-      description: t('settings_aiModelDesc'),
-      type: 'select',
-      options: getAvailableProviders().flatMap((provider) =>
-        getModelsForProvider(provider.id).map((model) => ({
-          value: model.id,
-          label: `${model.name} (${getLocalizedProviderName(provider.id)})`,
-        })),
-      ),
-    },
-    aiMaxRecommendations: { label: t('settings_aiMaxRecommendations'), description: t('settings_aiMaxRecommendationsDesc'), type: 'number', min: 1, max: 10, step: 1 },
-    aiAutoTriggerOnOpen: { label: t('settings_aiAutoTrigger'), description: t('settings_aiAutoTriggerDesc'), type: 'switch' },
-    aiReadPageContent: { label: t('settings_aiReadPageContent'), description: t('settings_aiReadPageContentDesc'), type: 'switch', requiresWebHostAccess: true },
-    aiMaxCategories: { label: t('settings_aiMaxCategories'), description: t('settings_aiMaxCategoriesDesc'), type: 'number', min: 1, max: 100, step: 1, unlimited: true },
-    aiMinItemsPerFolder: { label: t('settings_aiMinItemsPerFolder'), description: t('settings_aiMinItemsPerFolderDesc'), type: 'number', min: 1, max: 100, step: 1 },
-    aiMaxItemsPerFolder: { label: t('settings_aiMaxItemsPerFolder'), description: t('settings_aiMaxItemsPerFolderDesc'), type: 'number', min: 1, max: 500, step: 1, unlimited: true },
-    exportFilenamePrefix: { label: t('settings_exportFilenamePrefix'), description: t('settings_exportFilenamePrefixDesc'), type: 'text' },
-    exportFilenameMaxLength: { label: t('settings_exportFilenameMaxLength'), description: t('settings_exportFilenameMaxLengthDesc'), type: 'number', min: 10, max: 100, step: 5 },
-    exportJsonIndentSize: { label: t('settings_exportJsonIndentSize'), description: t('settings_exportJsonIndentSizeDesc'), type: 'number', min: 1, max: 8, step: 1 },
-    exportHtmlIndentSpaces: { label: t('settings_exportHtmlIndentSpaces'), description: t('settings_exportHtmlIndentSpacesDesc'), type: 'number', min: 1, max: 8, step: 1 },
-    exportMarkdownIndentSpaces: { label: t('settings_exportMarkdownIndentSpaces'), description: t('settings_exportMarkdownIndentSpacesDesc'), type: 'number', min: 1, max: 8, step: 1 },
-    exportIncludeDates: { label: t('settings_exportIncludeDates'), description: t('settings_exportIncludeDatesDesc'), type: 'switch' },
-    exportIncludeUrls: { label: t('settings_exportIncludeUrls'), description: t('settings_exportIncludeUrlsDesc'), type: 'switch' },
-    contextMenuEnabled: { label: t('settings_contextMenuEnabled'), description: t('settings_contextMenuEnabledDesc'), type: 'switch' },
-    contextMenuBookmarkNaming: {
-      label: t('settings_contextMenuNaming'),
-      description: t('settings_contextMenuNamingDesc'),
-      type: 'select',
-      options: [
-        { value: 'link_text', label: t('settings_namingLinkText') },
-        { value: 'page_title', label: t('settings_namingPageTitle') },
-        { value: 'link_url', label: t('settings_namingLinkUrl') },
-      ],
-    },
-    aiContextPackerEnabled: { label: t('settings_aiContextPackerEnabled'), description: t('settings_aiContextPackerEnabledDesc'), type: 'switch' },
-    aiContextPackerDefaultScope: { label: t('settings_aiContextPackerDefaultScope'), description: t('settings_aiContextPackerDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    aiContextPackerOutputFormat: { label: t('settings_aiContextPackerOutputFormat'), description: t('settings_aiContextPackerOutputFormatDesc'), type: 'select', options: [{ value: 'markdown', label: 'Markdown' }, { value: 'xml', label: 'XML' }] },
-    aiContextPackerIncludeFolderPath: { label: t('settings_aiContextPackerIncludeFolderPath'), description: t('settings_aiContextPackerIncludeFolderPathDesc'), type: 'switch' },
-    aiContextPackerIncludeDates: { label: t('settings_aiContextPackerIncludeDates'), description: t('settings_aiContextPackerIncludeDatesDesc'), type: 'switch' },
-    aiContextPackerIncludeTags: { label: t('settings_aiContextPackerIncludeTags'), description: t('settings_aiContextPackerIncludeTagsDesc'), type: 'switch' },
-    aiContextPackerIncludeSummaries: { label: t('settings_aiContextPackerIncludeSummaries'), description: t('settings_aiContextPackerIncludeSummariesDesc'), type: 'switch' },
-    aiContextPackerMaxItems: { label: t('settings_aiContextPackerMaxItems'), description: t('settings_aiContextPackerMaxItemsDesc'), type: 'number', min: 1, max: 2000, step: 10 },
-    aiContextPackerMaxDepth: { label: t('settings_aiContextPackerMaxDepth'), description: t('settings_aiContextPackerMaxDepthDesc'), type: 'number', min: 1, max: 20, step: 1 },
-    aiContextPackerExcerptLength: { label: t('settings_aiContextPackerExcerptLength'), description: t('settings_aiContextPackerExcerptLengthDesc'), type: 'number', min: 40, max: 2000, step: 10 },
-    autoTaggingEnabled: { label: t('settings_autoTaggingEnabled'), description: t('settings_autoTaggingEnabledDesc'), type: 'switch' },
-    autoTaggingDefaultScope: { label: t('settings_autoTaggingDefaultScope'), description: t('settings_autoTaggingDefaultScopeDesc'), type: 'select', options: scopeOptions('folder') },
-    autoTaggingMinTags: { label: t('settings_autoTaggingMinTags'), description: t('settings_autoTaggingMinTagsDesc'), type: 'number', min: 1, max: 20, step: 1 },
-    autoTaggingMaxTags: { label: t('settings_autoTaggingMaxTags'), description: t('settings_autoTaggingMaxTagsDesc'), type: 'number', min: 1, max: 20, step: 1 },
-    autoTaggingTagStyle: { label: t('settings_autoTaggingTagStyle'), description: t('settings_autoTaggingTagStyleDesc'), type: 'select', options: [{ value: 'kebab-case', label: 'kebab-case' }, { value: 'snake_case', label: 'snake_case' }, { value: 'lowercase', label: 'lowercase' }] },
-    autoTaggingMergeMode: { label: t('settings_autoTaggingMergeMode'), description: t('settings_autoTaggingMergeModeDesc'), type: 'select', options: mergeModeOptions() },
-    autoTaggingDedupeTags: { label: t('settings_autoTaggingDedupeTags'), description: t('settings_autoTaggingDedupeTagsDesc'), type: 'switch' },
-    summarizerEnabled: { label: t('settings_summarizerEnabled'), description: t('settings_summarizerEnabledDesc'), type: 'switch' },
-    summarizerDefaultScope: { label: t('settings_summarizerDefaultScope'), description: t('settings_summarizerDefaultScopeDesc'), type: 'select', options: scopeOptions('folder') },
-    summarizerSummaryLength: { label: t('settings_summarizerSummaryLength'), description: t('settings_summarizerSummaryLengthDesc'), type: 'number', min: 40, max: 1000, step: 10 },
-    summarizerIncludeDomainHint: { label: t('settings_summarizerIncludeDomainHint'), description: t('settings_summarizerIncludeDomainHintDesc'), type: 'switch' },
-    summarizerMergeMode: { label: t('settings_summarizerMergeMode'), description: t('settings_summarizerMergeModeDesc'), type: 'select', options: mergeModeOptions() },
-    reorganizationEnabled: { label: t('settings_reorganizationEnabled'), description: t('settings_reorganizationEnabledDesc'), type: 'switch' },
-    reorganizationDefaultScope: { label: t('settings_reorganizationDefaultScope'), description: t('settings_reorganizationDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    reorganizationDryRunFirst: { label: t('settings_reorganizationDryRunFirst'), description: t('settings_reorganizationDryRunFirstDesc'), type: 'switch' },
-    reorganizationMinConfidence: { label: t('settings_reorganizationMinConfidence'), description: t('settings_reorganizationMinConfidenceDesc'), type: 'number', min: 0, max: 1, step: 0.05, control: 'slider' },
-    reorganizationBatchSize: { label: t('settings_reorganizationBatchSize'), description: t('settings_reorganizationBatchSizeDesc'), type: 'number', min: 1, max: 1000, step: 10 },
-    duplicatesEnabled: { label: t('settings_duplicatesEnabled'), description: t('settings_duplicatesEnabledDesc'), type: 'switch' },
-    duplicatesDefaultScope: { label: t('settings_duplicatesDefaultScope'), description: t('settings_duplicatesDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
-    duplicatesMatchStrategy: { label: t('settings_duplicatesMatchStrategy'), description: t('settings_duplicatesMatchStrategyDesc'), type: 'select', options: [{ value: 'exact_url', label: t('settings_duplicatesMatchExactUrl') }, { value: 'normalized_url', label: t('settings_duplicatesMatchNormalizedUrl') }, { value: 'title_url', label: t('settings_duplicatesMatchTitleUrl') }, { value: 'title_only', label: t('settings_duplicatesMatchTitleOnly') }] },
-    duplicatesNormalizeWww: { label: t('settings_duplicatesNormalizeWww'), description: t('settings_duplicatesNormalizeWwwDesc'), type: 'switch' },
-    duplicatesIgnoreProtocol: { label: t('settings_duplicatesIgnoreProtocol'), description: t('settings_duplicatesIgnoreProtocolDesc'), type: 'switch' },
-    duplicatesIgnoreTrailingSlash: { label: t('settings_duplicatesIgnoreTrailingSlash'), description: t('settings_duplicatesIgnoreTrailingSlashDesc'), type: 'switch' },
-    duplicatesKeepRule: { label: t('settings_duplicatesKeepRule'), description: t('settings_duplicatesKeepRuleDesc'), type: 'select', options: [{ value: 'oldest', label: t('settings_duplicatesKeepOldest') }, { value: 'newest', label: t('settings_duplicatesKeepNewest') }, { value: 'first', label: t('settings_duplicatesKeepFirst') }] },
-    duplicatesMaxGroups: { label: t('settings_duplicatesMaxGroups'), description: t('settings_duplicatesMaxGroupsDesc'), type: 'number', min: 1, max: 5000, step: 10 },
-    urlCleanerEnabled: { label: t('settings_urlCleanerEnabled'), description: t('settings_urlCleanerEnabledDesc'), type: 'switch' },
-    urlCleanerDefaultScope: { label: t('settings_urlCleanerDefaultScope'), description: t('settings_urlCleanerDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    urlCleanerRemoveHash: { label: t('settings_urlCleanerRemoveHash'), description: t('settings_urlCleanerRemoveHashDesc'), type: 'switch' },
-    urlCleanerSortQueryParams: { label: t('settings_urlCleanerSortQueryParams'), description: t('settings_urlCleanerSortQueryParamsDesc'), type: 'switch' },
-    urlCleanerDedupeQueryParams: { label: t('settings_urlCleanerDedupeQueryParams'), description: t('settings_urlCleanerDedupeQueryParamsDesc'), type: 'switch' },
-    urlCleanerPreserveParams: { label: t('settings_urlCleanerPreserveParams'), description: t('settings_urlCleanerPreserveParamsDesc'), type: 'text', list: 'string' },
-    urlCleanerRemoveParams: { label: t('settings_urlCleanerRemoveParams'), description: t('settings_urlCleanerRemoveParamsDesc'), type: 'text', list: 'string' },
-    deadLinksEnabled: { label: t('settings_deadLinksEnabled'), description: t('settings_deadLinksEnabledDesc'), type: 'switch' },
-    deadLinksDefaultScope: { label: t('settings_deadLinksDefaultScope'), description: t('settings_deadLinksDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    deadLinksRequestTimeoutMs: { label: t('settings_deadLinksRequestTimeoutMs'), description: t('settings_deadLinksRequestTimeoutMsDesc'), type: 'number', min: 1000, max: 60000, step: 500 },
-    deadLinksConcurrency: { label: t('settings_deadLinksConcurrency'), description: t('settings_deadLinksConcurrencyDesc'), type: 'number', min: 1, max: 20, step: 1 },
-    deadLinksRetryCount: { label: t('settings_deadLinksRetryCount'), description: t('settings_deadLinksRetryCountDesc'), type: 'number', min: 0, max: 10, step: 1 },
-    deadLinksFollowRedirects: { label: t('settings_deadLinksFollowRedirects'), description: t('settings_deadLinksFollowRedirectsDesc'), type: 'switch' },
-    deadLinksSuccessStatuses: { label: t('settings_deadLinksSuccessStatuses'), description: t('settings_deadLinksSuccessStatusesDesc'), type: 'text', list: 'number' },
-    metadataFetcherEnabled: { label: t('settings_metadataFetcherEnabled'), description: t('settings_metadataFetcherEnabledDesc'), type: 'switch' },
-    metadataFetcherDefaultScope: { label: t('settings_metadataFetcherDefaultScope'), description: t('settings_metadataFetcherDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    metadataFetcherOverwriteTitles: { label: t('settings_metadataFetcherOverwriteTitles'), description: t('settings_metadataFetcherOverwriteTitlesDesc'), type: 'switch' },
-    metadataFetcherFetchDescriptions: { label: t('settings_metadataFetcherFetchDescriptions'), description: t('settings_metadataFetcherFetchDescriptionsDesc'), type: 'switch' },
-    metadataFetcherRequestTimeoutMs: { label: t('settings_metadataFetcherRequestTimeoutMs'), description: t('settings_metadataFetcherRequestTimeoutMsDesc'), type: 'number', min: 1000, max: 60000, step: 500 },
-    metadataFetcherConcurrency: { label: t('settings_metadataFetcherConcurrency'), description: t('settings_metadataFetcherConcurrencyDesc'), type: 'number', min: 1, max: 20, step: 1 },
-    siteIconsEnabled: { label: t('settings_siteIconsEnabled'), description: t('settings_siteIconsEnabledDesc'), type: 'switch' },
-    siteIconsDefaultScope: { label: t('settings_siteIconsDefaultScope'), description: t('settings_siteIconsDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    siteIconsPreferredSize: { label: t('settings_siteIconsPreferredSize'), description: t('settings_siteIconsPreferredSizeDesc'), type: 'number', min: 16, max: 256, step: 8, unit: 'px' },
-    siteIconsMaxIconKb: { label: t('settings_siteIconsMaxIconKb'), description: t('settings_siteIconsMaxIconKbDesc'), type: 'number', min: 1, max: 512, step: 1, unit: 'KB' },
-    siteIconsMaxCacheKb: { label: t('settings_siteIconsMaxCacheKb'), description: t('settings_siteIconsMaxCacheKbDesc'), type: 'number', min: 256, max: 8192, step: 256, unit: 'KB' },
-    privacyScannerEnabled: { label: t('settings_privacyScannerEnabled'), description: t('settings_privacyScannerEnabledDesc'), type: 'switch' },
-    privacyScannerDefaultScope: { label: t('settings_privacyScannerDefaultScope'), description: t('settings_privacyScannerDefaultScopeDesc'), type: 'select', options: scopeOptions('all') },
-    privacyScannerScanTitles: { label: t('settings_privacyScannerScanTitles'), description: t('settings_privacyScannerScanTitlesDesc'), type: 'switch' },
-    privacyScannerScanQueryParams: { label: t('settings_privacyScannerScanQueryParams'), description: t('settings_privacyScannerScanQueryParamsDesc'), type: 'switch' },
-    privacyScannerScanFragments: { label: t('settings_privacyScannerScanFragments'), description: t('settings_privacyScannerScanFragmentsDesc'), type: 'switch' },
-    privacyScannerSensitiveParams: { label: t('settings_privacyScannerSensitiveParams'), description: t('settings_privacyScannerSensitiveParamsDesc'), type: 'text', list: 'string' },
-    privacyScannerEmailDetection: { label: t('settings_privacyScannerEmailDetection'), description: t('settings_privacyScannerEmailDetectionDesc'), type: 'switch' },
-    privacyScannerUuidDetection: { label: t('settings_privacyScannerUuidDetection'), description: t('settings_privacyScannerUuidDetectionDesc'), type: 'switch' },
-    statisticsEnabled: { label: t('settings_statisticsEnabled'), description: t('settings_statisticsEnabledDesc'), type: 'switch' },
-    statisticsDefaultScope: { label: t('settings_statisticsDefaultScope'), description: t('settings_statisticsDefaultScopeDesc'), type: 'select', options: scopeOptions() },
-    statisticsIncludeDomains: { label: t('settings_statisticsIncludeDomains'), description: t('settings_statisticsIncludeDomainsDesc'), type: 'switch' },
-    statisticsIncludeFolders: { label: t('settings_statisticsIncludeFolders'), description: t('settings_statisticsIncludeFoldersDesc'), type: 'switch' },
-    statisticsIncludeDuplicates: { label: t('settings_statisticsIncludeDuplicates'), description: t('settings_statisticsIncludeDuplicatesDesc'), type: 'switch' },
-    statisticsIncludeProtocols: { label: t('settings_statisticsIncludeProtocols'), description: t('settings_statisticsIncludeProtocolsDesc'), type: 'switch' },
-    statisticsIncludeDepthBreakdown: { label: t('settings_statisticsIncludeDepthBreakdown'), description: t('settings_statisticsIncludeDepthBreakdownDesc'), type: 'switch' },
-    statisticsTopN: { label: t('settings_statisticsTopN'), description: t('settings_statisticsTopNDesc'), type: 'number', min: 1, max: 100, step: 1 },
-    dataShowExport: { label: t('settings_dataShowExport'), description: t('settings_dataShowExportDesc'), type: 'switch' },
-    dataShowImport: { label: t('settings_dataShowImport'), description: t('settings_dataShowImportDesc'), type: 'switch' },
-    dataDefaultExportFormat: { label: t('settings_dataDefaultExportFormat'), description: t('settings_dataDefaultExportFormatDesc'), type: 'select', options: [{ value: 'html', label: 'HTML' }, { value: 'json', label: 'JSON' }, { value: 'markdown', label: 'Markdown' }, { value: 'csv', label: 'CSV' }] },
-  };
-}
-
 const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {
   ollama: 'settings_aiProviderOllama',
   custom: 'settings_aiProviderCustom',
@@ -784,23 +1002,10 @@ export function getLocalizedProviderName(provider: AIProvider): string {
   return key ? t(key) : getProviderName(provider);
 }
 
-function scopeOptions(capability: 'folder' | 'all' | 'both' = 'both') {
-  const options = [
-    { value: 'folder', label: t('settings_scopeFolder') },
-    { value: 'all', label: t('settings_scopeAll') },
-  ];
-  return capability === 'both' ? options : options.filter((option) => option.value === capability);
-}
-
-function mergeModeOptions() {
-  return [
-    { value: 'append', label: t('settings_mergeAppend') },
-    { value: 'replace', label: t('settings_mergeReplace') },
-  ];
-}
-
 export function getSettingsFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
-  return buildFieldMeta();
+  return Object.fromEntries(
+    Object.entries(fields).map(([key, field]) => [key, field.meta()]),
+  ) as Record<keyof Settings, SettingsFieldMeta>;
 }
 
 export type SettingsFieldGroup = {
@@ -835,7 +1040,11 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       id: 'duplicatesMatching',
       label: t('settings_groupDuplicatesMatching'),
       description: t('settings_groupDuplicatesMatchingDesc'),
-      fields: ['duplicatesNormalizeWww', 'duplicatesIgnoreProtocol', 'duplicatesIgnoreTrailingSlash'],
+      fields: [
+        'duplicatesNormalizeWww',
+        'duplicatesIgnoreProtocol',
+        'duplicatesIgnoreTrailingSlash',
+      ],
     },
     {
       id: 'urlCleanerRules',

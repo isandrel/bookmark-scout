@@ -1,0 +1,14 @@
+# Defaults for Options > Search. Numeric settings list their default with the bounds and step
+# that Options and validation share.
+
+# Delay in milliseconds before search starts after typing
+debounce_ms = { default = 300, min = 50, max = 1000, step = 50 }
+
+# Maximum number of search results to display: 10, 20, 50, or 100
+max_results = 20
+
+# Automatically expand folders when searching
+expand_folders_on_search = true
+
+# Remember and display recent searches
+search_history = true

@@ -1,0 +1,14 @@
+# Defaults for exported bookmark files (Options > Data).
+
+# Filename settings for exported bookmark files
+filename_max_length = { default = 50, min = 10, max = 100, step = 5 }
+filename_prefix = "bookmarks_"
+
+# Indentation settings (spaces)
+html_indent_spaces = { default = 4, min = 1, max = 8, step = 1 }
+json_indent_size = { default = 2, min = 1, max = 8, step = 1 }
+markdown_indent_spaces = { default = 2, min = 1, max = 8, step = 1 }
+
+# Default export options
+include_dates_by_default = true
+include_urls_by_default = true

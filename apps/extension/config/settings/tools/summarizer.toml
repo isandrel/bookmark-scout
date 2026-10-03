@@ -1,0 +1,5 @@
+# Content Summarizer tool. It always runs on the current folder, so it has no default scope.
+enabled = true
+summary_length = { default = 160, min = 40, max = 1000, step = 10 }
+include_domain_hint = true
+merge_mode = "replace"
