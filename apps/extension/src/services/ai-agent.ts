@@ -152,11 +152,11 @@ export async function createAskAIAgent(options: AskAIOptions) {
   const settings = await getActiveAISettings(appSettings.aiEnabled);
   const readPages = appSettings.aiReadPageContent && (await hasWebHostAccess());
   const webSearch = options.webSearch ? WEB_SEARCH_TOOLS[settings.provider]?.() : undefined;
-  const { system } = await buildPrompt('ask_ai', { today: formatToday() });
+  const { system } = await buildPrompt('ask_ai', {});
 
   return new ToolLoopAgent({
     model: createAIModel(settings, 'askAI'),
-    instructions: `${system}\n\n${ASK_AI_TOOL_RULE}`,
+    instructions: system,
     tools: {
       ...createReadOnlyTools(readPages),
       ...(webSearch ? { webSearch: webSearch as ToolSet[string] } : {}),

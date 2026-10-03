@@ -61,7 +61,7 @@ export type DuplicateMatchOptions = {
   ignoreTrailingSlash: boolean;
 };
 
-type DuplicateOptions = DuplicateMatchOptions & {
+export type DuplicateScanOptions = DuplicateMatchOptions & {
   maxGroups: number;
   /** Orders each group so `items[0]` is the bookmark the keep rule retains. */
   keepRule?: DuplicateKeepRule;
@@ -79,7 +79,7 @@ export type DuplicateRemovalResult = {
   undo: () => Promise<BookmarkChangesUndoResult>;
 };
 
-type UrlCleanerOptions = {
+export type UrlCleanerOptions = {
   removeHash: boolean;
   sortQueryParams: boolean;
   dedupeQueryParams: boolean;
@@ -87,7 +87,7 @@ type UrlCleanerOptions = {
   removeParams: string[];
 };
 
-type StatisticsOptions = {
+export type StatisticsOptions = {
   includeDomains: boolean;
   includeFolders: boolean;
   includeProtocols: boolean;
@@ -170,7 +170,7 @@ function bookmarkLevel(bookmark: FlatBookmark): number {
 
 export function scanDuplicateBookmarks(
   nodes: BookmarkTreeNode[],
-  options: DuplicateOptions,
+  options: DuplicateScanOptions,
 ): DuplicateScanResult {
   const flatBookmarks = flattenBookmarks(nodes);
   const groups = new Map<string, FlatBookmark[]>();

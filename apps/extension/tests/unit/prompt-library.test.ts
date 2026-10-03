@@ -10,10 +10,13 @@ import {
   saveCustomPrompt,
   setActivePrompt,
 } from '@/lib/prompt-library-storage';
+import { defaultSettings } from '@/lib/settings-schema';
 import {
+  PROMPT_TASK_IDS,
   PROMPT_TASKS,
   buildPrompt,
   findUnknownPromptVariables,
+  getPromptVariables,
 } from '@/services/prompt-config';
 
 beforeEach(() => {
@@ -21,9 +24,47 @@ beforeEach(() => {
   setLanguage('en');
 });
 
+const ONE_ITEM_RULE = 'Return exactly one item per bookmark and preserve bookmarkId/title exactly.';
+const tagging = { autoTaggingMinTags: 2, autoTaggingMaxTags: 3, autoTaggingTagStyle: 'kebab-case' } as const;
+
+describe('prompt variables', () => {
+  it('fills every variable each task declares, for previews and runs alike', () => {
+    for (const taskId of PROMPT_TASK_IDS) {
+      const variables = getPromptVariables(taskId, defaultSettings);
+      for (const { name } of PROMPT_TASKS[taskId].variables) {
+        expect(variables[name], `${taskId}.${name}`).toBeDefined();
+      }
+    }
+    expect(getPromptVariables('summarization', defaultSettings).includeDomainHint).toMatch(
+      /^(true|false)$/,
+    );
+  });
+
+  it('leaves no placeholder unfilled in any built-in prompt and its rules', async () => {
+    for (const taskId of PROMPT_TASK_IDS) {
+      const { system } = await buildPrompt(taskId, defaultSettings, { hasPageText: true });
+      expect(system, taskId).not.toMatch(/\{\{\w+\}\}/);
+    }
+  });
+
+  it('adds the task rules always and the page-text rule only for page text', async () => {
+    const plain = (await buildPrompt('auto_tagging', tagging)).system;
+    expect(plain.endsWith(`\n\n${ONE_ITEM_RULE}`)).toBe(true);
+    expect(plain).not.toContain('pageText');
+    const withPages = (await buildPrompt('auto_tagging', tagging, { hasPageText: true })).system;
+    expect(withPages).toContain(`${ONE_ITEM_RULE}\n\nSome items include pageText`);
+    expect((await buildPrompt('folder_recommendation', { aiMaxRecommendations: 7 })).system).toContain(
+      'Return exactly 7 folder recommendations',
+    );
+  });
+});
+
 describe('prompt library', () => {
   it('uses the built-in prompt until a custom one is active', async () => {
-    const { system } = await buildPrompt('auto_tagging', { minTags: 2, maxTags: 4, tagStyle: 'kebab-case' });
+    const { system } = await buildPrompt('auto_tagging', {
+      ...tagging,
+      autoTaggingMaxTags: 4,
+    });
     expect(system).toContain('Suggest 2-4 tags per bookmark');
 
     const saved = await saveCustomPrompt({
@@ -32,16 +73,16 @@ describe('prompt library', () => {
       system: 'Use {{maxTags}} one-word tags at most.',
     });
     // Saved but not active yet: still the built-in prompt.
-    expect((await buildPrompt('auto_tagging', { maxTags: 3 })).system).toContain(
-      'Suggest {{minTags}}-3 tags',
-    );
+    expect((await buildPrompt('auto_tagging', tagging)).system).toContain('Suggest 2-3 tags');
     await setActivePrompt('auto_tagging', saved.id);
-    expect((await buildPrompt('auto_tagging', { maxTags: 3 })).system).toBe(
-      'Use 3 one-word tags at most.',
+    expect((await buildPrompt('auto_tagging', tagging)).system).toBe(
+      `Use 3 one-word tags at most.\n\n${ONE_ITEM_RULE}`,
     );
     await setActivePrompt('auto_tagging', undefined);
-    expect((await buildPrompt('auto_tagging', { maxTags: 3 })).system).toBe(
-      PROMPT_TASKS.auto_tagging.system.replace('{{maxTags}}', '3'),
+    expect((await buildPrompt('auto_tagging', tagging)).system).toContain(
+      PROMPT_TASKS.auto_tagging.system
+        .replace('{{minTags}}-{{maxTags}}', '2-3')
+        .replace('{{tagStyle}}', 'kebab-case'),
     );
   });
 
@@ -57,7 +98,8 @@ describe('prompt library', () => {
     library = await getPromptLibrary();
     expect(library.prompts.map((prompt) => prompt.id)).toEqual([first.id]);
     expect(library.active.summarization).toBeUndefined();
-    expect((await buildPrompt('summarization')).system).toBe(PROMPT_TASKS.summarization.system);
+    const { system } = await buildPrompt('summarization', defaultSettings);
+    expect(system.startsWith('You are a content summarizer.')).toBe(true);
   });
 
   it('stores each prompt as its own sync item to stay under the per-item quota', async () => {

@@ -271,9 +271,9 @@ export async function generateReorganizationPlan(
   }
 
   const { system } = await buildPrompt('folder_reorganization', {
-    maxCategories: cfg.maxCategories,
-    minItemsPerFolder: cfg.minItemsPerFolder,
-    maxItemsPerFolder: cfg.maxItemsPerFolder,
+    aiMaxCategories: cfg.maxCategories,
+    aiMinItemsPerFolder: cfg.minItemsPerFolder,
+    aiMaxItemsPerFolder: cfg.maxItemsPerFolder,
   });
 
   aiLogger.debug({ provider: settings.provider, model: settings.model }, 'Creating AI model');
