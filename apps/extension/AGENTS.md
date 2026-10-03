@@ -94,6 +94,7 @@ Equivalent scripts also exist in `apps/extension/package.json` when working dire
 For nearly any source change, run:
 
 - `nx run extension:lint`
+- `nx run extension:typecheck`
 
 ### Build validation
 
@@ -161,6 +162,7 @@ Use these before writing a new helper; each replaced several copies. Their file 
 - **Bookmark changes:** `applyBookmarkChanges` (`src/services/bookmarks.ts`) applies reviewed edits and removals, skips items that changed since the preview, and returns counts plus a single-use `undo()`.
 - **Network:** `fetchHtmlPage` (`src/services/bookmark-network-tools.ts`) for any page fetch with a timeout and byte cap.
 - **AI prompts and tools:** `getPromptVariables`/`buildPrompt` (`src/services/prompt-config.ts`) for both preview and runtime; `getToolOptions`/`getToolScopeCapability` (`src/services/tool-options.ts`).
+- **Tools sidebar:** add a tool as an entry in `TOOL_DEFINITIONS` (`src/components/bookmarks/tools/tool-definitions.ts`); `createToolRun` (`tool-run.ts`) and `useToolRun` (`src/hooks/use-tool-run.tsx`) own scanning, review, apply, partial outcomes, and undo, and `ReviewApplyDialog` is the shared review dialog.
 - **Deleting bookmarks:** `useBookmarkDeletion` / `deleteBookmarksWithUndo` (`src/hooks/use-bookmark-deletion.tsx`) with `BookmarkDeleteDialog`, used by both the popup and the manager.
 - **UI:** `toast.success`/`toast.error`/`toast.withUndo` and `quoteToastItemTitle` (`src/hooks/use-toast.ts`), `getErrorMessage`, `formatPercent`, `formatList` (`src/hooks/use-i18n.ts`), `Field`, `ConfirmDialog`, `MaskIcon` (`src/components/ui/`), `OptionsPanel`, `mountExtensionPage` for entry pages, `SHORTCUT_BINDINGS` with `shortcutKeyCaps` for any shortcut shown in the UI.
 - **Small helpers:** `src/lib/bookmark-tree.ts` (tree walks, display titles, the bookmarks-bar folder lives in `services/bookmarks.ts`), `src/lib/units.ts`, `isPlainObject`/`isSameJson` in `src/lib/utils.ts`, `truncateText`.
@@ -252,7 +254,7 @@ Type rules:
 - prefer `type` over `interface` unless interface behavior is required
 - avoid `any`
 - keep runtime and type boundaries explicit when working with browser APIs and provider payloads
-- `tsc` is not run in CI and `main` already has type errors, so never claim a clean type check; run `bunx wxt prepare && bunx tsc --noEmit -p . --ignoreDeprecations 6.0` and compare the errors in your files against `main`
+- run `nx run extension:typecheck` (it runs `wxt prepare` first); `main` type-checks clean and the CI Lint job runs it, so do not add errors or silence them with casts that hide a real mismatch
 
 ## Security and privacy
 

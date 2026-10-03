@@ -36,10 +36,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 - **No `scrollIntoView` in the popup or side panel.** It also scrolls the document and cuts off the header. Set `list.scrollTop = list.scrollHeight` on the scroll container. Chat-style views are `flex h-full min-h-0 flex-col` with a `min-h-0 flex-1 overflow-y-auto` list; check them at real popup sizes, where the composer once sat off-screen.
 - **Legacy stylesheets.** Delete old rules that fight the new tokens (for example `popup.scss` hover and lift rules) but keep their class names on the elements: E2E specs use them as hooks.
 - **Formatting:** `biome check --write` across the app reformatted about 60 unrelated files. Format only the files you touched. Biome rejects `aria-label` on a plain `div`; give it a role or use a semantic element.
-- **Type check:** there is no Nx typecheck target and `main` already has `tsc` errors. Compare your files against the baseline instead of claiming a clean check:
-  ```bash
-  cd apps/extension && bunx wxt prepare && bunx tsc --noEmit -p . --ignoreDeprecations 6.0 | grep -E "<changed files>"
-  ```
+- **Type check:** `bunx nx run extension:typecheck` (runs `wxt prepare` first). `main` is clean and CI runs it, so any error is yours.
 - **Hover transforms break geometry tests.** Rows that scale on hover changed a measurement by 0.07px and failed `popup-guards` on `main`. Move the pointer away (`page.mouse.move(0, 0)`) and let transitions settle before measuring; do not loosen tolerances.
 
 ## Settings UX the user expects

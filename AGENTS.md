@@ -137,6 +137,7 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 ### Targeted Nx commands
 
 - extension lint: `nx run extension:lint`
+- extension type check: `nx run extension:typecheck`
 - extension Chrome build: `nx run extension:build:chrome`
 - extension Firefox build: `nx run extension:build:firefox`
 - extension Edge build: `nx run extension:build:edge`
@@ -158,6 +159,7 @@ Verification is required for substantive changes. At a minimum, run the narrowes
 Minimum:
 
 - `nx run extension:lint`
+- `nx run extension:typecheck`
 
 Also run build targets when the change affects runtime behavior, entrypoints, browser-specific behavior, packaging, configuration, or imports that cross extension runtime boundaries:
 
