@@ -1,7 +1,8 @@
 /**
  * Ask AI: a chat with the default AI service inside the popup and side panel. Messages stay in
  * memory only; closing the panel ends the conversation. Answers render as Markdown without raw
- * HTML, and links open in a new tab.
+ * HTML, and links open in a new tab. The chat needs the AI SDK, so `AskAIPanel` loads this file
+ * when Ask AI opens; like every `*.lazy.tsx` file it is left out of auto-imports.
  */
 import { useChat } from '@ai-sdk/react';
 import {
@@ -165,7 +166,7 @@ const SUGGESTION_KEYS = [
   'askAI_suggestionFolders',
 ] as const;
 
-export function AskAIPanel({ onClose }: { onClose: () => void }) {
+export function AskAIChat({ onClose }: AskAIPanelProps) {
   const { state } = useAIServices();
   const { value: readPageContent } = useSetting('aiReadPageContent');
   const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);

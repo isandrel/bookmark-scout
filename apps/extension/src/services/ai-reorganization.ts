@@ -3,7 +3,6 @@
  * Analyzes bookmarks and suggests moving them into existing folders or new ones.
  */
 
-import { generateObject } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -321,9 +320,6 @@ export async function generateReorganizationPlan(
     aiMaxItemsPerFolder: cfg.maxItemsPerFolder,
   });
 
-  aiLogger.debug({ provider: settings.provider, model: settings.model }, 'Creating AI model');
-  const model = createAIModel(settings, 'reorganization');
-
   aiLogger.info({ provider: settings.provider, model: settings.model }, 'Calling AI for reorganization');
 
   const bookmarkBatches = chunkItems(allBookmarks, cfg.batchSize);
@@ -343,8 +339,9 @@ export async function generateReorganizationPlan(
       })),
       config: limitsForRequest(cfg),
     };
-    const { object } = await generateObject({
-      model,
+    const { object } = await generateAIObject({
+      settings,
+      source: 'reorganization',
       schema: reorganizationResultSchema,
       system,
       prompt: JSON.stringify(request),

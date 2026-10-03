@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { z } from 'zod';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
-import { createAIModel } from '@/services/ai-client';
+import { generateAIObject } from '@/services/ai-client';
+import { createAIModel } from '@/services/ai-client.lazy';
 import {
   buildAISettingsFromProvider,
   getProviderEndpoint,
@@ -13,10 +15,15 @@ import {
 const mocks = vi.hoisted(() => ({
   createOpenAI: vi.fn(() => vi.fn((model: string) => ({ model }))),
   createAnthropic: vi.fn(() => vi.fn((model: string) => ({ model }))),
+  generateObject: vi.fn(),
 }));
 
 vi.mock('@ai-sdk/openai', () => ({ createOpenAI: mocks.createOpenAI }));
 vi.mock('@ai-sdk/anthropic', () => ({ createAnthropic: mocks.createAnthropic }));
+vi.mock('ai', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('ai')>()),
+  generateObject: mocks.generateObject,
+}));
 
 beforeEach(() => {
   fakeBrowser.reset();
@@ -79,7 +86,7 @@ describe('[mocked provider contract] native providers honor Base URL and Extra H
       baseUrl: 'https://proxy.example.test/v1',
       extraHeaders: '{"X-Proxy":"yes"}',
     });
-    createAIModel(await buildAISettingsFromProvider(provider, model, true));
+    await createAIModel(await buildAISettingsFromProvider(provider, model, true));
     expect(factory).toHaveBeenCalledWith(
       expect.objectContaining({
         apiKey,
@@ -91,7 +98,7 @@ describe('[mocked provider contract] native providers honor Base URL and Extra H
 
   it('uses the provider default endpoint when no Base URL is configured', async () => {
     await saveStoredAIProviderConfig('openai', { apiKey: 'sk-synthetic' });
-    createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
+    await createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
     expect(mocks.createOpenAI).toHaveBeenCalledWith(
       expect.objectContaining({
         apiKey: 'sk-synthetic',
@@ -106,7 +113,9 @@ describe('[mocked provider contract] native providers honor Base URL and Extra H
       apiKey: 'sk-ant-synthetic',
       extraHeaders: '{"X-Proxy":"yes"}',
     });
-    createAIModel(await buildAISettingsFromProvider('anthropic', 'claude-sonnet-4-20250514', true));
+    await createAIModel(
+      await buildAISettingsFromProvider('anthropic', 'claude-sonnet-4-20250514', true),
+    );
     expect(mocks.createAnthropic).toHaveBeenCalledWith(
       expect.objectContaining({
         headers: { 'anthropic-dangerous-direct-browser-access': 'true', 'X-Proxy': 'yes' },
@@ -119,9 +128,44 @@ describe('[mocked provider contract] native providers honor Base URL and Extra H
       apiKey: 'sk-synthetic',
       options: { organization: ' org-synthetic ', project: '' },
     });
-    createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
+    await createAIModel(await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true));
     expect(mocks.createOpenAI).toHaveBeenCalledWith(
       expect.objectContaining({ organization: 'org-synthetic', project: undefined }),
     );
+  });
+});
+
+describe('[mocked provider contract] AI client calls', () => {
+  it('loads the AI SDK on first use and sends the request to the service model', async () => {
+    await saveStoredAIProviderConfig('openai', { apiKey: 'sk-synthetic' });
+    const settings = await buildAISettingsFromProvider('openai', 'gpt-4o-mini', true);
+    const schema = z.object({ ok: z.boolean() });
+    mocks.generateObject.mockResolvedValue({ object: { ok: true }, usage: {} });
+
+    await expect(
+      generateAIObject({ settings, source: 'autoTagging', schema, system: 'S', prompt: 'P' }),
+    ).resolves.toEqual({ object: { ok: true } });
+    expect(mocks.generateObject).toHaveBeenCalledWith({
+      schema,
+      system: 'S',
+      prompt: 'P',
+      model: { model: 'gpt-4o-mini' },
+    });
+  });
+
+  it('checks the settings before loading a provider', async () => {
+    await saveStoredAIProviderConfig('openai', { apiKey: 'sk-synthetic' });
+    const settings = await buildAISettingsFromProvider('openai', 'gpt-4o-mini', false);
+    await expect(
+      generateAIObject({
+        settings,
+        source: 'autoTagging',
+        schema: z.object({}),
+        system: '',
+        prompt: '',
+      }),
+    ).rejects.toThrow('AI features are disabled');
+    expect(mocks.createOpenAI).not.toHaveBeenCalled();
+    expect(mocks.generateObject).not.toHaveBeenCalled();
   });
 });
