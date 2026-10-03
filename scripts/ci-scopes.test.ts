@@ -46,6 +46,7 @@ describe("ci scopes", () => {
       "packages/config/src/index.ts",
       "config/project.toml",
       ".github/workflows/ci.yml",
+      ".github/actions/setup-workspace/action.yml",
       "tsconfig.base.json",
     ]) {
       expect(scopes(file)).toEqual({ extension: true, sites: true });

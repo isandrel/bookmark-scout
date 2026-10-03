@@ -32,7 +32,7 @@ Until October 2026 the repo used the binary `bun.lockb`, which Dependabot did no
 Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lock` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, regenerates the READMEs (their version badges show installed major versions, so a major bump changes them), and pushes a normal commit. It stops if any file other than `bun.lock` or the generated READMEs conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
 
 Watch for:
-- **CI coverage of website and docs.** The required `Website and Docs` job runs website lint, `website:verify`, `website:test:e2e`, `docs:types:check`, `docs:build` and the docs `verify`, but not the docs Biome lint. For a docs dependency bump, also run `bunx biome check src scripts` in `apps/docs`.
+- **CI coverage of website and docs.** The required `Website and Docs` job runs website lint, `website:verify`, `website:test:e2e`, `docs:types:check`, the docs Biome lint, and `docs:verify` (build plus checks).
 - **ESLint 10:** `eslint-plugin-react` 7.x calls removed context APIs (`contextOrFilename.getFilename is not a function`). `apps/website/eslint.config.mjs` wraps the Next configs in `fixupConfigRules` from `@eslint/compat`; remove it when the plugin supports ESLint 10.
 - **Major bumps** (for example `@atlaskit/pragmatic-drag-and-drop`) are safe to auto-merge only because the required E2E suite covers drag and drop.
 

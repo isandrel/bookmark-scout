@@ -21,19 +21,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
 
       - name: Get version from tag
         id: get_version
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "version=${{ inputs.version }}" >> $GITHUB_OUTPUT
+            echo "version=${{ inputs.version }}" >> "$GITHUB_OUTPUT"
           else
-            echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+            echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
           fi
 
       # WXT writes the manifest version from apps/extension/package.json.
@@ -45,60 +42,57 @@ jobs:
             exit 1
           fi
 
-      # wxt zip builds each target and writes bookmark-scout-<tag>-<browser>.zip to dist/.
-      # The Firefox run also writes bookmark-scout-<tag>-sources.zip for add-on review.
+      # `wxt zip` names the files from the zip templates in apps/extension/wxt.config.ts: one zip
+      # per browser plus, from the Firefox run, the sources zip for add-on review. Nothing below
+      # repeats those names; each step finds the files in dist/.
       - name: Build and zip extension
         run: bun run zip
         working-directory: ./apps/extension
 
+      - name: Find the Chrome zip
+        id: chrome
+        run: |
+          zip=$(ls apps/extension/dist/*-chrome.zip)
+          echo "zip=$zip" >> "$GITHUB_OUTPUT"
+          echo "crx=${zip%.zip}.crx" >> "$GITHUB_OUTPUT"
+
       - name: Build Chrome CRX
         uses: cardinalby/webext-buildtools-chrome-crx-action@v2
         with:
-          zipFilePath: apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
-          crxFilePath: apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
+          zipFilePath: ${{ steps.chrome.outputs.zip }}
+          crxFilePath: ${{ steps.chrome.outputs.crx }}
           privateKey: ${{ secrets.CRX_PRIVATE_KEY }}
+
+      - name: Read release links from config
+        id: links
+        run: |
+          # shellcheck disable=SC2016 # the backticks are a JavaScript template literal
+          bun -e 'import { site } from "@bookmark-scout/config";
+            console.log(`name=${site.name}`);
+            console.log(`install=${site.docs.url("/installation")}`);' >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.get_version.outputs.version }}
-          name: Bookmark Scout ${{ steps.get_version.outputs.version }}
+          name: ${{ steps.links.outputs.name }} ${{ steps.get_version.outputs.version }}
           body: |
             ## 📦 Downloads
 
-            | Browser | File | Description |
-            |---------|------|-------------|
-            | Chrome | `bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx` | Signed extension (sideload) |
-            | Chrome | `bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip` | For Chrome Web Store |
-            | Firefox | `bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip` | For Firefox Add-ons |
-            | Edge | `bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip` | For Edge Add-ons |
-            | Source | `bookmark-scout-${{ steps.get_version.outputs.version }}-sources.zip` | Source code for Firefox Add-ons review |
+            | Browser | File ends with | Use |
+            |---------|----------------|-----|
+            | Chrome | `-chrome.crx` | Signed extension to sideload in developer mode |
+            | Chrome | `-chrome.zip` | Unpacked install, or the Chrome Web Store upload |
+            | Firefox | `-firefox.zip` | Temporary add-on, or the Firefox Add-ons upload |
+            | Edge | `-edge.zip` | Unpacked install, or the Edge Add-ons upload |
+            | Source | `-sources.zip` | Source code for Firefox Add-ons review |
 
             ## Installation
 
-            ### Chrome (CRX - Developer Mode)
-            1. Download `bookmark-scout-chrome.crx`
-            2. Open `chrome://extensions/`
-            3. Enable "Developer mode"
-            4. Drag and drop the `.crx` file
-
-            ### Firefox
-            1. Download `bookmark-scout-firefox.zip`
-            2. Open `about:debugging#/runtime/this-firefox`
-            3. Click "Load Temporary Add-on"
-            4. Select the zip file
-
-            ### Edge
-            1. Download `bookmark-scout-edge.zip`
-            2. Open `edge://extensions/`
-            3. Enable "Developer mode"
-            4. Click "Load unpacked" and select the extracted folder
+            Step-by-step instructions for each browser: ${{ steps.links.outputs.install }}
           files: |
-            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.crx
-            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-chrome.zip
-            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-firefox.zip
-            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-edge.zip
-            apps/extension/dist/bookmark-scout-${{ steps.get_version.outputs.version }}-sources.zip
+            apps/extension/dist/*.zip
+            apps/extension/dist/*.crx
           generate_release_notes: true
           draft: false
           prerelease: false
