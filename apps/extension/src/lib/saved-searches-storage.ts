@@ -18,7 +18,6 @@ const savedSearchLimits = readConfig(
   }),
 );
 
-export const SAVED_SEARCHES_STORAGE_KEY = 'bookmark-scout-saved-searches';
 export const MAX_SAVED_SEARCHES = savedSearchLimits.max_searches;
 export const SAVED_SEARCH_NAME_MAX_LENGTH = savedSearchLimits.name_max_length;
 
@@ -33,14 +32,6 @@ export type SavedSearchesPayload = {
   version: 1;
   searches: SavedSearch[];
 };
-
-/**
- * `version` is the payload's own schema version, so no WXT `$` metadata key is written.
- * Reads go through `parseSavedSearches`.
- */
-export const savedSearchesItem = storage.defineItem<SavedSearchesPayload>(
-  `local:${SAVED_SEARCHES_STORAGE_KEY}`,
-);
 
 const nameSchema = z.string().trim().min(1).max(SAVED_SEARCH_NAME_MAX_LENGTH);
 
@@ -82,22 +73,23 @@ export function parseSavedSearches(value: unknown): SavedSearch[] {
   return searches;
 }
 
+/**
+ * `version` is the payload's own schema version, so no WXT `$` metadata key is written. A
+ * malformed or unsupported payload reads as no saved searches.
+ */
+export const savedSearchesValue = defineStoredValue<SavedSearchesPayload>({
+  key: STORAGE_KEYS.savedSearches,
+  parse: (raw) => ({ version: 1, searches: parseSavedSearches(raw) }),
+  empty: { version: 1, searches: [] },
+});
+
 export async function getSavedSearches(): Promise<SavedSearch[]> {
   try {
-    return parseSavedSearches(await savedSearchesItem.getValue());
+    return (await savedSearchesValue.get()).searches;
   } catch (error) {
     uiLogger.error({ error }, 'Error reading saved searches');
     return [];
   }
-}
-
-export function watchSavedSearches(callback: (searches: SavedSearch[]) => void): () => void {
-  return savedSearchesItem.watch((value) => callback(parseSavedSearches(value)));
-}
-
-async function writeSavedSearches(searches: SavedSearch[]): Promise<SavedSearch[]> {
-  await savedSearchesItem.setValue({ version: 1, searches });
-  return searches;
 }
 
 export type SavedSearchError =
@@ -158,8 +150,11 @@ export function renameSavedSearchInList(
 async function updateSavedSearches(
   change: (searches: SavedSearch[]) => SavedSearchResult,
 ): Promise<SavedSearchResult> {
-  const result = change(await getSavedSearches());
-  if (result.ok) await writeSavedSearches(result.searches);
+  let result: SavedSearchResult = { ok: false, error: 'not-found' };
+  await savedSearchesValue.update((current) => {
+    result = change(current.searches);
+    return result.ok ? { version: 1, searches: result.searches } : current;
+  });
   return result;
 }
 
@@ -172,8 +167,11 @@ export function renameSavedSearch(id: string, name: string) {
 }
 
 export async function deleteSavedSearch(id: string): Promise<SavedSearch[]> {
-  const searches = await getSavedSearches();
-  return writeSavedSearches(searches.filter((search) => search.id !== id));
+  const stored = await savedSearchesValue.update((current) => ({
+    version: 1,
+    searches: current.searches.filter((search) => search.id !== id),
+  }));
+  return stored.searches;
 }
 
 /** Puts a deleted saved search back at its old position (undo). */

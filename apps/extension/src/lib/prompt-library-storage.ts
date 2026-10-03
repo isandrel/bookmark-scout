@@ -35,12 +35,43 @@ export const MAX_PROMPT_BYTES = readConfig(
   z.strictObject({ prompt_max_bytes: z.number().int().positive().max(8192) }),
 ).prompt_max_bytes;
 
-const INDEX_KEY = 'sync:bookmark-scout-prompts' as const;
-const promptKey = (id: string) => `sync:bookmark-scout-prompt-${id}` as const;
-
-const indexItem = storage.defineItem<PromptLibraryIndex>(INDEX_KEY, {
-  fallback: { ids: [], active: {} },
+const indexValue = defineStoredValue<PromptLibraryIndex>({
+  key: STORAGE_KEYS.promptLibraryIndex,
+  parse: (raw) => ({
+    ids:
+      isPlainObject(raw) && Array.isArray(raw.ids)
+        ? raw.ids.filter((id): id is string => typeof id === 'string')
+        : [],
+    active:
+      isPlainObject(raw) && isPlainObject(raw.active)
+        ? (raw.active as PromptLibraryIndex['active'])
+        : {},
+  }),
+  empty: { ids: [], active: {} },
 });
+
+function parseCustomPrompt(raw: unknown): CustomPrompt | null {
+  return isPlainObject(raw) && typeof raw.task === 'string' && raw.task in PROMPT_TASKS
+    ? (raw as CustomPrompt)
+    : null;
+}
+
+const promptValues = new Map<string, StoredValue<CustomPrompt | null>>();
+
+/** One sync item per prompt, so each stays under the per-item quota. */
+function promptValue(id: string): StoredValue<CustomPrompt | null> {
+  let value = promptValues.get(id);
+  if (!value) {
+    value = defineStoredValue<CustomPrompt | null>({
+      key: `${STORAGE_KEYS.promptPrefix}${id}`,
+      parse: parseCustomPrompt,
+      empty: null,
+      isEmpty: (prompt) => prompt === null,
+    });
+    promptValues.set(id, value);
+  }
+  return value;
+}
 
 /** UTF-8 size, which is what sync storage counts; Japanese or Korean text uses 3 bytes a char. */
 export function promptByteLength(text: string): number {
@@ -59,13 +90,9 @@ export function validateCustomPrompt(name: string, system: string): string | und
 }
 
 export async function getPromptLibrary(): Promise<PromptLibrary> {
-  const index = await indexItem.getValue();
-  const stored = await Promise.all(
-    index.ids.map((id) => storage.getItem<CustomPrompt>(promptKey(id))),
-  );
-  const prompts = stored.filter(
-    (prompt): prompt is CustomPrompt => prompt !== null && prompt.task in PROMPT_TASKS,
-  );
+  const index = await indexValue.get();
+  const stored = await Promise.all(index.ids.map((id) => promptValue(id).get()));
+  const prompts = stored.filter((prompt): prompt is CustomPrompt => prompt !== null);
   const ids = new Set(prompts.map((prompt) => prompt.id));
   // An active id whose prompt is gone (deleted on another device) falls back to the default.
   const active = Object.fromEntries(
@@ -76,9 +103,9 @@ export async function getPromptLibrary(): Promise<PromptLibrary> {
 
 /** Text of the task's active custom prompt, or undefined to use the built-in default. */
 export async function getActivePromptText(task: PromptTaskId): Promise<string | undefined> {
-  const id = (await indexItem.getValue()).active[task];
+  const id = (await indexValue.get()).active[task];
   if (!id) return undefined;
-  const prompt = await storage.getItem<CustomPrompt>(promptKey(id));
+  const prompt = await promptValue(id).get();
   return prompt?.task === task && prompt.system.trim() ? prompt.system : undefined;
 }
 
@@ -99,53 +126,59 @@ export async function saveCustomPrompt(
     system: prompt.system,
     updatedAt: Date.now(),
   };
-  await storage.setItem(promptKey(saved.id), saved);
-  const index = await indexItem.getValue();
-  if (!index.ids.includes(saved.id)) {
-    await indexItem.setValue({ ...index, ids: [...index.ids, saved.id] });
-  }
+  await promptValue(saved.id).set(saved);
+  await indexValue.update((index) =>
+    index.ids.includes(saved.id) ? index : { ...index, ids: [...index.ids, saved.id] },
+  );
   return saved;
 }
 
 /** Makes `id` the task's prompt; undefined goes back to the built-in default. */
 export async function setActivePrompt(task: PromptTaskId, id: string | undefined): Promise<void> {
-  const index = await indexItem.getValue();
-  const active = { ...index.active };
-  if (id) active[task] = id;
-  else delete active[task];
-  await indexItem.setValue({ ...index, active });
+  await indexValue.update((index) => {
+    const active = { ...index.active };
+    if (id) active[task] = id;
+    else delete active[task];
+    return { ...index, active };
+  });
 }
 
 export async function deleteCustomPrompt(id: string): Promise<void> {
-  const index = await indexItem.getValue();
-  const active = Object.fromEntries(
-    Object.entries(index.active).filter(([, activeId]) => activeId !== id),
-  ) as PromptLibraryIndex['active'];
-  await indexItem.setValue({ ids: index.ids.filter((promptId) => promptId !== id), active });
-  await storage.removeItem(promptKey(id));
+  await indexValue.update((index) => ({
+    ids: index.ids.filter((promptId) => promptId !== id),
+    active: Object.fromEntries(
+      Object.entries(index.active).filter(([, activeId]) => activeId !== id),
+    ) as PromptLibraryIndex['active'],
+  }));
+  await promptValue(id).clear();
 }
 
-/** Live prompt library for React, following edits from any page or synced device. */
+/**
+ * Live prompt library for React, following edits from any page or synced device. Only the latest
+ * refresh is applied, so a slow earlier read never replaces a newer one.
+ */
 export function usePromptLibrary(): { library: PromptLibrary; isLoading: boolean } {
   const [library, setLibrary] = useState<PromptLibrary>({ prompts: [], active: {} });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
+    let latest = 0;
     let unwatchPrompts: (() => void)[] = [];
     const refresh = async () => {
+      const request = ++latest;
       const next = await getPromptLibrary();
-      if (!active) return;
+      if (!active || request !== latest) return;
       setLibrary(next);
       setIsLoading(false);
       // Prompt items change on their own when edited, so each one is watched too.
       for (const unwatch of unwatchPrompts) unwatch();
       unwatchPrompts = next.prompts.map((prompt) =>
-        storage.watch(promptKey(prompt.id), () => void refresh()),
+        promptValue(prompt.id).watch(() => void refresh()),
       );
     };
     void refresh();
-    const unwatchIndex = indexItem.watch(() => void refresh());
+    const unwatchIndex = indexValue.watch(() => void refresh());
     return () => {
       active = false;
       unwatchIndex();

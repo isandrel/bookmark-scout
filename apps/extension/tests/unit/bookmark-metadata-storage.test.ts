@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
-  BOOKMARK_METADATA_STORAGE_KEY,
   getStoredBookmarkMetadata,
   mergeStoredBookmarkMetadata,
   reconcileStoredBookmarkMetadata,
@@ -12,6 +11,9 @@ import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-boo
 import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
 import { setLanguage } from '@/hooks/use-i18n';
+import { STORAGE_KEYS } from '@/lib/storage-keys';
+
+const BOOKMARK_METADATA_STORAGE_KEY = STORAGE_KEYS.bookmarkMetadata.replace(/^local:/, '');
 
 const mocks = vi.hoisted(() => ({ generateObject: vi.fn() }));
 

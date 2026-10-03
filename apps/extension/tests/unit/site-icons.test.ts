@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
-  SITE_ICON_STORAGE_KEY,
   clearSiteIconCache,
   fitSiteIconCache,
   getSiteIconCache,
@@ -21,6 +20,9 @@ import {
 } from '@/services/site-icons';
 import { lookupSiteIcon } from '@/stores/site-icon-store';
 import type { BookmarkTreeNode } from '@/types';
+import { STORAGE_KEYS } from '@/lib/storage-keys';
+
+const SITE_ICON_STORAGE_KEY = STORAGE_KEYS.siteIcons.replace(/^local:/, '');
 
 const PNG_BYTES = Uint8Array.from(
   atob(

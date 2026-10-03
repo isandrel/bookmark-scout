@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import enMessages from '../../public/_locales/en/messages.json';
 import {
-  aiActivityItem,
-  aiActivityRecordingItem,
+  aiActivityRecordingValue,
+  aiActivityValue,
   MAX_AI_ACTIVITY_BODY_CHARS,
   MAX_AI_ACTIVITY_ENTRIES,
   REDACTED_VALUE,
@@ -83,7 +83,7 @@ describe('AI activity log', () => {
         recordAIActivity(entry(index)),
       ),
     );
-    const entries = await aiActivityItem.getValue();
+    const entries = await aiActivityValue.get();
     expect(entries).toHaveLength(MAX_AI_ACTIVITY_ENTRIES);
     expect(entries[0]?.at).toBe(MAX_AI_ACTIVITY_ENTRIES + 2);
   });
@@ -108,11 +108,11 @@ describe('createLoggingFetch', () => {
     const response = await fetch('https://api.example.invalid/v1/models');
     expect(await response.text()).toBe('{"ok":true}');
     await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(await aiActivityItem.getValue()).toEqual([]);
+    expect(await aiActivityValue.get()).toEqual([]);
   });
 
   it('records the call with credentials redacted and leaves the response readable', async () => {
-    await aiActivityRecordingItem.setValue(true);
+    await aiActivityRecordingValue.set(true);
     const fetch = createLoggingFetch({ source: 'autoTagging', provider: 'openai', model: 'm' });
     const response = await fetch('https://api.example.invalid/v1/chat', {
       method: 'POST',
@@ -120,8 +120,8 @@ describe('createLoggingFetch', () => {
       body: '{"prompt":"hi"}',
     });
     expect(await response.text()).toBe('{"ok":true}');
-    await vi.waitFor(async () => expect(await aiActivityItem.getValue()).toHaveLength(1));
-    const [recorded] = await aiActivityItem.getValue();
+    await vi.waitFor(async () => expect(await aiActivityValue.get()).toHaveLength(1));
+    const [recorded] = await aiActivityValue.get();
     expect(recorded).toMatchObject({
       source: 'autoTagging',
       provider: 'openai',
@@ -135,11 +135,11 @@ describe('createLoggingFetch', () => {
   });
 
   it('records a failed call and still throws it to the caller', async () => {
-    await aiActivityRecordingItem.setValue(true);
+    await aiActivityRecordingValue.set(true);
     respond.mockRejectedValueOnce(new TypeError('Failed to fetch'));
     const fetch = createLoggingFetch({ source: 'modelList' });
     await expect(fetch('https://api.example.invalid/v1/models')).rejects.toThrow('Failed to fetch');
-    await vi.waitFor(async () => expect(await aiActivityItem.getValue()).toHaveLength(1));
-    expect((await aiActivityItem.getValue())[0]?.error).toBe('TypeError: Failed to fetch');
+    await vi.waitFor(async () => expect(await aiActivityValue.get()).toHaveLength(1));
+    expect((await aiActivityValue.get())[0]?.error).toBe('TypeError: Failed to fetch');
   });
 });

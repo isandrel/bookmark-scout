@@ -3,13 +3,8 @@
  * Invalid stored or submitted fields are isolated so one bad value never blocks the rest.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import type { z } from 'zod';
-
-export const SETTINGS_SYNC_KEY = 'bookmark-scout-settings';
-
-/** Stored data may predate the current schema; every read goes through `sanitizeSettings`. */
-export const settingsItem = storage.defineItem<Settings>(`sync:${SETTINGS_SYNC_KEY}`);
 
 /** Localized, human-readable validation messages keyed by setting. */
 export type SettingsFieldErrors = Partial<Record<keyof Settings, string>>;
@@ -112,18 +107,30 @@ export function sanitizeSettings(stored: unknown): Settings {
   return validateSettingsUpdate(defaultSettings, input).settings;
 }
 
-async function writeSettings(settings: Settings): Promise<void> {
-  await settingsItem.setValue(settings);
-}
+/**
+ * Synced settings. Stored data may predate the current schema, so every read is sanitized, and
+ * every read or change also sets the language `t()` uses, so a page follows a language change
+ * made anywhere.
+ */
+export const settingsValue = defineStoredValue<Settings>({
+  key: STORAGE_KEYS.settings,
+  parse: (raw) => {
+    const settings = sanitizeSettings(raw);
+    setLanguage(settings.language);
+    return settings;
+  },
+  empty: defaultSettings,
+});
+
+/** @deprecated Read `settingsValue`; kept until services/context-menu.ts moves. */
+export const settingsItem = storage.defineItem<Settings>(STORAGE_KEYS.settings);
 
 /**
- * Get settings from sync storage.
+ * Get settings from sync storage; defaults when storage cannot be read.
  */
 export async function getSettings(): Promise<Settings> {
   try {
-    const settings = sanitizeSettings(await settingsItem.getValue());
-    setLanguage(settings.language);
-    return settings;
+    return await settingsValue.get();
   } catch (error) {
     settingsLogger.error({ error }, 'Error reading settings');
     return defaultSettings;
@@ -134,10 +141,11 @@ export async function getSettings(): Promise<Settings> {
  * Save settings. Rejects with SettingsValidationError when any field is invalid; nothing is saved.
  */
 export async function saveSettings(settings: Partial<Settings>): Promise<void> {
-  const current = await getSettings();
-  const { settings: next, errors } = validateSettingsUpdate(current, settings);
-  if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
-  await writeSettings(next);
+  await settingsValue.update((current) => {
+    const { settings: next, errors } = validateSettingsUpdate(current, settings);
+    if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+    return next;
+  });
 }
 
 /**
@@ -146,15 +154,18 @@ export async function saveSettings(settings: Partial<Settings>): Promise<void> {
 export async function saveValidSettings(
   updates: Partial<Settings>,
 ): Promise<{ settings: Settings; errors: SettingsFieldErrors }> {
-  const current = await getSettings();
-  const result = validateSettingsUpdate(current, updates);
-  if (!isSameJson(result.settings, current)) await writeSettings(result.settings);
-  return result;
+  let errors: SettingsFieldErrors = {};
+  const settings = await settingsValue.update((current) => {
+    const result = validateSettingsUpdate(current, updates);
+    errors = result.errors;
+    return result.settings;
+  });
+  return { settings, errors };
 }
 
 /**
  * Like `saveValidSettings`, but validates against `current` (the latest known stored settings)
- * instead of reading storage first, so the write starts synchronously. Use it when the page may
+ * instead of reading storage first, so the write starts right away. Use it when the page may
  * unload before an extra storage round trip completes.
  */
 export function saveValidSettingsNow(
@@ -164,7 +175,7 @@ export function saveValidSettingsNow(
   const result = validateSettingsUpdate(current, updates);
   const saved = isSameJson(result.settings, current)
     ? Promise.resolve()
-    : writeSettings(result.settings);
+    : settingsValue.set(result.settings).then(() => undefined);
   return { ...result, saved };
 }
 
@@ -172,7 +183,7 @@ export function saveValidSettingsNow(
  * Reset settings to defaults.
  */
 export async function resetSettings(): Promise<void> {
-  await writeSettings(defaultSettings);
+  await settingsValue.set(defaultSettings);
 }
 
 /**
@@ -200,30 +211,28 @@ export async function importSettings(json: string): Promise<(keyof Settings)[]> 
   const updates = Object.fromEntries(Object.entries(parsed).filter(([key]) => isSettingsKey(key)));
   if (Object.keys(updates).length === 0) throw new Error(t('error_invalidSettingsFile'));
 
-  const current = await getSettings();
-  const { settings, errors } = validateSettingsUpdate(current, updates);
-  if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
-
-  await writeSettings(settings);
-  return (Object.keys(settings) as (keyof Settings)[]).filter(
-    (key) => !isSameJson(settings[key], current[key]),
-  );
+  let changed: (keyof Settings)[] = [];
+  await settingsValue.update((current) => {
+    const { settings, errors } = validateSettingsUpdate(current, updates);
+    if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
+    changed = (Object.keys(settings) as (keyof Settings)[]).filter(
+      (key) => !isSameJson(settings[key], current[key]),
+    );
+    return settings;
+  });
+  return changed;
 }
 
 /**
  * Call `listener` with sanitized settings whenever synced settings change (any page or device).
  */
 export function subscribeToSettings(listener: (settings: Settings) => void): () => void {
-  return settingsItem.watch((newValue) => {
-    const settings = sanitizeSettings(newValue);
-    setLanguage(settings.language);
-    listener(settings);
-  });
+  return settingsValue.watch(listener);
 }
 
 /**
- * React hook for all settings.
- * Returns current settings and a setter function.
+ * All settings for React. Every caller on a page shares one stored copy, read once and followed
+ * by one watcher, so changes from any page or device re-render the page without remounting it.
  */
 export function useSettings(): {
   settings: Settings;
@@ -231,45 +240,12 @@ export function useSettings(): {
   updateSettings: (updates: Partial<Settings>) => Promise<void>;
   resetToDefaults: () => Promise<void>;
 } {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    // A change delivered by the watcher is newer than the initial read, which must not undo it.
-    let received = false;
-    getSettings().then((s) => {
-      if (!active) return;
-      if (!received) setSettings(s);
-      setIsLoading(false);
-    });
-    const unsubscribe = subscribeToSettings((next) => {
-      if (!active) return;
-      received = true;
-      setSettings(next);
-    });
-    return () => {
-      active = false;
-      unsubscribe();
-    };
-  }, []);
-
-  const updateSettings = useCallback(async (updates: Partial<Settings>) => {
-    await saveSettings(updates);
-    setSettings((prev) => ({ ...prev, ...updates }));
-  }, []);
-
-  const resetToDefaults = useCallback(async () => {
-    await resetSettings();
-    setSettings(defaultSettings);
-  }, []);
-
-  return { settings, isLoading, updateSettings, resetToDefaults };
+  const { value: settings, isLoading } = useStoredValue(settingsValue);
+  return { settings, isLoading, updateSettings: saveSettings, resetToDefaults: resetSettings };
 }
 
 /**
- * React hook for a single setting.
- * Returns the current value and a setter function.
+ * One setting for React, from the page's shared settings; re-renders only when it changes.
  */
 export function useSetting<K extends keyof Settings>(
   key: K,
@@ -278,18 +254,11 @@ export function useSetting<K extends keyof Settings>(
   isLoading: boolean;
   setValue: (value: Settings[K]) => Promise<void>;
 } {
-  const { settings, isLoading, updateSettings } = useSettings();
-
+  const select = useCallback((settings: Settings) => settings[key], [key]);
+  const { value, isLoading } = useStoredValue(settingsValue, select);
   const setValue = useCallback(
-    async (value: Settings[K]) => {
-      await updateSettings({ [key]: value } as Partial<Settings>);
-    },
-    [key, updateSettings],
+    (next: Settings[K]) => saveSettings({ [key]: next } as Partial<Settings>),
+    [key],
   );
-
-  return {
-    value: settings[key],
-    isLoading,
-    setValue,
-  };
+  return { value, isLoading, setValue };
 }

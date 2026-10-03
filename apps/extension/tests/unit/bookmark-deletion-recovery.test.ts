@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import {
-  BOOKMARK_METADATA_STORAGE_KEY,
   getStoredBookmarkMetadata,
   removeStoredBookmarkMetadata,
   saveBookmarkMetadata,
@@ -13,6 +12,9 @@ import {
   deleteBookmark,
   restoreBookmarkDeletion,
 } from '@/services/bookmarks';
+import { STORAGE_KEYS } from '@/lib/storage-keys';
+
+const BOOKMARK_METADATA_STORAGE_KEY = STORAGE_KEYS.bookmarkMetadata.replace(/^local:/, '');
 
 type FakeNode = {
   id: string;
@@ -239,7 +241,9 @@ describe('bookmark deletion recovery', () => {
     expect(restoredDeep?.title).toBe('Deep');
     expect(restoredDeep?.id).not.toBe('6');
 
-    expect(await getStoredBookmarkMetadata([restored.id, restoredDeep?.id ?? '', '3', '6'])).toEqual({
+    expect(
+      await getStoredBookmarkMetadata([restored.id, restoredDeep?.id ?? '', '3', '6']),
+    ).toEqual({
       [restored.id]: { tags: ['folder-tag'] },
       [restoredDeep?.id ?? '']: { tags: ['deep'], summary: 'Deep summary' },
     });
