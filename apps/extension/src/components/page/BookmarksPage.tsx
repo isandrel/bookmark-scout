@@ -125,7 +125,7 @@ export default function BookmarksPage() {
       ...new Set(allData.map((bookmark) => getUrlDomain(bookmark.url)).filter(Boolean)),
     ].sort((left, right) => left.localeCompare(right));
     return {
-      parentId: buildFolderOptions(allData, t('bookmarks_untitled')),
+      parentId: buildFolderOptions(allData, t('popup_untitled')),
       domain: domains.map((domain) => ({
         value: domain,
         label: domain,

@@ -222,7 +222,7 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
                         className="h-8 text-xs"
                       />
                       {newUrl === undefined ? (
-                        <p className="text-xs text-destructive">
+                        <p className="text-xs text-destructive-text">
                           {t('tools_deadLinkRepairInvalidUrl')}
                         </p>
                       ) : null}

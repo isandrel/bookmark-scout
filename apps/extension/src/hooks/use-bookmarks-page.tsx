@@ -45,7 +45,7 @@ function flattenBookmarks(
     if (node.children) {
       const childBookmarks = flattenBookmarks(node.children, rootIds, [
         ...ancestorTitles,
-        node.title.trim() || t('bookmarks_untitled'),
+        getBookmarkDisplayTitle(node.title.trim()),
       ]);
       for (const child of childBookmarks) bookmarks.push(child);
     }
