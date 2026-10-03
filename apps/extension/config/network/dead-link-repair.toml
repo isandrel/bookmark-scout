@@ -1,0 +1,5 @@
+# Dead link repair choices. Read by src/services/dead-link-repair.ts.
+
+# The "Use archived copy" choice writes this prefix followed by the dead URL. The link is built
+# locally and never requested, so it can point at a page that was never archived.
+archive_url_prefix = "https://web.archive.org/web/"

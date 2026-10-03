@@ -18,6 +18,7 @@ const config = readConfig(
     concurrency: z.number().int().positive(),
     skip_private_hosts: z.boolean(),
     private_host_suffixes: z.array(z.string().min(1)),
+    drop_elements: z.array(z.string().regex(/^[a-z][a-z0-9-]*$/)),
   }),
 );
 
@@ -90,7 +91,7 @@ function createTurndown(): TurndownService {
   const turndown = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' });
   // Keep link and image text only: addresses cost tokens and say little about the topic.
   turndown.addRule('linkText', { filter: 'a', replacement: (content) => content });
-  turndown.remove(['img', 'picture', 'video', 'audio', 'iframe', 'script', 'style']);
+  turndown.remove(config.drop_elements as TurndownService.Filter);
   return turndown;
 }
 

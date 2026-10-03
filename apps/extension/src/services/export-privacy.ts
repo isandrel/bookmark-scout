@@ -37,14 +37,6 @@ type Analysis = { title: string; url: string; fields: ExportPrivacyField[] };
 const HIERARCHICAL_URL_PATTERN = /^[a-z][a-z0-9+.-]*:\/\//i;
 const ORIGIN_PATTERN = /^([a-z][a-z0-9+.-]*:\/\/)([^/]*)(.*)$/i;
 
-function decodeComponent(value: string, plusAsSpace: boolean): string {
-  try {
-    return decodeURIComponent(plusAsSpace ? value.replace(/\+/g, ' ') : value);
-  } catch {
-    return value;
-  }
-}
-
 function replaceAll(text: string, values: string[]): string {
   return values.reduce(
     (result, value) => result.split(value).join(EXPORT_REDACTION_PLACEHOLDER),
@@ -73,9 +65,9 @@ function redactParams(
       const separator = pair.indexOf('=');
       if (separator < 0) return pair;
       const rawName = pair.slice(0, separator);
-      const value = decodeComponent(pair.slice(separator + 1), true);
+      const value = decodeUrlComponent(pair.slice(separator + 1), true);
       if (!value) return pair;
-      const name = decodeComponent(rawName, true);
+      const name = decodeUrlComponent(rawName, true);
       const { tokens, emails } = sensitiveValues(value, options);
       let field: ExportPrivacyField | null = null;
       if (sensitiveNames.has(name.toLowerCase())) field = { kind: nameKind, location: 'url', name };
@@ -93,7 +85,7 @@ function redactPath(path: string, options: ExportPrivacyOptions, fields: ExportP
   return path
     .split('/')
     .map((segment) => {
-      const decoded = decodeComponent(segment, false);
+      const decoded = decodeUrlComponent(segment);
       const { tokens, emails } = sensitiveValues(decoded, options);
       if (!tokens.length && !emails.length) return segment;
       if (tokens.length) fields.push({ kind: 'token', location: 'url' });
@@ -115,7 +107,7 @@ function redactFragment(
     const params = queryStart >= 0 ? fragment.slice(queryStart + 1) : fragment;
     return prefix + redactParams(params, sensitiveNames, 'fragmentParam', options, fields);
   }
-  const { tokens, emails } = sensitiveValues(decodeComponent(fragment, false), options);
+  const { tokens, emails } = sensitiveValues(decodeUrlComponent(fragment), options);
   if (!tokens.length && !emails.length) return fragment;
   fields.push({ kind: 'fragment', location: 'url' });
   return EXPORT_REDACTION_PLACEHOLDER;
@@ -124,12 +116,12 @@ function redactFragment(
 function redactUrl(url: string, options: ExportPrivacyOptions, fields: ExportPrivacyField[]) {
   if (!HIERARCHICAL_URL_PATTERN.test(url)) {
     // mailto:, javascript:, and other opaque URLs are treated as text.
-    const { tokens, emails } = sensitiveValues(decodeComponent(url, false), options);
+    const { tokens, emails } = sensitiveValues(decodeUrlComponent(url), options);
     if (!tokens.length && !emails.length) return url;
     if (tokens.length) fields.push({ kind: 'token', location: 'url' });
     if (emails.length) fields.push({ kind: 'email', location: 'url' });
     const redacted = replaceAll(url, [...tokens, ...emails]);
-    const remaining = sensitiveValues(decodeComponent(redacted, false), options);
+    const remaining = sensitiveValues(decodeUrlComponent(redacted), options);
     return remaining.tokens.length || remaining.emails.length
       ? `${url.slice(0, url.indexOf(':') + 1)}${EXPORT_REDACTION_PLACEHOLDER}`
       : redacted;

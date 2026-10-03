@@ -8,7 +8,20 @@
  * registrable domain) and never to a third-party icon service. Nothing is stored until the user
  * reviews the results and saves them.
  */
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
+
+const scoring = readConfig(
+  'network/site-icons',
+  z.strictObject({
+    max_declared_icon_attempts: z.number().int().nonnegative(),
+    preferred_formats: z.array(z.string().min(1)),
+    uncommon_format_penalty: z.number().nonnegative(),
+    apple_touch_icon_default_size: z.number().int().positive(),
+    unknown_size_distance: z.number().nonnegative(),
+    upscale_penalty: z.number().positive(),
+  }),
+);
 
 export type SiteIconRel = 'icon' | 'apple-touch-icon';
 
@@ -63,16 +76,9 @@ export type SiteIconRefreshOptions = {
   concurrency: number;
 };
 
-/**
- * Icon files tried per origin, best first, before `/favicon.ico`. It bounds the requests one
- * site can cause when it lists many broken icons.
- */
-const MAX_DECLARED_ICON_ATTEMPTS = 3;
-const PREFERRED_ICON_TYPES = new Set(['png', 'svg', 'ico']);
-/** Apple touch icons without `sizes` are 180px by convention. */
-const APPLE_TOUCH_ICON_DEFAULT_SIZE = 180;
-/** Distance score for an icon without `sizes`: worse than an exact match, better than 2x off. */
-const UNKNOWN_SIZE_DISTANCE = 0.75;
+const PREFERRED_ICON_FORMATS: ReadonlySet<string> = new Set(scoring.preferred_formats);
+/** Every site serves this path by convention; it is tried after the declared icons. */
+const FALLBACK_ICON_PATH = '/favicon.ico';
 
 const HTML_ENTITIES: Record<string, string> = {
   amp: '&',
@@ -117,7 +123,7 @@ function resolveWebUrl(href: string, base: string): string | null {
   if (!trimmed) return null;
   try {
     const url = new URL(trimmed, base);
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    if (!isWebUrl(url)) return null;
     url.hash = '';
     return url.href;
   } catch {
@@ -208,7 +214,7 @@ function sizeDistance(size: number, preferredSize: number): number {
   // Downscaling a larger icon looks better than upscaling a smaller one.
   return size >= preferredSize
     ? (size - preferredSize) / preferredSize
-    : (2 * (preferredSize - size)) / preferredSize;
+    : (scoring.upscale_penalty * (preferredSize - size)) / preferredSize;
 }
 
 /** Lower is better: distance from the preferred size, plus a penalty for uncommon formats. */
@@ -220,11 +226,11 @@ export function scoreIconCandidate(candidate: SiteIconCandidate, preferredSize: 
   } else if (candidate.sizes) {
     distance = Math.min(...candidate.sizes.map((size) => sizeDistance(size, preferredSize)));
   } else if (candidate.rel === 'apple-touch-icon') {
-    distance = sizeDistance(APPLE_TOUCH_ICON_DEFAULT_SIZE, preferredSize);
+    distance = sizeDistance(scoring.apple_touch_icon_default_size, preferredSize);
   } else {
-    distance = UNKNOWN_SIZE_DISTANCE;
+    distance = scoring.unknown_size_distance;
   }
-  return distance + (PREFERRED_ICON_TYPES.has(format) ? 0 : 1);
+  return distance + (PREFERRED_ICON_FORMATS.has(format) ? 0 : scoring.uncommon_format_penalty);
 }
 
 /** Candidates best first; ties keep document order. */
@@ -251,8 +257,8 @@ export function isSameSiteIconUrl(iconUrl: string, bookmarkUrl: string): boolean
 }
 
 /**
- * The URLs to try for an origin, best first: up to {@link MAX_DECLARED_ICON_ATTEMPTS} same-site
- * icons the page declares, then the origin's `/favicon.ico`.
+ * The URLs to try for an origin, best first: up to the configured number of same-site icons the
+ * page declares, then the origin's `/favicon.ico`.
  */
 export function selectIconUrls(
   candidates: SiteIconCandidate[],
@@ -263,9 +269,9 @@ export function selectIconUrls(
     candidates.filter((candidate) => isSameSiteIconUrl(candidate.url, bookmarkUrl)),
     preferredSize,
   )
-    .slice(0, MAX_DECLARED_ICON_ATTEMPTS)
+    .slice(0, scoring.max_declared_icon_attempts)
     .map((candidate) => candidate.url);
-  const fallback = new URL('/favicon.ico', bookmarkUrl).href;
+  const fallback = new URL(FALLBACK_ICON_PATH, bookmarkUrl).href;
   return declared.includes(fallback) ? declared : [...declared, fallback];
 }
 

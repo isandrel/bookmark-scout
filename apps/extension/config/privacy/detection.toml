@@ -1,0 +1,38 @@
+# What counts as a private value in a bookmark URL or title. The Privacy Scanner and the export
+# privacy review share these rules. Read by src/services/bookmark-network-tools.ts.
+
+# Fragment parameters that sign in to OAuth flows or APIs even when the name looks harmless;
+# flagged in fragments in addition to the Privacy Scanner's sensitive parameters
+fragment_token_params = ["access_token", "id_token", "refresh_token", "token", "code"]
+
+# API and access token formats found in URL values and titles (regular expressions)
+token_patterns = [
+  'gh[pousr]_[A-Za-z0-9]{20,}',
+  'github_pat_[A-Za-z0-9_]{20,}',
+  'sk-[A-Za-z0-9_-]{20,}',
+  'xox[abprs]-[A-Za-z0-9-]{10,}',
+]
+
+# Token prefixes that are also common in slugs (sk-telecom-annual-report); a match with one of
+# them counts only when the rest mixes upper case, lower case, and digits, as generated keys do
+ambiguous_token_prefixes = ["sk-"]
+
+# Email-like values whose domain ends in one of these file extensions are asset names
+# (logo@2x.png), not addresses
+asset_extensions = [
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "svg",
+  "webp",
+  "avif",
+  "ico",
+  "bmp",
+  "css",
+  "js",
+  "mjs",
+  "json",
+  "htm",
+  "html",
+]

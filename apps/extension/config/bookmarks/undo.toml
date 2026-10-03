@@ -1,0 +1,5 @@
+# Undoing bookmark changes. Read by src/services/bookmarks.ts.
+
+# Milliseconds a deletion (or a batch of tool changes that deleted bookmarks) can be undone;
+# the undo toast stays open this long
+deletion_undo_window_ms = 10000
