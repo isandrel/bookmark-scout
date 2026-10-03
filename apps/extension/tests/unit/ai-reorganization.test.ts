@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { BookmarkTreeNode } from '@/types';
 import { setLanguage } from '@/hooks/use-i18n';
 import type { AISettings } from '@/services/ai-client';
 import {
   applyReorganizationPlan,
-  type CreateFolderOp,
   generateReorganizationPlan,
   type MoveBookmarkOp,
   type ReorganizationPlan,
+  stripLeadingFolder,
 } from '@/services/ai-reorganization';
+import type { BookmarkTreeNode } from '@/types';
 
 const mocks = vi.hoisted(() => ({
   generateObject: vi.fn(),
@@ -18,7 +18,6 @@ const mocks = vi.hoisted(() => ({
   removeTree: vi.fn(),
   update: vi.fn(),
   move: vi.fn(),
-  getTree: vi.fn(),
 }));
 
 vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
@@ -40,7 +39,6 @@ vi.mock('wxt/browser', () => ({
       removeTree: mocks.removeTree,
       update: mocks.update,
       move: mocks.move,
-      getTree: mocks.getTree,
     },
   },
 }));
@@ -85,9 +83,7 @@ function moveOperation(bookmarkId: string, confidence: number): MoveBookmarkOp {
   };
 }
 
-function planWithOperations(
-  operations: Array<MoveBookmarkOp | CreateFolderOp>,
-): ReorganizationPlan {
+function planWithOperations(operations: MoveBookmarkOp[]): ReorganizationPlan {
   return {
     operations,
     summary: 'Synthetic plan',
@@ -234,27 +230,39 @@ describe('AI reorganization safety settings', () => {
     });
   });
 
-  it('creates new top-level folders in the bookmarks bar the browser reports', async () => {
-    // Firefox: no folderType, fixed GUIDs, and the menu folder listed before the toolbar.
-    mocks.getTree.mockResolvedValue([
-      {
-        id: 'root________',
-        title: '',
-        children: [
-          { id: 'menu________', parentId: 'root________', title: 'Menu', children: [] },
-          { id: 'toolbar_____', parentId: 'root________', title: 'Toolbar', children: [] },
-        ],
-      },
-    ]);
+  it('reports a move into a folder that does not exist and moves nothing', async () => {
     const plan = planWithOperations([
-      { type: 'create', name: 'Reading', parentPath: '', description: 'Articles' },
       { ...moveOperation('b1', 0.9), toFolderId: undefined, toFolderPath: 'Reading' },
     ]);
 
     const result = await applyReorganizationPlan(plan, { previewConfirmed: true });
 
-    expect(mocks.create).toHaveBeenCalledWith({ parentId: 'toolbar_____', title: 'Reading' });
-    expect(mocks.move).toHaveBeenCalledWith('b1', { parentId: 'created-folder' });
-    expect(result).toEqual({ success: true, errors: [], applied: 2, skipped: 0 });
+    expect(mocks.move).not.toHaveBeenCalled();
+    expect(mocks.create).not.toHaveBeenCalled();
+    expect(result).toEqual({
+      success: false,
+      errors: ['Cannot find the target folder for "Bookmark b1"'],
+      applied: 0,
+      skipped: 0,
+    });
+  });
+});
+
+describe('plan paths for display', () => {
+  it('drops the bookmarks bar title the browser reports, in any language', () => {
+    expect(stripLeadingFolder('Favorites bar/Work/Docs', 'Favorites bar')).toBe('Work/Docs');
+    expect(stripLeadingFolder('ブックマーク バー/仕事', 'ブックマーク バー')).toBe('仕事');
+    expect(stripLeadingFolder('Bookmarks Toolbar/News', 'Bookmarks Toolbar')).toBe('News');
+  });
+
+  it('keeps other paths, the bar itself, and look-alike prefixes', () => {
+    expect(stripLeadingFolder('Other Bookmarks/Work', 'Bookmarks Bar')).toBe(
+      'Other Bookmarks/Work',
+    );
+    expect(stripLeadingFolder('Bookmarks Bar', 'Bookmarks Bar')).toBe('Bookmarks Bar');
+    expect(stripLeadingFolder('Bookmarks Bar 2/Work', 'Bookmarks Bar')).toBe(
+      'Bookmarks Bar 2/Work',
+    );
+    expect(stripLeadingFolder('Bookmarks Bar/Work', undefined)).toBe('Bookmarks Bar/Work');
   });
 });

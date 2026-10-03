@@ -1349,68 +1349,6 @@
         "message": "ブックマークを分析できませんでした",
         "description": "Reorganization error when analysis fails without details"
     },
-    "ai_reorgStatusCollecting": {
-        "message": "ブックマークを収集中...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusCollectingDesc": {
-        "message": "フォルダ構造とブックマークのデータを集めています",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusSending": {
-        "message": "AIに送信中...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusSendingDesc": {
-        "message": "AI分析用のリクエストを準備しています",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusWaiting": {
-        "message": "AIがブックマークを分析中...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusWaitingDesc": {
-        "message": "10〜30秒ほどかかる場合があります",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusProcessing": {
-        "message": "提案を処理中...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusProcessingDesc": {
-        "message": "再整理プランを作成しています",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgNewFolders": {
-        "message": "新しいフォルダ: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "2"
-            }
-        }
-    },
-    "ai_reorgFoldersToRemove": {
-        "message": "削除するフォルダ: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
-    "ai_reorgRenames": {
-        "message": "名前の変更: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
     "ai_reorgMoves": {
         "message": "ブックマークの移動: $count$",
         "description": "Reorganization summary badge",
@@ -1431,31 +1369,9 @@
             }
         }
     },
-    "ai_reorgOp_create": {
-        "message": "作成",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_delete": {
-        "message": "削除",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_rename": {
-        "message": "名前変更",
-        "description": "Reorganization operation type"
-    },
     "ai_reorgOp_move": {
         "message": "移動",
         "description": "Reorganization operation type"
-    },
-    "ai_reorgInFolder": {
-        "message": "場所: $path$",
-        "description": "Parent folder of a folder to create",
-        "placeholders": {
-            "path": {
-                "content": "$1",
-                "example": "Work/Projects"
-            }
-        }
     },
     "ai_reorgFrom": {
         "message": "移動元:",

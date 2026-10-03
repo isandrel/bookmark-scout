@@ -1349,68 +1349,6 @@
         "message": "북마크를 분석하지 못했습니다",
         "description": "Reorganization error when analysis fails without details"
     },
-    "ai_reorgStatusCollecting": {
-        "message": "북마크 수집 중...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusCollectingDesc": {
-        "message": "폴더 구조와 북마크 데이터를 모으고 있습니다",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusSending": {
-        "message": "AI로 보내는 중...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusSendingDesc": {
-        "message": "AI 분석 요청을 준비하고 있습니다",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusWaiting": {
-        "message": "AI가 북마크를 분석하는 중...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusWaitingDesc": {
-        "message": "10~30초 정도 걸릴 수 있습니다",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgStatusProcessing": {
-        "message": "제안 처리 중...",
-        "description": "Reorganization loading status"
-    },
-    "ai_reorgStatusProcessingDesc": {
-        "message": "재구성 계획을 만들고 있습니다",
-        "description": "Reorganization loading status detail"
-    },
-    "ai_reorgNewFolders": {
-        "message": "새 폴더: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "2"
-            }
-        }
-    },
-    "ai_reorgFoldersToRemove": {
-        "message": "제거할 폴더: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
-    "ai_reorgRenames": {
-        "message": "이름 변경: $count$",
-        "description": "Reorganization summary badge",
-        "placeholders": {
-            "count": {
-                "content": "$1",
-                "example": "1"
-            }
-        }
-    },
     "ai_reorgMoves": {
         "message": "북마크 이동: $count$",
         "description": "Reorganization summary badge",
@@ -1431,31 +1369,9 @@
             }
         }
     },
-    "ai_reorgOp_create": {
-        "message": "만들기",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_delete": {
-        "message": "삭제",
-        "description": "Reorganization operation type"
-    },
-    "ai_reorgOp_rename": {
-        "message": "이름 변경",
-        "description": "Reorganization operation type"
-    },
     "ai_reorgOp_move": {
         "message": "이동",
         "description": "Reorganization operation type"
-    },
-    "ai_reorgInFolder": {
-        "message": "위치: $path$",
-        "description": "Parent folder of a folder to create",
-        "placeholders": {
-            "path": {
-                "content": "$1",
-                "example": "Work/Projects"
-            }
-        }
     },
     "ai_reorgFrom": {
         "message": "이전:",

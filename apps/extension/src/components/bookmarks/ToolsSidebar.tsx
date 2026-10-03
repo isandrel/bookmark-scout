@@ -66,7 +66,7 @@ function ToolEntry({ tool, environment, currentFolderName, runWithAccess }: Tool
           apply={apply as (selection: ToolSelections[ToolId]) => Promise<void>}
           undo={undo}
           close={close}
-          onChanged={environment.refresh}
+          environment={environment}
         />
       ) : null}
     </>
