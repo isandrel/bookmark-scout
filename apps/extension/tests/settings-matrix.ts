@@ -207,6 +207,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit('ai-prompt-settings.test.ts', 'asks for and returns at most the saved number of folder recommendations'),
   ]),
   aiAutoTriggerOnOpen: tested(POPUP, [popupAi]),
+  aiReadPageContent: tested(POPUP, [
+    e2e('ai-page-reading.spec.ts', '[mocked provider contract] Read page content sends the page text as untrusted data'),
+    e2e('ai-page-reading.spec.ts', '[mocked provider contract] without Read page content only the title and URL are sent'),
+    e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
+    unit('page-reader.test.ts', 'leaves items unchanged when page reading is off or website access is missing'),
+  ], 'Also read by Auto-Tagging and Content Summarizer in ToolsSidebar.tsx.'),
   aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits],
     'Prompt-level limit; provider compliance is not verified. -1 is sent to the prompt as-is.'),
   aiMinItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],

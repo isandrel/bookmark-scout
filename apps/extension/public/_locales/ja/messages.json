@@ -4604,5 +4604,17 @@
     "error_aiReorganizeEmptyScope": {
         "message": "選択した範囲にブックマークがありません。「すべてのブックマーク」を選ぶか、ブックマークがあるフォルダーを選択してください。",
         "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
+    },
+    "settings_aiReadPageContent": {
+        "message": "ページの内容を読む",
+        "description": "Settings: switch that lets AI tools read page text"
+    },
+    "settings_aiReadPageContentDesc": {
+        "message": "フォルダーの提案、自動タグ付け、コンテンツ要約で、タイトルと URL に加えて各ページの本文も送信し、結果の精度を高めます。ページは Cookie なしでダウンロードされ、ローカルネットワーク上のページは読み込まれません。オンにするとウェブサイトへのアクセス許可を求めます。",
+        "description": "Settings: description of Read page content"
+    },
+    "settings_hostAccessDeniedDesc": {
+        "message": "この設定でページを読むにはウェブサイトへのアクセスが必要です。オフのままになります。",
+        "description": "Toast when the user declines website access for a setting"
     }
 }

@@ -4604,5 +4604,17 @@
     "error_aiReorganizeEmptyScope": {
         "message": "선택한 범위에 북마크가 없습니다. \"모든 북마크\"를 선택하거나 북마크가 있는 폴더를 고르세요.",
         "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
+    },
+    "settings_aiReadPageContent": {
+        "message": "페이지 내용 읽기",
+        "description": "Settings: switch that lets AI tools read page text"
+    },
+    "settings_aiReadPageContentDesc": {
+        "message": "폴더 추천, 자동 태그, 콘텐츠 요약에서 제목과 URL뿐 아니라 각 페이지의 본문도 보내 더 나은 결과를 얻습니다. 페이지는 쿠키 없이 다운로드되며 로컬 네트워크의 페이지는 읽지 않습니다. 켜면 웹사이트 접근 권한을 요청합니다.",
+        "description": "Settings: description of Read page content"
+    },
+    "settings_hostAccessDeniedDesc": {
+        "message": "이 설정으로 페이지를 읽으려면 웹사이트 접근 권한이 필요합니다. 꺼진 상태로 유지됩니다.",
+        "description": "Toast when the user declines website access for a setting"
     }
 }

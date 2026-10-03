@@ -77,6 +77,10 @@ max_categories       = -1
 max_items_per_folder = -1
 min_items_per_folder = 1
 
+# Send the readable text of each page, not only its title and URL, to folder recommendations,
+# Auto-Tagging, and Content Summarizer. Needs website access, which is asked for when turned on.
+read_page_content = false
+
 # Limits for AI requests and the tools around them.
 [ai.limits]
 # Model-list and Verify Service requests give up after this many milliseconds
@@ -89,6 +93,23 @@ model_list_page_size = 1000
 anthropic_version = "2023-06-01"
 # Largest custom prompt in UTF-8 bytes; browser sync allows 8,192 per item, including the key
 prompt_max_bytes = 7000
+
+# Reading page text for AI tools when read_page_content is on
+[ai.page_reading]
+# A page that has not finished downloading after this many milliseconds is skipped
+timeout_ms = 10000
+# Bytes downloaded from one page at most
+max_bytes = 2000000
+# Characters of readable text sent per page
+max_chars_per_page = 3000
+# Pages read in one tool run; later bookmarks are sent with their title and URL only
+max_pages_per_run = 40
+# Pages downloaded at the same time
+concurrency = 4
+# Never read pages on the local network, so intranet content does not reach a cloud provider
+skip_private_hosts = true
+# Host names ending in these labels count as local, in addition to private IP addresses
+private_host_suffixes = ["localhost", "local", "internal", "lan", "home.arpa"]
 
 # Opt-in AI activity log (Options > AI > AI activity)
 [ai.activity]

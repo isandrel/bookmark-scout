@@ -4604,5 +4604,17 @@
     "error_aiReorganizeEmptyScope": {
         "message": "No bookmarks found in the selected scope. Select \"All Bookmarks\" or choose a folder with bookmarks.",
         "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
+    },
+    "settings_aiReadPageContent": {
+        "message": "Read page content",
+        "description": "Settings: switch that lets AI tools read page text"
+    },
+    "settings_aiReadPageContentDesc": {
+        "message": "Folder recommendations, Auto-Tagging, and Content Summarizer also send the readable text of each page, not only its title and URL, for better results. Pages are downloaded without your cookies, local network pages are never read, and turning this on asks for website access.",
+        "description": "Settings: description of Read page content"
+    },
+    "settings_hostAccessDeniedDesc": {
+        "message": "This setting needs website access to read pages. It stays off.",
+        "description": "Toast when the user declines website access for a setting"
     }
 }
