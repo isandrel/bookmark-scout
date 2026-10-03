@@ -11,7 +11,14 @@ import { isStepCount, type ToolSet, ToolLoopAgent, tool } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
-const { agent: config } = aiRuntimeConfig;
+const config = readConfig(
+  'ai/agent',
+  z.strictObject({
+    max_steps: z.number().int().positive(),
+    max_bookmark_results: z.number().int().positive(),
+    web_search_max_uses: z.number().int().positive(),
+  }),
+);
 
 /**
  * Built-in web search per provider, run by the provider itself. Each package types its tool

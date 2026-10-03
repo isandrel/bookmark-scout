@@ -1,0 +1,22 @@
+# Privacy Scanner tool. It always scans all bookmarks, so it has no default scope.
+enabled = true
+scan_titles = false
+scan_query_params = true
+scan_fragments = true
+sensitive_params = [
+  "token",
+  "access_token",
+  "refresh_token",
+  "auth",
+  "authorization",
+  "api_key",
+  "apikey",
+  "key",
+  "secret",
+  "password",
+  "pwd",
+  "code",
+  "session",
+]
+email_detection = true
+uuid_detection = true

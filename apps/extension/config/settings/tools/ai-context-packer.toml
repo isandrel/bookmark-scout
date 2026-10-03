@@ -1,0 +1,11 @@
+# AI Context Packer tool. `default_scope` is "folder" or "all".
+enabled = true
+default_scope = "folder"
+output_format = "markdown"
+include_folder_path = true
+include_dates = true
+include_tags = true
+include_summaries = true
+max_items = { default = 200, min = 1, max = 2000, step = 10 }
+max_depth = { default = 8, min = 1, max = 20, step = 1 }
+excerpt_length = { default = 240, min = 40, max = 2000, step = 10 }

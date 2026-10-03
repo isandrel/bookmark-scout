@@ -1,13 +1,25 @@
 /**
  * Reads the main text of web pages for AI tools: downloads the page without cookies, keeps the
  * article with Mozilla Readability, and converts it to compact Markdown. Page text is untrusted
- * input; callers send it to the model as data, never as instructions. Limits come from the
- * [ai.page_reading] table of the config.
+ * input; callers send it to the model as data, never as instructions. Limits come from
+ * config/ai/page-reading.toml.
  */
 import { Readability } from '@mozilla/readability';
 import TurndownService from 'turndown';
+import { z } from 'zod';
 
-const { page_reading: config } = aiRuntimeConfig;
+const config = readConfig(
+  'ai/page-reading',
+  z.strictObject({
+    timeout_ms: z.number().int().positive(),
+    max_bytes: z.number().int().positive(),
+    max_chars_per_page: z.number().int().positive(),
+    max_pages_per_run: z.number().int().nonnegative(),
+    concurrency: z.number().int().positive(),
+    skip_private_hosts: z.boolean(),
+    private_host_suffixes: z.array(z.string().min(1)),
+  }),
+);
 
 export type PageText = {
   /** The page's own title, which can be better than an old bookmark title. */

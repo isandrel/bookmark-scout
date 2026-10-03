@@ -1,0 +1,17 @@
+# Reading page text for AI tools when the read_page_content setting is on.
+# Read by src/services/page-reader.ts.
+
+# A page that has not finished downloading after this many milliseconds is skipped
+timeout_ms = 10000
+# Bytes downloaded from one page at most
+max_bytes = 2000000
+# Characters of readable text sent per page
+max_chars_per_page = 3000
+# Pages read in one tool run; later bookmarks are sent with their title and URL only
+max_pages_per_run = 40
+# Pages downloaded at the same time
+concurrency = 4
+# Never read pages on the local network, so intranet content does not reach a cloud provider
+skip_private_hosts = true
+# Host names ending in these labels count as local, in addition to private IP addresses
+private_host_suffixes = ["localhost", "local", "internal", "lan", "home.arpa"]

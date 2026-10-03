@@ -1,0 +1,10 @@
+# Refresh Site Icons downloads each website's own icon into local storage. It reuses the
+# Metadata Fetcher's request timeout and concurrency. `default_scope` is "folder" or "all".
+enabled = true
+default_scope = "folder"
+# Icon size in pixels to prefer when a page lists several
+preferred_size = { default = 32, min = 16, max = 256, step = 8, integer = true }
+# Largest icon file that is downloaded, in KB
+max_icon_kb = { default = 64, min = 1, max = 512, step = 1, integer = true }
+# Total size of all cached icons in local storage, in KB; the oldest are removed first
+max_cache_kb = { default = 4096, min = 256, max = 8192, step = 256, integer = true }

@@ -1,0 +1,49 @@
+name = "Groq"
+order = 40
+default_model = "llama-3.3-70b-versatile"
+provider_kind = "native"
+requires_api_key = true
+api_key_pattern = "^gsk_"
+api_key_placeholder = "gsk_..."
+base_url = "https://api.groq.com/openai/v1"
+logo = "groq"
+
+[[models]]
+id = "llama-3.3-70b-versatile"
+name = "Llama 3.3 70B"
+description = "Fast & Capable"
+
+[[models]]
+id = "llama-3.1-8b-instant"
+name = "Llama 3.1 8B"
+description = "Super Fast"
+
+[[models]]
+id = "mixtral-8x7b-32768"
+name = "Mixtral 8x7B"
+description = "Good Balance"
+
+[[models]]
+id = "gemma2-9b-it"
+name = "Gemma 2 9B"
+description = "Google's Open Model"
+
+[[models]]
+id = "deepseek-r1-distill-qwen-32b"
+name = "DeepSeek R1 Distill Qwen 32B"
+description = "Reasoning distilled"
+
+[[models]]
+id = "deepseek-r1-distill-llama-70b"
+name = "DeepSeek R1 Distill Llama 70B"
+description = "Large reasoning"
+
+[[models]]
+id = "qwen-2.5-32b"
+name = "Qwen 2.5 32B"
+description = "Alibaba's model"
+
+[[models]]
+id = "qwen-qwq-32b"
+name = "Qwen QwQ 32B"
+description = "Reasoning variant"

@@ -7,6 +7,7 @@
  * keystroke, which keeps clear of the sync write limits.
  */
 import { useEffect, useState } from 'react';
+import { z } from 'zod';
 
 export type CustomPrompt = {
   id: string;
@@ -29,7 +30,10 @@ export type PromptLibrary = {
 };
 
 /** Leaves room under sync's 8,192-byte item quota for the key and the other fields. */
-export const MAX_PROMPT_BYTES = aiRuntimeConfig.limits.prompt_max_bytes;
+export const MAX_PROMPT_BYTES = readConfig(
+  'ai/prompt-library',
+  z.strictObject({ prompt_max_bytes: z.number().int().positive().max(8192) }),
+).prompt_max_bytes;
 
 const INDEX_KEY = 'sync:bookmark-scout-prompts' as const;
 const promptKey = (id: string) => `sync:bookmark-scout-prompt-${id}` as const;

@@ -26,14 +26,22 @@ function providersInTable(toml: Record<string, unknown>): ExtensionProvider[] {
     return Object.entries(table).flatMap(([id, value]) => providerFrom(id, value) ?? []);
 }
 
-/** One file per provider (`config/ai/providers/<id>.toml`), or files holding provider tables. */
+/**
+ * One file per provider (`config/ai/providers/<id>.toml`, kebab-case file names are snake_case
+ * ids), or files holding provider tables. Files are listed by their `order`, the extension's
+ * picker order, then by name.
+ */
 function readProviderDir(dir: string): ExtensionProvider[] {
-    return readdirSync(dir)
+    const files = readdirSync(dir)
         .filter((file) => file.endsWith(".toml"))
         .sort()
-        .flatMap((file) => {
-            const toml = parse(readFileSync(join(dir, file), "utf8")) as Record<string, unknown>;
-            const single = providerFrom(file.replace(/\.toml$/, ""), toml);
+        .map((file) => ({ file, toml: parse(readFileSync(join(dir, file), "utf8")) as Record<string, unknown> }));
+    const order = (toml: Record<string, unknown>) =>
+        typeof toml.order === "number" ? toml.order : Number.POSITIVE_INFINITY;
+    return files
+        .sort((left, right) => order(left.toml) - order(right.toml) || 0)
+        .flatMap(({ file, toml }) => {
+            const single = providerFrom(file.replace(/\.toml$/, "").replace(/-/g, "_"), toml);
             return single ? [single] : providersInTable(toml);
         });
 }

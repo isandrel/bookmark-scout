@@ -1,0 +1,25 @@
+# Defaults for Options > AI. AI stays off until the user turns it on.
+
+# Enable AI-powered folder recommendations
+enabled = false
+
+# Default AI provider (an id from config/ai/providers/ or the provider catalog)
+provider = "openai"
+
+# Default model to use (must match a model id of that provider)
+model = "gpt-4o-mini"
+
+# Auto-trigger AI recommendations when popup opens
+auto_trigger_on_open = false
+
+# Folder suggestions shown in the popup
+max_recommendations = { default = 5, min = 1, max = 10, step = 1 }
+
+# Reorganization limits; -1 means no limit where `unlimited` is set
+max_categories = { default = -1, min = 1, max = 100, step = 1, integer = true, unlimited = true }
+max_items_per_folder = { default = -1, min = 1, max = 500, step = 1, integer = true, unlimited = true }
+min_items_per_folder = { default = 1, min = 1, max = 100, step = 1 }
+
+# Send the readable text of each page, not only its title and URL, to folder recommendations,
+# Auto-Tagging, and Content Summarizer. Needs website access, which is asked for when turned on.
+read_page_content = false

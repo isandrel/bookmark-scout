@@ -1,6 +1,10 @@
-import { parse } from 'smol-toml';
+import {
+  AI_PROVIDERS_CONFIG_PATH,
+  type AI_PROVIDER_EXTRA_FIELDS,
+  type AI_PROVIDER_KINDS,
+  aiProviderFilesSchema,
+} from '@/lib/config/ai-provider-schema';
 import providerCatalog from '../../config/provider-catalog.json';
-import settingsToml from '../../config/settings.default.toml?raw';
 
 export type AIModel = {
   id: string;
@@ -8,7 +12,7 @@ export type AIModel = {
   description?: string;
 };
 
-export type AIProviderKind = 'native' | 'openai_compatible' | 'anthropic_compatible' | 'ollama';
+export type AIProviderKind = (typeof AI_PROVIDER_KINDS)[number];
 
 export type AIProviderConfig = {
   name: string;
@@ -30,21 +34,20 @@ export type AIProviderConfig = {
   source?: 'featured' | 'catalog';
   /** Picker group for TOML providers; catalog providers are always `catalog`. */
   group?: 'featured' | 'local' | 'custom';
+  /** models.dev logo id for a provider file; catalog providers use their own id. */
+  logo?: string;
 };
 
 /** Provider picker groups, in display order. */
 export type AIProviderGroup = 'featured' | 'local' | 'custom' | 'catalog';
 
 /** Provider-specific connection settings beyond the API key, Base URL, and headers. */
-export type AIProviderExtraField = 'organization' | 'project' | 'resourceName' | 'apiVersion';
+export type AIProviderExtraField = (typeof AI_PROVIDER_EXTRA_FIELDS)[number];
 
-type TomlConfig = {
-  ai: {
-    providers: Record<string, AIProviderConfig>;
-  };
-};
-
-const config = parse(settingsToml) as unknown as TomlConfig;
+/** One file per featured, local, and custom provider, in picker order. */
+const providerFiles = Object.entries(
+  readConfig(AI_PROVIDERS_CONFIG_PATH, aiProviderFilesSchema),
+).sort(([, left], [, right]) => left.order - right.order);
 
 type CatalogEntry = {
   name: string;
@@ -84,13 +87,10 @@ function catalogProviders(): Record<string, AIProviderConfig> {
   );
 }
 
-// Featured providers from the TOML come first and win over catalog entries with the same id.
+// Provider files come first and win over catalog entries with the same id.
 const providers: Record<string, AIProviderConfig> = (() => {
   const featured = Object.fromEntries(
-    Object.entries(config.ai?.providers ?? {}).map(([id, provider]) => [
-      id,
-      { ...provider, source: 'featured' as const },
-    ]),
+    providerFiles.map(([id, provider]) => [id, { ...provider, source: 'featured' as const }]),
   );
   const catalog = Object.fromEntries(
     Object.entries(catalogProviders()).filter(([id]) => !(id in featured)),
@@ -163,13 +163,15 @@ export function getProviderDocUrl(provider: AIProvider): string | undefined {
 }
 
 const logoIds = new Set(catalog.logos);
-/** Featured providers whose logo is published under another models.dev id. */
-const LOGO_ALIASES: Record<string, string> = { ollama: 'ollama-cloud' };
 
-/** URL of the provider's bundled one-color logo, if the catalog has one. */
+/**
+ * URL of the provider's bundled one-color logo, if the catalog has one. Provider files name their
+ * logo with `logo`; catalog providers use their own id.
+ */
 export function getProviderLogoUrl(provider: AIProvider): string | undefined {
-  const id = LOGO_ALIASES[provider] ?? provider;
-  return logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
+  const providerConfig = getProviderConfig(provider);
+  const id = providerConfig?.source === 'featured' ? providerConfig.logo : provider;
+  return id !== undefined && logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
 }
 
 export function getProviderGroup(provider: AIProvider): AIProviderGroup {

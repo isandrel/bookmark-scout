@@ -60,7 +60,7 @@ Agents should assume Chrome is the default runtime path, but should not make Chr
 ### Static and localized assets
 
 - `public/_locales/`: extension locale files for `en`, `ja`, and `ko`
-- `config/settings.default.toml`: default settings template
+- `config/`: app config, one TOML file per domain (setting defaults with their bounds in `config/settings/`), loaded once by `src/lib/app-config.ts`, whose header explains how to add a file
 
 Do not edit generated output or build artifacts under:
 
@@ -175,11 +175,11 @@ Rules:
 - keep provider creation and model wiring centralized in existing AI service files
 - do not embed provider-specific logic deep inside UI components unless the current architecture already does so for a narrow reason
 - preserve clear disclosure around what user bookmark data is sent to external providers
-- put AI timeouts, sizes, and limits in `config/settings.default.toml` and validate them in `src/lib/ai-runtime-config.ts`; never hard-code them
+- put AI timeouts, sizes, and limits in a file under `config/ai/` and read it with `readConfig` and a strict zod schema in the module that uses it; never hard-code them
 - write local server addresses as `localhost`, never `127.0.0.1`
 - follow the `extension-ai-feature` skill in `.agents/skills/` for the end-to-end checklist
 
-Featured providers are defined in `config/settings.default.toml`. About 200 more come from `config/provider-catalog.json`, a snapshot of the models.dev catalog (MIT; license in `public/licenses/models-dev.txt`). Regenerate it with `bun run catalog:sync` instead of editing it by hand; it also refreshes the one-color provider logos in `public/provider-logos/`, which are drawn as CSS masks. The extension never fetches models.dev at runtime. Providers left out or marked without a model list after the 2026-10-02 endpoint probe are listed with reasons in `scripts/sync-provider-catalog.ts`. Model lists and connection checks go through `src/services/ai-model-list.ts`.
+Featured, local, and custom providers are defined one per file in `config/ai/providers/<id>.toml` (validated by `src/lib/config/ai-provider-schema.ts`; `order` sets the picker position and `logo` the models.dev logo id). About 200 more come from `config/provider-catalog.json`, a snapshot of the models.dev catalog (MIT; license in `public/licenses/models-dev.txt`). Regenerate it with `bun run catalog:sync` instead of editing it by hand; it also refreshes the one-color provider logos in `public/provider-logos/`, which are drawn as CSS masks. The extension never fetches models.dev at runtime. Providers left out or marked without a model list after the 2026-10-02 endpoint probe are listed with reasons in `scripts/sync-provider-catalog.ts`. Model lists and connection checks go through `src/services/ai-model-list.ts`.
 
 When working in AI-related files, check whether the logic already belongs in:
 

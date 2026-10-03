@@ -4,6 +4,7 @@
  * default, the log stays on this device, and credentials are redacted before anything is stored.
  */
 import { useEffect, useState } from 'react';
+import { z } from 'zod';
 
 export type AIActivityEntry = {
   id: string;
@@ -25,9 +26,17 @@ export type AIActivityEntry = {
   error?: string;
 };
 
+const activityConfig = readConfig(
+  'ai/activity',
+  z.strictObject({
+    max_entries: z.number().int().positive(),
+    max_body_chars: z.number().int().positive(),
+  }),
+);
+
 /** How many recent calls are kept and how long each stored body may be, from the config. */
-export const MAX_AI_ACTIVITY_ENTRIES = aiRuntimeConfig.activity.max_entries;
-export const MAX_AI_ACTIVITY_BODY_CHARS = aiRuntimeConfig.activity.max_body_chars;
+export const MAX_AI_ACTIVITY_ENTRIES = activityConfig.max_entries;
+export const MAX_AI_ACTIVITY_BODY_CHARS = activityConfig.max_body_chars;
 
 export const aiActivityItem = storage.defineItem<AIActivityEntry[]>('local:bookmark-scout-ai-activity', {
   fallback: [],

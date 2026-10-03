@@ -1,7 +1,6 @@
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { aiRuntimeConfig } from '@/lib/ai-runtime-config';
 import {
   addPageText,
   extractPageText,
@@ -9,6 +8,9 @@ import {
   isReadablePageUrl,
   readPagesText,
 } from '@/services/page-reader';
+import { readConfigToml } from '../config-files';
+
+const MAX_PAGES_PER_RUN = readConfigToml('ai/page-reading.toml').max_pages_per_run as number;
 
 const ARTICLE = `<!doctype html><html><head><title>Rust ownership explained</title>
 <meta name="description" content="A guide to borrowing."></head><body>
@@ -125,11 +127,11 @@ describe('readPagesText', () => {
   it('reads at most the configured number of pages in one run', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => html(ARTICLE)));
     const urls = Array.from(
-      { length: aiRuntimeConfig.page_reading.max_pages_per_run + 5 },
+      { length: MAX_PAGES_PER_RUN + 5 },
       (_, index) => `https://example.com/${index}`,
     );
     const pages = await readPagesText(urls);
-    expect(pages.size).toBe(aiRuntimeConfig.page_reading.max_pages_per_run);
+    expect(pages.size).toBe(MAX_PAGES_PER_RUN);
   });
 });
 

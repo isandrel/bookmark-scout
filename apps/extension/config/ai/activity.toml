@@ -1,0 +1,6 @@
+# Opt-in AI activity log (Options > AI > AI activity). Read by src/lib/ai-activity-storage.ts.
+
+# Recent calls kept on this device
+max_entries = 50
+# Characters kept from each request or response body
+max_body_chars = 64000

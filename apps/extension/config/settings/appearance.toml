@@ -1,0 +1,14 @@
+# Defaults for Options > Appearance. Read by src/lib/settings-schema.ts, which also holds the
+# option lists for language, theme, and favicon size.
+
+# Language preference: "auto" (follow browser), "en", "ja", or "ko"
+language = "auto"
+
+# Theme preference: "system", "light", or "dark"
+theme = "system"
+
+# Whether to display favicon icons next to bookmarks
+show_favicons = true
+
+# Size of favicon icons in pixels: 16, 24, or 32
+favicon_size = 16

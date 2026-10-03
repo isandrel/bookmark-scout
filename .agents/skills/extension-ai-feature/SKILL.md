@@ -1,6 +1,6 @@
 ---
 name: extension-ai-feature
-description: Add or change AI functionality in the Bookmark Scout extension end to end - a provider or local-server preset, an AI tool, model listing, prompts, page reading, or any tunable AI limit - while keeping it opt-in, configurable, logged, tested, and disclosed. Use when touching src/services/ai-*, the provider catalog, config/settings.default.toml AI tables, or anything that sends user data to a provider.
+description: Add or change AI functionality in the Bookmark Scout extension end to end - a provider or local-server preset, an AI tool, model listing, prompts, page reading, or any tunable AI limit - while keeping it opt-in, configurable, logged, tested, and disclosed. Use when touching src/services/ai-*, the provider catalog, the config/ai/ files, or anything that sends user data to a provider.
 ---
 
 # Extension AI feature
@@ -10,7 +10,7 @@ Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first.
 ## Checklist
 
 1. **Off by default.** New AI behavior is opt-in and stays disabled until the user turns it on.
-2. **No hard-coded tunables.** Timeouts, sizes, counts, and limits go in `apps/extension/config/settings.default.toml` under `[ai.limits]`, `[ai.page_reading]`, `[ai.agent]`, or `[ai.activity]`, with a comment, and into the zod schema in `src/lib/ai-runtime-config.ts`, so a missing value fails at load instead of at the first AI call. Messages that mention a value take it as a placeholder; `ai_connErrorTimeout` once hard-coded "8 seconds".
+2. **No hard-coded tunables.** Timeouts, sizes, counts, and limits go in a file under `apps/extension/config/ai/` (such as `model-list.toml`, `page-reading.toml`, `agent.toml`, or `activity.toml`), with a comment, and are read once with `readConfig` and a strict zod schema in the module that uses them, so a missing value fails at load instead of at the first AI call. Messages that mention a value take it as a placeholder; `ai_connErrorTimeout` once hard-coded "8 seconds".
 3. **Pick the storage area deliberately.**
    - AI services and API keys: `local:` only, never sync.
    - Prompt library: `sync:` with one item per prompt plus an index (`src/lib/prompt-library-storage.ts`), because sync allows 8 KB per item and about 100 KB total. Keep `prompt_max_bytes` at 8192 or less (the schema enforces it).

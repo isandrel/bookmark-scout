@@ -1,0 +1,4 @@
+# Import and export tool cards. `default_export_format` is "html", "json", "markdown", or "csv".
+show_export = true
+show_import = true
+default_export_format = "html"

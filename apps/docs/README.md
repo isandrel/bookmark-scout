@@ -41,7 +41,7 @@ bun run verify
 
 ## Maintenance notes
 
-- Keep feature claims aligned with `content/docs/status.mdx`, `apps/extension/src/`, and `apps/extension/config/settings.default.toml`.
+- Keep feature claims aligned with `content/docs/status.mdx`, `apps/extension/src/`, and `apps/extension/config/`.
 - Update install steps when WXT output paths or release asset names change.
 - AI docs must say that AI is opt-in and which bookmark data goes to the configured provider.
 - The theme and components are described in `DESIGN.md`.

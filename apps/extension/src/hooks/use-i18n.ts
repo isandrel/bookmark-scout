@@ -69,7 +69,7 @@ export function getFormattingLocale(): string | undefined {
 
 /** A byte count in kilobytes with at most one decimal, e.g. "12.5 KB". */
 export function formatKilobytes(bytes: number): string {
-  const kilobytes = Math.round((bytes / 1024) * 10) / 10;
+  const kilobytes = Math.round((bytes / BYTES_PER_KB) * 10) / 10;
   try {
     return `${kilobytes.toLocaleString(getFormattingLocale())} KB`;
   } catch {
@@ -138,6 +138,11 @@ export function t(key: MessageKey, substitutions?: string | string[]): string {
     // Fallback for non-extension environments (like tests)
     return key;
   }
+}
+
+/** A message to show for a caught error: its own message, or the localized fallback. */
+export function getErrorMessage(error: unknown, fallbackKey: MessageKey = 'error_unknown'): string {
+  return error instanceof Error ? error.message : t(fallbackKey);
 }
 
 /**

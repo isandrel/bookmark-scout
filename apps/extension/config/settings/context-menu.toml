@@ -1,0 +1,8 @@
+# Defaults for the right-click menu (Options > Data).
+
+# Enable right-click context menu for quick bookmark saving
+enabled = true
+
+# Source for bookmark title when saving via context menu
+# Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)
+bookmark_naming = "link_text"

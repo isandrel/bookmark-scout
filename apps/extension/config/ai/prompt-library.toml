@@ -1,0 +1,5 @@
+# Custom prompts live in the prompt library (Options > AI Tools > Prompts), synced per user; the
+# built-in defaults are in src/services/prompt-config.ts. Read by src/lib/prompt-library-storage.ts.
+
+# Largest custom prompt in UTF-8 bytes; browser sync allows 8,192 per item, including the key
+prompt_max_bytes = 7000

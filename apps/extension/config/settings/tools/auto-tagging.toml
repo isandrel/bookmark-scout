@@ -1,0 +1,7 @@
+# Auto-Tagging tool. It always runs on the current folder, so it has no default scope.
+enabled = true
+min_tags = { default = 2, min = 1, max = 20, step = 1 }
+max_tags = { default = 5, min = 1, max = 20, step = 1 }
+tag_style = "kebab-case"
+merge_mode = "append"
+dedupe_tags = true
