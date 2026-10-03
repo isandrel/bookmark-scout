@@ -7,6 +7,46 @@ on:
     branches: [main]
 
 jobs:
+  # Decides which jobs a pull request needs, from the rules in .github/ci-scopes.toml. Required
+  # checks still report: a job skipped by its `if` counts as passed. Pushes to main run everything.
+  # Dependent jobs use `!cancelled()`, so a failure here never skips them; with no output, their
+  # `if` fails to evaluate, which fails the check instead of passing it.
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      scopes: ${{ steps.scopes.outputs.scopes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Match changed files to scopes
+        id: scopes
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            git diff --name-only "$BASE"...HEAD | tee /dev/stderr > changed.txt
+            # If the rules cannot be read, run everything rather than skip anything.
+            scopes=$(bun scripts/ci-scopes.ts < changed.txt) || scopes=$(bun scripts/ci-scopes.ts --all)
+          else
+            scopes=$(bun scripts/ci-scopes.ts --all)
+          fi
+          echo "Scopes: $scopes"
+          echo "scopes=$scopes" >> "$GITHUB_OUTPUT"
+
+      # After the output is set, so a failing rule test still lets the other jobs run.
+      - name: Test the scope rules
+        run: bun test scripts/ci-scopes.test.ts
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -38,25 +78,38 @@ jobs:
   build:
     name: Build Extension
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: ${{ !cancelled() && needs.lint.result == 'success' }}
     strategy:
       matrix:
         target: [chrome, firefox, edge]
+    # Conditions are per step, not on the job: a skipped matrix job would report one unnamed
+    # check instead of "Build Extension (chrome)" and the others the ruleset requires.
+    env:
+      RUN: ${{ fromJSON(needs.changes.outputs.scopes).extension }}
     steps:
+      - name: Skip, the extension is unchanged
+        if: env.RUN != 'true'
+        run: echo "No extension changes in this pull request."
+
       - name: Checkout
+        if: env.RUN == 'true'
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Bun
+        if: env.RUN == 'true'
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
       - name: Install dependencies
+        if: env.RUN == 'true'
         run: bun install
 
       - name: Build for ${{ matrix.target }}
+        if: env.RUN == 'true'
         run: |
           if [ "${{ matrix.target }}" = "chrome" ]; then
             bunx nx run extension:build:chrome
@@ -69,7 +122,8 @@ jobs:
   test:
     name: Extension Tests
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && fromJSON(needs.changes.outputs.scopes).extension }}
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -105,7 +159,8 @@ jobs:
   e2e-edge:
     name: Edge E2E
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && fromJSON(needs.changes.outputs.scopes).extension }}
     timeout-minutes: 25
     steps:
       - name: Checkout
@@ -146,7 +201,8 @@ jobs:
   e2e-firefox:
     name: Firefox E2E smoke
     runs-on: ubuntu-latest
-    needs: lint
+    needs: [lint, changes]
+    if: ${{ !cancelled() && needs.lint.result == 'success' && fromJSON(needs.changes.outputs.scopes).extension }}
     timeout-minutes: 15
     steps:
       - name: Checkout
@@ -185,6 +241,8 @@ jobs:
   sites:
     name: Website and Docs
     runs-on: ubuntu-latest
+    needs: changes
+    if: ${{ !cancelled() && fromJSON(needs.changes.outputs.scopes).sites }}
     timeout-minutes: 20
     steps:
       - name: Checkout

@@ -1,0 +1,42 @@
+# Which CI jobs a pull request needs, from the files it changes. Read by scripts/ci-scopes.ts in
+# the "Detect changes" job of .github/workflows/ci.yml. Patterns are globs relative to the
+# repository root (`**` crosses folders). Lint and Detect changes always run.
+#
+# For each changed file:
+# 1. A file matching `ignore` needs no checks.
+# 2. A file matching `shared` runs every scope.
+# 3. Otherwise each scope whose patterns match the file runs.
+# 4. A file that matches nothing runs every scope, so an unlisted path never skips checks.
+#
+# To add a scope, add it under [scopes] and gate its jobs on
+# `fromJSON(needs.changes.outputs.scopes).<name>` in ci.yml.
+
+# Notes and content that no build or test reads. Lint checks the generated READMEs.
+ignore = [
+  "**/*.md",
+  ".agents/**",
+  "backlog/**",
+  "store/**",
+  "LICENSE*",
+  ".github/ISSUE_TEMPLATE/**",
+]
+
+# Files every app depends on, and CI's own definition.
+shared = [
+  "package.json",
+  "bun.lock",
+  "nx.json",
+  "biome.json",
+  "tsconfig*.json",
+  "packages/**",
+  "config/**",
+  ".github/workflows/ci.yml",
+  ".github/ci-scopes.toml",
+  "scripts/ci-scopes*.ts",
+]
+
+[scopes]
+# Build Extension, Extension Tests, Edge E2E, Firefox E2E smoke
+extension = ["apps/extension/**"]
+# Website and Docs
+sites = ["apps/website/**", "apps/docs/**"]

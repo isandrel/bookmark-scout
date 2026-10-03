@@ -50,7 +50,7 @@ PRs can pass CI and still fail on `main` (flaky timing, or two PRs that conflict
 
 ## Changing required checks
 
-Only with the user's approval. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no path filters), or PRs that skip them can never merge.
+Only with the user's approval. Back up the ruleset first, then add contexts by exact check name (`gh pr checks <n>` lists them). Only require jobs that run on every PR (no workflow-level path filters), or PRs that skip them can never merge. Skipping inside the workflow is fine: CI's `Detect changes` job (rules in `.github/ci-scopes.toml`) gates jobs with `if`, and a job skipped that way reports as passed. Skip matrix jobs per step, because a skipped matrix job reports one check under its unexpanded name, and keep `!cancelled()` in each `if`, so a failed detection runs the jobs instead of skipping them as passed.
 
 ```bash
 gh api repos/isandrel/bookmark-scout/rulesets/11384898 > ~/.cache/ruleset-11384898-before-$(date +%Y%m%d-%H%M).json
