@@ -126,7 +126,7 @@ function FolderRow({ node }: { node: BookmarkTreeNode }) {
               )}
               {itemCount > 0 && (
                 <span className="ml-2 shrink-0 text-xs text-muted-foreground tabular-nums">
-                  ({itemCount})
+                  {t('popup_folderItemCount', String(itemCount))}
                 </span>
               )}
             </div>

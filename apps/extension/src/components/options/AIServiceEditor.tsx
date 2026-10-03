@@ -16,33 +16,34 @@ import {
   Wifi,
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
+import { AI_PROVIDER_EXTRA_FIELDS } from '@/lib/config/ai-provider-schema';
 
-/** Labels, descriptions, and placeholders of provider-specific connection fields. */
-const EXTRA_FIELD_COPY: Record<
-  AIProviderExtraField,
-  { label: MessageKey; description: MessageKey; placeholder: string }
-> = {
-  organization: {
-    label: 'options_organization',
-    description: 'options_organizationDescription',
-    placeholder: 'org-...',
-  },
-  project: {
-    label: 'options_project',
-    description: 'options_projectDescription',
-    placeholder: 'proj_...',
-  },
-  resourceName: {
-    label: 'options_resourceName',
-    description: 'options_resourceNameDescription',
-    placeholder: 'my-resource',
-  },
-  apiVersion: {
-    label: 'options_apiVersion',
-    description: 'options_apiVersionDescription',
-    placeholder: 'v1',
-  },
-};
+/** Example values shown as placeholders, from config/ai/provider-fields.toml. */
+const fieldExamples = readConfig(
+  'ai/provider-fields',
+  z.strictObject({
+    api_key: z.string(),
+    base_url: z.string(),
+    extra_headers: z.string(),
+    extra_fields: z.record(z.enum(AI_PROVIDER_EXTRA_FIELDS), z.string()),
+  }),
+);
+
+/** Labels and descriptions of provider-specific connection fields. */
+const EXTRA_FIELD_COPY: Record<AIProviderExtraField, { label: MessageKey; description: MessageKey }> =
+  {
+    organization: {
+      label: 'options_organization',
+      description: 'options_organizationDescription',
+    },
+    project: { label: 'options_project', description: 'options_projectDescription' },
+    resourceName: {
+      label: 'options_resourceName',
+      description: 'options_resourceNameDescription',
+    },
+    apiVersion: { label: 'options_apiVersion', description: 'options_apiVersionDescription' },
+  };
 
 /** A field of the AI services panel and the text settings search matches it by. */
 export type AIServicesSearchField = { advanced: boolean; text: string[] };
@@ -338,7 +339,7 @@ export function AIServiceEditor({
       setStatus({
         tone: 'error',
         title: t('toast_aiServiceVerifyFailed'),
-        description: error instanceof Error ? error.message : t('error_unknown'),
+        description: getErrorMessage(error),
       });
     } finally {
       setIsVerifying(false);
@@ -363,7 +364,7 @@ export function AIServiceEditor({
       setStatus({
         tone: 'error',
         title: t('toast_aiModelsRefreshFailed'),
-        description: error instanceof Error ? error.message : t('error_unknown'),
+        description: getErrorMessage(error),
       });
     } finally {
       setIsDetecting(false);
@@ -448,7 +449,7 @@ export function AIServiceEditor({
               onBlur={() => void saveFields()}
               aria-describedby={describedBy(`${idPrefix}-apiKey`, errors.apiKey)}
               aria-invalid={Boolean(errors.apiKey)}
-              placeholder={providerConfig?.api_key_placeholder || 'sk-...'}
+              placeholder={providerConfig?.api_key_placeholder || fieldExamples.api_key}
               className="pr-9"
             />
             <Button
@@ -510,7 +511,7 @@ export function AIServiceEditor({
               onKeyDown={(event) => {
                 if (event.key === 'Enter') event.currentTarget.blur();
               }}
-              placeholder="model-id"
+              placeholder={t('options_customModelPlaceholder')}
               aria-describedby={`${idPrefix}-customModel-description`}
               className="h-8 w-full sm:w-72"
             />
@@ -545,7 +546,7 @@ export function AIServiceEditor({
               onBlur={() => void saveFields()}
               aria-describedby={describedBy(`${idPrefix}-baseUrl`, errors.baseUrl)}
               aria-invalid={Boolean(errors.baseUrl)}
-              placeholder={getProviderEndpoint(provider, undefined, options) || 'https://api.example.com/v1'}
+              placeholder={getProviderEndpoint(provider, undefined, options) || fieldExamples.base_url}
             />,
             errors.baseUrl,
           )}
@@ -566,7 +567,7 @@ export function AIServiceEditor({
                   onBlur={() => void saveFields()}
                   aria-describedby={`${id}-description`}
                   autoComplete="off"
-                  placeholder={copy.placeholder}
+                  placeholder={fieldExamples.extra_fields[field]}
                 />
                 <p id={`${id}-description`} className="text-xs text-muted-foreground">
                   {t(copy.description)}
@@ -587,7 +588,7 @@ export function AIServiceEditor({
               onBlur={() => void saveFields()}
               aria-describedby={describedBy(`${idPrefix}-extraHeaders`, errors.extraHeaders)}
               aria-invalid={Boolean(errors.extraHeaders)}
-              placeholder='{"HTTP-Referer":"https://example.com"}'
+              placeholder={fieldExamples.extra_headers}
             />,
             errors.extraHeaders,
           )}

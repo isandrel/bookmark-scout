@@ -175,6 +175,10 @@
         "message": "Delete folder",
         "description": "Delete folder tooltip"
     },
+    "popup_folderItemCount": {
+        "message": "($1)",
+        "description": "Number of items in a folder, shown after its name in the popup tree"
+    },
     "popup_deleteBookmark": {
         "message": "Delete bookmark",
         "description": "Delete bookmark tooltip"
@@ -2721,6 +2725,22 @@
         "message": "No limit",
         "description": "Slider value meaning unlimited"
     },
+    "settings_unitMilliseconds": {
+        "message": "ms",
+        "description": "Unit shown next to a setting in milliseconds"
+    },
+    "settings_unitPixels": {
+        "message": "px",
+        "description": "Unit shown next to a setting in pixels"
+    },
+    "settings_unitCharacters": {
+        "message": "chars",
+        "description": "Unit shown next to a setting counted in characters; keep it short"
+    },
+    "settings_unitKilobytes": {
+        "message": "KB",
+        "description": "Unit shown next to a setting in kilobytes"
+    },
     "settings_modified": {
         "message": "Modified",
         "description": "Badge for settings changed from default"
@@ -2800,6 +2820,10 @@
     "options_customModel": {
         "message": "Custom Model",
         "description": "Custom model label"
+    },
+    "options_customModelPlaceholder": {
+        "message": "model-id",
+        "description": "Placeholder of the custom model field: an example model id"
     },
     "options_customModelDescription": {
         "message": "Optional model id override for providers that allow arbitrary model names.",
@@ -3133,9 +3157,13 @@
         "message": "Close",
         "description": "Accessible label for close buttons on dialogs, panels, and notifications"
     },
+    "action_delete": {
+        "message": "Delete",
+        "description": "Button or menu item that deletes the item it belongs to"
+    },
     "toast_regionLabel": {
-        "message": "Notifications ({hotkey})",
-        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+        "message": "Notifications ($1)",
+        "description": "Accessible name of the notifications region; $1 is the key that moves focus to it"
     },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$ duplicate bookmark removed",
@@ -3957,6 +3985,14 @@
         "message": "Refresh",
         "description": "Refresh button label"
     },
+    "format_separator": {
+        "message": "·",
+        "description": "Separator between two short parts on one line, such as a provider and its model; spaces are added around it"
+    },
+    "format_copyName": {
+        "message": "$1 (copy)",
+        "description": "Name of a duplicated item; $1 is the original name"
+    },
     "tools_siteIcons": {
         "message": "Refresh Site Icons",
         "description": "Title for the Refresh Site Icons tool"
@@ -4368,10 +4404,6 @@
     "options_aiServiceDuplicate": {
         "message": "Duplicate",
         "description": "Menu action that copies a service"
-    },
-    "options_aiServiceDelete": {
-        "message": "Delete",
-        "description": "Menu action and confirm button that delete a service"
     },
     "options_aiServiceDeleteTitle": {
         "message": "Delete $1?",

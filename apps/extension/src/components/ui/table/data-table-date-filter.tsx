@@ -50,7 +50,7 @@ export function DataTableDateFilter({
             defaultMonth={value?.from}
             selected={value}
             onSelect={(range) => onChange(range?.from || range?.to ? range : undefined)}
-            numberOfMonths={2}
+            numberOfMonths={DATE_FILTER_MONTHS}
           />
         </PopoverContent>
       </Popover>

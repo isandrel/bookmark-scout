@@ -1,0 +1,15 @@
+# Example values shown as placeholders in the AI service editor (Options > AI). Read by
+# src/components/options/AIServiceEditor.tsx. A provider can show its own key format with
+# `api_key_placeholder` in config/ai/providers/<id>.toml; the endpoint placeholder is the
+# provider's own endpoint when it has one.
+
+api_key = "sk-..."
+base_url = "https://api.example.com/v1"
+extra_headers = '{"HTTP-Referer":"https://example.com"}'
+
+# Provider-specific connection fields, by field id (`extra_fields` in a provider file)
+[extra_fields]
+organization = "org-..."
+project = "proj_..."
+resourceName = "my-resource"
+apiVersion = "v1"

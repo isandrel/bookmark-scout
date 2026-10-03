@@ -66,7 +66,7 @@ function ActivityRow({ entry }: { entry: AIActivityEntry }) {
           <span className="min-w-0 flex-1 truncate">
             <span className="font-medium">{t(AI_ACTIVITY_SOURCES[entry.source])}</span>
             <span className="text-muted-foreground">
-              {' · '}
+              {` ${t('format_separator')} `}
               {entry.method} {url}
             </span>
           </span>
@@ -78,7 +78,7 @@ function ActivityRow({ entry }: { entry: AIActivityEntry }) {
           <div className="flex flex-wrap items-center justify-between gap-2 text-muted-foreground">
             <span>
               {formatDateTime(entry.at)}
-              {entry.model ? ` · ${entry.provider} / ${entry.model}` : ''}
+              {entry.model ? ` ${t('format_separator')} ${entry.provider} / ${entry.model}` : ''}
             </span>
             <Button variant="outline" size="sm" onClick={() => void copy()}>
               <ClipboardCopy className="h-4 w-4" />

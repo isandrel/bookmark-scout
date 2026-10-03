@@ -79,7 +79,7 @@ function PromptEditorDialog({
       if (!editor.id) await setActivePrompt(editor.task, saved.id);
       onClose();
     } catch (saveError) {
-      setError(saveError instanceof Error ? saveError.message : t('error_unknown'));
+      setError(getErrorMessage(saveError));
     } finally {
       setSaving(false);
     }
@@ -91,7 +91,7 @@ function PromptEditorDialog({
         <DialogHeader>
           <DialogTitle>
             {editor?.id ? t('prompt_editTitle') : t('prompt_newTitle')}
-            {task ? ` · ${t(task.nameKey)}` : ''}
+            {task ? ` ${t('format_separator')} ${t(task.nameKey)}` : ''}
           </DialogTitle>
           <DialogDescription>{t('prompt_editorDescription')}</DialogDescription>
         </DialogHeader>
@@ -192,7 +192,7 @@ function BuiltInPromptDialog({
         <DialogHeader>
           <DialogTitle>
             {t('prompt_builtInTitle')}
-            {task ? ` · ${t(task.nameKey)}` : ''}
+            {task ? ` ${t('format_separator')} ${t(task.nameKey)}` : ''}
           </DialogTitle>
           <DialogDescription>{t('prompt_builtInDescription')}</DialogDescription>
         </DialogHeader>
@@ -302,7 +302,7 @@ function PromptTaskRow({
                 aria-label={t('prompt_duplicateNamed', active.name)}
                 title={t('prompt_duplicateNamed', active.name)}
                 onClick={() =>
-                  startFrom({ name: t('options_aiServiceCopyName', active.name), system: active.system })
+                  startFrom({ name: t('format_copyName', active.name), system: active.system })
                 }
               >
                 <Copy className="h-4 w-4" />
@@ -402,7 +402,7 @@ export function PromptLibraryPanel() {
                 setDeleting(null);
               }}
             >
-              {t('options_aiServiceDelete')}
+              {t('action_delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

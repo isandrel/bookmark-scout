@@ -175,6 +175,10 @@
         "message": "폴더 삭제",
         "description": "Delete folder tooltip"
     },
+    "popup_folderItemCount": {
+        "message": "($1)",
+        "description": "Number of items in a folder, shown after its name in the popup tree"
+    },
     "popup_deleteBookmark": {
         "message": "북마크 삭제",
         "description": "Delete bookmark tooltip"
@@ -2721,6 +2725,22 @@
         "message": "제한 없음",
         "description": "Slider value meaning unlimited"
     },
+    "settings_unitMilliseconds": {
+        "message": "ms",
+        "description": "Unit shown next to a setting in milliseconds"
+    },
+    "settings_unitPixels": {
+        "message": "px",
+        "description": "Unit shown next to a setting in pixels"
+    },
+    "settings_unitCharacters": {
+        "message": "자",
+        "description": "Unit shown next to a setting counted in characters; keep it short"
+    },
+    "settings_unitKilobytes": {
+        "message": "KB",
+        "description": "Unit shown next to a setting in kilobytes"
+    },
     "settings_modified": {
         "message": "변경됨",
         "description": "Badge for settings changed from default"
@@ -2800,6 +2820,10 @@
     "options_customModel": {
         "message": "사용자 지정 모델",
         "description": "Custom model label"
+    },
+    "options_customModelPlaceholder": {
+        "message": "모델 ID",
+        "description": "Placeholder of the custom model field: an example model id"
     },
     "options_customModelDescription": {
         "message": "임의 모델 이름을 허용하는 제공자용 모델 ID(선택 사항)",
@@ -3133,9 +3157,13 @@
         "message": "닫기",
         "description": "Accessible label for close buttons on dialogs, panels, and notifications"
     },
+    "action_delete": {
+        "message": "삭제",
+        "description": "Button or menu item that deletes the item it belongs to"
+    },
     "toast_regionLabel": {
-        "message": "알림 ({hotkey})",
-        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+        "message": "알림 ($1)",
+        "description": "Accessible name of the notifications region; $1 is the key that moves focus to it"
     },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$개의 중복 북마크를 제거했습니다",
@@ -3957,6 +3985,14 @@
         "message": "새로 고침",
         "description": "Refresh button label"
     },
+    "format_separator": {
+        "message": "·",
+        "description": "Separator between two short parts on one line, such as a provider and its model; spaces are added around it"
+    },
+    "format_copyName": {
+        "message": "$1 (사본)",
+        "description": "Name of a duplicated item; $1 is the original name"
+    },
     "tools_siteIcons": {
         "message": "사이트 아이콘 새로 고침",
         "description": "Title for the Refresh Site Icons tool"
@@ -4368,10 +4404,6 @@
     "options_aiServiceDuplicate": {
         "message": "복제",
         "description": "Menu action that copies a service"
-    },
-    "options_aiServiceDelete": {
-        "message": "삭제",
-        "description": "Menu action and confirm button that delete a service"
     },
     "options_aiServiceDeleteTitle": {
         "message": "$1을(를) 삭제할까요?",

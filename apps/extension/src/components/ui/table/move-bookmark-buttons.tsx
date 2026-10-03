@@ -59,10 +59,9 @@ export function MoveBookmarkButtons({ onMove, position }: MoveBookmarkButtonsPro
           onClick={(e) => {
             e.stopPropagation();
             onMove(direction).catch((error: unknown) =>
-              toast({
-                title: `× ${t('toast_errorMovingItem')}`,
-                description: error instanceof Error ? error.message : t('error_unknown'),
-                variant: 'destructive',
+              toast.error({
+                title: t('toast_errorMovingItem'),
+                description: getErrorMessage(error),
               }),
             );
           }}
