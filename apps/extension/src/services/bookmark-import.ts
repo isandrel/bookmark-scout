@@ -50,7 +50,10 @@ function createImportIdGenerator(): () => string {
 
 /** Netscape files store dates as Unix seconds. */
 function parseNetscapeDate(value: string | null): number {
-  return value ? parseInt(value, 10) * MS_PER_SECOND : Date.now();
+  // Not a `cond ? x * MS_PER_SECOND : y` ternary: WXT's auto-import skips an identifier right
+  // before `:` as if it were an object key, which leaves it undefined at runtime.
+  if (!value) return Date.now();
+  return parseInt(value, 10) * MS_PER_SECOND;
 }
 
 /**
