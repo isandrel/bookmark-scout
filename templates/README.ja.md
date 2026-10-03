@@ -28,7 +28,7 @@
   <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
   <img src="https://img.shields.io/badge/Zustand-{{VERSION:zustand}}-764ABC?style=flat-square" alt="Zustand">
-  <img src="https://img.shields.io/badge/shadcn%2Fui-{{VERSION:shadcn-ui}}-000000?style=flat-square" alt="shadcn/ui">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn/ui">
   <img src="https://img.shields.io/badge/Nx-{{VERSION:nx}}-143055?style=flat-square&logo=nx&logoColor=white" alt="Nx">
   <img src="https://img.shields.io/badge/Bun-{{VERSION:bun}}-000000?style=flat-square&logo=bun&logoColor=white" alt="Bun">
   <img src="https://img.shields.io/badge/Biome-{{VERSION:@biomejs/biome}}-60A5FA?style=flat-square" alt="Biome">
@@ -149,9 +149,8 @@
 |                                                     テクノロジー                                                     | バージョン | 説明                        |
 | :------------------------------------------------------------------------------------------------------------------: | :--------: | --------------------------- |
 | ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white) |    {{VERSION:tailwindcss}}     | ユーティリティファーストCSS |
-|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |    {{VERSION:shadcn-ui}}     | Base UIベースコンポーネント   |
+|                  ![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge)                   |    —     | Base UIベースコンポーネント   |
 |       ![Base UI](https://img.shields.io/badge/Base_UI-161618?style=for-the-badge)        |    {{VERSION:@base-ui/react}}     | ヘッドレスUIプリミティブ    |
-| ![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)  |   {{VERSION:framer-motion}}    | アニメーションライブラリ    |
 |                      ![Lucide](https://img.shields.io/badge/Lucide-F56565?style=for-the-badge)                       |    {{VERSION:lucide-react}}     | アイコンライブラリ          |
 
 ### 状態＆データ
