@@ -3,7 +3,7 @@
  * request and response bodies. Requests carry bookmark titles and URLs, so recording is off by
  * default, the log stays on this device, and credentials are redacted before anything is stored.
  */
-import { useEffect, useState } from 'react';
+
 import { z } from 'zod';
 
 export type AIActivityEntry = {
@@ -38,16 +38,23 @@ const activityConfig = readConfig(
 export const MAX_AI_ACTIVITY_ENTRIES = activityConfig.max_entries;
 export const MAX_AI_ACTIVITY_BODY_CHARS = activityConfig.max_body_chars;
 
-export const aiActivityItem = storage.defineItem<AIActivityEntry[]>(
-  'local:bookmark-scout-ai-activity',
-  {
-    fallback: [],
-  },
-);
+/** Newest first; only this extension writes it, so entries are trusted as stored. */
+export const aiActivityValue = defineStoredValue<AIActivityEntry[]>({
+  key: STORAGE_KEYS.aiActivity,
+  parse: (raw) => (Array.isArray(raw) ? (raw as AIActivityEntry[]) : []),
+  empty: [],
+});
 
 /** Per device: whether AI requests are recorded. */
+export const aiActivityRecordingValue = defineStoredValue<boolean>({
+  key: STORAGE_KEYS.aiActivityRecording,
+  parse: (raw) => raw === true,
+  empty: false,
+});
+
+/** @deprecated Read `aiActivityRecordingValue`; kept until services/ai-activity.ts moves. */
 export const aiActivityRecordingItem = storage.defineItem<boolean>(
-  'local:bookmark-scout-ai-activity-recording',
+  STORAGE_KEYS.aiActivityRecording,
   { fallback: false },
 );
 
@@ -97,27 +104,19 @@ export function truncateBody(body: string | undefined): { body?: string; omitted
   };
 }
 
-/** Writes run one at a time, so calls that finish together never overwrite each other. */
-let writeQueue: Promise<void> = Promise.resolve();
-
-export function recordAIActivity(entry: Omit<AIActivityEntry, 'id'>): Promise<void> {
-  writeQueue = writeQueue
-    .then(async () => {
-      const entries = await aiActivityItem.getValue();
-      const next = [{ ...entry, id: crypto.randomUUID() }, ...entries].slice(
-        0,
-        MAX_AI_ACTIVITY_ENTRIES,
-      );
-      await aiActivityItem.setValue(next);
-    })
-    .catch(() => {
-      // A full or unavailable storage area must never break the AI call itself.
-    });
-  return writeQueue;
+/** Calls that finish together are queued, so none overwrites another. */
+export async function recordAIActivity(entry: Omit<AIActivityEntry, 'id'>): Promise<void> {
+  try {
+    await aiActivityValue.update((entries) =>
+      [{ ...entry, id: crypto.randomUUID() }, ...entries].slice(0, MAX_AI_ACTIVITY_ENTRIES),
+    );
+  } catch {
+    // A full or unavailable storage area must never break the AI call itself.
+  }
 }
 
-export async function clearAIActivity(): Promise<void> {
-  await aiActivityItem.setValue([]);
+export function clearAIActivity(): Promise<void> {
+  return aiActivityValue.clear();
 }
 
 /** Live log and recording switch for React, following calls made from any page. */
@@ -126,29 +125,13 @@ export function useAIActivity(): {
   recording: boolean;
   setRecording: (recording: boolean) => Promise<void>;
 } {
-  const [entries, setEntries] = useState<AIActivityEntry[]>([]);
-  const [recording, setRecordingState] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    void aiActivityItem.getValue().then((value) => active && setEntries(value));
-    void aiActivityRecordingItem.getValue().then((value) => active && setRecordingState(value));
-    const unwatchEntries = aiActivityItem.watch((value) => active && setEntries(value ?? []));
-    const unwatchRecording = aiActivityRecordingItem.watch(
-      (value) => active && setRecordingState(Boolean(value)),
-    );
-    return () => {
-      active = false;
-      unwatchEntries();
-      unwatchRecording();
-    };
-  }, []);
-
+  const { value: entries } = useStoredValue(aiActivityValue);
+  const { value: recording } = useStoredValue(aiActivityRecordingValue);
   return {
     entries,
     recording,
     setRecording: async (next: boolean) => {
-      await aiActivityRecordingItem.setValue(next);
+      await aiActivityRecordingValue.set(next);
       // Turning recording off also drops what was recorded.
       if (!next) await clearAIActivity();
     },

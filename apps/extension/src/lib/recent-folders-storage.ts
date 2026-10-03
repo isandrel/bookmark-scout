@@ -1,9 +1,8 @@
 /**
- * Recent folders storage backed by a WXT storage item in the local area.
- * Tracks folders where bookmarks were recently added for quick access.
+ * Folders where bookmarks were recently added, for quick access, in the local storage area.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
 export const RECENT_FOLDERS_STORAGE_LIMIT = SETTING_NUMBER_BOUNDS.recentFoldersMax.max;
@@ -13,11 +12,6 @@ export interface RecentFolder {
   title: string;
   lastUsed: number;
 }
-
-/** Entries are normalized on read, so malformed stored values are dropped. */
-export const recentFoldersItem = storage.defineItem<RecentFolder[]>(
-  'local:bookmark-scout-recent-folders',
-);
 
 function isRecentFolder(value: unknown): value is RecentFolder {
   if (!value || typeof value !== 'object') return false;
@@ -44,17 +38,23 @@ export function normalizeRecentFolders(value: unknown): RecentFolder[] {
   return folders.slice(0, RECENT_FOLDERS_STORAGE_LIMIT);
 }
 
+/** Most recent first; malformed stored entries are dropped on read. */
+export const recentFoldersValue = defineStoredValue<RecentFolder[]>({
+  key: STORAGE_KEYS.recentFolders,
+  parse: normalizeRecentFolders,
+  empty: [],
+});
+
+/** @deprecated Watch `recentFoldersValue` instead; kept until services/context-menu.ts moves. */
+export const recentFoldersItem = storage.defineItem<RecentFolder[]>(STORAGE_KEYS.recentFolders);
+
 async function readRecentFolders(): Promise<RecentFolder[]> {
   try {
-    return normalizeRecentFolders(await recentFoldersItem.getValue());
+    return await recentFoldersValue.get();
   } catch (error) {
     bookmarkLogger.error({ error }, 'Error reading recent folders');
     return [];
   }
-}
-
-async function writeRecentFolders(folders: RecentFolder[]): Promise<void> {
-  await recentFoldersItem.setValue(normalizeRecentFolders(folders));
 }
 
 /**
@@ -81,14 +81,14 @@ async function reconcileWithBookmarks(folders: RecentFolder[]): Promise<RecentFo
  * Pass `limit` to apply the user's recentFoldersMax setting.
  */
 export async function getRecentFolders(limit?: number): Promise<RecentFolder[]> {
-  const stored = await readRecentFolders();
-  const reconciled = await reconcileWithBookmarks(stored);
-  if (!isSameJson(reconciled, stored)) {
-    await writeRecentFolders(reconciled).catch((error) => {
-      bookmarkLogger.error({ error }, 'Error pruning recent folders');
-    });
+  let folders: RecentFolder[];
+  try {
+    folders = await recentFoldersValue.update(reconcileWithBookmarks);
+  } catch (error) {
+    bookmarkLogger.error({ error }, 'Error pruning recent folders');
+    folders = await readRecentFolders();
   }
-  return limit === undefined ? reconciled : reconciled.slice(0, Math.max(0, limit));
+  return limit === undefined ? folders : folders.slice(0, Math.max(0, limit));
 }
 
 /**
@@ -96,8 +96,7 @@ export async function getRecentFolders(limit?: number): Promise<RecentFolder[]> 
  * If folder already exists, moves it to the front and updates lastUsed.
  */
 export async function addRecentFolder(id: string, title: string): Promise<void> {
-  const current = await readRecentFolders();
-  await writeRecentFolders([
+  await recentFoldersValue.update((current) => [
     { id, title, lastUsed: Date.now() },
     ...current.filter((folder) => folder.id !== id),
   ]);
@@ -108,74 +107,35 @@ export async function addRecentFolder(id: string, title: string): Promise<void> 
  */
 export async function removeRecentFolders(ids: readonly string[]): Promise<void> {
   const removed = new Set(ids);
-  const current = await readRecentFolders();
-  const next = current.filter((folder) => !removed.has(folder.id));
-  if (next.length !== current.length) await writeRecentFolders(next);
-}
-
-export async function removeRecentFolder(id: string): Promise<void> {
-  await removeRecentFolders([id]);
+  await recentFoldersValue.update((current) => current.filter((folder) => !removed.has(folder.id)));
 }
 
 /**
  * Keep a recent folder's title in sync after a rename.
  */
 export async function updateRecentFolderTitle(id: string, title: string): Promise<void> {
-  const current = await readRecentFolders();
-  if (!current.some((folder) => folder.id === id && folder.title !== title)) return;
-  await writeRecentFolders(
+  await recentFoldersValue.update((current) =>
     current.map((folder) => (folder.id === id ? { ...folder, title } : folder)),
   );
 }
 
 /**
- * Clear all recent folders.
+ * Live recent folders for React. The list is pruned against the bookmark tree once on mount,
+ * and stays loading until then, so deleted folders never flash.
  */
-export async function clearRecentFolders(): Promise<void> {
-  await recentFoldersItem.removeValue();
-}
-
-/**
- * React hook for recent folders with live updates.
- */
-export function useRecentFolders(): {
-  recentFolders: RecentFolder[];
-  isLoading: boolean;
-  addFolder: (id: string, title: string) => Promise<void>;
-  removeFolder: (id: string) => Promise<void>;
-  clearAll: () => Promise<void>;
-} {
-  const [recentFolders, setRecentFolders] = useState<RecentFolder[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export function useRecentFolders(): { recentFolders: RecentFolder[]; isLoading: boolean } {
+  const { value: recentFolders, isLoading } = useStoredValue(recentFoldersValue);
+  const [isReconciled, setIsReconciled] = useState(false);
 
   useEffect(() => {
     let active = true;
-    getRecentFolders().then((folders) => {
-      if (!active) return;
-      setRecentFolders(folders);
-      setIsLoading(false);
-    });
-
-    const unwatch = recentFoldersItem.watch((folders) => {
-      setRecentFolders(normalizeRecentFolders(folders));
+    void getRecentFolders().finally(() => {
+      if (active) setIsReconciled(true);
     });
     return () => {
       active = false;
-      unwatch();
     };
   }, []);
 
-  const addFolder = useCallback(async (id: string, title: string) => {
-    await addRecentFolder(id, title);
-  }, []);
-
-  const removeFolder = useCallback(async (id: string) => {
-    await removeRecentFolder(id);
-  }, []);
-
-  const clearAll = useCallback(async () => {
-    await clearRecentFolders();
-  }, []);
-
-  return { recentFolders, isLoading, addFolder, removeFolder, clearAll };
+  return { recentFolders, isLoading: isLoading || !isReconciled };
 }

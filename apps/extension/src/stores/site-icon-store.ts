@@ -52,10 +52,7 @@ let siteIconsStarted = false;
 export function ensureSiteIconsLoaded(): void {
   if (siteIconsStarted) return;
   siteIconsStarted = true;
-  watchSiteIconCache(applySiteIconCache);
-  getSiteIconCache()
-    .then(applySiteIconCache)
-    .catch(() => useSiteIconStore.setState({ loaded: true }));
+  siteIconCacheValue.observe(applySiteIconCache);
 }
 
 /**

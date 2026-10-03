@@ -4,7 +4,6 @@ import { defaultSettings } from '@/lib/settings-schema';
 import {
   getSettings,
   importSettings,
-  SETTINGS_SYNC_KEY,
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
@@ -21,6 +20,9 @@ import {
   toUnlimitedSliderValue,
 } from '@/lib/settings-form';
 import { setLanguage } from '@/hooks/use-i18n';
+import { STORAGE_KEYS } from '@/lib/storage-keys';
+
+const SETTINGS_SYNC_KEY = STORAGE_KEYS.settings.replace(/^sync:/, '');
 
 async function readStored() {
   const result = await fakeBrowser.storage.sync.get(SETTINGS_SYNC_KEY);

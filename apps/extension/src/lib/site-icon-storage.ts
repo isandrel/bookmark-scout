@@ -4,8 +4,6 @@
  * The total size is capped by the `siteIconsMaxCacheKb` setting; the oldest icons go first.
  */
 
-export const SITE_ICON_STORAGE_KEY = 'bookmark-scout-site-icons';
-
 export type SiteIconEntry = {
   /** A base64 `data:image/...` URL. */
   icon: string;
@@ -14,10 +12,6 @@ export type SiteIconEntry = {
 };
 
 export type SiteIconCache = Record<string, SiteIconEntry>;
-
-export const siteIconCacheItem = storage.defineItem<SiteIconCache>(
-  `local:${SITE_ICON_STORAGE_KEY}`,
-);
 
 /** Raster and SVG icon types the refresh stores; anything else in storage is dropped on read. */
 const SITE_ICON_DATA_URL_PATTERN =
@@ -84,17 +78,16 @@ export function normalizeSiteIconCache(raw: unknown): SiteIconCache {
   return cache;
 }
 
-// Read-modify-write updates are serialized so a save and a clear in one page cannot interleave.
-let siteIconWriteQueue: Promise<unknown> = Promise.resolve();
+/** Valid entries only; an empty cache removes the key. */
+export const siteIconCacheValue = defineStoredValue<SiteIconCache>({
+  key: STORAGE_KEYS.siteIcons,
+  parse: normalizeSiteIconCache,
+  empty: {},
+  isEmpty: (cache) => Object.keys(cache).length === 0,
+});
 
-function withSiteIconWriteLock<T>(task: () => Promise<T>): Promise<T> {
-  const run = siteIconWriteQueue.then(task, task);
-  siteIconWriteQueue = run.catch(() => undefined);
-  return run;
-}
-
-export async function getSiteIconCache(): Promise<SiteIconCache> {
-  return normalizeSiteIconCache(await siteIconCacheItem.getValue());
+export function getSiteIconCache(): Promise<SiteIconCache> {
+  return siteIconCacheValue.get();
 }
 
 export type SiteIconSaveResult = {
@@ -104,40 +97,25 @@ export type SiteIconSaveResult = {
 };
 
 /** Stores icons by origin with the current time, then trims the cache to `maxCacheBytes`. */
-export function saveSiteIcons(
+export async function saveSiteIcons(
   icons: Record<string, string>,
   options: { maxCacheBytes: number; now?: number },
 ): Promise<SiteIconSaveResult> {
-  return withSiteIconWriteLock(async () => {
-    const fetchedAt = options.now ?? Date.now();
-    const cache = await getSiteIconCache();
-    const savedOrigins: string[] = [];
-    for (const [origin, icon] of Object.entries(icons)) {
-      if (getSiteIconOrigin(origin) !== origin || !isSiteIconDataUrl(icon)) continue;
-      cache[origin] = { icon, fetchedAt };
-      savedOrigins.push(origin);
-    }
+  const fetchedAt = options.now ?? Date.now();
+  const savedOrigins = Object.entries(icons)
+    .filter(([origin, icon]) => getSiteIconOrigin(origin) === origin && isSiteIconDataUrl(icon))
+    .map(([origin]) => origin);
+  let evicted = 0;
+  const stored = await siteIconCacheValue.update((current) => {
+    const cache = { ...current };
+    for (const origin of savedOrigins) cache[origin] = { icon: icons[origin], fetchedAt };
     const fitted = fitSiteIconCache(cache, options.maxCacheBytes);
-    await writeSiteIconCache(fitted.cache);
-    return {
-      saved: savedOrigins.filter((origin) => origin in fitted.cache).length,
-      evicted: fitted.evicted.length,
-    };
+    evicted = fitted.evicted.length;
+    return fitted.cache;
   });
+  return { saved: savedOrigins.filter((origin) => origin in stored).length, evicted };
 }
 
 export function clearSiteIconCache(): Promise<void> {
-  return withSiteIconWriteLock(() => siteIconCacheItem.removeValue());
-}
-
-export function watchSiteIconCache(callback: (cache: SiteIconCache) => void): () => void {
-  return siteIconCacheItem.watch((value) => callback(normalizeSiteIconCache(value)));
-}
-
-async function writeSiteIconCache(cache: SiteIconCache): Promise<void> {
-  if (Object.keys(cache).length === 0) {
-    await siteIconCacheItem.removeValue();
-    return;
-  }
-  await siteIconCacheItem.setValue(cache);
+  return siteIconCacheValue.clear();
 }

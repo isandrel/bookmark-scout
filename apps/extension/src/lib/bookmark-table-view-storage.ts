@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-export const BOOKMARK_TABLE_VIEW_STORAGE_KEY = 'bookmark-scout-table-view';
-
 // The saved view covers every column in the registry (components/ui/table/columns.tsx) except
 // filter-only ones, in registry order.
 const SAVED_COLUMNS = BOOKMARK_COLUMNS.filter((column) => !column.internal);
@@ -58,14 +56,6 @@ export type BookmarkTableView = {
   /** Widths of the columns the user resized, in pixels. */
   columnSizing: BookmarkColumnSizing;
 };
-
-/**
- * `version` above is the payload's own schema version, not a WXT item version, so no
- * `$` metadata key is written. Reads go through `parseBookmarkTableView`.
- */
-export const bookmarkTableViewItem = storage.defineItem<BookmarkTableView>(
-  `sync:${BOOKMARK_TABLE_VIEW_STORAGE_KEY}`,
-);
 
 export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
   version: 1,
@@ -134,9 +124,19 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
   };
 }
 
+/**
+ * `version` is the payload's own schema version, not a WXT item version, so no `$` metadata key
+ * is written. Synced, so the layout follows the user to other devices.
+ */
+export const bookmarkTableViewValue = defineStoredValue<BookmarkTableView>({
+  key: STORAGE_KEYS.tableView,
+  parse: parseBookmarkTableView,
+  empty: DEFAULT_BOOKMARK_TABLE_VIEW,
+});
+
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
   try {
-    return parseBookmarkTableView(await bookmarkTableViewItem.getValue());
+    return await bookmarkTableViewValue.get();
   } catch (error) {
     uiLogger.error({ error }, 'Error reading bookmark table view');
     return cloneDefaultTableView();
@@ -144,9 +144,9 @@ export async function getBookmarkTableView(): Promise<BookmarkTableView> {
 }
 
 export async function saveBookmarkTableView(view: BookmarkTableView): Promise<void> {
-  await bookmarkTableViewItem.setValue(parseBookmarkTableView(view));
+  await bookmarkTableViewValue.set(view);
 }
 
 export async function resetBookmarkTableView(): Promise<void> {
-  await saveBookmarkTableView(cloneDefaultTableView());
+  await bookmarkTableViewValue.set(cloneDefaultTableView());
 }

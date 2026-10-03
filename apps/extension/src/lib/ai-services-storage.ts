@@ -21,23 +21,24 @@ export type AIServicesState = {
   defaultServiceId?: string;
 };
 
-export const aiServicesItem = storage.defineItem<AIServicesState>(
-  'local:bookmark-scout-ai-services',
-);
+/** `null` until services are first saved; until then they derive from the older setup. */
+export const aiServicesValue = defineStoredValue<AIServicesState | null>({
+  key: STORAGE_KEYS.aiServices,
+  parse: (raw) =>
+    isPlainObject(raw) && Array.isArray(raw.services) ? (raw as AIServicesState) : null,
+  empty: null,
+});
 
 /**
  * The services a setup from before named services implies: one per provider with stored
  * credentials, plus the selected provider, which is the default. Nothing is written.
  */
 async function deriveLegacyServices(): Promise<AIServicesState> {
-  const [settings, configs] = await Promise.all([
-    getSettings(),
-    aiProviderConfigItem.getValue(),
-  ]);
+  const [settings, configs] = await Promise.all([getSettings(), aiProviderConfigValue.get()]);
   const providerIds = new Set(getAvailableProviders().map((provider) => provider.id));
   const ids = [
     settings.aiProvider,
-    ...Object.keys(configs ?? {}).filter((id) => id !== settings.aiProvider),
+    ...Object.keys(configs).filter((id) => id !== settings.aiProvider),
   ].filter((id) => providerIds.has(id));
   return {
     defaultServiceId: settings.aiProvider,
@@ -47,8 +48,8 @@ async function deriveLegacyServices(): Promise<AIServicesState> {
       provider,
       model:
         provider === settings.aiProvider
-          ? configs?.[provider]?.customModel?.trim() || settings.aiModel
-          : configs?.[provider]?.customModel?.trim() || getDefaultModel(provider),
+          ? configs[provider]?.customModel?.trim() || settings.aiModel
+          : configs[provider]?.customModel?.trim() || getDefaultModel(provider),
       enabled: true,
     })),
   };
@@ -64,9 +65,12 @@ function normalizeServices(state: AIServicesState): AIServicesState {
   return { services, defaultServiceId: defaultService?.id };
 }
 
-export async function getAIServicesState(): Promise<AIServicesState> {
-  const stored = await aiServicesItem.getValue();
+async function resolveServices(stored: AIServicesState | null): Promise<AIServicesState> {
   return normalizeServices(stored ?? (await deriveLegacyServices()));
+}
+
+export async function getAIServicesState(): Promise<AIServicesState> {
+  return resolveServices(await aiServicesValue.get());
 }
 
 export async function getDefaultAIService(): Promise<AIService | undefined> {
@@ -74,10 +78,13 @@ export async function getDefaultAIService(): Promise<AIService | undefined> {
   return state.services.find((service) => service.id === state.defaultServiceId);
 }
 
-async function updateServices(update: (state: AIServicesState) => AIServicesState) {
-  const next = normalizeServices(update(await getAIServicesState()));
-  await aiServicesItem.setValue(next);
-  return next;
+async function updateServices(
+  change: (state: AIServicesState) => AIServicesState,
+): Promise<AIServicesState> {
+  const next = await aiServicesValue.update(async (stored) =>
+    normalizeServices(change(await resolveServices(stored))),
+  );
+  return next ?? { services: [] };
 }
 
 /** A new id that no stored service or credential entry uses yet. */
@@ -89,10 +96,13 @@ function newServiceId(provider: AIProvider, taken: Set<string>): string {
 }
 
 export async function addAIService(provider: AIProvider, name?: string): Promise<AIService> {
-  const configs = (await aiProviderConfigItem.getValue()) ?? {};
+  const configs = await aiProviderConfigValue.get();
   let created: AIService | undefined;
   await updateServices((state) => {
-    const taken = new Set([...state.services.map((service) => service.id), ...Object.keys(configs)]);
+    const taken = new Set([
+      ...state.services.map((service) => service.id),
+      ...Object.keys(configs),
+    ]);
     created = {
       id: newServiceId(provider, taken),
       name: name?.trim() || getLocalizedProviderName(provider),
@@ -151,42 +161,35 @@ export async function deleteAIService(id: string): Promise<void> {
   await clearStoredAIProviderConfig(id);
 }
 
-/** Live services state for React, following changes from any page. */
+/**
+ * Live services state for React, following changes from any page. Before the first save,
+ * services derive from the synced provider and stored keys, so those are followed too. Only the
+ * latest refresh is applied, so a slow earlier read never replaces a newer one.
+ */
 export function useAIServices(): { state: AIServicesState; isLoading: boolean } {
   const [state, setState] = useState<AIServicesState>({ services: [] });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let latest = 0;
     let active = true;
-    let received = false;
     const refresh = () => {
+      const request = ++latest;
       void getAIServicesState().then((next) => {
-        if (active) setState(next);
+        if (!active || request !== latest) return;
+        setState(next);
+        setIsLoading(false);
       });
     };
-    void getAIServicesState().then((next) => {
-      if (!active) return;
-      if (!received) setState(next);
-      setIsLoading(false);
-    });
-    const unwatchServices = aiServicesItem.watch(() => {
-      received = true;
-      refresh();
-    });
-    // Before the first save, services are derived from the synced provider and stored keys.
-    const unwatchSettings = subscribeToSettings(() => {
-      received = true;
-      refresh();
-    });
-    const unwatchConfigs = aiProviderConfigItem.watch(() => {
-      received = true;
-      refresh();
-    });
+    refresh();
+    const unwatchers = [
+      aiServicesValue.watch(refresh),
+      subscribeToSettings(refresh),
+      aiProviderConfigValue.watch(refresh),
+    ];
     return () => {
       active = false;
-      unwatchServices();
-      unwatchSettings();
-      unwatchConfigs();
+      for (const unwatch of unwatchers) unwatch();
     };
   }, []);
 

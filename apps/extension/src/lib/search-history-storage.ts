@@ -10,40 +10,33 @@ export const MAX_SEARCH_HISTORY_ENTRIES = readConfig(
   z.strictObject({ max_entries: z.number().int().positive() }),
 ).max_entries;
 
-export const searchHistoryItem = storage.defineItem<string[]>(
-  'local:bookmark-scout-search-history',
-  { fallback: [] },
-);
+/** Non-blank queries, newest first. */
+export const searchHistoryValue = defineStoredValue<string[]>({
+  key: STORAGE_KEYS.searchHistory,
+  parse: (raw) =>
+    Array.isArray(raw)
+      ? raw.filter((entry): entry is string => typeof entry === 'string' && entry.trim() !== '')
+      : [],
+  empty: [],
+});
 
-function normalizeHistory(value: unknown): string[] {
-  return Array.isArray(value)
-    ? value.filter((entry): entry is string => typeof entry === 'string' && entry.trim() !== '')
-    : [];
-}
-
-export async function getSearchHistory(): Promise<string[]> {
-  return normalizeHistory(await searchHistoryItem.getValue());
+export function getSearchHistory(): Promise<string[]> {
+  return searchHistoryValue.get();
 }
 
 /** Move the query to the front, dropping case-insensitive duplicates and the oldest overflow. */
-export async function addSearchHistoryEntry(query: string): Promise<string[]> {
+export function addSearchHistoryEntry(query: string): Promise<string[]> {
   const entry = query.trim();
-  const current = await getSearchHistory();
-  if (!entry) return current;
-
+  if (!entry) return getSearchHistory();
   const key = entry.toLocaleLowerCase();
-  const updated = [
-    entry,
-    ...current.filter((existing) => existing.toLocaleLowerCase() !== key),
-  ].slice(0, MAX_SEARCH_HISTORY_ENTRIES);
-  await searchHistoryItem.setValue(updated);
-  return updated;
+  return searchHistoryValue.update((current) =>
+    [entry, ...current.filter((existing) => existing.toLocaleLowerCase() !== key)].slice(
+      0,
+      MAX_SEARCH_HISTORY_ENTRIES,
+    ),
+  );
 }
 
-export async function clearSearchHistory(): Promise<void> {
-  await searchHistoryItem.removeValue();
-}
-
-export function watchSearchHistory(callback: (history: string[]) => void): () => void {
-  return searchHistoryItem.watch((value) => callback(normalizeHistory(value)));
+export function clearSearchHistory(): Promise<void> {
+  return searchHistoryValue.clear();
 }
