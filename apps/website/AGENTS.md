@@ -63,6 +63,8 @@ Minimum for any substantive website change:
 
 Also run `nx run website:test:e2e` when the change touches pages, components, routing, or interaction. CI runs all three in the required `Website and Docs` job.
 
+Browser test files are named `tests/e2e/*.spec.mts` (as `.ts`, Playwright loads them as CommonJS and cannot import the ESM `@bookmark-scout/config`), and every test stubs analytics so no test reaches the real network. For screenshot reviews, deploy checks, and known static-export traps, follow the `website-docs-delivery` skill in `.agents/skills/`.
+
 Build verification is particularly important when the change touches:
 
 - localized pages

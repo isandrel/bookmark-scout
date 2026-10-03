@@ -104,6 +104,8 @@ Important subareas:
 
 ## Setup and common commands
 
+Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never use `npm`, `npx`, `yarn`, or `pnpm`, including in docs, scripts, and CI.
+
 ### Workspace-level commands
 
 - install dependencies: `bun install`
@@ -315,6 +317,7 @@ This repository includes AI-backed functionality and user bookmark data. Treat p
 - avoid logging sensitive data unless there is a strong existing pattern and a concrete debugging need
 - preserve explicit user control for enabling AI features and selecting providers
 - do not weaken existing consent, disclosure, or privacy messaging
+- when a change alters what data leaves the device, update `store/privacy-policy.md`, `store/privacy-disclosures.md`, `store/permissions.md`, the docs `privacy.mdx` and `permissions.mdx`, and `apps/website/messages/privacy/{en,ja,ko}.json` in the same change
 
 ## Documentation policy
 
@@ -344,6 +347,8 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 - do not overwrite or revert user changes you did not make
 - mention unrelated issues separately instead of folding them into the same task
 - prefer additive or local edits over broad rewrites when both solve the problem
+- keep temporary scripts, screenshots, logs, and one-off reports out of the repository; use the session scratchpad or `~/.cache/bookmark-scout-*`
+- put one-time infrastructure setup (hosting projects, domains, DNS, secrets) in a local, idempotent script with `--dry-run`, not in CI
 
 ## Default agent workflow
 
@@ -367,6 +372,9 @@ Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Sk
 - `extension-exploratory-qa`: hands-on QA of the built extension in a disposable Playwright profile, with a bundled runner script.
 - `repo-maintenance`: landing a PR queue under the strict up-to-date ruleset, Dependabot lockfile repair, red-main recovery, and branch cleanup, with bundled scripts.
 - `parallel-agent-delivery`: splitting work across parallel agents and landing auto-merged PRs safely.
+- `extension-ui-change`: restyling extension surfaces with the phased PR plan, token audits, Base UI quirks, visual checks, and expected settings UX.
+- `extension-ai-feature`: adding AI providers, tools, and limits end to end: config, storage, logging, disclosures, and provider gotchas.
+- `website-docs-delivery`: verifying, screenshot-reviewing, and deploying the website and docs, with next-intl, Playwright, and Cloudflare Pages traps.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 
