@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { BookmarkTreeNode } from '@/types';
 import {
-  applyMetadataTitles,
   fetchBookmarkMetadata,
   fetchHtmlPage,
   isConfirmedDeadLink,
@@ -13,7 +12,6 @@ import {
   requestWebHostAccess,
   WEB_HOST_ORIGINS,
 } from '@/services/web-host-access';
-import { installFakeBookmarks } from '../fake-bookmarks';
 
 const deadLinkOptions = {
   requestTimeoutMs: 1000,
@@ -439,29 +437,5 @@ describe('fetchHtmlPage', () => {
     await expect(
       fetchHtmlPage('https://e2e.invalid/', { ...options, timeoutMs: 50, fetch }),
     ).rejects.toThrow('Request timed out');
-  });
-});
-
-describe('applying metadata titles', () => {
-  beforeEach(() => {
-    fakeBrowser.reset();
-    vi.restoreAllMocks();
-  });
-
-  it('applies reviewed titles only to bookmarks unchanged since the scan', async () => {
-    const bookmarks = installFakeBookmarks([
-      { id: '1', title: 'Original', url: 'https://e2e.invalid/1' },
-      { id: '2', title: 'Renamed later', url: 'https://e2e.invalid/2' },
-    ]);
-    await expect(
-      applyMetadataTitles([
-        { id: '1', title: 'Original', suggestedTitle: 'Suggested' },
-        { id: '2', title: 'Original', suggestedTitle: 'Suggested' },
-        { id: '3', title: 'Deleted', suggestedTitle: 'Suggested' },
-        { id: '1', title: 'Original' },
-      ]),
-    ).resolves.toEqual({ updated: 1, skipped: 3, failed: 0 });
-    expect(bookmarks.get('1')?.title).toBe('Suggested');
-    expect(bookmarks.get('2')?.title).toBe('Renamed later');
   });
 });

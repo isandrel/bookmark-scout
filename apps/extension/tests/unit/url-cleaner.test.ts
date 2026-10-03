@@ -1,11 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeBrowser } from 'wxt/testing/fake-browser';
-import {
-  applyUrlCleanerPreviews,
-  cleanBookmarkUrl,
-  previewCleanUrls,
-} from '@/services/bookmark-tooling';
-import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { describe, expect, it } from 'vitest';
+import { cleanBookmarkUrl, previewCleanUrls } from '@/services/bookmark-tooling';
 
 const options = {
   removeHash: false,
@@ -57,40 +51,5 @@ describe('URL cleaner', () => {
       options,
     ).previews;
     expect(preview.title).toBe('');
-  });
-});
-
-describe('applying URL cleaner previews', () => {
-  const preview = (id: string, originalUrl: string) => ({
-    id,
-    title: id,
-    folderPath: '',
-    originalUrl,
-    cleanedUrl: `${originalUrl.split('?')[0]}`,
-    removedParams: ['utm_source'],
-  });
-
-  let bookmarks: FakeBookmarks;
-  beforeEach(() => {
-    fakeBrowser.reset();
-    vi.restoreAllMocks();
-    bookmarks = installFakeBookmarks([
-      { id: '1', title: '1', url: 'https://e2e.invalid/a?utm_source=x' },
-      { id: '2', title: '2', url: 'https://e2e.invalid/edited' },
-      { id: '4', title: '4', url: 'https://e2e.invalid/d?utm_source=x' },
-    ]);
-    bookmarks.fail.update.add('4');
-  });
-
-  it('updates unchanged bookmarks and skips edited or deleted ones', async () => {
-    const result = await applyUrlCleanerPreviews([
-      preview('1', 'https://e2e.invalid/a?utm_source=x'),
-      preview('2', 'https://e2e.invalid/b?utm_source=x'),
-      preview('3', 'https://e2e.invalid/c?utm_source=x'),
-      preview('4', 'https://e2e.invalid/d?utm_source=x'),
-    ]);
-    expect(result).toEqual({ updated: 1, skipped: 2, failed: 1 });
-    expect(bookmarks.get('1')?.url).toBe('https://e2e.invalid/a');
-    expect(bookmarks.get('2')?.url).toBe('https://e2e.invalid/edited');
   });
 });

@@ -221,11 +221,6 @@ export async function summarizeBookmarksWithAI(
   });
 }
 
-/** @deprecated Saves a file the same way as exports; call {@link downloadExport}. */
-export function downloadTextFile(content: string, filename: string, mimeType: string) {
-  downloadExport(content, filename, mimeType);
-}
-
 /** A bookmark's folder path in a context pack; bookmarks outside any folder read as the root. */
 function contextFolderLabel(bookmark: FlatBookmark): string {
   return bookmark.pathLabel || t('tools_rootFolder');

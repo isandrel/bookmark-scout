@@ -74,7 +74,6 @@ export type DuplicateRemovalResult = {
   /** Groups left untouched because their kept item was removed or no longer matches the group. */
   skippedGroups: number;
   failed: number;
-  snapshots: BookmarkDeletionSnapshot[];
   /** Restores the removed bookmarks, once. */
   undo: () => Promise<BookmarkChangesUndoResult>;
 };
@@ -298,27 +297,15 @@ export function previewCleanUrls(
   };
 }
 
-export type UrlCleanerApplyResult = {
-  updated: number;
-  /** Bookmarks deleted or edited since the preview; they are left untouched. */
-  skipped: number;
-  failed: number;
-};
-
-/** Applies previews only to bookmarks whose current URL still matches the previewed original. */
-export async function applyUrlCleanerPreviews(
-  previews: UrlCleanerPreview[],
-): Promise<UrlCleanerApplyResult> {
-  const { applied, skipped, failed } = await applyBookmarkChanges(
-    previews.map((preview) => ({
-      kind: 'update',
-      id: preview.id,
-      title: preview.title,
-      expect: { url: preview.originalUrl },
-      set: { url: preview.cleanedUrl },
-    })),
-  );
-  return { updated: applied, skipped, failed };
+/** The URL changes a reviewed preview makes, each only while the bookmark keeps its original URL. */
+export function getUrlCleanerChanges(previews: readonly UrlCleanerPreview[]): BookmarkChange[] {
+  return previews.map((preview) => ({
+    kind: 'update',
+    id: preview.id,
+    title: preview.title,
+    expect: { url: preview.originalUrl },
+    set: { url: preview.cleanedUrl },
+  }));
 }
 
 export function collectBookmarkStatistics(
@@ -467,19 +454,8 @@ export async function removeDuplicateExtras(
     skipped: skippedExtras + result.skipped,
     skippedGroups,
     failed: result.failed,
-    snapshots: result.deletions,
     undo: result.undo,
   };
-}
-
-/**
- * Restores bookmarks removed by {@link removeDuplicateExtras}.
- * @deprecated Call the removal result's `undo`.
- */
-export async function restoreDuplicateExtras(
-  snapshots: BookmarkDeletionSnapshot[],
-): Promise<{ restored: number; failed: number }> {
-  return restoreBookmarkDeletions(snapshots);
 }
 
 function buildDuplicateKey(
