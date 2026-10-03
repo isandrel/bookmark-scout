@@ -13,6 +13,8 @@ import {
 } from '@/lib/settings-storage';
 import {
   coerceSelectValue,
+  commitNumberSetting,
+  dropSettledErrors,
   formatListSetting,
   fromUnlimitedSliderValue,
   getChangedSettings,
@@ -249,6 +251,27 @@ describe('settings form helpers', () => {
     expect(toUnlimitedSliderValue(5)).toBe(5);
     expect(fromUnlimitedSliderValue(0)).toBe(-1);
     expect(fromUnlimitedSliderValue(3)).toBe(3);
+  });
+
+  it('commits -1 and an empty field as no limit, and clamps everything else', () => {
+    const unlimited = { min: 1, max: 100, unlimited: true };
+    expect(commitNumberSetting(-1, unlimited)).toBe(-1);
+    expect(commitNumberSetting(null, unlimited)).toBe(-1);
+    expect(commitNumberSetting(0, unlimited)).toBe(1);
+    expect(commitNumberSetting(1000, unlimited)).toBe(100);
+    expect(commitNumberSetting(42, unlimited)).toBe(42);
+    const limited = { min: 1, max: 10 };
+    expect(commitNumberSetting(-1, limited)).toBe(1);
+    expect(commitNumberSetting(null, limited)).toBeUndefined();
+    expect(commitNumberSetting(11, limited)).toBe(10);
+  });
+
+  it('drops save errors of fields that are back at their saved value', () => {
+    const errors = { defaultNewFolderName: 'empty', popupWidth: 'too wide' };
+    const values = { ...defaultSettings, popupWidth: 9999 };
+    expect(dropSettledErrors(errors, defaultSettings, values)).toEqual({ popupWidth: 'too wide' });
+    const unchanged = { popupWidth: 'too wide' };
+    expect(dropSettledErrors(unchanged, defaultSettings, values)).toBe(unchanged);
   });
 
   it('lists only changed fields', () => {

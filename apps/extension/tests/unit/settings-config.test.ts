@@ -40,6 +40,17 @@ describe('settings defined from config', () => {
     expect(untranslated).toEqual([]);
   });
 
+  it('shows a unit on every duration and length setting', () => {
+    const meta = getSettingsFieldMeta();
+    const missing = Object.keys(SETTING_NUMBER_BOUNDS).flatMap((key) => {
+      const { unit } = meta[key as keyof typeof meta];
+      if (key.endsWith('Ms') && unit !== 'ms') return [`${key}: ${unit}`];
+      if (key.endsWith('Length') && unit !== 'chars') return [`${key}: ${unit}`];
+      return [];
+    });
+    expect(missing).toEqual([]);
+  });
+
   it('reads the AI suggestion count from its own key, not the auto-tagging maximum', () => {
     const ai = readConfigToml('settings/ai.toml') as { max_recommendations: { default: number } };
     expect(defaultSettings.aiMaxRecommendations).toBe(ai.max_recommendations.default);

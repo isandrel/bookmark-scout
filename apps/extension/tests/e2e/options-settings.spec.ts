@@ -135,7 +135,7 @@ test('list settings accept commas and status codes are validated inline', async 
   await expect(settingRow(page, 'deadLinksSuccessStatuses').getByRole('alert')).toHaveText(
     'Enter HTTP status codes from 100 to 599, separated by commas.',
   );
-  await expect(page.getByTestId('settings-save-status')).toHaveText('1 settings not saved');
+  await expect(page.getByTestId('settings-save-status')).toHaveText('1 setting not saved');
 
   // An invalid field does not block other edits.
   await page.getByRole('checkbox', { name: /Remove Fragments/ }).click();
@@ -167,12 +167,40 @@ test('a setting error uses the dark-mode-safe error text color', async ({
   const alert = row.getByRole('alert');
   await expect(alert).toBeVisible();
   const status = page.getByTestId('settings-save-status');
-  await expect(status).toHaveText('1 settings not saved');
+  await expect(status).toHaveText('1 setting not saved');
 
   // The footer status uses the error text token; in dark mode the fill token is too dark for text.
   const color = (locator: typeof alert) =>
     locator.evaluate((element) => getComputedStyle(element).color);
   expect(await color(alert)).toBe(await color(status));
+});
+
+test('a save error clears once the field is reset or its saved value is typed again', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  const row = settingRow(page, 'defaultNewFolderName');
+  const input = row.getByRole('textbox');
+  const status = page.getByTestId('settings-save-status');
+  const saved = await input.inputValue();
+
+  await input.fill('');
+  await expect(row.getByRole('alert')).toHaveText("This field can't be empty.");
+  await expect(status).toHaveText('1 setting not saved');
+  await row.getByRole('button', { name: 'Reset Default Folder Name to default' }).click();
+  await expect(input).toHaveValue(saved);
+  await expect(row.getByRole('alert')).toHaveCount(0);
+  await expect(status).toBeEmpty();
+
+  await input.fill('');
+  await expect(status).toHaveText('1 setting not saved');
+  await input.fill(saved);
+  await expect(row.getByRole('alert')).toHaveCount(0);
+  await expect(status).toBeEmpty();
 });
 
 test('invalid text shows a localized inline error and is not silently saved', async ({
@@ -298,9 +326,14 @@ test('settings search shows matches from every tab and controls have accessible 
   await openOptions(page, extensionId);
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('status codes');
-  await expect(page.getByText('1 matching settings in all tabs')).toBeVisible();
+  await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Success Status Codes' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Maintenance' })).toBeVisible();
+
+  // The search covers every tab, so the empty state does not mention a category.
+  await page.getByRole('searchbox', { name: 'Search settings...' }).fill('zzzz-no-match');
+  await expect(page.getByText('0 matching settings in all tabs')).toBeVisible();
+  await expect(page.getByText('No settings match your search.', { exact: true })).toBeVisible();
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
@@ -516,7 +549,7 @@ test('settings search finds AI service fields, including ones under More setting
   ]) {
     await search.fill(query);
     await expect(page.getByRole('textbox', { name, exact: true })).toBeVisible();
-    await expect(page.getByText('1 matching settings in all tabs')).toBeVisible();
+    await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
   }
 });
 
@@ -544,6 +577,24 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await field.blur();
   await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(-1);
 
+  // -1 also means no limit, as the description says; other values below the minimum clamp.
+  await field.fill('7');
+  await field.blur();
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(7);
+  await field.fill('-1');
+  await field.blur();
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(-1);
+  await expect(field).toHaveValue('');
+  await expect(field).toHaveAttribute('placeholder', 'No limit');
+  await field.fill('0');
+  await field.blur();
+  await expect(field).toHaveValue('1');
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(1);
+  await field.fill('1000');
+  await field.blur();
+  await expect(field).toHaveValue('100');
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(100);
+
   // Values outside the range are clamped when the field is committed.
   const recent = page.getByRole('textbox', { name: 'Max Recommendations' });
   await recent.fill('99');
@@ -552,6 +603,24 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await expect
     .poll(async () => (await readSettings(extensionWorker)).aiMaxRecommendations)
     .toBe(10);
+});
+
+test('a long unit such as Japanese milliseconds stays on one line', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'ja' });
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: '詳細' }).click();
+  const unit = settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]');
+  await expect(unit).toHaveText('ミリ秒');
+  const lineHeight = await unit.evaluate((element) =>
+    Number.parseFloat(getComputedStyle(element).lineHeight),
+  );
+  await expect
+    .poll(() => unit.evaluate((element) => element.getBoundingClientRect().height))
+    .toBeLessThanOrEqual(lineHeight);
 });
 
 test('changing a switch back to its default keeps it under the pointer', async ({

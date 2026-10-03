@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
+        "message": "검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -2765,9 +2765,17 @@
         "message": "모든 탭에서 일치하는 설정 $1개",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "모든 탭에서 일치하는 설정 $1개",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "설정 $1개가 저장되지 않았습니다",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "설정 $1개가 저장되지 않았습니다",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "해당 폴더가 더 이상 없습니다. 가장 가까운 기존 폴더를 표시합니다.",

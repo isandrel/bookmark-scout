@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "No settings match your search in this category.",
+        "message": "No settings match your search.",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -2765,9 +2765,17 @@
         "message": "$1 matching settings in all tabs",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "$1 matching setting in all tabs",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "$1 settings not saved",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "$1 setting not saved",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "That folder doesn't exist anymore. Showing the nearest folder that does.",
