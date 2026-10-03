@@ -38,10 +38,21 @@ const activityConfig = readConfig(
 export const MAX_AI_ACTIVITY_ENTRIES = activityConfig.max_entries;
 export const MAX_AI_ACTIVITY_BODY_CHARS = activityConfig.max_body_chars;
 
-/** Newest first; only this extension writes it, so entries are trusted as stored. */
+/**
+ * Newest first; only this extension writes it. Headers are redacted again on every read, so an
+ * entry an older release stored with a credential never reaches the panel or its Copy output.
+ */
 export const aiActivityValue = defineStoredValue<AIActivityEntry[]>({
   key: STORAGE_KEYS.aiActivity,
-  parse: (raw) => (Array.isArray(raw) ? (raw as AIActivityEntry[]) : []),
+  parse: (raw) =>
+    Array.isArray(raw)
+      ? (raw as AIActivityEntry[]).map((entry) => ({
+          ...entry,
+          requestHeaders: redactHeaderRecord(
+            isPlainObject(entry.requestHeaders) ? entry.requestHeaders : {},
+          ),
+        }))
+      : [],
   empty: [],
 });
 
@@ -55,22 +66,42 @@ export const aiActivityRecordingValue = defineStoredValue<boolean>({
 /** Stored in place of a credential. */
 export const REDACTED_VALUE = '[redacted]';
 
-/** Header names that carry credentials; their values are never stored. */
-const SECRET_HEADERS = new Set([
-  'authorization',
-  'x-api-key',
-  'x-goog-api-key',
-  'api-key',
-  'proxy-authorization',
-  'cookie',
-]);
+/**
+ * Header names that look like they carry a credential (Authorization, X-Api-Key, X-Auth-Token,
+ * CF-Access-Client-Secret, Ocp-Apim-Subscription-Key, Cookie, session ids, signatures); their
+ * values are never stored.
+ */
+const CREDENTIAL_HEADER_PATTERN = /token|secret|key|auth|cookie|session|signature|password/i;
 
-export function redactHeaders(headers: HeadersInit | undefined): Record<string, string> {
-  const redacted: Record<string, string> = {};
+/**
+ * Headers with every credential value replaced: names that match the credential pattern, plus
+ * `secretNames` (any case), such as the extra headers the user configured, which can hold a
+ * credential under any name.
+ */
+export function redactHeaders(
+  headers: HeadersInit | undefined,
+  secretNames: Iterable<string> = [],
+): Record<string, string> {
+  const record: Record<string, string> = {};
   new Headers(headers).forEach((value, name) => {
-    redacted[name] = SECRET_HEADERS.has(name.toLowerCase()) ? REDACTED_VALUE : value;
+    record[name] = value;
   });
-  return redacted;
+  return redactHeaderRecord(record, secretNames);
+}
+
+function redactHeaderRecord(
+  headers: Record<string, unknown>,
+  secretNames: Iterable<string> = [],
+): Record<string, string> {
+  const secrets = new Set([...secretNames].map((name) => name.toLowerCase()));
+  return Object.fromEntries(
+    Object.entries(headers).map(([name, value]) => [
+      name,
+      secrets.has(name.toLowerCase()) || CREDENTIAL_HEADER_PATTERN.test(name)
+        ? REDACTED_VALUE
+        : String(value),
+    ]),
+  );
 }
 
 /** Query parameters some providers put API keys in; their values are never stored. */
