@@ -44,6 +44,7 @@ Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmark
 - **Settings must change behavior:** for each toggle, check the screen it controls. A turned-off section showing zeros, or a removed setting still shown in Options, is a bug.
 - **Stale scan results:** change bookmarks after a scan (move, delete, re-URL) and then run the destructive action. Cleaners must re-check current state before deleting.
 - **Network edge cases:** on the local server, add a stalled body, a never-ending non-HTML response, HEAD answered with 403 or 405, a redirect loop, and a refused port.
+- **User-reported UI bugs:** reproduce on current `main` before fixing. A user's screenshot once came from an installed build a version behind. Save before and after screenshots (popup and side panel, light and dark) under `~/.cache/bookmark-scout-qa/<topic>/`. For visual reviews of a UI change, see the `extension-ui-change` skill.
 - **Combined main:** after a batch of fix PRs lands, re-run the affected surfaces on the combined `main`. PRs that each pass CI can regress together (for example an empty templated toast).
 
 ## Scaling out

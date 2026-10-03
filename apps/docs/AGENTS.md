@@ -45,7 +45,9 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 - type and generated-source check: `bun run types:check` (in `apps/docs`)
 - build: `nx run docs:build`
 - verify the static export: `nx run docs:verify` (runs the build first) or `bun run verify` after a build
-- lint: `bunx biome check src scripts` (in `apps/docs`)
+- lint: `bunx biome check src scripts` (in `apps/docs`; CI does not run it, so run it locally)
+
+The docs app has no `project.json`. Nx targets come from `package.json` scripts plus its `"nx"` field; add new targets there. For screenshot reviews and deploy checks, follow the `website-docs-delivery` skill in `.agents/skills/`.
 
 ## Verification rules
 
