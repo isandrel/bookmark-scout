@@ -38,7 +38,7 @@ export function DataTableFacetedFilter<TData extends RowData, TValue>({
                 {selectedValues.size}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
-                {selectedValues.size > 2 ? (
+                {selectedValues.size > FACET_BADGES_MAX ? (
                   <Badge variant="secondary" className="rounded-sm px-1 font-normal">
                     {t('table_filterSelectedCount', String(selectedValues.size))}
                   </Badge>

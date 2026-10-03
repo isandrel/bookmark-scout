@@ -10,8 +10,6 @@ const DialogTrigger = DialogPrimitive.Trigger;
 
 const DialogPortal = DialogPrimitive.Portal;
 
-const DialogClose = DialogPrimitive.Close;
-
 const DialogOverlay = React.forwardRef<
   HTMLDivElement,
   Omit<DialogPrimitive.Backdrop.Props, 'className'> & { className?: string }
@@ -92,7 +90,6 @@ export {
   Dialog,
   DialogPortal,
   DialogOverlay,
-  DialogClose,
   DialogTrigger,
   DialogContent,
   DialogHeader,

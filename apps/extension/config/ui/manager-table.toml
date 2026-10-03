@@ -1,0 +1,33 @@
+# The bookmark manager table. Read by src/components/ui/table/table-config.ts.
+
+# Rows per page offered under the table; the saved view must use one of them
+page_sizes = [10, 20, 30, 40, 50]
+default_page_size = 10
+
+# Column widths are saved to sync storage, which limits writes per minute, so a width is saved
+# once resizing has stopped for this long, in milliseconds
+column_sizing_save_delay_ms = 400
+
+# Months shown side by side in the Date Added filter's calendar
+date_filter_months = 2
+
+# A filter button names up to this many selected options; more are shown as a count
+facet_badges_max = 2
+
+# Column widths in pixels, by column id (src/components/ui/table/columns.tsx). `size` is the
+# starting width and `min_size` the narrowest a user can resize it to; a `fixed` column never
+# resizes. `hide_below_width` hides the column while the table is narrower than that, in pixels.
+[columns]
+select = { fixed = 40 }
+type = { size = 120, min_size = 70 }
+id = { size = 100, min_size = 60 }
+parentId = { size = 180, min_size = 80 }
+folderPath = { size = 180, min_size = 80, hide_below_width = 960 }
+url = { size = 200, min_size = 80, hide_below_width = 880 }
+# Title fills the room the other columns leave until the user sizes it; `size` is the narrowest
+# it fills to
+title = { size = 160, min_size = 120 }
+dateAdded = { size = 190, min_size = 100 }
+dateGroupModified = { size = 190, min_size = 100 }
+unmodifiable = { size = 130, min_size = 80 }
+actions = { fixed = 68 }

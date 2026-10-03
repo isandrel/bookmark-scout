@@ -1,0 +1,4 @@
+# Tooltips. Read by src/components/ui/tooltip.tsx.
+
+# How long the pointer rests on a control before its tooltip opens, in milliseconds
+delay_ms = 200

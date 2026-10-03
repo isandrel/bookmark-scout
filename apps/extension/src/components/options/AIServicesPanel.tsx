@@ -26,14 +26,13 @@ function providerOptions(): ProviderOption[] {
 
 function ServiceLogo({ provider }: { provider: AIProvider }) {
   const url = getProviderLogoUrl(provider);
-  const mask = url ? `url("${url}") center / contain no-repeat` : undefined;
   return (
     <span
       aria-hidden="true"
       className="flex size-8 shrink-0 items-center justify-center rounded-md bg-muted text-foreground"
     >
-      {mask ? (
-        <span className="size-4 bg-current" style={{ mask, WebkitMask: mask }} />
+      {url ? (
+        <MaskIcon url={url} className="size-4" />
       ) : (
         <span className="text-xs font-semibold uppercase">{provider.slice(0, 2)}</span>
       )}
@@ -50,7 +49,7 @@ function AddServiceDialog({
   onOpenChange: (open: boolean) => void;
   onAdded: (service: AIService) => void;
 }) {
-  const [provider, setProvider] = useState<string>('openai');
+  const [provider, setProvider] = useState<string>(defaultSettings.aiProvider);
   const [name, setName] = useState('');
   const options = providerOptions();
 
@@ -131,7 +130,7 @@ function DeleteServiceDialog({
               onClose();
             }}
           >
-            {t('options_aiServiceDelete')}
+            {t('action_delete')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -201,7 +200,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                     </span>
                     <span className="block truncate text-xs text-muted-foreground">
                       {getLocalizedProviderName(service.provider)}
-                      {service.model ? ` · ${service.model}` : ''}
+                      {service.model ? ` ${t('format_separator')} ${service.model}` : ''}
                     </span>
                   </span>
                   <ChevronDown
@@ -252,7 +251,7 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                       onClick={() => setDeleting(service)}
                     >
                       <Trash2 className="h-4 w-4" />
-                      {t('options_aiServiceDelete')}
+                      {t('action_delete')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

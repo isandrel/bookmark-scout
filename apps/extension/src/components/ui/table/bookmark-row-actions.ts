@@ -63,7 +63,7 @@ export const BOOKMARK_ROW_ACTIONS: readonly BookmarkRowAction[] = [
   },
   {
     id: 'delete',
-    labelKey: 'table_delete',
+    labelKey: 'action_delete',
     icon: Trash2,
     isAvailable: isModifiableBookmark,
     isDestructive: true,

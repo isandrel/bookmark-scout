@@ -10,18 +10,10 @@ export type SearchableSelectOption = {
   iconUrl?: string;
 };
 
-/** Draws `url` as a mask so the icon follows the theme's text color; nothing from it runs. */
+/** The option's icon, or an empty slot of the same size so labels line up. */
 function OptionIcon({ url }: { url?: string }) {
   if (!url) return <span aria-hidden="true" className="size-4 shrink-0" />;
-  const mask = `url("${url}") center / contain no-repeat`;
-  return (
-    <span
-      aria-hidden="true"
-      data-slot="option-icon"
-      className="size-4 shrink-0 bg-current"
-      style={{ mask, WebkitMask: mask }}
-    />
-  );
+  return <MaskIcon url={url} data-slot="option-icon" className="size-4 shrink-0" />;
 }
 
 type OptionGroup = { value: string; items: SearchableSelectOption[] };
