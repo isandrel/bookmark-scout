@@ -67,23 +67,3 @@ export interface DragData {
   node: BookmarkTreeNode;
   instanceId: symbol;
 }
-
-/**
- * Bookmark item for table view (used in BookmarksPage).
- */
-export enum ItemTypeEnum {
-  Folder = 'folder',
-  Link = 'link',
-}
-
-export interface BookmarkTableItem {
-  type: ItemTypeEnum;
-  id: string;
-  parentId: string;
-  index?: number;
-  title: string;
-  url?: string;
-  dateAdded?: number;
-  dateGroupModified?: number;
-  unmodifiable?: 'managed';
-}

@@ -4397,10 +4397,6 @@
         "message": "API 키와 설정이 이 기기에서 삭제됩니다.",
         "description": "Body of the delete service confirmation"
     },
-    "options_aiServiceCopyName": {
-        "message": "$1 (사본)",
-        "description": "Name of a duplicated service; $1 is the original name"
-    },
     "options_aiServiceMore": {
         "message": "추가 설정",
         "description": "Toggle that shows Base URL, headers, and provider-specific fields"
@@ -4872,5 +4868,21 @@
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",
         "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
+    },
+    "page_title": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+    },
+    "page_sidePanel": {
+        "message": "사이드 패널",
+        "description": "Name of the side panel page, used in its tab title"
+    },
+    "page_bookmarks": {
+        "message": "북마크",
+        "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_options": {
+        "message": "옵션",
+        "description": "Name of the options page, used in its tab title"
     }
 }

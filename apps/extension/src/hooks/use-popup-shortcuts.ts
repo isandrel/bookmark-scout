@@ -24,7 +24,8 @@ export const POPUP_TREE_FOLDER_ATTRIBUTE = 'data-folder-trigger';
 export const POPUP_TREE_CAN_SAVE_ATTRIBUTE = 'data-can-save';
 const TREE_ROW_SELECTOR = `[${POPUP_TREE_ROW_ATTRIBUTE}]`;
 
-const POPUP_TREE_BINDINGS = {
+/** Tree navigation keys (the standard tree pattern), exported so hints can name them. */
+export const POPUP_TREE_BINDINGS = {
   next: [{ key: 'ArrowDown' }],
   previous: [{ key: 'ArrowUp' }],
   first: [{ key: 'Home' }],
@@ -34,7 +35,8 @@ const POPUP_TREE_BINDINGS = {
   activate: [{ key: 'Enter' }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
 
-const SEARCH_INPUT_BINDINGS = {
+/** Keys the search box handles itself: Escape clears or leaves it, ArrowDown enters the tree. */
+export const POPUP_SEARCH_INPUT_BINDINGS = {
   escape: [{ key: 'Escape' }],
   enterTree: [{ key: 'ArrowDown' }],
 } as const satisfies Record<string, readonly ShortcutBinding[]>;
@@ -76,7 +78,7 @@ export function usePopupShortcuts({ searchInputRef, onClearQuery }: PopupShortcu
 
       if (event.target === input) {
         // The search box handles its own history list first and marks those keys handled.
-        const action = findShortcut(event, SEARCH_INPUT_BINDINGS, { allowWhileTyping: true });
+        const action = findShortcut(event, POPUP_SEARCH_INPUT_BINDINGS, { allowWhileTyping: true });
         if (action === 'escape') {
           event.preventDefault();
           if (input.value) {
