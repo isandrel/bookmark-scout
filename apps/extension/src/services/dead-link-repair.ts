@@ -2,8 +2,12 @@
  * Reviewed repairs for dead-link scan results. Nothing changes until the user applies a plan;
  * each change is re-checked against the live bookmark first, and an applied batch can be undone.
  */
+import { z } from 'zod';
 
-const WAYBACK_PREFIX = 'https://web.archive.org/web/';
+const config = readConfig(
+  'network/dead-link-repair',
+  z.strictObject({ archive_url_prefix: z.string().url() }),
+);
 
 export type DeadLinkRepairChoice = 'keep' | 'delete' | 'redirect' | 'archive' | 'edit';
 
@@ -51,7 +55,7 @@ export function isDeadLinkRepairCandidate(item: Pick<DeadLinkResultItem, 'status
  * requested, so it can point at a page that was never archived.
  */
 export function buildArchiveUrl(url: string): string {
-  return `${WAYBACK_PREFIX}${url}`;
+  return `${config.archive_url_prefix}${url}`;
 }
 
 /** Replacement URLs must be web links; bookmarklets and browser pages cannot be chosen here. */

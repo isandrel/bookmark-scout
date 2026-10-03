@@ -4824,5 +4824,45 @@
     "prompt_varToday": {
         "message": "Today's date, as YYYY-MM-DD",
         "description": "Prompt variable description"
+    },
+    "error_bookmarksApiUnavailable": {
+        "message": "The browser's bookmarks API is not available.",
+        "description": "Error when the browser bookmarks API cannot be used"
+    },
+    "error_bookmarkNotFound": {
+        "message": "Bookmark not found.",
+        "description": "Error when a bookmark no longer exists"
+    },
+    "error_bookmarkNoParent": {
+        "message": "This item cannot be recovered because it has no parent folder.",
+        "description": "Error when an item without a parent folder cannot be deleted with undo"
+    },
+    "error_tabsApiUnavailable": {
+        "message": "The browser's tabs API is not available.",
+        "description": "Error when the browser tabs API cannot be used"
+    },
+    "error_noActiveTab": {
+        "message": "No active tab found.",
+        "description": "Error when no browser tab is active"
+    },
+    "error_readFileFailed": {
+        "message": "Failed to read the file.",
+        "description": "Import error when the chosen file cannot be read"
+    },
+    "ai_recommendationNoFolders": {
+        "message": "No existing folders found",
+        "description": "Reason shown for the only folder suggestion when there are no folders yet"
+    },
+    "ai_reorgPreviewRequired": {
+        "message": "Preview must be confirmed before applying reorganization changes",
+        "description": "Reorganization error when changes are applied before the preview is confirmed"
+    },
+    "ai_reorgTargetMissing": {
+        "message": "Cannot find the target folder for \"$1\"",
+        "description": "Reorganization error; $1 is the bookmark or folder title"
+    },
+    "ai_reorgChangeFailed": {
+        "message": "Could not change \"$1\": $2",
+        "description": "Reorganization error; $1 is the bookmark or folder title, $2 the browser's error"
     }
 }

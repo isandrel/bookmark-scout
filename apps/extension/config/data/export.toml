@@ -1,0 +1,6 @@
+# Export file names. Read by src/services/bookmark-export.ts. The prefix and the folder-name
+# length limit are user settings (config/settings/export.toml).
+
+# {prefix}: the filename prefix setting; {scope}: the exported folder's name, made safe for file
+# systems; {date}: the local date as YYYY-MM-DD; {extension}: the format's file extension
+filename_pattern = "{prefix}{scope}_{date}.{extension}"

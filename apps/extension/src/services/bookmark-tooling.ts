@@ -103,7 +103,7 @@ export function getScopedNodes(
     return folders;
   }
 
-  const target = findNodeById(folders, currentFolderId);
+  const target = findNode(folders, currentFolderId);
   return target ? [target] : [];
 }
 
@@ -116,7 +116,7 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
       result.push({
         node,
         folderPath,
-        pathLabel: folderPath.join(' / '),
+        pathLabel: folderPath.join(FOLDER_PATH_SEPARATOR),
         normalizedUrl,
         hostname: normalizedUrl ? new URL(normalizedUrl).hostname : undefined,
         depth,
@@ -129,7 +129,7 @@ export function flattenBookmarks(nodes: BookmarkTreeNode[]): FlatBookmark[] {
     const isBrowserRoot = !node.parentId && !node.title;
     const nextPath = isBrowserRoot
       ? folderPath
-      : [...folderPath, node.title || t('bookmarks_untitled')];
+      : [...folderPath, getBookmarkDisplayTitle(node.title)];
     node.children?.forEach((child) => {
       walk(child, nextPath, depth + 1);
     });
@@ -187,7 +187,10 @@ export function scanDuplicateBookmarks(
   const duplicateGroups = Array.from(groups.entries())
     .filter(([, items]) => items.length > 1)
     .slice(0, options.maxGroups)
-    .map(([key, items]) => ({ key, items: orderDuplicateGroup(items, options.keepRule ?? 'oldest') }));
+    .map(([key, items]) => ({
+      key,
+      items: orderDuplicateGroup(items, options.keepRule ?? defaultSettings.duplicatesKeepRule),
+    }));
 
   return {
     groups: duplicateGroups,
@@ -202,14 +205,6 @@ export function scanDuplicateBookmarks(
   };
 }
 
-function decodeQueryKey(rawKey: string): string {
-  try {
-    return decodeURIComponent(rawKey.replace(/\+/g, ' '));
-  } catch {
-    return rawKey;
-  }
-}
-
 /**
  * Removes tracking parameters by editing the raw query string, so kept parameters keep their
  * exact encoding (`%20` stays `%20`) and valueless parameters (`?amp`) stay valueless. Sorting
@@ -220,13 +215,7 @@ export function cleanBookmarkUrl(
   originalUrl: string,
   options: UrlCleanerOptions,
 ): { cleanedUrl: string; removedParams: string[] } | null {
-  let parsed: URL;
-  try {
-    parsed = new URL(originalUrl);
-  } catch {
-    return null;
-  }
-  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+  if (!isWebUrl(originalUrl)) {
     return null;
   }
 
@@ -245,7 +234,7 @@ export function cleanBookmarkUrl(
   for (const segment of segments) {
     if (!segment) continue;
     const separator = segment.indexOf('=');
-    const key = decodeQueryKey(separator >= 0 ? segment.slice(0, separator) : segment);
+    const key = decodeUrlComponent(separator >= 0 ? segment.slice(0, separator) : segment, true);
     const normalizedKey = key.toLowerCase();
 
     if (!preserveParams.has(normalizedKey) && removeParams.has(normalizedKey)) {
@@ -392,16 +381,24 @@ export function collectBookmarkStatistics(
     ...(options.includeDuplicates
       ? {
           duplicateCount: scanDuplicateBookmarks(nodes, {
-            strategy: 'normalized_url',
-            normalizeWww: true,
-            ignoreProtocol: true,
-            ignoreTrailingSlash: true,
+            ...STATISTICS_DUPLICATE_MATCH,
             maxGroups: Number.MAX_SAFE_INTEGER,
           }).totalDuplicates,
         }
       : {}),
   };
 }
+
+/**
+ * How Statistics counts duplicates: the loosest URL match, independent of the Duplicate Finder
+ * settings, so the count reads the same whatever that tool is set to.
+ */
+const STATISTICS_DUPLICATE_MATCH: DuplicateMatchOptions = {
+  strategy: 'normalized_url',
+  normalizeWww: true,
+  ignoreProtocol: true,
+  ignoreTrailingSlash: true,
+};
 
 /** Compares browser bookmark IDs numerically when both are numeric (Chrome), else as strings. */
 function compareBookmarkIds(a: string, b: string): number {
@@ -574,22 +571,8 @@ function normalizeDuplicateUrl(url: string | undefined, options: DuplicateMatchO
   }
 }
 
-function findNodeById(nodes: BookmarkTreeNode[], id: string): BookmarkTreeNode | null {
-  for (const node of nodes) {
-    if (node.id === id) {
-      return node;
-    }
-    if (node.children) {
-      const result = findNodeById(node.children, id);
-      if (result) {
-        return result;
-      }
-    }
-  }
-  return null;
-}
-
-function safeNormalizeUrl(url: string) {
+/** The URL as the parser normalizes it (lower-case scheme and host), or undefined if invalid. */
+export function safeNormalizeUrl(url: string): string | undefined {
   try {
     return new URL(url).toString();
   } catch {

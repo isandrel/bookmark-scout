@@ -111,19 +111,28 @@ export type ApplyReorganizationResult = {
   skipped: number;
 };
 
-/**
- * Get reorganization config from settings (no hardcoded values).
- */
-export function getReorgConfig(): ReorganizationConfig {
-  const settings = defaultSettings as Record<string, unknown>;
+/** Reorganization limits from the setting defaults; callers override them with stored values. */
+function getReorgConfig(): ReorganizationConfig {
   return {
-    maxCategories: (settings.aiMaxCategories as number) ?? 10,
-    minItemsPerFolder: (settings.aiMinItemsPerFolder as number) ?? 3,
-    maxItemsPerFolder: (settings.aiMaxItemsPerFolder as number) ?? 20,
-    dryRunFirst: (settings.reorganizationDryRunFirst as boolean) ?? true,
-    minConfidence: (settings.reorganizationMinConfidence as number) ?? 0.55,
-    batchSize: (settings.reorganizationBatchSize as number) ?? 100,
+    maxCategories: defaultSettings.aiMaxCategories,
+    minItemsPerFolder: defaultSettings.aiMinItemsPerFolder,
+    maxItemsPerFolder: defaultSettings.aiMaxItemsPerFolder,
+    dryRunFirst: defaultSettings.reorganizationDryRunFirst,
+    minConfidence: defaultSettings.reorganizationMinConfidence,
+    batchSize: defaultSettings.reorganizationBatchSize,
   };
+}
+
+/** Title an apply error names: the bookmark for a move, the folder for the other changes. */
+function operationLabel(op: ReorganizationOperation): string {
+  switch (op.type) {
+    case 'move':
+      return op.bookmarkTitle;
+    case 'create':
+      return op.name;
+    default:
+      return op.folderPath;
+  }
 }
 
 function resolveReorgConfig(config?: Partial<ReorganizationConfig>): ReorganizationConfig {
@@ -164,6 +173,9 @@ const reorganizationResultSchema = z.object({
 // Helper Functions
 // ============================================================================
 
+/** Joins folder names in the paths AI tools send and receive, e.g. "Bookmarks Bar/Work". */
+export const AI_FOLDER_PATH_SEPARATOR = '/';
+
 export function collectBookmarks(
   nodes: BookmarkTreeNode[],
   parentPath = '',
@@ -172,8 +184,8 @@ export function collectBookmarks(
   const result: BookmarkInfo[] = [];
   aiLogger.debug({ nodesCount: nodes.length }, 'collectBookmarks called');
   for (const node of nodes) {
-    const currentPath = parentPath && node.title 
-      ? `${parentPath}/${node.title}` 
+    const currentPath = parentPath && node.title
+      ? `${parentPath}${AI_FOLDER_PATH_SEPARATOR}${node.title}`
       : node.title || parentPath;
     if (node.url) {
       result.push({
@@ -202,8 +214,8 @@ export function collectFolders(
   const result: FolderInfo[] = [];
   for (const node of nodes) {
     if (node.url) continue;
-    const currentPath = parentPath && node.title 
-      ? `${parentPath}/${node.title}` 
+    const currentPath = parentPath && node.title
+      ? `${parentPath}${AI_FOLDER_PATH_SEPARATOR}${node.title}`
       : node.title || '';
     if (node.title) {
       const bookmarkCount = node.children?.filter(c => c.url).length ?? 0;
@@ -400,11 +412,14 @@ export async function applyReorganizationPlan(
   if (config.dryRunFirst && !previewConfirmed) {
     return {
       success: false,
-      errors: ['Preview must be confirmed before applying reorganization changes'],
+      errors: [t('ai_reorgPreviewRequired')],
       applied,
       skipped,
     };
   }
+
+  // New top-level folders go in the bookmarks bar, looked up once since its id differs by browser.
+  let bookmarksBarId: Promise<string | undefined> | undefined;
 
   // Preserve operation order while limiting each mutation batch to the configured size.
   for (const operationBatch of chunkItems(operations, config.batchSize)) {
@@ -412,59 +427,49 @@ export async function applyReorganizationPlan(
       try {
         switch (op.type) {
           case 'create': {
-            let parentId = '1'; // Default to Bookmarks Bar
-            if (op.parentPath) {
-              const existing = createdFolders.get(op.parentPath);
-              if (existing) parentId = existing;
+            bookmarksBarId ??= getBookmarksBarId();
+            const parentId =
+              (op.parentPath ? createdFolders.get(op.parentPath) : undefined) ??
+              (await bookmarksBarId);
+            if (!parentId) {
+              errors.push(t('ai_reorgTargetMissing', operationLabel(op)));
+              continue;
             }
-            const created = await browser.bookmarks.create({ parentId, title: op.name });
-            const fullPath = op.parentPath ? `${op.parentPath}/${op.name}` : op.name;
+            const created = await createBookmark({ parentId, title: op.name });
+            const fullPath = op.parentPath
+              ? `${op.parentPath}${AI_FOLDER_PATH_SEPARATOR}${op.name}`
+              : op.name;
             createdFolders.set(fullPath, created.id);
             break;
           }
           case 'delete': {
             if (op.folderId) {
-              await browser.bookmarks.removeTree(op.folderId);
+              await deleteBookmark(op.folderId);
             }
             break;
           }
           case 'rename': {
             if (op.folderId) {
-              await browser.bookmarks.update(op.folderId, { title: op.newName });
+              await updateBookmark(op.folderId, { title: op.newName });
             }
             break;
           }
           case 'move': {
-            let targetId = op.toFolderId;
+            const targetId = op.toFolderId || createdFolders.get(op.toFolderPath);
             if (!targetId) {
-              targetId = createdFolders.get(op.toFolderPath);
-            }
-            if (targetId) {
-              await browser.bookmarks.move(op.bookmarkId, { parentId: targetId });
-            } else {
-              errors.push(`Cannot find target folder for "${op.bookmarkTitle}"`);
+              errors.push(t('ai_reorgTargetMissing', operationLabel(op)));
               continue;
             }
+            await moveBookmark(op.bookmarkId, { parentId: targetId });
             break;
           }
         }
         applied += 1;
       } catch (err) {
-        errors.push(`${op.type} failed: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        errors.push(t('ai_reorgChangeFailed', [operationLabel(op), getErrorMessage(err)]));
       }
     }
   }
 
   return { success: errors.length === 0, errors, applied, skipped };
-}
-
-/**
- * Get plan summary for preview UI.
- */
-export function getPlanSummary(plan: ReorganizationPlan) {
-  const creates = plan.operations.filter(o => o.type === 'create').length;
-  const deletes = plan.operations.filter(o => o.type === 'delete').length;
-  const renames = plan.operations.filter(o => o.type === 'rename').length;
-  const moves = plan.operations.filter(o => o.type === 'move').length;
-  return { creates, deletes, renames, moves, total: plan.operations.length };
 }

@@ -216,14 +216,14 @@ export async function summarizeBookmarksWithAI(
   });
 }
 
+/** @deprecated Saves a file the same way as exports; call {@link downloadExport}. */
 export function downloadTextFile(content: string, filename: string, mimeType: string) {
-  const blob = new Blob([content], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(url);
+  downloadExport(content, filename, mimeType);
+}
+
+/** A bookmark's folder path in a context pack; bookmarks outside any folder read as the root. */
+function contextFolderLabel(bookmark: FlatBookmark): string {
+  return bookmark.pathLabel || t('tools_rootFolder');
 }
 
 function buildMarkdownContext(
@@ -235,12 +235,12 @@ function buildMarkdownContext(
 
   bookmarks.forEach((bookmark, index) => {
     const metadata = metadataByBookmarkId[bookmark.node.id];
-    lines.push(`## ${index + 1}. ${bookmark.node.title || 'Untitled'}`);
+    lines.push(`## ${index + 1}. ${getBookmarkDisplayTitle(bookmark.node.title)}`);
     if (bookmark.node.url) {
       lines.push(`- URL: ${bookmark.node.url}`);
     }
     if (options.includeFolderPath) {
-      lines.push(`- Folder: ${bookmark.pathLabel || 'Root'}`);
+      lines.push(`- Folder: ${contextFolderLabel(bookmark)}`);
     }
     if (options.includeDates && bookmark.node.dateAdded) {
       lines.push(`- Added: ${new Date(bookmark.node.dateAdded).toISOString()}`);
@@ -266,9 +266,11 @@ function buildXmlContext(
     .map((bookmark) => {
       const metadata = metadataByBookmarkId[bookmark.node.id];
       const fields = [
-        `<title>${escapeXml(bookmark.node.title || 'Untitled')}</title>`,
+        `<title>${escapeXml(getBookmarkDisplayTitle(bookmark.node.title))}</title>`,
         bookmark.node.url ? `<url>${escapeXml(bookmark.node.url)}</url>` : '',
-        options.includeFolderPath ? `<folder>${escapeXml(bookmark.pathLabel || 'Root')}</folder>` : '',
+        options.includeFolderPath
+          ? `<folder>${escapeXml(contextFolderLabel(bookmark))}</folder>`
+          : '',
         options.includeDates && bookmark.node.dateAdded
           ? `<dateAdded>${new Date(bookmark.node.dateAdded).toISOString()}</dateAdded>`
           : '',
@@ -295,11 +297,7 @@ function truncateForContext(text: string, maxLength: number) {
   return `${text.slice(0, maxLength - 3)}...`;
 }
 
+/** HTML escaping plus `'`, which XML attribute values may be quoted with. */
 function escapeXml(value: string) {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;');
+  return escapeHtml(value).replace(/'/g, '&apos;');
 }

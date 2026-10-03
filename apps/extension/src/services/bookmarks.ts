@@ -3,10 +3,21 @@
  * Centralizes all browser bookmarks API interactions.
  */
 
+import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
+const undoConfig = readConfig(
+  'bookmarks/undo',
+  z.strictObject({ deletion_undo_window_ms: z.number().int().positive() }),
+);
+
 /** How long a deletion can be undone from the popup or side panel. */
-export const BOOKMARK_DELETION_UNDO_WINDOW_MS = 10_000;
+export const BOOKMARK_DELETION_UNDO_WINDOW_MS = undoConfig.deletion_undo_window_ms;
+
+/** Chrome 134+ and Edge mark the bookmarks bar with this `folderType`. */
+const BOOKMARKS_BAR_FOLDER_TYPE = 'bookmarks-bar';
+/** Firefox's bookmarks toolbar has a fixed GUID and no `folderType`. */
+const FIREFOX_TOOLBAR_FOLDER_ID = 'toolbar_____';
 
 export type RecoverableBookmarkNode = {
   title: string;
@@ -83,18 +94,12 @@ function toRecoverableNode(
   };
 }
 
-function collectSubtreeIds(node: Browser.bookmarks.BookmarkTreeNode, ids: string[] = []): string[] {
-  ids.push(node.id);
-  for (const child of node.children ?? []) collectSubtreeIds(child, ids);
-  return ids;
-}
-
 /**
  * Gets the favicon URL for a given page URL using Chrome's favicon API.
  * @param pageUrl - The URL of the page to get the favicon for
- * @param size - The size of the favicon (default: 16)
+ * @param size - The size of the favicon (default: the favicon size setting's default)
  */
-export function getFaviconUrl(pageUrl: string, size = 16): string {
+export function getFaviconUrl(pageUrl: string, size: number = defaultSettings.faviconSize): string {
   // The _favicon path is a Chromium feature, so it is not one of the typed public paths.
   const url = new URL(browser.runtime.getURL('/_favicon/' as '/'));
   url.searchParams.set('pageUrl', pageUrl);
@@ -113,7 +118,7 @@ export function hasBrowserFaviconCache(): boolean {
  */
 export function getSiteIconUrl(
   pageUrl: string,
-  size = 16,
+  size: number = defaultSettings.faviconSize,
   cachedIcon?: string | null,
 ): string | null {
   if (cachedIcon) return cachedIcon;
@@ -140,7 +145,7 @@ function processNode(node: Browser.bookmarks.BookmarkTreeNode): BookmarkTreeNode
 }
 
 function requireBookmarksApi(): typeof browser.bookmarks {
-  if (!browser?.bookmarks) throw new Error('Chrome bookmarks API not available.');
+  if (!browser?.bookmarks) throw new Error(t('error_bookmarksApiUnavailable'));
   return browser.bookmarks;
 }
 
@@ -154,12 +159,35 @@ export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
 }
 
 /**
+ * The bookmarks bar (Firefox: bookmarks toolbar) among the permanent folders of `tree`, found by
+ * what each browser reports instead of a browser-specific id: Chrome's and Edge's `folderType`,
+ * then Firefox's toolbar GUID, then the first permanent folder, where older Chrome versions
+ * without `folderType` keep the bar.
+ */
+export function findBookmarksBarFolder<T extends Pick<BookmarkTreeNode, 'id' | 'parentId'> & {
+  folderType?: string;
+  children?: T[];
+}>(tree: readonly T[]): T | undefined {
+  const permanent = tree.filter(isBookmarkTreeRoot).flatMap((root) => root.children ?? []);
+  return (
+    permanent.find((folder) => folder.folderType === BOOKMARKS_BAR_FOLDER_TYPE) ??
+    permanent.find((folder) => folder.id === FIREFOX_TOOLBAR_FOLDER_ID) ??
+    permanent[0]
+  );
+}
+
+/** Id of the bookmarks bar in this browser, or undefined when the tree has no folders. */
+export async function getBookmarksBarId(): Promise<string | undefined> {
+  return findBookmarksBarFolder(await requireBookmarksApi().getTree())?.id;
+}
+
+/**
  * Gets a single bookmark by ID.
  * @param id - The bookmark ID
  */
 export async function getBookmark(id: string): Promise<Browser.bookmarks.BookmarkTreeNode> {
   const [result] = await requireBookmarksApi().get(id);
-  if (!result) throw new Error('Bookmark not found.');
+  if (!result) throw new Error(t('error_bookmarkNotFound'));
   return result;
 }
 
@@ -275,11 +303,11 @@ export async function captureBookmarkDeletion(
 ): Promise<BookmarkDeletionSnapshot> {
   const [node] = await getBookmarkSubTree(id);
   if (!node?.parentId) {
-    throw new Error('Bookmark cannot be recovered without its parent folder.');
+    throw new Error(t('error_bookmarkNoParent'));
   }
 
   // Tags and summaries are keyed by browser ID, which changes when the tree is recreated.
-  const metadataById = await getStoredBookmarkMetadata(collectSubtreeIds(node)).catch(
+  const metadataById = await getStoredBookmarkMetadata(subtreeIds(node)).catch(
     () => ({}) as StoredBookmarkMetadataById,
   );
   const expiresAt = now + BOOKMARK_DELETION_UNDO_WINDOW_MS;
@@ -326,20 +354,17 @@ export async function restoreBookmarkDeletion(
   now: number = Date.now(),
 ): Promise<Browser.bookmarks.BookmarkTreeNode> {
   if (now > snapshot.expiresAt) {
-    throw new BookmarkRestoreError('The undo window for this deletion has expired.', 'expired');
+    throw new BookmarkRestoreError(t('toast_restoreExpired'), 'expired');
   }
 
-  let siblings: Browser.bookmarks.BookmarkTreeNode[];
-  try {
-    const [parent] = await getBookmarkSubTree(snapshot.parentId);
-    if (!parent || parent.url) throw new Error('Original parent is not a folder.');
-    siblings = parent.children ?? [];
-  } catch {
-    throw new BookmarkRestoreError(
-      'The original parent folder no longer exists.',
-      'parent-missing',
-    );
+  const parent = await getBookmarkSubTree(snapshot.parentId).then(
+    ([node]) => node,
+    () => undefined,
+  );
+  if (!parent || parent.url) {
+    throw new BookmarkRestoreError(t('toast_restoreParentMissing'), 'parent-missing');
   }
+  const siblings = parent.children ?? [];
 
   // Other deletions may have been undone since, so place the item by the remembered order;
   // otherwise clamp the captured index so the browser accepts it.
@@ -382,7 +407,7 @@ export async function restoreBookmarkDeletion(
       }
     }
     throw new BookmarkRestoreError(
-      error instanceof Error ? error.message : 'Failed to restore bookmark deletion.',
+      getErrorMessage(error, 'toast_errorRestoringDeletion'),
       'restore-failed',
     );
   }
@@ -423,27 +448,8 @@ export async function openBookmarkInNewTab(url: string): Promise<void> {
  * Gets the current active tab information.
  */
 export async function getCurrentTab(): Promise<Browser.tabs.Tab> {
-  if (!browser?.tabs) throw new Error('Chrome tabs API not available.');
+  if (!browser?.tabs) throw new Error(t('error_tabsApiUnavailable'));
   const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-  if (!tab) throw new Error('No active tab found.');
+  if (!tab) throw new Error(t('error_noActiveTab'));
   return tab;
-}
-
-/**
- * Truncates a string to a specified length.
- * @param text - The text to truncate
- * @param length - Maximum length (default: 50)
- */
-export function truncate(text?: string, length = 50): string {
-  if (!text) return '';
-  return text.length > length ? `${text.slice(0, length)}...` : text;
-}
-
-/**
- * Formats a timestamp to a locale string.
- * @param timestamp - The timestamp in milliseconds
- */
-export function formatDate(timestamp?: number): string {
-  if (!timestamp) return '';
-  return new Date(timestamp).toLocaleString();
 }

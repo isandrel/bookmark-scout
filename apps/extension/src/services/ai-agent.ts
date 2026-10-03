@@ -16,6 +16,8 @@ const config = readConfig(
   z.strictObject({
     max_steps: z.number().int().positive(),
     max_bookmark_results: z.number().int().positive(),
+    search_title_weight: z.number().nonnegative(),
+    search_text_weight: z.number().nonnegative(),
     web_search_max_uses: z.number().int().positive(),
   }),
 );
@@ -44,8 +46,9 @@ export type BookmarkSearchHit = {
 };
 
 /**
- * Bookmarks that match the most query words, best first. Words in the title count double; the
- * URL, folder path, saved tags, and saved summary count once.
+ * Bookmarks that match the most query words, best first. Each word scores the configured title
+ * weight when in the title, plus the text weight when in the URL, folder path, saved tags, or
+ * saved summary.
  */
 export function searchBookmarksForAI(
   nodes: BookmarkTreeNode[],
@@ -64,7 +67,10 @@ export function searchBookmarksForAI(
         .join(' ')
         .toLowerCase();
       const score = words.reduce(
-        (total, word) => total + (title.includes(word) ? 2 : 0) + (rest.includes(word) ? 1 : 0),
+        (total, word) =>
+          total +
+          (title.includes(word) ? config.search_title_weight : 0) +
+          (rest.includes(word) ? config.search_text_weight : 0),
         0,
       );
       if (score === 0) return [];

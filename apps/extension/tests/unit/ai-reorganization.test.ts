@@ -1,8 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { BookmarkTreeNode } from '@/types';
+import { setLanguage } from '@/hooks/use-i18n';
 import type { AISettings } from '@/services/ai-client';
 import {
   applyReorganizationPlan,
+  type CreateFolderOp,
   generateReorganizationPlan,
   type MoveBookmarkOp,
   type ReorganizationPlan,
@@ -16,6 +18,7 @@ const mocks = vi.hoisted(() => ({
   removeTree: vi.fn(),
   update: vi.fn(),
   move: vi.fn(),
+  getTree: vi.fn(),
 }));
 
 vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
@@ -37,6 +40,7 @@ vi.mock('wxt/browser', () => ({
       removeTree: mocks.removeTree,
       update: mocks.update,
       move: mocks.move,
+      getTree: mocks.getTree,
     },
   },
 }));
@@ -81,7 +85,9 @@ function moveOperation(bookmarkId: string, confidence: number): MoveBookmarkOp {
   };
 }
 
-function planWithOperations(operations: MoveBookmarkOp[]): ReorganizationPlan {
+function planWithOperations(
+  operations: Array<MoveBookmarkOp | CreateFolderOp>,
+): ReorganizationPlan {
   return {
     operations,
     summary: 'Synthetic plan',
@@ -98,6 +104,7 @@ function planWithOperations(operations: MoveBookmarkOp[]): ReorganizationPlan {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  setLanguage('en');
   mocks.validateAISettings.mockImplementation((settings: AISettings) => {
     if (!settings.enabled) throw new Error('AI features are disabled');
   });
@@ -221,9 +228,33 @@ describe('AI reorganization safety settings', () => {
     expect(mocks.move.mock.calls.map(([bookmarkId]) => bookmarkId)).toEqual(['b1', 'b3', 'b4']);
     expect(result).toEqual({
       success: false,
-      errors: ['move failed: Synthetic move failure'],
+      errors: ['Could not change "Bookmark b3": Synthetic move failure'],
       applied: 2,
       skipped: 1,
     });
+  });
+
+  it('creates new top-level folders in the bookmarks bar the browser reports', async () => {
+    // Firefox: no folderType, fixed GUIDs, and the menu folder listed before the toolbar.
+    mocks.getTree.mockResolvedValue([
+      {
+        id: 'root________',
+        title: '',
+        children: [
+          { id: 'menu________', parentId: 'root________', title: 'Menu', children: [] },
+          { id: 'toolbar_____', parentId: 'root________', title: 'Toolbar', children: [] },
+        ],
+      },
+    ]);
+    const plan = planWithOperations([
+      { type: 'create', name: 'Reading', parentPath: '', description: 'Articles' },
+      { ...moveOperation('b1', 0.9), toFolderId: undefined, toFolderPath: 'Reading' },
+    ]);
+
+    const result = await applyReorganizationPlan(plan, { previewConfirmed: true });
+
+    expect(mocks.create).toHaveBeenCalledWith({ parentId: 'toolbar_____', title: 'Reading' });
+    expect(mocks.move).toHaveBeenCalledWith('b1', { parentId: 'created-folder' });
+    expect(result).toEqual({ success: true, errors: [], applied: 2, skipped: 0 });
   });
 });

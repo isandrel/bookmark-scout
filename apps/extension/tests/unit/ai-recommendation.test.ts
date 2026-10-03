@@ -1,8 +1,11 @@
+import { generateObject } from 'ai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { z } from 'zod';
 import {
   createRecommendedFolderBookmark,
   type RecommendedFolderError,
   type FolderRecommendation,
+  recommendFolders,
 } from '@/services/ai-recommendation';
 import { createBookmark, deleteBookmark, getBookmarkChildren } from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
@@ -11,6 +14,11 @@ vi.mock('@/services/bookmarks', () => ({
   createBookmark: vi.fn(),
   deleteBookmark: vi.fn(),
   getBookmarkChildren: vi.fn(),
+}));
+vi.mock('ai', () => ({ generateObject: vi.fn() }));
+vi.mock('@/services/ai-client', () => ({
+  createAIModel: vi.fn(() => ({})),
+  validateAISettings: vi.fn(),
 }));
 
 const bookmark = { title: 'Current page', url: 'https://e2e.invalid/current' };
@@ -39,6 +47,36 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.mocked(deleteBookmark).mockResolvedValue();
   vi.mocked(getBookmarkChildren).mockResolvedValue([]);
+});
+
+describe('[mocked provider contract] folder recommendations', () => {
+  const settings = { enabled: true, provider: 'openai', model: 'm', apiKey: 'synthetic-key' };
+  const folders = folderTree([{ id: 'news', parentId: 'bar', title: 'News', children: [] }]);
+  const suggestions = (count: number) =>
+    Array.from({ length: count }, (_, index) => ({
+      type: 'existing' as const,
+      folderPath: 'Bookmarks Bar/News',
+      parentPath: '',
+      confidence: 0.9 - index / 100,
+      reason: `Reason ${index}`,
+    }));
+
+  it.each([1, 3, 7, 10])('asks for and accepts %i recommendations', async (count) => {
+    vi.mocked(generateObject).mockResolvedValue({
+      object: { recommendations: suggestions(count) },
+    } as never);
+
+    const result = await recommendFolders(bookmark, folders, settings, count);
+
+    const [request] = vi.mocked(generateObject).mock.lastCall ?? [];
+    const { schema, system } = request as unknown as { schema: z.ZodType; system: string };
+    expect(schema.safeParse({ recommendations: suggestions(count) }).success).toBe(true);
+    expect(system).toContain(`Return exactly ${count} folder recommendations`);
+    // The rule once listed exactly three slots whatever the count.
+    expect(system).not.toContain('third best');
+    expect(result).toHaveLength(count);
+    expect(result[0].folderId).toBe('news');
+  });
 });
 
 describe('recommended folder bookmark creation', () => {
