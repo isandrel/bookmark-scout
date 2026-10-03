@@ -79,14 +79,36 @@ const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
   Escape: 'Esc',
 };
 
+/** Apple keyboards print symbols on these keys, and macOS menus name them the same way. */
+const APPLE_KEY_CAP_LABELS: Readonly<Record<string, string>> = {
+  ...KEY_CAP_LABELS,
+  Alt: '⌥',
+  Shift: '⇧',
+  Backspace: '⌫',
+  Delete: '⌦',
+};
+
+/** macOS, iPadOS, and iOS, where key caps use Apple's symbols. */
+function isApplePlatform(): boolean {
+  const nav = globalThis.navigator as
+    | (Navigator & { userAgentData?: { platform?: string } })
+    | undefined;
+  const platform = nav?.userAgentData?.platform || nav?.platform || '';
+  return /mac|iphone|ipad|ipod/i.test(platform);
+}
+
 /** Modifier names, which `aria-keyshortcuts` and printed key caps share. */
 function bindingModifiers(binding: ShortcutBinding): string[] {
   return [...(binding.alt ? ['Alt'] : []), ...(binding.shift ? ['Shift'] : [])];
 }
 
-/** The keys to press for `binding`, modifiers first, e.g. `['Alt', '↑']`. Not translated. */
+/**
+ * The keys to press for `binding`, modifiers first, as the keyboard prints them: `['Alt', '↑']`,
+ * or `['⌥', '↑']` on Apple platforms. Not translated.
+ */
 export function shortcutKeyCaps(binding: ShortcutBinding): string[] {
-  return [...bindingModifiers(binding), KEY_CAP_LABELS[binding.key] ?? binding.key];
+  const labels = isApplePlatform() ? APPLE_KEY_CAP_LABELS : KEY_CAP_LABELS;
+  return [...bindingModifiers(binding), binding.key].map((key) => labels[key] ?? key);
 }
 
 /** An `aria-keyshortcuts` value for the bindings, e.g. `Alt+ArrowUp Backspace`. */

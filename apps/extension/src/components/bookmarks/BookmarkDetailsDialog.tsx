@@ -97,7 +97,7 @@ function BookmarkDetailsContent({
     setMetadataSaving(true);
     setMetadataStatus('');
     try {
-      const tags = parseListSetting(tagsText, 'string');
+      const tags = parseBookmarkTags(tagsText);
       await saveBookmarkMetadata(bookmark.id, { tags, summary });
       const stored = await getStoredBookmarkMetadata([bookmark.id]);
       setTagsText(formatListSetting(stored[bookmark.id]?.tags ?? []));

@@ -1,5 +1,15 @@
 import { type FormEvent, useState } from 'react';
 
+/** Whether `url` is a complete URL with a scheme, such as `https://example.com/`. */
+function isAbsoluteUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 type BookmarkEditDialogProps = {
   bookmark: Bookmark | null;
   onClose: () => void;
@@ -18,6 +28,7 @@ function BookmarkEditForm({
   const isLink = bookmark.type === ItemTypeEnum.Link;
   const [title, setTitle] = useState(bookmark.title);
   const [url, setUrl] = useState(bookmark.url ?? '');
+  const [titleError, setTitleError] = useState('');
   const [urlError, setUrlError] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -25,12 +36,21 @@ function BookmarkEditForm({
     event.preventDefault();
     const trimmedUrl = url.trim();
     const trimmedTitle = title.trim();
+    // Bookmarks may be untitled, as in the browser; a folder needs a name to be found again.
+    if (!isLink && !trimmedTitle) {
+      setTitleError(t('bookmarks_editFolderNameRequired'));
+      return;
+    }
     if (isLink && !trimmedUrl) {
       setUrlError(t('bookmarks_editUrlRequired'));
       return;
     }
     // Only a new URL is checked, so existing bookmarklets can still be renamed.
     const urlChanged = isLink && trimmedUrl !== bookmark.url;
+    if (urlChanged && !isAbsoluteUrl(trimmedUrl)) {
+      setUrlError(t('bookmarks_editUrlInvalid'));
+      return;
+    }
     const blocked = urlChanged ? getBlockedEditUrl(trimmedUrl) : null;
     if (blocked) {
       setUrlError(
@@ -58,14 +78,26 @@ function BookmarkEditForm({
   };
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    // The checks above show their own messages in the page language, so the browser's
+    // built-in URL validation (which only says "Please enter a URL.") stays off.
+    <form className="space-y-4" onSubmit={handleSubmit} noValidate>
       <div className="space-y-2">
         <Label htmlFor="bookmark-edit-title">{t('bookmarks_editName')}</Label>
         <Input
           id="bookmark-edit-title"
           value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          aria-invalid={titleError ? true : undefined}
+          aria-describedby={titleError ? 'bookmark-edit-title-error' : undefined}
+          onChange={(event) => {
+            setTitle(event.target.value);
+            setTitleError('');
+          }}
         />
+        {titleError && (
+          <p id="bookmark-edit-title-error" className="text-sm text-destructive-text">
+            {titleError}
+          </p>
+        )}
       </div>
       {isLink && (
         <div className="space-y-2">

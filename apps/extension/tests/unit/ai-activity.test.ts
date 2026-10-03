@@ -12,6 +12,7 @@ import {
   redactUrl,
   truncateBody,
 } from '@/lib/ai-activity-storage';
+import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
 import { AI_ACTIVITY_SOURCES, createLoggingFetch } from '@/services/ai-activity';
 import { readConfigToml } from '../config-files';
@@ -58,6 +59,39 @@ describe('AI activity redaction', () => {
       'x-goog-api-key': REDACTED_VALUE,
       'content-type': 'application/json',
     });
+  });
+
+  it('redacts every header whose name looks like a credential, and the names it is given', () => {
+    const credentials = [
+      'X-Auth-Token',
+      'CF-Access-Client-Secret',
+      'Ocp-Apim-Subscription-Key',
+      'Proxy-Authorization',
+      'Cookie',
+      'X-Session-Id',
+      'X-Amz-Signature',
+      'X-Password',
+    ];
+    const redacted = redactHeaders(
+      {
+        ...Object.fromEntries(credentials.map((name) => [name, 'secret-value'])),
+        'X-Tenant': 'tenant-secret',
+        Accept: 'application/json',
+      },
+      ['x-TENANT'],
+    );
+    expect(JSON.stringify(redacted)).not.toMatch(/secret-value|tenant-secret/);
+    expect(redacted).toMatchObject({ 'x-tenant': REDACTED_VALUE, accept: 'application/json' });
+  });
+
+  it('redacts credentials in entries an older release stored', async () => {
+    await fakeBrowser.storage.local.set({
+      'bookmark-scout-ai-activity': [
+        { ...entry(1), id: 'old', requestHeaders: { 'x-auth-token': 'old-secret', accept: '*/*' } },
+      ],
+    });
+    const [stored] = await aiActivityValue.get();
+    expect(stored?.requestHeaders).toEqual({ 'x-auth-token': REDACTED_VALUE, accept: '*/*' });
   });
 
   it('removes API keys from the query string', () => {
@@ -132,6 +166,24 @@ describe('createLoggingFetch', () => {
       requestHeaders: { authorization: REDACTED_VALUE },
     });
     expect(JSON.stringify(recorded)).not.toContain('secret-key');
+  });
+
+  it('never records the values of extra headers a service configured, whatever their name', async () => {
+    await aiActivityRecordingValue.set(true);
+    await saveStoredAIProviderConfig('service-1', {
+      extraHeaders: '{"X-Tenant":"tenant-secret","X-Title":"Bookmark Scout"}',
+    });
+    const fetch = createLoggingFetch({ source: 'verifyService', provider: 'custom' });
+    await fetch('https://api.example.invalid/v1/models', {
+      headers: { 'X-Tenant': 'tenant-secret', 'X-Title': 'Bookmark Scout', Accept: 'text/plain' },
+    });
+    await vi.waitFor(async () => expect(await aiActivityValue.get()).toHaveLength(1));
+    const [recorded] = await aiActivityValue.get();
+    expect(recorded?.requestHeaders).toEqual({
+      accept: 'text/plain',
+      'x-tenant': REDACTED_VALUE,
+      'x-title': REDACTED_VALUE,
+    });
   });
 
   it('records a failed call and still throws it to the caller', async () => {
