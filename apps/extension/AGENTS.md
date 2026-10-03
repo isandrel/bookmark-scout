@@ -161,7 +161,8 @@ Use these before writing a new helper; each replaced several copies. Their file 
 - **Bookmark changes:** `applyBookmarkChanges` (`src/services/bookmarks.ts`) applies reviewed edits and removals, skips items that changed since the preview, and returns counts plus a single-use `undo()`.
 - **Network:** `fetchHtmlPage` (`src/services/bookmark-network-tools.ts`) for any page fetch with a timeout and byte cap.
 - **AI prompts and tools:** `getPromptVariables`/`buildPrompt` (`src/services/prompt-config.ts`) for both preview and runtime; `getToolOptions`/`getToolScopeCapability` (`src/services/tool-options.ts`).
-- **UI:** `toast.success`/`toast.error`/`toast.withUndo` (`src/hooks/use-toast.ts`), `getErrorMessage` (`src/hooks/use-i18n.ts`), `Field`, `ConfirmDialog`, `MaskIcon` (`src/components/ui/`), `OptionsPanel`, `mountExtensionPage` for entry pages, `SHORTCUT_BINDINGS` with `shortcutKeyCaps` for any shortcut shown in the UI.
+- **Deleting bookmarks:** `useBookmarkDeletion` / `deleteBookmarksWithUndo` (`src/hooks/use-bookmark-deletion.tsx`) with `BookmarkDeleteDialog`, used by both the popup and the manager.
+- **UI:** `toast.success`/`toast.error`/`toast.withUndo` and `quoteToastItemTitle` (`src/hooks/use-toast.ts`), `getErrorMessage`, `formatPercent`, `formatList` (`src/hooks/use-i18n.ts`), `Field`, `ConfirmDialog`, `MaskIcon` (`src/components/ui/`), `OptionsPanel`, `mountExtensionPage` for entry pages, `SHORTCUT_BINDINGS` with `shortcutKeyCaps` for any shortcut shown in the UI.
 - **Small helpers:** `src/lib/bookmark-tree.ts` (tree walks, display titles, the bookmarks-bar folder lives in `services/bookmarks.ts`), `src/lib/units.ts`, `isPlainObject`/`isSameJson` in `src/lib/utils.ts`, `truncateText`.
 
 ### Bookmark operations
