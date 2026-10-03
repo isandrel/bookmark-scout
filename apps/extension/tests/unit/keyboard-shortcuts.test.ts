@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ariaKeyShortcuts,
   canHandleShortcut,
@@ -13,6 +13,10 @@ import {
   type ShortcutKeyEvent,
 } from '@/lib/keyboard-shortcuts';
 import { readConfigToml } from '../config-files';
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 const noOverlay = { querySelector: () => null };
 const withOverlay = { querySelector: () => ({}) as Element };
@@ -184,6 +188,7 @@ describe('configured bindings', () => {
   });
 
   it('print as key caps and aria-keyshortcuts', () => {
+    vi.stubGlobal('navigator', { platform: 'Win32' });
     expect(SHORTCUT_BINDINGS.manager.parentFolder.map(shortcutKeyCaps)).toEqual([
       ['Alt', '↑'],
       ['Backspace'],
@@ -192,5 +197,20 @@ describe('configured bindings', () => {
     expect(shortcutKeyCaps({ key: 'Enter' })).toEqual(['↵']);
     expect(ariaKeyShortcuts(SHORTCUT_BINDINGS.manager.parentFolder)).toBe('Alt+ArrowUp Backspace');
     expect(ariaKeyShortcuts([{ key: '?' }])).toBe('?');
+  });
+
+  it.each([
+    ['macOS', { platform: 'MacIntel' }],
+    ['macOS with client hints', { platform: '', userAgentData: { platform: 'macOS' } }],
+    ['iPadOS', { platform: 'iPad' }],
+  ])('print Apple symbols on %s, while aria-keyshortcuts keeps key names', (_, navigator) => {
+    vi.stubGlobal('navigator', navigator);
+    expect(SHORTCUT_BINDINGS.manager.parentFolder.map(shortcutKeyCaps)).toEqual([
+      ['⌥', '↑'],
+      ['⌫'],
+    ]);
+    expect(shortcutKeyCaps({ key: 'k', alt: true, shift: true })).toEqual(['⌥', '⇧', 'k']);
+    expect(shortcutKeyCaps({ key: 'Escape' })).toEqual(['Esc']);
+    expect(ariaKeyShortcuts(SHORTCUT_BINDINGS.manager.parentFolder)).toBe('Alt+ArrowUp Backspace');
   });
 });

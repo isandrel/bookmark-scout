@@ -308,7 +308,7 @@ describe('context menu recent folders', () => {
     vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
     await contextMenu.initializeContextMenu();
     expect(menus.get('bookmark-scout::root')?.title).not.toBe('Save bookmark to...');
-    expect(menus.get('bookmark-scout::category::recent')?.title).toBe('📁 最近のフォルダー');
+    expect(menus.get('bookmark-scout::category::recent')?.title).toBe('📁 最近のフォルダ');
   });
 });
 

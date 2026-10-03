@@ -109,14 +109,6 @@ function PopupPage() {
   const autoTriggerExecutedRef = useRef(false);
   const deletion = useBookmarkDeletion({ onChanged: refreshFolders });
 
-  // A confirmation for an item deleted elsewhere (manager, sync) closes instead of failing.
-  const { pendingDeletion, cancelDeletion } = deletion;
-  useEffect(() => {
-    if (!pendingDeletion || isLoading) return;
-    const targets = pendingDeletion.items ?? [pendingDeletion];
-    if (targets.every((target) => !findNode(folders, target.id))) cancelDeletion();
-  }, [cancelDeletion, folders, isLoading, pendingDeletion]);
-
   // Debounce search query using configurable delay
   const debouncedQuery = useDebounce(query, searchDebounceMs);
   useEffect(() => {
@@ -464,6 +456,8 @@ function PopupPage() {
         id: node.id,
         title: node.title,
         type,
+        // A bookmark whose URL changed since it was chosen is skipped, not deleted.
+        ...(node.url !== undefined ? { url: node.url } : {}),
         onDone: restoreFocusAfterRender,
       });
     },

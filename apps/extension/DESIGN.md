@@ -186,13 +186,15 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`row-actions`**: icon buttons (24px) overlaid at the row's end on the row's current fill, shown on hover and focus-within, and never reserving width when hidden. Each one has an `aria-label` and a tooltip.
 
-**`keycap`**: shortcut glyphs in a 20px sunken box with a 1px line. Arrow and Enter keys are drawn as 12px lucide icons (the bundled fonts lack some arrows, which then fell back to a smaller system glyph); the glyph stays as screen-reader text. Use the platform's modifier (⌘ on macOS, Ctrl elsewhere). Used in the hint bar, tooltips, and the shortcuts help dialog.
+**`keycap`**: shortcut glyphs in a 20px sunken box with a 1px line. Use the platform's modifier (⌘ on macOS, Ctrl elsewhere) and print keys as the keyboard does: Apple platforms show ⌥, ⇧, and ⌫ where others show Alt, Shift, and Backspace (`shortcutKeyCaps`). Arrow and Enter keys are drawn as 12px lucide icons (the bundled fonts lack some arrows, which then fell back to a smaller system glyph); the glyph stays as screen-reader text. Used in the hint bar, tooltips, and the shortcuts help dialog.
 
 **`hint-bar`**: the popup footer: `/ search`, `↑↓ navigate`, `←→ close or open folder`, and `↵ open`, or `↵ save here` while a folder row is active. It only shows shortcuts that exist in `use-popup-shortcuts.ts`.
 
 **`chip`**: recent folders and saved searches. 24px, pill, 1px line; the selected chip uses `teal-wash`.
 
 **`button`**: `default` is teal, `outline` is surface with a line, `ghost` has no fill, `destructive` is danger. Sizes are `sm` (28px), `default` (32px), and `lg` (36px); icon sizes are 24px and 28px. Do not override heights per call site.
+
+**`checkbox`** (`Checkbox`): a 16px box with a 1px primary line, filled when checked. A partly selected group, such as the table's select-all, is indeterminate and shows a dash, never a check.
 
 **`badge`**: counts and states in a table or result. Neutral badges are `sunken`; semantic badges use their wash with their text color.
 

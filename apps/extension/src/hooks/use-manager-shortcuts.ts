@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 const TABLE_ROW_SELECTOR = 'main table tbody tr';
 
 /** Folder rows take focus themselves; bookmark rows offer their actions menu. */
-function getRowFocusTarget(row: HTMLElement): HTMLElement | null {
+export function getTableRowFocusTarget(row: HTMLElement): HTMLElement | null {
   if (row.tabIndex >= 0) return row;
   return (
     row.querySelector<HTMLElement>('button[aria-haspopup="menu"]:not([disabled])') ??
@@ -28,7 +28,7 @@ function getRowFocusTarget(row: HTMLElement): HTMLElement | null {
 
 function moveRowFocus(step: 1 | -1): boolean {
   const rows = Array.from(document.querySelectorAll<HTMLElement>(TABLE_ROW_SELECTOR)).filter(
-    (row) => getRowFocusTarget(row) !== null,
+    (row) => getTableRowFocusTarget(row) !== null,
   );
   if (rows.length === 0) return false;
   const active = document.activeElement;
@@ -39,7 +39,7 @@ function moveRowFocus(step: 1 | -1): boolean {
         ? 0
         : rows.length - 1
       : Math.min(rows.length - 1, Math.max(0, current + step));
-  getRowFocusTarget(rows[next])?.focus();
+  getTableRowFocusTarget(rows[next])?.focus();
   return true;
 }
 
