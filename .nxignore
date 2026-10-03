@@ -1,0 +1,3 @@
+# Agent tool state, including git worktrees of this repository (.claude/worktrees/*). Without this
+# the Nx daemon watches every worktree's files and its log grows without bound.
+.claude/
