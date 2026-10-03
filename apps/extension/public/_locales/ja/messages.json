@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "このカテゴリには一致する設定がありません",
+        "message": "検索に一致する設定がありません",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -2709,6 +2709,10 @@
         "message": "$1 はAPIキーなしで利用できます。",
         "description": "Optional API key description"
     },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "任意",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
     "options_apiKey": {
         "message": "APIキー",
         "description": "API key field label"
@@ -2785,9 +2789,17 @@
         "message": "すべてのタブで一致する設定: $1 件",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "すべてのタブで一致する設定: $1 件",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "$1 件の設定が未保存です",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "$1 件の設定が未保存です",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "そのフォルダは存在しません。最も近い既存のフォルダを表示しています。",
@@ -4428,8 +4440,12 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "プロンプトが長すぎて同期できません。$1 バイト未満にしてください。",
+        "message": "プロンプトが長すぎて同期できません。$1 以内にしてください。",
         "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "プロンプトを保存できませんでした。同期ストレージがいっぱいの可能性があります。使わないプロンプトを削除してから、もう一度お試しください。",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
     },
     "prompt_varMaxRecommendations": {
         "message": "フォルダ候補の数（最大推薦数）",

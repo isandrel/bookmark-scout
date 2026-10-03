@@ -435,7 +435,12 @@ export function AIServiceEditor({
                   setFields((current) => ({ ...current, apiKey: event.target.value }))
                 }
                 onBlur={() => void saveFields()}
-                placeholder={providerConfig?.api_key_placeholder || fieldExamples.api_key}
+                placeholder={
+                  providerConfig?.api_key_placeholder ||
+                  (providerRequiresApiKey(provider)
+                    ? fieldExamples.api_key
+                    : t('options_apiKeyOptionalPlaceholder'))
+                }
                 className="pr-9"
               />
               <Button

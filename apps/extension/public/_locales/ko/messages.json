@@ -244,7 +244,7 @@
         "description": "Settings loading state"
     },
     "state_noSettingsMatch": {
-        "message": "이 카테고리에서 검색과 일치하는 설정이 없습니다",
+        "message": "검색과 일치하는 설정이 없습니다",
         "description": "Empty settings search result"
     },
     "toast_preferencesUpdated": {
@@ -2709,6 +2709,10 @@
         "message": "$1은(는) API 키 없이 사용할 수 있습니다.",
         "description": "Optional API key description"
     },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "선택 사항",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
     "options_apiKey": {
         "message": "API 키",
         "description": "API key field label"
@@ -2785,9 +2789,17 @@
         "message": "모든 탭에서 일치하는 설정 $1개",
         "description": "Settings search result count"
     },
+    "settings_searchResultsCount_one": {
+        "message": "모든 탭에서 일치하는 설정 $1개",
+        "description": "Settings search result count (singular)"
+    },
     "settings_statusNotSaved": {
         "message": "설정 $1개가 저장되지 않았습니다",
         "description": "Save status when fields are invalid"
+    },
+    "settings_statusNotSaved_one": {
+        "message": "설정 $1개가 저장되지 않았습니다",
+        "description": "Save status when one field is invalid (singular)"
     },
     "bookmarks_folderUnavailable": {
         "message": "해당 폴더가 더 이상 없습니다. 가장 가까운 기존 폴더를 표시합니다.",
@@ -4428,8 +4440,12 @@
         "description": "Prompt validation: empty text"
     },
     "prompt_errorTooLong": {
-        "message": "프롬프트가 너무 길어 동기화할 수 없습니다. $1바이트 미만으로 줄이세요.",
+        "message": "프롬프트가 너무 길어 동기화할 수 없습니다. $1 이하로 줄이세요.",
         "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "프롬프트를 저장하지 못했습니다. 동기화 저장 공간이 가득 찼을 수 있습니다. 사용하지 않는 프롬프트를 삭제한 뒤 다시 시도하세요.",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
     },
     "prompt_varMaxRecommendations": {
         "message": "폴더 추천 수(최대 추천 수)",
