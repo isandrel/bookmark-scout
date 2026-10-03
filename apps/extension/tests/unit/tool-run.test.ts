@@ -1,3 +1,4 @@
+import { APICallError } from 'ai';
 import { DOMParser as LinkedomParser } from 'linkedom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
@@ -23,7 +24,11 @@ const mocks = vi.hoisted(() => ({
   createAIModel: vi.fn(() => ({ provider: 'synthetic' })),
   validateAISettings: vi.fn(),
 }));
-vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
+// The SDK's error classes stay real, so AI errors are described as users see them.
+vi.mock('ai', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('ai')>()),
+  generateObject: mocks.generateObject,
+}));
 vi.mock('@/services/ai-client', () => ({
   createAIModel: mocks.createAIModel,
   validateAISettings: mocks.validateAISettings,
@@ -497,6 +502,31 @@ describe('AI tools', () => {
       title: 'Reorganization undone',
       description: 'Moved back: 1. Could not move back: 0.',
     });
+  });
+
+  it('[mocked provider contract] describes a provider rejection in the toast instead of raw SDK text', async () => {
+    settings = { ...settings, aiEnabled: true };
+    mocks.generateObject.mockRejectedValue(
+      new APICallError({
+        message: 'HTTP 401 raw provider text',
+        url: 'https://provider.invalid/v1/chat/completions',
+        requestBodyValues: {},
+        statusCode: 401,
+      }),
+    );
+    const run = createToolRun(TOOL_DEFINITIONS.summarizer, deps());
+    await run.run('folder');
+    expect(notices[0].outcome).toEqual({
+      title: 'Tool failed',
+      description: 'The provider rejected the API key. Check that it is correct and still active.',
+      variant: 'destructive',
+    });
+
+    const reorganization = createToolRun(TOOL_DEFINITIONS.reorganization, deps());
+    await reorganization.run('all');
+    expect(reorganization.getState().errors).toEqual([
+      'The provider rejected the API key. Check that it is correct and still active.',
+    ]);
   });
 
   it('shows reorganization failures inside the review instead of a toast', async () => {

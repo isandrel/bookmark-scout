@@ -135,12 +135,12 @@ export function createToolRun<Result, Selection>(
     for (const listener of listeners) listener();
   };
 
-  const reportFailure = (error: unknown, titleKey: string, fallbackKey?: string) =>
-    deps.notify({
-      title: t(titleKey),
-      description: getErrorMessage(error, fallbackKey),
-      variant: 'destructive',
-    });
+  const reportFailure = (titleKey: string, description: string) =>
+    deps.notify({ title: t(titleKey), description, variant: 'destructive' });
+
+  /** A failed scan as the user reads it: an AI tool's scan is an AI request. */
+  const describeScanError = (error: unknown) =>
+    tool.requiresAI ? describeAIError(error) : getErrorMessage(error, tool.scanFailureKey);
 
   const context = (nodes: BookmarkTreeNode[]): ToolContext => {
     const settings = deps.settings();
@@ -156,7 +156,10 @@ export function createToolRun<Result, Selection>(
       },
       saveFile: (request, write) =>
         deps.saveFile(
-          { ...request, onError: (error) => reportFailure(error, 'toast_toolFailed') },
+          {
+            ...request,
+            onError: (error) => reportFailure('toast_toolFailed', getErrorMessage(error)),
+          },
           write,
         ),
       notify: (outcome) => deps.notify(outcome),
@@ -182,7 +185,7 @@ export function createToolRun<Result, Selection>(
           }
           deps.notify(outcome);
         } catch (error) {
-          reportFailure(error, 'toast_toolFailed');
+          reportFailure('toast_toolFailed', getErrorMessage(error));
         }
       },
       onEnd: (reason) => {
@@ -239,7 +242,7 @@ export function createToolRun<Result, Selection>(
       return;
     }
     update({ phase: state.open ? 'review' : 'idle' });
-    reportFailure(error, tool.applyFailureTitleKey ?? 'toast_toolFailed');
+    reportFailure(tool.applyFailureTitleKey ?? 'toast_toolFailed', getErrorMessage(error));
   };
 
   return {
@@ -259,11 +262,11 @@ export function createToolRun<Result, Selection>(
         if (tool.reviewWhileScanning) {
           update({
             phase: state.open ? 'review' : 'idle',
-            errors: [getErrorMessage(error, tool.scanFailureKey)],
+            errors: [describeScanError(error)],
           });
         } else {
           update({ phase: 'idle' });
-          reportFailure(error, 'toast_toolFailed', tool.scanFailureKey);
+          reportFailure('toast_toolFailed', describeScanError(error));
         }
         return;
       }
