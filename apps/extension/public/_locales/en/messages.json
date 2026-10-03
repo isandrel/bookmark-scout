@@ -19,8 +19,12 @@
         "message": "Search bookmarks...",
         "description": "Search input placeholder"
     },
+    "search_placeholderShort": {
+        "message": "Search",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+    },
     "shortcuts_popupHint": {
-        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search",
+        "message": "Shortcuts: / search, ↓ ↑ move through folders and bookmarks, → ← open or close a folder, Enter saves the current page to the focused folder, Esc clears the search, Alt+↓ shows recent searches",
         "description": "Tooltip on the popup search box listing the popup keyboard shortcuts"
     },
     "shortcuts_title": {
@@ -621,6 +625,18 @@
         "message": "AI Recommendation Failed",
         "description": "Toast title when AI fails"
     },
+    "ai_errorNoObject": {
+        "message": "The AI's answer was not in the expected format. Try again, or choose another model.",
+        "description": "AI error: the provider's answer did not match the expected structured format"
+    },
+    "ai_errorRetriesExhausted": {
+        "message": "Gave up after $1 attempts. $2",
+        "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorRequestFailed": {
+        "message": "The AI request failed. Try again, or check the service in Options.",
+        "description": "AI error with no more specific explanation"
+    },
     "error_unknown": {
         "message": "Unknown error",
         "description": "Generic error message"
@@ -640,6 +656,10 @@
     "ai_newFolderPathLabel": {
         "message": "Folder path",
         "description": "Label for the reviewed AI folder path"
+    },
+    "ai_newFolderPathNew": {
+        "message": "new",
+        "description": "Badge after a folder in the reviewed path that does not exist yet and will be created"
     },
     "ai_currentPageLabel": {
         "message": "Current page",

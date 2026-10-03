@@ -22,7 +22,8 @@ export interface FolderRecommendation {
 export type RecommendedFolderBookmarkResult = {
   status: 'created' | 'duplicate';
   folderId: string;
-  folderPath: string;
+  /** Titles of the folders on the path, from the permanent folder down to the saved-to folder. */
+  folderTitles: string[];
   bookmarkId?: string;
   createdFolderIds: string[];
 };
@@ -50,14 +51,12 @@ const singleRecommendationSchema = z.object({
 });
 
 /**
- * Schema for multiple recommendations. It accepts as many as the setting allows at most, so any
- * value the user picks validates; the result is cut to the requested count afterwards.
+ * Schema for multiple recommendations. It has no upper bound: providers do not always honor the
+ * requested count, and one extra suggestion must not fail the whole request. The result is cut
+ * to the requested count afterwards.
  */
 const recommendationsSchema = z.object({
-  recommendations: z
-    .array(singleRecommendationSchema)
-    .min(1)
-    .max(SETTING_NUMBER_BOUNDS.aiMaxRecommendations.max),
+  recommendations: z.array(singleRecommendationSchema).min(1),
 });
 
 /**
@@ -115,8 +114,7 @@ export async function recommendFolders(
     }),
   });
 
-  // Providers do not always honor the requested count; never show more than the setting allows.
-  // Map folderPaths back to folderIds
+  // Never show more than the setting allows. Map folderPaths back to folderIds
   return object.recommendations.slice(0, maxRecommendations).map((rec) => {
     const matchedFolder = folderList.find((f) => f.path === rec.folderPath);
     return {
@@ -126,83 +124,138 @@ export async function recommendFolders(
   });
 }
 
+/**
+ * Where a suggested folder path leads in the current tree. Folder titles may contain the path
+ * separator ("CI/CD"), so the path is matched against real titles before the rest is split.
+ */
+export type ResolvedFolderPath = {
+  /** The deepest folder on the path that already exists; new folders go inside it. */
+  folder: BookmarkTreeNode;
+  /** Titles of the existing folders, from the permanent folder down to `folder`. */
+  existingTitles: string[];
+  /** Titles of the folders still to create inside `folder`, outermost first. */
+  newTitles: string[];
+};
+
+/**
+ * The longest chain of folders in `nodes` and below whose titles spell the start of `path`. A
+ * title only matches up to a separator or the end of the path, so "CI/CD" matches the folder
+ * "CI/CD" and not a folder "CI".
+ */
+function matchFolderChain(
+  nodes: readonly BookmarkTreeNode[],
+  path: string,
+): { chain: BookmarkTreeNode[]; rest: string } {
+  let best: { chain: BookmarkTreeNode[]; rest: string } = { chain: [], rest: path };
+  for (const node of nodes) {
+    const title = node.title.trim();
+    if (node.url || !title || !sameTitle(path.slice(0, title.length), title)) continue;
+    const after = path.slice(title.length).trimStart();
+    if (after && !after.startsWith(AI_FOLDER_PATH_SEPARATOR)) continue;
+    const below = matchFolderChain(
+      node.children ?? [],
+      after.slice(AI_FOLDER_PATH_SEPARATOR.length).trimStart(),
+    );
+    if (below.rest.length < best.rest.length) {
+      best = { chain: [node, ...below.chain], rest: below.rest };
+    }
+  }
+  return best;
+}
+
+/** The full path a recommendation names: a bare folder name goes inside its `parentPath`. */
+function getRecommendedPath({ folderPath, parentPath = '' }: FolderRecommendation): string {
+  const name = folderPath.trim();
+  const parent = parentPath.trim();
+  return parent && !name.includes(AI_FOLDER_PATH_SEPARATOR)
+    ? `${parent}${AI_FOLDER_PATH_SEPARATOR}${name}`
+    : name;
+}
+
+/**
+ * Resolves a suggested path against `folders`: the existing folders it names, then the folders to
+ * create. Paths start with a permanent folder ("Bookmarks Bar/News"), or inside the bookmarks bar
+ * when they name none.
+ */
+export function resolveRecommendedFolderPath(
+  recommendation: FolderRecommendation,
+  folders: readonly BookmarkTreeNode[],
+): ResolvedFolderPath {
+  const path = getRecommendedPath(recommendation);
+  if (parsePath(path).length === 0) throw new RecommendedFolderError('invalid-path');
+
+  const topLevelFolders = getTopLevelBookmarkNodes(folders).filter((node) => !node.url);
+  const defaultRoot = findBookmarksBarFolder(folders) ?? topLevelFolders[0];
+  if (!defaultRoot) throw new RecommendedFolderError('no-writable-root');
+
+  const fromRoot = matchFolderChain(topLevelFolders, path);
+  const insideDefault = matchFolderChain(defaultRoot.children ?? [], path);
+  const { chain, rest } =
+    fromRoot.chain.length > 0
+      ? fromRoot
+      : { chain: [defaultRoot, ...insideDefault.chain], rest: insideDefault.rest };
+
+  const newTitles = parsePath(rest);
+  if (newTitles.some((title) => title === '.' || title === '..')) {
+    throw new RecommendedFolderError('invalid-path');
+  }
+  return {
+    folder: chain[chain.length - 1],
+    existingTitles: chain.map((node) => node.title),
+    newTitles,
+  };
+}
+
 export async function createRecommendedFolderBookmark(
   recommendation: FolderRecommendation,
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
 ): Promise<RecommendedFolderBookmarkResult> {
-  const pathSegments = getRecommendedPathSegments(recommendation);
-  const topLevelFolders = getTopLevelBookmarkNodes(folders).filter((node) => !node.url);
+  const { folder, existingTitles, newTitles } = resolveRecommendedFolderPath(
+    recommendation,
+    folders,
+  );
+  const folderTitles = [...existingTitles, ...newTitles];
   const createdFolderIds: string[] = [];
 
-  const matchingRoot = topLevelFolders.find((folder) => sameTitle(folder.title, pathSegments[0]));
-  let segmentIndex = matchingRoot ? 1 : 0;
-  const startFolder = matchingRoot ?? topLevelFolders[0];
-  if (!startFolder) {
-    throw new RecommendedFolderError('no-writable-root');
-  }
-  let currentFolder: BookmarkTreeNode = startFolder;
-  const folderPath = (
-    segmentIndex === 0 ? [currentFolder.title, ...pathSegments] : pathSegments
-  ).join(AI_FOLDER_PATH_SEPARATOR);
+  // Only the first new folder can collide; the ones below it go into brand-new folders.
+  const conflict = newTitles[0]
+    ? folder.children?.find((child) => child.url && sameTitle(child.title, newTitles[0]))
+    : undefined;
+  if (conflict) throw new RecommendedFolderError('path-conflict', newTitles[0]);
 
+  let currentFolderId = folder.id;
   try {
-    for (; segmentIndex < pathSegments.length; segmentIndex += 1) {
-      const segment = pathSegments[segmentIndex];
-      const children: BookmarkTreeNode[] = currentFolder.children ?? [];
-      const matchingFolder = children.find(
-        (child) => !child.url && sameTitle(child.title, segment),
-      );
-
-      if (matchingFolder) {
-        currentFolder = matchingFolder;
-        continue;
-      }
-
-      const conflictingBookmark = children.find(
-        (child) => Boolean(child.url) && sameTitle(child.title, segment),
-      );
-      if (conflictingBookmark) {
-        throw new RecommendedFolderError('path-conflict', segment);
-      }
-
-      const created = await createBookmark({
-        parentId: currentFolder.id,
-        title: segment,
-      });
+    for (const title of newTitles) {
+      const created = await createBookmark({ parentId: currentFolderId, title });
       createdFolderIds.push(created.id);
-      currentFolder = {
-        id: created.id,
-        parentId: created.parentId,
-        title: created.title,
-        children: [],
-      };
+      currentFolderId = created.id;
     }
 
-    const children = await getBookmarkChildren(currentFolder.id);
+    const children = await getBookmarkChildren(currentFolderId);
     const duplicate = children.find(
       (child) => child.url && comparableUrl(child.url) === comparableUrl(bookmark.url),
     );
     if (duplicate) {
       return {
         status: 'duplicate',
-        folderId: currentFolder.id,
-        folderPath,
+        folderId: currentFolderId,
+        folderTitles,
         bookmarkId: duplicate.id,
         createdFolderIds,
       };
     }
 
     const createdBookmark = await createBookmark({
-      parentId: currentFolder.id,
+      parentId: currentFolderId,
       title: bookmark.title || t('popup_newBookmark'),
       url: bookmark.url,
     });
 
     return {
       status: 'created',
-      folderId: currentFolder.id,
-      folderPath,
+      folderId: currentFolderId,
+      folderTitles,
       bookmarkId: createdBookmark.id,
       createdFolderIds,
     };
@@ -216,23 +269,6 @@ export async function createRecommendedFolderBookmark(
     }
     throw error;
   }
-}
-
-function getRecommendedPathSegments(recommendation: FolderRecommendation) {
-  const folderSegments = parsePath(recommendation.folderPath);
-  const parentSegments = parsePath(recommendation.parentPath ?? '');
-  const segments = parentSegments.length > 0 && folderSegments.length === 1
-    ? [...parentSegments, folderSegments[folderSegments.length - 1] ?? '']
-    : folderSegments;
-
-  if (
-    segments.length === 0 ||
-    segments.some((segment) => !segment || segment === '.' || segment === '..')
-  ) {
-    throw new RecommendedFolderError('invalid-path');
-  }
-
-  return segments;
 }
 
 function parsePath(path: string) {
