@@ -66,10 +66,15 @@ function useSearchBoxFit(
         if (!input || !context) return;
         const style = getComputedStyle(input);
         context.font = style.font;
+        // Firefox's clientWidth of an input already leaves out the padding; the border box does
+        // not differ between browsers.
+        const px = (value: string) => Number.parseFloat(value) || 0;
         const free =
-          input.clientWidth -
-          Number.parseFloat(style.paddingLeft) -
-          Number.parseFloat(style.paddingRight);
+          input.getBoundingClientRect().width -
+          px(style.borderLeftWidth) -
+          px(style.borderRightWidth) -
+          px(style.paddingLeft) -
+          px(style.paddingRight);
         setFullFits(context.measureText(full).width <= free);
       }),
     [full, inputRef, reservedRight],

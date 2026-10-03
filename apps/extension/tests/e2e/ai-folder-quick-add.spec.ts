@@ -383,7 +383,9 @@ for (const { width, height, count } of [
           if (!context2d) return Number.NaN;
           context2d.font = style.font;
           const free =
-            input.clientWidth -
+            input.getBoundingClientRect().width -
+            Number.parseFloat(style.borderLeftWidth) -
+            Number.parseFloat(style.borderRightWidth) -
             Number.parseFloat(style.paddingLeft) -
             Number.parseFloat(style.paddingRight);
           return free - context2d.measureText(input.placeholder).width;
