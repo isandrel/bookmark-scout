@@ -9,8 +9,7 @@ const VIEWPORT_HOTKEY = 'F6';
 export function Toaster() {
   const { settings } = useSettings();
 
-  // Use settings value if available, otherwise fall back to default
-  const toastDuration = settings?.toastDurationMs ?? TOAST_DURATION;
+  const toastDuration = settings?.toastDurationMs ?? defaultSettings.toastDurationMs;
 
   // Undo toasts are never dropped, so the stack has no limit.
   return (
@@ -76,10 +75,7 @@ function ToastStack({ toastDuration }: { toastDuration: number }) {
   const newestId = toasts.find((toast) => toast.transitionStatus !== 'ending')?.id;
 
   return (
-    <ToastViewport
-      ref={viewportRef}
-      aria-label={t('toast_regionLabel').replace('{hotkey}', VIEWPORT_HOTKEY)}
-    >
+    <ToastViewport ref={viewportRef} aria-label={t('toast_regionLabel', VIEWPORT_HOTKEY)}>
       {[...toasts].reverse().map((toast) => {
         const { action, variant } = toast.data ?? {};
         const duration = toast.timeout ?? toastDuration;

@@ -107,7 +107,7 @@ export function DataTableToolbar<TData extends RowData>({
           <span id="applyToCurrentFolderHelp" className="sr-only">
             {currentFolderHelp}
           </span>
-          <TooltipProvider delay={200}>
+          <TooltipProvider>
             <Tooltip>
               <TooltipTrigger
                 render={

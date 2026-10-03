@@ -13,7 +13,7 @@ type SiteIconProps = {
  * then a generic globe (also used when an image fails to load). The image is requested at twice
  * the displayed size for high-density screens.
  */
-export function SiteIcon({ url, size = 16, className }: SiteIconProps) {
+export function SiteIcon({ url, size = defaultSettings.faviconSize, className }: SiteIconProps) {
   const src = useSiteIconUrl(url, size * 2);
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
 

@@ -1,7 +1,19 @@
 import { Tooltip as TooltipPrimitive } from '@base-ui/react/tooltip';
 import * as React from 'react';
+import { z } from 'zod';
 
-const TooltipProvider = TooltipPrimitive.Provider;
+const tooltipConfig = readConfig(
+  'ui/tooltips',
+  z.strictObject({ delay_ms: z.number().int().nonnegative() }),
+);
+
+/** Shares the open delay from config/ui/tooltips.toml with the tooltips inside it. */
+function TooltipProvider({
+  delay = tooltipConfig.delay_ms,
+  ...props
+}: TooltipPrimitive.Provider.Props) {
+  return <TooltipPrimitive.Provider delay={delay} {...props} />;
+}
 
 const Tooltip = TooltipPrimitive.Root;
 

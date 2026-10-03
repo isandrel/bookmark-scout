@@ -34,12 +34,6 @@ const stickyColumnClass = cn(
 // column keeps exactly the width it was given.
 const FILLER_CELL_CLASS = 'w-auto p-0';
 
-type PageSize = 10 | 20 | 30 | 40 | 50;
-
-// Widths are saved to sync storage, which limits writes per minute, so keyboard resizing is
-// saved once the presses stop and dragging once it ends.
-const COLUMN_SIZING_SAVE_DELAY_MS = 400;
-
 const IDLE_COLUMN_RESIZING: columnResizingState = {
   columnSizingStart: [],
   deltaOffset: null,
@@ -174,7 +168,7 @@ export function DataTable<TData extends RowData>({
       sorting,
       columnVisibility,
       columnOrder,
-      pageSize: pagination.pageSize as PageSize,
+      pageSize: pagination.pageSize as BookmarkTableView['pageSize'],
       browserOrder,
       columnSizing: savedColumnSizing,
     }).catch((error) => console.error('Failed to save bookmark table view:', error));
@@ -191,6 +185,8 @@ export function DataTable<TData extends RowData>({
   const isResizingColumn = columnResizing.isResizingColumn !== false;
   React.useEffect(() => {
     if (isResizingColumn) return;
+    // Widths are saved to sync storage, which limits writes per minute, so keyboard resizing is
+    // saved once the presses stop and dragging once it ends.
     const timer = setTimeout(() => setSavedColumnSizing(columnSizing), COLUMN_SIZING_SAVE_DELAY_MS);
     return () => clearTimeout(timer);
   }, [columnSizing, isResizingColumn]);

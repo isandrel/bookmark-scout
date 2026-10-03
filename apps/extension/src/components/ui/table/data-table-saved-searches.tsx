@@ -63,7 +63,7 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
     }
     setName('');
     setSaveError(null);
-    toast({ title: `✓ ${t('savedSearches_saved', result.search.name)}`, variant: 'success' });
+    toast.success({ title: t('savedSearches_saved', result.search.name) });
   };
 
   const handleApply = (search: SavedSearch) => {
@@ -102,9 +102,8 @@ export function DataTableSavedSearches({ currentQuery, onApply }: DataTableSaved
     // The deleted row's button is gone; keep focus inside the menu.
     nameInputRef.current?.focus();
     let undone = false;
-    toast({
-      title: `✓ ${t('savedSearches_deleted', search.name)}`,
-      variant: 'success',
+    toast.success({
+      title: t('savedSearches_deleted', search.name),
       action: (
         <ToastAction
           onClick={async () => {

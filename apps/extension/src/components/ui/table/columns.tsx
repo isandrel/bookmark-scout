@@ -22,21 +22,17 @@ export enum ItemTypeEnum {
   Link = 'link',
 }
 
-export const typeMap: Record<ItemTypeEnum, ItemType> = {
-  [ItemTypeEnum.Folder]: { value: 'folder', label: 'Folder', icon: Folder },
-  [ItemTypeEnum.Link]: { value: 'link', label: 'Link', icon: Link },
-};
-
-const typeLabelKeys: Record<ItemTypeEnum, string> = {
-  [ItemTypeEnum.Folder]: 'table_typeFolder',
-  [ItemTypeEnum.Link]: 'table_typeLink',
+const ITEM_TYPES: Record<ItemTypeEnum, { labelKey: MessageKey; icon: ItemType['icon'] }> = {
+  [ItemTypeEnum.Folder]: { labelKey: 'table_typeFolder', icon: Folder },
+  [ItemTypeEnum.Link]: { labelKey: 'table_typeLink', icon: Link },
 };
 
 /** Type filter options with labels resolved in the active UI language. */
 export function getLocalizedTypeOptions(): ItemType[] {
   return Object.values(ItemTypeEnum).map((type) => ({
-    ...typeMap[type],
-    label: t(typeLabelKeys[type]),
+    value: type,
+    label: t(ITEM_TYPES[type].labelKey),
+    icon: ITEM_TYPES[type].icon,
   }));
 }
 
@@ -151,7 +147,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-    size: { fixed: 40 },
+    ...getManagerColumnLayout('select'),
   },
   {
     id: 'type',
@@ -169,14 +165,14 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       );
     },
     filterFn: facetFilter,
-    size: { size: 120, minSize: 70 },
+    ...getManagerColumnLayout('type'),
   },
   {
     id: 'id',
     labelKey: 'table_columnId',
     accessor: (row) => row.id,
     header: 'sortable',
-    size: { size: 100, minSize: 60 },
+    ...getManagerColumnLayout('id'),
     defaultVisible: false,
   },
   {
@@ -193,7 +189,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         </div>
       ) : null,
     filterFn: facetFilter,
-    size: { size: 180, minSize: 80 },
+    ...getManagerColumnLayout('parentId'),
     defaultVisible: false,
   },
   {
@@ -206,10 +202,9 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         {row.original.folderPath}
       </span>
     ),
-    size: { size: 180, minSize: 80 },
     // Dropped first when the table is narrow (for example with the Tools sidebar open), so Title
     // and Date Added stay in view instead of scrolling away.
-    hideBelowWidth: 960,
+    ...getManagerColumnLayout('folderPath'),
   },
   {
     id: 'url',
@@ -229,8 +224,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
       );
     },
     filterFn: textFilter,
-    size: { size: 200, minSize: 80 },
-    hideBelowWidth: 880,
+    ...getManagerColumnLayout('url'),
   },
   {
     id: DOMAIN_COLUMN_ID,
@@ -283,7 +277,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     filterFn: textFilter,
     // Title fills the room the other columns leave until the user sizes it (FILL_COLUMN_ID);
     // `size` is the narrowest it fills to, and `minSize` keeps a resized Title readable.
-    size: { size: 160, minSize: 120 },
+    ...getManagerColumnLayout('title'),
   },
   {
     id: 'dateAdded',
@@ -292,7 +286,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     header: 'sortable',
     cell: ({ getValue }) => formatTimestamp(getValue()),
     filterFn: (row, id, value: DateRange | undefined) => isWithinDateRange(row.getValue(id), value),
-    size: { size: 190, minSize: 100 },
+    ...getManagerColumnLayout('dateAdded'),
   },
   {
     id: 'dateGroupModified',
@@ -300,7 +294,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     accessor: (row) => row.dateGroupModified,
     header: 'label',
     cell: ({ getValue }) => formatTimestamp(getValue()),
-    size: { size: 190, minSize: 100 },
+    ...getManagerColumnLayout('dateGroupModified'),
     defaultVisible: false,
   },
   {
@@ -308,7 +302,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
     labelKey: 'table_columnUnmodifiable',
     accessor: (row) => row.unmodifiable,
     header: 'label',
-    size: { size: 130, minSize: 80 },
+    ...getManagerColumnLayout('unmodifiable'),
     defaultVisible: false,
   },
   {
@@ -334,7 +328,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
         </div>
       );
     },
-    size: { fixed: 68 },
+    ...getManagerColumnLayout('actions'),
   },
 ];
 

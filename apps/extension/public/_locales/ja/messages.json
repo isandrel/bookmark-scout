@@ -175,6 +175,10 @@
         "message": "フォルダを削除",
         "description": "Delete folder tooltip"
     },
+    "popup_folderItemCount": {
+        "message": "($1)",
+        "description": "Number of items in a folder, shown after its name in the popup tree"
+    },
     "popup_deleteBookmark": {
         "message": "ブックマークを削除",
         "description": "Delete bookmark tooltip"
@@ -2801,6 +2805,10 @@
         "message": "カスタムモデル",
         "description": "Custom model label"
     },
+    "options_customModelPlaceholder": {
+        "message": "モデル ID",
+        "description": "Placeholder of the custom model field: an example model id"
+    },
     "options_customModelDescription": {
         "message": "任意のモデル名を使えるプロバイダー向けのモデルID（任意）",
         "description": "Custom model description"
@@ -3133,9 +3141,13 @@
         "message": "閉じる",
         "description": "Accessible label for close buttons on dialogs, panels, and notifications"
     },
+    "action_delete": {
+        "message": "削除",
+        "description": "Button or menu item that deletes the item it belongs to"
+    },
     "toast_regionLabel": {
-        "message": "通知 ({hotkey})",
-        "description": "Accessible name of the notifications region; keep {hotkey} unchanged, it is replaced with the keyboard shortcut"
+        "message": "通知 ($1)",
+        "description": "Accessible name of the notifications region; $1 is the key that moves focus to it"
     },
     "toast_duplicatesRemovedDesc_one": {
         "message": "$count$ 件の重複ブックマークを削除しました",
@@ -3957,6 +3969,14 @@
         "message": "更新",
         "description": "Refresh button label"
     },
+    "format_separator": {
+        "message": "·",
+        "description": "Separator between two short parts on one line, such as a provider and its model; spaces are added around it"
+    },
+    "format_copyName": {
+        "message": "$1（コピー）",
+        "description": "Name of a duplicated item; $1 is the original name"
+    },
     "tools_siteIcons": {
         "message": "サイトアイコンを更新",
         "description": "Title for the Refresh Site Icons tool"
@@ -4368,10 +4388,6 @@
     "options_aiServiceDuplicate": {
         "message": "複製",
         "description": "Menu action that copies a service"
-    },
-    "options_aiServiceDelete": {
-        "message": "削除",
-        "description": "Menu action and confirm button that delete a service"
     },
     "options_aiServiceDeleteTitle": {
         "message": "$1 を削除しますか？",

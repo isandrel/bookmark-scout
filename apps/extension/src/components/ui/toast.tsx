@@ -44,9 +44,6 @@ const toastVariants = cva(
   },
 );
 
-// Default toast duration in ms
-const TOAST_DURATION = 4000;
-
 // Closes the toast that renders it; see ToastAction.
 const ToastCloseContext = React.createContext<() => void>(() => {});
 
@@ -54,7 +51,7 @@ const Toast = React.forwardRef<
   HTMLLIElement,
   Omit<ToastPrimitives.Root.Props, 'className'> &
     VariantProps<typeof toastVariants> & { className?: string; duration?: number }
->(({ className, variant, duration = TOAST_DURATION, toast, ...props }, ref) => {
+>(({ className, variant, duration = defaultSettings.toastDurationMs, toast, ...props }, ref) => {
   const { close } = ToastPrimitives.useToastManager();
   const closeToast = React.useCallback(() => close(toast.id), [close, toast.id]);
   return (
@@ -151,7 +148,7 @@ ToastDescription.displayName = 'ToastDescription';
 const ToastProgress = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'destructive' | 'success' | null; duration?: number }
->(({ className, variant, duration = TOAST_DURATION, ...props }, ref) => {
+>(({ className, variant, duration = defaultSettings.toastDurationMs, ...props }, ref) => {
   const progressColors = {
     default: 'bg-primary/50',
     destructive: 'bg-destructive/50',
@@ -196,5 +193,4 @@ export {
   ToastClose,
   ToastAction,
   ToastProgress,
-  TOAST_DURATION,
 };
