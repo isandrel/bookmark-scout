@@ -4446,8 +4446,8 @@
         "description": "Label before the variable chips"
     },
     "prompt_size": {
-        "message": "$1 KB / $2 KB",
-        "description": "Prompt size counter; $1 used, $2 limit"
+        "message": "$1 / $2",
+        "description": "Prompt size counter; $1 used and $2 limit, each with its unit (e.g. 1.2 KB)"
     },
     "prompt_unknownVariables": {
         "message": "このツールでは置き換えられません: $1",
