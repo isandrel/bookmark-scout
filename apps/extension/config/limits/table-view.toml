@@ -1,5 +1,0 @@
-# The bookmark manager table's saved view (sync storage, `bookmark-scout-table-view`).
-
-# Rows-per-page choices, in menu order. A saved page size not in this list resets the saved view.
-page_sizes = [10, 20, 30, 40, 50]
-default_page_size = 10
