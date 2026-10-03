@@ -233,7 +233,7 @@ describe('duplicate removal', () => {
   it('undoes a removal by restoring the extras in their places', async () => {
     const result = scanDuplicateBookmarks(folder(items), normalized);
     const outcome = await removeDuplicateExtras(result.groups, result.match);
-    expect(outcome.snapshots).toHaveLength(3);
+    expect(outcome.removed).toBe(3);
     await expect(outcome.undo()).resolves.toEqual({ restored: 3, failed: 0 });
     expect(live().map((id) => bookmarks.get(id)?.url)).toEqual(items.map((item) => item.url));
   });

@@ -69,9 +69,7 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
     case 'sensitiveFragmentParam':
       return t('tools_privacySensitiveFragmentParam', finding.param);
     case 'credentials':
-      return finding.withPassword
-        ? t('tools_privacyCredentials')
-        : t('tools_privacyUsername');
+      return finding.withPassword ? t('tools_privacyCredentials') : t('tools_privacyUsername');
     case 'tokenPattern':
       return t('tools_privacyTokenPattern');
     case 'fragment':
@@ -85,6 +83,85 @@ function describePrivacyFinding(finding: PrivacyFinding): string {
 
 function privacyFindingKey(finding: PrivacyFinding): string {
   return 'param' in finding ? `${finding.kind}:${finding.param}` : finding.kind;
+}
+
+/** One reviewed bookmark: its title, optional badges, an optional control before it, details. */
+export function ToolResultRow({
+  title,
+  badges,
+  leading,
+  children,
+}: {
+  title: string;
+  badges?: React.ReactNode;
+  /** A control such as a checkbox, shown before the details. */
+  leading?: React.ReactNode;
+  children?: React.ReactNode;
+}) {
+  const details = (
+    <>
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-medium">{title}</span>
+        {badges ? <div className="flex flex-shrink-0 items-center gap-1">{badges}</div> : null}
+      </div>
+      {children}
+    </>
+  );
+  return leading ? (
+    <div data-slot="tool-result-row" className="flex gap-3 rounded-lg border p-3 text-sm">
+      {leading}
+      <div className="min-w-0 flex-1 space-y-2">{details}</div>
+    </div>
+  ) : (
+    <div data-slot="tool-result-row" className="space-y-2 rounded-lg border p-3 text-sm">
+      {details}
+    </div>
+  );
+}
+
+/** A secondary line of a result row, such as a URL or a status. */
+function ResultLine({ children }: { children: React.ReactNode }) {
+  return <div className="break-all text-xs text-muted-foreground">{children}</div>;
+}
+
+/** Shown in place of results when a scan found nothing. */
+export function ToolEmptyState({ message }: { message: string }) {
+  return (
+    <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
+      {message}
+    </div>
+  );
+}
+
+/** The confirm button under a review, with an optional Cancel before it. */
+export function ReviewFooter({
+  label,
+  busyLabel,
+  busy,
+  disabled = false,
+  onConfirm,
+  onCancel,
+}: {
+  label: string;
+  /** Shown while `busy`. */
+  busyLabel: string;
+  busy: boolean;
+  disabled?: boolean;
+  onConfirm: () => void;
+  onCancel?: () => void;
+}) {
+  return (
+    <div className="flex justify-end gap-2">
+      {onCancel ? (
+        <Button variant="outline" onClick={onCancel}>
+          {t('action_cancel')}
+        </Button>
+      ) : null}
+      <Button onClick={onConfirm} disabled={disabled || busy}>
+        {busy ? busyLabel : label}
+      </Button>
+    </div>
+  );
 }
 
 export function DuplicateResultsView({
@@ -151,31 +228,31 @@ export function DuplicateResultsView({
                   <div className="flex items-center gap-2">
                     {index === 0 ? <Info className="h-3.5 w-3.5 text-primary" /> : null}
                     <span data-slot="tool-result-title" className="font-medium">
-                      {item.node.title || t('bookmarks_untitled')}
+                      {getBookmarkDisplayTitle(item.node.title)}
                     </span>
                     {index === 0 ? <Badge>{t('state_keep')}</Badge> : null}
                   </div>
                   <p className="break-all text-xs text-muted-foreground">{item.node.url}</p>
-                  <p className="text-xs text-muted-foreground">{item.pathLabel || t('tools_rootFolder')}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {item.pathLabel || t('tools_rootFolder')}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         ))
       ) : (
-        <EmptyState message={t('state_noDuplicatesFound')} />
+        <ToolEmptyState message={t('state_noDuplicatesFound')} />
       )}
 
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
-          {t('action_cancel')}
-        </Button>
-        <Button onClick={onConfirm} disabled={!result?.groups.length || isRemoving}>
-          {isRemoving
-            ? t('action_removing')
-            : t('action_removeDuplicates')}
-        </Button>
-      </div>
+      <ReviewFooter
+        label={t('action_removeDuplicates')}
+        busyLabel={t('action_removing')}
+        busy={isRemoving}
+        disabled={!result?.groups.length}
+        onConfirm={onConfirm}
+        onCancel={onClose}
+      />
     </div>
   );
 }
@@ -195,10 +272,13 @@ export function UrlCleanerResultsView({
     <div className="space-y-4">
       {result?.previews.length ? (
         result.previews.map((preview) => (
-          <div key={preview.id} className="space-y-2 rounded-lg border p-3 text-sm">
-            <div className="font-medium">{preview.title || t('bookmarks_untitled')}</div>
-            <div className="text-xs text-muted-foreground">{preview.folderPath || t('tools_rootFolder')}</div>
-            <div className="break-all rounded-md bg-muted/40 p-2 text-xs">{preview.originalUrl}</div>
+          <ToolResultRow key={preview.id} title={getBookmarkDisplayTitle(preview.title)}>
+            <div className="text-xs text-muted-foreground">
+              {preview.folderPath || t('tools_rootFolder')}
+            </div>
+            <div className="break-all rounded-md bg-muted/40 p-2 text-xs">
+              {preview.originalUrl}
+            </div>
             <div className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
               {preview.cleanedUrl}
             </div>
@@ -209,20 +289,20 @@ export function UrlCleanerResultsView({
                 </Badge>
               ))}
             </div>
-          </div>
+          </ToolResultRow>
         ))
       ) : (
-        <EmptyState message={t('state_noUrlChangesFound')} />
+        <ToolEmptyState message={t('state_noUrlChangesFound')} />
       )}
 
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onClose}>
-          {t('action_cancel')}
-        </Button>
-        <Button onClick={onConfirm} disabled={!result?.previews.length || isApplying}>
-          {isApplying ? t('action_applying') : t('action_applyChanges')}
-        </Button>
-      </div>
+      <ReviewFooter
+        label={t('action_applyChanges')}
+        busyLabel={t('action_applying')}
+        busy={isApplying}
+        disabled={!result?.previews.length}
+        onConfirm={onConfirm}
+        onCancel={onClose}
+      />
     </div>
   );
 }
@@ -289,14 +369,11 @@ export function DeadLinkResultsView({
         ) : null}
       </div>
       {result.items.map((item) => (
-        <div
+        <ToolResultRow
           key={item.id}
-          data-slot="tool-result-row"
-          className="space-y-2 rounded-lg border p-3 text-sm"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
-            <div className="flex flex-shrink-0 items-center gap-1">
+          title={getBookmarkDisplayTitle(item.title)}
+          badges={
+            <>
               <DeadLinkCategoryBadge item={item} />
               <Badge
                 variant={
@@ -305,15 +382,16 @@ export function DeadLinkResultsView({
               >
                 {t(`tools_deadLinkStatus_${item.status}`)}
               </Badge>
-            </div>
-          </div>
-          <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-          <div className="break-all text-xs text-muted-foreground">{describeDeadLink(item)}</div>
-        </div>
+            </>
+          }
+        >
+          <ResultLine>{item.url}</ResultLine>
+          <ResultLine>{describeDeadLink(item)}</ResultLine>
+        </ToolResultRow>
       ))}
     </div>
   ) : (
-    <EmptyState message={t('state_noDeadLinksFound')} />
+    <ToolEmptyState message={t('state_noDeadLinksFound')} />
   );
 }
 
@@ -344,7 +422,7 @@ export function MetadataResultsView({
     });
 
   if (!result?.items.length) {
-    return <EmptyState message={t('state_noMetadataFound')} />;
+    return <ToolEmptyState message={t('state_noMetadataFound')} />;
   }
 
   return (
@@ -352,48 +430,43 @@ export function MetadataResultsView({
       <div className="space-y-3">
         {result.items.map((item) => {
           const canApply = item.changed && Boolean(item.suggestedTitle);
-          const checkboxId = `metadata-apply-${item.id}`;
+          const title = getBookmarkDisplayTitle(item.title);
           return (
-            <div
+            <ToolResultRow
               key={item.id}
-              data-slot="tool-result-row"
-              className="flex gap-3 rounded-lg border p-3 text-sm"
+              title={title}
+              leading={
+                canApply ? (
+                  <Checkbox
+                    id={`metadata-apply-${item.id}`}
+                    className="mt-0.5"
+                    checked={selected.has(item.id)}
+                    onCheckedChange={(checked) => toggle(item.id, checked === true)}
+                    aria-label={t('tools_metadataApplyItem', title)}
+                  />
+                ) : undefined
+              }
             >
-              {canApply ? (
-                <Checkbox
-                  id={checkboxId}
-                  className="mt-0.5"
-                  checked={selected.has(item.id)}
-                  onCheckedChange={(checked) => toggle(item.id, checked === true)}
-                  aria-label={t('tools_metadataApplyItem', item.title || t('bookmarks_untitled'))}
-                />
+              <ResultLine>{item.url}</ResultLine>
+              {item.status === 'ok' && item.suggestedTitle ? (
+                <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
               ) : null}
-              <div className="min-w-0 flex-1 space-y-2">
-                <div className="font-medium">{item.title || t('bookmarks_untitled')}</div>
-                <div className="break-all text-xs text-muted-foreground">{item.url}</div>
-                {item.status === 'ok' && item.suggestedTitle ? (
-                  <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
-                ) : null}
-                {item.status === 'ok' && item.description ? (
-                  <div className="text-xs text-muted-foreground">{item.description}</div>
-                ) : null}
-                <div className="text-xs text-muted-foreground">{describeMetadata(item)}</div>
-              </div>
-            </div>
+              {item.status === 'ok' && item.description ? (
+                <div className="text-xs text-muted-foreground">{item.description}</div>
+              ) : null}
+              <ResultLine>{describeMetadata(item)}</ResultLine>
+            </ToolResultRow>
           );
         })}
       </div>
       {applicable.length ? (
-        <div className="flex justify-end">
-          <Button
-            onClick={() => onApply(applicable.filter((item) => selected.has(item.id)))}
-            disabled={isApplying || selected.size === 0}
-          >
-            {isApplying
-              ? t('action_applying')
-              : tPlural('tools_metadataApplySelected', selected.size)}
-          </Button>
-        </div>
+        <ReviewFooter
+          label={tPlural('tools_metadataApplySelected', selected.size)}
+          busyLabel={t('action_applying')}
+          busy={isApplying}
+          disabled={selected.size === 0}
+          onConfirm={() => onApply(applicable.filter((item) => selected.has(item.id)))}
+        />
       ) : null}
     </div>
   );
@@ -446,7 +519,7 @@ export function SiteIconResultsView({
   const savable = counts.updated + counts.unchanged;
 
   if (!result || (result.items.length === 0 && result.skippedBookmarks === 0)) {
-    return <EmptyState message={t('state_noSiteIconsFound')} />;
+    return <ToolEmptyState message={t('state_noSiteIconsFound')} />;
   }
 
   return (
@@ -494,20 +567,25 @@ export function SiteIconResultsView({
               <div className="text-xs text-muted-foreground">
                 {tPlural('tools_siteIconsBookmarkCount', item.bookmarkCount)}
               </div>
-              <div className="break-all text-xs text-muted-foreground">{describeSiteIcon(item)}</div>
+              <div className="break-all text-xs text-muted-foreground">
+                {describeSiteIcon(item)}
+              </div>
               {item.keepsCachedIcon && (item.status === 'failed' || item.status === 'noIcon') ? (
-                <div className="text-xs text-muted-foreground">{t('tools_siteIconsKeptCached')}</div>
+                <div className="text-xs text-muted-foreground">
+                  {t('tools_siteIconsKeptCached')}
+                </div>
               ) : null}
             </div>
           </div>
         ))}
       </div>
       {savable > 0 ? (
-        <div className="flex justify-end">
-          <Button onClick={onSave} disabled={isSaving}>
-            {isSaving ? t('action_saving') : tPlural('tools_siteIconsSave', savable)}
-          </Button>
-        </div>
+        <ReviewFooter
+          label={tPlural('tools_siteIconsSave', savable)}
+          busyLabel={t('action_saving')}
+          busy={isSaving}
+          onConfirm={onSave}
+        />
       ) : null}
     </div>
   );
@@ -517,18 +595,16 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
   return result?.items.length ? (
     <div className="space-y-3">
       {result.items.map((item) => (
-        <div
+        <ToolResultRow
           key={item.id}
-          data-slot="tool-result-row"
-          className="space-y-2 rounded-lg border p-3 text-sm"
-        >
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-medium">{item.title || t('bookmarks_untitled')}</span>
+          title={getBookmarkDisplayTitle(item.title)}
+          badges={
             <Badge variant={item.severity === 'high' ? 'destructive' : 'outline'}>
               {t(`tools_privacySeverity_${item.severity}`)}
             </Badge>
-          </div>
-          <div className="break-all text-xs text-muted-foreground">{item.url}</div>
+          }
+        >
+          <ResultLine>{item.url}</ResultLine>
           <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
             {item.findings.map((finding) => (
               <li key={`${item.id}-${privacyFindingKey(finding)}`}>
@@ -536,18 +612,65 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
               </li>
             ))}
           </ul>
-        </div>
+        </ToolResultRow>
       ))}
     </div>
   ) : (
-    <EmptyState message={t('state_noPrivacyIssuesFound')} />
+    <ToolEmptyState message={t('state_noPrivacyIssuesFound')} />
   );
 }
 
-function EmptyState({ message }: { message: string }) {
+/** A tag or summary suggestion for one bookmark; which fields are set depends on the tool. */
+type AIMetadataSuggestion = {
+  bookmarkId: string;
+  title: string;
+  url: string;
+  tags?: string[];
+  reason?: string;
+  summary?: string;
+};
+
+/** Suggested tags (Auto-Tagging) or summaries (Summarizer), saved together after review. */
+export function AIMetadataResultsView({
+  items,
+  saveLabel,
+  isSaving,
+  onSave,
+}: {
+  items: readonly AIMetadataSuggestion[];
+  saveLabel: string;
+  isSaving: boolean;
+  onSave: () => void;
+}) {
+  if (!items.length) return <ToolEmptyState message={t('state_noAiResults')} />;
   return (
-    <div className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">
-      {message}
+    <div className="space-y-4">
+      {items.map((item) => (
+        <ToolResultRow key={item.bookmarkId} title={getBookmarkDisplayTitle(item.title)}>
+          <ResultLine>{item.url}</ResultLine>
+          {item.tags ? (
+            <div className="flex flex-wrap gap-2">
+              {item.tags.map((tag) => (
+                <Badge key={`${item.bookmarkId}-${tag}`} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+          {item.summary !== undefined ? (
+            <div className="rounded-md bg-muted/40 p-2 text-sm">{item.summary}</div>
+          ) : null}
+          {item.reason !== undefined ? (
+            <div className="text-xs text-muted-foreground">{item.reason}</div>
+          ) : null}
+        </ToolResultRow>
+      ))}
+      <ReviewFooter
+        label={saveLabel}
+        busyLabel={t('action_saving')}
+        busy={isSaving}
+        onConfirm={onSave}
+      />
     </div>
   );
 }
@@ -574,7 +697,10 @@ function StatList({
       <div className="mt-3 space-y-2">
         {items.length ? (
           items.map((item) => (
-            <div key={`${label}-${item.label}`} className="flex items-center justify-between text-sm">
+            <div
+              key={`${label}-${item.label}`}
+              className="flex items-center justify-between text-sm"
+            >
               <span className="truncate pr-4">{item.label || t('tools_rootFolder')}</span>
               <Badge variant="secondary">{item.count}</Badge>
             </div>

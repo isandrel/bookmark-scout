@@ -33,6 +33,9 @@ const tested = (
   note?: string,
 ): SettingCoverage => ({ status: 'tested', consumer, tests, ...(note ? { note } : {}) });
 
+const TOOL_TABLE = 'components/bookmarks/tools/tool-definitions.ts';
+const TOOL_OPTIONS = 'services/tool-options.ts';
+const DATA_TOOLS = 'components/bookmarks/tools/DataToolCards.tsx';
 const TOOLS = 'components/bookmarks/ToolsSidebar.tsx';
 const POPUP = 'components/page/PopupPage.tsx';
 
@@ -214,7 +217,7 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     e2e('ai-page-reading.spec.ts', '[mocked provider contract] without Read page content only the title and URL are sent'),
     e2e('ai-page-reading.spec.ts', 'Read page content turns on once website access is granted'),
     unit('page-reader.test.ts', 'leaves items unchanged when page reading is off or website access is missing'),
-  ], 'Also read by Auto-Tagging and Content Summarizer in ToolsSidebar.tsx.'),
+  ], 'Also read by Auto-Tagging and Content Summarizer in services/tool-options.ts.'),
   aiMaxCategories: tested('services/ai-reorganization.ts', [reorgLimits],
     'Prompt-level limit; provider compliance is not verified. -1 is sent to the prompt as-is.'),
   aiMinItemsPerFolder: tested('services/ai-reorganization.ts', [reorgLimits],
@@ -223,15 +226,15 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     'Prompt-level limit; provider compliance is not verified. -1 is sent to the prompt as-is.'),
 
   // Export
-  exportFilenamePrefix: tested(TOOLS, [exportPreferences]),
-  exportFilenameMaxLength: tested(TOOLS, [
+  exportFilenamePrefix: tested(DATA_TOOLS, [exportPreferences]),
+  exportFilenameMaxLength: tested(DATA_TOOLS, [
     unit('bookmark-export.test.ts', 'names files with the saved prefix and the local date'),
   ]),
-  exportJsonIndentSize: tested(TOOLS, [exportUnit]),
-  exportHtmlIndentSpaces: tested(TOOLS, [exportUnit]),
-  exportMarkdownIndentSpaces: tested(TOOLS, [exportUnit]),
-  exportIncludeDates: tested(TOOLS, [exportPreferences, exportUnit]),
-  exportIncludeUrls: tested(TOOLS, [exportPreferences]),
+  exportJsonIndentSize: tested(DATA_TOOLS, [exportUnit]),
+  exportHtmlIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
+  exportMarkdownIndentSpaces: tested(DATA_TOOLS, [exportUnit]),
+  exportIncludeDates: tested(DATA_TOOLS, [exportPreferences, exportUnit]),
+  exportIncludeUrls: tested(DATA_TOOLS, [exportPreferences]),
 
   // Context menu
   contextMenuEnabled: tested('services/context-menu.ts', [
@@ -243,184 +246,184 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   ]),
 
   // AI context packer
-  aiContextPackerEnabled: tested(TOOLS, [toolFlags]),
-  aiContextPackerDefaultScope: tested(TOOLS, [toolFlags]),
-  aiContextPackerOutputFormat: tested(TOOLS, [
+  aiContextPackerEnabled: tested(TOOL_TABLE, [toolFlags]),
+  aiContextPackerDefaultScope: tested(TOOL_TABLE, [toolFlags]),
+  aiContextPackerOutputFormat: tested(TOOL_OPTIONS, [
     unit('ai-context-pack.test.ts', 'escapes stored metadata in XML and omits missing fields'),
     contextPack,
   ]),
-  aiContextPackerIncludeFolderPath: tested(TOOLS, [contextPack]),
-  aiContextPackerIncludeDates: tested(TOOLS, [contextPackOptions]),
-  aiContextPackerIncludeTags: tested(TOOLS, [contextPack, contextPackOptions]),
-  aiContextPackerIncludeSummaries: tested(TOOLS, [contextPack, contextPackOptions]),
-  aiContextPackerMaxItems: tested(TOOLS, [contextPackLimits]),
-  aiContextPackerMaxDepth: tested(TOOLS, [contextPackLimits]),
-  aiContextPackerExcerptLength: tested(TOOLS, [contextPackLimits]),
+  aiContextPackerIncludeFolderPath: tested(TOOL_OPTIONS, [contextPack]),
+  aiContextPackerIncludeDates: tested(TOOL_OPTIONS, [contextPackOptions]),
+  aiContextPackerIncludeTags: tested(TOOL_OPTIONS, [contextPack, contextPackOptions]),
+  aiContextPackerIncludeSummaries: tested(TOOL_OPTIONS, [contextPack, contextPackOptions]),
+  aiContextPackerMaxItems: tested(TOOL_OPTIONS, [contextPackLimits]),
+  aiContextPackerMaxDepth: tested(TOOL_OPTIONS, [contextPackLimits]),
+  aiContextPackerExcerptLength: tested(TOOL_OPTIONS, [contextPackLimits]),
 
   // Auto-tagging
-  autoTaggingEnabled: tested(TOOLS, [toolFlags]),
+  autoTaggingEnabled: tested(TOOL_TABLE, [toolFlags]),
   autoTaggingDefaultScope: {
     status: 'unsupported',
-    consumer: TOOLS,
+    consumer: TOOL_TABLE,
     reason: 'Auto-tagging only runs on the current folder; the setting is fixed to "folder".',
     tests: [toolFlags],
   },
-  autoTaggingMinTags: tested(TOOLS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
-  autoTaggingMaxTags: tested(TOOLS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
-  autoTaggingTagStyle: tested(TOOLS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
-  autoTaggingMergeMode: tested(TOOLS, [
+  autoTaggingMinTags: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
+  autoTaggingMaxTags: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
+  autoTaggingTagStyle: tested(TOOL_OPTIONS, [aiPrompts], 'Prompt-level; provider compliance is not verified.'),
+  autoTaggingMergeMode: tested(TOOL_TABLE, [
     metadataMerge,
     unit('bookmark-metadata-storage.test.ts', 'appends tags without dedupe and replaces tags when requested'),
   ]),
-  autoTaggingDedupeTags: tested(TOOLS, [
+  autoTaggingDedupeTags: tested(TOOL_TABLE, [
     unit('bookmark-metadata-storage.test.ts', 'appends tags without dedupe and replaces tags when requested'),
   ]),
 
   // Summarizer
-  summarizerEnabled: tested(TOOLS, [toolFlags]),
+  summarizerEnabled: tested(TOOL_TABLE, [toolFlags]),
   summarizerDefaultScope: {
     status: 'unsupported',
-    consumer: TOOLS,
+    consumer: TOOL_TABLE,
     reason: 'The summarizer only runs on the current folder; the setting is fixed to "folder".',
   },
-  summarizerSummaryLength: tested(TOOLS, [
+  summarizerSummaryLength: tested(TOOL_OPTIONS, [
     unit('ai-prompt-settings.test.ts', 'puts the saved summary length into the summarizer prompt'),
   ], 'Prompt-level; provider compliance is not verified.'),
-  summarizerIncludeDomainHint: tested(TOOLS, [
+  summarizerIncludeDomainHint: tested(TOOL_OPTIONS, [
     unit('ai-bookmark-workflows.test.ts', 'includes optional domain context and filters unknown or duplicate summarizer results'),
   ]),
-  summarizerMergeMode: tested(TOOLS, [
+  summarizerMergeMode: tested(TOOL_TABLE, [
     metadataMerge,
     unit('bookmark-metadata-storage.test.ts', 'appends or replaces summaries according to the merge mode'),
   ]),
 
   // Reorganization
-  reorganizationEnabled: tested(TOOLS, [toolFlags]),
-  reorganizationDefaultScope: tested(TOOLS, [duplicateSettings]),
-  reorganizationDryRunFirst: tested(TOOLS, [
+  reorganizationEnabled: tested(TOOL_TABLE, [toolFlags]),
+  reorganizationDefaultScope: tested(TOOL_TABLE, [duplicateSettings]),
+  reorganizationDryRunFirst: tested(TOOL_TABLE, [
     toolFlags,
     unit('ai-reorganization.test.ts', 'allows apply without preview confirmation when dry-run-first is disabled'),
   ]),
-  reorganizationMinConfidence: tested(TOOLS, [reorgSafety]),
-  reorganizationBatchSize: tested(TOOLS, [reorgSafety]),
+  reorganizationMinConfidence: tested(TOOL_OPTIONS, [reorgSafety]),
+  reorganizationBatchSize: tested(TOOL_OPTIONS, [reorgSafety]),
 
   // Duplicates
-  duplicatesEnabled: tested(TOOLS, [toolFlags]),
+  duplicatesEnabled: tested(TOOL_TABLE, [toolFlags]),
   duplicatesDefaultScope: {
     status: 'unsupported',
-    consumer: TOOLS,
+    consumer: TOOL_TABLE,
     reason: 'Duplicate scans always cover all bookmarks; the setting is fixed to "all".',
     tests: [fixedScopes],
   },
-  duplicatesMatchStrategy: tested(TOOLS, [
+  duplicatesMatchStrategy: tested(TOOL_OPTIONS, [
     duplicateSettings,
     e2e('tool-data-safety.spec.ts', 'duplicate cleaner warns before title-only matching removes bookmarks with different URLs'),
   ]),
-  duplicatesNormalizeWww: tested(TOOLS, [duplicateSettings]),
-  duplicatesIgnoreProtocol: tested(TOOLS, [
+  duplicatesNormalizeWww: tested(TOOL_OPTIONS, [duplicateSettings]),
+  duplicatesIgnoreProtocol: tested(TOOL_OPTIONS, [
     unit('bookmark-duplicates.test.ts', 'normalizes scheme and host case, default ports, www, protocol, and trailing slash'),
   ]),
-  duplicatesIgnoreTrailingSlash: tested(TOOLS, [
+  duplicatesIgnoreTrailingSlash: tested(TOOL_OPTIONS, [
     unit('bookmark-duplicates.test.ts', 'normalizes scheme and host case, default ports, www, protocol, and trailing slash'),
   ]),
-  duplicatesKeepRule: tested(TOOLS, [
+  duplicatesKeepRule: tested(TOOL_OPTIONS, [
     e2e('tool-data-safety.spec.ts', 'duplicate cleaner keeps the newest item it labels Keep and ignores case, port, and query-order lookalikes'),
   ]),
-  duplicatesMaxGroups: tested(TOOLS, [
+  duplicatesMaxGroups: tested(TOOL_OPTIONS, [
     duplicateSettings,
     unit(SETTINGS_UNIT, 'duplicate scans return at most the saved number of groups'),
   ]),
 
   // URL cleaner
-  urlCleanerEnabled: tested(TOOLS, [
+  urlCleanerEnabled: tested(TOOL_TABLE, [
     fixedScopes,
   ]),
-  urlCleanerDefaultScope: tested(TOOLS, [
+  urlCleanerDefaultScope: tested(TOOL_TABLE, [
     e2e('tool-settings.spec.ts', 'tools sidebar headings, cards, scopes, and dialogs follow the selected language'),
   ]),
-  urlCleanerRemoveHash: tested(TOOLS, [urlCleanerE2e]),
-  urlCleanerSortQueryParams: tested(TOOLS, [
+  urlCleanerRemoveHash: tested(TOOL_OPTIONS, [urlCleanerE2e]),
+  urlCleanerSortQueryParams: tested(TOOL_OPTIONS, [
     e2e('tool-data-safety.spec.ts', 'URL cleaner keeps URL encoding, ignores pure reordering, and skips bookmarks edited after the preview'),
   ]),
-  urlCleanerDedupeQueryParams: tested(TOOLS, [
+  urlCleanerDedupeQueryParams: tested(TOOL_OPTIONS, [
     urlCleanerE2e,
     unit('url-cleaner.test.ts', 'dedupes identical key/value pairs only'),
   ]),
-  urlCleanerPreserveParams: tested(TOOLS, [urlCleanerE2e]),
-  urlCleanerRemoveParams: tested(TOOLS, [urlCleanerE2e]),
+  urlCleanerPreserveParams: tested(TOOL_OPTIONS, [urlCleanerE2e]),
+  urlCleanerRemoveParams: tested(TOOL_OPTIONS, [urlCleanerE2e]),
 
   // Dead links
-  deadLinksEnabled: tested(TOOLS, [toolFlags]),
-  deadLinksDefaultScope: tested(TOOLS, [networkRealServer]),
-  deadLinksRequestTimeoutMs: tested(TOOLS, [
+  deadLinksEnabled: tested(TOOL_TABLE, [toolFlags]),
+  deadLinksDefaultScope: tested(TOOL_TABLE, [networkRealServer]),
+  deadLinksRequestTimeoutMs: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'dead-link scans time out after the saved request timeout'),
   ]),
-  deadLinksConcurrency: tested(TOOLS, [
+  deadLinksConcurrency: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'dead-link scans never exceed the saved concurrency'),
   ]),
-  deadLinksRetryCount: tested(TOOLS, [networkRealServer]),
-  deadLinksFollowRedirects: tested(TOOLS, [networkRealServer]),
-  deadLinksSuccessStatuses: tested(TOOLS, [
+  deadLinksRetryCount: tested(TOOL_OPTIONS, [networkRealServer]),
+  deadLinksFollowRedirects: tested(TOOL_OPTIONS, [networkRealServer]),
+  deadLinksSuccessStatuses: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'dead-link scans treat only the saved success statuses as reachable'),
   ]),
 
   // Metadata fetcher
-  metadataFetcherEnabled: tested(TOOLS, [toolFlags]),
-  metadataFetcherDefaultScope: tested(TOOLS, [
+  metadataFetcherEnabled: tested(TOOL_TABLE, [toolFlags]),
+  metadataFetcherDefaultScope: tested(TOOL_TABLE, [
     e2e('tool-network.spec.ts', 'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles'),
   ]),
-  metadataFetcherOverwriteTitles: tested(TOOLS, [
+  metadataFetcherOverwriteTitles: tested(TOOL_OPTIONS, [
     e2e('tool-network.spec.ts', 'metadata fetcher decodes Shift_JIS, ignores error pages, and applies only reviewed titles'),
   ]),
-  metadataFetcherFetchDescriptions: tested(TOOLS, [
+  metadataFetcherFetchDescriptions: tested(TOOL_OPTIONS, [
     e2e('additional-workflows.spec.ts', 'metadata fetcher previews mocked page metadata without changing bookmarks'),
   ]),
-  metadataFetcherRequestTimeoutMs: tested(TOOLS, [
+  metadataFetcherRequestTimeoutMs: tested(TOOL_OPTIONS, [
     e2e('tool-network.spec.ts', 'metadata fetcher times out on a stalled body, skips non-HTML files, and leaves Running'),
   ]),
-  metadataFetcherConcurrency: tested(TOOLS, [
+  metadataFetcherConcurrency: tested(TOOL_OPTIONS, [
     unit(SETTINGS_UNIT, 'metadata fetches never exceed the saved concurrency'),
   ]),
 
   // Site icons (requests reuse the Metadata Fetcher's timeout and concurrency)
-  siteIconsEnabled: tested(TOOLS, [toolFlags]),
-  siteIconsDefaultScope: tested(TOOLS, [siteIconsRefresh]),
-  siteIconsPreferredSize: tested(TOOLS, [
+  siteIconsEnabled: tested(TOOL_TABLE, [toolFlags]),
+  siteIconsDefaultScope: tested(TOOL_TABLE, [siteIconsRefresh]),
+  siteIconsPreferredSize: tested(TOOL_OPTIONS, [
     unit(SITE_ICONS_UNIT, 'prefers the declared icon closest to the saved preferred size'),
   ]),
-  siteIconsMaxIconKb: tested(TOOLS, [
+  siteIconsMaxIconKb: tested(TOOL_OPTIONS, [
     siteIconsRefresh,
     unit(SITE_ICONS_UNIT, 'rejects icon files over the saved byte cap and files that are not images'),
   ]),
-  siteIconsMaxCacheKb: tested(TOOLS, [
+  siteIconsMaxCacheKb: tested(TOOL_TABLE, [
     unit(SITE_ICONS_UNIT, 'evicts the oldest icons to stay within the saved cache limit'),
   ]),
 
   // Privacy scanner
-  privacyScannerEnabled: tested(TOOLS, [toolFlags]),
+  privacyScannerEnabled: tested(TOOL_TABLE, [toolFlags]),
   privacyScannerDefaultScope: {
     status: 'unsupported',
-    consumer: TOOLS,
+    consumer: TOOL_TABLE,
     reason: 'Privacy scans always cover all bookmarks; the setting is fixed to "all".',
   },
-  privacyScannerScanTitles: tested(TOOLS, [reportSettings, privacyUnit]),
-  privacyScannerScanQueryParams: tested(TOOLS, [privacyUnit]),
-  privacyScannerScanFragments: tested(TOOLS, [privacyUnit]),
-  privacyScannerSensitiveParams: tested(TOOLS, [privacyDetectors]),
-  privacyScannerEmailDetection: tested(TOOLS, [privacyDetectors]),
-  privacyScannerUuidDetection: tested(TOOLS, [privacyDetectors]),
+  privacyScannerScanTitles: tested(TOOL_OPTIONS, [reportSettings, privacyUnit]),
+  privacyScannerScanQueryParams: tested(TOOL_OPTIONS, [privacyUnit]),
+  privacyScannerScanFragments: tested(TOOL_OPTIONS, [privacyUnit]),
+  privacyScannerSensitiveParams: tested(TOOL_OPTIONS, [privacyDetectors]),
+  privacyScannerEmailDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
+  privacyScannerUuidDetection: tested(TOOL_OPTIONS, [privacyDetectors]),
 
   // Statistics
-  statisticsEnabled: tested(TOOLS, [toolFlags]),
-  statisticsDefaultScope: tested(TOOLS, [toolFlags]),
-  statisticsIncludeDomains: tested(TOOLS, [statisticsSections]),
-  statisticsIncludeFolders: tested(TOOLS, [statisticsSections]),
-  statisticsIncludeDuplicates: tested(TOOLS, [statisticsSections]),
-  statisticsIncludeProtocols: tested(TOOLS, [statisticsSections]),
-  statisticsIncludeDepthBreakdown: tested(TOOLS, [
+  statisticsEnabled: tested(TOOL_TABLE, [toolFlags]),
+  statisticsDefaultScope: tested(TOOL_TABLE, [toolFlags]),
+  statisticsIncludeDomains: tested(TOOL_OPTIONS, [statisticsSections]),
+  statisticsIncludeFolders: tested(TOOL_OPTIONS, [statisticsSections]),
+  statisticsIncludeDuplicates: tested(TOOL_OPTIONS, [statisticsSections]),
+  statisticsIncludeProtocols: tested(TOOL_OPTIONS, [statisticsSections]),
+  statisticsIncludeDepthBreakdown: tested(TOOL_OPTIONS, [
     e2e('tool-reports.spec.ts', 'statistics count folders inside the scope and show the depth breakdown only when enabled'),
   ]),
-  statisticsTopN: tested(TOOLS, [
+  statisticsTopN: tested(TOOL_OPTIONS, [
     reportSettings,
     unit(SETTINGS_UNIT, 'statistics top lists hold at most the saved top-N entries'),
   ]),
@@ -432,5 +435,5 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   dataShowImport: tested(TOOLS, [
     e2e('tool-data-io.spec.ts', 'export and import cards follow their visibility settings without changing bookmarks'),
   ]),
-  dataDefaultExportFormat: tested(TOOLS, [exportPreferences]),
+  dataDefaultExportFormat: tested(DATA_TOOLS, [exportPreferences]),
 };

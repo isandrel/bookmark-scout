@@ -127,13 +127,6 @@ export type MetadataFetchResult = {
   items: MetadataFetchResultItem[];
 };
 
-export type MetadataApplyResult = {
-  updated: number;
-  /** Bookmarks deleted or renamed since the scan; they are left untouched. */
-  skipped: number;
-  failed: number;
-};
-
 export type PrivacySeverity = 'low' | 'medium' | 'high';
 
 export type PrivacyFinding =
@@ -428,20 +421,18 @@ export async function fetchBookmarkMetadata(
 }
 
 /**
- * Applies reviewed title suggestions. A bookmark renamed or deleted since the scan is skipped
- * so a stale suggestion never overwrites the user's newer title.
+ * The title changes reviewed suggestions make. Each applies only while the bookmark keeps the
+ * scanned title, so a stale suggestion never overwrites the user's newer title; items without a
+ * suggestion make no change.
  */
-export async function applyMetadataTitles(
-  items: Array<Pick<MetadataFetchResultItem, 'id' | 'title' | 'suggestedTitle'>>,
-): Promise<MetadataApplyResult> {
-  const changes: BookmarkChange[] = items.flatMap(({ id, title, suggestedTitle }) =>
+export function getMetadataTitleChanges(
+  items: ReadonlyArray<Pick<MetadataFetchResultItem, 'id' | 'title' | 'suggestedTitle'>>,
+): BookmarkChange[] {
+  return items.flatMap(({ id, title, suggestedTitle }) =>
     suggestedTitle
       ? [{ kind: 'update', id, title, expect: { title }, set: { title: suggestedTitle } }]
       : [],
   );
-  const { applied, skipped, failed } = await applyBookmarkChanges(changes);
-  // Items without a suggestion have nothing to apply.
-  return { updated: applied, skipped: skipped + items.length - changes.length, failed };
 }
 
 /** Tokens that sign in to OAuth flows or APIs even when the parameter name looks harmless. */
