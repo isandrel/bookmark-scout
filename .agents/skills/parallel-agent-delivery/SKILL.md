@@ -11,7 +11,8 @@ description: Plan and run several coding subagents in parallel on the Bookmark S
 2. When two agents need the same new helper, prescribe its **exact path, name, and signature** in both prompts (for example `src/hooks/use-bookmark-events.ts` exporting `useBookmarkEvents(callback)`), so the second merge is a trivial conflict.
 3. Order inside each agent: security, then data loss, then broken core flows, then polish. Security and data-loss fixes go in their own commits.
 4. Keep concurrency to about four agents. More agents mean more conflicts and more rate-limit stops.
-5. Make every prompt self-contained: branch name, the findings or `backlog/tasks/` file to read, the verification commands below, commit and PR rules, and the required final report (PR URL, merge status, per-bug outcome, verification results).
+5. Make every prompt self-contained: branch name, the findings or `backlog/tasks/` file to read, the verification commands below, commit and PR rules, and the required final report (PR URL, merge status, per-bug outcome, verification results, and **user-visible behavior changes or deviations from the brief**). Agents have changed behavior on their own (Enter on a folder saving the page, saved searches moved to local storage); the report section lets you ask the user before it ships.
+6. For a migration or codemod, record a baseline on `origin/main` first (lint warning count, unit and E2E totals, the list of `tsc` errors) and diff against it, so existing failures are not blamed on the change.
 
 Verification for extension changes, from the repository root (in worktrees, export `NX_DAEMON=false` first):
 ```bash
@@ -29,7 +30,8 @@ bunx nx run extension:test:e2e
 - Conventional Commits with the repository's emoji prefix (for example `🐛 fix(extension): ...`). No Co-Authored-By or "Generated with" attribution lines.
 - Open PRs with `.github/pull_request_template.md`, then `gh pr merge <n> --auto --squash`.
 - **Auto-merge only waits for required checks.** The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Website and Docs`, `Analyze (javascript-typescript)`, and CodeQL, with strict up-to-date branches. Before this, PRs auto-merged with red or still-running E2E. If a required check is ever removed, stop relying on auto-merge.
-- BEHIND: `gh pr update-branch <n>`. DIRTY: merge `origin/main` into the branch, resolve (keep both sides' locale keys), re-verify, push. **Never force-push** a published branch.
+- BEHIND: `gh pr update-branch <n>`. DIRTY: merge `origin/main` into the branch, resolve (keep both sides' locale keys), re-verify, push. **Never force-push** a branch that has an open PR; `--force-with-lease` is acceptable only on a branch with no PR yet.
+- After creating or updating a worktree, run `bun install --frozen-lockfile`. A worktree created before `main` added a dependency failed unit tests with `Cannot find package '@ai-sdk/azure'`.
 - Use `gh` for all GitHub operations; never browser automation.
 
 ## Stacked PRs
@@ -37,6 +39,11 @@ bunx nx run extension:test:e2e
 - Merging a PR with `--delete-branch` **closes** (does not retarget) PRs based on that branch. Retarget dependents first with `gh pr edit <n> --base main`, or merge the base without deleting its branch.
 - After a base PR is squash-merged, update the dependent branch by merging `origin/main`.
 - If a stack goes stale while `main` moves a lot, close it with a comment and redo the change on current `main`.
+- **What worked best: keep the stack local and open one PR at a time against `main`.** Note the parent branch's tip SHA before anything moves. After the bottom PR squash-merges, run `git rebase --onto origin/main <old-parent-tip-sha>` on the next branch (it has no PR yet, so `--force-with-lease` is safe), push, open its PR with auto-merge, and wait:
+  ```bash
+  until s=$(gh pr view N --json state --jq .state) && { [[ $s == MERGED ]] || gh pr checks N | grep -q fail; }; do sleep 45; done
+  ```
+  Run that loop with `run_in_background` and a long timeout; a short one killed an earlier wait.
 
 ## Shared-resource gotchas
 
@@ -48,7 +55,12 @@ bunx nx run extension:test:e2e
 ## Running and recovering agents
 
 - Run agents in the background and report to the user as each finishes; do not predict results before a notification arrives.
-- Agents share one session scratchpad. Tell each agent to use unique scratch file names (for example `pr-body-<branch>.md`); two agents writing `pr-body.md` overwrote each other.
+- Agents share one session scratchpad, and files there were overwritten and even deleted mid-task. Tell each agent to keep scripts, logs, and PR bodies in `~/.cache/bookmark-scout-<branch>/`.
+- **Rejecting or interrupting a tool call stops the background agents too**, and they cannot be resumed. Avoid it while agents run unless you mean to stop them. Afterwards check `ListAgents`, inspect each worktree with `git status`, and start new agents told to continue from the files on disk.
+- **Worktree-isolated agents have a command guard** that refuses anything it cannot prove stays inside the worktree: shell variables (`D=...; mkdir $D`), loops, `cd $X`, `git -C <dir>`, heredoc interpreters (`python3 - <<EOF`, `perl -0pi -e`), `gh ... --jq` inside compound commands, and commands the rtk hook rewrites (globbed `ls` or `grep`). Tell agents to run plain, separate commands with literal absolute paths, call `/usr/bin/git`, `/usr/bin/grep`, and `/bin/ls` (or the Grep and Glob tools), edit with the Edit tool, run one Nx target per command (`extension:build:chrome`, then `:firefox`, then `:edge`), and put multi-step logic in a script file run as `zsh /abs/path/script.sh`.
+- **Waiting:** a foreground `sleep N` before a check is blocked. Use `run_in_background`, or an `until` loop that polls a summary file.
+- **Re-check reported counts.** Confirm test totals from the PR's CI logs before relaying them; two agents once reported different E2E totals for the same suite.
+- **Shared message files:** when agents edit the same `messages/*.json`, keep the orchestrator's own edits uncommitted until they finish, then commit with explicit paths.
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
 - **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.

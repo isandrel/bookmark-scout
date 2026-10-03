@@ -12,6 +12,10 @@ description: Inspect an installed browser extension with Computer Use when expli
 5. If Computer Use or Browser Use rejects access to a `chrome-extension://` page and forbids workarounds, stop that route immediately. Do not reach the same page through another browser surface, native UI, raw CDP, terminal automation, or an indirect URL. Report the restriction and the checks that remain unverified.
 6. Summarize exactly what was visibly observed, which build and profile were involved, and what was not tested. Avoid reproducing private user data or settings values in the report unless essential and explicitly requested.
 
+## "My browser still shows the old UI"
+
+Usually the build is stale, not the code. The browser loads `apps/extension/dist/chrome-mv3` exactly as last built (once a day older than the merged code), and `dist/chrome-mv3-dev` only updates while `bun run dev` runs. Fix, with the user's go-ahead: `bun install && bunx nx run extension:build:chrome` in the main checkout, reload the extension in `chrome://extensions`, then reopen the popup and any open extension pages.
+
 ## Known tool limits
 
 - **Computer Use grants browsers read-only access.** Browsers (Chrome, Chrome for Testing, Safari, Firefox) are granted at a read tier: screenshots only, no clicks or typing. Do not work around it.

@@ -11,13 +11,19 @@ Run scripts from the repository root. They use `/usr/bin/git` because a local ho
 
 ## Merge a queue of PRs
 
-The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. Every merge makes the other open PRs BEHIND, so PRs land one at a time.
+The `Protect Main Branch` ruleset requires Lint, the three Build Extension jobs, Extension Tests, `Edge E2E`, `Firefox E2E smoke`, `Website and Docs`, `Analyze (javascript-typescript)` and CodeQL, with **strict up-to-date branches**. Every merge makes the other open PRs BEHIND, so PRs land one at a time.
 
 1. List state: `gh pr list --state open --json number,title,headRefName,mergeStateStatus,autoMergeRequest`.
 2. Enable auto-merge on each PR you are allowed to merge: `gh pr merge <n> --auto --squash`. Leave PRs that an agent is still working on to that agent; `update-branch` adds a remote merge commit that rejects the agent's next push.
 3. Fix each failing PR first (Dependabot lockfile below; other failures: read `gh run view <id> --log-failed`).
-4. Run `scripts/merge-queue.sh` in the background. It updates one BEHIND PR every 3 minutes until no open PRs remain, so CI is not wasted on branches that will be BEHIND again.
+4. Run `scripts/merge-queue.sh` with `run_in_background` (the harness blocks foreground `sleep`; to wait on a condition, use an `until` loop or Monitor). It updates one BEHIND PR every 3 minutes until no open PRs remain, so CI is not wasted on branches that will be BEHIND again.
 5. After the queue drains, confirm the latest `CI` run on `main` is green, not only the PR checks.
+
+Watch for:
+- **Merge state lags.** A PR can still show as conflicting a minute after a successful merge-and-push. Check again before resolving twice.
+- **Flaky check on an unrelated PR:** rerun, do not change code. Edge E2E sometimes times out on its first test from a cold browser start. Rerun only the failed jobs with `gh run rerun <run-id> --failed`, check history with `gh run list --workflow ci.yml --limit 15 --json headBranch,conclusion`, and fix the test only if the same failure repeats.
+- **CodeQL is required, so false positives still block.** Rewrite the code rather than arguing: when decoding HTML entities, decode `&amp;` last; avoid one-pass regex HTML sanitizers. Then reply on the CodeQL thread and resolve it.
+- **Dependency Review:** an "Unknown License" warning on a package whose real license is on the allowlist needs no action. A license that is not on the allowlist (for example OFL-1.1 fonts) blocks the PR; add it to `.github/workflows/dependency-review.yml` with the user's agreement and ship the license text.
 
 ## Dependabot Bun PRs
 
@@ -26,7 +32,7 @@ Until October 2026 the repo used the binary `bun.lockb`, which Dependabot did no
 Fix: `scripts/fix-dependabot-lockfile.sh <pr>`. It merges `origin/main` into the PR branch, takes main's `bun.lock` on conflict, regenerates it with `bun install`, checks `bun install --frozen-lockfile`, and pushes a normal commit. It stops if any file other than `bun.lock` conflicts. Then build what the bump touches (for example `bunx nx run docs:build` or the website lint).
 
 Watch for:
-- **CI only lints the extension.** A website or docs dependency bump can pass CI and still break `bun run lint`. Run the affected app's lint and build locally before letting it merge.
+- **CI coverage of website and docs.** The required `Website and Docs` job runs website lint, `website:verify`, `website:test:e2e`, `docs:types:check`, `docs:build` and the docs `verify`, but not the docs Biome lint. For a docs dependency bump, also run `bunx biome check src scripts` in `apps/docs`.
 - **ESLint 10:** `eslint-plugin-react` 7.x calls removed context APIs (`contextOrFilename.getFilename is not a function`). `apps/website/eslint.config.mjs` wraps the Next configs in `fixupConfigRules` from `@eslint/compat`; remove it when the plugin supports ESLint 10.
 - **Major bumps** (for example `@atlaskit/pragmatic-drag-and-drop`) are safe to auto-merge only because the required E2E suite covers drag and drop.
 
@@ -39,7 +45,7 @@ The desktop app may send `<ci-monitor-event>` messages for watched PRs. CI failu
 PRs can pass CI and still fail on `main` (flaky timing, or two PRs that conflict in behavior).
 
 1. `gh run view <id> --log-failed` and find the failing spec.
-2. Reproduce on a worktree from `origin/main` with `--repeat-each=6`. If it passes locally, treat it as timing: replace one-shot measurements with `expect.poll` (for example after a sidebar transition) instead of adding sleeps.
+2. Reproduce on a worktree from `origin/main` with `--repeat-each=6`. This happens after dependency-only merges too (a lockfile switch once exposed an unrelated flaky test). If it passes locally, treat it as timing: replace one-shot measurements with `expect.poll` (for example after a sidebar transition) instead of adding sleeps.
 3. Ship the fix as its own small PR with auto-merge, then confirm `main` is green.
 
 ## Changing required checks

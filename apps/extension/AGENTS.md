@@ -121,7 +121,7 @@ If a change is plausibly browser-specific, prefer validating the specific browse
 - Run `nx run extension:test:e2e` for changes to popup, settings, bookmark management, maintenance, reports, or import/export workflows covered by browser tests.
 - The end-to-end target builds Chrome and installs Playwright Chromium and its platform dependencies automatically. CI runs `bun run test` on pushes and pull requests.
 - Dead-link, metadata, and site icon requests have deterministic route-mocked Chromium E2E coverage, plus a real local HTTP server (no CORS headers) test that runs against a copy of the build with the optional website access pre-granted (`grantWebHostAccess` fixture option). The real browser permission prompt cannot be answered headlessly; the declined path is covered with a stubbed `permissions.request`. Provider-backed AI tools are covered by `[mocked provider contract]` unit and E2E tests with stubbed providers and synthetic keys; these do not prove live provider compatibility. Live network behavior and real providers remain manually verified.
-- Edge and Firefox: `nx run extension:test:e2e:edge` runs the same Playwright suite (Playwright project `edge`) in the installed Microsoft Edge against `dist/edge-mv3`; install Edge first (`bunx playwright install msedge`). `nx run extension:test:e2e:firefox` runs the smoke suite in `tests/e2e-firefox/` against `dist/firefox-mv2`; it needs Firefox and drives it through geckodriver with `selenium-webdriver` because Playwright cannot open `moz-extension://` pages (Selenium Manager downloads geckodriver if needed). Run the Edge or Firefox target when a change is browser-specific. CI runs both as non-required jobs.
+- Edge and Firefox: `nx run extension:test:e2e:edge` runs the same Playwright suite (Playwright project `edge`) in the installed Microsoft Edge against `dist/edge-mv3`; install Edge first (`bunx playwright install msedge`). `nx run extension:test:e2e:firefox` runs the smoke suite in `tests/e2e-firefox/` against `dist/firefox-mv2`; it needs Firefox and drives it through geckodriver with `selenium-webdriver` because Playwright cannot open `moz-extension://` pages (Selenium Manager downloads geckodriver if needed). Run the Edge or Firefox target when a change is browser-specific. CI runs both as required checks (`Edge E2E` and `Firefox E2E smoke`).
 - Do not hard-code one browser's permanent folder names (Edge says "Favorites bar" and "Other favorites"); read them from `chrome.bookmarks` as `otherBookmarksTitle` in `tests/e2e/popup-helpers.ts` does. A negative assertion on a missing title passes vacuously.
 
 ## Architectural expectations
@@ -162,6 +162,7 @@ WXT auto-imports every export from `components/**`, `hooks/`, `utils/`, `lib/`, 
 - be careful with cross-browser API assumptions
 - do not introduce a fix that works only for Chrome if the existing code clearly supports Firefox or Edge
 - keep background, sidepanel, popup, and options flows consistent with their runtime boundaries
+- use WXT's promise-based `browser.*` API, never callback-style `chrome.*`; Firefox's `browser` is promise-only, so a renamed callback call breaks there
 
 ## AI and provider guidance
 
@@ -174,6 +175,9 @@ Rules:
 - keep provider creation and model wiring centralized in existing AI service files
 - do not embed provider-specific logic deep inside UI components unless the current architecture already does so for a narrow reason
 - preserve clear disclosure around what user bookmark data is sent to external providers
+- put AI timeouts, sizes, and limits in `config/settings.default.toml` and validate them in `src/lib/ai-runtime-config.ts`; never hard-code them
+- write local server addresses as `localhost`, never `127.0.0.1`
+- follow the `extension-ai-feature` skill in `.agents/skills/` for the end-to-end checklist
 
 Featured providers are defined in `config/settings.default.toml`. About 200 more come from `config/provider-catalog.json`, a snapshot of the models.dev catalog (MIT; license in `public/licenses/models-dev.txt`). Regenerate it with `bun run catalog:sync` instead of editing it by hand; it also refreshes the one-color provider logos in `public/provider-logos/`, which are drawn as CSS masks. The extension never fetches models.dev at runtime. Providers left out or marked without a model list after the 2026-10-02 endpoint probe are listed with reasons in `scripts/sync-provider-catalog.ts`. Model lists and connection checks go through `src/services/ai-model-list.ts`.
 
@@ -194,6 +198,9 @@ When working in AI-related files, check whether the logic already belongs in:
 - keep component APIs small and understandable
 - keep theme tokens, Tailwind setup, and animations in `src/styles/theme.css`, the one stylesheet every entrypoint imports
 - give tests a `data-slot`, `data-testid`, or semantic class hook (`.folder-item`, `.bookmark-item`) instead of selecting on Tailwind utility classes, so restyling does not break E2E specs
+- primitives are shadcn on Base UI; `components.json` still says `"style": "default"`, which makes `bunx shadcn add` install Radix code, so port new components to `@base-ui/react` by hand
+- settings autosave and apply live with no success toast or status text; show failures only. A language change re-renders the page and must not remount it
+- follow the `extension-ui-change` skill in `.agents/skills/` for redesign and restyle work
 
 If a component becomes a container for too much logic, split responsibilities rather than continuing to grow it.
 
@@ -216,11 +223,14 @@ Follow local Biome rules and established code style:
 - trailing commas
 - line width 100
 
+Format only the files you touched; `biome check --write` across the app reformats dozens of unrelated files.
+
 Type rules:
 
 - prefer `type` over `interface` unless interface behavior is required
 - avoid `any`
 - keep runtime and type boundaries explicit when working with browser APIs and provider payloads
+- `tsc` is not run in CI and `main` already has type errors, so never claim a clean type check; run `bunx wxt prepare && bunx tsc --noEmit -p . --ignoreDeprecations 6.0` and compare the errors in your files against `main`
 
 ## Security and privacy
 
