@@ -3,7 +3,6 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "useDefineForClassFields": true,
-    "baseUrl": null,
     "moduleDetection": "force",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
