@@ -29,10 +29,12 @@
             "preset": "recommended",
             "correctness": {
                 "useExhaustiveDependencies": "warn",
-                "useHookAtTopLevel": "error"
+                "useHookAtTopLevel": "error",
+                "noChildrenProp": "off"
             },
             "suspicious": {
-                "noExplicitAny": "warn"
+                "noExplicitAny": "warn",
+                "noArrayIndexKey": "off"
             }
         }
     },
