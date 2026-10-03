@@ -2,8 +2,7 @@ import { site } from '@bookmark-scout/config';
 import { defineConfig } from 'wxt';
 import react from '@vitejs/plugin-react-swc';
 import path from 'node:path';
-
-const OPTIONAL_WEB_ORIGINS = ['http://*/*', 'https://*/*'];
+import { adaptManifestV2, createManifest } from './manifest.config';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -15,47 +14,13 @@ export default defineConfig({
         dirs: ['components/**', 'lib', 'services', 'stores', '!**/index.ts'],
     },
 
-    manifest: {
-        name: '__MSG_extName__',
-        description: '__MSG_extDescription__',
-        // The workspace default locale (config/project.toml); _locales must contain it.
-        default_locale: site.locales.default,
-        icons: {
-            16: 'icon-16.png',
-            32: 'icon-32.png',
-            48: 'icon-48.png',
-            96: 'icon-96.png',
-            128: 'icon-128.png',
-        },
-        action: {
-            default_icon: {
-                16: 'icon-16.png',
-                32: 'icon-32.png',
-                48: 'icon-48.png',
-            },
-        },
-        permissions: ['bookmarks', 'tabs', 'favicon', 'storage', 'sidePanel', 'contextMenus'],
-        // Requested at click time only, never at install: website access for the dead-link and
-        // metadata tools, and per-origin access for the AI provider Verify Service check.
-        optional_host_permissions: OPTIONAL_WEB_ORIGINS,
-        web_accessible_resources: [
-            {
-                resources: ['_favicon/*'],
-                matches: ['<all_urls>'],
-                extension_ids: ['*'],
-            },
-        ],
-    },
+    // Per-browser keys (permissions, the Firefox add-on ID and data collection declaration) live
+    // in manifest.config.ts so unit tests can check them.
+    manifest: createManifest,
 
     hooks: {
-        // MV2 (Firefox) has no optional_host_permissions; origins go in optional_permissions.
         'build:manifestGenerated': (wxt, manifest) => {
-            if (wxt.config.manifestVersion !== 2) return;
-            manifest.optional_permissions = [
-                ...(manifest.optional_permissions ?? []),
-                ...OPTIONAL_WEB_ORIGINS,
-            ] as typeof manifest.optional_permissions;
-            delete manifest.optional_host_permissions;
+            if (wxt.config.manifestVersion === 2) adaptManifestV2(manifest);
         },
     },
 

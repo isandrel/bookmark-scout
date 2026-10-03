@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { test as base, expect } from '@playwright/test';
 import { Builder, By, until, type WebDriver, type WebElement } from 'selenium-webdriver';
 import firefox from 'selenium-webdriver/firefox.js';
+import { FIREFOX_ADDON_ID } from '../../manifest.config';
 
 /**
  * Firefox end-to-end fixtures.
@@ -23,8 +24,11 @@ import firefox from 'selenium-webdriver/firefox.js';
  * as a temporary add-on, and `--allow-system-access` lets it navigate to moz-extension:// URLs.
  */
 
-/** Explicit add-on ID: Firefox requires one for storage.sync and for a fixed moz-extension UUID. */
-const ADDON_ID = 'bookmark-scout-e2e@tests.invalid';
+/**
+ * The build's own add-on ID, so the tests install the manifest AMO receives. Firefox needs an ID
+ * for storage.sync and to map the add-on to a fixed moz-extension UUID.
+ */
+const ADDON_ID = FIREFOX_ADDON_ID;
 const ADDON_UUID = '5b0f8e1c-2f6a-4d2e-9a7c-3e1d4c5b6a70';
 /** Empty page added to the test copy so extension APIs can be called from a privileged page. */
 const API_PAGE = 'e2e-api.html';
@@ -78,8 +82,10 @@ export const test = base.extend<FirefoxFixtures, FirefoxWorkerFixtures>({
       cpSync(firefoxBuild, directory, { recursive: true });
       const manifestPath = path.join(directory, 'manifest.json');
       const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-      manifest.browser_specific_settings = { gecko: { id: ADDON_ID } };
-      writeFileSync(manifestPath, JSON.stringify(manifest));
+      const builtId = manifest.browser_specific_settings?.gecko?.id;
+      if (builtId !== ADDON_ID) {
+        throw new Error(`Firefox build has add-on ID ${builtId}, expected ${ADDON_ID}`);
+      }
       writeFileSync(path.join(directory, API_PAGE), '<!doctype html><title>E2E API</title>');
       await use(directory);
       rmSync(directory, { recursive: true, force: true });

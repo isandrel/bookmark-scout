@@ -21,7 +21,7 @@
         "zip:chrome": "wxt zip -b chrome",
         "zip:firefox": "wxt zip -b firefox",
         "zip:edge": "wxt zip -b edge",
-        "lint": "biome lint ./src ./tests ./vitest.config.ts ./playwright.config.ts",
+        "lint": "biome lint ./src ./tests ./manifest.config.ts ./vitest.config.ts ./playwright.config.ts",
         "format": "biome format --write ./src",
         "check": "biome check --write ./src",
         "catalog:sync": "bun scripts/sync-provider-catalog.ts",

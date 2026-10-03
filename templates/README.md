@@ -132,7 +132,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 ### 🚧 Current Focus
 
 - [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
-- [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package first needs an add-on ID and a data collection declaration
+- [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package has its permanent add-on ID and data collection declaration
 
 ---
 

@@ -34,7 +34,7 @@ The full Chromium E2E suite runs against the Edge build as the required `Edge E2
 - [ ] Description: "Chrome Web Store and Edge Add-ons" sections of [`en.md`](../listings/en.md), [`ja.md`](../listings/ja.md), [`ko.md`](../listings/ko.md), adjusted by the override check above.
 - [ ] Search terms: from the same files.
 - [ ] Short description: from the package (`extDescription`).
-- [ ] Store logo: 300x300 PNG. **Not prepared**; create it from `apps/extension/public/icon-original.png` when needed.
+- [ ] Store logo: 300x300 PNG. **Not prepared**; create it from `store/assets/icon-original.png` when needed.
 - [ ] Screenshots (1280x800): all eight from [`../screenshots/`](../screenshots/), or without the manager and Tools images if the override does not apply.
 - [ ] Small promo tile 440x280 (optional): `promo-small-440x280.png`. Large promo tile 1400x560: not prepared.
 

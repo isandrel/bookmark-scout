@@ -6,10 +6,10 @@
 
 These must be resolved, by a code change and a new release, before a first AMO listing:
 
-- [ ] **Add-on ID.** `browser_specific_settings.gecko.id` is missing (`MISSING_ADDON_ID`). Pick a permanent ID; it cannot change after the first upload.
-- [ ] **Data collection declaration.** `browser_specific_settings.gecko.data_collection_permissions` is missing (`MISSING_DATA_COLLECTION_PERMISSIONS`); it is required for new Firefox extensions. Choose an option in [`../privacy-disclosures.md`](../privacy-disclosures.md#firefox-add-ons-data-collection-declaration). After adding it, re-run the linter and check its minimum Firefox version (`strict_min_version`) warning, if any.
+- [x] **Add-on ID.** `bookmark-scout@isandrel.github.io` in `browser_specific_settings.gecko.id` (`apps/extension/manifest.config.ts`). It cannot change after the first upload. The Firefox smoke suite installs the build with this ID.
+- [x] **Data collection declaration.** `browser_specific_settings.gecko.data_collection_permissions` is declared (see [`../privacy-disclosures.md`](../privacy-disclosures.md#firefox-add-ons-data-collection-declaration)), with `strict_min_version` 140.0 for desktop and 142.0 for Android, the first versions that support it. The linter reports no manifest warnings.
 - [ ] **Scope decision.** The bookmarks manager and Tools sidebar are not reachable in the Firefox build (no override, no link). Either ship with the reduced Firefox description in [`../listings/en.md`](../listings/en.md), or add an entry point first.
-- [ ] Optional: drop the Chromium-only `favicon` and `sidePanel` permissions from the Firefox manifest in the `build:manifestGenerated` hook to clear the `MANIFEST_PERMISSIONS` warnings.
+- [x] The Chromium-only `favicon` and `sidePanel` permissions are left out of the Firefox manifest, and the broad `_favicon/*` `web_accessible_resources` entry is gone.
 
 ## 0. Approval
 
@@ -69,7 +69,7 @@ The bundle is built with WXT and Vite from TypeScript and React sources; nothing
 
 Linter notes:
 - DANGEROUS_EVAL: Zod 4 probes `Function('')` inside try/catch to detect JIT support. The extension CSP blocks it and Zod uses its non-JIT path.
-- UNSAFE_VAR_ASSIGNMENT: React DOM's dangerouslySetInnerHTML support code. The extension source never uses dangerouslySetInnerHTML or innerHTML.
+- UNSAFE_VAR_ASSIGNMENT: React DOM's dangerouslySetInnerHTML support code. The extension source never uses dangerouslySetInnerHTML or innerHTML. The "document().write" call is the Markdown parser (mdast-util-from-markdown) writing to its own tokenizer, not to a DOM document.
 
 AI features are off by default and need the user's own provider key (Settings > AI); a local Ollama server works without a key. Website access (http/https) is an optional permission requested only when the user runs a feature that needs it.
 ```
