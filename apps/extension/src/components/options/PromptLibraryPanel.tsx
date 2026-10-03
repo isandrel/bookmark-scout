@@ -139,10 +139,7 @@ function PromptEditorDialog({
             />
             <div className="flex flex-wrap justify-between gap-2 text-xs text-muted-foreground">
               <span id="prompt-text-size" className={bytes > MAX_PROMPT_BYTES ? 'text-destructive-text' : ''}>
-                {t('prompt_size', [
-                  (bytes / 1000).toFixed(1),
-                  (MAX_PROMPT_BYTES / 1000).toFixed(0),
-                ])}
+                {t('prompt_size', [formatKilobytes(bytes), formatKilobytes(MAX_PROMPT_BYTES)])}
               </span>
               {unknown.length > 0 && (
                 <span className="text-warning">

@@ -105,6 +105,40 @@ for (const surface of ['popup', 'sidepanel'] as const) {
       ).toHaveCount(1);
     });
 
+    test('the dragged row stays marked until the drop, which clears every drop marker', async ({
+      extensionId,
+      extensionWorker,
+      page,
+    }) => {
+      await seedFolder(extensionWorker, 'DnD Marker Source', [
+        { title: 'DnD Marker Traveller', url: 'https://e2e.invalid/marker' },
+      ]);
+      await seedFolder(extensionWorker, 'DnD Marker Destination', [
+        { title: 'DnD Marker Resident', url: 'https://e2e.invalid/marker-resident' },
+      ]);
+
+      await openTree(page, extensionId, surface);
+      await page.getByPlaceholder('Search bookmarks...').fill('DnD Marker');
+      const source = bookmarkHandle(page, 'DnD Marker Traveller');
+      const target = folderHandle(page, 'DnD Marker Destination');
+      await expect(source).toBeVisible();
+      const from = await centerOf(source);
+      await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(from.x + from.width / 2 + 6, from.y + from.height / 2 + 6, {
+        steps: 3,
+      });
+      const to = await centerOf(target);
+      await page.mouse.move(to.x + to.width / 2, to.y + to.height / 2, { steps: 12 });
+
+      // Mid-drag: the source is marked as dragging and the folder as the drop target.
+      await expect(source).toHaveClass(/\bdragging\b/);
+      await expect(target).toHaveClass(/\bdrop-into-folder\b/);
+
+      await page.mouse.up();
+      await expect(page.locator('.dragging, .drop-target, .drop-indicator')).toHaveCount(0);
+    });
+
     test('dragging a folder onto another folder nests it with its contents', async ({
       extensionId,
       extensionWorker,
