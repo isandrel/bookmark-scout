@@ -1,28 +1,44 @@
 /**
- * i18n hook with language override support.
- * When language = 'auto': uses browser.i18n.getMessage
- * When specific language: loads from bundled messages
+ * Translation with the in-app Language setting.
+ * When language = 'auto', or the browser's own locale: uses browser.i18n.getMessage
+ * When another specific language: uses that locale's messages.json, loaded on demand
+ *
+ * No locale is bundled: each page and the background fetch only the selected locale's messages
+ * from the extension's own `_locales/` files, and only when the browser does not already show
+ * that locale. `t()` stays synchronous: a newly selected language is applied once its messages
+ * have loaded, and until then `t()` keeps showing the previous one.
  */
 
-// Import message files at build time for custom language support
-import messagesEn from '../../public/_locales/en/messages.json';
-import messagesJa from '../../public/_locales/ja/messages.json';
-import messagesKo from '../../public/_locales/ko/messages.json';
+import { useSyncExternalStore } from 'react';
 
 export type BundledMessage = {
   message: string;
   placeholders?: Record<string, { content: string }>;
 };
 
-const bundledMessages = { en: messagesEn, ja: messagesJa, ko: messagesKo };
+type LocaleMessages = Record<string, BundledMessage>;
 
-/** A language the extension ships messages for; adding a locale file here adds it everywhere. */
-export type SupportedLocale = keyof typeof bundledMessages;
+// Only each locale's own name is bundled (JSON named imports are tree-shaken); the folder list
+// under public/_locales is the list of supported locales.
+const localeNameEntries = import.meta.glob<BundledMessage | undefined>(
+  '../../public/_locales/*/messages.json',
+  { eager: true, import: 'meta_languageName' },
+);
+const localeNames = Object.fromEntries(
+  Object.entries(localeNameEntries).map(([file, name]) => [
+    file.split('/').at(-2) as string,
+    name?.message,
+  ]),
+);
 
-const messagesMap: Record<SupportedLocale, Record<string, BundledMessage>> = bundledMessages;
+/**
+ * A language the extension ships messages for. Types cannot list folders, so a new
+ * `_locales/<locale>/` folder also goes here; tests/unit/locale-messages.test.ts fails until it does.
+ */
+export type SupportedLocale = 'en' | 'ja' | 'ko';
 
-/** Bundled locales in the order the Language setting lists them. */
-export const SUPPORTED_LOCALES = Object.keys(messagesMap) as SupportedLocale[];
+/** Bundled locales (one per `_locales/` folder) in the order the Language setting lists them. */
+export const SUPPORTED_LOCALES = Object.keys(localeNames) as SupportedLocale[];
 
 /** Shown when the browser language is not bundled; the manifest's `default_locale` (unit-tested). */
 export const FALLBACK_LOCALE: SupportedLocale = 'en';
@@ -32,26 +48,130 @@ export const AUTO_LANGUAGE = 'auto';
 
 export type LanguagePreference = typeof AUTO_LANGUAGE | SupportedLocale;
 
-// Current language setting (updated by settings storage)
-let currentLanguage: LanguagePreference = AUTO_LANGUAGE;
+/**
+ * Where a locale's messages are served from, relative to the extension root. `browser.runtime.
+ * getURL` accepts only files under public/, so a locale without a folder is a type error.
+ */
+export function getLocaleMessagesPath<L extends SupportedLocale>(
+  locale: L,
+): `/_locales/${L}/messages.json` {
+  return `/_locales/${locale}/messages.json`;
+}
+
+const loadedMessages: Partial<Record<SupportedLocale, LocaleMessages>> = {};
+const pendingLoads = new Map<SupportedLocale, Promise<void>>();
 
 /**
- * Set the current language. Called by settings storage on load/change.
+ * Makes a locale's messages available without loading them, for contexts that already have them
+ * (unit tests register every locale up front, so they can switch languages synchronously).
+ */
+export function registerLocaleMessages(locale: SupportedLocale, messages: LocaleMessages): void {
+  loadedMessages[locale] = messages;
+}
+
+async function fetchLocaleMessages(locale: SupportedLocale): Promise<LocaleMessages> {
+  const response = await fetch(browser.runtime.getURL(getLocaleMessagesPath(locale)));
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return (await response.json()) as LocaleMessages;
+}
+
+/**
+ * Loads a locale's messages once per page. Never rejects: when loading fails, `t()` falls back
+ * to `browser.i18n.getMessage`, and the next request tries again.
+ */
+function loadLocaleMessages(locale: SupportedLocale): Promise<void> {
+  if (loadedMessages[locale]) return Promise.resolve();
+  let pending = pendingLoads.get(locale);
+  if (!pending) {
+    pending = fetchLocaleMessages(locale)
+      .then((messages) => {
+        loadedMessages[locale] = messages;
+      })
+      .catch((error: unknown) => {
+        settingsLogger.warn({ error, locale }, 'Could not load locale messages');
+      })
+      .finally(() => pendingLoads.delete(locale));
+    pendingLoads.set(locale, pending);
+  }
+  return pending;
+}
+
+// The language `t()` shows, and the one most recently selected (they differ while it loads).
+let currentLanguage: LanguagePreference = AUTO_LANGUAGE;
+let requestedLanguage: LanguagePreference = AUTO_LANGUAGE;
+let languageReady: Promise<void> = Promise.resolve();
+const languageListeners = new Set<() => void>();
+
+function applyLanguage(language: LanguagePreference) {
+  if (currentLanguage === language) return;
+  currentLanguage = language;
+  for (const listener of [...languageListeners]) listener();
+}
+
+/**
+ * The bundled locale `browser.i18n.getMessage` shows: the browser UI language (`ja-JP` uses
+ * `ja`) when it is bundled, otherwise the manifest's `default_locale`. Undefined outside the
+ * extension (unit tests).
+ */
+function getBrowserLocale(): SupportedLocale | undefined {
+  try {
+    const uiLanguage = browser.i18n.getUILanguage().toLowerCase().replace('_', '-');
+    return (
+      SUPPORTED_LOCALES.find(
+        (locale) => uiLanguage === locale || uiLanguage.startsWith(`${locale}-`),
+      ) ?? FALLBACK_LOCALE
+    );
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Select the language. Called by settings storage on load/change. Applies at once when `t()`
+ * can already show it ('auto', a loaded locale, or the browser's own locale, which
+ * `browser.i18n` serves), otherwise after its messages load; `whenLanguageReady` waits for that.
  */
 export function setLanguage(language: LanguagePreference) {
-  currentLanguage = language;
+  requestedLanguage = language;
+  if (language === AUTO_LANGUAGE || loadedMessages[language] || language === getBrowserLocale()) {
+    applyLanguage(language);
+    languageReady = Promise.resolve();
+    return;
+  }
+  languageReady = loadLocaleMessages(language).then(() => {
+    // A later selection wins over this one.
+    if (requestedLanguage === language) applyLanguage(language);
+  });
+}
+
+/** Resolves once the selected language is applied, so `t()` returns its messages. */
+export function whenLanguageReady(): Promise<void> {
+  return languageReady;
+}
+
+/** Calls back after the language `t()` shows changes. */
+export function subscribeToLanguage(listener: () => void): () => void {
+  languageListeners.add(listener);
+  return () => {
+    languageListeners.delete(listener);
+  };
 }
 
 /** A language's own name ("日本語"), from that locale's `meta_languageName` message. */
 export function getLanguageName(locale: SupportedLocale): string {
-  return messagesMap[locale].meta_languageName?.message ?? locale;
+  return localeNames[locale] ?? locale;
 }
 
 /**
- * Get the current language setting.
+ * The language `t()` currently shows: the selected language once its messages have loaded.
  */
 export function getLanguage() {
   return currentLanguage;
+}
+
+/** The language `t()` shows, re-rendering the component after it changes. */
+export function useLanguage(): LanguagePreference {
+  return useSyncExternalStore(subscribeToLanguage, getLanguage, getLanguage);
 }
 
 /**
@@ -60,14 +180,8 @@ export function getLanguage() {
  */
 export function getResolvedLanguage(): SupportedLocale {
   if (currentLanguage !== AUTO_LANGUAGE) return currentLanguage;
-  try {
-    const uiLanguage = browser.i18n.getUILanguage().toLowerCase();
-    const match = SUPPORTED_LOCALES.find((locale) => uiLanguage.startsWith(locale));
-    if (match) return match;
-  } catch {
-    // Non-extension environments (tests) fall back to the default locale.
-  }
-  return FALLBACK_LOCALE;
+  // Non-extension environments (tests) fall back to the default locale.
+  return getBrowserLocale() ?? FALLBACK_LOCALE;
 }
 
 /**
@@ -165,13 +279,14 @@ export function formatBundledMessage(
 /**
  * Get localized message.
  * - When language = 'auto': uses browser.i18n.getMessage (follows browser settings)
- * - When specific language: returns from bundled messages
+ * - When specific language: returns from its loaded messages (the browser's own locale is not
+ *   loaded; browser.i18n serves it)
  */
 export function t(key: MessageKey, substitutions?: string | string[]): string {
   try {
-    // Use bundled messages when specific language is selected
+    // Use the loaded messages when a specific language is selected
     if (currentLanguage !== AUTO_LANGUAGE) {
-      const entry = messagesMap[currentLanguage]?.[key];
+      const entry = loadedMessages[currentLanguage]?.[key];
       if (entry) {
         return formatBundledMessage(entry, substitutions);
       }

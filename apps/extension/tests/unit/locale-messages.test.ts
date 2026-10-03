@@ -8,6 +8,7 @@ import {
   formatBundledMessage,
   getLanguageName,
   SUPPORTED_LOCALES,
+  type SupportedLocale,
 } from '@/hooks/use-i18n';
 
 type LocaleMessage = {
@@ -135,6 +136,14 @@ describe('bundled locales', () => {
   const project = parse(readFileSync(path.join(appRoot, '../../config/project.toml'), 'utf8')) as {
     locales: { default: string; supported: string[]; names: Record<string, string> };
   };
+
+  it('are the _locales folders, each named by the SupportedLocale type', () => {
+    const folders = readdirSync(path.join(appRoot, 'public/_locales')).sort();
+    expect([...SUPPORTED_LOCALES]).toEqual(folders);
+    // A new folder needs its code in the type too (excess keys fail type checking).
+    const typed = { en: true, ja: true, ko: true } satisfies Record<SupportedLocale, true>;
+    expect([...SUPPORTED_LOCALES]).toEqual(Object.keys(typed));
+  });
 
   it('are the workspace locales, with the workspace default as the fallback', () => {
     expect([...SUPPORTED_LOCALES]).toEqual(project.locales.supported);

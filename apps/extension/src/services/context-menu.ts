@@ -49,6 +49,8 @@ function menuSettingsChanged(oldValue: unknown, newValue: unknown): boolean {
 async function getContextMenuSettings(): Promise<ContextMenuSettings> {
   const settings = toContextMenuSettings(await settingsValue.get());
   setLanguage(settings.language);
+  // Menu titles are built right after this, so the selected language's messages must be loaded.
+  await whenLanguageReady();
   return settings;
 }
 

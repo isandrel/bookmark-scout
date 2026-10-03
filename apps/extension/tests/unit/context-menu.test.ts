@@ -3,6 +3,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage';
 import { createBookmark } from '@/services/bookmarks';
 import { installFakePermissions } from '../fake-permissions';
+import { serveExtensionFiles } from '../locale-files';
 
 vi.mock('@/services/bookmarks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/services/bookmarks')>()),
@@ -339,12 +340,21 @@ describe('context menu recent folders', () => {
     expect(createdIds.filter((id) => id === 'bookmark-scout::recent::a')).toHaveLength(1);
   });
 
-  it('localizes menu titles with the selected language', async () => {
-    await seedSettings({ language: 'ja' });
-    vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
-    await contextMenu.initializeContextMenu();
-    expect(menus.get('bookmark-scout::root')?.title).not.toBe('Save bookmark to...');
-    expect(menus.get('bookmark-scout::category::recent')?.title).toBe('📁 最近のフォルダ');
+  it('localizes menu titles with the selected language on the first build', async () => {
+    // This module copy has no locales loaded, as in a freshly started background.
+    const fetchFile = serveExtensionFiles();
+    try {
+      await seedSettings({ language: 'ja' });
+      vi.mocked(getRecentFolders).mockResolvedValue(recent(['a']));
+      await contextMenu.initializeContextMenu();
+      expect(fetchFile).toHaveBeenCalledWith(
+        'chrome-extension://test-extension-id/_locales/ja/messages.json',
+      );
+      expect(menus.get('bookmark-scout::root')?.title).toBe('ブックマークの保存先...');
+      expect(menus.get('bookmark-scout::category::recent')?.title).toBe('📁 最近のフォルダ');
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
 

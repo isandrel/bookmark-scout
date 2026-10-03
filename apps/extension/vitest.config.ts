@@ -5,5 +5,6 @@ export default defineConfig({
   plugins: [WxtVitest()],
   test: {
     include: ['tests/unit/**/*.test.ts'],
+    setupFiles: ['tests/unit/setup/register-locales.ts'],
   },
 });
