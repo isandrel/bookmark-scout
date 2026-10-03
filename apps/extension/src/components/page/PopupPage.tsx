@@ -67,6 +67,7 @@ function PopupPage() {
   const { value: searchDebounceMs } = useSetting('searchDebounceMs');
   const { value: aiEnabled } = useSetting('aiEnabled');
   const { value: aiMaxRecommendations } = useSetting('aiMaxRecommendations');
+  const { value: aiReadPageContent } = useSetting('aiReadPageContent');
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
   const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
@@ -140,7 +141,8 @@ function PopupPage() {
         { title: tab.title, url: tab.url },
         folders,
         settings,
-        aiMaxRecommendations
+        aiMaxRecommendations,
+        aiReadPageContent,
       );
 
       setAIRecommendations(recommendations);
@@ -153,7 +155,7 @@ function PopupPage() {
     } finally {
       setAILoading(false);
     }
-  }, [aiEnabled, folders, toast, aiMaxRecommendations]);
+  }, [aiEnabled, folders, toast, aiMaxRecommendations, aiReadPageContent]);
 
   // Auto-trigger AI recommendations on popup open if setting is enabled
   useEffect(() => {
