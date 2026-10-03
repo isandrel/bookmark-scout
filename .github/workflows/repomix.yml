@@ -22,10 +22,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
         with:
-          bun-version: latest
+          install: "false"
 
       - name: Generate Repomix Output
         run: bunx repomix --output repomix-output.xml

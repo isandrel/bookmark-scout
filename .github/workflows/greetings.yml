@@ -23,7 +23,7 @@ jobs:
             - Please check if there are any similar issues already open
             - Feel free to submit a PR if you'd like to contribute a fix!
 
-            📚 Check out our [Contributing Guide](https://github.com/isandrel/bookmark-scout/blob/main/CONTRIBUTING.md) for more info.
+            📚 Check out our [Contributing Guide](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.repository.default_branch }}/CONTRIBUTING.md) for more info.
           pr_message: |
             🎉 Welcome to **Bookmark Scout**! Thanks for your first contribution!
 
@@ -32,6 +32,6 @@ jobs:
             - A maintainer will review your changes
             - Please ensure all checks pass before requesting review
 
-            📚 Check out our [Contributing Guide](https://github.com/isandrel/bookmark-scout/blob/main/CONTRIBUTING.md) for best practices.
+            📚 Check out our [Contributing Guide](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.repository.default_branch }}/CONTRIBUTING.md) for best practices.
 
             Thanks for helping make Bookmark Scout better! 🚀

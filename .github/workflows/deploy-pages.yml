@@ -1,0 +1,54 @@
+name: Deploy to Cloudflare Pages
+
+# Shared by deploy-website.yml and deploy-docs.yml: build and verify one app's static export,
+# then upload `apps/<app>/out` to its Cloudflare Pages project.
+on:
+  workflow_call:
+    inputs:
+      app:
+        description: App folder under apps/ and its Nx project, such as website or docs.
+        required: true
+        type: string
+      fetch-depth:
+        description: Git history to check out; 0 for apps that date pages from git history.
+        required: false
+        type: number
+        default: 1
+    secrets:
+      CLOUDFLARE_API_TOKEN:
+        required: true
+      CLOUDFLARE_ACCOUNT_ID:
+        required: true
+      CLOUDFLARE_PROJECT_NAME:
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy ${{ inputs.app }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-${{ inputs.app }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: ${{ inputs.fetch-depth }}
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Build and verify
+        run: bunx nx run ${{ inputs.app }}:verify
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/${{ inputs.app }}/out --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}

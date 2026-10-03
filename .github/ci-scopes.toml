@@ -31,6 +31,7 @@ shared = [
   "packages/**",
   "config/**",
   ".github/workflows/ci.yml",
+  ".github/actions/**",
   ".github/ci-scopes.toml",
   "scripts/ci-scopes*.ts",
 ]

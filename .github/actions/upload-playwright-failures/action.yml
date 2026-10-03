@@ -1,0 +1,26 @@
+name: Upload Playwright failures
+description: >-
+  Uploads an app's Playwright traces, screenshots, and error contexts for a week. Call it with
+  `if: failure()`; files a browser does not produce are skipped.
+
+inputs:
+  app:
+    description: App folder under apps/, such as extension or website.
+    required: true
+  name:
+    description: Artifact name, unique within the workflow run.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Upload browser test diagnostics
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.name }}
+        path: |
+          apps/${{ inputs.app }}/test-results/playwright/**/trace.zip
+          apps/${{ inputs.app }}/test-results/playwright/**/*.png
+          apps/${{ inputs.app }}/test-results/playwright/**/error-context.md
+        if-no-files-found: ignore
+        retention-days: 7
