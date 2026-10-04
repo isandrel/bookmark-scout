@@ -367,7 +367,7 @@ Update documentation when the change affects:
 
 Relevant locations include:
 
-- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Templates use placeholders for config values (`{{SITE_URL}}`), library versions (`{{VERSION:react}}`, the installed major version or `0.minor`), and the supported-browser badges (`{{BROWSER_BADGES:<label>}}`); an unknown placeholder fails the run. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
+- `README.md` and `translations/README.{ja,ko}.md`, which are generated locally: edit `templates/README*.md` (or `config/`), and the pre-commit hook runs `bun run generate:readme` and stages the output. Templates use placeholders for config values (`{{SITE_URL}}`), library versions (`{{VERSION:react}}`, the installed major version or `0.minor`; `{{VERSION:apps/extension:typescript}}` reads one workspace's install, for packages whose major differs by workspace, so the TypeScript badge shows the extension's), and the supported-browser badges (`{{BROWSER_BADGES:<label>}}`); an unknown placeholder fails the run. Run it by hand if hooks are skipped; the Lint job fails when the READMEs and templates differ. No workflow regenerates them.
 - `CONTRIBUTING.md`
 - `apps/docs/content/docs/`
 - website content under `apps/website/app/`

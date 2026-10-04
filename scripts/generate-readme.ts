@@ -11,6 +11,8 @@
  * Placeholders:
  *   {{NAME}}                 a value from `readmeValues()`
  *   {{VERSION:<package>}}    the installed package's release line ("bun" reads packageManager)
+ *   {{VERSION:<workspace>:<package>}} the same, as installed for that workspace's package.json;
+ *                            use it when workspaces pin different majors (TypeScript)
  *   {{BROWSER_BADGES:<label>}} one shields.io badge per supported browser, labelled <label>
  *
  * A placeholder that cannot be filled fails the run.
@@ -51,19 +53,33 @@ export function releaseLine(version: string): string {
 	return major === "0" ? `0.${minor}` : (major as string);
 }
 
-/** Installed version of a workspace package, or of Bun from the root `packageManager`. */
-export function installedVersion(name: string, root = rootDir): string {
+/** Splits a `{{VERSION:...}}` argument into the package and the optional workspace before it. */
+export function parseVersionArgument(argument: string): { name: string; workspace?: string } {
+	const separator = argument.lastIndexOf(":");
+	if (separator === -1) return { name: argument };
+	return { workspace: argument.slice(0, separator), name: argument.slice(separator + 1) };
+}
+
+/**
+ * Installed version of a package, or of Bun from the root `packageManager`. Without a workspace,
+ * the first workspace in `PACKAGE_DIRS` that has it wins; with one, only that workspace counts.
+ */
+export function installedVersion(name: string, root = rootDir, workspace?: string): string {
 	if (name === "bun") {
 		const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { packageManager?: string };
 		const version = /^bun@(.+)$/.exec(manifest.packageManager ?? "")?.[1];
 		if (!version) throw new Error('package.json: set "packageManager": "bun@<version>"');
 		return version;
 	}
-	for (const dir of PACKAGE_DIRS) {
+	if (workspace !== undefined && !PACKAGE_DIRS.includes(workspace)) {
+		throw new Error(`Unknown workspace "${workspace}"; expected one of ${PACKAGE_DIRS.join(", ")}`);
+	}
+	for (const dir of workspace === undefined ? PACKAGE_DIRS : [workspace]) {
 		const file = join(root, dir, "node_modules", name, "package.json");
 		if (existsSync(file)) return (JSON.parse(readFileSync(file, "utf8")) as { version: string }).version;
 	}
-	throw new Error(`Package "${name}" is not installed; run bun install`);
+	const where = workspace === undefined ? "" : ` in ${workspace}`;
+	throw new Error(`Package "${name}" is not installed${where}; run bun install`);
 }
 
 export function readmeValues(model: Site = site): Record<string, string> {
@@ -96,7 +112,7 @@ export function browserBadges(label: string, model: Site = site): string {
 
 type RenderContext = {
 	values: Record<string, string>;
-	version: (name: string) => string;
+	version: (name: string, workspace?: string) => string;
 	browserBadges: (label: string) => string;
 };
 
@@ -104,7 +120,10 @@ type RenderContext = {
 export function render(template: string, context: RenderContext, label = "template"): string {
 	const unknown = new Set<string>();
 	const output = template.replace(PLACEHOLDER, (match, name: string, argument?: string) => {
-		if (name === "VERSION" && argument) return releaseLine(context.version(argument));
+		if (name === "VERSION" && argument) {
+			const { name: packageName, workspace } = parseVersionArgument(argument);
+			return releaseLine(context.version(packageName, workspace));
+		}
 		if (name === "BROWSER_BADGES" && argument) return context.browserBadges(argument);
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
@@ -126,7 +145,7 @@ export function outputPathFor(file: string): string {
 if (import.meta.main) {
 	const context: RenderContext = {
 		values: readmeValues(),
-		version: (name) => installedVersion(name),
+		version: (name, workspace) => installedVersion(name, rootDir, workspace),
 		browserBadges: (label) => browserBadges(label),
 	};
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {

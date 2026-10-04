@@ -23,7 +23,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/React-{{VERSION:react}}-61DAFB?style=flat-square&logo=react&logoColor=white" alt="React">
-  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/TypeScript-{{VERSION:apps/extension:typescript}}-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/WXT-{{VERSION:wxt}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="WXT">
   <img src="https://img.shields.io/badge/Vite-{{VERSION:vite}}-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/TailwindCSS-{{VERSION:tailwindcss}}-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
@@ -131,7 +131,7 @@
 |                                                   テクノロジー                                                    | バージョン | 説明                       |
 | :---------------------------------------------------------------------------------------------------------------: | :--------: | -------------------------- |
 |        ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)         |    {{VERSION:react}}    | UIライブラリ               |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |    {{VERSION:typescript}}     | 型安全なJavaScript         |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white) |    {{VERSION:apps/extension:typescript}}     | 型安全なJavaScript         |
 |    ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)     |     {{VERSION:next}}     | ウェブサイトフレームワーク |
 
 ### ビルド＆ツール
