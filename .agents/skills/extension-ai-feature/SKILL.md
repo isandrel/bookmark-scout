@@ -5,7 +5,7 @@ description: Add or change AI functionality in the Bookmark Scout extension end 
 
 # Extension AI feature
 
-Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first. Provider creation, model wiring, and model listing stay in `src/services/ai-client.ts` and `src/services/ai-model-list.ts`. The Ask AI agent lives in `src/services/ai-agent.ts` with its tools in `ai-bookmark-tools.ts`. Every AI feature resolves its provider through `getActiveAISettings` in `src/services/ai-settings.ts` (the user's default named service); never read the legacy synced `aiProvider`/`aiModel` keys. The named-services migration derives a default from them on read without writing, so old data survives a rollback.
+Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first. Provider creation and model wiring live in the lazily loaded `src/services/ai-client.lazy.ts`, behind the always-loaded facade `src/services/ai-client.ts` (`generateAIObject` for structured calls); model listing stays in `src/services/ai-model-list.ts`. The Ask AI agent loop is `src/services/ai-agent.lazy.ts` behind `ai-agent.ts`, with its tools in `ai-bookmark-tools.ts`. Anything that imports the AI SDK or a provider package goes in a `*.lazy.ts(x)` file loaded with `await import()`, never in a facade or shared module; `tests/e2e/lazy-ai-sdk.spec.ts` guards this, and unit tests mock `generateAIObject` rather than `ai`. Every AI feature resolves its provider through `getActiveAISettings` in `src/services/ai-settings.ts` (the user's default named service); never read the legacy synced `aiProvider`/`aiModel` keys. The named-services migration derives a default from them on read without writing, so old data survives a rollback.
 
 ## Checklist
 
