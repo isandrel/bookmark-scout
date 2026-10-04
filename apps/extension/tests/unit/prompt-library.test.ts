@@ -134,7 +134,7 @@ describe('prompt library', () => {
     const saved = await saveCustomPrompt({ task: 'auto_tagging', name: 'N', system: 'Text' });
     const stored = await fakeBrowser.storage.sync.get(null);
     expect(Object.keys(stored).sort()).toEqual([
-      'bookmark-scout-prompt-' + saved.id,
+      `bookmark-scout-prompt-${saved.id}`,
       'bookmark-scout-prompts',
     ]);
   });

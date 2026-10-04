@@ -165,6 +165,8 @@ export function AIServiceEditor({
 
   useEffect(() => setName(service.name), [service.name]);
 
+  // Reload only for another service; extraFields derives from provider.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: extraFields follows provider
   useEffect(() => {
     let active = true;
     setErrors({});
@@ -207,7 +209,6 @@ export function AIServiceEditor({
       active = false;
       unwatch();
     };
-    // biome-ignore lint/correctness/useExhaustiveDependencies: reload only for another service.
   }, [service.id, provider]);
 
   const modelOptions = useMemo(() => {

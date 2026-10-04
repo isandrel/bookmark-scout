@@ -113,7 +113,7 @@ export const htmlImportFormat: ImportFormat = {
         // Find the sibling <DL> that contains the folder's children
         let sibling = element.closest('DT')?.nextElementSibling;
         // May also be nested within the same DT
-        if (!sibling || sibling.tagName !== 'DL') {
+        if (sibling?.tagName !== 'DL') {
           sibling = element.closest('DT')?.querySelector('DL');
         }
 
