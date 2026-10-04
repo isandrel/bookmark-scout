@@ -42,10 +42,13 @@ export function RecommendedFolderDialog({
   }
 
   // Each folder on its own, so a title that contains "/" cannot pass for two folders.
-  const segments = [
-    ...path.existingTitles.map((title) => ({ title, isNew: false })),
-    ...path.newTitles.map((title) => ({ title, isNew: true })),
-  ];
+  const titles = [...path.existingTitles, ...path.newTitles];
+  const segments = titles.map((title, depth) => ({
+    title,
+    isNew: depth >= path.existingTitles.length,
+    // Titles can repeat along a path; the titles down to this folder name it uniquely.
+    key: JSON.stringify(titles.slice(0, depth + 1)),
+  }));
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -70,9 +73,7 @@ export function RecommendedFolderDialog({
             >
               {segments.map((segment, index) => (
                 <li
-                  // Titles can repeat along a path, which is never reordered; the position is
-                  // the identity.
-                  key={index}
+                  key={segment.key}
                   data-slot="path-segment"
                   data-new={segment.isNew ? '' : undefined}
                   className="flex min-w-0 items-center gap-1"

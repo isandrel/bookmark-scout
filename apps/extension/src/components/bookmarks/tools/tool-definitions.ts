@@ -30,6 +30,9 @@ export const TOOL_SECTIONS: ReadonlyArray<{ id: ToolSectionId; titleKey: string 
   { id: 'analytics', titleKey: 'tools_category_analytics' },
 ];
 
+/** One line under an outcome, keyed by the item it is about (a bookmark id). */
+export type ToolOutcomeNote = { id: string; text: string };
+
 /** What a run reports to the user, and how to revert it when the tool allows that. */
 export type ToolOutcome = {
   title: string;
@@ -42,7 +45,7 @@ export type ToolOutcome = {
    */
   keepOpen?: boolean;
   /** Lines the review lists under the outcome while it stays open, such as skipped items. */
-  notes?: string[];
+  notes?: ToolOutcomeNote[];
   /** Problems to show inside the review instead of announcing the outcome. */
   errors?: string[];
   /** Reverts the change and resolves with what to report about the revert. */
@@ -324,11 +327,12 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
         variant: complete ? 'success' : 'destructive',
         // A partial run stays open so the user sees which moves were left out.
         keepOpen: !complete,
-        notes: result.issues.map((issue) =>
-          t(issue.reason === 'changed' ? 'ai_reorgIssueChanged' : 'ai_reorgIssueFailed', [
+        notes: result.issues.map((issue) => ({
+          id: issue.id,
+          text: t(issue.reason === 'changed' ? 'ai_reorgIssueChanged' : 'ai_reorgIssueFailed', [
             getBookmarkDisplayTitle(issue.title),
           ]),
-        ),
+        })),
         undoExpiresAt: result.expiresAt,
         undo:
           applied > 0

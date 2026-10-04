@@ -17,7 +17,7 @@ export type ToolRunState<Result> = {
   /** Problems shown inside the review (reorganization). */
   errors: string[];
   /** A partial apply's outcome, shown above the review; `canUndo` while undo is offered. */
-  notice: { message: string; notes: string[]; canUndo: boolean } | null;
+  notice: { message: string; notes: ToolOutcomeNote[]; canUndo: boolean } | null;
 };
 
 /** What a run needs from the page; tests pass fakes. */
