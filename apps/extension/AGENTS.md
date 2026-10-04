@@ -258,7 +258,7 @@ Type rules:
 - avoid `any`
 - keep runtime and type boundaries explicit when working with browser APIs and provider payloads
 - a `tsconfig.json` change also needs an E2E run: Playwright loads the extension's tsconfig itself and failed on a value `tsc` accepted (`"baseUrl": null`)
-- run `nx run extension:typecheck` (it runs `wxt prepare` first); `main` type-checks clean and the CI Lint job runs it, so do not add errors or silence them with casts that hide a real mismatch
+- run `nx run extension:typecheck` (it runs `wxt prepare` first, then TypeScript 7's native `tsc`, under a second warm); `main` type-checks clean and the CI Lint job runs it, so do not add errors or silence them with casts that hide a real mismatch
 
 ## Security and privacy
 
