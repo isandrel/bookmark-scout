@@ -1,4 +1,4 @@
-import type { BrowserContext, Page, Worker } from '@playwright/test';
+import type { BrowserContext, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { setSettings } from './popup-helpers';
