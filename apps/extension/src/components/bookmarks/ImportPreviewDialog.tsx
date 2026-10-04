@@ -260,12 +260,8 @@ export function ImportPreviewDialog({
                 ])}
               </p>
               <ul className="space-y-2">
-                {listedConflicts.map((conflict, index) => (
-                  <li
-                    // Titles and URLs can repeat, so the position disambiguates.
-                    key={`${conflict.url}-${index}`}
-                    className="rounded-md bg-muted/40 p-2 text-sm"
-                  >
+                {listedConflicts.map((conflict) => (
+                  <li key={conflict.id} className="rounded-md bg-muted/40 p-2 text-sm">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-medium">{getBookmarkDisplayTitle(conflict.title)}</span>
                       <Badge variant="outline">{t(CONFLICT_LABEL_KEYS[conflict.kind])}</Badge>

@@ -12,6 +12,7 @@
             "src/**/*.ts",
             "src/**/*.tsx",
             "tests/**/*.ts",
+            "tests/**/*.tsx",
             "manifest.config.ts",
             "vitest.config.ts",
             "playwright.config.ts"
@@ -29,12 +30,10 @@
             "preset": "recommended",
             "correctness": {
                 "useExhaustiveDependencies": "warn",
-                "useHookAtTopLevel": "error",
-                "noChildrenProp": "off"
+                "useHookAtTopLevel": "error"
             },
             "suspicious": {
-                "noExplicitAny": "warn",
-                "noArrayIndexKey": "off"
+                "noExplicitAny": "warn"
             }
         }
     },

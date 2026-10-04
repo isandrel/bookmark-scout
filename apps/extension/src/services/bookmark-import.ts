@@ -338,6 +338,8 @@ export type ImportPlanNode = {
 };
 
 export type ImportConflict = {
+  /** The entry's id in the parsed file, unique within one import even when URLs repeat. */
+  id: string;
   title: string;
   url: string;
   kind: ImportConflictKind;
@@ -468,7 +470,9 @@ export function planImport(
       if (conflict === 'in-target') counts.duplicatesInTarget += 1;
       if (conflict === 'elsewhere') counts.duplicatesElsewhere += 1;
       if (conflict === 'in-file') counts.duplicatesInFile += 1;
-      if (conflict) conflicts.push({ title: node.title, url, kind: conflict, skipped: skip });
+      if (conflict) {
+        conflicts.push({ id: node.id, title: node.title, url, kind: conflict, skipped: skip });
+      }
       if (skip) counts.bookmarksToSkip += 1;
       else counts.bookmarksToCreate += 1;
       return {

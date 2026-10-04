@@ -1,5 +1,4 @@
 import { parseHTML } from 'linkedom';
-import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 import { OptionsPanel } from '@/components/options/OptionsPanel';
@@ -14,13 +13,12 @@ function parse(html: string) {
 function renderField(props: Omit<Parameters<typeof Field>[0], 'children'>) {
   const controls: FieldControlProps[] = [];
   const html = renderToStaticMarkup(
-    createElement(Field, {
-      ...props,
-      children: (control: FieldControlProps) => {
+    <Field {...props}>
+      {(control) => {
         controls.push(control);
-        return createElement('input', control);
-      },
-    }),
+        return <input {...control} />;
+      }}
+    </Field>,
   );
   return { root: parse(html), control: controls[0] };
 }
@@ -69,8 +67,8 @@ describe('Field', () => {
       label: 'Theme',
       description: 'Light or dark',
       layout: 'setting',
-      badge: createElement('span', { 'data-testid': 'badge' }, 'Modified'),
-      actions: createElement('button', { type: 'button' }, 'Reset'),
+      badge: <span data-testid="badge">Modified</span>,
+      actions: <button type="button">Reset</button>,
     });
     const [left, right] = Array.from(root.children);
     expect(left.querySelector('label + [data-testid="badge"]')).not.toBeNull();
@@ -81,17 +79,15 @@ describe('Field', () => {
 describe('OptionsPanel', () => {
   it('names the section by its heading and ids its description', () => {
     const html = renderToStaticMarkup(
-      createElement(
-        OptionsPanel,
-        {
-          id: 'ai-activity',
-          'data-testid': 'ai-activity',
-          title: 'AI activity',
-          description: 'Recent calls',
-          actions: createElement('button', { type: 'button' }, 'Record'),
-        },
-        createElement('ul'),
-      ),
+      <OptionsPanel
+        id="ai-activity"
+        data-testid="ai-activity"
+        title="AI activity"
+        description="Recent calls"
+        actions={<button type="button">Record</button>}
+      >
+        <ul />
+      </OptionsPanel>,
     );
     const section = parse(html).querySelector('section');
     expect(section?.getAttribute('aria-labelledby')).toBe('ai-activity-heading');

@@ -480,7 +480,7 @@ describe('AI tools', () => {
       notice: {
         message:
           'Moved: 1. New folders: 1. Skipped because they changed after the preview: 1. Failed: 0.',
-        notes: ['Recipe: changed after the preview; left where it is'],
+        notes: [{ id: 'b2', text: 'Recipe: changed after the preview; left where it is' }],
         canUndo: true,
       },
     });

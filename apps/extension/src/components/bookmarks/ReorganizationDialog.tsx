@@ -26,7 +26,7 @@ interface ReorganizationDialogProps {
   onCancel: () => void;
   errors?: string[];
   /** A partial apply's outcome; it replaces the plan, and Apply is no longer offered. */
-  notice?: { message: string; notes: string[]; canUndo: boolean } | null;
+  notice?: { message: string; notes: ToolOutcomeNote[]; canUndo: boolean } | null;
   /** Reverts the applied moves; shown while `notice.canUndo`. */
   onUndo?: () => void;
   /**
@@ -154,8 +154,9 @@ export function ReorganizationDialog({
                 <AlertCircle className="h-5 w-5 text-destructive-text flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-destructive-text">
                   <p className="font-medium mb-1">{t('error_generic')}</p>
-                  {errors.map((err, i) => (
-                    <p key={i}>{err}</p>
+                  {/* The message is the key; the same message twice would say nothing new. */}
+                  {[...new Set(errors)].map((err) => (
+                    <p key={err}>{err}</p>
                   ))}
                 </div>
               </div>
@@ -170,10 +171,9 @@ export function ReorganizationDialog({
             <p>{notice.message}</p>
             {notice.notes.length > 0 ? (
               <ul className="max-h-64 list-disc space-y-1 overflow-y-auto pl-5 text-xs">
-                {notice.notes.map((note, index) => (
-                  // Two bookmarks can share a title, so the position disambiguates.
-                  <li key={`${note}-${index}`} className="break-words">
-                    {note}
+                {notice.notes.map((note) => (
+                  <li key={note.id} className="break-words">
+                    {note.text}
                   </li>
                 ))}
               </ul>
