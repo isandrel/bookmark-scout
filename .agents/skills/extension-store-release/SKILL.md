@@ -32,8 +32,20 @@ Summarize the JSON with a short script; the table output truncates columns. Targ
 ## Sources ZIP and reproducible builds
 
 - The sources ZIP (`wxt zip` with `sourcesRoot` at the workspace root) must include `.gitignore`, `bun.lock`, `tsconfig.base.json`, and every workspace `package.json`. Tailwind v4's source detection honors `.gitignore`; without it the rebuilt CSS differs.
-- Verify by unzipping into an empty folder, running `bun install --frozen-lockfile` and the Firefox build, and comparing file hashes.
-- Clean rebuilds match each other byte for byte, even at different paths, but differ from a developer-checkout build in minified names. Compare the reviewer rebuild with the CI release asset, never a local build.
+- Tailwind scans only `apps/extension/src/` (`@import 'tailwindcss' source('../')` in `src/styles/theme.css`). Scanning the whole app once put `.bg-black` and `.transition` from `tests/` into the release CSS; the sources ZIP leaves `tests/` out, so the reviewer rebuild differed. Never widen the scan to files the ZIP excludes. If shipped classes ever live outside `src/`, add an `@source` for that folder and keep it in the ZIP.
+- Verify by unzipping into an empty folder, running `bun install --frozen-lockfile` and the Firefox build, and comparing file hashes. A CSS change also renames every chunk that imports it, so one extra rule shows up as a dozen differing files; diff the CSS first.
+- Clean rebuilds match each other byte for byte, even at different paths, but differ from a developer-checkout build in minified names. Compare the reviewer rebuild with the CI release asset, never a local build. Before a release exists, a release-style build from a clean export stands in for it:
+
+  ```bash
+  mkdir -p ~/.cache/bookmark-scout-repro/{export,review,release}
+  git archive HEAD | tar -x -C ~/.cache/bookmark-scout-repro/export
+  (cd ~/.cache/bookmark-scout-repro/export && bun install --frozen-lockfile && cd apps/extension && bun run zip)
+  unzip -q ~/.cache/bookmark-scout-repro/export/apps/extension/dist/*-sources.zip -d ~/.cache/bookmark-scout-repro/review
+  unzip -q ~/.cache/bookmark-scout-repro/export/apps/extension/dist/*-firefox.zip -d ~/.cache/bookmark-scout-repro/release
+  (cd ~/.cache/bookmark-scout-repro/review && bun install --frozen-lockfile && cd apps/extension && bun run build:firefox)
+  diff <(cd ~/.cache/bookmark-scout-repro/release && find . -type f | sort | xargs shasum -a 256) \
+       <(cd ~/.cache/bookmark-scout-repro/review/apps/extension/dist/firefox-mv2 && find . -type f | sort | xargs shasum -a 256)
+  ```
 
 ## Release
 
