@@ -1,4 +1,8 @@
-@import 'tailwindcss';
+/*
+ * Classes are detected in src/ only, the code that ships. Scanning the whole app would also pick
+ * up names from tests/, which the sources ZIP leaves out, so a reviewer's rebuild would differ.
+ */
+@import 'tailwindcss' source('../');
 @import 'tw-animate-css';
 
 /* Bundled woff2 files from @fontsource-variable: the extension makes no remote font requests. */
