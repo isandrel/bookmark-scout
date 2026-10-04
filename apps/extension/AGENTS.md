@@ -151,6 +151,7 @@ WXT auto-imports every export from `components/**`, `hooks/`, `utils/`, `lib/`, 
 - do not add explicit imports for these exports; `@/types`, third-party packages, and assets still use explicit imports
 - export names must be unique across the scanned directories; `wxt prepare` warns on duplicates
 - do not add `index.ts` barrels in scanned directories; they are excluded from scanning
+- files named `*.lazy.ts` / `*.lazy.tsx` are excluded from auto-imports on purpose: they hold heavy code (the AI SDK, provider packages, the Ask AI chat) that must load only through `await import()`, so it stays out of the chunk every page loads. Never import them statically; `tests/e2e/lazy-ai-sdk.spec.ts` fails if AI SDK code reaches any entry's startup chunks
 - generated declarations live in `.wxt/types/imports.d.ts` and refresh on `wxt prepare`, `dev`, and `build`
 - auto-import can miss a use that lint, `tsc`, and unit tests accept (an identifier right before `:` in a ternary once became a runtime `ReferenceError` that broke HTML import); after a build, run `bun .agents/skills/extension-feature-test/scripts/scan-unresolved-imports.ts apps/extension dist/chrome-mv3`
 
@@ -202,12 +203,13 @@ Featured, local, and custom providers are defined one per file in `config/ai/pro
 
 When working in AI-related files, check whether the logic already belongs in:
 
-- `src/services/ai-client.ts`: provider factories and model wiring
+- `src/services/ai-client.ts`: the always-loaded facade (settings types and validation, Verify Service, and `generateAIObject` for structured calls); it loads the runtime on first use
+- `src/services/ai-client.lazy.ts`: provider factories and model wiring (`createAIModel` is async; each provider package loads only when that provider is used)
 - `src/services/ai-models.ts`: featured providers and catalog lookup
 - `src/services/ai-model-list.ts`: model lists, Verify, and error classification
 - `src/services/ai-settings.ts`: named services and `getActiveAISettings` (the default service; never read the legacy `aiProvider`/`aiModel`)
 - `src/services/ai-activity.ts`: the logging fetch every provider call goes through
-- `src/services/ai-agent.ts` and `src/services/ai-bookmark-tools.ts`: the Ask AI agent and its read-only tools
+- `src/services/ai-agent.ts` (facade) with `ai-agent.lazy.ts` (agent loop) and `src/services/ai-bookmark-tools.ts`: the Ask AI agent and its read-only tools; the chat UI is `components/ai/AskAIPanel.lazy.tsx` behind the small `AskAIPanel.tsx`
 - `src/services/page-reader.ts`: page reading
 - `src/services/prompt-config.ts` and `src/lib/prompt-library-storage.ts`: prompt tasks, `buildPrompt`, and saved prompts
 - `src/services/ai-recommendation.ts` and `src/services/ai-reorganization.ts`: folder suggestions and reorganization
