@@ -1,0 +1,7 @@
+[install]
+# Each workspace resolves only the packages it declares, so a missing entry in an app's
+# package.json fails locally instead of working by accident through the root (like pnpm).
+# Keep globalStore off: packages linked from the shared store resolve from the Bun cache, outside
+# the checkout, where TypeScript cannot find @types/react for next-themes and Turbopack cannot
+# find its PostCSS loader.
+linker = "isolated"

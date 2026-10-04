@@ -62,6 +62,7 @@ The maintainer reviews every change against these four words. Each has a concret
 Key root files and directories:
 
 - `package.json`: root workspace scripts, Bun entrypoints, and Nx command orchestration
+- `bunfig.toml`: Bun install settings (isolated linker)
 - `nx.json`: Nx workspace configuration
 - `packages/config`: shared configuration package used by multiple apps
 - `scripts/generate-readme.ts`: repository utility script
@@ -242,7 +243,11 @@ Use this section for repo maintenance tasks such as release publishing, CI repai
 
 ### Dependency automation
 
+- Each workspace declares what it imports or runs in its own `package.json`: the extension's runtime, build, and test packages live in `apps/extension/package.json`. The root `package.json` holds only workspace tooling (Nx, Biome, TypeScript, Husky, lint-staged) and what the root `scripts/` and `.agents/skills/` scripts import. Add a dependency with `bun add` from that app's folder.
+- Installs are isolated (`bunfig.toml`, `linker = "isolated"`): a workspace resolves only its declared packages, so an import that works only through another workspace's dependency fails. Declare the package in the importing app instead of adding it to the root. After the first isolated install in a checkout that had hoisted `node_modules`, delete `apps/website/.next`, `apps/docs/.next`, and every `*.tsbuildinfo` outside `node_modules/.bun`. Turbopack's stale cache fails with `Cannot find module '@vercel/turbopack/postcss'`, and stale incremental type-check state hid a missing `@types/bun` that only CI caught. Leave `globalStore` off. With it, packages resolve from the Bun cache outside the checkout, and the extension type check (`next-themes` loses `@types/react`) and the website's Turbopack build (`@vercel/turbopack/postcss`) both fail.
+- Declaring `react` in a workspace turns on Biome's React rules there. `apps/extension/biome.json` turns off `noArrayIndexKey` and `noChildrenProp` until the existing findings are fixed.
 - Treat the root text lockfile `bun.lock` as the workspace lockfile source of truth. It replaced the binary `bun.lockb` so Dependabot can update it and conflicts can be read and merged.
+- Keep `bun.lock` at `"lockfileVersion": 1`. Dependabot's bundled Bun reads only format 1 and fails every Bun update on format 2 (dependabot/dependabot-core#16071). Bun 1.4 writes 2 only for a brand-new lockfile and keeps an existing version, and the two formats differ only in that number, so if a regenerated lockfile says 2, change it back to 1. `scripts/lockfile.test.ts` fails otherwise. Raise its limit once Dependabot ships Bun 1.4.
 - Dependabot runs weekly with a cooldown and groups updates (`.github/dependabot.yml`): the AI SDK packages, Next.js and the docs framework, build and test tooling, the remaining minor and patch updates, and all GitHub Actions. Add a related package family to a group rather than letting it open one PR per package.
 - Avoid app-local `bun.lock` files unless an app truly installs independently in its workflow.
 - If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.

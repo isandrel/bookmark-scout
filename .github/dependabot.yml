@@ -7,7 +7,8 @@
 
 version: 2
 updates:
-  # Bun workspace (root bun.lock)
+  # Bun workspace (root bun.lock). Dependabot's Bun reads only "lockfileVersion": 1; keep bun.lock
+  # there (scripts/lockfile.test.ts) or every Bun update job fails.
   - package-ecosystem: "bun"
     directory: "/"
     schedule:
