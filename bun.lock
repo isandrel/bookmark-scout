@@ -9,6 +9,7 @@
         "@bookmark-scout/config": "workspace:*",
         "@nx/js": "^23.2.1",
         "@playwright/test": "^1.62.1",
+        "@types/bun": "1.4.2",
         "husky": "^9.1.7",
         "lint-staged": "^17.5.1",
         "nx": "^23.2.1",
@@ -31,6 +32,7 @@
       "devDependencies": {
         "@biomejs/biome": "^2.5.14",
         "@tailwindcss/postcss": "^4.3.3",
+        "@types/bun": "1.4.2",
         "@types/mdx": "^2.0.14",
         "@types/node": "^26.6.2",
         "@types/react": "^19.3.0",
@@ -139,6 +141,7 @@
         "smol-toml": "^1.9.0",
       },
       "devDependencies": {
+        "@types/bun": "1.4.2",
         "@types/node": "^26.6.2",
         "typescript": "^6.0.3",
       },

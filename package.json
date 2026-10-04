@@ -33,6 +33,7 @@
     "@bookmark-scout/config": "workspace:*",
     "@nx/js": "^23.2.1",
     "@playwright/test": "^1.62.1",
+    "@types/bun": "1.4.2",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
     "nx": "^23.2.1",
