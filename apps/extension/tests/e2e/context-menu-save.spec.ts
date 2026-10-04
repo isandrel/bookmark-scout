@@ -163,6 +163,20 @@ test.describe('context menu save', () => {
     await setSettings(extensionWorker, { contextMenuEnabled: true });
   });
 
+  test('menu titles are in the selected language from its first build', async ({
+    extensionWorker,
+  }) => {
+    await recordMenu(extensionWorker);
+    // The browser shows English; Japanese messages are fetched for this rebuild, which can take
+    // seconds in a busy service worker.
+    await setSettings(extensionWorker, { language: 'ja' });
+    await expect
+      .poll(() => menuChildren(extensionWorker, ROOT_ID), { timeout: 15_000 })
+      .toEqual([`${BOOKMARKS_BAR_ITEM_ID}: 📚 ブックマークバー`]);
+    const root = (await menuEntries(extensionWorker)).find((entry) => entry.id === ROOT_ID);
+    expect(root?.title).toBe('ブックマークの保存先...');
+  });
+
   test('a fresh profile offers only the Bookmarks Bar, which saves the link there', async ({
     extensionWorker,
   }) => {

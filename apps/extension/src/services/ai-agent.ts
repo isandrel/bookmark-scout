@@ -1,13 +1,9 @@
 /**
  * The Ask AI chat agent: a tool-calling loop over the user's default AI service. Its own tools
  * only read (bookmarks, folders, the current tab, and with Read page content on, web pages);
- * providers with a built-in web search get that tool too, when the user turns it on.
+ * providers with a built-in web search get that tool too, when the user turns it on. The loop
+ * and its tools need the AI SDK, so they live in ai-agent.lazy.ts and load with the first message.
  */
-import { anthropic } from '@ai-sdk/anthropic';
-import { google } from '@ai-sdk/google';
-import { openai } from '@ai-sdk/openai';
-import { xai } from '@ai-sdk/xai';
-import { isStepCount, type ToolSet, ToolLoopAgent, tool } from 'ai';
 import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
@@ -22,16 +18,10 @@ const config = readConfig(
   }),
 );
 
-/**
- * Built-in web search per provider, run by the provider itself. Each package types its tool
- * differently, so they are held as plain objects and typed as a tool where they join the set.
- */
-const WEB_SEARCH_TOOLS: Partial<Record<AIProvider, () => object>> = {
-  openai: () => openai.tools.webSearch({}),
-  anthropic: () => anthropic.tools.webSearch_20250305({ maxUses: config.web_search_max_uses }),
-  google: () => google.tools.googleSearch({}),
-  xai: () => xai.tools.webSearch({}),
-};
+/** Providers whose own built-in web search Ask AI can add (tools in ai-agent.lazy.ts). */
+const WEB_SEARCH_PROVIDERS = ['openai', 'anthropic', 'google', 'xai'] as const;
+
+export type WebSearchProvider = (typeof WEB_SEARCH_PROVIDERS)[number];
 
 /** Names the Ask AI tools are registered under, which the chat shows as steps. */
 export const ASK_AI_TOOL_NAMES = {
@@ -49,8 +39,8 @@ export const ASK_AI_WEB_SEARCH_TOOL_NAMES: ReadonlySet<string> = new Set([
   'google_search',
 ]);
 
-export function supportsWebSearch(provider: AIProvider): boolean {
-  return provider in WEB_SEARCH_TOOLS;
+export function supportsWebSearch(provider: AIProvider): provider is WebSearchProvider {
+  return (WEB_SEARCH_PROVIDERS as readonly string[]).includes(provider);
 }
 
 export type BookmarkSearchHit = {
@@ -104,58 +94,6 @@ export function searchBookmarksForAI(
     .map(({ hit }) => hit);
 }
 
-async function loadBookmarks() {
-  const nodes = await fetchBookmarkTree();
-  const ids = flattenBookmarks(nodes).map((bookmark) => bookmark.node.id);
-  return { nodes, metadata: await getStoredBookmarkMetadata(ids) };
-}
-
-/** Tool results reach the model as data; these explain to it why a tool returned nothing. */
-const TOOL_MESSAGES = {
-  pageUnreadable:
-    'The page could not be read: it did not load, is not an HTML page, or is on the local network.',
-  noActiveTab: 'There is no web page open in the active tab.',
-} as const;
-
-function createReadOnlyTools(readPages: boolean): ToolSet {
-  const tools: ToolSet = {
-    [ASK_AI_TOOL_NAMES.searchBookmarks]: tool({
-      description:
-        "Search the user's bookmarks by keywords. Matches titles, URLs, folder names, saved tags, and saved summaries.",
-      inputSchema: z.object({
-        query: z.string().describe('Space-separated keywords'),
-      }),
-      execute: async ({ query }) => {
-        const { nodes, metadata } = await loadBookmarks();
-        return searchBookmarksForAI(nodes, metadata, query);
-      },
-    }),
-    [ASK_AI_TOOL_NAMES.listFolders]: tool({
-      description: "List the paths of all the user's bookmark folders.",
-      inputSchema: z.object({}),
-      execute: async () => extractFolderPaths(await fetchBookmarkTree()).map((folder) => folder.path),
-    }),
-    [ASK_AI_TOOL_NAMES.getCurrentPage]: tool({
-      description: 'Get the title and URL of the page open in the active browser tab.',
-      inputSchema: z.object({}),
-      execute: async () => {
-        const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
-        return tab?.url && isWebUrl(tab.url)
-          ? { title: tab.title ?? '', url: tab.url }
-          : { error: TOOL_MESSAGES.noActiveTab };
-      },
-    }),
-  };
-  if (readPages) {
-    tools[ASK_AI_TOOL_NAMES.readPage] = tool({
-      description: 'Read the main text of a web page by its URL, as Markdown.',
-      inputSchema: z.object({ url: z.string().url() }),
-      execute: async ({ url }) => (await readPageText(url)) ?? { error: TOOL_MESSAGES.pageUnreadable },
-    });
-  }
-  return tools;
-}
-
 export type AskAIOptions = {
   /** Add the provider's built-in web search, where it has one. */
   webSearch: boolean;
@@ -167,16 +105,15 @@ export async function createAskAIAgent(options: AskAIOptions) {
   const appSettings = await getSettings();
   const settings = await getActiveAISettings(appSettings.aiEnabled);
   const readPages = appSettings.aiReadPageContent && (await hasPermission('pageReading'));
-  const webSearch = options.webSearch ? WEB_SEARCH_TOOLS[settings.provider]?.() : undefined;
   const { system } = await buildPrompt('ask_ai', {});
+  const { buildAskAIAgent } = await import('./ai-agent.lazy');
 
-  return new ToolLoopAgent({
-    model: createAIModel(settings, 'askAI'),
+  return buildAskAIAgent({
+    settings,
     instructions: system,
-    tools: {
-      ...createReadOnlyTools(readPages),
-      ...(webSearch ? { [ASK_AI_TOOL_NAMES.webSearch]: webSearch as ToolSet[string] } : {}),
-    },
-    stopWhen: isStepCount(config.max_steps),
+    readPages,
+    webSearch: options.webSearch,
+    maxSteps: config.max_steps,
+    webSearchMaxUses: config.web_search_max_uses,
   });
 }

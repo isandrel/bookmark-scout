@@ -138,7 +138,10 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Appearance
   language: tested('lib/settings-storage.ts', [
     e2e('bookmark-workflows.spec.ts', 'popup uses selected Japanese and Korean language settings'),
-    unit('context-menu.test.ts', 'localizes menu titles with the selected language'),
+    unit(
+      'context-menu.test.ts',
+      'localizes menu titles with the selected language on the first build',
+    ),
   ]),
   theme: tested('components/theme-provider.tsx', [
     e2e('options-settings.spec.ts', 'theme is one synced setting applied live in every open page'),
