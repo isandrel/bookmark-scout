@@ -1,6 +1,6 @@
 ---
 name: repo-maintenance
-description: Keep the Bookmark Scout GitHub repository healthy and get PRs merged. Use this skill whenever the user asks to "merge all PRs", "merge PR #N", fix or babysit a failing Dependabot PR, resolve a bun.lock conflict, respond to an Auto-fix CI event, investigate CI that went red on main after a merge, or clean up branches and worktrees - even when they only paste a PR link. Covers the strict up-to-date merge queue, the recurring Dependabot `lockfile had changes, but lockfile is frozen` failure, post-merge flaky tests, and safe branch cleanup with a ref backup. Bundles scripts for each.
+description: Keep the Bookmark Scout GitHub repository healthy and get PRs merged. Use this skill whenever the user asks to "merge all PRs", "merge PR #N", fix or babysit a failing Dependabot PR, resolve a bun.lock conflict, respond to an Auto-fix CI event, investigate CI that went red on main after a merge, debug a GitHub Actions or Cloudflare Pages deploy failure, change dependency or lockfile setup, or clean up branches and worktrees - even when they only paste a PR link. Covers the strict up-to-date merge queue, the recurring Dependabot `lockfile had changes, but lockfile is frozen` failure, post-merge flaky tests, and safe branch cleanup with a ref backup. Bundles scripts for each.
 ---
 
 # Repository maintenance
@@ -79,6 +79,26 @@ bun scripts/ci-scopes.ts --all
 ```
 
 A PR that touches `ci.yml` or the scope rules runs every job, so the first real skip shows only on the next PR; say so rather than claiming it works.
+
+The TOML has `ignore` patterns (every `*.md`, `.agents/`, `backlog/`, `store/`), `shared` patterns (workspace files that run every scope), and named `[scopes]` (`extension`, `sites`). A file that matches no pattern runs every scope. Skipped jobs still report as passed, so required checks never block, and pushes to `main` always run everything.
+
+## GitHub Actions reference
+
+- Inspect logs before changing code: `gh run list --limit 20`, `gh run view <run-id> --log-failed`, `gh run watch <run-id> --exit-status`.
+- Every job checks out the repository and runs `.github/actions/setup-workspace`, which installs the Bun version pinned by `packageManager` in `package.json` and runs `bun install --frozen-lockfile`. Bump Bun there, not in workflows. Failed browser tests upload their traces through `.github/actions/upload-playwright-failures`.
+- The website and docs deploy to Cloudflare Pages through the reusable `deploy-pages.yml` (build, `<app>:verify`, `wrangler pages deploy --branch`, one concurrency group per app), called by `deploy-website.yml` and `deploy-docs.yml` with the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
+- The Chromium and Edge suites run as matrix shards (`Chromium E2E (i/N)`, `Edge E2E (i/N)`, N from the matrix size in `ci.yml`), each on the worker count from `apps/extension/playwright.config.ts`, with the unit tests in `Extension Unit Tests`. The required checks `Extension Tests` and `Edge E2E` are summary jobs (`.github/actions/require-jobs`) that pass when the extension scope is off, fail when scope detection produced no output, and otherwise fail unless every shard passed. Shard failure diagnostics upload as `playwright-failures-<browser>-<shard>`. The browser jobs do not wait for Lint.
+- CI, CodeQL, Dependency Review, and the labeler cancel a pull request's older run when a new push arrives; runs on `main`, releases, and deploys are never cancelled. The extension Playwright config retries a failed test once on CI only, so a test that passes on retry is reported as flaky: fix it rather than raising retries.
+- Old failed runs stay in GitHub history. Judge repository health by the latest runs for the current `main` SHA.
+
+## Dependencies and lockfile
+
+- `bun.lock` (text) is the workspace lockfile source of truth; it replaced the binary `bun.lockb` so Dependabot can update it and conflicts can be read. Avoid app-local `bun.lock` files unless an app truly installs on its own in its workflow.
+- If `bun install --frozen-lockfile` fails, run `bun install`, commit the updated `bun.lock`, then verify `bun install --frozen-lockfile`. A workflow that installs from the root uses `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
+- Keep `"lockfileVersion": 1`. Dependabot's bundled Bun reads only format 1 and fails every Bun update on format 2 (dependabot/dependabot-core#16071). Bun 1.4 writes 2 only for a brand-new lockfile, and the formats differ only in that number, so change a regenerated 2 back to 1. `scripts/lockfile.test.ts` fails otherwise; raise its limit once Dependabot ships Bun 1.4.
+- After the first isolated install in a checkout that had hoisted `node_modules`, delete `apps/website/.next`, `apps/docs/.next`, and every `*.tsbuildinfo` outside `node_modules/.bun`. Turbopack's stale cache fails with `Cannot find module '@vercel/turbopack/postcss'`, and stale incremental type-check state once hid a missing `@types/bun` that only CI caught. Leave Bun's `globalStore` off: with it, packages resolve from outside the checkout and both the extension type check (`next-themes` loses `@types/react`) and the website's Turbopack build fail.
+- Dependabot runs weekly with a cooldown and groups updates (`.github/dependabot.yml`): the AI SDK packages, Next.js and the docs framework, build and test tooling, the remaining minor and patch updates, and all GitHub Actions. Add a related package family to a group rather than letting it open one PR per package. Keep a single root Bun updater: duplicate app-level entries produce `Dependabot::Bun::FileUpdater::NoChangeError`.
+- After merging Dependabot PRs, check whether `bun.lock` needs a follow-up refresh and whether path-filtered deploy workflows ran.
 
 ## Branch and worktree cleanup
 
