@@ -207,54 +207,17 @@ When reporting completion:
 
 ### Current repository constraint
 
-Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link, metadata, and site icon requests, and mocked-provider AI auto-tagging, summarization, page reading, request logging, opt-in, and provider-error paths (tests titled `[mocked provider contract]`), plus the Ask AI agent with a mocked streaming tool call and its error path, the prompt library, named AI services and the popup service switcher, live settings (language switch and a second Options tab), and dialog motion (no backdrop flash on close). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, saved site icons in the popup, side panel page, opening the manager from the popup and side panel, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and the browser favicon cache are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered; do not represent lint or build success as test coverage.
+The current coverage map lives in the `extension-feature-test` skill; keep it current when tests change. Live network behavior and real provider compatibility are not covered, so do not represent lint or build success as test coverage.
 
-## AI maintainer runbook
+## Maintenance and dependencies
 
-Use this section for repo maintenance tasks such as release publishing, CI repair, Dependabot triage, and GitHub Actions verification.
+Releases, CI repair, GitHub Actions, deploys, Dependabot, and lockfile work follow the `repo-maintenance` skill (release tags: `extension-store-release`). Do not publish a release tag unless the user explicitly asks. Rules that apply to everyday changes:
 
-### Release publishing
-
-- Do not publish a release tag unless the user explicitly asks for release publication.
-- Before pushing a release tag, confirm:
-  - `main` is clean and synced: `git status --short --branch`
-  - no PRs are open: `gh pr list --state open`
-  - latest relevant Actions for current `main` are green
-  - the remote tag does not already exist: `git ls-remote --tags origin vX.Y.Z`
-  - `apps/extension/package.json` `version` equals `X.Y.Z`; WXT writes it into the manifest and the release workflow rejects mismatched tags
-- If a local release tag points to an older commit, move it to the current passing `main` before pushing: `git tag -f vX.Y.Z HEAD`.
-- Push the tag to trigger `Release Extension`: `git push origin vX.Y.Z`.
-- Watch the workflow and verify uploaded release assets: `gh run watch <run-id> --exit-status` and `gh release view vX.Y.Z`.
-- Expected release assets are Chrome `.crx`, Chrome `.zip`, Firefox `.zip`, Edge `.zip`, and the Firefox review sources `.zip`.
-
-### GitHub Actions troubleshooting
-
-- Inspect logs before changing code:
-  - list recent runs: `gh run list --limit 20`
-  - inspect failed logs: `gh run view <run-id> --log-failed`
-  - watch reruns: `gh run watch <run-id> --exit-status`
-- Every workflow job checks out the repository and then runs `.github/actions/setup-workspace`, which installs the Bun version pinned by `packageManager` in `package.json` and runs `bun install --frozen-lockfile`; bump Bun there, not in workflows. Failed browser tests upload their traces through `.github/actions/upload-playwright-failures`.
-- The website and docs both deploy to Cloudflare Pages through the reusable `deploy-pages.yml` (build, `<app>:verify`, `wrangler pages deploy --branch`, one concurrency group per app), called by `deploy-website.yml` and `deploy-docs.yml` with the `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_PROJECT_NAME_WEBSITE`, and `CLOUDFLARE_PROJECT_NAME_DOCS` secrets. If a deploy fails with a transient Cloudflare API error, rerun the failed job before patching code.
-- If `bun install --frozen-lockfile` fails, run `bun install`, commit the updated `bun.lock`, then verify `bun install --frozen-lockfile`.
-- CI skips jobs a pull request cannot affect. The rules live in `.github/ci-scopes.toml` as glob patterns: `ignore` (for example every `*.md`, `.agents/`, `backlog/`, `store/`), `shared` (workspace files that run every scope), and named `[scopes]` (`extension`, `sites`). A file that matches no pattern runs every scope. `scripts/ci-scopes.ts` applies the rules in the `Detect changes` job, and `scripts/ci-scopes.test.ts` covers them; extend the TOML, not the workflow, when paths change. Skipped jobs still report as passed, so required checks never block, and pushes to `main` always run everything.
-- The Chromium and Edge suites run as matrix shards (`Chromium E2E (i/N)`, `Edge E2E (i/N)`, N from the matrix size in `ci.yml`), each on the worker count from `apps/extension/playwright.config.ts`, with the unit tests in `Extension Unit Tests`. The required checks `Extension Tests` and `Edge E2E` are summary jobs (`.github/actions/require-jobs`) that pass when the extension scope is off, fail when scope detection produced no output, and otherwise fail unless every shard passed. Shard failure diagnostics upload as `playwright-failures-<browser>-<shard>`. The browser jobs do not wait for Lint.
-- CI, CodeQL, Dependency Review, and the labeler cancel a pull request's older run when a new push arrives; runs on `main`, releases, and deploys are never cancelled. The extension Playwright config retries a failed test once on CI only, so a test that passes on retry is reported as flaky: fix it rather than raising retries.
-- Old failed workflow runs remain in GitHub history. Judge repository health by the latest runs for the current `main` SHA, not by historical failures.
-
-### Dependency automation
-
-- Each workspace declares what it imports or runs in its own `package.json`: the extension's runtime, build, and test packages live in `apps/extension/package.json`. The root `package.json` holds only workspace tooling (Nx, Biome, TypeScript, Husky, lint-staged) and what the root `scripts/` and `.agents/skills/` scripts import. Add a dependency with `bun add` from that app's folder.
-- Installs are isolated (`bunfig.toml`, `linker = "isolated"`): a workspace resolves only its declared packages, so an import that works only through another workspace's dependency fails. Declare the package in the importing app instead of adding it to the root. After the first isolated install in a checkout that had hoisted `node_modules`, delete `apps/website/.next`, `apps/docs/.next`, and every `*.tsbuildinfo` outside `node_modules/.bun`. Turbopack's stale cache fails with `Cannot find module '@vercel/turbopack/postcss'`, and stale incremental type-check state hid a missing `@types/bun` that only CI caught. Leave `globalStore` off. With it, packages resolve from the Bun cache outside the checkout, and the extension type check (`next-themes` loses `@types/react`) and the website's Turbopack build (`@vercel/turbopack/postcss`) both fail.
-- TypeScript is split by what each workspace runs. The extension and docs use TypeScript 7 (the native `tsc`, about 5x faster). The root, website, and `packages/config` stay on 6, because TypeScript 7 has no programmatic API yet: Nx loads the root's `typescript` to find project dependencies and on 7 silently loses them, and typescript-eslint (website lint) refuses 7. `scripts/typescript-versions.test.ts` pins each workspace's major. Move a workspace to 7 only when nothing it runs imports `typescript`.
-- Declaring `react` in a workspace turns on Biome's React rules there, such as `noArrayIndexKey` (key list items by an id or other value from the data) and `noChildrenProp` (pass children as JSX children; tests that render components are `.test.tsx`).
-- Treat the root text lockfile `bun.lock` as the workspace lockfile source of truth. It replaced the binary `bun.lockb` so Dependabot can update it and conflicts can be read and merged.
-- Keep `bun.lock` at `"lockfileVersion": 1`. Dependabot's bundled Bun reads only format 1 and fails every Bun update on format 2 (dependabot/dependabot-core#16071). Bun 1.4 writes 2 only for a brand-new lockfile and keeps an existing version, and the two formats differ only in that number, so if a regenerated lockfile says 2, change it back to 1. `scripts/lockfile.test.ts` fails otherwise. Raise its limit once Dependabot ships Bun 1.4.
-- Dependabot runs weekly with a cooldown and groups updates (`.github/dependabot.yml`): the AI SDK packages, Next.js and the docs framework, build and test tooling, the remaining minor and patch updates, and all GitHub Actions. Add a related package family to a group rather than letting it open one PR per package.
-- Avoid app-local `bun.lock` files unless an app truly installs independently in its workflow.
-- If a workflow installs from the root, use `bun install --frozen-lockfile` and the workspace script, such as `bun run build:website`.
-- Duplicate app-level Bun Dependabot entries can produce `Dependabot::Bun::FileUpdater::NoChangeError`; prefer a single root Bun updater unless the app has a separate lockfile and install workflow.
-- After merging Dependabot PRs, check whether `bun.lock` needs a follow-up refresh and whether path-filtered deploy workflows were triggered.
-- If a Dependabot Bun PR still fails `bun install --frozen-lockfile`, repair it with `.agents/skills/repo-maintenance/scripts/fix-dependabot-lockfile.sh <pr>`.
+- Each workspace declares what it imports or runs in its own `package.json`; add a dependency with `bun add` from that app's folder. The root `package.json` holds only workspace tooling (Nx, Biome, TypeScript, Husky, lint-staged) and what the root `scripts/` and `.agents/skills/` scripts import.
+- Installs are isolated (`bunfig.toml`, `linker = "isolated"`): a workspace resolves only its declared packages, so declare a package in the importing app instead of relying on another workspace or the root.
+- TypeScript is split by what each workspace runs: the extension and docs use TypeScript 7 (native `tsc`); the root, website, and `packages/config` stay on 6 because Nx and typescript-eslint need the programmatic API. `scripts/typescript-versions.test.ts` pins each major.
+- Declaring `react` in a workspace turns on Biome's React rules there, such as `noArrayIndexKey` (key list items by a value from the data) and `noChildrenProp` (tests that render components are `.test.tsx`).
+- `bun.lock` is the single workspace lockfile and must stay at `"lockfileVersion": 1`; `scripts/lockfile.test.ts` enforces it.
 
 ## Coding standards
 
@@ -406,17 +369,7 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
-- `extension-feature-test`: turning behaviors into unit and E2E coverage, with lessons from past audits.
-- `extension-live-smoke`: read-only checks of an installed extension with Computer Use, and its tool limits.
-- `extension-exploratory-qa`: hands-on QA of the built extension in a disposable Playwright profile, with a bundled runner script.
-- `repo-maintenance`: landing a PR queue under the strict up-to-date ruleset, Dependabot lockfile repair, red-main recovery, and branch cleanup, with bundled scripts.
-- `parallel-agent-delivery`: splitting work across parallel agents and landing auto-merged PRs safely.
-- `extension-ui-change`: restyling extension surfaces with the phased PR plan, token audits, Base UI quirks, visual checks, and expected settings UX.
-- `extension-ai-feature`: adding AI providers, tools, and limits end to end: config, storage, logging, disclosures, and provider gotchas.
-- `website-docs-delivery`: verifying, screenshot-reviewing, and deploying the website and docs, with next-intl, Playwright, image pipeline, hosting cutover, and Cloudflare Pages traps, plus a marketing and SEO review reference.
-- `extension-store-release`: getting the builds, manifests, release assets, and listings ready for the Chrome Web Store, Firefox Add-ons, and Edge Add-ons, without submitting.
-- `feature-research-planning`: research-first planning for a new capability or redesign: map the code, research libraries and patterns online, present options with a recommended default.
-- `session-learnings`: mining past agent sessions into portable skill and `AGENTS.md` updates, with a transcript digest script.
+Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `website-docs-delivery`, `extension-store-release`, `feature-research-planning`, `session-learnings`. Each `SKILL.md` description says when to use it.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 

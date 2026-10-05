@@ -49,7 +49,14 @@ Summarize the JSON with a short script; the table output truncates columns. Targ
 
 ## Release
 
-- Tag `vX.Y.Z` only when the maintainer asks, after the checks in the root `AGENTS.md` "Release publishing" section; the workflow rejects a tag that differs from `apps/extension/package.json` `version`.
+- Tag `vX.Y.Z` only when the maintainer explicitly asks for a release. Before pushing the tag, confirm:
+  - `main` is clean and synced: `git status --short --branch`
+  - no PRs are open: `gh pr list --state open`
+  - the latest relevant Actions for the current `main` SHA are green
+  - the remote tag does not exist yet: `git ls-remote --tags origin vX.Y.Z`
+  - `apps/extension/package.json` `version` equals `X.Y.Z`; WXT writes it into the manifest and the release workflow rejects a mismatched tag
+- If a local tag points to an older commit, move it to the current passing `main` first: `git tag -f vX.Y.Z HEAD`.
+- Push the tag to trigger `Release Extension` (`git push origin vX.Y.Z`), then watch it with `gh run watch <run-id> --exit-status`.
 - Check all five assets with `gh release view vX.Y.Z`: Chrome `.crx` and `.zip`, Firefox `.zip`, Edge `.zip`, and the Firefox sources `.zip`. Treat the first tag after any release-workflow change as its first real test.
 
 ## Listings and screenshots

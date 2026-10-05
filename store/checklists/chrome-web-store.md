@@ -9,7 +9,7 @@
 
 ## 1. Version and release package
 
-Follow the release runbook in the root `AGENTS.md` ("Release publishing"). Releasing is its own approval gate.
+Follow the "Release" section of `.agents/skills/extension-store-release/SKILL.md`. Releasing is its own approval gate.
 
 - [ ] `apps/extension/package.json` `version` is `X.Y.Z` and is higher than the version currently published on the Chrome Web Store.
 - [ ] `main` is clean and green, and the tag does not exist yet: `git ls-remote --tags origin vX.Y.Z`.

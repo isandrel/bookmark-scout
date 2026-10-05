@@ -14,6 +14,12 @@ description: Verify browser-extension features with automated tests. Use when im
 
 For WXT projects, consult the current [WXT end-to-end testing guide](https://wxt.dev/guide/essentials/e2e-testing.html) when changing test setup; adapt it to existing fixtures rather than replacing them by default.
 
+## Current coverage in Bookmark Scout
+
+Keep this list current when tests are added or removed.
+
+Automated extension coverage includes sorting unit tests and Chromium end-to-end tests for popup search, folder creation, bookmark management, settings synchronization, maintenance tools, reports, import/export, offline AI context export, export privacy review, import preview, keyboard shortcuts, saved searches, context-menu saves, popup and side panel drag-and-drop moves, manager column resizing, route-mocked and real-local-server dead-link, metadata, and site icon requests, and mocked-provider AI auto-tagging, summarization, page reading, request logging, opt-in, and provider-error paths (tests titled `[mocked provider contract]`), plus the Ask AI agent with a mocked streaming tool call and its error path, the prompt library, named AI services and the popup service switcher, live settings (language switch and a second Options tab), and dialog motion (no backdrop flash on close). The same suite also runs in Microsoft Edge against the Edge build. Firefox runs a smaller smoke suite (popup search and folder creation, saved site icons in the popup, side panel page, opening the manager from the popup and side panel, manager, settings save, JSON export and import, statistics and privacy reports) against the Firefox build; context menus, drag and drop, network and AI tools, and the browser favicon cache are not covered there. The Edge and Firefox CI jobs are required checks, and the `Website and Docs` job builds, verifies, and browser-tests the marketing site and docs. Live network behavior and real provider compatibility are not covered.
+
 ## Lessons from past runs
 
 - **Ground truth over UI.** Verify outcomes through the extension APIs (`chrome.bookmarks`, `chrome.storage`) from the service worker (`serviceWorker.evaluate`) or from files on disk (downloads, exports), not only through what the page renders.
