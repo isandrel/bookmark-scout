@@ -345,6 +345,7 @@ If code and docs diverge during a task, fix both when reasonable or call out the
 - do not overwrite or revert user changes you did not make
 - mention unrelated issues separately instead of folding them into the same task
 - prefer additive or local edits over broad rewrites when both solve the problem
+- plans (`plans/`) and Backlog.md tasks (`backlog/`) are local agent working state and are git-ignored; never commit them
 - keep temporary scripts, screenshots, logs, and one-off reports out of the repository; put them in `~/.cache/bookmark-scout-<topic>/`. Session scratchpads get wiped and are shared between parallel agents, so use them only for throwaway output. Third-party tools and skills sometimes write reports into the working tree (a migration skill once committed `.migration/`); check `git status` for new top-level folders before committing
 - script repository files (TOML, JSON, Markdown) with Bun and the workspace's libraries (`smol-toml` for TOML), not the system `python3`, which may lack `tomllib`; one Python edit to the README generator overwrote the READMEs
 - after changing a generator or its templates, run it and check `git diff --exit-code` on its output before trusting it; the README templates once lagged months behind their output

@@ -61,4 +61,4 @@ For a full pass, run one tester per surface in parallel, each with its own `RUN`
 
 ## Report format
 
-Use `assets/findings-template.md`. One entry per bug: severity (High, Medium, Low), area, exact repro, expected vs actual, evidence. Tag bugs already tracked in `backlog/tasks/`. List what works and what was not covered. Report security issues (for example user data rendered as HTML) and data loss first.
+Use `assets/findings-template.md`. One entry per bug: severity (High, Medium, Low), area, exact repro, expected vs actual, evidence. Tag bugs already tracked in the local, git-ignored `backlog/tasks/`. List what works and what was not covered. Report security issues (for example user data rendered as HTML) and data loss first.
