@@ -58,6 +58,10 @@ test-results
 .remember/
 CLAUDE.local.md
 
+# Agent working state: plans and Backlog.md tasks stay local
+plans/
+backlog/
+
 # One-off migration reports
 .migration/
 

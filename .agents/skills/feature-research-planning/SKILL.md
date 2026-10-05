@@ -24,7 +24,7 @@ Check every option against the root `AGENTS.md` "Engineering intent" rules: conf
 
 ## 3. Write the plan
 
-Put it in `plans/<date>-<topic>.md` when it spans more than one PR. Include:
+Put it in `plans/<date>-<topic>.md` (git-ignored, local only) when it spans more than one PR. Include:
 
 - the decisions and their reasons;
 - a phased PR order (foundations first, then one surface or area per PR), with the files each phase owns so phases can run as parallel agents without conflicts (see the `parallel-agent-delivery` skill);

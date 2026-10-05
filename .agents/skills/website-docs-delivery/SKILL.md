@@ -5,7 +5,7 @@ description: Change, verify, visually review, and ship the Bookmark Scout market
 
 # Website and docs delivery
 
-Read `apps/website/AGENTS.md` or `apps/docs/AGENTS.md` and the matching `DESIGN.md` first. For a content, marketing, SEO, or store-copy review, also read `references/marketing-review.md`. For a redesign, write the plan in `plans/` and critique it against generic defaults before dispatching builders (the critique replaced three equal columns with tabs and a fact grid with a data-boundary diagram).
+Read `apps/website/AGENTS.md` or `apps/docs/AGENTS.md` and the matching `DESIGN.md` first. For a content, marketing, SEO, or store-copy review, also read `references/marketing-review.md`. For a redesign, write the plan in the git-ignored `plans/` folder and critique it against generic defaults before dispatching builders (the critique replaced three equal columns with tabs and a fact grid with a data-boundary diagram).
 
 ## Full local check
 
