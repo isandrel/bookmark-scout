@@ -1,0 +1,56 @@
+---
+title: Confidentialité
+description: Ce que Bookmark Scout lit, ce qu'il stocke, et quand des données quittent votre navigateur. Un résumé de la politique de confidentialité.
+---
+
+Ceci est un résumé. Seule la <SiteLink to="privacy">politique de confidentialité</SiteLink> complète publiée sur le site Web fait foi ; elle est entrée en vigueur le <PrivacyEffectiveDate />.
+
+## En bref [#in-short]
+
+- **Ni compte, ni serveur.** Bookmark Scout fonctionne au sein de votre navigateur. Le développeur ne reçoit rien de l'extension.
+- **Aucune télémétrie.** L'extension ne comporte ni mesure d'audience, ni rapports de plantage, ni publicité.
+- **L'IA reste désactivée tant que vous ne l'activez pas**, et les requêtes vont alors directement de votre navigateur au fournisseur que vous avez choisi. Dans Firefox, l'activation demande aussi votre consentement au partage de ces données.
+- **Des autorisations uniquement lorsque vous en avez besoin.** À l'installation, l'extension ne demande que ce dont elle ne peut pas se passer ; l'accès aux onglets, le menu contextuel, le cache d'icônes du navigateur et l'accès aux sites Web sont demandés la première fois que vous utilisez la fonctionnalité concernée. Consultez [Autorisations](/permissions).
+
+## Ce que lit l'extension [#what-the-extension-reads]
+
+- Vos favoris, pour les afficher, les rechercher, les modifier, les déplacer, les supprimer, les importer et les exporter.
+- Le titre et l'URL de l'onglet actif, lorsque vous enregistrez la page que vous consultez ou demandez une suggestion de dossier.
+- Les icônes de site du cache d'icônes du navigateur, dans Chrome et Edge, une fois l'option **Utiliser le cache d'icônes du navigateur** activée.
+- Les icônes de site que vous téléchargez avec **Actualiser les icônes de site**, depuis chaque site enregistré en favori.
+
+Elle ne lit pas le contenu des pages que vous consultez.
+
+## Ce qu'elle stocke [#what-it-stores]
+
+| Données | Emplacement | Synchronisées |
+| --- | --- | --- |
+| Paramètres, y compris l'activation de l'IA et le fournisseur et le modèle choisis | Stockage synchronisé du navigateur | Oui, via votre compte de navigateur lorsque la synchronisation du navigateur est activée |
+| Disposition du tableau des favoris dans le gestionnaire | Stockage synchronisé du navigateur | Comme les paramètres |
+| Paramètres du fournisseur d'IA : clé API, URL de base, en-têtes supplémentaires | Stockage local de cet appareil | Non |
+| Étiquettes, résumés, recherches enregistrées, dossiers récents, recherches récentes | Stockage local de cet appareil | Non |
+| Icônes de site enregistrées avec **Actualiser les icônes de site**, jusqu'à 4096 Ko par défaut | Stockage local de cet appareil | Non |
+
+Les résultats d'analyse de la barre latérale Outils ne sont conservés que tant que leur boîte de dialogue est ouverte. La désinstallation de l'extension supprime ce qu'elle a stocké ; vos favoris restent dans le navigateur.
+
+## Quand les données quittent votre navigateur [#when-data-leaves-your-browser]
+
+Uniquement lorsque vous utilisez l'une de ces fonctionnalités, et uniquement vers la destination indiquée :
+
+| Fonctionnalité | Destination | Données envoyées |
+| --- | --- | --- |
+| Recommandations de dossiers par IA | Le fournisseur d'IA que vous avez configuré | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
+| Étiquetage automatique, Générateur de résumés, Réorganisation des dossiers par IA | Le fournisseur d'IA que vous avez configuré | Les titres, les URL et les chemins de dossier des favoris compris dans la portée. Si **Lire le contenu des pages** est activé, l'étiquetage automatique et le générateur de résumés envoient aussi le texte principal de chaque page ; la réorganisation des dossiers par IA ne le fait jamais |
+| Demander à l'IA | Le fournisseur d'IA que vous avez configuré | Vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte pour répondre : les favoris correspondants, les noms des dossiers, le titre et l'URL de la page actuelle et, si **Lire le contenu des pages** est activé, le texte des pages qu'elle lit. Si sa recherche sur le Web est activée, le fournisseur effectue aussi des recherches sur le Web. La conversation n'est pas enregistrée |
+| Vérifier les liens morts, Récupération des métadonnées | Chaque site enregistré en favori | Une requête pour la page, sans cookies, après que vous avez autorisé l'accès aux sites Web |
+| Actualiser les icônes de site | Chaque site enregistré en favori | Une requête pour une page enregistrée en favori par site et pour un fichier d'icône sur le domaine de ce site, sans cookies, après que vous avez autorisé l'accès aux sites Web. Aucun service d'icônes tiers n'est utilisé |
+
+Un fournisseur qui s'exécute sur votre propre ordinateur, comme Ollama, garde les requêtes d'IA sur votre machine. Les exportations, y compris celles du **Préparateur de contexte IA**, sont enregistrées sous forme de fichiers sur votre ordinateur et ne sont mises en ligne nulle part ; une vérification de confidentialité peut d'abord masquer les valeurs sensibles. Les données exactes envoyées par chaque outil d'IA sont détaillées dans [Configurer les outils d'IA](/guides/ai-tools#what-each-tool-sends), et chaque autorisation est expliquée dans [Autorisations](/permissions).
+
+## Ce site de documentation [#this-docs-site]
+
+La documentation est un site statique sans mesure d'audience, sans compte et sans cookies propres. Les polices sont servies par ce site, et non par Google Fonts. La politique de confidentialité indique le nom de l'hébergeur.
+
+## Questions [#questions]
+
+Écrivez à <Contact role="privacy" /> pour toute question relative à la confidentialité ou toute demande concernant vos données. Pour signaler un problème de sécurité, écrivez à <Contact role="security" /> au lieu d'ouvrir un ticket public.

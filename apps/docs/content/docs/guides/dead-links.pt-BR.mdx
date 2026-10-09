@@ -1,0 +1,77 @@
+---
+title: Encontrar e corrigir links quebrados
+description: Verifique os favoritos em busca de links quebrados, veja quais precisam de uma verificação manual e corrija-os excluindo, seguindo um redirecionamento, usando uma cópia arquivada ou editando o URL.
+---
+
+**Verificar links quebrados** fica na barra lateral **Ferramentas** do gerenciador de favoritos, em **Manutenção**. A ferramenta solicita cada página salva nos favoritos para ver se ela ainda carrega.
+
+<Callout title="Firefox">
+No Firefox, abra o gerenciador com **Abrir gerenciador de favoritos** no pop-up.
+</Callout>
+
+## Executar uma verificação [#run-a-scan]
+
+<Steps>
+<Step>
+Em **Verificar links quebrados**, escolha a pasta atual ou todos os favoritos no menu de escopo e clique em **Verificar**.
+</Step>
+<Step>
+Na primeira vez, o Bookmark Scout explica por que precisa de acesso aos sites. Clique em **Permitir acesso** e aceite a solicitação do navegador. Se você escolher **Agora não** ou recusar, nada é verificado.
+</Step>
+<Step>
+Aguarde os resultados. Um resumo no topo conta os links quebrados confirmados, os que precisam de verificação manual e os que foram redirecionados.
+</Step>
+</Steps>
+
+O acesso aos sites é opcional e não é concedido na instalação. As solicitações são enviadas sem cookies, e você pode revogar o acesso nas configurações de extensões do navegador. Consulte [Permissões](/permissions).
+
+## Entender os resultados [#read-the-results]
+
+| Resultado | O que significa |
+| --- | --- |
+| **Quebrado (confirmado)** | Página não encontrada (404 ou 410), a conexão foi recusada, o host não foi encontrado ou os redirecionamentos entraram em loop |
+| **Verificar manualmente** | Muitas vezes ainda funciona em um navegador: login necessário ou acesso negado (401, 403, 407), limite de taxa (429), o site rejeita verificações automatizadas (405 ou 501), erro no servidor (5xx), outro erro HTTP ou tempo esgotado |
+| **Redirecionado** | O link funciona, mas agora aponta para outro lugar; o destino é mostrado |
+| **Ignorado** | Não é um link da web, como um bookmarklet |
+
+Qualquer erro de uma solicitação `HEAD` é confirmado com uma solicitação `GET` antes de ser informado, porque alguns servidores não aceitam `HEAD`.
+
+<Callout type="info" title="Mensagens do console no Chrome">
+O Chrome registra uma linha "Failed to load resource" no console do desenvolvedor da página para cada solicitação com falha. As extensões não conseguem suprimir essas linhas; a verificação em si não registra nada.
+</Callout>
+
+## Corrigir links [#repair-links]
+
+<Steps>
+<Step>
+Clique em **Revisar correções**. Todos os links com falha, com tempo esgotado ou redirecionados são listados.
+</Step>
+<Step>
+Escolha uma ação para cada um:
+
+- **Manter como está** (o padrão, então nada muda a menos que você escolha outra opção)
+- **Excluir favorito**
+- **Usar destino do redirecionamento**, oferecido somente quando a verificação detectou um redirecionamento
+- **Usar cópia arquivada (Wayback Machine)**, que aponta o favorito para `https://web.archive.org/web/<original URL>`. O link é montado localmente e não é verificado, então a página pode nunca ter sido arquivada.
+- **Editar URL**, que só aceita um URL `http` ou `https` válido e diferente do atual
+</Step>
+<Step>
+Confira o resumo de quantos favoritos serão excluídos, terão o URL substituído ou serão mantidos e clique em **Aplicar**.
+</Step>
+</Steps>
+
+Nada muda até você aplicar. Antes de cada alteração, o favorito é lido de novo: um favorito excluído ou editado depois da verificação é ignorado e listado, para que uma verificação desatualizada nunca sobrescreva uma edição mais recente.
+
+**Desfazer**, na notificação ou na caixa de diálogo depois de uma aplicação parcial, restaura os favoritos excluídos em até 10 segundos e volta os URLs substituídos ao que eram, a menos que tenham sido editados de novo.
+
+## Ajustar a verificação [#tune-the-scan]
+
+Na guia **Manutenção** das [Configurações](/settings):
+
+| Configuração | Padrão |
+| --- | --- |
+| **Tempo limite da solicitação** | 8 segundos por solicitação |
+| **Simultaneidade** | 4 solicitações ao mesmo tempo |
+| **Número de tentativas** | 1 nova tentativa |
+| **Seguir redirecionamentos** | Ativado |
+| **Códigos de status de sucesso** | 200, 201, 202, 204, 301, 302, 307, 308 |

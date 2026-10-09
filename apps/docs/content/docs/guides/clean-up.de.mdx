@@ -1,0 +1,96 @@
+---
+title: Duplikate und Tracking-URLs bereinigen
+description: Entfernen Sie doppelte Lesezeichen nach einer Prüfung, entfernen Sie Tracking-Parameter wie utm_source aus Lesezeichen-URLs zuerst mit Vorschau, und aktualisieren Sie fehlende Website-Symbole.
+---
+
+Beide Tools befinden sich in der **Tools**-Leiste des Lesezeichen-Managers unter **Wartung**. Öffnen Sie in Chrome die Lesezeichenseite des Browsers und klicken Sie dann in der Kopfzeile des Managers auf **Tools einblenden**, falls die Leiste ausgeblendet ist.
+
+<Callout title="Firefox">
+Firefox erlaubt Erweiterungen nicht, seine eigene Lesezeichenseite zu ersetzen. Öffnen Sie den Manager dort daher über **Lesezeichen-Manager öffnen** im Pop-up der Symbolleiste und öffnen Sie dann die Tools-Leiste.
+</Callout>
+
+## Doppelte Lesezeichen entfernen [#remove-duplicate-bookmarks]
+
+<Steps>
+<Step>
+Klicken Sie in **Duplikatbereinigung** auf **Prüfen**. Das Tool prüft immer alle Lesezeichen.
+</Step>
+<Step>
+Prüfen Sie die Gruppen. Jede Gruppe listet übereinstimmende Lesezeichen auf; das Lesezeichen, das erhalten bleibt, ist mit **Behalten** markiert.
+</Step>
+<Step>
+Klicken Sie auf **Duplikate entfernen**, um die übrigen Kopien in allen Gruppen zu löschen, oder auf **Abbrechen**, um nichts zu ändern.
+</Step>
+<Step>
+Haben Sie es sich anders überlegt? Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**, um das Entfernte wiederherzustellen.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+Was als Duplikat gilt, legen Sie im Tab **Wartung** der [Einstellungen](/settings) fest:
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Vergleichsmethode** | Normalisierte URL | Vergleich nach **Exakte URL**, **Normalisierte URL**, **Titel + URL** oder **Nur Titel** |
+| **www normalisieren** | An | `www.example.com` und `example.com` als denselben Host behandeln |
+| **Protokoll ignorieren** | An | `http`- und `https`-Versionen als Duplikate behandeln |
+| **Abschließenden Schrägstrich ignorieren** | An | URLs mit und ohne abschließendes `/` als Duplikate behandeln |
+| **Behalten-Regel** | Ältestes | Welches Lesezeichen jeder Gruppe erhalten bleibt: **Ältestes**, **Neuestes** oder **Zuerst gefundenes** |
+| **Max. Gruppen** | 500 | Höchstzahl der Gruppen, die eine Prüfung liefert |
+
+Bevor etwas entfernt wird, wird jede Gruppe erneut geprüft. Wurde das mit **Behalten** markierte Lesezeichen gelöscht oder verweist es inzwischen auf ein anderes Ziel, bleibt die ganze Gruppe unangetastet, und die Benachrichtigung zeigt an, wie viele Gruppen übersprungen wurden. Beim Abgleich mit **Nur Titel** erscheint eine Warnung, wenn eine Gruppe unterschiedliche URLs enthält, denn das Entfernen dieser Kopien löscht verschiedene Seiten.
+
+## Tracking-Parameter entfernen [#strip-tracking-parameters]
+
+<Steps>
+<Step>
+Wählen Sie in **URL-Bereinigung** im Bereichsmenü den aktuellen Ordner oder alle Lesezeichen aus und klicken Sie auf **Bereinigen**.
+</Step>
+<Step>
+Prüfen Sie die Vorschau aller URLs, die sich ändern würden.
+</Step>
+<Step>
+Klicken Sie auf **Änderungen übernehmen**, um alle zu aktualisieren, oder schließen Sie den Dialog, um nichts zu ändern.
+</Step>
+</Steps>
+
+Hat sich ein Lesezeichen nach der Vorschau geändert, wird es übersprungen und in der Benachrichtigung mitgezählt. Die URL-Bereinigung lässt sich nicht rückgängig machen, prüfen Sie daher die Vorschau, bevor Sie die Änderungen übernehmen.
+
+Die Regeln befinden sich im Tab **Wartung** der Einstellungen:
+
+- **Zu entfernende Parameter**: Parameter, die entfernt werden. Die Standardliste lautet `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` und `si`.
+- **Beizubehaltende Parameter**: Parameter, die nie entfernt werden. Standard: `id`, `page`, `q`, `p` und `lang`.
+- **Doppelte Abfrageparameter entfernen** (standardmäßig an) entfernt wiederholte Parameter.
+- **Abfrageparameter sortieren** (standardmäßig an) sortiert die verbleibenden Parameter alphabetisch.
+- **Fragmente entfernen** (standardmäßig aus) entfernt zusätzlich Teile wie `#section`.
+
+## Website-Symbole aktualisieren [#refresh-site-icons]
+
+Lesezeichen zeigen das Symbol, das Ihr Browser für die jeweilige Website im Cache hat. Websites, die Sie länger nicht besucht haben, zeigen eine allgemeine Weltkugel, und Firefox bietet Erweiterungen überhaupt keinen Symbol-Cache. **Website-Symbole aktualisieren** unter **Metadaten und Inhalte** in der Tools-Leiste lädt stattdessen das eigene Symbol jeder Website herunter.
+
+<Steps>
+<Step>
+Wählen Sie im Bereichsmenü den aktuellen Ordner oder alle Lesezeichen aus und klicken Sie auf **Aktualisieren**. Erlauben Sie beim ersten Mal den Zugriff auf Websites, wenn Sie danach gefragt werden; wenn Sie ablehnen, wird nichts angefragt.
+</Step>
+<Step>
+Prüfen Sie die Ergebnisse: wie viele Symbole **Aktualisiert**, **Unverändert**, **Kein Symbol gefunden** oder **Fehlgeschlagen** sind und wie viele Lesezeichen **Übersprungen** wurden, weil sie keine Weblinks sind.
+</Step>
+<Step>
+Klicken Sie auf **Speichern** (zum Beispiel **12 Symbole speichern**), um sie zu behalten, oder schließen Sie den Dialog, um nichts zu behalten.
+</Step>
+</Steps>
+
+Für jede Website (Origin) im Bereich fragt das Tool eine gespeicherte Seite ohne Cookies an, liest nur deren Kopfbereich und lädt das von der Seite angegebene Symbol herunter, das der Einstellung **Bevorzugte Symbolgröße** am nächsten kommt, oder die `/favicon.ico` der Website. Es werden nur Symboldateien auf der eigenen Domain des Lesezeichens verwendet, nie ein Symboldienst von Dritten. Dateien, die größer als **Max. Dateigröße pro Symbol** (64 KB) oder keine Bilder sind, werden übersprungen.
+
+Gespeicherte Symbole werden im lokalen Speicher dieses Browsers abgelegt, nicht synchronisiert und im Pop-up, in der Seitenleiste und im Manager angezeigt. Sie haben Vorrang vor dem Symbol aus dem Browser-Cache. Die Karte zeigt an, wie viele gespeichert sind; **Gespeicherte Symbole löschen** löscht sie alle. Wenn die Gesamtgröße die **Speicherbegrenzung für Symbole** (4096 KB) erreicht, werden die ältesten Symbole zuerst entfernt. Schlägt eine Website bei einer späteren Aktualisierung fehl, behält sie das zuvor gespeicherte Symbol.
+
+<Callout title="Firefox">
+Öffnen Sie in Firefox den Manager über **Lesezeichen-Manager öffnen** im Pop-up der Symbolleiste, um das Tool auszuführen. Nachdem Sie dort Symbole gespeichert haben, zeigen Pop-up und Seitenleiste sie an.
+</Callout>
+
+## Verwandte Tools [#related-tools]
+
+- [Defekte Links finden und reparieren](/guides/dead-links) prüft, ob gespeicherte Seiten noch laden.
+- **Datenschutzprüfung** (unter **Sicherheit**) markiert URLs, die Tokens, E-Mail-Adressen, UUIDs oder sensible Parameter enthalten (und Titel, wenn **Titel prüfen** aktiviert ist), damit Sie sie selbst bearbeiten oder löschen können.
+- **Metadatenabruf** (unter **Metadaten und Inhalte**) schlägt Seitentitel aus den Live-Seiten vor und übernimmt nur die von Ihnen ausgewählten. Er verwendet denselben Zugriff auf Websites wie die Linkprüfung.

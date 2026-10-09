@@ -1,0 +1,53 @@
+---
+title: Projektstatus
+description: Was Bookmark Scout heute kann, was teilweise umgesetzt und was geplant ist, im Einklang mit dem Code gehalten.
+---
+
+Diese Seite fasst den aktuellen Stand des Repositorys zusammen, damit die Roadmap-Dokumentation nicht von der Implementierung abweicht.
+
+## Implementiert [#implemented]
+
+- Browsererweiterung, erstellt mit WXT, React, TypeScript, Zustand, shadcn/ui-Komponenten auf Base-UI-Primitiven und den Lesezeichen-APIs des Browsers
+- Chrome als primäre Zielplattform, mit Build-Zielen für Firefox und Edge
+- Lesezeichensuche im Pop-up, Ordnerfilterung, Ordnen per Drag-and-drop, schnelles Hinzufügen, Erstellen von Ordnern sowie Steuerelemente zum Aus- und Einklappen
+- Löschen aus dem Pop-up, der Seitenleiste und dem Manager mit Bestätigungsdialog (standardmäßig an, in den Einstellungen optional) und 10 Sekunden Rückgängig, das den Teilbaum samt gespeicherten Tags und Zusammenfassungen wiederherstellt
+- Einstiegspunkt für die Chrome-Seitenleiste
+- Tastenkombinationen im Pop-up, in der Seitenleiste und im Manager für Suche, Navigation in Baum und Tabelle, Speichern der aktuellen Seite, Wechsel zum übergeordneten Ordner, Öffnen gespeicherter Suchen und einen Hilfedialog unter `?`; sie belegen nie Kombinationen mit Ctrl/Cmd und pausieren während der Eingabe oder solange ein Dialog geöffnet ist
+- Eigene Ersetzung der Lesezeichenseite mit Ordnerbaum, Pfadnavigation, Lesezeichentabelle und Tools-Leiste
+- Gespeicherte Suchen (intelligente Ansichten) im Manager, die nur Filter, Sortierung und Ordnerbereich im lokalen Speicher ablegen und sie auf den aktuellen Lesezeichenbaum anwenden, wobei gelöschte Ordner übersprungen werden
+- Konfigurierbare Sortierung nach Hinzufügedatum, natürlicher alphabetischer Reihenfolge und mit Ordnern zuerst, ohne die gespeicherte Lesezeichenreihenfolge zu verändern
+- Optionsseite mit Einstellungen für Darstellung, Sprache, Suche, Verhalten, erweiterte UI-Größen, KI, KI-Tools, Wartung, Metadaten, Sicherheit, Analyse, Daten und Kontextmenüs
+- Einstellungen werden über `chrome.storage.sync` gespeichert
+- KI-Anbieter aus der Konfiguration: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI und eigene OpenAI-kompatible Endpunkte
+- KI-Ordnervorschläge, einschließlich des geprüften Erstellens eines vorgeschlagenen neuen Ordnerpfads, in dem die aktuelle Seite gespeichert wird
+- KI-Kontextpakete mit gespeicherten Tags und Zusammenfassungen, Tag-Vorschläge, Zusammenfassungen und Ordnerneuordnung (standardmäßig mit Vorschau vor dem Übernehmen)
+- Wartungstools für Lesezeichen: Duplikatbereinigung, URL-Bereinigung, Prüfung auf defekte Links mit den Ergebnissen „sicher defekt“ und „manuell prüfen“ sowie geprüften Reparaturen (Löschen, Weiterleitungsziel, Wayback-Machine-Kopie oder bearbeitete URL, mit Rückgängig), Metadatenabruf (geprüfte Titel werden übernommen; Beschreibungen nur als Vorschau), Datenschutzprüfung und Statistik
+- Website-Symbole aktualisieren: Lädt nach optionalem Zugriff auf Websites ein Symbol pro Website direkt von der gespeicherten Website herunter (nie über einen Symboldienst von Dritten), speichert geprüfte Symbole mit Größenbegrenzung im lokalen Speicher und zeigt sie im Pop-up, in der Seitenleiste und im Manager vor dem Symbol-Cache des Browsers an; gespeicherte Symbole lassen sich löschen
+- Datenschutzprüfung mit optionaler Schwärzung vor Lesezeichen-Exporten und KI-Kontextexporten
+- Lesezeichenimport aus HTML oder JSON mit Vorschau von Zielordner, Anzahlen und Duplikaten, Wahl der Duplikatbehandlung und Rückgängig
+- Lesezeichenexport nach HTML, JSON, Markdown oder CSV
+- Speichern von Links über das Kontextmenü
+- Erweiterung und Marketing-Website auf Englisch, vereinfachtem Chinesisch, traditionellem Chinesisch, Japanisch, Koreanisch, Spanisch, Deutsch, Französisch und brasilianischem Portugiesisch
+- Dokumentationswebsite mit Fumadocs
+- Unit-Tests und unbeaufsichtigte Chromium-E2E-Tests für Pop-up, Manager, Einstellungen, Wartung, Berichte, Import/Export, Netzwerktools mit simulierten Routen und lokalen Servern sowie KI-Tools mit simulierten Anbietern
+- Dieselbe Playwright-Suite in Microsoft Edge mit dem Edge-Build (`nx run extension:test:e2e:edge`) und eine Firefox-Smoke-Suite mit neun Tests für den Firefox-Build (`nx run extension:test:e2e:firefox`): Suche und Erstellen von Ordnern im Pop-up, gespeicherte Website-Symbole im Pop-up, die Seite der Seitenleiste, Öffnen des Managers aus Pop-up und Seitenleiste, Laden und Filtern im Manager, Speichern einer Einstellung, ein JSON-Export mit anschließendem Import sowie die Statistik- und Datenschutzberichte
+- Eine Zuordnung von Einstellungen zu Verhalten (`apps/extension/tests/settings-matrix.ts`), die jede Einstellung dem Code zuordnet, der sie liest, und einem Test, der sie ändert
+
+## Teilweise umgesetzt [#partial]
+
+- Lesezeichen-Tags und -Zusammenfassungen: in Lesezeichendetails bearbeitbar und aus geprüften KI-Vorschlägen gespeichert, aber nur im lokalen Erweiterungsspeicher abgelegt. Sie werden nicht synchronisiert, sind nicht durchsuchbar und nicht in Lesezeichen-Exporten enthalten.
+- Grenzwerte der KI-Tools (Anzahl und Stil der Tags, Länge der Zusammenfassung, Ordnergrenzen bei der Neuordnung) werden als Anweisungen an den Anbieter gesendet; die Ausgabe wird nicht daraufhin geprüft. Die Kompatibilität mit echten Anbietern wird manuell überprüft.
+- Die Laufzeitabdeckung für Firefox ist eine Smoke-Suite, nicht die vollständige Suite. Playwright kann keine `moz-extension://`-Seiten öffnen, daher steuern die Firefox-Tests den regulären Firefox über geckodriver (Selenium) und installieren den Build als temporäres Add-on mit seiner echten Add-on-ID, sodass sie das Manifest testen, das Firefox Add-ons erhält. Nicht abgedeckt sind das Speichern über das Kontextmenü (die Chromium-Tests lösen `contextMenus.onClicked` aus dem Service Worker aus; der Firefox-Build verwendet eine MV2-Hintergrundseite, die das Test-Harness nicht skripten kann), Drag-and-drop, Tastenkombinationen, Netzwerktools, KI-Tools und Sprachen.
+- Unterschiede der Firefox-API: Der Symbol-Cache des Browsers ist nicht verfügbar, weil Firefox keinen `_favicon`-Dienst hat, daher zeigen Lesezeichen ein allgemeines Symbol, sofern **Website-Symbole aktualisieren** keines gespeichert hat; Manager und Tools-Leiste öffnen sich über **Lesezeichen-Manager öffnen** im Pop-up, weil Firefox die Lesezeichenseite nicht ersetzen kann; die Seite der Seitenleiste ist als Firefox-Sidebar deklariert, und die Tests laden diese Seite in einem Tab, weil die Automatisierung die Sidebar selbst nicht öffnen kann.
+- Vier Bereichseinstellungen von Tools sind fest: Automatische Tags und Inhaltszusammenfassung verwenden immer den aktuellen Ordner; Duplikatbereinigung und Datenschutzprüfung prüfen immer alle Lesezeichen.
+
+## Geplant [#planned]
+
+- Breitere Laufzeitabdeckung für Firefox: Kontextmenüs, Drag-and-drop, Tastenkombinationen, Netzwerktools, KI-Tools und Sprachen
+- Einreichung im Chrome Web Store, bei Firefox Add-ons und bei Edge Add-ons. Material für die Store-Einträge und Checklisten für die Einreichung befinden sich im <RepoLink tree="store">`store/`-Ordner</RepoLink> des Repositorys; die Einreichung erfolgt manuell und muss für das Release freigegeben werden. Das Firefox-Paket hat seine dauerhafte Add-on-ID und seine Angaben zur Datenerhebung
+
+## Regeln für die Dokumentation [#documentation-rules]
+
+- Aktualisieren Sie die Dokumentation, wenn sich Funktionsstatus, Installationswege, Browserunterstützung, Datenschutzerwartungen oder die Konfiguration ändern.
+- KI-Funktionen sind optional und können Lesezeichendaten an den gewählten Anbieter senden.
+- Die CI führt die Unit-Tests der Erweiterung, die Chromium-End-to-End-Suite, die Edge-Suite und die Firefox-Smoke-Suite als erforderliche Prüfungen ohne manuelle Einrichtung aus. Ein erfolgreicher Build ist keine Laufzeitabdeckung.

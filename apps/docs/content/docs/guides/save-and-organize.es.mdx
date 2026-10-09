@@ -1,0 +1,57 @@
+---
+title: Guardar y organizar
+description: Guarda la página actual o un enlace en una carpeta, crea carpetas, mueve elementos arrastrándolos y soltándolos, ordena el árbol y elimina con opción de deshacer.
+---
+
+## Guardar la página en la que estás [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Abre la ventana emergente o el panel lateral en la página que quieres conservar.
+</Step>
+<Step>
+Coloca el puntero sobre la carpeta que quieras y haz clic en **Añadir la página actual**. Con el teclado, ve a la carpeta y pulsa `Enter`.
+</Step>
+</Steps>
+
+El panel **Recientes** muestra las carpetas usadas recientemente; haz clic en una para guardar allí la página actual. Desactívalo, o cambia cuántas carpetas muestra, con **Carpetas recientes** y **Máximo de carpetas recientes** en [Configuración](/settings).
+
+Una página que ya está en la carpeta no se guarda dos veces; el mensaje indica que ya está allí.
+
+La ventana emergente de la barra de herramientas lee la página en la que hiciste clic sin preguntar. El panel lateral sigue abierto mientras cambias de pestaña, así que la primera vez que guardas desde él, Bookmark Scout te lo explica y luego pide acceso a tus pestañas. Si lo rechazas, no se guarda nada.
+
+## Guardar un enlace con el menú contextual [#save-a-link-with-the-right-click-menu]
+
+Primero activa **Menú contextual** en [Configuración](/settings#data); está desactivado de forma predeterminada. Después, haz clic con el botón derecho en cualquier enlace de una página, elige **Guardar marcador en...** y selecciona una de tus carpetas recientes o la Barra de marcadores. **Origen del nombre del marcador**, en la configuración, decide si el marcador recibe el nombre del texto del enlace, del título de la página o de la URL del enlace. Desactiva el menú con **Menú contextual** (ambos están en la pestaña **Datos**).
+
+## Crear carpetas [#create-folders]
+
+Coloca el puntero sobre una carpeta en la ventana emergente o el panel lateral, haz clic en **Añadir carpeta** y escribe el nombre. Las carpetas nuevas empiezan con el **Nombre de carpeta predeterminado** de la configuración.
+
+## Mover marcadores y carpetas [#move-bookmarks-and-folders]
+
+- **Arrastrar y soltar** en la ventana emergente o el panel lateral. Al soltar junto a un elemento de otra carpeta, se mueve a esa carpeta. Una carpeta no se puede mover dentro de sí misma ni de una de sus subcarpetas.
+- **Varios a la vez** en el administrador: selecciona filas en la tabla, usa **Mover a una carpeta** y elige el destino. Los elementos se añaden al final de esa carpeta.
+- **Reordenar** en el administrador: activa **Orden del navegador**, quita cualquier ordenación por columna y usa los botones **Subir**, **Bajar**, **Mover al principio** y **Mover al final** de la fila. Necesitan que la tabla muestre una sola carpeta, así que borra los filtros o marca **Solo la carpeta actual**.
+
+Reordenar cambia el orden guardado del navegador. La ventana emergente solo muestra ese orden con el orden **Carpetas primero**; los órdenes por fecha y alfabético siguen reordenando la lista, y la confirmación lo indica.
+
+La ventana emergente y el panel lateral se actualizan solos cuando los marcadores cambian en otro lugar, como en el administrador o en la propia interfaz de marcadores del navegador.
+
+## Ordenar el árbol [#sort-the-tree]
+
+Elige **Fecha de creación**, **Alfabético** (orden natural, así que `2` va antes que `10`) o **Carpetas primero** con **Orden** en la configuración. La ordenación solo cambia cómo muestra Bookmark Scout el árbol, nunca el orden que guarda el navegador. **Agrupar por carpetas** muestra las subcarpetas antes que los marcadores en cada nivel de la ventana emergente y el panel lateral.
+
+## Editar un marcador [#edit-a-bookmark]
+
+En el administrador, abre el menú de una fila y elige **Editar** para cambiar el nombre y la URL de un marcador, o el nombre de una carpeta. **Ver detalles** muestra la ruta completa, las fechas y el ID, y es donde añades **Etiquetas** y un **Resumen**.
+
+Las etiquetas y los resúmenes solo se guardan en el almacenamiento local de la extensión en este navegador. No se sincronizan, no se pueden buscar y no se incluyen en las exportaciones de marcadores. Las exportaciones de contexto para IA sí pueden incluirlos; consulta [Configurar las herramientas de IA](/guides/ai-tools).
+
+## Eliminar y deshacer [#delete-and-undo]
+
+Elimina un marcador o una carpeta desde la ventana emergente, el panel lateral o el menú de una fila del administrador, o selecciona varias filas en el administrador y elimínalas juntas.
+
+- **Confirmar antes de eliminar** está activado de forma predeterminada y muestra un diálogo que indica lo que se va a quitar. Desactívalo en la pestaña **Comportamiento** de la configuración para eliminar al instante.
+- Cada eliminación muestra **Deshacer** durante 10 segundos. Deshacer restaura el elemento, todo lo que contiene y sus etiquetas y resúmenes guardados. Un elemento restaurado se vuelve a crear, así que recibe una nueva fecha de creación.
+- Las carpetas permanentes, como la Barra de marcadores, no se pueden editar ni eliminar.

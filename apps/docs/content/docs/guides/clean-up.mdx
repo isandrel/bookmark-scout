@@ -6,7 +6,7 @@ description: Remove duplicate bookmarks after a review, strip tracking parameter
 Both tools live in the **Tools** sidebar of the bookmarks manager, under **Maintenance**. In Chrome, open the browser's bookmarks page, then click **Show tools** in the manager's header if the sidebar is hidden.
 
 <Callout title="Firefox">
-Firefox has no menu entry for the manager, so these tools are reachable there only at the manager's extension URL (see [Refresh site icons](#refresh-site-icons)).
+Firefox does not let extensions replace its own bookmarks page, so open the manager there with **Open bookmark manager** in the toolbar popup, then open the Tools sidebar.
 </Callout>
 
 ## Remove duplicate bookmarks
@@ -86,7 +86,7 @@ For each website (origin) in scope, the tool requests one bookmarked page withou
 Saved icons are stored in this browser's local storage, not synced, and show in the popup, side panel, and manager. They take priority over the browser's cached icon. The card shows how many are saved; **Clear saved icons** deletes them all. When the total reaches **Icon Storage Limit** (4096 KB), the oldest icons are removed first. A site that fails on a later refresh keeps the icon saved earlier.
 
 <Callout title="Firefox">
-To run the tool in Firefox, open `about:debugging#/runtime/this-firefox`, copy the **Manifest URL** of Bookmark Scout, and replace `manifest.json` at its end with `bookmarks.html`. After you save icons there, the popup and side panel show them.
+In Firefox, open the manager with **Open bookmark manager** in the toolbar popup to run the tool. After you save icons there, the popup and side panel show them.
 </Callout>
 
 ## Related tools

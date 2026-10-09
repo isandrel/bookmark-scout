@@ -1,0 +1,143 @@
+---
+title: Einstellungen
+description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab für Tab, mit Standardwert und Wirkung.
+---
+
+Öffnen Sie die Einstellungsseite über den Eintrag **Optionen** der Erweiterung, in Chrome zum Beispiel per Rechtsklick auf das Symbol in der Symbolleiste und Auswahl von **Optionen**. Änderungen werden sofort gespeichert.
+
+## Die Einstellungsseite verwenden [#using-the-settings-page]
+
+- **Einstellungen durchsuchen...** oben auf der Seite findet eine Einstellung in jedem Tab und zeigt an, wie viele Treffer es gibt.
+- Eine geänderte Einstellung ist als **Geändert** markiert und hat eine Schaltfläche, um sie auf den Standardwert zurückzusetzen. **Alle zurücksetzen** setzt alle Einstellungen zurück.
+- **Exportieren** speichert Ihre Einstellungen als JSON-Datei, und **Importieren** stellt sie daraus wieder her. Beides lässt Ihre Lesezeichen unberührt.
+- Einstellungen werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Ausgenommen sind der API-Schlüssel des KI-Anbieters, **Basis-URL** und **Zusätzliche Header (JSON)**: Sie bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
+
+## Darstellung [#appearance]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Sprache** | Browsereinstellung | Englisch, vereinfachtes Chinesisch, traditionelles Chinesisch, Japanisch, Koreanisch, Spanisch, Deutsch, Französisch oder brasilianisches Portugiesisch, oder der Browsersprache folgen |
+| **Design** | System | System, Hell oder Dunkel, angewendet auf jede geöffnete Bookmark-Scout-Seite |
+| **Website-Symbole anzeigen** | An | Website-Symbole neben Lesezeichen im Pop-up und in der Seitenleiste anzeigen |
+| **Symbol-Cache des Browsers verwenden** | Aus | Chrome und Edge: Zusätzlich Symbole anzeigen, die der Browser bereits im Cache hat, für Websites ohne mit **Website-Symbole aktualisieren** gespeichertes Symbol. Beim Aktivieren wird um die Berechtigung gebeten, Website-Symbole zu lesen. Wird in Firefox nicht angezeigt, da Firefox Erweiterungen keinen Symbol-Cache bietet |
+| **Symbolgröße** | 16px (klein) | 16, 24 oder 32 Pixel |
+
+## Suche [#search]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Suchverzögerung** | 300 ms | Wie lange das Pop-up nach Ihrer letzten Eingabe wartet, bevor es sucht |
+| **Max. Suchergebnisse** | 20 Ergebnisse | Höchstzahl angezeigter Treffer; ein Hinweis erscheint, wenn es mehr gibt |
+| **Ordner bei Suche ausklappen** | An | Die Ordner öffnen, die Treffer enthalten |
+| **Suchverlauf** | An | Letzte Suchen auf diesem Gerät speichern |
+
+Siehe [Suche und gespeicherte Suchen](/guides/search).
+
+## Verhalten [#behavior]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Sortierung** | Hinzufügedatum | **Hinzufügedatum**, **Alphabetisch** oder **Ordner zuerst**. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
+| **Nach Ordnern gruppieren** | An | Im Pop-up und in der Seitenleiste auf jeder Ebene Unterordner vor Lesezeichen auflisten |
+| **Vor dem Löschen bestätigen** | An | Vor dem Löschen nachfragen. Jedes Löschen lässt sich in beiden Fällen 10 Sekunden lang rückgängig machen |
+| **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
+| **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up und im Rechtsklickmenü anzeigen |
+| **Max. letzte Ordner** | 5 | Wie viele zuletzt verwendete Ordner angezeigt werden |
+
+Siehe [Speichern und ordnen](/guides/save-and-organize).
+
+## Erweitert [#advanced]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Pop-up-Breite** | 400 px | Browser erlauben höchstens 800 px |
+| **Pop-up-Höhe** | 500 px | Browser erlauben höchstens 600 px |
+| **Kürzungslänge** | 50 Zeichen | Kürzt den Seitentitel in der Kopfzeile der KI-Vorschläge im Pop-up |
+| **Anzeigedauer von Benachrichtigungen** | 4000 ms | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
+
+## KI [#ai]
+
+KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben.
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **KI-Funktionen** | Aus | Die KI-Tools und die Ordnervorschläge im Pop-up aktivieren. In Firefox werden Sie beim Aktivieren um Ihre Einwilligung gebeten, die Daten zu teilen, die Ihr KI-Anbieter benötigt |
+| **Beim Öffnen automatisch vorschlagen** | Aus | Bei jedem Öffnen des Pop-ups Ordnervorschläge anfordern |
+| **Seiteninhalt lesen** | Aus | Den Haupttext jeder Seite, nicht nur Titel und URL, an Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden. Fragt beim Aktivieren nach Zugriff auf Websites |
+| **KI-Anbieter** und **KI-Modell** | OpenAI, GPT-4o Mini | Welchen Anbieter und welches Modell alle KI-Tools verwenden |
+| **Max. Vorschläge** | 5 | Höchstzahl anzufordernder Ordnervorschläge |
+| **Max. Kategorien** | Unbegrenzt | Höchstzahl der Ordner auf oberster Ebene, die ein Neuordnungsplan anlegen darf |
+| **Min. Elemente pro Ordner** und **Max. Elemente pro Ordner** | 1 und Unbegrenzt | Zielgrößen für Ordner in Neuordnungsplänen |
+
+Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigenes Modell** und **Zusätzliche Header (JSON)** sowie **Dienst überprüfen** und **Modelle aktualisieren**. Die Ordnergrenzen werden als Anweisungen an den Anbieter gesendet, seine Ausgabe wird aber nicht daraufhin geprüft. Siehe [KI-Tools einrichten](/guides/ai-tools).
+
+## KI-Tools [#ai-tools]
+
+Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags aktivieren** (standardmäßig an). Ein deaktiviertes Tool wird in der **Tools**-Leiste des Managers ausgeblendet.
+
+| Tool | Einstellungen und Standardwerte |
+| --- | --- |
+| **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** 200; **Max. Tiefe** 8; **Auszugslänge** 240 |
+| **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an |
+| **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
+| **KI-Ordnerneuordnung** | **Immer zuerst Vorschau anzeigen** an; **Mindestkonfidenz** 0,55 (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
+
+Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner, unabhängig davon, was ihr **Standardbereich** angibt.
+
+## Wartung [#maintenance]
+
+| Tool | Einstellungen und Standardwerte |
+| --- | --- |
+| **Duplikatbereinigung** | **Vergleichsmethode** Normalisierte URL; **www normalisieren**, **Protokoll ignorieren** und **Abschließenden Schrägstrich ignorieren** an; **Behalten-Regel** Ältestes; **Max. Gruppen** 500. Prüft immer alle Lesezeichen |
+| **URL-Bereinigung** | **Fragmente entfernen** aus; **Abfrageparameter sortieren** und **Doppelte Abfrageparameter entfernen** an; Listen **Beizubehaltende Parameter** und **Zu entfernende Parameter** |
+| **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8000 ms; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
+
+Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
+
+## Metadaten und Inhalte [#metadata--content]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Metadatenabruf aktivieren** | An | **Metadatenabruf** in der Tools-Leiste anzeigen |
+| **Titel überschreiben** | Aus | Auch für Lesezeichen, die bereits einen Titel haben, neue Titel vorschlagen |
+| **Beschreibungen abrufen** | An | Seitenbeschreibungen bei der Prüfung anzeigen. Sie werden nie gespeichert |
+| **Zeitlimit für Anfragen** | 8000 ms | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
+| **Parallele Anfragen** | 4 | Gleichzeitig angefragte Seiten. Wird auch von **Website-Symbole aktualisieren** verwendet |
+| **„Website-Symbole aktualisieren“ aktivieren** | An | **Website-Symbole aktualisieren** in der Tools-Leiste anzeigen |
+| **Standardbereich** | Aktueller Ordner | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
+| **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
+| **Max. Dateigröße pro Symbol** | 64 KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
+| **Speicherbegrenzung für Symbole** | 4096 KB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |
+
+## Sicherheit [#security]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Datenschutzprüfung aktivieren** | An | **Datenschutzprüfung** in der Tools-Leiste anzeigen. Sie prüft immer alle Lesezeichen |
+| **Titel prüfen** | Aus | Neben URLs auch Titel prüfen |
+| **Abfrageparameter prüfen** und **Fragmente prüfen** | An | Diese Teile jeder URL prüfen |
+| **Sensible Parameter** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Zu markierende Parameternamen |
+| **E-Mail-Adressen erkennen** und **UUIDs erkennen** | An | E-Mail-Adressen und UUID-ähnliche Werte markieren |
+
+## Analyse [#analytics]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Statistik aktivieren** | An | **Lesezeichen-Statistik** in der Tools-Leiste anzeigen |
+| **Domains einschließen**, **Ordner einschließen**, **Duplikate einschließen**, **Protokolle einschließen**, **Aufschlüsselung nach Tiefe einschließen** | An | Abschnitte des Berichts; ein deaktivierter Abschnitt wird ausgeblendet |
+| **Anzahl der Top-Einträge** | 10 | Länge der Listen der häufigsten Domains und Ordner |
+
+## Daten [#data]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Export-Tool anzeigen** und **Import-Tool anzeigen** | An | Diese Tools in der Tools-Leiste anzeigen |
+| **Standard-Exportformat** | HTML | Format, das beim Öffnen des Export-Tools ausgewählt ist |
+| **Dateinamenpräfix** | `bookmarks_` | Anfang jedes Exportdateinamens |
+| **Max. Dateinamenlänge** | 50 | Längster erzeugter Dateiname |
+| **JSON-Einrückung**, **HTML-Einrückung**, **Markdown-Einrückung** | 2, 4, 2 | Leerzeichen pro Ebene im jeweiligen Format |
+| **Datum einschließen** und **URLs einschließen** | An | In Exporte aufnehmen |
+| **Kontextmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
+| **Quelle für Lesezeichennamen** | Linktext | Ein per Rechtsklick gespeichertes Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benennen |
+
+Siehe [Import und Export](/guides/import-export).

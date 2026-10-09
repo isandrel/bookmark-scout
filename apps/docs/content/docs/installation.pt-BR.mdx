@@ -1,0 +1,89 @@
+---
+title: Instalação
+description: Instale o Bookmark Scout no Chrome, no Microsoft Edge ou no Firefox a partir de uma versão do GitHub.
+---
+
+O Bookmark Scout é gratuito e de código aberto. Cada <RepoLink path="/releases">versão no GitHub</RepoLink> tem um download para cada navegador:
+
+| Navegador | Arquivo |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` ou `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+Baixe o arquivo em <ReleaseLink /> e siga as etapas para o seu navegador.
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<StoreListing browser="chrome" />
+
+<Steps>
+<Step>
+Baixe `bookmark-scout-<version>-chrome.crx` ou `bookmark-scout-<version>-chrome.zip`. Se usar o ZIP, extraia-o em uma pasta que você vai manter, porque o Chrome carrega a extensão a partir dessa pasta.
+</Step>
+<Step>
+Abra `chrome://extensions/` e ative o **Modo do desenvolvedor** (no canto superior direito).
+</Step>
+<Step>
+Arraste o arquivo CRX para a página ou clique em **Carregar sem compactação** e selecione a pasta extraída.
+</Step>
+<Step>
+Fixe o Bookmark Scout na barra de ferramentas pelo menu Extensões (o ícone de quebra-cabeça) para abrir o pop-up com um só clique.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<StoreListing browser="edge" />
+
+<Steps>
+<Step>
+Baixe `bookmark-scout-<version>-edge.zip` e extraia-o em uma pasta que você vai manter.
+</Step>
+<Step>
+Abra `edge://extensions/` e ative o **Modo do desenvolvedor**.
+</Step>
+<Step>
+Clique em **Carregar sem compactação** e selecione a pasta extraída.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<StoreListing browser="firefox" />
+
+<Steps>
+<Step>
+Baixe `bookmark-scout-<version>-firefox.zip` e extraia-o.
+</Step>
+<Step>
+Abra `about:debugging#/runtime/this-firefox`.
+</Step>
+<Step>
+Clique em **Carregar extensão temporária** e selecione o arquivo `manifest.json` extraído.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Limitações do Firefox">
+O Firefox remove as extensões temporárias quando é reiniciado, então você precisa carregá-la de novo depois de cada reinicialização. O Firefox também não permite substituir a página de favoritos, então abra o gerenciador de favoritos (com as Ferramentas, as pesquisas salvas e a importação e exportação) em **Abrir gerenciador de favoritos** no pop-up. Consulte [Compatibilidade com navegadores](/browser-support).
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Depois de instalar [#after-installing]
+
+- Clique no ícone do Bookmark Scout para abrir o pop-up e pesquisar seus favoritos. Comece por [Pesquisa e pesquisas salvas](/guides/search).
+- No Chrome, abra a página de favoritos do navegador (por exemplo, com `Ctrl+Shift+O`, ou `Cmd+Option+B` no macOS) para chegar ao gerenciador do Bookmark Scout e à barra lateral de Ferramentas.
+- As configurações abrem em uma guia pela opção **Opções** da extensão, por exemplo, clicando com o botão direito do mouse no ícone da barra de ferramentas no Chrome. Consulte [Configurações](/settings).
+
+## Atualizar [#updating]
+
+Baixe a versão mais recente em <ReleaseLink /> e repita as etapas para o seu navegador.
+
+## Compilar a partir do código-fonte [#building-from-source]
+
+Se quiser compilar a extensão você mesmo, siga [Contribuição e desenvolvimento](/contributing#build-from-source).

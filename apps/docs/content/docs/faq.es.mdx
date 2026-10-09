@@ -1,0 +1,85 @@
+---
+title: Preguntas frecuentes y solución de problemas
+description: Respuestas a las preguntas habituales sobre Bookmark Scout y soluciones a los problemas más frecuentes.
+---
+
+## Preguntas [#questions]
+
+### ¿Bookmark Scout es gratuito? [#is-bookmark-scout-free]
+
+Sí. Es gratuito y de código abierto con licencia <License />, sin anuncios ni plan de pago. Si activas la IA, es posible que tu proveedor de IA cobre por el uso de su API.
+
+### ¿Tengo que usar la IA? [#do-i-need-to-use-ai]
+
+No. La búsqueda, el guardado, la organización, la limpieza y la importación y exportación funcionan sin ella. La IA sigue desactivada hasta que la activas en [Configuración](/settings#ai).
+
+### ¿Envía mis marcadores a algún sitio? [#does-it-send-my-bookmarks-anywhere]
+
+Al desarrollador no: no existe ningún servidor de Bookmark Scout. Los datos solo salen de tu navegador cuando usas una herramienta de IA que activaste (van a tu proveedor) o cuando ejecutas una comprobación de enlaces rotos o una obtención de títulos (se solicitan los sitios web guardados en marcadores). Consulta [Privacidad](/privacy).
+
+### ¿Cambiará mis marcadores sin preguntar? [#will-it-change-my-bookmarks-without-asking]
+
+No. La limpieza de duplicados, la limpieza de URLs, las reparaciones de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. De forma predeterminada, eliminar pide confirmación, y las eliminaciones y las importaciones se pueden deshacer durante 10 segundos.
+
+### ¿Por qué no está en las tiendas de los navegadores? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+Cada tienda revisa una extensión antes de publicarla, y las fichas todavía se están preparando. Mientras una tienda no la publique, [instálala desde una versión publicada en GitHub](/installation).
+
+### ¿Funciona en Firefox? [#does-it-work-in-firefox]
+
+Sí. Firefox no permite que las extensiones reemplacen su página de marcadores, así que abre el administrador de Bookmark Scout, con sus herramientas de limpieza, la importación y exportación y las búsquedas guardadas, desde **Abrir el administrador de marcadores** en la ventana emergente. La caché de iconos del navegador no está disponible en Firefox, y allí las pruebas automatizadas cubren menos funciones. Consulta [Compatibilidad con navegadores](/browser-support).
+
+### ¿Por qué no Safari? [#why-not-safari]
+
+Las Safari Web Extensions no implementan la API `bookmarks` en la que se basa Bookmark Scout.
+
+## Solución de problemas [#troubleshooting]
+
+### ¿Dónde está el administrador de marcadores? [#where-is-the-bookmarks-manager]
+
+En Chrome, abre la propia página de marcadores del navegador, por ejemplo con `Ctrl+Shift+O` (`Cmd+Option+B` en macOS). Bookmark Scout la reemplaza por su administrador. Si la barra lateral **Herramientas** está oculta, haz clic en **Mostrar herramientas** en el encabezado del administrador.
+
+### Bookmark Scout desapareció de Firefox [#bookmark-scout-disappeared-from-firefox]
+
+Firefox quita los complementos temporales cuando se reinicia. Vuelve a cargarlo desde `about:debugging#/runtime/this-firefox`, como se explica en [Instalar](/installation).
+
+### Faltan los iconos de sitios [#site-icons-are-missing]
+
+Comprueba que **Mostrar iconos de sitios** esté activado en [Configuración](/settings#appearance). Chrome y Edge muestran el icono que tienen en caché para cada sitio, así que los sitios que no visitaste recientemente muestran un globo genérico. Firefox no ofrece a las extensiones una API de iconos. En cualquier navegador, [Actualizar iconos de sitios](/guides/clean-up#refresh-site-icons) descarga el icono propio de cada sitio y lo guarda en este dispositivo.
+
+### Mi clave de API no se guardó [#my-api-key-was-not-saved]
+
+Una clave que no parece una clave del proveedor elegido se rechaza y no se guarda, y un mensaje lo indica. Comprueba que el **Proveedor de IA** corresponda a la clave que pegaste. Consulta [Configurar las herramientas de IA](/guides/ai-tools#turn-on-ai).
+
+### La comprobación de enlaces rotos dice que un sitio que funciona necesita una comprobación manual [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+Los sitios que piden iniciar sesión, limitan la frecuencia de las solicitudes, bloquean las comprobaciones automatizadas o tienen un error del servidor aparecen en **Comprobar a mano**, porque a menudo siguen funcionando en un navegador. Abre el enlace para verlo. Solo cuentan como **Roto (confirmado)** las páginas no encontradas, las conexiones rechazadas, los hosts desconocidos y los bucles de redirección. Consulta [Encontrar y reparar enlaces rotos](/guides/dead-links#read-the-results).
+
+### La consola muestra "Failed to load resource" durante un análisis [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome registra una línea por cada solicitud fallida en la consola para desarrolladores de la página. Las extensiones no pueden ocultar estas líneas, y no significan que algo haya fallado en el análisis.
+
+### Reordenar en el administrador no se refleja en la ventana emergente [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+La ventana emergente solo muestra el orden guardado del navegador con el orden **Carpetas primero**. Los órdenes **Fecha de creación** y **Alfabético** siguen reordenando la lista. Cambia **Orden** en [Configuración](/settings#behavior).
+
+### La búsqueda dice que hay más coincidencias de las que muestra [#search-says-there-are-more-matches-than-it-shows]
+
+Los resultados se detienen en **Máximo de resultados de búsqueda** (20 de forma predeterminada). Afina la búsqueda o sube el límite en [Configuración](/settings#search).
+
+### Mis etiquetas, resúmenes o búsquedas guardadas no aparecen en otro equipo [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Solo se guardan en el dispositivo donde los creaste, y no se sincronizan ni se incluyen en las exportaciones de marcadores. La configuración sí se sincroniza, a través de tu cuenta del navegador, cuando la sincronización del navegador está activada.
+
+### Eliminé algo por error [#i-deleted-something-by-mistake]
+
+Haz clic en **Deshacer** en el mensaje antes de que pasen 10 segundos. Se restauran el elemento, todo lo que contiene y sus etiquetas y resúmenes guardados; un elemento restaurado recibe una nueva fecha de creación. Una vez que se cierra el mensaje, la eliminación ya no se puede deshacer desde Bookmark Scout.
+
+## Obtener ayuda [#get-help]
+
+- La <SiteLink to="support">página de soporte</SiteLink> del sitio web.
+- Informa de un error o pide una función en <RepoLink path="/issues">GitHub</RepoLink>.
+- Escribe a <Contact role="support" />.
+- Informa de un problema de seguridad en privado a <Contact role="security" />, no en un issue público.

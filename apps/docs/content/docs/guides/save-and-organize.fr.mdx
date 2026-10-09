@@ -1,0 +1,57 @@
+---
+title: Enregistrer et organiser
+description: Enregistrez la page actuelle ou un lien dans un dossier, créez des dossiers, déplacez des éléments par glisser-déposer, triez l'arborescence et supprimez avec possibilité d'annulation.
+---
+
+## Enregistrer la page que vous consultez [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Ouvrez la fenêtre pop-up ou le panneau latéral sur la page que vous souhaitez conserver.
+</Step>
+<Step>
+Survolez le dossier de votre choix et cliquez sur **Ajouter la page actuelle**. Au clavier, accédez au dossier et appuyez sur `Enter`.
+</Step>
+</Steps>
+
+Le panneau **Récents** liste les dossiers récemment utilisés ; cliquez sur l'un d'eux pour y enregistrer la page actuelle. Désactivez-le, ou modifiez le nombre de dossiers qu'il affiche, avec **Dossiers récents** et **Nombre maximal de dossiers récents** dans les [Paramètres](/settings).
+
+Une page qui se trouve déjà dans le dossier n'est pas enregistrée deux fois ; la notification indique qu'elle y figure déjà.
+
+La fenêtre pop-up de la barre d'outils lit la page sur laquelle vous l'avez ouverte sans rien demander. Le panneau latéral, lui, reste ouvert lorsque vous changez d'onglet : la première fois que vous enregistrez depuis ce panneau, Bookmark Scout vous donne une explication, puis demande l'accès à vos onglets. Si vous refusez, rien n'est enregistré.
+
+## Enregistrer un lien avec le menu contextuel [#save-a-link-with-the-right-click-menu]
+
+Activez d'abord le **Menu contextuel** dans les [Paramètres](/settings#data) ; il est désactivé par défaut. Effectuez ensuite un clic droit sur n'importe quel lien d'une page, choisissez **Enregistrer le favori dans…**, puis l'un de vos dossiers récents ou la Barre de favoris. Le paramètre **Source du nom du favori** détermine si le favori est nommé d'après le texte du lien, le titre de la page ou l'URL du lien. Désactivez le menu avec **Menu contextuel** (ces deux paramètres se trouvent dans l'onglet **Données**).
+
+## Créer des dossiers [#create-folders]
+
+Survolez un dossier dans la fenêtre pop-up ou le panneau latéral, cliquez sur **Ajouter un dossier**, puis saisissez son nom. Les nouveaux dossiers portent initialement le **Nom de dossier par défaut** défini dans les paramètres.
+
+## Déplacer des favoris et des dossiers [#move-bookmarks-and-folders]
+
+- **Glisser-déposer** dans la fenêtre pop-up ou le panneau latéral. Déposer un élément à côté d'un élément d'un autre dossier le déplace dans ce dossier. Un dossier ne peut pas être déplacé dans lui-même ni dans l'un de ses sous-dossiers.
+- **Plusieurs à la fois** dans le gestionnaire : sélectionnez des lignes dans le tableau, puis utilisez **Déplacer vers un dossier** et choisissez la destination. Les éléments sont ajoutés à la fin de ce dossier.
+- **Réorganiser** dans le gestionnaire : activez **Ordre du navigateur**, supprimez tout tri de colonne, puis utilisez les boutons **Monter**, **Descendre**, **Déplacer en haut** et **Déplacer en bas** de la ligne. Ils nécessitent que le tableau affiche un seul dossier : supprimez donc les filtres ou cochez **Dossier actuel uniquement**.
+
+La réorganisation modifie l'ordre enregistré par le navigateur. La fenêtre pop-up n'affiche cet ordre qu'avec le tri **Dossiers en premier** ; les tris par date et alphabétique trient à nouveau la liste, ce que la confirmation précise.
+
+La fenêtre pop-up et le panneau latéral s'actualisent d'eux-mêmes lorsque des favoris sont modifiés ailleurs, par exemple dans le gestionnaire ou dans l'interface de favoris du navigateur.
+
+## Trier l'arborescence [#sort-the-tree]
+
+Choisissez **Date d'ajout**, **Alphabétique** (ordre naturel : `2` vient avant `10`) ou **Dossiers en premier** avec l'**Ordre de tri** dans les paramètres. Le tri change uniquement l'affichage de l'arborescence dans Bookmark Scout, jamais l'ordre enregistré par le navigateur. **Regrouper par dossiers** liste les sous-dossiers avant les favoris à chaque niveau de la fenêtre pop-up et du panneau latéral.
+
+## Modifier un favori [#edit-a-bookmark]
+
+Dans le gestionnaire, ouvrez le menu d'une ligne et choisissez **Modifier** pour changer le nom et l'URL d'un favori, ou le nom d'un dossier. **Afficher les détails** affiche le chemin complet, les dates et l'ID ; c'est là que vous ajoutez des **Étiquettes** et un **Résumé**.
+
+Les étiquettes et les résumés sont stockés uniquement dans le stockage local de l'extension dans ce navigateur. Ils ne sont ni synchronisés, ni consultables par la recherche, ni inclus dans les exportations de favoris. Les exportations de contexte IA peuvent les inclure ; consultez [Configurer les outils d'IA](/guides/ai-tools).
+
+## Supprimer et annuler [#delete-and-undo]
+
+Supprimez un favori ou un dossier depuis la fenêtre pop-up, le panneau latéral ou le menu d'une ligne du gestionnaire, ou sélectionnez plusieurs lignes dans le gestionnaire pour les supprimer ensemble.
+
+- **Confirmer avant de supprimer** est activé par défaut et affiche une boîte de dialogue qui indique ce qui va être supprimé. Désactivez cette option dans l'onglet **Comportement** des paramètres pour supprimer immédiatement.
+- Chaque suppression affiche **Annuler** pendant 10 secondes. L'annulation restaure l'élément, tout son contenu, ainsi que ses étiquettes et résumés enregistrés. Un élément restauré est recréé : il reçoit donc une nouvelle date d'ajout.
+- Les dossiers permanents, comme la Barre de favoris, ne peuvent être ni modifiés ni supprimés.

@@ -1,0 +1,56 @@
+---
+title: Datenschutz
+description: Was Bookmark Scout liest, was es speichert und wann Daten Ihren Browser verlassen. Eine Zusammenfassung der Datenschutzerklärung.
+---
+
+Dies ist eine Zusammenfassung. Maßgeblich ist die vollständige <SiteLink to="privacy">Datenschutzerklärung</SiteLink> auf der Website; sie gilt seit <PrivacyEffectiveDate />.
+
+## Kurz gesagt [#in-short]
+
+- **Kein Konto und kein Server.** Bookmark Scout läuft in Ihrem Browser. Der Entwickler erhält nichts von der Erweiterung.
+- **Keine Telemetrie.** Keine Analyse, keine Absturzberichte und keine Werbung in der Erweiterung.
+- **KI bleibt aus, bis Sie sie aktivieren**, und dann gehen Anfragen direkt von Ihrem Browser an den von Ihnen gewählten Anbieter. In Firefox werden Sie beim Aktivieren außerdem um Ihre Einwilligung gebeten, diese Daten zu teilen.
+- **Berechtigungen erst bei Bedarf.** Bei der Installation fragt die Erweiterung nur nach dem, ohne das sie nicht funktioniert; Zugriff auf Tabs, das Rechtsklickmenü, der Symbol-Cache des Browsers und der Zugriff auf Websites werden erst angefragt, wenn Sie die Funktion zum ersten Mal verwenden. Siehe [Berechtigungen](/permissions).
+
+## Was die Erweiterung liest [#what-the-extension-reads]
+
+- Ihre Lesezeichen, um sie anzuzeigen, zu durchsuchen, zu bearbeiten, zu verschieben, zu löschen, zu importieren und zu exportieren.
+- Titel und URL des aktiven Tabs, wenn Sie die aktuelle Seite speichern oder einen Ordnervorschlag anfordern.
+- Website-Symbole aus dem eigenen Symbol-Cache des Browsers, in Chrome und Edge, sobald Sie **Symbol-Cache des Browsers verwenden** aktivieren.
+- Website-Symbole, die Sie mit **Website-Symbole aktualisieren** herunterladen, von der jeweiligen gespeicherten Website.
+
+Sie liest nicht den Inhalt der Seiten, die Sie besuchen.
+
+## Was sie speichert [#what-it-stores]
+
+| Daten | Ort | Synchronisiert |
+| --- | --- | --- |
+| Einstellungen, einschließlich der Angabe, ob KI aktiviert ist und welchen Anbieter und welches Modell Sie gewählt haben | Synchronisierungsspeicher des Browsers | Ja, über Ihr Browserkonto, wenn die Browsersynchronisierung aktiviert ist |
+| Layout der Lesezeichentabelle im Manager | Synchronisierungsspeicher des Browsers | Wie die Einstellungen |
+| Einstellungen des KI-Anbieters: API-Schlüssel, Basis-URL, zusätzliche Header | Lokaler Speicher auf diesem Gerät | Nein |
+| Tags, Zusammenfassungen, gespeicherte Suchen, letzte Ordner, letzte Suchen | Lokaler Speicher auf diesem Gerät | Nein |
+| Mit **Website-Symbole aktualisieren** gespeicherte Website-Symbole, standardmäßig bis zu 4096 KB | Lokaler Speicher auf diesem Gerät | Nein |
+
+Prüfergebnisse aus der Tools-Leiste werden nur aufbewahrt, solange ihr Dialog geöffnet ist. Wenn Sie die Erweiterung deinstallieren, wird entfernt, was sie gespeichert hat; Ihre Lesezeichen bleiben im Browser.
+
+## Wann Daten Ihren Browser verlassen [#when-data-leaves-your-browser]
+
+Nur wenn Sie eine dieser Funktionen verwenden, und nur an das genannte Ziel:
+
+| Funktion | Ziel | Was gesendet wird |
+| --- | --- | --- |
+| KI-Ordnervorschläge | Der von Ihnen eingerichtete KI-Anbieter | Titel und URL der aktuellen Seite sowie Ihre Ordnernamen. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite |
+| Automatische Tags, Inhaltszusammenfassung, KI-Ordnerneuordnung | Der von Ihnen eingerichtete KI-Anbieter | Titel, URLs und Ordnerpfade der Lesezeichen im Bereich. Mit aktiviertem **Seiteninhalt lesen** senden Automatische Tags und Inhaltszusammenfassung zusätzlich den Haupttext jeder Seite; die KI-Ordnerneuordnung tut das nie |
+| KI fragen | Der von Ihnen eingerichtete KI-Anbieter | Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI für die Antwort nachschlägt: passende Lesezeichen, Ordnernamen, Titel und URL der aktuellen Seite und mit aktiviertem **Seiteninhalt lesen** der Text der Seiten, die sie liest. Ist die Websuche aktiviert, sucht der Anbieter zusätzlich im Web. Das Gespräch wird nicht gespeichert |
+| Defekte Links prüfen, Metadatenabruf | Jede gespeicherte Website | Eine Anfrage nach der Seite, ohne Cookies, nachdem Sie den Zugriff auf Websites erlaubt haben |
+| Website-Symbole aktualisieren | Jede gespeicherte Website | Eine Anfrage nach einer gespeicherten Seite pro Website und nach einer Symboldatei auf der Domain dieser Website, ohne Cookies, nachdem Sie den Zugriff auf Websites erlaubt haben. Es wird kein Symboldienst von Dritten verwendet |
+
+Ein Anbieter, der auf Ihrem eigenen Computer läuft, etwa Ollama, hält KI-Anfragen auf Ihrem Rechner. Exporte, einschließlich **KI-Kontextpaket**, werden als Dateien auf Ihrem Computer gespeichert und nirgendwohin hochgeladen; eine Datenschutzprüfung kann sensible Werte vorher schwärzen. Welche Daten jedes KI-Tool genau sendet, steht unter [KI-Tools einrichten](/guides/ai-tools#what-each-tool-sends), und jede Berechtigung wird unter [Berechtigungen](/permissions) erklärt.
+
+## Diese Doku-Website [#this-docs-site]
+
+Die Dokumentation ist eine statische Website ohne Analyse, ohne Konten und ohne eigene Cookies. Schriftarten werden von dieser Website ausgeliefert, nicht von Google Fonts. Die Datenschutzerklärung nennt den Hosting-Anbieter.
+
+## Fragen [#questions]
+
+Schreiben Sie bei Fragen zum Datenschutz oder Anfragen zu Ihren Daten eine E-Mail an <Contact role="privacy" />. Um ein Sicherheitsproblem zu melden, schreiben Sie an <Contact role="security" />, statt ein öffentliches Issue zu eröffnen.

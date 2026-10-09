@@ -1,0 +1,96 @@
+---
+title: Nettoyer les doublons et les URL de suivi
+description: Supprimez les favoris en double après vérification, retirez des URL de vos favoris les paramètres de suivi tels que utm_source après un aperçu, et actualisez les icônes de site manquantes.
+---
+
+Ces deux outils se trouvent dans la barre latérale **Outils** du gestionnaire de favoris, sous **Maintenance**. Dans Chrome, ouvrez la page Favoris du navigateur, puis cliquez sur **Afficher les outils** dans l'en-tête du gestionnaire si la barre latérale est masquée.
+
+<Callout title="Firefox">
+Firefox ne permet pas aux extensions de remplacer sa propre page de favoris : ouvrez donc le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up de la barre d'outils, puis ouvrez la barre latérale Outils.
+</Callout>
+
+## Supprimer les favoris en double [#remove-duplicate-bookmarks]
+
+<Steps>
+<Step>
+Dans **Nettoyeur de doublons**, cliquez sur **Analyser**. L'outil vérifie toujours tous les favoris.
+</Step>
+<Step>
+Vérifiez les groupes. Chaque groupe liste les favoris correspondants, et celui qui sera conservé est marqué **Conserver**.
+</Step>
+<Step>
+Cliquez sur **Supprimer les doublons** pour supprimer les autres copies dans tous les groupes, ou sur **Annuler** pour ne rien modifier.
+</Step>
+<Step>
+Vous avez changé d'avis ? Cliquez sur **Annuler** dans la notification dans les 10 secondes pour restaurer ce qui a été supprimé.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+Ce qui est considéré comme un doublon se règle dans l'onglet **Maintenance** des [Paramètres](/settings) :
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Méthode de comparaison** | URL normalisée | Compare par **URL exacte**, **URL normalisée**, **Titre + URL** ou **Titre uniquement** |
+| **Normaliser www** | Activé | Considère `www.example.com` et `example.com` comme le même hôte |
+| **Ignorer le protocole** | Activé | Considère les versions `http` et `https` comme des doublons |
+| **Ignorer la barre oblique finale** | Activé | Considère les URL avec et sans `/` final comme des doublons |
+| **Règle de conservation** | Le plus ancien | Conserve le favori **Le plus ancien**, **Le plus récent** ou **Le premier trouvé** de chaque groupe |
+| **Nombre maximal de groupes** | 500 | Nombre maximal de groupes renvoyés par une analyse |
+
+Avant toute suppression, chaque groupe est vérifié à nouveau. Si le favori marqué **Conserver** a été supprimé ou pointe désormais ailleurs, le groupe entier est laissé intact et la notification indique combien de groupes ont été ignorés. Avec la comparaison **Titre uniquement**, un avertissement s'affiche lorsqu'un groupe contient des URL différentes, car supprimer ces copies revient à supprimer des pages différentes.
+
+## Retirer les paramètres de suivi [#strip-tracking-parameters]
+
+<Steps>
+<Step>
+Dans **Nettoyeur d'URL**, choisissez le dossier actuel ou tous les favoris dans le menu de portée, puis cliquez sur **Nettoyer**.
+</Step>
+<Step>
+Vérifiez l'aperçu de chaque URL qui serait modifiée.
+</Step>
+<Step>
+Cliquez sur **Appliquer les modifications** pour toutes les mettre à jour, ou fermez la boîte de dialogue pour ne rien modifier.
+</Step>
+</Steps>
+
+Si un favori a été modifié après l'aperçu, il est ignoré et comptabilisé dans la notification. Le nettoyage des URL ne peut pas être annulé : vérifiez donc l'aperçu avant d'appliquer les modifications.
+
+Les règles se trouvent dans l'onglet **Maintenance** des paramètres :
+
+- **Paramètres à supprimer** : paramètres à retirer. La liste par défaut est `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` et `si`.
+- **Paramètres à conserver** : paramètres qui ne sont jamais retirés. Par défaut : `id`, `page`, `q`, `p` et `lang`.
+- **Dédoublonner les paramètres de requête** (activé par défaut) supprime les paramètres répétés.
+- **Trier les paramètres de requête** (activé par défaut) trie les paramètres restants par ordre alphabétique.
+- **Supprimer les fragments** (désactivé par défaut) supprime aussi les parties telles que `#section`.
+
+## Actualiser les icônes de site [#refresh-site-icons]
+
+Les favoris affichent l'icône que votre navigateur a mise en cache pour chaque site. Les sites que vous n'avez pas consultés récemment affichent un globe générique, et Firefox n'offre aucun cache d'icônes aux extensions. **Actualiser les icônes de site**, sous **Métadonnées et contenu** dans la barre latérale Outils, télécharge à la place l'icône propre à chaque site.
+
+<Steps>
+<Step>
+Choisissez le dossier actuel ou tous les favoris dans le menu de portée, puis cliquez sur **Actualiser**. La première fois, autorisez l'accès aux sites Web lorsque cela vous est demandé ; si vous refusez, aucune requête n'est envoyée.
+</Step>
+<Step>
+Vérifiez les résultats : le nombre d'icônes **Mise à jour**, **Inchangée**, **Aucune icône trouvée** ou **Échec**, et le nombre de favoris **Ignorés** parce qu'ils ne sont pas des liens Web.
+</Step>
+<Step>
+Cliquez sur **Enregistrer** (par exemple **Enregistrer 12 icônes**) pour les conserver, ou fermez la boîte de dialogue pour ne rien conserver.
+</Step>
+</Steps>
+
+Pour chaque site Web (origine) compris dans la portée, l'outil demande une page enregistrée en favori sans cookies, n'en lit que l'en-tête, et télécharge l'icône indiquée par la page dont la taille est la plus proche de la **Taille d'icône préférée**, ou à défaut le fichier `/favicon.ico` du site. Seuls les fichiers d'icône situés sur le domaine du favori lui-même sont utilisés, jamais un service d'icônes tiers. Les fichiers qui dépassent la **Taille maximale du fichier d'icône** (64 Ko) ou qui ne sont pas des images sont ignorés.
+
+Les icônes enregistrées sont stockées dans le stockage local de ce navigateur, ne sont pas synchronisées, et s'affichent dans la fenêtre pop-up, le panneau latéral et le gestionnaire. Elles ont la priorité sur l'icône en cache du navigateur. La carte indique combien d'icônes sont enregistrées ; **Effacer les icônes enregistrées** les supprime toutes. Lorsque le total atteint la **Limite de stockage des icônes** (4096 Ko), les icônes les plus anciennes sont supprimées en premier. Un site dont l'actualisation échoue ultérieurement conserve l'icône enregistrée auparavant.
+
+<Callout title="Firefox">
+Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up de la barre d'outils pour lancer l'outil. Une fois les icônes enregistrées dans le gestionnaire, la fenêtre pop-up et le panneau latéral les affichent.
+</Callout>
+
+## Outils associés [#related-tools]
+
+- [Trouver et réparer les liens morts](/guides/dead-links) vérifie si les pages enregistrées en favoris se chargent toujours.
+- **Analyseur de confidentialité** (sous **Sécurité**) signale les URL qui contiennent des jetons, des adresses e-mail, des UUID ou des paramètres sensibles (ainsi que les titres, si **Analyser les titres** est activé), pour que vous puissiez les modifier ou les supprimer vous-même.
+- **Récupération des métadonnées** (sous **Métadonnées et contenu**) suggère des titres à partir des pages en ligne et n'applique que ceux que vous sélectionnez. Elle utilise le même accès aux sites Web que la vérification des liens morts.

@@ -1,0 +1,47 @@
+---
+title: Permisos
+description: Cada permiso del navegador que pide Bookmark Scout, por qué lo necesita y el acceso opcional a sitios web que solo solicita cuando ejecutas una herramienta.
+---
+
+Estos son los permisos de la extensión compilada para cada navegador. Bookmark Scout no tiene scripts de contenido, así que nunca lee las páginas que visitas. Al instalarse, solo pide lo que necesita para funcionar; todo lo demás se pide cuando activas o ejecutas la función que lo necesita.
+
+## Concedidos al instalar [#granted-at-install]
+
+| Permiso | Navegadores | Por qué |
+| --- | --- | --- |
+| `bookmarks` | Todos | Mostrar y buscar tus marcadores, y crearlos, editarlos, moverlos y eliminarlos cuando actúas en la ventana emergente, el panel lateral, el administrador o el menú contextual |
+| `storage` | Todos | Guardar tu configuración y, solo en este dispositivo, la configuración de tu proveedor de IA, las etiquetas, los resúmenes, las búsquedas guardadas, las carpetas recientes, las búsquedas recientes y los iconos de sitios guardados con **Actualizar iconos de sitios** |
+| `activeTab` | Todos | Cuando haces clic en el botón de la barra de herramientas o en el menú contextual, leer el título y la URL de esa pestaña para que puedas guardar la página en la que estás. Ninguna otra pestaña, ningún historial |
+| `sidePanel` | Chrome, Edge | Ofrecer la vista del panel lateral. Firefox declara la misma página como barra lateral |
+| `contextMenus` | Firefox | Firefox no permite que las extensiones lo pidan más adelante. El menú solo aparece después de que actives **Menú contextual** |
+
+En Chrome y Edge, la extensión también reemplaza la página de marcadores del navegador por el administrador de Bookmark Scout. Eso es un reemplazo de página, no un permiso. Firefox no lo permite, así que ahí el administrador se abre desde **Abrir el administrador de marcadores** en la ventana emergente; consulta [Compatibilidad con navegadores](/browser-support).
+
+## Se piden cuando los necesitas [#asked-for-when-you-need-it]
+
+| Permiso | Navegadores | Se pide cuando |
+| --- | --- | --- |
+| `tabs` | Todos | Guardas la página actual, o pides sugerencias de carpetas, desde el panel lateral. Antes aparece una breve explicación. La ventana emergente de la barra de herramientas nunca lo necesita |
+| `contextMenus` | Chrome, Edge | Activas **Menú contextual** en [Configuración](/settings#data). Está desactivado de forma predeterminada, y Chrome lo concede sin preguntar |
+| `favicon` | Chrome, Edge | Activas **Usar la caché de iconos del navegador** en [Configuración](/settings#appearance), para mostrar los iconos que el navegador ya guardó |
+| Consentimiento para compartir datos | Firefox | Activas **Funciones de IA** o **Leer el contenido de la página**, o haces clic en **Verificar servicio**. Firefox pregunta antes de que la extensión envíe nada a tu proveedor de IA |
+
+Si lo rechazas, la función sigue desactivada y no se envía nada. Si más adelante retiras un permiso en la configuración de extensiones del navegador, la función se desactiva; al volver a activarla, se vuelve a pedir.
+
+## Acceso opcional a sitios web [#optional-website-access]
+
+La extensión también declara acceso a `http://*/*` y `https://*/*`, pero nada de eso se concede al instalar. El navegador te lo pregunta en el momento en que lo necesitas:
+
+- **Comprobar enlaces rotos**, **Extractor de metadatos** y **Actualizar iconos de sitios** piden acceso a los sitios web la primera vez que los ejecutas, porque los marcadores pueden apuntar a cualquier sitio. Las solicitudes se envían sin cookies, y solo se lee el encabezado de la página para obtener títulos y enlaces de iconos. Si lo rechazas, no se analiza nada. Consulta [Encontrar y reparar enlaces rotos](/guides/dead-links) y [Actualizar iconos de sitios](/guides/clean-up#refresh-site-icons).
+- **Leer el contenido de la página**, en los ajustes de IA, pide acceso a los sitios web cuando lo activas, para que las herramientas de IA puedan descargar páginas, sin cookies, y enviar su texto principal a tu proveedor de IA. Las páginas de tu red local nunca se leen. Consulta [Leer el contenido de la página](/guides/ai-tools#read-page-content).
+- **Verificar servicio** y **Actualizar modelos**, en los ajustes de IA, solo piden acceso a la dirección de ese proveedor. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
+
+Para retirar el acceso, abre la página de la extensión en el navegador (por ejemplo, `chrome://extensions/` y luego **Detalles** en Bookmark Scout, o **Permisos** en `about:addons` de Firefox) y cambia su acceso a sitios o sus permisos.
+
+## Lo que no se solicita [#what-is-not-requested]
+
+- Ningún acceso al contenido de las páginas y ningún script de contenido
+- Ningún permiso de historial, descargas ni cookies
+- Ningún acceso a hosts al instalar
+
+Adónde van tus datos cuando se usa un permiso se explica en [Privacidad](/privacy). La justificación de cada permiso, tal como se envió a las tiendas, está en <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> del repositorio.

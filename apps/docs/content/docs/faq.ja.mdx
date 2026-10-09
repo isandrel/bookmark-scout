@@ -1,0 +1,85 @@
+---
+title: よくある質問とトラブルシューティング
+description: Bookmark Scout についてよくある質問への回答と、よく起きる問題の解決方法です。
+---
+
+## よくある質問 [#questions]
+
+### Bookmark Scout は無料ですか? [#is-bookmark-scout-free]
+
+はい。<License /> ライセンスの無料オープンソースで、広告も有料プランもありません。AI をオンにした場合は、AI プロバイダーから API の利用料金を請求されることがあります。
+
+### AI を使う必要はありますか? [#do-i-need-to-use-ai]
+
+いいえ。検索、保存、整理、クリーンアップ、インポートとエクスポートは、すべて AI なしで使えます。AI は[設定](/settings#ai)でオンにするまでオフのままです。
+
+### ブックマークはどこかに送信されますか? [#does-it-send-my-bookmarks-anywhere]
+
+開発者には送信されません。Bookmark Scout のサーバーは存在しません。データがブラウザの外に出るのは、自分でオンにした AI ツールを使ったとき（プロバイダーに送られます）か、リンク切れチェックやタイトルの取得を実行したとき（ブックマークしたウェブサイトにリクエストを送ります）だけです。[プライバシー](/privacy)をご覧ください。
+
+### 確認なしでブックマークを変更しませんか? [#will-it-change-my-bookmarks-without-asking]
+
+しません。重複のクリーンアップ、URL のクリーンアップ、リンク切れの修復、取得したタイトル、AI による再整理、インポートは、いずれも書き込む前に確認画面を表示します。削除は初期設定で確認を求め、削除とインポートは 10 秒間元に戻せます。
+
+### なぜブラウザのストアにないのですか? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+各ストアは拡張機能を公開する前に審査を行います。また、掲載の準備はまだ進行中です。ストアに掲載されるまでは、[GitHub リリースからインストール](/installation)してください。
+
+### Firefox で使えますか? [#does-it-work-in-firefox]
+
+使えます。Firefox では拡張機能がブックマークページを置き換えられないため、クリーンアップツール、インポートとエクスポート、保存した検索を含む Bookmark Scout のマネージャーは、ポップアップの **ブックマークマネージャーを開く** から開きます。Firefox ではブラウザのアイコンキャッシュを使えず、自動テストで確認されている機能も少なくなります。[ブラウザ対応](/browser-support)をご覧ください。
+
+### Safari に対応しないのはなぜですか? [#why-not-safari]
+
+Safari Web Extensions は、Bookmark Scout の土台である `bookmarks` API を実装していないためです。
+
+## トラブルシューティング [#troubleshooting]
+
+### ブックマークマネージャーはどこにありますか? [#where-is-the-bookmarks-manager]
+
+Chrome では、ブラウザ自体のブックマークページを開きます（たとえば `Ctrl+Shift+O`、macOS では `Cmd+Option+B`）。Bookmark Scout はこのページを自身のマネージャーに置き換えます。**ツール** サイドバーが隠れている場合は、マネージャーのヘッダーにある **ツールを表示** をクリックします。
+
+### Firefox から Bookmark Scout が消えた [#bookmark-scout-disappeared-from-firefox]
+
+Firefox は再起動すると一時的なアドオンを削除します。[インストール](/installation)の手順に従って、`about:debugging#/runtime/this-firefox` からもう一度読み込んでください。
+
+### サイトアイコンが表示されない [#site-icons-are-missing]
+
+[設定](/settings#appearance)で **ファビコンを表示** がオンになっているか確認してください。Chrome と Edge はサイトごとにキャッシュしたアイコンを表示するため、最近アクセスしていないサイトには汎用の地球儀アイコンが表示されます。Firefox には拡張機能向けのアイコン API がありません。どのブラウザでも、[サイトアイコンを更新](/guides/clean-up#refresh-site-icons)を使うと各サイト自身のアイコンをダウンロードし、このデバイスに保存できます。
+
+### API キーが保存されない [#my-api-key-was-not-saved]
+
+選んだプロバイダーのキーの形式に合わないキーは拒否されて保存されず、その旨のメッセージが表示されます。**AIプロバイダー** が貼り付けたキーと一致しているか確認してください。[AI ツールの設定](/guides/ai-tools#turn-on-ai)をご覧ください。
+
+### 正常なサイトなのにリンク切れチェックで手動確認が必要と表示される [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+サインインを求めるサイト、リクエスト数を制限しているサイト、自動チェックをブロックするサイト、サーバーエラーが起きているサイトは、ブラウザでは開けることが多いため、**手動で確認** に表示されます。リンクを開いて確認してください。**リンク切れ確定** になるのは、ページが見つからない、接続が拒否された、ホストが不明、リダイレクトがループしている場合だけです。[リンク切れの検出と修復](/guides/dead-links#read-the-results)をご覧ください。
+
+### スキャン中にコンソールに「Failed to load resource」と表示される [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome は、失敗したリクエストごとに、ページのデベロッパーコンソールに 1 行を記録します。拡張機能はこの行を抑止できません。また、この行はスキャンに問題が起きたことを意味するものではありません。
+
+### マネージャーでの並べ替えがポップアップに反映されない [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+ポップアップにブラウザの保存された順序が反映されるのは、並び順が **フォルダ優先** のときだけです。**追加日順** と **アルファベット順** では一覧が並べ替えられ続けます。[設定](/settings#behavior)で **並び順** を変更してください。
+
+### 表示されている数より多くの一致があると検索に表示される [#search-says-there-are-more-matches-than-it-shows]
+
+結果は **最大検索結果数**（初期設定は 20）で打ち切られます。検索を絞り込むか、[設定](/settings#search)で上限を増やしてください。
+
+### 別のコンピューターでタグ、要約、保存した検索が見つからない [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+これらは作成したデバイスにのみ保存され、同期されず、ブックマークのエクスポートにも含まれません。設定は、ブラウザの同期がオンならブラウザのアカウントを通じて同期されます。
+
+### 誤って削除してしまった [#i-deleted-something-by-mistake]
+
+10 秒以内にメッセージの **元に戻す** をクリックしてください。その項目と中に含まれるすべての項目、保存したタグと要約が復元されます。復元した項目の追加日は新しくなります。メッセージが閉じた後は、Bookmark Scout から削除を元に戻すことはできません。
+
+## ヘルプ [#get-help]
+
+- ウェブサイトの<SiteLink to="support">サポートページ</SiteLink>。
+- バグの報告や機能のリクエストは <RepoLink path="/issues">GitHub</RepoLink> で。
+- <Contact role="support" /> へのメール。
+- セキュリティ上の問題は、公開の issue ではなく <Contact role="security" /> へ非公開で報告してください。

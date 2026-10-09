@@ -1,0 +1,60 @@
+---
+title: Importar y exportar
+description: Exporta marcadores como HTML, JSON, Markdown o CSV con una revisión de privacidad, e importa archivos HTML o JSON después de una vista previa que muestra los duplicados.
+---
+
+Ambas herramientas están en la barra lateral **Herramientas** del administrador de marcadores, en **Datos**.
+
+<Callout title="Firefox">
+En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente.
+</Callout>
+
+## Exportar marcadores [#export-bookmarks]
+
+<Steps>
+<Step>
+En **Exportar marcadores**, elige un **Formato**: **HTML (Chrome)**, **JSON**, **Markdown** o **CSV**.
+</Step>
+<Step>
+Elige la carpeta actual o todos los marcadores y haz clic en **Exportar**.
+</Step>
+<Step>
+Si el archivo fuera a contener valores que pueden ser privados, primero se abre una revisión. Elige **Exportar el original**, **Exportar censurado** o **Cancelar**.
+</Step>
+</Steps>
+
+La revisión busca parámetros de consulta sensibles, tokens en los fragmentos de URL, valores con forma de correo electrónico o de token, y nombres de usuario o contraseñas dentro de las URLs. Una exportación censurada reemplaza esos valores por `REDACTED` solo en el archivo descargado; tus marcadores no cambian. Las exportaciones sin nada sensible se descargan directamente.
+
+Detalles del archivo:
+
+- Los nombres de archivo empiezan por el **Prefijo del nombre de archivo** (`bookmarks_` de forma predeterminada) y conservan los nombres de carpeta con caracteres no ASCII.
+- Los archivos CSV empiezan con una marca de orden de bytes UTF-8. La columna Folder une las carpetas con `/`, y escribe una `/` dentro de un nombre de carpeta como `\/` y una barra invertida como `\\`.
+- **Incluir fechas** e **Incluir URLs**, y los tamaños de sangría de cada formato, están en la pestaña **Datos** de la [Configuración](/settings).
+
+Las etiquetas y los resúmenes no se incluyen en las exportaciones de marcadores. Para pasar marcadores con sus etiquetas y resúmenes a una herramienta de IA, usa el **Empaquetador de contexto para IA**; consulta [Configurar las herramientas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Importar marcadores [#import-bookmarks]
+
+<Steps>
+<Step>
+En **Importar marcadores**, haz clic en **Importar** y elige un archivo de marcadores HTML o JSON, como uno exportado desde un navegador.
+</Step>
+<Step>
+Revisa la **Vista previa de la importación**. Muestra la carpeta de destino, cuántos marcadores y carpetas se van a crear u omitir, y qué URLs ya existen en la carpeta de destino, en otra parte de tus marcadores o antes en el mismo archivo.
+</Step>
+<Step>
+Cambia **Importar en** si hace falta. Empieza siendo la carpeta abierta en el administrador.
+</Step>
+<Step>
+Elige cómo tratar los **Duplicados**: omitir los marcadores que ya existen en cualquier lugar, omitir solo los que ya están en la carpeta de destino o importarlo todo.
+</Step>
+<Step>
+Haz clic en **Importar**. Un mensaje indica cuántos elementos se crearon, se omitieron o tuvieron errores, con **Deshacer** durante 10 segundos.
+</Step>
+</Steps>
+
+No se escribe nada hasta que haces clic en **Importar**. Si tus marcadores cambian mientras la vista previa está abierta, la vista previa se actualiza en lugar de aplicarse.
+
+## Los archivos de configuración son aparte [#settings-files-are-separate]
+
+Los botones **Exportar** e **Importar** de la parte inferior de la página de configuración guardan y restauran la configuración de Bookmark Scout como archivo JSON. No tocan los marcadores.

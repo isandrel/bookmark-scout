@@ -1,0 +1,39 @@
+---
+title: Compatibilidade com navegadores
+description: O que funciona no Chrome, no Microsoft Edge e no Firefox, o que é testado em cada um e por que o Safari não é compatível.
+---
+
+O Chrome é o navegador principal. O Edge é baseado no Chromium e tem os mesmos recursos, exceto nos casos indicados abaixo. O Firefox usa uma versão Manifest V2 com um conjunto menor de recursos.
+
+## Tabela de recursos [#feature-matrix]
+
+Esta tabela vem dos manifestos da extensão compilada para cada navegador.
+
+| Recurso | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Pop-up da barra de ferramentas com pesquisa e salvamento | Sim | Sim | Sim |
+| Painel lateral | Sim | Sim | Não compatível. A página é declarada como uma barra lateral do Firefox, mas nenhum teste a verifica lá. |
+| Gerenciador de favoritos e barra lateral de Ferramentas | Substitui a página de favoritos do navegador e é aberto por **Abrir gerenciador de favoritos** no pop-up e no painel lateral | É aberto por **Abrir gerenciador de favoritos**. Não foi verificado se o Edge também aplica a substituição à página Favoritos dele. | É aberto por **Abrir gerenciador de favoritos** no pop-up. O Firefox não permite substituir a página de favoritos. |
+| Pesquisas salvas, ferramentas de manutenção, importação e exportação, estatísticas, ferramentas de IA do gerenciador | Sim | Sim | Sim, no gerenciador. Testes automatizados cobrem a importação e a exportação e os relatórios; as outras ferramentas são verificadas manualmente. |
+| Página de configurações | Sim | Sim | Sim |
+| Menu de clique com o botão direito para salvar links | Sim, depois que você ativa o **Menu de contexto** (pede permissão) | Igual | Sim, depois que você ativa o **Menu de contexto** |
+| Ícones dos sites ao lado dos favoritos | Ícones salvos com **Atualizar ícones dos sites** e, depois que você ativa **Usar o cache de ícones do navegador**, ícones do cache do navegador | Igual | Somente ícones salvos com **Atualizar ícones dos sites**, que é executado no gerenciador. O Firefox não oferece às extensões uma API de ícones dos sites, então os outros favoritos mostram um ícone genérico. |
+| Acesso opcional a sites para a verificação de links quebrados, a busca de títulos e a atualização dos ícones dos sites | Solicitado quando você executa a ferramenta | Igual | Igual |
+
+## O que é testado [#what-is-tested]
+
+- **Chrome (Chromium)**: testes de unidade e testes de ponta a ponta para o pop-up, o painel lateral, o gerenciador, as configurações, as ferramentas de manutenção, os relatórios, a importação e a exportação, os atalhos de teclado, as pesquisas salvas, o salvamento pelo menu de contexto, o arrastar e soltar, as ferramentas de rede e as ferramentas de IA com provedores simulados.
+- **Edge**: o mesmo conjunto de testes de ponta a ponta é executado na versão para o Edge.
+- **Firefox**: um conjunto de testes básicos (smoke tests) cobre a pesquisa e a criação de pastas no pop-up, a página do painel lateral carregada em uma guia, a abertura do gerenciador pelo pop-up e pelo painel lateral, a página do gerenciador, o salvamento de uma configuração, uma exportação e importação de JSON de ida e volta, os relatórios de estatísticas e de privacidade e os ícones dos sites salvos no pop-up. Menus de contexto, arrastar e soltar, atalhos de teclado e as ferramentas de rede e de IA (incluindo o próprio **Atualizar ícones dos sites**) não são cobertos.
+
+O conjunto do Edge e o conjunto de testes básicos do Firefox são verificações obrigatórias da CI, assim como o conjunto do Chromium. Os provedores de IA reais e os sites ativos são verificados manualmente, não por testes automatizados.
+
+## Safari [#safari]
+
+O Safari não é compatível. As Safari Web Extensions não implementam a API `bookmarks`, da qual todas as partes do Bookmark Scout dependem.
+
+## Disponibilidade nas lojas [#store-availability]
+
+<StoreAvailability />
+
+O material das páginas das lojas é preparado na <RepoLink tree="store">pasta `store/`</RepoLink> do repositório, e cada envio precisa da aprovação do mantenedor. Onde uma loja ainda não lista a extensão, [instale-a a partir de uma versão do GitHub](/installation).

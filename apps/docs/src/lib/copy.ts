@@ -1,4 +1,12 @@
 import type { Translations } from "fumadocs-ui/i18n";
+import { de } from "./copy/de";
+import { es } from "./copy/es";
+import { fr } from "./copy/fr";
+import { ja } from "./copy/ja";
+import { ko } from "./copy/ko";
+import { ptBR } from "./copy/pt-BR";
+import { zhCN } from "./copy/zh-CN";
+import { zhTW } from "./copy/zh-TW";
 
 /**
  * UI text the docs app renders outside MDX, per language: navigation, the docs home, the
@@ -73,7 +81,16 @@ export type DocsCopy = typeof en;
  * A language missing here uses English. Start a translation from English and override what is
  * translated, so the type keeps every key: `ja: { ...en, nav: { website: "…" } }`.
  */
-const TRANSLATIONS: Partial<Record<string, DocsCopy>> = {};
+const TRANSLATIONS: Partial<Record<string, DocsCopy>> = {
+  ja: ja,
+  ko: ko,
+  "zh-CN": zhCN,
+  "zh-TW": zhTW,
+  es: es,
+  de: de,
+  fr: fr,
+  "pt-BR": ptBR,
+};
 
 export function getCopy(locale: string): DocsCopy {
   return TRANSLATIONS[locale] ?? en;

@@ -1,0 +1,22 @@
+{
+  "title": "Bookmark Scout 說明文件",
+  "description": "安裝和使用 Bookmark Scout。這是一款瀏覽器擴充功能，可以直接在瀏覽器中搜尋、整理和清理書籤。",
+  "pages": [
+    "---開始使用---",
+    "index",
+    "installation",
+    "browser-support",
+    "---指南---",
+    "...guides",
+    "---參考資料---",
+    "features",
+    "settings",
+    "permissions",
+    "---關於---",
+    "privacy",
+    "faq",
+    "status",
+    "---參與貢獻---",
+    "contributing"
+  ]
+}

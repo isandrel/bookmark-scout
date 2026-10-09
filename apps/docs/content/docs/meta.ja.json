@@ -1,0 +1,22 @@
+{
+  "title": "Bookmark Scout ドキュメント",
+  "description": "ブラウザの中でブックマークを検索、整理、クリーンアップするブラウザ拡張機能、Bookmark Scout のインストール方法と使い方です。",
+  "pages": [
+    "---はじめに---",
+    "index",
+    "installation",
+    "browser-support",
+    "---ガイド---",
+    "...guides",
+    "---リファレンス---",
+    "features",
+    "settings",
+    "permissions",
+    "---Bookmark Scout について---",
+    "privacy",
+    "faq",
+    "status",
+    "---コントリビュート---",
+    "contributing"
+  ]
+}

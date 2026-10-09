@@ -1,0 +1,47 @@
+---
+title: Berechtigungen
+description: Jede Browserberechtigung, die Bookmark Scout anfordert, wozu sie benötigt wird, und der optionale Zugriff auf Websites, der erst angefragt wird, wenn Sie ein Tool ausführen.
+---
+
+Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout hat keine Content-Skripte und liest daher nie die Seiten, die Sie besuchen. Bei der Installation fragt die Erweiterung nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
+
+## Bei der Installation gewährt [#granted-at-install]
+
+| Berechtigung | Browser | Zweck |
+| --- | --- | --- |
+| `bookmarks` | Alle | Ihre Lesezeichen anzeigen und durchsuchen sowie sie erstellen, bearbeiten, verschieben und löschen, wenn Sie im Pop-up, in der Seitenleiste, im Manager oder im Rechtsklickmenü eine Aktion ausführen |
+| `storage` | Alle | Ihre Einstellungen speichern sowie, nur auf diesem Gerät, Ihre KI-Anbietereinstellungen, Tags, Zusammenfassungen, gespeicherten Suchen, letzten Ordner, letzten Suchen und mit **Website-Symbole aktualisieren** gespeicherten Website-Symbole |
+| `activeTab` | Alle | Wenn Sie auf die Schaltfläche in der Symbolleiste oder auf das Rechtsklickmenü klicken, Titel und URL dieses Tabs lesen, damit Sie die aktuelle Seite speichern können. Keine anderen Tabs, kein Verlauf |
+| `sidePanel` | Chrome, Edge | Die Seitenleistenansicht bereitstellen. Firefox deklariert dieselbe Seite stattdessen als Sidebar |
+| `contextMenus` | Firefox | Firefox erlaubt Erweiterungen nicht, diese Berechtigung später anzufordern. Das Menü erscheint trotzdem erst, nachdem Sie **Kontextmenü** aktiviert haben |
+
+In Chrome und Edge ersetzt die Erweiterung außerdem die Lesezeichenseite des Browsers durch den Bookmark-Scout-Manager. Das ist eine Seitenersetzung, keine Berechtigung. Firefox erlaubt dies nicht, daher öffnet sich der Manager dort über **Lesezeichen-Manager öffnen** im Pop-up; siehe [Browserunterstützung](/browser-support).
+
+## Bei Bedarf angefragt [#asked-for-when-you-need-it]
+
+| Berechtigung | Browser | Angefragt, wenn |
+| --- | --- | --- |
+| `tabs` | Alle | Sie die aktuelle Seite aus der Seitenleiste speichern oder dort Ordnervorschläge anfordern. Zuvor erscheint eine kurze Erklärung. Das Pop-up in der Symbolleiste benötigt diese Berechtigung nie |
+| `contextMenus` | Chrome, Edge | Sie **Kontextmenü** in den [Einstellungen](/settings#data) aktivieren. Die Option ist standardmäßig deaktiviert, und Chrome gewährt die Berechtigung ohne Nachfrage |
+| `favicon` | Chrome, Edge | Sie **Symbol-Cache des Browsers verwenden** in den [Einstellungen](/settings#appearance) aktivieren, um Symbole anzuzeigen, die der Browser bereits gespeichert hat |
+| Einwilligung zur Datenweitergabe | Firefox | Sie **KI-Funktionen** oder **Seiteninhalt lesen** aktivieren oder auf **Dienst überprüfen** klicken. Firefox fragt nach, bevor die Erweiterung etwas an Ihren KI-Anbieter sendet |
+
+Wenn Sie ablehnen, bleibt die Funktion deaktiviert, und es wird nichts gesendet. Wenn Sie eine Berechtigung später in den Erweiterungseinstellungen des Browsers widerrufen, wird die Funktion deaktiviert; beim erneuten Aktivieren wird wieder nachgefragt.
+
+## Optionaler Zugriff auf Websites [#optional-website-access]
+
+Die Erweiterung deklariert außerdem Zugriff auf `http://*/*` und `https://*/*`, aber nichts davon wird bei der Installation gewährt. Der Browser fragt Sie in dem Moment, in dem der Zugriff benötigt wird:
+
+- **Defekte Links prüfen**, **Metadatenabruf** und **Website-Symbole aktualisieren** fragen beim ersten Ausführen nach Zugriff auf Websites, da Lesezeichen auf jede beliebige Website verweisen können. Anfragen werden ohne Cookies gesendet, und für Titel und Symbol-Links wird nur der Seitenkopf gelesen. Wenn Sie ablehnen, wird nichts geprüft. Siehe [Defekte Links finden und reparieren](/guides/dead-links) und [Website-Symbole aktualisieren](/guides/clean-up#refresh-site-icons).
+- **Seiteninhalt lesen** in den KI-Einstellungen fragt beim Aktivieren nach Zugriff auf Websites, damit KI-Tools Seiten ohne Cookies herunterladen und ihren Haupttext an Ihren KI-Anbieter senden können. Seiten in Ihrem lokalen Netzwerk werden nie gelesen. Siehe [Seiteninhalt lesen](/guides/ai-tools#read-page-content).
+- **Dienst überprüfen** und **Modelle aktualisieren** in den KI-Einstellungen fragen nur nach Zugriff auf die Adresse dieses einen Anbieters. Siehe [KI-Tools einrichten](/guides/ai-tools).
+
+Um den Zugriff zu widerrufen, öffnen Sie die Seite der Erweiterung im Browser (zum Beispiel `chrome://extensions/`, dann **Details** bei Bookmark Scout, oder **Berechtigungen** in `about:addons` von Firefox) und ändern Sie dort den Websitezugriff oder die Berechtigungen.
+
+## Was nicht angefordert wird [#what-is-not-requested]
+
+- Kein Zugriff auf Seiteninhalte und keine Content-Skripte
+- Keine Berechtigungen für Verlauf, Downloads oder Cookies
+- Kein Host-Zugriff bei der Installation
+
+Wohin Ihre Daten gehen, wenn eine Berechtigung genutzt wird, ist unter [Datenschutz](/privacy) beschrieben. Die Begründung jeder Berechtigung, wie sie bei den Stores eingereicht wurde, steht in <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> im Repository.

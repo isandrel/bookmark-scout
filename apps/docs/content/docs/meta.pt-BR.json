@@ -1,0 +1,22 @@
+{
+  "title": "Documentação do Bookmark Scout",
+  "description": "Instale e use o Bookmark Scout, uma extensão de navegador que pesquisa, organiza e limpa seus favoritos dentro do próprio navegador.",
+  "pages": [
+    "---Primeiros passos---",
+    "index",
+    "installation",
+    "browser-support",
+    "---Guias---",
+    "...guides",
+    "---Referência---",
+    "features",
+    "settings",
+    "permissions",
+    "---Sobre---",
+    "privacy",
+    "faq",
+    "status",
+    "---Contribuir---",
+    "contributing"
+  ]
+}

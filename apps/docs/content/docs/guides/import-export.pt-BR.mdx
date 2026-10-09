@@ -1,0 +1,60 @@
+---
+title: Importar e exportar
+description: Exporte favoritos como HTML, JSON, Markdown ou CSV com uma revisão de privacidade e importe arquivos HTML ou JSON depois de uma prévia que mostra as duplicatas.
+---
+
+As duas ferramentas ficam na barra lateral **Ferramentas** do gerenciador de favoritos, em **Dados**.
+
+<Callout title="Firefox">
+No Firefox, abra o gerenciador com **Abrir gerenciador de favoritos** no pop-up.
+</Callout>
+
+## Exportar favoritos [#export-bookmarks]
+
+<Steps>
+<Step>
+Em **Exportar favoritos**, escolha um **Formato**: **HTML (Chrome)**, **JSON**, **Markdown** ou **CSV**.
+</Step>
+<Step>
+Escolha a pasta atual ou todos os favoritos e clique em **Exportar**.
+</Step>
+<Step>
+Se o arquivo for conter valores que podem ser particulares, uma revisão é aberta antes. Escolha **Exportar original**, **Exportar com dados ocultos** ou **Cancelar**.
+</Step>
+</Steps>
+
+A revisão procura parâmetros de consulta confidenciais, tokens em fragmentos de URL, valores parecidos com e-mails e tokens, e nomes de usuário ou senhas dentro de URLs. Uma exportação com dados ocultos substitui esses valores por `REDACTED` somente no arquivo baixado; seus favoritos não mudam. As exportações sem nada confidencial são baixadas diretamente.
+
+Detalhes dos arquivos:
+
+- Os nomes dos arquivos começam com o **Prefixo do nome do arquivo** (padrão `bookmarks_`) e mantêm os nomes de pastas com caracteres não ASCII.
+- Os arquivos CSV começam com uma marca de ordem de bytes (BOM) UTF-8. A coluna Pasta junta as pastas com `/` e grava uma `/` dentro do nome de uma pasta como `\/` e uma barra invertida como `\\`.
+- **Incluir datas** e **Incluir URLs**, além dos tamanhos de recuo de cada formato, ficam na guia **Dados** das [Configurações](/settings).
+
+As tags e os resumos não são incluídos nas exportações de favoritos. Para entregar favoritos com as tags e os resumos deles a uma ferramenta de IA, use o **Empacotador de contexto para IA**; consulte [Configurar as ferramentas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Importar favoritos [#import-bookmarks]
+
+<Steps>
+<Step>
+Em **Importar favoritos**, clique em **Importar** e escolha um arquivo de favoritos HTML ou JSON, como um exportado de um navegador.
+</Step>
+<Step>
+Revise a **Prévia da importação**. Ela mostra a pasta de destino, quantos favoritos e pastas serão criados ou ignorados e quais URLs já existem na pasta de destino, em outro lugar dos seus favoritos ou antes no mesmo arquivo.
+</Step>
+<Step>
+Altere **Importar para**, se necessário. O valor inicial é a pasta aberta no gerenciador.
+</Step>
+<Step>
+Escolha como tratar as **Duplicatas**: ignorar os favoritos que já existem em qualquer lugar, ignorar somente os que já estão na pasta de destino ou importar tudo.
+</Step>
+<Step>
+Clique em **Importar**. Uma notificação informa quantos itens foram criados, ignorados e com falha, com **Desfazer** por 10 segundos.
+</Step>
+</Steps>
+
+Nada é gravado até você clicar em **Importar**. Se os seus favoritos mudarem enquanto a prévia estiver aberta, a prévia é atualizada em vez de ser aplicada.
+
+## Os arquivos de configurações são separados [#settings-files-are-separate]
+
+Os botões **Exportar** e **Importar** na parte de baixo da página de Configurações salvam e restauram as configurações do Bookmark Scout como um arquivo JSON. Eles não mexem nos favoritos.

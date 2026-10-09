@@ -1,0 +1,86 @@
+---
+title: 参与贡献和开发
+description: 设置 Bookmark Scout monorepo、从源代码构建扩展程序、运行测试并提交拉取请求。
+---
+
+欢迎参与贡献：报告错误、修复问题、翻译和编写文档都可以。完整的贡献指南见 <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>；本页介绍你需要用到的命令。
+
+## 代码仓库 [#the-repository]
+
+一个基于 Bun 和 Nx 的 monorepo，包含三个应用和一个共享配置包：
+
+| 路径 | 内容 |
+| --- | --- |
+| `apps/extension` | 浏览器扩展程序：WXT、React、TypeScript、Zustand，以及基于 Base UI 的 shadcn/ui |
+| `apps/website` | 宣传网站：Next.js，使用 `next-intl` 实现本地化 |
+| `apps/docs` | 本网站：Next.js、Fumadocs，以及位于 `content/docs` 中的 MDX |
+| `packages/config` | 从 `config/project.toml` 和 `config/web.toml` 读取的项目和网站配置值 |
+
+## 设置开发环境 [#set-up]
+
+你需要安装 [Bun](https://bun.sh) 以及 Chrome、Edge 或 Firefox。在 GitHub 上复刻（fork）<RepoLink>代码仓库</RepoLink>，克隆你的复刻，然后在其文件夹中运行：
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` 会在 Chrome 中启动扩展程序并开启实时重新加载。对于其他浏览器，请使用 `bun run dev:edge` 或 `bun run dev:firefox`。
+
+## 从源代码构建 [#build-from-source]
+
+```bash
+bun run build
+```
+
+此命令会将全部三个浏览器目标构建到 `apps/extension/dist/` 中：
+
+| 浏览器 | 文件夹 |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+按照与[安装](/installation)中加载下载版本相同的方式，将对应浏览器的文件夹作为未打包的扩展程序加载：在 Chrome 中使用**加载已解压的扩展程序**，在 Edge 中使用**加载解压缩的扩展**，在 Firefox 中使用**临时载入附加组件**并选择该文件夹中的 `manifest.json`。如需只构建一个浏览器版本，请运行 `bunx nx run extension:build:chrome`、`extension:build:edge` 或 `extension:build:firefox`。
+
+## 测试 [#test]
+
+```bash
+bun run test
+```
+
+此命令会构建 Chrome 目标、安装 Playwright 的 Chromium，并以无头模式运行单元测试和 Chromium 端到端测试。联网工具和 AI 工具会针对本地服务器和模拟服务商运行；标题为 `[mocked provider contract]` 的测试检查的是 Bookmark Scout 这一侧的服务商接口约定，而不是与真实服务商的兼容性。
+
+| 更改内容 | 运行 |
+| --- | --- |
+| 扩展程序源代码 | `bunx nx run extension:lint` |
+| 排序逻辑 | `bun run test:unit` |
+| 弹出窗口、设置、书签管理器、工具、导入和导出 | `bun run test:e2e` |
+| Edge 行为 | `bunx nx run extension:test:e2e:edge` |
+| Firefox 行为 | `bunx nx run extension:test:e2e:firefox`（冒烟测试套件） |
+| 清单文件、服务商或浏览器集成 | `bunx nx run extension:build:chrome`，以及每个受影响的浏览器目标 |
+| 网站 | `bunx nx run website:build` |
+| 文档 | `bunx nx run docs:build`，然后运行 `bunx nx run docs:verify` |
+| 跨应用的更改 | `bun run lint` 和 `bun run build:all` |
+
+CI 会在每个拉取请求上将 lint、三个扩展程序构建、单元测试和 Chromium 端到端测试、Edge 测试套件以及 Firefox 冒烟测试套件作为必需检查运行。构建通过并不等于测试覆盖：请说明你运行了哪些测试。
+
+## 编写文档 [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+页面是位于 `apps/docs/content/docs` 中的 MDX 文件，按其旁边的 `meta.json` 文件排序。指向网站、代码仓库、版本发布的链接以及联系地址，都通过 `<Contact role="support" />` 和 `<ReleaseLink />` 等小组件从配置中获取，因此页面中从不硬编码这些内容。构建完成后，`bunx nx run docs:verify` 会检查静态导出结果。
+
+## 翻译 [#translations]
+
+面向用户的扩展程序文字位于 `apps/extension/public/_locales/<locale>/messages.json`，网站文字位于 `apps/website/messages/<locale>.json`。请同时更改所有语言；缺少某个键时，单元测试和网站构建检查会失败。如需添加一种语言，请按照 `apps/extension/AGENTS.md` 中的“Localization”部分操作。
+
+## 拉取请求 [#pull-requests]
+
+- 从 `main` 创建分支，每个拉取请求只包含一项更改。
+- 按照 [Conventional Commits](https://www.conventionalcommits.org/) 编写提交信息，并加上 [Gitmoji](https://gitmoji.dev/) 前缀，例如 `🐛 fix(popup): keep focus after deleting a folder`。
+- 当更改影响用户所见内容、浏览器支持、隐私或设置时，请更新文档。[项目状态](/status)列出了已实现、部分实现和计划中的功能。
+
+安全问题请私下报告至 <Contact role="security" />，不要在公开的 issue 中报告。Bookmark Scout 基于 <License /> 许可证授权。

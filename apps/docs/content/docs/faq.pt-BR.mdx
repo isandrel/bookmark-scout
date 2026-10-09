@@ -1,0 +1,85 @@
+---
+title: Perguntas frequentes e solução de problemas
+description: Respostas para dúvidas comuns sobre o Bookmark Scout e soluções para os problemas mais frequentes.
+---
+
+## Perguntas [#questions]
+
+### O Bookmark Scout é gratuito? [#is-bookmark-scout-free]
+
+Sim. Ele é gratuito e de código aberto sob a licença <License />, sem anúncios e sem plano pago. Se você ativar a IA, seu provedor de IA pode cobrar pelo uso da API.
+
+### Preciso usar IA? [#do-i-need-to-use-ai]
+
+Não. A pesquisa, o salvamento, a organização, a limpeza e a importação e exportação funcionam sem ela. A IA fica desativada até você ativá-la nas [Configurações](/settings#ai).
+
+### Ele envia meus favoritos para algum lugar? [#does-it-send-my-bookmarks-anywhere]
+
+Não para o desenvolvedor: não existe servidor do Bookmark Scout. Os dados só saem do seu navegador quando você usa uma ferramenta de IA que ativou (eles vão para o seu provedor) ou executa uma verificação de links quebrados ou uma busca de títulos (os sites salvos nos favoritos são solicitados). Consulte [Privacidade](/privacy).
+
+### Ele vai alterar meus favoritos sem perguntar? [#will-it-change-my-bookmarks-without-asking]
+
+Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de qualquer alteração ser gravada. Por padrão, a exclusão pede confirmação, e as exclusões e importações podem ser desfeitas por 10 segundos.
+
+### Por que ele não está nas lojas dos navegadores? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+Cada loja analisa uma extensão antes de publicá-la, e as páginas nas lojas ainda estão sendo preparadas. Enquanto uma loja não listar a extensão, [instale-a a partir de uma versão do GitHub](/installation).
+
+### Ele funciona no Firefox? [#does-it-work-in-firefox]
+
+Sim. O Firefox não permite que as extensões substituam a página de favoritos, então abra o gerenciador do Bookmark Scout, com as ferramentas de limpeza, a importação e exportação e as pesquisas salvas, em **Abrir gerenciador de favoritos** no pop-up. O cache de ícones do navegador não está disponível no Firefox, e lá menos recursos são cobertos por testes automatizados. Consulte [Compatibilidade com navegadores](/browser-support).
+
+### Por que não o Safari? [#why-not-safari]
+
+As Safari Web Extensions não implementam a API `bookmarks`, que é a base do Bookmark Scout.
+
+## Solução de problemas [#troubleshooting]
+
+### Onde está o gerenciador de favoritos? [#where-is-the-bookmarks-manager]
+
+No Chrome, abra a página de favoritos do próprio navegador, por exemplo, com `Ctrl+Shift+O` (`Cmd+Option+B` no macOS). O Bookmark Scout a substitui pelo gerenciador dele. Se a barra lateral **Ferramentas** estiver oculta, clique em **Mostrar ferramentas** no cabeçalho do gerenciador.
+
+### O Bookmark Scout sumiu do Firefox [#bookmark-scout-disappeared-from-firefox]
+
+O Firefox remove as extensões temporárias quando é reiniciado. Carregue-a de novo em `about:debugging#/runtime/this-firefox`, como em [Instalação](/installation).
+
+### Os ícones dos sites não aparecem [#site-icons-are-missing]
+
+Verifique se **Mostrar ícones dos sites** está ativado nas [Configurações](/settings#appearance). O Chrome e o Edge mostram o ícone que têm em cache para cada site, então os sites que você não visitou recentemente mostram um globo genérico. O Firefox não oferece às extensões uma API de ícones. Em qualquer navegador, [Atualizar ícones dos sites](/guides/clean-up#refresh-site-icons) baixa o ícone de cada site e o mantém neste dispositivo.
+
+### Minha chave de API não foi salva [#my-api-key-was-not-saved]
+
+Uma chave que não parece ser do provedor escolhido é rejeitada e não é salva, e uma mensagem avisa isso. Verifique se o **Provedor de IA** corresponde à chave que você colou. Consulte [Configurar as ferramentas de IA](/guides/ai-tools#turn-on-ai).
+
+### A verificação de links quebrados diz que um site que funciona precisa de verificação manual [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+Sites que pedem login, limitam a taxa de solicitações, bloqueiam verificações automatizadas ou têm um erro no servidor aparecem em **Verificar manualmente**, porque muitas vezes ainda funcionam em um navegador. Abra o link para conferir. Só contam como **Quebrado (confirmado)** as páginas não encontradas, as conexões recusadas, os hosts desconhecidos e os loops de redirecionamento. Consulte [Encontrar e corrigir links quebrados](/guides/dead-links#read-the-results).
+
+### O console mostra "Failed to load resource" durante uma verificação [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+O Chrome registra uma linha no console do desenvolvedor da página para cada solicitação com falha. As extensões não conseguem suprimir essas linhas, e elas não significam que algo deu errado na verificação.
+
+### A reordenação no gerenciador não aparece no pop-up [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+O pop-up só mostra a ordem salva no navegador com a classificação **Pastas primeiro**. As classificações **Data de adição** e **Ordem alfabética** continuam reordenando a lista. Altere a **Ordem de classificação** nas [Configurações](/settings#behavior).
+
+### A pesquisa diz que há mais correspondências do que as mostradas [#search-says-there-are-more-matches-than-it-shows]
+
+Os resultados param no **Máximo de resultados da pesquisa** (20 por padrão). Refine a pesquisa ou aumente o limite nas [Configurações](/settings#search).
+
+### Minhas tags, resumos ou pesquisas salvas não aparecem em outro computador [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Eles ficam armazenados somente no dispositivo em que você os criou e não são sincronizados nem incluídos nas exportações de favoritos. Já as configurações são sincronizadas, pela sua conta do navegador, quando a sincronização do navegador está ativada.
+
+### Excluí algo por engano [#i-deleted-something-by-mistake]
+
+Clique em **Desfazer** na notificação em até 10 segundos. Isso restaura o item, tudo o que havia dentro dele e as tags e os resumos salvos dele; um item restaurado recebe uma nova data de adição. Depois que a notificação se fecha, não é mais possível desfazer a exclusão pelo Bookmark Scout.
+
+## Obter ajuda [#get-help]
+
+- A <SiteLink to="support">página de suporte</SiteLink> no site.
+- Relate um bug ou peça um recurso no <RepoLink path="/issues">GitHub</RepoLink>.
+- Envie um e-mail para <Contact role="support" />.
+- Relate problemas de segurança de forma privada para <Contact role="security" />, não em uma issue pública.

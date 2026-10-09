@@ -1,0 +1,89 @@
+---
+title: 安裝
+description: 從 GitHub 版本發布安裝適用於 Chrome、Microsoft Edge 或 Firefox 的 Bookmark Scout。
+---
+
+Bookmark Scout 免費且開放原始碼。每個 <RepoLink path="/releases">GitHub 版本發布</RepoLink>都為各瀏覽器提供一個下載檔案：
+
+| 瀏覽器 | 檔案 |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` 或 `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+請從<ReleaseLink />下載，然後依照所用瀏覽器的步驟操作。
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<StoreListing browser="chrome" />
+
+<Steps>
+<Step>
+下載 `bookmark-scout-<version>-chrome.crx` 或 `bookmark-scout-<version>-chrome.zip`。如果使用 ZIP 檔，請解壓縮到會長期保留的資料夾，因為 Chrome 會從該資料夾載入擴充功能。
+</Step>
+<Step>
+開啟 `chrome://extensions/`，然後開啟右上角的「**開發人員模式**」。
+</Step>
+<Step>
+將 CRX 檔案拖曳到頁面上，或按一下「**載入未封裝項目**」並選取解壓縮後的資料夾。
+</Step>
+<Step>
+從拼圖形狀的「擴充功能」選單將 Bookmark Scout 固定到工具列，只要按一下就能開啟彈出式視窗。
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<StoreListing browser="edge" />
+
+<Steps>
+<Step>
+下載 `bookmark-scout-<version>-edge.zip`，並解壓縮到會長期保留的資料夾。
+</Step>
+<Step>
+開啟 `edge://extensions/`，然後開啟「**開發人員模式**」。
+</Step>
+<Step>
+按一下「**載入解壓縮**」，然後選取解壓縮後的資料夾。
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<StoreListing browser="firefox" />
+
+<Steps>
+<Step>
+下載 `bookmark-scout-<version>-firefox.zip` 並解壓縮。
+</Step>
+<Step>
+開啟 `about:debugging#/runtime/this-firefox`。
+</Step>
+<Step>
+按一下「**載入暫用附加元件**」，然後選取解壓縮後的 `manifest.json` 檔案。
+</Step>
+</Steps>
+
+<Callout type="warn" title="Firefox 的限制">
+Firefox 重新啟動時會移除暫用附加元件，因此每次重新啟動後都要再載入一次。Firefox 也無法取代其書籤頁面，因此請從彈出式視窗中的「**開啟書籤管理員**」開啟書籤管理員 (包含工具、已儲存的搜尋以及匯入和匯出功能)。請參閱「[瀏覽器支援](/browser-support)」。
+</Callout>
+
+</Tab>
+</Tabs>
+
+## 安裝完成後 [#after-installing]
+
+- 按一下 Bookmark Scout 圖示開啟彈出式視窗，即可搜尋書籤。建議從「[搜尋和已儲存的搜尋](/guides/search)」開始閱讀。
+- 在 Chrome 中，開啟瀏覽器的書籤頁面 (例如按下 `Ctrl+Shift+O`，在 macOS 上則是 `Cmd+Option+B`)，即可進入 Bookmark Scout 書籤管理員及其工具側欄。
+- 設定會從擴充功能的「**選項**」項目在分頁中開啟，例如在 Chrome 中對工具列圖示按一下滑鼠右鍵。請參閱「[設定](/settings)」。
+
+## 更新 [#updating]
+
+從<ReleaseLink />下載較新的版本，然後重複所用瀏覽器的步驟。
+
+## 從原始碼建置 [#building-from-source]
+
+如果想自行建置擴充功能，請參閱「[參與貢獻與開發](/contributing#build-from-source)」。

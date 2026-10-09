@@ -1,0 +1,22 @@
+{
+  "title": "Bookmark Scout 문서",
+  "description": "브라우저 안에서 북마크를 검색하고, 정리하고, 깔끔하게 관리하는 브라우저 확장 프로그램 Bookmark Scout의 설치 및 사용 방법을 안내합니다.",
+  "pages": [
+    "---시작하기---",
+    "index",
+    "installation",
+    "browser-support",
+    "---가이드---",
+    "...guides",
+    "---참고 자료---",
+    "features",
+    "settings",
+    "permissions",
+    "---정보---",
+    "privacy",
+    "faq",
+    "status",
+    "---기여하기---",
+    "contributing"
+  ]
+}

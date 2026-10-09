@@ -1,0 +1,40 @@
+---
+title: Raccourcis clavier
+description: Recherchez, parcourez les dossiers, enregistrez la page actuelle et utilisez le tableau du gestionnaire sans souris.
+---
+
+Les raccourcis de Bookmark Scout n'utilisent jamais `Ctrl` ni `Cmd` : les raccourcis du navigateur tels que `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` et `D` continuent donc de fonctionner. Ils sont suspendus pendant que vous saisissez du texte dans un champ (à l'exception de `Esc` dans le champ de recherche), pendant qu'un éditeur de méthode de saisie compose du texte, et lorsqu'une boîte de dialogue ou un menu est ouvert.
+
+## Fenêtre pop-up et panneau latéral [#popup-and-side-panel]
+
+Survolez le champ de recherche pour afficher un aide-mémoire.
+
+| Touche | Action |
+| --- | --- |
+| `/` | Placer le curseur dans le champ de recherche |
+| `Esc` dans le champ de recherche | Effacer la recherche ; appuyez à nouveau pour quitter le champ |
+| `↓` dans le champ de recherche | Accéder au premier dossier |
+| `Alt+↓` dans le champ de recherche vide | Afficher les recherches récentes ; `↓` / `↑` en sélectionnent une, `Enter` la relance, `Tab` atteint **Effacer** |
+| `↓` / `↑`, `Home` / `End` | Se déplacer entre les dossiers et favoris visibles (`↑` sur la première ligne ramène à la recherche) |
+| `→` / `←` | Ouvrir ou fermer un dossier ; sur un dossier ouvert, `→` accède à son premier élément, et `←` accède au dossier parent |
+| `Enter` sur un dossier | Enregistrer la page actuelle dans ce dossier (une page qui y est déjà enregistrée n'est pas dupliquée) |
+| `Enter` sur un favori | L'ouvrir dans un nouvel onglet |
+| `Space` sur un dossier | L'ouvrir ou le fermer |
+
+## Gestionnaire de favoris [#bookmarks-manager]
+
+Appuyez sur `?`, ou cliquez sur le bouton en forme de clavier dans l'en-tête, pour afficher cette liste dans le gestionnaire.
+
+| Touche | Action |
+| --- | --- |
+| `/` | Placer le curseur dans le filtre des titres |
+| `Backspace` ou `Alt+↑` | Accéder au dossier parent |
+| `j` / `k` | Passer à la ligne suivante ou précédente du tableau (une ligne de dossier, ou le menu d'actions d'une ligne de favori) |
+| `Enter` sur une ligne de dossier | Ouvrir le dossier |
+| `s` | Ouvrir les recherches enregistrées |
+| `?` | Afficher les raccourcis clavier |
+| `Esc` | Fermer une boîte de dialogue ou un menu |
+
+Dans le tableau, placez le curseur sur le bord d'un en-tête de colonne et appuyez sur `←` ou `→` pour redimensionner cette colonne.
+
+Les raccourcis clavier sont couverts par les tests automatisés Chromium et Edge, mais pas par ceux de Firefox.

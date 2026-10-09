@@ -1,0 +1,85 @@
+---
+title: FAQ et dépannage
+description: Réponses aux questions fréquentes sur Bookmark Scout, et solutions aux problèmes les plus courants.
+---
+
+## Questions [#questions]
+
+### Bookmark Scout est-il gratuit ? [#is-bookmark-scout-free]
+
+Oui. Il est gratuit et open source, sous licence <License />, sans publicité ni offre payante. Si vous activez l'IA, votre fournisseur d'IA peut facturer l'utilisation de son API.
+
+### Dois-je utiliser l'IA ? [#do-i-need-to-use-ai]
+
+Non. La recherche, l'enregistrement, l'organisation, le nettoyage, l'importation et l'exportation fonctionnent tous sans IA. L'IA reste désactivée tant que vous ne l'activez pas dans les [Paramètres](/settings#ai).
+
+### Mes favoris sont-ils envoyés quelque part ? [#does-it-send-my-bookmarks-anywhere]
+
+Pas au développeur : il n'existe aucun serveur Bookmark Scout. Les données ne quittent votre navigateur que lorsque vous utilisez un outil d'IA que vous avez activé (elles vont à votre fournisseur), ou lorsque vous lancez une vérification des liens morts ou une récupération des titres (les sites enregistrés en favoris sont alors interrogés). Consultez [Confidentialité](/privacy).
+
+### Va-t-il modifier mes favoris sans me demander ? [#will-it-change-my-bookmarks-without-asking]
+
+Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. La suppression demande une confirmation par défaut, et les suppressions comme les importations peuvent être annulées pendant 10 secondes.
+
+### Pourquoi n'est-il pas dans les boutiques des navigateurs ? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+Chaque boutique examine une extension avant sa mise en ligne, et les fiches sont encore en préparation. En attendant qu'une boutique la propose, [installez-la à partir d'une version GitHub](/installation).
+
+### Fonctionne-t-il dans Firefox ? [#does-it-work-in-firefox]
+
+Oui. Firefox ne permet pas aux extensions de remplacer sa page de favoris : ouvrez donc le gestionnaire Bookmark Scout, avec ses outils de nettoyage, l'importation et l'exportation, et les recherches enregistrées, depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Le cache d'icônes du navigateur n'est pas disponible dans Firefox, et moins de fonctionnalités y sont couvertes par des tests automatisés. Consultez [Compatibilité des navigateurs](/browser-support).
+
+### Pourquoi pas Safari ? [#why-not-safari]
+
+Les extensions Web Safari n'implémentent pas l'API `bookmarks`, sur laquelle repose Bookmark Scout.
+
+## Dépannage [#troubleshooting]
+
+### Où se trouve le gestionnaire de favoris ? [#where-is-the-bookmarks-manager]
+
+Dans Chrome, ouvrez la page Favoris du navigateur, par exemple avec `Ctrl+Shift+O` (`Cmd+Option+B` sous macOS). Bookmark Scout la remplace par son gestionnaire. Si la barre latérale **Outils** est masquée, cliquez sur **Afficher les outils** dans l'en-tête du gestionnaire.
+
+### Bookmark Scout a disparu de Firefox [#bookmark-scout-disappeared-from-firefox]
+
+Firefox supprime les modules complémentaires temporaires à chaque redémarrage. Rechargez l'extension depuis `about:debugging#/runtime/this-firefox`, comme indiqué dans [Installation](/installation).
+
+### Les icônes de site sont absentes [#site-icons-are-missing]
+
+Vérifiez que l'option **Afficher les icônes de site** est activée dans les [Paramètres](/settings#appearance). Chrome et Edge affichent l'icône qu'ils ont en cache pour chaque site : les sites que vous n'avez pas consultés récemment affichent donc un globe générique. Firefox n'offre aucune API d'icônes aux extensions. Quel que soit le navigateur, [Actualiser les icônes de site](/guides/clean-up#refresh-site-icons) télécharge l'icône propre à chaque site et la conserve sur cet appareil.
+
+### Ma clé API n'a pas été enregistrée [#my-api-key-was-not-saved]
+
+Une clé qui ne ressemble pas à une clé du fournisseur choisi est refusée et n'est pas enregistrée, et un message l'indique. Vérifiez que le **Fournisseur d'IA** correspond à la clé que vous avez collée. Consultez [Configurer les outils d'IA](/guides/ai-tools#turn-on-ai).
+
+### La vérification des liens morts indique qu'un site qui fonctionne doit être vérifié manuellement [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+Les sites qui vous demandent de vous connecter, limitent le débit des requêtes, bloquent les vérifications automatisées ou renvoient une erreur serveur sont classés dans **À vérifier manuellement**, car ils fonctionnent souvent encore dans un navigateur. Ouvrez le lien pour le vérifier. Seuls les pages introuvables, les connexions refusées, les hôtes inconnus et les boucles de redirection sont comptés comme **Lien mort confirmé**. Consultez [Trouver et réparer les liens morts](/guides/dead-links#read-the-results).
+
+### La console affiche « Failed to load resource » pendant une analyse [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome consigne une ligne dans la console de développement de la page pour chaque requête qui échoue. Les extensions ne peuvent pas supprimer ces lignes, et elles n'indiquent aucun problème avec l'analyse.
+
+### Une réorganisation dans le gestionnaire n'apparaît pas dans la fenêtre pop-up [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+La fenêtre pop-up n'affiche l'ordre enregistré par le navigateur qu'avec le tri **Dossiers en premier**. Les tris **Date d'ajout** et **Alphabétique** trient à nouveau la liste. Modifiez l'**Ordre de tri** dans les [Paramètres](/settings#behavior).
+
+### La recherche indique plus de correspondances qu'elle n'en affiche [#search-says-there-are-more-matches-than-it-shows]
+
+Les résultats s'arrêtent au **Nombre maximal de résultats** (20 par défaut). Affinez la recherche, ou augmentez la limite dans les [Paramètres](/settings#search).
+
+### Mes étiquettes, résumés ou recherches enregistrées sont absents sur un autre ordinateur [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Ils sont stockés uniquement sur l'appareil où vous les avez créés, et ne sont ni synchronisés, ni inclus dans les exportations de favoris. Les paramètres, eux, sont synchronisés via votre compte de navigateur lorsque la synchronisation du navigateur est activée.
+
+### J'ai supprimé quelque chose par erreur [#i-deleted-something-by-mistake]
+
+Cliquez sur **Annuler** dans la notification dans les 10 secondes. Cela restaure l'élément, tout son contenu, ainsi que ses étiquettes et résumés enregistrés ; un élément restauré reçoit une nouvelle date d'ajout. Une fois la notification fermée, la suppression ne peut plus être annulée depuis Bookmark Scout.
+
+## Obtenir de l'aide [#get-help]
+
+- La <SiteLink to="support">page d'assistance</SiteLink> du site Web.
+- Signalez un bug ou demandez une fonctionnalité sur <RepoLink path="/issues">GitHub</RepoLink>.
+- Écrivez à <Contact role="support" />.
+- Signalez un problème de sécurité en privé à <Contact role="security" />, et non dans un ticket public.
