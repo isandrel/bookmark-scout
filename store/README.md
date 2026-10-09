@@ -97,6 +97,9 @@ Suggested order for the Chrome Web Store (5 maximum): 01, 02, 03, 04, 06. Firefo
 
 ### How they were made
 
+To recapture, run the scripts in `.agents/skills/extension-cws-submission/` (see that skill).
+
+
 - Chrome build of this commit, loaded into a disposable headless Chromium profile with the `extension-exploratory-qa` runner (`.agents/skills/extension-exploratory-qa/`). No real profile and no personal data.
 - Synthetic bookmarks only: public documentation sites, `example.com` and `example.org` placeholder URLs, and two deliberate duplicates for the Duplicate Cleaner.
 - Theme left at the default `system`; light and dark come from the emulated OS color scheme, so Options shows no "Modified" badges.
