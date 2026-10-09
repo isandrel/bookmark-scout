@@ -16,11 +16,8 @@ Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first.
    - Prompt library: `sync:` with one item per prompt plus an index (`src/lib/prompt-library-storage.ts`), because sync allows 8 KB per item and about 100 KB total. Keep `prompt_max_bytes` at 8192 or less (the schema enforces it). Sync counts the key plus the JSON-serialized value, not the raw text: quotes and backslashes take 2 bytes, Japanese or Korean 3 a character, and Chrome escapes `<` (and the line and paragraph separators) as `\uXXXX`, 6 bytes. Measure with `syncItemBytes` in `src/lib/prompt-library-storage.ts`, never `text.length` or a plain UTF-8 count.
 4. **Log every request.** Pass the logging fetch with a source name into every provider factory and into model listing, so the opt-in AI activity log sees all traffic. Source names shown to users go through `t()`.
 5. **Treat page and bookmark text as untrusted.** After any user custom prompt, append the fixed rule that tells the model not to follow instructions found inside the content.
-6. **Update every disclosure when data leaving the device changes.** PR #516 found these still saying "No page content is fetched":
-   - `store/privacy-policy.md`, `store/privacy-disclosures.md`, `store/permissions.md`
-   - `apps/docs/content/docs/privacy.mdx` and `permissions.mdx`
-   - `apps/website/messages/privacy/{en,ja,ko}.json`
-7. **Locales:** new strings in `en`, `ja`, and `ko`.
+6. **Update every disclosure when data leaving the device changes.** PR #516 found the privacy pages still saying "No page content is fetched". Follow the `privacy-disclosure-sync` skill: it lists the ten places, from `store/privacy-disclosures.md` to the in-product consent text, and has a script that inventories outbound requests.
+7. **Locales:** new strings in every `public/_locales/*/messages.json`.
 8. **Tests:** `[mocked provider contract]` unit and E2E tests with stubbed providers and synthetic keys, plus the settings matrix (`tests/settings-matrix.ts`) when a setting is added. Mock the endpoint the SDK really calls: moving custom providers to `@ai-sdk/openai-compatible` switched requests from `/responses` to `/chat/completions` and broke the mocked auto-tagging test.
 
 ## Provider gotchas

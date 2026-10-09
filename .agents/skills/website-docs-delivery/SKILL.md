@@ -70,7 +70,7 @@ Check Fumadocs built-ins before writing a feature by hand, in the current Fumado
 
 - Pages projects are named `bookmark-scout-<app>`, after the folder under `apps/`.
 - `public/_headers` and the generated `public/_redirects` are Pages inputs. Zone-level Cloudflare settings can override `_headers`; confirm live headers with `curl -sI` after deploy.
-- A new host, CDN, analytics, or any third party that sees visitor requests is a privacy change: update `apps/website/messages/privacy/{en,ja,ko}.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` in `config/project.toml` in the same PR.
+- A new host, CDN, analytics, or any third party that sees visitor requests is a privacy change: update every `apps/website/messages/privacy/<locale>.json`, `store/privacy-policy.md`, and `[legal] privacy_effective_date` in `config/project.toml` in the same PR.
 - Cutover order, so a working origin exists at every step:
   1. Deploy to the new host and check the `*.pages.dev` URL: content, `_headers`, and the `/` redirect.
   2. Back up DNS records to `~/.cache/`.

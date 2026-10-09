@@ -291,15 +291,11 @@ Bookmark Scout already supports multiple locales and agents must preserve that s
 
 If you change user-visible extension copy, update:
 
-- every `apps/extension/public/_locales/<locale>/messages.json` (adding a language: see "Localization" in `apps/extension/AGENTS.md`)
+- every `apps/extension/public/_locales/<locale>/messages.json` (adding a language: the `i18n-add-language` skill)
 
 ### Website
 
-If you change localized website copy, update the relevant files in:
-
-- `apps/website/messages/en.json`
-- `apps/website/messages/ja.json`
-- `apps/website/messages/ko.json`
+If you change localized website copy, update the matching file for every language in `[locales] supported` of `config/project.toml`: `apps/website/messages/<locale>.json`, or the same file under `messages/privacy/` or `messages/support/`.
 
 ### Docs
 
@@ -317,7 +313,7 @@ This repository includes AI-backed functionality and user bookmark data. Treat p
 - avoid logging sensitive data unless there is a strong existing pattern and a concrete debugging need
 - preserve explicit user control for enabling AI features and selecting providers
 - do not weaken existing consent, disclosure, or privacy messaging
-- when a change alters what data leaves the device, update `store/privacy-policy.md`, `store/privacy-disclosures.md`, `store/permissions.md`, the docs `privacy.mdx` and `permissions.mdx`, and `apps/website/messages/privacy/{en,ja,ko}.json` in the same change
+- when a change alters what data leaves the device, update `store/privacy-policy.md`, `store/privacy-disclosures.md`, `store/permissions.md`, the docs `privacy.mdx` and `permissions.mdx`, and every `apps/website/messages/privacy/<locale>.json` in the same change (the full list and order: the `privacy-disclosure-sync` skill)
 
 ## Documentation policy
 
@@ -371,7 +367,7 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
-Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`. Each `SKILL.md` description says when to use it.
+Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 
