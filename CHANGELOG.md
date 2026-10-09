@@ -7,6 +7,18 @@
 - Refresh repository, docs-site, website, and localized README content to reflect current implemented features and planned work.
 - Move implemented options, theme, settings sync, full bookmarks manager, import/export, duplicate cleanup, dead-link checking, and bookmark tooling out of roadmap copy.
 
+## 0.3.1
+
+### Privacy
+
+- The AI Features setting now says, in every browser, what AI tools send (bookmark titles, URLs, folder names, the current page, and Ask AI messages) and that it goes straight to the provider you choose. Before, only Firefox showed this.
+- The privacy policy adds the Chrome Web Store Limited Use statement and states that pages are downloaded only when Read page content is on.
+
+### Store listing
+
+- New screenshots of the redesigned popup, manager, Tools, and settings, a store icon with padding, a small promo tile, and a marquee tile.
+- The Chrome and Edge listing descriptions name every AI feature and everything it sends.
+
 ## 0.3.0
 
 ### Highlights
