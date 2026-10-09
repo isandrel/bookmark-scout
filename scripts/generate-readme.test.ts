@@ -9,18 +9,21 @@ import {
 	readmeValues,
 	releaseLine,
 	render,
+	storeBadges,
 } from "./generate-readme";
+import { site } from "@bookmark-scout/config";
 
 const context = {
 	values: { SITE_NAME: "Example" },
 	version: (name: string) => ({ react: "19.3.0", wxt: "0.21.4" })[name] ?? "1.0.0",
 	browserBadges: (label: string) => `<badges ${label}>`,
+	storeBadges: (label: string) => `<stores ${label}>`,
 };
 
 describe("render", () => {
 	test("fills values, versions, and browser badges", () => {
-		expect(render("{{SITE_NAME}} {{VERSION:react}} {{VERSION:wxt}} {{BROWSER_BADGES:Supported}}", context)).toBe(
-			"Example 19 0.21 <badges Supported>",
+		expect(render("{{SITE_NAME}} {{VERSION:react}} {{VERSION:wxt}} {{BROWSER_BADGES:Supported}} {{STORE_BADGES:Install}}", context)).toBe(
+			"Example 19 0.21 <badges Supported> <stores Install>",
 		);
 	});
 
@@ -56,6 +59,14 @@ test("a workspace-qualified version is the one that workspace's package.json ins
 	expect(() => installedVersion("typescript", root, "apps/nope")).toThrow('Unknown workspace "apps/nope"');
 });
 
+test("storeBadges links only live store listings", () => {
+	const badges = storeBadges("Install");
+	for (const store of site.stores) {
+		expect(badges.includes(`href="${store.url}"`)).toBe(store.live);
+	}
+	expect(storeBadges("Install", { ...site, stores: [] })).toBe("");
+});
+
 test("badgeText escapes shields.io separators", () => {
 	expect(badgeText("AGPL-3.0")).toBe("AGPL--3.0");
 	expect(badgeText("Not Supported")).toBe("Not%20Supported");
@@ -67,6 +78,7 @@ test("every template renders with the repository config and installed packages",
 		values: readmeValues(),
 		version: (name: string, workspace?: string) => installedVersion(name, undefined, workspace),
 		browserBadges: (label: string) => browserBadges(label),
+		storeBadges: (label: string) => storeBadges(label),
 	};
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), real, file);

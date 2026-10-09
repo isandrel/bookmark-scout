@@ -35,6 +35,7 @@
 </p>
 
 <p align="center">
+  <a href="https://chromewebstore.google.com/detail/bookmark-scout/pmjiopaebkmoenkoodpoldfbnfncnedk"><img src="https://img.shields.io/badge/Chrome%20Web%20Store-설치-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome Web Store"></a>
   <img src="https://img.shields.io/badge/Chrome-지원-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Chrome">
   <img src="https://img.shields.io/badge/Firefox-지원-FF7139?style=flat-square&logo=firefox&logoColor=white" alt="Firefox">
   <img src="https://img.shields.io/badge/Edge-지원-0078D7?style=flat-square&logo=microsoftedge&logoColor=white" alt="Edge">

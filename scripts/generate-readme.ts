@@ -14,6 +14,8 @@
  *   {{VERSION:<workspace>:<package>}} the same, as installed for that workspace's package.json;
  *                            use it when workspaces pin different majors (TypeScript)
  *   {{BROWSER_BADGES:<label>}} one shields.io badge per supported browser, labelled <label>
+ *   {{STORE_BADGES:<label>}} one linked badge per live store listing, labelled <label>;
+ *                            empty while no listing is live
  *
  * A placeholder that cannot be filled fails the run.
  */
@@ -110,10 +112,22 @@ export function browserBadges(label: string, model: Site = site): string {
 		.join("\n");
 }
 
+export function storeBadges(label: string, model: Site = site): string {
+	return model.stores
+		.filter((store) => store.live)
+		.map((store) => {
+			const style = BROWSER_BADGE_STYLES[store.browser];
+			if (!style) throw new Error(`No README badge style for browser "${store.browser}"; add it to BROWSER_BADGE_STYLES`);
+			return `  <a href="${store.url}"><img src="https://img.shields.io/badge/${badgeText(store.name)}-${badgeText(label)}-${style.color}?style=flat-square&logo=${style.logo}&logoColor=white" alt="${store.name}"></a>`;
+		})
+		.join("\n");
+}
+
 type RenderContext = {
 	values: Record<string, string>;
 	version: (name: string, workspace?: string) => string;
 	browserBadges: (label: string) => string;
+	storeBadges: (label: string) => string;
 };
 
 /** Fills every placeholder in `template`; throws listing any it cannot fill. */
@@ -125,6 +139,7 @@ export function render(template: string, context: RenderContext, label = "templa
 			return releaseLine(context.version(packageName, workspace));
 		}
 		if (name === "BROWSER_BADGES" && argument) return context.browserBadges(argument);
+		if (name === "STORE_BADGES" && argument) return context.storeBadges(argument);
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
 			unknown.add(match);
@@ -147,6 +162,7 @@ if (import.meta.main) {
 		values: readmeValues(),
 		version: (name, workspace) => installedVersion(name, rootDir, workspace),
 		browserBadges: (label) => browserBadges(label),
+		storeBadges: (label) => storeBadges(label),
 	};
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`);
