@@ -21,13 +21,7 @@ Read from `extName` in `apps/extension/public/_locales/ja/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged today:
-
-```text
-ブックマークを素早く検索し、特定のフォルダに保存します。
-```
-
-Optional replacement (requires editing `extDescription` and a new version):
+Packaged since 0.3.2 (`extDescription`; changing it needs a new version):
 
 ```text
 ブックマークを素早く検索・整理・掃除。フォルダへのワンクリック保存、重複やリンク切れの検出、自分の API キーで使えるオプトインの AI 機能。
