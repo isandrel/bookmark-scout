@@ -686,3 +686,47 @@ test('an invalid Base URL does not block saving valid Extra Headers', async ({
   await expect.poll(async () => (await readAI()).openai?.extraHeaders).toBe('{"X-Test":"1"}');
   expect((await readAI()).openai?.baseUrl).toBeUndefined();
 });
+
+test('a slider setting follows a mouse drag and a track click, and saves', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+
+  const row = settingRow(page, 'reorganizationMinConfidence');
+  const slider = row.getByRole('slider');
+  // The thumb wraps the hidden range input that carries the slider role.
+  const thumb = slider.locator('xpath=..');
+  const control = row.locator('.touch-none').first();
+  await thumb.scrollIntoViewIfNeeded();
+  const start = Number(await slider.inputValue());
+  const thumbBox = await thumb.boundingBox();
+  const controlBox = await control.boundingBox();
+  if (!thumbBox || !controlBox) throw new Error('slider not laid out');
+  const y = thumbBox.y + thumbBox.height / 2;
+
+  // Pointer changes once threw "number is not iterable" in the settings row, so only the
+  // keyboard moved the slider.
+  await page.mouse.move(thumbBox.x + thumbBox.width / 2, y);
+  await page.mouse.down();
+  await page.mouse.move(controlBox.x + controlBox.width * 0.9, y, { steps: 10 });
+  await page.mouse.up();
+  await expect.poll(async () => Number(await slider.inputValue())).toBeGreaterThan(start);
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).reorganizationMinConfidence)
+    .toBe(Number(await slider.inputValue()));
+
+  await page.mouse.click(
+    controlBox.x + controlBox.width * 0.1,
+    controlBox.y + controlBox.height / 2,
+  );
+  await expect.poll(async () => Number(await slider.inputValue())).toBeLessThan(start);
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).reorganizationMinConfidence)
+    .toBe(Number(await slider.inputValue()));
+  expect(errors).toEqual([]);
+});
