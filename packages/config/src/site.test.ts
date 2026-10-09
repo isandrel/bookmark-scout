@@ -30,6 +30,7 @@ file = "LICENSE.txt"
 [locales]
 default = "en"
 supported = ["en", "ja"]
+extension = ["en", "ja", "zh-CN"]
 
 [locales.names]
 en = "English"
@@ -205,6 +206,14 @@ describe("strict loading", () => {
 		expect(() => parseProjectConfig(PROJECT.replace('default = "en"', 'default = "ko"'))).toThrow(
 			/locales\.default/,
 		);
+	});
+
+	test("accepts region tags and requires the default in the extension languages too", () => {
+		expect(parseProjectConfig(PROJECT).locales.extension).toEqual(["en", "ja", "zh-CN"]);
+		expect(() => parseProjectConfig(PROJECT.replace(`extension = ["en", "ja", "zh-CN"]`, `extension = ["ja", "zh-CN"]`))).toThrow(
+			/locales\.default: "en" is not in locales\.extension/,
+		);
+		expect(() => parseProjectConfig(PROJECT.replace(`"zh-CN"]`, `"zh_CN"]`))).toThrow(/locales\.extension/);
 	});
 
 	test("requires a store and a name for every supported browser", () => {

@@ -32,10 +32,21 @@ const localeNames = Object.fromEntries(
 );
 
 /**
- * A language the extension ships messages for. Types cannot list folders, so a new
- * `_locales/<locale>/` folder also goes here; tests/unit/locale-messages.test.ts fails until it does.
+ * A language the extension ships messages for, named like its `_locales/` folder (`zh_CN`, with
+ * an underscore). Types cannot list folders, so a new folder also goes here, and its language tag
+ * in `config/project.toml` `[locales] extension`; tests/unit/locale-messages.test.ts fails until
+ * both do.
  */
-export type SupportedLocale = 'en' | 'ja' | 'ko';
+export type SupportedLocale =
+  | 'de'
+  | 'en'
+  | 'es'
+  | 'fr'
+  | 'ja'
+  | 'ko'
+  | 'pt_BR'
+  | 'zh_CN'
+  | 'zh_TW';
 
 /** Bundled locales (one per `_locales/` folder) in the order the Language setting lists them. */
 export const SUPPORTED_LOCALES = Object.keys(localeNames) as SupportedLocale[];
@@ -47,6 +58,48 @@ export const FALLBACK_LOCALE: SupportedLocale = 'en';
 export const AUTO_LANGUAGE = 'auto';
 
 export type LanguagePreference = typeof AUTO_LANGUAGE | SupportedLocale;
+
+/**
+ * The standard (BCP 47) tag for a locale folder name: `zh_CN` is `zh-CN`. `Intl` and
+ * `<html lang>` need the tag; `_locales/` and `browser.i18n` use the folder name.
+ */
+export function toLanguageTag(locale: SupportedLocale): string {
+  return locale.replace('_', '-');
+}
+
+/**
+ * Browser languages that belong to a different bundled locale than their own tag suggests:
+ * Chinese scripts and regions. Keys and values are lowercase language tags.
+ */
+const LANGUAGE_ALIASES: Readonly<Record<string, string>> = {
+  zh: 'zh-cn',
+  'zh-hans': 'zh-cn',
+  'zh-sg': 'zh-cn',
+  'zh-hant': 'zh-tw',
+  'zh-hk': 'zh-tw',
+  'zh-mo': 'zh-tw',
+};
+
+/**
+ * The bundled locale that best fits a browser language (`zh-HK`, `pt_PT`, `ja-JP`): the exact
+ * tag, then an alias, then the language with its first subtag, then the language alone, then any
+ * bundled locale of that language. Undefined when none is bundled.
+ */
+export function matchBundledLocale(
+  language: string,
+  locales: readonly SupportedLocale[] = SUPPORTED_LOCALES,
+): SupportedLocale | undefined {
+  const byTag = new Map(locales.map((locale) => [toLanguageTag(locale).toLowerCase(), locale]));
+  const tag = language.toLowerCase().replaceAll('_', '-');
+  const [base, second] = tag.split('-');
+  const prefix = second ? `${base}-${second}` : base;
+  const candidates = [tag, LANGUAGE_ALIASES[tag], prefix, LANGUAGE_ALIASES[prefix], base];
+  for (const candidate of candidates) {
+    const locale = candidate && byTag.get(candidate);
+    if (locale) return locale;
+  }
+  return locales.find((locale) => toLanguageTag(locale).toLowerCase().split('-')[0] === base);
+}
 
 /**
  * Where a locale's messages are served from, relative to the extension root. `browser.runtime.
@@ -99,48 +152,78 @@ function loadLocaleMessages(locale: SupportedLocale): Promise<void> {
 // The language `t()` shows, and the one most recently selected (they differ while it loads).
 let currentLanguage: LanguagePreference = AUTO_LANGUAGE;
 let requestedLanguage: LanguagePreference = AUTO_LANGUAGE;
+// The locale whose loaded messages `t()` reads; undefined when `browser.i18n` serves them.
+let messagesLocale: SupportedLocale | undefined;
+let languageRevision = 0;
 let languageReady: Promise<void> = Promise.resolve();
 const languageListeners = new Set<() => void>();
 
-function applyLanguage(language: LanguagePreference) {
-  if (currentLanguage === language) return;
+function applyLanguage(language: LanguagePreference, locale: SupportedLocale | undefined) {
+  if (currentLanguage === language && messagesLocale === locale) return;
   currentLanguage = language;
+  messagesLocale = locale;
+  languageRevision += 1;
   for (const listener of [...languageListeners]) listener();
 }
 
-/**
- * The bundled locale `browser.i18n.getMessage` shows: the browser UI language (`ja-JP` uses
- * `ja`) when it is bundled, otherwise the manifest's `default_locale`. Undefined outside the
- * extension (unit tests).
- */
-function getBrowserLocale(): SupportedLocale | undefined {
+/** The browser UI language (`zh-HK`), or undefined outside the extension (unit tests). */
+function getUILanguage(): string | undefined {
   try {
-    const uiLanguage = browser.i18n.getUILanguage().toLowerCase().replace('_', '-');
-    return (
-      SUPPORTED_LOCALES.find(
-        (locale) => uiLanguage === locale || uiLanguage.startsWith(`${locale}-`),
-      ) ?? FALLBACK_LOCALE
-    );
+    return browser.i18n.getUILanguage() || undefined;
   } catch {
     return undefined;
   }
 }
 
 /**
+ * The bundled locale that fits the browser UI language (see `matchBundledLocale`), otherwise the
+ * manifest's `default_locale`. Undefined outside the extension (unit tests).
+ */
+function getBrowserLocale(): SupportedLocale | undefined {
+  const uiLanguage = getUILanguage();
+  return uiLanguage === undefined
+    ? undefined
+    : (matchBundledLocale(uiLanguage) ?? FALLBACK_LOCALE);
+}
+
+/**
+ * The locale `browser.i18n.getMessage` serves, by the browser's own rule: the folder named for
+ * the UI language (`zh_TW`), then its language alone (`ja` for `ja-JP`), then `default_locale`.
+ * It has no aliases, so `zh-HK` gets the default here while `getBrowserLocale` picks `zh_TW`.
+ */
+function getServedLocale(): SupportedLocale | undefined {
+  const uiLanguage = getUILanguage();
+  if (uiLanguage === undefined) return undefined;
+  const tag = uiLanguage.toLowerCase().replaceAll('_', '-');
+  const base = tag.split('-')[0];
+  const byTag = (wanted: string) =>
+    SUPPORTED_LOCALES.find((locale) => toLanguageTag(locale).toLowerCase() === wanted);
+  return byTag(tag) ?? byTag(base) ?? FALLBACK_LOCALE;
+}
+
+/** The locale whose messages `t()` must load for a language, or undefined if the browser serves it. */
+function localeToLoad(language: LanguagePreference): SupportedLocale | undefined {
+  const locale = language === AUTO_LANGUAGE ? getBrowserLocale() : language;
+  return locale && locale !== getServedLocale() ? locale : undefined;
+}
+
+/**
  * Select the language. Called by settings storage on load/change. Applies at once when `t()`
- * can already show it ('auto', a loaded locale, or the browser's own locale, which
- * `browser.i18n` serves), otherwise after its messages load; `whenLanguageReady` waits for that.
+ * can already show it (a loaded locale, or the one `browser.i18n` serves), otherwise after its
+ * messages load; `whenLanguageReady` waits for that. 'auto' loads messages too when the browser
+ * language fits a bundled locale the browser itself would not serve (`zh-HK` uses `zh_TW`).
  */
 export function setLanguage(language: LanguagePreference) {
   requestedLanguage = language;
-  if (language === AUTO_LANGUAGE || loadedMessages[language] || language === getBrowserLocale()) {
-    applyLanguage(language);
+  const locale = localeToLoad(language);
+  if (!locale || loadedMessages[locale]) {
+    applyLanguage(language, locale);
     languageReady = Promise.resolve();
     return;
   }
-  languageReady = loadLocaleMessages(language).then(() => {
+  languageReady = loadLocaleMessages(locale).then(() => {
     // A later selection wins over this one.
-    if (requestedLanguage === language) applyLanguage(language);
+    if (requestedLanguage === language) applyLanguage(language, locale);
   });
 }
 
@@ -175,6 +258,18 @@ export function useLanguage(): LanguagePreference {
 }
 
 /**
+ * Counts changes to the messages `t()` shows, re-rendering the component after each. Unlike
+ * `useLanguage`, it also changes when 'auto' starts showing loaded messages (`zh-HK` → `zh_TW`).
+ */
+export function useLanguageRevision(): number {
+  return useSyncExternalStore(subscribeToLanguage, getLanguageRevision, getLanguageRevision);
+}
+
+function getLanguageRevision(): number {
+  return languageRevision;
+}
+
+/**
  * The bundled language actually shown: the explicit setting, or for 'auto' the browser UI
  * language when it is one of the bundled locales, otherwise English.
  */
@@ -185,16 +280,13 @@ export function getResolvedLanguage(): SupportedLocale {
 }
 
 /**
- * Locale for dates and numbers: the selected language, or for 'auto' the browser UI language
- * (undefined outside the extension, which means the runtime default).
+ * Locale for dates and numbers: the selected language's tag (`zh-CN`; `Intl` rejects `zh_CN`),
+ * or for 'auto' the browser UI language (undefined outside the extension, which means the
+ * runtime default).
  */
 export function getFormattingLocale(): string | undefined {
-  if (currentLanguage !== AUTO_LANGUAGE) return currentLanguage;
-  try {
-    return browser.i18n.getUILanguage() || undefined;
-  } catch {
-    return undefined;
-  }
+  if (currentLanguage !== AUTO_LANGUAGE) return toLanguageTag(currentLanguage);
+  return getUILanguage();
 }
 
 /** A byte count in kilobytes with at most one decimal, e.g. "12.5 KB". */
@@ -277,34 +369,30 @@ export function formatBundledMessage(
 }
 
 /**
- * Get localized message.
- * - When language = 'auto': uses browser.i18n.getMessage (follows browser settings)
- * - When specific language: returns from its loaded messages (the browser's own locale is not
- *   loaded; browser.i18n serves it)
+ * A message in the language `t()` shows, or undefined when no locale defines the key. Loaded
+ * messages come first (a selected language, or 'auto' showing a locale the browser does not
+ * serve); otherwise, and for a key a loaded locale lacks, `browser.i18n.getMessage`.
  */
-export function t(key: MessageKey, substitutions?: string | string[]): string {
+function lookupMessage(key: MessageKey, substitutions?: string | string[]): string | undefined {
   try {
-    // Use the loaded messages when a specific language is selected
-    if (currentLanguage !== AUTO_LANGUAGE) {
-      const entry = loadedMessages[currentLanguage]?.[key];
-      if (entry) {
-        return formatBundledMessage(entry, substitutions);
-      }
-      // Fall through to browser.i18n if key not found
-    }
-
-    // Default: use browser.i18n.getMessage (auto-detects from browser)
+    const entry = messagesLocale && loadedMessages[messagesLocale]?.[key];
+    if (entry) return formatBundledMessage(entry, substitutions);
     // WXT types getMessage with the generated key union; keys here are checked against every
     // locale by tests/unit/locale-messages.test.ts instead.
     const message = browser.i18n.getMessage(
       key as Parameters<typeof browser.i18n.getMessage>[0],
       substitutions,
     );
-    return message || key;
+    return message || undefined;
   } catch {
-    // Fallback for non-extension environments (like tests)
-    return key;
+    // Non-extension environments (unit tests) have no browser.i18n.
+    return undefined;
   }
+}
+
+/** Get a localized message, or the key itself when no locale defines it. */
+export function t(key: MessageKey, substitutions?: string | string[]): string {
+  return lookupMessage(key, substitutions) ?? key;
 }
 
 /** A message to show for a caught error: its own message, or the localized fallback. */
@@ -312,11 +400,32 @@ export function getErrorMessage(error: unknown, fallbackKey: MessageKey = 'error
   return error instanceof Error ? error.message : t(fallbackKey);
 }
 
+const pluralRules = new Map<string, Intl.PluralRules>();
+
+/** The CLDR plural category of a count in the language shown: 'one', 'few', 'other', and so on. */
+export function getPluralCategory(count: number): Intl.LDMLPluralRule {
+  const tag = toLanguageTag(getResolvedLanguage());
+  try {
+    let rules = pluralRules.get(tag);
+    if (!rules) {
+      rules = new Intl.PluralRules(tag);
+      pluralRules.set(tag, rules);
+    }
+    return rules.select(count);
+  } catch {
+    return count === 1 ? 'one' : 'other';
+  }
+}
+
 /**
- * Count-aware message lookup. `<key>_one` holds the singular form (identical to `<key>` in
- * locales without grammatical number); the count is always the first substitution.
+ * Count-aware message lookup. `<key>` holds the general ('other') form and `<key>_<category>`
+ * each other form the language needs (`_one` in English; `_one`, `_few`, `_many` in
+ * Russian), picked by `Intl.PluralRules`; a missing form falls back to `<key>`. The count is
+ * always the first substitution.
  */
 export function tPlural(key: MessageKey, count: number, extra: string[] = []): string {
   const substitutions = [String(count), ...extra];
-  return t(count === 1 ? `${key}_one` : key, substitutions);
+  const category = getPluralCategory(count);
+  const form = category === 'other' ? undefined : lookupMessage(`${key}_${category}`, substitutions);
+  return form ?? t(key, substitutions);
 }

@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "title": "Bookmark Scout - Gerenciador de favoritos moderno para o navegador",
+    "description": "Uma extensão de navegador para pesquisar, organizar, limpar, importar/exportar e salvar favoritos, com ferramentas de IA opcionais.",
+    "keywords": [
+      "extensão de navegador",
+      "extensão do Chrome",
+      "complemento do Firefox",
+      "extensão do Edge",
+      "gerenciador de favoritos",
+      "pesquisa de favoritos",
+      "organizador de favoritos",
+      "limpeza de favoritos",
+      "favoritos duplicados",
+      "links quebrados",
+      "ferramentas de IA para favoritos"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "Pesquisa instantânea nos favoritos",
+      "Organização com arrastar e soltar",
+      "Salvamento rápido de favoritos",
+      "Suporte ao painel lateral (Chrome e Edge)",
+      "Pesquisas salvas",
+      "Atalhos de teclado",
+      "Exclusão com opção de desfazer",
+      "Modo escuro",
+      "Gerenciador de favoritos próprio",
+      "Limpeza de duplicatas",
+      "Remoção de parâmetros de rastreamento",
+      "Verificação de links quebrados com correções revisadas",
+      "Importação e exportação de favoritos",
+      "Revisão de privacidade com ocultação opcional antes das exportações",
+      "Ferramentas de IA opcionais para favoritos",
+      "Suporte a vários idiomas"
+    ]
+  },
+  "nav": {
+    "features": "Recursos",
+    "privacy": "Privacidade",
+    "install": "Instalar",
+    "docs": "Documentação",
+    "github": "GitHub",
+    "menu": "Menu",
+    "skip": "Pular para o conteúdo",
+    "languages": "Idioma",
+    "home": "Página inicial do Bookmark Scout"
+  },
+  "footer": {
+    "tagline": "Pesquise, organize e limpe seus favoritos direto no navegador.",
+    "product": "Produto",
+    "project": "Projeto",
+    "contact": "Contato",
+    "legal": "Informações legais",
+    "features": "Recursos",
+    "install": "Instalar",
+    "docs": "Documentação",
+    "releases": "Versões",
+    "github": "Código-fonte",
+    "contributing": "Como contribuir",
+    "license": "Licença ({license})",
+    "support": "Suporte",
+    "privacy": "Privacidade",
+    "security": "Segurança",
+    "contactAddress": "{role}: {address}",
+    "privacyPolicy": "Política de privacidade",
+    "securityTxt": "security.txt",
+    "madeBy": "Feito por {author}. Gratuito e de código aberto.",
+    "helpCenter": "Central de ajuda"
+  },
+  "home": {
+    "hero": {
+      "title": "Todos os favoritos que você salvou, a uma pesquisa de distância.",
+      "description": "O Bookmark Scout é uma extensão para Chrome, Edge e Firefox que pesquisa, organiza e limpa os favoritos que você já tem. Ele funciona no seu navegador, sem conta e sem servidor próprio.",
+      "download": "Baixar do GitHub",
+      "install": "Instalar o Bookmark Scout",
+      "docs": "Ler a documentação",
+      "license": "Gratuito e de código aberto sob a licença {license}.",
+      "demoNote": "Esta demonstração pesquisa uma coleção fictícia de 37 favoritos. A extensão pesquisa os seus, dentro do seu navegador."
+    },
+    "demo": {
+      "label": "Pesquisar na coleção de exemplo",
+      "placeholder": "Pesquisar favoritos",
+      "count": "{count, number} de {total, number} favoritos",
+      "results": "Favoritos correspondentes",
+      "more": "{count, plural, one {# outro resultado não é mostrado} other {# outros resultados não são mostrados}}. Continue digitando para refinar a lista.",
+      "emptyTitle": "Nada corresponde a “{query}”.",
+      "emptyHint": "Tente parte de um título, um site como github ou uma pasta como Receitas. Usar menos letras também ajuda.",
+      "clear": "Limpar pesquisa",
+      "try": "Experimente",
+      "chips": [
+        "receitas",
+        "mdn",
+        "viagem",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "Docs de desenvolvimento",
+        "css": "CSS",
+        "research": "Pesquisa",
+        "recipes": "Receitas",
+        "travel": "Viagem",
+        "japan": "Japão",
+        "reading": "Leitura",
+        "inbox": "Caixa de entrada"
+      }
+    },
+    "tour": {
+      "title": "O que você pode fazer com ele",
+      "lede": "Capturas de tela reais da versão para Chrome. Elas seguem a configuração de tema claro ou escuro do seu sistema.",
+      "tabsLabel": "Tarefas que o Bookmark Scout faz",
+      "firefoxNote": "O Firefox não permite substituir a página de favoritos, então, no Firefox, o gerenciador, com as ferramentas de limpeza, as pesquisas salvas e a importação e exportação, abre por um botão no pop-up da barra de ferramentas.",
+      "find": {
+        "tab": "Encontrar",
+        "heading": "Pesquise pela barra de ferramentas",
+        "caption": "O pop-up da barra de ferramentas: árvore de pastas, pesquisa instantânea e salvamento em qualquer pasta com um clique.",
+        "alt": "Dois pop-ups do Bookmark Scout lado a lado: uma árvore de pastas com as pastas Receitas, Viagem, Pesquisa e Docs de desenvolvimento, e uma pesquisa por docs com os resultados destacados",
+        "points": [
+          "Pesquise em todos os favoritos enquanto digita, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular",
+          "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do Chrome e do Edge",
+          "Salve uma pesquisa como visualização inteligente que sempre mostra resultados atualizados",
+          "Navegue pelas pastas e pelos resultados com o teclado; os atalhos Ctrl e Cmd do navegador continuam funcionando"
+        ]
+      },
+      "organize": {
+        "tab": "Organizar",
+        "heading": "Guarde cada página no lugar certo",
+        "caption": "O gerenciador substitui a página de favoritos do Chrome por uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
+        "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
+        "points": [
+          "Salve a página atual em qualquer pasta com um clique, sem salvá-la duas vezes",
+          "Arraste favoritos e pastas pela árvore de pastas",
+          "Salve links em pastas recentes pelo menu de clique com o botão direito",
+          "Filtre, classifique e redimensione colunas na tabela do gerenciador",
+          "Importe HTML ou JSON depois de uma prévia e exporte para HTML, JSON, Markdown ou CSV"
+        ]
+      },
+      "cleanUp": {
+        "tab": "Limpar",
+        "heading": "Arrume anos de links salvos",
+        "caption": "O Limpador de duplicatas mostra cada grupo e a cópia que será mantida antes de remover qualquer coisa.",
+        "alt": "A caixa de diálogo do Limpador de duplicatas listando dois grupos de favoritos duplicados, cada um com a cópia a manter marcada, acima de um botão Remover duplicatas",
+        "points": [
+          "Revise os grupos de duplicatas e remova as cópias extras",
+          "Remova parâmetros de rastreamento dos URLs depois de uma prévia",
+          "Encontre links quebrados e corrija-os: exclua, use o redirecionamento, aponte para uma cópia arquivada ou edite o URL",
+          "Busque títulos de página e aplique só os que você escolher",
+          "Baixe o ícone de cada site para que os favoritos o mostrem, inclusive no Firefox",
+          "Exclua com confirmação e desfaça em até 10 segundos"
+        ]
+      },
+      "ai": {
+        "tab": "IA (opcional)",
+        "heading": "Use IA com seu próprio provedor, ou não use",
+        "caption": "A IA fica desativada até você ativá-la nas Configurações, escolher um provedor e adicionar sua própria chave de API quando o provedor exigir uma.",
+        "alt": "A guia IA da página de configurações do Bookmark Scout com os recursos de IA desativados e os seletores de provedor e modelo",
+        "points": [
+          "Sugestões de pasta para a página em que você está, incluindo um novo caminho de pastas depois que você o revisar",
+          "Sugestões de tags e resumos curtos que você revisa antes de salvar",
+          "Planos de reorganização de pastas, com prévia antes de qualquer movimentação",
+          "Exporte os favoritos selecionados como contexto em Markdown ou XML para uma conversa com IA; isso funciona sem IA e não envia nada"
+        ],
+        "providersTitle": "Provedores compatíveis",
+        "customProvider": "Qualquer endpoint compatível com OpenAI"
+      }
+    },
+    "privacy": {
+      "title": "Seus favoritos ficam no seu navegador.",
+      "policyLink": "Ler a política de privacidade",
+      "diagram": {
+        "browser": "Seu navegador",
+        "bookmarks": {
+          "name": "Favoritos",
+          "detail": "Pesquisados, movidos e limpos aqui"
+        },
+        "settings": {
+          "name": "Configurações",
+          "detail": "Sincronizadas pela conta do navegador, se a sincronização estiver ativada"
+        },
+        "keys": {
+          "name": "Chaves de API, tags, pesquisas salvas",
+          "detail": "Ficam somente neste dispositivo"
+        },
+        "ai": {
+          "name": "Provedor de IA que você escolher",
+          "detail": "Somente com a IA ativada. O Ollama mantém tudo no seu computador."
+        },
+        "websites": {
+          "name": "Sites que você verifica",
+          "detail": "Verificação de links quebrados, busca de títulos e ícones dos sites, depois que você permitir o acesso"
+        },
+        "server": {
+          "name": "Servidor do Bookmark Scout",
+          "detail": "Não existe. Nada vai para o desenvolvedor."
+        },
+        "legend": "Os caminhos tracejados são opcionais. Eles só são usados quando você usa o recurso correspondente."
+      },
+      "facts": {
+        "noServer": {
+          "title": "Sem conta, sem servidor",
+          "body": "Não há cadastro, e o Bookmark Scout não tem servidor próprio. Seus favoritos são lidos e alterados dentro do seu navegador."
+        },
+        "noTelemetry": {
+          "title": "Sem telemetria",
+          "body": "A extensão não envia nada ao desenvolvedor: sem análises de uso, sem anúncios, sem rastreamento."
+        },
+        "aiOptIn": {
+          "title": "A IA fica desativada até você ativá-la",
+          "body": "Depois disso, as solicitações vão direto do seu navegador para o provedor que você escolheu. Com o Ollama no seu próprio computador, elas ficam nele."
+        },
+        "exports": {
+          "title": "As exportações passam por uma revisão de privacidade",
+          "body": "Antes de baixar um arquivo, uma revisão sinaliza tokens, endereços de e-mail e outros valores confidenciais, e pode ocultá-los na cópia que você salva."
+        }
+      }
+    },
+    "install": {
+      "title": "Instale em poucos passos",
+      "lede": "Escolha seu navegador. Cada versão no GitHub tem um pacote para Chrome, Edge e Firefox.",
+      "tabsLabel": "Navegador",
+      "download": "Baixar do GitHub",
+      "storeComing": "A página do Bookmark Scout na loja ({store}) está sendo preparada. Até que ela seja publicada, instale o pacote do GitHub Releases.",
+      "manual": "Ou instale você mesmo o pacote do GitHub Releases:",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome Web Store",
+        "storeButton": "Usar no Chrome",
+        "steps": {
+          "download": "Baixe <code>bookmark-scout-*-chrome.zip</code> da versão mais recente e extraia o arquivo.",
+          "open": "Abra <code>chrome://extensions</code> e ative o <b>Modo do desenvolvedor</b> no canto superior direito.",
+          "load": "Clique em <b>Carregar sem compactação</b> e selecione a pasta extraída."
+        },
+        "crx": "A versão também inclui um arquivo <code>.crx</code> assinado, que você pode arrastar para a página de extensões."
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Complementos do Microsoft Edge",
+        "storeButton": "Obter para o Edge",
+        "steps": {
+          "download": "Baixe <code>bookmark-scout-*-edge.zip</code> da versão mais recente e extraia o arquivo.",
+          "open": "Abra <code>edge://extensions</code> e ative o <b>Modo de desenvolvedor</b>.",
+          "load": "Clique em <b>Carregar sem pacote</b> e selecione a pasta extraída."
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Firefox Add-ons",
+        "storeButton": "Adicionar ao Firefox",
+        "steps": {
+          "download": "Baixe <code>bookmark-scout-*-firefox.zip</code> da versão mais recente e extraia o arquivo.",
+          "open": "Abra <code>about:debugging#/runtime/this-firefox</code>.",
+          "load": "Clique em <b>Carregar extensão temporária</b> e selecione <code>manifest.json</code> na pasta extraída."
+        },
+        "limits": "O Firefox remove extensões temporárias ao reiniciar, então você precisa carregá-la de novo a cada reinício. No Firefox, o gerenciador e suas ferramentas abrem pelo botão Abrir gerenciador de favoritos no pop-up da barra de ferramentas."
+      }
+    },
+    "faq": {
+      "title": "Perguntas",
+      "items": {
+        "data": {
+          "q": "O Bookmark Scout envia meus favoritos para algum lugar?",
+          "a": "Não. Seus favoritos são lidos e alterados dentro do seu navegador, e a extensão não envia nada ao desenvolvedor. Os dados só saem do navegador quando você usa um recurso opcional: as solicitações de IA vão para o provedor que você escolheu, e o verificador de links quebrados, o buscador de títulos e a atualização de ícones dos sites acessam os sites salvos nos favoritos depois que você permite o acesso aos sites. As configurações são sincronizadas pela conta do navegador, se a sincronização do navegador estiver ativada. A <privacy>política de privacidade</privacy> tem os detalhes."
+        },
+        "needAi": {
+          "q": "Preciso usar IA?",
+          "a": "Não. A pesquisa, a organização, a limpeza e a importação e exportação funcionam sem ela. A IA fica desativada até você ativá-la nas Configurações."
+        },
+        "providers": {
+          "q": "Quais provedores de IA posso usar?",
+          "a": "Você pode usar {providers}. Você adiciona sua própria chave de API quando o provedor exige uma, e o provedor pode cobrar pelo uso."
+        },
+        "changes": {
+          "q": "Ele altera meus favoritos sem perguntar?",
+          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Por padrão, a exclusão pede confirmação, e exclusões e importações podem ser desfeitas por 10 segundos."
+        },
+        "firefox": {
+          "q": "Funciona no Firefox?",
+          "a": "Sim. O Firefox não permite substituir a página de favoritos, então o gerenciador, com as ferramentas de limpeza, a importação e exportação e as pesquisas salvas, abre por um botão no pop-up da barra de ferramentas. Até a página no Firefox Add-ons ficar pronta, o Firefox o carrega como extensão temporária, que é removida quando o Firefox reinicia."
+        },
+        "stores": {
+          "q": "Por que ainda não está nas lojas dos navegadores?",
+          "a": "As páginas na Chrome Web Store, nos Complementos do Microsoft Edge e no Firefox Add-ons estão sendo preparadas, e cada loja analisa a extensão antes de publicá-la. Até lá, instale pelo GitHub Releases."
+        },
+        "free": {
+          "q": "É gratuito?",
+          "a": "Sim. O Bookmark Scout é gratuito e de código aberto sob a licença {license}, sem anúncios e sem plano pago. Se você ativar a IA, seu provedor pode cobrar pelo uso da API."
+        },
+        "help": {
+          "q": "Como consigo ajuda?",
+          "a": "Comece pela <support>página de suporte</support> ou pela <docs>documentação</docs>. Você também pode relatar um problema no <github>GitHub</github> ou enviar um e-mail para <email>{supportEmail}</email>."
+        }
+      }
+    }
+  }
+}

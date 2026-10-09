@@ -75,7 +75,7 @@ Pages are MDX files in `apps/docs/content/docs`, ordered by the `meta.json` file
 
 ## Translations
 
-User-facing extension text lives in `apps/extension/public/_locales/{en,ja,ko}/messages.json`, and website text in `apps/website/messages/{en,ja,ko}.json`. Change all three languages together.
+User-facing extension text lives in `apps/extension/public/_locales/<locale>/messages.json`, and website text in `apps/website/messages/<locale>.json`. Change every language together; the unit tests and the website build check fail when a key is missing. To add a language, follow "Localization" in `apps/extension/AGENTS.md`.
 
 ## Pull requests
 

@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "title": "Bookmark Scout - 现代浏览器书签管理器",
+    "description": "一款浏览器扩展程序，可搜索、整理、清理、导入/导出和保存书签，并提供可选的 AI 工具。",
+    "keywords": [
+      "浏览器扩展程序",
+      "Chrome 扩展程序",
+      "Firefox 附加组件",
+      "Edge 扩展",
+      "书签管理器",
+      "书签搜索",
+      "书签整理",
+      "书签清理",
+      "重复书签",
+      "失效链接",
+      "AI 书签工具"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "即时搜索书签",
+      "拖放整理",
+      "快速保存书签",
+      "支持侧边栏（Chrome 和 Edge）",
+      "已保存的搜索",
+      "键盘快捷键",
+      "删除后可撤消",
+      "深色模式",
+      "自定义书签管理器",
+      "重复书签清理",
+      "跟踪参数清理",
+      "扫描失效链接并审核修复方案",
+      "书签导入和导出",
+      "导出前进行隐私检查，可选择脱敏",
+      "可选的 AI 书签工具",
+      "多语言支持"
+    ]
+  },
+  "nav": {
+    "features": "功能",
+    "privacy": "隐私",
+    "install": "安装",
+    "docs": "文档",
+    "github": "GitHub",
+    "menu": "菜单",
+    "skip": "跳到正文",
+    "languages": "语言",
+    "home": "Bookmark Scout 首页"
+  },
+  "footer": {
+    "tagline": "在浏览器中搜索、整理和清理你的书签。",
+    "product": "产品",
+    "project": "项目",
+    "contact": "联系",
+    "legal": "法律信息",
+    "features": "功能",
+    "install": "安装",
+    "docs": "文档",
+    "releases": "版本发布",
+    "github": "源代码",
+    "contributing": "参与贡献",
+    "license": "许可证（{license}）",
+    "support": "支持",
+    "privacy": "隐私",
+    "security": "安全",
+    "contactAddress": "{role}：{address}",
+    "privacyPolicy": "隐私政策",
+    "securityTxt": "security.txt",
+    "madeBy": "由 {author} 制作。免费且开源。",
+    "helpCenter": "帮助中心"
+  },
+  "home": {
+    "hero": {
+      "title": "你保存过的每个书签，一搜即得。",
+      "description": "Bookmark Scout 是一款适用于 Chrome、Edge 和 Firefox 的浏览器扩展程序，可搜索、整理和清理你已有的书签。它在你的浏览器中运行，无需账号，也没有自己的服务器。",
+      "download": "从 GitHub 下载",
+      "install": "安装 Bookmark Scout",
+      "docs": "阅读文档",
+      "license": "基于 {license} 免费开源。",
+      "demoNote": "此演示搜索的是一个由 37 个虚构书签组成的示例书签库。扩展程序会在你的浏览器中搜索你自己的书签。"
+    },
+    "demo": {
+      "label": "搜索示例书签库",
+      "placeholder": "搜索书签",
+      "count": "{count, number} / {total, number} 个书签",
+      "results": "匹配的书签",
+      "more": "另有 {count, plural, other {# 个匹配项}}未显示。继续输入可缩小范围。",
+      "emptyTitle": "没有与“{query}”匹配的结果。",
+      "emptyHint": "试试标题的一部分、github 之类的网站，或“食谱”之类的文件夹。减少字数也会有帮助。",
+      "clear": "清除搜索",
+      "try": "试试",
+      "chips": [
+        "食谱",
+        "mdn",
+        "旅行",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "开发文档",
+        "css": "CSS",
+        "research": "研究",
+        "recipes": "食谱",
+        "travel": "旅行",
+        "japan": "日本",
+        "reading": "阅读",
+        "inbox": "待整理"
+      }
+    },
+    "tour": {
+      "title": "它能做什么",
+      "lede": "以下均为 Chrome 版本的真实截图，会跟随系统的浅色或深色设置显示。",
+      "tabsLabel": "Bookmark Scout 能完成的工作",
+      "firefoxNote": "Firefox 无法替换其书签页面，因此在 Firefox 中，书签管理器（包括清理工具、已保存的搜索以及导入和导出）需从工具栏弹出窗口中的按钮打开。",
+      "find": {
+        "tab": "查找",
+        "heading": "在工具栏中搜索",
+        "caption": "工具栏弹出窗口：文件夹树、即时搜索，以及一键保存到任意文件夹。",
+        "alt": "两个并排的 Bookmark Scout 弹出窗口：一个显示包含 Recipes、Travel、Research 和 Dev Docs 文件夹的文件夹树，另一个显示对 docs 的搜索，匹配内容已高亮",
+        "points": [
+          "输入时即可搜索所有书签，支持区分大小写、全字匹配和正则表达式",
+          "在 Chrome 和 Edge 中，可在侧边栏中保持打开同样的文件夹树和搜索",
+          "将搜索保存为智能视图，始终显示最新结果",
+          "用键盘在文件夹和结果之间移动；浏览器的 Ctrl 和 Cmd 快捷键照常可用"
+        ]
+      },
+      "organize": {
+        "tab": "整理",
+        "heading": "把网页归档到合适的位置",
+        "caption": "书签管理器以文件夹树、路径导航和可排序的表格取代 Chrome 的书签页面。",
+        "alt": "Bookmark Scout 书签管理器以表格显示 Dev Docs 文件夹，包含类型、文件夹路径、网址、标题和添加日期列，旁边是文件夹树",
+        "points": [
+          "一键将当前网页保存到任意文件夹，不会重复保存",
+          "在文件夹树中拖动书签和文件夹",
+          "通过右键菜单将链接保存到最近使用的文件夹",
+          "在书签管理器的表格中筛选、排序和调整列宽",
+          "预览后导入 HTML 或 JSON，并可导出为 HTML、JSON、Markdown 或 CSV"
+        ]
+      },
+      "cleanUp": {
+        "tab": "清理",
+        "heading": "整理多年积攒的链接",
+        "caption": "重复书签清理会在移除任何内容之前，显示每个重复组及其要保留的副本。",
+        "alt": "重复书签清理对话框列出两组重复书签，每组都标出了要保留的副本，下方是“移除重复项”按钮",
+        "points": [
+          "检查重复组，然后移除多余的副本",
+          "预览后去除网址中的跟踪参数",
+          "找出失效链接并修复：删除、使用重定向地址、指向存档副本或修改网址",
+          "获取网页标题，只应用你选中的标题",
+          "下载每个网站自己的图标，即使在 Firefox 中书签也能显示",
+          "删除前确认，并可在 10 秒内撤消"
+        ]
+      },
+      "ai": {
+        "tab": "AI（可选）",
+        "heading": "用你自己的服务商使用 AI，或完全不用",
+        "caption": "在你于设置中开启 AI、选择服务商，并在服务商需要时添加自己的 API 密钥之前，AI 始终处于关闭状态。",
+        "alt": "Bookmark Scout 设置页面的 AI 标签页，AI 功能处于关闭状态，并显示服务商和模型选择器",
+        "points": [
+          "为你正在浏览的网页建议文件夹，经你确认后还可创建新的文件夹路径",
+          "标签建议和简短摘要，保存前由你审核",
+          "文件夹重组方案，在移动任何内容之前先预览",
+          "将所选书签导出为 Markdown 或 XML 上下文，供 AI 对话使用；无需 AI，也不发送任何内容"
+        ],
+        "providersTitle": "支持的服务商",
+        "customProvider": "任何兼容 OpenAI 的端点"
+      }
+    },
+    "privacy": {
+      "title": "你的书签保留在你的浏览器中。",
+      "policyLink": "阅读隐私政策",
+      "diagram": {
+        "browser": "你的浏览器",
+        "bookmarks": {
+          "name": "书签",
+          "detail": "在这里搜索、移动和清理"
+        },
+        "settings": {
+          "name": "设置",
+          "detail": "开启同步时，通过你的浏览器账号同步"
+        },
+        "keys": {
+          "name": "API 密钥、标签、已保存的搜索",
+          "detail": "仅保存在此设备上"
+        },
+        "ai": {
+          "name": "你选择的 AI 服务商",
+          "detail": "仅在开启 AI 时。使用 Ollama 时数据留在你的电脑上。"
+        },
+        "websites": {
+          "name": "你检查的网站",
+          "detail": "失效链接检查、标题获取和网站图标，需在你允许访问后进行"
+        },
+        "server": {
+          "name": "Bookmark Scout 服务器",
+          "detail": "并不存在。不会向开发者发送任何内容。"
+        },
+        "legend": "虚线路径是可选的，只有在你使用相应功能时才会启用。"
+      },
+      "facts": {
+        "noServer": {
+          "title": "无需账号，没有服务器",
+          "body": "无需注册任何账号，Bookmark Scout 也没有自己的服务器。你的书签在浏览器中读取和修改。"
+        },
+        "noTelemetry": {
+          "title": "没有遥测",
+          "body": "扩展程序不会向开发者发送任何内容：没有分析、没有广告、没有跟踪。"
+        },
+        "aiOptIn": {
+          "title": "在你开启前 AI 始终关闭",
+          "body": "开启后，请求会从你的浏览器直接发送给你选择的服务商。如果在自己的电脑上使用 Ollama，请求不会离开你的电脑。"
+        },
+        "exports": {
+          "title": "导出前进行隐私检查",
+          "body": "文件下载前，检查会标出令牌、电子邮件地址和其他敏感值，并可在你保存的副本中对其做脱敏处理。"
+        }
+      }
+    },
+    "install": {
+      "title": "几步即可安装",
+      "lede": "选择你的浏览器。GitHub 上的每个版本都提供适用于 Chrome、Edge 和 Firefox 的构建包。",
+      "tabsLabel": "浏览器",
+      "download": "从 GitHub 下载",
+      "storeComing": "{store} 上架信息正在准备中。在正式上架之前，请从 GitHub Releases 安装构建包。",
+      "manual": "或者自行从 GitHub Releases 安装构建包：",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome 应用商店",
+        "storeButton": "添加至 Chrome",
+        "steps": {
+          "download": "从最新版本下载 <code>bookmark-scout-*-chrome.zip</code> 并解压。",
+          "open": "打开 <code>chrome://extensions</code>，并开启右上角的<b>开发者模式</b>。",
+          "load": "点击<b>加载已解压的扩展程序</b>，然后选择解压后的文件夹。"
+        },
+        "crx": "该版本还提供已签名的 <code>.crx</code> 文件，你也可以将它拖到扩展程序页面上进行安装。"
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Edge 加载项",
+        "storeButton": "获取 Edge 版",
+        "steps": {
+          "download": "从最新版本下载 <code>bookmark-scout-*-edge.zip</code> 并解压。",
+          "open": "打开 <code>edge://extensions</code>，并开启<b>开发人员模式</b>。",
+          "load": "点击<b>加载解压缩的扩展</b>，然后选择解压后的文件夹。"
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Firefox 附加组件",
+        "storeButton": "添加到 Firefox",
+        "steps": {
+          "download": "从最新版本下载 <code>bookmark-scout-*-firefox.zip</code> 并解压。",
+          "open": "打开 <code>about:debugging#/runtime/this-firefox</code>。",
+          "load": "点击<b>临时载入附加组件</b>，然后选择解压后文件夹中的 <code>manifest.json</code>。"
+        },
+        "limits": "Firefox 重启时会移除临时附加组件，因此每次重启后都需要重新载入。在 Firefox 中，书签管理器及其工具需从工具栏弹出窗口中的“打开书签管理器”按钮打开。"
+      }
+    },
+    "faq": {
+      "title": "常见问题",
+      "items": {
+        "data": {
+          "q": "Bookmark Scout 会把我的书签发送到别处吗？",
+          "a": "不会。你的书签在浏览器中读取和修改，扩展程序不会向开发者发送任何内容。只有在你使用可选功能时，数据才会离开你的浏览器：AI 请求会发送给你选择的服务商；在你允许网站访问后，失效链接检查、标题获取和网站图标刷新会请求已加入书签的网站。如果开启了浏览器同步，设置会通过你的浏览器账号同步。详情请参阅<privacy>隐私政策</privacy>。"
+        },
+        "needAi": {
+          "q": "必须使用 AI 吗？",
+          "a": "不必。搜索、整理、清理以及导入和导出都无需 AI 即可使用。在你于设置中开启之前，AI 始终处于关闭状态。"
+        },
+        "providers": {
+          "q": "可以使用哪些 AI 服务商？",
+          "a": "你可以使用 {providers}。服务商需要 API 密钥时，由你添加自己的密钥；服务商可能会收取使用费用。"
+        },
+        "changes": {
+          "q": "它会不经询问就更改我的书签吗？",
+          "a": "不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审核的内容。删除默认需要确认，删除和导入均可在 10 秒内撤消。"
+        },
+        "firefox": {
+          "q": "它能在 Firefox 中使用吗？",
+          "a": "可以。Firefox 无法替换其书签页面，因此书签管理器（包括清理工具、导入和导出以及已保存的搜索）需从工具栏弹出窗口中的按钮打开。在 Firefox 附加组件上架之前，Firefox 会将其作为临时附加组件载入，Firefox 重启时会将其移除。"
+        },
+        "stores": {
+          "q": "为什么还没有在浏览器应用商店上架？",
+          "a": "Chrome 应用商店、Edge 加载项和 Firefox 附加组件的上架信息正在准备中，而且每个商店都会在扩展程序上架前进行审核。在此之前，请从 GitHub Releases 安装。"
+        },
+        "free": {
+          "q": "它是免费的吗？",
+          "a": "是的。Bookmark Scout 基于 {license} 免费开源，没有广告，也没有付费方案。如果你开启 AI，服务商可能会收取 API 使用费用。"
+        },
+        "help": {
+          "q": "如何获取帮助？",
+          "a": "请先查看<support>支持页面</support>或<docs>文档</docs>。你也可以在 <github>GitHub</github> 上报告问题，或发送电子邮件至 <email>{supportEmail}</email>。"
+        }
+      }
+    }
+  }
+}

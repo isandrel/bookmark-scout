@@ -1,0 +1,4774 @@
+{
+    "extName": {
+        "message": "Bookmark Scout",
+        "description": "Extension name (used in manifest.json)"
+    },
+    "extDescription": {
+        "message": "搜尋、整理及清理書籤：快速搜尋、儲存至資料夾、重複書籤與失效連結工具，以及使用自備金鑰、需自行啟用的 AI 功能。",
+        "description": "Extension description (used in manifest.json)"
+    },
+    "popup_searchPlaceholder": {
+        "message": "搜尋書籤...",
+        "description": "Search input placeholder"
+    },
+    "search_placeholderShort": {
+        "message": "搜尋",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+    },
+    "shortcuts_popupHint": {
+        "message": "快速鍵：$1",
+        "description": "Tooltip on the popup search box; $1 is the list of shortcut hints, each built from shortcuts_hintItem"
+    },
+    "shortcuts_hintItem": {
+        "message": "$1 $2",
+        "description": "One popup shortcut hint: $1 is the key or keys (such as / or ↓ ↑), $2 is what they do (a shortcuts_popupHint* action)"
+    },
+    "shortcuts_popupHintSearch": {
+        "message": "搜尋",
+        "description": "Popup shortcut action: focus the search box"
+    },
+    "shortcuts_popupHintMove": {
+        "message": "在資料夾和書籤之間移動",
+        "description": "Popup shortcut action: move between the visible folders and bookmarks"
+    },
+    "shortcuts_popupHintOpenClose": {
+        "message": "開啟或關閉資料夾",
+        "description": "Popup shortcut action: open or close the focused folder"
+    },
+    "shortcuts_popupHintSave": {
+        "message": "將目前網頁儲存到選取的資料夾",
+        "description": "Popup shortcut action: save the current page into the focused folder"
+    },
+    "shortcuts_popupHintClear": {
+        "message": "清除搜尋",
+        "description": "Popup shortcut action: clear the search"
+    },
+    "shortcuts_popupHintRecent": {
+        "message": "顯示最近的搜尋",
+        "description": "Popup shortcut action: show recent searches"
+    },
+    "shortcuts_title": {
+        "message": "鍵盤快速鍵",
+        "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
+    },
+    "shortcuts_buttonTitle": {
+        "message": "鍵盤快速鍵 (?)",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+    },
+    "shortcuts_pausedWhileTyping": {
+        "message": "在欄位中輸入文字，或對話方塊、選單開啟時，快速鍵會暫停作用。",
+        "description": "Keyboard shortcuts dialog description"
+    },
+    "shortcuts_focusFilter": {
+        "message": "將焦點移至標題篩選器",
+        "description": "Keyboard shortcut description: / focuses the title filter"
+    },
+    "shortcuts_parentFolder": {
+        "message": "前往上層資料夾",
+        "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
+    },
+    "shortcuts_nextPreviousRow": {
+        "message": "移至下一列或上一列",
+        "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_openFolder": {
+        "message": "開啟選取的資料夾",
+        "description": "Keyboard shortcut description: Enter opens the focused folder row"
+    },
+    "shortcuts_showHelp": {
+        "message": "顯示鍵盤快速鍵",
+        "description": "Keyboard shortcut description: ? opens this dialog"
+    },
+    "shortcuts_closeDialog": {
+        "message": "關閉對話方塊或選單",
+        "description": "Keyboard shortcut description: Escape closes dialogs and menus"
+    },
+    "shortcuts_or": {
+        "message": "或",
+        "description": "Separator between alternative keys in the shortcuts dialog"
+    },
+    "popup_newFolder": {
+        "message": "新資料夾",
+        "description": "Default name for new folder"
+    },
+    "action_retry": {
+        "message": "重試",
+        "description": "Retry button text"
+    },
+    "error_generic": {
+        "message": "錯誤",
+        "description": "Error label"
+    },
+    "error_boundaryTitle": {
+        "message": "發生錯誤",
+        "description": "Heading shown when a page crashes"
+    },
+    "error_boundaryFallback": {
+        "message": "發生未預期的錯誤。",
+        "description": "Shown under the crash heading when the error has no message"
+    },
+    "toast_folderCreated": {
+        "message": "已建立資料夾",
+        "description": "Toast title for folder creation success"
+    },
+    "toast_errorCreatingFolder": {
+        "message": "建立資料夾時發生錯誤",
+        "description": "Toast title for folder creation error"
+    },
+    "toast_bookmarkAdded": {
+        "message": "已新增書籤",
+        "description": "Toast title for bookmark addition success"
+    },
+    "toast_errorAddingBookmark": {
+        "message": "新增書籤時發生錯誤",
+        "description": "Toast title for bookmark addition error"
+    },
+    "toast_bookmarkDeleted": {
+        "message": "已刪除書籤",
+        "description": "Toast title for bookmark deletion success"
+    },
+    "toast_errorDeletingBookmark": {
+        "message": "刪除書籤時發生錯誤",
+        "description": "Toast title for bookmark deletion error"
+    },
+    "toast_folderDeleted": {
+        "message": "已刪除資料夾",
+        "description": "Toast title for folder deletion success"
+    },
+    "toast_errorDeletingFolder": {
+        "message": "刪除資料夾時發生錯誤",
+        "description": "Toast title for folder deletion error"
+    },
+    "toast_deleteUndoWindow": {
+        "message": "已刪除「$title$」。可在 $seconds$ 秒內復原。",
+        "description": "Deletion toast description with the undo time limit",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "seconds": {
+                "content": "$2",
+                "example": "10"
+            }
+        }
+    },
+    "toast_deleteRestored": {
+        "message": "已復原刪除",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "已還原「$title$」。",
+        "description": "Toast description after restoring a deletion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "無法復原刪除",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "此刪除操作的復原期限已過。",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "原本的資料夾已不存在，因此無法還原這個項目。",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
+    "toast_itemMoved": {
+        "message": "已移動項目",
+        "description": "Toast title for item move success"
+    },
+    "toast_errorMovingItem": {
+        "message": "移動項目時發生錯誤",
+        "description": "Toast title for item move error"
+    },
+    "popup_addBookmark": {
+        "message": "新增目前網頁",
+        "description": "Add bookmark tooltip"
+    },
+    "popup_addFolder": {
+        "message": "新增資料夾",
+        "description": "Add folder tooltip"
+    },
+    "popup_deleteFolder": {
+        "message": "刪除資料夾",
+        "description": "Delete folder tooltip"
+    },
+    "popup_folderItemCount": {
+        "message": "($1)",
+        "description": "Number of items in a folder, shown after its name in the popup tree"
+    },
+    "popup_deleteBookmark": {
+        "message": "刪除書籤",
+        "description": "Delete bookmark tooltip"
+    },
+    "popup_confirmDeleteBookmark": {
+        "message": "要刪除「$1」嗎？這個書籤將會移除。",
+        "description": "Confirmation before deleting a bookmark; $1 is its title"
+    },
+    "popup_confirmDeleteFolder": {
+        "message": "要刪除「$1」及其所有內容嗎？短時間內可以復原。",
+        "description": "Confirmation before deleting a folder; $1 is its title"
+    },
+    "popup_expandAll": {
+        "message": "全部展開",
+        "description": "Expand all button tooltip"
+    },
+    "popup_collapseAll": {
+        "message": "全部收合",
+        "description": "Collapse all button tooltip"
+    },
+    "popup_openManager": {
+        "message": "開啟書籤管理員",
+        "description": "Popup and side panel button that opens the bookmark manager in a new tab"
+    },
+    "popup_openManagerFailed": {
+        "message": "無法開啟書籤管理員",
+        "description": "Error toast title when the bookmark manager tab could not be opened"
+    },
+    "popup_enterFolderName": {
+        "message": "輸入資料夾名稱...",
+        "description": "New folder input placeholder"
+    },
+    "popup_newFolderNameLabel": {
+        "message": "新資料夾名稱",
+        "description": "Accessible name of the new folder name input"
+    },
+    "state_noBookmarksFound": {
+        "message": "找不到書籤",
+        "description": "Empty state when search has no results"
+    },
+    "state_noBookmarksYet": {
+        "message": "尚無書籤",
+        "description": "Empty state when there are no bookmarks"
+    },
+    "state_tryDifferentSearch": {
+        "message": "請嘗試其他搜尋字詞",
+        "description": "Hint for empty search results"
+    },
+    "action_lightMode": {
+        "message": "淺色模式",
+        "description": "Light mode toggle tooltip"
+    },
+    "action_darkMode": {
+        "message": "深色模式",
+        "description": "Dark mode toggle tooltip"
+    },
+    "settings_title": {
+        "message": "設定",
+        "description": "Settings page title"
+    },
+    "settings_description": {
+        "message": "自訂 Bookmark Scout 的使用方式",
+        "description": "Settings page description"
+    },
+    "settings_searchPlaceholder": {
+        "message": "搜尋設定...",
+        "description": "Settings search placeholder"
+    },
+    "state_loadingSettings": {
+        "message": "正在載入設定...",
+        "description": "Settings loading state"
+    },
+    "state_noSettingsMatch": {
+        "message": "沒有符合搜尋條件的設定。",
+        "description": "Empty settings search result"
+    },
+    "toast_preferencesUpdated": {
+        "message": "偏好設定已更新。",
+        "description": "Toast description for settings save success"
+    },
+    "toast_errorSavingSettings": {
+        "message": "儲存設定時發生錯誤",
+        "description": "Toast title for settings save error"
+    },
+    "toast_settingsReset": {
+        "message": "已重設設定",
+        "description": "Toast title for settings reset success"
+    },
+    "toast_settingsResetDescription": {
+        "message": "所有設定均已還原為預設值。",
+        "description": "Toast description for settings reset success"
+    },
+    "toast_errorResettingSettings": {
+        "message": "重設設定時發生錯誤",
+        "description": "Toast title for settings reset error"
+    },
+    "toast_settingsExported": {
+        "message": "已匯出設定",
+        "description": "Toast title for settings export success"
+    },
+    "toast_settingsExportedDescription": {
+        "message": "設定檔已下載。",
+        "description": "Toast description for settings export success"
+    },
+    "toast_exportFailed": {
+        "message": "匯出失敗",
+        "description": "Toast title for settings export error"
+    },
+    "toast_settingsImported": {
+        "message": "已匯入設定",
+        "description": "Toast title for settings import success"
+    },
+    "toast_settingsImportedDescription": {
+        "message": "已從檔案還原設定。",
+        "description": "Toast description for settings import success"
+    },
+    "toast_importFailed": {
+        "message": "匯入失敗",
+        "description": "Toast title for settings import error"
+    },
+    "error_invalidSettingsFile": {
+        "message": "設定檔無效",
+        "description": "Error message for invalid settings import"
+    },
+    "action_export": {
+        "message": "匯出",
+        "description": "Export button label"
+    },
+    "action_import": {
+        "message": "匯入",
+        "description": "Import button label"
+    },
+    "action_cancel": {
+        "message": "取消",
+        "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "復原",
+        "description": "Undo deletion button label"
+    },
+    "action_applyChanges": {
+        "message": "套用變更",
+        "description": "Apply previewed changes button label"
+    },
+    "action_resetAll": {
+        "message": "全部重設",
+        "description": "Reset all settings button label"
+    },
+    "action_saving": {
+        "message": "正在儲存...",
+        "description": "Saving state button label"
+    },
+    "action_saveChanges": {
+        "message": "儲存變更",
+        "description": "Save changes button label"
+    },
+    "settings_appearance": {
+        "message": "外觀",
+        "description": "Appearance category label"
+    },
+    "settings_appearanceDesc": {
+        "message": "自訂書籤的顯示方式",
+        "description": "Appearance category description"
+    },
+    "settings_search": {
+        "message": "搜尋",
+        "description": "Search category label"
+    },
+    "settings_searchDesc": {
+        "message": "設定搜尋行為",
+        "description": "Search category description"
+    },
+    "settings_behavior": {
+        "message": "行為",
+        "description": "Behavior category label"
+    },
+    "settings_behaviorDesc": {
+        "message": "控制擴充功能的行為",
+        "description": "Behavior category description"
+    },
+    "settings_advanced": {
+        "message": "進階",
+        "description": "Advanced category label"
+    },
+    "settings_advancedDesc": {
+        "message": "進階設定",
+        "description": "Advanced category description"
+    },
+    "settings_language": {
+        "message": "語言",
+        "description": "Language setting label"
+    },
+    "settings_languageDesc": {
+        "message": "選擇擴充功能的語言",
+        "description": "Language setting description"
+    },
+    "settings_languageAuto": {
+        "message": "瀏覽器設定",
+        "description": "Auto language option"
+    },
+    "settings_theme": {
+        "message": "主題",
+        "description": "Theme setting label"
+    },
+    "settings_themeDesc": {
+        "message": "選擇偏好的色彩配置",
+        "description": "Theme setting description"
+    },
+    "settings_themeSystem": {
+        "message": "系統",
+        "description": "System theme option"
+    },
+    "settings_themeLight": {
+        "message": "淺色",
+        "description": "Light theme option"
+    },
+    "settings_themeDark": {
+        "message": "深色",
+        "description": "Dark theme option"
+    },
+    "settings_showFavicons": {
+        "message": "顯示網站圖示",
+        "description": "Show favicons setting label"
+    },
+    "settings_showFaviconsDesc": {
+        "message": "在書籤旁顯示網站圖示",
+        "description": "Show favicons setting description"
+    },
+    "settings_browserIconCache": {
+        "message": "使用瀏覽器的圖示快取",
+        "description": "Setting label: show site icons from the browser's own icon cache (Chrome and Edge)"
+    },
+    "settings_browserIconCacheDesc": {
+        "message": "對於尚未透過「重新整理網站圖示」取得圖示的網站，改為顯示瀏覽器已儲存的圖示。開啟此選項時會要求讀取網站圖示的權限。",
+        "description": "Setting description for the browser icon cache"
+    },
+    "settings_faviconSize": {
+        "message": "網站圖示大小",
+        "description": "Favicon size setting label"
+    },
+    "settings_faviconSizeDesc": {
+        "message": "網站圖示的大小 (像素)",
+        "description": "Favicon size setting description"
+    },
+    "settings_faviconSmall": {
+        "message": "16px (小)",
+        "description": "Small favicon size option"
+    },
+    "settings_faviconMedium": {
+        "message": "24px (中)",
+        "description": "Medium favicon size option"
+    },
+    "settings_faviconLarge": {
+        "message": "32px (大)",
+        "description": "Large favicon size option"
+    },
+    "settings_searchDelay": {
+        "message": "搜尋延遲",
+        "description": "Search delay setting label"
+    },
+    "settings_searchDelayDesc": {
+        "message": "輸入後等待多久才開始搜尋",
+        "description": "Search delay setting description"
+    },
+    "settings_maxResults": {
+        "message": "搜尋結果上限",
+        "description": "Max results setting label"
+    },
+    "settings_maxResultsDesc": {
+        "message": "顯示的結果數量上限",
+        "description": "Max results setting description"
+    },
+    "settings_expandFolders": {
+        "message": "搜尋時展開資料夾",
+        "description": "Expand folders setting label"
+    },
+    "settings_expandFoldersDesc": {
+        "message": "搜尋時自動展開資料夾",
+        "description": "Expand folders setting description"
+    },
+    "settings_searchHistory": {
+        "message": "搜尋記錄",
+        "description": "Search history setting label"
+    },
+    "settings_searchHistoryDesc": {
+        "message": "記住最近的搜尋",
+        "description": "Search history setting description"
+    },
+    "settings_sortOrder": {
+        "message": "排序方式",
+        "description": "Sort order setting label"
+    },
+    "settings_sortOrderDesc": {
+        "message": "書籤的預設排序方式",
+        "description": "Sort order setting description"
+    },
+    "settings_sortDate": {
+        "message": "新增日期",
+        "description": "Date sort option"
+    },
+    "settings_sortAlphabetical": {
+        "message": "依字母順序",
+        "description": "Alphabetical sort option"
+    },
+    "settings_sortFolders": {
+        "message": "資料夾優先",
+        "description": "Folders first sort option"
+    },
+    "settings_groupByFolders": {
+        "message": "依資料夾分組",
+        "description": "Group by folders setting label"
+    },
+    "settings_groupByFoldersDesc": {
+        "message": "在彈出式視窗和側邊面板中，將子資料夾列在書籤之前；排序方式會套用在各組內",
+        "description": "Group by folders setting description"
+    },
+    "settings_confirmDelete": {
+        "message": "刪除前確認",
+        "description": "Confirm delete setting label"
+    },
+    "settings_confirmDeleteDesc": {
+        "message": "刪除前顯示確認對話方塊",
+        "description": "Confirm delete setting description"
+    },
+    "settings_defaultFolderName": {
+        "message": "預設資料夾名稱",
+        "description": "Default folder name setting label"
+    },
+    "settings_defaultFolderNameDesc": {
+        "message": "新資料夾的預設名稱",
+        "description": "Default folder name setting description"
+    },
+    "settings_popupWidth": {
+        "message": "彈出式視窗寬度",
+        "description": "Popup width setting label"
+    },
+    "settings_popupWidthDesc": {
+        "message": "彈出式視窗的寬度 (瀏覽器最多允許 800 px)",
+        "description": "Popup width setting description"
+    },
+    "settings_popupHeight": {
+        "message": "彈出式視窗高度",
+        "description": "Popup height setting label"
+    },
+    "settings_popupHeightDesc": {
+        "message": "彈出式視窗的高度 (瀏覽器最多允許 600 px)",
+        "description": "Popup height setting description"
+    },
+    "settings_truncateLength": {
+        "message": "截斷長度",
+        "description": "Truncate length setting label"
+    },
+    "settings_truncateLengthDesc": {
+        "message": "文字截斷前的字元數上限",
+        "description": "Truncate length setting description"
+    },
+    "settings_toastDuration": {
+        "message": "通知顯示時間",
+        "description": "Toast duration setting label"
+    },
+    "settings_toastDurationDesc": {
+        "message": "通知自動關閉前的顯示時間",
+        "description": "Description for toast duration setting"
+    },
+    "settings_results": {
+        "message": "$1 筆結果",
+        "description": "Results count option"
+    },
+    "settings_ai": {
+        "message": "AI",
+        "description": "AI category label"
+    },
+    "settings_aiDesc": {
+        "message": "由 AI 推薦資料夾",
+        "description": "AI category description"
+    },
+    "settings_aiAutoTrigger": {
+        "message": "開啟時自動推薦",
+        "description": "AI auto trigger label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "開啟彈出式視窗時自動執行書籤推薦",
+        "description": "AI auto trigger description"
+    },
+    "settings_recentFoldersMax": {
+        "message": "最近使用的資料夾上限",
+        "description": "Recent folders max setting label"
+    },
+    "settings_recentFoldersMaxDesc": {
+        "message": "可快速選取的最近使用資料夾數量上限",
+        "description": "Recent folders max setting description"
+    },
+    "popup_recentFolders": {
+        "message": "最近使用",
+        "description": "Recent folders panel title"
+    },
+    "popup_addToFolderTitle": {
+        "message": "新增至「$folder$」",
+        "description": "Tooltip and accessible name for a recent folder chip that saves the current page into that folder",
+        "placeholders": {
+            "folder": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "popup_hintLabel": {
+        "message": "鍵盤快速鍵",
+        "description": "Accessible name of the popup footer that lists keyboard shortcuts"
+    },
+    "popup_hintSearch": {
+        "message": "搜尋",
+        "description": "Popup footer: the / key focuses search"
+    },
+    "popup_hintMove": {
+        "message": "移動",
+        "description": "Popup footer: arrow up and down move between rows"
+    },
+    "popup_hintExpand": {
+        "message": "資料夾",
+        "description": "Popup footer: arrow left and right close or open a folder"
+    },
+    "popup_hintEnter": {
+        "message": "開啟",
+        "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "state_noRecentFolders": {
+        "message": "沒有最近使用的資料夾",
+        "description": "Empty state for recent folders"
+    },
+    "settings_recentFoldersEnabled": {
+        "message": "最近使用的資料夾",
+        "description": "Recent folders enabled setting label"
+    },
+    "settings_recentFoldersEnabledDesc": {
+        "message": "顯示最近使用的資料夾面板，以便快速儲存書籤",
+        "description": "Recent folders enabled setting description"
+    },
+    "toast_cannotGetCurrentPage": {
+        "message": "無法取得目前網頁",
+        "description": "Toast title when tab info unavailable"
+    },
+    "toast_pleaseOpenWebpage": {
+        "message": "請先開啟網頁",
+        "description": "Toast description when tab info unavailable"
+    },
+    "toast_apiKeyRequired": {
+        "message": "需要 API 金鑰",
+        "description": "Toast title when API key missing"
+    },
+    "toast_apiKeyRequiredDesc": {
+        "message": "請在「設定」→「AI」中設定 API 金鑰",
+        "description": "Toast description when API key missing"
+    },
+    "ai_recommendationFailed": {
+        "message": "AI 推薦失敗",
+        "description": "Toast title when AI fails"
+    },
+    "ai_errorNoObject": {
+        "message": "AI 的回應格式不符預期。請再試一次，或改用其他模型。",
+        "description": "AI error: the provider's answer did not match the expected structured format"
+    },
+    "ai_errorRetriesExhausted": {
+        "message": "嘗試 $1 次後放棄。$2",
+        "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorProviderDetail": {
+        "message": "$1 供應商回應：「$2」",
+        "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
+    },
+    "ai_errorRequestFailed": {
+        "message": "AI 要求失敗。請再試一次，或在「選項」中檢查服務設定。",
+        "description": "AI error with no more specific explanation"
+    },
+    "error_unknown": {
+        "message": "不明錯誤",
+        "description": "Generic error message"
+    },
+    "ai_suggestionsFor": {
+        "message": "AI 建議：",
+        "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "確認新資料夾",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "儲存前請確認資料夾路徑和目前網頁。核准之前不會做任何變更。",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "資料夾路徑",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_newFolderPathNew": {
+        "message": "新",
+        "description": "Badge after a folder in the reviewed path that does not exist yet and will be created"
+    },
+    "ai_currentPageLabel": {
+        "message": "目前網頁",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "建立資料夾並儲存",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "正在儲存...",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "已儲存書籤",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "已建立或沿用「$1」，並儲存目前網頁。",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "書籤已存在",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "目前網頁已存在於「$1」中，因此沒有重複新增。",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "無法儲存推薦結果",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "未新增任何書籤。請檢查資料夾路徑後再試一次。",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "路徑與現有的書籤「$1」名稱衝突。未新增任何書籤。",
+        "description": "Path conflict description for AI new-folder creation"
+    },
+    "popup_newBookmark": {
+        "message": "新書籤",
+        "description": "Default name for new bookmark"
+    },
+    "toast_bookmarkAddedToFolder": {
+        "message": "已將「$1」新增至「$2」",
+        "description": "Toast description for bookmark added"
+    },
+    "toast_folderAddedIn": {
+        "message": "已在「$2」中新增資料夾「$1」",
+        "description": "Toast description for folder created"
+    },
+    "toast_itemRemoved": {
+        "message": "已移除「$1」",
+        "description": "Toast description for item deleted"
+    },
+    "popup_untitled": {
+        "message": "未命名",
+        "description": "Default name for untitled items"
+    },
+    "error_failedToLoadBookmarks": {
+        "message": "無法載入書籤",
+        "description": "Error message for bookmark loading failure"
+    },
+    "tools_title": {
+        "message": "工具",
+        "description": "Tools panel title"
+    },
+    "tools_checkDeadLinks": {
+        "message": "檢查失效連結",
+        "description": "Dead link checker tool title"
+    },
+    "tools_checkDeadLinksDesc": {
+        "message": "掃描書籤中無效或無法連線的網址",
+        "description": "Dead link checker description"
+    },
+    "tools_aiReorganize": {
+        "message": "AI 資料夾重組",
+        "description": "AI reorganization tool title"
+    },
+    "tools_aiReorganizeDesc": {
+        "message": "讓 AI 建議更好的資料夾結構",
+        "description": "AI reorganization description"
+    },
+    "tools_statistics": {
+        "message": "書籤統計",
+        "description": "Statistics tool title"
+    },
+    "tools_statisticsDesc": {
+        "message": "查看書籤收藏的統計資料",
+        "description": "Statistics tool description"
+    },
+    "action_scan": {
+        "message": "掃描",
+        "description": "Scan button label"
+    },
+    "action_analyze": {
+        "message": "分析",
+        "description": "Analyze button label"
+    },
+    "action_view": {
+        "message": "查看",
+        "description": "View button label"
+    },
+    "table_toggleColumns": {
+        "message": "自訂欄位",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "自訂表格檢視",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "將「$1」左移",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "將「$1」右移",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "重設檢視",
+        "description": "Reset bookmark table view button label"
+    },
+    "table_filterTitles": {
+        "message": "篩選標題...",
+        "description": "Bookmark table title filter placeholder"
+    },
+    "table_filterUrls": {
+        "message": "篩選網址...",
+        "description": "Bookmark table URL filter placeholder"
+    },
+    "table_currentFolderOnly": {
+        "message": "僅限目前資料夾",
+        "description": "Checkbox label limiting table filters to the current folder"
+    },
+    "table_currentFolderOnlyHelp": {
+        "message": "取消勾選時，篩選器會搜尋所有書籤。",
+        "description": "Help text for the current-folder-only filter checkbox"
+    },
+    "table_resetFilters": {
+        "message": "重設",
+        "description": "Button that clears bookmark table filters"
+    },
+    "table_noResults": {
+        "message": "沒有結果。",
+        "description": "Empty bookmark table message"
+    },
+    "table_rowsSelected": {
+        "message": "已選取 $1 列 (共 $2 列)。",
+        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
+    },
+    "table_rowsPerPage": {
+        "message": "每頁列數",
+        "description": "Bookmark table page size label"
+    },
+    "table_pageOf": {
+        "message": "第 $1 頁，共 $2 頁",
+        "description": "Bookmark table page indicator; $1 current page, $2 page count"
+    },
+    "table_firstPage": {
+        "message": "前往第一頁",
+        "description": "Accessible label for the first page button"
+    },
+    "table_previousPage": {
+        "message": "前往上一頁",
+        "description": "Accessible label for the previous page button"
+    },
+    "table_nextPage": {
+        "message": "前往下一頁",
+        "description": "Accessible label for the next page button"
+    },
+    "table_lastPage": {
+        "message": "前往最後一頁",
+        "description": "Accessible label for the last page button"
+    },
+    "table_selectAll": {
+        "message": "全選",
+        "description": "Accessible label for the select-all rows checkbox"
+    },
+    "table_selectRow": {
+        "message": "選取「$1」",
+        "description": "Row selection checkbox label; $1 is the item title"
+    },
+    "table_sortAsc": {
+        "message": "遞增",
+        "description": "Column header menu item for ascending sort"
+    },
+    "table_sortDesc": {
+        "message": "遞減",
+        "description": "Column header menu item for descending sort"
+    },
+    "table_hideColumn": {
+        "message": "隱藏",
+        "description": "Column header menu item that hides the column"
+    },
+    "table_columnType": {
+        "message": "類型",
+        "description": "Bookmark table column header"
+    },
+    "table_columnId": {
+        "message": "ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnParentId": {
+        "message": "上層 ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUrl": {
+        "message": "網址",
+        "description": "Bookmark table column header"
+    },
+    "table_columnTitle": {
+        "message": "標題",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateAdded": {
+        "message": "新增日期",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateGroupModified": {
+        "message": "資料夾修改日期",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUnmodifiable": {
+        "message": "不可修改",
+        "description": "Bookmark table column header"
+    },
+    "table_typeFolder": {
+        "message": "資料夾",
+        "description": "Bookmark item type label"
+    },
+    "table_typeLink": {
+        "message": "連結",
+        "description": "Bookmark item type label"
+    },
+    "table_openMenu": {
+        "message": "開啟選單",
+        "description": "Accessible label for the bookmark row actions menu"
+    },
+    "table_actions": {
+        "message": "動作",
+        "description": "Bookmark row actions menu heading"
+    },
+    "table_copyId": {
+        "message": "複製書籤 ID",
+        "description": "Bookmark row action that copies the bookmark ID"
+    },
+    "table_edit": {
+        "message": "編輯",
+        "description": "Bookmark row action that edits the item"
+    },
+    "table_openInNewTab": {
+        "message": "在新分頁中開啟",
+        "description": "Bookmark row action that opens a link in a new tab"
+    },
+    "table_moveTop": {
+        "message": "移至最上方",
+        "description": "Accessible label for moving a bookmark to the top of its folder"
+    },
+    "table_moveUp": {
+        "message": "上移",
+        "description": "Accessible label for moving a bookmark up"
+    },
+    "table_moveDown": {
+        "message": "下移",
+        "description": "Accessible label for moving a bookmark down"
+    },
+    "table_moveBottom": {
+        "message": "移至最下方",
+        "description": "Accessible label for moving a bookmark to the bottom of its folder"
+    },
+    "bookmarks_showFolders": {
+        "message": "顯示資料夾",
+        "description": "Bookmark manager button that shows the folder sidebar"
+    },
+    "bookmarks_hideFolders": {
+        "message": "隱藏資料夾",
+        "description": "Bookmark manager button that hides the folder sidebar"
+    },
+    "bookmarks_showTools": {
+        "message": "顯示工具",
+        "description": "Bookmark manager button that shows the tools sidebar"
+    },
+    "bookmarks_hideTools": {
+        "message": "隱藏工具",
+        "description": "Bookmark manager button that hides the tools sidebar"
+    },
+    "bookmarks_editBookmark": {
+        "message": "編輯書籤",
+        "description": "Edit dialog title for a link"
+    },
+    "bookmarks_editFolder": {
+        "message": "編輯資料夾",
+        "description": "Edit dialog title for a folder"
+    },
+    "bookmarks_editDescription": {
+        "message": "變更這個項目的名稱或網址。",
+        "description": "Edit dialog description"
+    },
+    "bookmarks_editName": {
+        "message": "名稱",
+        "description": "Edit dialog name field label"
+    },
+    "bookmarks_editUrl": {
+        "message": "網址",
+        "description": "Edit dialog URL field label"
+    },
+    "bookmarks_editSave": {
+        "message": "儲存",
+        "description": "Edit dialog save button"
+    },
+    "bookmarks_editSaved": {
+        "message": "已儲存變更",
+        "description": "Toast shown after an edit is saved"
+    },
+    "bookmarks_editFailed": {
+        "message": "無法儲存變更",
+        "description": "Toast shown when an edit fails"
+    },
+    "bookmarks_editUrlRequired": {
+        "message": "請輸入網址。",
+        "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_editUrlInvalid": {
+        "message": "請輸入包含通訊協定的完整網址，例如 https://example.com/。",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "請輸入資料夾名稱。",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
+    "bookmarks_openFailed": {
+        "message": "無法開啟書籤",
+        "description": "Toast shown when a bookmark cannot be opened"
+    },
+    "bookmarks_root": {
+        "message": "書籤",
+        "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_folderPath": {
+        "message": "資料夾路徑",
+        "description": "Column showing the containing folder path"
+    },
+    "bookmarks_loading": {
+        "message": "正在載入書籤...",
+        "description": "Loading message for bookmarks page"
+    },
+    "bookmarks_viewDetails": {
+        "message": "查看詳細資料",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "書籤詳細資料",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "查看完整的書籤資訊和可用的動作。",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "名稱",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "網址",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "資料夾路徑",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "新增日期",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "修改日期",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "書籤 ID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "無法取得",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "無法取得資料夾路徑",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "正在載入路徑...",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "複製網址",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "複製 ID",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "開啟連結",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "開啟資料夾",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "已複製。",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "無法複製。",
+        "description": "Error after bookmark detail copying fails"
+    },
+    "bookmarks_metadataTitle": {
+        "message": "標籤和摘要",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "儲存在擴充功能的本機資料中；啟用時會包含在匯出的 AI 脈絡中。",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "標籤",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "研究, 工具, 閱讀",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "使用半形逗號分隔標籤。儲存時會移除重複的標籤。",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "摘要",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "為這個書籤加上私人備註或摘要",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "儲存中繼資料",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "清除中繼資料",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "已儲存中繼資料。",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "已清除中繼資料。",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "無法載入已儲存的中繼資料。",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "無法儲存中繼資料。",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "儲存建議的標籤",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "儲存建議的摘要",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "已依照合併設定儲存經過確認的標籤建議。",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "已依照合併設定儲存經過確認的摘要建議。",
+        "description": "Toast description after applying generated summaries"
+    },
+    "bookmarks_metadataPartlySaved": {
+        "message": "部分建議未儲存",
+        "description": "Toast title when some reviewed AI suggestions were not saved because their bookmark changed"
+    },
+    "bookmarks_metadataPartlySavedDesc": {
+        "message": "已儲存：$1。因掃描後書籤已刪除或網址已變更而略過：$2。",
+        "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
+    },
+    "tools_category_ai": {
+        "message": "AI 與智慧功能",
+        "description": "AI tools category"
+    },
+    "tools_category_maintenance": {
+        "message": "維護",
+        "description": "Maintenance tools category"
+    },
+    "tools_category_metadata": {
+        "message": "中繼資料與內容",
+        "description": "Metadata tools category"
+    },
+    "tools_category_security": {
+        "message": "安全性",
+        "description": "Security tools category"
+    },
+    "tools_category_analytics": {
+        "message": "分析",
+        "description": "Tools section heading for analytics tools"
+    },
+    "tools_exportAI": {
+        "message": "AI 脈絡打包工具",
+        "description": "Title for AI Export tool"
+    },
+    "tools_exportAIDesc": {
+        "message": "以適合 AI 讀取的格式 (XML/Markdown) 匯出書籤",
+        "description": "Description for AI Export tool"
+    },
+    "tools_autoTagging": {
+        "message": "自動加上標籤",
+        "description": "Title for Auto-Tagging tool"
+    },
+    "tools_autoTaggingDesc": {
+        "message": "自動為書籤建議標籤",
+        "description": "Description for Auto-Tagging tool"
+    },
+    "tools_summarizer": {
+        "message": "內容摘要工具",
+        "description": "Title for Summarizer tool"
+    },
+    "tools_summarizerDesc": {
+        "message": "為書籤內容產生簡短摘要",
+        "description": "Description for Summarizer tool"
+    },
+    "tools_findDuplicates": {
+        "message": "重複書籤清理工具",
+        "description": "Title for Duplicate Cleaner tool"
+    },
+    "tools_findDuplicatesDesc": {
+        "message": "找出並移除重複的書籤",
+        "description": "Description for Duplicate Cleaner tool"
+    },
+    "tools_cleanUrls": {
+        "message": "網址清理工具",
+        "description": "Title for URL Cleaner tool"
+    },
+    "tools_cleanUrlsDesc": {
+        "message": "移除網址中的追蹤參數",
+        "description": "Description for URL Cleaner tool"
+    },
+    "tools_metadataFetcher": {
+        "message": "中繼資料擷取工具",
+        "description": "Title for Metadata Fetcher tool"
+    },
+    "tools_metadataFetcherDesc": {
+        "message": "建議網頁標題，並套用經過核准的項目",
+        "description": "Metadata fetcher tool description"
+    },
+    "tools_privacyScanner": {
+        "message": "隱私掃描工具",
+        "description": "Title for Privacy Scanner tool"
+    },
+    "tools_privacyScannerDesc": {
+        "message": "偵測網址中的敏感資料",
+        "description": "Description for Privacy Scanner tool"
+    },
+    "tools_category_data": {
+        "message": "資料",
+        "description": "Data tools category for import/export"
+    },
+    "tools_export": {
+        "message": "匯出書籤",
+        "description": "Export bookmarks tool title"
+    },
+    "tools_exportDesc": {
+        "message": "將書籤匯出為 HTML、JSON、Markdown 或 CSV",
+        "description": "Export bookmarks tool description"
+    },
+    "tools_import": {
+        "message": "匯入書籤",
+        "description": "Import bookmarks tool title"
+    },
+    "tools_importDesc": {
+        "message": "從 HTML 或 JSON 檔案匯入書籤",
+        "description": "Import bookmarks tool description"
+    },
+    "tools_exportFormat": {
+        "message": "格式",
+        "description": "Placeholder for the export format selector"
+    },
+    "tools_exporting": {
+        "message": "正在匯出...",
+        "description": "Export button label while exporting"
+    },
+    "tools_importing": {
+        "message": "正在匯入...",
+        "description": "Import button label while importing"
+    },
+    "tools_scopeSelect": {
+        "message": "選取範圍",
+        "description": "Placeholder for a tool scope selector"
+    },
+    "tools_running": {
+        "message": "執行中...",
+        "description": "Tool button label while the tool runs"
+    },
+    "toast_exportSuccess": {
+        "message": "匯出完成",
+        "description": "Toast title for successful bookmark export"
+    },
+    "toast_exportSuccessDesc": {
+        "message": "已將 $count$ 個書籤匯出為 $format$",
+        "description": "Toast description for successful bookmark export",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "format": {
+                "content": "$2",
+                "example": "JSON"
+            }
+        }
+    },
+    "toast_nothingToExport": {
+        "message": "沒有可匯出的內容",
+        "description": "Toast title when an export scope has no bookmarks, so no file is saved"
+    },
+    "toast_nothingToExportDesc": {
+        "message": "這個範圍內沒有書籤，因此未儲存任何檔案。",
+        "description": "Toast description when an export scope has no bookmarks"
+    },
+    "toast_importSuccess": {
+        "message": "匯入完成",
+        "description": "Toast title for successful bookmark import"
+    },
+    "toast_importSuccessDesc": {
+        "message": "已成功匯入 $count$ 個項目",
+        "description": "Toast description for successful bookmark import",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "toast_reorganizeSuccess": {
+        "message": "重組完成",
+        "description": "Toast title after applying an AI reorganization"
+    },
+    "toast_reorganizeAppliedDesc": {
+        "message": "已移動：$1。新資料夾：$2。",
+        "description": "Toast description after applying an AI reorganization: bookmarks moved ($1) and new folders created ($2)"
+    },
+    "toast_reorganizePartial": {
+        "message": "部分移動未套用",
+        "description": "Toast title when some reorganization moves were skipped or failed"
+    },
+    "toast_reorganizePartialDesc": {
+        "message": "已移動：$1。新資料夾：$2。因預覽後有變更而略過：$3。失敗：$4。",
+        "description": "Partial reorganization outcome: moved ($1), new folders ($2), skipped because the bookmark changed after the preview ($3), failed ($4)"
+    },
+    "toast_reorganizeUndone": {
+        "message": "已復原重組",
+        "description": "Toast title after undoing an AI reorganization"
+    },
+    "toast_reorganizeUndoPartial": {
+        "message": "部分移動未復原",
+        "description": "Toast title when undoing an AI reorganization could not move every bookmark back"
+    },
+    "toast_reorganizeUndoneDesc": {
+        "message": "已移回：$1。無法移回：$2。",
+        "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
+    },
+    "error_importFailed": {
+        "message": "匯入失敗：$1",
+        "description": "Error message for failed bookmark import"
+    },
+    "error_unsupportedFileFormat": {
+        "message": "不支援的檔案格式",
+        "description": "Import error for an unrecognized file type"
+    },
+    "export_formatHtml": {
+        "message": "HTML (Chrome)",
+        "description": "Export format name for HTML/Chrome format"
+    },
+    "export_formatJson": {
+        "message": "JSON",
+        "description": "Export format name for JSON format"
+    },
+    "export_formatMarkdown": {
+        "message": "Markdown",
+        "description": "Export format name for Markdown format"
+    },
+    "export_formatCsv": {
+        "message": "CSV",
+        "description": "Export format name for CSV format"
+    },
+    "export_htmlTitle": {
+        "message": "書籤",
+        "description": "Title in exported HTML bookmark file"
+    },
+    "export_csvTitle": {
+        "message": "標題",
+        "description": "CSV header for bookmark title column"
+    },
+    "export_csvUrl": {
+        "message": "網址",
+        "description": "CSV header for bookmark URL column"
+    },
+    "export_csvFolder": {
+        "message": "資料夾",
+        "description": "CSV header for bookmark folder column"
+    },
+    "export_csvDateAdded": {
+        "message": "新增日期",
+        "description": "CSV header for bookmark date added column"
+    },
+    "ai_reorganizationDesc": {
+        "message": "套用前請確認建議的變更。在核准之前不會做任何變更。",
+        "description": "Description for AI reorganization dialog"
+    },
+    "ai_analyzing": {
+        "message": "正在分析書籤...",
+        "description": "Loading text while AI analyzes bookmarks"
+    },
+    "ai_noChangesNeeded": {
+        "message": "書籤已經整理得很好了！",
+        "description": "Message when no reorganization is needed"
+    },
+    "ai_applying": {
+        "message": "正在套用...",
+        "description": "Button text while applying changes"
+    },
+    "ai_applyChanges": {
+        "message": "套用變更",
+        "description": "Button text to apply reorganization changes"
+    },
+    "ai_reorgAnalyzeFailed": {
+        "message": "無法分析書籤",
+        "description": "Reorganization error when analysis fails without details"
+    },
+    "ai_reorgMoves": {
+        "message": "書籤移動：$count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "8"
+            }
+        }
+    },
+    "ai_reorgNewFolders": {
+        "message": "新資料夾：$1",
+        "description": "Reorganization summary badge: how many folders applying the plan creates"
+    },
+    "ai_reorgViewOperations": {
+        "message": "查看操作 ($count$)",
+        "description": "Toggle for the reorganization operation list",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ai_reorgOp_move": {
+        "message": "移動",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgNewFolder": {
+        "message": "新資料夾",
+        "description": "Badge on a reorganization move whose target folder is created when the plan is applied"
+    },
+    "ai_reorgIssueChanged": {
+        "message": "$1：預覽後已變更，保留在原處",
+        "description": "A reorganization move skipped because its bookmark was moved, edited, or deleted after the preview ($1 is its title)"
+    },
+    "ai_reorgIssueFailed": {
+        "message": "$1：無法移動",
+        "description": "A reorganization move the browser rejected ($1 is the bookmark title)"
+    },
+    "ai_reorgFrom": {
+        "message": "來源：",
+        "description": "Source folder label for a bookmark move"
+    },
+    "ai_reorgTo": {
+        "message": "目的地：",
+        "description": "Destination folder label for a bookmark move"
+    },
+    "ai_reorgDebugToggle": {
+        "message": "查看 AI 要求和回應",
+        "description": "Toggle for AI request debug details"
+    },
+    "ai_reorgSystemPrompt": {
+        "message": "系統提示詞：",
+        "description": "AI debug section label"
+    },
+    "ai_reorgRequestData": {
+        "message": "要求資料：",
+        "description": "AI debug section label"
+    },
+    "ai_reorgResponse": {
+        "message": "AI 回應：",
+        "description": "AI debug section label"
+    },
+    "ai_promptFolderRecommendationDesc": {
+        "message": "為新書籤建議最適合的資料夾",
+        "description": "Description for folder recommendation prompt"
+    },
+    "ai_promptFolderReorganizationDesc": {
+        "message": "分析並重組書籤資料夾",
+        "description": "Description for folder reorganization prompt"
+    },
+    "ai_promptAutoTaggingDesc": {
+        "message": "根據內容為書籤建議標籤",
+        "description": "Description for auto tagging prompt"
+    },
+    "ai_promptSummarizationDesc": {
+        "message": "為書籤產生簡短說明",
+        "description": "Description for summarization prompt"
+    },
+    "contextMenu_saveToFolder": {
+        "message": "將書籤儲存至...",
+        "description": "Root context menu item title"
+    },
+    "contextMenu_noFolders": {
+        "message": "沒有可用的資料夾",
+        "description": "Placeholder when no folders to show"
+    },
+    "contextMenu_bookmarksBar": {
+        "message": "書籤列",
+        "description": "Bookmarks bar folder name"
+    },
+    "toast_linkSaved": {
+        "message": "已儲存連結",
+        "description": "Toast title when link saved via context menu"
+    },
+    "toast_linkSavedDesc": {
+        "message": "已將「$1」新增至「$2」",
+        "description": "Toast description for link saved"
+    },
+    "toast_linkSaveFailed": {
+        "message": "無法儲存連結",
+        "description": "Toast title when link save fails"
+    },
+    "settings_contextMenuEnabled": {
+        "message": "右鍵選單",
+        "description": "Context menu enabled setting label"
+    },
+    "settings_contextMenuEnabledDesc": {
+        "message": "在連結的右鍵選單中加入「將書籤儲存至...」。預設為關閉，需自行開啟。",
+        "description": "Context menu enabled setting description"
+    },
+    "settings_contextMenuNaming": {
+        "message": "書籤名稱來源",
+        "description": "Context menu bookmark naming setting label"
+    },
+    "settings_contextMenuNamingDesc": {
+        "message": "透過右鍵選單儲存時，要用什麼作為書籤標題。「連結文字」在 Firefox 中使用連結的文字，在 Chrome 中則使用選取的文字；若都沒有，則使用網頁標題。",
+        "description": "Context menu bookmark naming setting description"
+    },
+    "settings_namingLinkText": {
+        "message": "連結文字",
+        "description": "Use link text for bookmark name"
+    },
+    "settings_namingPageTitle": {
+        "message": "網頁標題",
+        "description": "Use page title for bookmark name"
+    },
+    "settings_namingLinkUrl": {
+        "message": "連結網址",
+        "description": "Use link URL for bookmark name"
+    },
+    "search_matchCase": {
+        "message": "大小寫須相符",
+        "description": "Toggle case-sensitive search"
+    },
+    "search_matchWholeWord": {
+        "message": "全字拼寫須相符",
+        "description": "Toggle whole word matching"
+    },
+    "search_useRegex": {
+        "message": "使用規則運算式",
+        "description": "Toggle regex search mode"
+    },
+    "search_recentSearches": {
+        "message": "最近的搜尋",
+        "description": "Heading for the recent search history list"
+    },
+    "search_clearHistory": {
+        "message": "清除",
+        "description": "Button that clears the recent search history"
+    },
+    "search_resultsLimited": {
+        "message": "顯示 $2 筆相符結果中的前 $1 筆。請縮小搜尋範圍以查看更多。",
+        "description": "Notice when search results are truncated; $1 is the result limit, $2 is the total match count"
+    },
+    "settings_aiEnabled": {
+        "message": "AI 功能",
+        "description": "AI feature toggle label"
+    },
+    "settings_aiEnabledDesc": {
+        "message": "啟用 AI 輔助的書籤工作流程。AI 工具會將所需的書籤標題、網址和資料夾名稱、目前網頁的標題和網址，以及傳給「詢問 AI」的訊息，直接傳送到所選的供應商。在使用 AI 工具之前，不會傳送任何資料。在 Firefox 中，開啟此選項時會要求同意分享這些資料。",
+        "description": "AI feature toggle description"
+    },
+    "settings_aiProvider": {
+        "message": "AI 供應商",
+        "description": "AI provider setting label"
+    },
+    "settings_aiProviderDesc": {
+        "message": "選擇 AI 工具使用的供應商",
+        "description": "AI provider setting description"
+    },
+    "settings_aiModel": {
+        "message": "AI 模型",
+        "description": "AI model setting label"
+    },
+    "settings_aiModelDesc": {
+        "message": "選擇 AI 工具使用的模型",
+        "description": "AI model setting description"
+    },
+    "settings_aiMaxRecommendations": {
+        "message": "推薦數量上限",
+        "description": "Max recommendations setting label"
+    },
+    "settings_aiMaxRecommendationsDesc": {
+        "message": "向 AI 要求的推薦數量上限",
+        "description": "Max recommendations setting description"
+    },
+    "settings_aiTools": {
+        "message": "AI 工具",
+        "description": "AI tools settings tab label"
+    },
+    "settings_aiToolsDesc": {
+        "message": "設定 AI 輔助的書籤工具",
+        "description": "AI tools settings tab description"
+    },
+    "settings_maintenance": {
+        "message": "維護",
+        "description": "Maintenance settings tab label"
+    },
+    "settings_maintenanceDesc": {
+        "message": "設定清理和修復工具",
+        "description": "Maintenance settings tab description"
+    },
+    "settings_metadataContent": {
+        "message": "中繼資料與內容",
+        "description": "Metadata settings tab label"
+    },
+    "settings_metadataContentDesc": {
+        "message": "設定中繼資料補充工具",
+        "description": "Metadata settings tab description"
+    },
+    "settings_security": {
+        "message": "安全性",
+        "description": "Security settings tab label"
+    },
+    "settings_securityDesc": {
+        "message": "設定安全性和隱私工具",
+        "description": "Security settings tab description"
+    },
+    "settings_analytics": {
+        "message": "分析",
+        "description": "Analytics settings tab label"
+    },
+    "settings_analyticsDesc": {
+        "message": "設定書籤分析和報告",
+        "description": "Analytics settings tab description"
+    },
+    "settings_data": {
+        "message": "資料",
+        "description": "Data settings tab label"
+    },
+    "settings_dataDesc": {
+        "message": "設定匯入、匯出和資料處理工具",
+        "description": "Data settings tab description"
+    },
+    "settings_aiMaxCategories": {
+        "message": "分類數量上限",
+        "description": "AI reorganization max categories label"
+    },
+    "settings_aiMaxCategoriesDesc": {
+        "message": "AI 可建立的頂層分類數量上限 (-1 表示不限)",
+        "description": "AI reorganization max categories description"
+    },
+    "settings_aiMinItemsPerFolder": {
+        "message": "每個資料夾的項目下限",
+        "description": "AI reorganization min items label"
+    },
+    "settings_aiMinItemsPerFolderDesc": {
+        "message": "AI 為每個資料夾設定的目標書籤數量下限",
+        "description": "AI reorganization min items description"
+    },
+    "settings_aiMaxItemsPerFolder": {
+        "message": "每個資料夾的項目上限",
+        "description": "AI reorganization max items label"
+    },
+    "settings_aiMaxItemsPerFolderDesc": {
+        "message": "AI 為每個資料夾設定的目標書籤數量上限 (-1 表示不限)",
+        "description": "AI reorganization max items description"
+    },
+    "settings_exportFilenamePrefix": {
+        "message": "檔案名稱前置字串",
+        "description": "Export filename prefix label"
+    },
+    "settings_exportFilenamePrefixDesc": {
+        "message": "產生書籤匯出檔案名稱時使用的前置字串",
+        "description": "Export filename prefix description"
+    },
+    "settings_exportFilenameMaxLength": {
+        "message": "檔案名稱長度上限",
+        "description": "Export filename max length label"
+    },
+    "settings_exportFilenameMaxLengthDesc": {
+        "message": "產生的書籤匯出檔案名稱長度上限",
+        "description": "Export filename max length description"
+    },
+    "settings_exportJsonIndentSize": {
+        "message": "JSON 縮排大小",
+        "description": "JSON indent size label"
+    },
+    "settings_exportJsonIndentSizeDesc": {
+        "message": "匯出 JSON 書籤時使用的空格數",
+        "description": "JSON indent size description"
+    },
+    "settings_exportHtmlIndentSpaces": {
+        "message": "HTML 縮排大小",
+        "description": "HTML indent size label"
+    },
+    "settings_exportHtmlIndentSpacesDesc": {
+        "message": "匯出 HTML 書籤時使用的空格數",
+        "description": "HTML indent size description"
+    },
+    "settings_exportMarkdownIndentSpaces": {
+        "message": "Markdown 縮排大小",
+        "description": "Markdown indent size label"
+    },
+    "settings_exportMarkdownIndentSpacesDesc": {
+        "message": "匯出 Markdown 書籤時使用的空格數",
+        "description": "Markdown indent size description"
+    },
+    "settings_exportIncludeDates": {
+        "message": "包含日期",
+        "description": "Export include dates label"
+    },
+    "settings_exportIncludeDatesDesc": {
+        "message": "匯出時預設包含書籤的建立日期",
+        "description": "Export include dates description"
+    },
+    "settings_exportIncludeUrls": {
+        "message": "包含網址",
+        "description": "Export include URLs label"
+    },
+    "settings_exportIncludeUrlsDesc": {
+        "message": "匯出時預設包含書籤網址",
+        "description": "Export include URLs description"
+    },
+    "settings_scopeFolder": {
+        "message": "目前資料夾",
+        "description": "Folder scope option label"
+    },
+    "settings_scopeAll": {
+        "message": "所有書籤",
+        "description": "All bookmarks scope option label"
+    },
+    "settings_scopeBoth": {
+        "message": "資料夾或全部",
+        "description": "Combined scope option label"
+    },
+    "settings_mergeAppend": {
+        "message": "附加",
+        "description": "Merge append option label"
+    },
+    "settings_mergeReplace": {
+        "message": "取代",
+        "description": "Merge replace option label"
+    },
+    "settings_aiContextPackerEnabled": {
+        "message": "啟用 AI 脈絡打包工具",
+        "description": "AI context packer enabled label"
+    },
+    "settings_aiContextPackerEnabledDesc": {
+        "message": "允許以適合 AI 讀取的格式匯出書籤",
+        "description": "AI context packer enabled description"
+    },
+    "settings_aiContextPackerDefaultScope": {
+        "message": "預設範圍",
+        "description": "AI context packer default scope label"
+    },
+    "settings_aiContextPackerDefaultScopeDesc": {
+        "message": "匯出 AI 脈絡時使用的預設範圍",
+        "description": "AI context packer default scope description"
+    },
+    "settings_aiContextPackerOutputFormat": {
+        "message": "輸出格式",
+        "description": "AI context packer output format label"
+    },
+    "settings_aiContextPackerOutputFormatDesc": {
+        "message": "選擇以 Markdown 或 XML 匯出 AI 脈絡",
+        "description": "AI context packer output format description"
+    },
+    "settings_aiContextPackerIncludeFolderPath": {
+        "message": "包含資料夾路徑",
+        "description": "AI context packer include folder path label"
+    },
+    "settings_aiContextPackerIncludeFolderPathDesc": {
+        "message": "在匯出的 AI 脈絡中包含每個書籤的資料夾路徑",
+        "description": "AI context packer include folder path description"
+    },
+    "settings_aiContextPackerIncludeDates": {
+        "message": "包含日期",
+        "description": "AI context packer include dates label"
+    },
+    "settings_aiContextPackerIncludeDatesDesc": {
+        "message": "在匯出的 AI 脈絡中包含書籤的建立日期",
+        "description": "AI context packer include dates description"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "包含已儲存的標籤",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "僅在書籤有已儲存的中繼資料時包含標籤",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "包含已儲存的摘要",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "僅在書籤有已儲存的中繼資料時包含摘要",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerMaxItems": {
+        "message": "項目數量上限",
+        "description": "AI context packer max items label"
+    },
+    "settings_aiContextPackerMaxItemsDesc": {
+        "message": "單次匯出 AI 脈絡時包含的書籤數量上限",
+        "description": "AI context packer max items description"
+    },
+    "settings_aiContextPackerMaxDepth": {
+        "message": "深度上限",
+        "description": "AI context packer max depth label"
+    },
+    "settings_aiContextPackerMaxDepthDesc": {
+        "message": "匯出 AI 脈絡時包含的資料夾層級上限",
+        "description": "AI context packer max depth description"
+    },
+    "settings_aiContextPackerExcerptLength": {
+        "message": "摘錄長度",
+        "description": "AI context packer excerpt length label"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "匯出 AI 脈絡時已儲存摘要的長度上限",
+        "description": "AI context packer excerpt length description"
+    },
+    "settings_autoTaggingEnabled": {
+        "message": "啟用自動加上標籤",
+        "description": "Auto-tagging enabled label"
+    },
+    "settings_autoTaggingEnabledDesc": {
+        "message": "允許 AI 為書籤建議標籤",
+        "description": "Auto-tagging enabled description"
+    },
+    "settings_autoTaggingDefaultScope": {
+        "message": "預設範圍",
+        "description": "Auto-tagging default scope label"
+    },
+    "settings_autoTaggingDefaultScopeDesc": {
+        "message": "執行自動加上標籤時使用的預設範圍",
+        "description": "Auto-tagging default scope description"
+    },
+    "settings_autoTaggingMinTags": {
+        "message": "標籤數量下限",
+        "description": "Auto-tagging minimum tags label"
+    },
+    "settings_autoTaggingMinTagsDesc": {
+        "message": "AI 為每個書籤產生的標籤數量下限",
+        "description": "Auto-tagging minimum tags description"
+    },
+    "settings_autoTaggingMaxTags": {
+        "message": "標籤數量上限",
+        "description": "Auto-tagging maximum tags label"
+    },
+    "settings_autoTaggingMaxTagsDesc": {
+        "message": "AI 為每個書籤產生的標籤數量上限",
+        "description": "Auto-tagging maximum tags description"
+    },
+    "settings_autoTaggingTagStyle": {
+        "message": "標籤樣式",
+        "description": "Auto-tagging tag style label"
+    },
+    "settings_autoTaggingTagStyleDesc": {
+        "message": "產生的標籤偏好使用的格式",
+        "description": "Auto-tagging tag style description"
+    },
+    "settings_autoTaggingMergeMode": {
+        "message": "合併模式",
+        "description": "Auto-tagging merge mode label"
+    },
+    "settings_autoTaggingMergeModeDesc": {
+        "message": "儲存經過確認的建議時，「附加」會將建議加入已儲存的標籤；「取代」會覆寫已儲存的標籤",
+        "description": "Auto-tagging merge mode description"
+    },
+    "settings_autoTaggingDedupeTags": {
+        "message": "移除重複的標籤",
+        "description": "Auto-tagging dedupe tag label"
+    },
+    "settings_autoTaggingDedupeTagsDesc": {
+        "message": "儲存經過確認的建議時，捨棄不分大小寫重複的標籤",
+        "description": "Auto-tagging dedupe tag description"
+    },
+    "settings_summarizerEnabled": {
+        "message": "啟用內容摘要工具",
+        "description": "Summarizer enabled label"
+    },
+    "settings_summarizerEnabledDesc": {
+        "message": "允許 AI 建立書籤摘要",
+        "description": "Summarizer enabled description"
+    },
+    "settings_summarizerDefaultScope": {
+        "message": "預設範圍",
+        "description": "Summarizer default scope label"
+    },
+    "settings_summarizerDefaultScopeDesc": {
+        "message": "產生書籤摘要時使用的預設範圍",
+        "description": "Summarizer default scope description"
+    },
+    "settings_summarizerSummaryLength": {
+        "message": "摘要長度",
+        "description": "Summarizer length label"
+    },
+    "settings_summarizerSummaryLengthDesc": {
+        "message": "產生的摘要的目標長度上限",
+        "description": "Summarizer length description"
+    },
+    "settings_summarizerIncludeDomainHint": {
+        "message": "包含網域提示",
+        "description": "Summarizer include domain hint label"
+    },
+    "settings_summarizerIncludeDomainHintDesc": {
+        "message": "將書籤的網域作為額外的 AI 脈絡",
+        "description": "Summarizer include domain hint description"
+    },
+    "settings_summarizerMergeMode": {
+        "message": "合併模式",
+        "description": "Summarizer merge mode label"
+    },
+    "settings_summarizerMergeModeDesc": {
+        "message": "儲存經過確認的摘要時，「附加」會將摘要加在已儲存的摘要之後；「取代」會覆寫已儲存的摘要",
+        "description": "Summarizer merge mode description"
+    },
+    "settings_reorganizationEnabled": {
+        "message": "啟用 AI 資料夾重組",
+        "description": "Reorganization enabled label"
+    },
+    "settings_reorganizationEnabledDesc": {
+        "message": "允許 AI 提出資料夾重組計畫",
+        "description": "Reorganization enabled description"
+    },
+    "settings_reorganizationDefaultScope": {
+        "message": "預設範圍",
+        "description": "Reorganization default scope label"
+    },
+    "settings_reorganizationDefaultScopeDesc": {
+        "message": "AI 資料夾重組使用的預設範圍",
+        "description": "Reorganization default scope description"
+    },
+    "settings_reorganizationDryRunFirst": {
+        "message": "一律先預覽",
+        "description": "Reorganization dry run label"
+    },
+    "settings_reorganizationDryRunFirstDesc": {
+        "message": "套用變更前先顯示提議的重組計畫",
+        "description": "Reorganization dry run description"
+    },
+    "settings_reorganizationMinConfidence": {
+        "message": "最低信賴度",
+        "description": "Reorganization minimum confidence label"
+    },
+    "settings_reorganizationMinConfidenceDesc": {
+        "message": "提議移動書籤所需的最低信賴度分數",
+        "description": "Reorganization minimum confidence description"
+    },
+    "settings_reorganizationBatchSize": {
+        "message": "批次大小",
+        "description": "Reorganization batch size label"
+    },
+    "settings_reorganizationBatchSizeDesc": {
+        "message": "每個重組批次傳送的書籤數量上限",
+        "description": "Reorganization batch size description"
+    },
+    "settings_duplicatesEnabled": {
+        "message": "啟用重複書籤清理工具",
+        "description": "Duplicate cleaner enabled label"
+    },
+    "settings_duplicatesEnabledDesc": {
+        "message": "允許掃描重複的書籤",
+        "description": "Duplicate cleaner enabled description"
+    },
+    "settings_duplicatesDefaultScope": {
+        "message": "預設範圍",
+        "description": "Duplicate cleaner default scope label"
+    },
+    "settings_duplicatesDefaultScopeDesc": {
+        "message": "掃描重複書籤時使用的預設範圍",
+        "description": "Duplicate cleaner default scope description"
+    },
+    "settings_duplicatesMatchStrategy": {
+        "message": "比對方式",
+        "description": "Duplicate cleaner match strategy label"
+    },
+    "settings_duplicatesMatchStrategyDesc": {
+        "message": "尋找重複項目時比較書籤的方式",
+        "description": "Duplicate cleaner match strategy description"
+    },
+    "settings_duplicatesNormalizeWww": {
+        "message": "統一 www",
+        "description": "Duplicate cleaner normalize www label"
+    },
+    "settings_duplicatesNormalizeWwwDesc": {
+        "message": "將 www.example.com 和 example.com 視為相同主機",
+        "description": "Duplicate cleaner normalize www description"
+    },
+    "settings_duplicatesIgnoreProtocol": {
+        "message": "忽略通訊協定",
+        "description": "Duplicate cleaner ignore protocol label"
+    },
+    "settings_duplicatesIgnoreProtocolDesc": {
+        "message": "將 http 和 https 版本視為重複",
+        "description": "Duplicate cleaner ignore protocol description"
+    },
+    "settings_duplicatesIgnoreTrailingSlash": {
+        "message": "忽略結尾斜線",
+        "description": "Duplicate cleaner ignore trailing slash label"
+    },
+    "settings_duplicatesIgnoreTrailingSlashDesc": {
+        "message": "將結尾有無斜線的網址視為重複",
+        "description": "Duplicate cleaner ignore trailing slash description"
+    },
+    "settings_duplicatesKeepRule": {
+        "message": "保留規則",
+        "description": "Duplicate cleaner keep rule label"
+    },
+    "settings_duplicatesKeepRuleDesc": {
+        "message": "選擇移除重複項目時要保留哪個書籤",
+        "description": "Duplicate cleaner keep rule description"
+    },
+    "settings_duplicatesMaxGroups": {
+        "message": "群組數量上限",
+        "description": "Duplicate cleaner max groups label"
+    },
+    "settings_duplicatesMaxGroupsDesc": {
+        "message": "單次掃描傳回的重複群組數量上限",
+        "description": "Duplicate cleaner max groups description"
+    },
+    "settings_urlCleanerEnabled": {
+        "message": "啟用網址清理工具",
+        "description": "URL cleaner enabled label"
+    },
+    "settings_urlCleanerEnabledDesc": {
+        "message": "允許清除書籤網址中的追蹤參數",
+        "description": "URL cleaner enabled description"
+    },
+    "settings_urlCleanerDefaultScope": {
+        "message": "預設範圍",
+        "description": "URL cleaner default scope label"
+    },
+    "settings_urlCleanerDefaultScopeDesc": {
+        "message": "清理書籤網址時使用的預設範圍",
+        "description": "URL cleaner default scope description"
+    },
+    "settings_urlCleanerRemoveHash": {
+        "message": "移除片段",
+        "description": "URL cleaner remove hash label"
+    },
+    "settings_urlCleanerRemoveHashDesc": {
+        "message": "從清理後的網址中移除 #section 之類的網址片段",
+        "description": "URL cleaner remove hash description"
+    },
+    "settings_urlCleanerSortQueryParams": {
+        "message": "排序查詢參數",
+        "description": "URL cleaner sort query params label"
+    },
+    "settings_urlCleanerSortQueryParamsDesc": {
+        "message": "依字母順序排列其餘的查詢參數",
+        "description": "URL cleaner sort query params description"
+    },
+    "settings_urlCleanerDedupeQueryParams": {
+        "message": "移除重複的查詢參數",
+        "description": "URL cleaner dedupe query params label"
+    },
+    "settings_urlCleanerDedupeQueryParamsDesc": {
+        "message": "清理網址時移除重複的查詢參數",
+        "description": "URL cleaner dedupe query params description"
+    },
+    "settings_urlCleanerPreserveParams": {
+        "message": "保留參數",
+        "description": "URL cleaner preserve params label"
+    },
+    "settings_urlCleanerPreserveParamsDesc": {
+        "message": "絕不移除的查詢參數，以半形逗號分隔",
+        "description": "URL cleaner preserve params description"
+    },
+    "settings_urlCleanerRemoveParams": {
+        "message": "移除參數",
+        "description": "URL cleaner remove params label"
+    },
+    "settings_urlCleanerRemoveParamsDesc": {
+        "message": "要從網址中移除的查詢參數，以半形逗號分隔",
+        "description": "URL cleaner remove params description"
+    },
+    "settings_deadLinksEnabled": {
+        "message": "啟用失效連結檢查工具",
+        "description": "Dead links enabled label"
+    },
+    "settings_deadLinksEnabledDesc": {
+        "message": "允許檢查書籤中無法連線的網址",
+        "description": "Dead links enabled description"
+    },
+    "settings_deadLinksDefaultScope": {
+        "message": "預設範圍",
+        "description": "Dead links default scope label"
+    },
+    "settings_deadLinksDefaultScopeDesc": {
+        "message": "檢查失效連結時使用的預設範圍",
+        "description": "Dead links default scope description"
+    },
+    "settings_deadLinksRequestTimeoutMs": {
+        "message": "要求逾時",
+        "description": "Dead links request timeout label"
+    },
+    "settings_deadLinksRequestTimeoutMsDesc": {
+        "message": "每個連結檢查要求的最長等待時間",
+        "description": "Dead links request timeout description"
+    },
+    "settings_deadLinksConcurrency": {
+        "message": "同時要求數",
+        "description": "Dead links concurrency label"
+    },
+    "settings_deadLinksConcurrencyDesc": {
+        "message": "掃描失效連結時同時傳送的要求數量",
+        "description": "Dead links concurrency description"
+    },
+    "settings_deadLinksRetryCount": {
+        "message": "重試次數",
+        "description": "Dead links retry count label"
+    },
+    "settings_deadLinksRetryCountDesc": {
+        "message": "失效連結檢查失敗時的重試次數",
+        "description": "Dead links retry count description"
+    },
+    "settings_deadLinksFollowRedirects": {
+        "message": "追蹤重新導向",
+        "description": "Dead links follow redirects label"
+    },
+    "settings_deadLinksFollowRedirectsDesc": {
+        "message": "掃描失效連結時，將重新導向的網址視為可連線",
+        "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksSuccessStatuses": {
+        "message": "成功狀態碼",
+        "description": "Dead links success statuses label"
+    },
+    "settings_deadLinksSuccessStatusesDesc": {
+        "message": "視為可連線的 HTTP 狀態碼，以半形逗號分隔",
+        "description": "Dead links success statuses description"
+    },
+    "settings_metadataFetcherEnabled": {
+        "message": "啟用中繼資料擷取工具",
+        "description": "Metadata fetcher enabled label"
+    },
+    "settings_metadataFetcherEnabledDesc": {
+        "message": "允許擷取書籤缺少的中繼資料",
+        "description": "Metadata fetcher enabled description"
+    },
+    "settings_metadataFetcherDefaultScope": {
+        "message": "預設範圍",
+        "description": "Metadata fetcher default scope label"
+    },
+    "settings_metadataFetcherDefaultScopeDesc": {
+        "message": "擷取中繼資料時使用的預設範圍",
+        "description": "Metadata fetcher default scope description"
+    },
+    "settings_metadataFetcherOverwriteTitles": {
+        "message": "覆寫標題",
+        "description": "Metadata fetcher overwrite titles label"
+    },
+    "settings_metadataFetcherOverwriteTitlesDesc": {
+        "message": "找到更合適的中繼資料時，取代現有的書籤標題",
+        "description": "Metadata fetcher overwrite titles description"
+    },
+    "settings_metadataFetcherFetchDescriptions": {
+        "message": "擷取說明",
+        "description": "Metadata fetcher fetch descriptions label"
+    },
+    "settings_metadataFetcherFetchDescriptionsDesc": {
+        "message": "嘗試收集書籤的簡短中繼資料說明",
+        "description": "Metadata fetcher fetch descriptions description"
+    },
+    "settings_metadataFetcherRequestTimeoutMs": {
+        "message": "要求逾時",
+        "description": "Metadata fetcher timeout label"
+    },
+    "settings_metadataFetcherRequestTimeoutMsDesc": {
+        "message": "每個中繼資料或網站圖示要求的最長等待時間",
+        "description": "Metadata fetcher timeout description"
+    },
+    "settings_metadataFetcherConcurrency": {
+        "message": "同時要求數",
+        "description": "Metadata fetcher concurrency label"
+    },
+    "settings_metadataFetcherConcurrencyDesc": {
+        "message": "擷取中繼資料或重新整理網站圖示時同時傳送的要求數量",
+        "description": "Metadata fetcher concurrency description"
+    },
+    "settings_privacyScannerEnabled": {
+        "message": "啟用隱私掃描工具",
+        "description": "Privacy scanner enabled label"
+    },
+    "settings_privacyScannerEnabledDesc": {
+        "message": "允許掃描書籤網址中的敏感資料",
+        "description": "Privacy scanner enabled description"
+    },
+    "settings_privacyScannerDefaultScope": {
+        "message": "預設範圍",
+        "description": "Privacy scanner default scope label"
+    },
+    "settings_privacyScannerDefaultScopeDesc": {
+        "message": "掃描敏感資料時使用的預設範圍",
+        "description": "Privacy scanner default scope description"
+    },
+    "settings_privacyScannerScanTitles": {
+        "message": "掃描標題",
+        "description": "Privacy scanner scan titles label"
+    },
+    "settings_privacyScannerScanTitlesDesc": {
+        "message": "除了網址，也檢查書籤標題中的敏感資訊",
+        "description": "Privacy scanner scan titles description"
+    },
+    "settings_privacyScannerScanQueryParams": {
+        "message": "掃描查詢參數",
+        "description": "Privacy scanner scan query params label"
+    },
+    "settings_privacyScannerScanQueryParamsDesc": {
+        "message": "檢查查詢參數中是否有密鑰和敏感資料",
+        "description": "Privacy scanner scan query params description"
+    },
+    "settings_privacyScannerScanFragments": {
+        "message": "掃描片段",
+        "description": "Privacy scanner scan fragments label"
+    },
+    "settings_privacyScannerScanFragmentsDesc": {
+        "message": "檢查網址片段中是否有敏感資料",
+        "description": "Privacy scanner scan fragments description"
+    },
+    "settings_privacyScannerSensitiveParams": {
+        "message": "敏感參數",
+        "description": "Privacy scanner sensitive params label"
+    },
+    "settings_privacyScannerSensitiveParamsDesc": {
+        "message": "要標示為敏感的參數名稱，以半形逗號分隔",
+        "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerEmailDetection": {
+        "message": "偵測電子郵件地址",
+        "description": "Privacy scanner email detection label"
+    },
+    "settings_privacyScannerEmailDetectionDesc": {
+        "message": "標示書籤網址或標題中的電子郵件地址",
+        "description": "Privacy scanner email detection description"
+    },
+    "settings_privacyScannerUuidDetection": {
+        "message": "偵測 UUID",
+        "description": "Privacy scanner uuid detection label"
+    },
+    "settings_privacyScannerUuidDetectionDesc": {
+        "message": "標示書籤網址中類似 UUID 的值",
+        "description": "Privacy scanner uuid detection description"
+    },
+    "settings_statisticsEnabled": {
+        "message": "啟用統計資料",
+        "description": "Statistics enabled label"
+    },
+    "settings_statisticsEnabledDesc": {
+        "message": "允許產生書籤統計報告",
+        "description": "Statistics enabled description"
+    },
+    "settings_statisticsDefaultScope": {
+        "message": "預設範圍",
+        "description": "Statistics default scope label"
+    },
+    "settings_statisticsDefaultScopeDesc": {
+        "message": "查看書籤統計資料時使用的預設範圍",
+        "description": "Statistics default scope description"
+    },
+    "settings_statisticsIncludeDomains": {
+        "message": "包含網域",
+        "description": "Statistics include domains label"
+    },
+    "settings_statisticsIncludeDomainsDesc": {
+        "message": "在書籤統計資料中包含最常見的網域",
+        "description": "Statistics include domains description"
+    },
+    "settings_statisticsIncludeFolders": {
+        "message": "包含資料夾",
+        "description": "Statistics include folders label"
+    },
+    "settings_statisticsIncludeFoldersDesc": {
+        "message": "在書籤統計資料中包含書籤最多的資料夾",
+        "description": "Statistics include folders description"
+    },
+    "settings_statisticsIncludeDuplicates": {
+        "message": "包含重複項目",
+        "description": "Statistics include duplicates label"
+    },
+    "settings_statisticsIncludeDuplicatesDesc": {
+        "message": "在統計資料中包含重複書籤的數量",
+        "description": "Statistics include duplicates description"
+    },
+    "settings_statisticsIncludeProtocols": {
+        "message": "包含通訊協定",
+        "description": "Statistics include protocols label"
+    },
+    "settings_statisticsIncludeProtocolsDesc": {
+        "message": "在統計資料中包含網址通訊協定的分布",
+        "description": "Statistics include protocols description"
+    },
+    "settings_statisticsIncludeDepthBreakdown": {
+        "message": "包含層級分布",
+        "description": "Statistics include depth breakdown label"
+    },
+    "settings_statisticsIncludeDepthBreakdownDesc": {
+        "message": "顯示每個資料夾層級中有多少書籤",
+        "description": "Statistics depth breakdown setting description"
+    },
+    "settings_statisticsTopN": {
+        "message": "前 N 名項目數",
+        "description": "Statistics top N label"
+    },
+    "settings_statisticsTopNDesc": {
+        "message": "最常見網域和資料夾清單中顯示的項目數量上限",
+        "description": "Statistics top N description"
+    },
+    "settings_dataShowExport": {
+        "message": "顯示匯出工具",
+        "description": "Data export tool visibility label"
+    },
+    "settings_dataShowExportDesc": {
+        "message": "在側欄中顯示書籤匯出工具",
+        "description": "Data export tool visibility description"
+    },
+    "settings_dataShowImport": {
+        "message": "顯示匯入工具",
+        "description": "Data import tool visibility label"
+    },
+    "settings_dataShowImportDesc": {
+        "message": "在側欄中顯示書籤匯入工具",
+        "description": "Data import tool visibility description"
+    },
+    "settings_dataDefaultExportFormat": {
+        "message": "預設匯出格式",
+        "description": "Default export format label"
+    },
+    "settings_dataDefaultExportFormatDesc": {
+        "message": "書籤匯出工具中預設選取的格式",
+        "description": "Default export format description"
+    },
+    "toast_duplicatesRemoved": {
+        "message": "已移除重複項目",
+        "description": "Duplicate removal success title"
+    },
+    "toast_duplicatesRemovedDesc": {
+        "message": "已移除 $count$ 個重複的書籤",
+        "description": "Duplicate removal success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_toolFailed": {
+        "message": "工具執行失敗",
+        "description": "Generic tool failure title"
+    },
+    "toast_urlCleanerApplied": {
+        "message": "已清理網址",
+        "description": "URL cleaner success title"
+    },
+    "toast_urlCleanerAppliedDesc": {
+        "message": "已更新 $count$ 個書籤",
+        "description": "URL cleaner success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_aiContextPacked": {
+        "message": "已匯出 AI 脈絡",
+        "description": "AI context export success title"
+    },
+    "toast_aiContextPackedDesc": {
+        "message": "已匯出 $count$ 個書籤供 AI 使用",
+        "description": "AI context export success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc": {
+        "message": "在 $bookmarks$ 個書籤中找到 $groups$ 組重複項目",
+        "description": "Duplicate dialog description",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "2"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "40"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc": {
+        "message": "有 $count$ 個書籤可以清理",
+        "description": "URL cleaner dialog description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_statisticsDialogDesc": {
+        "message": "所選書籤範圍的概況",
+        "description": "Statistics dialog description"
+    },
+    "tools_autoTaggingDialogDesc": {
+        "message": "AI 為所選書籤產生的標籤",
+        "description": "Auto-tagging dialog description"
+    },
+    "tools_summarizerDialogDesc": {
+        "message": "AI 產生的書籤摘要",
+        "description": "Summarizer dialog description"
+    },
+    "tools_deadLinksDialogDesc": {
+        "message": "所選書籤的連線檢查結果",
+        "description": "Dead link checker dialog description"
+    },
+    "tools_metadataDialogDesc": {
+        "message": "所選書籤的中繼資料建議",
+        "description": "Metadata fetcher dialog description"
+    },
+    "tools_privacyDialogDesc": {
+        "message": "在所選書籤中發現的可能敏感資料",
+        "description": "Privacy scanner dialog description"
+    },
+    "tools_rootFolder": {
+        "message": "根目錄",
+        "description": "Label for bookmarks with no parent folder path"
+    },
+    "tools_suggestedTitle": {
+        "message": "建議的標題：$title$",
+        "description": "Metadata fetcher suggested title",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            }
+        }
+    },
+    "tools_metadataAvailable": {
+        "message": "有可用的中繼資料",
+        "description": "Metadata fetcher result when a better title was found"
+    },
+    "tools_metadataNoChange": {
+        "message": "標題不需要變更",
+        "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_metadataNotHtml": {
+        "message": "不是 HTML 網頁，已略過",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
+    "tools_deadLinkStatus_ok": {
+        "message": "正常",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_redirect": {
+        "message": "已重新導向",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_error": {
+        "message": "錯誤",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_timeout": {
+        "message": "逾時",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_invalid": {
+        "message": "無效",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkReachable": {
+        "message": "可連線",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkRedirected": {
+        "message": "已重新導向，但可連線",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkHttpStatus": {
+        "message": "HTTP $status$",
+        "description": "Dead link result detail with the HTTP status code",
+        "placeholders": {
+            "status": {
+                "content": "$1",
+                "example": "404"
+            }
+        }
+    },
+    "tools_deadLinkTimedOut": {
+        "message": "要求逾時",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkInvalidUrl": {
+        "message": "網址無效",
+        "description": "Dead link result detail"
+    },
+    "tools_privacySeverity_low": {
+        "message": "低",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_medium": {
+        "message": "中",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_high": {
+        "message": "高",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySensitiveParam": {
+        "message": "敏感的查詢參數：$param$",
+        "description": "Privacy finding for a sensitive URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "token"
+            }
+        }
+    },
+    "tools_privacyFragment": {
+        "message": "網址包含片段",
+        "description": "Privacy finding"
+    },
+    "tools_privacyEmail": {
+        "message": "偵測到電子郵件地址",
+        "description": "Privacy finding"
+    },
+    "tools_privacyUuid": {
+        "message": "偵測到類似 UUID 的權杖",
+        "description": "Privacy finding"
+    },
+    "state_keep": {
+        "message": "保留",
+        "description": "Keep badge label"
+    },
+    "state_noDuplicatesFound": {
+        "message": "找不到重複的書籤。",
+        "description": "No duplicates found state"
+    },
+    "state_noUrlChangesFound": {
+        "message": "沒有需要清理的網址。",
+        "description": "No URL changes found state"
+    },
+    "state_noData": {
+        "message": "沒有可用的資料。",
+        "description": "No data available state"
+    },
+    "state_noAiResults": {
+        "message": "沒有可用的 AI 結果。",
+        "description": "No AI results state"
+    },
+    "state_noDeadLinksFound": {
+        "message": "找不到失效連結。",
+        "description": "Dead link checker empty state"
+    },
+    "state_noMetadataFound": {
+        "message": "沒有需要更新的中繼資料。",
+        "description": "Metadata fetcher empty state"
+    },
+    "state_noPrivacyIssuesFound": {
+        "message": "找不到隱私問題。",
+        "description": "Privacy scanner empty state"
+    },
+    "action_clean": {
+        "message": "清理",
+        "description": "Clean button label"
+    },
+    "action_removing": {
+        "message": "正在移除...",
+        "description": "Removing state label"
+    },
+    "action_applying": {
+        "message": "正在套用...",
+        "description": "Button label while changes are applied"
+    },
+    "action_removeDuplicates": {
+        "message": "移除重複項目",
+        "description": "Remove duplicates button label"
+    },
+    "stats_totalBookmarks": {
+        "message": "書籤",
+        "description": "Statistics total bookmarks label"
+    },
+    "stats_totalFolders": {
+        "message": "資料夾",
+        "description": "Statistics total folders label"
+    },
+    "stats_deepestLevel": {
+        "message": "最深層級",
+        "description": "Statistics deepest level label"
+    },
+    "stats_duplicates": {
+        "message": "重複項目",
+        "description": "Statistics duplicates label"
+    },
+    "stats_topDomains": {
+        "message": "最常見的網域",
+        "description": "Statistics top domains label"
+    },
+    "stats_topFolders": {
+        "message": "書籤最多的資料夾",
+        "description": "Statistics top folders label"
+    },
+    "stats_protocols": {
+        "message": "通訊協定",
+        "description": "Statistics protocols label"
+    },
+    "settings_aiProviderOllama": {
+        "message": "Ollama (本機)",
+        "description": "Ollama provider name"
+    },
+    "settings_aiProviderCustom": {
+        "message": "自訂供應商",
+        "description": "Custom AI provider name"
+    },
+    "settings_duplicatesMatchExactUrl": {
+        "message": "網址完全相同",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchNormalizedUrl": {
+        "message": "正規化網址",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleUrl": {
+        "message": "標題 + 網址",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleOnly": {
+        "message": "僅標題",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesKeepOldest": {
+        "message": "最舊的",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepNewest": {
+        "message": "最新的",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepFirst": {
+        "message": "最先找到的",
+        "description": "Duplicate keep rule option"
+    },
+    "error_invalidSettingsFields": {
+        "message": "下列設定的值無效：$1",
+        "description": "Settings validation error listing field labels"
+    },
+    "settings_errorMinExceedsMax": {
+        "message": "最小值不能大於最大值。",
+        "description": "Settings error for min greater than max"
+    },
+    "settings_errorStatusCodes": {
+        "message": "請輸入 100 到 599 之間的 HTTP 狀態碼，並以半形逗號分隔。",
+        "description": "Settings error for status code list"
+    },
+    "settings_errorRangeOrUnlimited": {
+        "message": "請選擇「不限」或 $1 到 $2 之間的值。",
+        "description": "Settings error for limit fields"
+    },
+    "settings_errorRange": {
+        "message": "請選擇 $1 到 $2 之間的值。",
+        "description": "Settings error for number range"
+    },
+    "settings_errorRequired": {
+        "message": "此欄位不得空白。",
+        "description": "Settings error for empty text"
+    },
+    "settings_errorTooLong": {
+        "message": "最多只能使用 $1 個字元。",
+        "description": "Settings error for long text"
+    },
+    "settings_errorInvalidOption": {
+        "message": "請從可用的選項中選擇一個。",
+        "description": "Settings error for invalid option"
+    },
+    "options_baseUrlInvalid": {
+        "message": "請輸入完整的 http:// 或 https:// 網址。",
+        "description": "Invalid AI provider base URL error"
+    },
+    "error_aiKeyNotConfigured": {
+        "message": "尚未設定 API 金鑰。請在「選項」→「AI」中新增。",
+        "description": "AI API key missing error"
+    },
+    "contextMenu_untitled": {
+        "message": "未命名",
+        "description": "Fallback bookmark title from context menu"
+    },
+    "contextMenu_recentFolders": {
+        "message": "最近使用的資料夾",
+        "description": "Context menu recent folders submenu"
+    },
+    "contextMenu_aiSuggestions": {
+        "message": "AI 建議",
+        "description": "Context menu AI suggestions submenu"
+    },
+    "contextMenu_defaultFolders": {
+        "message": "預設資料夾",
+        "description": "Context menu default folders submenu"
+    },
+    "settings_noLimit": {
+        "message": "不限",
+        "description": "Slider value meaning unlimited"
+    },
+    "settings_modified": {
+        "message": "已修改",
+        "description": "Badge for settings changed from default"
+    },
+    "settings_resetToDefault": {
+        "message": "重設為預設值",
+        "description": "Reset one setting button tooltip"
+    },
+    "settings_resetFieldToDefault": {
+        "message": "將「$1」重設為預設值",
+        "description": "Reset one setting button accessible name"
+    },
+    "options_apiKeyInvalidFormat": {
+        "message": "這看起來不像是 $1 的 API 金鑰，因此未儲存。",
+        "description": "Invalid API key format error"
+    },
+    "options_extraHeadersInvalid": {
+        "message": "請使用值為字串的 JSON 物件，例如 {\"HTTP-Referer\":\"https://example.com\"}。",
+        "description": "Invalid extra headers error"
+    },
+    "toast_aiServiceVerified": {
+        "message": "服務驗證成功",
+        "description": "AI verify success title"
+    },
+    "toast_aiServiceVerifiedDescription": {
+        "message": "$1 已成功回應。",
+        "description": "AI verify success description"
+    },
+    "toast_aiServiceVerifyFailed": {
+        "message": "服務驗證失敗",
+        "description": "AI verify failure title"
+    },
+    "error_aiNoModels": {
+        "message": "供應商未傳回任何模型。",
+        "description": "AI model detection empty error"
+    },
+    "toast_aiModelsRefreshed": {
+        "message": "已重新整理模型",
+        "description": "AI models refreshed title"
+    },
+    "toast_aiModelsRefreshedDescription": {
+        "message": "從 $2 找到 $1 個模型。",
+        "description": "AI models refreshed description"
+    },
+    "toast_aiModelsRefreshFailed": {
+        "message": "無法偵測模型",
+        "description": "AI model detection failure title"
+    },
+    "options_apiKeyDescription": {
+        "message": "AI 供應商的 API 金鑰，只會儲存在這部裝置上。",
+        "description": "API key field description"
+    },
+    "options_apiKeyOptionalDescription": {
+        "message": "$1 不需要 API 金鑰也能執行。",
+        "description": "Optional API key description"
+    },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "選填",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
+    "options_apiKeyRequiredPlaceholder": {
+        "message": "必填",
+        "description": "Placeholder of the API key field for a provider that needs a key and has no known key format"
+    },
+    "options_apiKey": {
+        "message": "API 金鑰",
+        "description": "API key field label"
+    },
+    "options_hideApiKey": {
+        "message": "隱藏 API 金鑰",
+        "description": "Hide API key button"
+    },
+    "options_showApiKey": {
+        "message": "顯示 API 金鑰",
+        "description": "Show API key button"
+    },
+    "options_baseUrl": {
+        "message": "基礎網址",
+        "description": "AI provider base URL label"
+    },
+    "options_baseUrlDescription": {
+        "message": "選填的端點覆寫設定，傳送至這個供應商的每個要求都會使用 (例如 Proxy 或與 OpenAI 相容的伺服器)。",
+        "description": "AI provider base URL description"
+    },
+    "options_customModel": {
+        "message": "自訂模型",
+        "description": "Custom model label"
+    },
+    "options_customModelPlaceholder": {
+        "message": "model-id",
+        "description": "Placeholder of the custom model field: an example model id"
+    },
+    "options_customModelDescription": {
+        "message": "選填的模型 ID 覆寫設定，適用於允許任意模型名稱的供應商。",
+        "description": "Custom model description"
+    },
+    "options_extraHeaders": {
+        "message": "額外標頭 JSON",
+        "description": "Extra headers label"
+    },
+    "options_extraHeadersDescription": {
+        "message": "選填的 JSON 物件，其中的標頭會隨傳送至這個供應商的每個要求一併傳送。",
+        "description": "Extra headers description"
+    },
+    "options_refreshingModels": {
+        "message": "正在重新整理...",
+        "description": "Refresh models button busy label"
+    },
+    "options_refreshModels": {
+        "message": "重新整理模型",
+        "description": "Refresh models button"
+    },
+    "options_verifyingService": {
+        "message": "正在驗證...",
+        "description": "Verify service button busy label"
+    },
+    "options_verifyService": {
+        "message": "驗證服務",
+        "description": "Verify service button"
+    },
+    "toast_settingsImportedNoChanges": {
+        "message": "檔案與目前的設定相同，沒有任何變更。",
+        "description": "Import toast when nothing changed"
+    },
+    "toast_settingsImportedChanges": {
+        "message": "已變更 $1 項設定：$2",
+        "description": "Import toast listing changed settings"
+    },
+    "action_switchToLight": {
+        "message": "切換為淺色主題",
+        "description": "Theme toggle accessible name"
+    },
+    "action_switchToDark": {
+        "message": "切換為深色主題",
+        "description": "Theme toggle accessible name"
+    },
+    "settings_searchResultsCount": {
+        "message": "所有分頁中有 $1 項相符的設定",
+        "description": "Settings search result count"
+    },
+    "settings_statusNotSaved": {
+        "message": "有 $1 項設定未儲存",
+        "description": "Save status when fields are invalid"
+    },
+    "bookmarks_folderUnavailable": {
+        "message": "該資料夾已不存在，改為顯示最接近的現有資料夾。",
+        "description": "Notice when the requested or current manager folder was deleted or never existed"
+    },
+    "bookmarks_folderNotAFolder": {
+        "message": "該項目不是資料夾，改為顯示包含它的資料夾。",
+        "description": "Notice when the manager URL points at a bookmark instead of a folder"
+    },
+    "bookmarks_expandFolder": {
+        "message": "展開「$1」",
+        "description": "Folder tree expand button label; $1 is the folder title"
+    },
+    "bookmarks_collapseFolder": {
+        "message": "收合「$1」",
+        "description": "Folder tree collapse button label; $1 is the folder title"
+    },
+    "bookmarks_breadcrumb": {
+        "message": "資料夾路徑",
+        "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "table_clearSort": {
+        "message": "清除排序",
+        "description": "Column header menu item that removes sorting by the column"
+    },
+    "table_sortedAsc": {
+        "message": "$1，遞增排序",
+        "description": "Column header button label when sorted ascending; $1 is the column name"
+    },
+    "table_sortedDesc": {
+        "message": "$1，遞減排序",
+        "description": "Column header button label when sorted descending; $1 is the column name"
+    },
+    "table_resizeColumn": {
+        "message": "調整「$1」欄的寬度",
+        "description": "Accessible name of a column resize handle (drag, double-click to reset, or ArrowLeft/ArrowRight); $1 is the column name"
+    },
+    "table_dateRange": {
+        "message": "$1 – $2",
+        "description": "Date filter button text for a range; $1 start date, $2 end date"
+    },
+    "table_clearDateFilter": {
+        "message": "清除日期篩選器",
+        "description": "Button that clears the Date Added filter"
+    },
+    "table_filterSelectedCount": {
+        "message": "已選取 $1 個",
+        "description": "Count of selected filter options or table rows; $1 is the count"
+    },
+    "table_filterNoOptions": {
+        "message": "找不到結果。",
+        "description": "Empty state inside a table filter popover"
+    },
+    "table_filterClear": {
+        "message": "清除篩選器",
+        "description": "Filter popover item that clears the selected options"
+    },
+    "table_filterDomains": {
+        "message": "網域",
+        "description": "Title of the filter that groups links by site domain"
+    },
+    "table_browserOrder": {
+        "message": "瀏覽器順序",
+        "description": "Toggle that shows the current folder in the browser bookmark order"
+    },
+    "table_browserOrderHelp": {
+        "message": "依瀏覽器本身的順序顯示項目，以便看見上移或下移的結果",
+        "description": "Tooltip for the Browser order toggle"
+    },
+    "table_moveNeedsBrowserOrder": {
+        "message": "開啟「瀏覽器順序」即可移動項目",
+        "description": "Why the move buttons are disabled when the table uses another sort order"
+    },
+    "table_moveNeedsNoColumnSort": {
+        "message": "清除欄位排序即可移動項目",
+        "description": "Why the move buttons are disabled while a column is sorted"
+    },
+    "table_moveNeedsFolderView": {
+        "message": "清除篩選器或勾選「僅限目前資料夾」即可移動項目",
+        "description": "Why the move buttons are disabled while filtering across all bookmarks"
+    },
+    "toast_itemsDeleted": {
+        "message": "已刪除 $1 個項目",
+        "description": "Toast title after deleting several selected items; $1 is the count"
+    },
+    "toast_deleteManyUndoWindow": {
+        "message": "已刪除 $1 個項目。可在 $2 秒內復原。",
+        "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_itemsRestoredDesc": {
+        "message": "已還原 $1 個項目。",
+        "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "因已變更或已刪除而略過：$1。失敗：$2。",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
+    },
+    "bookmarks_deleteItems": {
+        "message": "刪除 $1 個項目",
+        "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
+    },
+    "bookmarks_confirmDeleteItems": {
+        "message": "要刪除所選的 $1 個項目 (包括所選資料夾內的所有內容) 嗎？短時間內可以復原。",
+        "description": "Confirmation text for deleting several selected items; $1 is the count"
+    },
+    "bookmarks_bulkActions": {
+        "message": "已選取的項目",
+        "description": "Accessible name of the toolbar for selected table rows"
+    },
+    "bookmarks_bulkMove": {
+        "message": "移至資料夾",
+        "description": "Button that moves the selected items to another folder"
+    },
+    "bookmarks_bulkMoveTitle": {
+        "message": "移動 $1 個項目",
+        "description": "Title of the dialog that moves selected items; $1 is the count"
+    },
+    "bookmarks_bulkMoveDescription": {
+        "message": "選擇要將所選項目移入的資料夾。項目會加在最後面。",
+        "description": "Description of the bulk move dialog"
+    },
+    "bookmarks_bulkMoveTarget": {
+        "message": "目的地資料夾",
+        "description": "Label of the destination folder picker in the bulk move dialog"
+    },
+    "bookmarks_bulkMoved": {
+        "message": "已移動 $1 個項目",
+        "description": "Toast after moving selected items; $1 is the count"
+    },
+    "bookmarks_clearSelection": {
+        "message": "清除選取",
+        "description": "Button that clears the table row selection"
+    },
+    "bookmarks_editUrlScriptRejected": {
+        "message": "無法在這裡儲存指令碼網址 ($1)。現有的書籤小程式仍可重新命名。",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
+    },
+    "bookmarks_editFolderDescription": {
+        "message": "變更這個資料夾的名稱。",
+        "description": "Edit dialog description for folders"
+    },
+    "action_dismiss": {
+        "message": "關閉",
+        "description": "Button that dismisses a notice"
+    },
+    "search_clear": {
+        "message": "清除搜尋",
+        "description": "Accessible label for the button that clears the popup search box"
+    },
+    "search_invalidRegex": {
+        "message": "規則運算式無效，改以純文字搜尋。",
+        "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
+    },
+    "ai_folderRecommendation": {
+        "message": "AI 資料夾推薦",
+        "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
+    },
+    "toast_bookmarkAddedDesc": {
+        "message": "已將「$title$」新增至「$folder$」",
+        "description": "Toast description after saving the current page; $1 is the page title, $2 the folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_bookmarkAlreadyInFolderDesc": {
+        "message": "「$title$」已在「$folder$」中。",
+        "description": "Toast description when the current page is already saved in the chosen folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_nothingChanged": {
+        "message": "已儲存過",
+        "description": "Toast title when an action was skipped because nothing needed to change"
+    },
+    "toast_errorAddingBookmarkDesc": {
+        "message": "無法新增書籤，請再試一次。",
+        "description": "Toast description when saving the current page fails"
+    },
+    "toast_folderCreatedDesc": {
+        "message": "已在「$parent$」中新增資料夾「$name$」",
+        "description": "Toast description after creating a folder; $1 is the new folder, $2 its parent",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Travel"
+            },
+            "parent": {
+                "content": "$2",
+                "example": "Bookmarks bar"
+            }
+        }
+    },
+    "toast_errorCreatingFolderDesc": {
+        "message": "無法建立新資料夾，請再試一次。",
+        "description": "Toast description when creating a folder fails"
+    },
+    "toast_itemMovedDesc": {
+        "message": "已將「$title$」移至「$folder$」",
+        "description": "Toast description after moving an item into another folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Reading"
+            }
+        }
+    },
+    "toast_itemReorderedDesc": {
+        "message": "已將「$title$」移至第 $position$ 個位置",
+        "description": "Toast description after reordering an item inside its folder; $2 is the 1-based position",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "position": {
+                "content": "$2",
+                "example": "3"
+            }
+        }
+    },
+    "toast_reorderHiddenBySort": {
+        "message": "清單目前依日期或名稱排序，因此只有在排序方式為「資料夾優先」時才看得到儲存的順序。",
+        "description": "Note added to the reorder toast when the popup sort order hides browser order"
+    },
+    "toast_errorMovingItemDesc": {
+        "message": "無法移動項目，請再試一次。",
+        "description": "Toast description when moving an item fails"
+    },
+    "toast_cannotMoveIntoDescendant": {
+        "message": "資料夾無法移入自己或自己的子資料夾。",
+        "description": "Toast description when a folder is dropped into itself or one of its subfolders"
+    },
+    "popup_expandAllSubfolders": {
+        "message": "展開所有子資料夾",
+        "description": "Tooltip and accessible label for the folder action that opens the folder and every subfolder"
+    },
+    "popup_collapseAllSubfolders": {
+        "message": "收合所有子資料夾",
+        "description": "Tooltip and accessible label for the folder action that closes every subfolder"
+    },
+    "action_close": {
+        "message": "關閉",
+        "description": "Accessible label for close buttons on dialogs, panels, and notifications"
+    },
+    "action_delete": {
+        "message": "刪除",
+        "description": "Button or menu item that deletes the item it belongs to"
+    },
+    "toast_regionLabel": {
+        "message": "通知 ($1)",
+        "description": "Accessible name of the notifications region; $1 is the key that moves focus to it"
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "部分重複項目未移除",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "已移除：$removed$。因已變更或已移除而略過：$skipped$。失敗：$failed$。",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "有 $count$ 組未做任何變更，因為要保留的書籤在掃描後已變更或移除。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "已還原：$restored$。無法還原：$failed$。",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredNote": {
+        "message": "還原的書籤會視為新加入的書籤，因此下次依日期套用的保留規則可能會保留另一個副本。",
+        "description": "Shown after duplicate removal is undone: the browser recreates restored bookmarks with a new date added"
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "「僅標題」比對將 $count$ 組中網址不同的書籤歸為一組。移除重複項目會刪除這些其他網頁的書籤，請先確認。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "網址不同",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
+    },
+    "toast_urlCleanerPartial": {
+        "message": "部分網址未清理",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "已更新：$updated$。因預覽後有變更而略過：$skipped$。失敗：$failed$。",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "重新導向至 $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "不是網頁連結，已略過",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "無法連線至網站",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "重新導向次數過多 (或無法連線至重新導向的目的地)",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "已略過",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "套用「$title$」的建議標題",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "套用 $count$ 個標題",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "已更新標題",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "已更新 $count$ 個書籤標題",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "部分標題未更新",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "已更新：$updated$。因掃描後有變更而略過：$skipped$。失敗：$failed$。",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "要允許存取網站嗎？",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "檢查失效連結、建議標題和重新整理網站圖示時，會向每個加入書籤的網頁傳送要求。除非 Bookmark Scout 擁有網站存取權，否則大多數網站都會封鎖這些要求。瀏覽器會要求確認。",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "只有在執行這些工具時才會使用存取權。要求不會附帶 Cookie，而且可以隨時在瀏覽器的擴充功能設定中撤銷存取權。",
+        "description": "Privacy note in the website access dialog"
+    },
+    "permission_deniedTitle": {
+        "message": "未授予權限",
+        "description": "Toast title when the user declines a browser permission a feature asked for"
+    },
+    "permission_contextMenuDenied": {
+        "message": "右鍵選單維持關閉。如要允許，請再次開啟「右鍵選單」。",
+        "description": "Toast text when the right-click menu permission is declined"
+    },
+    "permission_currentTabTitle": {
+        "message": "要允許存取目前分頁嗎？",
+        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
+    },
+    "permission_currentTabDesc": {
+        "message": "為了儲存目前所在的網頁，或為其建議資料夾，Bookmark Scout 會讀取使用中分頁的標題和網址。工具列的彈出式視窗不需詢問就能讀取；但側邊面板在切換分頁時仍會保持開啟，因此需要這項權限。",
+        "description": "Why saving the current page from the side panel needs the tab permission"
+    },
+    "permission_currentTabDetail": {
+        "message": "瀏覽器的提示會將此稱為存取分頁或瀏覽記錄。Bookmark Scout 只會在你要求時讀取使用中分頁的標題和網址，不會儲存其他任何資料。",
+        "description": "What the tab permission is used for, shown in the explanation dialog"
+    },
+    "permission_currentTabDenied": {
+        "message": "未儲存任何內容。請改為在該網頁上開啟工具列的彈出式視窗，或在系統詢問時允許存取分頁。",
+        "description": "Toast text when the tab permission is declined or missing"
+    },
+    "permission_browserIconsDenied": {
+        "message": "書籤會繼續顯示透過「重新整理網站圖示」儲存的圖示，或是通用圖示。",
+        "description": "Toast text when the favicon permission is declined"
+    },
+    "permission_aiDenied": {
+        "message": "AI 功能維持關閉。開啟 AI 時，瀏覽器會要求允許擴充功能分享 AI 供應商所需的資料。",
+        "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
+    },
+    "permission_aiProviderCheckDenied": {
+        "message": "未傳送任何資料。擴充功能將 API 金鑰分享給供應商之前，瀏覽器會先詢問。",
+        "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
+    },
+    "tools_hostAccessDenied": {
+        "message": "未授予網站存取權",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "未掃描任何內容。請再次執行工具以允許存取。",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "暫時不要",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "允許存取",
+        "description": "Button that requests website access"
+    },
+    "error_invalidJsonFormat": {
+        "message": "JSON 格式無效",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "這個檔案中找不到書籤或資料夾，未匯入任何內容。",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "已匯入書籤：$bookmarks$。已匯入資料夾：$folders$。",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "部分項目未匯入",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "已匯入書籤：$bookmarks$。已匯入資料夾：$folders$。未匯入：$failed$。",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "網址片段中的敏感值：$param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "網址中內嵌使用者名稱和密碼",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "網址中內嵌使用者名稱",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "值看起來像 API 或存取權杖",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "export_privacyReviewTitle": {
+        "message": "匯出前確認私人資料",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "這次匯出中有 $count$ 個書籤包含可能屬於私人的值。選擇「遮蔽後匯出」時，只會在檔案中將這些值替換為 REDACTED，不會變更書籤本身。",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "匯出原始內容",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "遮蔽後匯出",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "網址中有使用者名稱或密碼",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "網址片段中有私人值",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "參數中有類似權杖的值：$param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "網址中有類似權杖的值",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "標題中有類似權杖的值",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "參數中有類似電子郵件地址的值：$param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "網址中有類似電子郵件地址的值",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "標題中有類似電子郵件地址的值",
+        "description": "Export privacy finding: email-like value in the title"
+    },
+    "stats_depthBreakdown": {
+        "message": "各資料夾層級的書籤數",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "第 $level$ 層",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI 功能已停用",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "請在「選項」中開啟 AI 功能以使用這項工具。",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "(另有 $1 個因篩選器而隱藏，不包含在內)",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "無法在這裡儲存會以網頁形式開啟的 data: 網址 ($1)。",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "移動 1 個項目",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "已移動 1 個項目",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "另有 $1 個所選項目位於所選資料夾內，會隨資料夾一起移動。",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "還有 $1 個",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "表格較窄時隱藏，以確保「標題」仍可見",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
+    },
+    "tools_importPreviewTitle": {
+        "message": "匯入預覽",
+        "description": "Title of the dialog that previews an import before anything is written"
+    },
+    "tools_importPreviewDesc": {
+        "message": "確認 $1 會新增哪些內容。選取「匯入」之前不會做任何變更。",
+        "description": "Import preview description; $1 is the selected file name"
+    },
+    "tools_importTarget": {
+        "message": "匯入至",
+        "description": "Label of the target folder picker in the import preview"
+    },
+    "tools_importStrategy": {
+        "message": "重複項目",
+        "description": "Label of the duplicate handling picker in the import preview"
+    },
+    "tools_importStrategySkipAnywhere": {
+        "message": "略過已存在於任何位置的書籤",
+        "description": "Import duplicate strategy that skips URLs found anywhere in the bookmarks"
+    },
+    "tools_importStrategySkipInTarget": {
+        "message": "略過已在目標資料夾中的書籤",
+        "description": "Import duplicate strategy that skips URLs already inside the target folder"
+    },
+    "tools_importStrategyImportAll": {
+        "message": "全部匯入，包括重複項目",
+        "description": "Import duplicate strategy that creates every item"
+    },
+    "tools_importPreviewTargetLine": {
+        "message": "目標資料夾：$1",
+        "description": "Import preview line naming the exact target folder path; $1 is the path"
+    },
+    "tools_importPreviewBookmarks": {
+        "message": "要建立的書籤：$1",
+        "description": "Import preview count of bookmarks that will be created; $1 is the count"
+    },
+    "tools_importPreviewFolders": {
+        "message": "要建立的資料夾：$1",
+        "description": "Import preview count of folders that will be created; $1 is the count"
+    },
+    "tools_importPreviewSkipped": {
+        "message": "要略過的項目：$1",
+        "description": "Import preview count of duplicate bookmarks and emptied folders that will be skipped; $1 is the count"
+    },
+    "tools_importPreviewInvalid": {
+        "message": "已忽略的無效項目：$1",
+        "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
+    },
+    "tools_importNothingToCreate": {
+        "message": "依這個選擇，沒有新的內容可匯入。",
+        "description": "Import preview note when every item would be skipped"
+    },
+    "tools_importPreviewConflicts": {
+        "message": "已存在：目標資料夾中 $1 個，其他位置 $2 個，此檔案中重複 $3 個",
+        "description": "Import preview duplicate summary; $1 in the target folder, $2 elsewhere in the bookmarks, $3 repeated within the file"
+    },
+    "tools_importConflictInTarget": {
+        "message": "在目標資料夾中",
+        "description": "Badge for an imported URL that already exists in the target folder"
+    },
+    "tools_importConflictElsewhere": {
+        "message": "在書籤的其他位置",
+        "description": "Badge for an imported URL that already exists outside the target folder"
+    },
+    "tools_importConflictInFile": {
+        "message": "在檔案中重複",
+        "description": "Badge for an imported URL that appears earlier in the same file"
+    },
+    "tools_importWillSkip": {
+        "message": "將略過",
+        "description": "Badge for a duplicate that the chosen strategy skips"
+    },
+    "tools_importWillImport": {
+        "message": "將匯入",
+        "description": "Badge for a duplicate that the chosen strategy still imports"
+    },
+    "tools_importPreviewChanged": {
+        "message": "書籤在預覽後有所變更。請確認更新後的計畫，然後再次匯入。",
+        "description": "Import preview notice when the bookmarks changed before the import was applied"
+    },
+    "tools_importTargetMissing": {
+        "message": "目標資料夾已不存在或無法變更。請選擇其他資料夾。",
+        "description": "Import preview error when the chosen target folder is missing or read-only"
+    },
+    "tools_importOutcome": {
+        "message": "已建立書籤：$1。已建立資料夾：$2。已略過：$3。失敗：$4。",
+        "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importItemFailed": {
+        "message": "無法匯入「$1」：$2",
+        "description": "An import entry the browser rejected: its title ($1) and the browser's error ($2)"
+    },
+    "tools_importUndone": {
+        "message": "已復原匯入",
+        "description": "Toast title after an import was undone"
+    },
+    "tools_importUndoPartial": {
+        "message": "匯入已部分復原",
+        "description": "Toast title when some imported items could not be removed by undo"
+    },
+    "tools_importUndoneDesc": {
+        "message": "已移除的頂層項目：$1。因已變更或無法移除而保留：$2。",
+        "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
+    },
+    "shortcuts_openSavedSearches": {
+        "message": "開啟已儲存的搜尋",
+        "description": "Keyboard shortcut description: s opens the saved searches menu"
+    },
+    "savedSearches_button": {
+        "message": "已儲存的搜尋",
+        "description": "Manager toolbar button and menu heading for saved searches (smart views)"
+    },
+    "savedSearches_buttonTitle": {
+        "message": "儲存並重新開啟篩選條件組合 (s)",
+        "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
+    },
+    "savedSearches_description": {
+        "message": "儲存的是目前的篩選器、排序和資料夾範圍，而不是書籤本身，因此結果一律會反映書籤的最新狀態。只會保存在這部裝置上。",
+        "description": "Explanation at the top of the saved searches menu"
+    },
+    "savedSearches_nameLabel": {
+        "message": "目前搜尋的名稱",
+        "description": "Accessible label of the input that names a new saved search"
+    },
+    "savedSearches_namePlaceholder": {
+        "message": "為這個搜尋命名",
+        "description": "Placeholder of the input that names a new saved search"
+    },
+    "savedSearches_save": {
+        "message": "儲存",
+        "description": "Button that saves a new saved search or a new name"
+    },
+    "savedSearches_saveHint": {
+        "message": "開啟已儲存的搜尋會取代目前的篩選器和排序。",
+        "description": "Hint under the saved search name input when the current search can be saved"
+    },
+    "savedSearches_needsFilter": {
+        "message": "請新增標題、網址、類型、資料夾、網域或日期篩選器，才能儲存這個搜尋。",
+        "description": "Hint shown when there is nothing to save because no filter is active"
+    },
+    "savedSearches_empty": {
+        "message": "尚無已儲存的搜尋。",
+        "description": "Shown in the saved searches menu when none are saved"
+    },
+    "savedSearches_listLabel": {
+        "message": "已儲存的搜尋清單",
+        "description": "Accessible name of the list of saved searches"
+    },
+    "savedSearches_rename": {
+        "message": "重新命名「$1」",
+        "description": "Accessible name of the button that renames a saved search; $1 is its name"
+    },
+    "savedSearches_renameLabel": {
+        "message": "「$1」的新名稱",
+        "description": "Accessible label of the input for a saved search new name; $1 is the current name"
+    },
+    "savedSearches_delete": {
+        "message": "刪除「$1」",
+        "description": "Accessible name of the button that deletes a saved search; $1 is its name"
+    },
+    "savedSearches_saved": {
+        "message": "已儲存搜尋「$1」",
+        "description": "Toast after saving a search; $1 is its name"
+    },
+    "savedSearches_deleted": {
+        "message": "已刪除已儲存的搜尋「$1」",
+        "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
+    },
+    "savedSearches_missingFoldersTitle": {
+        "message": "部分資料夾已不存在",
+        "description": "Toast title when an opened saved search names folders that no longer exist"
+    },
+    "savedSearches_missingFolders": {
+        "message": "因已刪除而略過的資料夾：$1。其他篩選器仍然有效。",
+        "description": "Toast description; $1 is how many folders of the saved search were skipped"
+    },
+    "savedSearches_errorEmptyName": {
+        "message": "請輸入名稱。",
+        "description": "Error when a saved search name is empty"
+    },
+    "savedSearches_errorDuplicateName": {
+        "message": "已有同名的已儲存搜尋。",
+        "description": "Error when another saved search already uses the name"
+    },
+    "savedSearches_errorLimit": {
+        "message": "最多只能保留 $1 個已儲存的搜尋。請刪除一個後再儲存。",
+        "description": "Error when the saved search limit is reached; $1 is the limit"
+    },
+    "savedSearches_errorGeneric": {
+        "message": "無法儲存這個搜尋。",
+        "description": "Error when a saved search could not be saved for another reason"
+    },
+    "tools_deadLinkCategory_notFound": {
+        "message": "找不到網頁",
+        "description": "Dead link reason for HTTP 404 or 410"
+    },
+    "tools_deadLinkCategory_auth": {
+        "message": "需要登入或存取遭拒；在瀏覽器中可能可以正常開啟",
+        "description": "Dead link reason for HTTP 401, 403, or 407"
+    },
+    "tools_deadLinkCategory_rateLimited": {
+        "message": "要求次數受到限制，請稍後再試",
+        "description": "Dead link reason for HTTP 429"
+    },
+    "tools_deadLinkCategory_methodRejected": {
+        "message": "網站拒絕自動檢查，請開啟網頁確認",
+        "description": "Dead link reason when both HEAD and GET are rejected with HTTP 405 or 501"
+    },
+    "tools_deadLinkCategory_serverError": {
+        "message": "伺服器錯誤，可能只是暫時的",
+        "description": "Dead link reason for HTTP 5xx"
+    },
+    "tools_deadLinkCategory_httpError": {
+        "message": "非預期的回應，請開啟網頁確認",
+        "description": "Dead link reason for other HTTP error statuses"
+    },
+    "tools_deadLinkHttpDetail": {
+        "message": "$1：$2",
+        "description": "Dead link detail; $1 is the HTTP status text (for example \"HTTP 404\"), $2 the reason"
+    },
+    "tools_deadLinkConfirmedDead": {
+        "message": "確定失效",
+        "description": "Badge for a link that is definitely broken (404/410, unreachable, redirect loop)"
+    },
+    "tools_deadLinkNeedsCheck": {
+        "message": "需手動檢查",
+        "description": "Badge for a failed link that may still work in a browser"
+    },
+    "tools_deadLinkSummary": {
+        "message": "確定失效：$1。需手動檢查：$2。已重新導向：$3。",
+        "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
+    },
+    "tools_deadLinkReview": {
+        "message": "確認修復項目",
+        "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkRepairTitle": {
+        "message": "確認失效連結修復項目",
+        "description": "Dead-link repair dialog title"
+    },
+    "tools_deadLinkRepairDesc": {
+        "message": "選擇每個連結的處理方式。套用之前不會做任何變更。",
+        "description": "Dead-link repair dialog description"
+    },
+    "tools_deadLinkRepairAction": {
+        "message": "「$1」的處理方式",
+        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairChoice_keep": {
+        "message": "維持不變",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_delete": {
+        "message": "刪除書籤",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_redirect": {
+        "message": "使用重新導向的目的地",
+        "description": "Dead-link repair choice; replaces the URL with where the site redirected"
+    },
+    "tools_deadLinkRepairChoice_archive": {
+        "message": "使用封存副本 (Wayback Machine)",
+        "description": "Dead-link repair choice; replaces the URL with a web.archive.org link"
+    },
+    "tools_deadLinkRepairChoice_edit": {
+        "message": "編輯網址",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairNewUrl": {
+        "message": "「$1」的新網址",
+        "description": "Accessible label of the edited URL field; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairInvalidUrl": {
+        "message": "請輸入與目前網址不同的有效 http 或 https 網址。",
+        "description": "Validation message for an edited dead-link URL"
+    },
+    "tools_deadLinkRepairWillChange": {
+        "message": "新網址：$1",
+        "description": "Preview of the URL a repair will write; $1 is the URL"
+    },
+    "tools_deadLinkRepairArchiveNote": {
+        "message": "系統不會檢查封存連結，該網頁可能從未被封存。",
+        "description": "Note shown when the archived-copy repair is chosen"
+    },
+    "tools_deadLinkRepairSummary": {
+        "message": "刪除：$1。替換網址：$2。保留：$3。",
+        "description": "Planned dead-link repair counts; $1 deletions, $2 URL replacements, $3 kept"
+    },
+    "tools_deadLinkRepairApply": {
+        "message": "套用 $1 項變更",
+        "description": "Apply button of the dead-link repair dialog; $1 is the number of changes"
+    },
+    "tools_deadLinkRepairApplied": {
+        "message": "已套用修復",
+        "description": "Toast title after all dead-link repairs were applied"
+    },
+    "tools_deadLinkRepairPartial": {
+        "message": "部分修復未套用",
+        "description": "Toast title when some dead-link repairs were skipped or failed"
+    },
+    "tools_deadLinkRepairOutcome": {
+        "message": "已刪除：$1。已替換網址：$2。因掃描後有變更而略過：$3。失敗：$4。",
+        "description": "Dead-link repair result counts; $1 deleted, $2 replaced, $3 skipped, $4 failed"
+    },
+    "tools_deadLinkRepairIssueChanged": {
+        "message": "$1：掃描後已變更，未做任何處理",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairIssueFailed": {
+        "message": "$1：無法變更",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairUndone": {
+        "message": "已復原修復",
+        "description": "Toast title after a dead-link repair batch was undone"
+    },
+    "tools_deadLinkRepairUndoPartial": {
+        "message": "部分修復無法復原",
+        "description": "Toast title when part of a dead-link repair batch could not be undone"
+    },
+    "tools_deadLinkRepairUndoneDesc": {
+        "message": "已還原：$1。無法還原：$2。",
+        "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
+    },
+    "action_refresh": {
+        "message": "重新整理",
+        "description": "Refresh button label"
+    },
+    "format_separator": {
+        "message": "·",
+        "description": "Separator between two short parts on one line, such as a provider and its model; spaces are added around it"
+    },
+    "format_copyName": {
+        "message": "$1 (副本)",
+        "description": "Name of a duplicated item; $1 is the original name"
+    },
+    "format_moreItems": {
+        "message": "其他 $1 個",
+        "description": "Last entry of a shortened list, counting the items left out; $1 is the count. The list words (\"and\") are added by the browser"
+    },
+    "tools_siteIcons": {
+        "message": "重新整理網站圖示",
+        "description": "Title for the Refresh Site Icons tool"
+    },
+    "tools_siteIconsDesc": {
+        "message": "下載每個網站本身的圖示並顯示在書籤上，在 Firefox 中也適用",
+        "description": "Refresh Site Icons tool description"
+    },
+    "tools_siteIconsDialogDesc": {
+        "message": "只會向各個加入書籤的網站要求圖示。儲存之前不會保存任何內容。",
+        "description": "Refresh Site Icons results dialog description"
+    },
+    "tools_siteIconsCached": {
+        "message": "已儲存 $count$ 個圖示 ($size$)",
+        "description": "Number and size of saved site icons on the tool card",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "size": {
+                "content": "$2",
+                "example": "18.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsClear": {
+        "message": "清除已儲存的圖示",
+        "description": "Button that deletes all saved site icons"
+    },
+    "tools_siteIconStatus_updated": {
+        "message": "已更新",
+        "description": "Site icon result status: a new or changed icon"
+    },
+    "tools_siteIconStatus_unchanged": {
+        "message": "未變更",
+        "description": "Site icon result status: same icon as already saved"
+    },
+    "tools_siteIconStatus_noIcon": {
+        "message": "找不到圖示",
+        "description": "Site icon result status: no usable icon"
+    },
+    "tools_siteIconStatus_failed": {
+        "message": "失敗",
+        "description": "Site icon result status: the site could not be reached"
+    },
+    "tools_siteIconStatus_skipped": {
+        "message": "已略過",
+        "description": "Site icon result count: bookmarks that are not web links"
+    },
+    "tools_siteIconsNewFrom": {
+        "message": "圖示來源：$url$",
+        "description": "Where a newly downloaded site icon came from",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/favicon.ico"
+            }
+        }
+    },
+    "tools_siteIconsUnchanged": {
+        "message": "與已儲存的圖示相同",
+        "description": "Site icon is the same as the saved one"
+    },
+    "tools_siteIconsTooLarge": {
+        "message": "圖示檔案超過大小上限",
+        "description": "Site icon rejected for exceeding the size limit"
+    },
+    "tools_siteIconsNotImage": {
+        "message": "圖示檔案不是圖片",
+        "description": "Site icon rejected because it is not an image"
+    },
+    "tools_siteIconsNotFound": {
+        "message": "網站沒有圖示",
+        "description": "The site has no icon"
+    },
+    "tools_siteIconsKeptCached": {
+        "message": "繼續使用先前儲存的圖示。",
+        "description": "A previously saved icon stays in use after a failed refresh"
+    },
+    "tools_siteIconsSkippedDesc": {
+        "message": "有 $count$ 個書籤不是網頁連結，已略過。",
+        "description": "Bookmarks skipped by Refresh Site Icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount": {
+        "message": "$count$ 個書籤",
+        "description": "Bookmarks that share a site's origin",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave": {
+        "message": "儲存 $count$ 個圖示",
+        "description": "Button that saves the downloaded site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "state_noSiteIconsFound": {
+        "message": "這個範圍內沒有書籤。",
+        "description": "Refresh Site Icons empty state"
+    },
+    "toast_siteIconsSaved": {
+        "message": "已儲存網站圖示",
+        "description": "Toast title after saving site icons"
+    },
+    "toast_siteIconsSavedDesc": {
+        "message": "已在這部裝置上儲存 $count$ 個圖示",
+        "description": "Toast description after saving site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedEvictedDesc": {
+        "message": "已儲存：$saved$。為了不超過儲存空間上限而移除的舊圖示：$evicted$。",
+        "description": "Toast description when older icons were removed to stay within the cache limit",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "evicted": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "toast_siteIconsCleared": {
+        "message": "已清除儲存的圖示",
+        "description": "Toast title after clearing saved site icons"
+    },
+    "toast_siteIconsClearedDesc": {
+        "message": "書籤會重新顯示瀏覽器本身的圖示。",
+        "description": "Toast description after clearing saved site icons"
+    },
+    "settings_siteIconsEnabled": {
+        "message": "啟用「重新整理網站圖示」",
+        "description": "Site icons enabled label"
+    },
+    "settings_siteIconsEnabledDesc": {
+        "message": "顯示用來下載各網站圖示的工具。儲存的圖示只會保存在這部裝置上。",
+        "description": "Site icons enabled description"
+    },
+    "settings_siteIconsDefaultScope": {
+        "message": "預設範圍",
+        "description": "Site icons default scope label"
+    },
+    "settings_siteIconsDefaultScopeDesc": {
+        "message": "重新整理網站圖示時使用的預設範圍",
+        "description": "Site icons default scope description"
+    },
+    "settings_siteIconsPreferredSize": {
+        "message": "偏好的圖示大小",
+        "description": "Site icons preferred size label"
+    },
+    "settings_siteIconsPreferredSizeDesc": {
+        "message": "網頁列出多個圖示時，會下載最接近這個大小的圖示",
+        "description": "Site icons preferred size description"
+    },
+    "settings_siteIconsMaxIconKb": {
+        "message": "圖示檔案大小上限",
+        "description": "Site icons maximum file size label"
+    },
+    "settings_siteIconsMaxIconKbDesc": {
+        "message": "超過此大小的圖示檔案不會下載或儲存",
+        "description": "Site icons maximum file size description"
+    },
+    "settings_siteIconsMaxCacheKb": {
+        "message": "圖示儲存空間上限",
+        "description": "Site icons storage limit label"
+    },
+    "settings_siteIconsMaxCacheKbDesc": {
+        "message": "這部裝置上已儲存圖示的總大小；超過時會先移除最舊的圖示",
+        "description": "Site icons storage limit description"
+    },
+    "ai_connErrorInvalidKey": {
+        "message": "供應商拒絕了 API 金鑰。請檢查金鑰是否正確且仍然有效。",
+        "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorForbidden": {
+        "message": "供應商拒絕存取。請檢查金鑰的權限和專案。",
+        "description": "Provider connection error: 403 from a remote provider"
+    },
+    "ai_connErrorNotFound": {
+        "message": "這個位址沒有任何回應。請檢查基礎網址。",
+        "description": "Provider connection error: 404, wrong Base URL"
+    },
+    "ai_connErrorRateLimited": {
+        "message": "可以連線至供應商，但要求次數受到限制。請稍後再試。",
+        "description": "Provider connection error: 429"
+    },
+    "ai_connErrorOriginRejected": {
+        "message": "本機伺服器拒絕來自擴充功能的要求。如果使用 Ollama，請設定 OLLAMA_ORIGINS=chrome-extension://*,moz-extension://* 並重新啟動。如果使用 LM Studio，請開啟「Enable CORS」。",
+        "description": "Provider connection error: 403 from a local server such as Ollama"
+    },
+    "ai_connErrorUnreachable": {
+        "message": "無法連線至 $1。請檢查位址和網路連線，或啟動本機伺服器。",
+        "description": "Provider connection error: network failure; $1 is the host"
+    },
+    "ai_connErrorTimeout": {
+        "message": "$1 未在 $2 秒內回應。",
+        "description": "Provider connection error: timeout; $1 is the host, $2 the timeout in seconds"
+    },
+    "ai_connErrorNotApi": {
+        "message": "這個位址有回應，但不像是 AI 供應商的 API。請檢查基礎網址。",
+        "description": "Provider connection error: response was not the expected JSON"
+    },
+    "ai_connErrorHttp": {
+        "message": "供應商回應了 HTTP $1 ($2)。",
+        "description": "Provider connection error: other HTTP status; $1 status, $2 host"
+    },
+    "error_aiModelListUnavailable": {
+        "message": "這個供應商沒有模型清單。請改為輸入模型或部署名稱。",
+        "description": "Shown when refreshing models for a provider without a model list"
+    },
+    "toast_aiServiceRateLimited": {
+        "message": "可以連線至 $1 且已接受金鑰，但目前要求次數受到限制。",
+        "description": "Verify result when the provider answered 429"
+    },
+    "toast_aiServiceModelMissing": {
+        "message": "已連線至 $1，但其模型清單中沒有 $2。請選擇其他模型。",
+        "description": "Verify result when the selected model is not listed; $1 provider, $2 model"
+    },
+    "options_organization": {
+        "message": "機構 ID",
+        "description": "OpenAI organization field label"
+    },
+    "options_organizationDescription": {
+        "message": "選填。會以 OpenAI-Organization 標頭傳送。",
+        "description": "OpenAI organization field description"
+    },
+    "options_project": {
+        "message": "專案 ID",
+        "description": "OpenAI project field label"
+    },
+    "options_projectDescription": {
+        "message": "選填。會以 OpenAI-Project 標頭傳送。",
+        "description": "OpenAI project field description"
+    },
+    "options_resourceName": {
+        "message": "資源名稱",
+        "description": "Azure resource name field label"
+    },
+    "options_resourceNameDescription": {
+        "message": "https://<name>.openai.azure.com 中的名稱。如果已設定基礎網址，則會改用基礎網址。",
+        "description": "Azure resource name field description"
+    },
+    "options_apiVersion": {
+        "message": "API 版本",
+        "description": "Azure API version field label"
+    },
+    "options_apiVersionDescription": {
+        "message": "選填。留空即使用 v1 API。",
+        "description": "Azure API version field description"
+    },
+    "settings_aiProviderGroupFeatured": {
+        "message": "精選",
+        "description": "Provider picker group: providers with built-in model lists"
+    },
+    "settings_aiProviderGroupCatalog": {
+        "message": "更多供應商 (models.dev)",
+        "description": "Provider picker group: providers from the bundled models.dev catalog"
+    },
+    "select_searchPlaceholder": {
+        "message": "搜尋...",
+        "description": "Search box inside a searchable select"
+    },
+    "select_noMatches": {
+        "message": "沒有相符的項目",
+        "description": "Searchable select: nothing matches the search"
+    },
+    "options_catalogProviderHint": {
+        "message": "這個供應商來自 models.dev 目錄。按一下「重新整理模型」即可載入其模型，或輸入自訂模型。",
+        "description": "Shown in the AI panel for catalog providers"
+    },
+    "options_providerDocs": {
+        "message": "供應商說明文件",
+        "description": "Link to the selected provider documentation"
+    },
+    "settings_aiProviderGroupLocal": {
+        "message": "本機伺服器",
+        "description": "Provider picker group: servers on this computer"
+    },
+    "settings_aiProviderGroupCustom": {
+        "message": "自訂",
+        "description": "Provider picker group: endpoints the user fills in by hand"
+    },
+    "settings_aiProviderCustomAnthropic": {
+        "message": "自訂供應商 (與 Anthropic 相容)",
+        "description": "Name of the hand-written Anthropic-compatible provider"
+    },
+    "options_aiServices": {
+        "message": "AI 服務",
+        "description": "Heading of the saved AI services list"
+    },
+    "options_aiServicesDescription": {
+        "message": "可以儲存任意數量的供應商。所有 AI 工具都會使用預設服務。",
+        "description": "Description of the AI services list"
+    },
+    "options_aiServiceAdd": {
+        "message": "新增服務",
+        "description": "Button that adds an AI service"
+    },
+    "options_aiServiceAddTitle": {
+        "message": "新增 AI 服務",
+        "description": "Title of the add AI service dialog"
+    },
+    "options_aiServiceProvider": {
+        "message": "供應商",
+        "description": "Label of the provider picker when adding a service"
+    },
+    "options_aiServiceName": {
+        "message": "名稱",
+        "description": "Label of an AI service name"
+    },
+    "options_aiServiceNameDescription": {
+        "message": "顯示在服務清單和彈出式視窗中。",
+        "description": "Description of an AI service name"
+    },
+    "options_aiServiceDefault": {
+        "message": "預設",
+        "description": "Badge on the default AI service"
+    },
+    "options_aiServiceSetDefault": {
+        "message": "設為預設",
+        "description": "Menu action that makes a service the default"
+    },
+    "options_aiServiceEnabled": {
+        "message": "使用 $1",
+        "description": "Accessible name of the switch that turns a service on or off; $1 is its name"
+    },
+    "options_aiServiceEdit": {
+        "message": "編輯 $1",
+        "description": "Accessible name of the button that expands a service editor"
+    },
+    "options_aiServiceActions": {
+        "message": "$1 的動作",
+        "description": "Accessible name of a service menu"
+    },
+    "options_aiServiceDuplicate": {
+        "message": "建立副本",
+        "description": "Menu action that copies a service"
+    },
+    "options_aiServiceDeleteTitle": {
+        "message": "要刪除 $1 嗎？",
+        "description": "Title of the delete service confirmation"
+    },
+    "options_aiServiceDeleteDescription": {
+        "message": "其 API 金鑰和設定會從這部裝置上移除。",
+        "description": "Body of the delete service confirmation"
+    },
+    "options_aiServiceMore": {
+        "message": "更多設定",
+        "description": "Toggle that shows Base URL, headers, and provider-specific fields"
+    },
+    "options_aiServiceEmpty": {
+        "message": "尚無 AI 服務。請新增一個服務以使用 AI 工具。",
+        "description": "Empty state of the AI services list"
+    },
+    "error_aiNoService": {
+        "message": "尚未設定 AI 服務。請在「選項」中新增。",
+        "description": "Error when an AI tool runs without any enabled service"
+    },
+    "popup_aiServiceSwitch": {
+        "message": "AI 服務：$1",
+        "description": "Accessible name of the popup AI service switcher; $1 is the current service"
+    },
+    "prompt_libraryTitle": {
+        "message": "提示詞",
+        "description": "Heading of the prompt library"
+    },
+    "prompt_libraryDescription": {
+        "message": "除非選擇自己的提示詞，否則每個 AI 工具都會使用內建提示詞。自己的提示詞會在所有裝置間同步。",
+        "description": "Description of the prompt library"
+    },
+    "prompt_default": {
+        "message": "預設 (內建)",
+        "description": "Select option for the built-in prompt"
+    },
+    "prompt_customize": {
+        "message": "自訂",
+        "description": "Button that starts a custom prompt from the default"
+    },
+    "prompt_newName": {
+        "message": "我的「$1」提示詞",
+        "description": "Default name of a new custom prompt; $1 is the task name"
+    },
+    "prompt_newTitle": {
+        "message": "新提示詞",
+        "description": "Title of the prompt editor for a new prompt"
+    },
+    "prompt_editTitle": {
+        "message": "編輯提示詞",
+        "description": "Title of the prompt editor for an existing prompt"
+    },
+    "prompt_editorDescription": {
+        "message": "應用程式會在提示詞後方加上自己的輸出格式規則，確保結果仍能正確載入。",
+        "description": "Description in the prompt editor"
+    },
+    "prompt_name": {
+        "message": "名稱",
+        "description": "Prompt name field"
+    },
+    "prompt_text": {
+        "message": "提示詞",
+        "description": "Prompt text field"
+    },
+    "prompt_variables": {
+        "message": "插入：",
+        "description": "Label before the variable chips"
+    },
+    "prompt_size": {
+        "message": "$1 / $2",
+        "description": "Prompt size counter; $1 used and $2 limit, each with its unit (e.g. 1.2 KB)"
+    },
+    "prompt_unknownVariables": {
+        "message": "這項工具不會填入：$1",
+        "description": "Warning listing unknown variables"
+    },
+    "prompt_preview": {
+        "message": "以目前設定預覽",
+        "description": "Toggle that shows the filled-in prompt"
+    },
+    "prompt_previewDescription": {
+        "message": "變數會以目前的設定填入。",
+        "description": "Description of the prompt preview"
+    },
+    "prompt_save": {
+        "message": "儲存提示詞",
+        "description": "Save button in the prompt editor"
+    },
+    "prompt_editNamed": {
+        "message": "編輯 $1",
+        "description": "Accessible name of the edit prompt button"
+    },
+    "prompt_duplicateNamed": {
+        "message": "建立 $1 的副本",
+        "description": "Accessible name of the duplicate prompt button"
+    },
+    "prompt_deleteNamed": {
+        "message": "刪除 $1",
+        "description": "Accessible name of the delete prompt button"
+    },
+    "prompt_deleteTitle": {
+        "message": "要刪除 $1 嗎？",
+        "description": "Title of the delete prompt confirmation"
+    },
+    "prompt_deleteDescription": {
+        "message": "工具會改回使用內建提示詞。此提示詞會從所有裝置上移除。",
+        "description": "Body of the delete prompt confirmation"
+    },
+    "prompt_errorNameRequired": {
+        "message": "請輸入名稱。",
+        "description": "Prompt validation: empty name"
+    },
+    "prompt_errorTextRequired": {
+        "message": "請輸入提示詞內容。",
+        "description": "Prompt validation: empty text"
+    },
+    "prompt_errorTooLong": {
+        "message": "提示詞過長，無法同步。請控制在 $1 以內。",
+        "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "無法儲存提示詞。同步儲存空間可能已滿；請刪除不再使用的提示詞後再試一次。",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
+    },
+    "prompt_varMaxRecommendations": {
+        "message": "資料夾建議數量 (推薦數量上限)",
+        "description": "Variable description"
+    },
+    "prompt_varMaxCategories": {
+        "message": "頂層資料夾數量上限，或註明沒有上限 (分類數量上限)",
+        "description": "Variable description"
+    },
+    "prompt_varMinItemsPerFolder": {
+        "message": "每個資料夾的書籤數量下限",
+        "description": "Variable description"
+    },
+    "prompt_varMaxItemsPerFolder": {
+        "message": "每個資料夾的書籤數量上限，或註明沒有上限",
+        "description": "Variable description"
+    },
+    "prompt_varMinTags": {
+        "message": "每個書籤的標籤數量下限",
+        "description": "Variable description"
+    },
+    "prompt_varMaxTags": {
+        "message": "每個書籤的標籤數量上限",
+        "description": "Variable description"
+    },
+    "prompt_varTagStyle": {
+        "message": "標籤樣式，例如 kebab-case",
+        "description": "Variable description"
+    },
+    "prompt_varSummaryLength": {
+        "message": "摘要長度上限 (字元數)",
+        "description": "Variable description"
+    },
+    "prompt_varIncludeDomainHint": {
+        "message": "是否提及網站 (true 或 false)",
+        "description": "Variable description"
+    },
+    "aiActivity_title": {
+        "message": "AI 活動",
+        "description": "Options: heading of the AI request log"
+    },
+    "aiActivity_description": {
+        "message": "在這部裝置上記錄最近 $1 個 AI 要求，包括傳送的內容和收到的回應，方便核對結果或排解失敗的呼叫。要求內容包含書籤標題和網址；絕不會儲存 API 金鑰。關閉記錄功能時會刪除記錄。",
+        "description": "Options: AI activity description; $1 is how many requests are kept"
+    },
+    "aiActivity_record": {
+        "message": "記錄要求",
+        "description": "Options: switch that turns AI request recording on"
+    },
+    "aiActivity_empty": {
+        "message": "尚無 AI 要求。執行 AI 工具或「驗證服務」後，就會顯示在這裡。",
+        "description": "Options: AI activity empty state"
+    },
+    "aiActivity_clear": {
+        "message": "清除記錄",
+        "description": "Options: button that deletes the AI request log"
+    },
+    "aiActivity_copy": {
+        "message": "複製為 JSON",
+        "description": "Options: button that copies one AI request entry"
+    },
+    "aiActivity_copied": {
+        "message": "已複製要求",
+        "description": "Toast after copying an AI request entry"
+    },
+    "aiActivity_failed": {
+        "message": "失敗",
+        "description": "Options: status badge of an AI request that got no response"
+    },
+    "aiActivity_requestHeaders": {
+        "message": "要求標頭",
+        "description": "Options: label of the recorded request headers"
+    },
+    "aiActivity_request": {
+        "message": "要求",
+        "description": "Options: label of the recorded request body"
+    },
+    "aiActivity_response": {
+        "message": "回應",
+        "description": "Options: label of the recorded response body"
+    },
+    "aiActivity_duration": {
+        "message": "$1 ms",
+        "description": "Options: AI request duration; $1 is milliseconds"
+    },
+    "aiActivity_truncated": {
+        "message": "另有 $1 個字元未記錄。",
+        "description": "Options: note under a cut-off body; $1 is the number of characters left out"
+    },
+    "aiActivity_sourceAI": {
+        "message": "AI 要求",
+        "description": "Options: AI activity source for a call with no named tool"
+    },
+    "aiActivity_sourceModelList": {
+        "message": "模型清單",
+        "description": "Options: AI activity source for fetching a provider model list"
+    },
+    "error_aiApiKeyRequired": {
+        "message": "請在「選項」>「AI」中為這個 AI 服務新增 API 金鑰。",
+        "description": "Error when an AI call needs an API key and none is saved"
+    },
+    "error_aiModelRequired": {
+        "message": "請在「選項」>「AI」中為這個 AI 服務選擇模型。",
+        "description": "Error when an AI call has no model selected"
+    },
+    "error_aiReorganizeEmptyScope": {
+        "message": "所選範圍內找不到書籤。請選取「所有書籤」，或選擇含有書籤的資料夾。",
+        "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
+    },
+    "settings_aiReadPageContent": {
+        "message": "讀取網頁內容",
+        "description": "Settings: switch that lets AI tools read page text"
+    },
+    "settings_aiReadPageContentDesc": {
+        "message": "資料夾推薦、自動加上標籤和內容摘要工具除了傳送標題和網址，也會傳送每個網頁的可讀文字，以獲得更好的結果。下載網頁時不會附帶 Cookie，絕不會讀取區域網路中的網頁，而且開啟此選項時會要求網站存取權。",
+        "description": "Settings: description of Read page content"
+    },
+    "settings_hostAccessDeniedDesc": {
+        "message": "這項設定需要網站存取權才能讀取網頁，因此維持關閉。",
+        "description": "Toast when the user declines website access for a setting"
+    },
+    "settings_groupExportInclude": {
+        "message": "匯出時包含",
+        "description": "Settings group: export fields"
+    },
+    "settings_groupExportIncludeDesc": {
+        "message": "匯出時預設包含的書籤詳細資料",
+        "description": "Settings group description"
+    },
+    "settings_groupAiContextPackerInclude": {
+        "message": "AI 脈絡中包含",
+        "description": "Settings group: AI Context Packer fields"
+    },
+    "settings_groupAiContextPackerIncludeDesc": {
+        "message": "在匯出的 AI 脈絡中，為每個書籤加入的詳細資料",
+        "description": "Settings group description"
+    },
+    "settings_groupDuplicatesMatching": {
+        "message": "重複項目比對",
+        "description": "Settings group: duplicate finder URL rules"
+    },
+    "settings_groupDuplicatesMatchingDesc": {
+        "message": "判斷兩個網址是否相同時要忽略的差異",
+        "description": "Settings group description"
+    },
+    "settings_groupUrlCleanerRules": {
+        "message": "清理規則",
+        "description": "Settings group: URL cleaner rules"
+    },
+    "settings_groupUrlCleanerRulesDesc": {
+        "message": "網址清理工具除了移除追蹤參數之外會做的變更",
+        "description": "Settings group description"
+    },
+    "settings_groupMetadataFetcherOptions": {
+        "message": "擷取選項",
+        "description": "Settings group: metadata fetcher options"
+    },
+    "settings_groupMetadataFetcherOptionsDesc": {
+        "message": "中繼資料擷取工具會讀取和取代的內容",
+        "description": "Settings group description"
+    },
+    "settings_groupPrivacyScannerChecks": {
+        "message": "檢查項目",
+        "description": "Settings group: privacy scanner checks"
+    },
+    "settings_groupPrivacyScannerChecksDesc": {
+        "message": "隱私掃描工具檢查的位置和標示的內容",
+        "description": "Settings group description"
+    },
+    "settings_groupStatisticsInclude": {
+        "message": "報告區段",
+        "description": "Settings group: statistics sections"
+    },
+    "settings_groupStatisticsIncludeDesc": {
+        "message": "書籤統計資料中顯示的區段",
+        "description": "Settings group description"
+    },
+    "settings_groupDataShow": {
+        "message": "側欄工具",
+        "description": "Settings group: data tools shown in sidebar"
+    },
+    "settings_groupDataShowDesc": {
+        "message": "書籤管理員側欄中顯示的資料工具",
+        "description": "Settings group description"
+    },
+    "settings_decrease": {
+        "message": "減少「$1」",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "settings_increase": {
+        "message": "增加「$1」",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "prompt_builtInTitle": {
+        "message": "內建提示詞",
+        "description": "Prompt library: title of the read-only built-in prompt view"
+    },
+    "prompt_builtInDescription": {
+        "message": "這項工具預設使用的提示詞。按一下「自訂」即可以此為基礎建立自己的副本。",
+        "description": "Prompt library: built-in prompt view description"
+    },
+    "prompt_viewBuiltIn": {
+        "message": "查看「$1」的內建提示詞",
+        "description": "Prompt library: button label; $1 is the tool name"
+    },
+    "askAI_title": {
+        "message": "詢問 AI",
+        "description": "Title of the Ask AI chat"
+    },
+    "askAI_open": {
+        "message": "詢問 AI 有關書籤或這個網頁的問題",
+        "description": "Popup button that opens the Ask AI chat"
+    },
+    "askAI_back": {
+        "message": "返回書籤",
+        "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_newChat": {
+        "message": "新對話",
+        "description": "Ask AI: button that clears the conversation"
+    },
+    "askAI_placeholder": {
+        "message": "詢問有關書籤、這個網頁或任何事情",
+        "description": "Ask AI: message box placeholder and label"
+    },
+    "askAI_send": {
+        "message": "傳送",
+        "description": "Ask AI: send button"
+    },
+    "askAI_stop": {
+        "message": "停止",
+        "description": "Ask AI: stop button while answering"
+    },
+    "askAI_webSearch": {
+        "message": "搜尋網路",
+        "description": "Ask AI: toggle for the provider web search"
+    },
+    "askAI_empty": {
+        "message": "可以詢問有關書籤、目前網頁或其他任何問題。對話不會儲存，關閉後即結束。",
+        "description": "Ask AI: empty state"
+    },
+    "askAI_suggestionPage": {
+        "message": "這個網頁在講什麼？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionRelated": {
+        "message": "我的哪些書籤與這個網頁有關？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionFolders": {
+        "message": "我的書籤資料夾是如何分類的？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_readPageOff": {
+        "message": "如要讓「詢問 AI」讀取網頁，請在「選項」>「AI」中開啟「讀取網頁內容」。",
+        "description": "Ask AI: hint when page reading is off"
+    },
+    "askAI_thinking": {
+        "message": "思考中…",
+        "description": "Ask AI: waiting for the first answer"
+    },
+    "askAI_retry": {
+        "message": "再試一次",
+        "description": "Ask AI: retry after an error"
+    },
+    "askAI_sources": {
+        "message": "來源",
+        "description": "Ask AI: heading for web sources"
+    },
+    "askAI_toolSearchBookmarks": {
+        "message": "已在書籤中搜尋「$1」",
+        "description": "Ask AI tool step; $1 is the search query"
+    },
+    "askAI_toolListFolders": {
+        "message": "已列出資料夾",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolCurrentPage": {
+        "message": "已查看目前網頁",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolReadPage": {
+        "message": "已讀取 $1",
+        "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolWebSearch": {
+        "message": "已搜尋網路",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "已使用工具",
+        "description": "Ask AI step for a provider tool that has no description of its own"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "回答「詢問 AI」對話中的問題",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "今天的日期，格式為 YYYY-MM-DD",
+        "description": "Prompt variable description"
+    },
+    "error_bookmarksApiUnavailable": {
+        "message": "無法使用瀏覽器的書籤 API。",
+        "description": "Error when the browser bookmarks API cannot be used"
+    },
+    "error_bookmarkNotFound": {
+        "message": "找不到書籤。",
+        "description": "Error when a bookmark no longer exists"
+    },
+    "error_bookmarkNoParent": {
+        "message": "這個項目沒有上層資料夾，因此無法復原。",
+        "description": "Error when an item without a parent folder cannot be deleted with undo"
+    },
+    "error_tabsApiUnavailable": {
+        "message": "無法使用瀏覽器的分頁 API。",
+        "description": "Error when the browser tabs API cannot be used"
+    },
+    "error_noActiveTab": {
+        "message": "找不到使用中的分頁。",
+        "description": "Error when no browser tab is active"
+    },
+    "error_readFileFailed": {
+        "message": "無法讀取檔案。",
+        "description": "Import error when the chosen file cannot be read"
+    },
+    "ai_recommendationNoFolders": {
+        "message": "找不到現有的資料夾",
+        "description": "Reason shown for the only folder suggestion when there are no folders yet"
+    },
+    "ai_reorgPreviewRequired": {
+        "message": "套用重組變更前，必須先確認預覽",
+        "description": "Reorganization error when changes are applied before the preview is confirmed"
+    },
+    "meta_languageName": {
+        "message": "繁體中文",
+        "description": "This language's own name, shown in the Language setting. Do not translate into another language."
+    },
+    "unit_ms": {
+        "message": "ms",
+        "description": "Unit shown after a duration in milliseconds"
+    },
+    "unit_px": {
+        "message": "px",
+        "description": "Unit shown after a size in pixels"
+    },
+    "unit_chars": {
+        "message": "字元",
+        "description": "Unit shown after a number of characters"
+    },
+    "unit_kb": {
+        "message": "KB",
+        "description": "Unit shown after a size in kilobytes"
+    },
+    "bookmarks_folderOptionWithId": {
+        "message": "$1 (#$2)",
+        "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
+    },
+    "page_title": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+    },
+    "page_sidePanel": {
+        "message": "側邊面板",
+        "description": "Name of the side panel page, used in its tab title"
+    },
+    "page_bookmarks": {
+        "message": "書籤",
+        "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_options": {
+        "message": "選項",
+        "description": "Name of the options page, used in its tab title"
+    }
+}

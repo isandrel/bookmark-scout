@@ -9,6 +9,7 @@ import {
   getLanguageName,
   SUPPORTED_LOCALES,
   type SupportedLocale,
+  toLanguageTag,
 } from '@/hooks/use-i18n';
 
 type LocaleMessage = {
@@ -34,6 +35,39 @@ function sourceFiles(dir: string): string[] {
 }
 
 const byLocale = Object.fromEntries(locales.map((locale) => [locale, readLocale(locale)]));
+const translated = locales.filter((locale) => locale !== FALLBACK_LOCALE);
+
+/**
+ * Every plural message: an English key with a singular `_one` form. Some reach tPlural()
+ * through a variable (tool definitions), so the source is not searched for them.
+ */
+const pluralKeys = Object.keys(byLocale.en.messages).filter(
+  (key) => `${key}_one` in byLocale.en.messages,
+);
+const PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many'] as const;
+
+/** The plural forms a locale needs besides 'other': those whole counts up to 1,000 select. */
+function neededPluralCategories(locale: SupportedLocale): string[] {
+  const rules = new Intl.PluralRules(toLanguageTag(locale));
+  const categories = new Set(Array.from({ length: 1001 }, (_, count) => rules.select(count)));
+  return PLURAL_CATEGORIES.filter((category) => categories.has(category));
+}
+
+/** The keys a locale must define: English's, plus its own plural forms, minus forms it lacks. */
+function expectedKeys(locale: SupportedLocale): string[] {
+  const needed = new Set(neededPluralCategories(locale));
+  const pluralForms = pluralKeys.flatMap((key) =>
+    PLURAL_CATEGORIES.map((category) => [`${key}_${category}`, category] as const),
+  );
+  const own = byLocale[locale].messages;
+  const keys = new Set(Object.keys(byLocale.en.messages));
+  for (const [form, category] of pluralForms) {
+    // A form the language needs is required; one it does not need may be kept (ja and ko keep _one).
+    if (needed.has(category)) keys.add(form);
+    else if (!(form in own)) keys.delete(form);
+  }
+  return [...keys].sort();
+}
 
 describe('extension locale messages', () => {
   it.each(locales)('%s has no duplicate top-level keys', (locale) => {
@@ -41,9 +75,8 @@ describe('extension locale messages', () => {
     expect(keys.filter((key, index) => keys.indexOf(key) !== index)).toEqual([]);
   });
 
-  it.each(['ja', 'ko'] as const)('%s has the same key set as en', (locale) => {
-    const enKeys = Object.keys(byLocale.en.messages).sort();
-    expect(Object.keys(byLocale[locale].messages).sort()).toEqual(enKeys);
+  it.each(translated)('%s has the same key set as en, plus its own plural forms', (locale) => {
+    expect(Object.keys(byLocale[locale].messages).sort()).toEqual(expectedKeys(locale));
   });
 
   it.each(locales)('%s defines every $NAME$ placeholder a message uses', (locale) => {
@@ -61,13 +94,16 @@ describe('extension locale messages', () => {
     expect(undefinedPlaceholders).toEqual([]);
   });
 
-  it.each(['ja', 'ko'] as const)('%s uses the same placeholders as en', (locale) => {
+  it.each(translated)('%s uses the same placeholders as en', (locale) => {
     const tokens = (message: string) =>
       [...message.matchAll(/\$([A-Za-z0-9_@]+)\$|\$[1-9]/g)].map((match) => match[0]).sort();
-    const mismatched = Object.entries(byLocale.en.messages)
+    // A plural form English lacks (_few) is compared with its base key.
+    const english = (key: string) =>
+      byLocale.en.messages[key] ?? byLocale.en.messages[key.replace(/_(zero|one|two|few|many)$/, '')];
+    const mismatched = Object.entries(byLocale[locale].messages)
       .filter(([key, entry]) => {
-        const translated = byLocale[locale].messages[key]?.message ?? '';
-        return JSON.stringify(tokens(translated)) !== JSON.stringify(tokens(entry.message));
+        const source = english(key);
+        return source && JSON.stringify(tokens(entry.message)) !== JSON.stringify(tokens(source.message));
       })
       .map(([key]) => key);
     expect(mismatched).toEqual([]);
@@ -125,6 +161,16 @@ describe('plural message variants', () => {
     expect(problems).toEqual([]);
   });
 
+  it.each(locales)('%s defines every plural form its language needs', (locale) => {
+    const messages = byLocale[locale].messages;
+    const missing = pluralKeys.flatMap((key) =>
+      neededPluralCategories(locale)
+        .map((category) => `${key}_${category}`)
+        .filter((form) => !(form in messages)),
+    );
+    expect(missing).toEqual([]);
+  });
+
   it('uses singular English for a count of one', () => {
     expect(formatBundledMessage(byLocale.en.messages.tools_urlCleanerDialogDesc_one, '1')).toBe(
       '1 bookmark can be cleaned',
@@ -134,25 +180,41 @@ describe('plural message variants', () => {
 
 describe('bundled locales', () => {
   const project = parse(readFileSync(path.join(appRoot, '../../config/project.toml'), 'utf8')) as {
-    locales: { default: string; supported: string[]; names: Record<string, string> };
+    locales: {
+      default: string;
+      supported: string[];
+      extension: string[];
+      names: Record<string, string>;
+    };
   };
 
   it('are the _locales folders, each named by the SupportedLocale type', () => {
     const folders = readdirSync(path.join(appRoot, 'public/_locales')).sort();
     expect([...SUPPORTED_LOCALES]).toEqual(folders);
     // A new folder needs its code in the type too (excess keys fail type checking).
-    const typed = { en: true, ja: true, ko: true } satisfies Record<SupportedLocale, true>;
+    const typed = {
+      de: true,
+      en: true,
+      es: true,
+      fr: true,
+      ja: true,
+      ko: true,
+      pt_BR: true,
+      zh_CN: true,
+      zh_TW: true,
+    } satisfies Record<SupportedLocale, true>;
     expect([...SUPPORTED_LOCALES]).toEqual(Object.keys(typed));
   });
 
-  it('are the workspace locales, with the workspace default as the fallback', () => {
-    expect([...SUPPORTED_LOCALES]).toEqual(project.locales.supported);
+  it('are the workspace extension locales, with the workspace default as the fallback', () => {
+    expect(SUPPORTED_LOCALES.map(toLanguageTag).sort()).toEqual([...project.locales.extension].sort());
     expect(FALLBACK_LOCALE).toBe(project.locales.default);
   });
 
-  it('name each language in its own words, as the workspace config does', () => {
+  it('name each language in its own words, as the workspace config does for the website', () => {
     for (const locale of SUPPORTED_LOCALES) {
-      expect(getLanguageName(locale)).toBe(project.locales.names[locale]);
+      const name = project.locales.names[toLanguageTag(locale)];
+      if (name !== undefined) expect(getLanguageName(locale)).toBe(name);
     }
   });
 });

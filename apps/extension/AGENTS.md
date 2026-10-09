@@ -59,7 +59,7 @@ Agents should assume Chrome is the default runtime path, but should not make Chr
 
 ### Static and localized assets
 
-- `public/_locales/`: extension locale files for `en`, `ja`, and `ko`
+- `public/_locales/`: extension locale files, one folder per language (the list is `[locales] extension` in `config/project.toml`)
 - `config/`: app config, one TOML file per domain (setting defaults with their bounds in `config/settings/`), loaded once by `src/lib/app-config.ts`, whose header explains how to add a file
 
 Do not edit generated output or build artifacts under:
@@ -231,15 +231,19 @@ If a component becomes a container for too much logic, split responsibilities ra
 
 ## Localization
 
-Any new or changed user-facing extension string must be reflected in:
+Any new or changed user-facing extension string must be reflected in every `public/_locales/<locale>/messages.json`. Do not leave new extension copy localized in only one language without explicitly noting the gap.
 
-- `public/_locales/en/messages.json`
-- `public/_locales/ja/messages.json`
-- `public/_locales/ko/messages.json`
+To add a language:
 
-Do not leave new extension copy localized in only one language without explicitly noting the gap.
+1. Add its tag (BCP 47, such as `zh-CN`) to `[locales] extension` in `config/project.toml`. The website's `supported` list is separate and can come later.
+2. Add `public/_locales/<folder>/messages.json`, where the folder is the tag with an underscore (`zh_CN`), as Chrome expects. Translate every key, `meta_languageName` included (the language's own name), and keep every `$1`/`$NAME$` placeholder.
+3. Add the folder name to the `SupportedLocale` type in `src/hooks/use-i18n.ts` and a `react-day-picker` locale to `calendarLocales` in `src/components/ui/calendar.tsx` (a type error until you do).
+4. Plurals: `tPlural` picks `<key>_<category>` by `Intl.PluralRules` (`_one` in English; `_one`, `_few`, `_many` in Russian) and falls back to `<key>`. `tests/unit/locale-messages.test.ts` lists any form a language needs and lacks.
+5. Add `store/listings/<folder>.md`; the Chrome Web Store adds a listing language for each `_locales` folder.
 
-- Keep the custom translation hook (`src/hooks/use-i18n.ts`). `@wxt-dev/i18n` follows only the browser language and would remove the in-app Language setting (auto, en, ja, ko).
+`matchBundledLocale` maps browser languages to folders (`zh-HK` to `zh_TW`, `pt-PT` to `pt_BR`); with Language on Browser setting, a language the browser itself would not serve that way is loaded like a selected one.
+
+- Keep the custom translation hook (`src/hooks/use-i18n.ts`). `@wxt-dev/i18n` follows only the browser language and would remove the in-app Language setting (Auto plus each bundled language).
 - Thrown errors that reach the UI, units, and log source names shown to users need locale keys too, not English literals.
 - Reuse an existing key when the same concept already has one (prompt tasks reuse the tool title keys such as `tools_autoTagging`); near-duplicate keys drift apart ("Auto Tagging" versus "Auto-Tagging").
 

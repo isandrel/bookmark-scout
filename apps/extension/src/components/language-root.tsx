@@ -8,15 +8,16 @@ import { Children, cloneElement, isValidElement, type ReactNode, useEffect, useM
  * keeps open sidebars, dialogs, and typed text.
  */
 export function LanguageRoot({ children }: { children: ReactNode }) {
-  const language = useLanguage();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `language` re-runs it; 'auto' resolves to the browser language.
+  const revision = useLanguageRevision();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `revision` re-runs it; 'auto' resolves to the browser language.
   useEffect(() => {
-    document.documentElement.lang = getResolvedLanguage();
-  }, [language]);
+    // A language tag (`zh-CN`), not the folder name: it picks fonts and CJK glyph shapes.
+    document.documentElement.lang = toLanguageTag(getResolvedLanguage());
+  }, [revision]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: new elements for each language re-render the page; other parent renders reuse them.
   return useMemo(
     () => Children.map(children, (child) => (isValidElement(child) ? cloneElement(child) : child)),
-    [children, language],
+    [children, revision],
   );
 }

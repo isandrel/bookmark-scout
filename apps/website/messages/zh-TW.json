@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "title": "Bookmark Scout - 現代化的瀏覽器書籤管理工具",
+    "description": "可搜尋、整理、清理、匯入/匯出和儲存書籤的瀏覽器擴充功能，並提供需自行啟用的 AI 工具。",
+    "keywords": [
+      "瀏覽器擴充功能",
+      "Chrome 擴充功能",
+      "Firefox 附加元件",
+      "Edge 擴充功能",
+      "書籤管理工具",
+      "書籤搜尋",
+      "書籤整理",
+      "書籤清理",
+      "重複書籤",
+      "失效連結",
+      "AI 書籤工具"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "即時搜尋書籤",
+      "以拖放方式整理",
+      "快速儲存書籤",
+      "支援側邊面板 (Chrome 和 Edge)",
+      "已儲存的搜尋",
+      "鍵盤快速鍵",
+      "可復原的刪除",
+      "深色模式",
+      "自訂書籤管理員",
+      "清理重複書籤",
+      "清除追蹤參數",
+      "掃描失效連結並確認修復方式",
+      "匯入和匯出書籤",
+      "匯出前進行隱私確認，可選擇遮蔽敏感值",
+      "需自行啟用的 AI 書籤工具",
+      "支援多種語言"
+    ]
+  },
+  "nav": {
+    "features": "功能",
+    "privacy": "隱私權",
+    "install": "安裝",
+    "docs": "說明文件",
+    "github": "GitHub",
+    "menu": "選單",
+    "skip": "跳至主要內容",
+    "languages": "語言",
+    "home": "Bookmark Scout 首頁"
+  },
+  "footer": {
+    "tagline": "直接在瀏覽器中搜尋、整理及清理書籤。",
+    "product": "產品",
+    "project": "專案",
+    "contact": "聯絡我們",
+    "legal": "法律資訊",
+    "features": "功能",
+    "install": "安裝",
+    "docs": "說明文件",
+    "releases": "版本發布",
+    "github": "原始碼",
+    "contributing": "參與貢獻",
+    "license": "授權 ({license})",
+    "support": "支援",
+    "privacy": "隱私權",
+    "security": "安全性",
+    "contactAddress": "{role}：{address}",
+    "privacyPolicy": "隱私權政策",
+    "securityTxt": "security.txt",
+    "madeBy": "由 {author} 製作。免費且開放原始碼。",
+    "helpCenter": "說明中心"
+  },
+  "home": {
+    "hero": {
+      "title": "儲存過的每個書籤，一搜就找到。",
+      "description": "Bookmark Scout 是適用於 Chrome、Edge 和 Firefox 的瀏覽器擴充功能，可以搜尋、整理和清理現有的書籤。它在瀏覽器中執行，不需要帳戶，也沒有自己的伺服器。",
+      "download": "從 GitHub 下載",
+      "install": "安裝 Bookmark Scout",
+      "docs": "閱讀說明文件",
+      "license": "依 {license} 授權，免費且開放原始碼。",
+      "demoNote": "這個示範會搜尋一組虛構的書籤 (共 37 個)。擴充功能則是在瀏覽器中搜尋你自己的書籤。"
+    },
+    "demo": {
+      "label": "搜尋範例書籤",
+      "placeholder": "搜尋書籤",
+      "count": "{count, number} 個書籤 (共 {total, number} 個)",
+      "results": "相符的書籤",
+      "more": "{count, plural, other {另有 # 個相符結果未顯示}}。繼續輸入即可縮小範圍。",
+      "emptyTitle": "沒有符合「{query}」的結果。",
+      "emptyHint": "可以試試標題的一部分、github 之類的網站，或是「食譜」之類的資料夾。減少輸入的字數也有幫助。",
+      "clear": "清除搜尋",
+      "try": "試試看",
+      "chips": [
+        "食譜",
+        "mdn",
+        "旅行",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "開發文件",
+        "css": "CSS",
+        "research": "研究",
+        "recipes": "食譜",
+        "travel": "旅行",
+        "japan": "日本",
+        "reading": "閱讀",
+        "inbox": "待整理"
+      }
+    },
+    "tour": {
+      "title": "可以用它做什麼",
+      "lede": "以下是 Chrome 版本的實際螢幕截圖，會依照系統的淺色或深色設定顯示。",
+      "tabsLabel": "Bookmark Scout 的功能",
+      "firefoxNote": "Firefox 無法取代其書籤頁面，因此在 Firefox 中，書籤管理員 (包括清理工具、已儲存的搜尋以及匯入和匯出功能) 要從工具列彈出式視窗中的按鈕開啟。",
+      "find": {
+        "tab": "尋找",
+        "heading": "從工具列搜尋",
+        "caption": "工具列彈出式視窗：資料夾樹狀結構、即時搜尋，以及一鍵儲存至任何資料夾。",
+        "alt": "兩個並排的 Bookmark Scout 彈出式視窗：一個顯示含有食譜、旅行、研究和開發文件資料夾的資料夾樹狀結構，另一個顯示搜尋 docs 的結果，相符的文字已醒目顯示",
+        "points": [
+          "邊輸入邊搜尋所有書籤，並提供大小寫須相符、全字拼寫須相符和規則運算式選項",
+          "在 Chrome 和 Edge 中，可以在側邊面板中持續開啟相同的樹狀結構和搜尋",
+          "將搜尋儲存為智慧檢視，一律顯示最新結果",
+          "使用鍵盤在資料夾和結果之間移動；瀏覽器的 Ctrl 和 Cmd 快速鍵照常運作"
+        ]
+      },
+      "organize": {
+        "tab": "整理",
+        "heading": "將網頁歸檔到正確的位置",
+        "caption": "書籤管理員以資料夾樹狀結構、路徑導覽和可排序的表格，取代 Chrome 的「書籤」頁面。",
+        "alt": "Bookmark Scout 書籤管理員，在資料夾樹狀結構旁以表格顯示開發文件資料夾，包含類型、資料夾路徑、網址、標題和新增日期欄位",
+        "points": [
+          "一鍵將目前網頁儲存至任何資料夾，不會重複儲存",
+          "在資料夾樹狀結構中拖曳書籤和資料夾",
+          "從右鍵選單將連結儲存至最近使用的資料夾",
+          "在書籤管理員的表格中篩選、排序和調整欄寬",
+          "預覽後匯入 HTML 或 JSON，並可匯出為 HTML、JSON、Markdown 或 CSV"
+        ]
+      },
+      "cleanUp": {
+        "tab": "清理",
+        "heading": "整理多年來儲存的連結",
+        "caption": "重複書籤清理工具會在移除任何內容之前，先顯示每個群組和要保留的副本。",
+        "alt": "重複書籤清理工具對話方塊列出兩組重複的書籤，每組都標示了要保留的副本，下方是「移除重複項目」按鈕",
+        "points": [
+          "確認重複群組，然後移除多餘的副本",
+          "預覽後移除網址中的追蹤參數",
+          "找出失效連結並加以修復：刪除、改用重新導向的網址、指向封存副本或編輯網址",
+          "擷取網頁標題，只套用選取的項目",
+          "下載每個網站本身的圖示，即使在 Firefox 中書籤也能顯示",
+          "刪除前會先確認，並可在 10 秒內復原"
+        ]
+      },
+      "ai": {
+        "tab": "AI (選用)",
+        "heading": "使用自選供應商的 AI，或完全不用",
+        "caption": "在「設定」中開啟 AI、選擇供應商，並在供應商需要時加入自己的 API 金鑰之前，AI 都會維持關閉。",
+        "alt": "Bookmark Scout 設定頁面的 AI 分頁，AI 功能為關閉狀態，並顯示供應商和模型選取器",
+        "points": [
+          "為目前所在的網頁建議資料夾，包括確認後建立新的資料夾路徑",
+          "建議標籤和簡短摘要，確認後才儲存",
+          "資料夾重組計畫，在移動任何項目前先預覽",
+          "將所選書籤匯出為 Markdown 或 XML 格式的脈絡，供 AI 對話使用；不需要 AI，也不會傳送任何資料"
+        ],
+        "providersTitle": "支援的供應商",
+        "customProvider": "任何與 OpenAI 相容的端點"
+      }
+    },
+    "privacy": {
+      "title": "書籤保留在瀏覽器中。",
+      "policyLink": "閱讀隱私權政策",
+      "diagram": {
+        "browser": "瀏覽器",
+        "bookmarks": {
+          "name": "書籤",
+          "detail": "在這裡搜尋、移動和清理"
+        },
+        "settings": {
+          "name": "設定",
+          "detail": "開啟同步功能時，透過瀏覽器帳戶同步"
+        },
+        "keys": {
+          "name": "API 金鑰、標籤、已儲存的搜尋",
+          "detail": "只會保留在這部裝置上"
+        },
+        "ai": {
+          "name": "自選的 AI 供應商",
+          "detail": "只有在開啟 AI 時才會使用。使用 Ollama 時，資料會留在自己的電腦上。"
+        },
+        "websites": {
+          "name": "檢查的網站",
+          "detail": "在允許存取後，用於檢查失效連結、擷取標題和網站圖示"
+        },
+        "server": {
+          "name": "Bookmark Scout 伺服器",
+          "detail": "根本不存在。不會傳送任何資料給開發人員。"
+        },
+        "legend": "虛線路徑為選用項目，只有在使用該功能時才會開啟。"
+      },
+      "facts": {
+        "noServer": {
+          "title": "不需要帳戶，也沒有伺服器",
+          "body": "不需要註冊任何帳戶，Bookmark Scout 也沒有自己的伺服器。書籤的讀取和變更都在瀏覽器中進行。"
+        },
+        "noTelemetry": {
+          "title": "不收集遙測資料",
+          "body": "擴充功能不會傳送任何資料給開發人員：沒有分析、沒有廣告，也沒有追蹤。"
+        },
+        "aiOptIn": {
+          "title": "AI 在開啟前一律關閉",
+          "body": "開啟後，要求會直接從瀏覽器傳送到所選的供應商。如果在自己的電腦上使用 Ollama，資料就會留在那裡。"
+        },
+        "exports": {
+          "title": "匯出前會進行隱私確認",
+          "body": "在下載檔案之前，系統會檢查並標示權杖、電子郵件地址和其他敏感值，並可在儲存的副本中加以遮蔽。"
+        }
+      }
+    },
+    "install": {
+      "title": "只要幾個步驟即可安裝",
+      "lede": "請選擇瀏覽器。GitHub 上的每個版本都提供適用於 Chrome、Edge 和 Firefox 的建置檔。",
+      "tabsLabel": "瀏覽器",
+      "download": "從 GitHub 下載",
+      "storeComing": "{store} 的商店頁面正在準備中。在上架之前，請從 GitHub Releases 安裝建置檔。",
+      "manual": "或者自行從 GitHub Releases 安裝建置檔：",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome 線上應用程式商店",
+        "storeButton": "加到 Chrome",
+        "steps": {
+          "download": "從最新版本下載 <code>bookmark-scout-*-chrome.zip</code> 並解壓縮。",
+          "open": "開啟 <code>chrome://extensions</code>，然後開啟右上角的<b>開發人員模式</b>。",
+          "load": "按一下<b>載入未封裝項目</b>，然後選取解壓縮後的資料夾。"
+        },
+        "crx": "版本中也提供已簽署的 <code>.crx</code> 檔案，也可以改為將它拖曳到擴充功能頁面上。"
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Edge 附加元件",
+        "storeButton": "取得 Edge 版本",
+        "steps": {
+          "download": "從最新版本下載 <code>bookmark-scout-*-edge.zip</code> 並解壓縮。",
+          "open": "開啟 <code>edge://extensions</code>，然後開啟<b>開發人員模式</b>。",
+          "load": "按一下<b>載入解壓縮</b>，然後選取解壓縮後的資料夾。"
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Firefox 附加元件",
+        "storeButton": "新增至 Firefox",
+        "steps": {
+          "download": "從最新版本下載 <code>bookmark-scout-*-firefox.zip</code> 並解壓縮。",
+          "open": "開啟 <code>about:debugging#/runtime/this-firefox</code>。",
+          "load": "按一下<b>載入暫用附加元件</b>，然後選取解壓縮後資料夾中的 <code>manifest.json</code>。"
+        },
+        "limits": "Firefox 重新啟動時會移除暫用附加元件，因此每次重新啟動後都需要再次載入。在 Firefox 中，書籤管理員及其工具要從工具列彈出式視窗中的「開啟書籤管理員」按鈕開啟。"
+      }
+    },
+    "faq": {
+      "title": "常見問題",
+      "items": {
+        "data": {
+          "q": "Bookmark Scout 會把我的書籤傳送到其他地方嗎？",
+          "a": "不會。書籤的讀取和變更都在瀏覽器中進行，擴充功能不會傳送任何資料給開發人員。只有在使用選用功能時，資料才會離開瀏覽器：AI 要求會傳送到所選的供應商；在允許網站存取權後，失效連結檢查工具、標題擷取工具和網站圖示重新整理功能會向加入書籤的網站傳送要求。如果開啟了瀏覽器同步功能，設定會透過瀏覽器帳戶同步。詳情請參閱<privacy>隱私權政策</privacy>。"
+        },
+        "needAi": {
+          "q": "一定要使用 AI 嗎？",
+          "a": "不用。搜尋、整理、清理以及匯入和匯出，都不需要 AI 就能使用。在「設定」中開啟之前，AI 會一直維持關閉。"
+        },
+        "providers": {
+          "q": "可以使用哪些 AI 供應商？",
+          "a": "可以使用 {providers}。如果供應商需要 API 金鑰，請加入自己的金鑰；供應商可能會依用量收費。"
+        },
+        "changes": {
+          "q": "它會未經詢問就變更我的書籤嗎？",
+          "a": "不會。清理重複書籤、清理網址、修復失效連結、擷取標題、AI 重組和匯入，都會在寫入任何內容之前先顯示確認畫面。刪除時預設會要求確認，而且刪除和匯入都可以在 10 秒內復原。"
+        },
+        "firefox": {
+          "q": "可以在 Firefox 中使用嗎？",
+          "a": "可以。Firefox 無法取代其書籤頁面，因此書籤管理員 (包括清理工具、匯入和匯出功能以及已儲存的搜尋) 要從工具列彈出式視窗中的按鈕開啟。在 Firefox 附加元件商店的頁面準備好之前，Firefox 會以暫用附加元件的形式載入，並在 Firefox 重新啟動時移除。"
+        },
+        "stores": {
+          "q": "為什麼還沒有在瀏覽器商店上架？",
+          "a": "Chrome 線上應用程式商店、Edge 附加元件和 Firefox 附加元件的商店頁面正在準備中，而且每個商店都會在擴充功能上架前進行審查。在此之前，請從 GitHub Releases 安裝。"
+        },
+        "free": {
+          "q": "可以免費使用嗎？",
+          "a": "可以。Bookmark Scout 依 {license} 授權，免費且開放原始碼，沒有廣告，也沒有付費方案。如果開啟 AI，供應商可能會依 API 用量收費。"
+        },
+        "help": {
+          "q": "如何取得協助？",
+          "a": "請先查看<support>支援頁面</support>或<docs>說明文件</docs>。也可以在 <github>GitHub</github> 上回報問題，或寄送電子郵件至 <email>{supportEmail}</email>。"
+        }
+      }
+    }
+  }
+}

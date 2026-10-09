@@ -23,21 +23,37 @@ spdx = "AGPL-3.0"
 url  = "https://www.gnu.org/licenses/agpl-3.0.html"
 file = "LICENSE"
 
+# Language tags (BCP 47, such as zh-CN). `supported` lists the website's languages, which the
+# README links too; `extension` lists the extension's, one per apps/extension/public/_locales
+# folder (zh-CN is the folder zh_CN), and may be ahead of the website.
 [locales]
 default   = "en"
-supported = ["en", "ja", "ko"]
+supported = ["en", "ja", "ko", "zh-CN", "zh-TW", "es", "de", "fr", "pt-BR"]
+extension = ["en", "ja", "ko", "zh-CN", "zh-TW", "es", "de", "fr", "pt-BR"]
 
 # Each language's own name, for language switchers.
 [locales.names]
 en = "English"
 ja = "日本語"
 ko = "한국어"
+"zh-CN" = "简体中文"
+"zh-TW" = "繁體中文"
+es = "Español"
+de = "Deutsch"
+fr = "Français"
+"pt-BR" = "Português (Brasil)"
 
 # Open Graph locale codes.
 [locales.og]
 en = "en_US"
 ja = "ja_JP"
 ko = "ko_KR"
+"zh-CN" = "zh_CN"
+"zh-TW" = "zh_TW"
+es = "es_ES"
+de = "de_DE"
+fr = "fr_FR"
+"pt-BR" = "pt_BR"
 
 [browsers]
 supported = ["chrome", "firefox", "edge"]

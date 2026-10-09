@@ -98,7 +98,9 @@ describe('on-demand locale loading', () => {
   it.each([
     ['ko', 'ko'],
     ['en-GB', 'en'],
-    ['fr-FR', 'en'],
+    ['fr-FR', 'fr'],
+    ['zh-HK', 'zh_TW'],
+    ['ru-RU', 'en'],
     // Konkani is not Korean: the browser falls back to the default locale.
     ['kok', 'en'],
   ])('resolves the browser UI language %s to the %s messages', (uiLanguage, locale) => {
@@ -110,12 +112,55 @@ describe('on-demand locale loading', () => {
     }
   });
 
+  it('picks plural forms by the plural rules of the language', async () => {
+    i18n.setLanguage('en');
+    await i18n.whenLanguageReady();
+    expect(i18n.tPlural('tools_urlCleanerDialogDesc', 1)).toBe('1 bookmark can be cleaned');
+    expect(i18n.tPlural('tools_urlCleanerDialogDesc', 0)).toBe('0 bookmarks can be cleaned');
+    i18n.setLanguage('ja');
+    await i18n.whenLanguageReady();
+    // Japanese has one form, so a count of one uses the general message.
+    expect(i18n.getPluralCategory(1)).toBe('other');
+  });
+
+  it('formats with language tags, not folder names', () => {
+    expect(i18n.toLanguageTag('en')).toBe('en');
+    expect(i18n.toLanguageTag('zh_CN' as never)).toBe('zh-CN');
+  });
+
   it('names every locale without loading its messages', () => {
     expect(i18n.SUPPORTED_LOCALES.map(i18n.getLanguageName)).toEqual([
+      'Deutsch',
       'English',
+      'Español',
+      'Français',
       '日本語',
       '한국어',
+      'Português (Brasil)',
+      '简体中文',
+      '繁體中文',
     ]);
     expect(fetchFile).not.toHaveBeenCalled();
+  });
+});
+
+describe('browser language matching', () => {
+  // Folder names as the extension ships them; zh_CN, zh_TW, and pt_BR stand in for future locales.
+  const locales = ['en', 'ja', 'ko', 'zh_CN', 'zh_TW', 'pt_BR'] as never[];
+
+  it.each([
+    ['ja-JP', 'ja'],
+    ['zh-CN', 'zh_CN'],
+    ['zh_CN', 'zh_CN'],
+    ['zh-TW', 'zh_TW'],
+    ['zh-HK', 'zh_TW'],
+    ['zh-Hant-HK', 'zh_TW'],
+    ['zh-SG', 'zh_CN'],
+    ['zh', 'zh_CN'],
+    ['pt-PT', 'pt_BR'],
+    ['kok', undefined],
+    ['fr-FR', undefined],
+  ])('matches %s to %s', (language, locale) => {
+    expect(i18n.matchBundledLocale(language, locales)).toBe(locale);
   });
 });

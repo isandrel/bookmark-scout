@@ -1,0 +1,96 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "Soporte",
+            "description": "Obtén ayuda con Bookmark Scout: respuestas a problemas habituales, cómo informar de un error y a qué dirección escribir sobre soporte, privacidad y seguridad."
+        },
+        "title": "Soporte",
+        "intro": "La mayoría de las respuestas están en la documentación y en las preguntas frecuentes. Si algo no funciona, infórmalo en GitHub. Para lo que prefieras no publicar, escríbenos un correo electrónico.",
+        "sections": {
+            "start-here": {
+                "title": "Empieza aquí",
+                "items": {
+                    "docs": {
+                        "title": "Lee la documentación",
+                        "body": "Instalación en cada navegador, guías de las funciones y la explicación de cada ajuste."
+                    },
+                    "faq": {
+                        "title": "Consulta las preguntas frecuentes",
+                        "body": "Respuestas breves sobre adónde van tus datos, si necesitas la IA y qué funciona en Firefox."
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "Problemas habituales",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "Bookmark Scout desaparece al reiniciar Firefox",
+                        "a": [
+                            "Hasta que se publique la ficha en Complementos de Firefox, Bookmark Scout funciona en Firefox como complemento temporal, y Firefox quita los complementos temporales al reiniciarse.",
+                            "Vuelve a cargarlo después de reiniciar: abre <code>about:debugging#/runtime/this-firefox</code>, haz clic en Cargar complemento temporal y selecciona el archivo <code>manifest.json</code> de la carpeta descomprimida."
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "No encuentro el administrador de marcadores en Firefox",
+                        "a": [
+                            "Firefox no permite que las extensiones reemplacen su página de marcadores, así que el administrador de Bookmark Scout no se abre desde el menú de marcadores de Firefox.",
+                            "Haz clic en Abrir el administrador de marcadores (el icono de libros) en la parte superior de la ventana emergente de la barra de herramientas. El administrador se abre en una pestaña nueva, con la barra lateral de herramientas, las búsquedas guardadas y la importación y exportación."
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "Faltan los iconos de sitios en Firefox",
+                        "a": [
+                            "Bookmark Scout muestra los iconos que el propio navegador guarda en caché, que Chrome y Edge comparten con las extensiones y Firefox no. Por el mismo motivo, los sitios que no has visitado recientemente pueden mostrar un globo genérico en Chrome y Edge.",
+                            "Ejecuta Actualizar iconos de sitios en la barra lateral de herramientas del administrador para descargar el icono propio de cada sitio. Los iconos guardados se quedan en este dispositivo. En Firefox, abre el administrador con Abrir el administrador de marcadores en la ventana emergente de la barra de herramientas."
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "Comprobar enlaces rotos, Extractor de metadatos o Actualizar iconos de sitios no analizó nada",
+                        "a": [
+                            "Estas herramientas necesitan acceso a los sitios web, que Bookmark Scout no recibe al instalarse. El navegador lo pide la primera vez que las ejecutas y, si lo rechazas, no se analiza nada.",
+                            "Vuelve a ejecutar la herramienta y permite el acceso cuando el navegador lo pida."
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "Las funciones de IA no aparecen o no responden",
+                        "a": [
+                            "Las funciones de IA están desactivadas de forma predeterminada. Actívalas en Configuración, en IA, elige un proveedor y escribe tu clave de API. Un servidor local de Ollama no necesita clave.",
+                            "Haz clic en Verificar servicio para probar la conexión. La primera vez, el navegador pide acceso al sitio de ese proveedor; permítelo para que la extensión pueda comunicarse con el proveedor."
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "Informar de un error",
+                "body": "Los informes de errores se envían a GitHub Issues, donde cualquiera puede seguir la corrección. Busca primero entre los issues existentes, por si alguien ya lo ha informado.",
+                "button": "Abrir un issue en GitHub",
+                "includeTitle": "Un informe útil incluye",
+                "include": {
+                    "browser": "Tu navegador y su versión (Chrome, Edge o Firefox).",
+                    "version": "La versión de Bookmark Scout, que aparece en la página de extensiones del navegador.",
+                    "steps": "Los pasos que llevan al problema, empezando por dónde abriste Bookmark Scout: la ventana emergente, el panel lateral o el administrador.",
+                    "result": "Lo que esperabas y lo que pasó en su lugar, incluido cualquier mensaje de error.",
+                    "screenshot": "Una captura de pantalla si ayuda, con los marcadores privados ocultos."
+                },
+                "privacyNote": "Los issues son públicos. Nunca pegues una clave de API y omite los títulos o las URLs de marcadores que no quieras que vean otras personas."
+            },
+            "email": {
+                "title": "Correo electrónico",
+                "channels": {
+                    "support": {
+                        "title": "Ayuda con la extensión",
+                        "body": "Preguntas sobre cómo instalar o usar Bookmark Scout que prefieras no publicar."
+                    },
+                    "privacy": {
+                        "title": "Preguntas y solicitudes sobre privacidad",
+                        "body": "Preguntas sobre cómo se tratan tus datos. La <privacyPolicy>política de privacidad</privacyPolicy> explica qué hacen con los datos la extensión y los sitios web."
+                    },
+                    "security": {
+                        "title": "Vulnerabilidades de seguridad",
+                        "body": "Informa aquí de las vulnerabilidades de forma privada, no en un issue público. Consulta <securityPolicy>SECURITY.md</securityPolicy> y <securityTxt>security.txt</securityTxt>."
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,96 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "支持",
+            "description": "获取 Bookmark Scout 的帮助：常见问题的解答、如何报告错误，以及有关支持、隐私和安全问题的联系邮箱。"
+        },
+        "title": "支持",
+        "intro": "大多数问题都能在文档和常见问题中找到答案。如果遇到故障，请在 GitHub 上报告。如有不便公开发布的内容，请给我们发送电子邮件。",
+        "sections": {
+            "start-here": {
+                "title": "从这里开始",
+                "items": {
+                    "docs": {
+                        "title": "阅读文档",
+                        "body": "各浏览器的安装方法、功能指南，以及每项设置的说明。"
+                    },
+                    "faq": {
+                        "title": "查看常见问题",
+                        "body": "简要解答数据去向、是否需要使用 AI，以及哪些功能可在 Firefox 中使用。"
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "常见问题",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "重启 Firefox 后 Bookmark Scout 消失了",
+                        "a": [
+                            "在 Firefox 附加组件上架之前，Bookmark Scout 在 Firefox 中以临时附加组件的形式运行，而 Firefox 重启时会移除临时附加组件。",
+                            "重启后请重新载入：打开 <code>about:debugging#/runtime/this-firefox</code>，点击“临时载入附加组件”，然后选择解压后文件夹中的 <code>manifest.json</code> 文件。"
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "在 Firefox 中找不到书签管理器",
+                        "a": [
+                            "Firefox 不允许扩展程序替换其书签页面，因此无法从 Firefox 自带的书签菜单打开 Bookmark Scout 书签管理器。",
+                            "点击工具栏弹出窗口顶部的“打开书签管理器”（书本图标）。书签管理器会在新标签页中打开，其中包含工具侧栏、已保存的搜索以及导入和导出。"
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "Firefox 中没有显示网站图标",
+                        "a": [
+                            "Bookmark Scout 显示的是浏览器自身缓存的图标；Chrome 和 Edge 会与扩展程序共享这些图标，而 Firefox 不会。出于同样的原因，在 Chrome 和 Edge 中，最近未访问过的网站可能会显示通用的地球图标。",
+                            "在书签管理器的工具侧栏中运行“刷新网站图标”，即可下载每个网站自己的图标。保存的图标保留在此设备上。在 Firefox 中，请通过工具栏弹出窗口中的“打开书签管理器”打开书签管理器。"
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "“检查失效链接”“元数据获取”或“刷新网站图标”没有扫描任何内容",
+                        "a": [
+                            "这些工具需要网站访问权限，而 Bookmark Scout 在安装时不会获得该权限。首次运行这些工具时浏览器会询问你；如果你拒绝，则不会扫描任何内容。",
+                            "请再次运行该工具，并在浏览器询问时允许访问。"
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "AI 功能不见了或没有响应",
+                        "a": [
+                            "AI 功能默认关闭。请在设置的“AI”中开启，选择服务商，并输入你的 API 密钥。本地 Ollama 服务器无需密钥。",
+                            "点击“验证服务”测试连接。首次验证时，浏览器会请求访问该服务商网站的权限；请允许，以便扩展程序能够连接到服务商。"
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "报告错误",
+                "body": "错误报告请提交到 GitHub Issues，任何人都可以在那里跟进修复进度。提交前请先搜索现有的 issue，以防已有人报告过。",
+                "button": "在 GitHub 上提交 issue",
+                "includeTitle": "一份有用的报告应包含",
+                "include": {
+                    "browser": "你的浏览器及其版本（Chrome、Edge 或 Firefox）。",
+                    "version": "Bookmark Scout 的版本号，可在浏览器的扩展程序页面中查看。",
+                    "steps": "导致问题的操作步骤，从你在哪里打开 Bookmark Scout 开始：弹出窗口、侧边栏还是书签管理器。",
+                    "result": "你预期的结果和实际发生的情况，包括任何错误消息。",
+                    "screenshot": "如有帮助，请附上屏幕截图，并隐藏私人书签。"
+                },
+                "privacyNote": "Issue 是公开的。切勿粘贴 API 密钥，也不要包含你不希望他人看到的书签标题或网址。"
+            },
+            "email": {
+                "title": "电子邮件",
+                "channels": {
+                    "support": {
+                        "title": "扩展程序使用帮助",
+                        "body": "有关安装或使用 Bookmark Scout、但你不便公开发布的问题。"
+                    },
+                    "privacy": {
+                        "title": "隐私问题和请求",
+                        "body": "有关你的数据如何处理的问题。<privacyPolicy>隐私政策</privacyPolicy>说明了扩展程序和网站如何处理数据。"
+                    },
+                    "security": {
+                        "title": "安全漏洞",
+                        "body": "请通过此处私下报告漏洞，不要在公开的 issue 中报告。请参阅 <securityPolicy>SECURITY.md</securityPolicy> 和 <securityTxt>security.txt</securityTxt>。"
+                    }
+                }
+            }
+        }
+    }
+}
