@@ -119,7 +119,10 @@ test.describe('saving the current page', () => {
     );
 
     await openPopup(page, extensionId);
-    const doubleChip = page.getByRole('button', { name: 'Add to "E2E Recent Double"', exact: true });
+    const doubleChip = page.getByRole('button', {
+      name: 'Add to "E2E Recent Double"',
+      exact: true,
+    });
     await doubleChip.dblclick();
     await expect.poll(() => childCount(extensionWorker, doubled.folderId)).toBe(1);
     await expect(doubleChip).not.toHaveAttribute('aria-disabled');
@@ -424,7 +427,7 @@ test('folder rows use a leading tree chevron that lines up per depth and rotates
   expect(hovered.actionsLeft).toBeGreaterThan(hovered.iconLeft);
 
   await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).height))
+    .poll(() => page.evaluate(() => getComputedStyle(document.body).height))
     .toBe('300px');
 });
 

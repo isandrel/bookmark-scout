@@ -8,37 +8,37 @@ test('the 300px popup with AI on fits every header button and never cuts off the
 }) => {
   await setSettings(extensionWorker, { popupWidth: 300, aiEnabled: true });
   await openPopup(page, extensionId);
-  await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).width))
-    .toBe('300px');
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).width)).toBe('300px');
   const manager = page.getByRole('button', { name: 'Open bookmark manager', exact: true });
   await expect(manager).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Ask AI about your bookmarks or this page', exact: true }),
   ).toBeVisible();
 
-  const fit = await page.getByRole('combobox', { name: 'Search bookmarks...' }).evaluate((input) => {
-    const field = input as HTMLInputElement;
-    const style = getComputedStyle(field);
-    const context = document.createElement('canvas').getContext('2d');
-    if (!context) throw new Error('No canvas');
-    context.font = style.font;
-    const px = (value: string) => Number.parseFloat(value) || 0;
-    const free =
-      field.getBoundingClientRect().width -
-      px(style.borderLeftWidth) -
-      px(style.borderRightWidth) -
-      px(style.paddingLeft) -
-      px(style.paddingRight);
-    const buttons = [...document.querySelectorAll('button')].map(
-      (button) => button.getBoundingClientRect().right,
-    );
-    return {
-      placeholderWidth: context.measureText(field.placeholder).width,
-      free,
-      rightmost: Math.max(...buttons),
-    };
-  });
+  const fit = await page
+    .getByRole('combobox', { name: 'Search bookmarks...' })
+    .evaluate((input) => {
+      const field = input as HTMLInputElement;
+      const style = getComputedStyle(field);
+      const context = document.createElement('canvas').getContext('2d');
+      if (!context) throw new Error('No canvas');
+      context.font = style.font;
+      const px = (value: string) => Number.parseFloat(value) || 0;
+      const free =
+        field.getBoundingClientRect().width -
+        px(style.borderLeftWidth) -
+        px(style.borderRightWidth) -
+        px(style.paddingLeft) -
+        px(style.paddingRight);
+      const buttons = [...document.querySelectorAll('button')].map(
+        (button) => button.getBoundingClientRect().right,
+      );
+      return {
+        placeholderWidth: context.measureText(field.placeholder).width,
+        free,
+        rightmost: Math.max(...buttons),
+      };
+    });
   expect(fit.placeholderWidth).toBeLessThanOrEqual(fit.free);
   expect(fit.rightmost).toBeLessThanOrEqual(300);
 });

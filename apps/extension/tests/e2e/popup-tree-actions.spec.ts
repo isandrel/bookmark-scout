@@ -40,10 +40,9 @@ test('dropping beside a bookmark in another folder moves it there', async ({
   await expect(target).toBeVisible();
 
   await dropOnLowerEdge(source, target);
-  await expect.poll(() => childTitles(extensionWorker, recipes.folderId)).toEqual([
-    'Pasta',
-    'Example tracked',
-  ]);
+  await expect
+    .poll(() => childTitles(extensionWorker, recipes.folderId))
+    .toEqual(['Pasta', 'Example tracked']);
   expect(await childTitles(extensionWorker, tracked.folderId)).toEqual([]);
   await expect(toastRegion(page)).toContainText('"Example tracked" moved to "E2E Recipes"');
 });
@@ -107,8 +106,13 @@ test('popup follows bookmark changes made elsewhere and keeps expanded folders',
 
   const created = await extensionWorker.evaluate(
     async (parentId) =>
-      (await chrome.bookmarks.create({ parentId, title: 'Live Created', url: 'https://e2e.invalid/new' }))
-        .id,
+      (
+        await chrome.bookmarks.create({
+          parentId,
+          title: 'Live Created',
+          url: 'https://e2e.invalid/new',
+        })
+      ).id,
     seeded.folderId,
   );
   await expect(bookmarkRow(page, 'Live Created')).toBeVisible();
@@ -119,7 +123,10 @@ test('popup follows bookmark changes made elsewhere and keeps expanded folders',
   );
   await expect(bookmarkRow(page, 'Live Renamed')).toBeVisible();
 
-  await extensionWorker.evaluate(async (id) => chrome.bookmarks.remove(id), seeded.ids['Live Existing']);
+  await extensionWorker.evaluate(
+    async (id) => chrome.bookmarks.remove(id),
+    seeded.ids['Live Existing'],
+  );
   await expect(bookmarkRow(page, 'Live Existing')).toHaveCount(0);
   await expect(bookmarkRow(page, 'Live Renamed')).toBeVisible();
   await expect(page.locator('[data-slot="skeleton"]')).toHaveCount(0);
@@ -155,7 +162,12 @@ test('expand all subfolders opens the folder, toggles its label, and hides witho
   page,
 }) => {
   const seeded = await seedFolder(extensionWorker, 'E2E Expand Tree', [
-    { title: 'Level One', children: [{ title: 'Level Two', children: [{ title: 'Deep Leaf', url: 'https://e2e.invalid/leaf' }] }] },
+    {
+      title: 'Level One',
+      children: [
+        { title: 'Level Two', children: [{ title: 'Deep Leaf', url: 'https://e2e.invalid/leaf' }] },
+      ],
+    },
     { title: 'Only Links', children: [{ title: 'Flat Link', url: 'https://e2e.invalid/flat' }] },
   ]);
 
@@ -224,11 +236,9 @@ test('popup applies favicon, new folder name, and popup size settings', async ({
   await expect(favicon).toHaveAttribute('width', '32');
   await expect(favicon).toHaveAttribute('src', /size=64/);
 
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.body).width)).toBe('500px');
   await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).width))
-    .toBe('500px');
-  await expect
-    .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).height))
+    .poll(() => page.evaluate(() => getComputedStyle(document.body).height))
     .toBe('600px');
 
   await setSettings(extensionWorker, { showFavicons: false });
