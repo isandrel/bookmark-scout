@@ -2,7 +2,7 @@
 
 > **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 3, 2026
+**Effective date:** October 8, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in Japanese and Korean. If a translation differs from the English version, the English version applies.
@@ -18,6 +18,8 @@ This policy is also available in Japanese and Korean. If a translation differs f
 
 Bookmark Scout works inside your browser. It has no account, no analytics, no ads, and no server of its own. The developer does not receive your bookmarks or any other data from the extension. Data leaves your browser only when you use an optional feature that needs the network, and then it goes directly to the service you chose.
 
+Bookmark Scout's use of information received through browser extension APIs adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements.
+
 ## What the extension reads
 
 - **Your bookmarks**, to show, search, edit, move, delete, import, and export them.
@@ -25,7 +27,7 @@ Bookmark Scout works inside your browser. It has no account, no analytics, no ad
 - **Site icons from your browser's own icon cache** (Chrome and Edge), to show next to bookmarks. No network request is made for them.
 - **Site icons from the bookmarked websites**, only when you run Refresh Site Icons (see below).
 
-The extension does not read the content of the pages you visit and has no content scripts.
+The extension has no content scripts and does not read the pages open in your tabs. Only when you turn on Read page content does it download pages separately, as described below.
 
 ## What the extension stores
 

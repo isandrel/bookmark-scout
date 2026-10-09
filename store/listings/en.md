@@ -56,7 +56,7 @@ import export bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 3,146 characters. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 3,758 characters. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout helps you find, file, and tidy your bookmarks without leaving the browser.
@@ -66,7 +66,7 @@ SEARCH AND SAVE FROM THE TOOLBAR
 • Folder tree with drag and drop, expand and collapse all, and new folders
 • Save the current page to any folder with one click; a page already in that folder is not saved twice
 • Side panel with the same tree and search
-• Save links from the right-click menu into recent folders
+• Optional right-click menu (turn on Context Menu in Settings) to save links into recent folders
 • Keyboard shortcuts that never take over browser Ctrl/Cmd shortcuts
 • Delete with a confirmation dialog (on by default) and a 10-second Undo
 
@@ -80,10 +80,11 @@ MAINTENANCE TOOLS
 • Metadata Fetcher: suggest page titles and apply only the ones you select
 • Privacy Scanner: find sensitive query parameters, URL fragments, email addresses, and UUIDs in bookmarks
 • Statistics: domains, folders, depth, and duplicates
+• Refresh Site Icons: fetch each site's own icon, with no third-party icon service
 • Import from HTML or JSON with a preview, duplicate handling, and Undo
 • Export to HTML, JSON, Markdown, or CSV, with an optional privacy review that can redact sensitive values
 
-The Dead Link Checker and Metadata Fetcher ask for optional website access the first time you run them. It is never granted at install, and declining it simply stops the scan.
+The Dead Link Checker, Metadata Fetcher, Refresh Site Icons, and the Read page content AI setting ask for optional website access the first time you use them. It is never granted at install, requests are sent without cookies, and declining it simply turns that feature off.
 
 OPT-IN AI TOOLS (OFF BY DEFAULT)
 Turn on AI in Settings and choose OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint, with your own API key where the provider requires one.
@@ -91,8 +92,10 @@ Turn on AI in Settings and choose OpenAI, Anthropic, Google, Groq, Mistral, Deep
 • Tag suggestions and short summaries that you review before saving
 • Folder reorganization plans, previewed before anything changes (default)
 • Export selected bookmarks as Markdown or XML context for an AI chat (works without AI and sends nothing)
+• Ask AI: chat about your bookmarks; the AI can look up matching bookmarks, your folder names, and the current page
+• Read page content (off by default): send each page's readable text, not only its title and URL, for better suggestions
 
-When you use an AI feature, the bookmark titles, URLs, and folder names it needs are sent directly from your browser to the provider you chose, under that provider's terms. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Provider usage may cost money.
+When you use an AI feature, the data it needs is sent directly from your browser to the provider you chose, under that provider's terms: bookmark titles, URLs, folder names, and saved tags and summaries; the current page's title and URL; your Ask AI messages; and, only with Read page content on, the text of the pages involved. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Provider usage may cost money.
 
 PRIVACY
 • No account, no analytics, no tracking, no ads

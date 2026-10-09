@@ -35,6 +35,10 @@
                     {
                         "type": "p",
                         "text": "Bookmark Scout works inside your browser. It has no account, no analytics, no ads, and no server of its own. The developer does not receive your bookmarks or any other data from the extension. Data leaves your browser only when you use an optional feature that needs the network, and then it goes directly to the service you chose."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout's use of information received through browser extension APIs adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements."
                     }
                 ]
             },
@@ -52,7 +56,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "The extension does not read the content of the pages you visit and has no content scripts."
+                        "text": "The extension has no content scripts and does not read the pages open in your tabs. Only when you turn on Read page content does it download pages separately, as described below."
                     }
                 ]
             },

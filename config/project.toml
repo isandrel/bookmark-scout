@@ -71,7 +71,7 @@ support  = "support@bookmark-scout.com"
 
 # Dates shown on legal pages (ISO 8601). Update when the policy text changes.
 [legal]
-privacy_effective_date = "2026-10-03"
+privacy_effective_date = "2026-10-08"
 
 # Price for structured data (schema.org Offer).
 [offer]

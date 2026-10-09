@@ -1618,7 +1618,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "AI 기반 북마크 워크플로를 활성화합니다. Firefox에서는 켜면 AI 제공자에게 필요한 데이터 공유 허용을 요청합니다.",
+        "message": "AI 기반 북마크 워크플로를 활성화합니다. AI 도구는 필요한 북마크 제목, URL, 폴더 이름, 현재 페이지의 제목과 URL, 'AI에게 묻기' 메시지를 사용자가 선택한 제공자에게 직접 보냅니다. AI 도구를 사용하기 전에는 아무것도 전송되지 않습니다. Firefox에서는 켜면 이 데이터 공유 허용을 요청합니다.",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {
