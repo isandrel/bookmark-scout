@@ -13,15 +13,17 @@
         --popup-height: 500px;
       }
       html {
-        width: var(--popup-width);
-        height: var(--popup-height);
         margin: 0;
         padding: 0;
-        overflow: hidden;
       }
+      /*
+       * The size goes on body, not html: Firefox measures the popup from its content and clipped
+       * a fixed-size html to a narrower panel, cutting off the search box buttons. Chrome sizes
+       * the popup from the same body.
+       */
       body {
-        width: 100%;
-        height: 100%;
+        width: var(--popup-width);
+        height: var(--popup-height);
         margin: 0;
         padding: 0;
         display: flex;
