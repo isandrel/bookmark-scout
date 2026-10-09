@@ -400,7 +400,7 @@
         "description": "Language setting description"
     },
     "settings_languageAuto": {
-        "message": "Automático (navegador)",
+        "message": "Configuração do navegador",
         "description": "Auto language option"
     },
     "settings_theme": {

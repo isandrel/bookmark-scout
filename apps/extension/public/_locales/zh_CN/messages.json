@@ -400,7 +400,7 @@
         "description": "Language setting description"
     },
     "settings_languageAuto": {
-        "message": "自动（跟随浏览器）",
+        "message": "浏览器设置",
         "description": "Auto language option"
     },
     "settings_theme": {

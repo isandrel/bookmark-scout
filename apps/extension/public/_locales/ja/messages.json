@@ -396,7 +396,7 @@
         "description": "Language setting description"
     },
     "settings_languageAuto": {
-        "message": "自動 (ブラウザ)",
+        "message": "ブラウザの設定",
         "description": "Auto language option"
     },
     "settings_theme": {

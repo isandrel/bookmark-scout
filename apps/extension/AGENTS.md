@@ -241,7 +241,7 @@ To add a language:
 4. Plurals: `tPlural` picks `<key>_<category>` by `Intl.PluralRules` (`_one` in English; `_one`, `_few`, `_many` in Russian) and falls back to `<key>`. `tests/unit/locale-messages.test.ts` lists any form a language needs and lacks.
 5. Add `store/listings/<folder>.md`; the Chrome Web Store adds a listing language for each `_locales` folder.
 
-`matchBundledLocale` maps browser languages to folders (`zh-HK` to `zh_TW`, `pt-PT` to `pt_BR`); with the Language setting on Auto, a language the browser itself would not serve that way is loaded like a selected one.
+`matchBundledLocale` maps browser languages to folders (`zh-HK` to `zh_TW`, `pt-PT` to `pt_BR`); with Language on Browser setting, a language the browser itself would not serve that way is loaded like a selected one.
 
 - Keep the custom translation hook (`src/hooks/use-i18n.ts`). `@wxt-dev/i18n` follows only the browser language and would remove the in-app Language setting (Auto plus each bundled language).
 - Thrown errors that reach the UI, units, and log source names shown to users need locale keys too, not English literals.
