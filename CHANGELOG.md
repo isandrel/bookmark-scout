@@ -1,14 +1,26 @@
 # bookmark-scout
 
-## Unreleased
+## 0.3.2
 
 ### Languages
 
 - The extension, website, and store listings are now available in Simplified Chinese, Traditional Chinese, Spanish, German, French, and Brazilian Portuguese, alongside English, Japanese, and Korean. With Language on Browser setting, Chinese browsers in Hong Kong, Macau, and Singapore get the matching Chinese variant.
 - Plural forms now follow each language's rules, and Chinese text uses Chinese fonts instead of Japanese ones.
 
+### Privacy
+
+- Turning on AI or Read page content first explains what is sent and that it goes straight to the AI provider you set up, before the browser's own permission prompt.
+
+### Fixes
+
+- Setting sliders follow a mouse drag again; before, only the arrow keys moved them.
+- The Firefox popup no longer clips its rounded corners and edges.
+- The manifest summary describes the extension in full.
+
 ### Documentation
 
+- The docs site is available in all nine languages, with English pages shown where a translation is missing, and search in each language.
+- The docs say the side panel works in Firefox, where it opens as the Firefox sidebar.
 - Refresh repository, docs-site, website, and localized README content to reflect current implemented features and planned work.
 - Move implemented options, theme, settings sync, full bookmarks manager, import/export, duplicate cleanup, dead-link checking, and bookmark tooling out of roadmap copy.
 
