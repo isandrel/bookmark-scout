@@ -108,6 +108,7 @@ BUSCA Y GUARDA DESDE LA BARRA DE HERRAMIENTAS
 • Búsqueda instantánea en todos los marcadores, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
 • Guarda la página actual en cualquier carpeta con un clic; una página que ya está en esa carpeta no se guarda dos veces
+• El mismo árbol y la misma búsqueda en el panel lateral de Firefox, que sigue abierto mientras navegas
 • Guarda enlaces en carpetas recientes desde el menú contextual
 • Combinaciones de teclas que nunca sustituyen a los atajos Ctrl/Cmd del navegador
 • Eliminación con cuadro de diálogo de confirmación (activado de forma predeterminada) y opción de deshacer durante 10 segundos

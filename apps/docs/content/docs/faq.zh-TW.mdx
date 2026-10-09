@@ -1,0 +1,85 @@
+---
+title: 常見問題與疑難排解
+description: Bookmark Scout 常見問題的解答，以及最常遇到的問題的解決方法。
+---
+
+## 常見問題 [#questions]
+
+### Bookmark Scout 是免費的嗎？ [#is-bookmark-scout-free]
+
+是。Bookmark Scout 依 <License /> 授權免費提供且開放原始碼，沒有廣告，也沒有付費方案。如果你開啟 AI，AI 供應商可能會收取 API 使用費用。
+
+### 一定要使用 AI 嗎？ [#do-i-need-to-use-ai]
+
+不需要。搜尋、儲存、整理、清理以及匯入和匯出，都不需要 AI 就能使用。在你於「[設定](/settings#ai)」中開啟 AI 之前，AI 一律為關閉。
+
+### 書籤會被傳送到其他地方嗎？ [#does-it-send-my-bookmarks-anywhere]
+
+不會傳送給開發人員：Bookmark Scout 沒有伺服器。只有在你使用已開啟的 AI 工具 (資料會傳送給你的供應商)，或執行失效連結檢查或標題擷取 (會向已加入書籤的網站發出要求) 時，資料才會離開瀏覽器。請參閱「[隱私權](/privacy)」。
+
+### 會在未經詢問的情況下變更書籤嗎？ [#will-it-change-my-bookmarks-without-asking]
+
+不會。清理重複書籤、清理網址、修復失效連結、擷取標題、AI 重組和匯入，都會在寫入任何變更前先顯示確認畫面。刪除時預設會要求確認，且刪除和匯入都可以在 10 秒內復原。
+
+### 為什麼瀏覽器商店裡找不到？ [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+各商店都會在擴充功能上架前進行審查，而商店資訊頁面仍在準備中。在商店上架之前，請[從 GitHub 版本發布安裝](/installation)。
+
+### 可以在 Firefox 中使用嗎？ [#does-it-work-in-firefox]
+
+可以。Firefox 不允許擴充功能取代其書籤頁面，因此請從彈出式視窗中的「**開啟書籤管理員**」開啟 Bookmark Scout 書籤管理員 (包含清理工具、匯入和匯出功能，以及已儲存的搜尋)。Firefox 無法使用瀏覽器的圖示快取，自動化測試涵蓋的功能也比較少。請參閱「[瀏覽器支援](/browser-support)」。
+
+### 為什麼不支援 Safari？ [#why-not-safari]
+
+Safari 網頁擴充功能並未實作 Bookmark Scout 所依賴的 `bookmarks` API。
+
+## 疑難排解 [#troubleshooting]
+
+### 書籤管理員在哪裡？ [#where-is-the-bookmarks-manager]
+
+在 Chrome 中，開啟瀏覽器本身的書籤頁面，例如按下 `Ctrl+Shift+O` (在 macOS 上為 `Cmd+Option+B`)。Bookmark Scout 會以自己的書籤管理員取代這個頁面。如果「**工具**」側欄已隱藏，請按一下書籤管理員標頭中的「**顯示工具**」。
+
+### Bookmark Scout 從 Firefox 中消失了 [#bookmark-scout-disappeared-from-firefox]
+
+Firefox 重新啟動時會移除暫用附加元件。請依照「[安裝](/installation)」中的步驟，從 `about:debugging#/runtime/this-firefox` 再次載入。
+
+### 網站圖示沒有顯示 [#site-icons-are-missing]
+
+請確認已在「[設定](/settings#appearance)」中開啟「**顯示網站圖示**」。Chrome 和 Edge 會顯示瀏覽器為各網站快取的圖示，因此最近沒有造訪的網站會顯示通用的地球圖示。Firefox 沒有提供擴充功能使用的圖示 API。在任何瀏覽器中，「[重新整理網站圖示](/guides/clean-up#refresh-site-icons)」都會下載各網站本身的圖示，並保存在這部裝置上。
+
+### API 金鑰沒有儲存 [#my-api-key-was-not-saved]
+
+如果金鑰看起來不像所選供應商的金鑰，就會遭到拒絕且不會儲存，並顯示訊息說明。請確認「**AI 供應商**」與你貼上的金鑰相符。請參閱「[設定 AI 工具](/guides/ai-tools#turn-on-ai)」。
+
+### 失效連結檢查顯示正常運作的網站需要手動檢查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+要求登入、限制要求頻率、封鎖自動檢查或發生伺服器錯誤的網站，都會列在「**需手動檢查**」下，因為這些網站在瀏覽器中通常仍可正常使用。請開啟連結確認。只有找不到網頁、拒絕連線、主機不明和重新導向迴圈，才會被列為「**確定失效**」。請參閱「[找出並修復失效連結](/guides/dead-links#read-the-results)」。
+
+### 掃描期間主控台顯示「Failed to load resource」 [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+每個失敗的要求，Chrome 都會在網頁的開發人員主控台中記錄一行。擴充功能無法隱藏這些訊息，而且這些訊息並不代表掃描出了問題。
+
+### 在書籤管理員中重新排序後，彈出式視窗沒有反映 [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+只有使用「**資料夾優先**」排序時，彈出式視窗才會顯示瀏覽器儲存的順序。「**新增日期**」和「**依字母順序**」排序會持續重新排序清單。請在「[設定](/settings#behavior)」中變更「**排序方式**」。
+
+### 搜尋顯示的相符結果比列出的還多 [#search-says-there-are-more-matches-than-it-shows]
+
+結果數量最多只到「**搜尋結果上限**」(預設為 20)。請縮小搜尋範圍，或在「[設定](/settings#search)」中提高上限。
+
+### 在另一部電腦上找不到標籤、摘要或已儲存的搜尋 [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+這些資料只會儲存在建立它們的裝置上，不會同步，也不會包含在書籤匯出檔案中。設定則會在開啟瀏覽器同步功能時，透過瀏覽器帳戶同步。
+
+### 不小心刪除了項目 [#i-deleted-something-by-mistake]
+
+請在 10 秒內按一下訊息中的「**復原**」。這會還原該項目、其中的所有內容，以及已儲存的標籤和摘要；還原的項目會有新的新增日期。訊息關閉後，就無法在 Bookmark Scout 中復原刪除。
+
+## 取得協助 [#get-help]
+
+- 網站上的<SiteLink to="support">支援頁面</SiteLink>。
+- 在 <RepoLink path="/issues">GitHub</RepoLink> 上回報錯誤或提出功能要求。
+- 寄電子郵件至 <Contact role="support" />。
+- 如要回報安全性問題，請私下寄至 <Contact role="security" />，不要在公開的 Issue 中回報。

@@ -1,0 +1,67 @@
+---
+title: Recherche et recherches enregistrées
+description: Trouvez n'importe quel favori par titre ou par URL depuis la fenêtre pop-up ou le panneau latéral, filtrez le tableau du gestionnaire, et conservez des combinaisons de filtres sous forme de recherches enregistrées nommées.
+---
+
+## Rechercher depuis la fenêtre pop-up ou le panneau latéral [#search-from-the-popup-or-side-panel]
+
+<Steps>
+<Step>
+Cliquez sur l'icône de Bookmark Scout dans la barre d'outils. Vous pouvez aussi ouvrir Bookmark Scout dans le panneau latéral du navigateur (Firefox compris), qui reste ouvert pendant votre navigation.
+</Step>
+<Step>
+Saisissez votre recherche dans **Rechercher dans les favoris…** (ou appuyez sur `/` pour y accéder directement). Les résultats s'affichent pendant la saisie, dans leurs dossiers, avec chaque correspondance mise en surbrillance.
+</Step>
+<Step>
+Affinez la correspondance avec les trois boutons du champ de recherche : **Respecter la casse**, **Mot entier** et **Utiliser une expression régulière**.
+</Step>
+<Step>
+Cliquez sur un favori, ou accédez-y avec les touches fléchées et appuyez sur `Enter`, pour l'ouvrir dans un nouvel onglet.
+</Step>
+</Steps>
+
+<Screenshot name="popup" />
+
+Bon à savoir :
+
+- La recherche par mot entier considère les espaces, la ponctuation et les changements d'écriture comme des limites de mot : des termes tels que `C++` et des mots japonais sont donc trouvés.
+- Une expression régulière non valide affiche un avertissement et est recherchée comme texte brut.
+- Les dossiers permanents, comme la Barre de favoris, sont des conteneurs et ne correspondent jamais par leur nom.
+- Lorsqu'il y a plus de correspondances que la limite de résultats, une note indique combien sont affichées. Affinez la recherche, ou augmentez le **Nombre maximal de résultats** dans les [Paramètres](/settings).
+- Effacer la recherche (avec le bouton d'effacement, ou `Esc` dans le champ de recherche) rouvre les dossiers qui étaient ouverts auparavant.
+- Les recherches récentes sont mémorisées sur cet appareil. Cliquez dans le champ de recherche vide, ou appuyez sur `Alt+↓` dans ce champ, pour les afficher. Effacez-les depuis cette liste, ou désactivez l'**Historique des recherches** dans les paramètres.
+
+## Filtrer dans le gestionnaire de favoris [#filter-in-the-bookmarks-manager]
+
+Le tableau du gestionnaire offre des filtres plus précis. Dans Chrome, ouvrez la page Favoris du navigateur pour y accéder.
+
+- **Filtrer les titres…** et **Filtrer les URL…** recherchent du texte dans ces colonnes. Appuyez sur `/` pour accéder directement au filtre des titres.
+- **Type**, **ID du parent**, **Domaine** et **Date d'ajout** restreignent encore les lignes.
+- **Dossier actuel uniquement** limite les filtres au dossier dans lequel vous vous trouvez. Lorsque cette option est désactivée, les filtres portent sur tous les favoris.
+- Triez sur n'importe quelle colonne depuis son en-tête.
+
+## Enregistrer une recherche [#save-a-search]
+
+Une recherche enregistrée conserve sous un nom les filtres, le tri et la portée de dossier actuels du gestionnaire, pour que vous puissiez rouvrir la même vue plus tard.
+
+<Steps>
+<Step>
+Définissez au moins un filtre : titre, URL, type, dossier, domaine ou date d'ajout.
+</Step>
+<Step>
+Cliquez sur **Recherches enregistrées** dans la barre d'outils du tableau, ou appuyez sur `s`.
+</Step>
+<Step>
+Saisissez un nom dans **Nommez cette recherche** et cliquez sur **Enregistrer**.
+</Step>
+</Steps>
+
+Pour en utiliser une, ouvrez **Recherches enregistrées** et choisissez-la. Ses filtres et son tri remplacent ceux en cours et, si elle était limitée à un dossier, le gestionnaire revient à ce dossier. Chaque entrée peut être renommée ou supprimée, et une suppression peut être annulée depuis la notification qui suit.
+
+Une recherche enregistrée stocke la définition des filtres, jamais des copies de favoris : ses résultats correspondent donc toujours à l'état actuel de vos favoris. Si un dossier qu'elle cible a été supprimé, ce dossier est ignoré, les autres filtres s'appliquent toujours, et une notification indique combien de dossiers ont été ignorés.
+
+Les recherches enregistrées restent dans le stockage local de l'extension dans ce navigateur et ne sont pas synchronisées, car leurs filtres peuvent révéler ce que vous enregistrez en favoris et les identifiants de dossier diffèrent d'un appareil à l'autre. Vous pouvez en conserver jusqu'à 50.
+
+<Callout title="Firefox">
+Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up.
+</Callout>

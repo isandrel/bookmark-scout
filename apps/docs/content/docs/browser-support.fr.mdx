@@ -1,0 +1,39 @@
+---
+title: Compatibilité des navigateurs
+description: Ce qui fonctionne dans Chrome, Microsoft Edge et Firefox, ce qui est testé dans chacun, et pourquoi Safari n'est pas pris en charge.
+---
+
+Chrome est la cible principale. Edge repose sur Chromium et offre les mêmes fonctionnalités, sauf indication contraire ci-dessous. Firefox utilise une version Manifest V2 dotée de moins de fonctionnalités.
+
+## Tableau des fonctionnalités [#feature-matrix]
+
+Ce tableau est établi à partir des manifestes de l'extension compilée pour chaque navigateur.
+
+| Fonctionnalité | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Fenêtre pop-up de la barre d'outils, avec recherche et enregistrement | Oui | Oui | Oui |
+| Panneau latéral | Oui | Oui | Oui, dans le panneau latéral de Firefox : choisissez Bookmark Scout dans le panneau latéral |
+| Gestionnaire de favoris et barre latérale Outils | Remplace la page Favoris du navigateur, et s'ouvre depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up et le panneau latéral | S'ouvre depuis **Ouvrir le gestionnaire de favoris**. Il n'a pas été vérifié si Edge applique aussi ce remplacement à sa page Favoris. | S'ouvre depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up. Firefox ne permet pas de remplacer sa page de favoris. |
+| Recherches enregistrées, outils de maintenance, importation et exportation, statistiques, outils d'IA du gestionnaire | Oui | Oui | Oui, dans le gestionnaire. Des tests automatisés couvrent l'importation, l'exportation et les rapports ; les autres outils sont vérifiés manuellement. |
+| Page des paramètres | Oui | Oui | Oui |
+| Menu contextuel pour enregistrer des liens | Oui, après activation du **Menu contextuel** (une autorisation est demandée) | Idem | Oui, après activation du **Menu contextuel** |
+| Icônes de site à côté des favoris | Icônes enregistrées avec **Actualiser les icônes de site**, et icônes du cache du navigateur une fois l'option **Utiliser le cache d'icônes du navigateur** activée | Idem | Uniquement les icônes enregistrées avec **Actualiser les icônes de site**, qui s'exécute dans le gestionnaire. Firefox n'offre aucune API d'icônes de site aux extensions : les autres favoris affichent donc une icône générique. |
+| Accès facultatif aux sites Web pour la vérification des liens morts, la récupération des titres et l'actualisation des icônes de site | Demandé lorsque vous lancez l'outil | Idem | Idem |
+
+## Ce qui est testé [#what-is-tested]
+
+- **Chrome (Chromium)** : tests unitaires et tests de bout en bout pour la fenêtre pop-up, le panneau latéral, le gestionnaire, les paramètres, les outils de maintenance, les rapports, l'importation et l'exportation, les raccourcis clavier, les recherches enregistrées, l'enregistrement depuis le menu contextuel, le glisser-déposer, les outils réseau et les outils d'IA avec des fournisseurs simulés.
+- **Edge** : la même suite de bout en bout s'exécute sur la version Edge.
+- **Firefox** : une suite de tests de fumée couvre la recherche et la création de dossiers dans la fenêtre pop-up, la page du panneau latéral chargée dans un onglet, l'ouverture du gestionnaire depuis la fenêtre pop-up et le panneau latéral, la page du gestionnaire, l'enregistrement d'un paramètre, un aller-retour d'exportation et d'importation JSON, les rapports de statistiques et de confidentialité, ainsi que les icônes de site enregistrées dans la fenêtre pop-up. Les menus contextuels, le glisser-déposer, les raccourcis clavier, ainsi que les outils réseau et d'IA (y compris **Actualiser les icônes de site** lui-même) ne sont pas couverts.
+
+La suite Edge et la suite de tests de fumée Firefox sont des vérifications CI obligatoires, comme la suite Chromium. Les vrais fournisseurs d'IA et les sites Web réels sont vérifiés manuellement, et non par des tests automatisés.
+
+## Safari [#safari]
+
+Safari n'est pas pris en charge. Les extensions Web Safari n'implémentent pas l'API `bookmarks`, dont dépend chaque partie de Bookmark Scout.
+
+## Disponibilité dans les boutiques [#store-availability]
+
+<StoreAvailability />
+
+Les éléments des fiches sont préparés dans le <RepoLink tree="store">dossier `store/`</RepoLink> du dépôt, et chaque soumission nécessite l'approbation du mainteneur. Lorsqu'une boutique ne propose pas encore de fiche, [installez l'extension à partir d'une version GitHub](/installation).

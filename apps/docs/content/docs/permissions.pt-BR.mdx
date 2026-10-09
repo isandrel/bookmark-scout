@@ -1,0 +1,47 @@
+---
+title: Permissões
+description: Cada permissão do navegador que o Bookmark Scout pede, por que ele precisa dela e o acesso opcional a sites que ele solicita somente quando você executa uma ferramenta.
+---
+
+Estas são as permissões da extensão compilada para cada navegador. O Bookmark Scout não tem scripts de conteúdo, então nunca lê as páginas que você visita. Na instalação, ele pede somente aquilo sem o qual não consegue funcionar; todo o resto é pedido quando você ativa ou executa o recurso que precisa da permissão.
+
+## Concedidas na instalação [#granted-at-install]
+
+| Permissão | Navegadores | Por quê |
+| --- | --- | --- |
+| `bookmarks` | Todos | Mostrar e pesquisar seus favoritos e criá-los, editá-los, movê-los e excluí-los quando você age no pop-up, no painel lateral, no gerenciador ou no menu de clique com o botão direito |
+| `storage` | Todos | Salvar suas configurações e, somente neste dispositivo, as configurações do provedor de IA, as tags, os resumos, as pesquisas salvas, as pastas recentes, as pesquisas recentes e os ícones dos sites salvos com **Atualizar ícones dos sites** |
+| `activeTab` | Todos | Quando você clica no botão da barra de ferramentas ou no menu de clique com o botão direito, ler o título e o URL dessa guia para que você possa salvar a página em que está. Nenhuma outra guia, nenhum histórico |
+| `sidePanel` | Chrome, Edge | Oferecer a visualização no painel lateral. O Firefox declara a mesma página como uma barra lateral |
+| `contextMenus` | Firefox | O Firefox não permite que as extensões peçam essa permissão depois. Mesmo assim, o menu só aparece depois que você ativa o **Menu de contexto** |
+
+No Chrome e no Edge, a extensão também substitui a página de favoritos do navegador pelo gerenciador do Bookmark Scout. Isso é uma substituição de página, não uma permissão. O Firefox não permite essa substituição, então nele o gerenciador é aberto por **Abrir gerenciador de favoritos** no pop-up; consulte [Compatibilidade com navegadores](/browser-support).
+
+## Pedidas quando você precisa [#asked-for-when-you-need-it]
+
+| Permissão | Navegadores | Pedida quando |
+| --- | --- | --- |
+| `tabs` | Todos | Você salva a página atual, ou pede sugestões de pasta, pelo painel lateral. Antes aparece uma breve explicação. O pop-up da barra de ferramentas nunca precisa dela |
+| `contextMenus` | Chrome, Edge | Você ativa o **Menu de contexto** nas [Configurações](/settings#data). Ele vem desativado por padrão, e o Chrome concede essa permissão sem nenhum aviso |
+| `favicon` | Chrome, Edge | Você ativa **Usar o cache de ícones do navegador** nas [Configurações](/settings#appearance), para mostrar os ícones que o navegador já salvou |
+| Consentimento para compartilhar dados | Firefox | Você ativa **Recursos de IA** ou **Ler conteúdo da página**, ou clica em **Verificar serviço**. O Firefox pergunta antes de a extensão enviar qualquer coisa ao seu provedor de IA |
+
+Se você recusar, o recurso continua desativado e nada é enviado. Se depois você revogar uma permissão nas configurações de extensões do navegador, o recurso é desativado; ao ativá-lo de novo, a permissão é pedida outra vez.
+
+## Acesso opcional a sites [#optional-website-access]
+
+A extensão também declara acesso a `http://*/*` e `https://*/*`, mas nada disso é concedido na instalação. O navegador pergunta a você no momento em que o acesso é necessário:
+
+- **Verificar links quebrados**, **Buscador de metadados** e **Atualizar ícones dos sites** pedem acesso aos sites na primeira vez que você os executa, porque os favoritos podem apontar para qualquer site. As solicitações são enviadas sem cookies, e somente o cabeçalho (head) da página é lido para obter títulos e links de ícones. Se você recusar, nada é verificado. Consulte [Encontrar e corrigir links quebrados](/guides/dead-links) e [Atualizar ícones dos sites](/guides/clean-up#refresh-site-icons).
+- **Ler conteúdo da página**, nas configurações de IA, pede acesso aos sites quando você o ativa, para que as ferramentas de IA possam baixar as páginas, sem cookies, e enviar o texto principal delas ao seu provedor de IA. Páginas da sua rede local nunca são lidas. Consulte [Ler conteúdo da página](/guides/ai-tools#read-page-content).
+- **Verificar serviço** e **Atualizar modelos**, nas configurações de IA, pedem acesso somente ao endereço desse provedor. Consulte [Configurar as ferramentas de IA](/guides/ai-tools).
+
+Para revogar o acesso, abra a página da extensão no navegador (por exemplo, `chrome://extensions/` e depois **Detalhes** no Bookmark Scout, ou **Permissões** em `about:addons` no Firefox) e altere o acesso a sites ou as permissões dela.
+
+## O que não é solicitado [#what-is-not-requested]
+
+- Nenhum acesso ao conteúdo das páginas e nenhum script de conteúdo
+- Nenhuma permissão de histórico, downloads ou cookies
+- Nenhum acesso a hosts na instalação
+
+O destino dos seus dados quando uma permissão é usada está descrito em [Privacidade](/privacy). A justificativa de cada permissão, como foi enviada às lojas, está no arquivo <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> do repositório.

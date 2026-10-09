@@ -1,0 +1,53 @@
+---
+title: Status do projeto
+description: O que o Bookmark Scout faz hoje, o que está parcial e o que está planejado, mantido em sincronia com o código.
+---
+
+Esta página resume o status atual do repositório para que a documentação do roadmap não se afaste da implementação.
+
+## Implementado [#implemented]
+
+- Extensão de navegador criada com WXT, React, TypeScript, Zustand, componentes shadcn/ui sobre primitivos do Base UI e as APIs de favoritos do navegador
+- Chrome como navegador principal, com versões para Firefox e Edge
+- Pesquisa de favoritos no pop-up, filtragem de pastas, organização com arrastar e soltar, adição rápida, criação de pastas e controles para expandir e recolher
+- Exclusão pelo pop-up, pelo painel lateral e pelo gerenciador com uma caixa de diálogo de confirmação (ativada por padrão, opcional nas Configurações) e 10 segundos para Desfazer, o que restaura a subárvore e as tags e os resumos salvos dela
+- Ponto de entrada do painel lateral (no Chrome, no Edge e no Firefox)
+- Atalhos de teclado no pop-up, no painel lateral e no gerenciador para pesquisa, navegação na árvore e na tabela, salvamento da página atual, navegação para a pasta superior, abertura de pesquisas salvas e uma caixa de diálogo de ajuda `?`; eles nunca usam combinações com Ctrl/Cmd e ficam pausados durante a digitação ou enquanto uma caixa de diálogo está aberta
+- Substituição personalizada da página de favoritos, com árvore de pastas, trilha de navegação, tabela de favoritos e barra lateral de ferramentas
+- Pesquisas salvas (visualizações inteligentes) no gerenciador, que armazenam somente os filtros, a classificação e o escopo de pasta no armazenamento local e os avaliam com base na árvore de favoritos atual, ignorando pastas excluídas
+- Ordenação configurável por data de adição, ordem alfabética natural e pastas primeiro, sem alterar a ordem armazenada dos favoritos
+- Página de opções com configurações de aparência, idioma, pesquisa, comportamento, dimensionamento avançado da interface, IA, ferramentas de IA, manutenção, metadados, segurança, análises, dados e menus de contexto
+- Configurações persistidas por `chrome.storage.sync`
+- Provedores de IA definidos na configuração: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI e endpoints personalizados compatíveis com a OpenAI
+- Recomendações de pasta com IA, incluindo a criação revisada de um caminho de nova pasta sugerido que salva a página atual nele
+- Empacotamento de contexto para IA com as tags e os resumos salvos, sugestões de tags, resumos e reorganização de pastas (com prévia antes da aplicação, por padrão)
+- Ferramentas de manutenção de favoritos para limpeza de duplicatas, limpeza de URLs, verificação de links quebrados com resultados confirmados como quebrados e que precisam de verificação manual, além de correções revisadas (exclusão, destino do redirecionamento, cópia do Wayback Machine ou URL editado, com opção de desfazer), busca de metadados (os títulos revisados são aplicados; as descrições são apenas para prévia), verificação de privacidade e estatísticas
+- Atualizar ícones dos sites: baixa um ícone por site diretamente do site salvo nos favoritos (nunca de um serviço de ícones de terceiros) depois do acesso opcional aos sites, salva os ícones revisados no armazenamento local com um limite de tamanho e os mostra no pop-up, no painel lateral e no gerenciador antes do cache de ícones do navegador; os ícones salvos podem ser apagados
+- Revisão de privacidade com ocultação opcional antes das exportações de favoritos e das exportações de contexto para IA
+- Importação de favoritos de HTML ou JSON, com prévia da pasta de destino, das contagens e das duplicatas, uma opção de tratamento de duplicatas e opção de desfazer
+- Exportação de favoritos para HTML, JSON, Markdown ou CSV
+- Fluxo de salvamento de links pelo menu de contexto (clique com o botão direito)
+- Extensão e site de divulgação em inglês, chinês simplificado, chinês tradicional, japonês, coreano, espanhol, alemão, francês e português do Brasil
+- Site de documentação com Fumadocs
+- Testes de unidade e testes E2E automáticos no Chromium para pop-up, gerenciador, configurações, manutenção, relatórios, importação/exportação, ferramentas de rede com rotas simuladas e servidor local, e ferramentas de IA com provedores simulados
+- O mesmo conjunto do Playwright no Microsoft Edge com a versão para o Edge (`nx run extension:test:e2e:edge`), e um conjunto de nove testes básicos (smoke tests) no Firefox com a versão para o Firefox (`nx run extension:test:e2e:firefox`): pesquisa e criação de pastas no pop-up, ícones dos sites salvos no pop-up, a página do painel lateral, abertura do gerenciador pelo pop-up e pelo painel lateral, carregamento e filtragem do gerenciador, salvamento de uma configuração, uma exportação e importação de JSON de ida e volta e os relatórios de estatísticas e de privacidade
+- Uma matriz de configurações e comportamentos (`apps/extension/tests/settings-matrix.ts`) que associa cada configuração ao código que a lê e a um teste que a altera
+
+## Parcial [#partial]
+
+- Tags e resumos dos favoritos: editáveis em Detalhes do favorito e salvos a partir de sugestões de IA revisadas, mas armazenados somente no armazenamento local da extensão. Eles não são sincronizados, não podem ser pesquisados e não são incluídos nas exportações de favoritos.
+- Os limites das ferramentas de IA (quantidade e estilo das tags, tamanho do resumo, limites de pasta da reorganização) são enviados ao provedor como instruções; a resposta não é conferida com base neles. A compatibilidade com os provedores reais é verificada manualmente.
+- A cobertura do Firefox em execução é um conjunto de testes básicos, não o conjunto completo. O Playwright não consegue abrir páginas `moz-extension://`, então os testes do Firefox controlam o Firefox padrão pelo geckodriver (Selenium) e instalam a versão como uma extensão temporária com o ID de extensão real, para testar o manifesto que o Firefox Add-ons recebe. Eles não cobrem o salvamento pelo menu de contexto (os testes do Chromium disparam `contextMenus.onClicked` a partir do service worker; a versão para o Firefox usa uma página de segundo plano MV2 que o ambiente de testes não consegue controlar por script), arrastar e soltar, atalhos de teclado, ferramentas de rede, ferramentas de IA nem idiomas.
+- Diferenças de API do Firefox: o cache de ícones do navegador não está disponível porque o Firefox não tem o serviço `_favicon`, então os favoritos mostram um ícone genérico, a menos que **Atualizar ícones dos sites** tenha salvo um; o gerenciador e a barra lateral Ferramentas são abertos por **Abrir gerenciador de favoritos** no pop-up, porque o Firefox não permite substituir a página de favoritos; a página do painel lateral é declarada como uma barra lateral do Firefox, e os testes carregam essa página em uma guia porque a automação não consegue abrir a própria barra lateral.
+- Quatro configurações de escopo de ferramentas são fixas: Tags automáticas e Gerador de resumos sempre usam a pasta atual; Limpador de duplicatas e Verificador de privacidade sempre verificam todos os favoritos.
+
+## Planejado [#planned]
+
+- Cobertura mais ampla do Firefox em execução: menus de contexto, arrastar e soltar, atalhos de teclado, ferramentas de rede, ferramentas de IA e idiomas
+- Envio à Chrome Web Store, ao Firefox Add-ons e aos Complementos do Microsoft Edge. O material das páginas nas lojas e as listas de verificação de envio estão na <RepoLink tree="store">pasta `store/`</RepoLink> do repositório; o envio é manual e precisa de aprovação da versão. O pacote para o Firefox já tem o ID de extensão permanente e a declaração de coleta de dados
+
+## Regras da documentação [#documentation-rules]
+
+- Atualize a documentação quando mudarem o status dos recursos, as formas de instalação, a compatibilidade com navegadores, as expectativas de privacidade ou a configuração.
+- Os recursos de IA são opcionais e podem enviar dados dos favoritos ao provedor selecionado.
+- A CI executa os testes de unidade da extensão, o conjunto de ponta a ponta do Chromium, o conjunto do Edge e o conjunto de testes básicos do Firefox como verificações obrigatórias, sem configuração manual. Uma compilação bem-sucedida não é cobertura em execução.

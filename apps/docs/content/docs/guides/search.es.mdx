@@ -1,0 +1,67 @@
+---
+title: Búsqueda y búsquedas guardadas
+description: Encuentra cualquier marcador por título o URL desde la ventana emergente o el panel lateral, filtra la tabla del administrador y guarda combinaciones de filtros como búsquedas guardadas con nombre.
+---
+
+## Buscar desde la ventana emergente o el panel lateral [#search-from-the-popup-or-side-panel]
+
+<Steps>
+<Step>
+Haz clic en el icono de Bookmark Scout en la barra de herramientas. También puedes abrir Bookmark Scout en el panel lateral del navegador (incluido Firefox), que sigue abierto mientras navegas.
+</Step>
+<Step>
+Escribe en **Buscar marcadores...** (o pulsa `/` para ir allí). Los resultados aparecen mientras escribes, dentro de sus carpetas, con cada coincidencia resaltada.
+</Step>
+<Step>
+Acota la búsqueda con los tres botones del cuadro de búsqueda: **Distinguir mayúsculas y minúsculas**, **Solo palabras completas** y **Usar expresión regular**.
+</Step>
+<Step>
+Haz clic en un marcador, o desplázate hasta él con las teclas de flecha y pulsa `Enter`, para abrirlo en una pestaña nueva.
+</Step>
+</Steps>
+
+<Screenshot name="popup" />
+
+Conviene saber:
+
+- La búsqueda de palabras completas trata los espacios, los signos de puntuación y los cambios de sistema de escritura como límites de palabra, así que coinciden términos como `C++` y palabras en japonés.
+- Una expresión regular no válida muestra una advertencia y se busca como texto normal.
+- Las carpetas permanentes, como la Barra de marcadores, son contenedores y nunca coinciden por su nombre.
+- Cuando hay más coincidencias que el límite de resultados, una nota indica cuántas se muestran. Afina la búsqueda o sube **Máximo de resultados de búsqueda** en [Configuración](/settings).
+- Al borrar la búsqueda (con el botón para borrar, o con `Esc` en el cuadro de búsqueda), se vuelven a abrir las carpetas que tenías abiertas antes.
+- Las búsquedas recientes se recuerdan en este dispositivo. Haz clic en el cuadro de búsqueda vacío, o pulsa `Alt+↓` en él, para verlas. Bórralas desde esa lista o desactiva **Historial de búsqueda** en la configuración.
+
+## Filtrar en el administrador de marcadores [#filter-in-the-bookmarks-manager]
+
+La tabla del administrador tiene filtros más precisos. En Chrome, abre la página de marcadores del navegador para llegar a ella.
+
+- **Filtrar títulos...** y **Filtrar URLs...** buscan texto en esas columnas. Pulsa `/` para ir al filtro de títulos.
+- **Tipo**, **ID superior**, **Dominio** y **Fecha de creación** acotan aún más las filas.
+- **Solo la carpeta actual** limita los filtros a la carpeta en la que estás. Cuando está desactivado, los filtros buscan en todos los marcadores.
+- Ordena por cualquier columna desde su encabezado.
+
+## Guardar una búsqueda [#save-a-search]
+
+Una búsqueda guardada conserva con un nombre los filtros, el orden y el ámbito de carpeta actuales del administrador, para que puedas volver a abrir la misma vista más adelante.
+
+<Steps>
+<Step>
+Define al menos un filtro: título, URL, tipo, carpeta, dominio o fecha de creación.
+</Step>
+<Step>
+Haz clic en **Búsquedas guardadas** en la barra de herramientas de la tabla, o pulsa `s`.
+</Step>
+<Step>
+Escribe un nombre en **Ponle nombre a esta búsqueda** y haz clic en **Guardar**.
+</Step>
+</Steps>
+
+Para usar una, abre **Búsquedas guardadas** y elígela. Sus filtros y su orden reemplazan a los actuales, y si estaba limitada a una carpeta, el administrador vuelve a esa carpeta. Cada entrada se puede renombrar o eliminar, y una eliminación se puede deshacer desde el mensaje que aparece a continuación.
+
+Una búsqueda guardada almacena las definiciones de los filtros, nunca copias de los marcadores, así que sus resultados siempre corresponden a tus marcadores tal como están ahora. Si se eliminó una carpeta que menciona, esa carpeta se omite, los demás filtros se siguen aplicando y un mensaje indica cuántas carpetas se omitieron.
+
+Las búsquedas guardadas se quedan en el almacenamiento local de la extensión en este navegador y no se sincronizan, porque sus filtros pueden revelar lo que guardas en marcadores y los ID de carpeta son distintos en cada dispositivo. Puedes conservar hasta 50.
+
+<Callout title="Firefox">
+En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente.
+</Callout>

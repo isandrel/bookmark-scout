@@ -1,0 +1,86 @@
+---
+title: コントリビュートと開発
+description: Bookmark Scout のモノレポをセットアップし、ソースから拡張機能をビルドし、テストを実行して、プルリクエストを作成します。
+---
+
+バグの報告、修正、翻訳、ドキュメントなど、コントリビュートを歓迎します。ガイドラインの全文は <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink> にあります。このページでは必要なコマンドを説明します。
+
+## リポジトリ [#the-repository]
+
+Bun と Nx のモノレポで、3 つのアプリと共有の設定パッケージで構成されています。
+
+| パス | 内容 |
+| --- | --- |
+| `apps/extension` | ブラウザ拡張機能: WXT、React、TypeScript、Zustand、Base UI 上の shadcn/ui |
+| `apps/website` | マーケティングサイト: Next.js、`next-intl` で多言語化 |
+| `apps/docs` | このサイト: Next.js、Fumadocs、`content/docs` の MDX |
+| `packages/config` | `config/project.toml` と `config/web.toml` から読み込むプロジェクトとサイトの値 |
+
+## セットアップ [#set-up]
+
+[Bun](https://bun.sh) と、Chrome、Edge、Firefox のいずれかが必要です。GitHub で<RepoLink>リポジトリ</RepoLink>をフォークし、フォークをクローンして、そのフォルダで次を実行します。
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` は、ライブリロード付きで Chrome で拡張機能を起動します。ほかのブラウザでは `bun run dev:edge` または `bun run dev:firefox` を使います。
+
+## ソースからビルドする [#build-from-source]
+
+```bash
+bun run build
+```
+
+これで、3 つのブラウザ向けのビルドがすべて `apps/extension/dist/` に作成されます。
+
+| ブラウザ | フォルダ |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+[インストール](/installation)でダウンロードしたリリースと同じ方法で、使っているブラウザのフォルダをパッケージ化されていない拡張機能として読み込みます。Chrome では **パッケージ化されていない拡張機能を読み込む**、Edge では **展開して読み込み** を使い、Firefox では **一時的なアドオンを読み込む** でフォルダの `manifest.json` を選びます。1 つのブラウザだけをビルドするには、`bunx nx run extension:build:chrome`、`extension:build:edge`、`extension:build:firefox` のいずれかを実行します。
+
+## テスト [#test]
+
+```bash
+bun run test
+```
+
+これは Chrome 向けのビルドを作成し、Playwright の Chromium をインストールして、ユニットテストと Chromium のエンドツーエンドテストをヘッドレスで実行します。ネットワークツールと AI ツールは、ローカルサーバーとモックのプロバイダーに対して実行されます。`[mocked provider contract]` という名前のテストは、プロバイダーとの取り決めのうち Bookmark Scout 側を確認するもので、実際のプロバイダーとの互換性は確認しません。
+
+| 変更内容 | 実行するもの |
+| --- | --- |
+| 拡張機能のソース | `bunx nx run extension:lint` |
+| 並べ替えのロジック | `bun run test:unit` |
+| ポップアップ、設定、マネージャー、ツール、インポートとエクスポート | `bun run test:e2e` |
+| Edge での動作 | `bunx nx run extension:test:e2e:edge` |
+| Firefox での動作 | `bunx nx run extension:test:e2e:firefox`（スモークテスト） |
+| マニフェスト、プロバイダー、ブラウザとの連携 | `bunx nx run extension:build:chrome` と、影響を受ける各ブラウザのターゲット |
+| ウェブサイト | `bunx nx run website:build` |
+| ドキュメント | `bunx nx run docs:build` の後に `bunx nx run docs:verify` |
+| 複数のアプリにまたがる変更 | `bun run lint` と `bun run build:all` |
+
+CI は、すべてのプルリクエストで、lint、3 つの拡張機能のビルド、ユニットテストと Chromium のエンドツーエンドテスト、Edge のテスト、Firefox のスモークテストを必須チェックとして実行します。ビルドが通ってもテストで確認されたことにはならないため、実行したテストを明記してください。
+
+## ドキュメントの作業 [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+ページは `apps/docs/content/docs` にある MDX ファイルで、隣にある `meta.json` ファイルで順序が決まります。ウェブサイト、リポジトリ、リリース、連絡先アドレスへのリンクは、`<Contact role="support" />` や `<ReleaseLink />` などの小さなコンポーネントを通じて設定から取得されるため、ページに直接書き込むことはありません。`bunx nx run docs:verify` は、ビルド後に静的エクスポートを確認します。
+
+## 翻訳 [#translations]
+
+ユーザーに表示される拡張機能のテキストは `apps/extension/public/_locales/<locale>/messages.json` に、ウェブサイトのテキストは `apps/website/messages/<locale>.json` にあります。すべての言語をまとめて変更してください。キーが欠けていると、ユニットテストとウェブサイトのビルドチェックが失敗します。言語を追加するには、`apps/extension/AGENTS.md` の「Localization」に従ってください。
+
+## プルリクエスト [#pull-requests]
+
+- `main` からブランチを作成し、1 つのプルリクエストには 1 つの変更だけを含めてください。
+- コミットは [Conventional Commits](https://www.conventionalcommits.org/) に従い、[Gitmoji](https://gitmoji.dev/) のプレフィックスを付けて書きます。例: `🐛 fix(popup): keep focus after deleting a folder`
+- ユーザーに見える内容、ブラウザ対応、プライバシー、設定に影響する変更では、ドキュメントを更新してください。[プロジェクトの状況](/status)には、実装済み、部分的、予定の項目が記載されています。
+
+セキュリティ上の問題は、公開の issue ではなく <Contact role="security" /> へ非公開で報告してください。Bookmark Scout のライセンスは <License /> です。

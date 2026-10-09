@@ -1,0 +1,40 @@
+---
+title: Combinaciones de teclas
+description: Busca, recorre las carpetas, guarda la página actual y maneja la tabla del administrador sin el ratón.
+---
+
+Las combinaciones de teclas de Bookmark Scout nunca usan `Ctrl` ni `Cmd`, así que los atajos del navegador como `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` y `D` siguen funcionando. Se pausan mientras escribes en un campo de texto (`Esc` en el cuadro de búsqueda es la excepción), mientras un editor de métodos de entrada está componiendo texto y mientras hay un diálogo o un menú abierto.
+
+## Ventana emergente y panel lateral [#popup-and-side-panel]
+
+Coloca el puntero sobre el cuadro de búsqueda para ver un recordatorio.
+
+| Tecla | Acción |
+| --- | --- |
+| `/` | Ir al cuadro de búsqueda |
+| `Esc` en el cuadro de búsqueda | Borrar la búsqueda; púlsala otra vez para salir del cuadro |
+| `↓` en el cuadro de búsqueda | Ir a la primera carpeta |
+| `Alt+↓` en el cuadro de búsqueda vacío | Mostrar las búsquedas recientes; `↓` / `↑` eligen una, `Enter` la busca y `Tab` llega a **Borrar** |
+| `↓` / `↑`, `Home` / `End` | Moverse entre las carpetas y los marcadores visibles (`↑` en la primera fila vuelve a la búsqueda) |
+| `→` / `←` | Abrir o cerrar una carpeta; en una carpeta abierta, `→` va a su primer elemento y `←` va a la carpeta superior |
+| `Enter` en una carpeta | Guardar la página actual en esa carpeta (una página que ya está guardada allí no se duplica) |
+| `Enter` en un marcador | Abrirlo en una pestaña nueva |
+| `Space` en una carpeta | Abrirla o cerrarla |
+
+## Administrador de marcadores [#bookmarks-manager]
+
+Pulsa `?`, o haz clic en el botón del teclado del encabezado, para ver esta lista en el administrador.
+
+| Tecla | Acción |
+| --- | --- |
+| `/` | Ir al filtro de títulos |
+| `Backspace` o `Alt+↑` | Ir a la carpeta superior |
+| `j` / `k` | Ir a la fila siguiente o anterior de la tabla (una fila de carpeta, o el menú de acciones de una fila de marcador) |
+| `Enter` en una fila de carpeta | Abrir la carpeta |
+| `s` | Abrir las búsquedas guardadas |
+| `?` | Mostrar las combinaciones de teclas |
+| `Esc` | Cerrar un diálogo o un menú |
+
+En la tabla, enfoca el borde del encabezado de una columna y pulsa `←` o `→` para cambiar el ancho de esa columna.
+
+Las combinaciones de teclas están cubiertas por las pruebas automatizadas de Chromium y Edge, no por las de Firefox.

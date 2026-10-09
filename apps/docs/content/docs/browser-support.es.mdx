@@ -1,0 +1,39 @@
+---
+title: Compatibilidad con navegadores
+description: Qué funciona en Chrome, Microsoft Edge y Firefox, qué se prueba en cada uno y por qué Safari no es compatible.
+---
+
+Chrome es el navegador principal. Edge está basado en Chromium y tiene las mismas funciones, salvo donde se indica a continuación. Firefox usa una compilación Manifest V2 con un conjunto de funciones más reducido.
+
+## Tabla de funciones [#feature-matrix]
+
+Esta tabla se basa en los manifiestos de la extensión compilada para cada navegador.
+
+| Función | Chrome | Edge | Firefox |
+| --- | --- | --- | --- |
+| Ventana emergente de la barra de herramientas con búsqueda y guardado | Sí | Sí | Sí |
+| Panel lateral | Sí | Sí | Sí, en el panel lateral de Firefox: elige Bookmark Scout en el panel lateral |
+| Administrador de marcadores y barra lateral de herramientas | Reemplaza la página de marcadores del navegador y se abre desde **Abrir el administrador de marcadores** en la ventana emergente y en el panel lateral | Se abre desde **Abrir el administrador de marcadores**. No se ha comprobado si Edge también aplica el reemplazo a su página de Favoritos. | Se abre desde **Abrir el administrador de marcadores** en la ventana emergente. Firefox no permite reemplazar su página de marcadores. |
+| Búsquedas guardadas, herramientas de mantenimiento, importación y exportación, estadísticas y herramientas de IA del administrador | Sí | Sí | Sí, en el administrador. Las pruebas automatizadas cubren la importación, la exportación y los informes; las demás herramientas se comprueban a mano. |
+| Página de configuración | Sí | Sí | Sí |
+| Menú contextual para guardar enlaces | Sí, después de activar **Menú contextual** (pide permiso) | Igual | Sí, después de activar **Menú contextual** |
+| Iconos de sitios junto a los marcadores | Iconos guardados con **Actualizar iconos de sitios**, y de la caché de iconos del navegador cuando activas **Usar la caché de iconos del navegador** | Igual | Solo los iconos guardados con **Actualizar iconos de sitios**, que se ejecuta en el administrador. Firefox no ofrece a las extensiones una API de favicons, así que los demás marcadores muestran un icono genérico. |
+| Acceso opcional a sitios web para comprobar enlaces rotos, obtener títulos y actualizar iconos de sitios | Se solicita al ejecutar la herramienta | Igual | Igual |
+
+## Qué se prueba [#what-is-tested]
+
+- **Chrome (Chromium)**: pruebas unitarias y pruebas de extremo a extremo de la ventana emergente, el panel lateral, el administrador, la configuración, las herramientas de mantenimiento, los informes, la importación y exportación, las combinaciones de teclas, las búsquedas guardadas, el guardado desde el menú contextual, el arrastrar y soltar, las herramientas de red y las herramientas de IA con proveedores simulados.
+- **Edge**: el mismo conjunto de pruebas de extremo a extremo se ejecuta con la compilación para Edge.
+- **Firefox**: un conjunto de pruebas básicas cubre la búsqueda y la creación de carpetas en la ventana emergente, la página del panel lateral cargada en una pestaña, la apertura del administrador desde la ventana emergente y el panel lateral, la página del administrador, el guardado de la configuración, una exportación e importación de ida y vuelta en JSON, los informes de estadísticas y de privacidad, y los iconos de sitios guardados en la ventana emergente. No se cubren los menús contextuales, el arrastrar y soltar, las combinaciones de teclas ni las herramientas de red y de IA (incluida la propia **Actualizar iconos de sitios**).
+
+El conjunto de pruebas de Edge y el de pruebas básicas de Firefox son comprobaciones de CI obligatorias, igual que el de Chromium. Los proveedores de IA reales y los sitios web en vivo se comprueban a mano, no con pruebas automatizadas.
+
+## Safari [#safari]
+
+Safari no es compatible. Las Safari Web Extensions no implementan la API `bookmarks`, de la que depende cada parte de Bookmark Scout.
+
+## Disponibilidad en tiendas [#store-availability]
+
+<StoreAvailability />
+
+El material de las fichas se prepara en la <RepoLink tree="store">carpeta `store/`</RepoLink> del repositorio, y cada envío necesita la aprobación del mantenedor. Si una tienda no tiene ficha, [instala desde una versión publicada en GitHub](/installation).

@@ -108,6 +108,7 @@ SUCHEN UND SPEICHERN IN DER SYMBOLLEISTE
 • Sofortsuche in allen Lesezeichen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke
 • Ordnerbaum mit Drag-and-drop, „Alle ausklappen“ und „Alle einklappen“ sowie neuen Ordnern
 • Aktuelle Seite mit einem Klick in jedem Ordner speichern; eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
+• Derselbe Ordnerbaum und dieselbe Suche in der Firefox-Sidebar, die beim Surfen geöffnet bleibt
 • Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern
 • Tastenkombinationen, die nie die Strg/Cmd-Tastenkombinationen des Browsers übernehmen
 • Löschen mit Bestätigungsdialog (standardmäßig aktiviert) und 10 Sekunden Zeit zum Rückgängigmachen

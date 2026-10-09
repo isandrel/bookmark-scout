@@ -1,0 +1,53 @@
+---
+title: État du projet
+description: Ce que fait Bookmark Scout aujourd'hui, ce qui est partiel et ce qui est prévu, tenu à jour avec le code.
+---
+
+Cette page résume l'état actuel du dépôt, afin que la documentation de la feuille de route ne s'écarte pas de l'implémentation.
+
+## Implémenté [#implemented]
+
+- Extension de navigateur construite avec WXT, React, TypeScript, Zustand, des composants shadcn/ui reposant sur les primitives Base UI, et les API de favoris des navigateurs
+- Chrome comme cible principale, avec des cibles de compilation pour Firefox et Edge
+- Dans la fenêtre pop-up : recherche de favoris, filtrage des dossiers, organisation par glisser-déposer, ajout rapide, création de dossiers, et commandes pour développer ou réduire
+- Suppression depuis la fenêtre pop-up, le panneau latéral et le gestionnaire, avec une boîte de dialogue de confirmation (activée par défaut, facultative dans les paramètres) et une annulation possible pendant 10 secondes qui restaure la sous-arborescence ainsi que ses étiquettes et résumés enregistrés
+- Point d'entrée du panneau latéral (dans Chrome, Edge et Firefox)
+- Raccourcis clavier dans la fenêtre pop-up, le panneau latéral et le gestionnaire pour la recherche, la navigation dans l'arborescence et le tableau, l'enregistrement de la page actuelle, le passage au dossier parent, l'ouverture des recherches enregistrées, et une boîte de dialogue d'aide `?` ; ils n'utilisent jamais de combinaisons avec Ctrl/Cmd et sont suspendus pendant la saisie ou lorsqu'une boîte de dialogue est ouverte
+- Page de favoris personnalisée qui remplace celle du navigateur, avec arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale des outils
+- Recherches enregistrées (vues intelligentes) dans le gestionnaire, qui ne stockent que les filtres, le tri et la portée du dossier dans le stockage local, et les évaluent sur l'arborescence des favoris en temps réel, en ignorant les dossiers supprimés
+- Tri configurable par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré des favoris
+- Page d'options avec des paramètres pour l'apparence, la langue, la recherche, le comportement, le dimensionnement avancé de l'interface, l'IA, les outils d'IA, la maintenance, les métadonnées, la sécurité, les analyses, les données et les menus contextuels
+- Paramètres conservés via `chrome.storage.sync`
+- Fournisseurs d'IA définis dans la configuration : OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI et points de terminaison personnalisés compatibles OpenAI
+- Recommandations de dossiers par IA, y compris la création, après vérification, d'un nouveau chemin de dossiers suggéré dans lequel la page actuelle est enregistrée
+- Préparation de contexte IA avec les étiquettes et résumés enregistrés, suggestions d'étiquettes, résumés et réorganisation des dossiers (avec aperçu avant application par défaut)
+- Outils de maintenance des favoris : nettoyage des doublons, nettoyage des URL, analyse des liens morts avec des résultats « mort confirmé » et « à vérifier manuellement » et des réparations vérifiées (suppression, cible de la redirection, copie Wayback Machine ou URL modifiée, avec annulation possible), récupération des métadonnées (les titres vérifiés sont appliqués ; les descriptions ne sont qu'affichées en aperçu), analyse de confidentialité et statistiques
+- Actualiser les icônes de site : télécharge une icône par site Web depuis le site enregistré en favori lui-même (jamais depuis un service d'icônes tiers) après l'octroi de l'accès facultatif aux sites Web, enregistre les icônes vérifiées dans le stockage local dans une limite de taille, et les affiche dans la fenêtre pop-up, le panneau latéral et le gestionnaire en priorité sur le cache d'icônes du navigateur ; les icônes enregistrées peuvent être effacées
+- Vérification de confidentialité avec masquage facultatif avant les exportations de favoris et les exportations de contexte IA
+- Importation de favoris depuis des fichiers HTML ou JSON, avec un aperçu du dossier cible, des nombres d'éléments et des doublons, un choix de traitement des doublons, et une annulation possible
+- Exportation des favoris au format HTML, JSON, Markdown ou CSV
+- Enregistrement de liens depuis le menu contextuel
+- Extension et site Web en anglais, chinois simplifié, chinois traditionnel, japonais, coréen, espagnol, allemand, français et portugais du Brésil
+- Site de documentation Fumadocs
+- Tests unitaires et tests E2E Chromium sans intervention pour la fenêtre pop-up, le gestionnaire, les paramètres, la maintenance, les rapports, l'importation et l'exportation, les outils réseau (avec routes simulées et serveurs locaux) et les outils d'IA avec fournisseurs simulés
+- La même suite Playwright dans Microsoft Edge sur la version Edge (`nx run extension:test:e2e:edge`), et une suite de tests de fumée Firefox de neuf tests sur la version Firefox (`nx run extension:test:e2e:firefox`) : recherche et création de dossiers dans la fenêtre pop-up, icônes de site enregistrées dans la fenêtre pop-up, page du panneau latéral, ouverture du gestionnaire depuis la fenêtre pop-up et le panneau latéral, chargement et filtrage du gestionnaire, enregistrement d'un paramètre, aller-retour d'exportation et d'importation JSON, et rapports de statistiques et de confidentialité
+- Une matrice paramètres-comportement (`apps/extension/tests/settings-matrix.ts`) qui associe chaque paramètre au code qui le lit et à un test qui le modifie
+
+## Partiel [#partial]
+
+- Étiquettes et résumés des favoris : modifiables dans Détails du favori et enregistrés à partir de suggestions d'IA vérifiées, mais stockés uniquement dans le stockage local de l'extension. Ils ne sont ni synchronisés, ni consultables par la recherche, ni inclus dans les exportations de favoris.
+- Les limites des outils d'IA (nombre et style des étiquettes, longueur des résumés, limites de dossiers de la réorganisation) sont transmises au fournisseur sous forme d'instructions ; la réponse n'est pas contrôlée par rapport à ces limites. La compatibilité avec les fournisseurs réels est vérifiée manuellement.
+- La couverture d'exécution dans Firefox se limite à une suite de tests de fumée, et non à la suite complète. Playwright ne peut pas ouvrir les pages `moz-extension://` : les tests Firefox pilotent donc le Firefox standard via geckodriver (Selenium) et installent la version compilée comme module complémentaire temporaire avec son véritable identifiant de module, de sorte qu'ils testent le manifeste que reçoit Firefox Add-ons. Ils ne couvrent pas l'enregistrement depuis le menu contextuel (les tests Chromium déclenchent `contextMenus.onClicked` depuis le service worker ; la version Firefox utilise une page d'arrière-plan MV2 que le banc de test ne peut pas piloter par script), le glisser-déposer, les raccourcis clavier, les outils réseau, les outils d'IA ni les langues.
+- Différences d'API dans Firefox : le cache d'icônes du navigateur n'est pas disponible, car Firefox n'a pas de service `_favicon` ; les favoris affichent donc une icône générique, sauf si **Actualiser les icônes de site** en a enregistré une ; le gestionnaire et la barre latérale Outils s'ouvrent depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up, car Firefox ne permet pas de remplacer la page des favoris ; la page du panneau latéral est déclarée comme barre latérale Firefox, et les tests chargent cette page dans un onglet, car l'automatisation ne peut pas ouvrir la barre latérale elle-même.
+- Quatre paramètres de portée d'outil sont fixes : l'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel ; le nettoyeur de doublons et l'analyseur de confidentialité analysent toujours tous les favoris.
+
+## Prévu [#planned]
+
+- Couverture d'exécution plus large dans Firefox : menus contextuels, glisser-déposer, raccourcis clavier, outils réseau, outils d'IA et langues
+- Soumission au Chrome Web Store, à Firefox Add-ons et à Edge Add-ons. Les éléments des fiches et les listes de contrôle de soumission se trouvent dans le <RepoLink tree="store">dossier `store/`</RepoLink> du dépôt ; la soumission est manuelle et nécessite l'approbation de la version. Le paquet Firefox dispose de son identifiant de module définitif et de sa déclaration de collecte de données
+
+## Règles de documentation [#documentation-rules]
+
+- Mettez à jour la documentation lorsque l'état d'une fonctionnalité, les méthodes d'installation, la compatibilité des navigateurs, les engagements de confidentialité ou la configuration changent.
+- Les fonctionnalités d'IA sont facultatives et peuvent envoyer des données de favoris au fournisseur sélectionné.
+- La CI exécute les tests unitaires de l'extension, la suite de bout en bout Chromium, la suite Edge et la suite de tests de fumée Firefox comme vérifications obligatoires, sans configuration manuelle. Une compilation réussie ne constitue pas une couverture d'exécution.

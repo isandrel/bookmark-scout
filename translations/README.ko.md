@@ -64,7 +64,7 @@
 |                                                  브라우저                                                   |  지원 수준  | 비고                         |
 | :---------------------------------------------------------------------------------------------------------: | :---------: | ---------------------------- |
 | ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) | ⭐⭐⭐ 주요 | Manifest V3, 모든 기능       |
-|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |  ⭐⭐ 보조  | Manifest V2, 사이드바 미지원 |
+|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |  ⭐⭐ 보조  | Manifest V2, 사이드 패널은 Firefox 사이드바에 표시 |
 |  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   |  ⭐⭐ 보조  | Chromium 기반, 완전 호환     |
 |    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |  ❌ 미지원  | `bookmarks` API 미구현       |
 

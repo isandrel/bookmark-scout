@@ -1,0 +1,86 @@
+---
+title: Mitwirken und Entwicklung
+description: Richten Sie das Bookmark-Scout-Monorepo ein, erstellen Sie die Erweiterung aus dem Quellcode, führen Sie die Tests aus und eröffnen Sie einen Pull Request.
+---
+
+Beiträge sind willkommen: Fehlerberichte, Korrekturen, Übersetzungen und Dokumentation. Die vollständigen Richtlinien stehen in <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>; diese Seite enthält die Befehle, die Sie brauchen.
+
+## Das Repository [#the-repository]
+
+Ein Bun- und Nx-Monorepo mit drei Apps und einem gemeinsamen Konfigurationspaket:
+
+| Pfad | Inhalt |
+| --- | --- |
+| `apps/extension` | Die Browsererweiterung: WXT, React, TypeScript, Zustand und shadcn/ui auf Base UI |
+| `apps/website` | Die Marketing-Website: Next.js, lokalisiert mit `next-intl` |
+| `apps/docs` | Diese Website: Next.js, Fumadocs und MDX in `content/docs` |
+| `packages/config` | Projekt- und Website-Werte, gelesen aus `config/project.toml` und `config/web.toml` |
+
+## Einrichten [#set-up]
+
+Sie benötigen [Bun](https://bun.sh) sowie Chrome, Edge oder Firefox. Forken Sie <RepoLink>das Repository</RepoLink> auf GitHub, klonen Sie Ihren Fork und führen Sie in dessen Ordner Folgendes aus:
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` startet die Erweiterung in Chrome mit Live-Reload. Verwenden Sie `bun run dev:edge` oder `bun run dev:firefox` für die anderen Browser.
+
+## Aus dem Quellcode erstellen [#build-from-source]
+
+```bash
+bun run build
+```
+
+Dies erstellt alle drei Browser-Ziele in `apps/extension/dist/`:
+
+| Browser | Ordner |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+Laden Sie den Ordner für Ihren Browser als entpackte Erweiterung, genau wie ein heruntergeladenes Release unter [Installieren](/installation): **Entpackte Erweiterung laden** in Chrome und Edge, oder **Temporäres Add-on laden…** mit der `manifest.json` des Ordners in Firefox. Um nur einen Browser zu erstellen, führen Sie `bunx nx run extension:build:chrome`, `extension:build:edge` oder `extension:build:firefox` aus.
+
+## Testen [#test]
+
+```bash
+bun run test
+```
+
+Dies erstellt das Chrome-Ziel, installiert das Chromium von Playwright und führt die Unit-Tests und die Chromium-End-to-End-Tests headless aus. Netzwerktools und KI-Tools laufen gegen lokale Server und simulierte Anbieter; Tests mit dem Titel `[mocked provider contract]` prüfen die Seite von Bookmark Scout im Vertrag mit dem Anbieter, nicht die Kompatibilität mit echten Anbietern.
+
+| Änderung | Ausführen |
+| --- | --- |
+| Quellcode der Erweiterung | `bunx nx run extension:lint` |
+| Sortierlogik | `bun run test:unit` |
+| Pop-up, Einstellungen, Manager, Tools, Import und Export | `bun run test:e2e` |
+| Verhalten in Edge | `bunx nx run extension:test:e2e:edge` |
+| Verhalten in Firefox | `bunx nx run extension:test:e2e:firefox` (eine Smoke-Suite) |
+| Manifest, Anbieter oder Browserintegration | `bunx nx run extension:build:chrome` sowie jedes betroffene Browser-Ziel |
+| Website | `bunx nx run website:build` |
+| Dokumentation | `bunx nx run docs:build`, dann `bunx nx run docs:verify` |
+| Änderungen über mehrere Apps | `bun run lint` und `bun run build:all` |
+
+Die CI führt bei jedem Pull Request Lint, die drei Builds der Erweiterung, die Unit- und Chromium-End-to-End-Tests, die Edge-Suite und die Firefox-Smoke-Suite als erforderliche Prüfungen aus. Ein erfolgreicher Build ist keine Testabdeckung: Geben Sie an, welche Tests Sie ausgeführt haben.
+
+## An der Dokumentation arbeiten [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+Seiten sind MDX-Dateien in `apps/docs/content/docs` und werden durch die daneben liegenden `meta.json`-Dateien geordnet. Links zur Website, zum Repository, zu Releases und Kontaktadressen kommen aus der Konfiguration über kleine Komponenten wie `<Contact role="support" />` und `<ReleaseLink />`, sodass Seiten sie nie fest codieren. `bunx nx run docs:verify` prüft nach einem Build den statischen Export.
+
+## Übersetzungen [#translations]
+
+Für Nutzer sichtbare Texte der Erweiterung befinden sich in `apps/extension/public/_locales/<locale>/messages.json`, Texte der Website in `apps/website/messages/<locale>.json`. Ändern Sie alle Sprachen gemeinsam; die Unit-Tests und der Build der Website schlagen fehl, wenn ein Schlüssel fehlt. Um eine Sprache hinzuzufügen, folgen Sie dem Abschnitt „Localization“ in `apps/extension/AGENTS.md`.
+
+## Pull Requests [#pull-requests]
+
+- Erstellen Sie einen Branch von `main` und beschränken Sie jeden Pull Request auf eine Änderung.
+- Schreiben Sie Commits als [Conventional Commits](https://www.conventionalcommits.org/) mit einem [Gitmoji](https://gitmoji.dev/)-Präfix, zum Beispiel `🐛 fix(popup): keep focus after deleting a folder`.
+- Aktualisieren Sie die Dokumentation, wenn eine Änderung beeinflusst, was Nutzer sehen, die Browserunterstützung, den Datenschutz oder die Einstellungen. Der [Projektstatus](/status) listet auf, was implementiert, teilweise umgesetzt und geplant ist.
+
+Melden Sie Sicherheitsprobleme vertraulich an <Contact role="security" />, nicht in einem öffentlichen Issue. Bookmark Scout ist unter <License /> lizenziert.

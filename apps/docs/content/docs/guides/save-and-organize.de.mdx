@@ -1,0 +1,57 @@
+---
+title: Speichern und ordnen
+description: Speichern Sie die aktuelle Seite oder einen Link in einem Ordner, erstellen Sie Ordner, verschieben Sie Elemente per Drag-and-drop, sortieren Sie den Baum, und löschen Sie mit der Möglichkeit zum Rückgängigmachen.
+---
+
+## Die aktuelle Seite speichern [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Öffnen Sie das Pop-up oder die Seitenleiste auf der Seite, die Sie behalten möchten.
+</Step>
+<Step>
+Bewegen Sie den Mauszeiger auf den gewünschten Ordner und klicken Sie auf **Aktuelle Seite hinzufügen**. Mit der Tastatur wechseln Sie zum Ordner und drücken `Enter`.
+</Step>
+</Steps>
+
+Der Bereich **Zuletzt verwendet** listet kürzlich genutzte Ordner auf; klicken Sie auf einen, um die aktuelle Seite dort zu speichern. Mit **Letzte Ordner** und **Max. letzte Ordner** in den [Einstellungen](/settings) können Sie ihn deaktivieren oder festlegen, wie viele Ordner er zeigt.
+
+Eine Seite, die sich bereits im Ordner befindet, wird nicht doppelt gespeichert; die Benachrichtigung weist darauf hin, dass sie schon vorhanden ist.
+
+Das Pop-up in der Symbolleiste liest die Seite, auf der Sie es angeklickt haben, ohne nachzufragen. Die Seitenleiste bleibt geöffnet, während Sie zwischen Tabs wechseln. Wenn Sie zum ersten Mal aus ihr speichern, erklärt Bookmark Scout daher den Grund und fragt dann nach Zugriff auf Ihre Tabs. Wenn Sie ablehnen, wird nichts gespeichert.
+
+## Einen Link über das Rechtsklickmenü speichern [#save-a-link-with-the-right-click-menu]
+
+Aktivieren Sie zuerst **Kontextmenü** in den [Einstellungen](/settings#data); es ist standardmäßig deaktiviert. Klicken Sie dann mit der rechten Maustaste auf einen Link auf einer Seite, wählen Sie **Lesezeichen speichern in...** und anschließend einen Ihrer zuletzt verwendeten Ordner oder die Lesezeichenleiste. **Quelle für Lesezeichennamen** in den Einstellungen legt fest, ob das Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benannt wird. Deaktivieren Sie das Menü mit **Kontextmenü** (beide befinden sich im Tab **Daten**).
+
+## Ordner erstellen [#create-folders]
+
+Bewegen Sie im Pop-up oder in der Seitenleiste den Mauszeiger auf einen Ordner, klicken Sie auf **Ordner hinzufügen** und geben Sie den Namen ein. Neue Ordner beginnen mit dem **Standardname für Ordner** aus den Einstellungen.
+
+## Lesezeichen und Ordner verschieben [#move-bookmarks-and-folders]
+
+- **Drag-and-drop** im Pop-up oder in der Seitenleiste. Wenn Sie ein Element neben einem Element in einem anderen Ordner ablegen, wird es in diesen Ordner verschoben. Ein Ordner kann nicht in sich selbst oder in einen seiner Unterordner verschoben werden.
+- **Mehrere auf einmal** im Manager: Wählen Sie Zeilen in der Tabelle aus, verwenden Sie dann **In Ordner verschieben** und wählen Sie das Ziel. Die Elemente werden am Ende dieses Ordners eingefügt.
+- **Neu anordnen** im Manager: Aktivieren Sie **Browser-Reihenfolge**, heben Sie jede Spaltensortierung auf, und verwenden Sie dann die Schaltflächen **Nach oben verschieben**, **Nach unten verschieben**, **An den Anfang verschieben** und **An das Ende verschieben** in der Zeile. Dafür muss die Tabelle genau einen Ordner zeigen, also entfernen Sie Filter oder aktivieren Sie **Nur aktueller Ordner**.
+
+Das Neuanordnen ändert die im Browser gespeicherte Reihenfolge. Das Pop-up zeigt diese Reihenfolge nur mit der Sortierung **Ordner zuerst**; bei Sortierung nach Datum oder alphabetisch wird die Liste immer wieder neu sortiert, und die Bestätigung weist darauf hin.
+
+Pop-up und Seitenleiste aktualisieren sich von selbst, wenn sich Lesezeichen an anderer Stelle ändern, etwa im Manager oder in der Lesezeichenverwaltung des Browsers.
+
+## Den Baum sortieren [#sort-the-tree]
+
+Wählen Sie mit **Sortierung** in den Einstellungen **Hinzufügedatum**, **Alphabetisch** (natürliche Reihenfolge, also `2` vor `10`) oder **Ordner zuerst**. Die Sortierung ändert nur, wie Bookmark Scout den Baum anzeigt, nie die im Browser gespeicherte Reihenfolge. **Nach Ordnern gruppieren** listet auf jeder Ebene von Pop-up und Seitenleiste Unterordner vor Lesezeichen auf.
+
+## Ein Lesezeichen bearbeiten [#edit-a-bookmark]
+
+Öffnen Sie im Manager das Menü einer Zeile und wählen Sie **Bearbeiten**, um Name und URL eines Lesezeichens oder den Namen eines Ordners zu ändern. **Details ansehen** zeigt den vollständigen Pfad, die Daten und die ID; dort fügen Sie auch **Tags** und eine **Zusammenfassung** hinzu.
+
+Tags und Zusammenfassungen werden nur im lokalen Erweiterungsspeicher dieses Browsers abgelegt. Sie werden nicht synchronisiert, sind nicht durchsuchbar und nicht in Lesezeichen-Exporten enthalten. KI-Kontextexporte können sie enthalten; siehe [KI-Tools einrichten](/guides/ai-tools).
+
+## Löschen und rückgängig machen [#delete-and-undo]
+
+Löschen Sie ein Lesezeichen oder einen Ordner im Pop-up, in der Seitenleiste oder über das Menü einer Zeile im Manager, oder wählen Sie im Manager mehrere Zeilen aus und löschen Sie sie gemeinsam.
+
+- **Vor dem Löschen bestätigen** ist standardmäßig aktiviert und zeigt einen Dialog, der nennt, was entfernt wird. Deaktivieren Sie die Option im Tab **Verhalten** der Einstellungen, um sofort zu löschen.
+- Jedes Löschen zeigt 10 Sekunden lang **Rückgängig** an. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt. Ein wiederhergestelltes Element wird neu angelegt und erhält daher ein neues Hinzufügedatum.
+- Feste Ordner wie die Lesezeichenleiste können nicht bearbeitet oder gelöscht werden.

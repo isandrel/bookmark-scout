@@ -1,0 +1,143 @@
+---
+title: Configurações
+description: Todas as configurações da página de configurações do Bookmark Scout, guia por guia, com o valor padrão e o que cada uma altera.
+---
+
+Abra a página de configurações pela opção **Opções** da extensão, por exemplo, clicando com o botão direito do mouse no ícone da barra de ferramentas no Chrome e escolhendo **Opções**. As alterações são salvas à medida que você as faz.
+
+## Usar a página de configurações [#using-the-settings-page]
+
+- **Pesquisar configurações...**, no topo, encontra uma configuração em qualquer guia e informa quantas correspondem.
+- Uma configuração alterada é marcada como **Modificado**, com um botão para redefini-la para o padrão. **Redefinir tudo** redefine todas as configurações.
+- **Exportar** salva suas configurações em um arquivo JSON, e **Importar** as restaura a partir de um. Nenhum dos dois mexe nos seus favoritos.
+- As configurações ficam no armazenamento sincronizado do navegador, então acompanham você em outros dispositivos quando a sincronização do navegador está ativada. A chave de API do provedor de IA, o **URL base** e os **Cabeçalhos extras (JSON)** são a exceção: eles ficam neste dispositivo. Consulte [Privacidade](/privacy).
+
+## Aparência [#appearance]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Idioma** | Configuração do navegador | Inglês, chinês simplificado, chinês tradicional, japonês, coreano, espanhol, alemão, francês ou português do Brasil, ou seguir o navegador |
+| **Tema** | Sistema | Sistema, Claro ou Escuro, aplicado a todas as páginas abertas do Bookmark Scout |
+| **Mostrar ícones dos sites** | Ativado | Mostra os ícones dos sites ao lado dos favoritos no pop-up e no painel lateral |
+| **Usar o cache de ícones do navegador** | Desativado | Chrome e Edge: mostra também os ícones que o navegador já tem em cache, para sites sem um ícone salvo por **Atualizar ícones dos sites**. Ao ativar, é pedida permissão para ler os ícones dos sites. Não aparece no Firefox, que não oferece às extensões um cache de ícones |
+| **Tamanho do ícone do site** | 16 px (pequeno) | 16, 24 ou 32 pixels |
+
+## Pesquisa [#search]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Atraso da pesquisa** | 300 ms | Quanto tempo esperar depois que você para de digitar antes de o pop-up pesquisar |
+| **Máximo de resultados da pesquisa** | 20 resultados | Número máximo de correspondências mostradas; uma observação avisa quando há mais |
+| **Expandir pastas na pesquisa** | Ativado | Abre as pastas que contêm correspondências |
+| **Histórico de pesquisa** | Ativado | Lembra as pesquisas recentes neste dispositivo |
+
+Consulte [Pesquisa e pesquisas salvas](/guides/search).
+
+## Comportamento [#behavior]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Ordem de classificação** | Data de adição | **Data de adição**, **Ordem alfabética** ou **Pastas primeiro**. Altera somente a forma como o Bookmark Scout mostra os favoritos, nunca a ordem armazenada no navegador |
+| **Agrupar por pastas** | Ativado | No pop-up e no painel lateral, lista as subpastas antes dos favoritos em cada nível |
+| **Confirmar antes de excluir** | Ativado | Pergunta antes de excluir. De qualquer forma, toda exclusão pode ser desfeita por 10 segundos |
+| **Nome padrão da pasta** | Nova pasta | O nome inicial de uma nova pasta |
+| **Pastas recentes** | Ativado | Mostra as pastas usadas recentemente no pop-up e no menu de clique com o botão direito |
+| **Máximo de pastas recentes** | 5 | Quantas pastas recentes mostrar |
+
+Consulte [Salvar e organizar](/guides/save-and-organize).
+
+## Avançado [#advanced]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Largura do pop-up** | 400 px | Os navegadores permitem no máximo 800 px |
+| **Altura do pop-up** | 500 px | Os navegadores permitem no máximo 600 px |
+| **Limite de caracteres** | 50 caracteres | Encurta o título da página no cabeçalho das sugestões de IA do pop-up |
+| **Duração das notificações** | 4000 ms | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
+
+## IA [#ai]
+
+A IA vem desativada por padrão. Estas configurações só fazem diferença depois que você ativa **Recursos de IA**.
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Recursos de IA** | Desativado | Ativa as ferramentas de IA e as recomendações de pasta do pop-up. No Firefox, ao ativar, é pedido seu consentimento para compartilhar os dados de que seu provedor de IA precisa |
+| **Recomendar ao abrir** | Desativado | Pede recomendações de pasta sempre que o pop-up é aberto |
+| **Ler conteúdo da página** | Desativado | Envia o texto principal de cada página, e não só o título e o URL, para as recomendações de pasta, Tags automáticas e Gerador de resumos. Ao ativar, é pedido acesso aos sites |
+| **Provedor de IA** e **Modelo de IA** | OpenAI, GPT-4o Mini | O provedor e o modelo usados por todas as ferramentas de IA |
+| **Máximo de recomendações** | 5 | Número máximo de recomendações de pasta solicitadas |
+| **Máximo de categorias** | Sem limite | Número máximo de pastas de nível superior que um plano de reorganização pode criar |
+| **Mínimo de itens por pasta** e **Máximo de itens por pasta** | 1 e Sem limite | Tamanhos de pasta desejados para os planos de reorganização |
+
+Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Modelo personalizado** e **Cabeçalhos extras (JSON)**, com **Verificar serviço** e **Atualizar modelos**. Os limites de pasta são enviados ao provedor como instruções, e a resposta dele não é conferida com base neles. Consulte [Configurar as ferramentas de IA](/guides/ai-tools).
+
+## Ferramentas de IA [#ai-tools]
+
+Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma delas, ela some da barra lateral **Ferramentas** do gerenciador.
+
+| Ferramenta | Configurações e padrões |
+| --- | --- |
+| **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** 200; **Profundidade máxima** 8; **Tamanho do trecho** 240 |
+| **Tags automáticas** | **Mínimo de tags** 2; **Máximo de tags** 5; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado |
+| **Gerador de resumos** | **Tamanho do resumo** 160; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
+| **Reorganização de pastas com IA** | **Sempre mostrar prévia** ativado; **Confiança mínima** 0,55 (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
+
+Tags automáticas e Gerador de resumos sempre trabalham na pasta atual, independentemente do que diz o **Escopo padrão** deles.
+
+## Manutenção [#maintenance]
+
+| Ferramenta | Configurações e padrões |
+| --- | --- |
+| **Limpador de duplicatas** | **Critério de correspondência** URL normalizado; **Normalizar www**, **Ignorar protocolo** e **Ignorar barra final** ativados; **Regra de manutenção** Mais antigo; **Máximo de grupos** 500. Sempre verifica todos os favoritos |
+| **Limpador de URLs** | **Remover fragmentos** desativado; **Ordenar parâmetros de consulta** e **Remover parâmetros de consulta duplicados** ativados; listas de **Parâmetros preservados** e **Parâmetros removidos** |
+| **Verificar links quebrados** | **Tempo limite da solicitação** 8000 ms; **Simultaneidade** 4; **Número de tentativas** 1; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
+
+Listas como **Parâmetros removidos** aceitam valores separados por vírgula. As listas padrão estão em [Limpar duplicatas e URLs de rastreamento](/guides/clean-up#strip-tracking-parameters). Consulte também [Encontrar e corrigir links quebrados](/guides/dead-links).
+
+## Metadados e conteúdo [#metadata--content]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Ativar Buscador de metadados** | Ativado | Mostra o **Buscador de metadados** na barra lateral Ferramentas |
+| **Substituir títulos** | Desativado | Oferece novos títulos também para favoritos que já têm um |
+| **Buscar descrições** | Ativado | Mostra as descrições das páginas na revisão. Elas nunca são salvas |
+| **Tempo limite da solicitação** | 8000 ms | Por página. Também usado por **Atualizar ícones dos sites** |
+| **Simultaneidade** | 4 | Páginas solicitadas ao mesmo tempo. Também usado por **Atualizar ícones dos sites** |
+| **Ativar Atualizar ícones dos sites** | Ativado | Mostra **Atualizar ícones dos sites** na barra lateral Ferramentas |
+| **Escopo padrão** | Pasta atual | Escopo com que a atualização dos ícones dos sites começa |
+| **Tamanho preferido do ícone** | 32 px | Quando uma página lista vários ícones, baixa o de tamanho mais próximo deste |
+| **Tamanho máximo do arquivo de ícone** | 64 KB | Arquivos de ícone maiores não são baixados nem salvos |
+| **Limite de armazenamento de ícones** | 4096 KB | Tamanho total dos ícones salvos neste dispositivo; os mais antigos são removidos primeiro |
+
+## Segurança [#security]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Ativar Verificador de privacidade** | Ativado | Mostra o **Verificador de privacidade** na barra lateral Ferramentas. Ele sempre verifica todos os favoritos |
+| **Verificar títulos** | Desativado | Verifica os títulos além dos URLs |
+| **Verificar parâmetros de consulta** e **Verificar fragmentos** | Ativado | Verifica essas partes de cada URL |
+| **Parâmetros confidenciais** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Nomes de parâmetros a sinalizar |
+| **Detectar e-mails** e **Detectar UUIDs** | Ativado | Sinaliza endereços de e-mail e valores parecidos com UUIDs |
+
+## Análises [#analytics]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Ativar estatísticas** | Ativado | Mostra **Estatísticas dos favoritos** na barra lateral Ferramentas |
+| **Incluir domínios**, **Incluir pastas**, **Incluir duplicatas**, **Incluir protocolos**, **Incluir distribuição por nível** | Ativado | Seções do relatório; uma seção desativada fica oculta |
+| **Quantidade de itens principais** | 10 | Tamanho das listas dos principais domínios e pastas |
+
+## Dados [#data]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Mostrar ferramenta de exportação** e **Mostrar ferramenta de importação** | Ativado | Mostra essas ferramentas na barra lateral Ferramentas |
+| **Formato de exportação padrão** | HTML | Formato selecionado quando a ferramenta de exportação é aberta |
+| **Prefixo do nome do arquivo** | `bookmarks_` | Início do nome de todo arquivo exportado |
+| **Tamanho máximo do nome do arquivo** | 50 | Nome de arquivo gerado mais longo possível |
+| **Recuo do JSON**, **Recuo do HTML**, **Recuo do Markdown** | 2, 4, 2 | Espaços por nível em cada formato |
+| **Incluir datas** e **Incluir URLs** | Ativado | Inclui esses dados nas exportações |
+| **Menu de contexto** | Desativado | Mostra **Salvar favorito em...** quando você clica com o botão direito do mouse em um link. No Chrome e no Edge, ao ativar, a permissão opcional do menu de clique com o botão direito é adicionada sem nenhum aviso |
+| **Origem do nome do favorito** | Texto do link | Dá a um favorito salvo pelo menu de clique com o botão direito o nome do texto do link, do título da página ou do URL do link |
+
+Consulte [Importar e exportar](/guides/import-export).

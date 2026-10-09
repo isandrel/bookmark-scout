@@ -1,0 +1,53 @@
+---
+title: Estado del proyecto
+description: Lo que Bookmark Scout hace hoy, lo que está incompleto y lo que está planificado, en sintonía con el código.
+---
+
+Esta página resume el estado actual del repositorio para que la documentación de la hoja de ruta no se aleje de la implementación.
+
+## Implementado [#implemented]
+
+- Extensión del navegador creada con WXT, React, TypeScript, Zustand, componentes de shadcn/ui sobre primitivas de Base UI y las API de marcadores del navegador
+- Chrome como navegador principal, con compilaciones para Firefox y Edge
+- Búsqueda de marcadores en la ventana emergente, filtrado de carpetas, organización con arrastrar y soltar, guardado rápido, creación de carpetas y controles para desplegar y contraer
+- Eliminación desde la ventana emergente, el panel lateral y el administrador con un diálogo de confirmación (activado de forma predeterminada, opcional en la configuración) y la opción Deshacer durante 10 segundos, que restaura el subárbol y sus etiquetas y resúmenes guardados
+- Punto de entrada del panel lateral (en Chrome, Edge y Firefox)
+- Combinaciones de teclas en la ventana emergente, el panel lateral y el administrador para buscar, navegar por el árbol y la tabla, guardar la página actual, ir a la carpeta superior, abrir búsquedas guardadas y un diálogo de ayuda `?`; nunca usan combinaciones con Ctrl/Cmd y se pausan mientras escribes o mientras hay un diálogo abierto
+- Reemplazo propio de la página de marcadores con árbol de carpetas, ruta de navegación, tabla de marcadores y barra lateral de herramientas
+- Búsquedas guardadas (vistas inteligentes) en el administrador que solo guardan los filtros, el orden y el ámbito de carpeta en el almacenamiento local, y los evalúan con el árbol de marcadores actual, omitiendo las carpetas eliminadas
+- Orden configurable por fecha de creación, orden alfabético natural y carpetas primero, sin modificar el orden de marcadores guardado
+- Página de opciones con ajustes de aspecto, idioma, búsqueda, comportamiento, tamaños avanzados de la interfaz, IA, herramientas de IA, mantenimiento, metadatos, seguridad, análisis, datos y menús contextuales
+- Configuración guardada mediante `chrome.storage.sync`
+- Proveedores de IA definidos en la configuración: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI y puntos de conexión personalizados compatibles con OpenAI
+- Recomendaciones de carpetas con IA, incluida la creación revisada de una ruta de carpeta nueva sugerida que guarda allí la página actual
+- Empaquetado de contexto para IA con etiquetas y resúmenes guardados, sugerencias de etiquetas, resúmenes y reorganización de carpetas (con vista previa antes de aplicar, de forma predeterminada)
+- Herramientas de mantenimiento de marcadores para limpiar duplicados, limpiar URLs, buscar enlaces rotos con resultados de rotos confirmados y de los que necesitan una comprobación manual, además de reparaciones revisadas (eliminar, destino de la redirección, copia de Wayback Machine o URL editada, con opción de deshacer), obtención de metadatos (los títulos revisados se aplican; las descripciones son solo de vista previa), análisis de privacidad y estadísticas
+- Actualizar iconos de sitios: descarga un icono por sitio web desde el propio sitio guardado (nunca desde un servicio de iconos de terceros) después de un acceso opcional a sitios web, guarda los iconos revisados en el almacenamiento local con un límite de tamaño y los muestra en la ventana emergente, el panel lateral y el administrador por delante de la caché de iconos del navegador; los iconos guardados se pueden borrar
+- Revisión de privacidad con censura opcional antes de las exportaciones de marcadores y las exportaciones de contexto para IA
+- Importación de marcadores desde HTML o JSON, con una vista previa de la carpeta de destino, los recuentos y los duplicados, una opción para gestionar los duplicados y la posibilidad de deshacer
+- Exportación de marcadores a HTML, JSON, Markdown o CSV
+- Flujo de guardado de enlaces desde el menú contextual
+- Extensión y sitio web en inglés, chino simplificado, chino tradicional, japonés, coreano, español, alemán, francés y portugués de Brasil
+- Sitio de documentación con Fumadocs
+- Pruebas unitarias y pruebas E2E desatendidas en Chromium para la ventana emergente, el administrador, la configuración, el mantenimiento, los informes, la importación y exportación, las herramientas de red con rutas simuladas y con servidor local, y las herramientas de IA con proveedores simulados
+- El mismo conjunto de pruebas de Playwright en Microsoft Edge con la compilación para Edge (`nx run extension:test:e2e:edge`), y un conjunto de nueve pruebas básicas de Firefox con la compilación para Firefox (`nx run extension:test:e2e:firefox`): búsqueda y creación de carpetas en la ventana emergente, iconos de sitios guardados en la ventana emergente, la página del panel lateral, apertura del administrador desde la ventana emergente y el panel lateral, carga y filtrado del administrador, guardado de la configuración, una exportación e importación de ida y vuelta en JSON, y los informes de estadísticas y de privacidad
+- Una matriz de ajustes y comportamiento (`apps/extension/tests/settings-matrix.ts`) que relaciona cada ajuste con el código que lo lee y con una prueba que lo cambia
+
+## Incompleto [#partial]
+
+- Etiquetas y resúmenes de marcadores: se pueden editar en Detalles del marcador y se guardan a partir de sugerencias de IA revisadas, pero solo se almacenan en el almacenamiento local de la extensión. No se sincronizan, no se pueden buscar y no se incluyen en las exportaciones de marcadores.
+- Los límites de las herramientas de IA (número y estilo de etiquetas, longitud del resumen, límites de carpetas de la reorganización) se envían al proveedor como instrucciones; no se comprueba que la respuesta los cumpla. La compatibilidad con proveedores reales se verifica a mano.
+- La cobertura de Firefox en tiempo de ejecución es un conjunto de pruebas básicas, no el conjunto completo. Playwright no puede abrir páginas `moz-extension://`, así que las pruebas de Firefox controlan el Firefox estándar mediante geckodriver (Selenium) e instalan la compilación como complemento temporal con su ID de complemento real, de modo que prueban el manifiesto que recibe Complementos de Firefox. No cubren el guardado desde el menú contextual (las pruebas de Chromium envían `contextMenus.onClicked` desde el service worker; la compilación para Firefox usa una página de fondo MV2 que el entorno de pruebas no puede controlar), el arrastrar y soltar, las combinaciones de teclas, las herramientas de red, las herramientas de IA ni los idiomas.
+- Diferencias de API en Firefox: la caché de iconos del navegador no está disponible porque Firefox no tiene el servicio `_favicon`, así que los marcadores muestran un icono genérico salvo que **Actualizar iconos de sitios** haya guardado uno; el administrador y la barra lateral de herramientas se abren desde **Abrir el administrador de marcadores** en la ventana emergente porque Firefox no permite reemplazar la página de marcadores; la página del panel lateral está declarada como barra lateral de Firefox, y las pruebas cargan esa página en una pestaña porque la automatización no puede abrir la propia barra lateral.
+- Cuatro ajustes de ámbito de las herramientas son fijos: el Etiquetado automático y el Generador de resúmenes siempre usan la carpeta actual; el Limpiador de duplicados y el Escáner de privacidad siempre analizan todos los marcadores.
+
+## Planificado [#planned]
+
+- Más cobertura de Firefox en tiempo de ejecución: menús contextuales, arrastrar y soltar, combinaciones de teclas, herramientas de red, herramientas de IA e idiomas
+- Envío a Chrome Web Store, Complementos de Firefox y Complementos de Edge. El material de las fichas y las listas de comprobación de envío están en la <RepoLink tree="store">carpeta `store/`</RepoLink> del repositorio; el envío es manual y necesita la aprobación de la versión. El paquete de Firefox ya tiene su ID de complemento permanente y su declaración de recopilación de datos
+
+## Reglas de documentación [#documentation-rules]
+
+- Actualiza la documentación cuando cambien el estado de las funciones, las rutas de instalación, la compatibilidad con navegadores, las expectativas de privacidad o la configuración.
+- Las funciones de IA son opcionales y pueden enviar datos de los marcadores al proveedor seleccionado.
+- La CI ejecuta las pruebas unitarias de la extensión, el conjunto de extremo a extremo de Chromium, el conjunto de Edge y el conjunto de pruebas básicas de Firefox como comprobaciones obligatorias, sin configuración manual. Una compilación correcta no equivale a cobertura en tiempo de ejecución.

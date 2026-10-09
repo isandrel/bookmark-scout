@@ -1,0 +1,67 @@
+---
+title: Suche und gespeicherte Suchen
+description: Finden Sie jedes Lesezeichen nach Titel oder URL im Pop-up oder in der Seitenleiste, filtern Sie die Tabelle des Managers, und speichern Sie Filterkombinationen als benannte Suchen.
+---
+
+## Im Pop-up oder in der Seitenleiste suchen [#search-from-the-popup-or-side-panel]
+
+<Steps>
+<Step>
+Klicken Sie in der Symbolleiste auf das Bookmark-Scout-Symbol. Sie können Bookmark Scout auch in der Seitenleiste des Browsers (in Firefox in der Sidebar) öffnen, die beim Surfen geöffnet bleibt.
+</Step>
+<Step>
+Tippen Sie in **Lesezeichen durchsuchen...** (oder drücken Sie `/`, um dorthin zu springen). Die Ergebnisse erscheinen schon beim Tippen, in ihren Ordnern und mit hervorgehobenem Treffer.
+</Step>
+<Step>
+Grenzen Sie die Suche mit den drei Schaltflächen im Suchfeld ein: **Groß-/Kleinschreibung beachten**, **Nur ganzes Wort** und **Regulären Ausdruck verwenden**.
+</Step>
+<Step>
+Klicken Sie auf ein Lesezeichen, oder wechseln Sie mit den Pfeiltasten dorthin und drücken Sie `Enter`, um es in einem neuen Tab zu öffnen.
+</Step>
+</Steps>
+
+<Screenshot name="popup" />
+
+Gut zu wissen:
+
+- Die Suche nach ganzen Wörtern behandelt Leerzeichen, Satzzeichen und Wechsel des Schriftsystems als Wortgrenzen, sodass auch Begriffe wie `C++` und japanische Wörter gefunden werden.
+- Ein ungültiger regulärer Ausdruck zeigt eine Warnung an und wird als normaler Text gesucht.
+- Feste Ordner wie die Lesezeichenleiste sind Container und werden nie anhand ihres Namens gefunden.
+- Wenn es mehr Treffer gibt als das Ergebnislimit, zeigt ein Hinweis an, wie viele angezeigt werden. Verfeinern Sie die Suche, oder erhöhen Sie **Max. Suchergebnisse** in den [Einstellungen](/settings).
+- Wenn Sie die Suche löschen (mit der Schaltfläche zum Löschen oder mit `Esc` im Suchfeld), werden die Ordner wieder geöffnet, die vorher geöffnet waren.
+- Letzte Suchen werden auf diesem Gerät gespeichert. Klicken Sie in das leere Suchfeld oder drücken Sie darin `Alt+↓`, um sie aufzulisten. Löschen Sie sie in dieser Liste, oder deaktivieren Sie **Suchverlauf** in den Einstellungen.
+
+## Im Lesezeichen-Manager filtern [#filter-in-the-bookmarks-manager]
+
+Die Tabelle des Managers bietet genauere Filter. Öffnen Sie in Chrome die Lesezeichenseite des Browsers, um dorthin zu gelangen.
+
+- **Titel filtern...** und **URLs filtern...** suchen Text in diesen Spalten. Drücken Sie `/`, um zum Titelfilter zu springen.
+- **Typ**, **Übergeordnete ID**, **Domain** und **Hinzugefügt am** grenzen die Zeilen weiter ein.
+- **Nur aktueller Ordner** beschränkt die Filter auf den Ordner, in dem Sie sich befinden. Ist die Option deaktiviert, durchsuchen die Filter alle Lesezeichen.
+- Sortieren Sie nach einer beliebigen Spalte über deren Kopfzeile.
+
+## Eine Suche speichern [#save-a-search]
+
+Eine gespeicherte Suche bewahrt die aktuellen Filter, die Sortierung und den Ordnerbereich des Managers unter einem Namen auf, sodass Sie dieselbe Ansicht später wieder öffnen können.
+
+<Steps>
+<Step>
+Legen Sie mindestens einen Filter fest: Titel, URL, Typ, Ordner, Domain oder Hinzufügedatum.
+</Step>
+<Step>
+Klicken Sie in der Symbolleiste der Tabelle auf **Gespeicherte Suchen**, oder drücken Sie `s`.
+</Step>
+<Step>
+Geben Sie unter **Suche benennen** einen Namen ein und klicken Sie auf **Speichern**.
+</Step>
+</Steps>
+
+Um eine gespeicherte Suche zu verwenden, öffnen Sie **Gespeicherte Suchen** und wählen sie aus. Ihre Filter und ihre Sortierung ersetzen die aktuellen, und wenn sie auf einen Ordner beschränkt war, kehrt der Manager zu diesem Ordner zurück. Jeder Eintrag lässt sich umbenennen oder löschen, und ein Löschen kann über die anschließende Benachrichtigung rückgängig gemacht werden.
+
+Eine gespeicherte Suche speichert die Filterdefinitionen, nie Kopien von Lesezeichen, sodass ihre Ergebnisse immer Ihren aktuellen Lesezeichen entsprechen. Wurde ein darin genannter Ordner gelöscht, wird dieser Ordner übersprungen, die übrigen Filter gelten weiterhin, und eine Benachrichtigung zeigt an, wie viele Ordner übersprungen wurden.
+
+Gespeicherte Suchen bleiben im lokalen Erweiterungsspeicher dieses Browsers und werden nicht synchronisiert, da ihre Filter verraten können, was Sie als Lesezeichen speichern, und Ordner-IDs sich zwischen Geräten unterscheiden. Sie können bis zu 50 behalten.
+
+<Callout title="Firefox">
+Öffnen Sie den Manager in Firefox über **Lesezeichen-Manager öffnen** im Pop-up.
+</Callout>

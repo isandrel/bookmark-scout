@@ -1,0 +1,56 @@
+---
+title: Privacidade
+description: O que o Bookmark Scout lê, o que ele armazena e quando os dados saem do seu navegador. Um resumo da política de privacidade.
+---
+
+Este é um resumo. A <SiteLink to="privacy">política de privacidade</SiteLink> completa, no site, é a que se aplica; ela entrou em vigor em <PrivacyEffectiveDate />.
+
+## Em resumo [#in-short]
+
+- **Sem conta e sem servidor.** O Bookmark Scout funciona dentro do seu navegador. O desenvolvedor não recebe nada da extensão.
+- **Sem telemetria.** A extensão não tem análises de uso, relatórios de falhas nem anúncios.
+- **A IA fica desativada até você ativá-la**, e então as solicitações vão diretamente do seu navegador para o provedor que você escolheu. No Firefox, ao ativá-la, também é pedido seu consentimento para compartilhar esses dados.
+- **Permissões só quando você precisa.** Na instalação, a extensão pede somente aquilo sem o qual não consegue funcionar; o acesso às guias, o menu de clique com o botão direito, o cache de ícones do navegador e o acesso a sites são pedidos na primeira vez que você usa o recurso. Consulte [Permissões](/permissions).
+
+## O que a extensão lê [#what-the-extension-reads]
+
+- Seus favoritos, para mostrá-los, pesquisá-los, editá-los, movê-los, excluí-los, importá-los e exportá-los.
+- O título e o URL da guia ativa, quando você salva a página em que está ou pede uma sugestão de pasta.
+- Os ícones dos sites no cache de ícones do próprio navegador, no Chrome e no Edge, depois que você ativa **Usar o cache de ícones do navegador**.
+- Os ícones dos sites que você baixa com **Atualizar ícones dos sites**, de cada site salvo nos favoritos.
+
+Ela não lê o conteúdo das páginas que você visita.
+
+## O que ela armazena [#what-it-stores]
+
+| Dados | Onde | Sincronizado |
+| --- | --- | --- |
+| Configurações, incluindo se a IA está ativada e qual provedor e modelo você escolheu | Armazenamento sincronizado do navegador | Sim, pela sua conta do navegador quando a sincronização do navegador está ativada |
+| Layout da tabela de favoritos no gerenciador | Armazenamento sincronizado do navegador | Igual às configurações |
+| Configurações do provedor de IA: chave de API, URL base, cabeçalhos extras | Armazenamento local neste dispositivo | Não |
+| Tags, resumos, pesquisas salvas, pastas recentes, pesquisas recentes | Armazenamento local neste dispositivo | Não |
+| Ícones dos sites salvos com **Atualizar ícones dos sites**, até 4096 KB por padrão | Armazenamento local neste dispositivo | Não |
+
+Os resultados das verificações da barra lateral Ferramentas são mantidos somente enquanto a caixa de diálogo deles está aberta. Desinstalar a extensão remove o que ela armazenou; seus favoritos continuam no navegador.
+
+## Quando os dados saem do seu navegador [#when-data-leaves-your-browser]
+
+Somente quando você usa um destes recursos, e somente para o destino indicado:
+
+| Recurso | Vai para | O que é enviado |
+| --- | --- | --- |
+| Recomendações de pasta com IA | O provedor de IA que você configurou | O título e o URL da página atual e os nomes das suas pastas. Com **Ler conteúdo da página** ativado, também o texto principal da página |
+| Tags automáticas, Gerador de resumos, Reorganização de pastas com IA | O provedor de IA que você configurou | Títulos, URLs e caminhos de pasta dos favoritos no escopo. Com **Ler conteúdo da página** ativado, Tags automáticas e Gerador de resumos também enviam o texto principal de cada página; a Reorganização de pastas com IA nunca envia |
+| Perguntar à IA | O provedor de IA que você configurou | Suas mensagens e a conversa até o momento, além do que a IA consulta para responder: favoritos correspondentes, nomes de pastas, o título e o URL da página atual e, com **Ler conteúdo da página** ativado, o texto das páginas que ela lê. Com a pesquisa na web ativada, o provedor também pesquisa na web. A conversa não é salva |
+| Verificar links quebrados, Buscador de metadados | Cada site salvo nos favoritos | Uma solicitação da página, sem cookies, depois que você permite o acesso aos sites |
+| Atualizar ícones dos sites | Cada site salvo nos favoritos | Uma solicitação de uma página salva nos favoritos por site e de um arquivo de ícone no domínio desse site, sem cookies, depois que você permite o acesso aos sites. Nenhum serviço de ícones de terceiros é usado |
+
+Um provedor executado no seu próprio computador, como o Ollama, mantém as solicitações de IA na sua máquina. As exportações, incluindo o **Empacotador de contexto para IA**, são salvas como arquivos no seu computador e não são enviadas para lugar nenhum; uma revisão de privacidade pode ocultar os valores confidenciais antes. Os dados exatos que cada ferramenta de IA envia estão listados em [Configurar as ferramentas de IA](/guides/ai-tools#what-each-tool-sends), e cada permissão é explicada em [Permissões](/permissions).
+
+## Este site de documentação [#this-docs-site]
+
+A documentação é um site estático sem análises de uso, sem contas e sem cookies próprios. As fontes são servidas por este site, não pelo Google Fonts. A política de privacidade informa qual é o provedor de hospedagem.
+
+## Dúvidas [#questions]
+
+Envie um e-mail para <Contact role="privacy" /> com dúvidas sobre privacidade ou solicitações sobre seus dados. Para relatar um problema de segurança, envie um e-mail para <Contact role="security" /> em vez de abrir uma issue pública.

@@ -1,0 +1,157 @@
+---
+title: Configurar las herramientas de IA
+description: Activa las funciones opcionales de IA, elige un proveedor y un modelo, añade tu clave de API y conoce exactamente qué datos de los marcadores envía cada herramienta de IA.
+---
+
+Las funciones de IA están **desactivadas de forma predeterminada**, y Bookmark Scout funciona por completo sin ellas. Cuando las activas, las solicitudes van directamente de tu navegador al proveedor que elijas, con tu propia clave de API. Bookmark Scout no tiene ningún servicio de IA propio.
+
+<Callout type="warn" title="Antes de activar la IA">
+Las herramientas de IA envían títulos de marcadores, URLs y nombres o rutas de carpetas al proveedor que configures. El proveedor trata esos datos según sus propias condiciones, y el uso de su API puede costar dinero. Revisa cada sugerencia antes de aplicarla.
+</Callout>
+
+## Activar la IA [#turn-on-ai]
+
+<Steps>
+<Step>
+Abre la configuración de Bookmark Scout (en Chrome, haz clic con el botón derecho en el icono de la barra de herramientas y elige **Opciones**) y ve a la pestaña **IA**.
+</Step>
+<Step>
+Activa **Funciones de IA**.
+</Step>
+<Step>
+En **Servicios de IA**, abre el servicio que ya aparece, o haz clic en **Añadir servicio** y elige un proveedor. El selector tiene un cuadro de búsqueda y agrupa los proveedores en **Destacados**, **Servidores locales**, **Personalizados** y **Más proveedores (models.dev)**. Después, elige un **Modelo de IA**.
+</Step>
+<Step>
+Escribe tu **Clave de API** si el proveedor la necesita. Se guarda cuando sales del campo y solo se almacena en este dispositivo. Una clave que no coincide con el formato del proveedor se rechaza y no se guarda.
+</Step>
+<Step>
+Opcional: haz clic en **Actualizar modelos** para cargar la lista de modelos actual del proveedor, o en **Verificar servicio** para comprobar que el proveedor está accesible, acepta la clave y ofrece el modelo elegido. Ambos leen la lista de modelos del proveedor, lo que no cuesta nada; Verificar solo envía un breve prompt de prueba a los proveedores que no tienen lista, como Azure OpenAI. La primera vez, el navegador pide acceso a la dirección de ese proveedor, y solo a esa. Una lista actualizada se conserva para el selector de modelos hasta que vuelvas a actualizarla.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+La configuración se guarda automáticamente. Los servicios de IA, con sus claves de API, su **URL base** y sus **Encabezados adicionales (JSON)**, se quedan en el almacenamiento local de este navegador y nunca se sincronizan. Los demás ajustes de IA, como si la IA está activada, se sincronizan a través de tu cuenta del navegador cuando el navegador lo admite.
+
+## Usar más de un servicio [#use-more-than-one-service]
+
+Guarda tantos servicios como quieras, incluso varios del mismo proveedor: por ejemplo, un proxy del trabajo y otro de casa, cada uno con su propia clave, dirección y modelo.
+
+- Todas las herramientas de IA usan el servicio **Predeterminado**. Elige **Establecer como predeterminado** en el menú de un servicio o, cuando hay más de un servicio activado, elige uno con la flecha que está junto al botón del destello en la ventana emergente.
+- Desactiva un servicio con su interruptor para ocultarlo de la ventana emergente sin eliminarlo.
+- **Duplicar** copia un servicio, clave incluida. **Eliminar** lo quita de este dispositivo junto con su clave.
+- La **URL base**, los **Encabezados adicionales (JSON)** y los campos propios de cada proveedor, como la organización de OpenAI, están en **Más ajustes**.
+
+## Proveedores [#providers]
+
+| Proveedor | Clave de API | Notas |
+| --- | --- | --- |
+| OpenAI | Obligatoria | **ID de organización** e **ID de proyecto** opcionales |
+| Anthropic | Obligatoria | |
+| Google | Obligatoria | |
+| Groq | Obligatoria | |
+| Mistral AI | Obligatoria | |
+| DeepSeek | Obligatoria | |
+| xAI | Obligatoria | |
+| Azure OpenAI | Obligatoria | Define el **Nombre del recurso** (o una **URL base**) y escribe el nombre de tu implementación como **Modelo personalizado**. Azure no tiene lista de implementaciones, así que **Actualizar modelos** no aparece. |
+| OpenRouter | Obligatoria | |
+| Ollama (local) | Opcional | Dirección predeterminada `http://localhost:11434/api`; las solicitudes se quedan en tu equipo |
+| CLIProxyAPI | Normalmente obligatoria | Se ejecuta en tu equipo y responde con tus propias cuentas de Claude, Gemini o Codex. Dirección predeterminada `http://localhost:8317/v1`; escribe una de las claves de `api-keys` de su `config.yaml` y luego usa **Actualizar modelos** para ver los modelos que ofrecen tus cuentas. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Opcional | Aparecen en **Servidores locales** con sus direcciones `localhost` predeterminadas: oMLX y vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp y LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Haz clic en **Actualizar modelos** para ver qué tiene cargado el servidor. |
+| Jan | Obligatoria | Servidor de API local en `http://localhost:1337/v1`; escribe la clave de la configuración del servidor de API de Jan |
+| Proveedor personalizado | Opcional | Cualquier punto de conexión compatible con OpenAI, definido con **URL base** |
+| Proveedor personalizado (compatible con Anthropic) | Opcional | Cualquier punto de conexión que use la API Messages de Anthropic, definido con **URL base** |
+| Unos 200 más | Normalmente obligatoria | Aparecen en **Más proveedores (models.dev)**, por ejemplo Together AI, Fireworks AI, Cerebras, DeepInfra y LM Studio. No tienen una lista de modelos integrada: haz clic en **Actualizar modelos** o escribe un **Modelo personalizado**. |
+
+El selector de **Proveedor de IA** tiene un cuadro de búsqueda. Los proveedores adicionales vienen de una copia del catálogo abierto de [models.dev](https://models.dev) que se incluye con la extensión, así que elegir uno no envía nada a models.dev; las solicitudes solo van al proveedor que elijas.
+
+La **URL base** reemplaza la dirección del proveedor en todas las solicitudes, por ejemplo para usar un proxy. Debe empezar por `http://` o `https://`. **Encabezados adicionales (JSON)** añade encabezados a todas las solicitudes, y **Modelo personalizado** define un ID de modelo para los proveedores que aceptan cualquier nombre de modelo.
+
+### Servidores locales [#local-servers]
+
+Los servidores locales deben aceptar las solicitudes de la extensión:
+
+- **Ollama:** define `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` y reinicia Ollama. Sin esto, Ollama responde 403 y Verificar indica que el servidor rechazó la extensión.
+- **LM Studio:** activa **Enable CORS** en la configuración del servidor, o inícialo con `lms server start --cors`.
+- **LocalAI:** define una clave de API; su comprobación CSRF rechaza las solicitudes sin clave que llegan desde el navegador.
+- **text-generation-webui:** inícialo con `--api`.
+- **CLIProxyAPI:** acepta las solicitudes de la extensión con su configuración predeterminada. Inícialo antes de hacer clic en **Verificar servicio**; si no se está ejecutando, Verificar indica que no pudo conectar con `localhost:8317`.
+
+### Cuando falla una comprobación [#when-a-check-fails]
+
+Verificar y Actualizar indican la causa probable: una clave rechazada (401, o 400 en Google y xAI), una URL base incorrecta (404), un proveedor que está limitando las solicitudes (429, lo que significa que la clave sí funciona), un servidor que rechazó el origen de la extensión, ninguna respuesta en 8 segundos o una dirección que no ofrece la API de un proveedor.
+
+## Escribir tus propios prompts [#write-your-own-prompts]
+
+Cada herramienta de IA empieza con un prompt integrado. Para cambiar cómo se comporta una herramienta, ve a **Opciones**, luego a **Herramientas de IA** y luego a **Prompts**:
+
+1. Para leer antes el prompt integrado de una herramienta, haz clic en el icono del ojo que está a su lado. Haz clic en **Personalizar**, aquí o en el visor, y se abre el editor con el prompt integrado como punto de partida.
+2. Edita el texto. Haz clic en una variable como `{{maxTags}}` para insertarla; la herramienta la rellena con tu configuración. **Vista previa con la configuración actual** muestra el resultado.
+3. Haz clic en **Guardar prompt**. El nuevo prompt pasa a ser el prompt de la herramienta.
+
+Guarda tantos prompts por herramienta como quieras y cambia de uno a otro con el menú de la herramienta; **Predeterminado (integrado)** vuelve al original. Tus prompts se sincronizan entre tus dispositivos a través de tu cuenta del navegador, así que cada uno debe ocupar menos de 7 KB. Bookmark Scout añade sus propias reglas de formato de salida después de tu prompt, así que los resultados se cargan aunque tu prompt pida otra cosa.
+
+## Qué envía cada herramienta [#what-each-tool-sends]
+
+| Herramienta | Dónde | Qué envía al proveedor |
+| --- | --- | --- |
+| Recomendaciones de carpetas | Ventana emergente, el botón del destello junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | El título y la URL de la página actual, y los nombres de tus carpetas de marcadores. Con **Leer el contenido de la página** activado, también el texto principal de la página |
+| **Etiquetado automático** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
+| **Generador de resúmenes** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores de la carpeta actual y, con **Leer el contenido de la página** activado, el texto principal de cada página |
+| **Reorganización de carpetas con IA** | Administrador, Herramientas, **Inteligencia artificial** | Títulos, URLs y rutas de carpeta de los marcadores del ámbito que elijas |
+| **Preguntar a la IA** | Ventana emergente y panel lateral, el botón de chat junto al cuadro de búsqueda (solo aparece cuando la IA está activada) | Tus mensajes y la conversación hasta el momento, y lo que consulta: los marcadores que coinciden, los nombres de las carpetas, el título y la URL de la página actual y, con **Leer el contenido de la página** activado, el texto de las páginas que lee |
+| **Empaquetador de contexto para IA** | Administrador, Herramientas, **Inteligencia artificial** | Nada. Guarda un archivo en tu equipo y funciona con la IA desactivada. |
+
+Activa **Recomendar al abrir** para pedir recomendaciones de carpetas cada vez que se abre la ventana emergente. Déjalo desactivado para enviar una solicitud solo cuando hagas clic en el botón.
+
+## Leer el contenido de la página [#read-page-content]
+
+Los títulos y las URLs no siempre dicen de qué trata una página. Activa **Leer el contenido de la página** en **Opciones**, luego en **IA**, y las recomendaciones de carpetas, el **Etiquetado automático** y el **Generador de resúmenes** también envían el texto principal de cada página. Al activarlo, se pide acceso a los sitios web; si lo rechazas, sigue desactivado.
+
+- Bookmark Scout descarga cada página por su cuenta, sin tus cookies, así que obtienes la versión del sitio sin sesión iniciada. Conserva el texto del artículo sin menús, scripts, imágenes ni direcciones de enlaces.
+- Cada página envía hasta unos 3000 caracteres, y una ejecución de una herramienta lee hasta 40 páginas. Los marcadores posteriores de una carpeta grande se envían solo con su título y su URL, igual que las páginas que no cargan.
+- Las páginas de tu red local, como `localhost`, las direcciones IP privadas y los nombres `.local`, nunca se leen, así que las páginas de la intranet no llegan a un proveedor en la nube.
+- El texto de las páginas viene de la web y podría contener instrucciones dirigidas a la IA. Bookmark Scout le indica al modelo que lo trate solo como datos, y tú sigues revisando cada sugerencia antes de que se guarde.
+
+## Preguntar a la IA [#ask-ai]
+
+Haz clic en el botón de chat que está junto al cuadro de búsqueda en la ventana emergente o el panel lateral para preguntar sobre tus marcadores, sobre la página en la que estás o sobre cualquier otra cosa. Usa tu servicio de IA predeterminado; cambia de servicio desde el menú de su encabezado.
+
+- Para responder, la IA puede buscar en tus marcadores, ver la lista de tus carpetas, consultar la página actual y, con **Leer el contenido de la página** activado, leer una página web. Solo puede leer; nunca añade, mueve ni elimina marcadores. Cada paso que da aparece en el chat.
+- OpenAI, Anthropic, Google Gemini y xAI también pueden buscar en la web. Actívalo con el botón del globo que está junto al cuadro de mensaje; sigue desactivado hasta que lo actives, y es el propio proveedor quien hace la búsqueda.
+- La conversación solo se conserva mientras el chat está abierto. **Nuevo chat** la borra, y al cerrar la ventana emergente termina.
+- Las instrucciones que sigue son el prompt **Preguntar a la IA** de la biblioteca de prompts, así que puedes verlas o reemplazarlas como cualquier otro prompt.
+
+## Ver lo que se envió [#see-what-was-sent]
+
+Para comprobar exactamente qué envió una herramienta y qué respondió el proveedor, ve a **Opciones**, luego a **IA**, y activa **Registrar solicitudes** en **Actividad de IA**. A partir de entonces, cada llamada de IA muestra su origen, dirección, estado y hora; abre una para ver los encabezados de la solicitud y los cuerpos de la solicitud y la respuesta, o cópiala como JSON para un informe de error.
+
+El registro está desactivado de forma predeterminada. Se queda en este dispositivo y solo conserva las llamadas más recientes. Las claves de API, los encabezados cuyo nombre sugiere una credencial (como los que contienen `key`, `token`, `secret`, `auth` o `cookie`) y todos los encabezados que definas en **Encabezados adicionales (JSON)** se reemplazan por `[redacted]` antes de guardar nada, pero los títulos y las URLs de los marcadores incluidos en las solicitudes se conservan, así que desactiva el registro cuando termines: eso también elimina el registro guardado.
+
+## Guardar una página con una recomendación de carpeta [#save-a-page-with-a-folder-recommendation]
+
+Haz clic en el botón del destello en la ventana emergente. Al elegir una carpeta existente sugerida, la página se guarda allí. Al elegir una carpeta nueva sugerida, se abre **Revisar la nueva carpeta** con la ruta completa y la página; **Crear carpeta y guardar** crea solo las carpetas que faltan y guarda la página. Si la página ya está en esa carpeta, no se guarda dos veces, y si un marcador ya usa uno de los nombres de carpeta de la ruta, no se crea nada. **Cancelar** no cambia nada.
+
+## Sugerir etiquetas y resúmenes [#suggest-tags-and-summaries]
+
+Ejecuta el **Etiquetado automático** o el **Generador de resúmenes** con **Analizar**. Las sugerencias se muestran para que las revises, y solo se guardan cuando haces clic en **Guardar etiquetas sugeridas** o **Guardar resúmenes sugeridos**. **Modo de combinación** decide si las sugerencias guardadas se añaden a lo que ya tienes o lo reemplazan.
+
+Las etiquetas y los resúmenes guardados están en el almacenamiento local de este navegador. También puedes editarlos a mano en **Detalles del marcador**. No se sincronizan, no se pueden buscar y no se incluyen en las exportaciones de marcadores.
+
+El número y el estilo de las etiquetas, la longitud del resumen y los límites de la reorganización de la configuración se envían al proveedor como instrucciones; no se comprueba que la respuesta del proveedor los cumpla.
+
+## Reorganizar carpetas [#reorganize-folders]
+
+La **Reorganización de carpetas con IA** pregunta al proveedor a qué carpeta pertenece cada marcador. Con **Mostrar siempre una vista previa** activado (el valor predeterminado), el plan se abre como una lista de movimientos de marcadores, con los movimientos a carpetas nuevas marcados y contados, y no cambia nada hasta que haces clic en **Aplicar cambios**.
+
+- **Aplicar cambios** mueve los marcadores y crea las carpetas nuevas que indica el plan. Si ya existe una carpeta con ese nombre en el mismo lugar, se usa esa.
+- Un marcador que moviste, al que le diste una URL nueva o que eliminaste después de la vista previa se omite y se deja donde está, así que el plan nunca anula un cambio más reciente. Cuando solo se aplica una parte del plan, el mensaje cuenta los marcadores movidos, las carpetas nuevas y los elementos omitidos y con errores, e indica los marcadores omitidos.
+- Haz clic en **Deshacer** en el mensaje o en la revisión para devolver los marcadores a su sitio y quitar las carpetas nuevas que sigan vacías. Un marcador que volviste a mover mientras tanto se queda donde lo pusiste.
+
+## Exportar contexto para un chat de IA [#export-context-for-an-ai-chat]
+
+El **Empaquetador de contexto para IA** exporta los marcadores seleccionados como Markdown o XML para que puedas pegarlos en cualquier chat de IA. Puede incluir rutas de carpeta, fechas y tus etiquetas y resúmenes guardados (**Incluir etiquetas guardadas** e **Incluir resúmenes guardados**). Igual que las exportaciones de marcadores, abre una revisión de privacidad cuando el archivo fuera a contener valores que pueden ser privados.
+
+<Callout title="Firefox">
+En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente de la barra de herramientas para usar las herramientas de IA del administrador. Las pruebas automatizadas de Firefox no cubren la IA.
+</Callout>

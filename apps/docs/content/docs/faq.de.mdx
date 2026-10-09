@@ -1,0 +1,85 @@
+---
+title: FAQ und Fehlerbehebung
+description: Antworten auf häufige Fragen zu Bookmark Scout und Lösungen für die häufigsten Probleme.
+---
+
+## Fragen [#questions]
+
+### Ist Bookmark Scout kostenlos? [#is-bookmark-scout-free]
+
+Ja. Es ist kostenlos und Open Source unter der Lizenz <License />, ohne Werbung und ohne kostenpflichtiges Abo. Wenn Sie KI aktivieren, kann Ihr KI-Anbieter Gebühren für die API-Nutzung erheben.
+
+### Muss ich KI verwenden? [#do-i-need-to-use-ai]
+
+Nein. Suchen, Speichern, Ordnen, Bereinigen sowie Import und Export funktionieren ohne KI. KI bleibt deaktiviert, bis Sie sie in den [Einstellungen](/settings#ai) aktivieren.
+
+### Sendet die Erweiterung meine Lesezeichen irgendwohin? [#does-it-send-my-bookmarks-anywhere]
+
+Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen Ihren Browser nur, wenn Sie ein KI-Tool verwenden, das Sie aktiviert haben (sie gehen an Ihren Anbieter), oder eine Linkprüfung oder einen Titelabruf ausführen (die gespeicherten Websites werden angefragt). Siehe [Datenschutz](/privacy).
+
+### Ändert die Erweiterung meine Lesezeichen ohne Nachfrage? [#will-it-change-my-bookmarks-without-asking]
+
+Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. Beim Löschen wird standardmäßig um Bestätigung gebeten, und Löschvorgänge und Importe lassen sich 10 Sekunden lang rückgängig machen.
+
+### Warum ist die Erweiterung nicht in den Browser-Stores? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+Jeder Store prüft eine Erweiterung, bevor sie veröffentlicht wird, und die Store-Einträge werden noch vorbereitet. Bis ein Store sie anbietet, [installieren Sie sie aus einem GitHub-Release](/installation).
+
+### Funktioniert die Erweiterung in Firefox? [#does-it-work-in-firefox]
+
+Ja. Firefox erlaubt Erweiterungen nicht, seine Lesezeichenseite zu ersetzen. Öffnen Sie den Bookmark-Scout-Manager mit seinen Bereinigungstools, Import und Export und gespeicherten Suchen daher über **Lesezeichen-Manager öffnen** im Pop-up. Der Symbol-Cache des Browsers ist in Firefox nicht verfügbar, und dort sind weniger Funktionen durch automatisierte Tests abgedeckt. Siehe [Browserunterstützung](/browser-support).
+
+### Warum nicht Safari? [#why-not-safari]
+
+Safari Web Extensions implementieren die `bookmarks`-API nicht, auf der Bookmark Scout aufbaut.
+
+## Fehlerbehebung [#troubleshooting]
+
+### Wo ist der Lesezeichen-Manager? [#where-is-the-bookmarks-manager]
+
+Öffnen Sie in Chrome die Lesezeichenseite des Browsers, zum Beispiel mit `Ctrl+Shift+O` (unter macOS `Cmd+Option+B`). Bookmark Scout ersetzt sie durch seinen Manager. Wenn die **Tools**-Leiste ausgeblendet ist, klicken Sie in der Kopfzeile des Managers auf **Tools einblenden**.
+
+### Bookmark Scout ist aus Firefox verschwunden [#bookmark-scout-disappeared-from-firefox]
+
+Firefox entfernt temporäre Add-ons beim Neustart. Laden Sie die Erweiterung erneut über `about:debugging#/runtime/this-firefox`, wie unter [Installieren](/installation) beschrieben.
+
+### Website-Symbole fehlen [#site-icons-are-missing]
+
+Prüfen Sie, ob **Website-Symbole anzeigen** in den [Einstellungen](/settings#appearance) aktiviert ist. Chrome und Edge zeigen das Symbol, das sie für die jeweilige Website im Cache haben, daher zeigen Websites, die Sie länger nicht besucht haben, eine allgemeine Weltkugel. Firefox bietet Erweiterungen keine Symbol-API. In jedem Browser lädt [Website-Symbole aktualisieren](/guides/clean-up#refresh-site-icons) das eigene Symbol jeder Website herunter und speichert es auf diesem Gerät.
+
+### Mein API-Schlüssel wurde nicht gespeichert [#my-api-key-was-not-saved]
+
+Ein Schlüssel, der nicht wie ein Schlüssel des gewählten Anbieters aussieht, wird abgelehnt und nicht gespeichert, und eine Meldung weist darauf hin. Prüfen Sie, ob **KI-Anbieter** zu dem eingefügten Schlüssel passt. Siehe [KI-Tools einrichten](/guides/ai-tools#turn-on-ai).
+
+### Die Linkprüfung meldet, dass eine funktionierende Website manuell geprüft werden muss [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+Websites, die eine Anmeldung verlangen, die Anfragerate begrenzen, automatisierte Prüfungen blockieren oder einen Serverfehler haben, werden unter **Manuell prüfen** aufgeführt, da sie im Browser oft trotzdem funktionieren. Öffnen Sie den Link, um es zu sehen. Nur nicht gefundene Seiten, abgelehnte Verbindungen, unbekannte Hosts und Weiterleitungsschleifen gelten als **Sicher defekt**. Siehe [Defekte Links finden und reparieren](/guides/dead-links#read-the-results).
+
+### Die Konsole zeigt während einer Prüfung „Failed to load resource“ an [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome protokolliert für jede fehlgeschlagene Anfrage eine Zeile in der Entwicklerkonsole der Seite. Erweiterungen können diese Zeilen nicht unterdrücken, und sie bedeuten nicht, dass bei der Prüfung etwas schiefgegangen ist.
+
+### Die Neuanordnung im Manager wird im Pop-up nicht angezeigt [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+Das Pop-up zeigt die im Browser gespeicherte Reihenfolge nur mit der Sortierung **Ordner zuerst**. Bei Sortierung nach **Hinzufügedatum** oder **Alphabetisch** wird die Liste immer wieder neu sortiert. Ändern Sie **Sortierung** in den [Einstellungen](/settings#behavior).
+
+### Die Suche meldet mehr Treffer, als sie anzeigt [#search-says-there-are-more-matches-than-it-shows]
+
+Die Ergebnisse enden bei **Max. Suchergebnisse** (standardmäßig 20). Verfeinern Sie die Suche, oder erhöhen Sie das Limit in den [Einstellungen](/settings#search).
+
+### Meine Tags, Zusammenfassungen oder gespeicherten Suchen fehlen auf einem anderen Computer [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+Sie werden nur auf dem Gerät gespeichert, auf dem Sie sie angelegt haben, und weder synchronisiert noch in Lesezeichen-Exporte aufgenommen. Einstellungen werden dagegen über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiviert ist.
+
+### Ich habe versehentlich etwas gelöscht [#i-deleted-something-by-mistake]
+
+Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt; ein wiederhergestelltes Element erhält ein neues Hinzufügedatum. Nachdem die Benachrichtigung geschlossen wurde, lässt sich das Löschen in Bookmark Scout nicht mehr rückgängig machen.
+
+## Hilfe erhalten [#get-help]
+
+- Die <SiteLink to="support">Support-Seite</SiteLink> auf der Website.
+- Melden Sie einen Fehler oder wünschen Sie sich eine Funktion auf <RepoLink path="/issues">GitHub</RepoLink>.
+- Schreiben Sie eine E-Mail an <Contact role="support" />.
+- Melden Sie ein Sicherheitsproblem vertraulich an <Contact role="security" />, nicht in einem öffentlichen Issue.

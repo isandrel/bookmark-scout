@@ -1,0 +1,89 @@
+---
+title: 설치
+description: GitHub 릴리스에서 Chrome, Microsoft Edge, Firefox에 Bookmark Scout를 설치합니다.
+---
+
+Bookmark Scout는 무료 오픈 소스입니다. 각 <RepoLink path="/releases">GitHub 릴리스</RepoLink>에는 브라우저별 다운로드 파일이 하나씩 있습니다.
+
+| 브라우저 | 파일 |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` 또는 `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+<ReleaseLink />에서 내려받은 뒤 사용하는 브라우저의 단계를 따르세요.
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<StoreListing browser="chrome" />
+
+<Steps>
+<Step>
+`bookmark-scout-<version>-chrome.crx` 또는 `bookmark-scout-<version>-chrome.zip`을 내려받습니다. ZIP을 사용하는 경우 계속 보관할 폴더에 압축을 푸세요. Chrome은 이 폴더에서 확장 프로그램을 로드합니다.
+</Step>
+<Step>
+`chrome://extensions/`를 열고 오른쪽 위의 **개발자 모드**를 켭니다.
+</Step>
+<Step>
+CRX 파일을 페이지로 끌어다 놓거나, **압축해제된 확장 프로그램을 로드합니다**를 클릭하고 압축을 푼 폴더를 선택합니다.
+</Step>
+<Step>
+퍼즐 조각 모양의 확장 프로그램 메뉴에서 Bookmark Scout를 툴바에 고정하면 한 번의 클릭으로 팝업을 열 수 있습니다.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<StoreListing browser="edge" />
+
+<Steps>
+<Step>
+`bookmark-scout-<version>-edge.zip`을 내려받아 계속 보관할 폴더에 압축을 풉니다.
+</Step>
+<Step>
+`edge://extensions/`를 열고 **개발자 모드**를 켭니다.
+</Step>
+<Step>
+**압축 풀린 확장 로드**(Load unpacked)를 클릭하고 압축을 푼 폴더를 선택합니다.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<StoreListing browser="firefox" />
+
+<Steps>
+<Step>
+`bookmark-scout-<version>-firefox.zip`을 내려받아 압축을 풉니다.
+</Step>
+<Step>
+`about:debugging#/runtime/this-firefox`를 엽니다.
+</Step>
+<Step>
+**임시 부가 기능 로드**를 클릭하고 압축을 푼 폴더의 `manifest.json` 파일을 선택합니다.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Firefox의 제한 사항">
+Firefox는 다시 시작할 때 임시 부가 기능을 제거하므로, 다시 시작할 때마다 새로 로드해야 합니다. 또한 Firefox는 북마크 페이지를 대체할 수 없으므로, 북마크 관리자(도구, 저장된 검색, 가져오기와 내보내기 포함)는 팝업의 **북마크 관리자 열기**로 엽니다. [브라우저 지원](/browser-support)을 참고하세요.
+</Callout>
+
+</Tab>
+</Tabs>
+
+## 설치한 뒤에는 [#after-installing]
+
+- Bookmark Scout 아이콘을 클릭해 팝업을 열고 북마크를 검색하세요. [검색과 저장된 검색](/guides/search)부터 시작하면 좋습니다.
+- Chrome에서는 브라우저의 북마크 페이지를 열면(예: `Ctrl+Shift+O`, macOS에서는 `Cmd+Option+B`) Bookmark Scout 관리자와 **도구** 사이드바가 열립니다.
+- 설정은 확장 프로그램의 **옵션** 항목에서 탭으로 열립니다. 예를 들어 Chrome에서는 툴바 아이콘을 마우스 오른쪽 버튼으로 클릭합니다. [설정](/settings)을 참고하세요.
+
+## 업데이트 [#updating]
+
+<ReleaseLink />에서 새 릴리스를 내려받아 사용하는 브라우저의 단계를 다시 따르세요.
+
+## 소스에서 빌드 [#building-from-source]
+
+확장 프로그램을 직접 빌드하려면 [기여 및 개발](/contributing#build-from-source)을 따르세요.

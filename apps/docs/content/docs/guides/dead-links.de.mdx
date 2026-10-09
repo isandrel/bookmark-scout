@@ -1,0 +1,77 @@
+---
+title: Defekte Links finden und reparieren
+description: Prüfen Sie Lesezeichen auf defekte Links, sehen Sie, welche manuell geprüft werden müssen, und reparieren Sie sie durch Löschen, Folgen einer Weiterleitung, Verwenden einer archivierten Kopie oder Bearbeiten der URL.
+---
+
+**Defekte Links prüfen** befindet sich in der **Tools**-Leiste des Lesezeichen-Managers unter **Wartung**. Das Tool fragt jede gespeicherte Seite an, um festzustellen, ob sie noch lädt.
+
+<Callout title="Firefox">
+Öffnen Sie den Manager in Firefox über **Lesezeichen-Manager öffnen** im Pop-up.
+</Callout>
+
+## Eine Prüfung starten [#run-a-scan]
+
+<Steps>
+<Step>
+Wählen Sie in **Defekte Links prüfen** im Bereichsmenü den aktuellen Ordner oder alle Lesezeichen aus und klicken Sie auf **Prüfen**.
+</Step>
+<Step>
+Beim ersten Mal erklärt Bookmark Scout, warum es Zugriff auf Websites benötigt. Klicken Sie auf **Zugriff erlauben** und bestätigen Sie dann die Abfrage des Browsers. Wenn Sie **Nicht jetzt** wählen oder ablehnen, wird nichts geprüft.
+</Step>
+<Step>
+Warten Sie auf die Ergebnisse. Eine Zusammenfassung oben zählt die Links, die sicher defekt sind, manuell geprüft werden müssen oder weitergeleitet wurden.
+</Step>
+</Steps>
+
+Der Zugriff auf Websites ist optional und wird bei der Installation nicht gewährt. Anfragen werden ohne Cookies gesendet, und Sie können den Zugriff in den Erweiterungseinstellungen des Browsers widerrufen. Siehe [Berechtigungen](/permissions).
+
+## Die Ergebnisse lesen [#read-the-results]
+
+| Ergebnis | Bedeutung |
+| --- | --- |
+| **Sicher defekt** | Seite nicht gefunden (404 oder 410), die Verbindung wurde abgelehnt, der Host wurde nicht gefunden, oder die Weiterleitungen bilden eine Schleife |
+| **Manuell prüfen** | Funktioniert im Browser oft trotzdem: Anmeldung erforderlich oder Zugriff verweigert (401, 403, 407), Anfragelimit erreicht (429), die Website lehnt automatisierte Prüfungen ab (405 oder 501), ein Serverfehler (5xx), ein anderer HTTP-Fehler oder eine Zeitüberschreitung |
+| **Weitergeleitet** | Der Link funktioniert, verweist aber inzwischen auf ein anderes Ziel; das Ziel wird angezeigt |
+| **Übersprungen** | Kein Weblink, zum Beispiel ein Bookmarklet |
+
+Jeder Fehler bei einer `HEAD`-Anfrage wird mit einer `GET`-Anfrage bestätigt, bevor er gemeldet wird, da manche Server `HEAD` nicht unterstützen.
+
+<Callout type="info" title="Konsolenmeldungen in Chrome">
+Chrome protokolliert für jede fehlgeschlagene Anfrage eine Zeile „Failed to load resource“ in der Entwicklerkonsole der Seite. Erweiterungen können diese Zeilen nicht unterdrücken; die Prüfung selbst protokolliert nichts.
+</Callout>
+
+## Links reparieren [#repair-links]
+
+<Steps>
+<Step>
+Klicken Sie auf **Reparaturen prüfen**. Alle fehlgeschlagenen, abgelaufenen oder weitergeleiteten Links werden aufgelistet.
+</Step>
+<Step>
+Wählen Sie für jeden Link eine Aktion:
+
+- **Unverändert lassen** (die Standardeinstellung, sodass sich nichts ändert, solange Sie nichts anderes wählen)
+- **Lesezeichen löschen**
+- **Weiterleitungsziel verwenden**, nur angeboten, wenn die Prüfung eine Weiterleitung festgestellt hat
+- **Archivkopie verwenden (Wayback Machine)**, wodurch das Lesezeichen auf `https://web.archive.org/web/<original URL>` zeigt. Der Link wird lokal erstellt und nicht geprüft, daher wurde die Seite möglicherweise nie archiviert.
+- **URL bearbeiten**, wobei nur eine gültige `http`- oder `https`-URL akzeptiert wird, die sich von der aktuellen unterscheidet
+</Step>
+<Step>
+Prüfen Sie die Zusammenfassung, wie viele Lesezeichen gelöscht werden, eine neue URL erhalten oder unverändert bleiben, und klicken Sie dann auf **Übernehmen**.
+</Step>
+</Steps>
+
+Nichts ändert sich, bevor Sie die Änderungen übernehmen. Vor jeder Änderung wird das Lesezeichen erneut gelesen: Eines, das seit der Prüfung gelöscht oder bearbeitet wurde, wird übersprungen und aufgelistet, sodass eine veraltete Prüfung nie eine neuere Bearbeitung überschreibt.
+
+**Rückgängig**, in der Benachrichtigung oder nach einer teilweisen Übernahme im Dialog, stellt gelöschte Lesezeichen innerhalb von 10 Sekunden wieder her und setzt ersetzte URLs zurück, sofern sie nicht erneut bearbeitet wurden.
+
+## Die Prüfung anpassen [#tune-the-scan]
+
+Im Tab **Wartung** der [Einstellungen](/settings):
+
+| Einstellung | Standard |
+| --- | --- |
+| **Zeitlimit für Anfragen** | 8 Sekunden pro Anfrage |
+| **Parallele Anfragen** | 4 Anfragen gleichzeitig |
+| **Wiederholungen** | 1 Wiederholung |
+| **Weiterleitungen folgen** | An |
+| **Erfolgs-Statuscodes** | 200, 201, 202, 204, 301, 302, 307, 308 |

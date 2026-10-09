@@ -1,0 +1,85 @@
+---
+title: 常见问题和故障排除
+description: 关于 Bookmark Scout 的常见问题解答，以及最常遇到的问题的解决方法。
+---
+
+## 常见问题 [#questions]
+
+### Bookmark Scout 免费吗？ [#is-bookmark-scout-free]
+
+是的。它基于 <License /> 许可证免费开源，没有广告，也没有付费套餐。如果你开启 AI，你的 AI 服务商可能会对 API 使用收费。
+
+### 我必须使用 AI 吗？ [#do-i-need-to-use-ai]
+
+不必。搜索、保存、整理、清理以及导入和导出都无需 AI 即可使用。在你于[设置](/settings#ai)中开启之前，AI 始终处于关闭状态。
+
+### 它会把我的书签发送到任何地方吗？ [#does-it-send-my-bookmarks-anywhere]
+
+不会发送给开发者：Bookmark Scout 没有服务器。只有当你使用已开启的 AI 工具（数据会发送给你的服务商），或运行失效链接检查或标题获取（会请求已加入书签的网站）时，数据才会离开你的浏览器。请参阅[隐私](/privacy)。
+
+### 它会在不询问的情况下更改我的书签吗？ [#will-it-change-my-bookmarks-without-asking]
+
+不会。重复书签清理、网址清理、失效链接修复、获取的标题、AI 重组和导入，都会在写入任何内容之前先显示供你审阅的内容。删除默认会要求确认，删除和导入都可以在 10 秒内撤消。
+
+### 为什么它没有在浏览器商店上架？ [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+每个商店都会在扩展程序上线前进行审核，上架材料仍在准备中。在商店上架之前，请[从 GitHub 版本发布安装](/installation)。
+
+### 它能在 Firefox 中使用吗？ [#does-it-work-in-firefox]
+
+可以。Firefox 不允许扩展程序替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**打开 Bookmark Scout 书签管理器，其中包含清理工具、导入和导出以及已保存的搜索。Firefox 中无法使用浏览器的图标缓存，并且自动化测试覆盖的功能也较少。请参阅[浏览器支持](/browser-support)。
+
+### 为什么不支持 Safari？ [#why-not-safari]
+
+Safari Web Extensions 未实现 Bookmark Scout 所依赖的 `bookmarks` API。
+
+## 故障排除 [#troubleshooting]
+
+### 书签管理器在哪里？ [#where-is-the-bookmarks-manager]
+
+在 Chrome 中，打开浏览器自带的书签页面，例如按 `Ctrl+Shift+O`（在 macOS 上按 `Cmd+Option+B`）。Bookmark Scout 会将其替换为自己的书签管理器。如果**工具**侧栏处于隐藏状态，请点击书签管理器顶部的**显示工具**。
+
+### Bookmark Scout 从 Firefox 中消失了 [#bookmark-scout-disappeared-from-firefox]
+
+Firefox 重启时会移除临时附加组件。请按照[安装](/installation)中的说明，从 `about:debugging#/runtime/this-firefox` 重新载入。
+
+### 网站图标不显示 [#site-icons-are-missing]
+
+请检查[设置](/settings#appearance)中的**显示网站图标**是否已开启。Chrome 和 Edge 会显示它们为每个网站缓存的图标，因此你最近没有访问过的网站会显示通用的地球图标。Firefox 没有面向扩展程序的图标 API。在任何浏览器中，[刷新网站图标](/guides/clean-up#refresh-site-icons)都会下载每个网站自己的图标，并将其保存在本设备上。
+
+### 我的 API 密钥没有保存 [#my-api-key-was-not-saved]
+
+如果密钥看起来不像所选服务商的密钥，它会被拒绝且不会保存，同时会显示一条提示消息。请检查 **AI 服务商**是否与你粘贴的密钥相符。请参阅[设置 AI 工具](/guides/ai-tools#turn-on-ai)。
+
+### 失效链接检查提示某个正常的网站需要手动检查 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+要求登录、限制请求频率、阻止自动检查或出现服务器错误的网站会列在**需手动检查**下，因为它们在浏览器中通常仍然可以正常访问。打开链接即可确认。只有页面不存在、拒绝连接、主机未知和重定向循环的情况才会计为**确认失效**。请参阅[查找并修复失效链接](/guides/dead-links#read-the-results)。
+
+### 扫描期间控制台显示“Failed to load resource” [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome 会在网页的开发者控制台中为每个失败的请求记录一行日志。扩展程序无法屏蔽这些日志，它们也不表示扫描出了问题。
+
+### 在书签管理器中调整的顺序没有显示在弹出窗口中 [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+只有使用**文件夹优先**排序时，弹出窗口才会显示浏览器中保存的顺序。**添加日期**和**按字母顺序**排序会持续对列表重新排序。请在[设置](/settings#behavior)中更改**排序方式**。
+
+### 搜索提示匹配项比显示的更多 [#search-says-there-are-more-matches-than-it-shows]
+
+结果数量以**最大搜索结果数**（默认为 20）为上限。请缩小搜索范围，或在[设置](/settings#search)中提高上限。
+
+### 我的标签、摘要或已保存的搜索在另一台电脑上不见了 [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+它们只保存在你创建它们的设备上，不会同步，也不会包含在书签导出文件中。开启浏览器同步后，设置会通过你的浏览器账号同步。
+
+### 我误删了内容 [#i-deleted-something-by-mistake]
+
+请在 10 秒内点击消息中的**撤消**。这会恢复该项目、其中的所有内容以及它已保存的标签和摘要；恢复的项目会获得新的添加日期。消息关闭后，就无法在 Bookmark Scout 中撤消此次删除。
+
+## 获取帮助 [#get-help]
+
+- 网站上的<SiteLink to="support">支持页面</SiteLink>。
+- 在 <RepoLink path="/issues">GitHub</RepoLink> 上报告错误或提出功能请求。
+- 发送电子邮件至 <Contact role="support" />。
+- 安全问题请私下报告至 <Contact role="security" />，不要在公开的 issue 中报告。

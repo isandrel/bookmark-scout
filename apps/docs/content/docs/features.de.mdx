@@ -1,0 +1,74 @@
+---
+title: Funktionen
+description: Alles, was Bookmark Scout heute kann, nach Bereichen geordnet, mit Links zur Anleitung für jede Aufgabe.
+---
+
+Eine Referenzliste dessen, was jetzt verfügbar ist. Schritt-für-Schritt-Anleitungen finden Sie in der Anleitung, die in jedem Abschnitt verlinkt ist. Was teilweise umgesetzt oder geplant ist, steht unter [Projektstatus](/status), und was in welchem Browser funktioniert, unter [Browserunterstützung](/browser-support).
+
+## Wo die Erweiterung läuft [#where-it-runs]
+
+| Oberfläche | Was sie ist |
+| --- | --- |
+| Pop-up | Die Schaltfläche in der Symbolleiste: Suche, Ordnerbaum, Speichern und KI-Ordnervorschläge |
+| Seitenleiste | Dieselbe Ansicht in der Seitenleiste des Browsers (in Firefox in der Sidebar), die beim Surfen geöffnet bleibt |
+| Lesezeichen-Manager | Ersetzt in Chrome und Edge die Lesezeichenseite des Browsers: Ordnerbaum, Pfadnavigation, eine Lesezeichentabelle und die **Tools**-Leiste |
+| Einstellungen | Die Optionsseite der Erweiterung mit elf Tabs. Siehe [Einstellungen](/settings) |
+| Rechtsklickmenü | **Lesezeichen speichern in...** bei jedem Link, sobald Sie **Kontextmenü** aktivieren |
+
+## Finden [#find]
+
+- Titel und URLs schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und regulärer Ausdruck sowie hervorgehobenen Treffern. Ordner mit Treffern werden automatisch geöffnet.
+- Letzte Suchen auf diesem Gerät, die Sie löschen oder deaktivieren können.
+- Tabellenfilter im Manager für Titel, URL, Typ, Ordner, Domain und Hinzufügedatum, mit Sortierung nach jeder Spalte.
+- Gespeicherte Suchen: benannte Filterkombinationen, die bei jedem Öffnen auf Ihre Lesezeichen angewendet werden. Bis zu 50, auf diesem Gerät gespeichert.
+
+Anleitung: [Suche und gespeicherte Suchen](/guides/search).
+
+## Speichern und ordnen [#save-and-organize]
+
+- Die aktuelle Seite in einem beliebigen Ordner speichern, nie zweimal im selben Ordner, mit einem Bereich **Zuletzt verwendet**, der die zuletzt genutzten Ordner zeigt.
+- Links über das Rechtsklickmenü in einem zuletzt verwendeten Ordner oder in der Lesezeichenleiste speichern.
+- Ordner erstellen, Lesezeichen und Ordner per Drag-and-drop verschieben und im Manager mehrere auf einmal verschieben.
+- Nach Hinzufügedatum, natürlicher alphabetischer Reihenfolge oder mit Ordnern zuerst sortieren, ohne die im Browser gespeicherte Reihenfolge zu ändern.
+- Namen und URLs bearbeiten sowie in **Lesezeichendetails** Tags und eine Zusammenfassung hinzufügen.
+- Löschen mit optionaler Bestätigung und 10 Sekunden Zeit zum Rückgängigmachen, wobei alles innerhalb eines Ordners wiederhergestellt wird.
+- Im Manager die Breite von Tabellenspalten durch Ziehen oder mit den Pfeiltasten ändern; **Ansicht zurücksetzen** stellt das Layout wieder her.
+
+Anleitung: [Speichern und ordnen](/guides/save-and-organize).
+
+## Bereinigen [#clean-up]
+
+- **Duplikatbereinigung**: Findet Duplikate mit konfigurierbarem Abgleich und entfernt die überzähligen Kopien nach einer Prüfung, mit Rückgängig.
+- **URL-Bereinigung**: Entfernt Tracking-Parameter wie `utm_source` nach einer Vorschau.
+- **Defekte Links prüfen**: Trennt sicher defekte Links von solchen, die manuell geprüft werden müssen, und repariert sie durch Löschen, Folgen einer Weiterleitung, Verwenden eines Wayback-Machine-Links oder Bearbeiten der URL, mit Rückgängig.
+- **Metadatenabruf**: Schlägt Titel aus den Live-Seiten vor, liest dabei nur den Seitenkopf und übernimmt die ausgewählten. Beschreibungen werden zur Prüfung angezeigt und nie gespeichert.
+- **Website-Symbole aktualisieren**: Lädt nach einer Prüfung das eigene Symbol jeder Website herunter, sodass Lesezeichen es auch dann zeigen, wenn der Browser keines im Cache hat, und auch in Firefox. Die Symbole bleiben auf diesem Gerät und können gelöscht werden.
+- **Datenschutzprüfung**: Markiert URLs und optional Titel, die Tokens, sensible Parameter, E-Mail-Adressen oder UUIDs enthalten.
+- **Lesezeichen-Statistik**: Top-Domains und -Ordner, Protokolle, Duplikate und die Verschachtelungstiefe Ihrer Ordner, für einen Ordner oder alle Lesezeichen.
+
+Anleitungen: [Duplikate und Tracking-URLs bereinigen](/guides/clean-up) und [Defekte Links finden und reparieren](/guides/dead-links).
+
+## Import und Export [#import-and-export]
+
+- Export nach HTML, JSON, Markdown oder CSV, mit einer Datenschutzprüfung, die sensible Werte in der Datei schwärzen kann.
+- Import von HTML oder JSON nach einer Vorschau von Zielordner, Anzahlen und Duplikaten, mit Rückgängig.
+- Export und Import der Einstellungen der Erweiterung als JSON-Datei.
+
+Anleitung: [Import und Export](/guides/import-export).
+
+## KI-Tools (optional) [#ai-tools-optional]
+
+Standardmäßig deaktiviert. Verwenden Sie Ihren eigenen Schlüssel für OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter oder rund 200 weitere Anbieter aus dem models.dev-Katalog, oder nutzen Sie Ollama, CLIProxyAPI oder einen beliebigen OpenAI-kompatiblen Endpunkt.
+
+- Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads.
+- **Automatische Tags** und **Inhaltszusammenfassung** für den aktuellen Ordner, erst nach Ihrer Prüfung gespeichert.
+- **KI-Ordnerneuordnung**, mit Vorschau, bevor etwas verschoben wird.
+- **KI-Kontextpaket**, das Lesezeichen als Markdown oder XML für einen KI-Chat exportiert und auch bei deaktivierter KI funktioniert.
+
+Tags und Zusammenfassungen bleiben auf diesem Gerät. Sie werden nicht synchronisiert, sind nicht durchsuchbar und nicht in Lesezeichen-Exporten enthalten. Anleitung: [KI-Tools einrichten](/guides/ai-tools).
+
+## Tastatur und Sprache [#keyboard-and-language]
+
+- Tastenkombinationen im Pop-up, in der Seitenleiste und im Manager, die nie `Ctrl` oder `Cmd` verwenden, mit einem Hilfedialog unter `?` im Manager. Siehe [Tastenkombinationen](/guides/keyboard-shortcuts).
+- Design System, Hell oder Dunkel.
+- Englisch, vereinfachtes Chinesisch, traditionelles Chinesisch, Japanisch, Koreanisch, Spanisch, Deutsch, Französisch und brasilianisches Portugiesisch.

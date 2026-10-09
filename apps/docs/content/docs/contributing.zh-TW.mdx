@@ -1,0 +1,86 @@
+---
+title: 參與貢獻與開發
+description: 設定 Bookmark Scout monorepo、從原始碼建置擴充功能、執行測試，以及提出 Pull Request。
+---
+
+歡迎參與貢獻：回報錯誤、修正問題、翻譯和撰寫說明文件都可以。完整的指南請參閱 <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>；本頁說明需要用到的指令。
+
+## 存放區 [#the-repository]
+
+這是包含三個應用程式和一個共用設定套件的 Bun 與 Nx monorepo：
+
+| 路徑 | 內容 |
+| --- | --- |
+| `apps/extension` | 瀏覽器擴充功能：WXT、React、TypeScript、Zustand，以及建構於 Base UI 上的 shadcn/ui |
+| `apps/website` | 行銷網站：Next.js，以 `next-intl` 進行在地化 |
+| `apps/docs` | 本網站：Next.js、Fumadocs，以及 `content/docs` 中的 MDX |
+| `packages/config` | 從 `config/project.toml` 和 `config/web.toml` 讀取的專案和網站設定值 |
+
+## 設定環境 [#set-up]
+
+你需要 [Bun](https://bun.sh)，以及 Chrome、Edge 或 Firefox。在 GitHub 上 Fork <RepoLink>存放區</RepoLink>、複製 (clone) 你的 Fork，然後在其資料夾中執行：
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` 會在 Chrome 中啟動擴充功能，並支援即時重新載入。如要使用其他瀏覽器，請執行 `bun run dev:edge` 或 `bun run dev:firefox`。
+
+## 從原始碼建置 [#build-from-source]
+
+```bash
+bun run build
+```
+
+這會將三個瀏覽器目標全部建置到 `apps/extension/dist/`：
+
+| 瀏覽器 | 資料夾 |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+請以載入未封裝擴充功能的方式載入所用瀏覽器的資料夾，做法與「[安裝](/installation)」中下載的版本相同：在 Chrome 中使用「**載入未封裝項目**」、在 Edge 中使用「**載入解壓縮**」，在 Firefox 中則使用「**載入暫用附加元件**」並選取該資料夾的 `manifest.json`。如果只要建置一個瀏覽器，請執行 `bunx nx run extension:build:chrome`、`extension:build:edge` 或 `extension:build:firefox`。
+
+## 測試 [#test]
+
+```bash
+bun run test
+```
+
+這會建置 Chrome 目標、安裝 Playwright 的 Chromium，並以無頭模式執行單元測試和 Chromium 端對端測試。網路工具和 AI 工具會在本機伺服器和模擬供應商上執行；標題為 `[mocked provider contract]` 的測試會檢查 Bookmark Scout 這一端是否符合供應商合約，而非與實際供應商的相容性。
+
+| 變更內容 | 執行 |
+| --- | --- |
+| 擴充功能原始碼 | `bunx nx run extension:lint` |
+| 排序邏輯 | `bun run test:unit` |
+| 彈出式視窗、設定、書籤管理員、工具、匯入和匯出 | `bun run test:e2e` |
+| Edge 行為 | `bunx nx run extension:test:e2e:edge` |
+| Firefox 行為 | `bunx nx run extension:test:e2e:firefox` (冒煙測試套件) |
+| 資訊清單、供應商或瀏覽器整合 | `bunx nx run extension:build:chrome`，以及每個受影響的瀏覽器目標 |
+| 網站 | `bunx nx run website:build` |
+| 說明文件 | `bunx nx run docs:build`，然後執行 `bunx nx run docs:verify` |
+| 跨應用程式的變更 | `bun run lint` 和 `bun run build:all` |
+
+CI 會在每個 Pull Request 上將 lint、三個擴充功能建置、單元測試和 Chromium 端對端測試、Edge 測試套件，以及 Firefox 冒煙測試套件作為必要檢查項目執行。建置成功不代表有測試涵蓋：請說明你執行了哪些測試。
+
+## 編輯說明文件 [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+頁面是 `apps/docs/content/docs` 中的 MDX 檔案，並依同一層的 `meta.json` 檔案排序。網站、存放區、版本發布和聯絡地址的連結，都透過 `<Contact role="support" />` 和 `<ReleaseLink />` 等小型元件從設定取得，因此頁面中絕不會寫死這些值。`bunx nx run docs:verify` 會在建置後檢查靜態匯出結果。
+
+## 翻譯 [#translations]
+
+擴充功能中使用者看得到的文字位於 `apps/extension/public/_locales/<locale>/messages.json`，網站文字則位於 `apps/website/messages/<locale>.json`。請同時變更所有語言；缺少任何鍵時，單元測試和網站建置檢查都會失敗。如要新增語言，請依照 `apps/extension/AGENTS.md` 中的「Localization」一節操作。
+
+## Pull Request [#pull-requests]
+
+- 從 `main` 建立分支，每個 Pull Request 只包含一項變更。
+- 以 [Conventional Commits](https://www.conventionalcommits.org/) 格式撰寫提交訊息，並加上 [Gitmoji](https://gitmoji.dev/) 前置字元，例如 `🐛 fix(popup): keep focus after deleting a folder`。
+- 變更影響使用者看到的內容、瀏覽器支援、隱私權或設定時，請更新說明文件。「[專案狀態](/status)」列出了已實作、部分完成和規劃中的功能。
+
+如要回報安全性問題，請私下寄至 <Contact role="security" />，不要在公開的 Issue 中回報。Bookmark Scout 依 <License /> 授權。

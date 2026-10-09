@@ -108,6 +108,7 @@ PESQUISE E SALVE PELA BARRA DE FERRAMENTAS
 • Pesquisa instantânea em todos os favoritos, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular
 • Árvore de pastas com arrastar e soltar, expandir e recolher tudo e criação de novas pastas
 • Salve a página atual em qualquer pasta com um clique; uma página que já está nessa pasta não é salva duas vezes
+• A mesma árvore e a mesma pesquisa no painel lateral do Firefox, que continua aberto enquanto você navega
 • Salve links em pastas recentes pelo menu de clique com o botão direito
 • Atalhos de teclado que nunca substituem os atalhos Ctrl/Cmd do navegador
 • Exclusão com caixa de confirmação (ativada por padrão) e opção de desfazer por 10 segundos

@@ -1,0 +1,77 @@
+---
+title: Trouver et réparer les liens morts
+description: Analysez vos favoris pour trouver les liens morts, repérez ceux qui doivent être vérifiés manuellement, et réparez-les en les supprimant, en suivant une redirection, en utilisant une copie archivée ou en modifiant l'URL.
+---
+
+**Vérifier les liens morts** se trouve dans la barre latérale **Outils** du gestionnaire de favoris, sous **Maintenance**. L'outil demande chaque page enregistrée en favori pour savoir si elle se charge toujours.
+
+<Callout title="Firefox">
+Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up.
+</Callout>
+
+## Lancer une analyse [#run-a-scan]
+
+<Steps>
+<Step>
+Dans **Vérifier les liens morts**, choisissez le dossier actuel ou tous les favoris dans le menu de portée, puis cliquez sur **Analyser**.
+</Step>
+<Step>
+La première fois, Bookmark Scout explique pourquoi il a besoin d'accéder aux sites Web. Cliquez sur **Autoriser l'accès**, puis acceptez la demande du navigateur. Si vous choisissez **Pas maintenant** ou refusez, rien n'est analysé.
+</Step>
+<Step>
+Attendez les résultats. Un résumé en haut indique le nombre de liens morts confirmés, de liens à vérifier manuellement et de liens redirigés.
+</Step>
+</Steps>
+
+L'accès aux sites Web est facultatif et n'est pas accordé à l'installation. Les requêtes sont envoyées sans cookies, et vous pouvez révoquer cet accès dans les paramètres des extensions du navigateur. Consultez [Autorisations](/permissions).
+
+## Lire les résultats [#read-the-results]
+
+| Résultat | Signification |
+| --- | --- |
+| **Lien mort confirmé** | Page introuvable (404 ou 410), connexion refusée, hôte introuvable ou boucle de redirections |
+| **À vérifier manuellement** | Fonctionne souvent encore dans un navigateur : connexion requise ou accès refusé (401, 403, 407), limite de débit atteinte (429), site qui rejette les vérifications automatisées (405 ou 501), erreur serveur (5xx), autre erreur HTTP, ou délai d'expiration dépassé |
+| **Redirigé** | Le lien fonctionne, mais pointe désormais ailleurs ; la destination est affichée |
+| **Ignoré** | Pas un lien Web, par exemple un bookmarklet |
+
+Toute erreur renvoyée par une requête `HEAD` est confirmée par une requête `GET` avant d'être signalée, car certains serveurs ne prennent pas en charge `HEAD`.
+
+<Callout type="info" title="Messages de la console dans Chrome">
+Chrome consigne une ligne « Failed to load resource » dans la console de développement de la page pour chaque requête qui échoue. Les extensions ne peuvent pas supprimer ces lignes ; l'analyse elle-même ne consigne rien.
+</Callout>
+
+## Réparer les liens [#repair-links]
+
+<Steps>
+<Step>
+Cliquez sur **Vérifier les réparations**. Tous les liens en échec, ayant dépassé le délai d'expiration ou redirigés sont listés.
+</Step>
+<Step>
+Choisissez une action pour chacun :
+
+- **Laisser tel quel** (l'action par défaut : rien ne change, sauf si vous choisissez autre chose)
+- **Supprimer le favori**
+- **Utiliser la cible de la redirection**, proposé uniquement lorsque l'analyse a détecté une redirection
+- **Utiliser une copie archivée (Wayback Machine)**, qui fait pointer le favori vers `https://web.archive.org/web/<original URL>`. Le lien est construit localement et n'est pas vérifié : il se peut donc que la page n'ait jamais été archivée.
+- **Modifier l'URL**, qui n'accepte qu'une URL `http` ou `https` valide et différente de l'URL actuelle
+</Step>
+<Step>
+Vérifiez le récapitulatif du nombre de favoris qui seront supprimés, dont l'URL sera remplacée ou qui seront conservés, puis cliquez sur **Appliquer**.
+</Step>
+</Steps>
+
+Rien ne change tant que vous n'appliquez pas les réparations. Avant chaque modification, le favori est relu : un favori supprimé ou modifié depuis l'analyse est ignoré et listé, de sorte qu'une analyse obsolète n'écrase jamais une modification plus récente.
+
+**Annuler**, dans la notification ou dans la boîte de dialogue après une application partielle, restaure les favoris supprimés dans les 10 secondes et rétablit les URL remplacées, sauf si elles ont été modifiées de nouveau entre-temps.
+
+## Ajuster l'analyse [#tune-the-scan]
+
+Dans l'onglet **Maintenance** des [Paramètres](/settings) :
+
+| Paramètre | Valeur par défaut |
+| --- | --- |
+| **Délai d'expiration des requêtes** | 8 secondes par requête |
+| **Requêtes simultanées** | 4 requêtes à la fois |
+| **Nombre de nouvelles tentatives** | 1 nouvelle tentative |
+| **Suivre les redirections** | Activé |
+| **Codes d'état de réussite** | 200, 201, 202, 204, 301, 302, 307, 308 |

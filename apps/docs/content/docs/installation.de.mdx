@@ -1,0 +1,89 @@
+---
+title: Installieren
+description: Installieren Sie Bookmark Scout in Chrome, Microsoft Edge oder Firefox aus einem GitHub-Release.
+---
+
+Bookmark Scout ist kostenlos und Open Source. Jedes <RepoLink path="/releases">GitHub-Release</RepoLink> enthält einen Download pro Browser:
+
+| Browser | Datei |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` oder `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+Laden Sie die Datei aus <ReleaseLink /> herunter und folgen Sie dann den Schritten für Ihren Browser.
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<StoreListing browser="chrome" />
+
+<Steps>
+<Step>
+Laden Sie `bookmark-scout-<version>-chrome.crx` oder `bookmark-scout-<version>-chrome.zip` herunter. Wenn Sie die ZIP-Datei verwenden, entpacken Sie sie in einen Ordner, den Sie behalten, denn Chrome lädt die Erweiterung aus diesem Ordner.
+</Step>
+<Step>
+Öffnen Sie `chrome://extensions/` und aktivieren Sie den **Entwicklermodus** (oben rechts).
+</Step>
+<Step>
+Ziehen Sie die CRX-Datei auf die Seite, oder klicken Sie auf **Entpackte Erweiterung laden** und wählen Sie den entpackten Ordner aus.
+</Step>
+<Step>
+Heften Sie Bookmark Scout über das Puzzleteil-Menü „Erweiterungen“ an die Symbolleiste an, damit das Pop-up nur einen Klick entfernt ist.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<StoreListing browser="edge" />
+
+<Steps>
+<Step>
+Laden Sie `bookmark-scout-<version>-edge.zip` herunter und entpacken Sie die Datei in einen Ordner, den Sie behalten.
+</Step>
+<Step>
+Öffnen Sie `edge://extensions/` und aktivieren Sie den **Entwicklermodus**.
+</Step>
+<Step>
+Klicken Sie auf **Entpackte Erweiterung laden** und wählen Sie den entpackten Ordner aus.
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<StoreListing browser="firefox" />
+
+<Steps>
+<Step>
+Laden Sie `bookmark-scout-<version>-firefox.zip` herunter und entpacken Sie die Datei.
+</Step>
+<Step>
+Öffnen Sie `about:debugging#/runtime/this-firefox`.
+</Step>
+<Step>
+Klicken Sie auf **Temporäres Add-on laden…** und wählen Sie die entpackte Datei `manifest.json` aus.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Einschränkungen in Firefox">
+Firefox entfernt temporäre Add-ons beim Neustart, daher müssen Sie die Erweiterung nach jedem Neustart erneut laden. Außerdem kann Firefox seine Lesezeichenseite nicht ersetzen. Öffnen Sie den Lesezeichen-Manager (mit Tools, gespeicherten Suchen sowie Import und Export) daher über **Lesezeichen-Manager öffnen** im Pop-up. Siehe [Browserunterstützung](/browser-support).
+</Callout>
+
+</Tab>
+</Tabs>
+
+## Nach der Installation [#after-installing]
+
+- Klicken Sie auf das Bookmark-Scout-Symbol, um das Pop-up zu öffnen und Ihre Lesezeichen zu durchsuchen. Beginnen Sie mit [Suche und gespeicherte Suchen](/guides/search).
+- Öffnen Sie in Chrome die Lesezeichenseite des Browsers (zum Beispiel mit `Ctrl+Shift+O` oder unter macOS mit `Cmd+Option+B`), um zum Bookmark-Scout-Manager und seiner Tools-Leiste zu gelangen.
+- Die Einstellungen öffnen sich in einem Tab über den Eintrag **Optionen** der Erweiterung, in Chrome zum Beispiel per Rechtsklick auf das Symbol in der Symbolleiste. Siehe [Einstellungen](/settings).
+
+## Aktualisieren [#updating]
+
+Laden Sie die neuere Version aus <ReleaseLink /> herunter und wiederholen Sie die Schritte für Ihren Browser.
+
+## Aus dem Quellcode erstellen [#building-from-source]
+
+Wenn Sie die Erweiterung selbst erstellen möchten, folgen Sie [Mitwirken und Entwicklung](/contributing#build-from-source).

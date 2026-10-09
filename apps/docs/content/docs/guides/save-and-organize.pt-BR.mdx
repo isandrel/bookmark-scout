@@ -1,0 +1,57 @@
+---
+title: Salvar e organizar
+description: Salve a página atual ou um link em uma pasta, crie pastas, mova itens arrastando e soltando, classifique a árvore e exclua com a opção de desfazer.
+---
+
+## Salvar a página em que você está [#save-the-page-you-are-on]
+
+<Steps>
+<Step>
+Abra o pop-up ou o painel lateral na página que você quer guardar.
+</Step>
+<Step>
+Passe o cursor sobre a pasta desejada e clique em **Adicionar página atual**. Com o teclado, vá até a pasta e pressione `Enter`.
+</Step>
+</Steps>
+
+O painel **Recentes** lista as pastas usadas recentemente; clique em uma delas para salvar a página atual lá. Desative o painel, ou altere quantas pastas ele mostra, com **Pastas recentes** e **Máximo de pastas recentes** nas [Configurações](/settings).
+
+Uma página que já está na pasta não é salva duas vezes; a notificação avisa que ela já está lá.
+
+O pop-up da barra de ferramentas lê a página em que você clicou nele sem perguntar. O painel lateral continua aberto enquanto você troca de guia, então, na primeira vez que você salva por ele, o Bookmark Scout explica o motivo e depois pede acesso às suas guias. Se você recusar, nada é salvo.
+
+## Salvar um link pelo menu de clique com o botão direito [#save-a-link-with-the-right-click-menu]
+
+Primeiro ative o **Menu de contexto** nas [Configurações](/settings#data); ele vem desativado por padrão. Depois clique com o botão direito do mouse em qualquer link de uma página, escolha **Salvar favorito em...** e selecione uma das suas pastas recentes ou a Barra de favoritos. A opção **Origem do nome do favorito** nas Configurações define se o favorito recebe o nome do texto do link, do título da página ou do URL do link. Desative o menu com o **Menu de contexto** (as duas opções ficam na guia **Dados**).
+
+## Criar pastas [#create-folders]
+
+Passe o cursor sobre uma pasta no pop-up ou no painel lateral, clique em **Adicionar pasta** e digite o nome. As novas pastas começam com o **Nome padrão da pasta** definido nas Configurações.
+
+## Mover favoritos e pastas [#move-bookmarks-and-folders]
+
+- **Arrastar e soltar** no pop-up ou no painel lateral. Soltar ao lado de um item em outra pasta move o item para essa pasta. Uma pasta não pode ser movida para dentro dela mesma nem para uma das subpastas dela.
+- **Vários itens de uma vez** no gerenciador: selecione linhas na tabela, use **Mover para pasta** e escolha o destino. Os itens são adicionados no final dessa pasta.
+- **Reordenar** no gerenciador: ative **Ordem do navegador**, remova qualquer classificação de coluna e use os botões **Mover para cima**, **Mover para baixo**, **Mover para o topo** e **Mover para o final** na linha. Eles exigem que a tabela mostre uma única pasta, então remova os filtros ou marque **Somente a pasta atual**.
+
+Reordenar altera a ordem salva no navegador. O pop-up só mostra essa ordem com a classificação **Pastas primeiro**; as classificações por data e em ordem alfabética continuam reordenando a lista, e a confirmação avisa isso.
+
+O pop-up e o painel lateral se atualizam sozinhos quando os favoritos mudam em outro lugar, como no gerenciador ou na interface de favoritos do próprio navegador.
+
+## Classificar a árvore [#sort-the-tree]
+
+Escolha **Data de adição**, **Ordem alfabética** (ordem natural, então `2` vem antes de `10`) ou **Pastas primeiro** em **Ordem de classificação** nas Configurações. A classificação altera somente a forma como o Bookmark Scout mostra a árvore, nunca a ordem armazenada no navegador. **Agrupar por pastas** lista as subpastas antes dos favoritos em cada nível do pop-up e do painel lateral.
+
+## Editar um favorito [#edit-a-bookmark]
+
+No gerenciador, abra o menu de uma linha e escolha **Editar** para alterar o nome e o URL de um favorito, ou o nome de uma pasta. **Ver detalhes** mostra o caminho completo, as datas e o ID, e é onde você adiciona **Tags** e um **Resumo**.
+
+As tags e os resumos ficam armazenados somente no armazenamento local da extensão neste navegador. Eles não são sincronizados, não podem ser pesquisados e não são incluídos nas exportações de favoritos. As exportações de contexto para IA podem incluí-los; consulte [Configurar as ferramentas de IA](/guides/ai-tools).
+
+## Excluir e desfazer [#delete-and-undo]
+
+Exclua um favorito ou uma pasta pelo pop-up, pelo painel lateral ou pelo menu de uma linha no gerenciador, ou selecione várias linhas no gerenciador e exclua todas juntas.
+
+- **Confirmar antes de excluir** vem ativado por padrão e mostra uma caixa de diálogo com o nome do que será removido. Desative essa opção na guia **Comportamento** das Configurações para excluir imediatamente.
+- Toda exclusão mostra **Desfazer** por 10 segundos. Desfazer restaura o item, tudo o que havia dentro dele e as tags e os resumos salvos dele. Um item restaurado é recriado, então recebe uma nova data de adição.
+- Pastas permanentes, como a Barra de favoritos, não podem ser editadas nem excluídas.

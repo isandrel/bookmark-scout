@@ -1,0 +1,22 @@
+{
+  "title": "Bookmark Scout Doku",
+  "description": "Installieren und verwenden Sie Bookmark Scout, eine Browsererweiterung, die Ihre Lesezeichen direkt im Browser durchsucht, ordnet und bereinigt.",
+  "pages": [
+    "---Erste Schritte---",
+    "index",
+    "installation",
+    "browser-support",
+    "---Anleitungen---",
+    "...guides",
+    "---Referenz---",
+    "features",
+    "settings",
+    "permissions",
+    "---Über das Projekt---",
+    "privacy",
+    "faq",
+    "status",
+    "---Mitwirken---",
+    "contributing"
+  ]
+}

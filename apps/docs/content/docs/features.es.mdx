@@ -1,0 +1,74 @@
+---
+title: Funciones
+description: Todo lo que hace Bookmark Scout hoy, por área, con enlaces a la guía de cada tarea.
+---
+
+Una lista de referencia de lo que incluye la versión actual. Para instrucciones paso a paso, sigue la guía enlazada en cada sección. Lo que está incompleto o planificado aparece en [Estado del proyecto](/status), y lo que funciona en cada navegador, en [Compatibilidad con navegadores](/browser-support).
+
+## Dónde se ejecuta [#where-it-runs]
+
+| Superficie | Qué es |
+| --- | --- |
+| Ventana emergente | El botón de la barra de herramientas: búsqueda, árbol de carpetas, guardado y recomendaciones de carpetas con IA |
+| Panel lateral | La misma vista en el panel lateral del navegador (incluido Firefox), que sigue abierto mientras navegas |
+| Administrador de marcadores | Reemplaza la página de marcadores del navegador en Chrome y Edge: árbol de carpetas, ruta de navegación, una tabla de marcadores y la barra lateral **Herramientas** |
+| Configuración | La página de opciones de la extensión, con once pestañas. Consulta [Configuración](/settings) |
+| Menú contextual | **Guardar marcador en...** en cualquier enlace, cuando activas **Menú contextual** |
+
+## Buscar [#find]
+
+- Busca en títulos y URLs mientras escribes, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares, y con las coincidencias resaltadas. Las carpetas que coinciden se abren automáticamente.
+- Búsquedas recientes en este dispositivo, que puedes borrar o desactivar.
+- Filtros de tabla en el administrador por título, URL, tipo, carpeta, dominio y fecha de creación, con ordenación por cualquier columna.
+- Búsquedas guardadas: conjuntos de filtros con nombre que se evalúan con tus marcadores cada vez que los abres. Hasta 50, guardadas en este dispositivo.
+
+Guía: [Búsqueda y búsquedas guardadas](/guides/search).
+
+## Guardar y organizar [#save-and-organize]
+
+- Guarda la página actual en cualquier carpeta, nunca dos veces en la misma carpeta, con un panel **Recientes** de las carpetas que usaste.
+- Guarda enlaces desde el menú contextual en una carpeta reciente o en la Barra de marcadores.
+- Crea carpetas, arrastra y suelta marcadores y carpetas, y mueve varios a la vez en el administrador.
+- Ordena por fecha de creación, por orden alfabético natural o con las carpetas primero, sin cambiar el orden que guarda el navegador.
+- Edita nombres y URLs, y añade etiquetas y un resumen en **Detalles del marcador**.
+- Elimina con una confirmación opcional y la posibilidad de deshacer durante 10 segundos, que restaura todo lo que había dentro de una carpeta.
+- En el administrador, cambia el ancho de las columnas de la tabla arrastrando o con las teclas de flecha; **Restablecer vista** recupera el diseño original.
+
+Guía: [Guardar y organizar](/guides/save-and-organize).
+
+## Limpiar [#clean-up]
+
+- **Limpiador de duplicados**: encuentra duplicados con criterios de coincidencia configurables y quita las copias sobrantes después de una revisión, con opción de deshacer.
+- **Limpiador de URLs**: elimina parámetros de seguimiento como `utm_source` después de una vista previa.
+- **Comprobar enlaces rotos**: separa los enlaces rotos confirmados de los que necesitan una comprobación manual, y los repara eliminándolos, siguiendo una redirección, usando un enlace de Wayback Machine o editando la URL, con opción de deshacer.
+- **Extractor de metadatos**: sugiere títulos a partir de las páginas en vivo, leyendo solo el encabezado de la página, y aplica los que selecciones. Las descripciones se muestran para revisarlas y nunca se guardan.
+- **Actualizar iconos de sitios**: descarga el icono propio de cada sitio web, después de una revisión, para que los marcadores lo muestren aunque el navegador no lo tenga en caché, y también en Firefox. Los iconos se quedan en este dispositivo y se pueden borrar.
+- **Escáner de privacidad**: marca las URLs, y opcionalmente los títulos, que contienen tokens, parámetros sensibles, direcciones de correo electrónico o UUID.
+- **Estadísticas de marcadores**: dominios y carpetas principales, protocolos, duplicados y la profundidad de tus carpetas, para una carpeta o para todos los marcadores.
+
+Guías: [Limpiar duplicados y URLs con seguimiento](/guides/clean-up) y [Encontrar y reparar enlaces rotos](/guides/dead-links).
+
+## Importar y exportar [#import-and-export]
+
+- Exporta a HTML, JSON, Markdown o CSV, con una revisión de privacidad que puede censurar los valores sensibles del archivo.
+- Importa HTML o JSON después de una vista previa de la carpeta de destino, los recuentos y los duplicados, con opción de deshacer.
+- Exporta e importa la configuración de la extensión como archivo JSON.
+
+Guía: [Importar y exportar](/guides/import-export).
+
+## Herramientas de IA (opcionales) [#ai-tools-optional]
+
+Desactivadas de forma predeterminada. Usa tu propia clave para OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter o unos 200 proveedores más del catálogo de models.dev, o usa Ollama, CLIProxyAPI o cualquier punto de conexión compatible con OpenAI.
+
+- Recomendaciones de carpetas en la ventana emergente, incluida una ruta de carpeta nueva que revisas antes.
+- **Etiquetado automático** y **Generador de resúmenes** para la carpeta actual, que solo se guardan después de que los revisas.
+- **Reorganización de carpetas con IA**, con vista previa antes de que se mueva nada.
+- **Empaquetador de contexto para IA**, que exporta marcadores como Markdown o XML para un chat de IA y funciona con la IA desactivada.
+
+Las etiquetas y los resúmenes se quedan en este dispositivo. No se sincronizan, no se pueden buscar y no se incluyen en las exportaciones de marcadores. Guía: [Configurar las herramientas de IA](/guides/ai-tools).
+
+## Teclado e idioma [#keyboard-and-language]
+
+- Combinaciones de teclas en la ventana emergente, el panel lateral y el administrador que nunca usan `Ctrl` ni `Cmd`, con un diálogo de ayuda `?` en el administrador. Consulta [Combinaciones de teclas](/guides/keyboard-shortcuts).
+- Tema del sistema, claro u oscuro.
+- Inglés, chino simplificado, chino tradicional, japonés, coreano, español, alemán, francés y portugués de Brasil.

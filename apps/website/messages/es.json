@@ -21,7 +21,7 @@
       "Búsqueda instantánea de marcadores",
       "Organización con arrastrar y soltar",
       "Guardado rápido de marcadores",
-      "Panel lateral (Chrome y Edge)",
+      "Panel lateral (incluido Firefox)",
       "Búsquedas guardadas",
       "Combinaciones de teclas",
       "Eliminación con opción de deshacer",
@@ -119,7 +119,7 @@
         "alt": "Dos ventanas emergentes de Bookmark Scout una al lado de la otra: un árbol con las carpetas Recetas, Viajes, Investigación y Documentación técnica, y una búsqueda de docs con las coincidencias resaltadas",
         "points": [
           "Busca en todos los marcadores mientras escribes, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares",
-          "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral de Chrome y Edge",
+          "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
           "Guarda una búsqueda como vista inteligente que siempre muestra resultados actualizados",
           "Muévete por carpetas y resultados con el teclado; los atajos Ctrl y Cmd del navegador siguen funcionando"
         ]
