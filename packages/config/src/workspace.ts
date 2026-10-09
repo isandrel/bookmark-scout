@@ -46,6 +46,7 @@ const projectSchema = table({
 	locales: table({
 		default: localeCode,
 		supported: list(localeCode, { minLength: 1, unique: true }),
+		extension: list(localeCode, { minLength: 1, unique: true }),
 		names: record(text()),
 		og: record(text({ pattern: /^[a-z]{2,3}_[A-Z]{2}$/, hint: "an Open Graph locale such as en_US" })),
 	}),
@@ -94,8 +95,10 @@ export type WorkspaceConfig = { project: ProjectConfig; web: WebConfig };
 /** Rules that span several tables: every locale and browser list must agree. */
 function checkProject(config: ProjectConfig, issues: Issues): void {
 	const { locales, browsers, stores } = config;
-	if (!locales.supported.includes(locales.default)) {
-		issues.push(`locales.default: "${locales.default}" is not in locales.supported`);
+	for (const list of ["supported", "extension"] as const) {
+		if (!locales[list].includes(locales.default)) {
+			issues.push(`locales.default: "${locales.default}" is not in locales.${list}`);
+		}
 	}
 	expectKeys("locales.names", Object.keys(locales.names), locales.supported, issues);
 	expectKeys("locales.og", Object.keys(locales.og), locales.supported, issues);

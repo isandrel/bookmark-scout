@@ -86,7 +86,7 @@ Important subareas:
 - `src/services/`: bookmark operations, AI integrations, prompt logic, browser integrations, import/export, and reorganization logic
 - `src/stores/`: Zustand state containers
 - `src/lib/`: storage, schema, logging, helpers, and lower-level utilities
-- `public/_locales/`: extension translations for `en`, `ja`, and `ko`
+- `public/_locales/`: extension translations, one folder per language listed in `[locales] extension` of `config/project.toml`
 
 #### `apps/website`
 
@@ -291,9 +291,7 @@ Bookmark Scout already supports multiple locales and agents must preserve that s
 
 If you change user-visible extension copy, update:
 
-- `apps/extension/public/_locales/en/messages.json`
-- `apps/extension/public/_locales/ja/messages.json`
-- `apps/extension/public/_locales/ko/messages.json`
+- every `apps/extension/public/_locales/<locale>/messages.json` (adding a language: see "Localization" in `apps/extension/AGENTS.md`)
 
 ### Website
 
