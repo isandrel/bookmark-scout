@@ -175,3 +175,50 @@ test.describe('with tab access granted', () => {
     ).toHaveCount(0);
   });
 });
+
+test('Read page content explains website access before the browser asks, and Not now asks nothing', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await extensionWorker.evaluate(async (key) => {
+    await chrome.storage.sync.set({ [key]: { language: 'en', aiEnabled: true } });
+  }, SETTINGS_KEY);
+  // Count requests and decline them, since the real prompt cannot be answered headlessly.
+  await page.addInitScript(() => {
+    const calls: unknown[] = [];
+    (window as unknown as { permissionRequests: unknown[] }).permissionRequests = calls;
+    Object.defineProperty(chrome.permissions, 'request', {
+      configurable: true,
+      value: (request: unknown) => {
+        calls.push(request);
+        return Promise.resolve(false);
+      },
+    });
+  });
+  const requestCount = () =>
+    page.evaluate(
+      () => (window as unknown as { permissionRequests: unknown[] }).permissionRequests.length,
+    );
+
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  const toggle = page.getByRole('switch', { name: 'Read page content' });
+  const dialog = page.getByRole('dialog', { name: 'Allow reading page content' });
+
+  await toggle.click();
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText('Bookmark Scout never receives page content.');
+  expect(await requestCount()).toBe(0);
+  await dialog.getByRole('button', { name: 'Not now' }).click();
+  await expect(dialog).toBeHidden();
+  await expect(toggle).not.toBeChecked();
+  expect(await requestCount()).toBe(0);
+
+  // Allow access is the click the browser's own prompt runs from.
+  await toggle.click();
+  await dialog.getByRole('button', { name: 'Allow access' }).click();
+  await expect.poll(requestCount).toBe(1);
+  await expect(toggle).not.toBeChecked();
+  expect((await storedSettings(extensionWorker)).aiReadPageContent).not.toBe(true);
+});
