@@ -21,7 +21,7 @@
       "Pesquisa instantânea nos favoritos",
       "Organização com arrastar e soltar",
       "Salvamento rápido de favoritos",
-      "Suporte ao painel lateral (Chrome e Edge)",
+      "Suporte ao painel lateral (inclusive no Firefox)",
       "Pesquisas salvas",
       "Atalhos de teclado",
       "Exclusão com opção de desfazer",
@@ -119,7 +119,7 @@
         "alt": "Dois pop-ups do Bookmark Scout lado a lado: uma árvore de pastas com as pastas Receitas, Viagem, Pesquisa e Docs de desenvolvimento, e uma pesquisa por docs com os resultados destacados",
         "points": [
           "Pesquise em todos os favoritos enquanto digita, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular",
-          "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do Chrome e do Edge",
+          "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa como visualização inteligente que sempre mostra resultados atualizados",
           "Navegue pelas pastas e pelos resultados com o teclado; os atalhos Ctrl e Cmd do navegador continuam funcionando"
         ]

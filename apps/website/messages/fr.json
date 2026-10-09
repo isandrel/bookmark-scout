@@ -21,7 +21,7 @@
       "Recherche instantanée dans les favoris",
       "Organisation par glisser-déposer",
       "Enregistrement rapide des favoris",
-      "Panneau latéral (Chrome et Edge)",
+      "Panneau latéral (Firefox compris)",
       "Recherches enregistrées",
       "Raccourcis clavier",
       "Suppression avec annulation",
@@ -119,7 +119,7 @@
         "alt": "Deux fenêtres pop-up de Bookmark Scout côte à côte : une arborescence avec les dossiers Recipes, Travel, Research et Dev Docs, et une recherche de « docs » avec les résultats surlignés",
         "points": [
           "Recherchez dans tous vos favoris pendant la saisie, avec les options Respecter la casse, Mot entier et Expression régulière",
-          "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral de Chrome et d'Edge",
+          "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche sous forme de vue intelligente qui affiche toujours des résultats à jour",
           "Parcourez les dossiers et les résultats au clavier ; les raccourcis Ctrl et Cmd du navigateur continuent de fonctionner"
         ]

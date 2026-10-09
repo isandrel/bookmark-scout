@@ -47,7 +47,7 @@ Derived from `apps/extension/dist/*/manifest.json` after `bunx nx run extension:
 | Surface | Chrome (MV3) | Edge (MV3) | Firefox (MV2) |
 | --- | --- | --- | --- |
 | Toolbar popup | Yes | Yes | Yes |
-| Side panel | `side_panel` | `side_panel` | `sidebar_action` is declared, but the docs say Firefox has no side panel and nothing tests it. Do not claim it. |
+| Side panel | `side_panel` | `side_panel` | `sidebar_action`: the same page in the Firefox sidebar. Checked by hand in Firefox 157 on 2026-10-09; the smoke suite loads the page in a tab, not the sidebar itself. |
 | Bookmarks manager and Tools sidebar | Replaces `chrome://bookmarks` (`chrome_url_overrides.bookmarks`), and opens in a new tab from **Open bookmark manager** in the popup and side panel | Same manifest key and button. Whether Edge applies the override to its Favorites page has not been checked. | Opens in a new tab from **Open bookmark manager** in the popup. Firefox has no bookmarks-page override, so the key is absent. |
 | Options page | Yes | Yes | Yes |
 | Context menu save | After the user turns on Context Menu (off by default; asks for the optional `contextMenus`) | Same | After the user turns on Context Menu (`contextMenus` is granted at install; Firefox cannot make it optional) |

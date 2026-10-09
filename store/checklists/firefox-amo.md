@@ -47,7 +47,7 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] AI folder suggestions with a test provider (for example local Ollama), if the description keeps them.
 - [ ] Settings sync behavior (with Firefox Sync, if available).
 - [ ] How bookmark icons render (the `favicon` API does not exist in Firefox).
-- [ ] Whether the declared sidebar (`sidebar_action`) works. The docs currently say Firefox has no side panel; reconcile the docs or keep the listing silent about it.
+- [x] The declared sidebar (`sidebar_action`) works: Bookmark Scout appears in the Firefox sidebar (checked by hand in Firefox 157 on 2026-10-09). The docs, README, website, and Firefox listing now say so.
 - [ ] The screenshots were captured in Chromium; confirm the Firefox popup and options look the same, or capture Firefox versions.
 
 ## 3. Listing
