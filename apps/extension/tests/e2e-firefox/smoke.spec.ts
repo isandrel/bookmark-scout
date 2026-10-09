@@ -173,16 +173,13 @@ test('popup shows saved site icons and a generic icon instead of a broken browse
     { title: 'Icon Saved Link', url: 'https://icons-saved.e2e.invalid/page' },
     { title: 'Icon Missing Link', url: 'https://icons-missing.e2e.invalid/page' },
   ]);
-  await extension.call(
-    async (browser, value) => {
-      await browser.storage.local.set({
-        'bookmark-scout-site-icons': {
-          'https://icons-saved.e2e.invalid': { icon: value, fetchedAt: Date.now() },
-        },
-      });
-    },
-    icon,
-  );
+  await extension.call(async (browser, value) => {
+    await browser.storage.local.set({
+      'bookmark-scout-site-icons': {
+        'https://icons-saved.e2e.invalid': { icon: value, fetchedAt: Date.now() },
+      },
+    });
+  }, icon);
 
   await extension.open('popup.html');
   await (await extension.find('input[placeholder="Search bookmarks..."]')).sendKeys('Icon ');
@@ -276,6 +273,20 @@ test('AI waits for data collection consent, and there is no browser icon cache s
   const aiSwitch = await extension.find('[data-setting="aiEnabled"] [role="switch"]');
   await expect.poll(() => aiSwitch.getAttribute('aria-checked')).toBe('false');
   expect((await readSettings(extension)).aiEnabled).toBe(true);
+
+  // Turning AI on explains where the data goes before Firefox's own consent prompt, whose
+  // wording ("the developer says the extension wants to collect") reads as if we receive it.
+  await aiSwitch.click();
+  const dialog = await extension.find('[role="dialog"]');
+  expect(await dialog.getText()).toContain(
+    'Bookmark Scout has no server and never receives this data.',
+  );
+  await dialog.findElement(By.xpath('.//button[normalize-space()="Not now"]')).click();
+  await extension.driver.wait(
+    async () => (await extension.driver.findElements(By.css('[role="dialog"]'))).length === 0,
+    5000,
+  );
+  expect(await aiSwitch.getAttribute('aria-checked')).toBe('false');
 });
 
 test('JSON export downloads the folder and importing it restores a deleted bookmark', async ({

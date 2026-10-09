@@ -3467,6 +3467,30 @@
         "message": "AI 기능은 꺼진 상태로 유지됩니다. AI를 켜면 AI 제공자에게 필요한 데이터를 공유할지 브라우저가 확인합니다.",
         "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
     },
+    "permission_aiTitle": {
+        "message": "AI 켜기",
+        "description": "Title of the dialog shown before turning on AI, which may lead to the browser asking about data collection"
+    },
+    "permission_aiDesc": {
+        "message": "AI 도구는 필요한 데이터를 브라우저에서 설정한 AI 제공자에게 바로 보냅니다. 보내는 데이터는 북마크 제목, URL, 폴더 이름, 현재 페이지의 제목과 URL, 'AI에게 묻기' 메시지, API 키입니다.",
+        "description": "What AI tools send, and to whom, in the dialog shown before turning on AI"
+    },
+    "permission_aiDetail": {
+        "message": "Bookmark Scout는 서버가 없으며 이 데이터를 받지 않습니다. 브라우저가 이러한 종류의 데이터 공유를 허용할지 물어볼 수 있습니다. AI 도구를 사용하기 전에는 아무것도 전송되지 않으며, AI는 언제든지 끌 수 있습니다.",
+        "description": "Privacy note in the dialog shown before turning on AI"
+    },
+    "permission_pageReadingTitle": {
+        "message": "페이지 내용 읽기 허용",
+        "description": "Title of the dialog shown before turning on Read page content"
+    },
+    "permission_pageReadingDesc": {
+        "message": "이 설정을 켜면 AI 도구가 각 페이지를 쿠키 없이 내려받아 읽을 수 있는 본문을 AI 제공자에게 보냅니다. 이를 위해 브라우저가 웹사이트 접근 권한을 요청합니다.",
+        "description": "What Read page content does, in the dialog shown before the browser asks for website access"
+    },
+    "permission_pageReadingDetail": {
+        "message": "Bookmark Scout는 페이지 내용을 받지 않습니다. 로컬 네트워크의 페이지는 읽지 않습니다. 설정을 끄면 언제든지 중단할 수 있습니다.",
+        "description": "Privacy note in the dialog shown before turning on Read page content"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"

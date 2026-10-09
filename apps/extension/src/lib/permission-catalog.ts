@@ -108,11 +108,23 @@ export const PERMISSION_FEATURES = {
   pageReading: {
     origins: WEB_ORIGINS,
     dataCollection: AI_DATA_COLLECTION,
+    explanation: {
+      titleKey: 'permission_pageReadingTitle',
+      descriptionKey: 'permission_pageReadingDesc',
+      detailKey: 'permission_pageReadingDetail',
+    },
     denied: { titleKey: 'tools_hostAccessDenied', descriptionKey: 'settings_hostAccessDeniedDesc' },
   },
   /** Every AI feature that sends bookmarks or the current page to the provider. */
   ai: {
     dataCollection: AI_DATA_COLLECTION,
+    // Firefox's consent prompt says only that "the developer" wants to collect these categories,
+    // which reads as if Bookmark Scout receives them; the dialog says where the data really goes.
+    explanation: {
+      titleKey: 'permission_aiTitle',
+      descriptionKey: 'permission_aiDesc',
+      detailKey: 'permission_aiDetail',
+    },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_aiDenied' },
   },
   /** Verify Service and Refresh Models send only the API key to the provider. */

@@ -257,20 +257,38 @@ const OptionsPage: React.FC = () => {
   // A switch whose permission is missing shows as off, though the synced value may be on.
   const shownValues = useEffectiveSettings(values);
 
+  // A setting waiting on the explanation dialog of its permission (AI, Read page content).
+  const [explainingField, setExplainingField] = useState<keyof Settings | null>(null);
+  const explainingFeature = explainingField ? getSettingPermission(explainingField) : undefined;
+
+  /** Requests the setting's permission and turns it on once granted. */
+  const requestAndEnable = (fieldKey: keyof Settings, feature: PermissionFeature) => {
+    void requestPermission(feature).then((granted) => {
+      if (granted) {
+        setFieldValue(fieldKey, true);
+        return;
+      }
+      notifyPermissionDenied(feature);
+    });
+  };
+
   const changeSettingsField = (fieldKey: keyof Settings, value: SettingValue) => {
     const feature = getSettingPermission(fieldKey);
     if (value !== true || !feature) {
       setFieldValue(fieldKey, value);
       return;
     }
-    // Ask inside the click so the browser treats the request as user-initiated; the switch
-    // only turns on once the permission is granted.
-    void requestPermission(feature).then((granted) => {
-      if (granted) {
-        setFieldValue(fieldKey, value);
-        return;
-      }
-      notifyPermissionDenied(feature);
+    if (!(PERMISSION_FEATURES[feature] as PermissionFeatureDefinition).explanation) {
+      // Ask inside the click so the browser treats the request as user-initiated; the switch
+      // only turns on once the permission is granted.
+      requestAndEnable(fieldKey, feature);
+      return;
+    }
+    // Explain first, but only when the browser would actually prompt: the dialog's Allow
+    // button is the click the request then runs in.
+    void hasPermission(feature).then((granted) => {
+      if (granted) setFieldValue(fieldKey, true);
+      else setExplainingField(fieldKey);
     });
   };
 
@@ -534,6 +552,17 @@ const OptionsPage: React.FC = () => {
           </div>
         </div>
       </footer>
+      {explainingField && explainingFeature && (
+        <PermissionDialog
+          feature={explainingFeature}
+          open
+          onAllow={() => {
+            setExplainingField(null);
+            requestAndEnable(explainingField, explainingFeature);
+          }}
+          onCancel={() => setExplainingField(null)}
+        />
+      )}
       <Toaster />
     </div>
   );
