@@ -3375,6 +3375,30 @@
         "message": "AI 功能保持关闭。开启 AI 时，浏览器会请你允许扩展程序共享 AI 服务商所需的数据。",
         "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
     },
+    "permission_aiTitle": {
+        "message": "开启 AI",
+        "description": "Title of the dialog shown before turning on AI, which may lead to the browser asking about data collection"
+    },
+    "permission_aiDesc": {
+        "message": "AI 工具会将所需的数据直接从浏览器发送到你设置的 AI 服务商：书签标题、网址和文件夹名称，当前网页的标题和网址，你在“询问 AI”中的消息，以及你的 API 密钥。",
+        "description": "What AI tools send, and to whom, in the dialog shown before turning on AI"
+    },
+    "permission_aiDetail": {
+        "message": "Bookmark Scout 没有服务器，也不会收到这些数据。浏览器可能会请你允许共享这几类数据。在你使用 AI 工具之前不会发送任何内容，你也可以随时关闭 AI。",
+        "description": "Privacy note in the dialog shown before turning on AI"
+    },
+    "permission_pageReadingTitle": {
+        "message": "允许读取网页内容",
+        "description": "Title of the dialog shown before turning on Read page content"
+    },
+    "permission_pageReadingDesc": {
+        "message": "开启后，AI 工具会在不带 Cookie 的情况下下载每个网页，并将其可读正文发送给你的 AI 服务商。为此，浏览器会请求访问网站的权限。",
+        "description": "What Read page content does, in the dialog shown before the browser asks for website access"
+    },
+    "permission_pageReadingDetail": {
+        "message": "Bookmark Scout 不会收到网页内容。本地网络中的网页永远不会被读取。关闭此设置即可随时停止。",
+        "description": "Privacy note in the dialog shown before turning on Read page content"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "未发送任何内容。扩展程序将 API 密钥共享给服务商之前，浏览器会先征求你的同意。",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
