@@ -10,6 +10,7 @@
         "@nx/js": "^23.2.1",
         "@playwright/test": "^1.62.1",
         "@types/bun": "1.4.2",
+        "github-slugger": "2.0.0",
         "husky": "^9.1.7",
         "lint-staged": "^17.6.0",
         "nx": "^23.2.1",
@@ -44,7 +45,7 @@
     },
     "apps/extension": {
       "name": "@bookmark-scout/extension",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "@ai-sdk/anthropic": "^4.0.71",
         "@ai-sdk/azure": "^4.0.90",

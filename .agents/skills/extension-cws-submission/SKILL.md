@@ -13,7 +13,7 @@ The maintainer approves each outward step: saving drafts, submitting, removing i
 
 | Dashboard field | Source in the repository |
 | --- | --- |
-| Description (en, ja, ko) | `store/listings/{en,ja,ko}.md`, section "Full description: Chrome Web Store and Edge Add-ons" |
+| Description (each language) | `store/listings/<folder>.md`, section "Full description: Chrome Web Store and Edge Add-ons" |
 | Title and summary | `extName` and `extDescription` in `apps/extension/public/_locales/*/messages.json` (package only) |
 | Category | Tools |
 | Store icon | `store/assets/store-icon-128.png` (padded; not the packaged `icon-128.png`) |
