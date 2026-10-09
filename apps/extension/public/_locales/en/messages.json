@@ -4,16 +4,8 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "Quickly search and save bookmarks to specific folders.",
+        "message": "Search, organize, and clean up bookmarks: fast search, folder save, duplicate and dead-link tools, and opt-in AI with your own key.",
         "description": "Extension description (used in manifest.json)"
-    },
-    "ext_name": {
-        "message": "Bookmark Scout",
-        "description": "Extension name"
-    },
-    "ext_description": {
-        "message": "Quickly search and save bookmarks to specific folders.",
-        "description": "Extension description"
     },
     "popup_searchPlaceholder": {
         "message": "Search bookmarks...",

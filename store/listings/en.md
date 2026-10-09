@@ -14,13 +14,7 @@ All three stores read the name from the packaged manifest (`extName` in `apps/ex
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-The Chrome Web Store shows the manifest description as the summary, and Edge uses it as the short description. The packaged text today is:
-
-```text
-Quickly search and save bookmarks to specific folders.
-```
-
-It is accurate but undersells the extension. Optional replacement (131 characters). Using it means editing `extDescription` in all three locale files and shipping a new version:
+The Chrome Web Store shows the manifest description as the summary, and Edge uses it as the short description. It is `extDescription` in `apps/extension/public/_locales/en/messages.json`; changing it needs a new version. Packaged since 0.3.2 (131 characters):
 
 ```text
 Search, organize, and clean up bookmarks: fast search, folder save, duplicate and dead-link tools, and opt-in AI with your own key.

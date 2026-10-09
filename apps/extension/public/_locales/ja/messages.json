@@ -4,16 +4,8 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "ブックマークを素早く検索し、特定のフォルダに保存します。",
+        "message": "ブックマークを素早く検索・整理・掃除。フォルダへのワンクリック保存、重複やリンク切れの検出、自分の API キーで使えるオプトインの AI 機能。",
         "description": "Extension description (used in manifest.json)"
-    },
-    "ext_name": {
-        "message": "ブックマークスカウト",
-        "description": "Extension name"
-    },
-    "ext_description": {
-        "message": "ブックマークを素早く検索し、特定のフォルダに保存します。",
-        "description": "Extension description"
     },
     "popup_searchPlaceholder": {
         "message": "ブックマークを検索...",
