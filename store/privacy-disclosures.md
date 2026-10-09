@@ -54,6 +54,8 @@ Ollama and custom endpoints can point to a server on the user's own machine, in 
 
 The Chrome Web Store asks which user data the extension collects. Bookmark Scout never sends data to its developer, but the AI features send data to a third party the user picks, and the network tools contact bookmarked sites. Disclosing conservatively is the safer reading of the User Data policy. **The final choice is the maintainer's.**
 
+Submitted for 0.3.0 (2026-10-08): the maintainer left every category unchecked, because the developer receives no data and AI requests go straight from the browser to a provider the user picks. The reviewer notes (Test instructions) explain this, and the listing description names everything the AI features send. If review rejects the item for undisclosed data, check Authentication information, Web history, and Website content as suggested below.
+
 | Category | Suggested answer | Reason |
 | --- | --- | --- |
 | Personally identifiable information | No | Not collected |

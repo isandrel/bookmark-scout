@@ -1594,7 +1594,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "AIを使ったブックマークワークフローを有効にします。Firefox では、オンにすると AI プロバイダーに必要なデータの共有の許可を求められます。",
+        "message": "AIを使ったブックマークワークフローを有効にします。AI ツールは、必要なブックマークのタイトル、URL、フォルダ名、表示中のページのタイトルと URL、「AI に質問」のメッセージを、選択したプロバイダーへ直接送信します。AI ツールを使うまでは何も送信されません。Firefox では、オンにするとこのデータの共有の許可を求められます。",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {

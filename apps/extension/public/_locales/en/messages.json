@@ -1618,7 +1618,7 @@
         "description": "AI feature toggle label"
     },
     "settings_aiEnabledDesc": {
-        "message": "Enable AI-powered bookmark workflows. In Firefox, turning this on asks to share the data your AI provider needs.",
+        "message": "Enable AI-powered bookmark workflows. AI tools send the bookmark titles, URLs, and folder names they need, the current page's title and URL, and your Ask AI messages directly to the provider you choose. Nothing is sent until you use an AI tool. In Firefox, turning this on asks to share this data.",
         "description": "AI feature toggle description"
     },
     "settings_aiProvider": {
