@@ -65,9 +65,16 @@ const run = async (args: string[], stdin?: string) => {
   console.log(`ok: ${shown}`);
 };
 
-// Environment that holds the secret; add a required reviewer in the repository settings so each
-// submission waits for approval.
-await run(["api", "--method", "PUT", `repos/${repo}/environments/${ENVIRONMENT}`, "--silent"]);
+// Environment that holds the secret. Create it only when missing: a PUT without a body would
+// replace its protection rules (required reviewer, `v*` tag policy) with none.
+const environmentExists =
+  Bun.spawnSync(["gh", "api", `repos/${repo}/environments/${ENVIRONMENT}`, "--silent"]).exitCode ===
+  0;
+if (environmentExists) {
+  console.log(`ok: environment "${ENVIRONMENT}" exists; protection rules left as they are`);
+} else {
+  await run(["api", "--method", "PUT", `repos/${repo}/environments/${ENVIRONMENT}`, "--silent"]);
+}
 await run(
   ["secret", "set", "CHROME_SERVICE_ACCOUNT_PRIVATE_KEY", "--env", ENVIRONMENT, "--repo", repo],
   key.private_key,

@@ -93,7 +93,7 @@ One-time setup, by the maintainer:
    bun scripts/setup-chrome-web-store-ci.ts --key <key.json> --publisher-id <id> --extension-id <id> --dry-run
    bun scripts/setup-chrome-web-store-ci.ts --key <key.json> --publisher-id <id> --extension-id <id> --enable --dry-run-submit
    ```
-6. In the repository settings, add yourself as a required reviewer for the `chrome-web-store` environment, so each submission waits for approval.
+6. In the repository settings (Environments, `chrome-web-store`), add yourself as a required reviewer so each submission waits for approval, and limit deployment tags to `v*`. The script never changes these rules once the environment exists. (Set up on 2026-10-09.)
 7. Delete the local key file, or keep it only in a password manager.
 8. On the next release, the job runs `wxt submit --dry-run`, which checks authentication only. When it passes, rerun the script without `--dry-run-submit`.
 
