@@ -5,7 +5,7 @@
 **Effective date:** October 8, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
-This policy is also available in Japanese and Korean. If a translation differs from the English version, the English version applies.
+This policy is also available in other languages. If a translation differs from the English version, the English version applies.
 
 ## At a glance
 

@@ -125,6 +125,45 @@ mark {
   }
 }
 
+/*
+ * CJK fonts by language. Han characters take Japanese, Simplified Chinese, or Traditional Chinese
+ * glyph shapes from the font, so Korean and Chinese pages list their own system fonts before the
+ * Japanese default. The theme is inline, so the utilities hold literal stacks: override them here.
+ */
+html:lang(ko) body,
+html:lang(ko) .font-sans {
+  font-family: var(--font-instrument), "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+}
+
+html:lang(ko) .font-display {
+  font-family: var(--font-bricolage), var(--font-instrument), "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+}
+
+html:lang(zh-CN) body,
+html:lang(zh-CN) .font-sans {
+  font-family: var(--font-instrument), "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+}
+
+html:lang(zh-CN) .font-display {
+  font-family: var(--font-bricolage), var(--font-instrument), "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+}
+
+html:lang(zh-TW) body,
+html:lang(zh-TW) .font-sans {
+  font-family: var(--font-instrument), "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+}
+
+html:lang(zh-TW) .font-display {
+  font-family: var(--font-bricolage), var(--font-instrument), "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+}
+
+/* Long single words (German compounds such as "Datenschutzerklärung") hyphenate or wrap instead of
+   widening the page on phones. <html lang> drives the hyphenation dictionary. */
+:is(h1, h2, h3) {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
 /* CJK line breaking: keep Japanese headings and Korean words from splitting mid-phrase. */
 :lang(ja) :is(h1, h2, h3) {
   word-break: auto-phrase;

@@ -56,7 +56,7 @@ export async function SiteHeader({ locale }: { locale: string }) {
                 </nav>
 
                 <div className="hidden lg:block">
-                    <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} />
+                    <LanguageSwitcher currentLocale={locale} languages={LANGUAGES} label={t("languages")} variant="menu" />
                 </div>
 
                 <details className="group relative lg:hidden">

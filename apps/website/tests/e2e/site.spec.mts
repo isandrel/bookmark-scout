@@ -76,7 +76,8 @@ test("language links keep the current page", async ({ page }) => {
     await page.goto("/en/privacy/");
     // Client-side navigation needs the router hydrated before the click.
     await page.waitForLoadState("networkidle");
-    const menu = page.locator("header details summary");
+    // Desktop shows the language dropdown, mobile the Menu; either reveals the language links.
+    const menu = page.locator("header details summary:visible").first();
     if (await menu.isVisible()) await menu.click();
     await page.locator('header a[hreflang="ja"]:visible').first().click();
     await expect(page).toHaveURL(/\/ja\/privacy\/$/);

@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "title": "Bookmark Scout – Moderner Lesezeichen-Manager für den Browser",
+    "description": "Eine Browsererweiterung zum Suchen, Ordnen, Bereinigen, Importieren, Exportieren und Speichern von Lesezeichen, mit optionalen KI-Tools.",
+    "keywords": [
+      "Browsererweiterung",
+      "Chrome-Erweiterung",
+      "Firefox-Add-on",
+      "Edge-Erweiterung",
+      "Lesezeichen-Manager",
+      "Lesezeichen suchen",
+      "Lesezeichen ordnen",
+      "Lesezeichen bereinigen",
+      "doppelte Lesezeichen",
+      "defekte Links",
+      "KI-Lesezeichen-Tools"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "Sofortsuche in Lesezeichen",
+      "Ordnen per Drag-and-drop",
+      "Schnelles Speichern von Lesezeichen",
+      "Seitenleiste (Chrome und Edge)",
+      "Gespeicherte Suchen",
+      "Tastenkombinationen",
+      "Löschen mit Rückgängig",
+      "Dunkler Modus",
+      "Eigener Lesezeichen-Manager",
+      "Duplikatbereinigung",
+      "Entfernen von Tracking-Parametern",
+      "Linkprüfung mit geprüften Reparaturen",
+      "Import und Export von Lesezeichen",
+      "Datenschutzprüfung mit optionaler Schwärzung vor dem Export",
+      "Optionale KI-Tools für Lesezeichen",
+      "Mehrsprachige Oberfläche"
+    ]
+  },
+  "nav": {
+    "features": "Funktionen",
+    "privacy": "Datenschutz",
+    "install": "Installieren",
+    "docs": "Doku",
+    "github": "GitHub",
+    "menu": "Menü",
+    "skip": "Zum Inhalt springen",
+    "languages": "Sprache",
+    "home": "Bookmark Scout – Startseite"
+  },
+  "footer": {
+    "tagline": "Lesezeichen suchen, ordnen und bereinigen, direkt im Browser.",
+    "product": "Produkt",
+    "project": "Projekt",
+    "contact": "Kontakt",
+    "legal": "Rechtliches",
+    "features": "Funktionen",
+    "install": "Installieren",
+    "docs": "Dokumentation",
+    "releases": "Releases",
+    "github": "Quellcode",
+    "contributing": "Mitwirken",
+    "license": "Lizenz ({license})",
+    "support": "Support",
+    "privacy": "Datenschutz",
+    "security": "Sicherheit",
+    "contactAddress": "{role}: {address}",
+    "privacyPolicy": "Datenschutzerklärung",
+    "securityTxt": "security.txt",
+    "madeBy": "Entwickelt von {author}. Kostenlos und Open Source.",
+    "helpCenter": "Hilfe"
+  },
+  "home": {
+    "hero": {
+      "title": "Jedes gespeicherte Lesezeichen, nur eine Suche entfernt.",
+      "description": "Bookmark Scout ist eine Browsererweiterung für Chrome, Edge und Firefox, die Ihre vorhandenen Lesezeichen durchsucht, ordnet und bereinigt. Sie läuft in Ihrem Browser, ohne Konto und ohne eigenen Server.",
+      "download": "Von GitHub herunterladen",
+      "install": "Bookmark Scout installieren",
+      "docs": "Dokumentation lesen",
+      "license": "Kostenlos und Open Source unter {license}.",
+      "demoNote": "Diese Demo durchsucht eine erfundene Sammlung von 37 Lesezeichen. Die Erweiterung durchsucht Ihre eigenen, in Ihrem Browser."
+    },
+    "demo": {
+      "label": "Beispielsammlung durchsuchen",
+      "placeholder": "Lesezeichen durchsuchen",
+      "count": "{count, number} von {total, number} Lesezeichen",
+      "results": "Passende Lesezeichen",
+      "more": "{count, plural, one {# weiterer Treffer wird} other {# weitere Treffer werden}} nicht angezeigt. Tippen Sie weiter, um die Liste einzugrenzen.",
+      "emptyTitle": "Keine Treffer für „{query}“.",
+      "emptyHint": "Versuchen Sie einen Teil eines Titels, eine Website wie github oder einen Ordner wie Rezepte. Weniger Buchstaben helfen auch.",
+      "clear": "Suche löschen",
+      "try": "Beispiele",
+      "chips": [
+        "rezepte",
+        "mdn",
+        "reisen",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "Entwickler-Doku",
+        "css": "CSS",
+        "research": "Recherche",
+        "recipes": "Rezepte",
+        "travel": "Reisen",
+        "japan": "Japan",
+        "reading": "Lesestoff",
+        "inbox": "Eingang"
+      }
+    },
+    "tour": {
+      "title": "Was Sie damit tun können",
+      "lede": "Echte Screenshots der Chrome-Version. Sie folgen der hellen oder dunklen Einstellung Ihres Systems.",
+      "tabsLabel": "Aufgaben von Bookmark Scout",
+      "firefoxNote": "Firefox kann seine Lesezeichenseite nicht ersetzen. Deshalb öffnet sich der Manager mit Bereinigungstools, gespeicherten Suchen sowie Import und Export in Firefox über eine Schaltfläche im Pop-up der Symbolleiste.",
+      "find": {
+        "tab": "Finden",
+        "heading": "Suchen in der Symbolleiste",
+        "caption": "Das Pop-up in der Symbolleiste: Ordnerbaum, Sofortsuche und Speichern in jedem Ordner mit einem Klick.",
+        "alt": "Zwei Bookmark-Scout-Pop-ups nebeneinander: ein Ordnerbaum mit den Ordnern Recipes, Travel, Research und Dev Docs sowie eine Suche nach docs mit hervorgehobenen Treffern",
+        "points": [
+          "Alle Lesezeichen schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke",
+          "Denselben Ordnerbaum und dieselbe Suche in Chrome und Edge in der Seitenleiste geöffnet lassen",
+          "Eine Suche als intelligente Ansicht speichern, die immer aktuelle Ergebnisse zeigt",
+          "Mit der Tastatur durch Ordner und Ergebnisse navigieren; die Strg- und Cmd-Tastenkombinationen des Browsers funktionieren weiter"
+        ]
+      },
+      "organize": {
+        "tab": "Ordnen",
+        "heading": "Seiten dort ablegen, wo sie hingehören",
+        "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome durch einen Ordnerbaum, eine Pfadnavigation und eine sortierbare Tabelle.",
+        "alt": "Der Bookmark-Scout-Manager zeigt den Ordner Dev Docs als Tabelle mit den Spalten Typ, Ordnerpfad, URL, Titel und Hinzugefügt am neben einem Ordnerbaum",
+        "points": [
+          "Die aktuelle Seite mit einem Klick in jedem Ordner speichern, ohne sie doppelt abzulegen",
+          "Lesezeichen und Ordner im Ordnerbaum verschieben",
+          "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern",
+          "Spalten in der Tabelle des Managers filtern, sortieren und in der Breite anpassen",
+          "HTML oder JSON nach einer Vorschau importieren und als HTML, JSON, Markdown oder CSV exportieren"
+        ]
+      },
+      "cleanUp": {
+        "tab": "Bereinigen",
+        "heading": "Jahre an gespeicherten Links aufräumen",
+        "caption": "Die Duplikatbereinigung zeigt jede Gruppe und die Kopie, die behalten wird, bevor etwas entfernt wird.",
+        "alt": "Der Dialog der Duplikatbereinigung mit zwei Gruppen doppelter Lesezeichen, jeweils mit markierter Kopie zum Behalten, über der Schaltfläche „Duplikate entfernen“",
+        "points": [
+          "Duplikatgruppen prüfen und dann die überzähligen Kopien entfernen",
+          "Tracking-Parameter nach einer Vorschau aus URLs entfernen",
+          "Defekte Links finden und reparieren: löschen, Weiterleitung verwenden, auf eine Archivkopie verweisen oder URL bearbeiten",
+          "Seitentitel abrufen und nur die ausgewählten übernehmen",
+          "Das Symbol jeder Website herunterladen, damit Lesezeichen es anzeigen, auch in Firefox",
+          "Löschen mit Bestätigung und 10 Sekunden lang rückgängig machen"
+        ]
+      },
+      "ai": {
+        "tab": "KI (optional)",
+        "heading": "KI mit Ihrem eigenen Anbieter nutzen, oder gar nicht",
+        "caption": "KI bleibt deaktiviert, bis Sie sie in den Einstellungen aktivieren, einen Anbieter wählen und, falls nötig, Ihren eigenen API-Schlüssel hinzufügen.",
+        "alt": "Der Tab KI der Bookmark-Scout-Einstellungen mit deaktivierten KI-Funktionen sowie Auswahlfeldern für Anbieter und Modell",
+        "points": [
+          "Ordnervorschläge für die aktuelle Seite, einschließlich eines neuen Ordnerpfads nach Ihrer Prüfung",
+          "Tag-Vorschläge und kurze Zusammenfassungen, die Sie vor dem Speichern prüfen",
+          "Pläne zur Neuordnung von Ordnern, mit Vorschau, bevor etwas verschoben wird",
+          "Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren; das funktioniert ohne KI und sendet nichts"
+        ],
+        "providersTitle": "Unterstützte Anbieter",
+        "customProvider": "Jeder OpenAI-kompatible Endpunkt"
+      }
+    },
+    "privacy": {
+      "title": "Ihre Lesezeichen bleiben in Ihrem Browser.",
+      "policyLink": "Datenschutzerklärung lesen",
+      "diagram": {
+        "browser": "Ihr Browser",
+        "bookmarks": {
+          "name": "Lesezeichen",
+          "detail": "Werden hier durchsucht, verschoben und bereinigt"
+        },
+        "settings": {
+          "name": "Einstellungen",
+          "detail": "Über Ihr Browserkonto synchronisiert, wenn die Synchronisierung aktiv ist"
+        },
+        "keys": {
+          "name": "API-Schlüssel, Tags, gespeicherte Suchen",
+          "detail": "Bleiben nur auf diesem Gerät"
+        },
+        "ai": {
+          "name": "Von Ihnen gewählter KI-Anbieter",
+          "detail": "Nur wenn KI aktiviert ist. Mit Ollama bleibt alles auf Ihrem Computer."
+        },
+        "websites": {
+          "name": "Geprüfte Websites",
+          "detail": "Linkprüfung, Titelabruf und Website-Symbole, nachdem Sie den Zugriff erlaubt haben"
+        },
+        "server": {
+          "name": "Bookmark-Scout-Server",
+          "detail": "Gibt es nicht. Nichts geht an den Entwickler."
+        },
+        "legend": "Gestrichelte Wege sind optional. Sie werden nur genutzt, wenn Sie die jeweilige Funktion verwenden."
+      },
+      "facts": {
+        "noServer": {
+          "title": "Kein Konto, kein Server",
+          "body": "Sie müssen sich nirgends registrieren, und Bookmark Scout hat keinen eigenen Server. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert."
+        },
+        "noTelemetry": {
+          "title": "Keine Telemetrie",
+          "body": "Die Erweiterung sendet nichts an den Entwickler: keine Analyse, keine Werbung, kein Tracking."
+        },
+        "aiOptIn": {
+          "title": "KI bleibt aus, bis Sie sie aktivieren",
+          "body": "Anfragen gehen dann direkt von Ihrem Browser an den von Ihnen gewählten Anbieter. Mit Ollama auf Ihrem eigenen Computer bleiben sie dort."
+        },
+        "exports": {
+          "title": "Exporte werden auf Datenschutz geprüft",
+          "body": "Bevor eine Datei heruntergeladen wird, markiert eine Prüfung Tokens, E-Mail-Adressen und andere sensible Werte und kann sie in der gespeicherten Kopie schwärzen."
+        }
+      }
+    },
+    "install": {
+      "title": "In wenigen Schritten installiert",
+      "lede": "Wählen Sie Ihren Browser. Jedes Release auf GitHub enthält eine Version für Chrome, Edge und Firefox.",
+      "tabsLabel": "Browser",
+      "download": "Von GitHub herunterladen",
+      "storeComing": "Der Eintrag für {store} wird vorbereitet. Bis er online ist, installieren Sie die Version aus den GitHub Releases.",
+      "manual": "Oder installieren Sie die Version aus den GitHub Releases selbst:",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome Web Store",
+        "storeButton": "Zu Chrome hinzufügen",
+        "steps": {
+          "download": "Laden Sie <code>bookmark-scout-*-chrome.zip</code> aus dem neuesten Release herunter und entpacken Sie die Datei.",
+          "open": "Öffnen Sie <code>chrome://extensions</code> und aktivieren Sie oben rechts den <b>Entwicklermodus</b>.",
+          "load": "Klicken Sie auf <b>Entpackte Erweiterung laden</b> und wählen Sie den entpackten Ordner aus."
+        },
+        "crx": "Das Release enthält außerdem eine signierte <code>.crx</code>-Datei, die Sie stattdessen auf die Erweiterungsseite ziehen können."
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Edge Add-ons",
+        "storeButton": "Für Edge herunterladen",
+        "steps": {
+          "download": "Laden Sie <code>bookmark-scout-*-edge.zip</code> aus dem neuesten Release herunter und entpacken Sie die Datei.",
+          "open": "Öffnen Sie <code>edge://extensions</code> und aktivieren Sie den <b>Entwicklermodus</b>.",
+          "load": "Klicken Sie auf <b>Entpackt laden</b> und wählen Sie den entpackten Ordner aus."
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Firefox Add-ons",
+        "storeButton": "Zu Firefox hinzufügen",
+        "steps": {
+          "download": "Laden Sie <code>bookmark-scout-*-firefox.zip</code> aus dem neuesten Release herunter und entpacken Sie die Datei.",
+          "open": "Öffnen Sie <code>about:debugging#/runtime/this-firefox</code>.",
+          "load": "Klicken Sie auf <b>Temporäres Add-on laden…</b> und wählen Sie <code>manifest.json</code> im entpackten Ordner aus."
+        },
+        "limits": "Firefox entfernt ein temporäres Add-on beim Neustart, daher müssen Sie es nach jedem Neustart erneut laden. In Firefox öffnen sich der Manager und seine Tools über die Schaltfläche „Lesezeichen-Manager öffnen“ im Pop-up der Symbolleiste."
+      }
+    },
+    "faq": {
+      "title": "Fragen",
+      "items": {
+        "data": {
+          "q": "Sendet Bookmark Scout meine Lesezeichen irgendwohin?",
+          "a": "Nein. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert, und die Erweiterung sendet nichts an den Entwickler. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden: KI-Anfragen gehen an den von Ihnen gewählten Anbieter, und Linkprüfung, Titelabruf und das Aktualisieren von Website-Symbolen rufen die gespeicherten Websites ab, nachdem Sie den Zugriff auf Websites erlaubt haben. Einstellungen werden über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiv ist. Details finden Sie in der <privacy>Datenschutzerklärung</privacy>."
+        },
+        "needAi": {
+          "q": "Muss ich KI verwenden?",
+          "a": "Nein. Suche, Ordnen, Bereinigen sowie Import und Export funktionieren auch ohne. KI bleibt deaktiviert, bis Sie sie in den Einstellungen aktivieren."
+        },
+        "providers": {
+          "q": "Welche KI-Anbieter kann ich verwenden?",
+          "a": "Sie können {providers} verwenden. Sie fügen Ihren eigenen API-Schlüssel hinzu, wenn der Anbieter einen benötigt, und der Anbieter kann die Nutzung in Rechnung stellen."
+        },
+        "changes": {
+          "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",
+          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. Vor dem Löschen wird standardmäßig nachgefragt, und Löschvorgänge und Importe lassen sich 10 Sekunden lang rückgängig machen."
+        },
+        "firefox": {
+          "q": "Funktioniert sie in Firefox?",
+          "a": "Ja. Firefox kann seine Lesezeichenseite nicht ersetzen. Deshalb öffnet sich der Manager mit Bereinigungstools, Import und Export sowie gespeicherten Suchen über eine Schaltfläche im Pop-up der Symbolleiste. Bis der Eintrag bei Firefox Add-ons bereit ist, lädt Firefox die Erweiterung als temporäres Add-on, das beim Neustart von Firefox entfernt wird."
+        },
+        "stores": {
+          "q": "Warum ist sie noch nicht in den Browser-Stores?",
+          "a": "Die Einträge im Chrome Web Store, bei Edge Add-ons und bei Firefox Add-ons werden vorbereitet, und jeder Store prüft eine Erweiterung, bevor sie veröffentlicht wird. Bis dahin installieren Sie sie aus den GitHub Releases."
+        },
+        "free": {
+          "q": "Ist sie kostenlos?",
+          "a": "Ja. Bookmark Scout ist kostenlos und Open Source unter {license}, ohne Werbung und ohne kostenpflichtiges Abo. Wenn Sie KI aktivieren, kann Ihr Anbieter die API-Nutzung in Rechnung stellen."
+        },
+        "help": {
+          "q": "Wie bekomme ich Hilfe?",
+          "a": "Beginnen Sie mit der <support>Supportseite</support> oder der <docs>Dokumentation</docs>. Sie können ein Problem auch auf <github>GitHub</github> melden oder eine E-Mail an <email>{supportEmail}</email> senden."
+        }
+      }
+    }
+  }
+}

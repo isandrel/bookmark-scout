@@ -111,7 +111,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on Context Menu in Settings
-- [x] 🌍 **i18n** — English, Japanese, and Korean language support
+- [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
 - [x] ⚙️ **Settings Sync** — Sync extension preferences with `chrome.storage.sync`
 

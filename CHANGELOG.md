@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Languages
+
+- The extension, website, and store listings are now available in Simplified Chinese, Traditional Chinese, Spanish, German, French, and Brazilian Portuguese, alongside English, Japanese, and Korean. With Language set to Auto, Chinese browsers in Hong Kong, Macau, and Singapore get the matching Chinese variant.
+- Plural forms now follow each language's rules, and Chinese text uses Chinese fonts instead of Japanese ones.
+
 ### Documentation
 
 - Refresh repository, docs-site, website, and localized README content to reflect current implemented features and planned work.

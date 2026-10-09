@@ -204,7 +204,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 ### Do
 
 - Read values from `@bookmark-scout/config` (URLs, contact addresses, store links, license, dates) and copy from `messages/`. Keep content lists in typed modules under `apps/website/lib/content/`.
-- Keep every string in English, Japanese, and Korean with identical keys.
+- Keep every string in every locale (`config/project.toml` `[locales] supported`) with identical keys; `scripts/verify-build.ts` checks it.
 - Use real product screenshots and the real feature set from `apps/docs/content/docs/status.mdx`.
 - Keep visible focus rings and respect `prefers-reduced-motion`.
 

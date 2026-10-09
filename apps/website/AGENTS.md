@@ -35,7 +35,7 @@ The website currently uses localized routes and shared site metadata. Preserve t
 - `lib/content/`: typed content data (demo library, tour, install steps, FAQ, AI providers, page sections, `routes.ts` with the indexable routes)
 - `lib/`: `download.ts` (store link or release fallback), `page-metadata.ts`, `images.ts` (responsive image widths, formats, quality, and byte budget), `extension-providers.ts` (reads the AI provider list from `apps/extension/config` at build time for `lib/content/ai-providers.ts`)
 - `scripts/optimize-images.ts`: generates AVIF and WebP variants of `public/screenshots/*.png` before dev and build (`bun run images` to run alone, `--force` to rebuild all)
-- `messages/{en,ja,ko}.json`: shared and home copy; `messages/privacy/` and `messages/support/`: long-form page copy, merged in `i18n/request.ts`
+- `messages/<locale>.json`: shared and home copy; `messages/privacy/` and `messages/support/`: long-form page copy, merged in `i18n/request.ts`
 - `i18n/`: locale routing and request behavior
 - `public/`: icons, store screenshots, and `_headers`. `scripts/generate-public-files.ts` writes `_redirects` and `.well-known/security.txt` from config before dev and build (both git-ignored)
 - `scripts/verify-build.ts`, `scripts/serve-out.ts`, `tests/e2e/`, `playwright.config.ts`: build checks and browser tests
@@ -87,11 +87,7 @@ Build verification is particularly important when the change touches:
 
 The website uses `next-intl` and locale routing from `i18n/routing.ts`.
 
-Current supported locales:
-
-- `en`
-- `ja`
-- `ko`
+Supported locales are `[locales] supported` in `config/project.toml` (language tags such as `zh-CN`, which are also the URL segment and the message file name). Adding one needs its three message files, its own name and Open Graph code in the same config, and a font stack in `app/globals.css` if its script needs one (Chinese does).
 
 Rules:
 
@@ -144,7 +140,7 @@ When editing product claims:
 
 When you add or change localized website content:
 
-- update `messages/en.json`, `messages/ja.json`, and `messages/ko.json`, or the matching files under `messages/privacy/` or `messages/support/`
+- update every `messages/<locale>.json`, or the matching files under `messages/privacy/` or `messages/support/`
 - keep keys and array lengths identical across locales; `nx run website:verify` fails otherwise
 
 If the change is intentionally English-only for a temporary reason, call that out explicitly in the final report instead of silently leaving the app inconsistent.

@@ -37,7 +37,16 @@ const localeNames = Object.fromEntries(
  * in `config/project.toml` `[locales] extension`; tests/unit/locale-messages.test.ts fails until
  * both do.
  */
-export type SupportedLocale = 'en' | 'ja' | 'ko';
+export type SupportedLocale =
+  | 'de'
+  | 'en'
+  | 'es'
+  | 'fr'
+  | 'ja'
+  | 'ko'
+  | 'pt_BR'
+  | 'zh_CN'
+  | 'zh_TW';
 
 /** Bundled locales (one per `_locales/` folder) in the order the Language setting lists them. */
 export const SUPPORTED_LOCALES = Object.keys(localeNames) as SupportedLocale[];
