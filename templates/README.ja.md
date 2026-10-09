@@ -62,7 +62,7 @@
 |                                                  ブラウザ                                                   | サポートレベル | 備考                          |
 | :---------------------------------------------------------------------------------------------------------: | :------------: | ----------------------------- |
 | ![Chrome](https://img.shields.io/badge/Chrome-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white) |  ⭐⭐⭐ 主要   | Manifest V3、全機能対応       |
-|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |   ⭐⭐ 副次    | Manifest V2、サイドバー非対応 |
+|  ![Firefox](https://img.shields.io/badge/Firefox-FF7139?style=for-the-badge&logo=firefox&logoColor=white)   |   ⭐⭐ 副次    | Manifest V2、サイドパネルは Firefox のサイドバーに表示 |
 |  ![Edge](https://img.shields.io/badge/Edge-0078D7?style=for-the-badge&logo=microsoftedge&logoColor=white)   |   ⭐⭐ 副次    | Chromiumベース、完全互換      |
 |    ![Safari](https://img.shields.io/badge/Safari-999999?style=for-the-badge&logo=safari&logoColor=white)    |   ❌ 非対応    | `bookmarks` API未実装         |
 

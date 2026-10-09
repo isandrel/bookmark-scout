@@ -21,7 +21,7 @@
       "Sofortsuche in Lesezeichen",
       "Ordnen per Drag-and-drop",
       "Schnelles Speichern von Lesezeichen",
-      "Seitenleiste (Chrome und Edge)",
+      "Seitenleiste (in Firefox die Sidebar)",
       "Gespeicherte Suchen",
       "Tastenkombinationen",
       "Löschen mit Rückgängig",
@@ -119,7 +119,7 @@
         "alt": "Zwei Bookmark-Scout-Pop-ups nebeneinander: ein Ordnerbaum mit den Ordnern Recipes, Travel, Research und Dev Docs sowie eine Suche nach docs mit hervorgehobenen Treffern",
         "points": [
           "Alle Lesezeichen schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke",
-          "Denselben Ordnerbaum und dieselbe Suche in Chrome und Edge in der Seitenleiste geöffnet lassen",
+          "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche als intelligente Ansicht speichern, die immer aktuelle Ergebnisse zeigt",
           "Mit der Tastatur durch Ordner und Ergebnisse navigieren; die Strg- und Cmd-Tastenkombinationen des Browsers funktionieren weiter"
         ]

@@ -108,6 +108,7 @@ RECHERCHER ET ENREGISTRER DEPUIS LA BARRE D'OUTILS
 • Recherche instantanée dans tous les favoris, avec les options Respecter la casse, Mot entier et Expression régulière
 • Arborescence de dossiers avec glisser-déposer, Tout développer, Tout réduire et création de dossiers
 • Enregistrement de la page actuelle dans n'importe quel dossier en un clic ; une page déjà présente dans ce dossier n'est pas enregistrée deux fois
+• La même arborescence et la même recherche dans le panneau latéral de Firefox, qui reste ouvert pendant votre navigation
 • Enregistrement de liens dans les dossiers récents depuis le menu contextuel
 • Raccourcis clavier qui ne remplacent jamais les raccourcis Ctrl/Cmd du navigateur
 • Suppression avec boîte de dialogue de confirmation (activée par défaut) et annulation possible pendant 10 secondes
