@@ -1,6 +1,6 @@
 # Chrome Web Store Submission Checklist
 
-> **Submission is manual and requires explicit approval.** No agent or workflow uploads to the Chrome Web Store. Do not start this checklist until the maintainer has approved both the release and the store submission for this version in writing (issue, PR comment, or chat).
+> **Submission requires explicit approval.** The only automated path is the `submit-chrome` job in `.github/workflows/release-extension.yml` (see [Automated submission](#automated-submission)), which is off until the maintainer turns it on and waits for an environment reviewer. Listing, privacy, and screenshot changes stay manual. Do not start this checklist until the maintainer has approved both the release and the store submission for this version in writing (issue, PR comment, or chat).
 
 ## 0. Approval
 
@@ -77,3 +77,24 @@ Source code: https://github.com/isandrel/bookmark-scout (AGPL-3.0).
 - [ ] Submit for review (manual, by the maintainer or with their explicit go-ahead for this step).
 - [ ] Record the review outcome and the listing URL.
 - [ ] After publication, add the store link to `README.md`, the docs installation page, and the website download section.
+
+## Automated submission
+
+After the first listing is live, a release tag can upload the Chrome zip and submit it for review with `wxt submit` (Chrome Web Store API v2, service account). The job runs only when the repository variable `CWS_SUBMIT` is `true`, uses the zip attached to the GitHub release, and defaults to `STAGED_PUBLISH` (an approved version waits until it is published from the dashboard). Dashboard-only changes, such as listing text, screenshots, and privacy answers, still have to be made by hand before tagging.
+
+One-time setup, by the maintainer:
+
+1. Turn on 2-Step Verification for the publisher's Google account. Publishing through the API requires it.
+2. In Google Cloud Console, create or choose a project, enable the **Chrome Web Store API**, create a service account, and create a JSON key for it.
+3. In the Developer Dashboard, under **Account**, add the service account's email. A publisher can have only one.
+4. Copy the publisher ID from the dashboard URL (`/devconsole/<publisher-id>/...`).
+5. From the repository root, preview the setup, then run it. It creates the `chrome-web-store` environment, stores the private key as an environment secret (passed on stdin, never printed), and sets the variables:
+   ```bash
+   bun scripts/setup-chrome-web-store-ci.ts --key <key.json> --publisher-id <id> --extension-id <id> --dry-run
+   bun scripts/setup-chrome-web-store-ci.ts --key <key.json> --publisher-id <id> --extension-id <id> --enable --dry-run-submit
+   ```
+6. In the repository settings, add yourself as a required reviewer for the `chrome-web-store` environment, so each submission waits for approval.
+7. Delete the local key file, or keep it only in a password manager.
+8. On the next release, the job runs `wxt submit --dry-run`, which checks authentication only. When it passes, rerun the script without `--dry-run-submit`.
+
+If you manually change the item's visibility in the dashboard, publish once from the dashboard before the API can publish again. To turn automation off, set `CWS_SUBMIT` to `false`. To rotate the key, create a new one, rerun the script, and delete the old key in Google Cloud.

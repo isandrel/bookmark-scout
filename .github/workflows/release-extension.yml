@@ -17,6 +17,8 @@ permissions:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -96,3 +98,53 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+
+  # Uploads the release's Chrome zip to the Chrome Web Store and submits it for review with
+  # `wxt submit` (Chrome Web Store API v2, service account). Off until the repository variable
+  # CWS_SUBMIT is "true". scripts/setup-chrome-web-store-ci.ts sets it up, and
+  # store/checklists/chrome-web-store.md ("Automated submission") explains the one-time setup.
+  # The listing, privacy answers, and screenshots stay manual in the dashboard.
+  submit-chrome:
+    needs: build-and-release
+    if: vars.CWS_SUBMIT == 'true'
+    runs-on: ubuntu-latest
+    # The service account key is an environment secret, so the environment's protection rules
+    # (a required reviewer) gate every submission.
+    environment: chrome-web-store
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      # Submit the exact file attached to the GitHub release, not a rebuild.
+      - name: Download the Chrome zip from the release
+        id: zip
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build-and-release.outputs.version }}
+        run: |
+          mkdir -p release
+          gh release download "$VERSION" --pattern "*-chrome.zip" --dir release
+          echo "path=$(ls "$PWD"/release/*-chrome.zip)" >> "$GITHUB_OUTPUT"
+
+      - name: Submit to the Chrome Web Store
+        working-directory: ./apps/extension
+        env:
+          CHROME_API_VERSION: v2
+          CHROME_ZIP: ${{ steps.zip.outputs.path }}
+          CHROME_PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+          CHROME_EXTENSION_ID: ${{ vars.CHROME_EXTENSION_ID }}
+          CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL: ${{ vars.CHROME_SERVICE_ACCOUNT_CLIENT_EMAIL }}
+          CHROME_SERVICE_ACCOUNT_PRIVATE_KEY: ${{ secrets.CHROME_SERVICE_ACCOUNT_PRIVATE_KEY }}
+          # STAGED_PUBLISH holds an approved version until it is published from the dashboard;
+          # DEFAULT_PUBLISH publishes it as soon as review passes.
+          CHROME_PUBLISH_TYPE: ${{ vars.CHROME_PUBLISH_TYPE || 'STAGED_PUBLISH' }}
+          DRY_RUN: ${{ vars.CWS_SUBMIT_DRY_RUN == 'true' }}
+        run: |
+          args=(--chrome-zip "$CHROME_ZIP")
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          bunx wxt submit "${args[@]}"
