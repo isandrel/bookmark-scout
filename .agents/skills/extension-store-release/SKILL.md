@@ -64,6 +64,7 @@ Summarize the JSON with a short script; the table output truncates columns. Targ
 - Copy and limits are in `store/listings/`. Chrome and Edge show the locale `extDescription` (at most 132 characters); the AMO summary allows 250. Count Unicode characters with a script for `ja` and `ko`. Copy rules are in `website-docs-delivery/references/marketing-review.md`.
 - Describe each browser's real feature set (the surface table in `store/README.md`). When a surface changes, update together: the listings, that table, the docs `status.mdx`, the README templates, and the screenshot picks.
 - Re-sync listing and privacy copy after merging `main` mid-PR; a feature that landed meanwhile may need disclosing (privacy files are listed in the root `AGENTS.md`).
+- Chrome Web Store dashboard work (filling tabs, uploading the release ZIP, submitting, rejections) and the scripted screenshot recapture live in the `extension-cws-submission` skill.
 - Screenshots: follow "Store and marketing screenshots" in the `extension-exploratory-qa` skill. Compose frames and the 440×280 promo tile by rendering HTML in the same runner. Export 24-bit RGB PNGs without alpha.
 
 ## Report
