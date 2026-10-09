@@ -23,7 +23,7 @@ Prepared on 2026-10-01 against extension version `0.2.0` (`apps/extension/packag
 
 ## Hosted pages
 
-The stores link to two pages on the website, each published in English, Japanese, and Korean once the website deploys from `main`:
+The stores link to two pages on the website, each published in every website language (`[locales] supported` in `config/project.toml`) once the website deploys from `main`:
 
 | Page | English URL | Other locales | Source |
 | --- | --- | --- | --- |

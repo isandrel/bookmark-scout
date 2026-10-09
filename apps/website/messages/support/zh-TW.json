@@ -1,0 +1,96 @@
+{
+    "supportPage": {
+        "meta": {
+            "title": "支援",
+            "description": "取得 Bookmark Scout 的相關協助：常見問題的解答、如何回報錯誤，以及支援、隱私權和安全性問題的聯絡電子郵件地址。"
+        },
+        "title": "支援",
+        "intro": "大多數問題都能在說明文件和常見問題中找到解答。如果有功能故障，請在 GitHub 上回報。如有不想公開發布的事項，請寄電子郵件給我們。",
+        "sections": {
+            "start-here": {
+                "title": "從這裡開始",
+                "items": {
+                    "docs": {
+                        "title": "閱讀說明文件",
+                        "body": "各瀏覽器的安裝方式、功能指南，以及每項設定的說明。"
+                    },
+                    "faq": {
+                        "title": "查看常見問題",
+                        "body": "簡短說明資料會傳送到哪裡、是否一定要使用 AI，以及哪些功能可在 Firefox 中使用。"
+                    }
+                }
+            },
+            "common-problems": {
+                "title": "常見問題",
+                "items": {
+                    "firefoxRestart": {
+                        "q": "重新啟動 Firefox 後，Bookmark Scout 就消失了",
+                        "a": [
+                            "在 Firefox 附加元件商店的頁面上架之前，Bookmark Scout 會以暫用附加元件的形式在 Firefox 中執行，而 Firefox 重新啟動時會移除暫用附加元件。",
+                            "重新啟動後請再次載入：開啟 <code>about:debugging#/runtime/this-firefox</code>，按一下「載入暫用附加元件」，然後選取解壓縮後資料夾中的 <code>manifest.json</code> 檔案。"
+                        ]
+                    },
+                    "firefoxManager": {
+                        "q": "在 Firefox 中找不到書籤管理員",
+                        "a": [
+                            "Firefox 不允許擴充功能取代其書籤頁面，因此無法從 Firefox 本身的書籤選單開啟 Bookmark Scout 書籤管理員。",
+                            "請按一下工具列彈出式視窗頂端的「開啟書籤管理員」(書本圖示)。書籤管理員會在新分頁中開啟，並提供工具側欄、已儲存的搜尋以及匯入和匯出功能。"
+                        ]
+                    },
+                    "firefoxIcons": {
+                        "q": "在 Firefox 中看不到網站圖示",
+                        "a": [
+                            "Bookmark Scout 會顯示瀏覽器本身快取的圖示，Chrome 和 Edge 會將這些圖示提供給擴充功能使用，但 Firefox 不會。基於同樣的原因，在 Chrome 和 Edge 中，最近未造訪的網站可能會顯示通用的地球圖示。",
+                            "請在書籤管理員的工具側欄中執行「重新整理網站圖示」，以下載每個網站本身的圖示。儲存的圖示會保留在這部裝置上。在 Firefox 中，請使用工具列彈出式視窗中的「開啟書籤管理員」開啟書籤管理員。"
+                        ]
+                    },
+                    "websiteAccess": {
+                        "q": "「檢查失效連結」、「中繼資料擷取工具」或「重新整理網站圖示」沒有掃描任何內容",
+                        "a": [
+                            "這些工具需要網站存取權，而 Bookmark Scout 在安裝時不會取得這項權限。第一次執行這些工具時，瀏覽器會詢問是否允許；如果拒絕，就不會掃描任何內容。",
+                            "請再次執行工具，並在瀏覽器詢問時允許存取。"
+                        ]
+                    },
+                    "aiSetup": {
+                        "q": "找不到 AI 功能，或 AI 功能沒有回應",
+                        "a": [
+                            "AI 功能預設為關閉。請在「設定」的「AI」中開啟 AI 功能、選擇供應商並輸入 API 金鑰。本機的 Ollama 伺服器不需要金鑰。",
+                            "按一下「驗證服務」即可測試連線。第一次使用時，瀏覽器會要求存取該供應商網站的權限；請予以允許，擴充功能才能連線至供應商。"
+                        ]
+                    }
+                }
+            },
+            "report-a-bug": {
+                "title": "回報錯誤",
+                "body": "錯誤報告請提交至 GitHub Issues，所有人都能在那裡追蹤修正進度。請先搜尋現有的 Issue，以免已經有人回報過。",
+                "button": "在 GitHub 上建立 Issue",
+                "includeTitle": "實用的錯誤報告應包含",
+                "include": {
+                    "browser": "使用的瀏覽器及其版本 (Chrome、Edge 或 Firefox)。",
+                    "version": "Bookmark Scout 的版本 (顯示在瀏覽器的擴充功能頁面上)。",
+                    "steps": "導致問題的步驟，從開啟 Bookmark Scout 的位置開始：彈出式視窗、側邊面板或書籤管理員。",
+                    "result": "預期的結果和實際發生的情況，包括任何錯誤訊息。",
+                    "screenshot": "如有幫助，請附上螢幕截圖，並隱藏私人書籤。"
+                },
+                "privacyNote": "Issue 是公開的。請絕對不要貼上 API 金鑰，也請省略不想讓他人看到的書籤標題或網址。"
+            },
+            "email": {
+                "title": "電子郵件",
+                "channels": {
+                    "support": {
+                        "title": "擴充功能使用協助",
+                        "body": "不想公開發布的 Bookmark Scout 安裝或使用問題。"
+                    },
+                    "privacy": {
+                        "title": "隱私權問題和要求",
+                        "body": "有關資料處理方式的問題。<privacyPolicy>隱私權政策</privacyPolicy>說明了擴充功能和網站如何處理資料。"
+                    },
+                    "security": {
+                        "title": "安全性漏洞",
+                        "body": "請透過這裡私下回報漏洞，不要在公開的 Issue 中回報。請參閱 <securityPolicy>SECURITY.md</securityPolicy> 和 <securityTxt>security.txt</securityTxt>。"
+                    }
+                }
+            }
+        }
+    }
+}

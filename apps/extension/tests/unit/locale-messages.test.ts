@@ -37,16 +37,13 @@ function sourceFiles(dir: string): string[] {
 const byLocale = Object.fromEntries(locales.map((locale) => [locale, readLocale(locale)]));
 const translated = locales.filter((locale) => locale !== FALLBACK_LOCALE);
 
-/** Every tPlural() key used in src. */
-const pluralKeys = [
-  ...new Set(
-    sourceFiles(path.join(appRoot, 'src')).flatMap((file) =>
-      [...readFileSync(file, 'utf8').matchAll(/\btPlural\(\s*['"]([A-Za-z0-9_]+)['"]/g)].map(
-        (match) => match[1],
-      ),
-    ),
-  ),
-];
+/**
+ * Every plural message: an English key with a singular `_one` form. Some reach tPlural()
+ * through a variable (tool definitions), so the source is not searched for them.
+ */
+const pluralKeys = Object.keys(byLocale.en.messages).filter(
+  (key) => `${key}_one` in byLocale.en.messages,
+);
 const PLURAL_CATEGORIES = ['zero', 'one', 'two', 'few', 'many'] as const;
 
 /** The plural forms a locale needs besides 'other': those whole counts up to 1,000 select. */
@@ -195,7 +192,17 @@ describe('bundled locales', () => {
     const folders = readdirSync(path.join(appRoot, 'public/_locales')).sort();
     expect([...SUPPORTED_LOCALES]).toEqual(folders);
     // A new folder needs its code in the type too (excess keys fail type checking).
-    const typed = { en: true, ja: true, ko: true } satisfies Record<SupportedLocale, true>;
+    const typed = {
+      de: true,
+      en: true,
+      es: true,
+      fr: true,
+      ja: true,
+      ko: true,
+      pt_BR: true,
+      zh_CN: true,
+      zh_TW: true,
+    } satisfies Record<SupportedLocale, true>;
     expect([...SUPPORTED_LOCALES]).toEqual(Object.keys(typed));
   });
 

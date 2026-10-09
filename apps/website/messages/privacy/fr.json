@@ -1,0 +1,226 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "Politique de confidentialité",
+            "description": "Comment Bookmark Scout et ses sites Web traitent vos données : ni compte, ni serveur, ni télémétrie, et une IA facultative qui n'envoie de requêtes qu'au fournisseur que vous choisissez."
+        },
+        "title": "Politique de confidentialité",
+        "effective": "En vigueur à compter du {date}",
+        "intro": "Cette politique couvre l'extension de navigateur Bookmark Scout pour Chrome, Microsoft Edge et Firefox (version 0.3.0 et ultérieures), ce site Web et le site de documentation.",
+        "translationNote": "Cette version française est une traduction de la version anglaise. En cas de divergence, la version anglaise prévaut.",
+        "glanceTitle": "En bref",
+        "glance": {
+            "noServer": {
+                "title": "Ni compte, ni serveur",
+                "body": "L'extension fonctionne au sein de votre navigateur. Il n'y a aucun compte à créer et aucun serveur Bookmark Scout ne reçoit vos données."
+            },
+            "noTelemetry": {
+                "title": "Aucune télémétrie",
+                "body": "L'extension ne comporte ni mesure d'audience, ni rapports de plantage, ni publicité."
+            },
+            "aiOptIn": {
+                "title": "L'IA reste désactivée tant que vous ne l'activez pas",
+                "body": "Lorsque vous utilisez une fonctionnalité d'IA, la requête est envoyée directement de votre navigateur au fournisseur que vous avez choisi."
+            },
+            "developer": {
+                "title": "Le développeur ne reçoit rien",
+                "body": "Vos favoris, vos paramètres et vos clés API ne parviennent jamais au développeur."
+            }
+        },
+        "tocLabel": "Sur cette page",
+        "sections": {
+            "summary": {
+                "title": "Résumé",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout fonctionne au sein de votre navigateur. Il n'a ni compte, ni mesure d'audience, ni publicité, ni serveur propre. Le développeur ne reçoit ni vos favoris ni aucune autre donnée de l'extension. Les données ne quittent votre navigateur que lorsque vous utilisez une fonctionnalité facultative qui a besoin du réseau, et elles sont alors envoyées directement au service que vous avez choisi."
+                    },
+                    {
+                        "type": "p",
+                        "text": "L'utilisation par Bookmark Scout des informations reçues via les API des extensions de navigateur respecte le Règlement sur les données utilisateur du Chrome Web Store, y compris les exigences relatives à l'utilisation limitée."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "Ce que lit l'extension",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Vos favoris</strong>, pour les afficher, les rechercher, les modifier, les déplacer, les supprimer, les importer et les exporter.",
+                            "<strong>Le titre et l'URL de l'onglet actif</strong>, pour que vous puissiez enregistrer la page consultée dans un dossier.",
+                            "<strong>Les icônes de site du cache d'icônes de votre navigateur</strong> (Chrome et Edge), pour les afficher à côté des favoris. Aucune requête réseau n'est effectuée pour les obtenir.",
+                            "<strong>Les icônes de site des sites enregistrés en favoris</strong>, uniquement lorsque vous lancez Actualiser les icônes de site (voir ci-dessous)."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "L'extension n'a pas de scripts de contenu et ne lit pas les pages ouvertes dans vos onglets. Ce n'est que si vous activez Lire le contenu des pages qu'elle télécharge des pages séparément, comme décrit ci-dessous."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "Ce que stocke l'extension",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Tout est conservé dans le stockage des extensions de votre navigateur :"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Les paramètres</strong> sont conservés dans le stockage synchronisé du navigateur. Si la synchronisation du navigateur est activée, votre navigateur peut les copier sur vos autres appareils via votre compte de navigateur (par exemple Google, Mozilla ou Microsoft). Les paramètres indiquent notamment si l'IA est activée, ainsi que le fournisseur et le modèle choisis, mais pas votre clé API.",
+                            "<strong>Les paramètres du fournisseur d'IA</strong>, y compris votre clé API, l'URL de base et les éventuels en-têtes supplémentaires, sont conservés dans le stockage local de cet appareil uniquement. Ils ne sont pas synchronisés.",
+                            "<strong>Les étiquettes, les résumés, les recherches enregistrées, les dossiers récents et les recherches récentes</strong> sont conservés dans le stockage local de cet appareil uniquement. Vous pouvez désactiver les recherches récentes dans les paramètres.",
+                            "<strong>Les icônes de site</strong> que vous enregistrez avec Actualiser les icônes de site sont conservées dans le stockage local de cet appareil uniquement, dans une limite de taille modifiable dans les paramètres. Vous pouvez les supprimer à tout moment avec Effacer les icônes enregistrées."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "La désinstallation de l'extension supprime les données qu'elle a stockées dans ce navigateur. Vos favoris eux-mêmes restent dans le navigateur."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "Quand les données quittent votre navigateur",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "Fonctionnalités d'IA facultatives (désactivées par défaut)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Les fonctionnalités d'IA ne s'exécutent qu'après que vous les avez activées dans les paramètres et que vous avez choisi un fournisseur. Lorsque vous en utilisez une, l'extension envoie les données dont cette fonctionnalité a besoin directement de votre navigateur au point de terminaison du fournisseur que vous avez configuré :"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Suggestions de dossiers : le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris.",
+                            "Étiquetage automatique, Générateur de résumés et Réorganisation des dossiers par IA : les titres, les URL et les chemins de dossier des favoris de la portée que vous avez choisie.",
+                            "Uniquement si vous activez Lire le contenu des pages (désactivé par défaut) : les suggestions de dossiers, l'étiquetage automatique et le générateur de résumés téléchargent aussi chaque page à partir de son URL, sans vos cookies, et envoient son texte principal. Les pages de votre réseau local ne sont jamais téléchargées. La réorganisation des dossiers par IA n'envoie jamais le contenu des pages.",
+                            "Demander à l'IA : vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte pour répondre : les favoris correspondants (titres, URL, chemins de dossier, étiquettes et résumés enregistrés), les noms de vos dossiers, le titre et l'URL de la page actuelle et, uniquement si Lire le contenu des pages est activé, le texte des pages qu'elle lit. Si vous activez sa recherche sur le Web (désactivée par défaut), le fournisseur effectue aussi des recherches sur le Web. La conversation n'est pas enregistrée ; elle se termine lorsque vous la fermez."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Si vous activez aussi Recommander à l'ouverture (désactivé par défaut), les suggestions de dossiers sont lancées chaque fois que vous ouvrez la fenêtre pop-up ou le panneau latéral."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Votre clé API est envoyée à ce fournisseur pour authentifier la requête. Le fournisseur traite les données selon ses propres conditions et sa propre politique de confidentialité, que vous acceptez directement auprès de lui. Bookmark Scout n'envoie ces données nulle part ailleurs. Si vous configurez l'extension pour utiliser un modèle qui s'exécute sur votre propre ordinateur (par exemple Ollama), les données restent sur votre machine."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Vérification des liens morts, récupération des titres et icônes de site"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Vérifier les liens morts et Récupération des métadonnées interrogent les pages enregistrées en favoris elles-mêmes pour savoir si elles se chargent et quels sont leurs titres. Actualiser les icônes de site interroge une page enregistrée en favori pour chaque site Web, puis demande un fichier d'icône au domaine de ce site, afin que les favoris puissent afficher l'icône du site. Le navigateur vous demande votre autorisation la première fois que vous lancez l'un de ces outils. Les requêtes sont envoyées directement à chaque site Web, sans cookies, et les résultats restent dans l'extension. Aucun service d'icônes tiers n'est utilisé. Comme pour toute visite, le site Web peut voir votre adresse IP et le fait que la page ou l'icône a été demandée."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Exportations"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Les exportations de favoris et les exportations de contexte IA sont enregistrées sous forme de fichiers sur votre ordinateur. Avant l'enregistrement, l'extension peut afficher une vérification de confidentialité qui vous permet de masquer les valeurs sensibles. Rien n'est mis en ligne."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "Ce que reçoit le développeur",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Rien. L'extension n'envoie aucune donnée au développeur, et il n'y a aucune télémétrie."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "Autorisations",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "À l'installation, Bookmark Scout demande uniquement <code>bookmarks</code>, <code>storage</code> et <code>activeTab</code>, ainsi que <code>sidePanel</code> dans Chrome et Edge et <code>contextMenus</code> dans Firefox, qui ne permet pas aux extensions de la demander plus tard. Tout le reste est facultatif et n'est demandé que lorsque vous activez ou lancez la fonctionnalité qui en a besoin :"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "L'accès à vos onglets (<code>tabs</code>), lorsque vous enregistrez la page actuelle ou demandez des suggestions de dossiers depuis le panneau latéral. La fenêtre pop-up de la barre d'outils n'en a pas besoin.",
+                            "Le menu contextuel (<code>contextMenus</code>, Chrome et Edge), lorsque vous activez Menu contextuel dans les paramètres.",
+                            "Le cache d'icônes du navigateur (<code>favicon</code>, Chrome et Edge), lorsque vous activez Utiliser le cache d'icônes du navigateur dans les paramètres.",
+                            "L'accès à tous les sites Web, lorsque vous lancez pour la première fois Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site, ou que vous activez Lire le contenu des pages.",
+                            "L'accès au site d'un fournisseur, lorsque vous cliquez sur Vérifier le service ou Actualiser les modèles dans les paramètres d'IA.",
+                            "Dans Firefox, votre consentement au partage de données avec votre fournisseur d'IA, lorsque vous activez l'IA ou cliquez sur Vérifier le service."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Si vous refusez, la fonctionnalité reste désactivée. Vous pouvez retirer une autorisation à tout moment dans les paramètres des extensions du navigateur, et la fonctionnalité qui en a besoin est alors désactivée."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Chaque autorisation est expliquée dans la <permissions>liste des autorisations du README</permissions>."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "Ce site Web et le site de documentation",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Ce site Web, bookmark-scout.com, est un site statique hébergé sur Cloudflare Pages. Cloudflare traite les requêtes pour diffuser le site, y compris votre adresse IP, conformément à la <cloudflare>politique de confidentialité de Cloudflare</cloudflare>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Ce site Web compte les visites avec <umami>Umami Cloud</umami>, qui fonctionne sans cookies. Umami enregistre l'adresse et le titre de la page, le site référent, votre navigateur, votre système d'exploitation, votre type d'appareil, la taille de votre écran, votre langue et votre position approximative (pays, région et ville). Il utilise votre adresse IP pour déterminer ces valeurs, mais ne la stocke pas. Il regroupe les pages vues en sessions à l'aide d'un hachage dont le sel change au début de chaque mois, et il ne vous suit pas sur d'autres sites Web. Les détails figurent dans la <umamiDocs>documentation d'Umami</umamiDocs>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Le site de documentation, docs.bookmark-scout.com, est également hébergé sur Cloudflare Pages et ne charge aucun outil de mesure d'audience."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Aucun des deux sites n'a de comptes ni de publicités. Tous deux servent eux-mêmes leurs polices, de sorte que votre navigateur ne contacte pas Google Fonts."
+                    }
+                ]
+            },
+            "children": {
+                "title": "Enfants",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout ne s'adresse pas aux enfants. L'extension ne collecte d'informations sur personne, et les sites Web ne collectent que les statistiques de visite anonymes décrites ci-dessus."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "Modifications de cette politique",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Les modifications de cette politique seront publiées sur cette page avec une nouvelle date d'entrée en vigueur et mentionnées dans les notes de version."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "Contact",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Pour toute question ou demande relative à la confidentialité, écrivez à <privacyEmailLink>{privacyEmail}</privacyEmailLink>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Pour signaler une faille de sécurité, écrivez à <securityEmailLink>{securityEmail}</securityEmailLink> ou suivez les étapes décrites dans <securityPolicy>SECURITY.md</securityPolicy>. Veuillez ne pas signaler de failles dans un ticket public."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Le code source est public sur <source>GitHub</source>, sous la licence <license>{licenseName}</license>."
+                    }
+                ]
+            }
+        }
+    }
+}

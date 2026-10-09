@@ -1,0 +1,297 @@
+{
+  "metadata": {
+    "title": "Bookmark Scout - Administrador de marcadores moderno para el navegador",
+    "description": "Una extensión del navegador para buscar, organizar, limpiar, importar, exportar y guardar marcadores, con herramientas de IA opcionales.",
+    "keywords": [
+      "extensión del navegador",
+      "extensión de Chrome",
+      "complemento de Firefox",
+      "extensión de Edge",
+      "administrador de marcadores",
+      "buscar marcadores",
+      "organizar marcadores",
+      "limpiar marcadores",
+      "marcadores duplicados",
+      "enlaces rotos",
+      "herramientas de IA para marcadores"
+    ]
+  },
+  "structuredData": {
+    "features": [
+      "Búsqueda instantánea de marcadores",
+      "Organización con arrastrar y soltar",
+      "Guardado rápido de marcadores",
+      "Panel lateral (Chrome y Edge)",
+      "Búsquedas guardadas",
+      "Combinaciones de teclas",
+      "Eliminación con opción de deshacer",
+      "Modo oscuro",
+      "Administrador de marcadores propio",
+      "Limpieza de duplicados",
+      "Limpieza de parámetros de seguimiento",
+      "Detección de enlaces rotos con reparaciones revisadas",
+      "Importación y exportación de marcadores",
+      "Revisión de privacidad con censura opcional antes de exportar",
+      "Herramientas de IA opcionales para marcadores",
+      "Varios idiomas"
+    ]
+  },
+  "nav": {
+    "features": "Funciones",
+    "privacy": "Privacidad",
+    "install": "Instalar",
+    "docs": "Documentación",
+    "github": "GitHub",
+    "menu": "Menú",
+    "skip": "Saltar al contenido",
+    "languages": "Idioma",
+    "home": "Inicio de Bookmark Scout"
+  },
+  "footer": {
+    "tagline": "Busca, organiza y limpia tus marcadores directamente en tu navegador.",
+    "product": "Producto",
+    "project": "Proyecto",
+    "contact": "Contacto",
+    "legal": "Legal",
+    "features": "Funciones",
+    "install": "Instalar",
+    "docs": "Documentación",
+    "releases": "Versiones",
+    "github": "Código fuente",
+    "contributing": "Cómo contribuir",
+    "license": "Licencia ({license})",
+    "support": "Soporte",
+    "privacy": "Privacidad",
+    "security": "Seguridad",
+    "contactAddress": "{role}: {address}",
+    "privacyPolicy": "Política de privacidad",
+    "securityTxt": "security.txt",
+    "madeBy": "Creado por {author}. Gratuito y de código abierto.",
+    "helpCenter": "Centro de ayuda"
+  },
+  "home": {
+    "hero": {
+      "title": "Todos los marcadores que guardaste, a una búsqueda de distancia.",
+      "description": "Bookmark Scout es una extensión para Chrome, Edge y Firefox que busca, organiza y limpia los marcadores que ya tienes. Funciona en tu navegador, sin cuenta y sin servidor propio.",
+      "download": "Descargar desde GitHub",
+      "install": "Instalar Bookmark Scout",
+      "docs": "Leer la documentación",
+      "license": "Gratuito y de código abierto con licencia {license}.",
+      "demoNote": "Esta demostración busca en una biblioteca ficticia de 37 marcadores. La extensión busca en los tuyos, dentro de tu navegador."
+    },
+    "demo": {
+      "label": "Busca en la biblioteca de ejemplo",
+      "placeholder": "Buscar marcadores",
+      "count": "{count, number} de {total, number} marcadores",
+      "results": "Marcadores coincidentes",
+      "more": "{count, plural, one {# coincidencia más no se muestra} other {# coincidencias más no se muestran}}. Sigue escribiendo para acotar la lista.",
+      "emptyTitle": "Nada coincide con “{query}”.",
+      "emptyHint": "Prueba con parte de un título, un sitio como github o una carpeta como Recetas. Escribir menos letras también ayuda.",
+      "clear": "Borrar la búsqueda",
+      "try": "Prueba",
+      "chips": [
+        "recetas",
+        "mdn",
+        "viajes",
+        "pasta"
+      ],
+      "autoQuery": "docs",
+      "folders": {
+        "devDocs": "Documentación técnica",
+        "css": "CSS",
+        "research": "Investigación",
+        "recipes": "Recetas",
+        "travel": "Viajes",
+        "japan": "Japón",
+        "reading": "Lecturas",
+        "inbox": "Bandeja de entrada"
+      }
+    },
+    "tour": {
+      "title": "Lo que puedes hacer con ella",
+      "lede": "Capturas de pantalla reales de la versión para Chrome. Siguen el modo claro u oscuro de tu sistema.",
+      "tabsLabel": "Tareas que hace Bookmark Scout",
+      "firefoxNote": "Firefox no permite reemplazar su página de marcadores, así que en Firefox el administrador, con sus herramientas de limpieza, búsquedas guardadas, importación y exportación, se abre desde un botón de la ventana emergente de la barra de herramientas.",
+      "find": {
+        "tab": "Buscar",
+        "heading": "Busca desde la barra de herramientas",
+        "caption": "La ventana emergente de la barra de herramientas: un árbol de carpetas, búsqueda instantánea y guardado con un clic en cualquier carpeta.",
+        "alt": "Dos ventanas emergentes de Bookmark Scout una al lado de la otra: un árbol con las carpetas Recetas, Viajes, Investigación y Documentación técnica, y una búsqueda de docs con las coincidencias resaltadas",
+        "points": [
+          "Busca en todos los marcadores mientras escribes, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares",
+          "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral de Chrome y Edge",
+          "Guarda una búsqueda como vista inteligente que siempre muestra resultados actualizados",
+          "Muévete por carpetas y resultados con el teclado; los atajos Ctrl y Cmd del navegador siguen funcionando"
+        ]
+      },
+      "organize": {
+        "tab": "Organizar",
+        "heading": "Archiva cada página en su sitio",
+        "caption": "El administrador sustituye la página Marcadores de Chrome por un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
+        "alt": "El administrador de Bookmark Scout con la carpeta Documentación técnica en forma de tabla, con columnas de tipo, ruta de la carpeta, URL, título y fecha de creación, junto a un árbol de carpetas",
+        "points": [
+          "Guarda la página actual en cualquier carpeta con un clic, sin guardarla dos veces",
+          "Arrastra marcadores y carpetas por el árbol de carpetas",
+          "Guarda enlaces en carpetas recientes desde el menú contextual",
+          "Filtra, ordena y ajusta el ancho de las columnas en la tabla del administrador",
+          "Importa HTML o JSON tras una vista previa, y exporta a HTML, JSON, Markdown o CSV"
+        ]
+      },
+      "cleanUp": {
+        "tab": "Limpiar",
+        "heading": "Ordena años de enlaces guardados",
+        "caption": "El Limpiador de duplicados muestra cada grupo y la copia que conserva antes de quitar nada.",
+        "alt": "El cuadro de diálogo del Limpiador de duplicados con dos grupos de marcadores duplicados, cada uno con la copia que se conserva marcada, sobre un botón Quitar duplicados",
+        "points": [
+          "Revisa los grupos de duplicados y quita las copias sobrantes",
+          "Quita los parámetros de seguimiento de las URLs tras una vista previa",
+          "Encuentra enlaces rotos y repáralos: elimínalos, usa la redirección, apunta a una copia archivada o edita la URL",
+          "Obtén los títulos de las páginas y aplica solo los que elijas",
+          "Descarga el icono propio de cada sitio para que los marcadores lo muestren, incluso en Firefox",
+          "Elimina con confirmación y deshazlo durante 10 segundos"
+        ]
+      },
+      "ai": {
+        "tab": "IA (opcional)",
+        "heading": "Usa la IA con tu propio proveedor, o no la uses",
+        "caption": "La IA está desactivada hasta que la activas en Configuración, eliges un proveedor y añades tu propia clave de API si el proveedor la necesita.",
+        "alt": "La pestaña IA de la configuración de Bookmark Scout con las funciones de IA desactivadas y los selectores de proveedor y modelo",
+        "points": [
+          "Sugerencias de carpeta para la página en la que estás, incluida una nueva ruta de carpetas después de revisarla",
+          "Sugerencias de etiquetas y resúmenes breves que revisas antes de guardar",
+          "Planes de reorganización de carpetas, con vista previa antes de mover nada",
+          "Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA; funciona sin IA y no envía nada"
+        ],
+        "providersTitle": "Proveedores compatibles",
+        "customProvider": "Cualquier punto de conexión compatible con OpenAI"
+      }
+    },
+    "privacy": {
+      "title": "Tus marcadores se quedan en tu navegador.",
+      "policyLink": "Leer la política de privacidad",
+      "diagram": {
+        "browser": "Tu navegador",
+        "bookmarks": {
+          "name": "Marcadores",
+          "detail": "Se buscan, se mueven y se limpian aquí"
+        },
+        "settings": {
+          "name": "Configuración",
+          "detail": "Se sincroniza con la cuenta del navegador si la sincronización está activada"
+        },
+        "keys": {
+          "name": "Claves de API, etiquetas y búsquedas guardadas",
+          "detail": "Solo se guardan en este dispositivo"
+        },
+        "ai": {
+          "name": "El proveedor de IA que elijas",
+          "detail": "Solo si la IA está activada. Con Ollama, todo se queda en tu equipo."
+        },
+        "websites": {
+          "name": "Los sitios web que compruebas",
+          "detail": "Comprobación de enlaces rotos, obtención de títulos e iconos de sitios, después de que permitas el acceso"
+        },
+        "server": {
+          "name": "Servidor de Bookmark Scout",
+          "detail": "No existe. No se envía nada al desarrollador."
+        },
+        "legend": "Las rutas discontinuas son opcionales. Solo se abren cuando usas esa función."
+      },
+      "facts": {
+        "noServer": {
+          "title": "Sin cuenta y sin servidor",
+          "body": "No hay que registrarse en nada y Bookmark Scout no tiene servidor propio. Tus marcadores se leen y se modifican dentro de tu navegador."
+        },
+        "noTelemetry": {
+          "title": "Sin telemetría",
+          "body": "La extensión no envía nada al desarrollador: ni analíticas, ni anuncios, ni seguimiento."
+        },
+        "aiOptIn": {
+          "title": "La IA está desactivada hasta que la activas",
+          "body": "Entonces, las solicitudes van directamente de tu navegador al proveedor que elegiste. Con Ollama en tu propio equipo, se quedan ahí."
+        },
+        "exports": {
+          "title": "Las exportaciones pasan una revisión de privacidad",
+          "body": "Antes de descargar un archivo, una revisión señala tokens, direcciones de correo electrónico y otros valores sensibles, y puede censurarlos en la copia que guardas."
+        }
+      }
+    },
+    "install": {
+      "title": "Instálala en unos pocos pasos",
+      "lede": "Elige tu navegador. Cada versión publicada en GitHub incluye una compilación para Chrome, Edge y Firefox.",
+      "tabsLabel": "Navegador",
+      "download": "Descargar desde GitHub",
+      "storeComing": "Se está preparando la ficha en {store}. Hasta que esté publicada, instala la compilación desde GitHub Releases.",
+      "manual": "O instala tú mismo la compilación desde GitHub Releases:",
+      "chrome": {
+        "tab": "Chrome",
+        "storeName": "Chrome Web Store",
+        "storeButton": "Añadir a Chrome",
+        "steps": {
+          "download": "Descarga <code>bookmark-scout-*-chrome.zip</code> de la última versión y descomprímelo.",
+          "open": "Abre <code>chrome://extensions</code> y activa el <b>Modo de desarrollador</b> arriba a la derecha.",
+          "load": "Haz clic en <b>Cargar descomprimida</b> y selecciona la carpeta descomprimida."
+        },
+        "crx": "La versión también incluye un archivo <code>.crx</code> firmado que puedes arrastrar a la página de extensiones en su lugar."
+      },
+      "edge": {
+        "tab": "Edge",
+        "storeName": "Complementos de Edge",
+        "storeButton": "Obtener para Edge",
+        "steps": {
+          "download": "Descarga <code>bookmark-scout-*-edge.zip</code> de la última versión y descomprímelo.",
+          "open": "Abre <code>edge://extensions</code> y activa el <b>Modo de desarrollador</b>.",
+          "load": "Haz clic en <b>Cargar desempaquetada</b> y selecciona la carpeta descomprimida."
+        }
+      },
+      "firefox": {
+        "tab": "Firefox",
+        "storeName": "Complementos de Firefox",
+        "storeButton": "Añadir a Firefox",
+        "steps": {
+          "download": "Descarga <code>bookmark-scout-*-firefox.zip</code> de la última versión y descomprímelo.",
+          "open": "Abre <code>about:debugging#/runtime/this-firefox</code>.",
+          "load": "Haz clic en <b>Cargar complemento temporal</b> y selecciona <code>manifest.json</code> en la carpeta descomprimida."
+        },
+        "limits": "Firefox quita los complementos temporales al reiniciarse, así que tendrás que volver a cargarlo después de cada reinicio. En Firefox, el administrador y sus herramientas se abren desde el botón Abrir el administrador de marcadores de la ventana emergente de la barra de herramientas."
+      }
+    },
+    "faq": {
+      "title": "Preguntas",
+      "items": {
+        "data": {
+          "q": "¿Bookmark Scout envía mis marcadores a algún sitio?",
+          "a": "No. Tus marcadores se leen y se modifican dentro de tu navegador, y la extensión no envía nada al desarrollador. Los datos solo salen de tu navegador cuando usas una función opcional: las solicitudes de IA van al proveedor que elegiste, y el comprobador de enlaces rotos, el extractor de títulos y la actualización de iconos de sitios solicitan los sitios guardados en marcadores después de que permitas el acceso a los sitios web. La configuración se sincroniza con la cuenta del navegador si la sincronización del navegador está activada. Encontrarás los detalles en la <privacy>política de privacidad</privacy>."
+        },
+        "needAi": {
+          "q": "¿Tengo que usar la IA?",
+          "a": "No. La búsqueda, la organización, la limpieza, la importación y la exportación funcionan sin ella. La IA está desactivada hasta que la activas en Configuración."
+        },
+        "providers": {
+          "q": "¿Qué proveedores de IA puedo usar?",
+          "a": "Puedes usar {providers}. Añades tu propia clave de API si el proveedor la necesita, y el proveedor puede cobrar por el uso."
+        },
+        "changes": {
+          "q": "¿Cambiará mis marcadores sin preguntar?",
+          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Al eliminar se pide confirmación de forma predeterminada, y las eliminaciones y las importaciones se pueden deshacer durante 10 segundos."
+        },
+        "firefox": {
+          "q": "¿Funciona en Firefox?",
+          "a": "Sí. Firefox no permite reemplazar su página de marcadores, así que el administrador, con sus herramientas de limpieza, la importación y exportación y las búsquedas guardadas, se abre desde un botón de la ventana emergente de la barra de herramientas. Hasta que la ficha en Complementos de Firefox esté lista, Firefox la carga como complemento temporal, que se quita al reiniciar Firefox."
+        },
+        "stores": {
+          "q": "¿Por qué todavía no está en las tiendas de los navegadores?",
+          "a": "Se están preparando las fichas para Chrome Web Store, Complementos de Edge y Complementos de Firefox, y cada tienda revisa las extensiones antes de publicarlas. Mientras tanto, instálala desde GitHub Releases."
+        },
+        "free": {
+          "q": "¿Es gratuita?",
+          "a": "Sí. Bookmark Scout es gratuita y de código abierto con licencia {license}, sin anuncios ni planes de pago. Si activas la IA, tu proveedor puede cobrar por el uso de la API."
+        },
+        "help": {
+          "q": "¿Cómo consigo ayuda?",
+          "a": "Empieza por la <support>página de soporte</support> o la <docs>documentación</docs>. También puedes informar de un problema en <github>GitHub</github> o escribir a <email>{supportEmail}</email>."
+        }
+      }
+    }
+  }
+}

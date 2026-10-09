@@ -1,12 +1,33 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type * as React from 'react';
 import { DayPicker, getDefaultClassNames } from 'react-day-picker';
-import { type DayPickerLocale, enUS, ja, ko } from 'react-day-picker/locale';
+import {
+  type DayPickerLocale,
+  de,
+  enUS,
+  es,
+  fr,
+  ja,
+  ko,
+  ptBR,
+  zhCN,
+  zhTW,
+} from 'react-day-picker/locale';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
 // Keyed by every bundled locale, so a new `_locales/` folder is a type error until it has one.
-const calendarLocales: Record<SupportedLocale, DayPickerLocale> = { en: enUS, ja, ko };
+const calendarLocales: Record<SupportedLocale, DayPickerLocale> = {
+  de,
+  en: enUS,
+  es,
+  fr,
+  ja,
+  ko,
+  pt_BR: ptBR,
+  zh_CN: zhCN,
+  zh_TW: zhTW,
+};
 
 /** date-fns locale matching the extension language, for calendars and date labels. */
 export function getCalendarLocale(): DayPickerLocale {

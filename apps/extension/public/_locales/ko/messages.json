@@ -400,7 +400,7 @@
         "description": "Language setting description"
     },
     "settings_languageAuto": {
-        "message": "자동 (브라우저)",
+        "message": "브라우저 설정",
         "description": "Auto language option"
     },
     "settings_theme": {

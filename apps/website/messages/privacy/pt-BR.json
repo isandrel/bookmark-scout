@@ -1,0 +1,226 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "Política de privacidade",
+            "description": "Como o Bookmark Scout e seus sites tratam seus dados: sem conta, sem servidor, sem telemetria e com IA opcional que envia solicitações somente ao provedor que você escolher."
+        },
+        "title": "Política de privacidade",
+        "effective": "Em vigor a partir de {date}",
+        "intro": "Esta política abrange a extensão de navegador Bookmark Scout para Chrome, Microsoft Edge e Firefox (versão 0.3.0 e posteriores), este site e o site de documentação.",
+        "translationNote": "Esta versão em português do Brasil é uma tradução da versão em inglês. Se houver diferença entre elas, prevalece a versão em inglês.",
+        "glanceTitle": "Resumo rápido",
+        "glance": {
+            "noServer": {
+                "title": "Sem conta, sem servidor",
+                "body": "A extensão funciona dentro do seu navegador. Não há cadastro nem servidor do Bookmark Scout que receba seus dados."
+            },
+            "noTelemetry": {
+                "title": "Sem telemetria",
+                "body": "A extensão não tem análises de uso, relatórios de falhas nem anúncios."
+            },
+            "aiOptIn": {
+                "title": "A IA fica desativada até você ativá-la",
+                "body": "Quando você usa um recurso de IA, a solicitação vai do seu navegador diretamente para o provedor que você escolheu."
+            },
+            "developer": {
+                "title": "O desenvolvedor não recebe nada",
+                "body": "Seus favoritos, configurações e chaves de API nunca chegam ao desenvolvedor."
+            }
+        },
+        "tocLabel": "Nesta página",
+        "sections": {
+            "summary": {
+                "title": "Resumo",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "O Bookmark Scout funciona dentro do seu navegador. Ele não tem conta, análises de uso, anúncios nem servidor próprio. O desenvolvedor não recebe seus favoritos nem quaisquer outros dados da extensão. Os dados só saem do seu navegador quando você usa um recurso opcional que precisa da rede e, nesse caso, vão diretamente para o serviço que você escolheu."
+                    },
+                    {
+                        "type": "p",
+                        "text": "O uso, pelo Bookmark Scout, das informações recebidas por meio das APIs de extensões do navegador segue a Política de Dados do Usuário da Chrome Web Store, incluindo os requisitos de Uso Limitado."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "O que a extensão lê",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Seus favoritos</strong>, para mostrá-los, pesquisá-los, editá-los, movê-los, excluí-los, importá-los e exportá-los.",
+                            "<strong>O título e o URL da guia ativa</strong>, para que você possa salvar a página que está vendo em uma pasta.",
+                            "<strong>Ícones dos sites no cache de ícones do próprio navegador</strong> (Chrome e Edge), para mostrá-los ao lado dos favoritos. Nenhuma solicitação de rede é feita para obtê-los.",
+                            "<strong>Ícones dos sites salvos nos favoritos</strong>, somente quando você executa Atualizar ícones dos sites (veja abaixo)."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "A extensão não tem scripts de conteúdo e não lê as páginas abertas nas suas guias. Somente quando você ativa Ler conteúdo da página ela baixa páginas separadamente, como descrito abaixo."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "O que a extensão armazena",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Tudo fica no armazenamento de extensões do seu navegador:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>As configurações</strong> ficam no armazenamento sincronizado do navegador. Se a sincronização do navegador estiver ativada, o navegador pode copiá-las para seus outros dispositivos pela sua conta do navegador (por exemplo, Google, Mozilla ou Microsoft). As configurações incluem se a IA está ativada e qual provedor e modelo você escolheu, mas não sua chave de API.",
+                            "<strong>As configurações do provedor de IA</strong>, incluindo sua chave de API, o URL base e eventuais cabeçalhos extras, ficam no armazenamento local somente deste dispositivo. Elas não são sincronizadas.",
+                            "<strong>Tags, resumos, pesquisas salvas, pastas recentes e pesquisas recentes</strong> ficam no armazenamento local somente deste dispositivo. Você pode desativar as pesquisas recentes nas Configurações.",
+                            "<strong>Os ícones dos sites</strong> que você salva com Atualizar ícones dos sites ficam no armazenamento local somente deste dispositivo, até um limite de tamanho que você pode alterar nas Configurações. Você pode excluí-los a qualquer momento com Limpar ícones salvos."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Desinstalar a extensão remove os dados que ela armazenou neste navegador. Os favoritos em si continuam no navegador."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "Quando os dados saem do seu navegador",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "Recursos de IA opcionais (desativados por padrão)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Os recursos de IA só funcionam depois que você os ativa nas Configurações e escolhe um provedor. Quando você usa um deles, a extensão envia os dados de que esse recurso precisa diretamente do seu navegador para o endpoint do provedor que você configurou:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Sugestões de pasta: o título e o URL da página atual e os nomes das suas pastas de favoritos.",
+                            "Tags automáticas, Gerador de resumos e Reorganização de pastas com IA: os títulos, URLs e caminhos de pasta dos favoritos no escopo que você escolheu.",
+                            "Somente se você ativar Ler conteúdo da página (desativado por padrão): as sugestões de pasta, Tags automáticas e Gerador de resumos também baixam cada página pelo URL, sem seus cookies, e enviam o texto principal dela. Páginas da sua rede local nunca são baixadas. A Reorganização de pastas com IA nunca envia o conteúdo das páginas.",
+                            "Perguntar à IA: suas mensagens e a conversa até o momento, além do que a IA consulta para responder: favoritos correspondentes (títulos, URLs, caminhos de pasta, tags e resumos salvos), os nomes das suas pastas, o título e o URL da página atual e, somente com Ler conteúdo da página ativado, o texto das páginas que ela lê. Se você ativar a pesquisa na web (desativada por padrão), o provedor também pesquisa na web. A conversa não é salva; ela termina quando você a fecha."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Se você também ativar Recomendar ao abrir (desativado por padrão), as sugestões de pasta são geradas sempre que você abre o pop-up ou o painel lateral."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Sua chave de API é enviada a esse provedor para autenticar a solicitação. O provedor trata os dados de acordo com os próprios termos e política de privacidade, que você aceita diretamente com ele. O Bookmark Scout não envia esses dados para nenhum outro lugar. Se você configurar a extensão para usar um modelo executado no seu próprio computador (por exemplo, o Ollama), os dados ficam na sua máquina."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Verificação de links quebrados, busca de títulos e ícones dos sites"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Verificar links quebrados e o Buscador de metadados solicitam as próprias páginas salvas nos favoritos para ver se elas carregam e quais são seus títulos. Atualizar ícones dos sites solicita uma página salva nos favoritos de cada site e, depois, um arquivo de ícone do próprio domínio desse site, para que os favoritos possam mostrar o ícone do site. O navegador pede sua permissão na primeira vez que você executa uma dessas ferramentas. As solicitações vão diretamente para cada site, sem cookies, e os resultados ficam na extensão. Nenhum serviço de ícones de terceiros é usado. Como em qualquer visita, o site pode ver seu endereço IP e que a página ou o ícone foi solicitado."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Exportações"
+                    },
+                    {
+                        "type": "p",
+                        "text": "As exportações de favoritos e de contexto para IA são salvas como arquivos no seu computador. Antes de salvar, a extensão pode mostrar uma revisão de privacidade que permite ocultar valores confidenciais. Nada é enviado."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "O que o desenvolvedor recebe",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Nada. A extensão não envia dados ao desenvolvedor, e não há telemetria."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "Permissões",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Na instalação, o Bookmark Scout pede somente <code>bookmarks</code>, <code>storage</code> e <code>activeTab</code>, além de <code>sidePanel</code> no Chrome e no Edge e <code>contextMenus</code> no Firefox, que não permite que extensões solicitem essa permissão depois. Todo o resto é opcional e só é solicitado quando você ativa ou executa o recurso que depende disso:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Acesso às suas guias (<code>tabs</code>), quando você salva a página atual ou pede sugestões de pasta pelo painel lateral. O pop-up da barra de ferramentas não precisa desse acesso.",
+                            "O menu de clique com o botão direito (<code>contextMenus</code>, Chrome e Edge), quando você ativa Menu de contexto nas Configurações.",
+                            "O cache de ícones do navegador (<code>favicon</code>, Chrome e Edge), quando você ativa Usar o cache de ícones do navegador nas Configurações.",
+                            "Acesso a todos os sites, quando você executa pela primeira vez Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites, ou ativa Ler conteúdo da página.",
+                            "Acesso ao site de um provedor, quando você clica em Verificar serviço ou Atualizar modelos nas configurações de IA.",
+                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, quando você ativa a IA ou clica em Verificar serviço."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Se você recusar, o recurso continua desativado. Você pode retirar uma permissão nas configurações de extensões do navegador a qualquer momento, e o recurso que precisa dela é desativado."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Cada permissão é explicada na <permissions>lista de permissões no README</permissions>."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "Este site e o site de documentação",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Este site, bookmark-scout.com, é um site estático hospedado no Cloudflare Pages. A Cloudflare processa as solicitações para entregar o site, incluindo seu endereço IP, de acordo com a <cloudflare>política de privacidade da Cloudflare</cloudflare>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Este site conta as visitas com o <umami>Umami Cloud</umami>, que funciona sem cookies. O Umami registra o endereço e o título da página, o site de origem, seu navegador, sistema operacional, tipo de dispositivo, tamanho da tela, idioma e localização aproximada (país, região e cidade). Ele usa seu endereço IP para calcular esses valores, mas não o armazena. Ele agrupa as visualizações de página em sessões com um hash cujo salt muda no início de cada mês e não rastreia você em outros sites. Os detalhes estão na <umamiDocs>documentação do Umami</umamiDocs>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "O site de documentação, docs.bookmark-scout.com, também é hospedado no Cloudflare Pages e não carrega nenhuma ferramenta de análise."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Nenhum dos dois sites tem contas ou anúncios. Ambos servem as próprias fontes, então seu navegador não se conecta ao Google Fonts."
+                    }
+                ]
+            },
+            "children": {
+                "title": "Crianças",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "O Bookmark Scout não é direcionado a crianças. A extensão não coleta informações de ninguém, e os sites coletam somente as estatísticas anônimas de visitas descritas acima."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "Alterações nesta política",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "As alterações nesta política serão publicadas nesta página com uma nova data de vigência e mencionadas nas notas de versão."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "Contato",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Para dúvidas e solicitações sobre privacidade, envie um e-mail para <privacyEmailLink>{privacyEmail}</privacyEmailLink>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Para relatar uma vulnerabilidade de segurança, envie um e-mail para <securityEmailLink>{securityEmail}</securityEmailLink> ou siga as instruções em <securityPolicy>SECURITY.md</securityPolicy>. Não relate vulnerabilidades em uma issue pública."
+                    },
+                    {
+                        "type": "p",
+                        "text": "O código-fonte é público no <source>GitHub</source> sob a licença <license>{licenseName}</license>."
+                    }
+                ]
+            }
+        }
+    }
+}

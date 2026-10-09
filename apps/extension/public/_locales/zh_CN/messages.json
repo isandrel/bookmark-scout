@@ -1,0 +1,4774 @@
+{
+    "extName": {
+        "message": "Bookmark Scout",
+        "description": "Extension name (used in manifest.json)"
+    },
+    "extDescription": {
+        "message": "搜索、整理和清理书签：快速搜索、保存到文件夹、重复书签与失效链接工具，以及使用你自己密钥的可选 AI 功能。",
+        "description": "Extension description (used in manifest.json)"
+    },
+    "popup_searchPlaceholder": {
+        "message": "搜索书签…",
+        "description": "Search input placeholder"
+    },
+    "search_placeholderShort": {
+        "message": "搜索",
+        "description": "Shorter search box placeholder, used when the popup is too narrow for the full one"
+    },
+    "shortcuts_popupHint": {
+        "message": "快捷键：$1",
+        "description": "Tooltip on the popup search box; $1 is the list of shortcut hints, each built from shortcuts_hintItem"
+    },
+    "shortcuts_hintItem": {
+        "message": "$1 $2",
+        "description": "One popup shortcut hint: $1 is the key or keys (such as / or ↓ ↑), $2 is what they do (a shortcuts_popupHint* action)"
+    },
+    "shortcuts_popupHintSearch": {
+        "message": "搜索",
+        "description": "Popup shortcut action: focus the search box"
+    },
+    "shortcuts_popupHintMove": {
+        "message": "在文件夹和书签之间移动",
+        "description": "Popup shortcut action: move between the visible folders and bookmarks"
+    },
+    "shortcuts_popupHintOpenClose": {
+        "message": "展开或收起文件夹",
+        "description": "Popup shortcut action: open or close the focused folder"
+    },
+    "shortcuts_popupHintSave": {
+        "message": "将当前网页保存到选中的文件夹",
+        "description": "Popup shortcut action: save the current page into the focused folder"
+    },
+    "shortcuts_popupHintClear": {
+        "message": "清除搜索",
+        "description": "Popup shortcut action: clear the search"
+    },
+    "shortcuts_popupHintRecent": {
+        "message": "显示最近的搜索",
+        "description": "Popup shortcut action: show recent searches"
+    },
+    "shortcuts_title": {
+        "message": "键盘快捷键",
+        "description": "Title of the manager keyboard shortcuts dialog and accessible name of its button"
+    },
+    "shortcuts_buttonTitle": {
+        "message": "键盘快捷键（?）",
+        "description": "Tooltip of the manager button that opens the keyboard shortcuts dialog"
+    },
+    "shortcuts_pausedWhileTyping": {
+        "message": "在输入框中输入内容，或有对话框、菜单打开时，快捷键会暂停。",
+        "description": "Keyboard shortcuts dialog description"
+    },
+    "shortcuts_focusFilter": {
+        "message": "聚焦到标题筛选框",
+        "description": "Keyboard shortcut description: / focuses the title filter"
+    },
+    "shortcuts_parentFolder": {
+        "message": "转到上级文件夹",
+        "description": "Keyboard shortcut description: Alt+Up or Backspace goes to the parent folder"
+    },
+    "shortcuts_nextPreviousRow": {
+        "message": "移到下一行或上一行",
+        "description": "Keyboard shortcut description: j and k move between table rows"
+    },
+    "shortcuts_openFolder": {
+        "message": "打开选中的文件夹",
+        "description": "Keyboard shortcut description: Enter opens the focused folder row"
+    },
+    "shortcuts_showHelp": {
+        "message": "显示键盘快捷键",
+        "description": "Keyboard shortcut description: ? opens this dialog"
+    },
+    "shortcuts_closeDialog": {
+        "message": "关闭对话框或菜单",
+        "description": "Keyboard shortcut description: Escape closes dialogs and menus"
+    },
+    "shortcuts_or": {
+        "message": "或",
+        "description": "Separator between alternative keys in the shortcuts dialog"
+    },
+    "popup_newFolder": {
+        "message": "新建文件夹",
+        "description": "Default name for new folder"
+    },
+    "action_retry": {
+        "message": "重试",
+        "description": "Retry button text"
+    },
+    "error_generic": {
+        "message": "错误",
+        "description": "Error label"
+    },
+    "error_boundaryTitle": {
+        "message": "出了点问题",
+        "description": "Heading shown when a page crashes"
+    },
+    "error_boundaryFallback": {
+        "message": "发生了意外错误。",
+        "description": "Shown under the crash heading when the error has no message"
+    },
+    "toast_folderCreated": {
+        "message": "已创建文件夹",
+        "description": "Toast title for folder creation success"
+    },
+    "toast_errorCreatingFolder": {
+        "message": "创建文件夹时出错",
+        "description": "Toast title for folder creation error"
+    },
+    "toast_bookmarkAdded": {
+        "message": "已添加书签",
+        "description": "Toast title for bookmark addition success"
+    },
+    "toast_errorAddingBookmark": {
+        "message": "添加书签时出错",
+        "description": "Toast title for bookmark addition error"
+    },
+    "toast_bookmarkDeleted": {
+        "message": "已删除书签",
+        "description": "Toast title for bookmark deletion success"
+    },
+    "toast_errorDeletingBookmark": {
+        "message": "删除书签时出错",
+        "description": "Toast title for bookmark deletion error"
+    },
+    "toast_folderDeleted": {
+        "message": "已删除文件夹",
+        "description": "Toast title for folder deletion success"
+    },
+    "toast_errorDeletingFolder": {
+        "message": "删除文件夹时出错",
+        "description": "Toast title for folder deletion error"
+    },
+    "toast_deleteUndoWindow": {
+        "message": "已删除“$title$”。可在 $seconds$ 秒内撤消。",
+        "description": "Deletion toast description with the undo time limit",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "seconds": {
+                "content": "$2",
+                "example": "10"
+            }
+        }
+    },
+    "toast_deleteRestored": {
+        "message": "已撤消删除",
+        "description": "Toast title after restoring a deletion"
+    },
+    "toast_deleteRestoredDesc": {
+        "message": "已恢复“$title$”。",
+        "description": "Toast description after restoring a deletion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "toast_errorRestoringDeletion": {
+        "message": "无法撤消删除",
+        "description": "Toast title when deletion recovery fails"
+    },
+    "toast_restoreExpired": {
+        "message": "此次删除的撤消时限已过。",
+        "description": "Deletion recovery failure after the undo window ends"
+    },
+    "toast_restoreParentMissing": {
+        "message": "原文件夹已不存在，因此无法恢复此项。",
+        "description": "Deletion recovery failure when the original parent is gone"
+    },
+    "toast_itemMoved": {
+        "message": "已移动项目",
+        "description": "Toast title for item move success"
+    },
+    "toast_errorMovingItem": {
+        "message": "移动项目时出错",
+        "description": "Toast title for item move error"
+    },
+    "popup_addBookmark": {
+        "message": "添加当前网页",
+        "description": "Add bookmark tooltip"
+    },
+    "popup_addFolder": {
+        "message": "添加文件夹",
+        "description": "Add folder tooltip"
+    },
+    "popup_deleteFolder": {
+        "message": "删除文件夹",
+        "description": "Delete folder tooltip"
+    },
+    "popup_folderItemCount": {
+        "message": "($1)",
+        "description": "Number of items in a folder, shown after its name in the popup tree"
+    },
+    "popup_deleteBookmark": {
+        "message": "删除书签",
+        "description": "Delete bookmark tooltip"
+    },
+    "popup_confirmDeleteBookmark": {
+        "message": "要删除“$1”吗？此书签将被移除。",
+        "description": "Confirmation before deleting a bookmark; $1 is its title"
+    },
+    "popup_confirmDeleteFolder": {
+        "message": "要删除“$1”及其全部内容吗？删除后短时间内可以撤消。",
+        "description": "Confirmation before deleting a folder; $1 is its title"
+    },
+    "popup_expandAll": {
+        "message": "全部展开",
+        "description": "Expand all button tooltip"
+    },
+    "popup_collapseAll": {
+        "message": "全部收起",
+        "description": "Collapse all button tooltip"
+    },
+    "popup_openManager": {
+        "message": "打开书签管理器",
+        "description": "Popup and side panel button that opens the bookmark manager in a new tab"
+    },
+    "popup_openManagerFailed": {
+        "message": "无法打开书签管理器",
+        "description": "Error toast title when the bookmark manager tab could not be opened"
+    },
+    "popup_enterFolderName": {
+        "message": "输入文件夹名称…",
+        "description": "New folder input placeholder"
+    },
+    "popup_newFolderNameLabel": {
+        "message": "新文件夹名称",
+        "description": "Accessible name of the new folder name input"
+    },
+    "state_noBookmarksFound": {
+        "message": "未找到书签",
+        "description": "Empty state when search has no results"
+    },
+    "state_noBookmarksYet": {
+        "message": "还没有书签",
+        "description": "Empty state when there are no bookmarks"
+    },
+    "state_tryDifferentSearch": {
+        "message": "请尝试其他搜索词",
+        "description": "Hint for empty search results"
+    },
+    "action_lightMode": {
+        "message": "浅色模式",
+        "description": "Light mode toggle tooltip"
+    },
+    "action_darkMode": {
+        "message": "深色模式",
+        "description": "Dark mode toggle tooltip"
+    },
+    "settings_title": {
+        "message": "设置",
+        "description": "Settings page title"
+    },
+    "settings_description": {
+        "message": "自定义 Bookmark Scout",
+        "description": "Settings page description"
+    },
+    "settings_searchPlaceholder": {
+        "message": "搜索设置…",
+        "description": "Settings search placeholder"
+    },
+    "state_loadingSettings": {
+        "message": "正在加载设置…",
+        "description": "Settings loading state"
+    },
+    "state_noSettingsMatch": {
+        "message": "没有与搜索内容匹配的设置。",
+        "description": "Empty settings search result"
+    },
+    "toast_preferencesUpdated": {
+        "message": "偏好设置已更新。",
+        "description": "Toast description for settings save success"
+    },
+    "toast_errorSavingSettings": {
+        "message": "保存设置时出错",
+        "description": "Toast title for settings save error"
+    },
+    "toast_settingsReset": {
+        "message": "已重置设置",
+        "description": "Toast title for settings reset success"
+    },
+    "toast_settingsResetDescription": {
+        "message": "所有设置均已恢复为默认值。",
+        "description": "Toast description for settings reset success"
+    },
+    "toast_errorResettingSettings": {
+        "message": "重置设置时出错",
+        "description": "Toast title for settings reset error"
+    },
+    "toast_settingsExported": {
+        "message": "已导出设置",
+        "description": "Toast title for settings export success"
+    },
+    "toast_settingsExportedDescription": {
+        "message": "设置文件已下载。",
+        "description": "Toast description for settings export success"
+    },
+    "toast_exportFailed": {
+        "message": "导出失败",
+        "description": "Toast title for settings export error"
+    },
+    "toast_settingsImported": {
+        "message": "已导入设置",
+        "description": "Toast title for settings import success"
+    },
+    "toast_settingsImportedDescription": {
+        "message": "已从文件恢复设置。",
+        "description": "Toast description for settings import success"
+    },
+    "toast_importFailed": {
+        "message": "导入失败",
+        "description": "Toast title for settings import error"
+    },
+    "error_invalidSettingsFile": {
+        "message": "设置文件无效",
+        "description": "Error message for invalid settings import"
+    },
+    "action_export": {
+        "message": "导出",
+        "description": "Export button label"
+    },
+    "action_import": {
+        "message": "导入",
+        "description": "Import button label"
+    },
+    "action_cancel": {
+        "message": "取消",
+        "description": "Cancel button label"
+    },
+    "action_undo": {
+        "message": "撤消",
+        "description": "Undo deletion button label"
+    },
+    "action_applyChanges": {
+        "message": "应用更改",
+        "description": "Apply previewed changes button label"
+    },
+    "action_resetAll": {
+        "message": "全部重置",
+        "description": "Reset all settings button label"
+    },
+    "action_saving": {
+        "message": "正在保存…",
+        "description": "Saving state button label"
+    },
+    "action_saveChanges": {
+        "message": "保存更改",
+        "description": "Save changes button label"
+    },
+    "settings_appearance": {
+        "message": "外观",
+        "description": "Appearance category label"
+    },
+    "settings_appearanceDesc": {
+        "message": "自定义书签的显示方式",
+        "description": "Appearance category description"
+    },
+    "settings_search": {
+        "message": "搜索",
+        "description": "Search category label"
+    },
+    "settings_searchDesc": {
+        "message": "配置搜索行为",
+        "description": "Search category description"
+    },
+    "settings_behavior": {
+        "message": "行为",
+        "description": "Behavior category label"
+    },
+    "settings_behaviorDesc": {
+        "message": "控制扩展程序的行为",
+        "description": "Behavior category description"
+    },
+    "settings_advanced": {
+        "message": "高级",
+        "description": "Advanced category label"
+    },
+    "settings_advancedDesc": {
+        "message": "高级设置",
+        "description": "Advanced category description"
+    },
+    "settings_language": {
+        "message": "语言",
+        "description": "Language setting label"
+    },
+    "settings_languageDesc": {
+        "message": "选择扩展程序的语言",
+        "description": "Language setting description"
+    },
+    "settings_languageAuto": {
+        "message": "浏览器设置",
+        "description": "Auto language option"
+    },
+    "settings_theme": {
+        "message": "主题",
+        "description": "Theme setting label"
+    },
+    "settings_themeDesc": {
+        "message": "选择偏好的配色方案",
+        "description": "Theme setting description"
+    },
+    "settings_themeSystem": {
+        "message": "跟随系统",
+        "description": "System theme option"
+    },
+    "settings_themeLight": {
+        "message": "浅色",
+        "description": "Light theme option"
+    },
+    "settings_themeDark": {
+        "message": "深色",
+        "description": "Dark theme option"
+    },
+    "settings_showFavicons": {
+        "message": "显示网站图标",
+        "description": "Show favicons setting label"
+    },
+    "settings_showFaviconsDesc": {
+        "message": "在书签旁显示网站图标",
+        "description": "Show favicons setting description"
+    },
+    "settings_browserIconCache": {
+        "message": "使用浏览器的图标缓存",
+        "description": "Setting label: show site icons from the browser's own icon cache (Chrome and Edge)"
+    },
+    "settings_browserIconCacheDesc": {
+        "message": "对于“刷新网站图标”未获取到图标的网站，显示浏览器已保存的图标。开启此项时会请求读取网站图标的权限。",
+        "description": "Setting description for the browser icon cache"
+    },
+    "settings_faviconSize": {
+        "message": "网站图标大小",
+        "description": "Favicon size setting label"
+    },
+    "settings_faviconSizeDesc": {
+        "message": "网站图标的大小（像素）",
+        "description": "Favicon size setting description"
+    },
+    "settings_faviconSmall": {
+        "message": "16px（小）",
+        "description": "Small favicon size option"
+    },
+    "settings_faviconMedium": {
+        "message": "24px（中）",
+        "description": "Medium favicon size option"
+    },
+    "settings_faviconLarge": {
+        "message": "32px（大）",
+        "description": "Large favicon size option"
+    },
+    "settings_searchDelay": {
+        "message": "搜索延迟",
+        "description": "Search delay setting label"
+    },
+    "settings_searchDelayDesc": {
+        "message": "停止输入后开始搜索前的等待时间",
+        "description": "Search delay setting description"
+    },
+    "settings_maxResults": {
+        "message": "最大搜索结果数",
+        "description": "Max results setting label"
+    },
+    "settings_maxResultsDesc": {
+        "message": "最多显示的结果数",
+        "description": "Max results setting description"
+    },
+    "settings_expandFolders": {
+        "message": "搜索时展开文件夹",
+        "description": "Expand folders setting label"
+    },
+    "settings_expandFoldersDesc": {
+        "message": "搜索时自动展开文件夹",
+        "description": "Expand folders setting description"
+    },
+    "settings_searchHistory": {
+        "message": "搜索历史记录",
+        "description": "Search history setting label"
+    },
+    "settings_searchHistoryDesc": {
+        "message": "记住最近的搜索",
+        "description": "Search history setting description"
+    },
+    "settings_sortOrder": {
+        "message": "排序方式",
+        "description": "Sort order setting label"
+    },
+    "settings_sortOrderDesc": {
+        "message": "书签的默认排序方式",
+        "description": "Sort order setting description"
+    },
+    "settings_sortDate": {
+        "message": "添加日期",
+        "description": "Date sort option"
+    },
+    "settings_sortAlphabetical": {
+        "message": "按字母顺序",
+        "description": "Alphabetical sort option"
+    },
+    "settings_sortFolders": {
+        "message": "文件夹优先",
+        "description": "Folders first sort option"
+    },
+    "settings_groupByFolders": {
+        "message": "按文件夹分组",
+        "description": "Group by folders setting label"
+    },
+    "settings_groupByFoldersDesc": {
+        "message": "在弹出窗口和侧边栏中，将子文件夹排在书签之前；排序方式在每组内分别生效",
+        "description": "Group by folders setting description"
+    },
+    "settings_confirmDelete": {
+        "message": "删除前确认",
+        "description": "Confirm delete setting label"
+    },
+    "settings_confirmDeleteDesc": {
+        "message": "删除前显示确认对话框",
+        "description": "Confirm delete setting description"
+    },
+    "settings_defaultFolderName": {
+        "message": "默认文件夹名称",
+        "description": "Default folder name setting label"
+    },
+    "settings_defaultFolderNameDesc": {
+        "message": "新文件夹的默认名称",
+        "description": "Default folder name setting description"
+    },
+    "settings_popupWidth": {
+        "message": "弹出窗口宽度",
+        "description": "Popup width setting label"
+    },
+    "settings_popupWidthDesc": {
+        "message": "弹出窗口的宽度（浏览器最多允许 800 px）",
+        "description": "Popup width setting description"
+    },
+    "settings_popupHeight": {
+        "message": "弹出窗口高度",
+        "description": "Popup height setting label"
+    },
+    "settings_popupHeightDesc": {
+        "message": "弹出窗口的高度（浏览器最多允许 600 px）",
+        "description": "Popup height setting description"
+    },
+    "settings_truncateLength": {
+        "message": "截断长度",
+        "description": "Truncate length setting label"
+    },
+    "settings_truncateLengthDesc": {
+        "message": "文本截断前的最大字符数",
+        "description": "Truncate length setting description"
+    },
+    "settings_toastDuration": {
+        "message": "通知显示时长",
+        "description": "Toast duration setting label"
+    },
+    "settings_toastDurationDesc": {
+        "message": "通知自动消失前的显示时长",
+        "description": "Description for toast duration setting"
+    },
+    "settings_results": {
+        "message": "$1 个结果",
+        "description": "Results count option"
+    },
+    "settings_ai": {
+        "message": "AI",
+        "description": "AI category label"
+    },
+    "settings_aiDesc": {
+        "message": "由 AI 推荐文件夹",
+        "description": "AI category description"
+    },
+    "settings_aiAutoTrigger": {
+        "message": "打开时自动推荐",
+        "description": "AI auto trigger label"
+    },
+    "settings_aiAutoTriggerDesc": {
+        "message": "打开弹出窗口时自动运行书签推荐",
+        "description": "AI auto trigger description"
+    },
+    "settings_recentFoldersMax": {
+        "message": "最近文件夹数量上限",
+        "description": "Recent folders max setting label"
+    },
+    "settings_recentFoldersMaxDesc": {
+        "message": "供快速选择的最近文件夹的最大显示数量",
+        "description": "Recent folders max setting description"
+    },
+    "popup_recentFolders": {
+        "message": "最近",
+        "description": "Recent folders panel title"
+    },
+    "popup_addToFolderTitle": {
+        "message": "添加到“$folder$”",
+        "description": "Tooltip and accessible name for a recent folder chip that saves the current page into that folder",
+        "placeholders": {
+            "folder": {
+                "content": "$1",
+                "example": "News"
+            }
+        }
+    },
+    "popup_hintLabel": {
+        "message": "键盘快捷键",
+        "description": "Accessible name of the popup footer that lists keyboard shortcuts"
+    },
+    "popup_hintSearch": {
+        "message": "搜索",
+        "description": "Popup footer: the / key focuses search"
+    },
+    "popup_hintMove": {
+        "message": "移动",
+        "description": "Popup footer: arrow up and down move between rows"
+    },
+    "popup_hintExpand": {
+        "message": "文件夹",
+        "description": "Popup footer: arrow left and right close or open a folder"
+    },
+    "popup_hintEnter": {
+        "message": "打开",
+        "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "state_noRecentFolders": {
+        "message": "没有最近使用的文件夹",
+        "description": "Empty state for recent folders"
+    },
+    "settings_recentFoldersEnabled": {
+        "message": "最近文件夹",
+        "description": "Recent folders enabled setting label"
+    },
+    "settings_recentFoldersEnabledDesc": {
+        "message": "显示最近文件夹面板，以便快速保存书签",
+        "description": "Recent folders enabled setting description"
+    },
+    "toast_cannotGetCurrentPage": {
+        "message": "无法获取当前网页",
+        "description": "Toast title when tab info unavailable"
+    },
+    "toast_pleaseOpenWebpage": {
+        "message": "请先打开一个网页",
+        "description": "Toast description when tab info unavailable"
+    },
+    "toast_apiKeyRequired": {
+        "message": "需要 API 密钥",
+        "description": "Toast title when API key missing"
+    },
+    "toast_apiKeyRequiredDesc": {
+        "message": "请在“设置 → AI”中设置 API 密钥",
+        "description": "Toast description when API key missing"
+    },
+    "ai_recommendationFailed": {
+        "message": "AI 推荐失败",
+        "description": "Toast title when AI fails"
+    },
+    "ai_errorNoObject": {
+        "message": "AI 的回答格式不符合预期。请重试，或选择其他模型。",
+        "description": "AI error: the provider's answer did not match the expected structured format"
+    },
+    "ai_errorRetriesExhausted": {
+        "message": "尝试 $1 次后已放弃。$2",
+        "description": "AI error after automatic retries: $1 is the number of attempts, $2 the last error message"
+    },
+    "ai_errorProviderDetail": {
+        "message": "$1 服务商返回的信息：“$2”",
+        "description": "AI error with the provider's own message: $1 is the localized error, $2 the provider's message (often English)"
+    },
+    "ai_errorRequestFailed": {
+        "message": "AI 请求失败。请重试，或在选项中检查该服务。",
+        "description": "AI error with no more specific explanation"
+    },
+    "error_unknown": {
+        "message": "未知错误",
+        "description": "Generic error message"
+    },
+    "ai_suggestionsFor": {
+        "message": "AI 建议：",
+        "description": "AI suggestions section label"
+    },
+    "ai_newFolderReviewTitle": {
+        "message": "确认新文件夹",
+        "description": "Title for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderReviewDescription": {
+        "message": "保存前请确认文件夹路径和当前网页。在你批准之前不会做任何更改。",
+        "description": "Description for the AI new-folder confirmation dialog"
+    },
+    "ai_newFolderPathLabel": {
+        "message": "文件夹路径",
+        "description": "Label for the reviewed AI folder path"
+    },
+    "ai_newFolderPathNew": {
+        "message": "新建",
+        "description": "Badge after a folder in the reviewed path that does not exist yet and will be created"
+    },
+    "ai_currentPageLabel": {
+        "message": "当前网页",
+        "description": "Label for the current tab in the AI folder review"
+    },
+    "ai_newFolderConfirm": {
+        "message": "创建文件夹并保存",
+        "description": "Confirmation button for AI new-folder creation"
+    },
+    "ai_newFolderSaving": {
+        "message": "正在保存…",
+        "description": "Loading label while creating an AI-recommended folder"
+    },
+    "ai_newFolderSuccess": {
+        "message": "已保存书签",
+        "description": "Success toast title for AI new-folder creation"
+    },
+    "ai_newFolderSuccessDesc": {
+        "message": "已创建或沿用“$1”，并保存了当前网页。",
+        "description": "Success toast description for AI new-folder creation"
+    },
+    "ai_newFolderDuplicate": {
+        "message": "书签已存在",
+        "description": "Duplicate toast title for AI new-folder creation"
+    },
+    "ai_newFolderDuplicateDesc": {
+        "message": "当前网页已在“$1”中，未重复添加。",
+        "description": "Duplicate toast description for AI new-folder creation"
+    },
+    "ai_newFolderFailed": {
+        "message": "无法保存推荐结果",
+        "description": "Failure toast title for AI new-folder creation"
+    },
+    "ai_newFolderFailedDesc": {
+        "message": "未添加书签。请检查文件夹路径后重试。",
+        "description": "Generic failure description for AI new-folder creation"
+    },
+    "ai_newFolderConflictDesc": {
+        "message": "该路径与现有的书签“$1”冲突。未添加书签。",
+        "description": "Path conflict description for AI new-folder creation"
+    },
+    "popup_newBookmark": {
+        "message": "新书签",
+        "description": "Default name for new bookmark"
+    },
+    "toast_bookmarkAddedToFolder": {
+        "message": "已将“$1”添加到“$2”",
+        "description": "Toast description for bookmark added"
+    },
+    "toast_folderAddedIn": {
+        "message": "已在“$2”中新建文件夹“$1”",
+        "description": "Toast description for folder created"
+    },
+    "toast_itemRemoved": {
+        "message": "已移除“$1”",
+        "description": "Toast description for item deleted"
+    },
+    "popup_untitled": {
+        "message": "无标题",
+        "description": "Default name for untitled items"
+    },
+    "error_failedToLoadBookmarks": {
+        "message": "无法加载书签",
+        "description": "Error message for bookmark loading failure"
+    },
+    "tools_title": {
+        "message": "工具",
+        "description": "Tools panel title"
+    },
+    "tools_checkDeadLinks": {
+        "message": "检查失效链接",
+        "description": "Dead link checker tool title"
+    },
+    "tools_checkDeadLinksDesc": {
+        "message": "扫描书签中已损坏或无法访问的网址",
+        "description": "Dead link checker description"
+    },
+    "tools_aiReorganize": {
+        "message": "AI 文件夹重组",
+        "description": "AI reorganization tool title"
+    },
+    "tools_aiReorganizeDesc": {
+        "message": "让 AI 建议更合理的文件夹结构",
+        "description": "AI reorganization description"
+    },
+    "tools_statistics": {
+        "message": "书签统计",
+        "description": "Statistics tool title"
+    },
+    "tools_statisticsDesc": {
+        "message": "查看书签收藏的统计信息",
+        "description": "Statistics tool description"
+    },
+    "action_scan": {
+        "message": "扫描",
+        "description": "Scan button label"
+    },
+    "action_analyze": {
+        "message": "分析",
+        "description": "Analyze button label"
+    },
+    "action_view": {
+        "message": "查看",
+        "description": "View button label"
+    },
+    "table_toggleColumns": {
+        "message": "自定义列",
+        "description": "Bookmark table view menu heading"
+    },
+    "table_viewOptions": {
+        "message": "自定义表格视图",
+        "description": "Accessible label for the bookmark table view menu"
+    },
+    "table_moveColumnUp": {
+        "message": "将“$1”左移",
+        "description": "Accessible label for moving a bookmark table column left"
+    },
+    "table_moveColumnDown": {
+        "message": "将“$1”右移",
+        "description": "Accessible label for moving a bookmark table column right"
+    },
+    "table_resetView": {
+        "message": "重置视图",
+        "description": "Reset bookmark table view button label"
+    },
+    "table_filterTitles": {
+        "message": "筛选标题…",
+        "description": "Bookmark table title filter placeholder"
+    },
+    "table_filterUrls": {
+        "message": "筛选网址…",
+        "description": "Bookmark table URL filter placeholder"
+    },
+    "table_currentFolderOnly": {
+        "message": "仅当前文件夹",
+        "description": "Checkbox label limiting table filters to the current folder"
+    },
+    "table_currentFolderOnlyHelp": {
+        "message": "取消勾选后，将在所有书签中筛选。",
+        "description": "Help text for the current-folder-only filter checkbox"
+    },
+    "table_resetFilters": {
+        "message": "重置",
+        "description": "Button that clears bookmark table filters"
+    },
+    "table_noResults": {
+        "message": "没有结果。",
+        "description": "Empty bookmark table message"
+    },
+    "table_rowsSelected": {
+        "message": "已选择 $1 行，共 $2 行。",
+        "description": "Bookmark table selection count; $1 selected rows, $2 total rows"
+    },
+    "table_rowsPerPage": {
+        "message": "每页行数",
+        "description": "Bookmark table page size label"
+    },
+    "table_pageOf": {
+        "message": "第 $1 页，共 $2 页",
+        "description": "Bookmark table page indicator; $1 current page, $2 page count"
+    },
+    "table_firstPage": {
+        "message": "转到第一页",
+        "description": "Accessible label for the first page button"
+    },
+    "table_previousPage": {
+        "message": "转到上一页",
+        "description": "Accessible label for the previous page button"
+    },
+    "table_nextPage": {
+        "message": "转到下一页",
+        "description": "Accessible label for the next page button"
+    },
+    "table_lastPage": {
+        "message": "转到最后一页",
+        "description": "Accessible label for the last page button"
+    },
+    "table_selectAll": {
+        "message": "全选",
+        "description": "Accessible label for the select-all rows checkbox"
+    },
+    "table_selectRow": {
+        "message": "选择“$1”",
+        "description": "Row selection checkbox label; $1 is the item title"
+    },
+    "table_sortAsc": {
+        "message": "升序",
+        "description": "Column header menu item for ascending sort"
+    },
+    "table_sortDesc": {
+        "message": "降序",
+        "description": "Column header menu item for descending sort"
+    },
+    "table_hideColumn": {
+        "message": "隐藏",
+        "description": "Column header menu item that hides the column"
+    },
+    "table_columnType": {
+        "message": "类型",
+        "description": "Bookmark table column header"
+    },
+    "table_columnId": {
+        "message": "ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnParentId": {
+        "message": "父级 ID",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUrl": {
+        "message": "网址",
+        "description": "Bookmark table column header"
+    },
+    "table_columnTitle": {
+        "message": "标题",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateAdded": {
+        "message": "添加日期",
+        "description": "Bookmark table column header"
+    },
+    "table_columnDateGroupModified": {
+        "message": "文件夹修改日期",
+        "description": "Bookmark table column header"
+    },
+    "table_columnUnmodifiable": {
+        "message": "不可修改",
+        "description": "Bookmark table column header"
+    },
+    "table_typeFolder": {
+        "message": "文件夹",
+        "description": "Bookmark item type label"
+    },
+    "table_typeLink": {
+        "message": "链接",
+        "description": "Bookmark item type label"
+    },
+    "table_openMenu": {
+        "message": "打开菜单",
+        "description": "Accessible label for the bookmark row actions menu"
+    },
+    "table_actions": {
+        "message": "操作",
+        "description": "Bookmark row actions menu heading"
+    },
+    "table_copyId": {
+        "message": "复制书签 ID",
+        "description": "Bookmark row action that copies the bookmark ID"
+    },
+    "table_edit": {
+        "message": "修改",
+        "description": "Bookmark row action that edits the item"
+    },
+    "table_openInNewTab": {
+        "message": "在新标签页中打开",
+        "description": "Bookmark row action that opens a link in a new tab"
+    },
+    "table_moveTop": {
+        "message": "移到顶部",
+        "description": "Accessible label for moving a bookmark to the top of its folder"
+    },
+    "table_moveUp": {
+        "message": "上移",
+        "description": "Accessible label for moving a bookmark up"
+    },
+    "table_moveDown": {
+        "message": "下移",
+        "description": "Accessible label for moving a bookmark down"
+    },
+    "table_moveBottom": {
+        "message": "移到底部",
+        "description": "Accessible label for moving a bookmark to the bottom of its folder"
+    },
+    "bookmarks_showFolders": {
+        "message": "显示文件夹",
+        "description": "Bookmark manager button that shows the folder sidebar"
+    },
+    "bookmarks_hideFolders": {
+        "message": "隐藏文件夹",
+        "description": "Bookmark manager button that hides the folder sidebar"
+    },
+    "bookmarks_showTools": {
+        "message": "显示工具",
+        "description": "Bookmark manager button that shows the tools sidebar"
+    },
+    "bookmarks_hideTools": {
+        "message": "隐藏工具",
+        "description": "Bookmark manager button that hides the tools sidebar"
+    },
+    "bookmarks_editBookmark": {
+        "message": "修改书签",
+        "description": "Edit dialog title for a link"
+    },
+    "bookmarks_editFolder": {
+        "message": "修改文件夹",
+        "description": "Edit dialog title for a folder"
+    },
+    "bookmarks_editDescription": {
+        "message": "更改此项的名称或网址。",
+        "description": "Edit dialog description"
+    },
+    "bookmarks_editName": {
+        "message": "名称",
+        "description": "Edit dialog name field label"
+    },
+    "bookmarks_editUrl": {
+        "message": "网址",
+        "description": "Edit dialog URL field label"
+    },
+    "bookmarks_editSave": {
+        "message": "保存",
+        "description": "Edit dialog save button"
+    },
+    "bookmarks_editSaved": {
+        "message": "已保存更改",
+        "description": "Toast shown after an edit is saved"
+    },
+    "bookmarks_editFailed": {
+        "message": "无法保存更改",
+        "description": "Toast shown when an edit fails"
+    },
+    "bookmarks_editUrlRequired": {
+        "message": "请输入网址。",
+        "description": "Validation message when a link URL is empty"
+    },
+    "bookmarks_editUrlInvalid": {
+        "message": "请输入包含协议的完整网址，例如 https://example.com/。",
+        "description": "Validation message when an edited link URL has no scheme or cannot be parsed"
+    },
+    "bookmarks_editFolderNameRequired": {
+        "message": "请输入文件夹名称。",
+        "description": "Validation message when a folder is renamed to an empty or blank name"
+    },
+    "bookmarks_openFailed": {
+        "message": "无法打开书签",
+        "description": "Toast shown when a bookmark cannot be opened"
+    },
+    "bookmarks_root": {
+        "message": "书签",
+        "description": "Root folder name in breadcrumb"
+    },
+    "bookmarks_folderPath": {
+        "message": "文件夹路径",
+        "description": "Column showing the containing folder path"
+    },
+    "bookmarks_loading": {
+        "message": "正在加载书签…",
+        "description": "Loading message for bookmarks page"
+    },
+    "bookmarks_viewDetails": {
+        "message": "查看详情",
+        "description": "Bookmark manager action that opens item details"
+    },
+    "bookmarks_detailsTitle": {
+        "message": "书签详情",
+        "description": "Bookmark details dialog title"
+    },
+    "bookmarks_detailsDescription": {
+        "message": "查看书签的完整信息和可用操作。",
+        "description": "Bookmark details dialog description"
+    },
+    "bookmarks_detailsName": {
+        "message": "名称",
+        "description": "Bookmark details name label"
+    },
+    "bookmarks_detailsUrl": {
+        "message": "网址",
+        "description": "Bookmark details URL label"
+    },
+    "bookmarks_detailsFolderPath": {
+        "message": "文件夹路径",
+        "description": "Bookmark details folder path label"
+    },
+    "bookmarks_detailsDateAdded": {
+        "message": "添加日期",
+        "description": "Bookmark details date-added label"
+    },
+    "bookmarks_detailsDateModified": {
+        "message": "修改日期",
+        "description": "Bookmark details date-modified label"
+    },
+    "bookmarks_detailsId": {
+        "message": "书签 ID",
+        "description": "Bookmark details ID label"
+    },
+    "bookmarks_detailsUnavailable": {
+        "message": "不可用",
+        "description": "Fallback for unavailable bookmark details"
+    },
+    "bookmarks_detailsPathUnavailable": {
+        "message": "无法获取文件夹路径",
+        "description": "Error shown when the bookmark folder path cannot be loaded"
+    },
+    "bookmarks_detailsLoadingPath": {
+        "message": "正在加载路径…",
+        "description": "Status shown while the bookmark folder path loads"
+    },
+    "bookmarks_detailsCopyUrl": {
+        "message": "复制网址",
+        "description": "Button that copies a bookmark URL"
+    },
+    "bookmarks_detailsCopyId": {
+        "message": "复制 ID",
+        "description": "Button that copies a bookmark ID"
+    },
+    "bookmarks_detailsOpenLink": {
+        "message": "打开链接",
+        "description": "Button that opens a bookmark URL"
+    },
+    "bookmarks_detailsOpenFolder": {
+        "message": "打开文件夹",
+        "description": "Button that navigates to a bookmark folder"
+    },
+    "bookmarks_detailsCopied": {
+        "message": "已复制。",
+        "description": "Confirmation after copying bookmark details"
+    },
+    "bookmarks_detailsCopyFailed": {
+        "message": "无法复制。",
+        "description": "Error after bookmark detail copying fails"
+    },
+    "bookmarks_metadataTitle": {
+        "message": "标签和摘要",
+        "description": "Bookmark metadata editor title"
+    },
+    "bookmarks_metadataDescription": {
+        "message": "保存在扩展程序本地；启用后会包含在 AI 上下文导出中。",
+        "description": "Bookmark metadata privacy and usage description"
+    },
+    "bookmarks_metadataTags": {
+        "message": "标签",
+        "description": "Bookmark metadata tags label"
+    },
+    "bookmarks_metadataTagsPlaceholder": {
+        "message": "研究，工具，阅读",
+        "description": "Bookmark metadata tags input placeholder"
+    },
+    "bookmarks_metadataTagsHelp": {
+        "message": "用逗号分隔标签。保存时会移除重复的标签。",
+        "description": "Bookmark metadata tags input help"
+    },
+    "bookmarks_metadataSummary": {
+        "message": "摘要",
+        "description": "Bookmark metadata summary label"
+    },
+    "bookmarks_metadataSummaryPlaceholder": {
+        "message": "为此书签添加私人备注或摘要",
+        "description": "Bookmark metadata summary input placeholder"
+    },
+    "bookmarks_metadataSave": {
+        "message": "保存元数据",
+        "description": "Button that saves bookmark metadata"
+    },
+    "bookmarks_metadataClear": {
+        "message": "清除元数据",
+        "description": "Button that removes bookmark metadata"
+    },
+    "bookmarks_metadataSaved": {
+        "message": "已保存元数据。",
+        "description": "Confirmation after saving bookmark metadata"
+    },
+    "bookmarks_metadataCleared": {
+        "message": "已清除元数据。",
+        "description": "Confirmation after clearing bookmark metadata"
+    },
+    "bookmarks_metadataLoadFailed": {
+        "message": "无法加载已保存的元数据。",
+        "description": "Error after loading bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveFailed": {
+        "message": "无法保存元数据。",
+        "description": "Error after saving bookmark metadata fails"
+    },
+    "bookmarks_metadataSaveTags": {
+        "message": "保存建议的标签",
+        "description": "Button that applies reviewed AI-generated tags"
+    },
+    "bookmarks_metadataSaveSummaries": {
+        "message": "保存建议的摘要",
+        "description": "Button that applies reviewed AI-generated summaries"
+    },
+    "bookmarks_metadataGeneratedTagsSaved": {
+        "message": "已按你的合并设置保存审核过的标签建议。",
+        "description": "Toast description after applying generated tags"
+    },
+    "bookmarks_metadataGeneratedSummariesSaved": {
+        "message": "已按你的合并设置保存审核过的摘要建议。",
+        "description": "Toast description after applying generated summaries"
+    },
+    "bookmarks_metadataPartlySaved": {
+        "message": "部分建议未保存",
+        "description": "Toast title when some reviewed AI suggestions were not saved because their bookmark changed"
+    },
+    "bookmarks_metadataPartlySavedDesc": {
+        "message": "已保存：$1。因书签在扫描后被删除或网址已更改而跳过：$2。",
+        "description": "Toast description with the saved count ($1) and the count skipped because the bookmark was deleted or its URL changed ($2)"
+    },
+    "tools_category_ai": {
+        "message": "AI 与智能",
+        "description": "AI tools category"
+    },
+    "tools_category_maintenance": {
+        "message": "维护",
+        "description": "Maintenance tools category"
+    },
+    "tools_category_metadata": {
+        "message": "元数据与内容",
+        "description": "Metadata tools category"
+    },
+    "tools_category_security": {
+        "message": "安全",
+        "description": "Security tools category"
+    },
+    "tools_category_analytics": {
+        "message": "分析",
+        "description": "Tools section heading for analytics tools"
+    },
+    "tools_exportAI": {
+        "message": "AI 上下文打包",
+        "description": "Title for AI Export tool"
+    },
+    "tools_exportAIDesc": {
+        "message": "以便于 AI 使用的格式（XML/Markdown）导出书签",
+        "description": "Description for AI Export tool"
+    },
+    "tools_autoTagging": {
+        "message": "自动标签",
+        "description": "Title for Auto-Tagging tool"
+    },
+    "tools_autoTaggingDesc": {
+        "message": "自动为书签建议标签",
+        "description": "Description for Auto-Tagging tool"
+    },
+    "tools_summarizer": {
+        "message": "内容摘要",
+        "description": "Title for Summarizer tool"
+    },
+    "tools_summarizerDesc": {
+        "message": "为书签内容生成简短摘要",
+        "description": "Description for Summarizer tool"
+    },
+    "tools_findDuplicates": {
+        "message": "重复书签清理",
+        "description": "Title for Duplicate Cleaner tool"
+    },
+    "tools_findDuplicatesDesc": {
+        "message": "查找并移除重复的书签",
+        "description": "Description for Duplicate Cleaner tool"
+    },
+    "tools_cleanUrls": {
+        "message": "网址清理",
+        "description": "Title for URL Cleaner tool"
+    },
+    "tools_cleanUrlsDesc": {
+        "message": "移除网址中的跟踪参数",
+        "description": "Description for URL Cleaner tool"
+    },
+    "tools_metadataFetcher": {
+        "message": "元数据获取",
+        "description": "Title for Metadata Fetcher tool"
+    },
+    "tools_metadataFetcherDesc": {
+        "message": "建议网页标题，并应用你批准的标题",
+        "description": "Metadata fetcher tool description"
+    },
+    "tools_privacyScanner": {
+        "message": "隐私扫描",
+        "description": "Title for Privacy Scanner tool"
+    },
+    "tools_privacyScannerDesc": {
+        "message": "检测网址中的敏感数据",
+        "description": "Description for Privacy Scanner tool"
+    },
+    "tools_category_data": {
+        "message": "数据",
+        "description": "Data tools category for import/export"
+    },
+    "tools_export": {
+        "message": "导出书签",
+        "description": "Export bookmarks tool title"
+    },
+    "tools_exportDesc": {
+        "message": "将书签导出为 HTML、JSON、Markdown 或 CSV",
+        "description": "Export bookmarks tool description"
+    },
+    "tools_import": {
+        "message": "导入书签",
+        "description": "Import bookmarks tool title"
+    },
+    "tools_importDesc": {
+        "message": "从 HTML 或 JSON 文件导入书签",
+        "description": "Import bookmarks tool description"
+    },
+    "tools_exportFormat": {
+        "message": "格式",
+        "description": "Placeholder for the export format selector"
+    },
+    "tools_exporting": {
+        "message": "正在导出…",
+        "description": "Export button label while exporting"
+    },
+    "tools_importing": {
+        "message": "正在导入…",
+        "description": "Import button label while importing"
+    },
+    "tools_scopeSelect": {
+        "message": "选择范围",
+        "description": "Placeholder for a tool scope selector"
+    },
+    "tools_running": {
+        "message": "正在运行…",
+        "description": "Tool button label while the tool runs"
+    },
+    "toast_exportSuccess": {
+        "message": "导出完成",
+        "description": "Toast title for successful bookmark export"
+    },
+    "toast_exportSuccessDesc": {
+        "message": "已将 $count$ 个书签导出为 $format$",
+        "description": "Toast description for successful bookmark export",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "format": {
+                "content": "$2",
+                "example": "JSON"
+            }
+        }
+    },
+    "toast_nothingToExport": {
+        "message": "没有可导出的内容",
+        "description": "Toast title when an export scope has no bookmarks, so no file is saved"
+    },
+    "toast_nothingToExportDesc": {
+        "message": "此范围内没有书签，因此未保存文件。",
+        "description": "Toast description when an export scope has no bookmarks"
+    },
+    "toast_importSuccess": {
+        "message": "导入完成",
+        "description": "Toast title for successful bookmark import"
+    },
+    "toast_importSuccessDesc": {
+        "message": "已成功导入 $count$ 项",
+        "description": "Toast description for successful bookmark import",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "toast_reorganizeSuccess": {
+        "message": "重组完成",
+        "description": "Toast title after applying an AI reorganization"
+    },
+    "toast_reorganizeAppliedDesc": {
+        "message": "已移动：$1。新文件夹：$2。",
+        "description": "Toast description after applying an AI reorganization: bookmarks moved ($1) and new folders created ($2)"
+    },
+    "toast_reorganizePartial": {
+        "message": "部分移动未应用",
+        "description": "Toast title when some reorganization moves were skipped or failed"
+    },
+    "toast_reorganizePartialDesc": {
+        "message": "已移动：$1。新文件夹：$2。因预览后发生变化而跳过：$3。失败：$4。",
+        "description": "Partial reorganization outcome: moved ($1), new folders ($2), skipped because the bookmark changed after the preview ($3), failed ($4)"
+    },
+    "toast_reorganizeUndone": {
+        "message": "已撤消重组",
+        "description": "Toast title after undoing an AI reorganization"
+    },
+    "toast_reorganizeUndoPartial": {
+        "message": "部分移动未能撤消",
+        "description": "Toast title when undoing an AI reorganization could not move every bookmark back"
+    },
+    "toast_reorganizeUndoneDesc": {
+        "message": "已移回：$1。无法移回：$2。",
+        "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
+    },
+    "error_importFailed": {
+        "message": "导入失败：$1",
+        "description": "Error message for failed bookmark import"
+    },
+    "error_unsupportedFileFormat": {
+        "message": "不支持的文件格式",
+        "description": "Import error for an unrecognized file type"
+    },
+    "export_formatHtml": {
+        "message": "HTML (Chrome)",
+        "description": "Export format name for HTML/Chrome format"
+    },
+    "export_formatJson": {
+        "message": "JSON",
+        "description": "Export format name for JSON format"
+    },
+    "export_formatMarkdown": {
+        "message": "Markdown",
+        "description": "Export format name for Markdown format"
+    },
+    "export_formatCsv": {
+        "message": "CSV",
+        "description": "Export format name for CSV format"
+    },
+    "export_htmlTitle": {
+        "message": "书签",
+        "description": "Title in exported HTML bookmark file"
+    },
+    "export_csvTitle": {
+        "message": "标题",
+        "description": "CSV header for bookmark title column"
+    },
+    "export_csvUrl": {
+        "message": "网址",
+        "description": "CSV header for bookmark URL column"
+    },
+    "export_csvFolder": {
+        "message": "文件夹",
+        "description": "CSV header for bookmark folder column"
+    },
+    "export_csvDateAdded": {
+        "message": "添加日期",
+        "description": "CSV header for bookmark date added column"
+    },
+    "ai_reorganizationDesc": {
+        "message": "应用前请检查建议的更改。在你批准之前不会做任何更改。",
+        "description": "Description for AI reorganization dialog"
+    },
+    "ai_analyzing": {
+        "message": "正在分析书签…",
+        "description": "Loading text while AI analyzes bookmarks"
+    },
+    "ai_noChangesNeeded": {
+        "message": "你的书签已经整理得很好了！",
+        "description": "Message when no reorganization is needed"
+    },
+    "ai_applying": {
+        "message": "正在应用…",
+        "description": "Button text while applying changes"
+    },
+    "ai_applyChanges": {
+        "message": "应用更改",
+        "description": "Button text to apply reorganization changes"
+    },
+    "ai_reorgAnalyzeFailed": {
+        "message": "无法分析书签",
+        "description": "Reorganization error when analysis fails without details"
+    },
+    "ai_reorgMoves": {
+        "message": "书签移动：$count$",
+        "description": "Reorganization summary badge",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "8"
+            }
+        }
+    },
+    "ai_reorgNewFolders": {
+        "message": "新文件夹：$1",
+        "description": "Reorganization summary badge: how many folders applying the plan creates"
+    },
+    "ai_reorgViewOperations": {
+        "message": "查看操作（$count$）",
+        "description": "Toggle for the reorganization operation list",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ai_reorgOp_move": {
+        "message": "移动",
+        "description": "Reorganization operation type"
+    },
+    "ai_reorgNewFolder": {
+        "message": "新文件夹",
+        "description": "Badge on a reorganization move whose target folder is created when the plan is applied"
+    },
+    "ai_reorgIssueChanged": {
+        "message": "$1：预览后已发生变化，保持原位",
+        "description": "A reorganization move skipped because its bookmark was moved, edited, or deleted after the preview ($1 is its title)"
+    },
+    "ai_reorgIssueFailed": {
+        "message": "$1：无法移动",
+        "description": "A reorganization move the browser rejected ($1 is the bookmark title)"
+    },
+    "ai_reorgFrom": {
+        "message": "从：",
+        "description": "Source folder label for a bookmark move"
+    },
+    "ai_reorgTo": {
+        "message": "到：",
+        "description": "Destination folder label for a bookmark move"
+    },
+    "ai_reorgDebugToggle": {
+        "message": "查看 AI 请求和响应",
+        "description": "Toggle for AI request debug details"
+    },
+    "ai_reorgSystemPrompt": {
+        "message": "系统提示词：",
+        "description": "AI debug section label"
+    },
+    "ai_reorgRequestData": {
+        "message": "请求数据：",
+        "description": "AI debug section label"
+    },
+    "ai_reorgResponse": {
+        "message": "AI 响应：",
+        "description": "AI debug section label"
+    },
+    "ai_promptFolderRecommendationDesc": {
+        "message": "为新书签推荐最合适的文件夹",
+        "description": "Description for folder recommendation prompt"
+    },
+    "ai_promptFolderReorganizationDesc": {
+        "message": "分析并重组书签文件夹",
+        "description": "Description for folder reorganization prompt"
+    },
+    "ai_promptAutoTaggingDesc": {
+        "message": "根据内容为书签建议标签",
+        "description": "Description for auto tagging prompt"
+    },
+    "ai_promptSummarizationDesc": {
+        "message": "为书签生成简短描述",
+        "description": "Description for summarization prompt"
+    },
+    "contextMenu_saveToFolder": {
+        "message": "将书签保存到…",
+        "description": "Root context menu item title"
+    },
+    "contextMenu_noFolders": {
+        "message": "没有可用的文件夹",
+        "description": "Placeholder when no folders to show"
+    },
+    "contextMenu_bookmarksBar": {
+        "message": "书签栏",
+        "description": "Bookmarks bar folder name"
+    },
+    "toast_linkSaved": {
+        "message": "已保存链接",
+        "description": "Toast title when link saved via context menu"
+    },
+    "toast_linkSavedDesc": {
+        "message": "已将“$1”添加到“$2”",
+        "description": "Toast description for link saved"
+    },
+    "toast_linkSaveFailed": {
+        "message": "无法保存链接",
+        "description": "Toast title when link save fails"
+    },
+    "settings_contextMenuEnabled": {
+        "message": "右键菜单",
+        "description": "Context menu enabled setting label"
+    },
+    "settings_contextMenuEnabledDesc": {
+        "message": "在链接的右键菜单中添加“将书签保存到…”。默认关闭，需要你手动开启。",
+        "description": "Context menu enabled setting description"
+    },
+    "settings_contextMenuNaming": {
+        "message": "书签名称来源",
+        "description": "Context menu bookmark naming setting label"
+    },
+    "settings_contextMenuNamingDesc": {
+        "message": "通过右键菜单保存时用作书签标题的内容。“链接文字”在 Firefox 中使用链接的文字，在 Chrome 中使用选中的文字；没有时使用网页标题。",
+        "description": "Context menu bookmark naming setting description"
+    },
+    "settings_namingLinkText": {
+        "message": "链接文字",
+        "description": "Use link text for bookmark name"
+    },
+    "settings_namingPageTitle": {
+        "message": "网页标题",
+        "description": "Use page title for bookmark name"
+    },
+    "settings_namingLinkUrl": {
+        "message": "链接网址",
+        "description": "Use link URL for bookmark name"
+    },
+    "search_matchCase": {
+        "message": "区分大小写",
+        "description": "Toggle case-sensitive search"
+    },
+    "search_matchWholeWord": {
+        "message": "全字匹配",
+        "description": "Toggle whole word matching"
+    },
+    "search_useRegex": {
+        "message": "使用正则表达式",
+        "description": "Toggle regex search mode"
+    },
+    "search_recentSearches": {
+        "message": "最近的搜索",
+        "description": "Heading for the recent search history list"
+    },
+    "search_clearHistory": {
+        "message": "清除",
+        "description": "Button that clears the recent search history"
+    },
+    "search_resultsLimited": {
+        "message": "显示前 $1 个匹配项，共 $2 个。请缩小搜索范围以查看更多。",
+        "description": "Notice when search results are truncated; $1 is the result limit, $2 is the total match count"
+    },
+    "settings_aiEnabled": {
+        "message": "AI 功能",
+        "description": "AI feature toggle label"
+    },
+    "settings_aiEnabledDesc": {
+        "message": "启用由 AI 驱动的书签功能。AI 工具会将所需的书签标题、网址和文件夹名称、当前网页的标题和网址，以及你在“询问 AI”中发送的消息直接发送给你选择的服务商。在你使用 AI 工具之前不会发送任何内容。在 Firefox 中，开启此项时会请求共享这些数据的许可。",
+        "description": "AI feature toggle description"
+    },
+    "settings_aiProvider": {
+        "message": "AI 服务商",
+        "description": "AI provider setting label"
+    },
+    "settings_aiProviderDesc": {
+        "message": "选择 AI 工具使用的服务商",
+        "description": "AI provider setting description"
+    },
+    "settings_aiModel": {
+        "message": "AI 模型",
+        "description": "AI model setting label"
+    },
+    "settings_aiModelDesc": {
+        "message": "选择 AI 工具使用的模型",
+        "description": "AI model setting description"
+    },
+    "settings_aiMaxRecommendations": {
+        "message": "最大推荐数",
+        "description": "Max recommendations setting label"
+    },
+    "settings_aiMaxRecommendationsDesc": {
+        "message": "向 AI 请求的最大推荐数量",
+        "description": "Max recommendations setting description"
+    },
+    "settings_aiTools": {
+        "message": "AI 工具",
+        "description": "AI tools settings tab label"
+    },
+    "settings_aiToolsDesc": {
+        "message": "配置由 AI 驱动的书签工具",
+        "description": "AI tools settings tab description"
+    },
+    "settings_maintenance": {
+        "message": "维护",
+        "description": "Maintenance settings tab label"
+    },
+    "settings_maintenanceDesc": {
+        "message": "配置清理和修复工具",
+        "description": "Maintenance settings tab description"
+    },
+    "settings_metadataContent": {
+        "message": "元数据与内容",
+        "description": "Metadata settings tab label"
+    },
+    "settings_metadataContentDesc": {
+        "message": "配置元数据补全工具",
+        "description": "Metadata settings tab description"
+    },
+    "settings_security": {
+        "message": "安全",
+        "description": "Security settings tab label"
+    },
+    "settings_securityDesc": {
+        "message": "配置安全和隐私工具",
+        "description": "Security settings tab description"
+    },
+    "settings_analytics": {
+        "message": "分析",
+        "description": "Analytics settings tab label"
+    },
+    "settings_analyticsDesc": {
+        "message": "配置书签分析和报告",
+        "description": "Analytics settings tab description"
+    },
+    "settings_data": {
+        "message": "数据",
+        "description": "Data settings tab label"
+    },
+    "settings_dataDesc": {
+        "message": "配置导入、导出和数据处理工具",
+        "description": "Data settings tab description"
+    },
+    "settings_aiMaxCategories": {
+        "message": "最大类别数",
+        "description": "AI reorganization max categories label"
+    },
+    "settings_aiMaxCategoriesDesc": {
+        "message": "AI 可创建的顶级类别的最大数量（-1 表示不限）",
+        "description": "AI reorganization max categories description"
+    },
+    "settings_aiMinItemsPerFolder": {
+        "message": "每个文件夹的最少项数",
+        "description": "AI reorganization min items label"
+    },
+    "settings_aiMinItemsPerFolderDesc": {
+        "message": "AI 为每个文件夹设定的最少书签数",
+        "description": "AI reorganization min items description"
+    },
+    "settings_aiMaxItemsPerFolder": {
+        "message": "每个文件夹的最多项数",
+        "description": "AI reorganization max items label"
+    },
+    "settings_aiMaxItemsPerFolderDesc": {
+        "message": "AI 为每个文件夹设定的最多书签数（-1 表示不限）",
+        "description": "AI reorganization max items description"
+    },
+    "settings_exportFilenamePrefix": {
+        "message": "文件名前缀",
+        "description": "Export filename prefix label"
+    },
+    "settings_exportFilenamePrefixDesc": {
+        "message": "生成书签导出文件名时使用的前缀",
+        "description": "Export filename prefix description"
+    },
+    "settings_exportFilenameMaxLength": {
+        "message": "文件名最大长度",
+        "description": "Export filename max length label"
+    },
+    "settings_exportFilenameMaxLengthDesc": {
+        "message": "生成的书签导出文件名的最大长度",
+        "description": "Export filename max length description"
+    },
+    "settings_exportJsonIndentSize": {
+        "message": "JSON 缩进大小",
+        "description": "JSON indent size label"
+    },
+    "settings_exportJsonIndentSizeDesc": {
+        "message": "JSON 书签导出使用的缩进空格数",
+        "description": "JSON indent size description"
+    },
+    "settings_exportHtmlIndentSpaces": {
+        "message": "HTML 缩进大小",
+        "description": "HTML indent size label"
+    },
+    "settings_exportHtmlIndentSpacesDesc": {
+        "message": "HTML 书签导出使用的缩进空格数",
+        "description": "HTML indent size description"
+    },
+    "settings_exportMarkdownIndentSpaces": {
+        "message": "Markdown 缩进大小",
+        "description": "Markdown indent size label"
+    },
+    "settings_exportMarkdownIndentSpacesDesc": {
+        "message": "Markdown 书签导出使用的缩进空格数",
+        "description": "Markdown indent size description"
+    },
+    "settings_exportIncludeDates": {
+        "message": "包含日期",
+        "description": "Export include dates label"
+    },
+    "settings_exportIncludeDatesDesc": {
+        "message": "导出时默认包含书签的创建日期",
+        "description": "Export include dates description"
+    },
+    "settings_exportIncludeUrls": {
+        "message": "包含网址",
+        "description": "Export include URLs label"
+    },
+    "settings_exportIncludeUrlsDesc": {
+        "message": "导出时默认包含书签网址",
+        "description": "Export include URLs description"
+    },
+    "settings_scopeFolder": {
+        "message": "当前文件夹",
+        "description": "Folder scope option label"
+    },
+    "settings_scopeAll": {
+        "message": "所有书签",
+        "description": "All bookmarks scope option label"
+    },
+    "settings_scopeBoth": {
+        "message": "文件夹或全部",
+        "description": "Combined scope option label"
+    },
+    "settings_mergeAppend": {
+        "message": "追加",
+        "description": "Merge append option label"
+    },
+    "settings_mergeReplace": {
+        "message": "替换",
+        "description": "Merge replace option label"
+    },
+    "settings_aiContextPackerEnabled": {
+        "message": "启用 AI 上下文打包",
+        "description": "AI context packer enabled label"
+    },
+    "settings_aiContextPackerEnabledDesc": {
+        "message": "允许以便于 AI 使用的格式导出书签",
+        "description": "AI context packer enabled description"
+    },
+    "settings_aiContextPackerDefaultScope": {
+        "message": "默认范围",
+        "description": "AI context packer default scope label"
+    },
+    "settings_aiContextPackerDefaultScopeDesc": {
+        "message": "导出 AI 上下文时使用的默认范围",
+        "description": "AI context packer default scope description"
+    },
+    "settings_aiContextPackerOutputFormat": {
+        "message": "输出格式",
+        "description": "AI context packer output format label"
+    },
+    "settings_aiContextPackerOutputFormatDesc": {
+        "message": "为 AI 上下文导出选择 Markdown 或 XML",
+        "description": "AI context packer output format description"
+    },
+    "settings_aiContextPackerIncludeFolderPath": {
+        "message": "包含文件夹路径",
+        "description": "AI context packer include folder path label"
+    },
+    "settings_aiContextPackerIncludeFolderPathDesc": {
+        "message": "在导出的 AI 上下文中包含每个书签的文件夹路径",
+        "description": "AI context packer include folder path description"
+    },
+    "settings_aiContextPackerIncludeDates": {
+        "message": "包含日期",
+        "description": "AI context packer include dates label"
+    },
+    "settings_aiContextPackerIncludeDatesDesc": {
+        "message": "在 AI 上下文导出中包含书签的创建日期",
+        "description": "AI context packer include dates description"
+    },
+    "settings_aiContextPackerIncludeTags": {
+        "message": "包含已保存的标签",
+        "description": "AI context packer include tags label"
+    },
+    "settings_aiContextPackerIncludeTagsDesc": {
+        "message": "仅当书签有已保存的元数据时才包含标签",
+        "description": "AI context packer include tags description"
+    },
+    "settings_aiContextPackerIncludeSummaries": {
+        "message": "包含已保存的摘要",
+        "description": "AI context packer include summaries label"
+    },
+    "settings_aiContextPackerIncludeSummariesDesc": {
+        "message": "仅当书签有已保存的元数据时才包含摘要",
+        "description": "AI context packer include summaries description"
+    },
+    "settings_aiContextPackerMaxItems": {
+        "message": "最大项数",
+        "description": "AI context packer max items label"
+    },
+    "settings_aiContextPackerMaxItemsDesc": {
+        "message": "单次 AI 上下文导出包含的最大书签数",
+        "description": "AI context packer max items description"
+    },
+    "settings_aiContextPackerMaxDepth": {
+        "message": "最大深度",
+        "description": "AI context packer max depth label"
+    },
+    "settings_aiContextPackerMaxDepthDesc": {
+        "message": "AI 上下文导出包含的最大文件夹层级",
+        "description": "AI context packer max depth description"
+    },
+    "settings_aiContextPackerExcerptLength": {
+        "message": "摘录长度",
+        "description": "AI context packer excerpt length label"
+    },
+    "settings_aiContextPackerExcerptLengthDesc": {
+        "message": "AI 上下文导出中已保存摘要的最大长度",
+        "description": "AI context packer excerpt length description"
+    },
+    "settings_autoTaggingEnabled": {
+        "message": "启用自动标签",
+        "description": "Auto-tagging enabled label"
+    },
+    "settings_autoTaggingEnabledDesc": {
+        "message": "允许 AI 为书签建议标签",
+        "description": "Auto-tagging enabled description"
+    },
+    "settings_autoTaggingDefaultScope": {
+        "message": "默认范围",
+        "description": "Auto-tagging default scope label"
+    },
+    "settings_autoTaggingDefaultScopeDesc": {
+        "message": "运行自动标签时使用的默认范围",
+        "description": "Auto-tagging default scope description"
+    },
+    "settings_autoTaggingMinTags": {
+        "message": "最少标签数",
+        "description": "Auto-tagging minimum tags label"
+    },
+    "settings_autoTaggingMinTagsDesc": {
+        "message": "AI 为每个书签生成的最少标签数",
+        "description": "Auto-tagging minimum tags description"
+    },
+    "settings_autoTaggingMaxTags": {
+        "message": "最多标签数",
+        "description": "Auto-tagging maximum tags label"
+    },
+    "settings_autoTaggingMaxTagsDesc": {
+        "message": "AI 为每个书签生成的最多标签数",
+        "description": "Auto-tagging maximum tags description"
+    },
+    "settings_autoTaggingTagStyle": {
+        "message": "标签样式",
+        "description": "Auto-tagging tag style label"
+    },
+    "settings_autoTaggingTagStyleDesc": {
+        "message": "生成标签的首选格式",
+        "description": "Auto-tagging tag style description"
+    },
+    "settings_autoTaggingMergeMode": {
+        "message": "合并方式",
+        "description": "Auto-tagging merge mode label"
+    },
+    "settings_autoTaggingMergeModeDesc": {
+        "message": "保存审核过的建议时，“追加”会将其添加到已保存的标签中；“替换”会覆盖已保存的标签",
+        "description": "Auto-tagging merge mode description"
+    },
+    "settings_autoTaggingDedupeTags": {
+        "message": "移除重复标签",
+        "description": "Auto-tagging dedupe tag label"
+    },
+    "settings_autoTaggingDedupeTagsDesc": {
+        "message": "保存审核过的建议时，去除重复的标签（不区分大小写）",
+        "description": "Auto-tagging dedupe tag description"
+    },
+    "settings_summarizerEnabled": {
+        "message": "启用内容摘要",
+        "description": "Summarizer enabled label"
+    },
+    "settings_summarizerEnabledDesc": {
+        "message": "允许 AI 生成书签摘要",
+        "description": "Summarizer enabled description"
+    },
+    "settings_summarizerDefaultScope": {
+        "message": "默认范围",
+        "description": "Summarizer default scope label"
+    },
+    "settings_summarizerDefaultScopeDesc": {
+        "message": "生成书签摘要时使用的默认范围",
+        "description": "Summarizer default scope description"
+    },
+    "settings_summarizerSummaryLength": {
+        "message": "摘要长度",
+        "description": "Summarizer length label"
+    },
+    "settings_summarizerSummaryLengthDesc": {
+        "message": "生成摘要的目标最大长度",
+        "description": "Summarizer length description"
+    },
+    "settings_summarizerIncludeDomainHint": {
+        "message": "包含域名提示",
+        "description": "Summarizer include domain hint label"
+    },
+    "settings_summarizerIncludeDomainHintDesc": {
+        "message": "将书签的域名作为额外的 AI 上下文",
+        "description": "Summarizer include domain hint description"
+    },
+    "settings_summarizerMergeMode": {
+        "message": "合并方式",
+        "description": "Summarizer merge mode label"
+    },
+    "settings_summarizerMergeModeDesc": {
+        "message": "保存审核过的摘要时，“追加”会将其添加在已保存摘要之后；“替换”会覆盖已保存的摘要",
+        "description": "Summarizer merge mode description"
+    },
+    "settings_reorganizationEnabled": {
+        "message": "启用 AI 重组",
+        "description": "Reorganization enabled label"
+    },
+    "settings_reorganizationEnabledDesc": {
+        "message": "允许 AI 提出文件夹重组方案",
+        "description": "Reorganization enabled description"
+    },
+    "settings_reorganizationDefaultScope": {
+        "message": "默认范围",
+        "description": "Reorganization default scope label"
+    },
+    "settings_reorganizationDefaultScopeDesc": {
+        "message": "AI 文件夹重组使用的默认范围",
+        "description": "Reorganization default scope description"
+    },
+    "settings_reorganizationDryRunFirst": {
+        "message": "始终先预览",
+        "description": "Reorganization dry run label"
+    },
+    "settings_reorganizationDryRunFirstDesc": {
+        "message": "应用更改前先显示建议的重组方案",
+        "description": "Reorganization dry run description"
+    },
+    "settings_reorganizationMinConfidence": {
+        "message": "最低置信度",
+        "description": "Reorganization minimum confidence label"
+    },
+    "settings_reorganizationMinConfidenceDesc": {
+        "message": "建议移动书签所需的最低置信度分数",
+        "description": "Reorganization minimum confidence description"
+    },
+    "settings_reorganizationBatchSize": {
+        "message": "批次大小",
+        "description": "Reorganization batch size label"
+    },
+    "settings_reorganizationBatchSizeDesc": {
+        "message": "每个重组批次发送的最大书签数",
+        "description": "Reorganization batch size description"
+    },
+    "settings_duplicatesEnabled": {
+        "message": "启用重复书签清理",
+        "description": "Duplicate cleaner enabled label"
+    },
+    "settings_duplicatesEnabledDesc": {
+        "message": "允许扫描重复的书签",
+        "description": "Duplicate cleaner enabled description"
+    },
+    "settings_duplicatesDefaultScope": {
+        "message": "默认范围",
+        "description": "Duplicate cleaner default scope label"
+    },
+    "settings_duplicatesDefaultScopeDesc": {
+        "message": "扫描重复书签时使用的默认范围",
+        "description": "Duplicate cleaner default scope description"
+    },
+    "settings_duplicatesMatchStrategy": {
+        "message": "匹配策略",
+        "description": "Duplicate cleaner match strategy label"
+    },
+    "settings_duplicatesMatchStrategyDesc": {
+        "message": "查找重复项时比较书签的方式",
+        "description": "Duplicate cleaner match strategy description"
+    },
+    "settings_duplicatesNormalizeWww": {
+        "message": "统一 www",
+        "description": "Duplicate cleaner normalize www label"
+    },
+    "settings_duplicatesNormalizeWwwDesc": {
+        "message": "将 www.example.com 和 example.com 视为同一主机",
+        "description": "Duplicate cleaner normalize www description"
+    },
+    "settings_duplicatesIgnoreProtocol": {
+        "message": "忽略协议",
+        "description": "Duplicate cleaner ignore protocol label"
+    },
+    "settings_duplicatesIgnoreProtocolDesc": {
+        "message": "将 http 和 https 版本视为重复项",
+        "description": "Duplicate cleaner ignore protocol description"
+    },
+    "settings_duplicatesIgnoreTrailingSlash": {
+        "message": "忽略末尾斜杠",
+        "description": "Duplicate cleaner ignore trailing slash label"
+    },
+    "settings_duplicatesIgnoreTrailingSlashDesc": {
+        "message": "将带和不带末尾斜杠的网址视为重复项",
+        "description": "Duplicate cleaner ignore trailing slash description"
+    },
+    "settings_duplicatesKeepRule": {
+        "message": "保留规则",
+        "description": "Duplicate cleaner keep rule label"
+    },
+    "settings_duplicatesKeepRuleDesc": {
+        "message": "选择移除重复项时保留哪个书签",
+        "description": "Duplicate cleaner keep rule description"
+    },
+    "settings_duplicatesMaxGroups": {
+        "message": "最大组数",
+        "description": "Duplicate cleaner max groups label"
+    },
+    "settings_duplicatesMaxGroupsDesc": {
+        "message": "单次扫描返回的最大重复组数",
+        "description": "Duplicate cleaner max groups description"
+    },
+    "settings_urlCleanerEnabled": {
+        "message": "启用网址清理",
+        "description": "URL cleaner enabled label"
+    },
+    "settings_urlCleanerEnabledDesc": {
+        "message": "允许清除书签网址中的跟踪参数",
+        "description": "URL cleaner enabled description"
+    },
+    "settings_urlCleanerDefaultScope": {
+        "message": "默认范围",
+        "description": "URL cleaner default scope label"
+    },
+    "settings_urlCleanerDefaultScopeDesc": {
+        "message": "清理书签网址时使用的默认范围",
+        "description": "URL cleaner default scope description"
+    },
+    "settings_urlCleanerRemoveHash": {
+        "message": "移除片段",
+        "description": "URL cleaner remove hash label"
+    },
+    "settings_urlCleanerRemoveHashDesc": {
+        "message": "从清理后的网址中移除 #section 之类的片段",
+        "description": "URL cleaner remove hash description"
+    },
+    "settings_urlCleanerSortQueryParams": {
+        "message": "排序查询参数",
+        "description": "URL cleaner sort query params label"
+    },
+    "settings_urlCleanerSortQueryParamsDesc": {
+        "message": "按字母顺序排列剩余的查询参数",
+        "description": "URL cleaner sort query params description"
+    },
+    "settings_urlCleanerDedupeQueryParams": {
+        "message": "去除重复查询参数",
+        "description": "URL cleaner dedupe query params label"
+    },
+    "settings_urlCleanerDedupeQueryParamsDesc": {
+        "message": "清理网址时移除重复的查询参数",
+        "description": "URL cleaner dedupe query params description"
+    },
+    "settings_urlCleanerPreserveParams": {
+        "message": "保留的参数",
+        "description": "URL cleaner preserve params label"
+    },
+    "settings_urlCleanerPreserveParamsDesc": {
+        "message": "永不移除的查询参数，以逗号分隔",
+        "description": "URL cleaner preserve params description"
+    },
+    "settings_urlCleanerRemoveParams": {
+        "message": "移除的参数",
+        "description": "URL cleaner remove params label"
+    },
+    "settings_urlCleanerRemoveParamsDesc": {
+        "message": "要从网址中去除的查询参数，以逗号分隔",
+        "description": "URL cleaner remove params description"
+    },
+    "settings_deadLinksEnabled": {
+        "message": "启用失效链接检查",
+        "description": "Dead links enabled label"
+    },
+    "settings_deadLinksEnabledDesc": {
+        "message": "允许检查书签中无法访问的网址",
+        "description": "Dead links enabled description"
+    },
+    "settings_deadLinksDefaultScope": {
+        "message": "默认范围",
+        "description": "Dead links default scope label"
+    },
+    "settings_deadLinksDefaultScopeDesc": {
+        "message": "检查失效链接时使用的默认范围",
+        "description": "Dead links default scope description"
+    },
+    "settings_deadLinksRequestTimeoutMs": {
+        "message": "请求超时",
+        "description": "Dead links request timeout label"
+    },
+    "settings_deadLinksRequestTimeoutMsDesc": {
+        "message": "每个链接检查请求的最长等待时间",
+        "description": "Dead links request timeout description"
+    },
+    "settings_deadLinksConcurrency": {
+        "message": "并发数",
+        "description": "Dead links concurrency label"
+    },
+    "settings_deadLinksConcurrencyDesc": {
+        "message": "扫描失效链接时的并发请求数",
+        "description": "Dead links concurrency description"
+    },
+    "settings_deadLinksRetryCount": {
+        "message": "重试次数",
+        "description": "Dead links retry count label"
+    },
+    "settings_deadLinksRetryCountDesc": {
+        "message": "失效链接检查失败后的重试次数",
+        "description": "Dead links retry count description"
+    },
+    "settings_deadLinksFollowRedirects": {
+        "message": "跟随重定向",
+        "description": "Dead links follow redirects label"
+    },
+    "settings_deadLinksFollowRedirectsDesc": {
+        "message": "扫描失效链接时，将重定向的网址视为可访问",
+        "description": "Dead links follow redirects description"
+    },
+    "settings_deadLinksSuccessStatuses": {
+        "message": "成功状态码",
+        "description": "Dead links success statuses label"
+    },
+    "settings_deadLinksSuccessStatusesDesc": {
+        "message": "视为可访问的 HTTP 状态码，以逗号分隔",
+        "description": "Dead links success statuses description"
+    },
+    "settings_metadataFetcherEnabled": {
+        "message": "启用元数据获取",
+        "description": "Metadata fetcher enabled label"
+    },
+    "settings_metadataFetcherEnabledDesc": {
+        "message": "允许获取缺失的书签元数据",
+        "description": "Metadata fetcher enabled description"
+    },
+    "settings_metadataFetcherDefaultScope": {
+        "message": "默认范围",
+        "description": "Metadata fetcher default scope label"
+    },
+    "settings_metadataFetcherDefaultScopeDesc": {
+        "message": "获取元数据时使用的默认范围",
+        "description": "Metadata fetcher default scope description"
+    },
+    "settings_metadataFetcherOverwriteTitles": {
+        "message": "覆盖标题",
+        "description": "Metadata fetcher overwrite titles label"
+    },
+    "settings_metadataFetcherOverwriteTitlesDesc": {
+        "message": "找到更好的元数据时替换现有的书签标题",
+        "description": "Metadata fetcher overwrite titles description"
+    },
+    "settings_metadataFetcherFetchDescriptions": {
+        "message": "获取描述",
+        "description": "Metadata fetcher fetch descriptions label"
+    },
+    "settings_metadataFetcherFetchDescriptionsDesc": {
+        "message": "尝试为书签收集简短的元数据描述",
+        "description": "Metadata fetcher fetch descriptions description"
+    },
+    "settings_metadataFetcherRequestTimeoutMs": {
+        "message": "请求超时",
+        "description": "Metadata fetcher timeout label"
+    },
+    "settings_metadataFetcherRequestTimeoutMsDesc": {
+        "message": "每个元数据或网站图标请求的最长等待时间",
+        "description": "Metadata fetcher timeout description"
+    },
+    "settings_metadataFetcherConcurrency": {
+        "message": "并发数",
+        "description": "Metadata fetcher concurrency label"
+    },
+    "settings_metadataFetcherConcurrencyDesc": {
+        "message": "获取元数据或刷新网站图标时的并发请求数",
+        "description": "Metadata fetcher concurrency description"
+    },
+    "settings_privacyScannerEnabled": {
+        "message": "启用隐私扫描",
+        "description": "Privacy scanner enabled label"
+    },
+    "settings_privacyScannerEnabledDesc": {
+        "message": "允许扫描书签网址中的敏感数据",
+        "description": "Privacy scanner enabled description"
+    },
+    "settings_privacyScannerDefaultScope": {
+        "message": "默认范围",
+        "description": "Privacy scanner default scope label"
+    },
+    "settings_privacyScannerDefaultScopeDesc": {
+        "message": "扫描敏感数据时使用的默认范围",
+        "description": "Privacy scanner default scope description"
+    },
+    "settings_privacyScannerScanTitles": {
+        "message": "扫描标题",
+        "description": "Privacy scanner scan titles label"
+    },
+    "settings_privacyScannerScanTitlesDesc": {
+        "message": "除网址外，也检查书签标题中的敏感信息",
+        "description": "Privacy scanner scan titles description"
+    },
+    "settings_privacyScannerScanQueryParams": {
+        "message": "扫描查询参数",
+        "description": "Privacy scanner scan query params label"
+    },
+    "settings_privacyScannerScanQueryParamsDesc": {
+        "message": "检查查询参数中的密钥和敏感数据",
+        "description": "Privacy scanner scan query params description"
+    },
+    "settings_privacyScannerScanFragments": {
+        "message": "扫描片段",
+        "description": "Privacy scanner scan fragments label"
+    },
+    "settings_privacyScannerScanFragmentsDesc": {
+        "message": "检查网址片段中的敏感数据",
+        "description": "Privacy scanner scan fragments description"
+    },
+    "settings_privacyScannerSensitiveParams": {
+        "message": "敏感参数",
+        "description": "Privacy scanner sensitive params label"
+    },
+    "settings_privacyScannerSensitiveParamsDesc": {
+        "message": "应标记为敏感的参数名称，以逗号分隔",
+        "description": "Privacy scanner sensitive params description"
+    },
+    "settings_privacyScannerEmailDetection": {
+        "message": "检测电子邮件地址",
+        "description": "Privacy scanner email detection label"
+    },
+    "settings_privacyScannerEmailDetectionDesc": {
+        "message": "标记书签网址或标题中的电子邮件地址",
+        "description": "Privacy scanner email detection description"
+    },
+    "settings_privacyScannerUuidDetection": {
+        "message": "检测 UUID",
+        "description": "Privacy scanner uuid detection label"
+    },
+    "settings_privacyScannerUuidDetectionDesc": {
+        "message": "标记书签网址中类似 UUID 的值",
+        "description": "Privacy scanner uuid detection description"
+    },
+    "settings_statisticsEnabled": {
+        "message": "启用统计",
+        "description": "Statistics enabled label"
+    },
+    "settings_statisticsEnabledDesc": {
+        "message": "允许生成书签统计报告",
+        "description": "Statistics enabled description"
+    },
+    "settings_statisticsDefaultScope": {
+        "message": "默认范围",
+        "description": "Statistics default scope label"
+    },
+    "settings_statisticsDefaultScopeDesc": {
+        "message": "查看书签统计时使用的默认范围",
+        "description": "Statistics default scope description"
+    },
+    "settings_statisticsIncludeDomains": {
+        "message": "包含域名",
+        "description": "Statistics include domains label"
+    },
+    "settings_statisticsIncludeDomainsDesc": {
+        "message": "在书签统计中包含热门域名",
+        "description": "Statistics include domains description"
+    },
+    "settings_statisticsIncludeFolders": {
+        "message": "包含文件夹",
+        "description": "Statistics include folders label"
+    },
+    "settings_statisticsIncludeFoldersDesc": {
+        "message": "在书签统计中包含热门文件夹",
+        "description": "Statistics include folders description"
+    },
+    "settings_statisticsIncludeDuplicates": {
+        "message": "包含重复项",
+        "description": "Statistics include duplicates label"
+    },
+    "settings_statisticsIncludeDuplicatesDesc": {
+        "message": "在统计中包含重复书签的数量",
+        "description": "Statistics include duplicates description"
+    },
+    "settings_statisticsIncludeProtocols": {
+        "message": "包含协议",
+        "description": "Statistics include protocols label"
+    },
+    "settings_statisticsIncludeProtocolsDesc": {
+        "message": "在统计中包含网址协议的分布",
+        "description": "Statistics include protocols description"
+    },
+    "settings_statisticsIncludeDepthBreakdown": {
+        "message": "包含层级分布",
+        "description": "Statistics include depth breakdown label"
+    },
+    "settings_statisticsIncludeDepthBreakdownDesc": {
+        "message": "显示每个文件夹层级中的书签数量",
+        "description": "Statistics depth breakdown setting description"
+    },
+    "settings_statisticsTopN": {
+        "message": "前 N 项",
+        "description": "Statistics top N label"
+    },
+    "settings_statisticsTopNDesc": {
+        "message": "热门域名和文件夹列表中显示的最大条目数",
+        "description": "Statistics top N description"
+    },
+    "settings_dataShowExport": {
+        "message": "显示导出工具",
+        "description": "Data export tool visibility label"
+    },
+    "settings_dataShowExportDesc": {
+        "message": "在侧栏中显示书签导出工具",
+        "description": "Data export tool visibility description"
+    },
+    "settings_dataShowImport": {
+        "message": "显示导入工具",
+        "description": "Data import tool visibility label"
+    },
+    "settings_dataShowImportDesc": {
+        "message": "在侧栏中显示书签导入工具",
+        "description": "Data import tool visibility description"
+    },
+    "settings_dataDefaultExportFormat": {
+        "message": "默认导出格式",
+        "description": "Default export format label"
+    },
+    "settings_dataDefaultExportFormatDesc": {
+        "message": "书签导出工具中默认选中的格式",
+        "description": "Default export format description"
+    },
+    "toast_duplicatesRemoved": {
+        "message": "已移除重复项",
+        "description": "Duplicate removal success title"
+    },
+    "toast_duplicatesRemovedDesc": {
+        "message": "已移除 $count$ 个重复书签",
+        "description": "Duplicate removal success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_toolFailed": {
+        "message": "工具运行失败",
+        "description": "Generic tool failure title"
+    },
+    "toast_urlCleanerApplied": {
+        "message": "已清理网址",
+        "description": "URL cleaner success title"
+    },
+    "toast_urlCleanerAppliedDesc": {
+        "message": "已更新 $count$ 个书签",
+        "description": "URL cleaner success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_aiContextPacked": {
+        "message": "已导出 AI 上下文",
+        "description": "AI context export success title"
+    },
+    "toast_aiContextPackedDesc": {
+        "message": "已导出 $count$ 个书签供 AI 使用",
+        "description": "AI context export success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "tools_duplicatesDialogDesc": {
+        "message": "在 $bookmarks$ 个书签中发现 $groups$ 组重复项",
+        "description": "Duplicate dialog description",
+        "placeholders": {
+            "groups": {
+                "content": "$1",
+                "example": "2"
+            },
+            "bookmarks": {
+                "content": "$2",
+                "example": "40"
+            }
+        }
+    },
+    "tools_urlCleanerDialogDesc": {
+        "message": "有 $count$ 个书签可以清理",
+        "description": "URL cleaner dialog description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_statisticsDialogDesc": {
+        "message": "所选书签范围的概况",
+        "description": "Statistics dialog description"
+    },
+    "tools_autoTaggingDialogDesc": {
+        "message": "AI 为所选书签生成的标签",
+        "description": "Auto-tagging dialog description"
+    },
+    "tools_summarizerDialogDesc": {
+        "message": "AI 生成的书签摘要",
+        "description": "Summarizer dialog description"
+    },
+    "tools_deadLinksDialogDesc": {
+        "message": "所选书签的可访问性检查结果",
+        "description": "Dead link checker dialog description"
+    },
+    "tools_metadataDialogDesc": {
+        "message": "所选书签的元数据建议",
+        "description": "Metadata fetcher dialog description"
+    },
+    "tools_privacyDialogDesc": {
+        "message": "在所选书签中发现的潜在敏感数据",
+        "description": "Privacy scanner dialog description"
+    },
+    "tools_rootFolder": {
+        "message": "根目录",
+        "description": "Label for bookmarks with no parent folder path"
+    },
+    "tools_suggestedTitle": {
+        "message": "建议的标题：$title$",
+        "description": "Metadata fetcher suggested title",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            }
+        }
+    },
+    "tools_metadataAvailable": {
+        "message": "有可用的元数据",
+        "description": "Metadata fetcher result when a better title was found"
+    },
+    "tools_metadataNoChange": {
+        "message": "标题无需更改",
+        "description": "Metadata fetcher result when the title is already current"
+    },
+    "tools_metadataNotHtml": {
+        "message": "不是 HTML 网页，已跳过",
+        "description": "Metadata fetcher result when the link points to a file such as a PDF or image"
+    },
+    "tools_deadLinkStatus_ok": {
+        "message": "正常",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_redirect": {
+        "message": "已重定向",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_error": {
+        "message": "错误",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_timeout": {
+        "message": "已超时",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkStatus_invalid": {
+        "message": "无效",
+        "description": "Dead link status badge"
+    },
+    "tools_deadLinkReachable": {
+        "message": "可访问",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkRedirected": {
+        "message": "已重定向，但可访问",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkHttpStatus": {
+        "message": "HTTP $status$",
+        "description": "Dead link result detail with the HTTP status code",
+        "placeholders": {
+            "status": {
+                "content": "$1",
+                "example": "404"
+            }
+        }
+    },
+    "tools_deadLinkTimedOut": {
+        "message": "请求超时",
+        "description": "Dead link result detail"
+    },
+    "tools_deadLinkInvalidUrl": {
+        "message": "网址无效",
+        "description": "Dead link result detail"
+    },
+    "tools_privacySeverity_low": {
+        "message": "低",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_medium": {
+        "message": "中",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySeverity_high": {
+        "message": "高",
+        "description": "Privacy finding severity badge"
+    },
+    "tools_privacySensitiveParam": {
+        "message": "敏感查询参数：$param$",
+        "description": "Privacy finding for a sensitive URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "token"
+            }
+        }
+    },
+    "tools_privacyFragment": {
+        "message": "网址包含片段",
+        "description": "Privacy finding"
+    },
+    "tools_privacyEmail": {
+        "message": "检测到电子邮件地址",
+        "description": "Privacy finding"
+    },
+    "tools_privacyUuid": {
+        "message": "检测到类似 UUID 的令牌",
+        "description": "Privacy finding"
+    },
+    "state_keep": {
+        "message": "保留",
+        "description": "Keep badge label"
+    },
+    "state_noDuplicatesFound": {
+        "message": "未发现重复的书签。",
+        "description": "No duplicates found state"
+    },
+    "state_noUrlChangesFound": {
+        "message": "没有需要清理的网址。",
+        "description": "No URL changes found state"
+    },
+    "state_noData": {
+        "message": "暂无数据。",
+        "description": "No data available state"
+    },
+    "state_noAiResults": {
+        "message": "暂无 AI 结果。",
+        "description": "No AI results state"
+    },
+    "state_noDeadLinksFound": {
+        "message": "未发现失效链接。",
+        "description": "Dead link checker empty state"
+    },
+    "state_noMetadataFound": {
+        "message": "没有可更新的元数据。",
+        "description": "Metadata fetcher empty state"
+    },
+    "state_noPrivacyIssuesFound": {
+        "message": "未发现隐私问题。",
+        "description": "Privacy scanner empty state"
+    },
+    "action_clean": {
+        "message": "清理",
+        "description": "Clean button label"
+    },
+    "action_removing": {
+        "message": "正在移除…",
+        "description": "Removing state label"
+    },
+    "action_applying": {
+        "message": "正在应用…",
+        "description": "Button label while changes are applied"
+    },
+    "action_removeDuplicates": {
+        "message": "移除重复项",
+        "description": "Remove duplicates button label"
+    },
+    "stats_totalBookmarks": {
+        "message": "书签",
+        "description": "Statistics total bookmarks label"
+    },
+    "stats_totalFolders": {
+        "message": "文件夹",
+        "description": "Statistics total folders label"
+    },
+    "stats_deepestLevel": {
+        "message": "最深层级",
+        "description": "Statistics deepest level label"
+    },
+    "stats_duplicates": {
+        "message": "重复项",
+        "description": "Statistics duplicates label"
+    },
+    "stats_topDomains": {
+        "message": "热门域名",
+        "description": "Statistics top domains label"
+    },
+    "stats_topFolders": {
+        "message": "热门文件夹",
+        "description": "Statistics top folders label"
+    },
+    "stats_protocols": {
+        "message": "协议",
+        "description": "Statistics protocols label"
+    },
+    "settings_aiProviderOllama": {
+        "message": "Ollama（本地）",
+        "description": "Ollama provider name"
+    },
+    "settings_aiProviderCustom": {
+        "message": "自定义服务商",
+        "description": "Custom AI provider name"
+    },
+    "settings_duplicatesMatchExactUrl": {
+        "message": "完全相同的网址",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchNormalizedUrl": {
+        "message": "规范化网址",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleUrl": {
+        "message": "标题 + 网址",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesMatchTitleOnly": {
+        "message": "仅标题",
+        "description": "Duplicate match strategy option"
+    },
+    "settings_duplicatesKeepOldest": {
+        "message": "最早的",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepNewest": {
+        "message": "最新的",
+        "description": "Duplicate keep rule option"
+    },
+    "settings_duplicatesKeepFirst": {
+        "message": "最先找到的",
+        "description": "Duplicate keep rule option"
+    },
+    "error_invalidSettingsFields": {
+        "message": "以下设置的值无效：$1",
+        "description": "Settings validation error listing field labels"
+    },
+    "settings_errorMinExceedsMax": {
+        "message": "最小值不能大于最大值。",
+        "description": "Settings error for min greater than max"
+    },
+    "settings_errorStatusCodes": {
+        "message": "请输入 100 到 599 之间的 HTTP 状态码，以逗号分隔。",
+        "description": "Settings error for status code list"
+    },
+    "settings_errorRangeOrUnlimited": {
+        "message": "请选择“不限”或 $1 到 $2 之间的值。",
+        "description": "Settings error for limit fields"
+    },
+    "settings_errorRange": {
+        "message": "请选择 $1 到 $2 之间的值。",
+        "description": "Settings error for number range"
+    },
+    "settings_errorRequired": {
+        "message": "此字段不能为空。",
+        "description": "Settings error for empty text"
+    },
+    "settings_errorTooLong": {
+        "message": "最多 $1 个字符。",
+        "description": "Settings error for long text"
+    },
+    "settings_errorInvalidOption": {
+        "message": "请从可用选项中选择一个。",
+        "description": "Settings error for invalid option"
+    },
+    "options_baseUrlInvalid": {
+        "message": "请输入以 http:// 或 https:// 开头的完整网址。",
+        "description": "Invalid AI provider base URL error"
+    },
+    "error_aiKeyNotConfigured": {
+        "message": "尚未配置 API 密钥。请在“选项 → AI”中添加。",
+        "description": "AI API key missing error"
+    },
+    "contextMenu_untitled": {
+        "message": "无标题",
+        "description": "Fallback bookmark title from context menu"
+    },
+    "contextMenu_recentFolders": {
+        "message": "最近文件夹",
+        "description": "Context menu recent folders submenu"
+    },
+    "contextMenu_aiSuggestions": {
+        "message": "AI 建议",
+        "description": "Context menu AI suggestions submenu"
+    },
+    "contextMenu_defaultFolders": {
+        "message": "默认文件夹",
+        "description": "Context menu default folders submenu"
+    },
+    "settings_noLimit": {
+        "message": "不限",
+        "description": "Slider value meaning unlimited"
+    },
+    "settings_modified": {
+        "message": "已修改",
+        "description": "Badge for settings changed from default"
+    },
+    "settings_resetToDefault": {
+        "message": "恢复默认值",
+        "description": "Reset one setting button tooltip"
+    },
+    "settings_resetFieldToDefault": {
+        "message": "将“$1”恢复为默认值",
+        "description": "Reset one setting button accessible name"
+    },
+    "options_apiKeyInvalidFormat": {
+        "message": "这看起来不像 $1 的 API 密钥。未保存。",
+        "description": "Invalid API key format error"
+    },
+    "options_extraHeadersInvalid": {
+        "message": "请使用值为字符串的 JSON 对象，例如 {\"HTTP-Referer\":\"https://example.com\"}。",
+        "description": "Invalid extra headers error"
+    },
+    "toast_aiServiceVerified": {
+        "message": "服务验证成功",
+        "description": "AI verify success title"
+    },
+    "toast_aiServiceVerifiedDescription": {
+        "message": "$1 已成功响应。",
+        "description": "AI verify success description"
+    },
+    "toast_aiServiceVerifyFailed": {
+        "message": "服务验证失败",
+        "description": "AI verify failure title"
+    },
+    "error_aiNoModels": {
+        "message": "服务商未返回任何模型。",
+        "description": "AI model detection empty error"
+    },
+    "toast_aiModelsRefreshed": {
+        "message": "已刷新模型",
+        "description": "AI models refreshed title"
+    },
+    "toast_aiModelsRefreshedDescription": {
+        "message": "从 $2 找到 $1 个模型。",
+        "description": "AI models refreshed description"
+    },
+    "toast_aiModelsRefreshFailed": {
+        "message": "模型检测失败",
+        "description": "AI model detection failure title"
+    },
+    "options_apiKeyDescription": {
+        "message": "你的 AI 服务商 API 密钥，仅存储在此设备上。",
+        "description": "API key field description"
+    },
+    "options_apiKeyOptionalDescription": {
+        "message": "$1 无需 API 密钥即可运行。",
+        "description": "Optional API key description"
+    },
+    "options_apiKeyOptionalPlaceholder": {
+        "message": "可选",
+        "description": "Placeholder of the API key field for a provider that works without a key"
+    },
+    "options_apiKeyRequiredPlaceholder": {
+        "message": "必填",
+        "description": "Placeholder of the API key field for a provider that needs a key and has no known key format"
+    },
+    "options_apiKey": {
+        "message": "API 密钥",
+        "description": "API key field label"
+    },
+    "options_hideApiKey": {
+        "message": "隐藏 API 密钥",
+        "description": "Hide API key button"
+    },
+    "options_showApiKey": {
+        "message": "显示 API 密钥",
+        "description": "Show API key button"
+    },
+    "options_baseUrl": {
+        "message": "API 地址",
+        "description": "AI provider base URL label"
+    },
+    "options_baseUrlDescription": {
+        "message": "可选的端点地址，用于覆盖默认值，向此服务商发出的每个请求都会使用（例如代理或兼容 OpenAI 的服务器）。",
+        "description": "AI provider base URL description"
+    },
+    "options_customModel": {
+        "message": "自定义模型",
+        "description": "Custom model label"
+    },
+    "options_customModelPlaceholder": {
+        "message": "model-id",
+        "description": "Placeholder of the custom model field: an example model id"
+    },
+    "options_customModelDescription": {
+        "message": "可选。对允许任意模型名称的服务商，用于覆盖模型 ID。",
+        "description": "Custom model description"
+    },
+    "options_extraHeaders": {
+        "message": "额外请求头 JSON",
+        "description": "Extra headers label"
+    },
+    "options_extraHeadersDescription": {
+        "message": "可选。一个 JSON 对象，其中的请求头会随每个请求发送给此服务商。",
+        "description": "Extra headers description"
+    },
+    "options_refreshingModels": {
+        "message": "正在刷新…",
+        "description": "Refresh models button busy label"
+    },
+    "options_refreshModels": {
+        "message": "刷新模型",
+        "description": "Refresh models button"
+    },
+    "options_verifyingService": {
+        "message": "正在验证…",
+        "description": "Verify service button busy label"
+    },
+    "options_verifyService": {
+        "message": "验证服务",
+        "description": "Verify service button"
+    },
+    "toast_settingsImportedNoChanges": {
+        "message": "文件与当前设置一致，未做任何更改。",
+        "description": "Import toast when nothing changed"
+    },
+    "toast_settingsImportedChanges": {
+        "message": "已更改 $1 项设置：$2",
+        "description": "Import toast listing changed settings"
+    },
+    "action_switchToLight": {
+        "message": "切换到浅色主题",
+        "description": "Theme toggle accessible name"
+    },
+    "action_switchToDark": {
+        "message": "切换到深色主题",
+        "description": "Theme toggle accessible name"
+    },
+    "settings_searchResultsCount": {
+        "message": "所有标签页中共有 $1 项匹配的设置",
+        "description": "Settings search result count"
+    },
+    "settings_statusNotSaved": {
+        "message": "$1 项设置未保存",
+        "description": "Save status when fields are invalid"
+    },
+    "bookmarks_folderUnavailable": {
+        "message": "该文件夹已不存在。现在显示最近的现有文件夹。",
+        "description": "Notice when the requested or current manager folder was deleted or never existed"
+    },
+    "bookmarks_folderNotAFolder": {
+        "message": "该项不是文件夹。现在显示包含它的文件夹。",
+        "description": "Notice when the manager URL points at a bookmark instead of a folder"
+    },
+    "bookmarks_expandFolder": {
+        "message": "展开“$1”",
+        "description": "Folder tree expand button label; $1 is the folder title"
+    },
+    "bookmarks_collapseFolder": {
+        "message": "收起“$1”",
+        "description": "Folder tree collapse button label; $1 is the folder title"
+    },
+    "bookmarks_breadcrumb": {
+        "message": "文件夹路径",
+        "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "table_clearSort": {
+        "message": "清除排序",
+        "description": "Column header menu item that removes sorting by the column"
+    },
+    "table_sortedAsc": {
+        "message": "$1，升序",
+        "description": "Column header button label when sorted ascending; $1 is the column name"
+    },
+    "table_sortedDesc": {
+        "message": "$1，降序",
+        "description": "Column header button label when sorted descending; $1 is the column name"
+    },
+    "table_resizeColumn": {
+        "message": "调整“$1”列的宽度",
+        "description": "Accessible name of a column resize handle (drag, double-click to reset, or ArrowLeft/ArrowRight); $1 is the column name"
+    },
+    "table_dateRange": {
+        "message": "$1 – $2",
+        "description": "Date filter button text for a range; $1 start date, $2 end date"
+    },
+    "table_clearDateFilter": {
+        "message": "清除日期筛选",
+        "description": "Button that clears the Date Added filter"
+    },
+    "table_filterSelectedCount": {
+        "message": "已选择 $1 项",
+        "description": "Count of selected filter options or table rows; $1 is the count"
+    },
+    "table_filterNoOptions": {
+        "message": "未找到结果。",
+        "description": "Empty state inside a table filter popover"
+    },
+    "table_filterClear": {
+        "message": "清除筛选",
+        "description": "Filter popover item that clears the selected options"
+    },
+    "table_filterDomains": {
+        "message": "域名",
+        "description": "Title of the filter that groups links by site domain"
+    },
+    "table_browserOrder": {
+        "message": "浏览器顺序",
+        "description": "Toggle that shows the current folder in the browser bookmark order"
+    },
+    "table_browserOrderHelp": {
+        "message": "按浏览器自身的顺序显示项目，以便看到上移或下移的效果",
+        "description": "Tooltip for the Browser order toggle"
+    },
+    "table_moveNeedsBrowserOrder": {
+        "message": "开启“浏览器顺序”后才能移动项目",
+        "description": "Why the move buttons are disabled when the table uses another sort order"
+    },
+    "table_moveNeedsNoColumnSort": {
+        "message": "清除列排序后才能移动项目",
+        "description": "Why the move buttons are disabled while a column is sorted"
+    },
+    "table_moveNeedsFolderView": {
+        "message": "清除筛选或勾选“仅当前文件夹”后才能移动项目",
+        "description": "Why the move buttons are disabled while filtering across all bookmarks"
+    },
+    "toast_itemsDeleted": {
+        "message": "已删除 $1 项",
+        "description": "Toast title after deleting several selected items; $1 is the count"
+    },
+    "toast_deleteManyUndoWindow": {
+        "message": "已删除 $1 项。可在 $2 秒内撤消。",
+        "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_itemsRestoredDesc": {
+        "message": "已恢复 $1 项。",
+        "description": "Toast description after undoing a multi-item deletion; $1 is the count"
+    },
+    "toast_deleteSkippedDesc": {
+        "message": "因已更改或已被删除而跳过：$1。失败：$2。",
+        "description": "Deletion outcome counts after some items were not deleted; $1 skipped (changed or deleted elsewhere since they were chosen), $2 failed"
+    },
+    "bookmarks_deleteItems": {
+        "message": "删除 $1 项",
+        "description": "Title and confirm button of the multi-item delete dialog; $1 is the count"
+    },
+    "bookmarks_confirmDeleteItems": {
+        "message": "要删除所选的 $1 项（包括所选文件夹中的全部内容）吗？删除后短时间内可以撤消。",
+        "description": "Confirmation text for deleting several selected items; $1 is the count"
+    },
+    "bookmarks_bulkActions": {
+        "message": "所选项目",
+        "description": "Accessible name of the toolbar for selected table rows"
+    },
+    "bookmarks_bulkMove": {
+        "message": "移到文件夹",
+        "description": "Button that moves the selected items to another folder"
+    },
+    "bookmarks_bulkMoveTitle": {
+        "message": "移动 $1 项",
+        "description": "Title of the dialog that moves selected items; $1 is the count"
+    },
+    "bookmarks_bulkMoveDescription": {
+        "message": "选择要将所选项目移入的文件夹。它们会添加到末尾。",
+        "description": "Description of the bulk move dialog"
+    },
+    "bookmarks_bulkMoveTarget": {
+        "message": "目标文件夹",
+        "description": "Label of the destination folder picker in the bulk move dialog"
+    },
+    "bookmarks_bulkMoved": {
+        "message": "已移动 $1 项",
+        "description": "Toast after moving selected items; $1 is the count"
+    },
+    "bookmarks_clearSelection": {
+        "message": "清除选择",
+        "description": "Button that clears the table row selection"
+    },
+    "bookmarks_editUrlScriptRejected": {
+        "message": "无法在此保存脚本网址（$1）。现有的小书签仍可重命名。",
+        "description": "Validation message when a newly entered URL runs script; $1 is the scheme, such as javascript: or vbscript:"
+    },
+    "bookmarks_editFolderDescription": {
+        "message": "更改此文件夹的名称。",
+        "description": "Edit dialog description for folders"
+    },
+    "action_dismiss": {
+        "message": "关闭",
+        "description": "Button that dismisses a notice"
+    },
+    "search_clear": {
+        "message": "清除搜索",
+        "description": "Accessible label for the button that clears the popup search box"
+    },
+    "search_invalidRegex": {
+        "message": "正则表达式无效。改为按纯文本搜索。",
+        "description": "Warning shown when the regex search option is on and the query is not a valid regular expression"
+    },
+    "ai_folderRecommendation": {
+        "message": "AI 文件夹推荐",
+        "description": "Tooltip and accessible label for the popup button that asks AI to recommend a folder"
+    },
+    "toast_bookmarkAddedDesc": {
+        "message": "已将“$title$”添加到“$folder$”",
+        "description": "Toast description after saving the current page; $1 is the page title, $2 the folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_bookmarkAlreadyInFolderDesc": {
+        "message": "“$title$”已在“$folder$”中。",
+        "description": "Toast description when the current page is already saved in the chosen folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example Domain"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Recipes"
+            }
+        }
+    },
+    "toast_nothingChanged": {
+        "message": "已保存过",
+        "description": "Toast title when an action was skipped because nothing needed to change"
+    },
+    "toast_errorAddingBookmarkDesc": {
+        "message": "无法添加书签。请重试。",
+        "description": "Toast description when saving the current page fails"
+    },
+    "toast_folderCreatedDesc": {
+        "message": "已在“$parent$”中新建文件夹“$name$”",
+        "description": "Toast description after creating a folder; $1 is the new folder, $2 its parent",
+        "placeholders": {
+            "name": {
+                "content": "$1",
+                "example": "Travel"
+            },
+            "parent": {
+                "content": "$2",
+                "example": "Bookmarks bar"
+            }
+        }
+    },
+    "toast_errorCreatingFolderDesc": {
+        "message": "无法新建文件夹。请重试。",
+        "description": "Toast description when creating a folder fails"
+    },
+    "toast_itemMovedDesc": {
+        "message": "已将“$title$”移到“$folder$”",
+        "description": "Toast description after moving an item into another folder",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "folder": {
+                "content": "$2",
+                "example": "Reading"
+            }
+        }
+    },
+    "toast_itemReorderedDesc": {
+        "message": "已将“$title$”移到第 $position$ 位",
+        "description": "Toast description after reordering an item inside its folder; $2 is the 1-based position",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "News"
+            },
+            "position": {
+                "content": "$2",
+                "example": "3"
+            }
+        }
+    },
+    "toast_reorderHiddenBySort": {
+        "message": "列表按日期或名称排序，因此保存的顺序只有在使用“文件夹优先”排序方式时才可见。",
+        "description": "Note added to the reorder toast when the popup sort order hides browser order"
+    },
+    "toast_errorMovingItemDesc": {
+        "message": "无法移动项目。请重试。",
+        "description": "Toast description when moving an item fails"
+    },
+    "toast_cannotMoveIntoDescendant": {
+        "message": "无法将文件夹移入其自身或其子文件夹。",
+        "description": "Toast description when a folder is dropped into itself or one of its subfolders"
+    },
+    "popup_expandAllSubfolders": {
+        "message": "展开所有子文件夹",
+        "description": "Tooltip and accessible label for the folder action that opens the folder and every subfolder"
+    },
+    "popup_collapseAllSubfolders": {
+        "message": "收起所有子文件夹",
+        "description": "Tooltip and accessible label for the folder action that closes every subfolder"
+    },
+    "action_close": {
+        "message": "关闭",
+        "description": "Accessible label for close buttons on dialogs, panels, and notifications"
+    },
+    "action_delete": {
+        "message": "删除",
+        "description": "Button or menu item that deletes the item it belongs to"
+    },
+    "toast_regionLabel": {
+        "message": "通知（$1）",
+        "description": "Accessible name of the notifications region; $1 is the key that moves focus to it"
+    },
+    "toast_duplicatesPartiallyRemoved": {
+        "message": "部分重复项未移除",
+        "description": "Duplicate removal partial result title"
+    },
+    "toast_duplicatesPartialDesc": {
+        "message": "已移除：$removed$。因已更改或已被移除而跳过：$skipped$。失败：$failed$。",
+        "description": "Duplicate removal partial result counts",
+        "placeholders": {
+            "removed": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesSkippedGroupsDesc": {
+        "message": "有 $count$ 组未做处理，因为要保留的书签在扫描后被更改或移除。",
+        "description": "Duplicate removal: groups skipped because their kept bookmark no longer matches",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "toast_duplicatesRestoredDesc": {
+        "message": "已恢复：$restored$。无法恢复：$failed$。",
+        "description": "Duplicate removal undo result",
+        "placeholders": {
+            "restored": {
+                "content": "$1",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_duplicatesRestoredNote": {
+        "message": "恢复的书签会被视为新添加的书签，因此按日期设定的保留规则下次可能会保留另一份副本。",
+        "description": "Shown after duplicate removal is undone: the browser recreates restored bookmarks with a new date added"
+    },
+    "tools_duplicatesTitleOnlyWarning": {
+        "message": "“仅标题”匹配在 $count$ 组中将网址不同的书签归为一组。移除重复项会删除那些其他网页的书签，请先检查。",
+        "description": "Duplicate cleaner warning when the title-only strategy groups different URLs",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "tools_duplicatesDifferentUrls": {
+        "message": "网址不同",
+        "description": "Badge on a duplicate group whose bookmarks point to different URLs"
+    },
+    "toast_urlCleanerPartial": {
+        "message": "部分网址未清理",
+        "description": "URL cleaner partial result title"
+    },
+    "toast_urlCleanerPartialDesc": {
+        "message": "已更新：$updated$。因预览后发生变化而跳过：$skipped$。失败：$failed$。",
+        "description": "URL cleaner partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_deadLinkRedirectsTo": {
+        "message": "重定向到 $url$",
+        "description": "Dead link result detail for a redirect with its destination",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/new"
+            }
+        }
+    },
+    "tools_notWebUrlSkipped": {
+        "message": "不是网页链接，已跳过",
+        "description": "Network tool detail for non-web URLs such as bookmarklets"
+    },
+    "tools_networkFailed": {
+        "message": "无法连接到该网站",
+        "description": "Network tool detail for a transport failure"
+    },
+    "tools_redirectFailed": {
+        "message": "重定向次数过多（或无法访问重定向目标）",
+        "description": "Network tool detail when the site answered with a redirect that could not be followed, usually a redirect loop"
+    },
+    "tools_deadLinkStatus_skipped": {
+        "message": "已跳过",
+        "description": "Dead link status badge"
+    },
+    "tools_metadataApplyItem": {
+        "message": "为“$title$”应用建议的标题",
+        "description": "Accessible label for the checkbox that selects a title suggestion",
+        "placeholders": {
+            "title": {
+                "content": "$1",
+                "example": "Example"
+            }
+        }
+    },
+    "tools_metadataApplySelected": {
+        "message": "应用 $count$ 个标题",
+        "description": "Button that applies selected title suggestions",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataApplied": {
+        "message": "已更新标题",
+        "description": "Metadata apply success title"
+    },
+    "toast_metadataAppliedDesc": {
+        "message": "已更新 $count$ 个书签标题",
+        "description": "Metadata apply success description",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "1"
+            }
+        }
+    },
+    "toast_metadataPartial": {
+        "message": "部分标题未更新",
+        "description": "Metadata apply partial result title"
+    },
+    "toast_metadataPartialDesc": {
+        "message": "已更新：$updated$。因扫描后发生变化而跳过：$skipped$。失败：$failed$。",
+        "description": "Metadata apply partial result counts",
+        "placeholders": {
+            "updated": {
+                "content": "$1",
+                "example": "1"
+            },
+            "skipped": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_hostAccessTitle": {
+        "message": "要允许访问网站吗？",
+        "description": "Title of the dialog asking for website access"
+    },
+    "tools_hostAccessDesc": {
+        "message": "失效链接检查、标题建议和网站图标刷新会请求每个已加入书签的网页。除非 Bookmark Scout 有权访问网站，否则大多数网站会阻止这些请求。浏览器会请你确认。",
+        "description": "Explains why the network tools need website access"
+    },
+    "tools_hostAccessPrivacy": {
+        "message": "仅在你运行这些工具时才会使用此权限。请求不会附带 Cookie，你也可以在浏览器的扩展程序设置中撤消访问权限。",
+        "description": "Privacy note in the website access dialog"
+    },
+    "permission_deniedTitle": {
+        "message": "未授予权限",
+        "description": "Toast title when the user declines a browser permission a feature asked for"
+    },
+    "permission_contextMenuDenied": {
+        "message": "右键菜单保持关闭。如需使用，请重新开启“右键菜单”。",
+        "description": "Toast text when the right-click menu permission is declined"
+    },
+    "permission_currentTabTitle": {
+        "message": "要允许访问当前标签页吗？",
+        "description": "Title of the dialog that explains the tab permission before the browser asks for it"
+    },
+    "permission_currentTabDesc": {
+        "message": "为了保存你正在浏览的网页或为其推荐文件夹，Bookmark Scout 会读取当前标签页的标题和网址。工具栏弹出窗口无需询问即可读取；而侧边栏在你切换标签页时会保持打开，因此需要此权限。",
+        "description": "Why saving the current page from the side panel needs the tab permission"
+    },
+    "permission_currentTabDetail": {
+        "message": "浏览器的提示会将其称为访问你的标签页或浏览记录。Bookmark Scout 只在你要求时读取当前标签页的标题和网址，不会存储其他任何内容。",
+        "description": "What the tab permission is used for, shown in the explanation dialog"
+    },
+    "permission_currentTabDenied": {
+        "message": "未保存任何内容。请改为在该网页上打开工具栏弹出窗口，或在出现提示时允许访问标签页。",
+        "description": "Toast text when the tab permission is declined or missing"
+    },
+    "permission_browserIconsDenied": {
+        "message": "书签会继续显示“刷新网站图标”保存的图标，或显示通用图标。",
+        "description": "Toast text when the favicon permission is declined"
+    },
+    "permission_aiDenied": {
+        "message": "AI 功能保持关闭。开启 AI 时，浏览器会请你允许扩展程序共享 AI 服务商所需的数据。",
+        "description": "Toast text when Firefox data sharing consent for AI features is declined or missing"
+    },
+    "permission_aiProviderCheckDenied": {
+        "message": "未发送任何内容。扩展程序将 API 密钥共享给服务商之前，浏览器会先征求你的同意。",
+        "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
+    },
+    "tools_hostAccessDenied": {
+        "message": "未授予网站访问权限",
+        "description": "Toast title when website access is declined"
+    },
+    "tools_hostAccessDeniedDesc": {
+        "message": "未扫描任何内容。再次运行该工具即可允许访问。",
+        "description": "Toast description when website access is declined"
+    },
+    "action_notNow": {
+        "message": "以后再说",
+        "description": "Button that dismisses a permission request"
+    },
+    "action_allowAccess": {
+        "message": "允许访问",
+        "description": "Button that requests website access"
+    },
+    "error_invalidJsonFormat": {
+        "message": "JSON 格式无效",
+        "description": "Import error for malformed JSON"
+    },
+    "error_importNothingFound": {
+        "message": "此文件中未找到书签或文件夹。未导入任何内容。",
+        "description": "Import error when a file contains no bookmarks or folders"
+    },
+    "toast_importResultDesc": {
+        "message": "已导入书签：$bookmarks$。已导入文件夹：$folders$。",
+        "description": "Import success counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            }
+        }
+    },
+    "toast_importPartial": {
+        "message": "部分项目未导入",
+        "description": "Import partial result title"
+    },
+    "toast_importPartialDesc": {
+        "message": "已导入书签：$bookmarks$。已导入文件夹：$folders$。未导入：$failed$。",
+        "description": "Import partial result counts",
+        "placeholders": {
+            "bookmarks": {
+                "content": "$1",
+                "example": "1"
+            },
+            "folders": {
+                "content": "$2",
+                "example": "1"
+            },
+            "failed": {
+                "content": "$3",
+                "example": "1"
+            }
+        }
+    },
+    "tools_privacySensitiveFragmentParam": {
+        "message": "网址片段中的敏感值：$param$",
+        "description": "Privacy finding for a sensitive value in the URL fragment",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "access_token"
+            }
+        }
+    },
+    "tools_privacyCredentials": {
+        "message": "网址中嵌入了用户名和密码",
+        "description": "Privacy finding for a username and password in the URL"
+    },
+    "tools_privacyUsername": {
+        "message": "网址中嵌入了用户名",
+        "description": "Privacy finding for a username in the URL"
+    },
+    "tools_privacyTokenPattern": {
+        "message": "值看起来像 API 令牌或访问令牌",
+        "description": "Privacy finding for a value that looks like an API token"
+    },
+    "export_privacyReviewTitle": {
+        "message": "导出前检查隐私数据",
+        "description": "Title of the dialog shown before exporting data that may contain private values"
+    },
+    "export_privacyReviewDesc": {
+        "message": "此次导出中有 $count$ 个书签包含可能属于隐私的值。脱敏导出仅在文件中将这些值替换为 REDACTED，不会更改你的书签。",
+        "description": "Export privacy review description; $count$ is how many bookmarks contain private values",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "export_privacyReviewOriginal": {
+        "message": "按原样导出",
+        "description": "Button that exports the file unchanged after the privacy review"
+    },
+    "export_privacyReviewRedacted": {
+        "message": "脱敏导出",
+        "description": "Button that exports the file with private values redacted"
+    },
+    "export_privacyCredentials": {
+        "message": "网址中含有用户名或密码",
+        "description": "Export privacy finding: user name or password in the URL"
+    },
+    "export_privacyFragment": {
+        "message": "网址片段中含有隐私值",
+        "description": "Export privacy finding: private value in the URL fragment"
+    },
+    "export_privacyTokenParam": {
+        "message": "参数中含有类似令牌的值：$param$",
+        "description": "Export privacy finding: token-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "state"
+            }
+        }
+    },
+    "export_privacyTokenUrl": {
+        "message": "网址中含有类似令牌的值",
+        "description": "Export privacy finding: token-like value in the URL"
+    },
+    "export_privacyTokenTitle": {
+        "message": "标题中含有类似令牌的值",
+        "description": "Export privacy finding: token-like value in the title"
+    },
+    "export_privacyEmailParam": {
+        "message": "参数中含有类似电子邮件地址的值：$param$",
+        "description": "Export privacy finding: email-like value in a URL parameter",
+        "placeholders": {
+            "param": {
+                "content": "$1",
+                "example": "user"
+            }
+        }
+    },
+    "export_privacyEmailUrl": {
+        "message": "网址中含有类似电子邮件地址的值",
+        "description": "Export privacy finding: email-like value in the URL"
+    },
+    "export_privacyEmailTitle": {
+        "message": "标题中含有类似电子邮件地址的值",
+        "description": "Export privacy finding: email-like value in the title"
+    },
+    "stats_depthBreakdown": {
+        "message": "按文件夹层级统计书签",
+        "description": "Statistics bookmarks-per-folder-level list label"
+    },
+    "stats_depthLevel": {
+        "message": "第 $level$ 层",
+        "description": "Statistics folder level label",
+        "placeholders": {
+            "level": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "ai_featuresDisabled": {
+        "message": "AI 功能已停用",
+        "description": "Error when an AI tool runs while AI features are off"
+    },
+    "ai_featuresDisabledNotice": {
+        "message": "请在选项中开启 AI 功能以使用此工具。",
+        "description": "Notice on AI tool cards while AI features are off"
+    },
+    "bookmarks_bulkHiddenSelection": {
+        "message": "（另有 $1 项被筛选隐藏，不包括在内）",
+        "description": "Note in the selection toolbar when selected rows are hidden by filters and will not be moved or deleted; $1 is the count"
+    },
+    "bookmarks_editUrlDataRejected": {
+        "message": "无法在此保存会以网页形式打开的 data: 网址（$1）。",
+        "description": "Validation message when a newly entered data: URL would open as a web page; $1 is the matched prefix, such as data:text/html"
+    },
+    "bookmarks_bulkMoveTitleOne": {
+        "message": "移动 1 项",
+        "description": "Title of the dialog that moves a single selected item"
+    },
+    "bookmarks_bulkMovedOne": {
+        "message": "已移动 1 项",
+        "description": "Toast after moving a single selected item"
+    },
+    "bookmarks_bulkNestedIncluded": {
+        "message": "另有 $1 个所选项目位于所选文件夹内，会随文件夹一起移动。",
+        "description": "Note in the bulk move dialog when some selected items are inside a selected folder; $1 is how many"
+    },
+    "bookmarks_bulkPreviewMore": {
+        "message": "以及其他 $1 项",
+        "description": "Last line of the list of items a bulk action affects when not all are shown; $1 is how many more"
+    },
+    "table_columnHiddenForSpace": {
+        "message": "表格较窄时隐藏，以便显示标题",
+        "description": "Hint on a column in the View menu that is hidden because the table is too narrow (for example with the Tools sidebar open)"
+    },
+    "tools_importPreviewTitle": {
+        "message": "导入预览",
+        "description": "Title of the dialog that previews an import before anything is written"
+    },
+    "tools_importPreviewDesc": {
+        "message": "检查 $1 将添加的内容。在你选择“导入”之前不会做任何更改。",
+        "description": "Import preview description; $1 is the selected file name"
+    },
+    "tools_importTarget": {
+        "message": "导入到",
+        "description": "Label of the target folder picker in the import preview"
+    },
+    "tools_importStrategy": {
+        "message": "重复项",
+        "description": "Label of the duplicate handling picker in the import preview"
+    },
+    "tools_importStrategySkipAnywhere": {
+        "message": "跳过已存在于任何位置的书签",
+        "description": "Import duplicate strategy that skips URLs found anywhere in the bookmarks"
+    },
+    "tools_importStrategySkipInTarget": {
+        "message": "跳过目标文件夹中已有的书签",
+        "description": "Import duplicate strategy that skips URLs already inside the target folder"
+    },
+    "tools_importStrategyImportAll": {
+        "message": "全部导入，包括重复项",
+        "description": "Import duplicate strategy that creates every item"
+    },
+    "tools_importPreviewTargetLine": {
+        "message": "目标文件夹：$1",
+        "description": "Import preview line naming the exact target folder path; $1 is the path"
+    },
+    "tools_importPreviewBookmarks": {
+        "message": "将创建的书签：$1",
+        "description": "Import preview count of bookmarks that will be created; $1 is the count"
+    },
+    "tools_importPreviewFolders": {
+        "message": "将创建的文件夹：$1",
+        "description": "Import preview count of folders that will be created; $1 is the count"
+    },
+    "tools_importPreviewSkipped": {
+        "message": "将跳过的项目：$1",
+        "description": "Import preview count of duplicate bookmarks and emptied folders that will be skipped; $1 is the count"
+    },
+    "tools_importPreviewInvalid": {
+        "message": "已忽略的无效条目：$1",
+        "description": "Import preview count of file entries that are not valid bookmarks; $1 is the count"
+    },
+    "tools_importNothingToCreate": {
+        "message": "按此选项没有新的内容可导入。",
+        "description": "Import preview note when every item would be skipped"
+    },
+    "tools_importPreviewConflicts": {
+        "message": "已存在：目标文件夹中 $1 个，其他位置 $2 个，此文件中重复 $3 个",
+        "description": "Import preview duplicate summary; $1 in the target folder, $2 elsewhere in the bookmarks, $3 repeated within the file"
+    },
+    "tools_importConflictInTarget": {
+        "message": "在目标文件夹中",
+        "description": "Badge for an imported URL that already exists in the target folder"
+    },
+    "tools_importConflictElsewhere": {
+        "message": "在书签的其他位置",
+        "description": "Badge for an imported URL that already exists outside the target folder"
+    },
+    "tools_importConflictInFile": {
+        "message": "在文件中重复",
+        "description": "Badge for an imported URL that appears earlier in the same file"
+    },
+    "tools_importWillSkip": {
+        "message": "将跳过",
+        "description": "Badge for a duplicate that the chosen strategy skips"
+    },
+    "tools_importWillImport": {
+        "message": "将导入",
+        "description": "Badge for a duplicate that the chosen strategy still imports"
+    },
+    "tools_importPreviewChanged": {
+        "message": "生成此预览后你的书签发生了变化。请检查更新后的方案，然后重新导入。",
+        "description": "Import preview notice when the bookmarks changed before the import was applied"
+    },
+    "tools_importTargetMissing": {
+        "message": "目标文件夹已不存在或无法更改。请选择其他文件夹。",
+        "description": "Import preview error when the chosen target folder is missing or read-only"
+    },
+    "tools_importOutcome": {
+        "message": "已创建书签：$1。已创建文件夹：$2。已跳过：$3。失败：$4。",
+        "description": "Import result counts; $1 bookmarks created, $2 folders created, $3 skipped, $4 failed"
+    },
+    "tools_importItemFailed": {
+        "message": "无法导入“$1”：$2",
+        "description": "An import entry the browser rejected: its title ($1) and the browser's error ($2)"
+    },
+    "tools_importUndone": {
+        "message": "已撤消导入",
+        "description": "Toast title after an import was undone"
+    },
+    "tools_importUndoPartial": {
+        "message": "已部分撤消导入",
+        "description": "Toast title when some imported items could not be removed by undo"
+    },
+    "tools_importUndoneDesc": {
+        "message": "已移除的顶层项目：$1。因已更改或无法移除而保留：$2。",
+        "description": "Import undo result; $1 is how many top-level imported items were removed, $2 how many were kept"
+    },
+    "shortcuts_openSavedSearches": {
+        "message": "打开已保存的搜索",
+        "description": "Keyboard shortcut description: s opens the saved searches menu"
+    },
+    "savedSearches_button": {
+        "message": "已保存的搜索",
+        "description": "Manager toolbar button and menu heading for saved searches (smart views)"
+    },
+    "savedSearches_buttonTitle": {
+        "message": "保存并重新打开筛选条件组合（s）",
+        "description": "Tooltip of the saved searches toolbar button; names its keyboard shortcut"
+    },
+    "savedSearches_description": {
+        "message": "保存的是当前的筛选条件、排序和文件夹范围，而不是书签本身，因此结果始终与你当前的书签一致。仅保存在此设备上。",
+        "description": "Explanation at the top of the saved searches menu"
+    },
+    "savedSearches_nameLabel": {
+        "message": "当前搜索的名称",
+        "description": "Accessible label of the input that names a new saved search"
+    },
+    "savedSearches_namePlaceholder": {
+        "message": "为此搜索命名",
+        "description": "Placeholder of the input that names a new saved search"
+    },
+    "savedSearches_save": {
+        "message": "保存",
+        "description": "Button that saves a new saved search or a new name"
+    },
+    "savedSearches_saveHint": {
+        "message": "打开已保存的搜索会替换当前的筛选条件和排序。",
+        "description": "Hint under the saved search name input when the current search can be saved"
+    },
+    "savedSearches_needsFilter": {
+        "message": "请添加标题、网址、类型、文件夹、域名或日期筛选条件后再保存此搜索。",
+        "description": "Hint shown when there is nothing to save because no filter is active"
+    },
+    "savedSearches_empty": {
+        "message": "还没有已保存的搜索。",
+        "description": "Shown in the saved searches menu when none are saved"
+    },
+    "savedSearches_listLabel": {
+        "message": "已保存的搜索列表",
+        "description": "Accessible name of the list of saved searches"
+    },
+    "savedSearches_rename": {
+        "message": "重命名“$1”",
+        "description": "Accessible name of the button that renames a saved search; $1 is its name"
+    },
+    "savedSearches_renameLabel": {
+        "message": "“$1”的新名称",
+        "description": "Accessible label of the input for a saved search new name; $1 is the current name"
+    },
+    "savedSearches_delete": {
+        "message": "删除“$1”",
+        "description": "Accessible name of the button that deletes a saved search; $1 is its name"
+    },
+    "savedSearches_saved": {
+        "message": "已保存搜索“$1”",
+        "description": "Toast after saving a search; $1 is its name"
+    },
+    "savedSearches_deleted": {
+        "message": "已删除保存的搜索“$1”",
+        "description": "Toast after deleting a saved search, with an Undo action; $1 is its name"
+    },
+    "savedSearches_missingFoldersTitle": {
+        "message": "部分文件夹已不存在",
+        "description": "Toast title when an opened saved search names folders that no longer exist"
+    },
+    "savedSearches_missingFolders": {
+        "message": "因已被删除而跳过的文件夹：$1。其他筛选条件仍然有效。",
+        "description": "Toast description; $1 is how many folders of the saved search were skipped"
+    },
+    "savedSearches_errorEmptyName": {
+        "message": "请输入名称。",
+        "description": "Error when a saved search name is empty"
+    },
+    "savedSearches_errorDuplicateName": {
+        "message": "已存在同名的已保存搜索。",
+        "description": "Error when another saved search already uses the name"
+    },
+    "savedSearches_errorLimit": {
+        "message": "最多可保留 $1 个已保存的搜索。请删除一个后再保存新的。",
+        "description": "Error when the saved search limit is reached; $1 is the limit"
+    },
+    "savedSearches_errorGeneric": {
+        "message": "无法保存此搜索。",
+        "description": "Error when a saved search could not be saved for another reason"
+    },
+    "tools_deadLinkCategory_notFound": {
+        "message": "找不到网页",
+        "description": "Dead link reason for HTTP 404 or 410"
+    },
+    "tools_deadLinkCategory_auth": {
+        "message": "需要登录或访问被拒绝；在浏览器中可能可以打开",
+        "description": "Dead link reason for HTTP 401, 403, or 407"
+    },
+    "tools_deadLinkCategory_rateLimited": {
+        "message": "请求过于频繁，请稍后重试",
+        "description": "Dead link reason for HTTP 429"
+    },
+    "tools_deadLinkCategory_methodRejected": {
+        "message": "该网站拒绝自动检查，请打开网页确认",
+        "description": "Dead link reason when both HEAD and GET are rejected with HTTP 405 or 501"
+    },
+    "tools_deadLinkCategory_serverError": {
+        "message": "服务器错误，可能是暂时性的",
+        "description": "Dead link reason for HTTP 5xx"
+    },
+    "tools_deadLinkCategory_httpError": {
+        "message": "意外的响应，请打开网页确认",
+        "description": "Dead link reason for other HTTP error statuses"
+    },
+    "tools_deadLinkHttpDetail": {
+        "message": "$1：$2",
+        "description": "Dead link detail; $1 is the HTTP status text (for example \"HTTP 404\"), $2 the reason"
+    },
+    "tools_deadLinkConfirmedDead": {
+        "message": "确认失效",
+        "description": "Badge for a link that is definitely broken (404/410, unreachable, redirect loop)"
+    },
+    "tools_deadLinkNeedsCheck": {
+        "message": "需手动检查",
+        "description": "Badge for a failed link that may still work in a browser"
+    },
+    "tools_deadLinkSummary": {
+        "message": "确认失效：$1。需手动检查：$2。已重定向：$3。",
+        "description": "Dead link scan summary; $1 confirmed dead, $2 need a manual check, $3 redirected"
+    },
+    "tools_deadLinkReview": {
+        "message": "检查修复方案",
+        "description": "Button that opens the reviewed dead-link repair dialog"
+    },
+    "tools_deadLinkRepairTitle": {
+        "message": "检查失效链接修复方案",
+        "description": "Dead-link repair dialog title"
+    },
+    "tools_deadLinkRepairDesc": {
+        "message": "选择如何处理每个链接。在你应用之前不会做任何更改。",
+        "description": "Dead-link repair dialog description"
+    },
+    "tools_deadLinkRepairAction": {
+        "message": "“$1”的处理方式",
+        "description": "Accessible label of the per-link repair choice; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairChoice_keep": {
+        "message": "保持不变",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_delete": {
+        "message": "删除书签",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairChoice_redirect": {
+        "message": "使用重定向目标",
+        "description": "Dead-link repair choice; replaces the URL with where the site redirected"
+    },
+    "tools_deadLinkRepairChoice_archive": {
+        "message": "使用存档副本（Wayback Machine）",
+        "description": "Dead-link repair choice; replaces the URL with a web.archive.org link"
+    },
+    "tools_deadLinkRepairChoice_edit": {
+        "message": "修改网址",
+        "description": "Dead-link repair choice"
+    },
+    "tools_deadLinkRepairNewUrl": {
+        "message": "“$1”的新网址",
+        "description": "Accessible label of the edited URL field; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairInvalidUrl": {
+        "message": "请输入与当前网址不同的有效 http 或 https 网址。",
+        "description": "Validation message for an edited dead-link URL"
+    },
+    "tools_deadLinkRepairWillChange": {
+        "message": "新网址：$1",
+        "description": "Preview of the URL a repair will write; $1 is the URL"
+    },
+    "tools_deadLinkRepairArchiveNote": {
+        "message": "不会检查存档链接；该网页可能从未被存档。",
+        "description": "Note shown when the archived-copy repair is chosen"
+    },
+    "tools_deadLinkRepairSummary": {
+        "message": "删除：$1。替换网址：$2。保留：$3。",
+        "description": "Planned dead-link repair counts; $1 deletions, $2 URL replacements, $3 kept"
+    },
+    "tools_deadLinkRepairApply": {
+        "message": "应用 $1 项更改",
+        "description": "Apply button of the dead-link repair dialog; $1 is the number of changes"
+    },
+    "tools_deadLinkRepairApplied": {
+        "message": "已应用修复",
+        "description": "Toast title after all dead-link repairs were applied"
+    },
+    "tools_deadLinkRepairPartial": {
+        "message": "部分修复未应用",
+        "description": "Toast title when some dead-link repairs were skipped or failed"
+    },
+    "tools_deadLinkRepairOutcome": {
+        "message": "已删除：$1。已替换网址：$2。因扫描后发生变化而跳过：$3。失败：$4。",
+        "description": "Dead-link repair result counts; $1 deleted, $2 replaced, $3 skipped, $4 failed"
+    },
+    "tools_deadLinkRepairIssueChanged": {
+        "message": "$1：扫描后已发生变化，未做处理",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairIssueFailed": {
+        "message": "$1：无法更改",
+        "description": "Dead-link repair issue; $1 is the bookmark title"
+    },
+    "tools_deadLinkRepairUndone": {
+        "message": "已撤消修复",
+        "description": "Toast title after a dead-link repair batch was undone"
+    },
+    "tools_deadLinkRepairUndoPartial": {
+        "message": "部分修复无法撤消",
+        "description": "Toast title when part of a dead-link repair batch could not be undone"
+    },
+    "tools_deadLinkRepairUndoneDesc": {
+        "message": "已恢复：$1。无法恢复：$2。",
+        "description": "Dead-link repair undo counts; $1 restored, $2 not restored"
+    },
+    "action_refresh": {
+        "message": "刷新",
+        "description": "Refresh button label"
+    },
+    "format_separator": {
+        "message": "·",
+        "description": "Separator between two short parts on one line, such as a provider and its model; spaces are added around it"
+    },
+    "format_copyName": {
+        "message": "$1（副本）",
+        "description": "Name of a duplicated item; $1 is the original name"
+    },
+    "format_moreItems": {
+        "message": "其他 $1 项",
+        "description": "Last entry of a shortened list, counting the items left out; $1 is the count. The list words (\"and\") are added by the browser"
+    },
+    "tools_siteIcons": {
+        "message": "刷新网站图标",
+        "description": "Title for the Refresh Site Icons tool"
+    },
+    "tools_siteIconsDesc": {
+        "message": "下载每个网站自己的图标，让书签显示该图标（在 Firefox 中也适用）",
+        "description": "Refresh Site Icons tool description"
+    },
+    "tools_siteIconsDialogDesc": {
+        "message": "图标只从各个已加入书签的网站请求。在你保存之前不会存储任何内容。",
+        "description": "Refresh Site Icons results dialog description"
+    },
+    "tools_siteIconsCached": {
+        "message": "已保存 $count$ 个图标（$size$）",
+        "description": "Number and size of saved site icons on the tool card",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            },
+            "size": {
+                "content": "$2",
+                "example": "18.5 KB"
+            }
+        }
+    },
+    "tools_siteIconsClear": {
+        "message": "清除已保存的图标",
+        "description": "Button that deletes all saved site icons"
+    },
+    "tools_siteIconStatus_updated": {
+        "message": "已更新",
+        "description": "Site icon result status: a new or changed icon"
+    },
+    "tools_siteIconStatus_unchanged": {
+        "message": "未变化",
+        "description": "Site icon result status: same icon as already saved"
+    },
+    "tools_siteIconStatus_noIcon": {
+        "message": "未找到图标",
+        "description": "Site icon result status: no usable icon"
+    },
+    "tools_siteIconStatus_failed": {
+        "message": "失败",
+        "description": "Site icon result status: the site could not be reached"
+    },
+    "tools_siteIconStatus_skipped": {
+        "message": "已跳过",
+        "description": "Site icon result count: bookmarks that are not web links"
+    },
+    "tools_siteIconsNewFrom": {
+        "message": "图标来自 $url$",
+        "description": "Where a newly downloaded site icon came from",
+        "placeholders": {
+            "url": {
+                "content": "$1",
+                "example": "https://example.com/favicon.ico"
+            }
+        }
+    },
+    "tools_siteIconsUnchanged": {
+        "message": "与已保存的图标相同",
+        "description": "Site icon is the same as the saved one"
+    },
+    "tools_siteIconsTooLarge": {
+        "message": "图标文件超过大小限制",
+        "description": "Site icon rejected for exceeding the size limit"
+    },
+    "tools_siteIconsNotImage": {
+        "message": "图标文件不是图片",
+        "description": "Site icon rejected because it is not an image"
+    },
+    "tools_siteIconsNotFound": {
+        "message": "该网站没有图标",
+        "description": "The site has no icon"
+    },
+    "tools_siteIconsKeptCached": {
+        "message": "继续使用之前保存的图标。",
+        "description": "A previously saved icon stays in use after a failed refresh"
+    },
+    "tools_siteIconsSkippedDesc": {
+        "message": "有 $count$ 个书签不是网页链接，已跳过。",
+        "description": "Bookmarks skipped by Refresh Site Icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsBookmarkCount": {
+        "message": "$count$ 个书签",
+        "description": "Bookmarks that share a site's origin",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "tools_siteIconsSave": {
+        "message": "保存 $count$ 个图标",
+        "description": "Button that saves the downloaded site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "state_noSiteIconsFound": {
+        "message": "此范围内没有书签。",
+        "description": "Refresh Site Icons empty state"
+    },
+    "toast_siteIconsSaved": {
+        "message": "已保存网站图标",
+        "description": "Toast title after saving site icons"
+    },
+    "toast_siteIconsSavedDesc": {
+        "message": "已在此设备上保存 $count$ 个图标",
+        "description": "Toast description after saving site icons",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "3"
+            }
+        }
+    },
+    "toast_siteIconsSavedEvictedDesc": {
+        "message": "已保存：$saved$。为不超出存储上限而移除的旧图标：$evicted$。",
+        "description": "Toast description when older icons were removed to stay within the cache limit",
+        "placeholders": {
+            "saved": {
+                "content": "$1",
+                "example": "3"
+            },
+            "evicted": {
+                "content": "$2",
+                "example": "2"
+            }
+        }
+    },
+    "toast_siteIconsCleared": {
+        "message": "已清除保存的图标",
+        "description": "Toast title after clearing saved site icons"
+    },
+    "toast_siteIconsClearedDesc": {
+        "message": "书签重新显示浏览器自带的图标。",
+        "description": "Toast description after clearing saved site icons"
+    },
+    "settings_siteIconsEnabled": {
+        "message": "启用“刷新网站图标”",
+        "description": "Site icons enabled label"
+    },
+    "settings_siteIconsEnabledDesc": {
+        "message": "显示用于下载各网站图标的工具。保存的图标仅保留在此设备上。",
+        "description": "Site icons enabled description"
+    },
+    "settings_siteIconsDefaultScope": {
+        "message": "默认范围",
+        "description": "Site icons default scope label"
+    },
+    "settings_siteIconsDefaultScopeDesc": {
+        "message": "刷新网站图标时使用的默认范围",
+        "description": "Site icons default scope description"
+    },
+    "settings_siteIconsPreferredSize": {
+        "message": "首选图标大小",
+        "description": "Site icons preferred size label"
+    },
+    "settings_siteIconsPreferredSizeDesc": {
+        "message": "当网页列出多个图标时，下载最接近此大小的那个",
+        "description": "Site icons preferred size description"
+    },
+    "settings_siteIconsMaxIconKb": {
+        "message": "图标文件大小上限",
+        "description": "Site icons maximum file size label"
+    },
+    "settings_siteIconsMaxIconKbDesc": {
+        "message": "不会下载或保存更大的图标文件",
+        "description": "Site icons maximum file size description"
+    },
+    "settings_siteIconsMaxCacheKb": {
+        "message": "图标存储上限",
+        "description": "Site icons storage limit label"
+    },
+    "settings_siteIconsMaxCacheKbDesc": {
+        "message": "此设备上已保存图标的总大小；超出时先移除最旧的图标",
+        "description": "Site icons storage limit description"
+    },
+    "ai_connErrorInvalidKey": {
+        "message": "服务商拒绝了该 API 密钥。请检查密钥是否正确且仍然有效。",
+        "description": "Provider connection error: 401 or invalid key"
+    },
+    "ai_connErrorForbidden": {
+        "message": "服务商拒绝访问。请检查密钥的权限和所属项目。",
+        "description": "Provider connection error: 403 from a remote provider"
+    },
+    "ai_connErrorNotFound": {
+        "message": "此地址没有响应。请检查 API 地址。",
+        "description": "Provider connection error: 404, wrong Base URL"
+    },
+    "ai_connErrorRateLimited": {
+        "message": "可以连接到服务商，但请求受到频率限制。请稍后重试。",
+        "description": "Provider connection error: 429"
+    },
+    "ai_connErrorOriginRejected": {
+        "message": "本地服务器拒绝了来自扩展程序的请求。对于 Ollama，请设置 OLLAMA_ORIGINS=chrome-extension://*,moz-extension://* 并重启。对于 LM Studio，请开启 Enable CORS。",
+        "description": "Provider connection error: 403 from a local server such as Ollama"
+    },
+    "ai_connErrorUnreachable": {
+        "message": "无法连接到 $1。请检查地址和网络连接，或启动本地服务器。",
+        "description": "Provider connection error: network failure; $1 is the host"
+    },
+    "ai_connErrorTimeout": {
+        "message": "$1 未在 $2 秒内响应。",
+        "description": "Provider connection error: timeout; $1 is the host, $2 the timeout in seconds"
+    },
+    "ai_connErrorNotApi": {
+        "message": "该地址有响应，但不像是 AI 服务商的 API。请检查 API 地址。",
+        "description": "Provider connection error: response was not the expected JSON"
+    },
+    "ai_connErrorHttp": {
+        "message": "服务商返回了 HTTP $1（$2）。",
+        "description": "Provider connection error: other HTTP status; $1 status, $2 host"
+    },
+    "error_aiModelListUnavailable": {
+        "message": "此服务商没有模型列表。请直接输入模型或部署名称。",
+        "description": "Shown when refreshing models for a provider without a model list"
+    },
+    "toast_aiServiceRateLimited": {
+        "message": "可以连接到 $1 且密钥已被接受，但目前请求受到频率限制。",
+        "description": "Verify result when the provider answered 429"
+    },
+    "toast_aiServiceModelMissing": {
+        "message": "已连接到 $1，但 $2 不在其模型列表中。请选择其他模型。",
+        "description": "Verify result when the selected model is not listed; $1 provider, $2 model"
+    },
+    "options_organization": {
+        "message": "组织 ID",
+        "description": "OpenAI organization field label"
+    },
+    "options_organizationDescription": {
+        "message": "可选。以 OpenAI-Organization 请求头发送。",
+        "description": "OpenAI organization field description"
+    },
+    "options_project": {
+        "message": "项目 ID",
+        "description": "OpenAI project field label"
+    },
+    "options_projectDescription": {
+        "message": "可选。以 OpenAI-Project 请求头发送。",
+        "description": "OpenAI project field description"
+    },
+    "options_resourceName": {
+        "message": "资源名称",
+        "description": "Azure resource name field label"
+    },
+    "options_resourceNameDescription": {
+        "message": "https://<name>.openai.azure.com 中的名称。如果设置了 API 地址，则改用 API 地址。",
+        "description": "Azure resource name field description"
+    },
+    "options_apiVersion": {
+        "message": "API 版本",
+        "description": "Azure API version field label"
+    },
+    "options_apiVersionDescription": {
+        "message": "可选。留空则使用 v1 API。",
+        "description": "Azure API version field description"
+    },
+    "settings_aiProviderGroupFeatured": {
+        "message": "推荐",
+        "description": "Provider picker group: providers with built-in model lists"
+    },
+    "settings_aiProviderGroupCatalog": {
+        "message": "更多服务商（models.dev）",
+        "description": "Provider picker group: providers from the bundled models.dev catalog"
+    },
+    "select_searchPlaceholder": {
+        "message": "搜索…",
+        "description": "Search box inside a searchable select"
+    },
+    "select_noMatches": {
+        "message": "无匹配项",
+        "description": "Searchable select: nothing matches the search"
+    },
+    "options_catalogProviderHint": {
+        "message": "此服务商来自 models.dev 目录。点击“刷新模型”加载其模型，或输入自定义模型。",
+        "description": "Shown in the AI panel for catalog providers"
+    },
+    "options_providerDocs": {
+        "message": "服务商文档",
+        "description": "Link to the selected provider documentation"
+    },
+    "settings_aiProviderGroupLocal": {
+        "message": "本地服务器",
+        "description": "Provider picker group: servers on this computer"
+    },
+    "settings_aiProviderGroupCustom": {
+        "message": "自定义",
+        "description": "Provider picker group: endpoints the user fills in by hand"
+    },
+    "settings_aiProviderCustomAnthropic": {
+        "message": "自定义服务商（兼容 Anthropic）",
+        "description": "Name of the hand-written Anthropic-compatible provider"
+    },
+    "options_aiServices": {
+        "message": "AI 服务",
+        "description": "Heading of the saved AI services list"
+    },
+    "options_aiServicesDescription": {
+        "message": "可以保存任意数量的服务商。所有 AI 工具都使用默认服务。",
+        "description": "Description of the AI services list"
+    },
+    "options_aiServiceAdd": {
+        "message": "添加服务",
+        "description": "Button that adds an AI service"
+    },
+    "options_aiServiceAddTitle": {
+        "message": "添加 AI 服务",
+        "description": "Title of the add AI service dialog"
+    },
+    "options_aiServiceProvider": {
+        "message": "服务商",
+        "description": "Label of the provider picker when adding a service"
+    },
+    "options_aiServiceName": {
+        "message": "名称",
+        "description": "Label of an AI service name"
+    },
+    "options_aiServiceNameDescription": {
+        "message": "显示在服务列表和弹出窗口中。",
+        "description": "Description of an AI service name"
+    },
+    "options_aiServiceDefault": {
+        "message": "默认",
+        "description": "Badge on the default AI service"
+    },
+    "options_aiServiceSetDefault": {
+        "message": "设为默认",
+        "description": "Menu action that makes a service the default"
+    },
+    "options_aiServiceEnabled": {
+        "message": "使用 $1",
+        "description": "Accessible name of the switch that turns a service on or off; $1 is its name"
+    },
+    "options_aiServiceEdit": {
+        "message": "修改 $1",
+        "description": "Accessible name of the button that expands a service editor"
+    },
+    "options_aiServiceActions": {
+        "message": "$1 的操作",
+        "description": "Accessible name of a service menu"
+    },
+    "options_aiServiceDuplicate": {
+        "message": "创建副本",
+        "description": "Menu action that copies a service"
+    },
+    "options_aiServiceDeleteTitle": {
+        "message": "要删除 $1 吗？",
+        "description": "Title of the delete service confirmation"
+    },
+    "options_aiServiceDeleteDescription": {
+        "message": "其 API 密钥和设置将从此设备中移除。",
+        "description": "Body of the delete service confirmation"
+    },
+    "options_aiServiceMore": {
+        "message": "更多设置",
+        "description": "Toggle that shows Base URL, headers, and provider-specific fields"
+    },
+    "options_aiServiceEmpty": {
+        "message": "还没有 AI 服务。添加一个即可使用 AI 工具。",
+        "description": "Empty state of the AI services list"
+    },
+    "error_aiNoService": {
+        "message": "尚未设置 AI 服务。请在选项中添加。",
+        "description": "Error when an AI tool runs without any enabled service"
+    },
+    "popup_aiServiceSwitch": {
+        "message": "AI 服务：$1",
+        "description": "Accessible name of the popup AI service switcher; $1 is the current service"
+    },
+    "prompt_libraryTitle": {
+        "message": "提示词",
+        "description": "Heading of the prompt library"
+    },
+    "prompt_libraryDescription": {
+        "message": "每个 AI 工具都使用其内置提示词，除非你选择了自己的提示词。你的提示词会在你的各台设备间同步。",
+        "description": "Description of the prompt library"
+    },
+    "prompt_default": {
+        "message": "默认（内置）",
+        "description": "Select option for the built-in prompt"
+    },
+    "prompt_customize": {
+        "message": "自定义",
+        "description": "Button that starts a custom prompt from the default"
+    },
+    "prompt_newName": {
+        "message": "我的“$1”提示词",
+        "description": "Default name of a new custom prompt; $1 is the task name"
+    },
+    "prompt_newTitle": {
+        "message": "新提示词",
+        "description": "Title of the prompt editor for a new prompt"
+    },
+    "prompt_editTitle": {
+        "message": "修改提示词",
+        "description": "Title of the prompt editor for an existing prompt"
+    },
+    "prompt_editorDescription": {
+        "message": "应用会在你的提示词后面附加自己的输出格式规则，以确保结果仍能正确加载。",
+        "description": "Description in the prompt editor"
+    },
+    "prompt_name": {
+        "message": "名称",
+        "description": "Prompt name field"
+    },
+    "prompt_text": {
+        "message": "提示词",
+        "description": "Prompt text field"
+    },
+    "prompt_variables": {
+        "message": "插入：",
+        "description": "Label before the variable chips"
+    },
+    "prompt_size": {
+        "message": "$1 / $2",
+        "description": "Prompt size counter; $1 used and $2 limit, each with its unit (e.g. 1.2 KB)"
+    },
+    "prompt_unknownVariables": {
+        "message": "此工具不会填充：$1",
+        "description": "Warning listing unknown variables"
+    },
+    "prompt_preview": {
+        "message": "使用当前设置预览",
+        "description": "Toggle that shows the filled-in prompt"
+    },
+    "prompt_previewDescription": {
+        "message": "变量会用你当前的设置填充。",
+        "description": "Description of the prompt preview"
+    },
+    "prompt_save": {
+        "message": "保存提示词",
+        "description": "Save button in the prompt editor"
+    },
+    "prompt_editNamed": {
+        "message": "修改 $1",
+        "description": "Accessible name of the edit prompt button"
+    },
+    "prompt_duplicateNamed": {
+        "message": "为 $1 创建副本",
+        "description": "Accessible name of the duplicate prompt button"
+    },
+    "prompt_deleteNamed": {
+        "message": "删除 $1",
+        "description": "Accessible name of the delete prompt button"
+    },
+    "prompt_deleteTitle": {
+        "message": "要删除 $1 吗？",
+        "description": "Title of the delete prompt confirmation"
+    },
+    "prompt_deleteDescription": {
+        "message": "该工具将恢复使用其内置提示词。此操作会从你的所有设备中移除该提示词。",
+        "description": "Body of the delete prompt confirmation"
+    },
+    "prompt_errorNameRequired": {
+        "message": "请输入名称。",
+        "description": "Prompt validation: empty name"
+    },
+    "prompt_errorTextRequired": {
+        "message": "请输入提示词内容。",
+        "description": "Prompt validation: empty text"
+    },
+    "prompt_errorTooLong": {
+        "message": "提示词过长，无法同步。请控制在 $1 以内。",
+        "description": "Prompt validation: over the sync size limit"
+    },
+    "prompt_errorSaveFailed": {
+        "message": "无法保存提示词。同步存储空间可能已满；请删除不再使用的提示词后重试。",
+        "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
+    },
+    "prompt_varMaxRecommendations": {
+        "message": "文件夹建议数量（最大推荐数）",
+        "description": "Variable description"
+    },
+    "prompt_varMaxCategories": {
+        "message": "顶级文件夹数量上限，或说明不设上限（最大类别数）",
+        "description": "Variable description"
+    },
+    "prompt_varMinItemsPerFolder": {
+        "message": "每个文件夹的最少书签数",
+        "description": "Variable description"
+    },
+    "prompt_varMaxItemsPerFolder": {
+        "message": "每个文件夹的最多书签数，或说明不设上限",
+        "description": "Variable description"
+    },
+    "prompt_varMinTags": {
+        "message": "每个书签的最少标签数",
+        "description": "Variable description"
+    },
+    "prompt_varMaxTags": {
+        "message": "每个书签的最多标签数",
+        "description": "Variable description"
+    },
+    "prompt_varTagStyle": {
+        "message": "标签样式，例如 kebab-case",
+        "description": "Variable description"
+    },
+    "prompt_varSummaryLength": {
+        "message": "摘要长度上限（字符数）",
+        "description": "Variable description"
+    },
+    "prompt_varIncludeDomainHint": {
+        "message": "是否提及网站（true 或 false）",
+        "description": "Variable description"
+    },
+    "aiActivity_title": {
+        "message": "AI 活动记录",
+        "description": "Options: heading of the AI request log"
+    },
+    "aiActivity_description": {
+        "message": "在此设备上记录最近 $1 次 AI 请求，包括发送和返回的内容，便于核对结果或调试失败的调用。请求中包含书签标题和网址；绝不会存储 API 密钥。关闭记录会删除日志。",
+        "description": "Options: AI activity description; $1 is how many requests are kept"
+    },
+    "aiActivity_record": {
+        "message": "记录请求",
+        "description": "Options: switch that turns AI request recording on"
+    },
+    "aiActivity_empty": {
+        "message": "还没有 AI 请求。运行 AI 工具或“验证服务”后，记录会显示在这里。",
+        "description": "Options: AI activity empty state"
+    },
+    "aiActivity_clear": {
+        "message": "清除日志",
+        "description": "Options: button that deletes the AI request log"
+    },
+    "aiActivity_copy": {
+        "message": "复制为 JSON",
+        "description": "Options: button that copies one AI request entry"
+    },
+    "aiActivity_copied": {
+        "message": "已复制请求",
+        "description": "Toast after copying an AI request entry"
+    },
+    "aiActivity_failed": {
+        "message": "失败",
+        "description": "Options: status badge of an AI request that got no response"
+    },
+    "aiActivity_requestHeaders": {
+        "message": "请求头",
+        "description": "Options: label of the recorded request headers"
+    },
+    "aiActivity_request": {
+        "message": "请求",
+        "description": "Options: label of the recorded request body"
+    },
+    "aiActivity_response": {
+        "message": "响应",
+        "description": "Options: label of the recorded response body"
+    },
+    "aiActivity_duration": {
+        "message": "$1 ms",
+        "description": "Options: AI request duration; $1 is milliseconds"
+    },
+    "aiActivity_truncated": {
+        "message": "另有 $1 个字符未记录。",
+        "description": "Options: note under a cut-off body; $1 is the number of characters left out"
+    },
+    "aiActivity_sourceAI": {
+        "message": "AI 请求",
+        "description": "Options: AI activity source for a call with no named tool"
+    },
+    "aiActivity_sourceModelList": {
+        "message": "模型列表",
+        "description": "Options: AI activity source for fetching a provider model list"
+    },
+    "error_aiApiKeyRequired": {
+        "message": "请在“选项 > AI”中为此 AI 服务添加 API 密钥。",
+        "description": "Error when an AI call needs an API key and none is saved"
+    },
+    "error_aiModelRequired": {
+        "message": "请在“选项 > AI”中为此 AI 服务选择模型。",
+        "description": "Error when an AI call has no model selected"
+    },
+    "error_aiReorganizeEmptyScope": {
+        "message": "所选范围内没有书签。请选择“所有书签”或包含书签的文件夹。",
+        "description": "AI Folder Reorganization error when the chosen scope has no bookmarks"
+    },
+    "settings_aiReadPageContent": {
+        "message": "读取网页内容",
+        "description": "Settings: switch that lets AI tools read page text"
+    },
+    "settings_aiReadPageContentDesc": {
+        "message": "文件夹推荐、自动标签和内容摘要除了发送网页的标题和网址外，还会发送每个网页的可读文本，以获得更好的结果。下载网页时不会附带你的 Cookie，绝不会读取本地网络中的网页，开启此项时会请求网站访问权限。",
+        "description": "Settings: description of Read page content"
+    },
+    "settings_hostAccessDeniedDesc": {
+        "message": "此设置需要网站访问权限才能读取网页。它将保持关闭。",
+        "description": "Toast when the user declines website access for a setting"
+    },
+    "settings_groupExportInclude": {
+        "message": "导出时包含",
+        "description": "Settings group: export fields"
+    },
+    "settings_groupExportIncludeDesc": {
+        "message": "导出时默认包含的书签详情",
+        "description": "Settings group description"
+    },
+    "settings_groupAiContextPackerInclude": {
+        "message": "AI 上下文中包含",
+        "description": "Settings group: AI Context Packer fields"
+    },
+    "settings_groupAiContextPackerIncludeDesc": {
+        "message": "在 AI 上下文导出中为每个书签添加的详情",
+        "description": "Settings group description"
+    },
+    "settings_groupDuplicatesMatching": {
+        "message": "重复项匹配",
+        "description": "Settings group: duplicate finder URL rules"
+    },
+    "settings_groupDuplicatesMatchingDesc": {
+        "message": "判断两个网址是否相同时要忽略的差异",
+        "description": "Settings group description"
+    },
+    "settings_groupUrlCleanerRules": {
+        "message": "清理规则",
+        "description": "Settings group: URL cleaner rules"
+    },
+    "settings_groupUrlCleanerRulesDesc": {
+        "message": "网址清理除移除跟踪参数外还会做的更改",
+        "description": "Settings group description"
+    },
+    "settings_groupMetadataFetcherOptions": {
+        "message": "获取选项",
+        "description": "Settings group: metadata fetcher options"
+    },
+    "settings_groupMetadataFetcherOptionsDesc": {
+        "message": "元数据获取会读取和替换哪些内容",
+        "description": "Settings group description"
+    },
+    "settings_groupPrivacyScannerChecks": {
+        "message": "检查项",
+        "description": "Settings group: privacy scanner checks"
+    },
+    "settings_groupPrivacyScannerChecksDesc": {
+        "message": "隐私扫描检查的位置和标记的内容",
+        "description": "Settings group description"
+    },
+    "settings_groupStatisticsInclude": {
+        "message": "报告内容",
+        "description": "Settings group: statistics sections"
+    },
+    "settings_groupStatisticsIncludeDesc": {
+        "message": "书签统计中显示的部分",
+        "description": "Settings group description"
+    },
+    "settings_groupDataShow": {
+        "message": "侧栏工具",
+        "description": "Settings group: data tools shown in sidebar"
+    },
+    "settings_groupDataShowDesc": {
+        "message": "书签管理器侧栏中显示的数据工具",
+        "description": "Settings group description"
+    },
+    "settings_decrease": {
+        "message": "减小 $1",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "settings_increase": {
+        "message": "增大 $1",
+        "description": "Stepper button label; $1 is the setting name"
+    },
+    "prompt_builtInTitle": {
+        "message": "内置提示词",
+        "description": "Prompt library: title of the read-only built-in prompt view"
+    },
+    "prompt_builtInDescription": {
+        "message": "此工具默认使用的提示词。点击“自定义”即可以它为基础创建你自己的副本。",
+        "description": "Prompt library: built-in prompt view description"
+    },
+    "prompt_viewBuiltIn": {
+        "message": "查看“$1”的内置提示词",
+        "description": "Prompt library: button label; $1 is the tool name"
+    },
+    "askAI_title": {
+        "message": "询问 AI",
+        "description": "Title of the Ask AI chat"
+    },
+    "askAI_open": {
+        "message": "就你的书签或此网页询问 AI",
+        "description": "Popup button that opens the Ask AI chat"
+    },
+    "askAI_back": {
+        "message": "返回书签",
+        "description": "Ask AI: button that closes the chat"
+    },
+    "askAI_newChat": {
+        "message": "新对话",
+        "description": "Ask AI: button that clears the conversation"
+    },
+    "askAI_placeholder": {
+        "message": "询问有关你的书签、此网页或任何其他问题",
+        "description": "Ask AI: message box placeholder and label"
+    },
+    "askAI_send": {
+        "message": "发送",
+        "description": "Ask AI: send button"
+    },
+    "askAI_stop": {
+        "message": "停止",
+        "description": "Ask AI: stop button while answering"
+    },
+    "askAI_webSearch": {
+        "message": "联网搜索",
+        "description": "Ask AI: toggle for the provider web search"
+    },
+    "askAI_empty": {
+        "message": "可以询问有关你的书签、当前网页或任何其他问题。对话不会保存，关闭后即结束。",
+        "description": "Ask AI: empty state"
+    },
+    "askAI_suggestionPage": {
+        "message": "这个网页讲的是什么？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionRelated": {
+        "message": "我的哪些书签与此网页相关？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_suggestionFolders": {
+        "message": "我的书签文件夹是如何组织的？",
+        "description": "Ask AI: suggested question"
+    },
+    "askAI_readPageOff": {
+        "message": "如需让“询问 AI”读取网页，请在“选项 > AI”中开启“读取网页内容”。",
+        "description": "Ask AI: hint when page reading is off"
+    },
+    "askAI_thinking": {
+        "message": "正在思考…",
+        "description": "Ask AI: waiting for the first answer"
+    },
+    "askAI_retry": {
+        "message": "重试",
+        "description": "Ask AI: retry after an error"
+    },
+    "askAI_sources": {
+        "message": "来源",
+        "description": "Ask AI: heading for web sources"
+    },
+    "askAI_toolSearchBookmarks": {
+        "message": "在你的书签中搜索了“$1”",
+        "description": "Ask AI tool step; $1 is the search query"
+    },
+    "askAI_toolListFolders": {
+        "message": "列出了你的文件夹",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolCurrentPage": {
+        "message": "查看了当前网页",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolReadPage": {
+        "message": "读取了 $1",
+        "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolWebSearch": {
+        "message": "进行了联网搜索",
+        "description": "Ask AI tool step"
+    },
+    "askAI_toolOther": {
+        "message": "使用了一个工具",
+        "description": "Ask AI step for a provider tool that has no description of its own"
+    },
+    "ai_promptAskAIDesc": {
+        "message": "在“询问 AI”对话中回答问题",
+        "description": "Prompt library: Ask AI task description"
+    },
+    "prompt_varToday": {
+        "message": "今天的日期，格式为 YYYY-MM-DD",
+        "description": "Prompt variable description"
+    },
+    "error_bookmarksApiUnavailable": {
+        "message": "浏览器的书签 API 不可用。",
+        "description": "Error when the browser bookmarks API cannot be used"
+    },
+    "error_bookmarkNotFound": {
+        "message": "找不到书签。",
+        "description": "Error when a bookmark no longer exists"
+    },
+    "error_bookmarkNoParent": {
+        "message": "此项没有上级文件夹，因此无法恢复。",
+        "description": "Error when an item without a parent folder cannot be deleted with undo"
+    },
+    "error_tabsApiUnavailable": {
+        "message": "浏览器的标签页 API 不可用。",
+        "description": "Error when the browser tabs API cannot be used"
+    },
+    "error_noActiveTab": {
+        "message": "未找到当前标签页。",
+        "description": "Error when no browser tab is active"
+    },
+    "error_readFileFailed": {
+        "message": "无法读取文件。",
+        "description": "Import error when the chosen file cannot be read"
+    },
+    "ai_recommendationNoFolders": {
+        "message": "未找到现有文件夹",
+        "description": "Reason shown for the only folder suggestion when there are no folders yet"
+    },
+    "ai_reorgPreviewRequired": {
+        "message": "应用重组更改前必须先确认预览",
+        "description": "Reorganization error when changes are applied before the preview is confirmed"
+    },
+    "meta_languageName": {
+        "message": "简体中文",
+        "description": "This language's own name, shown in the Language setting. Do not translate into another language."
+    },
+    "unit_ms": {
+        "message": "ms",
+        "description": "Unit shown after a duration in milliseconds"
+    },
+    "unit_px": {
+        "message": "px",
+        "description": "Unit shown after a size in pixels"
+    },
+    "unit_chars": {
+        "message": "字符",
+        "description": "Unit shown after a number of characters"
+    },
+    "unit_kb": {
+        "message": "KB",
+        "description": "Unit shown after a size in kilobytes"
+    },
+    "bookmarks_folderOptionWithId": {
+        "message": "$1 (#$2)",
+        "description": "A folder path that appears more than once, told apart by its folder ID. $1 is the path, $2 the ID."
+    },
+    "page_title": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+    },
+    "page_sidePanel": {
+        "message": "侧边栏",
+        "description": "Name of the side panel page, used in its tab title"
+    },
+    "page_bookmarks": {
+        "message": "书签",
+        "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_options": {
+        "message": "选项",
+        "description": "Name of the options page, used in its tab title"
+    }
+}

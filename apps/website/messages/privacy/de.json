@@ -1,0 +1,226 @@
+{
+    "privacyPage": {
+        "meta": {
+            "title": "Datenschutzerklärung",
+            "description": "Wie Bookmark Scout und seine Websites mit Ihren Daten umgehen: kein Konto, kein Server, keine Telemetrie und optionale KI, die Anfragen nur an den von Ihnen gewählten Anbieter sendet."
+        },
+        "title": "Datenschutzerklärung",
+        "effective": "Gültig ab {date}",
+        "intro": "Diese Erklärung gilt für die Browsererweiterung Bookmark Scout für Chrome, Microsoft Edge und Firefox (Version 0.3.0 und höher), diese Website und die Dokumentationswebsite.",
+        "translationNote": "Diese deutsche Fassung ist eine Übersetzung der englischen Fassung. Bei Abweichungen gilt die englische Fassung.",
+        "glanceTitle": "Auf einen Blick",
+        "glance": {
+            "noServer": {
+                "title": "Kein Konto, kein Server",
+                "body": "Die Erweiterung läuft in Ihrem Browser. Sie müssen sich nirgends registrieren, und es gibt keinen Bookmark-Scout-Server, der Ihre Daten empfängt."
+            },
+            "noTelemetry": {
+                "title": "Keine Telemetrie",
+                "body": "Die Erweiterung enthält keine Analyse, keine Absturzberichte und keine Werbung."
+            },
+            "aiOptIn": {
+                "title": "KI bleibt aus, bis Sie sie aktivieren",
+                "body": "Wenn Sie eine KI-Funktion verwenden, geht die Anfrage direkt von Ihrem Browser an den von Ihnen gewählten Anbieter."
+            },
+            "developer": {
+                "title": "Der Entwickler erhält nichts",
+                "body": "Ihre Lesezeichen, Einstellungen und API-Schlüssel erreichen den Entwickler nie."
+            }
+        },
+        "tocLabel": "Auf dieser Seite",
+        "sections": {
+            "summary": {
+                "title": "Zusammenfassung",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout arbeitet in Ihrem Browser. Es gibt kein Konto, keine Analyse, keine Werbung und keinen eigenen Server. Der Entwickler erhält weder Ihre Lesezeichen noch andere Daten aus der Erweiterung. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden, die das Netzwerk benötigt, und gehen dann direkt an den von Ihnen gewählten Dienst."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Die Verwendung von Informationen, die Bookmark Scout über APIs für Browsererweiterungen erhält, entspricht der Richtlinie zu Nutzerdaten des Chrome Web Store, einschließlich der Anforderungen zur eingeschränkten Nutzung (Limited Use)."
+                    }
+                ]
+            },
+            "what-the-extension-reads": {
+                "title": "Was die Erweiterung liest",
+                "blocks": [
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Ihre Lesezeichen</strong>, um sie anzuzeigen, zu durchsuchen, zu bearbeiten, zu verschieben, zu löschen, zu importieren und zu exportieren.",
+                            "<strong>Titel und URL des aktiven Tabs</strong>, damit Sie die angezeigte Seite in einem Ordner speichern können.",
+                            "<strong>Website-Symbole aus dem Symbol-Cache Ihres Browsers</strong> (Chrome und Edge), um sie neben Lesezeichen anzuzeigen. Dafür wird keine Netzwerkanfrage gestellt.",
+                            "<strong>Website-Symbole von den gespeicherten Websites</strong>, nur wenn Sie „Website-Symbole aktualisieren“ ausführen (siehe unten)."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Die Erweiterung hat keine Content-Skripte und liest nicht die Seiten, die in Ihren Tabs geöffnet sind. Nur wenn Sie „Seiteninhalt lesen“ aktivieren, lädt sie Seiten separat herunter, wie unten beschrieben."
+                    }
+                ]
+            },
+            "what-the-extension-stores": {
+                "title": "Was die Erweiterung speichert",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Alles wird im Erweiterungsspeicher Ihres Browsers aufbewahrt:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "<strong>Einstellungen</strong> werden im Synchronisierungsspeicher des Browsers aufbewahrt. Wenn Sie die Browsersynchronisierung aktiviert haben, kann Ihr Browser sie über Ihr Browserkonto (z. B. bei Google, Mozilla oder Microsoft) auf Ihre anderen Geräte kopieren. Zu den Einstellungen gehört, ob KI aktiviert ist und welchen Anbieter und welches Modell Sie gewählt haben, nicht aber Ihr API-Schlüssel.",
+                            "<strong>Einstellungen der KI-Anbieter</strong>, einschließlich Ihres API-Schlüssels, der Basis-URL und zusätzlicher Header, werden nur im lokalen Speicher dieses Geräts aufbewahrt. Sie werden nicht synchronisiert.",
+                            "<strong>Tags, Zusammenfassungen, gespeicherte Suchen, zuletzt verwendete Ordner und letzte Suchen</strong> werden nur im lokalen Speicher dieses Geräts aufbewahrt. Die letzten Suchen können Sie in den Einstellungen deaktivieren.",
+                            "<strong>Website-Symbole</strong>, die Sie mit „Website-Symbole aktualisieren“ speichern, werden nur im lokalen Speicher dieses Geräts aufbewahrt, bis zu einer Größenbegrenzung, die Sie in den Einstellungen ändern können. Sie können sie jederzeit mit „Gespeicherte Symbole löschen“ entfernen."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Beim Deinstallieren der Erweiterung werden die Daten entfernt, die sie in diesem Browser gespeichert hat. Ihre Lesezeichen selbst bleiben im Browser."
+                    }
+                ]
+            },
+            "when-data-leaves-your-browser": {
+                "title": "Wann Daten Ihren Browser verlassen",
+                "blocks": [
+                    {
+                        "type": "h3",
+                        "text": "Optionale KI-Funktionen (standardmäßig deaktiviert)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "KI-Funktionen laufen erst, nachdem Sie sie in den Einstellungen aktiviert und einen Anbieter gewählt haben. Wenn Sie eine davon verwenden, sendet die Erweiterung die Daten, die diese Funktion benötigt, direkt von Ihrem Browser an den von Ihnen konfigurierten Endpunkt des Anbieters:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Ordnervorschläge: Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner.",
+                            "Automatische Tags, Inhaltszusammenfassung und KI-Ordnerneuordnung: Titel, URLs und Ordnerpfade der Lesezeichen im gewählten Bereich.",
+                            "Nur wenn Sie „Seiteninhalt lesen“ aktivieren (standardmäßig deaktiviert): Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung laden zusätzlich jede Seite über ihre URL ohne Ihre Cookies herunter und senden ihren Haupttext. Seiten in Ihrem lokalen Netzwerk werden nie heruntergeladen. Die KI-Ordnerneuordnung sendet nie Seiteninhalte.",
+                            "KI fragen: Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI für ihre Antwort nachschlägt: passende Lesezeichen (Titel, URLs, Ordnerpfade, gespeicherte Tags und Zusammenfassungen), Ihre Ordnernamen, Titel und URL der aktuellen Seite und, nur bei aktiviertem „Seiteninhalt lesen“, der Text der Seiten, die sie liest. Wenn Sie die Websuche aktivieren (standardmäßig deaktiviert), durchsucht der Anbieter zusätzlich das Web. Das Gespräch wird nicht gespeichert; es endet, wenn Sie es schließen."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Wenn Sie zusätzlich „Beim Öffnen automatisch vorschlagen“ aktivieren (standardmäßig deaktiviert), werden Ordnervorschläge bei jedem Öffnen des Pop-ups oder der Seitenleiste abgerufen."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Ihr API-Schlüssel wird an diesen Anbieter gesendet, um die Anfrage zu authentifizieren. Der Anbieter verarbeitet die Daten gemäß seinen eigenen Bedingungen und seiner eigenen Datenschutzerklärung, denen Sie direkt ihm gegenüber zustimmen. Bookmark Scout sendet diese Daten nirgendwohin sonst. Wenn Sie die Erweiterung auf ein Modell auf Ihrem eigenen Computer richten (z. B. Ollama), bleiben die Daten auf Ihrem Rechner."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Linkprüfung, Titelabruf und Website-Symbole"
+                    },
+                    {
+                        "type": "p",
+                        "text": "„Defekte Links prüfen“ und der Metadatenabruf rufen die gespeicherten Seiten selbst ab, um zu prüfen, ob sie laden und welche Titel sie haben. „Website-Symbole aktualisieren“ ruft pro Website eine gespeicherte Seite ab und dann eine Symboldatei von der Domain dieser Website, damit Lesezeichen das Symbol der Website anzeigen können. Der Browser bittet Sie um Erlaubnis, wenn Sie eines dieser Tools zum ersten Mal ausführen. Anfragen gehen direkt an die jeweilige Website, ohne Cookies, und die Ergebnisse bleiben in der Erweiterung. Es wird kein Symboldienst eines Drittanbieters verwendet. Wie bei jedem Besuch kann die Website Ihre IP-Adresse sehen und dass die Seite oder das Symbol abgerufen wurde."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Exporte"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Lesezeichenexporte und KI-Kontextexporte werden als Dateien auf Ihrem Computer gespeichert. Vor dem Speichern kann die Erweiterung eine Datenschutzprüfung anzeigen, mit der Sie sensible Werte schwärzen können. Es wird nichts hochgeladen."
+                    }
+                ]
+            },
+            "what-the-developer-receives": {
+                "title": "Was der Entwickler erhält",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Nichts. Die Erweiterung sendet keine Daten an den Entwickler, und es gibt keine Telemetrie."
+                    }
+                ]
+            },
+            "permissions": {
+                "title": "Berechtigungen",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bei der Installation fordert Bookmark Scout nur <code>bookmarks</code>, <code>storage</code> und <code>activeTab</code> an, dazu <code>sidePanel</code> in Chrome und Edge sowie <code>contextMenus</code> in Firefox, da Firefox Erweiterungen nicht erlaubt, diese Berechtigung später anzufordern. Alles andere ist optional und wird erst angefordert, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt:"
+                    },
+                    {
+                        "type": "ul",
+                        "items": [
+                            "Zugriff auf Ihre Tabs (<code>tabs</code>), wenn Sie die aktuelle Seite speichern oder Ordnervorschläge aus der Seitenleiste anfordern. Das Pop-up in der Symbolleiste benötigt ihn nicht.",
+                            "Das Rechtsklickmenü (<code>contextMenus</code>, Chrome und Edge), wenn Sie „Kontextmenü“ in den Einstellungen aktivieren.",
+                            "Der Symbol-Cache des Browsers (<code>favicon</code>, Chrome und Edge), wenn Sie „Symbol-Cache des Browsers verwenden“ in den Einstellungen aktivieren.",
+                            "Zugriff auf alle Websites, wenn Sie zum ersten Mal „Defekte Links prüfen“, den Metadatenabruf oder „Website-Symbole aktualisieren“ ausführen oder „Seiteninhalt lesen“ aktivieren.",
+                            "Zugriff auf die Website eines Anbieters, wenn Sie in den KI-Einstellungen auf „Dienst überprüfen“ oder „Modelle aktualisieren“ klicken.",
+                            "In Firefox Ihre Einwilligung, Daten an Ihren KI-Anbieter weiterzugeben, wenn Sie KI aktivieren oder auf „Dienst überprüfen“ klicken."
+                        ]
+                    },
+                    {
+                        "type": "p",
+                        "text": "Wenn Sie ablehnen, bleibt die Funktion deaktiviert. Sie können eine Berechtigung jederzeit in den Erweiterungseinstellungen des Browsers widerrufen; die Funktion, die sie benötigt, wird dann deaktiviert."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Jede Berechtigung wird in der <permissions>Berechtigungsliste in der README</permissions> erklärt."
+                    }
+                ]
+            },
+            "websites": {
+                "title": "Diese Website und die Dokumentationswebsite",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Diese Website, bookmark-scout.com, ist eine statische Website, die auf Cloudflare Pages gehostet wird. Cloudflare verarbeitet Anfragen, um die Website auszuliefern, einschließlich Ihrer IP-Adresse, gemäß der <cloudflare>Datenschutzerklärung von Cloudflare</cloudflare>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Diese Website zählt Besuche mit <umami>Umami Cloud</umami>, das ohne Cookies auskommt. Umami erfasst Adresse und Titel der Seite, die verweisende Website, Ihren Browser, Ihr Betriebssystem, Ihren Gerätetyp, Ihre Bildschirmgröße, Ihre Sprache und Ihren ungefähren Standort (Land, Region und Stadt). Es verwendet Ihre IP-Adresse, um diese Werte zu ermitteln, speichert sie aber nicht. Seitenaufrufe werden mit einem Hash zu Sitzungen zusammengefasst, dessen Salt sich zu Beginn jedes Monats ändert, und Sie werden nicht über andere Websites hinweg verfolgt. Details finden Sie in der <umamiDocs>Dokumentation von Umami</umamiDocs>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Die Dokumentationswebsite, docs.bookmark-scout.com, wird ebenfalls auf Cloudflare Pages gehostet und lädt keine Analysewerkzeuge."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Keine der beiden Websites hat Konten oder Werbung. Beide liefern ihre Schriftarten selbst aus, sodass Ihr Browser keine Verbindung zu Google Fonts herstellt."
+                    }
+                ]
+            },
+            "children": {
+                "title": "Kinder",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Bookmark Scout richtet sich nicht an Kinder. Die Erweiterung erhebt von niemandem Informationen, und die Websites erheben nur die oben beschriebenen anonymen Besuchsstatistiken."
+                    }
+                ]
+            },
+            "changes": {
+                "title": "Änderungen dieser Erklärung",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Änderungen dieser Erklärung werden auf dieser Seite mit einem neuen Gültigkeitsdatum veröffentlicht und in den Versionshinweisen vermerkt."
+                    }
+                ]
+            },
+            "contact": {
+                "title": "Kontakt",
+                "blocks": [
+                    {
+                        "type": "p",
+                        "text": "Für Fragen und Anliegen zum Datenschutz schreiben Sie eine E-Mail an <privacyEmailLink>{privacyEmail}</privacyEmailLink>."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Um eine Sicherheitslücke zu melden, schreiben Sie eine E-Mail an <securityEmailLink>{securityEmail}</securityEmailLink> oder folgen Sie den Schritten in <securityPolicy>SECURITY.md</securityPolicy>. Bitte melden Sie Sicherheitslücken nicht in einem öffentlichen Issue."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Der Quellcode ist auf <source>GitHub</source> unter der Lizenz <license>{licenseName}</license> öffentlich verfügbar."
+                    }
+                ]
+            }
+        }
+    }
+}
