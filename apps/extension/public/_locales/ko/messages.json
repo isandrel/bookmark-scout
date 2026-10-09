@@ -4,16 +4,8 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "북마크를 빠르게 검색하고 특정 폴더에 저장합니다.",
+        "message": "북마크를 빠르게 검색하고 정리하세요. 원클릭 폴더 저장, 중복 및 깨진 링크 찾기, 내 API 키로 쓰는 선택형 AI 기능을 제공합니다.",
         "description": "Extension description (used in manifest.json)"
-    },
-    "ext_name": {
-        "message": "북마크 스카우트",
-        "description": "Extension name"
-    },
-    "ext_description": {
-        "message": "북마크를 빠르게 검색하고 특정 폴더에 저장합니다.",
-        "description": "Extension description"
     },
     "popup_searchPlaceholder": {
         "message": "북마크 검색...",

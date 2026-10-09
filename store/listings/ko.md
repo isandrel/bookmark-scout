@@ -21,13 +21,7 @@ Read from `extName` in `apps/extension/public/_locales/ko/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged today:
-
-```text
-북마크를 빠르게 검색하고 특정 폴더에 저장합니다.
-```
-
-Optional replacement (requires editing `extDescription` and a new version):
+Packaged since 0.3.2 (`extDescription`; changing it needs a new version):
 
 ```text
 북마크를 빠르게 검색하고 정리하세요. 원클릭 폴더 저장, 중복 및 깨진 링크 찾기, 내 API 키로 쓰는 선택형 AI 기능을 제공합니다.
