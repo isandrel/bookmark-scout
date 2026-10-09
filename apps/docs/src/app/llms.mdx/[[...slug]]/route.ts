@@ -1,16 +1,23 @@
 import { notFound } from "next/navigation";
-import { docsLlms, getPageMarkdownUrl, source } from "@/lib/source";
+import {
+  docsLlms,
+  getPageForRoute,
+  getPageMarkdownUrl,
+  getTranslatedPages,
+} from "@/lib/source";
 
 export const revalidate = false;
 
-// Serves `/llms.mdx/<page slug>/content.md`, the Markdown behind each page's copy and
-// "open in" actions. The trailing `content.md` segment gives the static export a file name.
+// Serves `/llms.mdx/<page slug>/content.md` (`/llms.mdx/<language>/<page slug>/content.md` for a
+// translation), the Markdown behind each page's copy and "open in" actions. The trailing
+// `content.md` segment gives the static export a file name. A page without a translation points
+// to the English copy, so only pages with their own file get one.
 export async function GET(
   _req: Request,
   { params }: RouteContext<"/llms.mdx/[[...slug]]">,
 ) {
   const { slug = [] } = await params;
-  const page = source.getPage(slug.slice(0, -1));
+  const page = getPageForRoute(slug.slice(0, -1));
   if (!page) notFound();
 
   return new Response(await docsLlms.page(page), {
@@ -19,7 +26,7 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
+  return getTranslatedPages().map((page) => ({
     slug: getPageMarkdownUrl(page).segments,
   }));
 }

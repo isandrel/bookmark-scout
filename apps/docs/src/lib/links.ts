@@ -1,19 +1,22 @@
 import { type ContactRole, site } from "@bookmark-scout/config";
-import { copy } from "@/lib/copy";
+import { getCopy } from "@/lib/copy";
 
 export type { ContactRole };
 
-/** Website pages the docs link to, as routes of the site model. */
-const SITE_PAGES = {
-  home: () => site.url.home,
-  privacy: () => site.url.page(site.locales.default, "/privacy"),
-  support: () => site.url.page(site.locales.default, "/support"),
+/**
+ * Website pages the docs link to, as routes of the site model. The website serves the same
+ * languages as the docs, so each link opens the page in the reader's language.
+ */
+const SITE_ROUTES = {
+  home: "",
+  privacy: "/privacy",
+  support: "/support",
 } as const;
 
-export type SitePath = keyof typeof SITE_PAGES;
+export type SitePath = keyof typeof SITE_ROUTES;
 
-export function siteUrl(page: SitePath): string {
-  return SITE_PAGES[page]();
+export function siteUrl(page: SitePath, locale: string): string {
+  return site.url.page(locale, SITE_ROUTES[page]);
 }
 
 /**
@@ -43,44 +46,48 @@ export const license = {
   url: site.license.fileUrl,
 } as const;
 
-/** The privacy policy's effective date: ISO 8601 from config, written out in the docs' language. */
-export const privacyEffectiveDate = {
-  iso: site.legal.privacyEffectiveDate,
-  text: new Intl.DateTimeFormat(site.locales.default, {
-    dateStyle: "long",
-    timeZone: "UTC",
-  }).format(new Date(`${site.legal.privacyEffectiveDate}T00:00:00Z`)),
-} as const;
+/** The privacy policy's effective date: ISO 8601 from config, written out in the page's language. */
+export function privacyEffectiveDate(locale: string) {
+  return {
+    iso: site.legal.privacyEffectiveDate,
+    text: new Intl.DateTimeFormat(locale, {
+      dateStyle: "long",
+      timeZone: "UTC",
+    }).format(new Date(`${site.legal.privacyEffectiveDate}T00:00:00Z`)),
+  } as const;
+}
 
 export type StoreListing =
   | { live: true; url: string; text: string }
   | { live: false; text: string };
 
 /** What to say about a browser's store listing, so pages never link to a listing that is not live. */
-export function storeListing(browser: string): StoreListing {
+export function storeListing(browser: string, locale: string): StoreListing {
   const store = site.store(browser);
+  const { store: copy } = getCopy(locale);
   return store.live
     ? {
         live: true,
         url: store.url,
-        text: copy.store.listed(site.name, store.name),
+        text: copy.listed(site.name, store.name),
       }
-    : { live: false, text: copy.store.notListed(site.name, store.name) };
+    : { live: false, text: copy.notListed(site.name, store.name) };
 }
 
 /** One sentence on which stores list the extension, derived from the store config. */
-export function storeAvailability(): {
+export function storeAvailability(locale: string): {
   text: string;
   links: { name: string; url: string }[];
 } {
+  const { store: copy } = getCopy(locale);
   const links = site.stores
     .filter((store) => store.live)
     .map((store) => ({ name: store.name, url: store.url }));
   return {
     text:
       links.length === 0
-        ? copy.store.noneListed(site.name)
-        : copy.store.listedOn(site.name),
+        ? copy.noneListed(site.name)
+        : copy.listedOn(site.name),
     links,
   };
 }

@@ -1,20 +1,23 @@
 import { site } from "@bookmark-scout/config";
 import Link from "next/link";
 import { TaskFinder } from "@/components/home/task-finder";
-import { copy } from "@/lib/copy";
+import { getCopy } from "@/lib/copy";
 import { getDocEntries } from "@/lib/doc-index";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { releasesUrl } from "@/lib/links";
 import { source } from "@/lib/source";
 
 /** The page the primary button opens (content/docs/installation.mdx). */
 const INSTALL_SLUGS = ["installation"];
 
-/** Docs home: the two first actions, then the page finder. */
-export function StartHere() {
-  const entries = getDocEntries().filter((entry) => entry.url !== "/");
+/** Docs home: the two first actions, then the page finder, in the page's language. */
+export function StartHere({ locale = DEFAULT_LOCALE }: { locale?: string }) {
+  const copy = getCopy(locale);
+  const home = source.getPage([], locale)?.url;
+  const entries = getDocEntries(locale).filter((entry) => entry.url !== home);
   // Sections in sidebar order, from the `---Name---` separators in content/docs/meta.json.
   const sections = [...new Set(entries.map((entry) => entry.section))];
-  const installPage = source.getPage(INSTALL_SLUGS);
+  const installPage = source.getPage(INSTALL_SLUGS, locale);
   if (!installPage)
     throw new Error(`Docs page /${INSTALL_SLUGS.join("/")} is missing`);
 
@@ -36,6 +39,7 @@ export function StartHere() {
         </a>
       </div>
       <TaskFinder
+        locale={locale}
         entries={entries}
         featuredSections={sections.slice(0, copy.home.featuredSectionCount)}
         suggestions={[...copy.home.suggestions]}

@@ -4,10 +4,12 @@ import { Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, type KeyboardEvent, useId, useMemo, useState } from "react";
-import { copy } from "@/lib/copy";
+import { getCopy } from "@/lib/copy";
 import type { DocEntry } from "@/lib/doc-index";
 
 type TaskFinderProps = {
+  /** The page language, which picks the finder copy. */
+  locale: string;
   entries: DocEntry[];
   /** Sections listed, by title, before anything is typed. Typing searches every page. */
   featuredSections: string[];
@@ -42,10 +44,12 @@ function Highlight({ text, tokens }: { text: string; tokens: string[] }) {
  * search, so the first thing on the page is the product's own core action.
  */
 export function TaskFinder({
+  locale,
   entries,
   featuredSections,
   suggestions,
 }: TaskFinderProps) {
+  const copy = getCopy(locale);
   const [query, setQuery] = useState("");
   const router = useRouter();
   const inputId = useId();

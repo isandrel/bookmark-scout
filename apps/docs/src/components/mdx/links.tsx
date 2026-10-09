@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { copy } from "@/lib/copy";
+import { getCopy } from "@/lib/copy";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import {
   type ContactRole,
   contactAddress,
@@ -15,15 +16,24 @@ import {
   storeListing,
 } from "@/lib/links";
 
+/**
+ * The page's language. MDX never sets it: the docs page binds it to every component that writes
+ * text or links to the website (`localizedMdxComponents` in `src/mdx-components.tsx`).
+ */
+type Localized = { locale?: string };
+
 /** A mailto link for one of the role addresses in config/project.toml. */
 export function Contact({ role }: { role: ContactRole }) {
   return <a href={contactHref(role)}>{contactAddress(role)}</a>;
 }
 
-export function ReleaseLink({ children }: { children?: ReactNode }) {
+export function ReleaseLink({
+  children,
+  locale = DEFAULT_LOCALE,
+}: Localized & { children?: ReactNode }) {
   return (
     <a href={releasesUrl} rel="noreferrer">
-      {children ?? copy.release.latest}
+      {children ?? getCopy(locale).release.latest}
     </a>
   );
 }
@@ -37,20 +47,21 @@ export function License() {
   );
 }
 
-export function PrivacyEffectiveDate() {
-  return (
-    <time dateTime={privacyEffectiveDate.iso}>{privacyEffectiveDate.text}</time>
-  );
+export function PrivacyEffectiveDate({ locale = DEFAULT_LOCALE }: Localized) {
+  const date = privacyEffectiveDate(locale);
+  return <time dateTime={date.iso}>{date.text}</time>;
 }
 
+/** A website page in the page's language. */
 export function SiteLink({
   to,
   children,
-}: {
+  locale = DEFAULT_LOCALE,
+}: Localized & {
   to: SitePath;
   children: ReactNode;
 }) {
-  return <a href={siteUrl(to)}>{children}</a>;
+  return <a href={siteUrl(to, locale)}>{children}</a>;
 }
 
 /**
@@ -69,8 +80,11 @@ export function RepoLink({
 }
 
 /** States whether a store listing is live, and links to it only when it is. */
-export function StoreListing({ browser }: { browser: string }) {
-  const listing = storeListing(browser);
+export function StoreListing({
+  browser,
+  locale = DEFAULT_LOCALE,
+}: Localized & { browser: string }) {
+  const listing = storeListing(browser, locale);
   if (!listing.live) return <p>{listing.text}</p>;
   return (
     <p>
@@ -81,8 +95,8 @@ export function StoreListing({ browser }: { browser: string }) {
   );
 }
 
-export function StoreAvailability() {
-  const { text, links } = storeAvailability();
+export function StoreAvailability({ locale = DEFAULT_LOCALE }: Localized) {
+  const { text, links } = storeAvailability(locale);
   if (links.length === 0) return <p>{text}</p>;
   return (
     <>

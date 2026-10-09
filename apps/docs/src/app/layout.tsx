@@ -1,6 +1,4 @@
 import { PUBLIC_PATHS, site, titleTemplate } from "@bookmark-scout/config";
-import { DocsLayout } from "fumadocs-ui/layouts/docs";
-import { RootProvider } from "fumadocs-ui/provider/next";
 import type { Metadata, Viewport } from "next";
 import {
   Bricolage_Grotesque,
@@ -8,10 +6,13 @@ import {
   JetBrains_Mono,
 } from "next/font/google";
 import Image from "next/image";
+import { DocsShell, type LanguageShell } from "@/components/docs-shell";
+import { i18nProviderProps, LOCALE_ROUTING, LOCALES } from "@/lib/i18n";
+import { searchIndexUrl } from "@/lib/search";
 import {
   DOCS_DESCRIPTION,
-  NAV_LINKS,
   NAV_TITLE,
+  navLinks,
   THEME_COLORS,
 } from "@/lib/site";
 import { source } from "@/lib/source";
@@ -65,25 +66,31 @@ function NavTitle() {
   );
 }
 
+/** The page tree, header links, and UI labels of every language, for the shell to pick from. */
+function languageShells(): Record<string, LanguageShell> {
+  return Object.fromEntries(
+    LOCALES.map((locale) => [
+      locale,
+      {
+        tree: source.getPageTree(locale),
+        links: navLinks(locale),
+        i18n: i18nProviderProps(locale),
+        searchApi: searchIndexUrl(locale),
+      },
+    ]),
+  );
+}
+
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang={site.locales.default}
+    <DocsShell
+      routing={LOCALE_ROUTING}
+      languages={languageShells()}
       className={`${display.variable} ${body.variable} ${code.variable}`}
-      suppressHydrationWarning
+      navTitle={<NavTitle />}
+      githubUrl={site.repo.url()}
     >
-      <body className="flex min-h-screen flex-col font-sans">
-        <RootProvider search={{ options: { type: "static" } }}>
-          <DocsLayout
-            tree={source.pageTree}
-            nav={{ title: <NavTitle /> }}
-            links={NAV_LINKS}
-            githubUrl={site.repo.url()}
-          >
-            {children}
-          </DocsLayout>
-        </RootProvider>
-      </body>
-    </html>
+      {children}
+    </DocsShell>
   );
 }
