@@ -56,7 +56,7 @@ import export bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 3,758 characters. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 3,731 characters. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout helps you find, file, and tidy your bookmarks without leaving the browser.
@@ -87,7 +87,7 @@ MAINTENANCE TOOLS
 The Dead Link Checker, Metadata Fetcher, Refresh Site Icons, and the Read page content AI setting ask for optional website access the first time you use them. It is never granted at install, requests are sent without cookies, and declining it simply turns that feature off.
 
 OPT-IN AI TOOLS (OFF BY DEFAULT)
-Turn on AI in Settings and choose OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint, with your own API key where the provider requires one.
+Turn on AI in Settings and choose a cloud AI provider, any OpenAI-compatible endpoint, or a model server on your own computer, with your own API key where the provider requires one.
 • Folder suggestions for the current page, including reviewed creation of a new folder path
 • Tag suggestions and short summaries that you review before saving
 • Folder reorganization plans, previewed before anything changes (default)
@@ -124,7 +124,7 @@ SEARCH AND SAVE FROM THE TOOLBAR
 • Delete with a confirmation dialog (on by default) and a 10-second Undo
 
 OPT-IN AI FOLDER SUGGESTIONS (OFF BY DEFAULT)
-Turn on AI in Settings and choose OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint, with your own API key where the provider requires one. Bookmark Scout then suggests folders for the current page and can create a new folder path after you review it.
+Turn on AI in Settings and choose a cloud AI provider, any OpenAI-compatible endpoint, or a model server on your own computer, with your own API key where the provider requires one. Bookmark Scout then suggests folders for the current page and can create a new folder path after you review it.
 
 When you ask for suggestions, the current page's title and URL and your folder names are sent directly from your browser to the provider you chose, under that provider's terms. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Provider usage may cost money.
 
