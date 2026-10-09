@@ -113,6 +113,7 @@ SEARCH AND SAVE FROM THE TOOLBAR
 • Instant search across all bookmarks, with match case, whole word, and regular expression options
 • Folder tree with drag and drop, expand and collapse all, and new folders
 • Save the current page to any folder with one click; a page already in that folder is not saved twice
+• The same tree and search in the Firefox sidebar, which stays open while you browse
 • Save links from the right-click menu into recent folders
 • Keyboard shortcuts that never take over browser Ctrl/Cmd shortcuts
 • Delete with a confirmation dialog (on by default) and a 10-second Undo

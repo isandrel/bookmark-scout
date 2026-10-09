@@ -21,7 +21,7 @@
       "Instant bookmark search",
       "Drag and drop organization",
       "Quick bookmark saving",
-      "Side panel support (Chrome and Edge)",
+      "Side panel support (the sidebar in Firefox)",
       "Saved searches",
       "Keyboard shortcuts",
       "Delete with undo",
@@ -119,7 +119,7 @@
         "alt": "Two Bookmark Scout popups side by side: a folder tree with Recipes, Travel, Research, and Dev Docs folders, and a search for docs with the matches highlighted",
         "points": [
           "Search every bookmark as you type, with match case, whole word, and regular expression options",
-          "Keep the same tree and search open in the side panel in Chrome and Edge",
+          "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search as a smart view that always shows current results",
           "Move through folders and results with the keyboard; browser Ctrl and Cmd shortcuts keep working"
         ]
