@@ -46,6 +46,7 @@
 </p>
 
 <p align="center">
+{{STORE_BADGES:Install}}
 {{BROWSER_BADGES:Supported}}
   <img src="https://img.shields.io/badge/Safari-Not%20Supported-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>

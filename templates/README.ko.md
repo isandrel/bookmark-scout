@@ -35,6 +35,7 @@
 </p>
 
 <p align="center">
+{{STORE_BADGES:설치}}
 {{BROWSER_BADGES:지원}}
   <img src="https://img.shields.io/badge/Safari-미지원-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>
