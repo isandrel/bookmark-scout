@@ -35,6 +35,7 @@
 </p>
 
 <p align="center">
+{{STORE_BADGES:インストール}}
 {{BROWSER_BADGES:対応}}
   <img src="https://img.shields.io/badge/Safari-非対応-999999?style=flat-square&logo=safari&logoColor=white" alt="Safari">
 </p>

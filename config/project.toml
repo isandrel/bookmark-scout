@@ -67,7 +67,7 @@ edge    = "Edge"
 # the website and docs then point to the GitHub release instead.
 [stores.chrome]
 name = "Chrome Web Store"
-url  = ""
+url  = "https://chromewebstore.google.com/detail/bookmark-scout/pmjiopaebkmoenkoodpoldfbnfncnedk"
 
 [stores.firefox]
 name = "Firefox Add-ons"
