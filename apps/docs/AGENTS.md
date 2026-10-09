@@ -25,16 +25,17 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 
 ## Local repository map
 
-- `content/docs/`: documentation pages in MDX
+- `content/docs/`: documentation pages in MDX; translations sit next to the English file (`faq.ja.mdx`, `meta.ja.json`)
 - `content/docs/meta.json`: page order and the sidebar sections (Get started, Guides, Reference, About, Contribute) as `---Name---` separators
 - `content/docs/guides/`: task guides, ordered by their own `meta.json`
-- `src/app/`: routes and the application shell (`layout.tsx`, `[[...slug]]/page.tsx`, `sitemap.ts`, `robots.ts`, `og/`)
+- `src/app/`: routes (`layout.tsx`, `[[...slug]]/page.tsx`, `sitemap.ts`, `robots.ts`, `og/`)
+- `src/components/docs-shell.tsx`: the document shell (`<html lang>`, providers, `DocsLayout`) in the language of the current URL
 - `src/app/llms.txt/`, `src/app/llms-full.txt/`, `src/app/llms.mdx/`: the LLM index, the full text, and one static Markdown copy per page (used by the page actions)
-- `src/app/api/search/`: the static search index
+- `src/app/api/search/[locale]/`: one static search index per language
 - `src/components/mdx/`: MDX components that read config (`Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, `PrivacyEffectiveDate`) and `Screenshot`
 - `src/components/home/`: the docs home's task finder
-- `src/lib/`: source loading (`source.ts`), link helpers (`links.ts`), site constants (`site.ts`), UI copy outside MDX (`copy.ts`), the page index (`doc-index.ts`), screenshot alt text over the shared manifest in `@bookmark-scout/config` (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
-- `src/mdx-components.tsx`: component mapping for MDX; register new MDX components here
+- `src/lib/`: source loading and translation fallback (`source.ts`), languages (`i18n.ts`, and the client-safe URL helpers in `locale-path.ts`), search indexes (`search.ts`), link helpers (`links.ts`), site constants (`site.ts`), UI copy outside MDX per language (`copy.ts`), the page index (`doc-index.ts`), screenshots with alt text from `copy.ts` over the shared manifest in `@bookmark-scout/config` (`screenshots.ts`), and the MDX-to-Markdown conversion for LLM text (`mdx-text.ts`)
+- `src/mdx-components.tsx`: component mapping for MDX; register new MDX components here, and in `localizedMdxComponents` too when the component takes a `locale`
 - `source.config.ts`: MDX and collection configuration
 - `scripts/verify-build.ts`: checks the static export in `out/`
 - `DESIGN.md`: the docs theme and components
@@ -54,7 +55,7 @@ The docs app has no `project.json`. Nx targets come from `package.json` scripts 
 Minimum for most docs changes:
 
 - `nx run docs:build`
-- `nx run docs:verify`, which checks that the legacy URLs (`/`, `/installation`, `/features`, `/status`, `/contributing`) still exist, that every sitemap URL is on `DOCS_URL` and has an HTML file, that canonical and `og:image` URLs are absolute on `DOCS_URL`, that titles use the `DOCS_NAME` template, that `robots.txt` names the sitemap, that `llms.txt` and `llms-full.txt` have content, and that no HTML links to a local address
+- `nx run docs:verify`, which checks that the legacy URLs (`/`, `/installation`, `/features`, `/status`, `/contributing`) still exist, that every English page also exists under `/<tag>/` for every other language, that each page's `<html lang>` matches its URL, that every sitemap URL and hreflang alternate is on `DOCS_URL` and has an HTML file, that canonical and `og:image` URLs are absolute on `DOCS_URL`, that titles use the `DOCS_NAME` template, that `robots.txt` names the sitemap, that `llms.txt` and `llms-full.txt` have content, that each language has a search index, and that no HTML links to a local address
 
 Also run `bun run types:check` when the task affects:
 
@@ -109,6 +110,18 @@ The content source is configured through:
 - `src/lib/source.ts`
 
 Be careful when editing these files because they affect page discovery, processing, and derived outputs such as LLM text.
+
+## Languages
+
+The docs serve every language in `[locales] supported` of `config/project.toml`; never list languages in docs code. English is the default and the source of every page.
+
+- URLs: English keeps unprefixed URLs (`/faq`); another language lives under its BCP 47 tag (`/ja/faq`, `/zh-CN/faq`). One optional catch-all route renders all of them, and `src/components/docs-shell.tsx` reads the language from the path, because a static export has no middleware to rewrite unprefixed URLs. A top-level English page may not be named like a language tag (`source.ts` throws).
+- Content: Fumadocs' dot parser. `faq.ja.mdx` translates `faq.mdx` and `meta.ja.json` translates `meta.json`. A page without a translation is the English page served under the language's URL, with a notice, its canonical URL on the English page, and no sitemap entry. Adding a language to config therefore never breaks the build.
+- UI text: every string the docs render outside MDX is in `src/lib/copy.ts`, including Fumadocs' own labels (`ui`) and screenshot alt text; a language without an entry there uses English. MDX components that write text or website links take the page's `locale` from `localizedMdxComponents`.
+- Links: in MDX, link to English page URLs (`/guides/search`); on a translated or fallback page they open the same page in the reader's language. Website links go through `<SiteLink>`, which uses `site.url.page(locale, route)`.
+- Search: one static index per language (`/api/search/<tag>`), tokenized by Fumadocs' multilingual tokenizer (Intl.Segmenter), which handles Chinese and Japanese text without spaces.
+- English only: `llms.txt`, `llms-full.txt`, and the social cards. Translated pages get their own Markdown copy under `/llms.mdx/<tag>/`.
+- Keep translations out of unrelated changes. The steps for translators are in `README.md`.
 
 ## Design
 

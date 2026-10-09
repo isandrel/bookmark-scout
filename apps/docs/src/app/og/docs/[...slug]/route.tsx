@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { PUBLIC_PATHS, site } from "@bookmark-scout/config";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import { getPageImage, source } from "@/lib/source";
 
 export const revalidate = false;
@@ -103,8 +104,8 @@ export async function GET(
 }
 
 export function generateStaticParams() {
-  return source.getPages().map((page) => ({
-    lang: page.locale,
+  // One card per page, in English; translated pages use their English page's card (DESIGN.md).
+  return source.getPages(DEFAULT_LOCALE).map((page) => ({
     slug: getPageImage(page).segments,
   }));
 }

@@ -1,7 +1,7 @@
 /// <reference types="bun" />
 /**
- * Checks the docs static export in `out/` for the URL, SEO, and LLM-text guarantees the
- * site depends on. Run after `next build`:
+ * Checks the docs static export in `out/` for the URL, language, SEO, search, and LLM-text
+ * guarantees the site depends on, for every language in config. Run after `next build`:
  *
  *   bun run verify
  *
@@ -14,6 +14,11 @@ import { site, TITLE_SEPARATOR } from "@bookmark-scout/config";
 // Raw config values; the expected URLs below are spelled out rather than built by the site model.
 const DOCS_NAME = site.docs.name;
 const DOCS_URL = site.docs.origin;
+const DEFAULT_LOCALE = site.locales.default;
+/** Languages served under `/<tag>/`; the default language has no prefix. */
+const PREFIXED_LOCALES = site.locales.supported.filter(
+  (locale) => locale !== DEFAULT_LOCALE,
+);
 
 const outDir = join(resolve(import.meta.dir, ".."), "out");
 
@@ -67,6 +72,33 @@ function decodeEntities(value: string): string {
     .replace(/&amp;/g, "&");
 }
 
+/** The language of a site path: a prefixed language tag, or the default language. */
+function localeOf(path: string): string {
+  const first = path.split("/").filter(Boolean)[0] ?? "";
+  return PREFIXED_LOCALES.includes(first) ? first : DEFAULT_LOCALE;
+}
+
+/** The default-language path of a page: `/ja/faq` is `/faq`, `/ja` is `/`. */
+function defaultPathOf(path: string): string {
+  const locale = localeOf(path);
+  if (locale === DEFAULT_LOCALE) return path;
+  return path.slice(locale.length + 1) || "/";
+}
+
+/** The same page in another language: `/faq` is `/ja/faq`, `/` is `/ja`. */
+function localizedPath(locale: string, path: string): string {
+  return `/${locale}${path === "/" ? "" : path}`;
+}
+
+/** An absolute docs URL that must be an exported page. */
+function checkDocsLink(where: string, url: string) {
+  if (url !== DOCS_URL && !url.startsWith(`${DOCS_URL}/`)) {
+    fail(`${where}: ${url} is not on ${DOCS_URL}`);
+  } else if (!htmlFileFor(new URL(url).pathname)) {
+    fail(`${where}: ${url} has no HTML file in out/`);
+  }
+}
+
 function checkPage(path: string) {
   const file = htmlFileFor(path);
   if (!file) {
@@ -77,6 +109,17 @@ function checkPage(path: string) {
 
   if (html.includes("__next_error__"))
     fail(`${path}: rendered as a Next.js error page`);
+
+  const lang = /<html[^>]*\slang="([^"]*)"/.exec(html)?.[1];
+  if (lang !== localeOf(path)) {
+    fail(`${path}: <html lang="${lang}"> should be "${localeOf(path)}"`);
+  }
+
+  for (const [, hreflang, href] of html.matchAll(
+    /<link rel="alternate" hrefLang="([^"]+)" href="([^"]+)"/g,
+  )) {
+    checkDocsLink(`${path}: hreflang ${hreflang}`, href ?? "");
+  }
 
   const title = decodeEntities(
     /<title>([^<]*)<\/title>/.exec(html)?.[1]?.trim() ?? "",
@@ -93,9 +136,14 @@ function checkPage(path: string) {
   // Next.js writes the home canonical without a trailing slash, so compare without one.
   const withoutSlash = (url: string | undefined) => url?.replace(/\/$/, "");
   const canonical = /<link rel="canonical" href="([^"]+)"/.exec(html)?.[1];
-  const expected = new URL(path, DOCS_URL).toString();
-  if (withoutSlash(canonical) !== withoutSlash(expected)) {
-    fail(`${path}: canonical "${canonical}" should be "${expected}"`);
+  // A page without a translation names its English page as canonical.
+  const expected = [path, defaultPathOf(path)].map((candidate) =>
+    new URL(candidate, DOCS_URL).toString(),
+  );
+  if (!expected.some((url) => withoutSlash(canonical) === withoutSlash(url))) {
+    fail(
+      `${path}: canonical "${canonical}" should be ${expected.map((url) => `"${url}"`).join(" or ")}`,
+    );
   }
 
   const ogImage = /<meta property="og:image" content="([^"]+)"/.exec(html)?.[1];
@@ -129,7 +177,43 @@ function checkSitemap(): string[] {
     if (!paths.includes(legacy))
       fail(`sitemap.xml: legacy URL ${legacy} is missing`);
   }
+  for (const [, hreflang, href] of sitemap.matchAll(
+    /<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"/g,
+  )) {
+    checkDocsLink(`sitemap.xml: hreflang ${hreflang}`, href ?? "");
+  }
   return paths;
+}
+
+/**
+ * Every default-language page must exist in every other language too: translated, or the
+ * English page served under that language's URL.
+ */
+function languagePaths(defaultPaths: Iterable<string>): string[] {
+  return [...defaultPaths]
+    .filter((path) => localeOf(path) === DEFAULT_LOCALE)
+    .flatMap((path) =>
+      PREFIXED_LOCALES.map((locale) => localizedPath(locale, path)),
+    );
+}
+
+/** Each language's static search index, loaded by the search dialog. */
+function checkSearchIndexes() {
+  for (const locale of site.locales.supported) {
+    const name = `api/search/${locale}`;
+    const text = readOut(name);
+    if (!text) {
+      fail(`${name}: missing`);
+      continue;
+    }
+    try {
+      const data = JSON.parse(text) as { type?: string };
+      if (data.type !== "advanced")
+        fail(`${name}: type "${data.type}" should be "advanced"`);
+    } catch {
+      fail(`${name}: not JSON`);
+    }
+  }
 }
 
 function checkRobots() {
@@ -164,9 +248,12 @@ if (!existsSync(outDir)) {
 }
 
 const sitemapPaths = checkSitemap();
-for (const path of new Set([...LEGACY_PATHS, ...sitemapPaths])) checkPage(path);
+const pagePaths = new Set([...LEGACY_PATHS, ...sitemapPaths]);
+for (const path of languagePaths(pagePaths)) pagePaths.add(path);
+for (const path of pagePaths) checkPage(path);
 checkRobots();
 checkLlmFiles();
+checkSearchIndexes();
 checkNoLocalUrls();
 
 if (failures.length > 0) {
@@ -176,5 +263,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `Docs build verified: ${new Set([...LEGACY_PATHS, ...sitemapPaths]).size} pages.`,
+  `Docs build verified: ${pagePaths.size} pages in ${site.locales.supported.length} languages.`,
 );

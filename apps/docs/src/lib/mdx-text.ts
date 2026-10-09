@@ -1,5 +1,6 @@
 import { site } from "@bookmark-scout/config";
-import { copy } from "@/lib/copy";
+import { getCopy } from "@/lib/copy";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import {
   type ContactRole,
   contactAddress,
@@ -13,29 +14,34 @@ import {
   storeAvailability,
   storeListing,
 } from "@/lib/links";
-import { SCREENSHOTS, type ScreenshotName } from "@/lib/screenshots";
+import { getScreenshot } from "@/lib/screenshots";
 
 const DOCS_URL = site.docs.origin;
 
 /**
  * The docs' own MDX components read links and addresses from config. The processed
  * Markdown used for llms.txt and the per-page Markdown copies still contains their
- * JSX tags, so replace each with the plain Markdown it renders.
+ * JSX tags, so replace each with the plain Markdown it renders in the page's language.
  */
-const replacements: [RegExp, (...groups: string[]) => string][] = [
+const replacementsFor = (
+  locale: string,
+): [RegExp, (...groups: string[]) => string][] => [
   [
     /<Contact\s+role="(\w+)"\s*\/>/g,
     (role) =>
       `[${contactAddress(role as ContactRole)}](${contactHref(role as ContactRole)})`,
   ],
-  [/<ReleaseLink\s*\/>/g, () => `[${copy.release.latest}](${releasesUrl})`],
+  [
+    /<ReleaseLink\s*\/>/g,
+    () => `[${getCopy(locale).release.latest}](${releasesUrl})`,
+  ],
   [
     /<ReleaseLink>([\s\S]*?)<\/ReleaseLink>/g,
     (text) => `[${text}](${releasesUrl})`,
   ],
   [
     /<SiteLink\s+to="(\w+)">([\s\S]*?)<\/SiteLink>/g,
-    (to, text) => `[${text}](${siteUrl(to as SitePath)})`,
+    (to, text) => `[${text}](${siteUrl(to as SitePath, locale)})`,
   ],
   [
     /<RepoLink((?:\s+(?:path|file|tree)="[^"]*")*)\s*>([\s\S]*?)<\/RepoLink>/g,
@@ -49,14 +55,14 @@ const replacements: [RegExp, (...groups: string[]) => string][] = [
   [
     /<StoreListing\s+browser="(\w+)"\s*\/>/g,
     (browser) => {
-      const listing = storeListing(browser);
+      const listing = storeListing(browser, locale);
       return listing.live ? `${listing.text} (${listing.url})` : listing.text;
     },
   ],
   [
     /<Screenshot\s+name="([\w-]+)"\s*\/>/g,
     (name) => {
-      const shot = SCREENSHOTS[name as ScreenshotName];
+      const shot = getScreenshot(name, locale);
       return shot
         ? `![${shot.alt}](${new URL(shot.light, DOCS_URL).toString()})`
         : "";
@@ -65,7 +71,7 @@ const replacements: [RegExp, (...groups: string[]) => string][] = [
   [
     /<StoreAvailability\s*\/>/g,
     () => {
-      const { text, links } = storeAvailability();
+      const { text, links } = storeAvailability(locale);
       return [
         text,
         ...links.map((link) => `- [${link.name}](${link.url})`),
@@ -73,7 +79,7 @@ const replacements: [RegExp, (...groups: string[]) => string][] = [
     },
   ],
   [/<License\s*\/>/g, () => `[${license.name}](${license.url})`],
-  [/<PrivacyEffectiveDate\s*\/>/g, () => privacyEffectiveDate.text],
+  [/<PrivacyEffectiveDate\s*\/>/g, () => privacyEffectiveDate(locale).text],
   [/<StartHere\s*\/>\n?/g, () => ""],
 ];
 
@@ -156,8 +162,11 @@ export function absolutizeLinks(markdown: string): string {
   });
 }
 
-export function resolveMdxForText(markdown: string): string {
-  const resolved = replacements.reduce(
+export function resolveMdxForText(
+  markdown: string,
+  locale: string = DEFAULT_LOCALE,
+): string {
+  const resolved = replacementsFor(locale).reduce(
     (text, [pattern, render]) =>
       text.replace(pattern, (_match, ...groups: unknown[]) =>
         render(

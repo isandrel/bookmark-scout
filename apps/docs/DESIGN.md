@@ -80,6 +80,8 @@ components:
   tabs: "Fumadocs Tabs for per-browser instructions"
   callout: "Fumadocs Callout for Firefox limits and data warnings"
   config-links: "Contact, ReleaseLink, SiteLink, RepoLink, StoreListing, StoreAvailability, License, PrivacyEffectiveDate"
+  language-switch: "Fumadocs LanguageSelect in the sidebar footer, each language by its own name from config"
+  untranslated-notice: "Fumadocs Callout under the page actions on a page shown in English because it has no translation"
 ---
 
 ## Overview
@@ -121,9 +123,9 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 
 ## Layout
 
-- Fumadocs `DocsLayout`: sidebar (268px) with search, the Website link, and the page tree; the article in the middle; the table of contents on the right from `xl`.
+- Fumadocs `DocsLayout`: sidebar (268px) with search, the Website link, the page tree, and the language switcher in its footer; the article in the middle; the table of contents on the right from `xl`. English pages have unprefixed URLs; other languages live under `/<tag>/` with their own page tree.
 - The page tree comes from `meta.json` separators in Diátaxis order: Get started, Guides, Reference, About, Contribute. Guides live in `content/docs/guides/` with their own `meta.json`. Legacy URLs (`/`, `/installation`, `/features`, `/status`, `/contributing`) never move.
-- Every page: title, description, page actions (Copy Markdown and Open in), a line rule, the body, then Edit on GitHub and Last updated (except on the home page), then Fumadocs' previous and next links.
+- Every page: title, description, page actions (Copy Markdown and Open in), a line rule, the untranslated-page notice when the page is shown in English in another language, the body, then Edit on GitHub and Last updated (except on the home page), then Fumadocs' previous and next links.
 - The docs home: title and description, two buttons (Install, latest release), the task finder, then a short overview.
 
 ## Elevation and depth
@@ -137,19 +139,23 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 
 ## Components
 
-**`nav-title`**: `public/icon.png` at 26px and the site name from config, in the display face. Header links come from `NAV_LINKS` in `src/lib/site.ts` (Website) plus `githubUrl` (GitHub icon in the sidebar footer).
+**`nav-title`**: `public/icon.png` at 26px and the site name from config, in the display face. Header links come from `navLinks(locale)` in `src/lib/site.ts` (Website, in the reader's language) plus `githubUrl` (GitHub icon in the sidebar footer).
 
-**`page-actions`**: `MarkdownCopyButton` and `ViewOptionsPopover` from `fumadocs-ui/layouts/docs/page`, pointing at the page's static Markdown copy (`/llms.mdx/<slug>/content.md`) and its source on GitHub.
+**`page-actions`**: `MarkdownCopyButton` and `ViewOptionsPopover` from `fumadocs-ui/layouts/docs/page`, pointing at the page's static Markdown copy (`/llms.mdx/<slug>/content.md`, or `/llms.mdx/<tag>/<slug>/content.md` for a translation) and its source on GitHub (the translated file, or the English file it falls back to).
 
 **`task-finder`** (`src/components/home/task-finder.tsx`): the one signature element. A `surface` panel with the ribbon in its top-left corner, a labeled search input in the display face, an `aria-live` status line, suggestion chips, and the Get started and Guides pages grouped by section. Typing filters every page by title, description, and section, highlights matches with `<mark>`, and Enter opens the first result. Page data comes from the page tree (`src/lib/doc-index.ts`), never a hand-written list.
 
-**`screenshot`** (`<Screenshot name="manager" />`): a store screenshot in a `surface` frame with Fumadocs `ImageZoom`; the light or dark capture shows by theme. Paths come from the shared manifest in `@bookmark-scout/config` (`SCREENSHOTS`); alt text is in `src/lib/screenshots.ts`.
+**`screenshot`** (`<Screenshot name="manager" />`): a store screenshot in a `surface` frame with Fumadocs `ImageZoom`; the light or dark capture shows by theme. Paths come from the shared manifest in `@bookmark-scout/config` (`SCREENSHOTS`); alt text is in `screenshots` of `src/lib/copy.ts`, per language.
 
 **Fumadocs MDX components**: `Steps` for real sequences (install, scans, imports), `Tabs` for per-browser instructions, `Callout` for Firefox limits and data warnings, tables for settings and results. `Accordion` is registered but unused, because FAQ answers are headings so they show in the table of contents and in search.
 
-**Config components**: `Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, and `PrivacyEffectiveDate` render values from `@bookmark-scout/config` (`src/components/mdx/links.tsx`). `src/lib/mdx-text.ts` turns the same tags, plus Tabs, Steps, and Callout, into plain Markdown for `llms.txt`, `llms-full.txt`, and the per-page Markdown copies.
+**Config components**: `Contact`, `ReleaseLink`, `SiteLink`, `RepoLink`, `StoreListing`, `StoreAvailability`, `License`, and `PrivacyEffectiveDate` render values from `@bookmark-scout/config` (`src/components/mdx/links.tsx`). The ones that write text or website links follow the page's language. `src/lib/mdx-text.ts` turns the same tags, plus Tabs, Steps, and Callout, into plain Markdown for `llms.txt`, `llms-full.txt`, and the per-page Markdown copies.
 
-**`og-image`** (`src/app/og/docs/[...slug]/route.tsx`): 1200x630, dark navy, the icon and site name, the page title, and the description under a teal rule, with the ribbon at top right.
+**`language-switch`**: Fumadocs' `LanguageSelect` in the sidebar footer, listing each language in `[locales] supported` by its own name (`[locales.names]`). Choosing one opens the same page in that language.
+
+**`untranslated-notice`**: a Fumadocs `Callout` under the page actions on a page that has no translation for the current language and shows the English text (marked `lang="en"`). Its text is `page.untranslated` in `src/lib/copy.ts`.
+
+**`og-image`** (`src/app/og/docs/[...slug]/route.tsx`): 1200x630, dark navy, the icon and site name, the page title, and the description under a teal rule, with the ribbon at top right. One card per English page; a translated page uses its English page's card.
 
 ## Do's and don'ts
 
@@ -181,6 +187,7 @@ The brand tokens are declared as `--bs-*` variables in `:root` and `.dark`, then
 
 ## Known gaps
 
-- The docs are English only.
+- No page is translated yet; every language shows the English pages with the untranslated-page notice, and the UI copy in `src/lib/copy.ts` and Fumadocs labels are English until a language is added there.
+- Social cards are English for every language: the bundled OG font has no CJK glyphs, so translated titles would render as boxes.
 - Screenshots are the store captures; they are not regenerated when the UI changes.
 - The Fumadocs search dialog and table of contents keep their stock styling apart from the color mapping.

@@ -303,6 +303,10 @@ If you change localized website copy, update the relevant files in:
 - `apps/website/messages/ja.json`
 - `apps/website/messages/ko.json`
 
+### Docs
+
+The docs serve every locale in `config/project.toml` and fall back to the English page where a translation is missing (`apps/docs/AGENTS.md`, Languages). When you change an English page that has translations (`<page>.<tag>.mdx`), update them or call out that they are now stale. Docs UI copy lives per locale in `apps/docs/src/lib/copy.ts`.
+
 Do not silently leave one locale updated and others stale unless the user explicitly asked for a partial change and the limitation is called out.
 
 ## Security and privacy rules

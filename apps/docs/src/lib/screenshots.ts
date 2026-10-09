@@ -3,25 +3,23 @@ import {
   SCREENSHOT_SIZE,
   type ScreenshotName,
 } from "@bookmark-scout/config";
+import { getCopy } from "@/lib/copy";
 
 export { SCREENSHOT_SIZE, type ScreenshotName };
 
-/** Alt text for each shared capture (paths and size come from `@bookmark-scout/config`). */
-const ALT: Record<ScreenshotName, string> = {
-  popup:
-    'The popup folder tree, and a search for "docs" with the matches highlighted',
-  manager:
-    "The bookmarks manager with the folder tree, the title and URL filters, and the bookmark table",
-  duplicates:
-    "The Duplicate Cleaner review over the manager, with the bookmark to keep in each group marked Keep",
-  "options-ai":
-    "The AI tab in Settings with AI Features turned off, the default",
-};
+export type Screenshot = { light: string; dark: string; alt: string };
 
-/** Each capture has a light and a dark version; the page shows the one matching the theme. */
-export const SCREENSHOTS = Object.fromEntries(
-  (Object.keys(CAPTURES) as ScreenshotName[]).map((name) => [
-    name,
-    { ...CAPTURES[name], alt: ALT[name] },
-  ]),
-) as Record<ScreenshotName, { light: string; dark: string; alt: string }>;
+/**
+ * A shared capture (paths and size from `@bookmark-scout/config`) with its alt text in the
+ * page's language (`screenshots` in `src/lib/copy.ts`). Each capture has a light and a dark
+ * version; the page shows the one matching the theme.
+ */
+export function getScreenshot(
+  name: string,
+  locale: string,
+): Screenshot | undefined {
+  if (!Object.hasOwn(CAPTURES, name)) return undefined;
+  const key = name as ScreenshotName;
+  const alt: Record<ScreenshotName, string> = getCopy(locale).screenshots;
+  return { ...CAPTURES[key], alt: alt[key] };
+}

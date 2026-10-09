@@ -9,8 +9,8 @@ export type DocEntry = {
   url: string;
 };
 
-/** Every page in sidebar order, labelled with its section. */
-export function getDocEntries(): DocEntry[] {
+/** Every page of one language in sidebar order, labelled with its section. */
+export function getDocEntries(locale: string): DocEntry[] {
   const entries: DocEntry[] = [];
   let section = "";
 
@@ -21,7 +21,7 @@ export function getDocEntries(): DocEntry[] {
       } else if (node.type === "folder") {
         visit(node.index ? [node.index, ...node.children] : node.children);
       } else {
-        const page = source.getNodePage(node);
+        const page = source.getNodePage(node, locale);
         if (!page) continue;
         entries.push({
           section,
@@ -33,6 +33,6 @@ export function getDocEntries(): DocEntry[] {
     }
   };
 
-  visit(source.pageTree.children);
+  visit(source.getPageTree(locale).children);
   return entries;
 }

@@ -1,13 +1,21 @@
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import { DEFAULT_LOCALE } from "@/lib/i18n";
 import {
+  getScreenshot,
   SCREENSHOT_SIZE,
-  SCREENSHOTS,
   type ScreenshotName,
 } from "@/lib/screenshots";
 
 /** A store screenshot that follows the docs theme and zooms on click. */
-export function Screenshot({ name }: { name: ScreenshotName }) {
-  const shot = SCREENSHOTS[name];
+export function Screenshot({
+  name,
+  locale = DEFAULT_LOCALE,
+}: {
+  name: ScreenshotName;
+  locale?: string;
+}) {
+  const shot = getScreenshot(name, locale);
+  if (!shot) throw new Error(`Unknown screenshot "${name}"`);
 
   return (
     <figure className="not-prose my-6 overflow-hidden rounded-xl border border-fd-border bg-fd-card">
