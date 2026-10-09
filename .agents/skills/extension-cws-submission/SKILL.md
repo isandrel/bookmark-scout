@@ -35,6 +35,8 @@ Extract a field from the Markdown with a small Bun script. Do not retype it. Aft
 4. If listing text, permissions, or data flows changed, update those tabs (see the table above) and run the general policy checklist.
 5. Submit only with the maintainer's go-ahead. The submit dialog's auto-publish box is checked by default. Unchecked, the approved version must be published within 30 days.
 
+When `CWS_SUBMIT` is `true`, the release tag also uploads and submits the Chrome zip (the `submit-chrome` job, after its environment reviewer approves), so steps 2 and 3 become checking the job's log and the Package tab. Setup and the off switch are in "Automated submission" in `store/checklists/chrome-web-store.md`. Dashboard-only changes still have to be made before tagging.
+
 Verified CRX uploads are off. Turning them on later requires every update to be the CI-signed `.crx` (secret `CRX_PRIVATE_KEY` in the release workflow). The public key must come from that same private key, and the key needs a backup first.
 
 ## Refreshing screenshots

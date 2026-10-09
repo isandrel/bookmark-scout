@@ -5,7 +5,7 @@ description: Get the Bookmark Scout extension ready for the Chrome Web Store, Fi
 
 # Extension store release
 
-Start from `store/README.md` (surface table per browser, asset list, how screenshots were made) and the checklist for each store in `store/checklists/`. Submission itself is manual and needs the maintainer's explicit approval: no `wxt submit` and no store credentials in CI.
+Start from `store/README.md` (surface table per browser, asset list, how screenshots were made) and the checklist for each store in `store/checklists/`. Submission needs the maintainer's explicit approval. The only automated path is the gated `submit-chrome` job (`wxt submit`, Chrome Web Store API v2, service account key as an environment secret, off unless `CWS_SUBMIT` is `true`); see "Automated submission" in `store/checklists/chrome-web-store.md`. No other store credentials in CI, and no automated Firefox or Edge submission.
 
 ## Manifest and build
 
