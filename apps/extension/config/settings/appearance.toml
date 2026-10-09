@@ -1,7 +1,7 @@
 # Defaults for Options > Appearance. Read by src/lib/settings-schema.ts, which also holds the
 # option lists for language, theme, and favicon size.
 
-# Language preference: "auto" (follow browser), "en", "ja", or "ko"
+# Language preference: "auto" (follow browser) or a public/_locales folder name such as "ja" or "zh_CN"
 language = "auto"
 
 # Theme preference: "system", "light", or "dark"

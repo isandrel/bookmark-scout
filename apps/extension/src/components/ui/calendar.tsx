@@ -5,7 +5,8 @@ import { type DayPickerLocale, enUS, ja, ko } from 'react-day-picker/locale';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-const calendarLocales: Record<'en' | 'ja' | 'ko', DayPickerLocale> = { en: enUS, ja, ko };
+// Keyed by every bundled locale, so a new `_locales/` folder is a type error until it has one.
+const calendarLocales: Record<SupportedLocale, DayPickerLocale> = { en: enUS, ja, ko };
 
 /** date-fns locale matching the extension language, for calendars and date labels. */
 export function getCalendarLocale(): DayPickerLocale {

@@ -23,9 +23,13 @@ spdx = "AGPL-3.0"
 url  = "https://www.gnu.org/licenses/agpl-3.0.html"
 file = "LICENSE"
 
+# Language tags (BCP 47, such as zh-CN). `supported` lists the website's languages, which the
+# README links too; `extension` lists the extension's, one per apps/extension/public/_locales
+# folder (zh-CN is the folder zh_CN), and may be ahead of the website.
 [locales]
 default   = "en"
 supported = ["en", "ja", "ko"]
+extension = ["en", "ja", "ko"]
 
 # Each language's own name, for language switchers.
 [locales.names]
