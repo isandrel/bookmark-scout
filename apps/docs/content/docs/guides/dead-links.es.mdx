@@ -1,0 +1,77 @@
+---
+title: Encontrar y reparar enlaces rotos
+description: Analiza los marcadores en busca de enlaces rotos, consulta cuáles necesitan una comprobación manual y repáralos eliminándolos, siguiendo una redirección, usando una copia archivada o editando la URL.
+---
+
+**Comprobar enlaces rotos** está en la barra lateral **Herramientas** del administrador de marcadores, en **Mantenimiento**. Solicita cada página guardada en marcadores para ver si todavía carga.
+
+<Callout title="Firefox">
+En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente.
+</Callout>
+
+## Ejecutar un análisis [#run-a-scan]
+
+<Steps>
+<Step>
+En **Comprobar enlaces rotos**, elige la carpeta actual o todos los marcadores en el menú de ámbito y haz clic en **Escanear**.
+</Step>
+<Step>
+La primera vez, Bookmark Scout explica por qué necesita acceso a los sitios web. Haz clic en **Permitir acceso** y acepta el aviso del navegador. Si eliges **Ahora no** o lo rechazas, no se analiza nada.
+</Step>
+<Step>
+Espera a que aparezcan los resultados. Un resumen en la parte superior cuenta los enlaces rotos confirmados, los que necesitan una comprobación manual y los que se redirigieron.
+</Step>
+</Steps>
+
+El acceso a los sitios web es opcional y no se concede al instalar. Las solicitudes se envían sin cookies, y puedes retirar el acceso en la configuración de extensiones del navegador. Consulta [Permisos](/permissions).
+
+## Interpretar los resultados [#read-the-results]
+
+| Resultado | Qué significa |
+| --- | --- |
+| **Roto (confirmado)** | Página no encontrada (404 o 410), conexión rechazada, host no encontrado o bucle de redirecciones |
+| **Comprobar a mano** | A menudo sigue funcionando en un navegador: inicio de sesión o acceso denegado (401, 403, 407), límite de solicitudes (429), el sitio rechaza las comprobaciones automatizadas (405 o 501), error del servidor (5xx), otro error HTTP o tiempo de espera agotado |
+| **Redirigido** | El enlace funciona, pero ahora apunta a otro sitio; se muestra el destino |
+| **Omitido** | No es un enlace web, como un bookmarklet |
+
+Cualquier error de una solicitud `HEAD` se confirma con una solicitud `GET` antes de notificarse, porque algunos servidores no admiten `HEAD`.
+
+<Callout type="info" title="Mensajes de la consola en Chrome">
+Chrome registra una línea "Failed to load resource" en la consola para desarrolladores de la página por cada solicitud fallida. Las extensiones no pueden ocultar estas líneas; el análisis en sí no registra nada.
+</Callout>
+
+## Reparar enlaces [#repair-links]
+
+<Steps>
+<Step>
+Haz clic en **Revisar reparaciones**. Aparecen todos los enlaces con error, con tiempo de espera agotado o redirigidos.
+</Step>
+<Step>
+Elige una acción para cada uno:
+
+- **Dejar como está** (la opción predeterminada, así que no cambia nada salvo que elijas otra cosa)
+- **Eliminar marcador**
+- **Usar el destino de la redirección**, que solo se ofrece cuando el análisis detectó una redirección
+- **Usar una copia archivada (Wayback Machine)**, que hace que el marcador apunte a `https://web.archive.org/web/<original URL>`. El enlace se genera localmente y no se comprueba, así que es posible que la página nunca se haya archivado.
+- **Editar URL**, que solo acepta una URL `http` o `https` válida y distinta de la actual
+</Step>
+<Step>
+Revisa el resumen de cuántos marcadores se van a eliminar, cuántos tendrán su URL reemplazada y cuántos se conservarán, y haz clic en **Aplicar**.
+</Step>
+</Steps>
+
+No cambia nada hasta que aplicas. Antes de cada cambio, el marcador se vuelve a leer: uno que se eliminó o editó después del análisis se omite y aparece en la lista, así que un análisis desactualizado nunca sobrescribe una edición más reciente.
+
+**Deshacer**, en el mensaje o en el diálogo después de una aplicación parcial, restaura los marcadores eliminados antes de que pasen 10 segundos y recupera las URLs reemplazadas, salvo que se hayan vuelto a editar.
+
+## Ajustar el análisis [#tune-the-scan]
+
+En la pestaña **Mantenimiento** de la [Configuración](/settings):
+
+| Ajuste | Predeterminado |
+| --- | --- |
+| **Tiempo de espera de la solicitud** | 8 segundos por solicitud |
+| **Solicitudes simultáneas** | 4 solicitudes a la vez |
+| **Número de reintentos** | 1 reintento |
+| **Seguir redirecciones** | Activado |
+| **Códigos de estado correctos** | 200, 201, 202, 204, 301, 302, 307, 308 |

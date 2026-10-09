@@ -1,0 +1,56 @@
+---
+title: Privacidad
+description: Qué lee Bookmark Scout, qué guarda y cuándo salen datos de tu navegador. Un resumen de la política de privacidad.
+---
+
+Esto es un resumen. La <SiteLink to="privacy">política de privacidad</SiteLink> completa del sitio web es la que se aplica; entró en vigor el <PrivacyEffectiveDate />.
+
+## En resumen [#in-short]
+
+- **Sin cuenta y sin servidor.** Bookmark Scout funciona dentro de tu navegador. El desarrollador no recibe nada de la extensión.
+- **Sin telemetría.** La extensión no tiene analíticas, ni informes de fallos, ni anuncios.
+- **La IA está desactivada hasta que la activas**, y entonces las solicitudes van directamente de tu navegador al proveedor que elegiste. En Firefox, al activarla también se te pide consentimiento para compartir esos datos.
+- **Permisos cuando los necesitas.** Al instalarse, la extensión solo pide lo que necesita para funcionar; el acceso a las pestañas, el menú contextual, la caché de iconos del navegador y el acceso a sitios web se piden la primera vez que usas la función. Consulta [Permisos](/permissions).
+
+## Qué lee la extensión [#what-the-extension-reads]
+
+- Tus marcadores, para mostrarlos, buscarlos, editarlos, moverlos, eliminarlos, importarlos y exportarlos.
+- El título y la URL de la pestaña activa, cuando guardas la página en la que estás o pides una sugerencia de carpeta.
+- Los iconos de sitios de la propia caché de iconos del navegador, en Chrome y Edge, cuando activas **Usar la caché de iconos del navegador**.
+- Los iconos de sitios que descargas con **Actualizar iconos de sitios**, de cada sitio web guardado en marcadores.
+
+No lee el contenido de las páginas que visitas.
+
+## Qué guarda [#what-it-stores]
+
+| Datos | Dónde | Se sincroniza |
+| --- | --- | --- |
+| La configuración, incluido si la IA está activada y qué proveedor y modelo elegiste | Almacenamiento sincronizado del navegador | Sí, a través de tu cuenta del navegador cuando la sincronización del navegador está activada |
+| El diseño de la tabla de marcadores del administrador | Almacenamiento sincronizado del navegador | Igual que la configuración |
+| La configuración del proveedor de IA: clave de API, URL base, encabezados adicionales | Almacenamiento local en este dispositivo | No |
+| Etiquetas, resúmenes, búsquedas guardadas, carpetas recientes, búsquedas recientes | Almacenamiento local en este dispositivo | No |
+| Iconos de sitios guardados con **Actualizar iconos de sitios**, hasta 4096 KB de forma predeterminada | Almacenamiento local en este dispositivo | No |
+
+Los resultados de los análisis de la barra lateral de herramientas solo se conservan mientras su diálogo está abierto. Al desinstalar la extensión se elimina lo que guardó; tus marcadores se quedan en el navegador.
+
+## Cuándo salen datos de tu navegador [#when-data-leaves-your-browser]
+
+Solo cuando usas alguna de estas funciones, y solo hacia el destino indicado:
+
+| Función | Destino | Qué se envía |
+| --- | --- | --- |
+| Recomendaciones de carpetas con IA | El proveedor de IA que configuraste | El título y la URL de la página actual, y los nombres de tus carpetas. Con **Leer el contenido de la página** activado, también el texto principal de la página |
+| Etiquetado automático, Generador de resúmenes, Reorganización de carpetas con IA | El proveedor de IA que configuraste | Títulos, URLs y rutas de carpeta de los marcadores incluidos en el ámbito. Con **Leer el contenido de la página** activado, el Etiquetado automático y el Generador de resúmenes también envían el texto principal de cada página; la Reorganización de carpetas con IA nunca lo hace |
+| Preguntar a la IA | El proveedor de IA que configuraste | Tus mensajes y la conversación hasta el momento, y lo que la IA consulta para responder: los marcadores que coinciden, los nombres de las carpetas, el título y la URL de la página actual y, con **Leer el contenido de la página** activado, el texto de las páginas que lee. Con su búsqueda web activada, el proveedor también busca en la web. La conversación no se guarda |
+| Comprobar enlaces rotos, Extractor de metadatos | Cada sitio web guardado en marcadores | Una solicitud de la página, sin cookies, después de que permitas el acceso a sitios web |
+| Actualizar iconos de sitios | Cada sitio web guardado en marcadores | Una solicitud de una página guardada por sitio y de un archivo de icono del dominio de ese sitio, sin cookies, después de que permitas el acceso a sitios web. No se usa ningún servicio de iconos de terceros |
+
+Un proveedor que se ejecuta en tu propio equipo, como Ollama, mantiene las solicitudes de IA en tu equipo. Las exportaciones, incluido el **Empaquetador de contexto para IA**, se guardan como archivos en tu equipo y no se suben a ningún sitio; una revisión de privacidad puede censurar antes los valores sensibles. Los datos exactos que envía cada herramienta de IA se indican en [Configurar las herramientas de IA](/guides/ai-tools#what-each-tool-sends), y cada permiso se explica en [Permisos](/permissions).
+
+## Este sitio de documentación [#this-docs-site]
+
+La documentación es un sitio estático sin analíticas, sin cuentas y sin cookies propias. Las fuentes se sirven desde este sitio, no desde Google Fonts. La política de privacidad indica el proveedor de alojamiento.
+
+## Preguntas [#questions]
+
+Escribe a <Contact role="privacy" /> si tienes preguntas sobre privacidad o solicitudes sobre tus datos. Para informar de un problema de seguridad, escribe a <Contact role="security" /> en lugar de abrir un issue público.

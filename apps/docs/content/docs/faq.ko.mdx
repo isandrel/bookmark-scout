@@ -1,0 +1,85 @@
+---
+title: FAQ 및 문제 해결
+description: Bookmark Scout에 관해 자주 묻는 질문에 답하고, 가장 흔히 겪는 문제의 해결 방법을 안내합니다.
+---
+
+## 질문 [#questions]
+
+### Bookmark Scout는 무료인가요? [#is-bookmark-scout-free]
+
+네. <License /> 라이선스의 무료 오픈 소스이며, 광고도 유료 요금제도 없습니다. AI를 켜면 AI 제공업체가 API 사용료를 청구할 수 있습니다.
+
+### AI를 꼭 사용해야 하나요? [#do-i-need-to-use-ai]
+
+아니요. 검색, 저장, 정리, 정돈, 가져오기와 내보내기는 모두 AI 없이 동작합니다. AI는 [설정](/settings#ai)에서 켜기 전까지 꺼져 있습니다.
+
+### 내 북마크를 어딘가로 보내나요? [#does-it-send-my-bookmarks-anywhere]
+
+개발자에게는 보내지 않습니다. Bookmark Scout 서버는 존재하지 않습니다. 데이터는 직접 켠 AI 도구를 사용할 때(내가 고른 제공업체로 전송)나 깨진 링크 확인 또는 제목 가져오기를 실행할 때(북마크한 웹사이트에 요청)만 브라우저 밖으로 나갑니다. [개인정보 보호](/privacy)를 참고하세요.
+
+### 묻지 않고 북마크를 바꾸지는 않나요? [#will-it-change-my-bookmarks-without-asking]
+
+바꾸지 않습니다. 중복 정리, URL 정리, 깨진 링크 복구, 가져온 제목, AI 재구성, 가져오기는 모두 무엇이든 쓰기 전에 검토 화면을 보여 줍니다. 삭제는 기본적으로 확인을 요청하며, 삭제와 가져오기는 10초 동안 실행 취소할 수 있습니다.
+
+### 왜 브라우저 스토어에 없나요? [#why-is-it-not-in-the-browser-stores]
+
+<StoreAvailability />
+
+각 스토어는 확장 프로그램을 공개하기 전에 심사하며, 스토어 등록은 아직 준비 중입니다. 스토어에 등록되기 전까지는 [GitHub 릴리스에서 설치](/installation)하세요.
+
+### Firefox에서도 동작하나요? [#does-it-work-in-firefox]
+
+네. Firefox는 확장 프로그램이 북마크 페이지를 대체하도록 허용하지 않으므로, 정리 도구, 가져오기와 내보내기, 저장된 검색이 있는 Bookmark Scout 관리자는 팝업의 **북마크 관리자 열기**로 엽니다. Firefox에서는 브라우저의 아이콘 캐시를 사용할 수 없으며, 자동 테스트로 확인하는 기능도 더 적습니다. [브라우저 지원](/browser-support)을 참고하세요.
+
+### Safari는 왜 지원하지 않나요? [#why-not-safari]
+
+Safari Web Extensions는 Bookmark Scout의 기반인 `bookmarks` API를 구현하지 않습니다.
+
+## 문제 해결 [#troubleshooting]
+
+### 북마크 관리자는 어디에 있나요? [#where-is-the-bookmarks-manager]
+
+Chrome에서는 브라우저 자체의 북마크 페이지를 엽니다(예: `Ctrl+Shift+O`, macOS에서는 `Cmd+Option+B`). Bookmark Scout가 이 페이지를 관리자로 대체합니다. **도구** 사이드바가 숨겨져 있으면 관리자 머리글의 **도구 표시**를 클릭하세요.
+
+### Firefox에서 Bookmark Scout가 사라졌습니다 [#bookmark-scout-disappeared-from-firefox]
+
+Firefox는 다시 시작할 때 임시 부가 기능을 제거합니다. [설치](/installation)에 나온 대로 `about:debugging#/runtime/this-firefox`에서 다시 로드하세요.
+
+### 사이트 아이콘이 표시되지 않습니다 [#site-icons-are-missing]
+
+[설정](/settings#appearance)에서 **파비콘 표시**가 켜져 있는지 확인하세요. Chrome과 Edge는 사이트마다 캐시해 둔 아이콘을 표시하므로, 최근에 방문하지 않은 사이트에는 기본 지구본 아이콘이 표시됩니다. Firefox에는 확장 프로그램용 아이콘 API가 없습니다. 어느 브라우저에서든 [사이트 아이콘 새로 고침](/guides/clean-up#refresh-site-icons)을 사용하면 각 사이트의 아이콘을 내려받아 이 기기에 보관합니다.
+
+### API 키가 저장되지 않았습니다 [#my-api-key-was-not-saved]
+
+선택한 제공업체의 키 형식과 맞지 않는 키는 거부되어 저장되지 않으며, 이를 알리는 메시지가 표시됩니다. **AI 제공자**가 붙여 넣은 키와 맞는지 확인하세요. [AI 도구 설정](/guides/ai-tools#turn-on-ai)을 참고하세요.
+
+### 정상 동작하는 사이트인데 깨진 링크 확인에서 직접 확인이 필요하다고 나옵니다 [#the-dead-link-check-says-a-working-site-needs-a-manual-check]
+
+로그인을 요구하거나, 요청 빈도를 제한하거나, 자동 검사를 차단하거나, 서버 오류가 발생한 사이트는 브라우저에서는 여전히 동작하는 경우가 많으므로 **직접 확인 필요**로 분류됩니다. 링크를 열어 확인하세요. 페이지를 찾을 수 없음, 연결 거부, 알 수 없는 호스트, 리디렉션 반복만 **깨진 링크 확인됨**으로 분류됩니다. [깨진 링크 찾기와 복구](/guides/dead-links#read-the-results)를 참고하세요.
+
+### 검사 중에 콘솔에 "Failed to load resource"가 표시됩니다 [#the-console-shows-failed-to-load-resource-during-a-scan]
+
+Chrome은 실패한 요청마다 페이지의 개발자 콘솔에 한 줄씩 기록합니다. 확장 프로그램은 이 기록을 숨길 수 없으며, 검사에 문제가 생겼다는 뜻도 아닙니다.
+
+### 관리자에서 바꾼 순서가 팝업에 반영되지 않습니다 [#reordering-in-the-manager-does-not-show-in-the-popup]
+
+팝업은 **폴더 우선** 정렬일 때만 브라우저에 저장된 순서를 표시합니다. **추가일 순**과 **알파벳 순** 정렬은 목록을 계속 다시 정렬합니다. [설정](/settings#behavior)에서 **정렬 순서**를 변경하세요.
+
+### 검색 결과가 표시된 것보다 더 있다고 나옵니다 [#search-says-there-are-more-matches-than-it-shows]
+
+결과는 **최대 검색 결과**(기본값 20개)까지만 표시됩니다. 검색어를 구체적으로 바꾸거나 [설정](/settings#search)에서 한도를 늘리세요.
+
+### 다른 컴퓨터에서 태그, 요약, 저장된 검색이 보이지 않습니다 [#my-tags-summaries-or-saved-searches-are-missing-on-another-computer]
+
+이 데이터는 만든 기기에만 저장되며, 동기화되지 않고 북마크 내보내기에도 포함되지 않습니다. 설정은 브라우저 동기화가 켜져 있으면 브라우저 계정을 통해 동기화됩니다.
+
+### 실수로 삭제했습니다 [#i-deleted-something-by-mistake]
+
+10초 안에 메시지의 **실행 취소**를 클릭하세요. 항목과 그 안의 모든 항목, 저장된 태그와 요약이 복원되며, 복원된 항목의 추가한 날짜는 새로 지정됩니다. 메시지가 닫힌 뒤에는 Bookmark Scout에서 삭제를 실행 취소할 수 없습니다.
+
+## 도움 받기 [#get-help]
+
+- 웹사이트의 <SiteLink to="support">지원 페이지</SiteLink>.
+- <RepoLink path="/issues">GitHub</RepoLink>에서 버그를 보고하거나 기능을 요청하세요.
+- <Contact role="support" />로 메일을 보내세요.
+- 보안 문제는 공개 이슈가 아니라 <Contact role="security" />로 비공개로 신고하세요.

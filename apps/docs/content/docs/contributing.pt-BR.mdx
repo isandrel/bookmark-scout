@@ -1,0 +1,86 @@
+---
+title: Contribuição e desenvolvimento
+description: Configure o monorepo do Bookmark Scout, compile a extensão a partir do código-fonte, execute os testes e abra um pull request.
+---
+
+Contribuições são bem-vindas: relatos de bugs, correções, traduções e documentação. As diretrizes completas estão em <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>; esta página reúne os comandos de que você precisa.
+
+## O repositório [#the-repository]
+
+Um monorepo Bun e Nx com três aplicativos e um pacote de configuração compartilhado:
+
+| Caminho | O que é |
+| --- | --- |
+| `apps/extension` | A extensão de navegador: WXT, React, TypeScript, Zustand e shadcn/ui sobre Base UI |
+| `apps/website` | O site de divulgação: Next.js, localizado com `next-intl` |
+| `apps/docs` | Este site: Next.js, Fumadocs e MDX em `content/docs` |
+| `packages/config` | Valores do projeto e do site lidos de `config/project.toml` e `config/web.toml` |
+
+## Configurar [#set-up]
+
+Você precisa do [Bun](https://bun.sh) e do Chrome, do Edge ou do Firefox. Crie um fork do <RepoLink>repositório</RepoLink> no GitHub, clone o seu fork e, na pasta dele, execute:
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev` inicia a extensão no Chrome com recarga automática. Use `bun run dev:edge` ou `bun run dev:firefox` para os outros navegadores.
+
+## Compilar a partir do código-fonte [#build-from-source]
+
+```bash
+bun run build
+```
+
+Isso compila as versões para os três navegadores em `apps/extension/dist/`:
+
+| Navegador | Pasta |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+Carregue a pasta do seu navegador como uma extensão sem compactação, do mesmo jeito que uma versão baixada em [Instalação](/installation): **Carregar sem compactação** no Chrome e no Edge, ou **Carregar extensão temporária** com o `manifest.json` da pasta no Firefox. Para compilar para um só navegador, execute `bunx nx run extension:build:chrome`, `extension:build:edge` ou `extension:build:firefox`.
+
+## Testar [#test]
+
+```bash
+bun run test
+```
+
+Isso compila a versão para o Chrome, instala o Chromium do Playwright e executa os testes de unidade e os testes de ponta a ponta do Chromium em modo headless. As ferramentas de rede e as ferramentas de IA são executadas com servidores locais e provedores simulados; os testes com o título `[mocked provider contract]` verificam o lado do Bookmark Scout no contrato com o provedor, não a compatibilidade com os provedores reais.
+
+| Alteração | Execute |
+| --- | --- |
+| Código-fonte da extensão | `bunx nx run extension:lint` |
+| Lógica de classificação | `bun run test:unit` |
+| Pop-up, configurações, gerenciador, ferramentas, importação e exportação | `bun run test:e2e` |
+| Comportamento no Edge | `bunx nx run extension:test:e2e:edge` |
+| Comportamento no Firefox | `bunx nx run extension:test:e2e:firefox` (um conjunto de testes básicos) |
+| Manifesto, provedor ou integração com o navegador | `bunx nx run extension:build:chrome` e a versão de cada navegador afetado |
+| Site | `bunx nx run website:build` |
+| Documentação | `bunx nx run docs:build` e depois `bunx nx run docs:verify` |
+| Alterações em vários aplicativos | `bun run lint` e `bun run build:all` |
+
+A CI executa o lint, as três compilações da extensão, os testes de unidade e de ponta a ponta do Chromium, o conjunto do Edge e o conjunto de testes básicos do Firefox como verificações obrigatórias em todo pull request. Uma compilação bem-sucedida não é cobertura de testes: diga quais testes você executou.
+
+## Trabalhar na documentação [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+As páginas são arquivos MDX em `apps/docs/content/docs`, ordenados pelos arquivos `meta.json` ao lado delas. Os links para o site, o repositório, as versões e os endereços de contato vêm da configuração, por meio de pequenos componentes como `<Contact role="support" />` e `<ReleaseLink />`, para que as páginas nunca os tenham fixos no texto. `bunx nx run docs:verify` verifica a exportação estática depois de uma compilação.
+
+## Traduções [#translations]
+
+O texto da extensão exibido ao usuário fica em `apps/extension/public/_locales/<locale>/messages.json`, e o texto do site em `apps/website/messages/<locale>.json`. Altere todos os idiomas juntos; os testes de unidade e a verificação na compilação do site falham quando falta uma chave. Para adicionar um idioma, siga "Localization" em `apps/extension/AGENTS.md`.
+
+## Pull requests [#pull-requests]
+
+- Crie a branch a partir de `main` e mantenha uma única alteração por pull request.
+- Escreva os commits no padrão [Conventional Commits](https://www.conventionalcommits.org/) com um prefixo [Gitmoji](https://gitmoji.dev/), por exemplo, `🐛 fix(popup): keep focus after deleting a folder`.
+- Atualize a documentação quando uma alteração afetar o que os usuários veem, a compatibilidade com navegadores, a privacidade ou as configurações. [Status do projeto](/status) lista o que está implementado, parcial e planejado.
+
+Relate problemas de segurança de forma privada para <Contact role="security" />, não em uma issue pública. O Bookmark Scout é licenciado sob a licença <License />.

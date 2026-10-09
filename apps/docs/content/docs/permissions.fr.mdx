@@ -1,0 +1,47 @@
+---
+title: Autorisations
+description: Chaque autorisation de navigateur demandée par Bookmark Scout, la raison pour laquelle elle est nécessaire, et l'accès facultatif aux sites Web, demandé uniquement lorsque vous lancez un outil.
+---
+
+Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout n'a pas de scripts de contenu : il ne lit donc jamais les pages que vous consultez. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
+
+## Accordées à l'installation [#granted-at-install]
+
+| Autorisation | Navigateurs | Raison |
+| --- | --- | --- |
+| `bookmarks` | Tous | Afficher vos favoris et y effectuer des recherches, ainsi que les créer, les modifier, les déplacer et les supprimer lorsque vous agissez dans la fenêtre pop-up, le panneau latéral, le gestionnaire ou le menu contextuel |
+| `storage` | Tous | Enregistrer vos paramètres et, uniquement sur cet appareil, les paramètres de votre fournisseur d'IA, vos étiquettes, résumés, recherches enregistrées, dossiers récents, recherches récentes et les icônes de site enregistrées avec **Actualiser les icônes de site** |
+| `activeTab` | Tous | Lorsque vous cliquez sur le bouton de la barre d'outils ou sur le menu contextuel, lire le titre et l'URL de cet onglet, pour que vous puissiez enregistrer la page que vous consultez. Aucun autre onglet, aucun historique |
+| `sidePanel` | Chrome, Edge | Fournir la vue du panneau latéral. Firefox déclare cette même page comme barre latérale |
+| `contextMenus` | Firefox | Firefox ne permet pas aux extensions de la demander ultérieurement. Le menu n'apparaît toutefois qu'après l'activation du **Menu contextuel** |
+
+Dans Chrome et Edge, l'extension remplace également la page Favoris du navigateur par le gestionnaire Bookmark Scout. Il s'agit d'un remplacement de page, et non d'une autorisation. Firefox ne le permet pas : le gestionnaire s'y ouvre donc depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up ; consultez [Compatibilité des navigateurs](/browser-support).
+
+## Demandées lorsque vous en avez besoin [#asked-for-when-you-need-it]
+
+| Autorisation | Navigateurs | Demandée lorsque |
+| --- | --- | --- |
+| `tabs` | Tous | Vous enregistrez la page actuelle, ou demandez des suggestions de dossiers, depuis le panneau latéral. Une courte explication s'affiche d'abord. La fenêtre pop-up de la barre d'outils n'en a jamais besoin |
+| `contextMenus` | Chrome, Edge | Vous activez le **Menu contextuel** dans les [Paramètres](/settings#data). Il est désactivé par défaut, et Chrome accorde cette autorisation sans demande de confirmation |
+| `favicon` | Chrome, Edge | Vous activez **Utiliser le cache d'icônes du navigateur** dans les [Paramètres](/settings#appearance), pour afficher les icônes que le navigateur a déjà enregistrées |
+| Consentement au partage de données | Firefox | Vous activez les **Fonctionnalités d'IA** ou **Lire le contenu des pages**, ou cliquez sur **Vérifier le service**. Firefox vous demande votre accord avant que l'extension n'envoie quoi que ce soit à votre fournisseur d'IA |
+
+Si vous refusez, la fonctionnalité reste désactivée et rien n'est envoyé. Si vous retirez ultérieurement une autorisation dans les paramètres des extensions du navigateur, la fonctionnalité est désactivée ; la réactiver entraîne une nouvelle demande.
+
+## Accès facultatif aux sites Web [#optional-website-access]
+
+L'extension déclare aussi un accès à `http://*/*` et à `https://*/*`, mais aucune partie de cet accès n'est accordée à l'installation. Le navigateur vous le demande au moment où vous en avez besoin :
+
+- **Vérifier les liens morts**, **Récupération des métadonnées** et **Actualiser les icônes de site** demandent l'accès aux sites Web la première fois que vous les lancez, car les favoris peuvent pointer vers n'importe quel site. Les requêtes sont envoyées sans cookies, et seul l'en-tête de la page est lu pour obtenir les titres et les liens des icônes. Si vous refusez, rien n'est analysé. Consultez [Trouver et réparer les liens morts](/guides/dead-links) et [Actualiser les icônes de site](/guides/clean-up#refresh-site-icons).
+- **Lire le contenu des pages**, dans les paramètres d'IA, demande l'accès aux sites Web lors de son activation, pour que les outils d'IA puissent télécharger les pages, sans cookies, et envoyer leur texte principal à votre fournisseur d'IA. Les pages de votre réseau local ne sont jamais lues. Consultez [Lire le contenu des pages](/guides/ai-tools#read-page-content).
+- **Vérifier le service** et **Actualiser les modèles**, dans les paramètres d'IA, demandent l'accès à l'adresse de ce seul fournisseur. Consultez [Configurer les outils d'IA](/guides/ai-tools).
+
+Pour retirer cet accès, ouvrez la page de l'extension dans le navigateur (par exemple `chrome://extensions/`, puis **Détails** sous Bookmark Scout, ou **Permissions** dans `about:addons` de Firefox) et modifiez l'accès aux sites ou les autorisations.
+
+## Ce qui n'est pas demandé [#what-is-not-requested]
+
+- Aucun accès au contenu des pages, et aucun script de contenu
+- Aucune autorisation d'accès à l'historique, aux téléchargements ou aux cookies
+- Aucun accès aux hôtes à l'installation
+
+L'endroit où vont vos données lorsqu'une autorisation est utilisée est décrit dans [Confidentialité](/privacy). La justification de chaque autorisation, telle que soumise aux boutiques, figure dans le fichier <RepoLink file="store/permissions.md">`store/permissions.md`</RepoLink> du dépôt.

@@ -1,0 +1,60 @@
+---
+title: Importation et exportation
+description: Exportez vos favoris au format HTML, JSON, Markdown ou CSV avec une vérification de confidentialité, et importez des fichiers HTML ou JSON après un aperçu qui signale les doublons.
+---
+
+Ces deux outils se trouvent dans la barre latérale **Outils** du gestionnaire de favoris, sous **Données**.
+
+<Callout title="Firefox">
+Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up.
+</Callout>
+
+## Exporter des favoris [#export-bookmarks]
+
+<Steps>
+<Step>
+Dans **Exporter les favoris**, choisissez un **Format** : **HTML (Chrome)**, **JSON**, **Markdown** ou **CSV**.
+</Step>
+<Step>
+Choisissez le dossier actuel ou tous les favoris, puis cliquez sur **Exporter**.
+</Step>
+<Step>
+Si le fichier risque de contenir des valeurs potentiellement privées, une vérification s'ouvre d'abord. Choisissez **Exporter l'original**, **Exporter en masquant** ou **Annuler**.
+</Step>
+</Steps>
+
+La vérification recherche les paramètres de requête sensibles, les jetons dans les fragments d'URL, les valeurs qui ressemblent à des adresses e-mail ou à des jetons, ainsi que les noms d'utilisateur ou mots de passe inclus dans les URL. Une exportation masquée remplace ces valeurs par `REDACTED` dans le fichier téléchargé uniquement ; vos favoris ne sont pas modifiés. Les exportations sans contenu sensible sont téléchargées directement.
+
+Détails des fichiers :
+
+- Les noms de fichier commencent par le **Préfixe du nom de fichier** (par défaut `bookmarks_`) et conservent les noms de dossier non ASCII.
+- Les fichiers CSV commencent par une marque d'ordre des octets UTF-8. La colonne Folder relie les dossiers par `/`, et écrit un `/` présent dans un nom de dossier sous la forme `\/` et une barre oblique inverse sous la forme `\\`.
+- **Inclure les dates** et **Inclure les URL**, ainsi que l'indentation de chaque format, se trouvent dans l'onglet **Données** des [Paramètres](/settings).
+
+Les étiquettes et les résumés ne sont pas inclus dans les exportations de favoris. Pour transmettre des favoris avec leurs étiquettes et résumés à un outil d'IA, utilisez le **Préparateur de contexte IA** ; consultez [Configurer les outils d'IA](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Importer des favoris [#import-bookmarks]
+
+<Steps>
+<Step>
+Dans **Importer des favoris**, cliquez sur **Importer** et choisissez un fichier de favoris HTML ou JSON, par exemple un fichier exporté depuis un navigateur.
+</Step>
+<Step>
+Vérifiez l'**Aperçu de l'importation**. Il indique le dossier cible, le nombre de favoris et de dossiers qui seront créés ou ignorés, et les URL qui existent déjà dans le dossier cible, ailleurs dans vos favoris ou plus haut dans le même fichier.
+</Step>
+<Step>
+Modifiez **Importer dans** si nécessaire. Ce champ indique initialement le dossier ouvert dans le gestionnaire.
+</Step>
+<Step>
+Choisissez comment traiter les **Doublons** : ignorer les favoris qui existent déjà n'importe où, ignorer uniquement ceux qui se trouvent déjà dans le dossier cible, ou tout importer.
+</Step>
+<Step>
+Cliquez sur **Importer**. Une notification indique le nombre d'éléments créés, ignorés et en échec, avec **Annuler** pendant 10 secondes.
+</Step>
+</Steps>
+
+Rien n'est écrit tant que vous n'avez pas cliqué sur **Importer**. Si vos favoris changent pendant que l'aperçu est ouvert, l'aperçu est actualisé au lieu d'être appliqué.
+
+## Les fichiers de paramètres sont distincts [#settings-files-are-separate]
+
+Les boutons **Exporter** et **Importer** situés en bas de la page des paramètres enregistrent et restaurent les paramètres de Bookmark Scout dans un fichier JSON. Ils ne touchent pas aux favoris.

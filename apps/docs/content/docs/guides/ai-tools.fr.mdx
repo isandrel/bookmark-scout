@@ -1,0 +1,157 @@
+---
+title: Configurer les outils d'IA
+description: Activez les fonctionnalités d'IA facultatives, choisissez un fournisseur et un modèle, ajoutez votre clé API, et sachez exactement quelles données de favoris chaque outil d'IA envoie.
+---
+
+Les fonctionnalités d'IA sont **désactivées par défaut**, et Bookmark Scout fonctionne pleinement sans elles. Lorsque vous les activez, les requêtes vont directement de votre navigateur au fournisseur que vous choisissez, avec votre propre clé API. Bookmark Scout n'a aucun service d'IA propre.
+
+<Callout type="warn" title="Avant d'activer l'IA">
+Les outils d'IA envoient les titres des favoris, leurs URL et les noms ou chemins de dossier au fournisseur que vous configurez. Le fournisseur traite ces données selon ses propres conditions, et l'utilisation de son API peut être payante. Vérifiez chaque suggestion avant de l'appliquer.
+</Callout>
+
+## Activer l'IA [#turn-on-ai]
+
+<Steps>
+<Step>
+Ouvrez les paramètres de Bookmark Scout (dans Chrome, effectuez un clic droit sur l'icône de la barre d'outils et choisissez **Options**), puis accédez à l'onglet **IA**.
+</Step>
+<Step>
+Activez les **Fonctionnalités d'IA**.
+</Step>
+<Step>
+Sous **Services d'IA**, ouvrez le service déjà présent, ou cliquez sur **Ajouter un service** et choisissez un fournisseur. Le sélecteur comporte un champ de recherche et regroupe les fournisseurs sous **À la une**, **Serveurs locaux**, **Personnalisé** et **Autres fournisseurs (models.dev)**. Choisissez ensuite un **Modèle d'IA**.
+</Step>
+<Step>
+Saisissez votre **Clé API** si le fournisseur en exige une. Elle est enregistrée lorsque vous quittez le champ, et stockée uniquement sur cet appareil. Une clé qui ne correspond pas au format du fournisseur est refusée et n'est pas enregistrée.
+</Step>
+<Step>
+Facultatif : cliquez sur **Actualiser les modèles** pour charger la liste actuelle des modèles du fournisseur, ou sur **Vérifier le service** pour vérifier que le fournisseur est joignable, accepte la clé et propose le modèle choisi. Ces deux actions lisent la liste des modèles du fournisseur, ce qui ne coûte rien ; la vérification n'envoie un court prompt de test qu'aux fournisseurs sans liste, comme Azure OpenAI. La première fois, le navigateur demande l'accès à l'adresse de ce seul fournisseur. Une liste actualisée est conservée pour le sélecteur de modèle jusqu'à la prochaine actualisation.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+Les paramètres sont enregistrés automatiquement. Les services d'IA, avec leurs clés API, leur **URL de base** et leurs **En-têtes supplémentaires (JSON)**, restent dans le stockage local de ce navigateur et ne sont jamais synchronisés. Les autres paramètres d'IA, comme l'activation de l'IA, sont synchronisés via votre compte de navigateur lorsque le navigateur le permet.
+
+## Utiliser plusieurs services [#use-more-than-one-service]
+
+Enregistrez autant de services que vous le souhaitez, y compris plusieurs pour le même fournisseur : par exemple un proxy professionnel et un proxy personnel, chacun avec sa propre clé, sa propre adresse et son propre modèle.
+
+- Tous les outils d'IA utilisent le service **Par défaut**. Choisissez **Définir par défaut** dans le menu d'un service ou, lorsque plusieurs services sont activés, choisissez-en un avec la flèche située à côté du bouton en forme d'étincelles dans la fenêtre pop-up.
+- Désactivez un service avec son interrupteur pour le masquer dans la fenêtre pop-up sans le supprimer.
+- **Dupliquer** copie un service, clé comprise. **Supprimer** le retire de cet appareil, avec sa clé.
+- L'**URL de base**, les **En-têtes supplémentaires (JSON)** et les champs propres à chaque fournisseur, comme l'organisation OpenAI, se trouvent sous **Plus de paramètres**.
+
+## Fournisseurs [#providers]
+
+| Fournisseur | Clé API | Remarques |
+| --- | --- | --- |
+| OpenAI | Obligatoire | **ID d'organisation** et **ID de projet** facultatifs |
+| Anthropic | Obligatoire | |
+| Google | Obligatoire | |
+| Groq | Obligatoire | |
+| Mistral AI | Obligatoire | |
+| DeepSeek | Obligatoire | |
+| xAI | Obligatoire | |
+| Azure OpenAI | Obligatoire | Indiquez le **Nom de la ressource** (ou une **URL de base**) et saisissez le nom de votre déploiement comme **Modèle personnalisé**. Azure ne fournit pas de liste des déploiements : **Actualiser les modèles** n'est donc pas affiché. |
+| OpenRouter | Obligatoire | |
+| Ollama (local) | Facultative | Adresse par défaut `http://localhost:11434/api` ; les requêtes restent sur votre machine |
+| CLIProxyAPI | Généralement obligatoire | S'exécute sur votre machine et répond avec vos propres comptes Claude, Gemini ou Codex. Adresse par défaut `http://localhost:8317/v1` ; saisissez l'une des clés indiquées sous `api-keys` dans son fichier `config.yaml`, puis cliquez sur **Actualiser les modèles** pour voir les modèles proposés par vos comptes. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Facultative | Listés sous **Serveurs locaux** avec leurs adresses `localhost` par défaut : oMLX et vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp et LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Cliquez sur **Actualiser les modèles** pour voir ce que le serveur a chargé. |
+| Jan | Obligatoire | Serveur d'API local à l'adresse `http://localhost:1337/v1` ; saisissez la clé indiquée dans les paramètres du serveur d'API de Jan |
+| Fournisseur personnalisé | Facultative | Tout point de terminaison compatible OpenAI, défini avec l'**URL de base** |
+| Fournisseur personnalisé (compatible Anthropic) | Facultative | Tout point de terminaison qui prend en charge l'API Messages d'Anthropic, défini avec l'**URL de base** |
+| Environ 200 autres | Généralement obligatoire | Listés sous **Autres fournisseurs (models.dev)**, par exemple Together AI, Fireworks AI, Cerebras, DeepInfra et LM Studio. Ils n'ont pas de liste de modèles intégrée : cliquez sur **Actualiser les modèles** ou saisissez un **Modèle personnalisé**. |
+
+Le sélecteur **Fournisseur d'IA** comporte un champ de recherche. Les fournisseurs supplémentaires proviennent d'une copie du catalogue ouvert [models.dev](https://models.dev) fournie avec l'extension : choisir l'un d'eux n'envoie donc rien à models.dev ; les requêtes vont uniquement au fournisseur que vous choisissez.
+
+L'**URL de base** remplace l'adresse du fournisseur pour chaque requête, par exemple pour passer par un proxy. Elle doit commencer par `http://` ou `https://`. Les **En-têtes supplémentaires (JSON)** ajoutent des en-têtes à chaque requête, et le **Modèle personnalisé** définit un ID de modèle pour les fournisseurs qui acceptent n'importe quel nom de modèle.
+
+### Serveurs locaux [#local-servers]
+
+Les serveurs locaux doivent accepter les requêtes de l'extension :
+
+- **Ollama :** définissez `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` et redémarrez Ollama. Sinon, Ollama répond par une erreur 403 et la vérification indique que le serveur a refusé l'extension.
+- **LM Studio :** activez **Enable CORS** dans les paramètres du serveur, ou démarrez-le avec `lms server start --cors`.
+- **LocalAI :** définissez une clé API ; sa protection CSRF rejette les requêtes sans clé provenant du navigateur.
+- **text-generation-webui :** démarrez-le avec `--api`.
+- **CLIProxyAPI :** accepte les requêtes de l'extension avec sa configuration par défaut. Démarrez-le avant de cliquer sur **Vérifier le service** ; s'il n'est pas en cours d'exécution, la vérification indique qu'elle n'a pas pu joindre `localhost:8317`.
+
+### En cas d'échec d'une vérification [#when-a-check-fails]
+
+La vérification et l'actualisation indiquent la cause probable : une clé refusée (401, ou 400 chez Google et xAI), une URL de base incorrecte (404), un fournisseur qui limite le débit des requêtes (429, ce qui signifie tout de même que la clé fonctionne), un serveur qui a refusé l'origine de l'extension, une absence de réponse dans les 8 secondes, ou une adresse qui ne sert pas d'API de fournisseur.
+
+## Rédiger vos propres prompts [#write-your-own-prompts]
+
+Chaque outil d'IA utilise au départ un prompt intégré. Pour modifier le comportement d'un outil, accédez à **Options**, puis **Outils d'IA**, puis **Prompts** :
+
+1. Pour lire d'abord le prompt intégré d'un outil, cliquez sur l'icône en forme d'œil à côté de celui-ci. Cliquez sur **Personnaliser**, ici ou dans la visionneuse : l'éditeur s'ouvre avec le prompt intégré comme point de départ.
+2. Modifiez le texte. Cliquez sur une variable telle que `{{maxTags}}` pour l'insérer ; l'outil la remplit à partir de vos paramètres. **Aperçu avec les paramètres actuels** affiche le résultat.
+3. Cliquez sur **Enregistrer le prompt**. Le nouveau prompt devient celui de l'outil.
+
+Conservez autant de prompts par outil que vous le souhaitez et passez de l'un à l'autre avec le menu de l'outil ; **Par défaut (intégré)** rétablit le prompt d'origine. Vos prompts sont synchronisés entre vos appareils via votre compte de navigateur : chacun doit donc rester sous 7 Ko. Bookmark Scout ajoute ses propres règles de format de sortie après votre prompt, de sorte que les résultats se chargent correctement même si votre prompt demande autre chose.
+
+## Ce que chaque outil envoie [#what-each-tool-sends]
+
+| Outil | Emplacement | Données envoyées au fournisseur |
+| --- | --- | --- |
+| Recommandations de dossiers | Fenêtre pop-up, bouton en forme d'étincelles à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
+| **Étiquetage automatique** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
+| **Générateur de résumés** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris du dossier actuel et, si **Lire le contenu des pages** est activé, le texte principal de chaque page |
+| **Réorganisation des dossiers par IA** | Gestionnaire, Outils, **Intelligence artificielle** | Les titres, les URL et les chemins de dossier des favoris de la portée que vous choisissez |
+| **Demander à l'IA** | Fenêtre pop-up et panneau latéral, bouton de discussion à côté du champ de recherche (affiché uniquement lorsque l'IA est activée) | Vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte : les favoris correspondants, les noms des dossiers, le titre et l'URL de la page actuelle et, si **Lire le contenu des pages** est activé, le texte des pages qu'elle lit |
+| **Préparateur de contexte IA** | Gestionnaire, Outils, **Intelligence artificielle** | Rien. Il enregistre un fichier sur votre ordinateur et fonctionne même lorsque l'IA est désactivée. |
+
+Activez **Recommander à l'ouverture** pour demander des recommandations de dossiers à chaque ouverture de la fenêtre pop-up. Laissez cette option désactivée pour n'envoyer une requête que lorsque vous cliquez sur le bouton.
+
+## Lire le contenu des pages [#read-page-content]
+
+Les titres et les URL ne suffisent pas toujours à savoir de quoi parle une page. Activez **Lire le contenu des pages** dans **Options**, puis **IA** : les recommandations de dossiers, l'**Étiquetage automatique** et le **Générateur de résumés** envoient alors aussi le texte principal de chaque page. L'activation de cette option demande l'accès aux sites Web ; si vous refusez, elle reste désactivée.
+
+- Bookmark Scout télécharge chaque page lui-même, sans vos cookies : vous obtenez donc la version d'un site accessible sans connexion. Il conserve le texte de l'article, sans les menus, les scripts, les images ni les adresses des liens.
+- Chaque page envoie jusqu'à environ 3 000 caractères, et une exécution d'outil lit jusqu'à 40 pages. Les favoris suivants d'un dossier volumineux sont envoyés avec leur titre et leur URL uniquement, de même que les pages qui ne se chargent pas.
+- Les pages de votre réseau local, comme `localhost`, les adresses IP privées et les noms en `.local`, ne sont jamais lues : les pages intranet ne parviennent donc pas à un fournisseur dans le cloud.
+- Le texte des pages provient du Web et peut contenir des instructions destinées à l'IA. Bookmark Scout demande au modèle de le traiter uniquement comme des données, et vous vérifiez toujours chaque suggestion avant son enregistrement.
+
+## Demander à l'IA [#ask-ai]
+
+Cliquez sur le bouton de discussion à côté du champ de recherche, dans la fenêtre pop-up ou le panneau latéral, pour poser des questions sur vos favoris, sur la page que vous consultez ou sur tout autre sujet. Cette fonctionnalité utilise votre service d'IA par défaut ; changez de service depuis le menu de son en-tête.
+
+- Pour répondre, l'IA peut rechercher dans vos favoris, lister vos dossiers, consulter la page actuelle et, si **Lire le contenu des pages** est activé, lire une page Web. Elle peut uniquement lire : elle n'ajoute, ne déplace ni ne supprime jamais de favoris. Chacune de ses étapes s'affiche dans la discussion.
+- OpenAI, Anthropic, Google Gemini et xAI peuvent aussi effectuer des recherches sur le Web. Activez cette option avec le bouton en forme de globe à côté du champ de message ; elle reste désactivée tant que vous ne l'activez pas, et c'est le fournisseur qui effectue la recherche lui-même.
+- La conversation n'est conservée que tant que la discussion est ouverte. **Nouvelle discussion** l'efface, et la fermeture de la fenêtre pop-up y met fin.
+- Les instructions qu'elle suit sont celles du prompt **Demander à l'IA** de la bibliothèque de prompts : vous pouvez donc les afficher ou les remplacer comme n'importe quel autre prompt.
+
+## Voir ce qui a été envoyé [#see-what-was-sent]
+
+Pour vérifier exactement ce qu'un outil a envoyé et ce que le fournisseur a répondu, accédez à **Options**, puis **IA**, et activez **Enregistrer les requêtes** sous **Activité de l'IA**. Chaque appel à l'IA affiche alors sa source, son adresse, son statut et sa durée ; ouvrez-en un pour voir les en-têtes de la requête ainsi que le corps de la requête et de la réponse, ou copiez-le au format JSON pour un rapport de bug.
+
+L'enregistrement est désactivé par défaut. Le journal reste sur cet appareil et ne conserve que les appels les plus récents. Les clés API, les en-têtes dont le nom évoque un identifiant de connexion (par exemple ceux qui contiennent `key`, `token`, `secret`, `auth` ou `cookie`) et tous les en-têtes que vous définissez dans **En-têtes supplémentaires (JSON)** sont remplacés par `[redacted]` avant tout stockage, mais les titres et les URL des favoris présents dans les requêtes sont conservés : désactivez donc l'enregistrement lorsque vous avez terminé, ce qui supprime aussi le journal.
+
+## Enregistrer une page avec une recommandation de dossier [#save-a-page-with-a-folder-recommendation]
+
+Cliquez sur le bouton en forme d'étincelles dans la fenêtre pop-up. Choisir un dossier existant suggéré y enregistre la page. Choisir un nouveau dossier suggéré ouvre **Vérifier le nouveau dossier**, avec le chemin complet et la page ; **Créer le dossier et enregistrer** crée uniquement les dossiers manquants et enregistre la page. Si la page se trouve déjà dans ce dossier, elle n'est pas enregistrée deux fois, et si un favori porte déjà l'un des noms de dossier du chemin, rien n'est créé. **Annuler** ne modifie rien.
+
+## Suggérer des étiquettes et des résumés [#suggest-tags-and-summaries]
+
+Lancez l'**Étiquetage automatique** ou le **Générateur de résumés** avec **Analyser**. Les suggestions sont affichées pour vérification, et ne sont enregistrées que lorsque vous cliquez sur **Enregistrer les étiquettes suggérées** ou **Enregistrer les résumés suggérés**. Le **Mode de fusion** détermine si les suggestions enregistrées s'ajoutent à l'existant ou le remplacent.
+
+Les étiquettes et les résumés enregistrés se trouvent dans le stockage local de ce navigateur. Vous pouvez aussi les modifier manuellement dans **Détails du favori**. Ils ne sont ni synchronisés, ni consultables par la recherche, ni inclus dans les exportations de favoris.
+
+Le nombre et le style des étiquettes, la longueur des résumés et les limites de réorganisation définis dans les paramètres sont transmis au fournisseur sous forme d'instructions ; la réponse du fournisseur n'est pas contrôlée par rapport à ces limites.
+
+## Réorganiser les dossiers [#reorganize-folders]
+
+La **Réorganisation des dossiers par IA** demande au fournisseur dans quel dossier chaque favori doit se trouver. Lorsque **Toujours afficher un aperçu** est activé (par défaut), le plan s'ouvre sous la forme d'une liste de déplacements de favoris, dans laquelle les déplacements vers de nouveaux dossiers sont signalés et comptés, et rien ne change tant que vous ne cliquez pas sur **Appliquer les modifications**.
+
+- **Appliquer les modifications** déplace les favoris et crée les nouveaux dossiers prévus par le plan. Si un dossier portant ce nom existe déjà au même emplacement, c'est lui qui est utilisé.
+- Un favori que vous avez déplacé, dont vous avez changé l'URL ou que vous avez supprimé après l'aperçu est ignoré et laissé à sa place : le plan n'écrase donc jamais une modification plus récente. Lorsque le plan n'est appliqué que partiellement, la notification indique le nombre de favoris déplacés, de nouveaux dossiers, et d'éléments ignorés ou en échec, et nomme les favoris ignorés.
+- Cliquez sur **Annuler** dans la notification ou dans la vérification pour remettre les favoris à leur place et supprimer les nouveaux dossiers encore vides. Un favori que vous avez déplacé de nouveau entre-temps reste là où vous l'avez mis.
+
+## Exporter du contexte pour une discussion avec une IA [#export-context-for-an-ai-chat]
+
+Le **Préparateur de contexte IA** exporte les favoris sélectionnés au format Markdown ou XML, que vous pouvez coller dans n'importe quelle discussion avec une IA. Il peut inclure les chemins de dossier, les dates, ainsi que vos étiquettes et résumés enregistrés (**Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés**). Comme pour les exportations de favoris, une vérification de confidentialité s'ouvre lorsque le fichier risque de contenir des valeurs potentiellement privées.
+
+<Callout title="Firefox">
+Dans Firefox, ouvrez le gestionnaire avec **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up de la barre d'outils pour utiliser les outils d'IA du gestionnaire. L'IA n'est pas couverte par les tests automatisés de Firefox.
+</Callout>

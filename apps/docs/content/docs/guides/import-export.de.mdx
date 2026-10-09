@@ -1,0 +1,60 @@
+---
+title: Import und Export
+description: Exportieren Sie Lesezeichen als HTML, JSON, Markdown oder CSV mit einer Datenschutzprüfung, und importieren Sie HTML- oder JSON-Dateien nach einer Vorschau, die Duplikate zeigt.
+---
+
+Beide Tools befinden sich in der **Tools**-Leiste des Lesezeichen-Managers unter **Daten**.
+
+<Callout title="Firefox">
+Öffnen Sie den Manager in Firefox über **Lesezeichen-Manager öffnen** im Pop-up.
+</Callout>
+
+## Lesezeichen exportieren [#export-bookmarks]
+
+<Steps>
+<Step>
+Wählen Sie in **Lesezeichen exportieren** ein **Format**: **HTML (Chrome)**, **JSON**, **Markdown** oder **CSV**.
+</Step>
+<Step>
+Wählen Sie den aktuellen Ordner oder alle Lesezeichen aus und klicken Sie auf **Exportieren**.
+</Step>
+<Step>
+Wenn die Datei Werte enthalten würde, die privat sein könnten, öffnet sich zuerst eine Prüfung. Wählen Sie **Original exportieren**, **Geschwärzt exportieren** oder **Abbrechen**.
+</Step>
+</Steps>
+
+Die Prüfung sucht nach sensiblen Abfrageparametern, Tokens in URL-Fragmenten, Werten, die wie E-Mail-Adressen oder Tokens aussehen, sowie Benutzernamen oder Passwörtern in URLs. Ein geschwärzter Export ersetzt diese Werte nur in der heruntergeladenen Datei durch `REDACTED`; Ihre Lesezeichen ändern sich nicht. Exporte ohne sensible Inhalte werden direkt heruntergeladen.
+
+Details zur Datei:
+
+- Dateinamen beginnen mit dem **Dateinamenpräfix** (Standard `bookmarks_`) und behalten Ordnernamen mit Nicht-ASCII-Zeichen bei.
+- CSV-Dateien beginnen mit einer UTF-8-Bytereihenfolgemarke (BOM). Die Spalte „Ordner“ verbindet Ordner mit `/` und schreibt ein `/` innerhalb eines Ordnernamens als `\/` und einen Backslash als `\\`.
+- **Datum einschließen** und **URLs einschließen** sowie die Einrückung für jedes Format befinden sich im Tab **Daten** der [Einstellungen](/settings).
+
+Tags und Zusammenfassungen sind nicht in Lesezeichen-Exporten enthalten. Um Lesezeichen mit ihren Tags und Zusammenfassungen an ein KI-Tool zu übergeben, verwenden Sie das **KI-Kontextpaket**; siehe [KI-Tools einrichten](/guides/ai-tools#export-context-for-an-ai-chat).
+
+## Lesezeichen importieren [#import-bookmarks]
+
+<Steps>
+<Step>
+Klicken Sie in **Lesezeichen importieren** auf **Importieren** und wählen Sie eine HTML- oder JSON-Lesezeichendatei aus, etwa eine aus einem Browser exportierte.
+</Step>
+<Step>
+Prüfen Sie die **Importvorschau**. Sie zeigt den Zielordner, wie viele Lesezeichen und Ordner erstellt oder übersprungen werden und welche URLs bereits im Zielordner, an anderer Stelle in Ihren Lesezeichen oder weiter oben in derselben Datei vorhanden sind.
+</Step>
+<Step>
+Ändern Sie bei Bedarf **Importieren in**. Voreingestellt ist der im Manager geöffnete Ordner.
+</Step>
+<Step>
+Wählen Sie, wie mit **Duplikate** umgegangen wird: Lesezeichen überspringen, die bereits irgendwo vorhanden sind, nur solche überspringen, die bereits im Zielordner sind, oder alles importieren.
+</Step>
+<Step>
+Klicken Sie auf **Importieren**. Eine Benachrichtigung zeigt an, wie viele Elemente erstellt, übersprungen und nicht importiert wurden, und bietet 10 Sekunden lang **Rückgängig** an.
+</Step>
+</Steps>
+
+Es wird nichts geschrieben, bevor Sie auf **Importieren** klicken. Ändern sich Ihre Lesezeichen, während die Vorschau geöffnet ist, wird die Vorschau aktualisiert statt angewendet.
+
+## Einstellungsdateien sind getrennt [#settings-files-are-separate]
+
+Die Schaltflächen **Exportieren** und **Importieren** unten auf der Einstellungsseite speichern die Einstellungen von Bookmark Scout als JSON-Datei und stellen sie daraus wieder her. Lesezeichen bleiben davon unberührt.

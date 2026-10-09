@@ -1,0 +1,157 @@
+---
+title: KI-Tools einrichten
+description: Aktivieren Sie die optionalen KI-Funktionen, wählen Sie Anbieter und Modell, hinterlegen Sie Ihren API-Schlüssel, und erfahren Sie genau, welche Lesezeichendaten jedes KI-Tool sendet.
+---
+
+KI-Funktionen sind **standardmäßig deaktiviert**, und Bookmark Scout funktioniert ohne sie vollständig. Wenn Sie sie aktivieren, gehen Anfragen direkt von Ihrem Browser an den von Ihnen gewählten Anbieter, mit Ihrem eigenen API-Schlüssel. Bookmark Scout hat keinen eigenen KI-Dienst.
+
+<Callout type="warn" title="Bevor Sie KI aktivieren">
+KI-Tools senden Lesezeichentitel, URLs und Ordnernamen oder -pfade an den von Ihnen eingerichteten Anbieter. Der Anbieter verarbeitet diese Daten nach seinen eigenen Bedingungen, und die Nutzung der API kann Kosten verursachen. Prüfen Sie jeden Vorschlag, bevor Sie ihn übernehmen.
+</Callout>
+
+## KI aktivieren [#turn-on-ai]
+
+<Steps>
+<Step>
+Öffnen Sie die Einstellungen von Bookmark Scout (in Chrome per Rechtsklick auf das Symbol in der Symbolleiste und Auswahl von **Optionen**) und wechseln Sie zum Tab **KI**.
+</Step>
+<Step>
+Aktivieren Sie **KI-Funktionen**.
+</Step>
+<Step>
+Öffnen Sie unter **KI-Dienste** den bereits vorhandenen Dienst, oder klicken Sie auf **Dienst hinzufügen** und wählen Sie einen Anbieter. Die Auswahl hat ein Suchfeld und gruppiert Anbieter unter **Empfohlen**, **Lokale Server**, **Benutzerdefiniert** und **Weitere Anbieter (models.dev)**. Wählen Sie dann ein **KI-Modell**.
+</Step>
+<Step>
+Geben Sie Ihren **API-Schlüssel** ein, falls der Anbieter einen benötigt. Er wird gespeichert, wenn Sie das Feld verlassen, und nur auf diesem Gerät abgelegt. Ein Schlüssel, der nicht dem Format des Anbieters entspricht, wird abgelehnt und nicht gespeichert.
+</Step>
+<Step>
+Optional: Klicken Sie auf **Modelle aktualisieren**, um die aktuelle Modellliste des Anbieters zu laden, oder auf **Dienst überprüfen**, um zu prüfen, ob der Anbieter erreichbar ist, den Schlüssel akzeptiert und das gewählte Modell anbietet. Beide lesen die Modellliste des Anbieters, was nichts kostet; die Überprüfung sendet nur bei Anbietern ohne Liste, etwa Azure OpenAI, einen kurzen Test-Prompt. Der Browser fragt beim ersten Mal nach Zugriff auf die Adresse dieses einen Anbieters. Eine aktualisierte Liste bleibt für die Modellauswahl erhalten, bis Sie erneut aktualisieren.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+Einstellungen werden automatisch gespeichert. KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben im lokalen Speicher dieses Browsers und werden nie synchronisiert. Andere KI-Einstellungen, etwa ob KI aktiviert ist, werden über Ihr Browserkonto synchronisiert, wo der Browser dies unterstützt.
+
+## Mehr als einen Dienst verwenden [#use-more-than-one-service]
+
+Speichern Sie beliebig viele Dienste, auch mehrere desselben Anbieters, zum Beispiel einen Proxy für die Arbeit und einen für zu Hause, jeweils mit eigenem Schlüssel, eigener Adresse und eigenem Modell.
+
+- Alle KI-Tools verwenden den **Standard**-Dienst. Wählen Sie **Als Standard festlegen** im Menü eines Dienstes, oder wählen Sie, wenn mehr als ein Dienst aktiviert ist, über den Pfeil neben der Funkel-Schaltfläche im Pop-up einen aus.
+- Deaktivieren Sie einen Dienst mit seinem Schalter, um ihn im Pop-up auszublenden, ohne ihn zu löschen.
+- **Duplizieren** kopiert einen Dienst einschließlich Schlüssel. **Löschen** entfernt ihn samt Schlüssel von diesem Gerät.
+- **Basis-URL**, **Zusätzliche Header (JSON)** und anbieterspezifische Felder wie die Organisation bei OpenAI befinden sich unter **Weitere Einstellungen**.
+
+## Anbieter [#providers]
+
+| Anbieter | API-Schlüssel | Hinweise |
+| --- | --- | --- |
+| OpenAI | Erforderlich | Optional **Organisations-ID** und **Projekt-ID** |
+| Anthropic | Erforderlich | |
+| Google | Erforderlich | |
+| Groq | Erforderlich | |
+| Mistral AI | Erforderlich | |
+| DeepSeek | Erforderlich | |
+| xAI | Erforderlich | |
+| Azure OpenAI | Erforderlich | Legen Sie **Ressourcenname** (oder eine **Basis-URL**) fest und geben Sie Ihren Deployment-Namen als **Eigenes Modell** ein. Azure bietet keine Deployment-Liste, daher wird **Modelle aktualisieren** nicht angezeigt. |
+| OpenRouter | Erforderlich | |
+| Ollama (lokal) | Optional | Standardadresse `http://localhost:11434/api`; Anfragen bleiben auf Ihrem Rechner |
+| CLIProxyAPI | Meist erforderlich | Läuft auf Ihrem Rechner und antwortet mit Ihren eigenen Claude-, Gemini- oder Codex-Konten. Standardadresse `http://localhost:8317/v1`; geben Sie einen der Schlüssel unter `api-keys` in dessen `config.yaml` ein und klicken Sie dann auf **Modelle aktualisieren**, um die Modelle Ihrer Konten zu sehen. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Optional | Unter **Lokale Server** mit ihren `localhost`-Standardadressen aufgeführt: oMLX und vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp und LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Klicken Sie auf **Modelle aktualisieren**, um zu sehen, welche Modelle der Server geladen hat. |
+| Jan | Erforderlich | Lokaler API-Server unter `http://localhost:1337/v1`; geben Sie den Schlüssel aus den API-Server-Einstellungen von Jan ein |
+| Eigener Anbieter | Optional | Jeder OpenAI-kompatible Endpunkt, festgelegt über **Basis-URL** |
+| Eigener Anbieter (Anthropic-kompatibel) | Optional | Jeder Endpunkt, der die Anthropic Messages API spricht, festgelegt über **Basis-URL** |
+| Rund 200 weitere | Meist erforderlich | Unter **Weitere Anbieter (models.dev)** aufgeführt, zum Beispiel Together AI, Fireworks AI, Cerebras, DeepInfra und LM Studio. Sie haben keine integrierte Modellliste: Klicken Sie auf **Modelle aktualisieren** oder geben Sie ein **Eigenes Modell** ein. |
+
+Die Auswahl **KI-Anbieter** hat ein Suchfeld. Die zusätzlichen Anbieter stammen aus einer Kopie des offenen Katalogs von [models.dev](https://models.dev), die mit der Erweiterung ausgeliefert wird. Die Auswahl eines solchen Anbieters sendet daher nichts an models.dev; Anfragen gehen nur an den gewählten Anbieter.
+
+**Basis-URL** überschreibt die Adresse des Anbieters für jede Anfrage, etwa um einen Proxy zu verwenden. Sie muss mit `http://` oder `https://` beginnen. **Zusätzliche Header (JSON)** fügt jeder Anfrage Header hinzu, und **Eigenes Modell** legt eine Modell-ID für Anbieter fest, die beliebige Modellnamen akzeptieren.
+
+### Lokale Server [#local-servers]
+
+Lokale Server müssen Anfragen der Erweiterung annehmen:
+
+- **Ollama:** Setzen Sie `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` und starten Sie Ollama neu. Andernfalls antwortet Ollama mit 403, und die Überprüfung meldet, dass der Server die Erweiterung abgelehnt hat.
+- **LM Studio:** Aktivieren Sie **Enable CORS** in den Servereinstellungen, oder starten Sie den Server mit `lms server start --cors`.
+- **LocalAI:** Legen Sie einen API-Schlüssel fest; die CSRF-Prüfung lehnt Anfragen des Browsers ohne Schlüssel ab.
+- **text-generation-webui:** Starten Sie es mit `--api`.
+- **CLIProxyAPI:** Nimmt die Anfragen der Erweiterung in der Standardkonfiguration an. Starten Sie es, bevor Sie auf **Dienst überprüfen** klicken; läuft es nicht, meldet die Überprüfung, dass `localhost:8317` nicht erreichbar war.
+
+### Wenn eine Prüfung fehlschlägt [#when-a-check-fails]
+
+Überprüfen und Aktualisieren nennen die wahrscheinliche Ursache: ein abgelehnter Schlüssel (401, oder 400 bei Google und xAI), eine falsche Basis-URL (404), ein Anbieter, der Anfragen drosselt (429, was dennoch bedeutet, dass der Schlüssel funktioniert), ein Server, der den Ursprung der Erweiterung abgelehnt hat, keine Antwort innerhalb von 8 Sekunden oder eine Adresse, die keine Anbieter-API bereitstellt.
+
+## Eigene Prompts schreiben [#write-your-own-prompts]
+
+Jedes KI-Tool beginnt mit einem integrierten Prompt. Um das Verhalten eines Tools zu ändern, öffnen Sie **Optionen**, dann **KI-Tools**, dann **Prompts**:
+
+1. Um zuerst den integrierten Prompt eines Tools zu lesen, klicken Sie auf das Augensymbol daneben. Klicken Sie hier oder in der Ansicht auf **Anpassen**, und der Editor öffnet sich mit dem integrierten Prompt als Ausgangspunkt.
+2. Bearbeiten Sie den Text. Klicken Sie auf eine Variable wie `{{maxTags}}`, um sie einzufügen; das Tool füllt sie mit Ihren Einstellungen. **Vorschau mit aktuellen Einstellungen** zeigt das Ergebnis.
+3. Klicken Sie auf **Prompt speichern**. Der neue Prompt wird zum Prompt des Tools.
+
+Behalten Sie beliebig viele Prompts pro Tool und wechseln Sie über das Menü des Tools zwischen ihnen; **Standard (integriert)** kehrt zum Original zurück. Ihre Prompts werden über Ihr Browserkonto auf Ihren Geräten synchronisiert, daher muss jeder unter 7 KB bleiben. Bookmark Scout fügt nach Ihrem Prompt eigene Regeln für das Ausgabeformat hinzu, sodass Ergebnisse auch dann geladen werden, wenn Ihr Prompt etwas anderes verlangt.
+
+## Was jedes Tool sendet [#what-each-tool-sends]
+
+| Tool | Ort | An den Anbieter gesendet |
+| --- | --- | --- |
+| Ordnervorschläge | Pop-up, die Funkel-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite |
+| **Automatische Tags** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
+| **Inhaltszusammenfassung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im aktuellen Ordner, und mit aktiviertem **Seiteninhalt lesen** der Haupttext jeder Seite |
+| **KI-Ordnerneuordnung** | Manager, Tools, **KI** | Titel, URLs und Ordnerpfade der Lesezeichen im gewählten Bereich |
+| **KI fragen** | Pop-up und Seitenleiste, die Chat-Schaltfläche neben dem Suchfeld (nur sichtbar, wenn KI aktiviert ist) | Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI nachschlägt: passende Lesezeichen, Ordnernamen, Titel und URL der aktuellen Seite und mit aktiviertem **Seiteninhalt lesen** der Text der Seiten, die sie liest |
+| **KI-Kontextpaket** | Manager, Tools, **KI** | Nichts. Es speichert eine Datei auf Ihrem Computer und funktioniert auch bei deaktivierter KI. |
+
+Aktivieren Sie **Beim Öffnen automatisch vorschlagen**, um bei jedem Öffnen des Pop-ups Ordnervorschläge anzufordern. Lassen Sie die Option deaktiviert, um nur dann eine Anfrage zu senden, wenn Sie auf die Schaltfläche klicken.
+
+## Seiteninhalt lesen [#read-page-content]
+
+Titel und URLs verraten nicht immer, worum es auf einer Seite geht. Aktivieren Sie **Seiteninhalt lesen** unter **Optionen**, dann **KI**, und Ordnervorschläge, **Automatische Tags** und **Inhaltszusammenfassung** senden zusätzlich den Haupttext jeder Seite. Beim Aktivieren wird um Zugriff auf Websites gebeten; wenn Sie ablehnen, bleibt die Option deaktiviert.
+
+- Bookmark Scout lädt jede Seite selbst herunter, ohne Ihre Cookies, Sie erhalten also die abgemeldete Version einer Website. Es behält den Artikeltext ohne Menüs, Skripte, Bilder oder Linkadressen.
+- Pro Seite werden bis zu etwa 3.000 Zeichen gesendet, und ein Durchlauf eines Tools liest bis zu 40 Seiten. Weitere Lesezeichen in einem großen Ordner werden nur mit Titel und URL gesendet, ebenso Seiten, die nicht laden.
+- Seiten in Ihrem lokalen Netzwerk, etwa `localhost`, private IP-Adressen und `.local`-Namen, werden nie gelesen, sodass Intranetseiten keinen Cloud-Anbieter erreichen.
+- Seitentext stammt aus dem Web und könnte Anweisungen enthalten, die sich an die KI richten. Bookmark Scout weist das Modell an, ihn nur als Daten zu behandeln, und Sie prüfen weiterhin jeden Vorschlag, bevor er gespeichert wird.
+
+## KI fragen [#ask-ai]
+
+Klicken Sie auf die Chat-Schaltfläche neben dem Suchfeld im Pop-up oder in der Seitenleiste, um Fragen zu Ihren Lesezeichen, zur aktuellen Seite oder zu etwas anderem zu stellen. Der Chat verwendet Ihren Standard-KI-Dienst; über das Menü in seiner Kopfzeile wechseln Sie den Dienst.
+
+- Für eine Antwort kann die KI Ihre Lesezeichen durchsuchen, Ihre Ordner auflisten, die aktuelle Seite prüfen und mit aktiviertem **Seiteninhalt lesen** eine Webseite lesen. Sie kann nur lesen; sie fügt nie Lesezeichen hinzu, verschiebt oder löscht sie. Jeder Schritt erscheint im Chat.
+- OpenAI, Anthropic, Google Gemini und xAI können zusätzlich im Web suchen. Aktivieren Sie dies mit der Weltkugel-Schaltfläche neben dem Nachrichtenfeld; bis dahin bleibt es deaktiviert, und die Suche führt der Anbieter selbst aus.
+- Das Gespräch bleibt nur erhalten, solange der Chat geöffnet ist. **Neuer Chat** löscht es, und das Schließen des Pop-ups beendet es.
+- Die Anweisungen, denen der Chat folgt, sind der Prompt **KI fragen** in der Prompt-Bibliothek. Sie können sie also wie jeden anderen Prompt ansehen oder ersetzen.
+
+## Sehen, was gesendet wurde [#see-what-was-sent]
+
+Um genau zu prüfen, was ein Tool gesendet und was der Anbieter geantwortet hat, öffnen Sie **Optionen**, dann **KI**, und aktivieren Sie **Anfragen aufzeichnen** unter **KI-Aktivität**. Jeder KI-Aufruf zeigt dann seine Quelle, Adresse, seinen Status und seine Dauer; öffnen Sie einen Aufruf, um die Anfrage-Header sowie den Anfrage- und Antworttext zu sehen, oder kopieren Sie ihn als JSON für einen Fehlerbericht.
+
+Die Aufzeichnung ist standardmäßig deaktiviert. Das Protokoll bleibt auf diesem Gerät und enthält nur die letzten Aufrufe. API-Schlüssel, Header, deren Namen auf Zugangsdaten hindeuten (etwa solche, die `key`, `token`, `secret`, `auth` oder `cookie` enthalten), und jeder Header, den Sie unter **Zusätzliche Header (JSON)** festlegen, werden vor dem Speichern durch `[redacted]` ersetzt. Lesezeichentitel und URLs in den Anfragen bleiben jedoch erhalten. Deaktivieren Sie die Aufzeichnung daher, wenn Sie fertig sind: Dadurch wird auch das Protokoll gelöscht.
+
+## Eine Seite mit einem Ordnervorschlag speichern [#save-a-page-with-a-folder-recommendation]
+
+Klicken Sie im Pop-up auf die Funkel-Schaltfläche. Wenn Sie einen vorgeschlagenen vorhandenen Ordner wählen, wird die Seite dort gespeichert. Wenn Sie einen vorgeschlagenen neuen Ordner wählen, öffnet sich **Neuen Ordner prüfen** mit dem vollständigen Pfad und der Seite; **Ordner erstellen und speichern** erstellt nur die fehlenden Ordner und speichert die Seite. Befindet sich die Seite bereits in diesem Ordner, wird sie nicht doppelt gespeichert, und wenn ein Lesezeichen bereits einen der Ordnernamen im Pfad verwendet, wird nichts erstellt. **Abbrechen** ändert nichts.
+
+## Tags und Zusammenfassungen vorschlagen [#suggest-tags-and-summaries]
+
+Starten Sie **Automatische Tags** oder **Inhaltszusammenfassung** mit **Analysieren**. Die Vorschläge werden zur Prüfung angezeigt und erst gespeichert, wenn Sie auf **Vorgeschlagene Tags speichern** oder **Vorgeschlagene Zusammenfassungen speichern** klicken. **Zusammenführung** legt fest, ob gespeicherte Vorschläge an das Vorhandene angehängt werden oder es ersetzen.
+
+Gespeicherte Tags und Zusammenfassungen liegen im lokalen Speicher dieses Browsers. Sie können sie auch in **Lesezeichendetails** von Hand bearbeiten. Sie werden nicht synchronisiert, sind nicht durchsuchbar und nicht in Lesezeichen-Exporten enthalten.
+
+Anzahl und Stil der Tags, Länge der Zusammenfassung und die Grenzen für die Neuordnung aus den Einstellungen werden als Anweisungen an den Anbieter gesendet; seine Ausgabe wird nicht daraufhin geprüft.
+
+## Ordner neu ordnen [#reorganize-folders]
+
+**KI-Ordnerneuordnung** fragt den Anbieter, in welchen Ordner jedes Lesezeichen gehört. Mit aktiviertem **Immer zuerst Vorschau anzeigen** (Standard) öffnet sich der Plan als Liste von Verschiebungen, wobei Verschiebungen in neue Ordner markiert und gezählt werden, und nichts ändert sich, bevor Sie auf **Änderungen übernehmen** klicken.
+
+- **Änderungen übernehmen** verschiebt die Lesezeichen und erstellt die neuen Ordner, die der Plan nennt. Gibt es an derselben Stelle bereits einen Ordner mit diesem Namen, wird stattdessen dieser verwendet.
+- Ein Lesezeichen, das Sie nach der Vorschau verschoben, mit einer neuen URL versehen oder gelöscht haben, wird übersprungen und bleibt, wo es ist, sodass der Plan nie eine neuere Änderung überschreibt. Wird der Plan nur teilweise übernommen, zählt die Benachrichtigung die verschobenen Lesezeichen, die neuen Ordner sowie die übersprungenen und fehlgeschlagenen Elemente und nennt die übersprungenen Lesezeichen.
+- Klicken Sie in der Benachrichtigung oder in der Prüfansicht auf **Rückgängig**, um die Lesezeichen zurückzuverschieben und die neuen Ordner zu entfernen, die noch leer sind. Ein Lesezeichen, das Sie in der Zwischenzeit erneut verschoben haben, bleibt, wo Sie es abgelegt haben.
+
+## Kontext für einen KI-Chat exportieren [#export-context-for-an-ai-chat]
+
+**KI-Kontextpaket** exportiert die ausgewählten Lesezeichen als Markdown oder XML, das Sie in jeden KI-Chat einfügen können. Es kann Ordnerpfade, Daten sowie Ihre gespeicherten Tags und Zusammenfassungen enthalten (**Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen**). Wie bei Lesezeichen-Exporten öffnet sich eine Datenschutzprüfung, wenn die Datei Werte enthalten würde, die privat sein könnten.
+
+<Callout title="Firefox">
+Öffnen Sie in Firefox den Manager über **Lesezeichen-Manager öffnen** im Pop-up der Symbolleiste, um die KI-Tools des Managers zu verwenden. KI wird von den automatisierten Firefox-Tests nicht abgedeckt.
+</Callout>

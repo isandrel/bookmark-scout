@@ -1,0 +1,96 @@
+---
+title: Limpiar duplicados y URLs con seguimiento
+description: Quita los marcadores duplicados después de una revisión, elimina parámetros de seguimiento como utm_source de las URLs de los marcadores con una vista previa y actualiza los iconos de sitios que faltan.
+---
+
+Ambas herramientas están en la barra lateral **Herramientas** del administrador de marcadores, en **Mantenimiento**. En Chrome, abre la página de marcadores del navegador y, si la barra lateral está oculta, haz clic en **Mostrar herramientas** en el encabezado del administrador.
+
+<Callout title="Firefox">
+Firefox no permite que las extensiones reemplacen su propia página de marcadores, así que allí abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente de la barra de herramientas y luego abre la barra lateral de herramientas.
+</Callout>
+
+## Quitar marcadores duplicados [#remove-duplicate-bookmarks]
+
+<Steps>
+<Step>
+En **Limpiador de duplicados**, haz clic en **Escanear**. Siempre comprueba todos los marcadores.
+</Step>
+<Step>
+Revisa los grupos. Cada grupo muestra los marcadores que coinciden, con el que se va a quedar marcado como **Conservar**.
+</Step>
+<Step>
+Haz clic en **Quitar duplicados** para eliminar las demás copias de todos los grupos, o en **Cancelar** para no cambiar nada.
+</Step>
+<Step>
+¿Cambiaste de idea? Haz clic en **Deshacer** en el mensaje antes de que pasen 10 segundos para restaurar lo que se quitó.
+</Step>
+</Steps>
+
+<Screenshot name="duplicates" />
+
+Qué cuenta como duplicado se define en la pestaña **Mantenimiento** de la [Configuración](/settings):
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Criterio de coincidencia** | URL normalizada | Compara por **URL exacta**, **URL normalizada**, **Título + URL** o **Solo el título** |
+| **Normalizar www** | Activado | Trata `www.example.com` y `example.com` como el mismo host |
+| **Ignorar el protocolo** | Activado | Trata las versiones `http` y `https` como duplicados |
+| **Ignorar la barra final** | Activado | Trata como duplicados las URLs con y sin `/` final |
+| **Regla de conservación** | El más antiguo | Conserva **El más antiguo**, **El más reciente** o **El primero encontrado** de cada grupo |
+| **Máximo de grupos** | 500 | Máximo de grupos que devuelve un análisis |
+
+Antes de quitar nada, cada grupo se vuelve a comprobar. Si el marcador marcado como **Conservar** se eliminó o ahora apunta a otro sitio, el grupo entero se deja intacto y el mensaje indica cuántos grupos se omitieron. Con la coincidencia **Solo el título**, aparece una advertencia cuando un grupo contiene URLs distintas, porque quitar esas copias elimina páginas diferentes.
+
+## Eliminar parámetros de seguimiento [#strip-tracking-parameters]
+
+<Steps>
+<Step>
+En **Limpiador de URLs**, elige la carpeta actual o todos los marcadores en el menú de ámbito y haz clic en **Limpiar**.
+</Step>
+<Step>
+Revisa la vista previa de cada URL que cambiaría.
+</Step>
+<Step>
+Haz clic en **Aplicar cambios** para actualizarlas todas, o cierra el diálogo para no cambiar nada.
+</Step>
+</Steps>
+
+Si un marcador cambió después de la vista previa, se omite y se cuenta en el mensaje. La limpieza de URLs no se puede deshacer, así que revisa la vista previa antes de aplicar.
+
+Las reglas están en la pestaña **Mantenimiento** de la configuración:
+
+- **Parámetros que se quitan**: los parámetros que se eliminan. La lista predeterminada es `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `utm_id`, `gclid`, `fbclid`, `mc_cid`, `mc_eid`, `ref`, `ref_src` y `si`.
+- **Parámetros que se conservan**: los parámetros que nunca se quitan. Predeterminados: `id`, `page`, `q`, `p` y `lang`.
+- **Quitar parámetros de consulta repetidos** (activado de forma predeterminada) elimina los parámetros repetidos.
+- **Ordenar parámetros de consulta** (activado de forma predeterminada) ordena alfabéticamente los parámetros restantes.
+- **Quitar fragmentos** (desactivado de forma predeterminada) también quita partes como `#section`.
+
+## Actualizar iconos de sitios [#refresh-site-icons]
+
+Los marcadores muestran el icono que tu navegador tiene en caché para cada sitio. Los sitios que no visitaste recientemente muestran un globo genérico, y Firefox no ofrece a las extensiones ninguna caché de iconos. **Actualizar iconos de sitios**, en **Metadatos y contenido** dentro de la barra lateral de herramientas, descarga en su lugar el icono propio de cada sitio.
+
+<Steps>
+<Step>
+Elige la carpeta actual o todos los marcadores en el menú de ámbito y haz clic en **Actualizar**. La primera vez, permite el acceso a los sitios web cuando se te pida; si lo rechazas, no se solicita nada.
+</Step>
+<Step>
+Revisa los resultados: cuántos iconos aparecen como **Actualizado**, **Sin cambios**, **No se encontró ningún icono** o **Error**, y cuántos marcadores se marcaron como **Omitido** porque no son enlaces web.
+</Step>
+<Step>
+Haz clic en **Guardar** (por ejemplo, **Guardar 12 iconos**) para conservarlos, o cierra el diálogo para no conservar ninguno.
+</Step>
+</Steps>
+
+Para cada sitio web (origen) del ámbito, la herramienta solicita una página guardada sin cookies, lee solo su encabezado y descarga el icono indicado por la página que más se acerque al **Tamaño de icono preferido**, o el `/favicon.ico` del sitio. Solo se usan archivos de icono del propio dominio del marcador, nunca un servicio de iconos de terceros. Se omiten los archivos que superan el **Tamaño máximo del archivo de icono** (64 KB) o que no son imágenes.
+
+Los iconos guardados se almacenan en el almacenamiento local de este navegador, no se sincronizan y se muestran en la ventana emergente, el panel lateral y el administrador. Tienen prioridad sobre el icono en caché del navegador. La tarjeta muestra cuántos hay guardados; **Borrar los iconos guardados** los elimina todos. Cuando el total llega al **Límite de almacenamiento de iconos** (4096 KB), se quitan primero los iconos más antiguos. Un sitio que falla en una actualización posterior conserva el icono guardado antes.
+
+<Callout title="Firefox">
+En Firefox, abre el administrador con **Abrir el administrador de marcadores** en la ventana emergente de la barra de herramientas para ejecutar la herramienta. Después de guardar iconos allí, la ventana emergente y el panel lateral los muestran.
+</Callout>
+
+## Herramientas relacionadas [#related-tools]
+
+- [Encontrar y reparar enlaces rotos](/guides/dead-links) comprueba si las páginas guardadas en marcadores siguen cargando.
+- **Escáner de privacidad** (en **Seguridad**) marca las URLs que contienen tokens, direcciones de correo electrónico, UUID o parámetros sensibles (y los títulos, si **Analizar títulos** está activado), para que puedas editarlas o eliminarlas tú mismo.
+- **Extractor de metadatos** (en **Metadatos y contenido**) sugiere títulos de página a partir de las páginas en vivo y solo aplica los que selecciones. Usa el mismo acceso a sitios web que la comprobación de enlaces rotos.

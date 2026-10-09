@@ -1,0 +1,86 @@
+---
+title: 기여 및 개발
+description: Bookmark Scout 모노레포를 설정하고, 소스에서 확장 프로그램을 빌드하고, 테스트를 실행하고, 풀 리퀘스트를 여는 방법을 안내합니다.
+---
+
+버그 보고, 수정, 번역, 문서 등 모든 기여를 환영합니다. 전체 가이드라인은 <RepoLink file="CONTRIBUTING.md">`CONTRIBUTING.md`</RepoLink>에 있으며, 이 페이지에서는 필요한 명령어를 다룹니다.
+
+## 저장소 구성 [#the-repository]
+
+앱 세 개와 공유 설정 패키지 하나로 이루어진 Bun 및 Nx 모노레포입니다.
+
+| 경로 | 내용 |
+| --- | --- |
+| `apps/extension` | 브라우저 확장 프로그램: WXT, React, TypeScript, Zustand, Base UI 기반 shadcn/ui |
+| `apps/website` | 홍보 사이트: Next.js, `next-intl`로 현지화 |
+| `apps/docs` | 이 사이트: Next.js, Fumadocs, `content/docs`의 MDX |
+| `packages/config` | `config/project.toml`과 `config/web.toml`에서 읽는 프로젝트 및 사이트 값 |
+
+## 설정 [#set-up]
+
+[Bun](https://bun.sh)과 Chrome, Edge, Firefox 중 하나가 필요합니다. GitHub에서 <RepoLink>저장소</RepoLink>를 포크하고, 포크한 저장소를 클론한 뒤 해당 폴더에서 다음을 실행합니다.
+
+```bash
+bun install
+bun run dev
+```
+
+`bun run dev`는 Chrome에서 실시간 다시 로드가 적용된 확장 프로그램을 시작합니다. 다른 브라우저에서는 `bun run dev:edge` 또는 `bun run dev:firefox`를 사용하세요.
+
+## 소스에서 빌드 [#build-from-source]
+
+```bash
+bun run build
+```
+
+이 명령은 세 가지 브라우저 대상을 모두 `apps/extension/dist/`에 빌드합니다.
+
+| 브라우저 | 폴더 |
+| --- | --- |
+| Chrome | `apps/extension/dist/chrome-mv3` |
+| Edge | `apps/extension/dist/edge-mv3` |
+| Firefox | `apps/extension/dist/firefox-mv2` |
+
+[설치](/installation)에서 내려받은 릴리스를 로드할 때와 같은 방법으로, 사용하는 브라우저의 폴더를 압축 해제된 확장 프로그램으로 로드합니다. Chrome과 Edge에서는 **Load unpacked**(압축해제된 확장 프로그램 로드)를, Firefox에서는 **Load Temporary Add-on**(임시 부가 기능 로드)으로 폴더의 `manifest.json`을 선택합니다. 한 브라우저만 빌드하려면 `bunx nx run extension:build:chrome`, `extension:build:edge`, `extension:build:firefox` 중 하나를 실행하세요.
+
+## 테스트 [#test]
+
+```bash
+bun run test
+```
+
+이 명령은 Chrome 대상을 빌드하고, Playwright의 Chromium을 설치한 뒤, 단위 테스트와 Chromium 엔드 투 엔드 테스트를 헤드리스로 실행합니다. 네트워크 도구와 AI 도구는 로컬 서버와 모의 제공업체를 대상으로 실행됩니다. `[mocked provider contract]`라는 제목의 테스트는 실제 제공업체와의 호환성이 아니라 제공업체 계약 중 Bookmark Scout 쪽을 확인합니다.
+
+| 변경 사항 | 실행할 명령 |
+| --- | --- |
+| 확장 프로그램 소스 | `bunx nx run extension:lint` |
+| 정렬 로직 | `bun run test:unit` |
+| 팝업, 설정, 관리자, 도구, 가져오기와 내보내기 | `bun run test:e2e` |
+| Edge 동작 | `bunx nx run extension:test:e2e:edge` |
+| Firefox 동작 | `bunx nx run extension:test:e2e:firefox`(스모크 테스트 모음) |
+| 매니페스트, 제공업체, 브라우저 통합 | `bunx nx run extension:build:chrome`과 영향을 받는 각 브라우저 대상 |
+| 웹사이트 | `bunx nx run website:build` |
+| 문서 | `bunx nx run docs:build` 후 `bunx nx run docs:verify` |
+| 여러 앱에 걸친 변경 | `bun run lint`와 `bun run build:all` |
+
+CI는 모든 풀 리퀘스트에서 린트, 세 가지 확장 프로그램 빌드, 단위 테스트와 Chromium 엔드 투 엔드 테스트, Edge 테스트 모음, Firefox 스모크 테스트 모음을 필수 검사로 실행합니다. 빌드가 통과했다고 해서 테스트가 된 것은 아니므로, 어떤 테스트를 실행했는지 밝혀 주세요.
+
+## 문서 작업 [#work-on-the-docs]
+
+```bash
+bun run dev:docs
+```
+
+페이지는 `apps/docs/content/docs`의 MDX 파일이며, 옆에 있는 `meta.json` 파일이 순서를 정합니다. 웹사이트, 저장소, 릴리스, 연락처 주소로 가는 링크는 `<Contact role="support" />`나 `<ReleaseLink />` 같은 작은 컴포넌트를 통해 설정에서 가져오므로, 페이지에 직접 적지 않습니다. `bunx nx run docs:verify`는 빌드 후 정적 내보내기 결과를 확인합니다.
+
+## 번역 [#translations]
+
+사용자에게 보이는 확장 프로그램 텍스트는 `apps/extension/public/_locales/<locale>/messages.json`에, 웹사이트 텍스트는 `apps/website/messages/<locale>.json`에 있습니다. 모든 언어를 함께 변경하세요. 키가 빠지면 단위 테스트와 웹사이트 빌드 검사가 실패합니다. 언어를 추가하려면 `apps/extension/AGENTS.md`의 "Localization" 섹션을 따르세요.
+
+## 풀 리퀘스트 [#pull-requests]
+
+- `main`에서 브랜치를 만들고, 풀 리퀘스트 하나에는 변경 사항 하나만 담으세요.
+- 커밋 메시지는 [Gitmoji](https://gitmoji.dev/) 접두사를 붙인 [Conventional Commits](https://www.conventionalcommits.org/) 형식으로 작성합니다. 예: `🐛 fix(popup): keep focus after deleting a folder`.
+- 변경 사항이 사용자에게 보이는 부분, 브라우저 지원, 개인정보 보호, 설정에 영향을 주면 문서를 업데이트하세요. [프로젝트 현황](/status)에 구현됨, 일부 구현됨, 계획됨 항목이 정리되어 있습니다.
+
+보안 문제는 공개 이슈가 아니라 <Contact role="security" />로 비공개로 신고하세요. Bookmark Scout는 <License /> 라이선스로 배포됩니다.

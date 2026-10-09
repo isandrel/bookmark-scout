@@ -1,0 +1,74 @@
+---
+title: Fonctionnalités
+description: Tout ce que fait Bookmark Scout aujourd'hui, par domaine, avec un lien vers le guide de chaque tâche.
+---
+
+Une liste de référence de ce qui est disponible aujourd'hui. Pour des instructions pas à pas, suivez le guide indiqué dans chaque section. Ce qui est partiel ou prévu figure dans [État du projet](/status), et ce qui fonctionne dans chaque navigateur dans [Compatibilité des navigateurs](/browser-support).
+
+## Où l'extension s'exécute [#where-it-runs]
+
+| Emplacement | Description |
+| --- | --- |
+| Fenêtre pop-up | Le bouton de la barre d'outils : recherche, arborescence des dossiers, enregistrement et recommandations de dossiers par IA |
+| Panneau latéral | La même vue dans le panneau latéral de Chrome ou d'Edge, qui reste ouvert pendant votre navigation |
+| Gestionnaire de favoris | Remplace la page Favoris du navigateur dans Chrome et Edge : arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale **Outils** |
+| Paramètres | La page d'options de l'extension, avec onze onglets. Consultez [Paramètres](/settings) |
+| Menu contextuel | **Enregistrer le favori dans…** sur n'importe quel lien, une fois le **Menu contextuel** activé |
+
+## Rechercher [#find]
+
+- Recherche dans les titres et les URL pendant la saisie, avec les options respect de la casse, mot entier et expression régulière, et mise en surbrillance des correspondances. Les dossiers correspondants s'ouvrent automatiquement.
+- Recherches récentes sur cet appareil, que vous pouvez effacer ou désactiver.
+- Filtres du tableau dans le gestionnaire par titre, URL, type, dossier, domaine et date d'ajout, avec tri sur n'importe quelle colonne.
+- Recherches enregistrées : des ensembles de filtres nommés, évalués sur vos favoris à chaque ouverture. Jusqu'à 50, conservées sur cet appareil.
+
+Guide : [Recherche et recherches enregistrées](/guides/search).
+
+## Enregistrer et organiser [#save-and-organize]
+
+- Enregistrement de la page actuelle dans n'importe quel dossier, jamais deux fois dans le même dossier, avec un panneau **Récents** qui liste les dossiers que vous avez utilisés.
+- Enregistrement de liens depuis le menu contextuel dans un dossier récent ou dans la Barre de favoris.
+- Création de dossiers, glisser-déposer de favoris et de dossiers, et déplacement de plusieurs éléments à la fois dans le gestionnaire.
+- Tri par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré par le navigateur.
+- Modification des noms et des URL, et ajout d'étiquettes et d'un résumé dans **Détails du favori**.
+- Suppression avec confirmation facultative et annulation possible pendant 10 secondes, qui restaure tout le contenu d'un dossier.
+- Dans le gestionnaire, redimensionnement des colonnes du tableau par glissement ou avec les touches fléchées ; **Réinitialiser l'affichage** restaure la disposition.
+
+Guide : [Enregistrer et organiser](/guides/save-and-organize).
+
+## Nettoyer [#clean-up]
+
+- **Nettoyeur de doublons** : trouve les doublons selon une méthode de comparaison configurable, et supprime les copies en trop après vérification, avec annulation possible.
+- **Nettoyeur d'URL** : retire les paramètres de suivi tels que `utm_source` après un aperçu.
+- **Vérifier les liens morts** : distingue les liens morts confirmés de ceux à vérifier manuellement, et les répare en les supprimant, en suivant une redirection, en utilisant un lien Wayback Machine ou en modifiant l'URL, avec annulation possible.
+- **Récupération des métadonnées** : suggère des titres à partir des pages en ligne, en ne lisant que l'en-tête de la page, et applique ceux que vous sélectionnez. Les descriptions sont affichées pour vérification et ne sont jamais enregistrées.
+- **Actualiser les icônes de site** : télécharge, après vérification, l'icône propre à chaque site, pour que les favoris l'affichent même lorsque le navigateur n'en a aucune en cache, ainsi que dans Firefox. Les icônes restent sur cet appareil et peuvent être effacées.
+- **Analyseur de confidentialité** : signale les URL, et éventuellement les titres, qui contiennent des jetons, des paramètres sensibles, des adresses e-mail ou des UUID.
+- **Statistiques des favoris** : principaux domaines et dossiers, protocoles, doublons et profondeur de vos dossiers, pour un dossier ou pour tous les favoris.
+
+Guides : [Nettoyer les doublons et les URL de suivi](/guides/clean-up) et [Trouver et réparer les liens morts](/guides/dead-links).
+
+## Importation et exportation [#import-and-export]
+
+- Exportation au format HTML, JSON, Markdown ou CSV, avec une vérification de confidentialité qui peut masquer les valeurs sensibles dans le fichier.
+- Importation de fichiers HTML ou JSON après un aperçu du dossier cible, des nombres d'éléments et des doublons, avec annulation possible.
+- Exportation et importation des paramètres de l'extension dans un fichier JSON.
+
+Guide : [Importation et exportation](/guides/import-export).
+
+## Outils d'IA (facultatifs) [#ai-tools-optional]
+
+Désactivés par défaut. Utilisez votre propre clé pour OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou environ 200 autres fournisseurs du catalogue models.dev, ou utilisez Ollama, CLIProxyAPI ou tout point de terminaison compatible OpenAI.
+
+- Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez.
+- **Étiquetage automatique** et **Générateur de résumés** pour le dossier actuel, avec enregistrement uniquement après votre vérification.
+- **Réorganisation des dossiers par IA**, avec un aperçu avant tout déplacement.
+- **Préparateur de contexte IA**, qui exporte des favoris au format Markdown ou XML pour une discussion avec une IA, et fonctionne même lorsque l'IA est désactivée.
+
+Les étiquettes et les résumés restent sur cet appareil. Ils ne sont ni synchronisés, ni consultables par la recherche, ni inclus dans les exportations de favoris. Guide : [Configurer les outils d'IA](/guides/ai-tools).
+
+## Clavier et langues [#keyboard-and-language]
+
+- Raccourcis dans la fenêtre pop-up, le panneau latéral et le gestionnaire, qui n'utilisent jamais `Ctrl` ni `Cmd`, avec une boîte de dialogue d'aide `?` dans le gestionnaire. Consultez [Raccourcis clavier](/guides/keyboard-shortcuts).
+- Thème système, clair ou sombre.
+- Anglais, chinois simplifié, chinois traditionnel, japonais, coréen, espagnol, allemand, français et portugais du Brésil.

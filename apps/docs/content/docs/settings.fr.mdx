@@ -1,0 +1,143 @@
+---
+title: Paramètres
+description: Chaque paramètre de la page des paramètres de Bookmark Scout, onglet par onglet, avec sa valeur par défaut et son effet.
+---
+
+Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par exemple en effectuant un clic droit sur l'icône de la barre d'outils dans Chrome, puis en choisissant **Options**. Les modifications sont enregistrées au fur et à mesure.
+
+## Utiliser la page des paramètres [#using-the-settings-page]
+
+- **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances.
+- Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Tout réinitialiser** rétablit tous les paramètres.
+- **Exporter** enregistre vos paramètres dans un fichier JSON, et **Importer** les restaure à partir d'un tel fichier. Aucun des deux ne touche à vos favoris.
+- Les paramètres sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. La clé API du fournisseur d'IA, l'**URL de base** et les **En-têtes supplémentaires (JSON)** font exception : ils restent sur cet appareil. Consultez [Confidentialité](/privacy).
+
+## Apparence [#appearance]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Langue** | Paramètre du navigateur | Anglais, chinois simplifié, chinois traditionnel, japonais, coréen, espagnol, allemand, français ou portugais du Brésil, ou la langue du navigateur |
+| **Thème** | Système | Système, Clair ou Sombre, appliqué à toutes les pages Bookmark Scout ouvertes |
+| **Afficher les icônes de site** | Activé | Affiche les icônes de site à côté des favoris dans la fenêtre pop-up et le panneau latéral |
+| **Utiliser le cache d'icônes du navigateur** | Désactivé | Chrome et Edge : affiche aussi les icônes que le navigateur a déjà en cache, pour les sites qui n'en ont pas d'enregistrée par **Actualiser les icônes de site**. L'activation de cette option demande l'autorisation de lire les icônes de site. Non affiché dans Firefox, qui n'offre aucun cache d'icônes aux extensions |
+| **Taille des icônes de site** | 16 px (petite) | 16, 24 ou 32 pixels |
+
+## Recherche [#search]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Délai de recherche** | 300 ms | Temps d'attente après la fin de la saisie avant que la fenêtre pop-up lance la recherche |
+| **Nombre maximal de résultats** | 20 résultats | Nombre maximal de correspondances affichées ; une note indique s'il y en a davantage |
+| **Développer les dossiers lors de la recherche** | Activé | Ouvre les dossiers qui contiennent des correspondances |
+| **Historique des recherches** | Activé | Mémorise les recherches récentes sur cet appareil |
+
+Consultez [Recherche et recherches enregistrées](/guides/search).
+
+## Comportement [#behavior]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Ordre de tri** | Date d'ajout | **Date d'ajout**, **Alphabétique** ou **Dossiers en premier**. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
+| **Regrouper par dossiers** | Activé | Dans la fenêtre pop-up et le panneau latéral, liste les sous-dossiers avant les favoris à chaque niveau |
+| **Confirmer avant de supprimer** | Activé | Demande confirmation avant de supprimer. Dans tous les cas, chaque suppression peut être annulée pendant 10 secondes |
+| **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
+| **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up et le menu contextuel |
+| **Nombre maximal de dossiers récents** | 5 | Nombre de dossiers récents à afficher |
+
+Consultez [Enregistrer et organiser](/guides/save-and-organize).
+
+## Avancé [#advanced]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Largeur de la fenêtre pop-up** | 400 px | Les navigateurs autorisent au maximum 800 px |
+| **Hauteur de la fenêtre pop-up** | 500 px | Les navigateurs autorisent au maximum 600 px |
+| **Longueur de troncature** | 50 caractères | Raccourcit le titre de la page dans l'en-tête des suggestions d'IA de la fenêtre pop-up |
+| **Durée des notifications** | 4000 ms | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
+
+## IA [#ai]
+
+L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'activation des **Fonctionnalités d'IA**.
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Fonctionnalités d'IA** | Désactivé | Active les outils d'IA et les recommandations de dossiers de la fenêtre pop-up. Dans Firefox, l'activation demande votre consentement pour partager les données dont votre fournisseur d'IA a besoin |
+| **Recommander à l'ouverture** | Désactivé | Demande des recommandations de dossiers à chaque ouverture de la fenêtre pop-up |
+| **Lire le contenu des pages** | Désactivé | Envoie le texte principal de chaque page, et pas seulement son titre et son URL, aux recommandations de dossiers, à l'étiquetage automatique et au générateur de résumés. Demande l'accès aux sites Web lors de l'activation |
+| **Fournisseur d'IA** et **Modèle d'IA** | OpenAI, GPT-4o Mini | Le fournisseur et le modèle utilisés par tous les outils d'IA |
+| **Nombre maximal de recommandations** | 5 | Nombre maximal de recommandations de dossiers à demander |
+| **Nombre maximal de catégories** | Aucune limite | Nombre maximal de dossiers de premier niveau qu'un plan de réorganisation peut créer |
+| **Nombre minimal de favoris par dossier** et **Nombre maximal de favoris par dossier** | 1 et Aucune limite | Tailles de dossier visées par les plans de réorganisation |
+
+En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **Modèle personnalisé** et **En-têtes supplémentaires (JSON)**, ainsi que **Vérifier le service** et **Actualiser les modèles**. Les limites de dossiers sont transmises au fournisseur sous forme d'instructions, et sa réponse n'est pas contrôlée par rapport à ces limites. Consultez [Configurer les outils d'IA](/guides/ai-tools).
+
+## Outils d'IA [#ai-tools]
+
+Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le désactiver masque l'outil dans la barre latérale **Outils** du gestionnaire.
+
+| Outil | Paramètres et valeurs par défaut |
+| --- | --- |
+| **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** 200 ; **Profondeur maximale** 8 ; **Longueur des extraits** 240 |
+| **Étiquetage automatique** | **Nombre minimal d'étiquettes** 2 ; **Nombre maximal d'étiquettes** 5 ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé |
+| **Générateur de résumés** | **Longueur du résumé** 160 ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
+| **Réorganisation des dossiers par IA** | **Toujours afficher un aperçu** activé ; **Confiance minimale** 0,55 (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
+
+L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel, quelle que soit leur **Portée par défaut**.
+
+## Maintenance [#maintenance]
+
+| Outil | Paramètres et valeurs par défaut |
+| --- | --- |
+| **Nettoyeur de doublons** | **Méthode de comparaison** URL normalisée ; **Normaliser www**, **Ignorer le protocole** et **Ignorer la barre oblique finale** activés ; **Règle de conservation** Le plus ancien ; **Nombre maximal de groupes** 500. Analyse toujours tous les favoris |
+| **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
+| **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8000 ms ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
+
+Les listes telles que **Paramètres à supprimer** acceptent des valeurs séparées par des virgules. Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
+
+## Métadonnées et contenu [#metadata--content]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Activer la récupération des métadonnées** | Activé | Affiche **Récupération des métadonnées** dans la barre latérale Outils |
+| **Remplacer les titres** | Désactivé | Propose de nouveaux titres pour les favoris qui en ont déjà un |
+| **Récupérer les descriptions** | Activé | Affiche les descriptions des pages dans la vérification. Elles ne sont jamais enregistrées |
+| **Délai d'expiration des requêtes** | 8000 ms | Par page. Également utilisé par **Actualiser les icônes de site** |
+| **Requêtes simultanées** | 4 | Nombre de pages demandées en même temps. Également utilisé par **Actualiser les icônes de site** |
+| **Activer l'outil Actualiser les icônes de site** | Activé | Affiche **Actualiser les icônes de site** dans la barre latérale Outils |
+| **Portée par défaut** | Dossier actuel | Portée initiale de l'actualisation des icônes de site |
+| **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
+| **Taille maximale du fichier d'icône** | 64 Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
+| **Limite de stockage des icônes** | 4096 Ko | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |
+
+## Sécurité [#security]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Activer l'analyseur de confidentialité** | Activé | Affiche **Analyseur de confidentialité** dans la barre latérale Outils. Il analyse toujours tous les favoris |
+| **Analyser les titres** | Désactivé | Vérifie les titres en plus des URL |
+| **Analyser les paramètres de requête** et **Analyser les fragments** | Activé | Vérifie ces parties de chaque URL |
+| **Paramètres sensibles** | `token`, `access_token`, `refresh_token`, `auth`, `authorization`, `api_key`, `apikey`, `key`, `secret`, `password`, `pwd`, `code`, `session` | Noms de paramètres à signaler |
+| **Détecter les adresses e-mail** et **Détecter les UUID** | Activé | Signale les adresses e-mail et les valeurs qui ressemblent à des UUID |
+
+## Analyses [#analytics]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Activer les statistiques** | Activé | Affiche **Statistiques des favoris** dans la barre latérale Outils |
+| **Inclure les domaines**, **Inclure les dossiers**, **Inclure les doublons**, **Inclure les protocoles**, **Inclure la répartition par profondeur** | Activé | Sections du rapport ; une section désactivée est masquée |
+| **Nombre d'entrées principales** | 10 | Longueur des listes des principaux domaines et dossiers |
+
+## Données [#data]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Afficher l'outil d'exportation** et **Afficher l'outil d'importation** | Activé | Affiche ces outils dans la barre latérale Outils |
+| **Format d'exportation par défaut** | HTML | Format sélectionné à l'ouverture de l'outil d'exportation |
+| **Préfixe du nom de fichier** | `bookmarks_` | Début du nom de chaque fichier exporté |
+| **Longueur maximale du nom de fichier** | 50 | Longueur maximale d'un nom de fichier généré |
+| **Indentation JSON**, **Indentation HTML**, **Indentation Markdown** | 2, 4, 2 | Nombre d'espaces par niveau dans chaque format |
+| **Inclure les dates** et **Inclure les URL** | Activé | Les inclut dans les exportations |
+| **Menu contextuel** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
+| **Source du nom du favori** | Texte du lien | Nomme un favori enregistré par clic droit d'après le texte du lien, le titre de la page ou l'URL du lien |
+
+Consultez [Importation et exportation](/guides/import-export).

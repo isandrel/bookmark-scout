@@ -1,0 +1,157 @@
+---
+title: Configurar as ferramentas de IA
+description: Ative os recursos de IA opcionais, escolha um provedor e um modelo, adicione sua chave de API e saiba exatamente quais dados dos favoritos cada ferramenta de IA envia.
+---
+
+Os recursos de IA vêm **desativados por padrão**, e o Bookmark Scout funciona por completo sem eles. Quando você os ativa, as solicitações vão diretamente do seu navegador para o provedor que você escolher, com a sua própria chave de API. O Bookmark Scout não tem um serviço de IA próprio.
+
+<Callout type="warn" title="Antes de ativar a IA">
+As ferramentas de IA enviam títulos, URLs e nomes ou caminhos de pastas dos favoritos ao provedor que você configurar. O provedor trata esses dados de acordo com os próprios termos, e o uso da API pode ser cobrado. Revise cada sugestão antes de aplicá-la.
+</Callout>
+
+## Ativar a IA [#turn-on-ai]
+
+<Steps>
+<Step>
+Abra as configurações do Bookmark Scout (no Chrome, clique com o botão direito do mouse no ícone da barra de ferramentas e escolha **Opções**) e vá para a guia **IA**.
+</Step>
+<Step>
+Ative **Recursos de IA**.
+</Step>
+<Step>
+Em **Serviços de IA**, abra o serviço que já está lá ou clique em **Adicionar serviço** e escolha um provedor. O seletor tem uma caixa de pesquisa e agrupa os provedores em **Destaques**, **Servidores locais**, **Personalizado** e **Mais provedores (models.dev)**. Depois escolha um **Modelo de IA**.
+</Step>
+<Step>
+Digite sua **Chave de API** se o provedor exigir uma. Ela é salva quando você sai do campo e fica armazenada somente neste dispositivo. Uma chave que não corresponde ao formato do provedor é rejeitada e não é salva.
+</Step>
+<Step>
+Opcional: clique em **Atualizar modelos** para carregar a lista atual de modelos do provedor, ou em **Verificar serviço** para confirmar que o provedor está acessível, aceita a chave e oferece o modelo escolhido. Os dois leem a lista de modelos do provedor, o que não tem custo; a verificação só envia um prompt de teste curto aos provedores que não têm uma lista, como o Azure OpenAI. Na primeira vez, o navegador pede acesso ao endereço desse provedor. Uma lista atualizada fica guardada para o seletor de modelos até você atualizar de novo.
+</Step>
+</Steps>
+
+<Screenshot name="options-ai" />
+
+As configurações são salvas automaticamente. Os serviços de IA, com as chaves de API, o **URL base** e os **Cabeçalhos extras (JSON)**, ficam no armazenamento local deste navegador e nunca são sincronizados. As outras configurações de IA, como a que indica se a IA está ativada, são sincronizadas pela sua conta do navegador quando o navegador oferece esse recurso.
+
+## Usar mais de um serviço [#use-more-than-one-service]
+
+Salve quantos serviços quiser, até vários do mesmo provedor: por exemplo, um proxy do trabalho e um proxy de casa, cada um com a própria chave, endereço e modelo.
+
+- Todas as ferramentas de IA usam o serviço **Padrão**. Escolha **Definir como padrão** no menu de um serviço ou, quando mais de um serviço estiver ativado, escolha um pela seta ao lado do botão de brilho no pop-up.
+- Desative um serviço com a chave dele para ocultá-lo do pop-up sem excluí-lo.
+- **Duplicar** copia um serviço, incluindo a chave. **Excluir** remove o serviço e a chave dele deste dispositivo.
+- **URL base**, **Cabeçalhos extras (JSON)** e os campos específicos de cada provedor, como a organização da OpenAI, ficam em **Mais configurações**.
+
+## Provedores [#providers]
+
+| Provedor | Chave de API | Observações |
+| --- | --- | --- |
+| OpenAI | Obrigatória | **ID da organização** e **ID do projeto** opcionais |
+| Anthropic | Obrigatória | |
+| Google | Obrigatória | |
+| Groq | Obrigatória | |
+| Mistral AI | Obrigatória | |
+| DeepSeek | Obrigatória | |
+| xAI | Obrigatória | |
+| Azure OpenAI | Obrigatória | Defina o **Nome do recurso** (ou um **URL base**) e digite o nome da sua implantação como **Modelo personalizado**. O Azure não tem uma lista de implantações, então **Atualizar modelos** não aparece. |
+| OpenRouter | Obrigatória | |
+| Ollama (local) | Opcional | Endereço padrão `http://localhost:11434/api`; as solicitações ficam na sua máquina |
+| CLIProxyAPI | Geralmente obrigatória | É executado na sua máquina e responde com as suas próprias contas do Claude, do Gemini ou do Codex. Endereço padrão `http://localhost:8317/v1`; digite uma das chaves listadas em `api-keys` no `config.yaml` dele e clique em **Atualizar modelos** para ver os modelos que as suas contas oferecem. |
+| oMLX, LM Studio, llama.cpp server, vLLM, LocalAI, KoboldCpp, text-generation-webui | Opcional | Listados em **Servidores locais** com os endereços `localhost` padrão: oMLX e vLLM `:8000/v1`, LM Studio `:1234/v1`, llama.cpp e LocalAI `:8080/v1`, KoboldCpp `:5001/v1`, text-generation-webui `:5000/v1`. Clique em **Atualizar modelos** para ver o que o servidor carregou. |
+| Jan | Obrigatória | Servidor de API local em `http://localhost:1337/v1`; digite a chave das configurações do servidor de API do Jan |
+| Provedor personalizado | Opcional | Qualquer endpoint compatível com a OpenAI, definido com o **URL base** |
+| Provedor personalizado (compatível com Anthropic) | Opcional | Qualquer endpoint que use a API Messages da Anthropic, definido com o **URL base** |
+| Cerca de 200 outros | Geralmente obrigatória | Listados em **Mais provedores (models.dev)**, por exemplo, Together AI, Fireworks AI, Cerebras, DeepInfra e LM Studio. Eles não têm uma lista de modelos integrada: clique em **Atualizar modelos** ou digite um **Modelo personalizado**. |
+
+O seletor **Provedor de IA** tem uma caixa de pesquisa. Os provedores extras vêm de uma cópia do catálogo aberto [models.dev](https://models.dev) incluída na extensão, então escolher um deles não envia nada ao models.dev; as solicitações vão somente para o provedor que você escolher.
+
+O **URL base** substitui o endereço do provedor em todas as solicitações, por exemplo, para usar um proxy. Ele precisa começar com `http://` ou `https://`. **Cabeçalhos extras (JSON)** adiciona cabeçalhos a todas as solicitações, e **Modelo personalizado** define um ID de modelo para os provedores que aceitam qualquer nome de modelo.
+
+### Servidores locais [#local-servers]
+
+Os servidores locais precisam aceitar as solicitações da extensão:
+
+- **Ollama:** defina `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` e reinicie o Ollama. Sem isso, o Ollama responde 403 e a verificação informa que o servidor recusou a extensão.
+- **LM Studio:** ative **Enable CORS** nas configurações do servidor ou inicie-o com `lms server start --cors`.
+- **LocalAI:** defina uma chave de API; a verificação CSRF dele rejeita solicitações sem chave vindas do navegador.
+- **text-generation-webui:** inicie-o com `--api`.
+- **CLIProxyAPI:** aceita as solicitações da extensão com a configuração padrão. Inicie-o antes de clicar em **Verificar serviço**; se ele não estiver em execução, a verificação informa que não conseguiu acessar `localhost:8317`.
+
+### Quando uma verificação falha [#when-a-check-fails]
+
+A verificação e a atualização indicam a causa provável: uma chave rejeitada (401, ou 400 no Google e no xAI), um URL base errado (404), um provedor que está limitando a taxa de solicitações (429, o que ainda indica que a chave funciona), um servidor que recusou a origem da extensão, nenhuma resposta em 8 segundos ou um endereço que não serve uma API de provedor.
+
+## Escrever seus próprios prompts [#write-your-own-prompts]
+
+Cada ferramenta de IA começa com um prompt integrado. Para mudar o comportamento de uma ferramenta, vá para **Opções**, depois **Ferramentas de IA** e depois **Prompts**:
+
+1. Para ler primeiro o prompt integrado de uma ferramenta, clique no ícone de olho ao lado dele. Clique em **Personalizar**, ali ou no visualizador, e o editor se abre com o prompt integrado como ponto de partida.
+2. Edite o texto. Clique em uma variável como `{{maxTags}}` para inseri-la; a ferramenta a preenche com base nas suas configurações. **Prévia com as configurações atuais** mostra o resultado.
+3. Clique em **Salvar prompt**. O novo prompt passa a ser o prompt da ferramenta.
+
+Guarde quantos prompts quiser por ferramenta e alterne entre eles pelo menu da ferramenta; **Padrão (integrado)** volta ao original. Seus prompts são sincronizados entre os seus dispositivos pela sua conta do navegador, então cada um precisa ter menos de 7 KB. O Bookmark Scout adiciona as próprias regras de formato de saída depois do seu prompt, para que os resultados continuem carregando mesmo que o seu prompt peça outra coisa.
+
+## O que cada ferramenta envia [#what-each-tool-sends]
+
+| Ferramenta | Onde | Envia ao provedor |
+| --- | --- | --- |
+| Recomendações de pasta | Pop-up, o botão de brilho ao lado da caixa de pesquisa (só aparece com a IA ativada) | O título e o URL da página atual e os nomes das suas pastas de favoritos. Com **Ler conteúdo da página** ativado, também o texto principal da página |
+| **Tags automáticas** | Gerenciador, Ferramentas, **IA e inteligência** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
+| **Gerador de resumos** | Gerenciador, Ferramentas, **IA e inteligência** | Títulos, URLs e caminhos de pasta dos favoritos da pasta atual e, com **Ler conteúdo da página** ativado, o texto principal de cada página |
+| **Reorganização de pastas com IA** | Gerenciador, Ferramentas, **IA e inteligência** | Títulos, URLs e caminhos de pasta dos favoritos no escopo que você escolher |
+| **Perguntar à IA** | Pop-up e painel lateral, o botão de conversa ao lado da caixa de pesquisa (só aparece com a IA ativada) | Suas mensagens e a conversa até o momento, além do que ele consulta: favoritos correspondentes, nomes de pastas, o título e o URL da página atual e, com **Ler conteúdo da página** ativado, o texto das páginas que ele lê |
+| **Empacotador de contexto para IA** | Gerenciador, Ferramentas, **IA e inteligência** | Nada. Ele salva um arquivo no seu computador e funciona com a IA desativada. |
+
+Ative **Recomendar ao abrir** para pedir recomendações de pasta sempre que o pop-up for aberto. Deixe essa opção desativada para enviar uma solicitação somente quando você clicar no botão.
+
+## Ler conteúdo da página [#read-page-content]
+
+Os títulos e os URLs nem sempre dizem do que uma página trata. Ative **Ler conteúdo da página** em **Opções**, depois **IA**, e as recomendações de pasta, as **Tags automáticas** e o **Gerador de resumos** passam a enviar também o texto principal de cada página. Ao ativar, é pedido acesso aos sites; se você recusar, a opção continua desativada.
+
+- O Bookmark Scout baixa cada página por conta própria, sem os seus cookies, então você recebe a versão do site para quem não fez login. Ele guarda o texto do artigo sem menus, scripts, imagens nem endereços de links.
+- Cada página envia até cerca de 3.000 caracteres, e uma execução da ferramenta lê até 40 páginas. Os favoritos seguintes de uma pasta grande são enviados somente com o título e o URL, assim como as páginas que não carregam.
+- Páginas da sua rede local, como `localhost`, endereços IP privados e nomes `.local`, nunca são lidas, então as páginas da intranet não chegam a um provedor na nuvem.
+- O texto das páginas vem da web e pode conter instruções direcionadas à IA. O Bookmark Scout instrui o modelo a tratá-lo somente como dados, e você ainda revisa cada sugestão antes de ela ser salva.
+
+## Perguntar à IA [#ask-ai]
+
+Clique no botão de conversa ao lado da caixa de pesquisa no pop-up ou no painel lateral para perguntar sobre seus favoritos, sobre a página em que você está ou sobre qualquer outro assunto. Ele usa o seu serviço de IA padrão; troque de serviço pelo menu no cabeçalho dele.
+
+- Para responder, a IA pode pesquisar seus favoritos, listar suas pastas, consultar a página atual e, com **Ler conteúdo da página** ativado, ler uma página da web. Ela só pode ler; nunca adiciona, move nem exclui favoritos. Cada etapa que ela executa aparece na conversa.
+- OpenAI, Anthropic, Google Gemini e xAI também podem pesquisar na web. Ative esse recurso com o botão de globo ao lado da caixa de mensagem; ele fica desativado até você ativá-lo, e o próprio provedor faz a pesquisa.
+- A conversa só é mantida enquanto ela está aberta. **Nova conversa** a apaga, e fechar o pop-up a encerra.
+- As instruções que ele segue são o prompt **Perguntar à IA** da biblioteca de prompts, então você pode vê-las ou substituí-las como qualquer outro prompt.
+
+## Ver o que foi enviado [#see-what-was-sent]
+
+Para conferir exatamente o que uma ferramenta enviou e o que o provedor respondeu, vá para **Opções**, depois **IA**, e ative **Registrar solicitações** em **Atividade da IA**. Cada chamada à IA passa a mostrar a origem, o endereço, o status e o horário; abra uma delas para ver os cabeçalhos da solicitação e os corpos da solicitação e da resposta, ou copie-a como JSON para um relatório de bug.
+
+O registro vem desativado por padrão. O log fica neste dispositivo e guarda somente as chamadas mais recentes. As chaves de API, os cabeçalhos cujos nomes sugerem uma credencial (como os que contêm `key`, `token`, `secret`, `auth` ou `cookie`) e todos os cabeçalhos que você define em **Cabeçalhos extras (JSON)** são substituídos por `[redacted]` antes de qualquer coisa ser armazenada, mas os títulos e os URLs dos favoritos nas solicitações são mantidos, então desative o registro quando terminar: isso também exclui o log.
+
+## Salvar uma página com uma recomendação de pasta [#save-a-page-with-a-folder-recommendation]
+
+Clique no botão de brilho no pop-up. Escolher uma pasta existente sugerida salva a página nela. Escolher uma nova pasta sugerida abre **Revisar nova pasta**, com o caminho completo e a página; **Criar pasta e salvar** cria somente as pastas que faltam e salva a página. Se a página já estiver nessa pasta, ela não é salva duas vezes, e se um favorito já usar um dos nomes de pasta do caminho, nada é criado. **Cancelar** não altera nada.
+
+## Sugerir tags e resumos [#suggest-tags-and-summaries]
+
+Execute **Tags automáticas** ou **Gerador de resumos** com **Analisar**. As sugestões são mostradas para revisão e só são salvas quando você clica em **Salvar tags sugeridas** ou **Salvar resumos sugeridos**. O **Modo de mesclagem** define se as sugestões salvas são acrescentadas ao que você já tem ou se o substituem.
+
+As tags e os resumos salvos ficam no armazenamento local deste navegador. Você também pode editá-los manualmente em **Detalhes do favorito**. Eles não são sincronizados, não podem ser pesquisados e não são incluídos nas exportações de favoritos.
+
+A quantidade e o estilo das tags, o tamanho do resumo e os limites da reorganização definidos nas Configurações são enviados ao provedor como instruções; a resposta do provedor não é conferida com base neles.
+
+## Reorganizar pastas [#reorganize-folders]
+
+A **Reorganização de pastas com IA** pergunta ao provedor em qual pasta cada favorito deve ficar. Com **Sempre mostrar prévia** ativado (o padrão), o plano se abre como uma lista de movimentações de favoritos, com as movimentações para novas pastas marcadas e contadas, e nada muda até você clicar em **Aplicar alterações**.
+
+- **Aplicar alterações** move os favoritos e cria as novas pastas indicadas no plano. Se já existir uma pasta com esse nome no mesmo lugar, ela é usada.
+- Um favorito que você moveu, cujo URL você alterou ou que você excluiu depois da prévia é ignorado e fica onde está, para que o plano nunca se sobreponha a uma alteração mais recente. Quando só parte do plano é aplicada, a notificação conta os favoritos movidos, as novas pastas e os itens ignorados e com falha, e indica os favoritos ignorados.
+- Clique em **Desfazer** na notificação ou na revisão para mover os favoritos de volta e remover as novas pastas que ainda estiverem vazias. Um favorito que você moveu de novo nesse meio-tempo fica onde você o colocou.
+
+## Exportar contexto para uma conversa com IA [#export-context-for-an-ai-chat]
+
+O **Empacotador de contexto para IA** exporta os favoritos selecionados como Markdown ou XML para você colar em qualquer conversa com IA. Ele pode incluir os caminhos das pastas, as datas e as tags e os resumos que você salvou (**Incluir tags salvas** e **Incluir resumos salvos**). Assim como as exportações de favoritos, ele abre uma revisão de privacidade quando o arquivo for conter valores que podem ser particulares.
+
+<Callout title="Firefox">
+No Firefox, abra o gerenciador com **Abrir gerenciador de favoritos** no pop-up da barra de ferramentas para usar as ferramentas de IA do gerenciador. A IA não é coberta pelos testes automatizados do Firefox.
+</Callout>

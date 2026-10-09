@@ -1,0 +1,89 @@
+---
+title: 安装
+description: 从 GitHub 版本发布中下载，并在 Chrome、Microsoft Edge 或 Firefox 中安装 Bookmark Scout。
+---
+
+Bookmark Scout 免费且开源。每个 <RepoLink path="/releases">GitHub 版本发布</RepoLink>都为每种浏览器提供一个下载文件：
+
+| 浏览器 | 文件 |
+| --- | --- |
+| Chrome | `bookmark-scout-<version>-chrome.crx` 或 `bookmark-scout-<version>-chrome.zip` |
+| Microsoft Edge | `bookmark-scout-<version>-edge.zip` |
+| Firefox | `bookmark-scout-<version>-firefox.zip` |
+
+从 <ReleaseLink /> 下载文件，然后按照你所用浏览器的步骤操作。
+
+<Tabs items={["Chrome", "Edge", "Firefox"]}>
+<Tab value="Chrome" id="chrome">
+
+<StoreListing browser="chrome" />
+
+<Steps>
+<Step>
+下载 `bookmark-scout-<version>-chrome.crx` 或 `bookmark-scout-<version>-chrome.zip`。如果使用 ZIP 文件，请将其解压到一个会长期保留的文件夹中，因为 Chrome 会从该文件夹加载扩展程序。
+</Step>
+<Step>
+打开 `chrome://extensions/`，然后开启右上角的**开发者模式**。
+</Step>
+<Step>
+将 CRX 文件拖到该页面上，或者点击**加载已解压的扩展程序**并选择解压后的文件夹。
+</Step>
+<Step>
+通过拼图形状的“扩展程序”菜单将 Bookmark Scout 固定到工具栏，这样点击一下即可打开弹出窗口。
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Edge" id="edge">
+
+<StoreListing browser="edge" />
+
+<Steps>
+<Step>
+下载 `bookmark-scout-<version>-edge.zip`，并将其解压到一个会长期保留的文件夹中。
+</Step>
+<Step>
+打开 `edge://extensions/`，然后开启**开发人员模式**。
+</Step>
+<Step>
+点击**加载解压缩的扩展**并选择解压后的文件夹。
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Firefox" id="firefox">
+
+<StoreListing browser="firefox" />
+
+<Steps>
+<Step>
+下载 `bookmark-scout-<version>-firefox.zip` 并解压。
+</Step>
+<Step>
+打开 `about:debugging#/runtime/this-firefox`。
+</Step>
+<Step>
+点击**临时载入附加组件**，然后选择解压后的 `manifest.json` 文件。
+</Step>
+</Steps>
+
+<Callout type="warn" title="Firefox 的限制">
+Firefox 重启时会移除临时附加组件，因此每次重启后都需要重新载入。Firefox 也无法替换其书签页面，因此请通过弹出窗口中的**打开书签管理器**来打开书签管理器（其中包含工具、已保存的搜索以及导入和导出功能）。请参阅[浏览器支持](/browser-support)。
+</Callout>
+
+</Tab>
+</Tabs>
+
+## 安装之后 [#after-installing]
+
+- 点击 Bookmark Scout 图标即可打开弹出窗口并搜索书签。建议从[搜索和已保存的搜索](/guides/search)开始。
+- 在 Chrome 中，打开浏览器的书签页面（例如按 `Ctrl+Shift+O`，在 macOS 上按 `Cmd+Option+B`），即可进入 Bookmark Scout 书签管理器及其工具侧栏。
+- 设置会通过扩展程序的**选项**入口在标签页中打开，例如在 Chrome 中右键点击工具栏图标。请参阅[设置](/settings)。
+
+## 更新 [#updating]
+
+从 <ReleaseLink /> 下载较新的版本，然后重复你所用浏览器的安装步骤。
+
+## 从源代码构建 [#building-from-source]
+
+如果你想自行构建扩展程序，请按照[参与贡献和开发](/contributing#build-from-source)中的说明操作。
