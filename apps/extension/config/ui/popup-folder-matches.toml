@@ -1,6 +1,6 @@
 # "Save to folder" matches at the top of popup and side panel search results. Read by
 # src/lib/folder-match.ts. Whether they show, how many, and typo matching are user settings
-# (config/settings/search.toml).
+# (config/settings/search.toml, [folder_matches]).
 
 # With Settings > Search > Allow typos on, a search word this long or longer may match a folder
 # name with one typo ("rect" finds React). Shorter words would match too many unrelated names.

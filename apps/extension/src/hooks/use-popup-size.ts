@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 /** CSS variables popup.html sizes itself with; its inline defaults are unit-tested. */
 export const POPUP_SIZE_CSS_VARS = { width: '--popup-width', height: '--popup-height' } as const;
 
-/** The popupWidth/popupHeight bounds from config/settings/advanced.toml. */
+/** The popupWidth/popupHeight bounds from config/settings/appearance.toml ([popup]). */
 export const POPUP_SIZE_LIMITS = {
   width: SETTING_NUMBER_BOUNDS.popupWidth,
   height: SETTING_NUMBER_BOUNDS.popupHeight,

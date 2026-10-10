@@ -3,8 +3,8 @@
  * imports only (no WXT auto-imports or Vite globs), so Bun scripts can use it as well as the
  * extension (src/lib/app-config.ts).
  *
- * A file's path is its namespace: `settings/tools/dead-links.toml` becomes
- * `settings.tools.dead_links` (kebab-case names become snake_case keys). Two files may not claim
+ * A file's path is its namespace: `settings/ai-tools.toml` becomes `settings.ai_tools`
+ * (kebab-case names become snake_case keys). Two files may not claim
  * overlapping paths, every value is frozen, and each module that owns a file reads it once through
  * a strict zod schema, so typos and unknown keys fail at load time.
  */
@@ -30,7 +30,7 @@ export type ConfigReader = {
 
 const TOML_EXTENSION = /\.toml$/;
 
-/** `settings/tools/dead-links.toml` or `settings/tools/dead-links` -> settings, tools, dead_links. */
+/** `settings/ai-tools.toml` or `settings/ai-tools` -> settings, ai_tools. */
 export function configPathSegments(path: string): string[] {
   const segments = path
     .replace(TOML_EXTENSION, '')

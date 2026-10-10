@@ -60,7 +60,7 @@ Agents should assume Chrome is the default runtime path, but should not make Chr
 ### Static and localized assets
 
 - `public/_locales/`: extension locale files, one folder per language (the list is `[locales] extension` in `config/project.toml`)
-- `config/`: app config, one TOML file per domain (setting defaults with their bounds in `config/settings/`), loaded once by `src/lib/app-config.ts`, whose header explains how to add a file
+- `config/`: app config, one TOML file per domain (setting defaults with their bounds in `config/settings/`, one file per Options tab), loaded once by `src/lib/app-config.ts`, whose header explains how to add a file
 
 Do not edit generated output or build artifacts under:
 
@@ -159,7 +159,7 @@ WXT auto-imports every export from `components/**`, `hooks/`, `utils/`, `lib/`, 
 
 Use these before writing a new helper; each replaced several copies. Their file headers document the details.
 
-- **Config:** add `config/<area>/<name>.toml` and read it once with `readConfig('<area>/<name>', z.strictObject({...}))` in the module that owns it (`src/lib/app-config.ts`); a unit test fails on unread or doubly read files. User-setting defaults and bounds live in `config/settings/**` and are defined once in `src/lib/settings-schema.ts`.
+- **Config:** add `config/<area>/<name>.toml` and read it once with `readConfig('<area>/<name>', z.strictObject({...}))` in the module that owns it (`src/lib/app-config.ts`); a unit test fails on unread or doubly read files. User-setting defaults and bounds live in `config/settings/<tab>.toml`, one table per Options section (`[folder_matches]` in `search.toml` is Saving & Search > Folder Matches), and are defined once in `src/lib/settings-schema.ts`; a new setting goes in the table of the section that shows it, which `tests/unit/settings-config.test.ts` checks.
 - **Storage:** `defineStoredValue` and `useStoredValue` (`src/lib/stored-value.ts`) for every stored key, registered in `STORAGE_KEYS` (`src/lib/storage-keys.ts`); `useSettings`/`useSetting` share one subscription per page.
 - **Bookmark changes:** `applyBookmarkChanges` (`src/services/bookmarks.ts`) applies reviewed edits, removals, and moves (a move's `expect` can include the `parentId` it had in the preview, and its target can create missing folders with `createPath`), skips items that changed since the preview, and returns counts (including `foldersCreated`) plus a single-use `undo()`.
 - **Network:** `fetchHtmlPage` (`src/services/bookmark-network-tools.ts`) for any page fetch with a timeout and byte cap.
