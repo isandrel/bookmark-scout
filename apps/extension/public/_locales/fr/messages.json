@@ -523,6 +523,26 @@
         "message": "Ordre de tri par défaut des favoris",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "Ouvrir les liens dans",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Ctrl/Cmd+clic fonctionnent toujours comme dans votre navigateur.",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "Nouvel onglet",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "Nouvel onglet en arrière-plan",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "Onglet actuel",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "Date d'ajout",
         "description": "Date sort option"

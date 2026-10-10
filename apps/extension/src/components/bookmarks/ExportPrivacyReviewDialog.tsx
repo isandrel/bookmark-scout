@@ -52,7 +52,9 @@ export function ExportPrivacyReviewDialog({
               <div className="text-sm font-medium break-words">
                 {getBookmarkDisplayTitle(item.title)}
               </div>
-              <div className="text-xs text-muted-foreground break-all">{item.url}</div>
+              <div className="text-xs text-muted-foreground break-all">
+                <UrlLink href={item.url} />
+              </div>
               <ul className="list-disc space-y-0.5 pl-5 text-xs">
                 {item.fields.map((field) => (
                   <li key={`${field.kind}:${field.location}:${field.name ?? ''}`}>

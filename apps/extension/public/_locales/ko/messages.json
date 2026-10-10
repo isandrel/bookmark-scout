@@ -523,6 +523,26 @@
         "message": "북마크 기본 정렬 순서",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "링크 열기 위치",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Bookmark Scout에서 링크를 클릭했을 때 열리는 위치입니다. 가운데 클릭과 Ctrl/Cmd+클릭은 브라우저 동작을 따릅니다.",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "새 탭",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "백그라운드 새 탭",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "현재 탭",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "추가일 순",
         "description": "Date sort option"

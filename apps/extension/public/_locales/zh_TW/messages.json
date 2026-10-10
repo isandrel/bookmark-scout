@@ -523,6 +523,26 @@
         "message": "書籤的預設排序方式",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "連結開啟位置",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "在 Bookmark Scout 中點選連結時要在哪裡開啟。按滑鼠中鍵和 Ctrl/Cmd+點選仍依瀏覽器的方式開啟。",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "新分頁",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "背景新分頁",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "目前分頁",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "新增日期",
         "description": "Date sort option"

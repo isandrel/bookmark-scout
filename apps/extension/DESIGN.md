@@ -220,6 +220,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`options-panel`** (`OptionsPanel`): a boxed Options section with a heading, a description, optional actions on the right, and the content below, such as AI services, AI activity, or the prompt library.
 
+**`url-link`** (`UrlLink`, `src/components/ui/url-link.tsx`): every URL shown as text, in tables, tool results, review dialogs, and details. It keeps the surrounding text style and underlines on hover. A plain click opens it where Settings > Behavior > Open links in says (`useLinkClick`, which popup tree rows share); middle-click and modifier clicks keep the browser’s behavior, and the click never reaches the row around it. A bookmarklet or unparseable URL stays plain text.
+
 **`mask-icon`** (`MaskIcon`): a one-color image, such as a provider logo, drawn as a CSS mask in the current text color.
 
 ## Do's and don'ts

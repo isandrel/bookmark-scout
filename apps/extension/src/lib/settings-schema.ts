@@ -125,6 +125,9 @@ export type Theme = z.infer<typeof themeSchema>;
 export const sortOrderSchema = z.enum(['date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
 
+export const linkOpenTargetSchema = z.enum(['new_tab', 'background_tab', 'current_tab']);
+export type LinkOpenTarget = z.infer<typeof linkOpenTargetSchema>;
+
 export const languageSchema = z.enum([AUTO_LANGUAGE, ...SUPPORTED_LOCALES]);
 export type Language = z.infer<typeof languageSchema>;
 
@@ -432,6 +435,17 @@ const fields = {
       })[value],
   ),
   groupByFolders: switchField('behavior.group_by_folders', 'groupByFolders'),
+  linkOpenTarget: enumField(
+    'behavior.link_open_target',
+    'linkOpenTarget',
+    linkOpenTargetSchema,
+    (value) =>
+      ({
+        new_tab: t('settings_linkOpenNewTab'),
+        background_tab: t('settings_linkOpenBackgroundTab'),
+        current_tab: t('settings_linkOpenCurrentTab'),
+      })[value],
+  ),
   confirmBeforeDelete: switchField('behavior.confirm_before_delete', 'confirmDelete'),
   defaultNewFolderName: textField('behavior.default_new_folder_name', 'defaultFolderName'),
   recentFoldersMax: numberField('behavior.recent_folders_max', 'recentFoldersMax'),
@@ -858,6 +872,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       fields: [
         'sortOrder',
         'groupByFolders',
+        'linkOpenTarget',
         'confirmBeforeDelete',
         'defaultNewFolderName',
         'recentFoldersEnabled',

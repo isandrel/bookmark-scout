@@ -275,9 +275,13 @@ test('bookmark details open with the title in view', async ({
     })
     .toBe('in view');
 
-  // Keyboard users still reach the first control with Tab once the stored metadata has loaded.
+  // Keyboard users reach the URL link, then the first field, once the stored metadata has loaded.
   const tags = dialog.getByRole('textbox', { name: 'Tags' });
   await expect(tags).toBeEnabled();
+  await page.keyboard.press('Tab');
+  await expect(
+    dialog.getByRole('link', { name: 'https://e2e.invalid/details-scroll' }),
+  ).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(tags).toBeFocused();
 });

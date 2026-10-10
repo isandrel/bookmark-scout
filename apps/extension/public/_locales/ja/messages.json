@@ -519,6 +519,26 @@
         "message": "ブックマークのデフォルト並び順",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "リンクを開く場所",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Bookmark Scout でリンクをクリックしたときに開く場所です。中クリックや Ctrl/Cmd+クリックはブラウザーの動作に従います。",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "新しいタブ",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "バックグラウンドの新しいタブ",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "現在のタブ",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "追加日順",
         "description": "Date sort option"
