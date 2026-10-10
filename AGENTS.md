@@ -189,6 +189,7 @@ Run Chromium and Firefox end-to-end tests locally. Edge (`nx run extension:test:
 ### Docs changes
 
 - `nx run docs:types:check`
+- `nx run docs:lint` (Biome format and lint; CI fails on unformatted docs code, such as `src/lib/copy*.ts`)
 - `nx run docs:build`, then `bun run --cwd apps/docs verify`
 
 ### Shared or cross-app changes

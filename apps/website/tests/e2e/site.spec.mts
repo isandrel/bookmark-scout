@@ -84,16 +84,26 @@ test("language links keep the current page", async ({ page }) => {
     await expect(page.locator("html")).toHaveAttribute("lang", "ja");
 });
 
-test("hero search filters the sample library", async ({ page }) => {
+test("hero demo saves the page to a folder found by name", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/en/");
-    const search = page.locator("#main input").first();
-    await search.fill("");
-    await search.fill("zzzz-no-such-bookmark");
-    await expect(page.locator("#main mark")).toHaveCount(0);
-    await search.fill("mdn");
-    await expect(page.locator("#main mark").first()).toBeVisible();
-    await expect(page.locator("#main [aria-live]").first()).toContainText(/\d/);
+    const input = page.getByRole("combobox", { name: "Try it: save this page to a folder" });
+    const options = page.getByRole("listbox", { name: "Save to folder" }).getByRole("option");
+    await input.fill("zzzz-no-such-folder");
+    await expect(options).toHaveCount(0);
+
+    // A path and a typo both find the folder; the first match is selected.
+    await input.fill("travel/japan");
+    await expect(options.first()).toContainText("Japan");
+    await input.fill("reserch");
+    await expect(options.first()).toContainText("Research");
+
+    await input.fill("pas");
+    await expect(options.first()).toHaveAttribute("aria-selected", "true");
+    await input.press("Enter");
+    await expect(page.getByText("Saved to Recipes / Pasta.")).toBeVisible();
+    await options.first().click();
+    await expect(page.getByText("Already in Recipes / Pasta, so it was not saved twice.")).toBeVisible();
 });
 
 test("tabs follow the ARIA tabs pattern", async ({ page, isMobile }) => {

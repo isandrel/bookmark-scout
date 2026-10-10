@@ -2,7 +2,7 @@ import { site } from "@bookmark-scout/config";
 import { getTranslations } from "next-intl/server";
 import { ContourLines } from "./ContourLines";
 import { DownloadButton, secondaryButtonClass } from "./DownloadButton";
-import { SearchDemo } from "./SearchDemo";
+import { SaveDemo } from "./SaveDemo";
 
 export async function Hero({ locale }: { locale: string }) {
     const t = await getTranslations("home.hero");
@@ -38,7 +38,7 @@ export async function Hero({ locale }: { locale: string }) {
                         <ContourLines className="size-full" />
                     </div>
                     <div className="relative">
-                        <SearchDemo />
+                        <SaveDemo />
                         <p className="mt-4 max-w-[70ch] text-sm text-ink-soft">{t("demoNote")}</p>
                     </div>
                 </div>
