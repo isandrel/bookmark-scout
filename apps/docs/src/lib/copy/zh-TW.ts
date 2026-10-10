@@ -44,7 +44,7 @@ export const zhTW: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "兩個彈出式視窗：在搜尋框中輸入「pas」，在「儲存到資料夾」下選取 Pasta 資料夾（Recipes / Italian）；以及按 Enter 後網頁已儲存到 Pasta 的同一個彈出式視窗",
+      "兩個彈出式視窗：在搜尋框中輸入「pas」，在「儲存到資料夾」下選取 Pasta 資料夾（Recipes / Italian）；以及針對目前網頁的 AI 建議：現有的 Recipes/Italian/Pasta 資料夾和新的 Recipes/Quick Dinners 資料夾",
     manager: "書籤管理員，包含資料夾樹狀結構、標題和網址篩選器，以及書籤表格",
     duplicates:
       "書籤管理員上方的重複書籤清理工具確認畫面，每個群組中要保留的書籤標示為「保留」",

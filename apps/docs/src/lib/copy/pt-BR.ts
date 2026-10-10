@@ -51,7 +51,7 @@ export const ptBR: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "Dois pop-ups: \"pas\" digitado na caixa de pesquisa com a pasta Pasta (Recipes / Italian) selecionada em Salvar na pasta, e o mesmo pop-up depois do Enter, com a página salva em Pasta",
+      "Dois pop-ups: \"pas\" digitado na caixa de pesquisa com a pasta Pasta (Recipes / Italian) selecionada em Salvar na pasta, e sugestões da IA para a página atual: a pasta existente Recipes/Italian/Pasta e uma nova pasta Recipes/Quick Dinners",
     manager:
       "O gerenciador de favoritos com a árvore de pastas, os filtros de título e de URL e a tabela de favoritos",
     duplicates:

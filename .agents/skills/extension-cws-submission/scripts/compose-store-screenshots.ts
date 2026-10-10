@@ -19,7 +19,7 @@ const THEMES = {
 } as const;
 // The save flow the listing leads with: type part of a folder's name, then save there.
 const HEADING = 'Save every page to the right folder';
-const SUBHEADING = "Type part of a folder's name, even one deep in the tree, and save without leaving the keyboard";
+const SUBHEADING = "Type part of a folder's name and save with the keyboard, or let opt-in AI suggest one";
 const POPUP_CROP = '400x500+0+0';
 
 const magick = (...args: string[]) => {
@@ -42,7 +42,7 @@ for (const [target, source] of Object.entries(files)) copyFileSync(path.join(sho
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 for (const [scheme, t] of Object.entries(THEMES)) {
-  for (const name of ['popup-match', 'popup-saved']) {
+  for (const name of ['popup-match', 'popup-ai']) {
     magick(path.join(shots, `${name}-${scheme}.png`), '-crop', POPUP_CROP, '+repage', path.join(shots, `crop-${name}-${scheme}.png`));
   }
   const html = `<!doctype html><html><head><style>
@@ -54,7 +54,7 @@ p{font:400 19px/1.4 Body;color:${t.soft};text-align:center;margin:0}
 .row{display:flex;gap:56px;justify-content:center;margin-top:40px}
 img{width:400px;height:500px;border-radius:14px;border:1px solid ${t.line};box-shadow:0 18px 40px ${t.shadow}}
 </style></head><body><h1>${HEADING}</h1><p>${SUBHEADING}</p>
-<div class="row"><img src="file://${shots}/crop-popup-match-${scheme}.png"><img src="file://${shots}/crop-popup-saved-${scheme}.png"></div>
+<div class="row"><img src="file://${shots}/crop-popup-match-${scheme}.png"><img src="file://${shots}/crop-popup-ai-${scheme}.png"></div>
 </body></html>`;
   const htmlPath = path.join(shots, `compose-${scheme}.html`);
   await Bun.write(htmlPath, html);

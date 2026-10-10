@@ -26,7 +26,8 @@ const seed = async () => {
   await mk(baking.id, 'Pastry');
   const travel = await mk(bar, 'Travel');
   const japan = await mk(travel.id, 'Japan');
-  await mk(japan.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
+  const kyoto = await mk(japan.id, 'Kyoto');
+  await mk(kyoto.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
   await mk(travel.id, 'Packing List', 'https://www.example.org/travel/packing');
   await mk(travel.id, 'Wikivoyage', 'https://en.wikivoyage.org/');
   const research = await mk(bar, 'Research');
@@ -56,6 +57,31 @@ const stubActiveTab = () => {
     query?.active
       ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'Weeknight carbonara in 20 minutes', url: 'https://www.example.com/recipes/weeknight-carbonara' }]
       : original(query);
+};
+
+// Folder suggestions from a stubbed AI provider; no request leaves the machine.
+const AI_BASE_URL = 'https://ai.example.invalid/v1';
+const AI_SUGGESTIONS = JSON.stringify({
+  recommendations: [
+    { type: 'existing', confidence: 0.94, folderPath: 'Bookmarks Bar/Recipes/Italian/Pasta', parentPath: '', reason: 'A pasta recipe, like the others in this folder' },
+    { type: 'new', confidence: 0.71, folderPath: 'Bookmarks Bar/Recipes/Quick Dinners', parentPath: '', reason: 'A 20-minute weeknight dinner' },
+  ],
+});
+
+const enableStubAI = async (baseUrl: string) => {
+  const key = 'bookmark-scout-settings';
+  const current = (await chrome.storage.sync.get(key))[key] ?? {};
+  await chrome.storage.sync.set({
+    [key]: { ...current, aiEnabled: true, aiProvider: 'custom', aiModel: 'demo-model', aiMaxRecommendations: 2 },
+  });
+  await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl, customModel: 'demo-model' } } });
+};
+
+const disableStubAI = async () => {
+  const key = 'bookmark-scout-settings';
+  const { aiEnabled, aiProvider, aiModel, aiMaxRecommendations, ...rest } = (await chrome.storage.sync.get(key))[key] ?? {};
+  await chrome.storage.sync.set({ [key]: rest });
+  await chrome.storage.local.remove('bookmark-scout-ai');
 };
 
 const runTool = async (page: Page, name: string) => {
@@ -105,29 +131,46 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await shot(page, `options-ai-${scheme}`);
     await page.close();
 
-    // The save flow: type part of a folder's name, pick the match with ↓, then Enter saves.
-    const popup = await context.newPage();
-    await popup.setViewportSize(POPUP);
-    await popup.emulateMedia({ colorScheme: scheme });
-    await popup.addInitScript(stubActiveTab);
-    await popup.goto(url('popup.html'));
-    await popup.waitForTimeout(SETTLE_MS);
-    const search = popup.getByPlaceholder(/Search bookmarks/);
+    // The two ways to pick a folder: type part of its name, or ask AI for suggestions.
+    const openPopup = async () => {
+      const popup = await context.newPage();
+      await popup.setViewportSize(POPUP);
+      await popup.emulateMedia({ colorScheme: scheme });
+      await popup.addInitScript(stubActiveTab);
+      await popup.goto(url('popup.html'));
+      await popup.waitForTimeout(SETTLE_MS);
+      return popup;
+    };
+    const match = await openPopup();
+    const search = match.getByPlaceholder(/Search bookmarks/);
     await search.pressSequentially('pas', { delay: 80 });
-    await popup.waitForTimeout(SETTLE_MS);
+    await match.waitForTimeout(SETTLE_MS);
     await search.press('ArrowDown');
-    await popup.waitForTimeout(SETTLE_MS / 2);
-    await shot(popup, `popup-match-${scheme}`);
-    await popup.keyboard.press('Enter');
-    await popup.getByText('Bookmark saved', { exact: true }).first().waitFor({ timeout: 5_000 }).catch(() => log('[popup] no save toast text found'));
-    await popup.waitForTimeout(SETTLE_MS / 2);
-    await shot(popup, `popup-saved-${scheme}`);
-    // Undo the save and its recent folder, so the light and dark runs start from the same state.
-    await sw.evaluate(async () => {
-      const [hit] = await chrome.bookmarks.search({ url: 'https://www.example.com/recipes/weeknight-carbonara' });
-      if (hit) await chrome.bookmarks.remove(hit.id);
-      await chrome.storage.local.remove('bookmark-scout-recent-folders');
-    });
-    await popup.close();
+    await match.waitForTimeout(SETTLE_MS / 2);
+    await shot(match, `popup-match-${scheme}`);
+    await match.close();
+
+    await sw.evaluate(enableStubAI, AI_BASE_URL);
+    await context.route(`${AI_BASE_URL}/**`, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' },
+        body: JSON.stringify({
+          id: 'store-capture',
+          model: 'demo-model',
+          choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content: AI_SUGGESTIONS } }],
+        }),
+      }),
+    );
+    const ai = await openPopup();
+    await ai.getByTitle('AI folder recommendation').click();
+    await ai.getByRole('button', { name: /Quick Dinners/ }).first().waitFor({ timeout: 15_000 });
+    await ai.mouse.move(0, 0);
+    await ai.waitForTimeout(SETTLE_MS / 2);
+    await shot(ai, `popup-ai-${scheme}`);
+    await ai.close();
+    await context.unroute(`${AI_BASE_URL}/**`);
+    await sw.evaluate(disableStubAI);
   }
 };

@@ -41,7 +41,7 @@ export const zhCN: DocsCopy = {
 
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
-    popup: "两个弹出窗口：在搜索框中输入“pas”，在“保存到文件夹”下选中 Pasta 文件夹（Recipes / Italian）；以及按 Enter 后网页已保存到 Pasta 的同一弹出窗口",
+    popup: "两个弹出窗口：在搜索框中输入“pas”，在“保存到文件夹”下选中 Pasta 文件夹（Recipes / Italian）；以及针对当前网页的 AI 建议：现有的 Recipes/Italian/Pasta 文件夹和新的 Recipes/Quick Dinners 文件夹",
     manager: "书签管理器，包含文件夹树、标题和网址筛选器以及书签表格",
     duplicates:
       "显示在书签管理器上方的重复书签清理审阅界面，每组中要保留的书签标有“保留”",

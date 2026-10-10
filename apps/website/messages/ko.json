@@ -119,7 +119,7 @@
         "tab": "저장",
         "heading": "알맞은 폴더에 저장",
         "caption": "툴바 팝업: 폴더 이름의 일부를 입력하거나 트리에서 폴더를 골라 한 번의 클릭으로 페이지를 저장.",
-        "alt": "두 개의 팝업: 검색창에 \"pas\"를 입력해 폴더에 저장에서 Pasta 폴더(Recipes / Italian)를 선택한 화면과, Enter를 눌러 페이지를 Pasta에 저장한 뒤의 화면",
+        "alt": "두 개의 팝업: 검색창에 \"pas\"를 입력해 폴더에 저장에서 Pasta 폴더(Recipes / Italian)를 선택한 화면과, 현재 페이지에 대한 AI 추천(기존 Recipes/Italian/Pasta 폴더와 새 Recipes/Quick Dinners 폴더)",
         "points": [
           "폴더 이름의 일부를 입력하면 트리 깊숙이 있는 폴더도 찾아, 키보드에서 손을 떼지 않고 현재 페이지를 저장",
           "work/react 같은 경로를 입력해도 되고, 오타가 조금 있어도 폴더를 찾음",

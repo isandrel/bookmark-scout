@@ -51,7 +51,7 @@ export const fr: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "Deux fenêtres pop-up : « pas » saisi dans le champ de recherche avec le dossier Pasta (Recipes / Italian) sélectionné sous Enregistrer dans un dossier, et la même fenêtre après Entrée, avec la page enregistrée dans Pasta",
+      "Deux fenêtres pop-up : « pas » saisi dans le champ de recherche avec le dossier Pasta (Recipes / Italian) sélectionné sous Enregistrer dans un dossier, et des suggestions de l’IA pour la page actuelle : le dossier existant Recipes/Italian/Pasta et un nouveau dossier Recipes/Quick Dinners",
     manager:
       "Le gestionnaire de favoris avec l'arborescence des dossiers, les filtres de titre et d'URL, et le tableau des favoris",
     duplicates:

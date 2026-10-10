@@ -119,7 +119,7 @@
         "tab": "Save",
         "heading": "Save to the right folder",
         "caption": "The toolbar popup: type part of a folder's name, or pick a folder in the tree, and save the page in one click.",
-        "alt": "Two popups: \"pas\" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and the same popup after Enter, with the page saved in Pasta",
+        "alt": "Two popups: \"pas\" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and AI suggestions for the current page: the existing Recipes/Italian/Pasta folder and a new Recipes/Quick Dinners folder",
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
           "Type a path such as work/react, and still find the folder with a small typo",

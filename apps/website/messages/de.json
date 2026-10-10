@@ -119,7 +119,7 @@
         "tab": "Speichern",
         "heading": "Im richtigen Ordner speichern",
         "caption": "Das Pop-up in der Symbolleiste: Geben Sie einen Teil eines Ordnernamens ein oder wählen Sie einen Ordner im Baum, und speichern Sie die Seite mit einem Klick.",
-        "alt": "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und dasselbe Pop-up nach Enter, mit der Seite in Pasta gespeichert",
+        "alt": "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und KI-Vorschläge für die aktuelle Seite: der vorhandene Ordner Recipes/Italian/Pasta und ein neuer Ordner Recipes/Quick Dinners",
         "points": [
           "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
           "Einen Pfad wie work/react eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
