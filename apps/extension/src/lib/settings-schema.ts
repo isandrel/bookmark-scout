@@ -1205,10 +1205,23 @@ export function getLocalizedProviderName(provider: AIProvider): string {
   return key ? t(key) : getProviderName(provider);
 }
 
-export function getSettingsFieldMeta(): Record<keyof Settings, SettingsFieldMeta> {
-  return Object.fromEntries(
-    Object.entries(fields).map(([key, field]) => [key, field.meta()]),
-  ) as Record<keyof Settings, SettingsFieldMeta>;
+let fieldMetaCache: { revision: number; meta: Record<keyof Settings, SettingsFieldMeta> } | undefined;
+
+/**
+ * Labels, units, and options of every setting, in the language `t()` shows. Built once per
+ * language: every row reads it on every render, and the AI model options alone list the whole
+ * provider catalog, so rebuilding it per call made each edit on the Options page take seconds
+ * on slow machines.
+ */
+export function getSettingsFieldMeta(): Readonly<Record<keyof Settings, SettingsFieldMeta>> {
+  const revision = getLanguageRevision();
+  if (fieldMetaCache?.revision !== revision) {
+    const meta = Object.fromEntries(
+      Object.entries(fields).map(([key, field]) => [key, field.meta()]),
+    ) as Record<keyof Settings, SettingsFieldMeta>;
+    fieldMetaCache = { revision, meta };
+  }
+  return fieldMetaCache.meta;
 }
 
 /**

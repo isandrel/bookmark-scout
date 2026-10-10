@@ -6,8 +6,8 @@ import { type ReactNode, useEffect, useId, useState } from 'react';
  * nothing is hidden without saying so. `forceOpen` (a search match, or a value already changed)
  * keeps it open.
  *
- * A button with `aria-expanded` rather than `<details>`: a controlled `<details>` froze Edge after
- * a setting inside it changed, and this needs no native toggle event to keep in step.
+ * A button with `aria-expanded` rather than a controlled `<details>`, so the open state has one
+ * owner and no native toggle event to keep in step.
  */
 export function SettingsAdvancedFold({
   labels,
