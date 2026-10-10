@@ -159,8 +159,7 @@ test('applies an Options UI sorting change to an open bookmarks table', async ({
     .locator('..')
     .locator('..')
     .locator('..');
-  await sortSetting.getByRole('combobox').click();
-  await optionsPage.getByRole('option', { name: 'Alphabetical' }).click();
+  await sortSetting.getByRole('radio', { name: 'Alphabetical' }).click();
 
   await expect
     .poll(() =>
