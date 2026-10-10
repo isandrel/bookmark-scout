@@ -499,6 +499,26 @@
         "message": "Orden predeterminado de los marcadores",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "Abrir enlaces en",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Dónde se abre un enlace al hacer clic en él en Bookmark Scout. El clic central y Ctrl/Cmd+clic siguen funcionando como en tu navegador.",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "Pestaña nueva",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "Pestaña nueva en segundo plano",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "Pestaña actual",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "Fecha de creación",
         "description": "Date sort option"

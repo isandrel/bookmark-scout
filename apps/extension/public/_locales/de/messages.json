@@ -499,6 +499,26 @@
         "message": "Standardsortierung für Lesezeichen",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "Links öffnen in",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Wo sich ein Link öffnet, wenn Sie in Bookmark Scout darauf klicken. Mittelklick und Strg/Cmd-Klick funktionieren weiterhin wie in Ihrem Browser.",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "Neuer Tab",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "Neuer Tab im Hintergrund",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "Aktueller Tab",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "Hinzufügedatum",
         "description": "Date sort option"

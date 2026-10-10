@@ -499,6 +499,26 @@
         "message": "Default sort order for bookmarks",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "Open links in",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "Where a link opens when you click it in Bookmark Scout. Middle-click and Ctrl/Cmd-click still work the way your browser does.",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "New tab",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "New background tab",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "Current tab",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "Date Added",
         "description": "Date sort option"

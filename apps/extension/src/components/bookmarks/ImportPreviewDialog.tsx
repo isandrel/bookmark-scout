@@ -269,7 +269,9 @@ export function ImportPreviewDialog({
                         {conflict.skipped ? t('tools_importWillSkip') : t('tools_importWillImport')}
                       </Badge>
                     </div>
-                    <p className="break-all text-xs text-muted-foreground">{conflict.url}</p>
+                    <p className="break-all text-xs text-muted-foreground">
+                      <UrlLink href={conflict.url} />
+                    </p>
                   </li>
                 ))}
               </ul>

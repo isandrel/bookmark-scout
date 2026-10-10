@@ -106,11 +106,8 @@ function MessageView({ message }: { message: UIMessage }) {
               <Markdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  a: ({ href, children }) => (
-                    <a href={href} target="_blank" rel="noopener noreferrer">
-                      {children}
-                    </a>
-                  ),
+                  a: ({ href, children }) =>
+                    href ? <UrlLink href={href}>{children}</UrlLink> : <span>{children}</span>,
                 }}
               >
                 {part.text}
@@ -143,14 +140,9 @@ function MessageView({ message }: { message: UIMessage }) {
           <ul className="space-y-0.5 text-xs">
             {sources.map((source) => (
               <li key={source.url} className="truncate">
-                <a
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline-offset-2 hover:underline"
-                >
+                <UrlLink href={source.url} className="text-primary">
                   {source.title || hostOf(source.url)}
-                </a>
+                </UrlLink>
               </li>
             ))}
           </ul>
