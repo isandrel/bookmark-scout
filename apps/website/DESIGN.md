@@ -102,7 +102,7 @@ components:
 
 Bookmark Scout is a browser extension that searches, organizes, and cleans up years of bookmarks, entirely inside the browser. The design borrows from map reading and field notes: cool paper, ink, a compass-teal action color, faint topographic contour lines, and a marker-pen highlight for search matches.
 
-One element is loud on purpose: the hero's live search over a sample bookmark library. Everything around it is quiet, left-aligned, and built from plain lists, real screenshots, and generous whitespace.
+One element is loud on purpose: the hero's live save demo, which saves a sample page into a folder found by typing part of its name. Everything around it is quiet, left-aligned, and built from plain lists, real screenshots, and generous whitespace.
 
 This file covers the marketing site (`apps/website`). The shared brand (palette, type, voice) is summarized in the root `DESIGN.md`; the docs site has its own `apps/docs/DESIGN.md`. The source of truth for tokens is `apps/website/app/globals.css`.
 
@@ -167,7 +167,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 ## Elevation and depth
 
 - Depth comes from `surface` on `paper` plus a 1px `line` border. Shadows are rare and soft (header menu popover only).
-- The contour-line texture appears behind the hero search instrument only, drawn in `line` color and faded with a mask.
+- The contour-line texture appears behind the hero save instrument only, drawn in `line` color and faded with a mask.
 
 ## Shapes
 
@@ -183,7 +183,7 @@ This file covers the marketing site (`apps/website`). The shared brand (palette,
 
 **`button-secondary`**: pill, `surface` background, 1px `line` border, `ink` text. Sits beside the primary button.
 
-**`search-instrument`**: the signature component. A `surface` panel with the ribbon tucked into its top-left corner, a labeled search input whose query renders in `search-query` type, an `aria-live` result count, suggestion chips, and result rows (folder path in `ink-soft`, title, URL in `url` type) with `<mark>` highlights. Auto-types one query on load; with reduced motion it shows the final state immediately.
+**`save-instrument`** (`components/home/SaveDemo.tsx`): the signature component. A `surface` panel with the ribbon tucked into its top-left corner, the page being saved (title, URL in `url` type), a folder-name combobox whose query renders in `search-query` type, suggestion chips, and a listbox of matching folders (name with a `<mark>` highlight, parents in `ink-soft`, a Save here pill on the selected row). ↑ ↓ and Enter work as in the extension's popup, and an `aria-live` line confirms the save or says the page is already there. Matching follows the extension's rules (`lib/folder-match.ts`). Auto-types one folder name on load; with reduced motion it shows the final state immediately. The large input draws focus with its teal underline instead of the site-wide outline.
 
 **`tabs`**: ARIA tablist with a roving tabindex and arrow, Home, and End keys. Used for the product tour (Find, Organize, Clean up, AI) and the install steps (Chrome, Edge, Firefox).
 
