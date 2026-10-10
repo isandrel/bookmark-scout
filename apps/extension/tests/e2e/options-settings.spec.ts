@@ -42,7 +42,7 @@ async function readServices(worker: Worker) {
 
 /** Opens a section's closed "Advanced settings" fold. */
 async function openAdvanced(page: Page, section: string) {
-  await page.locator(`[data-settings-section="${section}"] [data-slot="settings-advanced"] > summary`).click();
+  await page.locator(`[data-settings-section="${section}"] [data-slot="settings-advanced"] > button`).click();
 }
 
 /** Opens Options on Appearance (language, theme, icons), where most of these checks start. */
@@ -744,8 +744,11 @@ test('a section switch folds its tool, search opens Advanced settings, and a swi
 
   // Technical settings start folded, named in the summary, and a search opens the fold.
   const fold = deadLinks.locator('[data-slot="settings-advanced"]');
-  await expect(fold).not.toHaveAttribute('open');
-  await expect(fold.locator('summary')).toContainText('Retry Count');
+  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toHaveAttribute(
+    'aria-expanded',
+    'false',
+  );
+  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toContainText('Retry Count');
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('retry');
   await expect(page.getByRole('textbox', { name: 'Retry Count' })).toBeVisible();
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
