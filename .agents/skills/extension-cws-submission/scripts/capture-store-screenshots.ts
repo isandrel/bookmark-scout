@@ -18,8 +18,16 @@ const seed = async () => {
   await mk(recipes.id, 'Weeknight Pasta', 'https://www.example.com/recipes/weeknight-pasta');
   await mk(recipes.id, 'Weeknight Pasta (copy)', 'https://www.example.com/recipes/weeknight-pasta');
   await mk(recipes.id, 'Sourdough Starter Guide', 'https://www.example.org/baking/sourdough');
+  // Nested folders, so the popup's folder matches show a folder deep in the tree.
+  const italian = await mk(recipes.id, 'Italian');
+  const pasta = await mk(italian.id, 'Pasta');
+  await mk(pasta.id, 'Cacio e Pepe', 'https://www.example.com/recipes/cacio-e-pepe');
+  const baking = await mk(recipes.id, 'Baking');
+  await mk(baking.id, 'Pastry');
   const travel = await mk(bar, 'Travel');
-  await mk(travel.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
+  const japan = await mk(travel.id, 'Japan');
+  const kyoto = await mk(japan.id, 'Kyoto');
+  await mk(kyoto.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
   await mk(travel.id, 'Packing List', 'https://www.example.org/travel/packing');
   await mk(travel.id, 'Wikivoyage', 'https://en.wikivoyage.org/');
   const research = await mk(bar, 'Research');
@@ -41,14 +49,39 @@ const seed = async () => {
   await mk(bar, 'GitHub', 'https://github.com/');
 };
 
-// Pages open as tabs, so the popup's "current tab" would be itself; report a public page instead.
+// Pages open as tabs, so the popup's "current tab" would be itself; report a sample page instead.
 const stubActiveTab = () => {
   const original = chrome.tabs.query.bind(chrome.tabs);
   // @ts-expect-error capture-only override
   chrome.tabs.query = async (query: chrome.tabs.QueryInfo) =>
     query?.active
-      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'MDN Web Docs', url: 'https://developer.mozilla.org/en-US/' }]
+      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'Weeknight carbonara in 20 minutes', url: 'https://www.example.com/recipes/weeknight-carbonara' }]
       : original(query);
+};
+
+// Folder suggestions from a stubbed AI provider; no request leaves the machine.
+const AI_BASE_URL = 'https://ai.example.invalid/v1';
+const AI_SUGGESTIONS = JSON.stringify({
+  recommendations: [
+    { type: 'existing', confidence: 0.94, folderPath: 'Bookmarks Bar/Recipes/Italian/Pasta', parentPath: '', reason: 'A pasta recipe, like the others in this folder' },
+    { type: 'new', confidence: 0.71, folderPath: 'Bookmarks Bar/Recipes/Quick Dinners', parentPath: '', reason: 'A 20-minute weeknight dinner' },
+  ],
+});
+
+const enableStubAI = async (baseUrl: string) => {
+  const key = 'bookmark-scout-settings';
+  const current = (await chrome.storage.sync.get(key))[key] ?? {};
+  await chrome.storage.sync.set({
+    [key]: { ...current, aiEnabled: true, aiProvider: 'custom', aiModel: 'demo-model', aiMaxRecommendations: 2 },
+  });
+  await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl, customModel: 'demo-model' } } });
+};
+
+const disableStubAI = async () => {
+  const key = 'bookmark-scout-settings';
+  const { aiEnabled, aiProvider, aiModel, aiMaxRecommendations, ...rest } = (await chrome.storage.sync.get(key))[key] ?? {};
+  await chrome.storage.sync.set({ [key]: rest });
+  await chrome.storage.local.remove('bookmark-scout-ai');
 };
 
 const runTool = async (page: Page, name: string) => {
@@ -98,25 +131,46 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await shot(page, `options-ai-${scheme}`);
     await page.close();
 
-    for (const [name, query] of [['popup-tree', ''], ['popup-search', 'docs']] as const) {
+    // The two ways to pick a folder: type part of its name, or ask AI for suggestions.
+    const openPopup = async () => {
       const popup = await context.newPage();
       await popup.setViewportSize(POPUP);
       await popup.emulateMedia({ colorScheme: scheme });
       await popup.addInitScript(stubActiveTab);
       await popup.goto(url('popup.html'));
       await popup.waitForTimeout(SETTLE_MS);
-      const search = popup.getByPlaceholder(/Search bookmarks/);
-      if (query) {
-        await search.fill(query);
-      } else {
-        await popup.getByText('Bookmarks Bar', { exact: true }).first().click();
-        await popup.getByText('Dev Docs', { exact: true }).first().click();
-        await popup.getByText('Dev Docs', { exact: true }).first().hover();
-      }
-      await search.blur();
-      await popup.waitForTimeout(SETTLE_MS);
-      await shot(popup, `${name}-${scheme}`);
-      await popup.close();
-    }
+      return popup;
+    };
+    const match = await openPopup();
+    const search = match.getByPlaceholder(/Search bookmarks/);
+    await search.pressSequentially('pas', { delay: 80 });
+    await match.waitForTimeout(SETTLE_MS);
+    await search.press('ArrowDown');
+    await match.waitForTimeout(SETTLE_MS / 2);
+    await shot(match, `popup-match-${scheme}`);
+    await match.close();
+
+    await sw.evaluate(enableStubAI, AI_BASE_URL);
+    await context.route(`${AI_BASE_URL}/**`, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        headers: { 'access-control-allow-origin': '*' },
+        body: JSON.stringify({
+          id: 'store-capture',
+          model: 'demo-model',
+          choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content: AI_SUGGESTIONS } }],
+        }),
+      }),
+    );
+    const ai = await openPopup();
+    await ai.getByTitle('AI folder recommendation').click();
+    await ai.getByRole('button', { name: /Quick Dinners/ }).first().waitFor({ timeout: 15_000 });
+    await ai.mouse.move(0, 0);
+    await ai.waitForTimeout(SETTLE_MS / 2);
+    await shot(ai, `popup-ai-${scheme}`);
+    await ai.close();
+    await context.unroute(`${AI_BASE_URL}/**`);
+    await sw.evaluate(disableStubAI);
   }
 };

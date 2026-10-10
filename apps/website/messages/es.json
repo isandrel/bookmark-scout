@@ -129,7 +129,7 @@
         "tab": "Guardar",
         "heading": "Guarda en la carpeta correcta",
         "caption": "La ventana emergente de la barra de herramientas: escribe parte del nombre de una carpeta, o elige una carpeta en el árbol, y guarda la página con un clic.",
-        "alt": "Dos ventanas emergentes de Bookmark Scout una al lado de la otra: un árbol con las carpetas Recetas, Viajes, Investigación y Documentación técnica, y una búsqueda de docs con las coincidencias resaltadas",
+        "alt": "Dos ventanas emergentes: \"pas\" escrito en el cuadro de búsqueda con la carpeta Pasta (Recipes / Italian) seleccionada en Guardar en carpeta, y sugerencias de IA para la página actual: la carpeta existente Recipes/Italian/Pasta y una carpeta nueva Recipes/Quick Dinners",
         "points": [
           "Escribe parte del nombre de una carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado",
           "Escribe una ruta como work/react y encuentra la carpeta aunque cometas un pequeño error de escritura",

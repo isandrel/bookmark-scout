@@ -53,7 +53,7 @@ The procedure lives in `store/README.md` ("How they were made"). Traps:
 - A fresh profile shows generic globe icons, because the browser's favicon cache is empty. Run Refresh Site Icons first in a copy of the build with optional website access pre-granted.
 - Stub `tabs.query` so the popup's "current tab" is a public page, not the extension page.
 - Keep the app theme on `system` and switch with `page.emulateMedia({ colorScheme })`.
-- Export 1280×800 24-bit RGB PNGs without alpha (Chrome rejects alpha): `magick mogrify -alpha off -type TrueColor -define png:color-type=2 *.png`. Use one image set for every store and copy the same file names to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`.
+- Export 1280×800 24-bit RGB PNGs without alpha (Chrome rejects alpha): `magick mogrify -format png -alpha off -type TrueColor -define png:color-type=2 *.png` (ImageMagick 7.1.2-33 and later fail without `-format png`). Use one image set for every store and copy the same file names to `store/screenshots/`, `apps/website/public/screenshots/`, and `apps/docs/public/screenshots/`.
 
 ## Scaling out
 

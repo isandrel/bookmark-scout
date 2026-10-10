@@ -83,11 +83,11 @@ All curated screenshots are 1280x800 24-bit RGB PNGs without alpha, so one set w
 
 | File | Shows |
 | --- | --- |
-| `01-popup-light.png` | Popup folder tree and search, light theme (composed on a 1280x800 frame with a caption) |
+| `01-popup-light.png` | The two ways to pick a folder, light theme: "pas" typed with the nested Pasta folder selected under Save to folder, and AI folder suggestions for the page (two popups composed on a 1280x800 frame with a caption) |
 | `02-manager-light.png` | Bookmarks manager in a folder, light theme |
 | `03-tools-duplicates-light.png` | Tools sidebar with a Duplicate Cleaner review, light theme |
 | `04-options-ai-light.png` | Options, AI tab with AI off (the default), light theme |
-| `05-popup-dark.png` | Popup, dark theme |
+| `05-popup-dark.png` | The same pair, dark theme |
 | `06-manager-dark.png` | Bookmarks manager, dark theme |
 | `07-tools-duplicates-dark.png` | Duplicate Cleaner review, dark theme |
 | `08-options-ai-dark.png` | Options, AI tab, dark theme |
@@ -103,9 +103,10 @@ To recapture, run the scripts in `.agents/skills/extension-cws-submission/` (see
 - Chrome build of this commit, loaded into a disposable headless Chromium profile with the `extension-exploratory-qa` runner (`.agents/skills/extension-exploratory-qa/`). No real profile and no personal data.
 - Synthetic bookmarks only: public documentation sites, `example.com` and `example.org` placeholder URLs, and two deliberate duplicates for the Duplicate Cleaner.
 - Theme left at the default `system`; light and dark come from the emulated OS color scheme, so Options shows no "Modified" badges.
-- The runner opens the popup as a tab, so its "current tab" would be the popup itself. The capture script stubbed `tabs.query` for the active tab to return a public MDN page instead. No other behavior was changed.
+- The runner opens the popup as a tab, so its "current tab" would be the popup itself. The capture script stubbed `tabs.query` for the active tab to return a sample `example.com` recipe page instead. No other behavior was changed.
 - Site icons are real: before capturing, the script ran **Refresh Site Icons** over all bookmarks and saved the results, in a copy of the build whose manifest grants the optional website access (as the E2E `grantWebHostAccess` fixture does, because the permission prompt cannot be answered headlessly). Icons came only from the bookmarked sites. Sites without a usable same-site icon (`developer.chrome.com`, `example.com`, `example.org`) keep the generic globe, as they would for a user.
 - Recaptured on 2026-10-02 from `main` after the Refresh Site Icons tool landed (#501). All eight were recaptured on 2026-10-08 for the redesigned UI: the popup pair (`01`, `05`) is composed from two 400×500 popup captures on the brand paper color with the Bricolage Grotesque heading, and the other six are plain 1280×800 page captures. The store icon (`store/assets/store-icon-128.png`, artwork 96 px tall on a 128 px canvas), the small promo tile, and the marquee tile (`store/assets/marquee-1400x560.png`) were made from `store/ai-asset-prompts.md`: AI-generated backgrounds and a cleaned logo master (`store/assets/logo-master-2048.png`), with the real logo and title composited afterwards. They are used for the store listing only; the packaged toolbar icons are unchanged.
+- Recaptured on 2026-10-10 for the save-first listing: the popup pair (`01`, `05`) now shows the two ways to pick a folder: typing `pas` with ↓ selecting Recipes / Italian / Pasta, and AI folder suggestions for the page (an existing folder and a new one). The suggestions come from a stubbed provider (`ai.example.invalid`, answered by a Playwright route, so no request leaves the machine); AI is turned off again before the next capture, so the Options screenshots still show the default. The other six were recaptured unchanged.
 - Raw captures stay in `~/.cache/bookmark-scout-qa/store-icons/` (not committed). Curated files were re-encoded with ImageMagick (reduced palette, saved as 24-bit RGB without alpha) to keep each file around 75 to 130 KB.
 
 Screenshots show the English UI. Localized screenshots for `ja` and `ko` were not produced; the stores accept the English set for every locale.

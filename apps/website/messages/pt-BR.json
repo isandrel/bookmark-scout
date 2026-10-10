@@ -129,7 +129,7 @@
         "tab": "Salvar",
         "heading": "Salve na pasta certa",
         "caption": "O pop-up da barra de ferramentas: digite parte do nome de uma pasta, ou escolha uma pasta na árvore, e salve a página com um clique.",
-        "alt": "Dois pop-ups do Bookmark Scout lado a lado: uma árvore de pastas com as pastas Receitas, Viagem, Pesquisa e Docs de desenvolvimento, e uma pesquisa por docs com os resultados destacados",
+        "alt": "Dois pop-ups: \"pas\" digitado na caixa de pesquisa com a pasta Pasta (Recipes / Italian) selecionada em Salvar na pasta, e sugestões da IA para a página atual: a pasta existente Recipes/Italian/Pasta e uma nova pasta Recipes/Quick Dinners",
         "points": [
           "Digite parte do nome de uma pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado",
           "Digite um caminho como work/react e encontre a pasta mesmo com um pequeno erro de digitação",
