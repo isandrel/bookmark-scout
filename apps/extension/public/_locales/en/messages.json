@@ -4875,6 +4875,38 @@
         "message": "Data tools shown in the manager sidebar",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "Popup Size",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "Width and height of the toolbar popup. Browsers allow at most 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "Tags per Bookmark",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "Fewest and most tags suggested for each bookmark",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "Bookmarks per Folder",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "Folder size targets for reorganization plans",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "Advanced settings ($1)",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "Turned off. Turn it on to change its settings.",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "Decrease $1",
         "description": "Stepper button label; $1 is the setting name"

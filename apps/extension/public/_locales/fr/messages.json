@@ -4875,6 +4875,38 @@
         "message": "Outils de données affichés dans la barre latérale du gestionnaire",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "Taille de la fenêtre pop-up",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "Largeur et hauteur de la fenêtre pop-up de la barre d’outils. Les navigateurs autorisent au plus 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "Tags par favori",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "Nombre minimal et maximal de tags suggérés pour chaque favori",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "Favoris par dossier",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "Taille visée des dossiers dans les plans de réorganisation",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "Paramètres avancés ($1)",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "Désactivé. Activez-le pour modifier ses paramètres.",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "Diminuer $1",
         "description": "Stepper button label; $1 is the setting name"

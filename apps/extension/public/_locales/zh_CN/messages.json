@@ -4691,6 +4691,38 @@
         "message": "书签管理器侧栏中显示的数据工具",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "弹出窗口大小",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "工具栏弹出窗口的宽度和高度。浏览器最大支持 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "每个书签的标签数",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "为每个书签推荐的最少和最多标签数",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "每个文件夹的书签数",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "重新整理方案中文件夹大小的目标",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "高级设置（$1）",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "已关闭。打开后才能更改相关设置。",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "减小 $1",
         "description": "Stepper button label; $1 is the setting name"

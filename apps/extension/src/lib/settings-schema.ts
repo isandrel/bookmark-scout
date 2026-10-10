@@ -35,10 +35,25 @@ export type SettingsSectionMeta = {
   id: string;
   /** Omitted for a category's lead setting, such as the AI switch, which needs no heading. */
   label?: string;
+  /**
+   * An on/off setting shown as a switch beside the heading, such as a tool's Enable switch.
+   * While it is off, the rest of the section is folded away.
+   */
+  toggle?: keyof Settings;
   fields: readonly (keyof Settings)[];
+  /**
+   * Technical settings most people never change, under a closed "Advanced settings" fold. Only
+   * worth a fold from 3 settings up (fewer stay in `fields`); search and changed values open it.
+   */
+  advanced?: readonly (keyof Settings)[];
   /** A panel drawn after the section's fields (it brings its own heading). */
   panel?: SettingsPanelId;
 };
+
+/** Every field of a section, in display order: the heading switch, the fields, then the fold. */
+export function getSectionFields(section: SettingsSectionMeta): (keyof Settings)[] {
+  return [...(section.toggle ? [section.toggle] : []), ...section.fields, ...(section.advanced ?? [])];
+}
 
 export type SettingsCategoryMeta = {
   label: string;
@@ -877,7 +892,7 @@ function category(
     label: t(labelKey),
     description: t(descriptionKey),
     sections: built,
-    fields: built.flatMap((section) => section.fields),
+    fields: built.flatMap(getSectionFields),
   };
 }
 
@@ -892,12 +907,13 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'folderMatches',
         labelKey: 'settings_folderMatchesEnabled',
-        fields: ['folderMatchesEnabled', 'folderMatchesMax', 'folderMatchesTypos'],
+        toggle: 'folderMatchesEnabled',
+        fields: ['folderMatchesMax', 'folderMatchesTypos'],
       },
       {
         id: 'search',
         labelKey: 'settings_search',
-        fields: ['searchDebounceMs', 'maxSearchResults', 'expandFoldersOnSearch', 'searchHistory'],
+        fields: ['maxSearchResults', 'expandFoldersOnSearch', 'searchHistory', 'searchDebounceMs'],
       },
       {
         id: 'saving',
@@ -907,7 +923,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'contextMenu',
         labelKey: 'settings_contextMenuEnabled',
-        fields: ['contextMenuEnabled', 'contextMenuBookmarkNaming'],
+        toggle: 'contextMenuEnabled',
+        fields: ['contextMenuBookmarkNaming'],
       },
     ]),
     appearance: category('settings_appearance', 'settings_appearanceDesc', [
@@ -953,24 +970,22 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'contextPacker',
         labelKey: 'tools_exportAI',
+        toggle: 'aiContextPackerEnabled',
         fields: [
-          'aiContextPackerEnabled',
           'aiContextPackerDefaultScope',
           'aiContextPackerOutputFormat',
           'aiContextPackerIncludeFolderPath',
           'aiContextPackerIncludeDates',
           'aiContextPackerIncludeTags',
           'aiContextPackerIncludeSummaries',
-          'aiContextPackerMaxItems',
-          'aiContextPackerMaxDepth',
-          'aiContextPackerExcerptLength',
         ],
+        advanced: ['aiContextPackerMaxItems', 'aiContextPackerMaxDepth', 'aiContextPackerExcerptLength'],
       },
       {
         id: 'autoTagging',
         labelKey: 'tools_autoTagging',
+        toggle: 'autoTaggingEnabled',
         fields: [
-          'autoTaggingEnabled',
           'autoTaggingDefaultScope',
           'autoTaggingMinTags',
           'autoTaggingMaxTags',
@@ -982,8 +997,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'summarizer',
         labelKey: 'tools_summarizer',
+        toggle: 'summarizerEnabled',
         fields: [
-          'summarizerEnabled',
           'summarizerDefaultScope',
           'summarizerSummaryLength',
           'summarizerIncludeDomainHint',
@@ -993,10 +1008,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'reorganization',
         labelKey: 'tools_aiReorganize',
+        toggle: 'reorganizationEnabled',
         fields: [
-          'reorganizationEnabled',
           'reorganizationDefaultScope',
           'reorganizationDryRunFirst',
+        ],
+        advanced: [
           'reorganizationMinConfidence',
           'reorganizationBatchSize',
           'aiMaxCategories',
@@ -1009,8 +1026,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'duplicates',
         labelKey: 'tools_findDuplicates',
+        toggle: 'duplicatesEnabled',
         fields: [
-          'duplicatesEnabled',
           'duplicatesDefaultScope',
           'duplicatesMatchStrategy',
           'duplicatesNormalizeWww',
@@ -1023,8 +1040,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'urlCleaner',
         labelKey: 'tools_cleanUrls',
+        toggle: 'urlCleanerEnabled',
         fields: [
-          'urlCleanerEnabled',
           'urlCleanerDefaultScope',
           'urlCleanerRemoveHash',
           'urlCleanerSortQueryParams',
@@ -1036,13 +1053,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'deadLinks',
         labelKey: 'tools_checkDeadLinks',
+        toggle: 'deadLinksEnabled',
         fields: [
-          'deadLinksEnabled',
           'deadLinksDefaultScope',
+          'deadLinksFollowRedirects',
+        ],
+        advanced: [
           'deadLinksRequestTimeoutMs',
           'deadLinksConcurrency',
           'deadLinksRetryCount',
-          'deadLinksFollowRedirects',
           'deadLinksSuccessStatuses',
         ],
       },
@@ -1051,8 +1070,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'metadataFetcher',
         labelKey: 'tools_metadataFetcher',
+        toggle: 'metadataFetcherEnabled',
         fields: [
-          'metadataFetcherEnabled',
           'metadataFetcherDefaultScope',
           'metadataFetcherOverwriteTitles',
           'metadataFetcherFetchDescriptions',
@@ -1063,21 +1082,19 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'siteIcons',
         labelKey: 'tools_siteIcons',
+        toggle: 'siteIconsEnabled',
         fields: [
-          'siteIconsEnabled',
           'siteIconsDefaultScope',
-          'siteIconsPreferredSize',
-          'siteIconsMaxIconKb',
-          'siteIconsMaxCacheKb',
         ],
+        advanced: ['siteIconsPreferredSize', 'siteIconsMaxIconKb', 'siteIconsMaxCacheKb'],
       },
     ]),
     security: category('settings_security', 'settings_securityDesc', [
       {
         id: 'privacyScanner',
         labelKey: 'tools_privacyScanner',
+        toggle: 'privacyScannerEnabled',
         fields: [
-          'privacyScannerEnabled',
           'privacyScannerDefaultScope',
           'privacyScannerScanTitles',
           'privacyScannerScanQueryParams',
@@ -1092,8 +1109,8 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'statistics',
         labelKey: 'tools_statistics',
+        toggle: 'statisticsEnabled',
         fields: [
-          'statisticsEnabled',
           'statisticsDefaultScope',
           'statisticsIncludeDomains',
           'statisticsIncludeFolders',
@@ -1105,14 +1122,17 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       },
     ]),
     data: category('settings_importExport', 'settings_importExportDesc', [
+      // Which of the two tools the Tools sidebar shows, as one checklist, leads the page.
+      { id: 'tools', fields: ['dataShowExport', 'dataShowImport'] },
       {
         id: 'export',
         labelKey: 'tools_export',
         fields: [
-          'dataShowExport',
           'dataDefaultExportFormat',
           'exportIncludeDates',
           'exportIncludeUrls',
+        ],
+        advanced: [
           'exportFilenamePrefix',
           'exportFilenameMaxLength',
           'exportJsonIndentSize',
@@ -1120,7 +1140,6 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'exportMarkdownIndentSpaces',
         ],
       },
-      { id: 'import', labelKey: 'tools_import', fields: ['dataShowImport'] },
     ]),
   };
 }
@@ -1159,6 +1178,7 @@ export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
         sections: category.sections.map((section) => ({
           ...section,
           fields: section.fields.filter(isSettingSupported),
+          ...(section.advanced ? { advanced: section.advanced.filter(isSettingSupported) } : {}),
         })),
         fields: category.fields.filter(isSettingSupported),
       },
@@ -1191,27 +1211,66 @@ export function getSettingsFieldMeta(): Record<keyof Settings, SettingsFieldMeta
   ) as Record<keyof Settings, SettingsFieldMeta>;
 }
 
+/**
+ * Related settings shown as one row; each keeps its own stored value.
+ * - `checklist`: on/off settings as checkboxes.
+ * - `pair`: two numbers side by side, such as a width and a height or a minimum and a maximum.
+ * - `switch`: an on/off setting with what it controls beside it (numbers and choices) and below
+ *   it (on/off options), disabled while it is off. Its label is the switch's own.
+ */
 export type SettingsFieldGroup = {
   id: string;
+  kind: 'checklist' | 'pair' | 'switch';
   label: string;
   description: string;
-  /** On/off settings shown together as one checklist; each keeps its own stored value. */
   fields: readonly (keyof Settings)[];
 };
 
-/** Related switches that read better as one checklist than as separate rows. */
+type GroupSpec = { id: string; fields: readonly (keyof Settings)[] } & (
+  | { kind: 'checklist' | 'pair'; labelKey: string }
+  | { kind: 'switch' }
+);
+
+function group(spec: GroupSpec): SettingsFieldGroup {
+  if (spec.kind === 'switch') {
+    const lead = getSettingsFieldMeta()[spec.fields[0]];
+    return { ...spec, label: lead.label, description: lead.description };
+  }
+  const { labelKey, ...rest } = spec;
+  return { ...rest, label: t(labelKey), description: t(`${labelKey}Desc`) };
+}
+
+/** Related settings that read better as one row than as separate rows. */
 export function getSettingsFieldGroups(): SettingsFieldGroup[] {
   return [
+    group({ id: 'popupSize', kind: 'pair', labelKey: 'settings_groupPopupSize', fields: ['popupWidth', 'popupHeight'] }),
+    group({
+      id: 'tagsPerBookmark',
+      kind: 'pair',
+      labelKey: 'settings_groupTagsPerBookmark',
+      fields: ['autoTaggingMinTags', 'autoTaggingMaxTags'],
+    }),
+    group({
+      id: 'itemsPerFolder',
+      kind: 'pair',
+      labelKey: 'settings_groupItemsPerFolder',
+      fields: ['aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
+    }),
+    group({ id: 'recentFolders', kind: 'switch', fields: ['recentFoldersEnabled', 'recentFoldersMax'] }),
+    group({ id: 'favicons', kind: 'switch', fields: ['showFavicons', 'faviconSize', 'browserIconCache'] }),
+    ...CHECKLISTS.map((spec) => group({ ...spec, kind: 'checklist' })),
+  ];
+}
+
+const CHECKLISTS: readonly { id: string; labelKey: string; fields: readonly (keyof Settings)[] }[] = [
     {
       id: 'exportInclude',
-      label: t('settings_groupExportInclude'),
-      description: t('settings_groupExportIncludeDesc'),
+      labelKey: 'settings_groupExportInclude',
       fields: ['exportIncludeDates', 'exportIncludeUrls'],
     },
     {
       id: 'aiContextPackerInclude',
-      label: t('settings_groupAiContextPackerInclude'),
-      description: t('settings_groupAiContextPackerIncludeDesc'),
+      labelKey: 'settings_groupAiContextPackerInclude',
       fields: [
         'aiContextPackerIncludeFolderPath',
         'aiContextPackerIncludeDates',
@@ -1221,8 +1280,7 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
     },
     {
       id: 'duplicatesMatching',
-      label: t('settings_groupDuplicatesMatching'),
-      description: t('settings_groupDuplicatesMatchingDesc'),
+      labelKey: 'settings_groupDuplicatesMatching',
       fields: [
         'duplicatesNormalizeWww',
         'duplicatesIgnoreProtocol',
@@ -1231,20 +1289,17 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
     },
     {
       id: 'urlCleanerRules',
-      label: t('settings_groupUrlCleanerRules'),
-      description: t('settings_groupUrlCleanerRulesDesc'),
+      labelKey: 'settings_groupUrlCleanerRules',
       fields: ['urlCleanerRemoveHash', 'urlCleanerSortQueryParams', 'urlCleanerDedupeQueryParams'],
     },
     {
       id: 'metadataFetcherOptions',
-      label: t('settings_groupMetadataFetcherOptions'),
-      description: t('settings_groupMetadataFetcherOptionsDesc'),
+      labelKey: 'settings_groupMetadataFetcherOptions',
       fields: ['metadataFetcherOverwriteTitles', 'metadataFetcherFetchDescriptions'],
     },
     {
       id: 'privacyScannerChecks',
-      label: t('settings_groupPrivacyScannerChecks'),
-      description: t('settings_groupPrivacyScannerChecksDesc'),
+      labelKey: 'settings_groupPrivacyScannerChecks',
       fields: [
         'privacyScannerScanTitles',
         'privacyScannerScanQueryParams',
@@ -1255,8 +1310,7 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
     },
     {
       id: 'statisticsInclude',
-      label: t('settings_groupStatisticsInclude'),
-      description: t('settings_groupStatisticsIncludeDesc'),
+      labelKey: 'settings_groupStatisticsInclude',
       fields: [
         'statisticsIncludeDomains',
         'statisticsIncludeFolders',
@@ -1267,9 +1321,7 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
     },
     {
       id: 'dataShow',
-      label: t('settings_groupDataShow'),
-      description: t('settings_groupDataShowDesc'),
+      labelKey: 'settings_groupDataShow',
       fields: ['dataShowExport', 'dataShowImport'],
     },
-  ];
-}
+];

@@ -301,8 +301,14 @@ const OptionsPage: React.FC = () => {
     />
   );
 
-  /** Renders settings in order; members of a checklist group render once, as the group. */
-  const renderSettingsFields = (fields: readonly (keyof Settings)[]) => {
+  /**
+   * Renders settings in order; members of a group render once, as the group's row. `visible` is
+   * every setting the category shows, so a group stays whole when a search matched one member.
+   */
+  const renderSettingsFields = (
+    fields: readonly (keyof Settings)[],
+    visible: ReadonlySet<keyof Settings>,
+  ) => {
     const groups = getSettingsFieldGroups();
     const renderedGroups = new Set<string>();
     return fields.flatMap((fieldKey) => {
@@ -310,16 +316,26 @@ const OptionsPage: React.FC = () => {
       if (!group) return [renderSettingsField(fieldKey)];
       if (renderedGroups.has(group.id)) return [];
       renderedGroups.add(group.id);
-      return [
-        <SettingsGroupRow
-          key={`${group.id}-${formVersion}`}
-          group={group}
-          values={shownValues}
-          onChange={changeSettingsField}
-        />,
-      ];
+      const props = { group, values: shownValues, visible, onChange: changeSettingsField };
+      const key = `${group.id}-${formVersion}`;
+      if (group.kind === 'pair') return [<SettingsPairRow key={key} {...props} />];
+      if (group.kind === 'switch') return [<SettingsSwitchRow key={key} {...props} />];
+      return [<SettingsGroupRow key={key} {...props} />];
     });
   };
+
+  /** A section's on/off setting, as a switch beside its heading. */
+  const renderSectionToggle = (fieldKey: keyof Settings, headingId: string) => (
+    <span data-setting={fieldKey} className="shrink-0">
+      <Switch
+        id={getSettingControlId(fieldKey)}
+        checked={shownValues[fieldKey] === true}
+        onCheckedChange={(checked) => changeSettingsField(fieldKey, checked)}
+        aria-label={getSettingsFieldMeta()[fieldKey].label}
+        aria-describedby={headingId}
+      />
+    </span>
+  );
 
   /** The panel a section draws after its fields; in a search, only when it matched. */
   const renderPanel = (panel: SettingsPanelId | undefined, matchesOnly: boolean) => {
@@ -342,34 +358,68 @@ const OptionsPage: React.FC = () => {
    * A category's titled sections, the page's second level. With `matches` (a search), only the
    * matching settings and the sections that hold them.
    */
-  const renderSections = (categoryKey: string, matches?: ReadonlySet<keyof Settings>) => (
-    <div className="space-y-8">
-      {categories[categoryKey].sections.map((section) => {
-        const fields = matches
-          ? section.fields.filter((fieldKey) => matches.has(fieldKey))
-          : section.fields;
-        const panel = renderPanel(section.panel, Boolean(matches));
-        if (fields.length === 0 && !panel) return null;
-        const headingId = `settings-section-${categoryKey}-${section.id}`;
-        return (
-          <section
-            key={section.id}
-            data-settings-section={section.id}
-            aria-labelledby={section.label ? headingId : undefined}
-            className="space-y-3"
-          >
-            {section.label ? (
-              <h3 id={headingId} className="text-base font-semibold text-foreground">
-                {section.label}
-              </h3>
-            ) : null}
-            {renderSettingsFields(fields)}
-            {panel}
-          </section>
-        );
-      })}
-    </div>
-  );
+  const renderSections = (categoryKey: string, matches?: ReadonlySet<keyof Settings>) => {
+    const visible = new Set(categories[categoryKey].fields);
+    const pick = (list: readonly (keyof Settings)[]) =>
+      matches ? list.filter((fieldKey) => matches.has(fieldKey)) : list;
+    const meta = getSettingsFieldMeta();
+    return (
+      <div className="space-y-8">
+        {categories[categoryKey].sections.map((section) => {
+          const fields = pick(section.fields);
+          const advanced = pick(section.advanced ?? []);
+          const panel = renderPanel(section.panel, Boolean(matches));
+          const toggleShown = section.toggle !== undefined && (!matches || matches.has(section.toggle));
+          if (fields.length === 0 && advanced.length === 0 && !panel && !toggleShown) return null;
+          // A search shows what matched even in a section that is turned off.
+          const folded =
+            !matches && section.toggle !== undefined && shownValues[section.toggle] !== true;
+          const headingId = `settings-section-${categoryKey}-${section.id}`;
+          return (
+            <section
+              key={section.id}
+              data-settings-section={section.id}
+              aria-labelledby={section.label ? headingId : undefined}
+              className="space-y-3"
+            >
+              {section.label ? (
+                <div className="flex items-center justify-between gap-3">
+                  <h3 id={headingId} className="text-base font-semibold text-foreground">
+                    {section.label}
+                  </h3>
+                  {section.toggle && renderSectionToggle(section.toggle, headingId)}
+                </div>
+              ) : null}
+              {folded ? (
+                <p className="text-sm text-muted-foreground">{t('settings_sectionOff')}</p>
+              ) : (
+                <>
+                  {renderSettingsFields(fields, visible)}
+                  {advanced.length > 0 && (
+                    <SettingsAdvancedFold
+                      labels={advanced.map((fieldKey) => meta[fieldKey].label)}
+                      forceOpen={
+                        Boolean(matches) ||
+                        advanced.some(
+                          (fieldKey) =>
+                            Boolean(fieldErrors[fieldKey]) ||
+                            JSON.stringify(shownValues[fieldKey]) !==
+                              JSON.stringify(defaultSettings[fieldKey]),
+                        )
+                      }
+                    >
+                      {renderSettingsFields(advanced, visible)}
+                    </SettingsAdvancedFold>
+                  )}
+                  {panel}
+                </>
+              )}
+            </section>
+          );
+        })}
+      </div>
+    );
+  };
 
   const renderCategoryHeader = (categoryKey: string) => {
     const category = categories[categoryKey];

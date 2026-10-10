@@ -161,6 +161,10 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   await expect(optionsPage.getByRole('option', { name: 'Folder or All' })).toHaveCount(0);
   await optionsPage.keyboard.press('Escape');
 
+  // URL Cleaner is off, so its section is folded; a settings search still reaches its scope.
+  await optionsPage
+    .getByRole('searchbox', { name: 'Search settings...' })
+    .fill('scope used when cleaning');
   const cleanerScopeSetting = optionsPage
     .getByText('Default scope used when cleaning bookmark URLs')
     .locator('..')

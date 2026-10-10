@@ -4875,6 +4875,38 @@
         "message": "Datentools in der Tools-Leiste des Managers",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "Pop-up-Größe",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "Breite und Höhe des Symbolleisten-Pop-ups. Browser erlauben höchstens 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "Tags pro Lesezeichen",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "Wie viele Tags mindestens und höchstens für jedes Lesezeichen vorgeschlagen werden",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "Lesezeichen pro Ordner",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "Zielgröße der Ordner in Umorganisationsplänen",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "Erweiterte Einstellungen ($1)",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "Ausgeschaltet. Schalten Sie es ein, um die Einstellungen zu ändern.",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "$1 verringern",
         "description": "Stepper button label; $1 is the setting name"
