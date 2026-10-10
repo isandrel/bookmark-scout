@@ -36,6 +36,20 @@ function groupIds(items: Seed[], options = normalized) {
 }
 
 describe('duplicate matching', () => {
+  it('labels each group with what matched, not the internal key', () => {
+    const items = [
+      { id: '1', url: 'https://www.example.com/recipes/', title: 'Weeknight Pasta', dateAdded: 1 },
+      { id: '2', url: 'https://example.com/recipes', title: 'weeknight pasta', dateAdded: 2 },
+    ];
+    const label = (options: Parameters<typeof scanDuplicateBookmarks>[1]) =>
+      scanDuplicateBookmarks(folder(items), { ...options, keepRule: 'oldest' }).groups[0]?.label;
+
+    expect(label(normalized)).toBe('example.com/recipes');
+    expect(label({ ...normalized, ignoreProtocol: false })).toBe('https://example.com/recipes');
+    expect(label({ ...normalized, strategy: 'title_only' })).toBe('Weeknight Pasta');
+    expect(label({ ...normalized, strategy: 'title_url' })).toBe('Weeknight Pasta · example.com/recipes');
+  });
+
   it('keeps path and query case and explicit ports distinct', () => {
     expect(
       groupIds([

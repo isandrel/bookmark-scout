@@ -12,7 +12,10 @@ export type FlatBookmark = {
 };
 
 export type DuplicateGroup = {
+  /** Internal match key; compare groups with it, never show it. */
   key: string;
+  /** What the group's bookmarks have in common, for display. */
+  label: string;
   items: FlatBookmark[];
 };
 
@@ -190,10 +193,13 @@ export function scanDuplicateBookmarks(
   const duplicateGroups = Array.from(groups.entries())
     .filter(([, items]) => items.length > 1)
     .slice(0, options.maxGroups)
-    .map(([key, items]) => ({
-      key,
-      items: orderDuplicateGroup(items, options.keepRule ?? defaultSettings.duplicatesKeepRule),
-    }));
+    .map(([key, items]) => {
+      const ordered = orderDuplicateGroup(
+        items,
+        options.keepRule ?? defaultSettings.duplicatesKeepRule,
+      );
+      return { key, label: duplicateGroupLabel(ordered[0].node, options), items: ordered };
+    });
 
   return {
     groups: duplicateGroups,
@@ -481,6 +487,28 @@ function buildDuplicateKey(
       return title || undefined;
     default:
       return undefined;
+  }
+}
+
+/**
+ * The shared value a group matched on, written for people: the URL without the `//` left
+ * when the scheme is ignored, and the kept bookmark's own title rather than the lower-cased key.
+ */
+function duplicateGroupLabel(
+  node: Pick<BookmarkTreeNode, 'title' | 'url'>,
+  options: DuplicateMatchOptions,
+): string {
+  const title = (node.title ?? '').trim();
+  const url = options.strategy === 'exact_url'
+    ? (node.url ?? '')
+    : (normalizeDuplicateUrl(node.url, options) ?? '').replace(/^\/\//, '');
+  switch (options.strategy) {
+    case 'title_only':
+      return title;
+    case 'title_url':
+      return `${title} · ${url}`;
+    default:
+      return url;
   }
 }
 

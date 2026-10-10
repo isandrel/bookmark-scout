@@ -217,7 +217,7 @@ export function DuplicateResultsView({
           <div key={group.key} className="space-y-3 rounded-lg border p-3">
             <div className="flex items-center gap-2">
               <Badge variant="secondary">{group.items.length}</Badge>
-              <code className="truncate text-xs text-muted-foreground">{group.key}</code>
+              <code className="truncate text-xs text-muted-foreground">{group.label}</code>
               {mixedUrlKeys.has(group.key) ? (
                 <Badge variant="outline">{t('tools_duplicatesDifferentUrls')}</Badge>
               ) : null}
