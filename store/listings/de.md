@@ -1,13 +1,13 @@
 # German Listing Copy (Deutsch)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 132 |
-| Firefox Add-ons summary | 218 |
-| Full description, Chrome and Edge | 4,491 |
-| Full description, Firefox | 2,014 |
+| Optional manifest description | 130 |
+| Firefox Add-ons summary | 249 |
+| Full description, Chrome and Edge | 4,947 |
+| Full description, Firefox | 2,556 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/de/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged from `extDescription` (changing it needs a new version):
+Packaged from `extDescription` (changing it needs a new version). Ships with the next version after 0.3.2 (130 characters):
 
 ```text
-Lesezeichen suchen, ordnen, bereinigen: schnelle Suche, Ordnerablage, Duplikat- und Linkprüfung, optionale KI mit eigenem Schlüssel.
+Seiten schnell im richtigen Ordner speichern: Namensteil tippen oder KI vorschlagen lassen. Dazu Lesezeichensuche und Bereinigung.
 ```
 
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-Lesezeichen direkt in der Symbolleiste suchen und ordnen: Sofortsuche, Ordnerbaum mit Drag-and-drop, Speichern in jedem Ordner mit einem Klick und optionale KI-Ordnervorschläge mit Ihrem eigenen Anbieter und Schlüssel.
+Seiten schnell im richtigen Lesezeichenordner speichern: Teil eines Ordnernamens eingeben, auch tief im Baum, und per Tastatur speichern, oder optionale KI einen Ordner vorschlagen lassen. Dazu Sofortsuche und Ordnerbaum in Symbolleiste und Sidebar.
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+in Ordner speichern
 Lesezeichen-Manager
 Lesezeichen suchen
 doppelte Lesezeichen
 defekte Links
 Lesezeichenordner
 KI Lesezeichen
-Lesezeichen importieren
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ Lesezeichen importieren
 The same Edge condition as in `en.md` applies.
 
 ```text
-Mit Bookmark Scout finden, ablegen und ordnen Sie Ihre Lesezeichen, ohne den Browser zu verlassen.
+Bookmark Scout speichert jede Seite in Sekunden im richtigen Ordner und hilft Ihnen dann, Ihre Lesezeichen zu finden und aufzuräumen, ohne den Browser zu verlassen.
 
-SUCHEN UND SPEICHERN IN DER SYMBOLLEISTE
+IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
+• Einen Teil eines beliebigen Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen
+• Einen Pfad wie work/react eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
+• Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
+• Optionale KI schlägt den besten Ordner für die Seite vor oder einen neuen Ordnerpfad, den Sie prüfen, bevor er erstellt wird
+• Optionales Rechtsklickmenü (aktivieren Sie „Kontextmenü“ in den Einstellungen), um Links in zuletzt verwendeten Ordnern zu speichern
+
+SUCHEN IN DER SYMBOLLEISTE
 • Sofortsuche in allen Lesezeichen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke
 • Ordnerbaum mit Drag-and-drop, „Alle ausklappen“ und „Alle einklappen“ sowie neuen Ordnern
-• Aktuelle Seite mit einem Klick in jedem Ordner speichern; eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
-• Seitenleiste mit demselben Ordnerbaum und derselben Suche
-• Optionales Rechtsklickmenü (aktivieren Sie „Kontextmenü“ in den Einstellungen), um Links in zuletzt verwendeten Ordnern zu speichern
+• Seitenleiste mit demselben Ordnerbaum, derselben Suche und den passenden Ordnern
 • Tastenkombinationen, die nie die Strg/Cmd-Tastenkombinationen des Browsers übernehmen
 • Löschen mit Bestätigungsdialog (standardmäßig aktiviert) und 10 Sekunden Zeit zum Rückgängigmachen
 
@@ -102,14 +107,19 @@ Dokumentation: https://docs.bookmark-scout.com
 ## Full description: Firefox Add-ons
 
 ```text
-Mit Bookmark Scout finden und speichern Sie Ihre Lesezeichen, ohne den Browser zu verlassen.
+Bookmark Scout speichert jede Seite in Sekunden im richtigen Ordner und hilft Ihnen dann, Ihre Lesezeichen zu finden, ohne den Browser zu verlassen.
 
-SUCHEN UND SPEICHERN IN DER SYMBOLLEISTE
+IN SEKUNDEN IM RICHTIGEN ORDNER SPEICHERN
+• Einen Teil eines beliebigen Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen
+• Einen Pfad wie work/react eingeben; ein kleiner Tippfehler findet den Ordner trotzdem, und zuletzt verwendete Ordner stehen oben
+• Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
+• Optionale KI schlägt den besten Ordner für die Seite vor oder einen neuen Ordnerpfad, den Sie prüfen, bevor er erstellt wird
+• Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern
+
+SUCHEN IN DER SYMBOLLEISTE
 • Sofortsuche in allen Lesezeichen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke
 • Ordnerbaum mit Drag-and-drop, „Alle ausklappen“ und „Alle einklappen“ sowie neuen Ordnern
-• Aktuelle Seite mit einem Klick in jedem Ordner speichern; eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert
-• Derselbe Ordnerbaum und dieselbe Suche in der Firefox-Sidebar, die beim Surfen geöffnet bleibt
-• Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern
+• Derselbe Ordnerbaum, dieselbe Suche und die passenden Ordner in der Firefox-Sidebar, die beim Surfen geöffnet bleibt
 • Tastenkombinationen, die nie die Strg/Cmd-Tastenkombinationen des Browsers übernehmen
 • Löschen mit Bestätigungsdialog (standardmäßig aktiviert) und 10 Sekunden Zeit zum Rückgängigmachen
 

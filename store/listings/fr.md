@@ -1,13 +1,13 @@
 # French Listing Copy (Français)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 128 |
+| Optional manifest description | 132 |
 | Firefox Add-ons summary | 247 |
-| Full description, Chrome and Edge | 4,988 |
-| Full description, Firefox | 2,166 |
+| Full description, Chrome and Edge | 5,476 |
+| Full description, Firefox | 2,770 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/fr/messages.json`. The br
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged as `extDescription` (changing it needs a new version):
+Packaged as `extDescription` (changing it needs a new version). Ships with the next version after 0.3.2 (132 characters):
 
 ```text
-Recherchez, organisez et nettoyez vos favoris : recherche rapide, doublons, liens morts et IA facultative avec votre propre clé.
+Classez vite vos pages dans le bon dossier : tapez une partie de son nom ou laissez l'IA le suggérer. Recherche et nettoyage inclus.
 ```
 
-### Firefox Add-ons summary (250 characters maximum)
+### Firefox Add-ons summary (250 characters maximum, 247 characters)
 
 ```text
-Recherchez et classez vos favoris depuis la barre d'outils : recherche instantanée, arborescence avec glisser-déposer, enregistrement en un clic dans tout dossier et suggestions de dossiers par IA facultatives, avec votre fournisseur et votre clé.
+Classez vite vos favoris dans le bon dossier : tapez une partie de son nom, même s'il est imbriqué, et validez au clavier, ou laissez l'IA facultative le suggérer. Recherche instantanée et arborescence dans la barre d'outils et le panneau latéral.
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+enregistrer dans un dossier
 gestionnaire de favoris
 recherche de favoris
 favoris en double
 liens morts
 dossiers de favoris
 favoris IA
-importer exporter favoris
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ importer exporter favoris
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout vous aide à retrouver, classer et ranger vos favoris sans quitter le navigateur.
+Bookmark Scout enregistre chaque page dans le bon dossier en quelques secondes, puis vous aide à retrouver et à ranger vos favoris sans quitter le navigateur.
 
-RECHERCHER ET ENREGISTRER DEPUIS LA BARRE D'OUTILS
+ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
+• Saisissez une partie du nom de n'importe quel dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page actuelle sans quitter le clavier
+• Saisissez un chemin comme work/react ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
+• Une page déjà présente dans ce dossier n'est pas enregistrée deux fois
+• L'IA facultative suggère le meilleur dossier pour la page, ou un nouveau chemin de dossiers que vous vérifiez avant sa création
+• Menu contextuel facultatif (activez Menu contextuel dans les paramètres) pour enregistrer des liens dans les dossiers récents
+
+RECHERCHER DEPUIS LA BARRE D'OUTILS
 • Recherche instantanée dans tous les favoris, avec les options Respecter la casse, Mot entier et Expression régulière
 • Arborescence de dossiers avec glisser-déposer, Tout développer, Tout réduire et création de dossiers
-• Enregistrement de la page actuelle dans n'importe quel dossier en un clic ; une page déjà présente dans ce dossier n'est pas enregistrée deux fois
-• Panneau latéral avec la même arborescence et la même recherche
-• Menu contextuel facultatif (activez Menu contextuel dans les paramètres) pour enregistrer des liens dans les dossiers récents
+• Panneau latéral avec la même arborescence, la même recherche et les dossiers correspondants
 • Raccourcis clavier qui ne remplacent jamais les raccourcis Ctrl/Cmd du navigateur
 • Suppression avec boîte de dialogue de confirmation (activée par défaut) et annulation possible pendant 10 secondes
 
@@ -102,14 +107,19 @@ Documentation : https://docs.bookmark-scout.com
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout vous aide à retrouver et à classer vos favoris sans quitter le navigateur.
+Bookmark Scout enregistre chaque page dans le bon dossier en quelques secondes, puis vous aide à retrouver vos favoris sans quitter le navigateur.
 
-RECHERCHER ET ENREGISTRER DEPUIS LA BARRE D'OUTILS
+ENREGISTRER DANS LE BON DOSSIER EN QUELQUES SECONDES
+• Saisissez une partie du nom de n'importe quel dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page actuelle sans quitter le clavier
+• Saisissez un chemin comme work/react ; une petite faute de frappe n'empêche pas de trouver le dossier, et les dossiers utilisés récemment apparaissent en premier
+• Une page déjà présente dans ce dossier n'est pas enregistrée deux fois
+• L'IA facultative suggère le meilleur dossier pour la page, ou un nouveau chemin de dossiers que vous vérifiez avant sa création
+• Enregistrement de liens dans les dossiers récents depuis le menu contextuel
+
+RECHERCHER DEPUIS LA BARRE D'OUTILS
 • Recherche instantanée dans tous les favoris, avec les options Respecter la casse, Mot entier et Expression régulière
 • Arborescence de dossiers avec glisser-déposer, Tout développer, Tout réduire et création de dossiers
-• Enregistrement de la page actuelle dans n'importe quel dossier en un clic ; une page déjà présente dans ce dossier n'est pas enregistrée deux fois
-• La même arborescence et la même recherche dans le panneau latéral de Firefox, qui reste ouvert pendant votre navigation
-• Enregistrement de liens dans les dossiers récents depuis le menu contextuel
+• La même arborescence, la même recherche et les dossiers correspondants dans le panneau latéral de Firefox, qui reste ouvert pendant votre navigation
 • Raccourcis clavier qui ne remplacent jamais les raccourcis Ctrl/Cmd du navigateur
 • Suppression avec boîte de dialogue de confirmation (activée par défaut) et annulation possible pendant 10 secondes
 

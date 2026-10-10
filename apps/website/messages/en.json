@@ -1,12 +1,14 @@
 {
   "metadata": {
-    "title": "Bookmark Scout - Modern Browser Bookmark Manager",
-    "description": "A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools.",
+    "title": "Bookmark Scout – Save bookmarks to the right folder, fast",
+    "description": "Browser extension that saves pages to the right bookmark folder: type a folder name or let AI suggest one. Plus search and cleanup tools.",
     "keywords": [
       "browser extension",
       "chrome extension",
       "firefox addon",
       "edge extension",
+      "save bookmarks to folder",
+      "bookmark folder search",
       "bookmark manager",
       "bookmark search",
       "bookmark organizer",
@@ -18,9 +20,10 @@
   },
   "structuredData": {
     "features": [
+      "Save to a folder by typing its name",
+      "Opt-in AI folder suggestions",
       "Instant bookmark search",
       "Drag and drop organization",
-      "Quick bookmark saving",
       "Side panel support (the sidebar in Firefox)",
       "Saved searches",
       "Keyboard shortcuts",
@@ -48,7 +51,7 @@
     "home": "Bookmark Scout home"
   },
   "footer": {
-    "tagline": "Search, organize, and clean up your bookmarks, right in your browser.",
+    "tagline": "Save pages to the right folder, then find and tidy them, right in your browser.",
     "product": "Product",
     "project": "Project",
     "contact": "Contact",
@@ -71,8 +74,8 @@
   },
   "home": {
     "hero": {
-      "title": "Every bookmark you saved, one search away.",
-      "description": "Bookmark Scout is a browser extension for Chrome, Edge, and Firefox that searches, organizes, and cleans up the bookmarks you already have. It runs in your browser, with no account and no server of its own.",
+      "title": "Save every page to the right folder, in seconds.",
+      "description": "Type part of a folder's name and save the page there in one click, or let opt-in AI suggest the folder. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
       "download": "Download from GitHub",
       "install": "Install Bookmark Scout",
       "docs": "Read the docs",
@@ -112,29 +115,33 @@
       "lede": "Real screenshots from the Chrome build. They follow your system's light or dark setting.",
       "tabsLabel": "Jobs Bookmark Scout does",
       "firefoxNote": "Firefox cannot replace its bookmarks page, so in Firefox the manager, with its cleanup tools, saved searches, and import and export, opens from a button in the toolbar popup.",
-      "find": {
-        "tab": "Find",
-        "heading": "Search from the toolbar",
-        "caption": "The toolbar popup: a folder tree, instant search, and one-click save to any folder.",
+      "save": {
+        "tab": "Save",
+        "heading": "Save to the right folder",
+        "caption": "The toolbar popup: type part of a folder's name, or pick a folder in the tree, and save the page in one click.",
         "alt": "Two Bookmark Scout popups side by side: a folder tree with Recipes, Travel, Research, and Dev Docs folders, and a search for docs with the matches highlighted",
+        "points": [
+          "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
+          "Type a path such as work/react, and still find the folder with a small typo",
+          "Folders you saved to recently come first",
+          "A page already in that folder is not saved twice",
+          "Save links from the right-click menu into recent folders",
+          "With AI turned on, get folder suggestions for the page, including a new folder path after you review it"
+        ]
+      },
+      "organize": {
+        "tab": "Find & organize",
+        "heading": "Find and organize what you saved",
+        "caption": "The manager replaces Chrome's Bookmarks page with a folder tree, breadcrumbs, and a sortable table.",
+        "alt": "The Bookmark Scout manager showing the Dev Docs folder as a table with type, folder path, URL, title, and date added columns next to a folder tree",
         "points": [
           "Search every bookmark as you type, with match case, whole word, and regular expression options",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search as a smart view that always shows current results",
-          "Move through folders and results with the keyboard; browser Ctrl and Cmd shortcuts keep working"
-        ]
-      },
-      "organize": {
-        "tab": "Organize",
-        "heading": "File pages where they belong",
-        "caption": "The manager replaces Chrome's Bookmarks page with a folder tree, breadcrumbs, and a sortable table.",
-        "alt": "The Bookmark Scout manager showing the Dev Docs folder as a table with type, folder path, URL, title, and date added columns next to a folder tree",
-        "points": [
-          "Save the current page to any folder in one click, without saving it twice",
           "Drag bookmarks and folders around the folder tree",
-          "Save links from the right-click menu into recent folders",
           "Filter, sort, and resize columns in the manager's table",
-          "Import HTML or JSON after a preview, and export HTML, JSON, Markdown, or CSV"
+          "Import HTML or JSON after a preview, and export HTML, JSON, Markdown, or CSV",
+          "Move through folders and results with the keyboard; browser Ctrl and Cmd shortcuts keep working"
         ]
       },
       "cleanUp": {
@@ -157,7 +164,6 @@
         "caption": "AI is off until you turn it on in Settings, choose a provider, and add your own API key where the provider needs one.",
         "alt": "The AI tab of the Bookmark Scout settings page with AI features turned off, and provider and model selectors",
         "points": [
-          "Folder suggestions for the page you are on, including a new folder path after you review it",
           "Tag suggestions and short summaries that you review before saving",
           "Folder reorganization plans, previewed before anything moves",
           "Export selected bookmarks as Markdown or XML context for an AI chat; this works without AI and sends nothing"

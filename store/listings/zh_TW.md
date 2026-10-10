@@ -1,13 +1,13 @@
 # Traditional Chinese (Taiwan) Listing Copy (繁體中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters, as measured on the date each section gives (2026-10-10 unless it says otherwise).
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 57 |
-| Firefox Add-ons summary | 70 |
-| Full description, Chrome and Edge | 1,577 |
-| Full description, Firefox | 706 |
+| Optional manifest description | 54 |
+| Firefox Add-ons summary | 101 |
+| Full description, Chrome and Edge | 1,743 |
+| Full description, Firefox | 916 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/zh_TW/messages.json`. The
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-`extDescription`; changing it needs a new version:
+`extDescription`; changing it needs a new version. Ships with the next version after 0.3.2 (54 characters):
 
 ```text
-搜尋、整理及清理書籤：快速搜尋、儲存至資料夾、重複書籤與失效連結工具，以及使用自備金鑰、需自行啟用的 AI 功能。
+快速將網頁儲存到正確的資料夾：輸入資料夾名稱的一部分，或讓 AI 建議資料夾。另外也提供書籤搜尋和清理工具。
 ```
 
-### Firefox Add-ons summary (250 characters maximum)
+### Firefox Add-ons summary (250 characters maximum, 101 characters)
 
 ```text
-從工具列搜尋和整理書籤：即時搜尋、支援拖放的資料夾樹狀結構、一鍵儲存至任何資料夾，以及需自行啟用、使用自選供應商和金鑰的 AI 資料夾建議。
+快速將網頁儲存到正確的書籤資料夾：輸入資料夾名稱的一部分，即使資料夾位於樹狀結構深處也能找到，直接用鍵盤儲存，或讓需自行啟用的 AI 建議資料夾。另外還能在工具列和側邊欄中使用即時搜尋和資料夾樹狀結構。
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+儲存到資料夾
 書籤管理
 書籤搜尋
 重複書籤
 失效連結
 書籤資料夾
 AI 書籤
-書籤匯入匯出
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ AI 書籤
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout 可以在不離開瀏覽器的情況下，尋找、歸檔和整理書籤。
+Bookmark Scout 能在幾秒內將每個網頁儲存到正確的資料夾，還可以在不離開瀏覽器的情況下，尋找和整理書籤。
 
-從工具列搜尋和儲存
+幾秒內儲存到正確的資料夾
+• 輸入任何資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將目前網頁儲存到那裡
+• 可以輸入 work/react 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
+• 已在該資料夾中的網頁不會重複儲存
+• 選用的 AI 會為網頁建議最適合的資料夾，或建議新的資料夾路徑，確認後才會建立
+• 選用的右鍵選單 (在「設定」中開啟「右鍵選單」)，可將連結儲存至最近使用的資料夾
+
+從工具列搜尋
 • 即時搜尋所有書籤，並提供大小寫須相符、全字拼寫須相符和規則運算式選項
 • 資料夾樹狀結構，支援拖放、全部展開和全部收合，以及建立新資料夾
-• 一鍵將目前網頁儲存至任何資料夾；已在該資料夾中的網頁不會重複儲存
-• 側邊面板，提供相同的樹狀結構和搜尋功能
-• 選用的右鍵選單 (在「設定」中開啟「右鍵選單」)，可將連結儲存至最近使用的資料夾
+• 側邊面板，提供相同的樹狀結構、搜尋和相符的資料夾
 • 鍵盤快速鍵絕不會搶用瀏覽器的 Ctrl/Cmd 快速鍵
 • 刪除前會顯示確認對話方塊 (預設開啟)，並可在 10 秒內復原
 
@@ -102,14 +107,19 @@ Bookmark Scout 會以自己的管理員取代瀏覽器的「書籤」頁面，�
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout 可以在不離開瀏覽器的情況下，尋找和歸檔書籤。
+Bookmark Scout 能在幾秒內將每個網頁儲存到正確的資料夾，還可以在不離開瀏覽器的情況下尋找書籤。
 
-從工具列搜尋和儲存
+幾秒內儲存到正確的資料夾
+• 輸入任何資料夾名稱的一部分，即使是樹狀結構深處的資料夾也能找到，不必離開鍵盤就能將目前網頁儲存到那裡
+• 可以輸入 work/react 之類的路徑；有小小的拼字錯誤也能找到資料夾，最近使用過的資料夾會排在前面
+• 已在該資料夾中的網頁不會重複儲存
+• 選用的 AI 會為網頁建議最適合的資料夾，或建議新的資料夾路徑，確認後才會建立
+• 從右鍵選單將連結儲存至最近使用的資料夾
+
+從工具列搜尋
 • 即時搜尋所有書籤，並提供大小寫須相符、全字拼寫須相符和規則運算式選項
 • 資料夾樹狀結構，支援拖放、全部展開和全部收合，以及建立新資料夾
-• 一鍵將目前網頁儲存至任何資料夾；已在該資料夾中的網頁不會重複儲存
-• 在 Firefox 側邊欄中使用相同的樹狀結構和搜尋，瀏覽網頁時側邊欄會保持開啟
-• 從右鍵選單將連結儲存至最近使用的資料夾
+• 在 Firefox 側邊欄中使用相同的樹狀結構、搜尋和相符的資料夾，瀏覽網頁時側邊欄會保持開啟
 • 鍵盤快速鍵絕不會搶用瀏覽器的 Ctrl/Cmd 快速鍵
 • 刪除前會顯示確認對話方塊 (預設開啟)，並可在 10 秒內復原
 

@@ -4,7 +4,7 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "Busca, organiza y limpia marcadores: búsqueda rápida, guardado en carpetas, duplicados, enlaces rotos e IA opcional con tu clave.",
+        "message": "Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre o deja que la IA sugiera una. Y busca y limpia marcadores.",
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {
