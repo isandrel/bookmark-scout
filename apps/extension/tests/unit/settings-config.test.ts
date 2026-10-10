@@ -43,8 +43,10 @@ describe('settings defined from config', () => {
   it('shows a unit on every duration and length setting', () => {
     const meta = getSettingsFieldMeta();
     const missing = Object.keys(SETTING_NUMBER_BOUNDS).flatMap((key) => {
-      const { unit } = meta[key as keyof typeof meta];
-      if (key.endsWith('Ms') && unit !== 'ms') return [`${key}: ${unit}`];
+      const { unit, displayScale } = meta[key as keyof typeof meta];
+      // Durations are stored in ms; long ones are edited in seconds.
+      const durationUnit = displayScale === 1000 ? 's' : 'ms';
+      if (key.endsWith('Ms') && unit !== durationUnit) return [`${key}: ${unit}`];
       if (key.endsWith('Length') && unit !== 'chars') return [`${key}: ${unit}`];
       return [];
     });

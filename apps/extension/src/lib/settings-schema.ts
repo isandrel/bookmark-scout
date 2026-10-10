@@ -25,6 +25,13 @@ export type SettingsFieldMeta = {
   list?: 'string' | 'number';
   /** Numbers use a stepper; a slider suits only fractional values such as a confidence. */
   control?: 'slider';
+  /**
+   * Shown divided by this, in `unit`: a value stored in milliseconds can be edited in seconds.
+   * The stored value and its bounds stay in the stored unit.
+   */
+  displayScale?: number;
+  /** A fraction from 0 to 1 shown as a percentage. */
+  percent?: boolean;
 };
 
 /** Options content that is not synced settings, drawn by its own component. */
@@ -214,21 +221,32 @@ type NumberFieldDefinition = FieldDefinition<z.ZodType<number>> & { bounds: Numb
 /** Units a numeric setting can show, as locale keys so they follow the language. */
 const UNIT_MESSAGE_KEYS = {
   ms: 'unit_ms',
+  s: 'unit_s',
   px: 'unit_px',
   chars: 'unit_chars',
   kb: 'unit_kb',
+  mb: 'unit_mb',
 } as const;
 
 type SettingUnit = keyof typeof UNIT_MESSAGE_KEYS;
 
-type FieldExtras = Pick<SettingsFieldMeta, 'control'> & {
+type FieldExtras = Pick<SettingsFieldMeta, 'control' | 'percent'> & {
   unit?: SettingUnit;
+  /** Edit in a friendlier unit: `{ unit: 's', scale: 1000 }` for a value stored in ms. */
+  display?: { unit: SettingUnit; scale: number };
 };
 
 /** Field meta for `extras`, with the unit localized when the meta is read. */
-function extrasMeta({ unit, ...extras }: FieldExtras): Partial<SettingsFieldMeta> {
-  return unit ? { ...extras, unit: t(UNIT_MESSAGE_KEYS[unit]) } : extras;
+function extrasMeta({ unit, display, ...extras }: FieldExtras): Partial<SettingsFieldMeta> {
+  const shownUnit = display?.unit ?? unit;
+  return {
+    ...extras,
+    ...(shownUnit ? { unit: t(UNIT_MESSAGE_KEYS[shownUnit]) } : {}),
+    ...(display ? { displayScale: display.scale } : {}),
+  };
 }
+
+const IN_SECONDS = { unit: 's', scale: 1000 } as const;
 
 /** Labels follow `settings_<stem>` and `settings_<stem>Desc` in the locale files. */
 function fieldLabels(stem: string): Pick<SettingsFieldMeta, 'label' | 'description'> {
@@ -484,7 +502,10 @@ const fields = {
   popupWidth: numberField('advanced.popup_width', 'popupWidth', { unit: 'px' }),
   popupHeight: numberField('advanced.popup_height', 'popupHeight', { unit: 'px' }),
   truncateLength: numberField('advanced.truncate_length', 'truncateLength', { unit: 'chars' }),
-  toastDurationMs: numberField('advanced.toast_duration_ms', 'toastDuration', { unit: 'ms' }),
+  toastDurationMs: numberField('advanced.toast_duration_ms', 'toastDuration', {
+    unit: 'ms',
+    display: IN_SECONDS,
+  }),
 
   aiEnabled: switchField('ai.enabled', 'aiEnabled'),
   aiProvider: aiProviderField,
@@ -621,7 +642,7 @@ const fields = {
   reorganizationMinConfidence: numberField(
     'tools.reorganization.min_confidence',
     'reorganizationMinConfidence',
-    { control: 'slider' },
+    { control: 'slider', percent: true },
   ),
   reorganizationBatchSize: numberField(
     'tools.reorganization.batch_size',
@@ -705,7 +726,7 @@ const fields = {
   deadLinksRequestTimeoutMs: numberField(
     'tools.dead_links.request_timeout_ms',
     'deadLinksRequestTimeoutMs',
-    { unit: 'ms' },
+    { unit: 'ms', display: IN_SECONDS },
   ),
   deadLinksConcurrency: numberField('tools.dead_links.concurrency', 'deadLinksConcurrency'),
   deadLinksRetryCount: numberField('tools.dead_links.retry_count', 'deadLinksRetryCount'),
@@ -737,7 +758,7 @@ const fields = {
   metadataFetcherRequestTimeoutMs: numberField(
     'tools.metadata_fetcher.request_timeout_ms',
     'metadataFetcherRequestTimeoutMs',
-    { unit: 'ms' },
+    { unit: 'ms', display: IN_SECONDS },
   ),
   metadataFetcherConcurrency: numberField(
     'tools.metadata_fetcher.concurrency',
@@ -758,6 +779,7 @@ const fields = {
   }),
   siteIconsMaxCacheKb: numberField('tools.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
     unit: 'kb',
+    display: { unit: 'mb', scale: 1024 },
   }),
 
   privacyScannerEnabled: switchField('tools.privacy_scanner.enabled', 'privacyScannerEnabled'),
@@ -840,25 +862,26 @@ const settingsShape = Object.fromEntries(
   Object.entries(fields).map(([key, field]) => [key, field.schema]),
 ) as { [K in SettingsKey]: SettingsFields[K]['schema'] };
 
-export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) => {
-  if (value.autoTaggingMinTags > value.autoTaggingMaxTags) {
-    ctx.addIssue({
-      code: 'custom',
-      path: ['autoTaggingMinTags'],
-      message: 'Minimum tags cannot exceed maximum tags',
-    });
-  }
+/**
+ * Number settings that form a range: the minimum may not exceed the maximum (a maximum of -1
+ * means no limit). Validation rejects a stored range that breaks this, and Options keeps each
+ * stepper within the other's value, so the range cannot be entered the wrong way round.
+ */
+export const SETTING_RANGES = [
+  { min: 'autoTaggingMinTags', max: 'autoTaggingMaxTags' },
+  { min: 'aiMinItemsPerFolder', max: 'aiMaxItemsPerFolder' },
+] as const satisfies readonly { min: SettingsKey; max: SettingsKey }[];
 
-  if (
-    value.aiMinItemsPerFolder > 0 &&
-    value.aiMaxItemsPerFolder > 0 &&
-    value.aiMinItemsPerFolder > value.aiMaxItemsPerFolder
-  ) {
-    ctx.addIssue({
-      code: 'custom',
-      path: ['aiMinItemsPerFolder'],
-      message: 'Minimum items per folder cannot exceed maximum items per folder',
-    });
+export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) => {
+  for (const range of SETTING_RANGES) {
+    const max = value[range.max];
+    if (max !== -1 && value[range.min] > max) {
+      ctx.addIssue({
+        code: 'custom',
+        path: [range.min],
+        message: `${range.min} cannot exceed ${range.max}`,
+      });
+    }
   }
 });
 
@@ -1169,6 +1192,16 @@ function isSettingSupported(key: keyof Settings): boolean {
   );
 }
 
+/**
+ * Settings shown on the page: supported in this browser, and a real choice. A tool that works on
+ * one scope only (Auto-Tagging on the current folder) has a one-option "Default Scope"; a choice
+ * of one is left off the page.
+ */
+export function isSettingShown(key: keyof Settings): boolean {
+  const meta = getSettingsFieldMeta()[key];
+  return isSettingSupported(key) && (meta.type !== 'select' || (meta.options?.length ?? 0) > 1);
+}
+
 export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
   return Object.fromEntries(
     Object.entries(buildCategories()).map(([id, category]) => [
@@ -1177,10 +1210,10 @@ export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
         ...category,
         sections: category.sections.map((section) => ({
           ...section,
-          fields: section.fields.filter(isSettingSupported),
-          ...(section.advanced ? { advanced: section.advanced.filter(isSettingSupported) } : {}),
+          fields: section.fields.filter(isSettingShown),
+          ...(section.advanced ? { advanced: section.advanced.filter(isSettingShown) } : {}),
         })),
-        fields: category.fields.filter(isSettingSupported),
+        fields: category.fields.filter(isSettingShown),
       },
     ]),
   );

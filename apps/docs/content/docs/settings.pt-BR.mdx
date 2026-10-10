@@ -75,7 +75,7 @@ Consulte [Salvar e organizar](/guides/save-and-organize).
 
 | Configuração | Padrão | O que faz |
 | --- | --- | --- |
-| **Duração das notificações** | 4000 ms | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
+| **Duração das notificações** | 4 s | Por quanto tempo as notificações ficam abertas. As notificações com a opção de desfazer mantêm o próprio prazo de 10 segundos |
 
 ## Comportamento [#behavior]
 
@@ -133,7 +133,7 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 | **Gerador de resumos** | **Tamanho do resumo** 160; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
 | **Reorganização de pastas com IA** | **Sempre mostrar prévia** ativado; **Confiança mínima** 0,55 (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
 
-Tags automáticas e Gerador de resumos sempre trabalham na pasta atual, independentemente do que diz o **Escopo padrão** deles.
+Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 
 ### Reorganização de pastas com IA [#ai-folder-reorganization]
 
@@ -148,9 +148,9 @@ Tags automáticas e Gerador de resumos sempre trabalham na pasta atual, independ
 | --- | --- |
 | **Limpador de duplicatas** | **Critério de correspondência** URL normalizado; **Normalizar www**, **Ignorar protocolo** e **Ignorar barra final** ativados; **Regra de manutenção** Mais antigo; **Máximo de grupos** 500. Sempre verifica todos os favoritos |
 | **Limpador de URLs** | **Remover fragmentos** desativado; **Ordenar parâmetros de consulta** e **Remover parâmetros de consulta duplicados** ativados; listas de **Parâmetros preservados** e **Parâmetros removidos** |
-| **Verificar links quebrados** | **Tempo limite da solicitação** 8000 ms; **Simultaneidade** 4; **Número de tentativas** 1; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Verificar links quebrados** | **Tempo limite da solicitação** 8 s; **Simultaneidade** 4; **Número de tentativas** 1; **Seguir redirecionamentos** ativado; **Códigos de status de sucesso** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Listas como **Parâmetros removidos** aceitam valores separados por vírgula. As listas padrão estão em [Limpar duplicatas e URLs de rastreamento](/guides/clean-up#strip-tracking-parameters). Consulte também [Encontrar e corrigir links quebrados](/guides/dead-links).
+Listas como **Parâmetros removidos** são editadas como etiquetas: digite um nome e pressione Enter, ou escolha uma sugestão. **Códigos de status de sucesso** é uma lista de caixas de seleção com os códigos comuns, e você pode adicionar outros. As listas padrão estão em [Limpar duplicatas e URLs de rastreamento](/guides/clean-up#strip-tracking-parameters). Consulte também [Encontrar e corrigir links quebrados](/guides/dead-links).
 
 ## Metadados e conteúdo [#metadata--content]
 
@@ -161,7 +161,7 @@ Listas como **Parâmetros removidos** aceitam valores separados por vírgula. As
 | **Ativar Buscador de metadados** | Ativado | Mostra o **Buscador de metadados** na barra lateral Ferramentas |
 | **Substituir títulos** | Desativado | Oferece novos títulos também para favoritos que já têm um |
 | **Buscar descrições** | Ativado | Mostra as descrições das páginas na revisão. Elas nunca são salvas |
-| **Tempo limite da solicitação** | 8000 ms | Por página. Também usado por **Atualizar ícones dos sites** |
+| **Tempo limite da solicitação** | 8 s | Por página. Também usado por **Atualizar ícones dos sites** |
 | **Simultaneidade** | 4 | Páginas solicitadas ao mesmo tempo. Também usado por **Atualizar ícones dos sites** |
 
 ### Atualizar ícones dos sites [#refresh-site-icons]
@@ -172,7 +172,7 @@ Listas como **Parâmetros removidos** aceitam valores separados por vírgula. As
 | **Escopo padrão** | Pasta atual | Escopo com que a atualização dos ícones dos sites começa |
 | **Tamanho preferido do ícone** | 32 px | Quando uma página lista vários ícones, baixa o de tamanho mais próximo deste |
 | **Tamanho máximo do arquivo de ícone** | 64 KB | Arquivos de ícone maiores não são baixados nem salvos |
-| **Limite de armazenamento de ícones** | 4096 KB | Tamanho total dos ícones salvos neste dispositivo; os mais antigos são removidos primeiro |
+| **Limite de armazenamento de ícones** | 4 MB | Tamanho total dos ícones salvos neste dispositivo; os mais antigos são removidos primeiro |
 
 ## Segurança [#security]
 

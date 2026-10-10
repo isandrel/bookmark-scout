@@ -222,6 +222,10 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`url-link`** (`UrlLink`, `src/components/ui/url-link.tsx`): every URL shown as text, in tables, tool results, review dialogs, and details. It keeps the surrounding text style and underlines on hover. A plain click opens it where Settings > Behavior > Open links in says (`useLinkClick`, which popup tree rows share); middle-click and modifier clicks keep the browser’s behavior, and the click never reaches the row around it. A bookmarklet or unparseable URL stays plain text.
 
+**`list-editor`** (`TokenListEditor`, `StatusCodeEditor` in `src/components/options/ListSettingEditors.tsx`): list settings are never typed as comma-separated text. Names are mono chips with a remove button, added by Enter, comma, space, or paste, with dashed one-click suggestions from `config/ui/list-settings.toml`; HTTP status codes are a checklist of common codes in 2xx, 3xx, and 4xx columns (code in mono, the protocol reason phrase muted), plus other codes as chips. These rows use the `settingWide` field layout, with the editor under the label.
+
+**`number-stepper`**: in a settings row, the stepper and its unit slot fill the same 220px column as a select, so controls on a page start at one position whether or not they have a unit. Values stored in ms or KB can be shown in seconds or MB (`display` in the setting definition), and a fraction as a percentage. In a range (`SETTING_RANGES`), each stepper is limited by the other, so a minimum cannot pass its maximum.
+
 **`mask-icon`** (`MaskIcon`): a one-color image, such as a provider logo, drawn as a CSS mask in the current text color.
 
 ## Do's and don'ts

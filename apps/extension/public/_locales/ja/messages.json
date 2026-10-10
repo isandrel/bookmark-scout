@@ -1750,7 +1750,7 @@
         "description": "AI reorganization max categories label"
     },
     "settings_aiMaxCategoriesDesc": {
-        "message": "AIが作成できる最上位カテゴリの最大数（-1で無制限）",
+        "message": "AI が作成できる最上位フォルダの最大数。空欄なら制限なし",
         "description": "AI reorganization max categories description"
     },
     "settings_aiMinItemsPerFolder": {
@@ -1766,7 +1766,7 @@
         "description": "AI reorganization max items label"
     },
     "settings_aiMaxItemsPerFolderDesc": {
-        "message": "AIが1フォルダあたりに目指すブックマークの最大数（-1で無制限）",
+        "message": "AI が各フォルダで目指すブックマークの最大数。空欄なら制限なし",
         "description": "AI reorganization max items description"
     },
     "settings_exportFilenamePrefix": {
@@ -2170,7 +2170,7 @@
         "description": "URL cleaner preserve params label"
     },
     "settings_urlCleanerPreserveParamsDesc": {
-        "message": "削除しないクエリパラメータ（カンマ区切り）",
+        "message": "削除しないクエリパラメーター",
         "description": "URL cleaner preserve params description"
     },
     "settings_urlCleanerRemoveParams": {
@@ -2178,7 +2178,7 @@
         "description": "URL cleaner remove params label"
     },
     "settings_urlCleanerRemoveParamsDesc": {
-        "message": "URLから削除するクエリパラメータ（カンマ区切り）",
+        "message": "URL から削除するクエリパラメーター",
         "description": "URL cleaner remove params description"
     },
     "settings_deadLinksEnabled": {
@@ -2234,7 +2234,7 @@
         "description": "Dead links success statuses label"
     },
     "settings_deadLinksSuccessStatusesDesc": {
-        "message": "アクセス可能として扱うHTTPステータスコード（カンマ区切り）",
+        "message": "アクセス可能とみなす HTTP ステータスコード",
         "description": "Dead links success statuses description"
     },
     "settings_metadataFetcherEnabled": {
@@ -2330,7 +2330,7 @@
         "description": "Privacy scanner sensitive params label"
     },
     "settings_privacyScannerSensitiveParamsDesc": {
-        "message": "機密として検出するパラメータ名（カンマ区切り）",
+        "message": "機密として警告するパラメーター名",
         "description": "Privacy scanner sensitive params description"
     },
     "settings_privacyScannerEmailDetection": {
@@ -2760,6 +2760,50 @@
     "settings_errorStatusCodes": {
         "message": "100〜599 の HTTP ステータスコードをカンマ区切りで入力してください。",
         "description": "Settings error for status code list"
+    },
+    "settings_listAdd": {
+        "message": "追加",
+        "description": "Button that adds the typed value to a list setting"
+    },
+    "settings_listAddPlaceholder": {
+        "message": "名前を入力して Enter",
+        "description": "Placeholder of the box that adds a name to a list setting"
+    },
+    "settings_listAddItem": {
+        "message": "$1 を追加",
+        "description": "Accessible name of a suggestion button; $1 is the name it adds"
+    },
+    "settings_listRemove": {
+        "message": "$1 を削除",
+        "description": "Accessible name of the remove button on a list chip; $1 is the item"
+    },
+    "settings_listSuggestions": {
+        "message": "候補:",
+        "description": "Label before one-click suggestions under a list setting"
+    },
+    "settings_statusGroup2xx": {
+        "message": "成功（2xx）",
+        "description": "Heading of the 2xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup3xx": {
+        "message": "リダイレクト（3xx）",
+        "description": "Heading of the 3xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup4xx": {
+        "message": "クライアントエラー（4xx）",
+        "description": "Heading of the 4xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusOther": {
+        "message": "その他のコード",
+        "description": "Label of HTTP status codes added that are not in the checklist"
+    },
+    "settings_statusAddPlaceholder": {
+        "message": "コード",
+        "description": "Placeholder of the box that adds another HTTP status code"
+    },
+    "settings_errorStatusCode": {
+        "message": "100〜599 のステータスコードを入力してください。",
+        "description": "Error when the added HTTP status code is not valid"
     },
     "settings_errorRangeOrUnlimited": {
         "message": "「制限なし」または $1〜$2 の値を選んでください。",
@@ -5050,6 +5094,14 @@
     "unit_kb": {
         "message": "KB",
         "description": "Unit shown after a size in kilobytes"
+    },
+    "unit_s": {
+        "message": "秒",
+        "description": "Unit: seconds"
+    },
+    "unit_mb": {
+        "message": "MB",
+        "description": "Unit: megabytes"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",

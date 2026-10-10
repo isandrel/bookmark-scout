@@ -75,7 +75,7 @@ Siehe [Speichern und ordnen](/guides/save-and-organize).
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
-| **Anzeigedauer von Benachrichtigungen** | 4000 ms | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
+| **Anzeigedauer von Benachrichtigungen** | 4 s | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
 
 ## Verhalten [#behavior]
 
@@ -133,7 +133,7 @@ Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags a
 | **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
 | **KI-Ordnerneuordnung** | **Immer zuerst Vorschau anzeigen** an; **Mindestkonfidenz** 0,55 (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
 
-Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner, unabhängig davon, was ihr **Standardbereich** angibt.
+Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner.
 
 ### KI-Ordnerneuordnung [#ai-folder-reorganization]
 
@@ -148,9 +148,9 @@ Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Or
 | --- | --- |
 | **Duplikatbereinigung** | **Vergleichsmethode** Normalisierte URL; **www normalisieren**, **Protokoll ignorieren** und **Abschließenden Schrägstrich ignorieren** an; **Behalten-Regel** Ältestes; **Max. Gruppen** 500. Prüft immer alle Lesezeichen |
 | **URL-Bereinigung** | **Fragmente entfernen** aus; **Abfrageparameter sortieren** und **Doppelte Abfrageparameter entfernen** an; Listen **Beizubehaltende Parameter** und **Zu entfernende Parameter** |
-| **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8000 ms; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Defekte Links prüfen** | **Zeitlimit für Anfragen** 8 s; **Parallele Anfragen** 4; **Wiederholungen** 1; **Weiterleitungen folgen** an; **Erfolgs-Statuscodes** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
+Listen wie **Zu entfernende Parameter** bearbeiten Sie als Chips: Namen eingeben und Enter drücken oder einen Vorschlag wählen. **Erfolgs-Statuscodes** ist eine Checkliste gängiger Codes, und Sie können weitere hinzufügen. Die Standardlisten stehen unter [Duplikate und Tracking-URLs bereinigen](/guides/clean-up#strip-tracking-parameters). Siehe auch [Defekte Links finden und reparieren](/guides/dead-links).
 
 ## Metadaten und Inhalte [#metadata--content]
 
@@ -161,7 +161,7 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 | **Metadatenabruf aktivieren** | An | **Metadatenabruf** in der Tools-Leiste anzeigen |
 | **Titel überschreiben** | Aus | Auch für Lesezeichen, die bereits einen Titel haben, neue Titel vorschlagen |
 | **Beschreibungen abrufen** | An | Seitenbeschreibungen bei der Prüfung anzeigen. Sie werden nie gespeichert |
-| **Zeitlimit für Anfragen** | 8000 ms | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
+| **Zeitlimit für Anfragen** | 8 s | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
 | **Parallele Anfragen** | 4 | Gleichzeitig angefragte Seiten. Wird auch von **Website-Symbole aktualisieren** verwendet |
 
 ### Website-Symbole aktualisieren [#refresh-site-icons]
@@ -172,7 +172,7 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 | **Standardbereich** | Aktueller Ordner | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
 | **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
 | **Max. Dateigröße pro Symbol** | 64 KB | Größere Symboldateien werden weder heruntergeladen noch gespeichert |
-| **Speicherbegrenzung für Symbole** | 4096 KB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |
+| **Speicherbegrenzung für Symbole** | 4 MB | Gesamtgröße der gespeicherten Symbole auf diesem Gerät; die ältesten werden zuerst entfernt |
 
 ## Sicherheit [#security]
 
