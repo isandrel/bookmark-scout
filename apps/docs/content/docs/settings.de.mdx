@@ -12,7 +12,47 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 - **Exportieren** speichert Ihre Einstellungen als JSON-Datei, und **Importieren** stellt sie daraus wieder her. Beides lässt Ihre Lesezeichen unberührt.
 - Einstellungen werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Ausgenommen sind der API-Schlüssel des KI-Anbieters, **Basis-URL** und **Zusätzliche Header (JSON)**: Sie bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
 
+## Speichern & Suche [#search]
+
+### Passende Ordner [#folder-matches]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Passende Ordner** | An | Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, um die aktuelle Seite dort zu speichern |
+| **Maximal passende Ordner** | 5 | Wie viele passende Ordner angezeigt werden |
+| **Tippfehler erlauben** | An | Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen |
+
+### Suche [#searching]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Suchverzögerung** | 300 ms | Wie lange das Pop-up nach Ihrer letzten Eingabe wartet, bevor es sucht |
+| **Max. Suchergebnisse** | 20 Ergebnisse | Höchstzahl angezeigter Treffer; ein Hinweis erscheint, wenn es mehr gibt |
+| **Ordner bei Suche ausklappen** | An | Die Ordner öffnen, die Treffer enthalten |
+| **Suchverlauf** | An | Letzte Suchen auf diesem Gerät speichern |
+
+Siehe [Suche und gespeicherte Suchen](/guides/search).
+
+### Speichern [#saving]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up und im Rechtsklickmenü anzeigen |
+| **Max. letzte Ordner** | 5 | Wie viele zuletzt verwendete Ordner angezeigt werden |
+| **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
+
+Siehe [Speichern und ordnen](/guides/save-and-organize).
+
+### Kontextmenü [#context-menu]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Kontextmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
+| **Quelle für Lesezeichennamen** | Linktext | Ein per Rechtsklick gespeichertes Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benennen |
+
 ## Darstellung [#appearance]
+
+### Sprache, Design und Symbole [#language-theme-and-icons]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
@@ -22,42 +62,40 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 | **Symbol-Cache des Browsers verwenden** | Aus | Chrome und Edge: Zusätzlich Symbole anzeigen, die der Browser bereits im Cache hat, für Websites ohne mit **Website-Symbole aktualisieren** gespeichertes Symbol. Beim Aktivieren wird um die Berechtigung gebeten, Website-Symbole zu lesen. Wird in Firefox nicht angezeigt, da Firefox Erweiterungen keinen Symbol-Cache bietet |
 | **Symbolgröße** | 16px (klein) | 16, 24 oder 32 Pixel |
 
-## Suche [#search]
-
-| Einstellung | Standard | Wirkung |
-| --- | --- | --- |
-| **Suchverzögerung** | 300 ms | Wie lange das Pop-up nach Ihrer letzten Eingabe wartet, bevor es sucht |
-| **Max. Suchergebnisse** | 20 Ergebnisse | Höchstzahl angezeigter Treffer; ein Hinweis erscheint, wenn es mehr gibt |
-| **Ordner bei Suche ausklappen** | An | Die Ordner öffnen, die Treffer enthalten |
-| **Suchverlauf** | An | Letzte Suchen auf diesem Gerät speichern |
-| **Passende Ordner** | An | Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, um die aktuelle Seite dort zu speichern |
-| **Maximal passende Ordner** | 5 | Wie viele passende Ordner angezeigt werden |
-| **Tippfehler erlauben** | An | Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen |
-
-Siehe [Suche und gespeicherte Suchen](/guides/search).
-
-## Verhalten [#behavior]
-
-| Einstellung | Standard | Wirkung |
-| --- | --- | --- |
-| **Sortierung** | Hinzufügedatum | **Hinzufügedatum**, **Alphabetisch** oder **Ordner zuerst**. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
-| **Nach Ordnern gruppieren** | An | Im Pop-up und in der Seitenleiste auf jeder Ebene Unterordner vor Lesezeichen auflisten |
-| **Links öffnen in** | Neuer Tab | **Neuer Tab**, **Neuer Tab im Hintergrund** oder **Aktueller Tab**: wo sich ein Link öffnet, wenn Sie in Bookmark Scout darauf klicken. Mittelklick und Strg/Cmd-Klick funktionieren weiterhin wie in Ihrem Browser |
-| **Vor dem Löschen bestätigen** | An | Vor dem Löschen nachfragen. Jedes Löschen lässt sich in beiden Fällen 10 Sekunden lang rückgängig machen |
-| **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
-| **Letzte Ordner** | An | Zuletzt verwendete Ordner im Pop-up und im Rechtsklickmenü anzeigen |
-| **Max. letzte Ordner** | 5 | Wie viele zuletzt verwendete Ordner angezeigt werden |
-
-Siehe [Speichern und ordnen](/guides/save-and-organize).
-
-## Erweitert [#advanced]
+### Pop-up [#popup]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Pop-up-Breite** | 400 px | Browser erlauben höchstens 800 px |
 | **Pop-up-Höhe** | 500 px | Browser erlauben höchstens 600 px |
 | **Kürzungslänge** | 50 Zeichen | Kürzt den Seitentitel in der Kopfzeile der KI-Vorschläge im Pop-up |
+
+### Benachrichtigungen [#notifications]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
 | **Anzeigedauer von Benachrichtigungen** | 4000 ms | Wie lange Benachrichtigungen geöffnet bleiben. Benachrichtigungen mit Rückgängig behalten ihr eigenes Zeitfenster von 10 Sekunden |
+
+## Verhalten [#behavior]
+
+### Baum und Sortierung [#tree-and-sorting]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Sortierung** | Hinzufügedatum | **Hinzufügedatum**, **Alphabetisch** oder **Ordner zuerst**. Ändert nur, wie Bookmark Scout Lesezeichen anzeigt, nie die im Browser gespeicherte Reihenfolge |
+| **Nach Ordnern gruppieren** | An | Im Pop-up und in der Seitenleiste auf jeder Ebene Unterordner vor Lesezeichen auflisten |
+
+### Links [#links]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Links öffnen in** | Neuer Tab | **Neuer Tab**, **Neuer Tab im Hintergrund** oder **Aktueller Tab**: wo sich ein Link öffnet, wenn Sie in Bookmark Scout darauf klicken. Mittelklick und Strg/Cmd-Klick funktionieren weiterhin wie in Ihrem Browser |
+
+### Löschen [#deleting]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Vor dem Löschen bestätigen** | An | Vor dem Löschen nachfragen. Jedes Löschen lässt sich in beiden Fällen 10 Sekunden lang rückgängig machen |
 
 ## KI [#ai]
 
@@ -66,14 +104,22 @@ KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **KI-Funktionen** | Aus | Die KI-Tools und die Ordnervorschläge im Pop-up aktivieren. In Firefox werden Sie beim Aktivieren um Ihre Einwilligung gebeten, die Daten zu teilen, die Ihr KI-Anbieter benötigt |
-| **Beim Öffnen automatisch vorschlagen** | Aus | Bei jedem Öffnen des Pop-ups Ordnervorschläge anfordern |
-| **Seiteninhalt lesen** | Aus | Den Haupttext jeder Seite, nicht nur Titel und URL, an Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden. Fragt beim Aktivieren nach Zugriff auf Websites |
 | **KI-Anbieter** und **KI-Modell** | OpenAI, GPT-4o Mini | Welchen Anbieter und welches Modell alle KI-Tools verwenden |
-| **Max. Vorschläge** | 5 | Höchstzahl anzufordernder Ordnervorschläge |
-| **Max. Kategorien** | Unbegrenzt | Höchstzahl der Ordner auf oberster Ebene, die ein Neuordnungsplan anlegen darf |
-| **Min. Elemente pro Ordner** und **Max. Elemente pro Ordner** | 1 und Unbegrenzt | Zielgrößen für Ordner in Neuordnungsplänen |
 
 Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigenes Modell** und **Zusätzliche Header (JSON)** sowie **Dienst überprüfen** und **Modelle aktualisieren**. Die Ordnergrenzen werden als Anweisungen an den Anbieter gesendet, seine Ausgabe wird aber nicht daraufhin geprüft. Siehe [KI-Tools einrichten](/guides/ai-tools).
+
+### Ordnervorschläge [#folder-suggestions]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Beim Öffnen automatisch vorschlagen** | Aus | Bei jedem Öffnen des Pop-ups Ordnervorschläge anfordern |
+| **Max. Vorschläge** | 5 | Höchstzahl anzufordernder Ordnervorschläge |
+
+### Seiteninhalt lesen [#read-page-content]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Seiteninhalt lesen** | Aus | Den Haupttext jeder Seite, nicht nur Titel und URL, an Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden. Fragt beim Aktivieren nach Zugriff auf Websites |
 
 ## KI-Tools [#ai-tools]
 
@@ -88,6 +134,13 @@ Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags a
 
 Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner, unabhängig davon, was ihr **Standardbereich** angibt.
 
+### KI-Ordnerneuordnung [#ai-folder-reorganization]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Max. Kategorien** | Unbegrenzt | Höchstzahl der Ordner auf oberster Ebene, die ein Neuordnungsplan anlegen darf |
+| **Min. Elemente pro Ordner** und **Max. Elemente pro Ordner** | 1 und Unbegrenzt | Zielgrößen für Ordner in Neuordnungsplänen |
+
 ## Wartung [#maintenance]
 
 | Tool | Einstellungen und Standardwerte |
@@ -100,6 +153,8 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 
 ## Metadaten und Inhalte [#metadata--content]
 
+### Metadatenabruf [#metadata-fetcher]
+
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
 | **Metadatenabruf aktivieren** | An | **Metadatenabruf** in der Tools-Leiste anzeigen |
@@ -107,6 +162,11 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 | **Beschreibungen abrufen** | An | Seitenbeschreibungen bei der Prüfung anzeigen. Sie werden nie gespeichert |
 | **Zeitlimit für Anfragen** | 8000 ms | Pro Seite. Wird auch von **Website-Symbole aktualisieren** verwendet |
 | **Parallele Anfragen** | 4 | Gleichzeitig angefragte Seiten. Wird auch von **Website-Symbole aktualisieren** verwendet |
+
+### Website-Symbole aktualisieren [#refresh-site-icons]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
 | **„Website-Symbole aktualisieren“ aktivieren** | An | **Website-Symbole aktualisieren** in der Tools-Leiste anzeigen |
 | **Standardbereich** | Aktueller Ordner | Bereich, mit dem die Aktualisierung der Website-Symbole beginnt |
 | **Bevorzugte Symbolgröße** | 32px | Wenn eine Seite mehrere Symbole angibt, wird das dieser Größe am nächsten liegende heruntergeladen |
@@ -131,7 +191,7 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 | **Domains einschließen**, **Ordner einschließen**, **Duplikate einschließen**, **Protokolle einschließen**, **Aufschlüsselung nach Tiefe einschließen** | An | Abschnitte des Berichts; ein deaktivierter Abschnitt wird ausgeblendet |
 | **Anzahl der Top-Einträge** | 10 | Länge der Listen der häufigsten Domains und Ordner |
 
-## Daten [#data]
+## Import & Export [#data]
 
 | Einstellung | Standard | Wirkung |
 | --- | --- | --- |
@@ -141,7 +201,5 @@ Listen wie **Zu entfernende Parameter** nehmen kommagetrennte Werte an. Die Stan
 | **Max. Dateinamenlänge** | 50 | Längster erzeugter Dateiname |
 | **JSON-Einrückung**, **HTML-Einrückung**, **Markdown-Einrückung** | 2, 4, 2 | Leerzeichen pro Ebene im jeweiligen Format |
 | **Datum einschließen** und **URLs einschließen** | An | In Exporte aufnehmen |
-| **Kontextmenü** | Aus | **Lesezeichen speichern in...** beim Rechtsklick auf einen Link anzeigen. In Chrome und Edge fügt das Aktivieren die optionale Berechtigung für das Rechtsklickmenü ohne Nachfrage hinzu |
-| **Quelle für Lesezeichennamen** | Linktext | Ein per Rechtsklick gespeichertes Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benennen |
 
 Siehe [Import und Export](/guides/import-export).

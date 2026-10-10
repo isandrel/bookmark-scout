@@ -12,7 +12,47 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 - **Exporter** enregistre vos paramètres dans un fichier JSON, et **Importer** les restaure à partir d'un tel fichier. Aucun des deux ne touche à vos favoris.
 - Les paramètres sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. La clé API du fournisseur d'IA, l'**URL de base** et les **En-têtes supplémentaires (JSON)** font exception : ils restent sur cet appareil. Consultez [Confidentialité](/privacy).
 
+## Enregistrement et recherche [#search]
+
+### Dossiers correspondants [#folder-matches]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Dossiers correspondants** | Activé | Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle |
+| **Nombre maximal de dossiers correspondants** | 5 | Combien de dossiers correspondants afficher |
+| **Tolérer les fautes de frappe** | Activé | Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe |
+
+### Recherche [#searching]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Délai de recherche** | 300 ms | Temps d'attente après la fin de la saisie avant que la fenêtre pop-up lance la recherche |
+| **Nombre maximal de résultats** | 20 résultats | Nombre maximal de correspondances affichées ; une note indique s'il y en a davantage |
+| **Développer les dossiers lors de la recherche** | Activé | Ouvre les dossiers qui contiennent des correspondances |
+| **Historique des recherches** | Activé | Mémorise les recherches récentes sur cet appareil |
+
+Consultez [Recherche et recherches enregistrées](/guides/search).
+
+### Enregistrement [#saving]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up et le menu contextuel |
+| **Nombre maximal de dossiers récents** | 5 | Nombre de dossiers récents à afficher |
+| **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
+
+Consultez [Enregistrer et organiser](/guides/save-and-organize).
+
+### Menu contextuel [#context-menu]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Menu contextuel** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
+| **Source du nom du favori** | Texte du lien | Nomme un favori enregistré par clic droit d'après le texte du lien, le titre de la page ou l'URL du lien |
+
 ## Apparence [#appearance]
+
+### Langue, thème et icônes [#language-theme-and-icons]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
@@ -22,42 +62,40 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 | **Utiliser le cache d'icônes du navigateur** | Désactivé | Chrome et Edge : affiche aussi les icônes que le navigateur a déjà en cache, pour les sites qui n'en ont pas d'enregistrée par **Actualiser les icônes de site**. L'activation de cette option demande l'autorisation de lire les icônes de site. Non affiché dans Firefox, qui n'offre aucun cache d'icônes aux extensions |
 | **Taille des icônes de site** | 16 px (petite) | 16, 24 ou 32 pixels |
 
-## Recherche [#search]
-
-| Paramètre | Valeur par défaut | Effet |
-| --- | --- | --- |
-| **Délai de recherche** | 300 ms | Temps d'attente après la fin de la saisie avant que la fenêtre pop-up lance la recherche |
-| **Nombre maximal de résultats** | 20 résultats | Nombre maximal de correspondances affichées ; une note indique s'il y en a davantage |
-| **Développer les dossiers lors de la recherche** | Activé | Ouvre les dossiers qui contiennent des correspondances |
-| **Historique des recherches** | Activé | Mémorise les recherches récentes sur cet appareil |
-| **Dossiers correspondants** | Activé | Pendant la recherche, affiche au-dessus des résultats les dossiers dont le nom correspond, pour y enregistrer la page actuelle |
-| **Nombre maximal de dossiers correspondants** | 5 | Combien de dossiers correspondants afficher |
-| **Tolérer les fautes de frappe** | Activé | Un mot de 4 lettres ou plus correspond à un nom de dossier malgré une faute de frappe |
-
-Consultez [Recherche et recherches enregistrées](/guides/search).
-
-## Comportement [#behavior]
-
-| Paramètre | Valeur par défaut | Effet |
-| --- | --- | --- |
-| **Ordre de tri** | Date d'ajout | **Date d'ajout**, **Alphabétique** ou **Dossiers en premier**. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
-| **Regrouper par dossiers** | Activé | Dans la fenêtre pop-up et le panneau latéral, liste les sous-dossiers avant les favoris à chaque niveau |
-| **Ouvrir les liens dans** | Nouvel onglet | **Nouvel onglet**, **Nouvel onglet en arrière-plan** ou **Onglet actuel** : où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Ctrl/Cmd+clic fonctionnent toujours comme dans votre navigateur |
-| **Confirmer avant de supprimer** | Activé | Demande confirmation avant de supprimer. Dans tous les cas, chaque suppression peut être annulée pendant 10 secondes |
-| **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
-| **Dossiers récents** | Activé | Affiche les dossiers récemment utilisés dans la fenêtre pop-up et le menu contextuel |
-| **Nombre maximal de dossiers récents** | 5 | Nombre de dossiers récents à afficher |
-
-Consultez [Enregistrer et organiser](/guides/save-and-organize).
-
-## Avancé [#advanced]
+### Fenêtre pop-up [#popup]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Largeur de la fenêtre pop-up** | 400 px | Les navigateurs autorisent au maximum 800 px |
 | **Hauteur de la fenêtre pop-up** | 500 px | Les navigateurs autorisent au maximum 600 px |
 | **Longueur de troncature** | 50 caractères | Raccourcit le titre de la page dans l'en-tête des suggestions d'IA de la fenêtre pop-up |
+
+### Notifications [#notifications]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
 | **Durée des notifications** | 4000 ms | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
+
+## Comportement [#behavior]
+
+### Arborescence et tri [#tree-and-sorting]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Ordre de tri** | Date d'ajout | **Date d'ajout**, **Alphabétique** ou **Dossiers en premier**. Change uniquement l'affichage des favoris dans Bookmark Scout, jamais l'ordre enregistré par le navigateur |
+| **Regrouper par dossiers** | Activé | Dans la fenêtre pop-up et le panneau latéral, liste les sous-dossiers avant les favoris à chaque niveau |
+
+### Liens [#links]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Ouvrir les liens dans** | Nouvel onglet | **Nouvel onglet**, **Nouvel onglet en arrière-plan** ou **Onglet actuel** : où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Ctrl/Cmd+clic fonctionnent toujours comme dans votre navigateur |
+
+### Suppression [#deleting]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Confirmer avant de supprimer** | Activé | Demande confirmation avant de supprimer. Dans tous les cas, chaque suppression peut être annulée pendant 10 secondes |
 
 ## IA [#ai]
 
@@ -66,14 +104,22 @@ L'IA est désactivée par défaut. Ces paramètres n'ont d'effet qu'après l'act
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Fonctionnalités d'IA** | Désactivé | Active les outils d'IA et les recommandations de dossiers de la fenêtre pop-up. Dans Firefox, l'activation demande votre consentement pour partager les données dont votre fournisseur d'IA a besoin |
-| **Recommander à l'ouverture** | Désactivé | Demande des recommandations de dossiers à chaque ouverture de la fenêtre pop-up |
-| **Lire le contenu des pages** | Désactivé | Envoie le texte principal de chaque page, et pas seulement son titre et son URL, aux recommandations de dossiers, à l'étiquetage automatique et au générateur de résumés. Demande l'accès aux sites Web lors de l'activation |
 | **Fournisseur d'IA** et **Modèle d'IA** | OpenAI, GPT-4o Mini | Le fournisseur et le modèle utilisés par tous les outils d'IA |
-| **Nombre maximal de recommandations** | 5 | Nombre maximal de recommandations de dossiers à demander |
-| **Nombre maximal de catégories** | Aucune limite | Nombre maximal de dossiers de premier niveau qu'un plan de réorganisation peut créer |
-| **Nombre minimal de favoris par dossier** et **Nombre maximal de favoris par dossier** | 1 et Aucune limite | Tailles de dossier visées par les plans de réorganisation |
 
 En dessous, le panneau du fournisseur contient **Clé API**, **URL de base**, **Modèle personnalisé** et **En-têtes supplémentaires (JSON)**, ainsi que **Vérifier le service** et **Actualiser les modèles**. Les limites de dossiers sont transmises au fournisseur sous forme d'instructions, et sa réponse n'est pas contrôlée par rapport à ces limites. Consultez [Configurer les outils d'IA](/guides/ai-tools).
+
+### Suggestions de dossier [#folder-suggestions]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Recommander à l'ouverture** | Désactivé | Demande des recommandations de dossiers à chaque ouverture de la fenêtre pop-up |
+| **Nombre maximal de recommandations** | 5 | Nombre maximal de recommandations de dossiers à demander |
+
+### Lire le contenu des pages [#read-page-content]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Lire le contenu des pages** | Désactivé | Envoie le texte principal de chaque page, et pas seulement son titre et son URL, aux recommandations de dossiers, à l'étiquetage automatique et au générateur de résumés. Demande l'accès aux sites Web lors de l'activation |
 
 ## Outils d'IA [#ai-tools]
 
@@ -88,6 +134,13 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 
 L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel, quelle que soit leur **Portée par défaut**.
 
+### Réorganisation des dossiers par IA [#ai-folder-reorganization]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Nombre maximal de catégories** | Aucune limite | Nombre maximal de dossiers de premier niveau qu'un plan de réorganisation peut créer |
+| **Nombre minimal de favoris par dossier** et **Nombre maximal de favoris par dossier** | 1 et Aucune limite | Tailles de dossier visées par les plans de réorganisation |
+
 ## Maintenance [#maintenance]
 
 | Outil | Paramètres et valeurs par défaut |
@@ -100,6 +153,8 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 
 ## Métadonnées et contenu [#metadata--content]
 
+### Récupération des métadonnées [#metadata-fetcher]
+
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
 | **Activer la récupération des métadonnées** | Activé | Affiche **Récupération des métadonnées** dans la barre latérale Outils |
@@ -107,6 +162,11 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 | **Récupérer les descriptions** | Activé | Affiche les descriptions des pages dans la vérification. Elles ne sont jamais enregistrées |
 | **Délai d'expiration des requêtes** | 8000 ms | Par page. Également utilisé par **Actualiser les icônes de site** |
 | **Requêtes simultanées** | 4 | Nombre de pages demandées en même temps. Également utilisé par **Actualiser les icônes de site** |
+
+### Actualiser les icônes de site [#refresh-site-icons]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
 | **Activer l'outil Actualiser les icônes de site** | Activé | Affiche **Actualiser les icônes de site** dans la barre latérale Outils |
 | **Portée par défaut** | Dossier actuel | Portée initiale de l'actualisation des icônes de site |
 | **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
@@ -131,7 +191,7 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 | **Inclure les domaines**, **Inclure les dossiers**, **Inclure les doublons**, **Inclure les protocoles**, **Inclure la répartition par profondeur** | Activé | Sections du rapport ; une section désactivée est masquée |
 | **Nombre d'entrées principales** | 10 | Longueur des listes des principaux domaines et dossiers |
 
-## Données [#data]
+## Importation et exportation [#data]
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
@@ -141,7 +201,5 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 | **Longueur maximale du nom de fichier** | 50 | Longueur maximale d'un nom de fichier généré |
 | **Indentation JSON**, **Indentation HTML**, **Indentation Markdown** | 2, 4, 2 | Nombre d'espaces par niveau dans chaque format |
 | **Inclure les dates** et **Inclure les URL** | Activé | Les inclut dans les exportations |
-| **Menu contextuel** | Désactivé | Affiche **Enregistrer le favori dans…** lorsque vous effectuez un clic droit sur un lien. Dans Chrome et Edge, l'activation ajoute l'autorisation facultative du menu contextuel, sans demande de confirmation |
-| **Source du nom du favori** | Texte du lien | Nomme un favori enregistré par clic droit d'après le texte du lien, le titre de la page ou l'URL du lien |
 
 Consultez [Importation et exportation](/guides/import-export).

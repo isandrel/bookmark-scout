@@ -38,7 +38,7 @@ async function menuRootRegistered(worker: Worker): Promise<boolean> {
 
 async function openDataSettings(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: 'Data', exact: true }).click();
+  await page.getByRole('tab', { name: 'Saving & Search', exact: true }).click();
   return page.getByRole('switch', { name: 'Context Menu' });
 }
 

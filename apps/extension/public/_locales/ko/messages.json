@@ -363,17 +363,9 @@
         "message": "외관",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "북마크 표시 방법 맞춤 설정",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "검색",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "검색 동작 설정",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "동작",
@@ -383,13 +375,57 @@
         "message": "확장 프로그램 동작 제어",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "고급 설정",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "저장 및 검색",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "고급 설정",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "페이지를 알맞은 폴더에 저장하고 폴더와 북마크를 찾습니다",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "언어, 테마, 아이콘, 팝업 크기, 알림",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "가져오기 및 내보내기",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "도구 사이드바에서 북마크를 내보내고 가져옵니다",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "저장",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "언어, 테마, 아이콘",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "팝업",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "알림",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "트리 및 정렬",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "링크",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "삭제",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "폴더 추천",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "언어",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "통계 및 리포트 기능을 설정합니다",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "데이터",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "가져오기/내보내기 설정을 관리합니다",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "최대 카테고리 수",

@@ -4,6 +4,7 @@
 
 ### Features
 
+- Settings are regrouped so each page has titled sections: **Saving & Search** comes first (folder matches, search, recent folders, right-click menu), **Appearance** takes the popup size and notification settings that were under **Advanced**, AI Folder Reorganization limits move to **AI Tools**, and every tool on the Maintenance, Metadata & Content, Security, Analytics, and AI Tools pages has its own heading. **Data** is now **Import & Export**. No setting or default changed.
 - Save to a folder by typing its name. While you search in the popup or side panel, **Save to folder** lists the matching folders above the results with where they are, best first; press Down and then Enter, or click one, to save the current page there. Several words also match parent folders ("react hooks", "frontend/react"), a longer word may have one typo, and folders you saved to recently rank higher. Settings > Search can turn the list off, change how many folders it shows, and turn off typo matching.
 - Pressing Down right after typing in the search box now moves to the new results instead of the previous ones.
 - The popup footer says **Save here** while a folder is selected, since Enter saves the page there.

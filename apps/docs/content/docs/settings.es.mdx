@@ -12,7 +12,47 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 - **Exportar** guarda tu configuración como archivo JSON, e **Importar** la restaura desde uno. Ninguno de los dos toca tus marcadores.
 - La configuración se guarda en el almacenamiento sincronizado del navegador, así que te sigue a otros dispositivos cuando la sincronización del navegador está activada. La clave de API del proveedor de IA, la **URL base** y los **Encabezados adicionales (JSON)** son la excepción: se quedan en este dispositivo. Consulta [Privacidad](/privacy).
 
+## Guardar y buscar [#search]
+
+### Carpetas coincidentes [#folder-matches]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Carpetas coincidentes** | Activado | Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual |
+| **Máximo de carpetas coincidentes** | 5 | Cuántas carpetas coincidentes mostrar |
+| **Permitir errores de escritura** | Activado | Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error |
+
+### Búsqueda [#searching]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Retraso de búsqueda** | 300 ms | Cuánto esperar después de que dejas de escribir antes de que la ventana emergente busque |
+| **Máximo de resultados de búsqueda** | 20 resultados | Máximo de coincidencias que se muestran; una nota avisa cuando hay más |
+| **Desplegar carpetas al buscar** | Activado | Abre las carpetas que contienen coincidencias |
+| **Historial de búsqueda** | Activado | Recuerda las búsquedas recientes en este dispositivo |
+
+Consulta [Búsqueda y búsquedas guardadas](/guides/search).
+
+### Guardar [#saving]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Carpetas recientes** | Activado | Muestra las carpetas usadas recientemente en la ventana emergente y en el menú contextual |
+| **Máximo de carpetas recientes** | 5 | Cuántas carpetas recientes se muestran |
+| **Nombre de carpeta predeterminado** | Nueva carpeta | El nombre con el que empieza una carpeta nueva |
+
+Consulta [Guardar y organizar](/guides/save-and-organize).
+
+### Menú contextual [#context-menu]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Menú contextual** | Desactivado | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace. En Chrome y Edge, al activarlo se añade el permiso opcional del menú contextual, sin preguntar |
+| **Origen del nombre del marcador** | Texto del enlace | Pone a un marcador guardado desde el menú contextual el nombre del texto del enlace, del título de la página o de la URL del enlace |
+
 ## Aspecto [#appearance]
+
+### Idioma, tema e iconos [#language-theme-and-icons]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
@@ -22,42 +62,40 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 | **Usar la caché de iconos del navegador** | Desactivado | Chrome y Edge: muestra también los iconos que el navegador ya tiene en caché, para los sitios que no tienen uno guardado con **Actualizar iconos de sitios**. Al activarlo, se pide permiso para leer los iconos de sitios. No aparece en Firefox, que no ofrece a las extensiones una caché de iconos |
 | **Tamaño de los iconos de sitios** | 16px (pequeño) | 16, 24 o 32 píxeles |
 
-## Búsqueda [#search]
-
-| Ajuste | Predeterminado | Qué hace |
-| --- | --- | --- |
-| **Retraso de búsqueda** | 300 ms | Cuánto esperar después de que dejas de escribir antes de que la ventana emergente busque |
-| **Máximo de resultados de búsqueda** | 20 resultados | Máximo de coincidencias que se muestran; una nota avisa cuando hay más |
-| **Desplegar carpetas al buscar** | Activado | Abre las carpetas que contienen coincidencias |
-| **Historial de búsqueda** | Activado | Recuerda las búsquedas recientes en este dispositivo |
-| **Carpetas coincidentes** | Activado | Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual |
-| **Máximo de carpetas coincidentes** | 5 | Cuántas carpetas coincidentes mostrar |
-| **Permitir errores de escritura** | Activado | Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error |
-
-Consulta [Búsqueda y búsquedas guardadas](/guides/search).
-
-## Comportamiento [#behavior]
-
-| Ajuste | Predeterminado | Qué hace |
-| --- | --- | --- |
-| **Orden** | Fecha de creación | **Fecha de creación**, **Alfabético** o **Carpetas primero**. Solo cambia cómo muestra Bookmark Scout los marcadores, nunca el orden que guarda el navegador |
-| **Agrupar por carpetas** | Activado | En la ventana emergente y en el panel lateral, muestra las subcarpetas antes que los marcadores en cada nivel |
-| **Abrir enlaces en** | Pestaña nueva | **Pestaña nueva**, **Pestaña nueva en segundo plano** o **Pestaña actual**: dónde se abre un enlace al hacer clic en él en Bookmark Scout. El clic central y Ctrl/Cmd+clic siguen funcionando como en tu navegador |
-| **Confirmar antes de eliminar** | Activado | Pregunta antes de eliminar. En cualquier caso, toda eliminación se puede deshacer durante 10 segundos |
-| **Nombre de carpeta predeterminado** | Nueva carpeta | El nombre con el que empieza una carpeta nueva |
-| **Carpetas recientes** | Activado | Muestra las carpetas usadas recientemente en la ventana emergente y en el menú contextual |
-| **Máximo de carpetas recientes** | 5 | Cuántas carpetas recientes se muestran |
-
-Consulta [Guardar y organizar](/guides/save-and-organize).
-
-## Avanzado [#advanced]
+### Ventana emergente [#popup]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Ancho de la ventana emergente** | 400 px | Los navegadores permiten como máximo 800 px |
 | **Alto de la ventana emergente** | 500 px | Los navegadores permiten como máximo 600 px |
 | **Longitud de recorte** | 50 caracteres | Acorta el título de la página en el encabezado de sugerencias de IA de la ventana emergente |
+
+### Notificaciones [#notifications]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
 | **Duración de las notificaciones** | 4000 ms | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
+
+## Comportamiento [#behavior]
+
+### Árbol y orden [#tree-and-sorting]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Orden** | Fecha de creación | **Fecha de creación**, **Alfabético** o **Carpetas primero**. Solo cambia cómo muestra Bookmark Scout los marcadores, nunca el orden que guarda el navegador |
+| **Agrupar por carpetas** | Activado | En la ventana emergente y en el panel lateral, muestra las subcarpetas antes que los marcadores en cada nivel |
+
+### Enlaces [#links]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Abrir enlaces en** | Pestaña nueva | **Pestaña nueva**, **Pestaña nueva en segundo plano** o **Pestaña actual**: dónde se abre un enlace al hacer clic en él en Bookmark Scout. El clic central y Ctrl/Cmd+clic siguen funcionando como en tu navegador |
+
+### Eliminar [#deleting]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Confirmar antes de eliminar** | Activado | Pregunta antes de eliminar. En cualquier caso, toda eliminación se puede deshacer durante 10 segundos |
 
 ## IA [#ai]
 
@@ -66,14 +104,22 @@ La IA está desactivada de forma predeterminada. Estos ajustes solo importan des
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Funciones de IA** | Desactivado | Activa las herramientas de IA y las recomendaciones de carpetas de la ventana emergente. En Firefox, al activarlo se te pide consentimiento para compartir los datos que necesita tu proveedor de IA |
-| **Recomendar al abrir** | Desactivado | Pide recomendaciones de carpetas cada vez que se abre la ventana emergente |
-| **Leer el contenido de la página** | Desactivado | Envía el texto principal de cada página, no solo su título y su URL, a las recomendaciones de carpetas, al Etiquetado automático y al Generador de resúmenes. Al activarlo, se pide acceso a los sitios web |
 | **Proveedor de IA** y **Modelo de IA** | OpenAI, GPT-4o Mini | Qué proveedor y qué modelo usan todas las herramientas de IA |
-| **Máximo de recomendaciones** | 5 | Máximo de recomendaciones de carpetas que se solicitan |
-| **Máximo de categorías** | Sin límite | Máximo de carpetas de primer nivel que puede crear un plan de reorganización |
-| **Mínimo de elementos por carpeta** y **Máximo de elementos por carpeta** | 1 y Sin límite | Tamaños de carpeta objetivo para los planes de reorganización |
 
 Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**, **Modelo personalizado** y **Encabezados adicionales (JSON)**, con **Verificar servicio** y **Actualizar modelos**. Los límites de carpeta se envían al proveedor como instrucciones, y no se comprueba que su respuesta los cumpla. Consulta [Configurar las herramientas de IA](/guides/ai-tools).
+
+### Sugerencias de carpeta [#folder-suggestions]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Recomendar al abrir** | Desactivado | Pide recomendaciones de carpetas cada vez que se abre la ventana emergente |
+| **Máximo de recomendaciones** | 5 | Máximo de recomendaciones de carpetas que se solicitan |
+
+### Leer el contenido de la página [#read-page-content]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Leer el contenido de la página** | Desactivado | Envía el texto principal de cada página, no solo su título y su URL, a las recomendaciones de carpetas, al Etiquetado automático y al Generador de resúmenes. Al activarlo, se pide acceso a los sitios web |
 
 ## Herramientas de IA [#ai-tools]
 
@@ -88,6 +134,13 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 
 El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual, diga lo que diga su **Ámbito predeterminado**.
 
+### Reorganización de carpetas con IA [#ai-folder-reorganization]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Máximo de categorías** | Sin límite | Máximo de carpetas de primer nivel que puede crear un plan de reorganización |
+| **Mínimo de elementos por carpeta** y **Máximo de elementos por carpeta** | 1 y Sin límite | Tamaños de carpeta objetivo para los planes de reorganización |
+
 ## Mantenimiento [#maintenance]
 
 | Herramienta | Ajustes y valores predeterminados |
@@ -100,6 +153,8 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 
 ## Metadatos y contenido [#metadata--content]
 
+### Extractor de metadatos [#metadata-fetcher]
+
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
 | **Activar el Extractor de metadatos** | Activado | Muestra **Extractor de metadatos** en la barra lateral de herramientas |
@@ -107,6 +162,11 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 | **Obtener descripciones** | Activado | Muestra las descripciones de las páginas en la revisión. Nunca se guardan |
 | **Tiempo de espera de la solicitud** | 8000 ms | Por página. También lo usa **Actualizar iconos de sitios** |
 | **Solicitudes simultáneas** | 4 | Páginas solicitadas a la vez. También lo usa **Actualizar iconos de sitios** |
+
+### Actualizar iconos de sitios [#refresh-site-icons]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
 | **Activar Actualizar iconos de sitios** | Activado | Muestra **Actualizar iconos de sitios** en la barra lateral de herramientas |
 | **Ámbito predeterminado** | Carpeta actual | Ámbito con el que empieza la actualización de iconos de sitios |
 | **Tamaño de icono preferido** | 32px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
@@ -131,7 +191,7 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 | **Incluir dominios**, **Incluir carpetas**, **Incluir duplicados**, **Incluir protocolos**, **Incluir desglose por profundidad** | Activado | Secciones del informe; una sección desactivada se oculta |
 | **Número de entradas principales** | 10 | Longitud de las listas de dominios y carpetas principales |
 
-## Datos [#data]
+## Importar y exportar [#data]
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
@@ -141,7 +201,5 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 | **Longitud máxima del nombre de archivo** | 50 | Nombre de archivo generado más largo |
 | **Sangría de JSON**, **Sangría de HTML**, **Sangría de Markdown** | 2, 4, 2 | Espacios por nivel en cada formato |
 | **Incluir fechas** e **Incluir URLs** | Activado | Los incluye en las exportaciones |
-| **Menú contextual** | Desactivado | Muestra **Guardar marcador en...** cuando haces clic con el botón derecho en un enlace. En Chrome y Edge, al activarlo se añade el permiso opcional del menú contextual, sin preguntar |
-| **Origen del nombre del marcador** | Texto del enlace | Pone a un marcador guardado desde el menú contextual el nombre del texto del enlace, del título de la página o de la URL del enlace |
 
 Consulta [Importar y exportar](/guides/import-export).

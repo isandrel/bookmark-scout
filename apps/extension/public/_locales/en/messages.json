@@ -363,17 +363,9 @@
         "message": "Appearance",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "Customize how bookmarks look",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "Search",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "Configure search behavior",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "Behavior",
@@ -383,13 +375,57 @@
         "message": "Control extension behavior",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "Advanced",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "Saving & Search",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "Advanced settings",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "Save pages into the right folder, and find folders and bookmarks",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "Language, theme, icons, popup size, and notifications",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "Import & Export",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "Export and import bookmarks from the Tools sidebar",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "Saving",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "Language, theme, and icons",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "Popup",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "Notifications",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "Tree and sorting",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "Links",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "Deleting",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "Folder suggestions",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "Language",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "Configure bookmark analysis and reporting",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "Data",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "Configure import, export, and data handling tools",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "Max Categories",

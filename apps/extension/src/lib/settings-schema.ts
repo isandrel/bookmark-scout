@@ -27,9 +27,24 @@ export type SettingsFieldMeta = {
   control?: 'slider';
 };
 
-type SettingsCategoryMeta = {
+/** Options content that is not synced settings, drawn by its own component. */
+export type SettingsPanelId = 'aiServices' | 'aiActivity' | 'promptLibrary';
+
+/** A titled group of settings inside a category: the Options page's second level. */
+export type SettingsSectionMeta = {
+  id: string;
+  /** Omitted for a category's lead setting, such as the AI switch, which needs no heading. */
+  label?: string;
+  fields: readonly (keyof Settings)[];
+  /** A panel drawn after the section's fields (it brings its own heading). */
+  panel?: SettingsPanelId;
+};
+
+export type SettingsCategoryMeta = {
   label: string;
   description: string;
+  sections: readonly SettingsSectionMeta[];
+  /** Every field of the category, in section order (search and counts read this). */
   fields: readonly (keyof Settings)[];
 };
 
@@ -846,182 +861,267 @@ export const SETTING_NUMBER_BOUNDS = Object.fromEntries(
   ),
 ) as Readonly<Record<NumberSettingKey, NumberSetting>>;
 
+type SectionSpec = Omit<SettingsSectionMeta, 'label'> & { labelKey?: string };
+
+/** A category from its message keys and sections; `fields` is derived from the sections. */
+function category(
+  labelKey: string,
+  descriptionKey: string,
+  sections: readonly SectionSpec[],
+): SettingsCategoryMeta {
+  const built = sections.map(({ labelKey: key, ...section }) => ({
+    ...section,
+    ...(key ? { label: t(key) } : {}),
+  }));
+  return {
+    label: t(labelKey),
+    description: t(descriptionKey),
+    sections: built,
+    fields: built.flatMap((section) => section.fields),
+  };
+}
+
+/**
+ * The Options page: categories on the left, titled sections on the right, in display order.
+ * The AI tool and maintenance categories mirror the manager's Tools sidebar, and their sections
+ * reuse the tool titles, so a tool has the same name in both places.
+ */
 function buildCategories(): Record<string, SettingsCategoryMeta> {
   return {
-    appearance: {
-      label: t('settings_appearance'),
-      description: t('settings_appearanceDesc'),
-      fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
-    },
-    search: {
-      label: t('settings_search'),
-      description: t('settings_searchDesc'),
-      fields: [
-        'searchDebounceMs',
-        'maxSearchResults',
-        'expandFoldersOnSearch',
-        'searchHistory',
-        'folderMatchesEnabled',
-        'folderMatchesMax',
-        'folderMatchesTypos',
-      ],
-    },
-    behavior: {
-      label: t('settings_behavior'),
-      description: t('settings_behaviorDesc'),
-      fields: [
-        'sortOrder',
-        'groupByFolders',
-        'linkOpenTarget',
-        'confirmBeforeDelete',
-        'defaultNewFolderName',
-        'recentFoldersEnabled',
-        'recentFoldersMax',
-      ],
-    },
-    advanced: {
-      label: t('settings_advanced'),
-      description: t('settings_advancedDesc'),
-      fields: ['popupWidth', 'popupHeight', 'truncateLength', 'toastDurationMs'],
-    },
-    ai: {
-      label: t('settings_ai'),
-      description: t('settings_aiDesc'),
-      // The provider and model live on AI services (AIServicesPanel), not in these synced fields.
-      fields: [
-        'aiEnabled',
-        'aiAutoTriggerOnOpen',
-        'aiReadPageContent',
-        'aiMaxRecommendations',
-        'aiMaxCategories',
-        'aiMinItemsPerFolder',
-        'aiMaxItemsPerFolder',
-      ],
-    },
-    aiTools: {
-      label: t('settings_aiTools'),
-      description: t('settings_aiToolsDesc'),
-      fields: [
-        'aiContextPackerEnabled',
-        'aiContextPackerDefaultScope',
-        'aiContextPackerOutputFormat',
-        'aiContextPackerIncludeFolderPath',
-        'aiContextPackerIncludeDates',
-        'aiContextPackerIncludeTags',
-        'aiContextPackerIncludeSummaries',
-        'aiContextPackerMaxItems',
-        'aiContextPackerMaxDepth',
-        'aiContextPackerExcerptLength',
-        'autoTaggingEnabled',
-        'autoTaggingDefaultScope',
-        'autoTaggingMinTags',
-        'autoTaggingMaxTags',
-        'autoTaggingTagStyle',
-        'autoTaggingMergeMode',
-        'autoTaggingDedupeTags',
-        'summarizerEnabled',
-        'summarizerDefaultScope',
-        'summarizerSummaryLength',
-        'summarizerIncludeDomainHint',
-        'summarizerMergeMode',
-        'reorganizationEnabled',
-        'reorganizationDefaultScope',
-        'reorganizationDryRunFirst',
-        'reorganizationMinConfidence',
-        'reorganizationBatchSize',
-      ],
-    },
-    maintenance: {
-      label: t('settings_maintenance'),
-      description: t('settings_maintenanceDesc'),
-      fields: [
-        'duplicatesEnabled',
-        'duplicatesDefaultScope',
-        'duplicatesMatchStrategy',
-        'duplicatesNormalizeWww',
-        'duplicatesIgnoreProtocol',
-        'duplicatesIgnoreTrailingSlash',
-        'duplicatesKeepRule',
-        'duplicatesMaxGroups',
-        'urlCleanerEnabled',
-        'urlCleanerDefaultScope',
-        'urlCleanerRemoveHash',
-        'urlCleanerSortQueryParams',
-        'urlCleanerDedupeQueryParams',
-        'urlCleanerPreserveParams',
-        'urlCleanerRemoveParams',
-        'deadLinksEnabled',
-        'deadLinksDefaultScope',
-        'deadLinksRequestTimeoutMs',
-        'deadLinksConcurrency',
-        'deadLinksRetryCount',
-        'deadLinksFollowRedirects',
-        'deadLinksSuccessStatuses',
-      ],
-    },
-    metadataContent: {
-      label: t('settings_metadataContent'),
-      description: t('settings_metadataContentDesc'),
-      fields: [
-        'metadataFetcherEnabled',
-        'metadataFetcherDefaultScope',
-        'metadataFetcherOverwriteTitles',
-        'metadataFetcherFetchDescriptions',
-        'metadataFetcherRequestTimeoutMs',
-        'metadataFetcherConcurrency',
-        'siteIconsEnabled',
-        'siteIconsDefaultScope',
-        'siteIconsPreferredSize',
-        'siteIconsMaxIconKb',
-        'siteIconsMaxCacheKb',
-      ],
-    },
-    security: {
-      label: t('settings_security'),
-      description: t('settings_securityDesc'),
-      fields: [
-        'privacyScannerEnabled',
-        'privacyScannerDefaultScope',
-        'privacyScannerScanTitles',
-        'privacyScannerScanQueryParams',
-        'privacyScannerScanFragments',
-        'privacyScannerSensitiveParams',
-        'privacyScannerEmailDetection',
-        'privacyScannerUuidDetection',
-      ],
-    },
-    analytics: {
-      label: t('settings_analytics'),
-      description: t('settings_analyticsDesc'),
-      fields: [
-        'statisticsEnabled',
-        'statisticsDefaultScope',
-        'statisticsIncludeDomains',
-        'statisticsIncludeFolders',
-        'statisticsIncludeDuplicates',
-        'statisticsIncludeProtocols',
-        'statisticsIncludeDepthBreakdown',
-        'statisticsTopN',
-      ],
-    },
-    data: {
-      label: t('settings_data'),
-      description: t('settings_dataDesc'),
-      fields: [
-        'dataShowExport',
-        'dataShowImport',
-        'dataDefaultExportFormat',
-        'exportFilenamePrefix',
-        'exportFilenameMaxLength',
-        'exportJsonIndentSize',
-        'exportHtmlIndentSpaces',
-        'exportMarkdownIndentSpaces',
-        'exportIncludeDates',
-        'exportIncludeUrls',
-        'contextMenuEnabled',
-        'contextMenuBookmarkNaming',
-      ],
-    },
+    search: category('settings_savingSearch', 'settings_savingSearchDesc', [
+      {
+        id: 'folderMatches',
+        labelKey: 'settings_folderMatchesEnabled',
+        fields: ['folderMatchesEnabled', 'folderMatchesMax', 'folderMatchesTypos'],
+      },
+      {
+        id: 'search',
+        labelKey: 'settings_search',
+        fields: ['searchDebounceMs', 'maxSearchResults', 'expandFoldersOnSearch', 'searchHistory'],
+      },
+      {
+        id: 'saving',
+        labelKey: 'settings_sectionSaving',
+        fields: ['recentFoldersEnabled', 'recentFoldersMax', 'defaultNewFolderName'],
+      },
+      {
+        id: 'contextMenu',
+        labelKey: 'settings_contextMenuEnabled',
+        fields: ['contextMenuEnabled', 'contextMenuBookmarkNaming'],
+      },
+    ]),
+    appearance: category('settings_appearance', 'settings_appearanceDesc', [
+      {
+        id: 'themeIcons',
+        labelKey: 'settings_sectionThemeIcons',
+        fields: ['language', 'theme', 'showFavicons', 'browserIconCache', 'faviconSize'],
+      },
+      {
+        id: 'popup',
+        labelKey: 'settings_sectionPopup',
+        fields: ['popupWidth', 'popupHeight', 'truncateLength'],
+      },
+      {
+        id: 'notifications',
+        labelKey: 'settings_sectionNotifications',
+        fields: ['toastDurationMs'],
+      },
+    ]),
+    behavior: category('settings_behavior', 'settings_behaviorDesc', [
+      { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders'] },
+      { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
+      { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
+    ]),
+    ai: category('settings_ai', 'settings_aiDesc', [
+      // The switch comes first, then the services it turns on (provider and model live there,
+      // not in synced settings), then what the services are used for.
+      { id: 'enable', fields: ['aiEnabled'], panel: 'aiServices' },
+      {
+        id: 'suggestions',
+        labelKey: 'settings_sectionSuggestions',
+        fields: ['aiAutoTriggerOnOpen', 'aiMaxRecommendations'],
+      },
+      {
+        id: 'pageReading',
+        labelKey: 'settings_aiReadPageContent',
+        fields: ['aiReadPageContent'],
+      },
+      { id: 'activity', fields: [], panel: 'aiActivity' },
+    ]),
+    aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
+      { id: 'prompts', fields: [], panel: 'promptLibrary' },
+      {
+        id: 'contextPacker',
+        labelKey: 'tools_exportAI',
+        fields: [
+          'aiContextPackerEnabled',
+          'aiContextPackerDefaultScope',
+          'aiContextPackerOutputFormat',
+          'aiContextPackerIncludeFolderPath',
+          'aiContextPackerIncludeDates',
+          'aiContextPackerIncludeTags',
+          'aiContextPackerIncludeSummaries',
+          'aiContextPackerMaxItems',
+          'aiContextPackerMaxDepth',
+          'aiContextPackerExcerptLength',
+        ],
+      },
+      {
+        id: 'autoTagging',
+        labelKey: 'tools_autoTagging',
+        fields: [
+          'autoTaggingEnabled',
+          'autoTaggingDefaultScope',
+          'autoTaggingMinTags',
+          'autoTaggingMaxTags',
+          'autoTaggingTagStyle',
+          'autoTaggingMergeMode',
+          'autoTaggingDedupeTags',
+        ],
+      },
+      {
+        id: 'summarizer',
+        labelKey: 'tools_summarizer',
+        fields: [
+          'summarizerEnabled',
+          'summarizerDefaultScope',
+          'summarizerSummaryLength',
+          'summarizerIncludeDomainHint',
+          'summarizerMergeMode',
+        ],
+      },
+      {
+        id: 'reorganization',
+        labelKey: 'tools_aiReorganize',
+        fields: [
+          'reorganizationEnabled',
+          'reorganizationDefaultScope',
+          'reorganizationDryRunFirst',
+          'reorganizationMinConfidence',
+          'reorganizationBatchSize',
+          'aiMaxCategories',
+          'aiMinItemsPerFolder',
+          'aiMaxItemsPerFolder',
+        ],
+      },
+    ]),
+    maintenance: category('settings_maintenance', 'settings_maintenanceDesc', [
+      {
+        id: 'duplicates',
+        labelKey: 'tools_findDuplicates',
+        fields: [
+          'duplicatesEnabled',
+          'duplicatesDefaultScope',
+          'duplicatesMatchStrategy',
+          'duplicatesNormalizeWww',
+          'duplicatesIgnoreProtocol',
+          'duplicatesIgnoreTrailingSlash',
+          'duplicatesKeepRule',
+          'duplicatesMaxGroups',
+        ],
+      },
+      {
+        id: 'urlCleaner',
+        labelKey: 'tools_cleanUrls',
+        fields: [
+          'urlCleanerEnabled',
+          'urlCleanerDefaultScope',
+          'urlCleanerRemoveHash',
+          'urlCleanerSortQueryParams',
+          'urlCleanerDedupeQueryParams',
+          'urlCleanerPreserveParams',
+          'urlCleanerRemoveParams',
+        ],
+      },
+      {
+        id: 'deadLinks',
+        labelKey: 'tools_checkDeadLinks',
+        fields: [
+          'deadLinksEnabled',
+          'deadLinksDefaultScope',
+          'deadLinksRequestTimeoutMs',
+          'deadLinksConcurrency',
+          'deadLinksRetryCount',
+          'deadLinksFollowRedirects',
+          'deadLinksSuccessStatuses',
+        ],
+      },
+    ]),
+    metadataContent: category('settings_metadataContent', 'settings_metadataContentDesc', [
+      {
+        id: 'metadataFetcher',
+        labelKey: 'tools_metadataFetcher',
+        fields: [
+          'metadataFetcherEnabled',
+          'metadataFetcherDefaultScope',
+          'metadataFetcherOverwriteTitles',
+          'metadataFetcherFetchDescriptions',
+          'metadataFetcherRequestTimeoutMs',
+          'metadataFetcherConcurrency',
+        ],
+      },
+      {
+        id: 'siteIcons',
+        labelKey: 'tools_siteIcons',
+        fields: [
+          'siteIconsEnabled',
+          'siteIconsDefaultScope',
+          'siteIconsPreferredSize',
+          'siteIconsMaxIconKb',
+          'siteIconsMaxCacheKb',
+        ],
+      },
+    ]),
+    security: category('settings_security', 'settings_securityDesc', [
+      {
+        id: 'privacyScanner',
+        labelKey: 'tools_privacyScanner',
+        fields: [
+          'privacyScannerEnabled',
+          'privacyScannerDefaultScope',
+          'privacyScannerScanTitles',
+          'privacyScannerScanQueryParams',
+          'privacyScannerScanFragments',
+          'privacyScannerSensitiveParams',
+          'privacyScannerEmailDetection',
+          'privacyScannerUuidDetection',
+        ],
+      },
+    ]),
+    analytics: category('settings_analytics', 'settings_analyticsDesc', [
+      {
+        id: 'statistics',
+        labelKey: 'tools_statistics',
+        fields: [
+          'statisticsEnabled',
+          'statisticsDefaultScope',
+          'statisticsIncludeDomains',
+          'statisticsIncludeFolders',
+          'statisticsIncludeDuplicates',
+          'statisticsIncludeProtocols',
+          'statisticsIncludeDepthBreakdown',
+          'statisticsTopN',
+        ],
+      },
+    ]),
+    data: category('settings_importExport', 'settings_importExportDesc', [
+      {
+        id: 'export',
+        labelKey: 'tools_export',
+        fields: [
+          'dataShowExport',
+          'dataDefaultExportFormat',
+          'exportIncludeDates',
+          'exportIncludeUrls',
+          'exportFilenamePrefix',
+          'exportFilenameMaxLength',
+          'exportJsonIndentSize',
+          'exportHtmlIndentSpaces',
+          'exportMarkdownIndentSpaces',
+        ],
+      },
+      { id: 'import', labelKey: 'tools_import', fields: ['dataShowImport'] },
+    ]),
   };
 }
 
@@ -1054,7 +1154,14 @@ export function getSettingsCategories(): Record<string, SettingsCategoryMeta> {
   return Object.fromEntries(
     Object.entries(buildCategories()).map(([id, category]) => [
       id,
-      { ...category, fields: category.fields.filter(isSettingSupported) },
+      {
+        ...category,
+        sections: category.sections.map((section) => ({
+          ...section,
+          fields: section.fields.filter(isSettingSupported),
+        })),
+        fields: category.fields.filter(isSettingSupported),
+      },
     ]),
   );
 }

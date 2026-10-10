@@ -363,17 +363,9 @@
         "message": "外观",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "自定义书签的显示方式",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "搜索",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "配置搜索行为",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "行为",
@@ -383,13 +375,57 @@
         "message": "控制扩展程序的行为",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "高级",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "保存与搜索",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "高级设置",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "把网页保存到合适的文件夹，并查找文件夹和书签",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "语言、主题、图标、弹出窗口大小和通知",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "导入与导出",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "从工具侧边栏导出和导入书签",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "保存",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "语言、主题和图标",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "弹出窗口",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "通知",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "树状列表与排序",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "链接",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "删除",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "文件夹推荐",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "语言",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "配置书签分析和报告",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "数据",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "配置导入、导出和数据处理工具",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "最大类别数",

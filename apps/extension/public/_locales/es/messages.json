@@ -363,17 +363,9 @@
         "message": "Aspecto",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "Personaliza el aspecto de los marcadores",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "Búsqueda",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "Configura cómo funciona la búsqueda",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "Comportamiento",
@@ -383,13 +375,57 @@
         "message": "Controla el comportamiento de la extensión",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "Avanzado",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "Guardar y buscar",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "Configuración avanzada",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "Guarda páginas en la carpeta adecuada y encuentra carpetas y marcadores",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "Idioma, tema, iconos, tamaño de la ventana emergente y notificaciones",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "Importar y exportar",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "Exporta e importa marcadores desde la barra lateral Herramientas",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "Guardar",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "Idioma, tema e iconos",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "Ventana emergente",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "Notificaciones",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "Árbol y orden",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "Enlaces",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "Eliminar",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "Sugerencias de carpeta",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "Idioma",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "Configura el análisis y los informes de marcadores",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "Datos",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "Configura las herramientas de importación, exportación y gestión de datos",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "Máximo de categorías",
