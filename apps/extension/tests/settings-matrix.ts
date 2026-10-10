@@ -169,6 +169,21 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   searchHistory: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'search history records, reuses, clears, and respects the setting'),
   ]),
+  folderMatchesEnabled: tested(POPUP, [e2e(
+      'folder-match-save.spec.ts',
+      'folder match settings hide the list, limit its length, and turn off typo matching',
+    )]),
+  folderMatchesMax: tested(POPUP, [e2e(
+      'folder-match-save.spec.ts',
+      'folder match settings hide the list, limit its length, and turn off typo matching',
+    )]),
+  folderMatchesTypos: tested(POPUP, [
+    e2e(
+      'folder-match-save.spec.ts',
+      'folder match settings hide the list, limit its length, and turn off typo matching',
+    ),
+    unit('folder-match.test.ts', 'accepts one typo in longer words only'),
+  ]),
 
   // Behavior
   sortOrder: tested(POPUP, [

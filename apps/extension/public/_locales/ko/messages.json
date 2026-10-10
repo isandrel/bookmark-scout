@@ -491,6 +491,30 @@
         "message": "최근 검색 기억",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "폴더 일치 항목",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "검색하는 동안 이름이 일치하는 폴더를 결과 위에 표시해 현재 페이지를 바로 저장할 수 있게 합니다",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "최대 폴더 일치 항목 수",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "표시할 일치 폴더 수",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "오타 허용",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "4글자 이상인 검색어는 한 글자가 틀려도 폴더 이름과 일치시킵니다(\"rect\"로 React를 찾음)",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "정렬 순서",
         "description": "Sort order setting label"
@@ -628,6 +652,18 @@
     "popup_hintEnter": {
         "message": "열기",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "여기에 저장",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "폴더에 저장",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "현재 페이지를 $1에 저장",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "최근 폴더 없음",

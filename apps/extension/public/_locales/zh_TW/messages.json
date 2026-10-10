@@ -491,6 +491,30 @@
         "message": "記住最近的搜尋",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "相符的資料夾",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "搜尋時，在結果上方列出名稱相符的資料夾，方便將目前網頁儲存到那裡",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "相符資料夾數量上限",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "最多列出幾個相符的資料夾",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "允許拼字錯誤",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "4 個字母以上的搜尋字詞，與資料夾名稱相差一個字母也能相符，例如輸入「rect」可找到 React",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "排序方式",
         "description": "Sort order setting label"
@@ -628,6 +652,18 @@
     "popup_hintEnter": {
         "message": "開啟",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "儲存到這裡",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "儲存到資料夾",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "將目前網頁儲存到 $1",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "沒有最近使用的資料夾",

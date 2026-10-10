@@ -491,6 +491,30 @@
         "message": "Recuerda las búsquedas recientes",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "Carpetas coincidentes",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "Mientras buscas, muestra sobre los resultados las carpetas cuyo nombre coincide, para guardar ahí la página actual",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "Máximo de carpetas coincidentes",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "Cuántas carpetas coincidentes mostrar",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "Permitir errores de escritura",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "Una palabra de 4 letras o más coincide con un nombre de carpeta aunque tenga un error, así \"rect\" encuentra React",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "Orden",
         "description": "Sort order setting label"
@@ -628,6 +652,18 @@
     "popup_hintEnter": {
         "message": "Abrir",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "Guardar aquí",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "Guardar en carpeta",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "Guardar la página actual en $1",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "No hay carpetas recientes",

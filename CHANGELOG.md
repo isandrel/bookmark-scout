@@ -1,5 +1,13 @@
 # bookmark-scout
 
+## Unreleased
+
+### Features
+
+- Save to a folder by typing its name. While you search in the popup or side panel, **Save to folder** lists the matching folders above the results with where they are, best first; press Down and then Enter, or click one, to save the current page there. Several words also match parent folders ("react hooks", "frontend/react"), a longer word may have one typo, and folders you saved to recently rank higher. Settings > Search can turn the list off, change how many folders it shows, and turn off typo matching.
+- Pressing Down right after typing in the search box now moves to the new results instead of the previous ones.
+- The popup footer says **Save here** while a folder is selected, since Enter saves the page there.
+
 ## 0.3.2
 
 ### Languages

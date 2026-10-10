@@ -94,6 +94,12 @@ function PopupPage() {
   const { value: searchHistoryEnabled, isLoading: searchHistoryLoading } =
     useSetting('searchHistory');
   const searchHistory = useSearchHistory(searchHistoryEnabled, searchHistoryLoading);
+  // Most recent first, so folder matches can rank folders the user saves to often.
+  const { value: folderMatchesEnabled } = useSetting('folderMatchesEnabled');
+  const { value: folderMatchesMax } = useSetting('folderMatchesMax');
+  const { value: folderMatchesTypos } = useSetting('folderMatchesTypos');
+  const { value: recentFolders } = useStoredValue(recentFoldersValue);
+  const recentFolderIds = useMemo(() => recentFolders.map((folder) => folder.id), [recentFolders]);
   const setExpandFoldersOnSearch = useBookmarkStore((state) => state.setExpandFoldersOnSearch);
   const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
@@ -272,7 +278,8 @@ function PopupPage() {
   }, [handleAIRecommend, runWithCurrentTab]);
 
   const clearQuery = useCallback(() => setQuery(''), [setQuery]);
-  usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery });
+  const applyQuery = useCallback(() => setDebouncedQuery(query), [query, setDebouncedQuery]);
+  usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery, onApplyQuery: applyQuery });
   const setFolderExpanded = useCallback(
     (folderId: string, expanded: boolean) =>
       setExpandedFolders((prev) =>
@@ -512,6 +519,26 @@ function PopupPage() {
     [activeQuery, sortedFolders],
   );
   const isSearchLimited = totalSearchMatches > maxSearchResults;
+  // A regular expression is for finding bookmarks; folder matching reads the words typed.
+  const folderMatches = useMemo(
+    () =>
+      folderMatchesEnabled && activeQuery && !searchOptions.useRegex
+        ? findFolderMatches(folders, activeQuery, {
+            limit: folderMatchesMax,
+            allowTypos: folderMatchesTypos,
+            recentFolderIds,
+          })
+        : [],
+    [
+      activeQuery,
+      folderMatchesEnabled,
+      folderMatchesMax,
+      folderMatchesTypos,
+      folders,
+      recentFolderIds,
+      searchOptions.useRegex,
+    ],
+  );
   const displayFolders = useMemo(
     () => (isSearchLimited ? limitSearchResults(sortedFolders, maxSearchResults) : sortedFolders),
     [isSearchLimited, maxSearchResults, sortedFolders],
@@ -590,6 +617,17 @@ function PopupPage() {
           />
         )}
 
+        {!isLoading && folderMatches.length > 0 && (
+          <FolderMatchesPanel
+            matches={folderMatches}
+            barTitle={barTitle}
+            truncateLength={truncateLength}
+            pendingFolderIds={addingToFolderIds}
+            onSave={saveCurrentPage}
+            onKeyDown={handleTreeKeyDown}
+          />
+        )}
+
         {/* Outside the scrolling tree so the notice stays visible while scrolling results. */}
         {!isLoading && isSearchLimited && (
           <p className="shrink-0 border-b px-4 py-1.5 text-xs text-muted-foreground" role="status">
@@ -606,6 +644,11 @@ function PopupPage() {
               <Skeleton className="h-8 w-full" />
               <Skeleton className="ml-5 h-8 w-9/12" />
             </div>
+          ) : displayFolders.length === 0 && folderMatches.length > 0 ? (
+            // Folders matched but no bookmark did: a quiet note, so the matches stay the focus.
+            <p className="px-4 py-3 text-xs text-muted-foreground" role="status">
+              {t('state_noBookmarksFound')}
+            </p>
           ) : displayFolders.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center gap-1 p-8 text-center">
               {query ? (
@@ -666,7 +709,7 @@ function PopupPage() {
             </div>
           )}
         </div>
-        {!isLoading && displayFolders.length > 0 && <PopupHintBar />}
+        {!isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />}
       </div>
       <BookmarkDeleteDialog
         deletion={deletion}

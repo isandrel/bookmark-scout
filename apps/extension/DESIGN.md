@@ -188,7 +188,9 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`keycap`**: shortcut glyphs in a 20px sunken box with a 1px line. Use the platform's modifier (⌘ on macOS, Ctrl elsewhere) and print keys as the keyboard does: Apple platforms show ⌥, ⇧, and ⌫ where others show Alt, Shift, and Backspace (`shortcutKeyCaps`). Arrow and Enter keys are drawn as 12px lucide icons (the bundled fonts lack some arrows, which then fell back to a smaller system glyph); the glyph stays as screen-reader text. Used in the hint bar, tooltips, and the shortcuts help dialog.
 
-**`hint-bar`**: the popup footer: `/ search`, `↑↓ navigate`, `←→ close or open folder`, and `↵ open`, or `↵ save here` while a folder row is active. It only shows shortcuts that exist in `use-popup-shortcuts.ts`.
+**`hint-bar`**: the popup footer: `/ search`, `↑↓ navigate`, `←→ close or open folder`, and `↵ open`, or `↵ save here` while a folder row (in the tree or the folder matches) is focused.
+
+**`folder-matches`** (`FolderMatchesPanel`): "Save to folder" while searching, between the AI suggestions and the tree: the folders whose names match (`findFolderMatches`, `src/lib/folder-match.ts`), best first, one 32px row each with the name and then its parents in `ink-soft`, which truncate first. Rows are tree rows for the keyboard, so ArrowDown from the search box lands on the best match and Enter saves there. The list takes at most a share of the popup height (`config/ui/popup-folder-matches.toml`) and scrolls beyond it; Settings > Search turns it off, sets how many rows it shows, and turns typo matching on or off. It only shows shortcuts that exist in `use-popup-shortcuts.ts`.
 
 **`chip`**: recent folders and saved searches. 24px, pill, 1px line; the selected chip uses `teal-wash`.
 

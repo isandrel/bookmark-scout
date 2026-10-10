@@ -12,3 +12,12 @@ expand_folders_on_search = true
 
 # Remember and display recent searches
 search_history = true
+
+# List the folders that match the search above the results, to save the current page there
+folder_matches_enabled = true
+
+# How many matching folders to list
+folder_matches_max = { default = 5, min = 1, max = 10, step = 1 }
+
+# Let a longer search word match a folder name with one typo ("rect" finds React)
+folder_matches_typos = true
