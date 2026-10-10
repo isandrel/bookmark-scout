@@ -46,7 +46,7 @@ The docs app is both content-driven and code-driven. Many changes are simple MDX
 - type and generated-source check: `bun run types:check` (in `apps/docs`)
 - build: `nx run docs:build`
 - verify the static export: `nx run docs:verify` (runs the build first) or `bun run verify` after a build
-- lint: `bunx biome check src scripts` (in `apps/docs`; CI runs it in the `Website and Docs` job)
+- lint: `nx run docs:lint` (Biome; covers `bunx biome check src scripts`, which CI runs in the `Website and Docs` job)
 
 The docs app has no `project.json`. Nx targets come from `package.json` scripts plus its `"nx"` field; add new targets there. For screenshot reviews and deploy checks, follow the `website-docs-delivery` skill in `.agents/skills/`.
 
@@ -54,6 +54,7 @@ The docs app has no `project.json`. Nx targets come from `package.json` scripts 
 
 Minimum for most docs changes:
 
+- `nx run docs:lint` when anything under `src/` or `scripts/` changed, including the UI copy in `src/lib/copy*.ts` (CI runs the same Biome check)
 - `nx run docs:build`
 - `nx run docs:verify`, which checks that the legacy URLs (`/`, `/installation`, `/features`, `/status`, `/contributing`) still exist, that every English page also exists under `/<tag>/` for every other language, that each page's `<html lang>` matches its URL, that every sitemap URL and hreflang alternate is on `DOCS_URL` and has an HTML file, that canonical and `og:image` URLs are absolute on `DOCS_URL`, that titles use the `DOCS_NAME` template, that `robots.txt` names the sitemap, that `llms.txt` and `llms-full.txt` have content, that each language has a search index, and that no HTML links to a local address
 
