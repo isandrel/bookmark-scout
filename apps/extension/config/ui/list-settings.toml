@@ -1,5 +1,5 @@
 # Choices offered by the list settings in Options. Read by src/components/options/ListSettingEditors.tsx.
-# The stored lists and their defaults are user settings (config/settings/tools/*.toml); these are
+# The stored lists and their defaults are user settings (config/settings/*.toml); these are
 # only what Options suggests. Anything else can still be typed.
 
 # One-click suggestions shown under a list of query parameter names, keyed by setting.

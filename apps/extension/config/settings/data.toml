@@ -1,0 +1,20 @@
+# Defaults for Options > Import & Export, one table per section.
+
+[tools]
+# Import and export tool cards in the Tools sidebar
+show_export = true
+show_import = true
+
+[export]
+# Format selected when the export tool opens: "html", "json", "markdown", or "csv"
+default_format = "html"
+# Default export options
+include_dates = true
+include_urls = true
+# Filename settings for exported bookmark files
+filename_prefix = "bookmarks_"
+filename_max_length = { default = 50, min = 10, max = 100, step = 5 }
+# Indentation settings (spaces)
+json_indent_size = { default = 2, min = 1, max = 8, step = 1 }
+html_indent_spaces = { default = 4, min = 1, max = 8, step = 1 }
+markdown_indent_spaces = { default = 2, min = 1, max = 8, step = 1 }

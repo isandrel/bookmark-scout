@@ -214,7 +214,12 @@ export const TOOL_SCOPE_CAPABILITIES = {
 type FieldDefinition<S extends z.ZodType = z.ZodType> = {
   schema: S;
   meta: () => SettingsFieldMeta;
+  /** The config table that holds the default, such as `search.folder_matches`. */
+  section: string;
 };
+
+/** `search.folder_matches.max` -> `search.folder_matches`. */
+const sectionOf = (path: string) => path.slice(0, path.lastIndexOf('.'));
 
 type NumberFieldDefinition = FieldDefinition<z.ZodType<number>> & { bounds: NumberSetting };
 
@@ -260,6 +265,7 @@ function switchField(
 ): FieldDefinition<z.ZodDefault<z.ZodBoolean>> {
   const value = configValue(path, z.boolean());
   return {
+    section: sectionOf(path),
     schema: z.boolean().default(value),
     meta: () => ({ ...fieldLabels(stem), type: 'switch', ...extrasMeta(extras) }),
   };
@@ -283,6 +289,7 @@ function numberSchema(bounds: NumberSetting): z.ZodType<number> {
 function numberField(path: string, stem: string, extras: FieldExtras = {}): NumberFieldDefinition {
   const bounds = configValue(path, numberSettingSchema);
   return {
+    section: sectionOf(path),
     bounds,
     schema: numberSchema(bounds),
     meta: () => ({
@@ -303,7 +310,7 @@ function textField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.Z
     typeof setting === 'string'
       ? z.string().default(setting)
       : z.string().min(setting.min_length).max(setting.max_length).default(setting.default);
-  return { schema, meta: () => ({ ...fieldLabels(stem), type: 'text' }) };
+  return { schema, section: sectionOf(path), meta: () => ({ ...fieldLabels(stem), type: 'text' }) };
 }
 
 function listField<S extends z.ZodArray<z.ZodType<string | number>>>(
@@ -314,6 +321,7 @@ function listField<S extends z.ZodArray<z.ZodType<string | number>>>(
 ): FieldDefinition<z.ZodDefault<S>> {
   const value = configValue(path, schema);
   return {
+    section: sectionOf(path),
     schema: schema.default(value as z.util.NoUndefined<z.output<S>>),
     meta: () => ({ ...fieldLabels(stem), type: 'text', list }),
   };
@@ -330,6 +338,7 @@ function enumField<T extends OptionValues>(
 ): FieldDefinition<z.ZodDefault<z.ZodEnum<T>>> {
   const value = configValue(path, schema);
   return {
+    section: sectionOf(path),
     schema: schema.default(value as z.util.NoUndefined<T[keyof T]>),
     meta: () => ({
       ...fieldLabels(stem),
@@ -347,6 +356,7 @@ function literalField<T extends number>(
 ): FieldDefinition<z.ZodDefault<z.ZodLiteral<T>>> {
   const value = configValue(path, schema);
   return {
+    section: sectionOf(path),
     schema: schema.default(value as z.util.NoUndefined<T>),
     meta: () => ({
       ...fieldLabels(stem),
@@ -362,25 +372,29 @@ const scopeLabel = (scope: ScopeValue) =>
   scope === 'folder' ? t('settings_scopeFolder') : t('settings_scopeAll');
 
 /**
- * A tool's default scope: selectable (from `default_scope` in its config file) when the tool
- * supports both scopes, otherwise fixed. Unsupported or malformed saved scopes fall back without
+ * A tool's default scope: selectable (from `default_scope` in the tool's config table,
+ * `section`) when the tool supports both scopes, otherwise fixed. Unsupported or malformed saved scopes fall back without
  * failing the other settings.
  */
 function scopeField(
-  tool: string,
+  section: string,
   stem: string,
   capability: 'both',
 ): FieldDefinition<z.ZodDefault<z.ZodCatch<typeof toolScopeSchema>>>;
 function scopeField<S extends ScopeValue>(
-  tool: string,
+  section: string,
   stem: string,
   capability: S,
 ): FieldDefinition<z.ZodDefault<z.ZodCatch<z.ZodLiteral<S>>>>;
-function scopeField(tool: string, stem: string, capability: ScopeValue | 'both'): FieldDefinition {
+function scopeField(
+  section: string,
+  stem: string,
+  capability: ScopeValue | 'both',
+): FieldDefinition {
   const scopes = capability === 'both' ? toolScopeSchema.options : [capability];
   const fallback =
     capability === 'both'
-      ? configValue(`tools.${tool}.default_scope`, toolScopeSchema)
+      ? configValue(`${section}.default_scope`, toolScopeSchema)
       : capability;
   const schema =
     capability === 'both'
@@ -388,6 +402,7 @@ function scopeField(tool: string, stem: string, capability: ScopeValue | 'both')
       : z.literal(fallback).catch(fallback).default(fallback);
   return {
     schema,
+    section,
     meta: () => ({
       ...fieldLabels(stem),
       type: 'select',
@@ -401,7 +416,8 @@ const mergeModeLabel = (mode: z.infer<typeof mergeModeSchema>) =>
   mode === 'append' ? t('settings_mergeAppend') : t('settings_mergeReplace');
 
 const aiProviderField: FieldDefinition<z.ZodDefault<typeof aiProviderSchema>> = {
-  schema: aiProviderSchema.default(configValue('ai.provider', aiProviderSchema)),
+  schema: aiProviderSchema.default(configValue('ai.enable.provider', aiProviderSchema)),
+  section: 'ai.enable',
   meta: () => ({
     ...fieldLabels('aiProvider'),
     type: 'select',
@@ -416,7 +432,8 @@ const aiProviderField: FieldDefinition<z.ZodDefault<typeof aiProviderSchema>> = 
 };
 
 const aiModelField: FieldDefinition<z.ZodDefault<z.ZodString>> = {
-  schema: z.string().default(configValue('ai.model', z.string())),
+  schema: z.string().default(configValue('ai.enable.model', z.string())),
+  section: 'ai.enable',
   meta: () => ({
     ...fieldLabels('aiModel'),
     type: 'select',
@@ -430,11 +447,11 @@ const aiModelField: FieldDefinition<z.ZodDefault<z.ZodString>> = {
 };
 
 const fields = {
-  language: enumField('appearance.language', 'language', languageSchema, (value) =>
+  language: enumField('appearance.theme_icons.language', 'language', languageSchema, (value) =>
     value === AUTO_LANGUAGE ? t('settings_languageAuto') : getLanguageName(value),
   ),
   theme: enumField(
-    'appearance.theme',
+    'appearance.theme_icons.theme',
     'theme',
     themeSchema,
     (value) =>
@@ -444,10 +461,10 @@ const fields = {
         dark: t('settings_themeDark'),
       })[value],
   ),
-  showFavicons: switchField('appearance.show_favicons', 'showFavicons'),
-  browserIconCache: switchField('appearance.browser_icon_cache', 'browserIconCache'),
+  showFavicons: switchField('appearance.theme_icons.show_favicons', 'showFavicons'),
+  browserIconCache: switchField('appearance.theme_icons.browser_icon_cache', 'browserIconCache'),
   faviconSize: literalField(
-    'appearance.favicon_size',
+    'appearance.theme_icons.favicon_size',
     'faviconSize',
     faviconSizeSchema,
     (value) =>
@@ -458,21 +475,21 @@ const fields = {
       })[value],
   ),
 
-  searchDebounceMs: numberField('search.debounce_ms', 'searchDelay', { unit: 'ms' }),
+  searchDebounceMs: numberField('search.search.debounce_ms', 'searchDelay', { unit: 'ms' }),
   maxSearchResults: literalField(
-    'search.max_results',
+    'search.search.max_results',
     'maxResults',
     maxSearchResultsSchema,
     (value) => t('settings_results', String(value)),
   ),
-  expandFoldersOnSearch: switchField('search.expand_folders_on_search', 'expandFolders'),
-  searchHistory: switchField('search.search_history', 'searchHistory'),
-  folderMatchesEnabled: switchField('search.folder_matches_enabled', 'folderMatchesEnabled'),
-  folderMatchesMax: numberField('search.folder_matches_max', 'folderMatchesMax'),
-  folderMatchesTypos: switchField('search.folder_matches_typos', 'folderMatchesTypos'),
+  expandFoldersOnSearch: switchField('search.search.expand_folders', 'expandFolders'),
+  searchHistory: switchField('search.search.history', 'searchHistory'),
+  folderMatchesEnabled: switchField('search.folder_matches.enabled', 'folderMatchesEnabled'),
+  folderMatchesMax: numberField('search.folder_matches.max', 'folderMatchesMax'),
+  folderMatchesTypos: switchField('search.folder_matches.typos', 'folderMatchesTypos'),
 
   sortOrder: enumField(
-    'behavior.sort_order',
+    'behavior.tree.sort_order',
     'sortOrder',
     sortOrderSchema,
     (value) =>
@@ -482,9 +499,9 @@ const fields = {
         folders: t('settings_sortFolders'),
       })[value],
   ),
-  groupByFolders: switchField('behavior.group_by_folders', 'groupByFolders'),
+  groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   linkOpenTarget: enumField(
-    'behavior.link_open_target',
+    'behavior.links.open_target',
     'linkOpenTarget',
     linkOpenTargetSchema,
     (value) =>
@@ -494,45 +511,45 @@ const fields = {
         current_tab: t('settings_linkOpenCurrentTab'),
       })[value],
   ),
-  confirmBeforeDelete: switchField('behavior.confirm_before_delete', 'confirmDelete'),
-  defaultNewFolderName: textField('behavior.default_new_folder_name', 'defaultFolderName'),
-  recentFoldersMax: numberField('behavior.recent_folders_max', 'recentFoldersMax'),
-  recentFoldersEnabled: switchField('behavior.recent_folders_enabled', 'recentFoldersEnabled'),
+  confirmBeforeDelete: switchField('behavior.deleting.confirm', 'confirmDelete'),
+  defaultNewFolderName: textField('search.saving.default_new_folder_name', 'defaultFolderName'),
+  recentFoldersMax: numberField('search.saving.recent_folders_max', 'recentFoldersMax'),
+  recentFoldersEnabled: switchField('search.saving.recent_folders_enabled', 'recentFoldersEnabled'),
 
-  popupWidth: numberField('advanced.popup_width', 'popupWidth', { unit: 'px' }),
-  popupHeight: numberField('advanced.popup_height', 'popupHeight', { unit: 'px' }),
-  truncateLength: numberField('advanced.truncate_length', 'truncateLength', { unit: 'chars' }),
-  toastDurationMs: numberField('advanced.toast_duration_ms', 'toastDuration', {
+  popupWidth: numberField('appearance.popup.width', 'popupWidth', { unit: 'px' }),
+  popupHeight: numberField('appearance.popup.height', 'popupHeight', { unit: 'px' }),
+  truncateLength: numberField('appearance.popup.truncate_length', 'truncateLength', { unit: 'chars' }),
+  toastDurationMs: numberField('appearance.notifications.toast_duration_ms', 'toastDuration', {
     unit: 'ms',
     display: IN_SECONDS,
   }),
 
-  aiEnabled: switchField('ai.enabled', 'aiEnabled'),
+  aiEnabled: switchField('ai.enable.enabled', 'aiEnabled'),
   aiProvider: aiProviderField,
   aiModel: aiModelField,
-  aiMaxRecommendations: numberField('ai.max_recommendations', 'aiMaxRecommendations'),
-  aiAutoTriggerOnOpen: switchField('ai.auto_trigger_on_open', 'aiAutoTrigger'),
-  aiReadPageContent: switchField('ai.read_page_content', 'aiReadPageContent'),
-  aiMaxCategories: numberField('ai.max_categories', 'aiMaxCategories'),
-  aiMinItemsPerFolder: numberField('ai.min_items_per_folder', 'aiMinItemsPerFolder'),
-  aiMaxItemsPerFolder: numberField('ai.max_items_per_folder', 'aiMaxItemsPerFolder'),
+  aiMaxRecommendations: numberField('ai.suggestions.max_recommendations', 'aiMaxRecommendations'),
+  aiAutoTriggerOnOpen: switchField('ai.suggestions.auto_trigger_on_open', 'aiAutoTrigger'),
+  aiReadPageContent: switchField('ai.page_reading.read_page_content', 'aiReadPageContent'),
+  aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
+  aiMinItemsPerFolder: numberField('ai_tools.reorganization.min_items_per_folder', 'aiMinItemsPerFolder'),
+  aiMaxItemsPerFolder: numberField('ai_tools.reorganization.max_items_per_folder', 'aiMaxItemsPerFolder'),
 
-  exportFilenamePrefix: textField('export.filename_prefix', 'exportFilenamePrefix'),
-  exportFilenameMaxLength: numberField('export.filename_max_length', 'exportFilenameMaxLength', {
+  exportFilenamePrefix: textField('data.export.filename_prefix', 'exportFilenamePrefix'),
+  exportFilenameMaxLength: numberField('data.export.filename_max_length', 'exportFilenameMaxLength', {
     unit: 'chars',
   }),
-  exportJsonIndentSize: numberField('export.json_indent_size', 'exportJsonIndentSize'),
-  exportHtmlIndentSpaces: numberField('export.html_indent_spaces', 'exportHtmlIndentSpaces'),
+  exportJsonIndentSize: numberField('data.export.json_indent_size', 'exportJsonIndentSize'),
+  exportHtmlIndentSpaces: numberField('data.export.html_indent_spaces', 'exportHtmlIndentSpaces'),
   exportMarkdownIndentSpaces: numberField(
-    'export.markdown_indent_spaces',
+    'data.export.markdown_indent_spaces',
     'exportMarkdownIndentSpaces',
   ),
-  exportIncludeDates: switchField('export.include_dates_by_default', 'exportIncludeDates'),
-  exportIncludeUrls: switchField('export.include_urls_by_default', 'exportIncludeUrls'),
+  exportIncludeDates: switchField('data.export.include_dates', 'exportIncludeDates'),
+  exportIncludeUrls: switchField('data.export.include_urls', 'exportIncludeUrls'),
 
-  contextMenuEnabled: switchField('context_menu.enabled', 'contextMenuEnabled'),
+  contextMenuEnabled: switchField('search.context_menu.enabled', 'contextMenuEnabled'),
   contextMenuBookmarkNaming: enumField(
-    'context_menu.bookmark_naming',
+    'search.context_menu.bookmark_naming',
     'contextMenuNaming',
     contextMenuNamingSchema,
     (value) =>
@@ -543,120 +560,120 @@ const fields = {
       })[value],
   ),
 
-  aiContextPackerEnabled: switchField('tools.ai_context_packer.enabled', 'aiContextPackerEnabled'),
+  aiContextPackerEnabled: switchField('ai_tools.context_packer.enabled', 'aiContextPackerEnabled'),
   aiContextPackerDefaultScope: scopeField(
-    'ai_context_packer',
+    'ai_tools.context_packer',
     'aiContextPackerDefaultScope',
     TOOL_SCOPE_CAPABILITIES.aiContextPacker,
   ),
   aiContextPackerOutputFormat: enumField(
-    'tools.ai_context_packer.output_format',
+    'ai_tools.context_packer.output_format',
     'aiContextPackerOutputFormat',
     aiContextFormatSchema,
     (value) => ({ markdown: 'Markdown', xml: 'XML' })[value],
   ),
   aiContextPackerIncludeFolderPath: switchField(
-    'tools.ai_context_packer.include_folder_path',
+    'ai_tools.context_packer.include_folder_path',
     'aiContextPackerIncludeFolderPath',
   ),
   aiContextPackerIncludeDates: switchField(
-    'tools.ai_context_packer.include_dates',
+    'ai_tools.context_packer.include_dates',
     'aiContextPackerIncludeDates',
   ),
   aiContextPackerIncludeTags: switchField(
-    'tools.ai_context_packer.include_tags',
+    'ai_tools.context_packer.include_tags',
     'aiContextPackerIncludeTags',
   ),
   aiContextPackerIncludeSummaries: switchField(
-    'tools.ai_context_packer.include_summaries',
+    'ai_tools.context_packer.include_summaries',
     'aiContextPackerIncludeSummaries',
   ),
   aiContextPackerMaxItems: numberField(
-    'tools.ai_context_packer.max_items',
+    'ai_tools.context_packer.max_items',
     'aiContextPackerMaxItems',
   ),
   aiContextPackerMaxDepth: numberField(
-    'tools.ai_context_packer.max_depth',
+    'ai_tools.context_packer.max_depth',
     'aiContextPackerMaxDepth',
   ),
   aiContextPackerExcerptLength: numberField(
-    'tools.ai_context_packer.excerpt_length',
+    'ai_tools.context_packer.excerpt_length',
     'aiContextPackerExcerptLength',
     { unit: 'chars' },
   ),
 
-  autoTaggingEnabled: switchField('tools.auto_tagging.enabled', 'autoTaggingEnabled'),
+  autoTaggingEnabled: switchField('ai_tools.auto_tagging.enabled', 'autoTaggingEnabled'),
   autoTaggingDefaultScope: scopeField(
-    'auto_tagging',
+    'ai_tools.auto_tagging',
     'autoTaggingDefaultScope',
     TOOL_SCOPE_CAPABILITIES.autoTagging,
   ),
-  autoTaggingMinTags: numberField('tools.auto_tagging.min_tags', 'autoTaggingMinTags'),
-  autoTaggingMaxTags: numberField('tools.auto_tagging.max_tags', 'autoTaggingMaxTags'),
+  autoTaggingMinTags: numberField('ai_tools.auto_tagging.min_tags', 'autoTaggingMinTags'),
+  autoTaggingMaxTags: numberField('ai_tools.auto_tagging.max_tags', 'autoTaggingMaxTags'),
   autoTaggingTagStyle: enumField(
-    'tools.auto_tagging.tag_style',
+    'ai_tools.auto_tagging.tag_style',
     'autoTaggingTagStyle',
     tagStyleSchema,
     sameAsValue,
   ),
   autoTaggingMergeMode: enumField(
-    'tools.auto_tagging.merge_mode',
+    'ai_tools.auto_tagging.merge_mode',
     'autoTaggingMergeMode',
     mergeModeSchema,
     mergeModeLabel,
   ),
-  autoTaggingDedupeTags: switchField('tools.auto_tagging.dedupe_tags', 'autoTaggingDedupeTags'),
+  autoTaggingDedupeTags: switchField('ai_tools.auto_tagging.dedupe_tags', 'autoTaggingDedupeTags'),
 
-  summarizerEnabled: switchField('tools.summarizer.enabled', 'summarizerEnabled'),
+  summarizerEnabled: switchField('ai_tools.summarizer.enabled', 'summarizerEnabled'),
   summarizerDefaultScope: scopeField(
-    'summarizer',
+    'ai_tools.summarizer',
     'summarizerDefaultScope',
     TOOL_SCOPE_CAPABILITIES.summarizer,
   ),
   summarizerSummaryLength: numberField(
-    'tools.summarizer.summary_length',
+    'ai_tools.summarizer.summary_length',
     'summarizerSummaryLength',
     { unit: 'chars' },
   ),
   summarizerIncludeDomainHint: switchField(
-    'tools.summarizer.include_domain_hint',
+    'ai_tools.summarizer.include_domain_hint',
     'summarizerIncludeDomainHint',
   ),
   summarizerMergeMode: enumField(
-    'tools.summarizer.merge_mode',
+    'ai_tools.summarizer.merge_mode',
     'summarizerMergeMode',
     mergeModeSchema,
     mergeModeLabel,
   ),
 
-  reorganizationEnabled: switchField('tools.reorganization.enabled', 'reorganizationEnabled'),
+  reorganizationEnabled: switchField('ai_tools.reorganization.enabled', 'reorganizationEnabled'),
   reorganizationDefaultScope: scopeField(
-    'reorganization',
+    'ai_tools.reorganization',
     'reorganizationDefaultScope',
     TOOL_SCOPE_CAPABILITIES.reorganization,
   ),
   reorganizationDryRunFirst: switchField(
-    'tools.reorganization.dry_run_first',
+    'ai_tools.reorganization.dry_run_first',
     'reorganizationDryRunFirst',
   ),
   reorganizationMinConfidence: numberField(
-    'tools.reorganization.min_confidence',
+    'ai_tools.reorganization.min_confidence',
     'reorganizationMinConfidence',
     { control: 'slider', percent: true },
   ),
   reorganizationBatchSize: numberField(
-    'tools.reorganization.batch_size',
+    'ai_tools.reorganization.batch_size',
     'reorganizationBatchSize',
   ),
 
-  duplicatesEnabled: switchField('tools.duplicates.enabled', 'duplicatesEnabled'),
+  duplicatesEnabled: switchField('maintenance.duplicates.enabled', 'duplicatesEnabled'),
   duplicatesDefaultScope: scopeField(
-    'duplicates',
+    'maintenance.duplicates',
     'duplicatesDefaultScope',
     TOOL_SCOPE_CAPABILITIES.duplicates,
   ),
   duplicatesMatchStrategy: enumField(
-    'tools.duplicates.match_strategy',
+    'maintenance.duplicates.match_strategy',
     'duplicatesMatchStrategy',
     duplicateMatchStrategySchema,
     (value) =>
@@ -667,17 +684,17 @@ const fields = {
         title_only: t('settings_duplicatesMatchTitleOnly'),
       })[value],
   ),
-  duplicatesNormalizeWww: switchField('tools.duplicates.normalize_www', 'duplicatesNormalizeWww'),
+  duplicatesNormalizeWww: switchField('maintenance.duplicates.normalize_www', 'duplicatesNormalizeWww'),
   duplicatesIgnoreProtocol: switchField(
-    'tools.duplicates.ignore_protocol',
+    'maintenance.duplicates.ignore_protocol',
     'duplicatesIgnoreProtocol',
   ),
   duplicatesIgnoreTrailingSlash: switchField(
-    'tools.duplicates.ignore_trailing_slash',
+    'maintenance.duplicates.ignore_trailing_slash',
     'duplicatesIgnoreTrailingSlash',
   ),
   duplicatesKeepRule: enumField(
-    'tools.duplicates.keep_rule',
+    'maintenance.duplicates.keep_rule',
     'duplicatesKeepRule',
     duplicateKeepRuleSchema,
     (value) =>
@@ -687,166 +704,166 @@ const fields = {
         first: t('settings_duplicatesKeepFirst'),
       })[value],
   ),
-  duplicatesMaxGroups: numberField('tools.duplicates.max_groups', 'duplicatesMaxGroups'),
+  duplicatesMaxGroups: numberField('maintenance.duplicates.max_groups', 'duplicatesMaxGroups'),
 
-  urlCleanerEnabled: switchField('tools.url_cleaner.enabled', 'urlCleanerEnabled'),
+  urlCleanerEnabled: switchField('maintenance.url_cleaner.enabled', 'urlCleanerEnabled'),
   urlCleanerDefaultScope: scopeField(
-    'url_cleaner',
+    'maintenance.url_cleaner',
     'urlCleanerDefaultScope',
     TOOL_SCOPE_CAPABILITIES.urlCleaner,
   ),
-  urlCleanerRemoveHash: switchField('tools.url_cleaner.remove_hash', 'urlCleanerRemoveHash'),
+  urlCleanerRemoveHash: switchField('maintenance.url_cleaner.remove_hash', 'urlCleanerRemoveHash'),
   urlCleanerSortQueryParams: switchField(
-    'tools.url_cleaner.sort_query_params',
+    'maintenance.url_cleaner.sort_query_params',
     'urlCleanerSortQueryParams',
   ),
   urlCleanerDedupeQueryParams: switchField(
-    'tools.url_cleaner.dedupe_query_params',
+    'maintenance.url_cleaner.dedupe_query_params',
     'urlCleanerDedupeQueryParams',
   ),
   urlCleanerPreserveParams: listField(
-    'tools.url_cleaner.preserve_params',
+    'maintenance.url_cleaner.preserve_params',
     'urlCleanerPreserveParams',
     z.array(z.string()),
     'string',
   ),
   urlCleanerRemoveParams: listField(
-    'tools.url_cleaner.remove_params',
+    'maintenance.url_cleaner.remove_params',
     'urlCleanerRemoveParams',
     z.array(z.string()),
     'string',
   ),
 
-  deadLinksEnabled: switchField('tools.dead_links.enabled', 'deadLinksEnabled'),
+  deadLinksEnabled: switchField('maintenance.dead_links.enabled', 'deadLinksEnabled'),
   deadLinksDefaultScope: scopeField(
-    'dead_links',
+    'maintenance.dead_links',
     'deadLinksDefaultScope',
     TOOL_SCOPE_CAPABILITIES.deadLinks,
   ),
   deadLinksRequestTimeoutMs: numberField(
-    'tools.dead_links.request_timeout_ms',
+    'maintenance.dead_links.request_timeout_ms',
     'deadLinksRequestTimeoutMs',
     { unit: 'ms', display: IN_SECONDS },
   ),
-  deadLinksConcurrency: numberField('tools.dead_links.concurrency', 'deadLinksConcurrency'),
-  deadLinksRetryCount: numberField('tools.dead_links.retry_count', 'deadLinksRetryCount'),
+  deadLinksConcurrency: numberField('maintenance.dead_links.concurrency', 'deadLinksConcurrency'),
+  deadLinksRetryCount: numberField('maintenance.dead_links.retry_count', 'deadLinksRetryCount'),
   deadLinksFollowRedirects: switchField(
-    'tools.dead_links.follow_redirects',
+    'maintenance.dead_links.follow_redirects',
     'deadLinksFollowRedirects',
   ),
   deadLinksSuccessStatuses: listField(
-    'tools.dead_links.success_statuses',
+    'maintenance.dead_links.success_statuses',
     'deadLinksSuccessStatuses',
     z.array(httpStatusCodeSchema).min(1),
     'number',
   ),
 
-  metadataFetcherEnabled: switchField('tools.metadata_fetcher.enabled', 'metadataFetcherEnabled'),
+  metadataFetcherEnabled: switchField('metadata_content.metadata_fetcher.enabled', 'metadataFetcherEnabled'),
   metadataFetcherDefaultScope: scopeField(
-    'metadata_fetcher',
+    'metadata_content.metadata_fetcher',
     'metadataFetcherDefaultScope',
     TOOL_SCOPE_CAPABILITIES.metadataFetcher,
   ),
   metadataFetcherOverwriteTitles: switchField(
-    'tools.metadata_fetcher.overwrite_titles',
+    'metadata_content.metadata_fetcher.overwrite_titles',
     'metadataFetcherOverwriteTitles',
   ),
   metadataFetcherFetchDescriptions: switchField(
-    'tools.metadata_fetcher.fetch_descriptions',
+    'metadata_content.metadata_fetcher.fetch_descriptions',
     'metadataFetcherFetchDescriptions',
   ),
   metadataFetcherRequestTimeoutMs: numberField(
-    'tools.metadata_fetcher.request_timeout_ms',
+    'metadata_content.metadata_fetcher.request_timeout_ms',
     'metadataFetcherRequestTimeoutMs',
     { unit: 'ms', display: IN_SECONDS },
   ),
   metadataFetcherConcurrency: numberField(
-    'tools.metadata_fetcher.concurrency',
+    'metadata_content.metadata_fetcher.concurrency',
     'metadataFetcherConcurrency',
   ),
 
-  siteIconsEnabled: switchField('tools.site_icons.enabled', 'siteIconsEnabled'),
+  siteIconsEnabled: switchField('metadata_content.site_icons.enabled', 'siteIconsEnabled'),
   siteIconsDefaultScope: scopeField(
-    'site_icons',
+    'metadata_content.site_icons',
     'siteIconsDefaultScope',
     TOOL_SCOPE_CAPABILITIES.siteIcons,
   ),
-  siteIconsPreferredSize: numberField('tools.site_icons.preferred_size', 'siteIconsPreferredSize', {
+  siteIconsPreferredSize: numberField('metadata_content.site_icons.preferred_size', 'siteIconsPreferredSize', {
     unit: 'px',
   }),
-  siteIconsMaxIconKb: numberField('tools.site_icons.max_icon_kb', 'siteIconsMaxIconKb', {
+  siteIconsMaxIconKb: numberField('metadata_content.site_icons.max_icon_kb', 'siteIconsMaxIconKb', {
     unit: 'kb',
   }),
-  siteIconsMaxCacheKb: numberField('tools.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
+  siteIconsMaxCacheKb: numberField('metadata_content.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
     unit: 'kb',
     display: { unit: 'mb', scale: 1024 },
   }),
 
-  privacyScannerEnabled: switchField('tools.privacy_scanner.enabled', 'privacyScannerEnabled'),
+  privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
-    'privacy_scanner',
+    'security.privacy_scanner',
     'privacyScannerDefaultScope',
     TOOL_SCOPE_CAPABILITIES.privacyScanner,
   ),
   privacyScannerScanTitles: switchField(
-    'tools.privacy_scanner.scan_titles',
+    'security.privacy_scanner.scan_titles',
     'privacyScannerScanTitles',
   ),
   privacyScannerScanQueryParams: switchField(
-    'tools.privacy_scanner.scan_query_params',
+    'security.privacy_scanner.scan_query_params',
     'privacyScannerScanQueryParams',
   ),
   privacyScannerScanFragments: switchField(
-    'tools.privacy_scanner.scan_fragments',
+    'security.privacy_scanner.scan_fragments',
     'privacyScannerScanFragments',
   ),
   privacyScannerSensitiveParams: listField(
-    'tools.privacy_scanner.sensitive_params',
+    'security.privacy_scanner.sensitive_params',
     'privacyScannerSensitiveParams',
     z.array(z.string()),
     'string',
   ),
   privacyScannerEmailDetection: switchField(
-    'tools.privacy_scanner.email_detection',
+    'security.privacy_scanner.email_detection',
     'privacyScannerEmailDetection',
   ),
   privacyScannerUuidDetection: switchField(
-    'tools.privacy_scanner.uuid_detection',
+    'security.privacy_scanner.uuid_detection',
     'privacyScannerUuidDetection',
   ),
 
-  statisticsEnabled: switchField('tools.statistics.enabled', 'statisticsEnabled'),
+  statisticsEnabled: switchField('analytics.statistics.enabled', 'statisticsEnabled'),
   statisticsDefaultScope: scopeField(
-    'statistics',
+    'analytics.statistics',
     'statisticsDefaultScope',
     TOOL_SCOPE_CAPABILITIES.statistics,
   ),
   statisticsIncludeDomains: switchField(
-    'tools.statistics.include_domains',
+    'analytics.statistics.include_domains',
     'statisticsIncludeDomains',
   ),
   statisticsIncludeFolders: switchField(
-    'tools.statistics.include_folders',
+    'analytics.statistics.include_folders',
     'statisticsIncludeFolders',
   ),
   statisticsIncludeDuplicates: switchField(
-    'tools.statistics.include_duplicates',
+    'analytics.statistics.include_duplicates',
     'statisticsIncludeDuplicates',
   ),
   statisticsIncludeProtocols: switchField(
-    'tools.statistics.include_protocols',
+    'analytics.statistics.include_protocols',
     'statisticsIncludeProtocols',
   ),
   statisticsIncludeDepthBreakdown: switchField(
-    'tools.statistics.include_depth_breakdown',
+    'analytics.statistics.include_depth_breakdown',
     'statisticsIncludeDepthBreakdown',
   ),
-  statisticsTopN: numberField('tools.statistics.top_n', 'statisticsTopN'),
+  statisticsTopN: numberField('analytics.statistics.top_n', 'statisticsTopN'),
 
-  dataShowExport: switchField('tools.data.show_export', 'dataShowExport'),
-  dataShowImport: switchField('tools.data.show_import', 'dataShowImport'),
+  dataShowExport: switchField('data.tools.show_export', 'dataShowExport'),
+  dataShowImport: switchField('data.tools.show_import', 'dataShowImport'),
   dataDefaultExportFormat: enumField(
-    'tools.data.default_export_format',
+    'data.export.default_format',
     'dataDefaultExportFormat',
     exportFormatSchema,
     (value) => ({ html: 'HTML', json: 'JSON', markdown: 'Markdown', csv: 'CSV' })[value],
@@ -1236,6 +1253,16 @@ const providerGroupLabelKeys: Record<AIProviderGroup, string> = {
 export function getLocalizedProviderName(provider: AIProvider): string {
   const key = localizedProviderNameKeys[provider];
   return key ? t(key) : getProviderName(provider);
+}
+
+/**
+ * The config table each setting's default lives in, `<tab>.<section>` as on the Options page
+ * (`search.folder_matches`). tests/unit/settings-config.test.ts keeps the two in step.
+ */
+export function getSettingsConfigSections(): Record<keyof Settings, string> {
+  return Object.fromEntries(
+    Object.entries(fields).map(([key, field]) => [key, field.section]),
+  ) as Record<keyof Settings, string>;
 }
 
 let fieldMetaCache: { revision: number; meta: Record<keyof Settings, SettingsFieldMeta> } | undefined;

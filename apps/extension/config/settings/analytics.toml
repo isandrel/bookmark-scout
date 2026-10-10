@@ -1,4 +1,6 @@
-# Statistics report tool. `default_scope` is "folder" or "all".
+# Defaults for Options > Analytics. `default_scope` is "folder" or "all".
+
+[statistics]
 enabled = true
 default_scope = "folder"
 include_domains = true
