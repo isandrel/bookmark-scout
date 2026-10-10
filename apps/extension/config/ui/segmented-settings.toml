@@ -1,0 +1,7 @@
+# Choice settings shown as one-click segments instead of a dropdown. Read by
+# src/components/ui/segmented-control.tsx. A choice qualifies when it has at most `max_options`
+# options and its labels, in the current language, fit in `max_label_width` (counted in Latin
+# characters; a CJK character counts as 2). Longer lists and labels stay a dropdown.
+
+max_options = 3
+max_label_width = 36
