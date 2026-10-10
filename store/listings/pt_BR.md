@@ -1,13 +1,13 @@
 # Brazilian Portuguese Listing Copy (Português (Brasil))
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts count Unicode characters and were measured on 2026-10-10.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 129 |
-| Firefox Add-ons summary | 241 |
-| Full description, Chrome and Edge | 4,474 |
-| Full description, Firefox | 1,910 |
+| Optional manifest description | 131 |
+| Firefox Add-ons summary | 248 |
+| Full description, Chrome and Edge | 4,915 |
+| Full description, Firefox | 2,457 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/pt_BR/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged as `extDescription`; changing it needs a new version:
+Packaged as `extDescription`; changing it needs a new version. Ships with the next version after 0.3.2 (131 characters):
 
 ```text
-Encontre, organize e limpe favoritos: pesquisa rápida, salvar em pastas, duplicatas, links quebrados e IA opcional com sua chave.
+Salve páginas na pasta certa, rápido: digite parte do nome de uma pasta ou deixe a IA sugerir. E ferramentas de pesquisa e limpeza.
 ```
 
-### Firefox Add-ons summary (250 characters maximum)
+### Firefox Add-ons summary (250 characters maximum, 248 characters)
 
 ```text
-Pesquise e organize seus favoritos pela barra de ferramentas: pesquisa instantânea, árvore de pastas com arrastar e soltar, salvamento em qualquer pasta com um clique e sugestões de pasta com IA opcional, usando seu próprio provedor e chave.
+Salve páginas na pasta de favoritos certa, rápido: digite parte do nome de uma pasta, mesmo no fundo da árvore, e salve pelo teclado, ou deixe a IA opcional sugerir uma. E mais: pesquisa instantânea e árvore de pastas no pop-up e no painel lateral.
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+salvar em pasta
 gerenciador de favoritos
 pesquisar favoritos
 favoritos duplicados
 links quebrados
 pastas de favoritos
 favoritos com IA
-importar exportar favoritos
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ importar exportar favoritos
 The same Edge condition as in `en.md` applies.
 
 ```text
-O Bookmark Scout ajuda você a encontrar, guardar e organizar seus favoritos sem sair do navegador.
+O Bookmark Scout salva cada página na pasta certa em segundos e depois ajuda você a encontrar e organizar seus favoritos sem sair do navegador.
 
-PESQUISE E SALVE PELA BARRA DE FERRAMENTAS
+SALVE NA PASTA CERTA EM SEGUNDOS
+• Digite parte do nome de qualquer pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado
+• Digite um caminho como work/react; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
+• Uma página que já está nessa pasta não é salva duas vezes
+• A IA opcional sugere a melhor pasta para a página, ou um novo caminho de pastas que você revisa antes de ele ser criado
+• Menu de clique com o botão direito opcional (ative Menu de contexto nas Configurações) para salvar links em pastas recentes
+
+PESQUISE PELA BARRA DE FERRAMENTAS
 • Pesquisa instantânea em todos os favoritos, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular
 • Árvore de pastas com arrastar e soltar, expandir e recolher tudo e criação de novas pastas
-• Salve a página atual em qualquer pasta com um clique; uma página que já está nessa pasta não é salva duas vezes
-• Painel lateral com a mesma árvore e a mesma pesquisa
-• Menu de clique com o botão direito opcional (ative Menu de contexto nas Configurações) para salvar links em pastas recentes
+• Painel lateral com a mesma árvore, a mesma pesquisa e as pastas correspondentes
 • Atalhos de teclado que nunca substituem os atalhos Ctrl/Cmd do navegador
 • Exclusão com caixa de confirmação (ativada por padrão) e opção de desfazer por 10 segundos
 
@@ -102,14 +107,19 @@ Documentação: https://docs.bookmark-scout.com
 ## Full description: Firefox Add-ons
 
 ```text
-O Bookmark Scout ajuda você a encontrar e guardar seus favoritos sem sair do navegador.
+O Bookmark Scout salva cada página na pasta certa em segundos e depois ajuda você a encontrar seus favoritos sem sair do navegador.
 
-PESQUISE E SALVE PELA BARRA DE FERRAMENTAS
+SALVE NA PASTA CERTA EM SEGUNDOS
+• Digite parte do nome de qualquer pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado
+• Digite um caminho como work/react; um pequeno erro de digitação ainda encontra a pasta, e as pastas que você usou recentemente aparecem primeiro
+• Uma página que já está nessa pasta não é salva duas vezes
+• A IA opcional sugere a melhor pasta para a página, ou um novo caminho de pastas que você revisa antes de ele ser criado
+• Salve links em pastas recentes pelo menu de clique com o botão direito
+
+PESQUISE PELA BARRA DE FERRAMENTAS
 • Pesquisa instantânea em todos os favoritos, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular
 • Árvore de pastas com arrastar e soltar, expandir e recolher tudo e criação de novas pastas
-• Salve a página atual em qualquer pasta com um clique; uma página que já está nessa pasta não é salva duas vezes
-• A mesma árvore e a mesma pesquisa no painel lateral do Firefox, que continua aberto enquanto você navega
-• Salve links em pastas recentes pelo menu de clique com o botão direito
+• A mesma árvore, a mesma pesquisa e as pastas correspondentes no painel lateral do Firefox, que continua aberto enquanto você navega
 • Atalhos de teclado que nunca substituem os atalhos Ctrl/Cmd do navegador
 • Exclusão com caixa de confirmação (ativada por padrão) e opção de desfazer por 10 segundos
 

@@ -1,12 +1,14 @@
 {
   "metadata": {
-    "title": "Bookmark Scout - Gestionnaire de favoris moderne pour le navigateur",
-    "description": "Une extension de navigateur pour rechercher, organiser, nettoyer, importer, exporter et enregistrer vos favoris, avec des outils d'IA facultatifs.",
+    "title": "Bookmark Scout – Enregistrez vos favoris dans le bon dossier, rapidement",
+    "description": "Extension de navigateur qui enregistre vos pages dans le bon dossier de favoris : saisissez un nom de dossier ou laissez l'IA en suggérer un. Avec recherche et nettoyage.",
     "keywords": [
       "extension de navigateur",
       "extension Chrome",
       "module Firefox",
       "extension Edge",
+      "enregistrer des favoris dans un dossier",
+      "recherche de dossiers de favoris",
       "gestionnaire de favoris",
       "recherche de favoris",
       "organisation des favoris",
@@ -18,9 +20,10 @@
   },
   "structuredData": {
     "features": [
+      "Enregistrement dans un dossier en saisissant son nom",
+      "Suggestions de dossiers par IA facultatives",
       "Recherche instantanée dans les favoris",
       "Organisation par glisser-déposer",
-      "Enregistrement rapide des favoris",
       "Panneau latéral (Firefox compris)",
       "Recherches enregistrées",
       "Raccourcis clavier",
@@ -48,7 +51,7 @@
     "home": "Accueil de Bookmark Scout"
   },
   "footer": {
-    "tagline": "Recherchez, organisez et nettoyez vos favoris, directement dans votre navigateur.",
+    "tagline": "Enregistrez vos pages dans le bon dossier, puis retrouvez-les et rangez-les, directement dans votre navigateur.",
     "product": "Produit",
     "project": "Projet",
     "contact": "Contact",
@@ -71,8 +74,8 @@
   },
   "home": {
     "hero": {
-      "title": "Tous vos favoris, à portée de recherche.",
-      "description": "Bookmark Scout est une extension pour Chrome, Edge et Firefox qui recherche, organise et nettoie les favoris que vous avez déjà. Elle fonctionne dans votre navigateur, sans compte et sans serveur propre.",
+      "title": "Enregistrez chaque page dans le bon dossier, en quelques secondes.",
+      "description": "Saisissez une partie du nom d'un dossier et enregistrez-y la page en un clic, ou laissez l'IA facultative suggérer le dossier. Bookmark Scout recherche et range aussi les favoris que vous avez déjà, dans Chrome, Edge et Firefox, sans compte et sans serveur propre.",
       "download": "Télécharger depuis GitHub",
       "install": "Installer Bookmark Scout",
       "docs": "Lire la documentation",
@@ -112,29 +115,33 @@
       "lede": "De vraies captures d'écran de la version Chrome. Elles suivent le thème clair ou sombre de votre système.",
       "tabsLabel": "Ce que fait Bookmark Scout",
       "firefoxNote": "Firefox ne permet pas de remplacer sa page de favoris : dans Firefox, le gestionnaire, avec ses outils de nettoyage, ses recherches enregistrées, l'importation et l'exportation, s'ouvre donc depuis un bouton de la fenêtre pop-up de la barre d'outils.",
-      "find": {
-        "tab": "Rechercher",
-        "heading": "Recherchez depuis la barre d'outils",
-        "caption": "La fenêtre pop-up de la barre d'outils : une arborescence de dossiers, une recherche instantanée et l'enregistrement en un clic dans n'importe quel dossier.",
+      "save": {
+        "tab": "Enregistrer",
+        "heading": "Enregistrez dans le bon dossier",
+        "caption": "La fenêtre pop-up de la barre d'outils : saisissez une partie du nom d'un dossier, ou choisissez un dossier dans l'arborescence, et enregistrez la page en un clic.",
         "alt": "Deux fenêtres pop-up de Bookmark Scout côte à côte : une arborescence avec les dossiers Recipes, Travel, Research et Dev Docs, et une recherche de « docs » avec les résultats surlignés",
+        "points": [
+          "Saisissez une partie du nom d'un dossier, même profondément imbriqué dans l'arborescence, et enregistrez-y la page actuelle sans quitter le clavier",
+          "Saisissez un chemin comme work/react, et trouvez le dossier même avec une petite faute de frappe",
+          "Les dossiers dans lesquels vous avez enregistré récemment apparaissent en premier",
+          "Une page déjà présente dans ce dossier n'est pas enregistrée deux fois",
+          "Enregistrez des liens dans les dossiers récents depuis le menu contextuel",
+          "Avec l'IA activée, obtenez des suggestions de dossiers pour la page, y compris un nouveau chemin de dossiers après votre vérification"
+        ]
+      },
+      "organize": {
+        "tab": "Rechercher et organiser",
+        "heading": "Retrouvez et organisez ce que vous avez enregistré",
+        "caption": "Le gestionnaire remplace la page Favoris de Chrome par une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
+        "alt": "Le gestionnaire Bookmark Scout affichant le dossier Dev Docs sous forme de tableau, avec les colonnes type, chemin du dossier, URL, titre et date d'ajout, à côté d'une arborescence de dossiers",
         "points": [
           "Recherchez dans tous vos favoris pendant la saisie, avec les options Respecter la casse, Mot entier et Expression régulière",
           "Gardez la même arborescence et la même recherche ouvertes dans le panneau latéral du navigateur (Firefox compris)",
           "Enregistrez une recherche sous forme de vue intelligente qui affiche toujours des résultats à jour",
-          "Parcourez les dossiers et les résultats au clavier ; les raccourcis Ctrl et Cmd du navigateur continuent de fonctionner"
-        ]
-      },
-      "organize": {
-        "tab": "Organiser",
-        "heading": "Classez chaque page au bon endroit",
-        "caption": "Le gestionnaire remplace la page Favoris de Chrome par une arborescence de dossiers, un fil d'Ariane et un tableau triable.",
-        "alt": "Le gestionnaire Bookmark Scout affichant le dossier Dev Docs sous forme de tableau, avec les colonnes type, chemin du dossier, URL, titre et date d'ajout, à côté d'une arborescence de dossiers",
-        "points": [
-          "Enregistrez la page actuelle dans n'importe quel dossier en un clic, sans l'enregistrer deux fois",
           "Faites glisser favoris et dossiers dans l'arborescence",
-          "Enregistrez des liens dans les dossiers récents depuis le menu contextuel",
           "Filtrez, triez et redimensionnez les colonnes du tableau du gestionnaire",
-          "Importez des fichiers HTML ou JSON après un aperçu, et exportez au format HTML, JSON, Markdown ou CSV"
+          "Importez des fichiers HTML ou JSON après un aperçu, et exportez au format HTML, JSON, Markdown ou CSV",
+          "Parcourez les dossiers et les résultats au clavier ; les raccourcis Ctrl et Cmd du navigateur continuent de fonctionner"
         ]
       },
       "cleanUp": {
@@ -157,7 +164,6 @@
         "caption": "L'IA reste désactivée tant que vous ne l'activez pas dans les paramètres, ne choisissez pas un fournisseur et n'ajoutez pas votre propre clé API lorsque le fournisseur en exige une.",
         "alt": "L'onglet IA de la page des paramètres de Bookmark Scout, avec les fonctionnalités d'IA désactivées et les sélecteurs de fournisseur et de modèle",
         "points": [
-          "Suggestions de dossiers pour la page que vous consultez, y compris un nouveau chemin de dossiers après votre vérification",
           "Suggestions d'étiquettes et courts résumés, que vous vérifiez avant de les enregistrer",
           "Plans de réorganisation des dossiers, prévisualisés avant tout déplacement",
           "Exportation des favoris sélectionnés au format Markdown ou XML comme contexte pour une discussion avec une IA ; cela fonctionne sans IA et n'envoie rien"

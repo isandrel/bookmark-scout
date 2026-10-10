@@ -4,7 +4,7 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "搜索、整理和清理书签：快速搜索、保存到文件夹、重复书签与失效链接工具，以及使用你自己密钥的可选 AI 功能。",
+        "message": "快速将网页保存到合适的文件夹：输入文件夹名称的一部分，或让 AI 建议一个。另有书签搜索和清理工具。",
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {

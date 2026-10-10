@@ -1,6 +1,6 @@
 # English Listing Copy
 
-Character counts were measured on 2026-10-01 and count Unicode characters. Store limits are listed in each section; confirm them in the dashboard during submission.
+Character counts count Unicode characters, as measured on the date each section gives (2026-10-10 unless it says otherwise). Store limits are listed in each section; confirm them in the dashboard during submission.
 
 ## Name
 
@@ -14,16 +14,16 @@ All three stores read the name from the packaged manifest (`extName` in `apps/ex
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-The Chrome Web Store shows the manifest description as the summary, and Edge uses it as the short description. It is `extDescription` in `apps/extension/public/_locales/en/messages.json`; changing it needs a new version. Packaged since 0.3.2 (131 characters):
+The Chrome Web Store shows the manifest description as the summary, and Edge uses it as the short description. It is `extDescription` in `apps/extension/public/_locales/en/messages.json`; changing it needs a new version. Ships with the next version after 0.3.2 (126 characters):
 
 ```text
-Search, organize, and clean up bookmarks: fast search, folder save, duplicate and dead-link tools, and opt-in AI with your own key.
+Save pages to the right folder fast: type part of a folder name or let AI suggest one. Plus bookmark search and cleanup tools.
 ```
 
-### Firefox Add-ons summary (250 characters maximum, 201 characters)
+### Firefox Add-ons summary (250 characters maximum, 231 characters)
 
 ```text
-Search and organize your bookmarks from the toolbar: instant search, a folder tree with drag and drop, one-click save to any folder, and opt-in AI folder suggestions that use your own provider and key.
+Save pages to the right bookmark folder fast: type part of a folder's name, even one deep in the tree, and save from the keyboard, or let opt-in AI suggest a folder. Plus instant search and a folder tree in the toolbar and sidebar.
 ```
 
 ## Category
@@ -39,28 +39,33 @@ Search and organize your bookmarks from the toolbar: instant search, a folder tr
 Edge allows up to 7 terms (assumed limits: 30 characters per term, 21 words in total).
 
 ```text
+save to folder
 bookmark manager
 bookmark search
 duplicate bookmarks
 dead links
 bookmark folders
 AI bookmarks
-import export bookmarks
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 3,731 characters. Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 4,105 characters (2026-10-10). Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
-Bookmark Scout helps you find, file, and tidy your bookmarks without leaving the browser.
+Bookmark Scout saves every page to the right folder in seconds, then helps you find and tidy your bookmarks without leaving the browser.
 
-SEARCH AND SAVE FROM THE TOOLBAR
+SAVE TO THE RIGHT FOLDER IN SECONDS
+• Type part of any folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard
+• Type a path such as work/react; a small typo still finds the folder, and folders you used recently come first
+• A page already in that folder is not saved twice
+• Optional AI suggests the best folder for the page, or a new folder path that you review before it is created
+• Optional right-click menu (turn on Context Menu in Settings) to save links into recent folders
+
+SEARCH FROM THE TOOLBAR
 • Instant search across all bookmarks, with match case, whole word, and regular expression options
 • Folder tree with drag and drop, expand and collapse all, and new folders
-• Save the current page to any folder with one click; a page already in that folder is not saved twice
-• Side panel with the same tree and search
-• Optional right-click menu (turn on Context Menu in Settings) to save links into recent folders
+• Side panel with the same tree, search, and folder matches
 • Keyboard shortcuts that never take over browser Ctrl/Cmd shortcuts
 • Delete with a confirmation dialog (on by default) and a 10-second Undo
 
@@ -104,17 +109,22 @@ Documentation: https://docs.bookmark-scout.com
 
 ## Full description: Firefox Add-ons
 
-AMO descriptions accept limited Markdown; this text is plain. 1,645 characters (2026-10-03). It does not describe the tools inside the bookmarks manager, which opens from the popup's Open bookmark manager button but has not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`).
+AMO descriptions accept limited Markdown; this text is plain. 2,075 characters (2026-10-10). It does not describe the tools inside the bookmarks manager, which opens from the popup's Open bookmark manager button but has not been checked by hand in Firefox, or icons from the browser's cache, which Firefox does not provide (see `../README.md`).
 
 ```text
-Bookmark Scout helps you find and file your bookmarks without leaving the browser.
+Bookmark Scout saves every page to the right folder in seconds, then helps you find your bookmarks without leaving the browser.
 
-SEARCH AND SAVE FROM THE TOOLBAR
+SAVE TO THE RIGHT FOLDER IN SECONDS
+• Type part of any folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard
+• Type a path such as work/react; a small typo still finds the folder, and folders you used recently come first
+• A page already in that folder is not saved twice
+• Optional AI suggests the best folder for the page, or a new folder path that you review before it is created
+• Save links from the right-click menu into recent folders
+
+SEARCH FROM THE TOOLBAR
 • Instant search across all bookmarks, with match case, whole word, and regular expression options
 • Folder tree with drag and drop, expand and collapse all, and new folders
-• Save the current page to any folder with one click; a page already in that folder is not saved twice
-• The same tree and search in the Firefox sidebar, which stays open while you browse
-• Save links from the right-click menu into recent folders
+• The same tree, search, and folder matches in the Firefox sidebar, which stays open while you browse
 • Keyboard shortcuts that never take over browser Ctrl/Cmd shortcuts
 • Delete with a confirmation dialog (on by default) and a 10-second Undo
 

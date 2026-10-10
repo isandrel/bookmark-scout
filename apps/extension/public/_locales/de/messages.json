@@ -4,7 +4,7 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "Lesezeichen suchen, ordnen, bereinigen: schnelle Suche, Ordnerablage, Duplikat- und Linkprüfung, optionale KI mit eigenem Schlüssel.",
+        "message": "Seiten schnell im richtigen Ordner speichern: Namensteil tippen oder KI vorschlagen lassen. Dazu Lesezeichensuche und Bereinigung.",
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {

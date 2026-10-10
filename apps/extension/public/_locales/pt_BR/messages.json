@@ -4,7 +4,7 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "Encontre, organize e limpe favoritos: pesquisa rápida, salvar em pastas, duplicatas, links quebrados e IA opcional com sua chave.",
+        "message": "Salve páginas na pasta certa, rápido: digite parte do nome de uma pasta ou deixe a IA sugerir. E ferramentas de pesquisa e limpeza.",
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {

@@ -1,12 +1,14 @@
 {
   "metadata": {
-    "title": "Bookmark Scout – Moderner Lesezeichen-Manager für den Browser",
-    "description": "Eine Browsererweiterung zum Suchen, Ordnen, Bereinigen, Importieren, Exportieren und Speichern von Lesezeichen, mit optionalen KI-Tools.",
+    "title": "Bookmark Scout – Lesezeichen schnell im richtigen Ordner speichern",
+    "description": "Browsererweiterung, die Seiten im richtigen Lesezeichenordner speichert: Ordnernamen eingeben oder von KI vorschlagen lassen. Dazu Such- und Bereinigungstools.",
     "keywords": [
       "Browsererweiterung",
       "Chrome-Erweiterung",
       "Firefox-Add-on",
       "Edge-Erweiterung",
+      "Lesezeichen in Ordner speichern",
+      "Lesezeichenordner suchen",
       "Lesezeichen-Manager",
       "Lesezeichen suchen",
       "Lesezeichen ordnen",
@@ -18,9 +20,10 @@
   },
   "structuredData": {
     "features": [
+      "In Ordner speichern durch Eingabe des Ordnernamens",
+      "Optionale KI-Ordnervorschläge",
       "Sofortsuche in Lesezeichen",
       "Ordnen per Drag-and-drop",
-      "Schnelles Speichern von Lesezeichen",
       "Seitenleiste (in Firefox die Sidebar)",
       "Gespeicherte Suchen",
       "Tastenkombinationen",
@@ -48,7 +51,7 @@
     "home": "Bookmark Scout – Startseite"
   },
   "footer": {
-    "tagline": "Lesezeichen suchen, ordnen und bereinigen, direkt im Browser.",
+    "tagline": "Seiten im richtigen Ordner speichern und sie dann finden und aufräumen, direkt im Browser.",
     "product": "Produkt",
     "project": "Projekt",
     "contact": "Kontakt",
@@ -71,8 +74,8 @@
   },
   "home": {
     "hero": {
-      "title": "Jedes gespeicherte Lesezeichen, nur eine Suche entfernt.",
-      "description": "Bookmark Scout ist eine Browsererweiterung für Chrome, Edge und Firefox, die Ihre vorhandenen Lesezeichen durchsucht, ordnet und bereinigt. Sie läuft in Ihrem Browser, ohne Konto und ohne eigenen Server.",
+      "title": "Jede Seite in Sekunden im richtigen Ordner speichern.",
+      "description": "Geben Sie einen Teil eines Ordnernamens ein und speichern Sie die Seite mit einem Klick dort, oder lassen Sie sich den Ordner von optionaler KI vorschlagen. Bookmark Scout durchsucht außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, in Chrome, Edge und Firefox, ohne Konto und ohne eigenen Server.",
       "download": "Von GitHub herunterladen",
       "install": "Bookmark Scout installieren",
       "docs": "Dokumentation lesen",
@@ -112,29 +115,33 @@
       "lede": "Echte Screenshots der Chrome-Version. Sie folgen der hellen oder dunklen Einstellung Ihres Systems.",
       "tabsLabel": "Aufgaben von Bookmark Scout",
       "firefoxNote": "Firefox kann seine Lesezeichenseite nicht ersetzen. Deshalb öffnet sich der Manager mit Bereinigungstools, gespeicherten Suchen sowie Import und Export in Firefox über eine Schaltfläche im Pop-up der Symbolleiste.",
-      "find": {
-        "tab": "Finden",
-        "heading": "Suchen in der Symbolleiste",
-        "caption": "Das Pop-up in der Symbolleiste: Ordnerbaum, Sofortsuche und Speichern in jedem Ordner mit einem Klick.",
+      "save": {
+        "tab": "Speichern",
+        "heading": "Im richtigen Ordner speichern",
+        "caption": "Das Pop-up in der Symbolleiste: Geben Sie einen Teil eines Ordnernamens ein oder wählen Sie einen Ordner im Baum, und speichern Sie die Seite mit einem Klick.",
         "alt": "Zwei Bookmark-Scout-Pop-ups nebeneinander: ein Ordnerbaum mit den Ordnern Recipes, Travel, Research und Dev Docs sowie eine Suche nach docs mit hervorgehobenen Treffern",
+        "points": [
+          "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
+          "Einen Pfad wie work/react eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
+          "Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
+          "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert",
+          "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern",
+          "Mit aktivierter KI Ordnervorschläge für die Seite erhalten, einschließlich eines neuen Ordnerpfads nach Ihrer Prüfung"
+        ]
+      },
+      "organize": {
+        "tab": "Finden und ordnen",
+        "heading": "Gespeichertes finden und ordnen",
+        "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome durch einen Ordnerbaum, eine Pfadnavigation und eine sortierbare Tabelle.",
+        "alt": "Der Bookmark-Scout-Manager zeigt den Ordner Dev Docs als Tabelle mit den Spalten Typ, Ordnerpfad, URL, Titel und Hinzugefügt am neben einem Ordnerbaum",
         "points": [
           "Alle Lesezeichen schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche als intelligente Ansicht speichern, die immer aktuelle Ergebnisse zeigt",
-          "Mit der Tastatur durch Ordner und Ergebnisse navigieren; die Strg- und Cmd-Tastenkombinationen des Browsers funktionieren weiter"
-        ]
-      },
-      "organize": {
-        "tab": "Ordnen",
-        "heading": "Seiten dort ablegen, wo sie hingehören",
-        "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome durch einen Ordnerbaum, eine Pfadnavigation und eine sortierbare Tabelle.",
-        "alt": "Der Bookmark-Scout-Manager zeigt den Ordner Dev Docs als Tabelle mit den Spalten Typ, Ordnerpfad, URL, Titel und Hinzugefügt am neben einem Ordnerbaum",
-        "points": [
-          "Die aktuelle Seite mit einem Klick in jedem Ordner speichern, ohne sie doppelt abzulegen",
           "Lesezeichen und Ordner im Ordnerbaum verschieben",
-          "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern",
           "Spalten in der Tabelle des Managers filtern, sortieren und in der Breite anpassen",
-          "HTML oder JSON nach einer Vorschau importieren und als HTML, JSON, Markdown oder CSV exportieren"
+          "HTML oder JSON nach einer Vorschau importieren und als HTML, JSON, Markdown oder CSV exportieren",
+          "Mit der Tastatur durch Ordner und Ergebnisse navigieren; die Strg- und Cmd-Tastenkombinationen des Browsers funktionieren weiter"
         ]
       },
       "cleanUp": {
@@ -157,7 +164,6 @@
         "caption": "KI bleibt deaktiviert, bis Sie sie in den Einstellungen aktivieren, einen Anbieter wählen und, falls nötig, Ihren eigenen API-Schlüssel hinzufügen.",
         "alt": "Der Tab KI der Bookmark-Scout-Einstellungen mit deaktivierten KI-Funktionen sowie Auswahlfeldern für Anbieter und Modell",
         "points": [
-          "Ordnervorschläge für die aktuelle Seite, einschließlich eines neuen Ordnerpfads nach Ihrer Prüfung",
           "Tag-Vorschläge und kurze Zusammenfassungen, die Sie vor dem Speichern prüfen",
           "Pläne zur Neuordnung von Ordnern, mit Vorschau, bevor etwas verschoben wird",
           "Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren; das funktioniert ohne KI und sendet nichts"

@@ -1,13 +1,13 @@
 # Simplified Chinese Listing Copy (简体中文)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 54 |
-| Firefox Add-ons summary | 69 |
-| Full description, Chrome and Edge | 1,489 |
-| Full description, Firefox | 680 |
+| Optional manifest description | 50 |
+| Firefox Add-ons summary | 90 |
+| Full description, Chrome and Edge | 1,656 |
+| Full description, Firefox | 887 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/zh_CN/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-`extDescription`; changing it needs a new version:
+`extDescription`; changing it needs a new version. Ships with the next version after 0.3.2 (50 characters):
 
 ```text
-搜索、整理和清理书签：快速搜索、保存到文件夹、重复书签与失效链接工具，以及使用你自己密钥的可选 AI 功能。
+快速将网页保存到合适的文件夹：输入文件夹名称的一部分，或让 AI 建议一个。另有书签搜索和清理工具。
 ```
 
-### Firefox Add-ons summary (250 characters maximum)
+### Firefox Add-ons summary (250 characters maximum, 90 characters)
 
 ```text
-在工具栏中搜索和整理书签：即时搜索、支持拖放的文件夹树、一键保存到任意文件夹，以及可选的 AI 文件夹建议，使用你自己选择的服务商和密钥。
+快速将网页保存到合适的书签文件夹：输入文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，用键盘就能保存，或让可选的 AI 建议文件夹。另有工具栏和侧栏中的即时搜索与文件夹树。
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+保存到文件夹
 书签管理器
 书签搜索
 重复书签
 失效链接
 书签文件夹
 AI 书签
-书签导入导出
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ AI 书签
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout 让你无需离开浏览器，就能查找、归档和整理书签。
+Bookmark Scout 能在几秒钟内把每个网页保存到合适的文件夹，并让你无需离开浏览器，就能查找和整理书签。
 
-在工具栏中搜索和保存
+几秒钟内保存到合适的文件夹
+• 输入任意文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将当前网页保存到那里
+• 输入 work/react 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
+• 已在该文件夹中的网页不会重复保存
+• 可选的 AI 会为网页建议最合适的文件夹，或建议一个新的文件夹路径，经你确认后才会创建
+• 可选的右键菜单（在设置中开启“右键菜单”），可将链接保存到最近使用的文件夹
+
+在工具栏中搜索
 • 即时搜索所有书签，支持区分大小写、全字匹配和正则表达式
 • 文件夹树支持拖放、全部展开和收起，以及新建文件夹
-• 一键将当前网页保存到任意文件夹；已在该文件夹中的网页不会重复保存
-• 侧边栏提供同样的文件夹树和搜索
-• 可选的右键菜单（在设置中开启“右键菜单”），可将链接保存到最近使用的文件夹
+• 侧边栏提供同样的文件夹树、搜索和匹配的文件夹
 • 键盘快捷键不会占用浏览器的 Ctrl/Cmd 快捷键
 • 删除前显示确认对话框（默认开启），并可在 10 秒内撤消
 
@@ -102,14 +107,19 @@ Bookmark Scout 将浏览器的书签页面替换为一个管理器，提供文�
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout 让你无需离开浏览器，就能查找和归档书签。
+Bookmark Scout 能在几秒钟内把每个网页保存到合适的文件夹，并让你无需离开浏览器，就能查找书签。
 
-在工具栏中搜索和保存
+几秒钟内保存到合适的文件夹
+• 输入任意文件夹名称的一部分，即使是文件夹树深处的文件夹也能找到，无需离开键盘就能将当前网页保存到那里
+• 输入 work/react 这样的路径；有小的拼写错误也能找到文件夹，最近使用过的文件夹排在前面
+• 已在该文件夹中的网页不会重复保存
+• 可选的 AI 会为网页建议最合适的文件夹，或建议一个新的文件夹路径，经你确认后才会创建
+• 通过右键菜单将链接保存到最近使用的文件夹
+
+在工具栏中搜索
 • 即时搜索所有书签，支持区分大小写、全字匹配和正则表达式
 • 文件夹树支持拖放、全部展开和收起，以及新建文件夹
-• 一键将当前网页保存到任意文件夹；已在该文件夹中的网页不会重复保存
-• 在 Firefox 侧栏中使用同样的文件夹树和搜索，浏览网页时侧栏保持打开
-• 通过右键菜单将链接保存到最近使用的文件夹
+• 在 Firefox 侧栏中使用同样的文件夹树、搜索和匹配的文件夹，浏览网页时侧栏保持打开
 • 键盘快捷键不会占用浏览器的 Ctrl/Cmd 快捷键
 • 删除前显示确认对话框（默认开启），并可在 10 秒内撤消
 

@@ -1,13 +1,13 @@
 # Japanese Listing Copy (日本語)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-01 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 73 |
-| Firefox Add-ons summary | 114 |
-| Full description, Chrome and Edge | 1,720 |
-| Full description, Firefox | 943 |
+| Optional manifest description | 75 |
+| Firefox Add-ons summary | 130 |
+| Full description, Chrome and Edge | 2,198 |
+| Full description, Firefox | 1,127 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/ja/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged since 0.3.2 (`extDescription`; changing it needs a new version):
+Ships with the next version after 0.3.2 (`extDescription`; changing it needs a new version; 75 characters):
 
 ```text
-ブックマークを素早く検索・整理・掃除。フォルダへのワンクリック保存、重複やリンク切れの検出、自分の API キーで使えるオプトインの AI 機能。
+ページを正しいフォルダにすばやく保存。フォルダ名の一部を入力するか、AI に提案させるだけ。ブックマークの検索とクリーンアップのツールも備えています。
 ```
 
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-ツールバーからブックマークを検索・整理。即時検索、ドラッグ＆ドロップ対応のフォルダツリー、任意のフォルダへのワンクリック保存に加え、自分で選んだプロバイダーと API キーで使えるオプトインの AI フォルダ提案を備えています。
+ページをブックマークの正しいフォルダにすばやく保存。フォルダ名の一部を入力すれば、ツリーの深い階層にあるフォルダでもキーボードから保存でき、オプトインの AI にフォルダを提案させることもできます。ツールバーとサイドバーでは即時検索とフォルダツリーも使えます。
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+フォルダに保存
 ブックマーク管理
 ブックマーク検索
 重複ブックマーク
 リンク切れ
 ブックマーク フォルダ
 AI ブックマーク
-ブックマーク インポート
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ AI ブックマーク
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout（ブックマークスカウト）は、ブラウザを離れずにブックマークを探し、保存し、整理できる拡張機能です。
+Bookmark Scout（ブックマークスカウト）は、どのページも数秒で正しいフォルダに保存し、ブラウザを離れずにブックマークを探して整理できる拡張機能です。
 
-ツールバーから検索と保存
+数秒で正しいフォルダに保存
+• フォルダ名の一部を入力すれば、ツリーの深い階層にあるフォルダでも見つかり、キーボードから手を離さずに表示中のページを保存
+• work/react のようなパスでも入力可能。少しの入力ミスがあってもフォルダが見つかり、最近使ったフォルダが先頭に表示
+• すでにそのフォルダにあるページは重複保存しません
+• AI（任意）がページに最適なフォルダを提案。新しいフォルダパスは確認してから作成
+• 右クリックメニュー（設定で「コンテキストメニュー」をオン）からリンクを最近使ったフォルダに保存
+
+ツールバーから検索
 • すべてのブックマークを即時検索（大文字と小文字の区別、単語単位、正規表現に対応）
 • ドラッグ＆ドロップ、すべて展開／折りたたみ、新規フォルダ作成ができるフォルダツリー
-• 表示中のページを任意のフォルダにワンクリックで保存（同じフォルダには重複保存しません）
-• 右クリックメニュー（設定で「コンテキストメニュー」をオン）からリンクを最近使ったフォルダに保存
-• 同じツリーと検索を使えるサイドパネル
+• 同じツリー、検索、フォルダの候補を使えるサイドパネル
 • ブラウザの Ctrl/Cmd ショートカットを妨げないキーボードショートカット
 • 確認ダイアログ（既定でオン）と 10 秒間の元に戻す付きの削除
 
@@ -102,14 +107,19 @@ AI 機能を使うと、その機能に必要なデータがブラウザから�
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout（ブックマークスカウト）は、ブラウザを離れずにブックマークを探して保存できる拡張機能です。
+Bookmark Scout（ブックマークスカウト）は、どのページも数秒で正しいフォルダに保存し、ブラウザを離れずにブックマークを探せる拡張機能です。
 
-ツールバーから検索と保存
+数秒で正しいフォルダに保存
+• フォルダ名の一部を入力すれば、ツリーの深い階層にあるフォルダでも見つかり、キーボードから手を離さずに表示中のページを保存
+• work/react のようなパスでも入力可能。少しの入力ミスがあってもフォルダが見つかり、最近使ったフォルダが先頭に表示
+• すでにそのフォルダにあるページは重複保存しません
+• AI（任意）がページに最適なフォルダを提案。新しいフォルダパスは確認してから作成
+• 右クリックメニューからリンクを最近使ったフォルダに保存
+
+ツールバーから検索
 • すべてのブックマークを即時検索（大文字と小文字の区別、単語単位、正規表現に対応）
 • ドラッグ＆ドロップ、すべて展開／折りたたみ、新規フォルダ作成ができるフォルダツリー
-• 表示中のページを任意のフォルダにワンクリックで保存（同じフォルダには重複保存しません）
-• 同じツリーと検索を Firefox のサイドバーで表示（ブラウズ中も開いたまま）
-• 右クリックメニューからリンクを最近使ったフォルダに保存
+• 同じツリー、検索、フォルダの候補を Firefox のサイドバーで表示（ブラウズ中も開いたまま）
 • ブラウザの Ctrl/Cmd ショートカットを妨げないキーボードショートカット
 • 確認ダイアログ（既定でオン）と 10 秒間の元に戻す付きの削除
 

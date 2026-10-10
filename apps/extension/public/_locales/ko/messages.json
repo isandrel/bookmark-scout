@@ -4,7 +4,7 @@
         "description": "Extension name (used in manifest.json)"
     },
     "extDescription": {
-        "message": "북마크를 빠르게 검색하고 정리하세요. 원클릭 폴더 저장, 중복 및 깨진 링크 찾기, 내 API 키로 쓰는 선택형 AI 기능을 제공합니다.",
+        "message": "폴더 이름의 일부를 입력하거나 AI 추천을 받아 페이지를 알맞은 폴더에 빠르게 저장하세요. 북마크 검색과 정돈 도구도 함께 제공합니다.",
         "description": "Extension description (used in manifest.json)"
     },
     "popup_searchPlaceholder": {

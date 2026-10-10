@@ -1,12 +1,14 @@
 {
   "metadata": {
-    "title": "Bookmark Scout - Gerenciador de favoritos moderno para o navegador",
-    "description": "Uma extensão de navegador para pesquisar, organizar, limpar, importar/exportar e salvar favoritos, com ferramentas de IA opcionais.",
+    "title": "Bookmark Scout – Salve favoritos na pasta certa, rápido",
+    "description": "Extensão de navegador que salva páginas na pasta de favoritos certa: digite o nome de uma pasta ou deixe a IA sugerir uma. Além disso, ferramentas de pesquisa e limpeza.",
     "keywords": [
       "extensão de navegador",
       "extensão do Chrome",
       "complemento do Firefox",
       "extensão do Edge",
+      "salvar favoritos em pasta",
+      "pesquisar pastas de favoritos",
       "gerenciador de favoritos",
       "pesquisa de favoritos",
       "organizador de favoritos",
@@ -18,9 +20,10 @@
   },
   "structuredData": {
     "features": [
+      "Salvar em uma pasta digitando o nome dela",
+      "Sugestões de pasta com IA opcional",
       "Pesquisa instantânea nos favoritos",
       "Organização com arrastar e soltar",
-      "Salvamento rápido de favoritos",
       "Suporte ao painel lateral (inclusive no Firefox)",
       "Pesquisas salvas",
       "Atalhos de teclado",
@@ -48,7 +51,7 @@
     "home": "Página inicial do Bookmark Scout"
   },
   "footer": {
-    "tagline": "Pesquise, organize e limpe seus favoritos direto no navegador.",
+    "tagline": "Salve páginas na pasta certa e depois encontre e arrume tudo, direto no navegador.",
     "product": "Produto",
     "project": "Projeto",
     "contact": "Contato",
@@ -71,8 +74,8 @@
   },
   "home": {
     "hero": {
-      "title": "Todos os favoritos que você salvou, a uma pesquisa de distância.",
-      "description": "O Bookmark Scout é uma extensão para Chrome, Edge e Firefox que pesquisa, organiza e limpa os favoritos que você já tem. Ele funciona no seu navegador, sem conta e sem servidor próprio.",
+      "title": "Salve cada página na pasta certa, em segundos.",
+      "description": "Digite parte do nome de uma pasta e salve a página nela com um clique, ou deixe a IA opcional sugerir a pasta. O Bookmark Scout também pesquisa e arruma os favoritos que você já tem, no Chrome, no Edge e no Firefox, sem conta e sem servidor próprio.",
       "download": "Baixar do GitHub",
       "install": "Instalar o Bookmark Scout",
       "docs": "Ler a documentação",
@@ -112,29 +115,33 @@
       "lede": "Capturas de tela reais da versão para Chrome. Elas seguem a configuração de tema claro ou escuro do seu sistema.",
       "tabsLabel": "Tarefas que o Bookmark Scout faz",
       "firefoxNote": "O Firefox não permite substituir a página de favoritos, então, no Firefox, o gerenciador, com as ferramentas de limpeza, as pesquisas salvas e a importação e exportação, abre por um botão no pop-up da barra de ferramentas.",
-      "find": {
-        "tab": "Encontrar",
-        "heading": "Pesquise pela barra de ferramentas",
-        "caption": "O pop-up da barra de ferramentas: árvore de pastas, pesquisa instantânea e salvamento em qualquer pasta com um clique.",
+      "save": {
+        "tab": "Salvar",
+        "heading": "Salve na pasta certa",
+        "caption": "O pop-up da barra de ferramentas: digite parte do nome de uma pasta, ou escolha uma pasta na árvore, e salve a página com um clique.",
         "alt": "Dois pop-ups do Bookmark Scout lado a lado: uma árvore de pastas com as pastas Receitas, Viagem, Pesquisa e Docs de desenvolvimento, e uma pesquisa por docs com os resultados destacados",
+        "points": [
+          "Digite parte do nome de uma pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado",
+          "Digite um caminho como work/react e encontre a pasta mesmo com um pequeno erro de digitação",
+          "As pastas em que você salvou recentemente aparecem primeiro",
+          "Uma página que já está nessa pasta não é salva duas vezes",
+          "Salve links em pastas recentes pelo menu de clique com o botão direito",
+          "Com a IA ativada, receba sugestões de pasta para a página, incluindo um novo caminho de pastas depois que você o revisar"
+        ]
+      },
+      "organize": {
+        "tab": "Encontrar e organizar",
+        "heading": "Encontre e organize o que você salvou",
+        "caption": "O gerenciador substitui a página de favoritos do Chrome por uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
+        "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
         "points": [
           "Pesquise em todos os favoritos enquanto digita, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa como visualização inteligente que sempre mostra resultados atualizados",
-          "Navegue pelas pastas e pelos resultados com o teclado; os atalhos Ctrl e Cmd do navegador continuam funcionando"
-        ]
-      },
-      "organize": {
-        "tab": "Organizar",
-        "heading": "Guarde cada página no lugar certo",
-        "caption": "O gerenciador substitui a página de favoritos do Chrome por uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
-        "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
-        "points": [
-          "Salve a página atual em qualquer pasta com um clique, sem salvá-la duas vezes",
           "Arraste favoritos e pastas pela árvore de pastas",
-          "Salve links em pastas recentes pelo menu de clique com o botão direito",
           "Filtre, classifique e redimensione colunas na tabela do gerenciador",
-          "Importe HTML ou JSON depois de uma prévia e exporte para HTML, JSON, Markdown ou CSV"
+          "Importe HTML ou JSON depois de uma prévia e exporte para HTML, JSON, Markdown ou CSV",
+          "Navegue pelas pastas e pelos resultados com o teclado; os atalhos Ctrl e Cmd do navegador continuam funcionando"
         ]
       },
       "cleanUp": {
@@ -157,7 +164,6 @@
         "caption": "A IA fica desativada até você ativá-la nas Configurações, escolher um provedor e adicionar sua própria chave de API quando o provedor exigir uma.",
         "alt": "A guia IA da página de configurações do Bookmark Scout com os recursos de IA desativados e os seletores de provedor e modelo",
         "points": [
-          "Sugestões de pasta para a página em que você está, incluindo um novo caminho de pastas depois que você o revisar",
           "Sugestões de tags e resumos curtos que você revisa antes de salvar",
           "Planos de reorganização de pastas, com prévia antes de qualquer movimentação",
           "Exporte os favoritos selecionados como contexto em Markdown ou XML para uma conversa com IA; isso funciona sem IA e não envia nada"

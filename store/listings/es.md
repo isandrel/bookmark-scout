@@ -1,13 +1,13 @@
 # Spanish Listing Copy (Español)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-08 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 129 |
-| Firefox Add-ons summary | 246 |
-| Full description, Chrome and Edge | 4,730 |
-| Full description, Firefox | 2,064 |
+| Optional manifest description | 131 |
+| Firefox Add-ons summary | 247 |
+| Full description, Chrome and Edge | 5,166 |
+| Full description, Firefox | 2,603 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/es/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged as `extDescription`; changing it needs a new version:
+Packaged as `extDescription`; changing it needs a new version. Ships with the next version after 0.3.2 (131 characters):
 
 ```text
-Busca, organiza y limpia marcadores: búsqueda rápida, guardado en carpetas, duplicados, enlaces rotos e IA opcional con tu clave.
+Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre o deja que la IA sugiera una. Y busca y limpia marcadores.
 ```
 
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-Busca y organiza tus marcadores desde la barra de herramientas: búsqueda instantánea, árbol de carpetas con arrastrar y soltar, guardado en cualquier carpeta con un clic y sugerencias de carpeta con IA opcionales, con tu propio proveedor y clave.
+Guarda páginas rápido en la carpeta de marcadores correcta: escribe parte de su nombre, aunque esté anidada, y guarda con el teclado, o deja que la IA opcional sugiera una. Con búsqueda instantánea y árbol de carpetas, también en el panel lateral.
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+guardar en carpeta
 administrador de marcadores
 buscar marcadores
 marcadores duplicados
 enlaces rotos
 carpetas de marcadores
 marcadores con IA
-importar marcadores
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ importar marcadores
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout te ayuda a encontrar, archivar y ordenar tus marcadores sin salir del navegador.
+Bookmark Scout guarda cada página en la carpeta correcta en segundos y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador.
 
-BUSCA Y GUARDA DESDE LA BARRA DE HERRAMIENTAS
+GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
+• Escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado
+• Escribe una ruta como work/react; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
+• Una página que ya está en esa carpeta no se guarda dos veces
+• La IA opcional sugiere la mejor carpeta para la página, o una nueva ruta de carpetas que revisas antes de que se cree
+• Menú contextual opcional (activa Menú contextual en Configuración) para guardar enlaces en carpetas recientes
+
+BUSCA DESDE LA BARRA DE HERRAMIENTAS
 • Búsqueda instantánea en todos los marcadores, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
-• Guarda la página actual en cualquier carpeta con un clic; una página que ya está en esa carpeta no se guarda dos veces
-• Panel lateral con el mismo árbol y la misma búsqueda
-• Menú contextual opcional (activa Menú contextual en Configuración) para guardar enlaces en carpetas recientes
+• Panel lateral con el mismo árbol, la misma búsqueda y las carpetas coincidentes
 • Combinaciones de teclas que nunca sustituyen a los atajos Ctrl/Cmd del navegador
 • Eliminación con cuadro de diálogo de confirmación (activado de forma predeterminada) y opción de deshacer durante 10 segundos
 
@@ -102,14 +107,19 @@ Documentación: https://docs.bookmark-scout.com
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout te ayuda a encontrar y archivar tus marcadores sin salir del navegador.
+Bookmark Scout guarda cada página en la carpeta correcta en segundos y luego te ayuda a encontrar tus marcadores sin salir del navegador.
 
-BUSCA Y GUARDA DESDE LA BARRA DE HERRAMIENTAS
+GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
+• Escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado
+• Escribe una ruta como work/react; un pequeño error de escritura no impide encontrar la carpeta, y las carpetas que usaste hace poco aparecen primero
+• Una página que ya está en esa carpeta no se guarda dos veces
+• La IA opcional sugiere la mejor carpeta para la página, o una nueva ruta de carpetas que revisas antes de que se cree
+• Guarda enlaces en carpetas recientes desde el menú contextual
+
+BUSCA DESDE LA BARRA DE HERRAMIENTAS
 • Búsqueda instantánea en todos los marcadores, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
-• Guarda la página actual en cualquier carpeta con un clic; una página que ya está en esa carpeta no se guarda dos veces
-• El mismo árbol y la misma búsqueda en el panel lateral de Firefox, que sigue abierto mientras navegas
-• Guarda enlaces en carpetas recientes desde el menú contextual
+• El mismo árbol, la misma búsqueda y las carpetas coincidentes en el panel lateral de Firefox, que sigue abierto mientras navegas
 • Combinaciones de teclas que nunca sustituyen a los atajos Ctrl/Cmd del navegador
 • Eliminación con cuadro de diálogo de confirmación (activado de forma predeterminada) y opción de deshacer durante 10 segundos
 

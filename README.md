@@ -11,7 +11,7 @@
 <h1 align="center">🔖 Bookmark Scout</h1>
 
 <p align="center">
-  <strong>A browser extension to search, organize, clean up, import/export, and save bookmarks with opt-in AI tools and multi-provider support.</strong>
+  <strong>A browser extension that saves pages to the right bookmark folder: type part of a folder's name or let opt-in AI suggest one. Plus search and cleanup tools.</strong>
 </p>
 
 <p align="center">
@@ -88,6 +88,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### ✅ Implemented
 
+- [x] 📥 **Save to a Folder by Name** — Type part of a folder's name, even a nested folder or a path such as `work/react`, then press ↓ and Enter to save the current page there; small typos still match and recently used folders come first
 - [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop

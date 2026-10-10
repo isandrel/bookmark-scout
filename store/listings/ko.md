@@ -1,13 +1,13 @@
 # Korean Listing Copy (한국어)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-01 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 76 |
-| Firefox Add-ons summary | 107 |
-| Full description, Chrome and Edge | 1,757 |
-| Full description, Firefox | 961 |
+| Optional manifest description | 75 |
+| Firefox Add-ons summary | 123 |
+| Full description, Chrome and Edge | 2,272 |
+| Full description, Firefox | 1,178 |
 
 ## Name
 
@@ -21,28 +21,28 @@ Read from `extName` in `apps/extension/public/_locales/ko/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged since 0.3.2 (`extDescription`; changing it needs a new version):
+Ships with the next version after 0.3.2 (`extDescription`; changing it needs a new version; 75 characters):
 
 ```text
-북마크를 빠르게 검색하고 정리하세요. 원클릭 폴더 저장, 중복 및 깨진 링크 찾기, 내 API 키로 쓰는 선택형 AI 기능을 제공합니다.
+폴더 이름의 일부를 입력하거나 AI 추천을 받아 페이지를 알맞은 폴더에 빠르게 저장하세요. 북마크 검색과 정돈 도구도 함께 제공합니다.
 ```
 
-### Firefox Add-ons summary (250 characters maximum)
+### Firefox Add-ons summary (250 characters maximum, 123 characters)
 
 ```text
-툴바에서 북마크를 검색하고 정리하세요. 즉시 검색, 드래그 앤 드롭 폴더 트리, 원하는 폴더에 원클릭 저장, 그리고 직접 고른 제공업체와 API 키로 쓰는 선택형 AI 폴더 추천을 제공합니다.
+페이지를 알맞은 북마크 폴더에 빠르게 저장하세요. 트리 깊숙이 있는 폴더도 이름의 일부만 입력해 키보드로 저장하거나, 선택형 AI에게 폴더를 추천받을 수 있습니다. 툴바와 사이드바에서 즉시 검색과 폴더 트리도 제공합니다.
 ```
 
 ## Search terms (Edge Add-ons)
 
 ```text
+폴더에 저장
 북마크 관리
 북마크 검색
 중복 북마크
 깨진 링크
 북마크 폴더
 AI 북마크
-북마크 가져오기
 ```
 
 ## Full description: Chrome Web Store and Edge Add-ons
@@ -50,14 +50,19 @@ AI 북마크
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout(북마크 스카우트)는 브라우저를 떠나지 않고 북마크를 찾고, 저장하고, 정리할 수 있는 확장 프로그램입니다.
+Bookmark Scout(북마크 스카우트)는 모든 페이지를 몇 초 만에 알맞은 폴더에 저장하고, 브라우저를 떠나지 않고 북마크를 찾고 정리할 수 있게 도와주는 확장 프로그램입니다.
 
-툴바에서 검색과 저장
+알맞은 폴더에 몇 초 만에 저장
+• 폴더 이름의 일부를 입력하면 트리 깊숙이 있는 폴더도 찾아, 키보드에서 손을 떼지 않고 현재 페이지를 저장
+• work/react 같은 경로도 입력 가능(오타가 조금 있어도 폴더를 찾고, 최근 사용한 폴더가 먼저 표시됨)
+• 이미 그 폴더에 있는 페이지는 중복 저장하지 않음
+• 선택형 AI가 페이지에 가장 알맞은 폴더를 추천하거나, 만들기 전에 검토하는 새 폴더 경로를 제안
+• 오른쪽 클릭 메뉴(설정에서 '컨텍스트 메뉴'를 켜기)로 링크를 최근 폴더에 저장
+
+툴바에서 검색
 • 모든 북마크 즉시 검색(대소문자 구분, 단어 단위, 정규식 지원)
 • 드래그 앤 드롭, 모두 펼치기/접기, 새 폴더 만들기를 지원하는 폴더 트리
-• 현재 페이지를 원하는 폴더에 원클릭 저장(같은 폴더에는 중복 저장하지 않음)
-• 오른쪽 클릭 메뉴(설정에서 '컨텍스트 메뉴'를 켜기)로 링크를 최근 폴더에 저장
-• 같은 트리와 검색을 쓰는 사이드 패널
+• 같은 트리, 검색, 폴더 일치 항목을 쓰는 사이드 패널
 • 브라우저의 Ctrl/Cmd 단축키를 가로채지 않는 키보드 단축키
 • 확인 대화상자(기본값 켜짐)와 10초 실행 취소가 있는 삭제
 
@@ -102,14 +107,19 @@ AI 기능을 사용하면 해당 기능에 필요한 데이터가 브라우저�
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout(북마크 스카우트)는 브라우저를 떠나지 않고 북마크를 찾고 저장할 수 있는 확장 프로그램입니다.
+Bookmark Scout(북마크 스카우트)는 모든 페이지를 몇 초 만에 알맞은 폴더에 저장하고, 브라우저를 떠나지 않고 북마크를 찾을 수 있게 도와주는 확장 프로그램입니다.
 
-툴바에서 검색과 저장
+알맞은 폴더에 몇 초 만에 저장
+• 폴더 이름의 일부를 입력하면 트리 깊숙이 있는 폴더도 찾아, 키보드에서 손을 떼지 않고 현재 페이지를 저장
+• work/react 같은 경로도 입력 가능(오타가 조금 있어도 폴더를 찾고, 최근 사용한 폴더가 먼저 표시됨)
+• 이미 그 폴더에 있는 페이지는 중복 저장하지 않음
+• 선택형 AI가 페이지에 가장 알맞은 폴더를 추천하거나, 만들기 전에 검토하는 새 폴더 경로를 제안
+• 오른쪽 클릭 메뉴로 링크를 최근 폴더에 저장
+
+툴바에서 검색
 • 모든 북마크 즉시 검색(대소문자 구분, 단어 단위, 정규식 지원)
 • 드래그 앤 드롭, 모두 펼치기/접기, 새 폴더 만들기를 지원하는 폴더 트리
-• 현재 페이지를 원하는 폴더에 원클릭 저장(같은 폴더에는 중복 저장하지 않음)
-• 같은 트리와 검색을 Firefox 사이드바에서 사용(웹을 탐색하는 동안 계속 열려 있음)
-• 오른쪽 클릭 메뉴로 링크를 최근 폴더에 저장
+• 같은 트리, 검색, 폴더 일치 항목을 Firefox 사이드바에서 사용(웹을 탐색하는 동안 계속 열려 있음)
 • 브라우저의 Ctrl/Cmd 단축키를 가로채지 않는 키보드 단축키
 • 확인 대화상자(기본값 켜짐)와 10초 실행 취소가 있는 삭제
 
