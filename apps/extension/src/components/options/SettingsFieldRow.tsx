@@ -382,12 +382,28 @@ function InlineSetting({
   const meta = { ...getSettingsFieldMeta()[fieldKey], ...bounds };
   const controlId = getSettingControlId(fieldKey);
   const captionId = `${controlId}-label`;
+  const choices = (meta.options ?? []).map((option) => ({
+    value: String(option.value),
+    label: option.label,
+  }));
   return (
     <div data-setting={fieldKey} className="space-y-1">
       <span id={captionId} className="block text-xs font-medium text-muted-foreground">
         {meta.label}
       </span>
-      {meta.type === 'select' ? (
+      {meta.type === 'select' && fitsSegmentedControl(choices) ? (
+        <SegmentedControl
+          id={controlId}
+          aria-labelledby={captionId}
+          value={String(value)}
+          disabled={disabled}
+          options={choices}
+          onValueChange={(next) => {
+            const coerced = coerceSelectValue(fieldKey, next);
+            if (coerced !== undefined) onChange(coerced);
+          }}
+        />
+      ) : meta.type === 'select' ? (
         <Select
           value={String(value)}
           disabled={disabled}
@@ -396,10 +412,7 @@ function InlineSetting({
             const coerced = coerceSelectValue(fieldKey, next);
             if (coerced !== undefined) onChange(coerced);
           }}
-          items={(meta.options ?? []).map((option) => ({
-            value: String(option.value),
-            label: option.label,
-          }))}
+          items={choices}
         >
           <SelectTrigger id={controlId} aria-labelledby={captionId} className="w-[180px]">
             <SelectValue />
@@ -593,6 +606,26 @@ export function SettingsFieldRow({
             />
           );
         }
+        const choices = options.map((option) => ({
+          value: String(option.value),
+          label: option.label,
+        }));
+        if (fitsSegmentedControl(choices)) {
+          return (
+            <SegmentedControl
+              id={controlId}
+              aria-labelledby={labelId}
+              aria-describedby={describedBy}
+              className="w-full sm:w-auto sm:min-w-[220px]"
+              value={String(value)}
+              options={choices}
+              onValueChange={(next) => {
+                const coerced = coerceSelectValue(fieldKey, next);
+                if (coerced !== undefined) onChange(coerced);
+              }}
+            />
+          );
+        }
         return (
           <Select
             value={String(value)}
@@ -601,7 +634,7 @@ export function SettingsFieldRow({
               const coerced = coerceSelectValue(fieldKey, next);
               if (coerced !== undefined) onChange(coerced);
             }}
-            items={options.map((option) => ({ value: String(option.value), label: option.label }))}
+            items={choices}
           >
             <SelectTrigger
               id={controlId}

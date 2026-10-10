@@ -164,11 +164,7 @@ test('unsupported and malformed saved scopes fall back without resetting other t
     .getByText('Default scope used when cleaning bookmark URLs')
     .locator('..')
     .locator('..');
-  await cleanerScopeSetting.getByRole('combobox').click();
-  await expect(optionsPage.getByRole('option', { name: 'All Bookmarks' })).toBeVisible();
-  await expect(optionsPage.getByRole('option', { name: 'Current Folder' })).toBeVisible();
-  await expect(optionsPage.getByRole('option', { name: 'Folder or All' })).toHaveCount(0);
-  await optionsPage.keyboard.press('Escape');
+  await expect(cleanerScopeSetting.getByRole('radio')).toHaveText(['Current Folder', 'All Bookmarks']);
 
   await setSettings(extensionWorker, { statisticsDefaultScope: 'unsupported' });
   await expect(toolCard(page, 'Bookmark Statistics').getByRole('combobox')).toContainText(

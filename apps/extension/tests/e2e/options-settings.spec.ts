@@ -26,6 +26,10 @@ function settingRow(page: Page, key: string) {
   return page.locator(`[data-setting="${key}"]`);
 }
 
+function themeChoice(page: Page, name: 'Dark' | 'Light' | 'System') {
+  return page.getByRole('radiogroup', { name: 'Theme' }).getByRole('radio', { name });
+}
+
 /** Base URL, headers, and provider-specific fields sit under More settings. */
 async function openMoreSettings(page: Page) {
   await page.getByRole('button', { name: 'More settings' }).click();
@@ -42,7 +46,9 @@ async function readServices(worker: Worker) {
 
 /** Opens a section's closed "Advanced settings" fold. */
 async function openAdvanced(page: Page, section: string) {
-  await page.locator(`[data-settings-section="${section}"] [data-slot="settings-advanced"] > button`).click();
+  await page
+    .locator(`[data-settings-section="${section}"] [data-slot="settings-advanced"] > button`)
+    .click();
 }
 
 /** Opens Options on Appearance (language, theme, icons), where most of these checks start. */
@@ -59,7 +65,8 @@ test('non-default selects survive reload and never block saving other settings',
   await setSettings(extensionWorker, { language: 'en', theme: 'dark', faviconSize: 32 });
   await openOptions(page, extensionId);
 
-  await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText('Dark');
+  // A choice of up to three short options is one-click segments, not a dropdown.
+  await expect(themeChoice(page, 'Dark')).toBeChecked();
   await expect(page.getByRole('combobox', { name: 'Favicon Size' })).toHaveText('32px (Large)');
   await expect(page.getByRole('combobox', { name: 'Language' })).toHaveText('English');
 
@@ -68,7 +75,7 @@ test('non-default selects survive reload and never block saving other settings',
 
   await page.reload();
   await page.getByRole('tab', { name: 'Appearance' }).click();
-  await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText('Dark');
+  await expect(themeChoice(page, 'Dark')).toBeChecked();
   await page.getByRole('switch', { name: 'Show Favicons' }).click();
   await expect
     .poll(() => readSettings(extensionWorker))
@@ -267,13 +274,13 @@ test('theme is one synced setting applied live in every open page', async ({
   // The toggle used to revert after the autosave debounce.
   await page.waitForTimeout(2_000);
   await expect(page.locator('html')).toHaveClass(/dark/);
-  await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText('Dark');
+  await expect(themeChoice(page, 'Dark')).toBeChecked();
 
   // A change arriving through sync (another device, import) applies without reload.
   await setSettings(extensionWorker, { theme: 'light' });
   await expect(page.locator('html')).toHaveClass(/light/);
   await expect(popup.locator('html')).toHaveClass(/light/);
-  await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText('Light');
+  await expect(themeChoice(page, 'Light')).toBeChecked();
 });
 
 test('rejected API keys and unsafe Base URLs are never persisted', async ({
@@ -406,7 +413,7 @@ test('options layout fits a 480px window without squeezed labels', async ({
   expect(labelBox?.height).toBeLessThan(40);
 
   await page.getByRole('tab', { name: '分析' }).click();
-  const scope = page.getByRole('combobox', { name: '既定の範囲' });
+  const scope = page.getByRole('radiogroup', { name: '既定の範囲' });
   const scopeBox = await scope.boundingBox();
   expect(scopeBox?.width).toBeGreaterThan(300);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
@@ -433,9 +440,7 @@ test('options follows theme changes made from the popup', async ({
     await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe(theme);
     await expect(popup.locator('html')).toHaveClass(new RegExp(theme));
     await expect(page.locator('html')).toHaveClass(new RegExp(theme));
-    await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText(
-      theme === 'dark' ? 'Dark' : 'Light',
-    );
+    await expect(themeChoice(page, theme === 'dark' ? 'Dark' : 'Light')).toBeChecked();
   }
   // Late cache events from other pages must not revert the synced theme.
   await page.waitForTimeout(1_500);
@@ -738,9 +743,9 @@ test('a section switch folds its tool, search opens Advanced settings, and a swi
   await deadLinks.getByRole('switch', { name: 'Enable Dead Link Checker' }).click();
   await expect.poll(async () => (await readSettings(extensionWorker)).deadLinksEnabled).toBe(false);
   await expect(deadLinks).toContainText('Turned off. Turn it on to change its settings.');
-  await expect(deadLinks.getByRole('combobox')).toHaveCount(0);
+  await expect(deadLinks.getByRole('radiogroup')).toHaveCount(0);
   await deadLinks.getByRole('switch', { name: 'Enable Dead Link Checker' }).click();
-  await expect(deadLinks.getByRole('combobox')).toHaveCount(1);
+  await expect(deadLinks.getByRole('radiogroup')).toHaveCount(1);
 
   // Technical settings start folded, named in the summary, and a search opens the fold.
   const fold = deadLinks.locator('[data-slot="settings-advanced"]');
@@ -748,7 +753,9 @@ test('a section switch folds its tool, search opens Advanced settings, and a swi
     'aria-expanded',
     'false',
   );
-  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toContainText('Retry Count');
+  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toContainText(
+    'Retry Count',
+  );
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('retry');
   await expect(page.getByRole('textbox', { name: 'Retry Count' })).toBeVisible();
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
@@ -776,9 +783,9 @@ test('a range keeps its minimum at or below its maximum, and durations are edite
   // Stored in milliseconds, shown and edited in seconds.
   const toast = page.getByRole('textbox', { name: 'Toast Duration' });
   await expect(toast).toHaveValue('4');
-  await expect(settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]')).toHaveText(
-    's',
-  );
+  await expect(
+    settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]'),
+  ).toHaveText('s');
   await page.getByRole('button', { name: 'Increase Toast Duration' }).click();
   await expect.poll(async () => (await readSettings(extensionWorker)).toastDurationMs).toBe(4500);
 
@@ -794,4 +801,28 @@ test('a range keeps its minimum at or below its maximum, and durations are edite
   await expect(min).toHaveValue('5');
   await expect(page.getByRole('button', { name: 'Decrease Maximum Tags' })).toBeDisabled();
   await expect(page.getByTestId('settings-save-status')).toBeEmpty();
+});
+
+test('a short choice is one-click segments that save on click and arrow keys, and a long one stays a dropdown', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+  await page.getByRole('tab', { name: 'Behavior' }).click();
+  const sort = page.getByRole('radiogroup', { name: 'Sort Order' });
+  await expect(sort.getByRole('radio')).toHaveText(['Date Added', 'Alphabetical', 'Folders First']);
+
+  await sort.getByRole('radio', { name: 'Alphabetical' }).click();
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).sortOrder)
+    .toBe('alphabetical');
+  await page.keyboard.press('ArrowRight');
+  await expect(sort.getByRole('radio', { name: 'Folders First' })).toBeChecked();
+  await expect.poll(async () => (await readSettings(extensionWorker)).sortOrder).toBe('folders');
+
+  // More than three options, or labels too long to sit side by side, keep the dropdown.
+  await page.getByRole('tab', { name: 'Maintenance' }).click();
+  await expect(page.getByRole('combobox', { name: 'Match Strategy' })).toBeVisible();
 });
