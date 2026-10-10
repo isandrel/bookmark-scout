@@ -140,6 +140,7 @@ function NumberStepper({
   labelledBy,
   describedBy,
   invalid,
+  disabled,
   onChange,
 }: {
   id: string;
@@ -148,6 +149,7 @@ function NumberStepper({
   labelledBy: string;
   describedBy?: string;
   invalid: boolean;
+  disabled?: boolean;
   onChange: (value: number) => void;
 }) {
   const unlimited = meta.unlimited && value === -1;
@@ -155,6 +157,7 @@ function NumberStepper({
     <div className="flex items-center gap-2">
       <NumberField.Root
         id={id}
+        disabled={disabled}
         value={unlimited ? null : value}
         min={meta.min}
         max={meta.max}
@@ -165,7 +168,7 @@ function NumberStepper({
           if (committed !== undefined) onChange(committed);
         }}
       >
-        <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring">
+        <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring data-disabled:opacity-50">
           <NumberField.Decrement
             className={stepperButtonClass}
             aria-label={t('settings_decrease', meta.label)}
@@ -278,6 +281,221 @@ export function SettingsGroupRow({ group, values, onChange }: SettingsGroupRowPr
         />
       </div>
     </div>
+  );
+}
+
+type GroupRowProps = SettingsGroupRowProps & {
+  /** The members shown on this page; others (unsupported in this browser) are left out. */
+  visible: ReadonlySet<keyof Settings>;
+};
+
+/** The frame every grouped row shares: label, description, Modified badge, and reset. */
+function GroupRowFrame({
+  group,
+  values,
+  fields,
+  onChange,
+  aside,
+  children,
+}: {
+  group: SettingsFieldGroup;
+  values: Settings;
+  fields: readonly (keyof Settings)[];
+  onChange: (fieldKey: keyof Settings, value: SettingValue) => void;
+  /** A control beside the label, such as the lead switch of a `switch` group. */
+  aside?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  const changed = fields.filter((fieldKey) => values[fieldKey] !== defaultSettings[fieldKey]);
+  const labelId = `setting-group-${group.id}-label`;
+  return (
+    <div
+      data-setting-group={group.id}
+      className={`flex flex-col gap-3 rounded-lg border bg-card p-4 transition-colors sm:flex-row sm:items-start sm:justify-between ${
+        changed.length > 0
+          ? 'border-primary/50 bg-primary/5'
+          : 'border-transparent hover:border-border'
+      }`}
+    >
+      <div className="min-w-0 flex-1 space-y-3 sm:pr-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span id={labelId} className="text-base font-medium">
+                {group.label}
+              </span>
+              {changed.length > 0 && <ModifiedBadge />}
+            </div>
+            <p id={`${labelId}-description`} className="text-sm text-muted-foreground">
+              {group.description}
+            </p>
+          </div>
+          {aside}
+        </div>
+        {children}
+      </div>
+      <div className="flex justify-end sm:shrink-0">
+        <ResetSlot
+          visible={changed.length > 0}
+          label={t('settings_resetFieldToDefault', group.label)}
+          onReset={() => {
+            for (const fieldKey of changed) onChange(fieldKey, defaultSettings[fieldKey]);
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/** A number or a choice with its own small caption, for use inside a grouped row. */
+function InlineSetting({
+  fieldKey,
+  value,
+  disabled,
+  onChange,
+}: {
+  fieldKey: keyof Settings;
+  value: SettingValue;
+  disabled?: boolean;
+  onChange: (value: SettingValue) => void;
+}) {
+  const meta = getSettingsFieldMeta()[fieldKey];
+  const controlId = getSettingControlId(fieldKey);
+  const captionId = `${controlId}-label`;
+  return (
+    <div data-setting={fieldKey} className="space-y-1">
+      <span id={captionId} className="block text-xs font-medium text-muted-foreground">
+        {meta.label}
+      </span>
+      {meta.type === 'select' ? (
+        <Select
+          value={String(value)}
+          disabled={disabled}
+          onValueChange={(next) => {
+            if (next === null) return;
+            const coerced = coerceSelectValue(fieldKey, next);
+            if (coerced !== undefined) onChange(coerced);
+          }}
+          items={(meta.options ?? []).map((option) => ({
+            value: String(option.value),
+            label: option.label,
+          }))}
+        >
+          <SelectTrigger id={controlId} aria-labelledby={captionId} className="w-[180px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {(meta.options ?? []).map((option) => (
+              <SelectItem key={String(option.value)} value={String(option.value)}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : (
+        <NumberStepper
+          id={controlId}
+          meta={meta}
+          value={value as number}
+          labelledBy={captionId}
+          invalid={false}
+          disabled={disabled}
+          onChange={onChange}
+        />
+      )}
+    </div>
+  );
+}
+
+/** Two numbers side by side, such as width and height, each still its own setting. */
+export function SettingsPairRow({ group, values, visible, onChange }: GroupRowProps) {
+  const fields = group.fields.filter((fieldKey) => visible.has(fieldKey));
+  return (
+    <GroupRowFrame group={group} values={values} fields={fields} onChange={onChange}>
+      <div className="flex flex-wrap gap-4">
+        {fields.map((fieldKey) => (
+          <InlineSetting
+            key={fieldKey}
+            fieldKey={fieldKey}
+            value={values[fieldKey]}
+            onChange={(value) => onChange(fieldKey, value)}
+          />
+        ))}
+      </div>
+    </GroupRowFrame>
+  );
+}
+
+/**
+ * An on/off setting with what it controls: numbers and choices beside it, on/off options below
+ * it. They are disabled while it is off but keep their values.
+ */
+export function SettingsSwitchRow({ group, values, visible, onChange }: GroupRowProps) {
+  const fields = group.fields.filter((fieldKey) => visible.has(fieldKey));
+  const [lead, ...rest] = fields;
+  const meta = getSettingsFieldMeta();
+  const on = values[lead] === true;
+  const inline = rest.filter((fieldKey) => meta[fieldKey].type !== 'switch');
+  const options = rest.filter((fieldKey) => meta[fieldKey].type === 'switch');
+  const labelId = `setting-group-${group.id}-label`;
+  return (
+    <GroupRowFrame
+      group={group}
+      values={values}
+      fields={fields}
+      onChange={onChange}
+      aside={
+        <span data-setting={lead} className="shrink-0">
+          <Switch
+            id={getSettingControlId(lead)}
+            checked={on}
+            onCheckedChange={(checked) => onChange(lead, checked)}
+            aria-labelledby={labelId}
+            aria-describedby={`${labelId}-description`}
+          />
+        </span>
+      }
+    >
+      {inline.length > 0 && (
+        <div className="flex flex-wrap gap-4">
+          {inline.map((fieldKey) => (
+            <InlineSetting
+              key={fieldKey}
+              fieldKey={fieldKey}
+              value={values[fieldKey]}
+              disabled={!on}
+              onChange={(value) => onChange(fieldKey, value)}
+            />
+          ))}
+        </div>
+      )}
+      {options.map((fieldKey) => {
+        const controlId = getSettingControlId(fieldKey);
+        return (
+          <label
+            key={fieldKey}
+            htmlFor={controlId}
+            data-setting={fieldKey}
+            className="flex cursor-pointer items-start gap-2.5 rounded-md border border-transparent px-2 py-1.5 hover:border-border hover:bg-muted/50 has-disabled:cursor-default has-disabled:opacity-60"
+          >
+            <Checkbox
+              id={controlId}
+              checked={values[fieldKey] as boolean}
+              disabled={!on}
+              onCheckedChange={(checked) => onChange(fieldKey, checked === true)}
+              aria-describedby={`${controlId}-description`}
+              className="mt-0.5"
+            />
+            <span className="min-w-0">
+              <span className="block text-sm font-medium">{meta[fieldKey].label}</span>
+              <span id={`${controlId}-description`} className="block text-xs text-muted-foreground">
+                {meta[fieldKey].description}
+              </span>
+            </span>
+          </label>
+        );
+      })}
+    </GroupRowFrame>
   );
 }
 

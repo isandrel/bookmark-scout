@@ -43,7 +43,7 @@ test.describe('with the favicon permission granted', () => {
     const options = await page.context().newPage();
     await options.goto(`chrome-extension://${extensionId}/options.html`);
     await options.getByRole('tab', { name: 'Appearance' }).click();
-    await options.getByRole('switch', { name: "Use the browser's icon cache" }).click();
+    await options.getByRole('checkbox', { name: "Use the browser's icon cache" }).click();
     await expect
       .poll(() =>
         extensionWorker.evaluate(

@@ -4691,6 +4691,38 @@
         "message": "書籤管理員側欄中顯示的資料工具",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "彈出式視窗大小",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "工具列彈出式視窗的寬度和高度。瀏覽器最多支援 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "每個書籤的標籤數",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "為每個書籤建議的最少和最多標籤數",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "每個資料夾的書籤數",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "重新整理方案中資料夾大小的目標",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "進階設定（$1）",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "已關閉。開啟後才能變更相關設定。",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "減少「$1」",
         "description": "Stepper button label; $1 is the setting name"

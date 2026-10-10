@@ -4875,6 +4875,38 @@
         "message": "Herramientas de datos que se muestran en la barra lateral del administrador",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "Tamaño de la ventana emergente",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "Ancho y alto de la ventana emergente de la barra de herramientas. Los navegadores permiten como máximo 800 × 600 px",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "Etiquetas por marcador",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "Mínimo y máximo de etiquetas sugeridas para cada marcador",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "Marcadores por carpeta",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "Tamaño objetivo de las carpetas en los planes de reorganización",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "Configuración avanzada ($1)",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "Desactivado. Actívalo para cambiar su configuración.",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "Reducir $1",
         "description": "Stepper button label; $1 is the setting name"

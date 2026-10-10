@@ -40,6 +40,11 @@ async function readServices(worker: Worker) {
   });
 }
 
+/** Opens a section's closed "Advanced settings" fold. */
+async function openAdvanced(page: Page, section: string) {
+  await page.locator(`[data-settings-section="${section}"] [data-slot="settings-advanced"] > button`).click();
+}
+
 /** Opens Options on Appearance (language, theme, icons), where most of these checks start. */
 async function openOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
@@ -125,6 +130,7 @@ test('list settings accept commas and status codes are validated inline', async 
     .poll(async () => (await readSettings(extensionWorker)).urlCleanerPreserveParams)
     .toEqual(['ref', 'page']);
 
+  await openAdvanced(page, 'deadLinks');
   const statuses = page.getByRole('textbox', { name: 'Success Status Codes' });
   await statuses.fill('200, 204');
   await statuses.press('Enter');
@@ -339,6 +345,7 @@ test('settings search shows matches from every tab and controls have accessible 
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
   await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  await openAdvanced(page, 'reorganization');
   await expect(page.getByRole('textbox', { name: 'Max Categories' })).toHaveAttribute(
     'placeholder',
     'No limit',
@@ -565,6 +572,7 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await setSettings(extensionWorker, { language: 'en', aiMaxCategories: -1 });
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  await openAdvanced(page, 'reorganization');
   const field = page.getByRole('textbox', { name: 'Max Categories' });
   await expect(field).toHaveValue('');
   await expect(field).toHaveAttribute('placeholder', 'No limit');
@@ -703,6 +711,7 @@ test('a slider setting follows a mouse drag and a track click, and saves', async
   page.on('pageerror', (error) => errors.push(error.message));
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  await openAdvanced(page, 'reorganization');
 
   const row = settingRow(page, 'reorganizationMinConfidence');
   const slider = row.getByRole('slider');
@@ -736,4 +745,41 @@ test('a slider setting follows a mouse drag and a track click, and saves', async
     .poll(async () => (await readSettings(extensionWorker)).reorganizationMinConfidence)
     .toBe(Number(await slider.inputValue()));
   expect(errors).toEqual([]);
+});
+
+test('a section switch folds its tool, search opens Advanced settings, and a switch row disables what it controls', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await openOptions(page, extensionId);
+
+  // The heading switch is the tool's Enable setting; off folds the rest of the section.
+  await page.getByRole('tab', { name: 'Maintenance' }).click();
+  const deadLinks = page.locator('[data-settings-section="deadLinks"]');
+  await deadLinks.getByRole('switch', { name: 'Enable Dead Link Checker' }).click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).deadLinksEnabled).toBe(false);
+  await expect(deadLinks).toContainText('Turned off. Turn it on to change its settings.');
+  await expect(deadLinks.getByRole('combobox')).toHaveCount(0);
+  await deadLinks.getByRole('switch', { name: 'Enable Dead Link Checker' }).click();
+  await expect(deadLinks.getByRole('combobox')).toHaveCount(1);
+
+  // Technical settings start folded, named in the summary, and a search opens the fold.
+  const fold = deadLinks.locator('[data-slot="settings-advanced"]');
+  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toHaveAttribute(
+    'aria-expanded',
+    'false',
+  );
+  await expect(fold.getByRole('button', { name: /Advanced settings/ })).toContainText('Retry Count');
+  await page.getByRole('searchbox', { name: 'Search settings...' }).fill('retry');
+  await expect(page.getByRole('textbox', { name: 'Retry Count' })).toBeVisible();
+  await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
+
+  // Show Favicons leads one row with its size and icon cache, disabled while it is off.
+  await page.getByRole('tab', { name: 'Appearance' }).click();
+  await page.getByRole('switch', { name: 'Show Favicons' }).click();
+  await expect(page.getByRole('combobox', { name: 'Favicon Size' })).toBeDisabled();
+  await page.getByRole('switch', { name: 'Show Favicons' }).click();
+  await expect(page.getByRole('combobox', { name: 'Favicon Size' })).toBeEnabled();
 });

@@ -4851,6 +4851,38 @@
         "message": "マネージャーのサイドバーに表示するデータツール",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "ポップアップのサイズ",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "ツールバーのポップアップの幅と高さ。ブラウザーの上限は 800 × 600 px です",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "ブックマークごとのタグ数",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "各ブックマークに提案するタグの最少数と最多数",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "フォルダごとのブックマーク数",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "整理プランでのフォルダの大きさの目安",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "詳細設定（$1）",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "オフになっています。設定を変えるにはオンにしてください。",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "$1 を減らす",
         "description": "Stepper button label; $1 is the setting name"

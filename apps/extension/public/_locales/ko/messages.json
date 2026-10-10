@@ -4875,6 +4875,38 @@
         "message": "관리자 사이드바에 표시할 데이터 도구",
         "description": "Settings group description"
     },
+    "settings_groupPopupSize": {
+        "message": "팝업 크기",
+        "description": "Settings row: popup width and height together"
+    },
+    "settings_groupPopupSizeDesc": {
+        "message": "도구 모음 팝업의 너비와 높이. 브라우저 최대값은 800 × 600 px입니다",
+        "description": "Settings row description: popup size"
+    },
+    "settings_groupTagsPerBookmark": {
+        "message": "북마크당 태그 수",
+        "description": "Settings row: minimum and maximum tags Auto-Tagging suggests"
+    },
+    "settings_groupTagsPerBookmarkDesc": {
+        "message": "각 북마크에 추천할 태그의 최소 및 최대 개수",
+        "description": "Settings row description: tags per bookmark"
+    },
+    "settings_groupItemsPerFolder": {
+        "message": "폴더당 북마크 수",
+        "description": "Settings row: minimum and maximum bookmarks per folder in reorganization plans"
+    },
+    "settings_groupItemsPerFolderDesc": {
+        "message": "정리 계획에서 폴더 크기 목표",
+        "description": "Settings row description: bookmarks per folder"
+    },
+    "settings_advancedSettings": {
+        "message": "고급 설정 ($1)",
+        "description": "Settings: label of the fold that holds technical settings of a section; $1 is how many"
+    },
+    "settings_sectionOff": {
+        "message": "꺼져 있습니다. 설정을 바꾸려면 켜세요.",
+        "description": "Settings: note shown in a section whose on/off switch is off"
+    },
     "settings_decrease": {
         "message": "$1 줄이기",
         "description": "Stepper button label; $1 is the setting name"

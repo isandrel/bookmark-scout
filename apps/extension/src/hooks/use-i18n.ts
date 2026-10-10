@@ -265,7 +265,8 @@ export function useLanguageRevision(): number {
   return useSyncExternalStore(subscribeToLanguage, getLanguageRevision, getLanguageRevision);
 }
 
-function getLanguageRevision(): number {
+/** Changes whenever the messages `t()` shows change; a cache of translated text keys on it. */
+export function getLanguageRevision(): number {
   return languageRevision;
 }
 
