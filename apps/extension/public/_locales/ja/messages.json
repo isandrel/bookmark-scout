@@ -487,6 +487,30 @@
         "message": "最近の検索を記憶",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "フォルダの候補",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "検索中、名前が一致するフォルダを結果の上に表示し、現在のページをそこに保存できるようにします",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "フォルダ候補の最大数",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "表示する一致フォルダの数",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "入力ミスを許容",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "4 文字以上の検索語なら、1 文字違いのフォルダ名にも一致させます（「rect」で React が見つかります）",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "並び順",
         "description": "Sort order setting label"
@@ -644,6 +668,18 @@
     "popup_hintEnter": {
         "message": "開く",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "ここに保存",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "フォルダに保存",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "現在のページを $1 に保存",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "最近のフォルダはありません",

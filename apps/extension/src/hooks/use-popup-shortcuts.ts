@@ -16,6 +16,7 @@ import {
   useCallback,
   useEffect,
 } from 'react';
+import { flushSync } from 'react-dom';
 
 /** Marks tree rows: `folder` on folder triggers, `bookmark` on bookmark links. */
 export const POPUP_TREE_ROW_ATTRIBUTE = 'data-popup-tree-row';
@@ -110,10 +111,19 @@ function getParentFolderRow(row: HTMLElement): HTMLElement | null {
 type PopupShortcutOptions = {
   searchInputRef: RefObject<HTMLInputElement | null>;
   onClearQuery: () => void;
+  /**
+   * Applies the typed query now instead of after the search delay. ArrowDown right after typing
+   * would otherwise focus a row of the previous results, which the new results then remove.
+   */
+  onApplyQuery?: () => void;
 };
 
 /** Page-wide shortcuts: `/` to search, and Escape and ArrowDown inside the search box. */
-export function usePopupShortcuts({ searchInputRef, onClearQuery }: PopupShortcutOptions) {
+export function usePopupShortcuts({
+  searchInputRef,
+  onClearQuery,
+  onApplyQuery,
+}: PopupShortcutOptions) {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const input = searchInputRef.current;
@@ -130,6 +140,7 @@ export function usePopupShortcuts({ searchInputRef, onClearQuery }: PopupShortcu
             input.blur();
           }
         } else if (action === 'enterTree') {
+          if (onApplyQuery) flushSync(onApplyQuery);
           const [firstRow] = getVisibleTreeRows();
           if (!firstRow) return;
           event.preventDefault();
@@ -147,7 +158,7 @@ export function usePopupShortcuts({ searchInputRef, onClearQuery }: PopupShortcu
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [searchInputRef, onClearQuery]);
+  }, [searchInputRef, onClearQuery, onApplyQuery]);
 }
 
 type PopupTreeKeyOptions = {

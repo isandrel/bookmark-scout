@@ -491,6 +491,30 @@
         "message": "Letzte Suchen speichern",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "Passende Ordner",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "Zeigt bei der Suche über den Ergebnissen die Ordner mit passendem Namen, damit Sie die aktuelle Seite dort speichern können",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "Maximal passende Ordner",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "Wie viele passende Ordner angezeigt werden",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "Tippfehler erlauben",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "Ein Suchwort mit 4 oder mehr Buchstaben passt auch mit einem Tippfehler zu einem Ordnernamen, sodass „rect“ React findet",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "Sortierung",
         "description": "Sort order setting label"
@@ -648,6 +672,18 @@
     "popup_hintEnter": {
         "message": "Öffnen",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "Hier speichern",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "In Ordner speichern",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "Aktuelle Seite in $1 speichern",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "Keine zuletzt verwendeten Ordner",

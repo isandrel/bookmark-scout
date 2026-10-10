@@ -419,6 +419,9 @@ const fields = {
   ),
   expandFoldersOnSearch: switchField('search.expand_folders_on_search', 'expandFolders'),
   searchHistory: switchField('search.search_history', 'searchHistory'),
+  folderMatchesEnabled: switchField('search.folder_matches_enabled', 'folderMatchesEnabled'),
+  folderMatchesMax: numberField('search.folder_matches_max', 'folderMatchesMax'),
+  folderMatchesTypos: switchField('search.folder_matches_typos', 'folderMatchesTypos'),
 
   sortOrder: enumField(
     'behavior.sort_order',
@@ -853,7 +856,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
     search: {
       label: t('settings_search'),
       description: t('settings_searchDesc'),
-      fields: ['searchDebounceMs', 'maxSearchResults', 'expandFoldersOnSearch', 'searchHistory'],
+      fields: [
+        'searchDebounceMs',
+        'maxSearchResults',
+        'expandFoldersOnSearch',
+        'searchHistory',
+        'folderMatchesEnabled',
+        'folderMatchesMax',
+        'folderMatchesTypos',
+      ],
     },
     behavior: {
       label: t('settings_behavior'),

@@ -491,6 +491,30 @@
         "message": "记住最近的搜索",
         "description": "Search history setting description"
     },
+    "settings_folderMatchesEnabled": {
+        "message": "匹配的文件夹",
+        "description": "Settings > Search: switch that lists matching folders above the search results"
+    },
+    "settings_folderMatchesEnabledDesc": {
+        "message": "搜索时，在结果上方列出名称匹配的文件夹，方便把当前网页保存到那里",
+        "description": "Settings > Search: description of the Folder Matches switch"
+    },
+    "settings_folderMatchesMax": {
+        "message": "匹配文件夹数量上限",
+        "description": "Settings > Search: how many matching folders to list"
+    },
+    "settings_folderMatchesMaxDesc": {
+        "message": "最多列出多少个匹配的文件夹",
+        "description": "Settings > Search: description of the Maximum Folder Matches setting"
+    },
+    "settings_folderMatchesTypos": {
+        "message": "允许拼写错误",
+        "description": "Settings > Search: switch that lets folder matching forgive one typo"
+    },
+    "settings_folderMatchesTyposDesc": {
+        "message": "4 个字母及以上的搜索词，与文件夹名相差一个字母也能匹配，例如输入“rect”能找到 React",
+        "description": "Settings > Search: description of the Allow Typos switch"
+    },
     "settings_sortOrder": {
         "message": "排序方式",
         "description": "Sort order setting label"
@@ -648,6 +672,18 @@
     "popup_hintEnter": {
         "message": "打开",
         "description": "Popup footer: Enter opens a bookmark, or saves the current page into a focused folder"
+    },
+    "popup_hintSaveHere": {
+        "message": "保存到这里",
+        "description": "Popup footer: Enter saves the current page into the focused folder"
+    },
+    "popup_folderMatchesTitle": {
+        "message": "保存到文件夹",
+        "description": "Popup and side panel: heading above the folders that match the search, where the current page can be saved"
+    },
+    "popup_saveToFolder": {
+        "message": "将当前网页保存到 $1",
+        "description": "Accessible name of a folder match row; $1 is the folder path"
     },
     "state_noRecentFolders": {
         "message": "没有最近使用的文件夹",
