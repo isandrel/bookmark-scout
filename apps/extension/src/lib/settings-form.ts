@@ -20,6 +20,11 @@ export function formatListSetting(value: unknown): string {
   return Array.isArray(value) ? value.join(', ') : String(value ?? '');
 }
 
+/** Names typed or pasted into a list editor: split at commas and whitespace, without repeats. */
+export function parseListTokens(raw: string): string[] {
+  return [...new Set(raw.split(/[\s,]+/).filter(Boolean))];
+}
+
 /**
  * Parse a committed comma-separated list. Number lists return null when any entry is not a valid
  * HTTP status code so the caller can show an error instead of saving a partial list.

@@ -141,6 +141,7 @@ function NumberStepper({
   describedBy,
   invalid,
   disabled,
+  inline = false,
   onChange,
 }: {
   id: string;
@@ -150,22 +151,38 @@ function NumberStepper({
   describedBy?: string;
   invalid: boolean;
   disabled?: boolean;
+  /** Inside a grouped row: sized to its content instead of the settings column. */
+  inline?: boolean;
   onChange: (value: number) => void;
 }) {
   const unlimited = meta.unlimited && value === -1;
+  // Edited in the shown unit (seconds for a value stored in ms) and stored in the stored unit.
+  const scale = meta.displayScale ?? 1;
+  const shown =
+    scale === 1
+      ? meta
+      : {
+          ...meta,
+          min: meta.min === undefined ? undefined : meta.min / scale,
+          max: meta.max === undefined ? undefined : meta.max / scale,
+          step: (meta.step ?? 1) / scale,
+        };
   return (
-    <div className="flex items-center gap-2">
+    // In a settings row the stepper and its unit fill the same column width as a select, so
+    // steppers, selects, and inputs on one page start at the same position, unit or not.
+    <div className={cn('flex items-center gap-2', !inline && 'w-full sm:w-[220px]')}>
       <NumberField.Root
         id={id}
         disabled={disabled}
-        value={unlimited ? null : value}
-        min={meta.min}
-        max={meta.max}
-        step={meta.step}
+        value={unlimited ? null : value / scale}
+        min={shown.min}
+        max={shown.max}
+        step={shown.step}
         allowOutOfRange={meta.unlimited}
         onValueChange={(next) => {
-          const committed = commitNumberSetting(next, meta);
-          if (committed !== undefined) onChange(committed);
+          const committed = commitNumberSetting(next, shown);
+          if (committed === undefined) return;
+          onChange(scale === 1 ? committed : Math.round(committed * scale));
         }}
       >
         <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring data-disabled:opacity-50">
@@ -190,10 +207,10 @@ function NumberStepper({
           </NumberField.Increment>
         </NumberField.Group>
       </NumberField.Root>
-      {meta.unit && (
+      {(meta.unit || !inline) && (
         <span
           data-slot="setting-unit"
-          className="min-w-8 text-xs whitespace-nowrap text-muted-foreground"
+          className="min-w-0 flex-1 text-xs whitespace-nowrap text-muted-foreground"
           aria-hidden="true"
         >
           {meta.unit}
@@ -352,14 +369,17 @@ function InlineSetting({
   fieldKey,
   value,
   disabled,
+  bounds,
   onChange,
 }: {
   fieldKey: keyof Settings;
   value: SettingValue;
   disabled?: boolean;
+  /** Tighter limits than the setting's own, such as a minimum that may not pass its maximum. */
+  bounds?: { min?: number; max?: number };
   onChange: (value: SettingValue) => void;
 }) {
-  const meta = getSettingsFieldMeta()[fieldKey];
+  const meta = { ...getSettingsFieldMeta()[fieldKey], ...bounds };
   const controlId = getSettingControlId(fieldKey);
   const captionId = `${controlId}-label`;
   return (
@@ -400,11 +420,22 @@ function InlineSetting({
           labelledBy={captionId}
           invalid={false}
           disabled={disabled}
+          inline
           onChange={onChange}
         />
       )}
     </div>
   );
+}
+
+/** Each setting's limits from the range it belongs to: a minimum stays at or below its maximum. */
+function rangeBounds(fieldKey: keyof Settings, values: Settings): { min?: number; max?: number } {
+  for (const range of SETTING_RANGES) {
+    const max = values[range.max] as number;
+    if (fieldKey === range.min && max !== -1) return { max };
+    if (fieldKey === range.max) return { min: values[range.min] as number };
+  }
+  return {};
 }
 
 /** Two numbers side by side, such as width and height, each still its own setting. */
@@ -418,6 +449,7 @@ export function SettingsPairRow({ group, values, visible, onChange }: GroupRowPr
             key={fieldKey}
             fieldKey={fieldKey}
             value={values[fieldKey]}
+            bounds={rangeBounds(fieldKey, values)}
             onChange={(value) => onChange(fieldKey, value)}
           />
         ))}
@@ -608,7 +640,11 @@ export function SettingsFieldRow({
         }
         const position = meta.unlimited ? toUnlimitedSliderValue(numeric) : numeric;
         const display =
-          meta.unlimited && numeric === -1 ? t('settings_noLimit') : `${numeric}${meta.unit ?? ''}`;
+          meta.unlimited && numeric === -1
+            ? t('settings_noLimit')
+            : meta.percent
+              ? formatPercent(numeric)
+              : `${numeric}${meta.unit ?? ''}`;
         return (
           <div className="flex w-full items-center gap-3 sm:w-[240px]">
             <Slider
@@ -632,6 +668,29 @@ export function SettingsFieldRow({
       }
 
       case 'text':
+        if (meta.list === 'number') {
+          return (
+            <StatusCodeEditor
+              id={controlId}
+              labelledBy={labelId}
+              describedBy={describedBy}
+              value={value as number[]}
+              onChange={onChange}
+            />
+          );
+        }
+        if (meta.list && isTokenListSetting(fieldKey)) {
+          return (
+            <TokenListEditor
+              id={controlId}
+              fieldKey={fieldKey}
+              labelledBy={labelId}
+              describedBy={describedBy}
+              value={value as string[]}
+              onChange={onChange}
+            />
+          );
+        }
         if (meta.list) {
           return (
             <ListSettingInput
@@ -679,7 +738,8 @@ export function SettingsFieldRow({
     >
       <Field
         id={getSettingControlId(fieldKey)}
-        layout="setting"
+        // List editors need the row's full width, so their control goes under the label.
+        layout={meta.list ? 'settingWide' : 'setting'}
         label={meta.label}
         description={meta.description}
         error={error}

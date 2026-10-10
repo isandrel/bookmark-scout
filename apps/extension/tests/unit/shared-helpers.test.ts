@@ -79,7 +79,10 @@ describe('unit constants', () => {
     const meta = getSettingsFieldMeta();
     expect(meta.searchDebounceMs.unit).toBe(jaMessages.unit_ms.message);
     expect(meta.truncateLength.unit).toBe(jaMessages.unit_chars.message);
-    expect(meta.siteIconsMaxCacheKb.unit).toBe(jaMessages.unit_kb.message);
+    // Stored in KB, edited in MB.
+    expect(meta.siteIconsMaxCacheKb.unit).toBe(jaMessages.unit_mb.message);
+    expect(meta.siteIconsMaxCacheKb.displayScale).toBe(1024);
+    expect(meta.toastDurationMs.unit).toBe(jaMessages.unit_s.message);
   });
 });
 

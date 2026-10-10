@@ -1774,7 +1774,7 @@
         "description": "AI reorganization max categories label"
     },
     "settings_aiMaxCategoriesDesc": {
-        "message": "AI 可创建的顶级类别的最大数量（-1 表示不限）",
+        "message": "AI 最多可创建的顶层文件夹数。留空表示不限",
         "description": "AI reorganization max categories description"
     },
     "settings_aiMinItemsPerFolder": {
@@ -1790,7 +1790,7 @@
         "description": "AI reorganization max items label"
     },
     "settings_aiMaxItemsPerFolderDesc": {
-        "message": "AI 为每个文件夹设定的最多书签数（-1 表示不限）",
+        "message": "AI 为每个文件夹设定的书签数上限。留空表示不限",
         "description": "AI reorganization max items description"
     },
     "settings_exportFilenamePrefix": {
@@ -2194,7 +2194,7 @@
         "description": "URL cleaner preserve params label"
     },
     "settings_urlCleanerPreserveParamsDesc": {
-        "message": "永不移除的查询参数，以逗号分隔",
+        "message": "永不移除的查询参数",
         "description": "URL cleaner preserve params description"
     },
     "settings_urlCleanerRemoveParams": {
@@ -2202,7 +2202,7 @@
         "description": "URL cleaner remove params label"
     },
     "settings_urlCleanerRemoveParamsDesc": {
-        "message": "要从网址中去除的查询参数，以逗号分隔",
+        "message": "从网址中移除的查询参数",
         "description": "URL cleaner remove params description"
     },
     "settings_deadLinksEnabled": {
@@ -2258,7 +2258,7 @@
         "description": "Dead links success statuses label"
     },
     "settings_deadLinksSuccessStatusesDesc": {
-        "message": "视为可访问的 HTTP 状态码，以逗号分隔",
+        "message": "视为可访问的 HTTP 状态码",
         "description": "Dead links success statuses description"
     },
     "settings_metadataFetcherEnabled": {
@@ -2354,7 +2354,7 @@
         "description": "Privacy scanner sensitive params label"
     },
     "settings_privacyScannerSensitiveParamsDesc": {
-        "message": "应标记为敏感的参数名称，以逗号分隔",
+        "message": "标记为敏感的参数名",
         "description": "Privacy scanner sensitive params description"
     },
     "settings_privacyScannerEmailDetection": {
@@ -2784,6 +2784,50 @@
     "settings_errorStatusCodes": {
         "message": "请输入 100 到 599 之间的 HTTP 状态码，以逗号分隔。",
         "description": "Settings error for status code list"
+    },
+    "settings_listAdd": {
+        "message": "添加",
+        "description": "Button that adds the typed value to a list setting"
+    },
+    "settings_listAddPlaceholder": {
+        "message": "输入名称后按 Enter",
+        "description": "Placeholder of the box that adds a name to a list setting"
+    },
+    "settings_listAddItem": {
+        "message": "添加 $1",
+        "description": "Accessible name of a suggestion button; $1 is the name it adds"
+    },
+    "settings_listRemove": {
+        "message": "移除 $1",
+        "description": "Accessible name of the remove button on a list chip; $1 is the item"
+    },
+    "settings_listSuggestions": {
+        "message": "建议：",
+        "description": "Label before one-click suggestions under a list setting"
+    },
+    "settings_statusGroup2xx": {
+        "message": "成功（2xx）",
+        "description": "Heading of the 2xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup3xx": {
+        "message": "重定向（3xx）",
+        "description": "Heading of the 3xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup4xx": {
+        "message": "客户端错误（4xx）",
+        "description": "Heading of the 4xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusOther": {
+        "message": "其他状态码",
+        "description": "Label of HTTP status codes added that are not in the checklist"
+    },
+    "settings_statusAddPlaceholder": {
+        "message": "状态码",
+        "description": "Placeholder of the box that adds another HTTP status code"
+    },
+    "settings_errorStatusCode": {
+        "message": "请输入 100 到 599 之间的状态码。",
+        "description": "Error when the added HTTP status code is not valid"
     },
     "settings_errorRangeOrUnlimited": {
         "message": "请选择“不限”或 $1 到 $2 之间的值。",
@@ -4890,6 +4934,14 @@
     "unit_kb": {
         "message": "KB",
         "description": "Unit shown after a size in kilobytes"
+    },
+    "unit_s": {
+        "message": "秒",
+        "description": "Unit: seconds"
+    },
+    "unit_mb": {
+        "message": "MB",
+        "description": "Unit: megabytes"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",

@@ -1,0 +1,65 @@
+# Choices offered by the list settings in Options. Read by src/components/options/ListSettingEditors.tsx.
+# The stored lists and their defaults are user settings (config/settings/tools/*.toml); these are
+# only what Options suggests. Anything else can still be typed.
+
+# One-click suggestions shown under a list of query parameter names, keyed by setting.
+[suggestions]
+urlCleanerPreserveParams = [ "id", "page", "q", "p", "lang", "s", "query", "search", "sort", "tab", "v", "t" ]
+urlCleanerRemoveParams = [
+  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "utm_id",
+  "gclid", "dclid", "gbraid", "wbraid", "fbclid", "msclkid", "yclid", "twclid", "ttclid",
+  "li_fat_id", "igshid", "mc_cid", "mc_eid", "_ga", "_gl", "ref", "ref_src", "si", "spm",
+]
+privacyScannerSensitiveParams = [
+  "token", "access_token", "refresh_token", "id_token", "auth", "authorization", "api_key",
+  "apikey", "key", "secret", "client_secret", "password", "pwd", "code", "session", "sessionid",
+  "sid", "jwt", "sig", "signature", "otp",
+]
+
+# HTTP status codes the Success Status Codes checklist offers, grouped by class in this order.
+# The reason phrases are the protocol's own (RFC 9110), so they are not translated.
+[[status_codes]]
+code = 200
+reason = "OK"
+[[status_codes]]
+code = 201
+reason = "Created"
+[[status_codes]]
+code = 202
+reason = "Accepted"
+[[status_codes]]
+code = 203
+reason = "Non-Authoritative Information"
+[[status_codes]]
+code = 204
+reason = "No Content"
+[[status_codes]]
+code = 206
+reason = "Partial Content"
+[[status_codes]]
+code = 301
+reason = "Moved Permanently"
+[[status_codes]]
+code = 302
+reason = "Found"
+[[status_codes]]
+code = 303
+reason = "See Other"
+[[status_codes]]
+code = 307
+reason = "Temporary Redirect"
+[[status_codes]]
+code = 308
+reason = "Permanent Redirect"
+[[status_codes]]
+code = 401
+reason = "Unauthorized"
+[[status_codes]]
+code = 403
+reason = "Forbidden"
+[[status_codes]]
+code = 405
+reason = "Method Not Allowed"
+[[status_codes]]
+code = 429
+reason = "Too Many Requests"

@@ -1774,7 +1774,7 @@
         "description": "AI reorganization max categories label"
     },
     "settings_aiMaxCategoriesDesc": {
-        "message": "Maximale Anzahl an Kategorien der obersten Ebene, die die KI erstellen darf (-1 für unbegrenzt)",
+        "message": "Höchstzahl der Ordner der obersten Ebene, die die KI anlegen darf. Leer lassen für unbegrenzt",
         "description": "AI reorganization max categories description"
     },
     "settings_aiMinItemsPerFolder": {
@@ -1790,7 +1790,7 @@
         "description": "AI reorganization max items label"
     },
     "settings_aiMaxItemsPerFolderDesc": {
-        "message": "Höchstzahl an Lesezeichen, die die KI pro Ordner anstreben soll (-1 für unbegrenzt)",
+        "message": "Höchstzahl der Lesezeichen, die die KI pro Ordner anstrebt. Leer lassen für unbegrenzt",
         "description": "AI reorganization max items description"
     },
     "settings_exportFilenamePrefix": {
@@ -2194,7 +2194,7 @@
         "description": "URL cleaner preserve params label"
     },
     "settings_urlCleanerPreserveParamsDesc": {
-        "message": "Kommagetrennte Abfrageparameter, die nie entfernt werden sollen",
+        "message": "Abfrageparameter, die nie entfernt werden",
         "description": "URL cleaner preserve params description"
     },
     "settings_urlCleanerRemoveParams": {
@@ -2202,7 +2202,7 @@
         "description": "URL cleaner remove params label"
     },
     "settings_urlCleanerRemoveParamsDesc": {
-        "message": "Kommagetrennte Abfrageparameter, die aus URLs entfernt werden sollen",
+        "message": "Abfrageparameter, die aus URLs entfernt werden",
         "description": "URL cleaner remove params description"
     },
     "settings_deadLinksEnabled": {
@@ -2258,7 +2258,7 @@
         "description": "Dead links success statuses label"
     },
     "settings_deadLinksSuccessStatusesDesc": {
-        "message": "Kommagetrennte HTTP-Statuscodes, die als erreichbar gelten",
+        "message": "HTTP-Statuscodes, die als erreichbar gelten",
         "description": "Dead links success statuses description"
     },
     "settings_metadataFetcherEnabled": {
@@ -2354,7 +2354,7 @@
         "description": "Privacy scanner sensitive params label"
     },
     "settings_privacyScannerSensitiveParamsDesc": {
-        "message": "Kommagetrennte Parameternamen, die als sensibel markiert werden sollen",
+        "message": "Parameternamen, die als sensibel markiert werden",
         "description": "Privacy scanner sensitive params description"
     },
     "settings_privacyScannerEmailDetection": {
@@ -2784,6 +2784,50 @@
     "settings_errorStatusCodes": {
         "message": "Geben Sie HTTP-Statuscodes von 100 bis 599 ein, durch Kommas getrennt.",
         "description": "Settings error for status code list"
+    },
+    "settings_listAdd": {
+        "message": "Hinzufügen",
+        "description": "Button that adds the typed value to a list setting"
+    },
+    "settings_listAddPlaceholder": {
+        "message": "Namen eingeben und Enter drücken",
+        "description": "Placeholder of the box that adds a name to a list setting"
+    },
+    "settings_listAddItem": {
+        "message": "$1 hinzufügen",
+        "description": "Accessible name of a suggestion button; $1 is the name it adds"
+    },
+    "settings_listRemove": {
+        "message": "$1 entfernen",
+        "description": "Accessible name of the remove button on a list chip; $1 is the item"
+    },
+    "settings_listSuggestions": {
+        "message": "Vorschläge:",
+        "description": "Label before one-click suggestions under a list setting"
+    },
+    "settings_statusGroup2xx": {
+        "message": "Erfolg (2xx)",
+        "description": "Heading of the 2xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup3xx": {
+        "message": "Weiterleitung (3xx)",
+        "description": "Heading of the 3xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup4xx": {
+        "message": "Clientfehler (4xx)",
+        "description": "Heading of the 4xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusOther": {
+        "message": "Weitere Codes",
+        "description": "Label of HTTP status codes added that are not in the checklist"
+    },
+    "settings_statusAddPlaceholder": {
+        "message": "Code",
+        "description": "Placeholder of the box that adds another HTTP status code"
+    },
+    "settings_errorStatusCode": {
+        "message": "Geben Sie einen Statuscode von 100 bis 599 ein.",
+        "description": "Error when the added HTTP status code is not valid"
     },
     "settings_errorRangeOrUnlimited": {
         "message": "Wählen Sie „Unbegrenzt“ oder einen Wert von $1 bis $2.",
@@ -5074,6 +5118,14 @@
     "unit_kb": {
         "message": "KB",
         "description": "Unit shown after a size in kilobytes"
+    },
+    "unit_s": {
+        "message": "s",
+        "description": "Unit: seconds"
+    },
+    "unit_mb": {
+        "message": "MB",
+        "description": "Unit: megabytes"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",

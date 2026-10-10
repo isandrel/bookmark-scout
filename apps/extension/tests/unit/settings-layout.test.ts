@@ -5,6 +5,8 @@ import {
   getSettingsCategories,
   getSettingsFieldGroups,
   getSettingsFieldMeta,
+  isSettingShown,
+  settingsSchema,
 } from '@/lib/settings-schema';
 
 // The legacy provider and model fields are edited through AI services, not as settings rows.
@@ -19,7 +21,10 @@ describe('Options layout', () => {
     const duplicates = placed.filter((key, index) => placed.indexOf(key) !== index);
     expect(duplicates).toEqual([]);
     const missing = Object.keys(defaultSettings).filter(
-      (key) => !EDITED_ELSEWHERE.has(key) && !placed.includes(key as keyof typeof defaultSettings),
+      (key) =>
+        !EDITED_ELSEWHERE.has(key) &&
+        isSettingShown(key as keyof typeof defaultSettings) &&
+        !placed.includes(key as keyof typeof defaultSettings),
     );
     expect(missing).toEqual([]);
   });
@@ -31,6 +36,14 @@ describe('Options layout', () => {
       }
       expect(category.fields).toEqual(category.sections.flatMap(getSectionFields));
     }
+  });
+
+  it('leaves one-option choices off the page', () => {
+    const meta = getSettingsFieldMeta();
+    for (const key of placed) {
+      if (meta[key].type === 'select') expect(meta[key].options?.length, key).toBeGreaterThan(1);
+    }
+    expect(placed).not.toContain('autoTaggingDefaultScope');
   });
 
   it('uses on/off settings as section switches and folds only 3 or more technical settings', () => {
@@ -54,5 +67,16 @@ describe('Options layout', () => {
         expect(group.fields.map((key) => meta[key].type)).toEqual(['number', 'number']);
       }
     }
+  });
+});
+
+describe('setting ranges', () => {
+  it('rejects a minimum above its maximum, except when the maximum is no limit', () => {
+    const parse = (values: Partial<typeof defaultSettings>) =>
+      settingsSchema.safeParse({ ...defaultSettings, ...values }).success;
+    expect(parse({ autoTaggingMinTags: 7, autoTaggingMaxTags: 5 })).toBe(false);
+    expect(parse({ autoTaggingMinTags: 5, autoTaggingMaxTags: 5 })).toBe(true);
+    expect(parse({ aiMinItemsPerFolder: 20, aiMaxItemsPerFolder: 10 })).toBe(false);
+    expect(parse({ aiMinItemsPerFolder: 20, aiMaxItemsPerFolder: -1 })).toBe(true);
   });
 });

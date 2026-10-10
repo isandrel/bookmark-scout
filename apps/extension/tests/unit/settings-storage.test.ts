@@ -19,6 +19,7 @@ import {
   fromUnlimitedSliderValue,
   getChangedSettings,
   parseListSetting,
+  parseListTokens,
   toUnlimitedSliderValue,
 } from '@/lib/settings-form';
 import { setLanguage } from '@/hooks/use-i18n';
@@ -239,6 +240,9 @@ describe('settings form helpers', () => {
   it('parses committed lists and validates status codes', () => {
     expect(parseListSetting('ref, page,, ref ', 'string')).toEqual(['ref', 'page']);
     expect(parseListSetting('', 'string')).toEqual([]);
+    // The list editor splits typed and pasted names at commas and whitespace.
+    expect(parseListTokens('utm_source, fbclid\n gclid  fbclid')).toEqual(['utm_source', 'fbclid', 'gclid']);
+    expect(parseListTokens(' , ')).toEqual([]);
     expect(parseListSetting('200, 301,404', 'number')).toEqual([200, 301, 404]);
     expect(parseListSetting('200, abc', 'number')).toBeNull();
     expect(parseListSetting('99', 'number')).toBeNull();

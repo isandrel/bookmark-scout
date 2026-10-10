@@ -75,7 +75,7 @@ Consulta [Guardar y organizar](/guides/save-and-organize).
 
 | Ajuste | Predeterminado | Qué hace |
 | --- | --- | --- |
-| **Duración de las notificaciones** | 4000 ms | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
+| **Duración de las notificaciones** | 4 s | Cuánto tiempo siguen abiertos los mensajes. Los mensajes con opción de deshacer mantienen su propio plazo de 10 segundos |
 
 ## Comportamiento [#behavior]
 
@@ -133,7 +133,7 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 | **Generador de resúmenes** | **Longitud del resumen** 160; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
 | **Reorganización de carpetas con IA** | **Mostrar siempre una vista previa** activado; **Confianza mínima** 0.55 (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
 
-El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual, diga lo que diga su **Ámbito predeterminado**.
+El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual.
 
 ### Reorganización de carpetas con IA [#ai-folder-reorganization]
 
@@ -148,9 +148,9 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 | --- | --- |
 | **Limpiador de duplicados** | **Criterio de coincidencia** URL normalizada; **Normalizar www**, **Ignorar el protocolo** e **Ignorar la barra final** activados; **Regla de conservación** El más antiguo; **Máximo de grupos** 500. Siempre analiza todos los marcadores |
 | **Limpiador de URLs** | **Quitar fragmentos** desactivado; **Ordenar parámetros de consulta** y **Quitar parámetros de consulta repetidos** activados; listas **Parámetros que se conservan** y **Parámetros que se quitan** |
-| **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8000 ms; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8 s; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Las listas como **Parámetros que se quitan** admiten valores separados por comas. Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
+Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
 
 ## Metadatos y contenido [#metadata--content]
 
@@ -161,7 +161,7 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 | **Activar el Extractor de metadatos** | Activado | Muestra **Extractor de metadatos** en la barra lateral de herramientas |
 | **Sobrescribir títulos** | Desactivado | Ofrece títulos nuevos para los marcadores que ya tienen uno |
 | **Obtener descripciones** | Activado | Muestra las descripciones de las páginas en la revisión. Nunca se guardan |
-| **Tiempo de espera de la solicitud** | 8000 ms | Por página. También lo usa **Actualizar iconos de sitios** |
+| **Tiempo de espera de la solicitud** | 8 s | Por página. También lo usa **Actualizar iconos de sitios** |
 | **Solicitudes simultáneas** | 4 | Páginas solicitadas a la vez. También lo usa **Actualizar iconos de sitios** |
 
 ### Actualizar iconos de sitios [#refresh-site-icons]
@@ -172,7 +172,7 @@ Las listas como **Parámetros que se quitan** admiten valores separados por coma
 | **Ámbito predeterminado** | Carpeta actual | Ámbito con el que empieza la actualización de iconos de sitios |
 | **Tamaño de icono preferido** | 32px | Cuando una página indica varios iconos, descarga el más cercano a este tamaño |
 | **Tamaño máximo del archivo de icono** | 64 KB | Los archivos de icono más grandes no se descargan ni se guardan |
-| **Límite de almacenamiento de iconos** | 4096 KB | Tamaño total de los iconos guardados en este dispositivo; los más antiguos se quitan primero |
+| **Límite de almacenamiento de iconos** | 4 MB | Tamaño total de los iconos guardados en este dispositivo; los más antiguos se quitan primero |
 
 ## Seguridad [#security]
 

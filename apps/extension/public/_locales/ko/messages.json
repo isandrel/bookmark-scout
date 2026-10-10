@@ -1774,7 +1774,7 @@
         "description": "AI reorganization max categories label"
     },
     "settings_aiMaxCategoriesDesc": {
-        "message": "AI가 만들 수 있는 최상위 카테고리의 최대 개수(-1은 제한 없음)",
+        "message": "AI가 만들 수 있는 최상위 폴더의 최대 개수. 비워 두면 제한 없음",
         "description": "AI reorganization max categories description"
     },
     "settings_aiMinItemsPerFolder": {
@@ -1790,7 +1790,7 @@
         "description": "AI reorganization max items label"
     },
     "settings_aiMaxItemsPerFolderDesc": {
-        "message": "AI가 폴더마다 목표로 하는 최대 북마크 수(-1은 제한 없음)",
+        "message": "AI가 폴더마다 목표로 하는 최대 북마크 수. 비워 두면 제한 없음",
         "description": "AI reorganization max items description"
     },
     "settings_exportFilenamePrefix": {
@@ -2194,7 +2194,7 @@
         "description": "URL cleaner preserve params label"
     },
     "settings_urlCleanerPreserveParamsDesc": {
-        "message": "절대 제거하지 않을 쿼리 매개변수(쉼표로 구분)",
+        "message": "제거하지 않을 쿼리 매개변수",
         "description": "URL cleaner preserve params description"
     },
     "settings_urlCleanerRemoveParams": {
@@ -2202,7 +2202,7 @@
         "description": "URL cleaner remove params label"
     },
     "settings_urlCleanerRemoveParamsDesc": {
-        "message": "URL에서 제거할 쿼리 매개변수(쉼표로 구분)",
+        "message": "URL에서 제거할 쿼리 매개변수",
         "description": "URL cleaner remove params description"
     },
     "settings_deadLinksEnabled": {
@@ -2258,7 +2258,7 @@
         "description": "Dead links success statuses label"
     },
     "settings_deadLinksSuccessStatusesDesc": {
-        "message": "접속 가능으로 취급할 HTTP 상태 코드(쉼표로 구분)",
+        "message": "접속 가능으로 볼 HTTP 상태 코드",
         "description": "Dead links success statuses description"
     },
     "settings_metadataFetcherEnabled": {
@@ -2354,7 +2354,7 @@
         "description": "Privacy scanner sensitive params label"
     },
     "settings_privacyScannerSensitiveParamsDesc": {
-        "message": "민감한 것으로 표시할 매개변수 이름(쉼표로 구분)",
+        "message": "민감한 정보로 표시할 매개변수 이름",
         "description": "Privacy scanner sensitive params description"
     },
     "settings_privacyScannerEmailDetection": {
@@ -2784,6 +2784,50 @@
     "settings_errorStatusCodes": {
         "message": "100~599 사이의 HTTP 상태 코드를 쉼표로 구분해 입력하세요.",
         "description": "Settings error for status code list"
+    },
+    "settings_listAdd": {
+        "message": "추가",
+        "description": "Button that adds the typed value to a list setting"
+    },
+    "settings_listAddPlaceholder": {
+        "message": "이름을 입력하고 Enter",
+        "description": "Placeholder of the box that adds a name to a list setting"
+    },
+    "settings_listAddItem": {
+        "message": "$1 추가",
+        "description": "Accessible name of a suggestion button; $1 is the name it adds"
+    },
+    "settings_listRemove": {
+        "message": "$1 삭제",
+        "description": "Accessible name of the remove button on a list chip; $1 is the item"
+    },
+    "settings_listSuggestions": {
+        "message": "추천:",
+        "description": "Label before one-click suggestions under a list setting"
+    },
+    "settings_statusGroup2xx": {
+        "message": "성공 (2xx)",
+        "description": "Heading of the 2xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup3xx": {
+        "message": "리디렉션 (3xx)",
+        "description": "Heading of the 3xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusGroup4xx": {
+        "message": "클라이언트 오류 (4xx)",
+        "description": "Heading of the 4xx HTTP status codes in the status code checklist"
+    },
+    "settings_statusOther": {
+        "message": "기타 코드",
+        "description": "Label of HTTP status codes added that are not in the checklist"
+    },
+    "settings_statusAddPlaceholder": {
+        "message": "코드",
+        "description": "Placeholder of the box that adds another HTTP status code"
+    },
+    "settings_errorStatusCode": {
+        "message": "100~599 사이의 상태 코드를 입력하세요.",
+        "description": "Error when the added HTTP status code is not valid"
     },
     "settings_errorRangeOrUnlimited": {
         "message": "'제한 없음' 또는 $1~$2 사이의 값을 선택하세요.",
@@ -5074,6 +5118,14 @@
     "unit_kb": {
         "message": "KB",
         "description": "Unit shown after a size in kilobytes"
+    },
+    "unit_s": {
+        "message": "초",
+        "description": "Unit: seconds"
+    },
+    "unit_mb": {
+        "message": "MB",
+        "description": "Unit: megabytes"
     },
     "bookmarks_folderOptionWithId": {
         "message": "$1 (#$2)",

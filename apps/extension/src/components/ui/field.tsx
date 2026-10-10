@@ -21,8 +21,9 @@ type FieldProps = {
   /**
    * `stacked` (default) puts the label, control, description, and error in one column.
    * `setting` is an Options setting row: label, description, and error beside the control.
+   * `settingWide` is a setting row whose wide control, such as a list editor, goes under them.
    */
-  layout?: 'stacked' | 'setting';
+  layout?: 'stacked' | 'setting' | 'settingWide';
   /** Setting layout: shown after the label, such as a Modified badge. */
   badge?: ReactNode;
   /** Setting layout: shown after the control, such as a reset button. */
@@ -58,6 +59,36 @@ export function Field({
     ...(describedBy ? { 'aria-describedby': describedBy } : {}),
     ...(error ? { 'aria-invalid': true } : {}),
   };
+
+  if (layout === 'settingWide') {
+    // A setting whose control needs the full width (a list editor): text and reset on top.
+    return (
+      <div className="min-w-0 flex-1 space-y-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 space-y-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <Label id={ids.label} htmlFor={id} className="text-base font-medium">
+                {label}
+              </Label>
+              {badge}
+            </div>
+            {description && (
+              <p id={ids.description} className="text-sm text-muted-foreground">
+                {description}
+              </p>
+            )}
+            {error && (
+              <p id={ids.error} role="alert" className="text-sm text-destructive-text">
+                {error}
+              </p>
+            )}
+          </div>
+          {actions}
+        </div>
+        {children(control)}
+      </div>
+    );
+  }
 
   if (layout === 'setting') {
     return (

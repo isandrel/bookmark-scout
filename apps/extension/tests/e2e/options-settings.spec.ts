@@ -112,7 +112,7 @@ test('adding an AI service selects that provider default model and saves', async
     .toMatchObject({ provider: 'custom', model: 'gpt-4o-mini', name: 'Work proxy' });
 });
 
-test('list settings accept commas and status codes are validated inline', async ({
+test('list editors add and remove names, and status codes are a checklist that validates other codes', async ({
   extensionId,
   extensionWorker,
   page,
@@ -120,46 +120,38 @@ test('list settings accept commas and status codes are validated inline', async 
   await setSettings(extensionWorker, { language: 'en' });
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'Maintenance' }).click();
+  const readPreserve = async () => (await readSettings(extensionWorker)).urlCleanerPreserveParams;
 
+  // Typing a comma, or pressing Enter, adds what was typed; names already there are skipped.
   const preserve = page.getByRole('textbox', { name: 'Preserve Parameters' });
-  await preserve.fill('');
   await preserve.pressSequentially('ref, page');
-  await expect(preserve).toHaveValue('ref, page');
-  await preserve.blur();
-  await expect
-    .poll(async () => (await readSettings(extensionWorker)).urlCleanerPreserveParams)
-    .toEqual(['ref', 'page']);
+  await preserve.press('Enter');
+  await expect.poll(readPreserve).toEqual(['id', 'page', 'q', 'p', 'lang', 'ref']);
+  await page.getByRole('button', { name: 'Remove id' }).click();
+  await page.getByRole('button', { name: 'Add query' }).click();
+  await expect.poll(readPreserve).toEqual(['page', 'q', 'p', 'lang', 'ref', 'query']);
+  // Backspace in the empty box removes the last name.
+  await preserve.press('Backspace');
+  await expect.poll(readPreserve).toEqual(['page', 'q', 'p', 'lang', 'ref']);
 
   await openAdvanced(page, 'deadLinks');
-  const statuses = page.getByRole('textbox', { name: 'Success Status Codes' });
-  await statuses.fill('200, 204');
-  await statuses.press('Enter');
-  await expect
-    .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
-    .toEqual([200, 204]);
+  const codes = page.getByRole('group', { name: 'Success Status Codes' });
+  const readCodes = async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses;
+  await codes.getByRole('checkbox', { name: '201 Created' }).click();
+  await codes.getByRole('checkbox', { name: '403 Forbidden' }).click();
+  await expect.poll(readCodes).toEqual([200, 202, 204, 301, 302, 307, 308, 403]);
 
-  await statuses.fill('200, abc');
-  await statuses.blur();
-  await expect(settingRow(page, 'deadLinksSuccessStatuses').getByRole('alert')).toHaveText(
-    'Enter HTTP status codes from 100 to 599, separated by commas.',
-  );
-  await expect(page.getByTestId('settings-save-status')).toHaveText('1 setting not saved');
-
-  // An invalid field does not block other edits.
-  await page.getByRole('checkbox', { name: /Remove Fragments/ }).click();
-  await expect
-    .poll(() => readSettings(extensionWorker))
-    .toMatchObject({
-      urlCleanerRemoveHash: expect.any(Boolean),
-      deadLinksSuccessStatuses: [200, 204],
-    });
-
-  await statuses.fill('200');
-  await statuses.blur();
-  await expect(settingRow(page, 'deadLinksSuccessStatuses').getByRole('alert')).toHaveCount(0);
-  await expect
-    .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
-    .toEqual([200]);
+  // A code outside the checklist is added as a chip; text that is not a code is refused inline.
+  const other = codes.getByRole('textbox', { name: 'Other codes' });
+  await other.fill('abc');
+  await other.press('Enter');
+  await expect(codes.getByRole('alert')).toHaveText('Enter a status code from 100 to 599.');
+  await other.fill('418');
+  await other.press('Enter');
+  await expect(codes.getByRole('alert')).toHaveCount(0);
+  await expect.poll(readCodes).toContain(418);
+  await codes.getByRole('button', { name: 'Remove 418' }).click();
+  await expect.poll(readCodes).not.toContain(418);
 });
 
 test('a setting error uses the dark-mode-safe error text color', async ({
@@ -335,7 +327,7 @@ test('settings search shows matches from every tab and controls have accessible 
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('status codes');
   await expect(page.getByText('1 matching setting in all tabs')).toBeVisible();
-  await expect(page.getByRole('textbox', { name: 'Success Status Codes' })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Success Status Codes' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Maintenance' })).toBeVisible();
 
   // The search covers every tab, so the empty state does not mention a category.
@@ -504,7 +496,7 @@ test('an invalid edit pending at close is not saved and does not block valid one
   expect((await readSettings(extensionWorker)).defaultNewFolderName).toBe('Keep Me');
 });
 
-test('resetting a list setting clears invalid text', async ({
+test('the last status code cannot be cleared, and reset restores the default codes', async ({
   extensionId,
   extensionWorker,
   page,
@@ -512,31 +504,16 @@ test('resetting a list setting clears invalid text', async ({
   await setSettings(extensionWorker, { language: 'en', deadLinksSuccessStatuses: [200] });
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'Maintenance' }).click();
-  const statuses = page.getByRole('textbox', { name: 'Success Status Codes' });
-  const alert = settingRow(page, 'deadLinksSuccessStatuses').getByRole('alert');
+  // A changed value keeps the fold open.
+  const codes = page.getByRole('group', { name: 'Success Status Codes' });
+  await expect(codes.getByRole('checkbox', { name: '200 OK' })).toBeDisabled();
 
-  await statuses.fill('200, abc');
-  await statuses.blur();
-  await expect(alert).toBeVisible();
   await page.getByRole('button', { name: 'Reset Success Status Codes to default' }).click();
-  await expect(statuses).toHaveValue(DEFAULT_SUCCESS_STATUSES.join(', '));
-  await expect(alert).toHaveCount(0);
   await expect
     .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
     .toEqual(DEFAULT_SUCCESS_STATUSES);
-
-  // Invalid text on a field that already holds its default is cleared by Reset All too.
-  await statuses.fill('abc');
-  await statuses.blur();
-  await expect(alert).toBeVisible();
-  await page.getByRole('button', { name: 'Reset All' }).click();
-  await expect(statuses).toHaveValue(DEFAULT_SUCCESS_STATUSES.join(', '));
-  await expect(alert).toHaveCount(0);
-  // Autosave shows no success message; the status only speaks up when a save fails.
+  await expect(codes.getByRole('checkbox', { name: '200 OK' })).toBeEnabled();
   await expect(page.getByTestId('settings-save-status')).toBeEmpty();
-  await expect
-    .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
-    .toEqual(DEFAULT_SUCCESS_STATUSES);
 });
 
 test('settings search finds AI service fields, including ones under More settings', async ({
@@ -625,8 +602,8 @@ test('a long unit such as Japanese milliseconds stays on one line', async ({
 }) => {
   await setSettings(extensionWorker, { language: 'ja' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: '外観' }).click();
-  const unit = settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]');
+  await page.getByRole('tab', { name: '保存と検索' }).click();
+  const unit = settingRow(page, 'searchDebounceMs').locator('[data-slot="setting-unit"]');
   await expect(unit).toHaveText('ミリ秒');
   const lineHeight = await unit.evaluate((element) =>
     Number.parseFloat(getComputedStyle(element).lineHeight),
@@ -782,4 +759,39 @@ test('a section switch folds its tool, search opens Advanced settings, and a swi
   await expect(page.getByRole('combobox', { name: 'Favicon Size' })).toBeDisabled();
   await page.getByRole('switch', { name: 'Show Favicons' }).click();
   await expect(page.getByRole('combobox', { name: 'Favicon Size' })).toBeEnabled();
+});
+
+test('a range keeps its minimum at or below its maximum, and durations are edited in seconds', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, {
+    language: 'en',
+    autoTaggingMinTags: 4,
+    autoTaggingMaxTags: 5,
+  });
+  await openOptions(page, extensionId);
+
+  // Stored in milliseconds, shown and edited in seconds.
+  const toast = page.getByRole('textbox', { name: 'Toast Duration' });
+  await expect(toast).toHaveValue('4');
+  await expect(settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]')).toHaveText(
+    's',
+  );
+  await page.getByRole('button', { name: 'Increase Toast Duration' }).click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).toastDurationMs).toBe(4500);
+
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
+  const increaseMin = page.getByRole('button', { name: 'Increase Minimum Tags' });
+  await increaseMin.click();
+  await expect.poll(async () => (await readSettings(extensionWorker)).autoTaggingMinTags).toBe(5);
+  // The minimum has reached the maximum, so it cannot go higher, and typing more is clamped.
+  await expect(increaseMin).toBeDisabled();
+  const min = page.getByRole('textbox', { name: 'Minimum Tags' });
+  await min.fill('9');
+  await min.blur();
+  await expect(min).toHaveValue('5');
+  await expect(page.getByRole('button', { name: 'Decrease Maximum Tags' })).toBeDisabled();
+  await expect(page.getByTestId('settings-save-status')).toBeEmpty();
 });

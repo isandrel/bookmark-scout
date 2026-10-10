@@ -151,15 +151,10 @@ test('unsupported and malformed saved scopes fall back without resetting other t
   const optionsPage = await context.newPage();
   await optionsPage.goto(`chrome-extension://${extensionId}/options.html`);
   await optionsPage.getByRole('tab', { name: 'Maintenance' }).click();
-  const duplicatesScopeSetting = optionsPage
-    .getByText('Default scope used when scanning for duplicate bookmarks')
-    .locator('..')
-    .locator('..');
-  await duplicatesScopeSetting.getByRole('combobox').click();
-  await expect(optionsPage.getByRole('option', { name: 'All Bookmarks' })).toBeVisible();
-  await expect(optionsPage.getByRole('option', { name: 'Current Folder' })).toHaveCount(0);
-  await expect(optionsPage.getByRole('option', { name: 'Folder or All' })).toHaveCount(0);
-  await optionsPage.keyboard.press('Escape');
+  // Duplicate Cleaner always scans all bookmarks, so a one-option scope is not shown at all.
+  await expect(
+    optionsPage.getByText('Default scope used when scanning for duplicate bookmarks'),
+  ).toHaveCount(0);
 
   // URL Cleaner is off, so its section is folded; a settings search still reaches its scope.
   await optionsPage

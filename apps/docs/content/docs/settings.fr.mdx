@@ -75,7 +75,7 @@ Consultez [Enregistrer et organiser](/guides/save-and-organize).
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Durée des notifications** | 4000 ms | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
+| **Durée des notifications** | 4 s | Durée d'affichage des notifications. Les notifications d'annulation conservent leur propre délai de 10 secondes |
 
 ## Comportement [#behavior]
 
@@ -133,7 +133,7 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 | **Générateur de résumés** | **Longueur du résumé** 160 ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
 | **Réorganisation des dossiers par IA** | **Toujours afficher un aperçu** activé ; **Confiance minimale** 0,55 (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
 
-L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel, quelle que soit leur **Portée par défaut**.
+L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel.
 
 ### Réorganisation des dossiers par IA [#ai-folder-reorganization]
 
@@ -148,9 +148,9 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 | --- | --- |
 | **Nettoyeur de doublons** | **Méthode de comparaison** URL normalisée ; **Normaliser www**, **Ignorer le protocole** et **Ignorer la barre oblique finale** activés ; **Règle de conservation** Le plus ancien ; **Nombre maximal de groupes** 500. Analyse toujours tous les favoris |
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
-| **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8000 ms ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
+| **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Les listes telles que **Paramètres à supprimer** acceptent des valeurs séparées par des virgules. Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
+Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
 ## Métadonnées et contenu [#metadata--content]
 
@@ -161,7 +161,7 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 | **Activer la récupération des métadonnées** | Activé | Affiche **Récupération des métadonnées** dans la barre latérale Outils |
 | **Remplacer les titres** | Désactivé | Propose de nouveaux titres pour les favoris qui en ont déjà un |
 | **Récupérer les descriptions** | Activé | Affiche les descriptions des pages dans la vérification. Elles ne sont jamais enregistrées |
-| **Délai d'expiration des requêtes** | 8000 ms | Par page. Également utilisé par **Actualiser les icônes de site** |
+| **Délai d'expiration des requêtes** | 8 s | Par page. Également utilisé par **Actualiser les icônes de site** |
 | **Requêtes simultanées** | 4 | Nombre de pages demandées en même temps. Également utilisé par **Actualiser les icônes de site** |
 
 ### Actualiser les icônes de site [#refresh-site-icons]
@@ -172,7 +172,7 @@ Les listes telles que **Paramètres à supprimer** acceptent des valeurs sépar�
 | **Portée par défaut** | Dossier actuel | Portée initiale de l'actualisation des icônes de site |
 | **Taille d'icône préférée** | 32 px | Lorsqu'une page propose plusieurs icônes, télécharge celle dont la taille est la plus proche de cette valeur |
 | **Taille maximale du fichier d'icône** | 64 Ko | Les fichiers d'icône plus volumineux ne sont ni téléchargés ni enregistrés |
-| **Limite de stockage des icônes** | 4096 Ko | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |
+| **Limite de stockage des icônes** | 4 Mo | Taille totale des icônes enregistrées sur cet appareil ; les plus anciennes sont supprimées en premier |
 
 ## Sécurité [#security]
 
