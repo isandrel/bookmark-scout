@@ -363,17 +363,9 @@
         "message": "Darstellung",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "Aussehen der Lesezeichen anpassen",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "Suche",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "Suchverhalten festlegen",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "Verhalten",
@@ -383,13 +375,57 @@
         "message": "Verhalten der Erweiterung steuern",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "Erweitert",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "Speichern & Suche",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "Erweiterte Einstellungen",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "Seiten im richtigen Ordner speichern und Ordner und Lesezeichen finden",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "Sprache, Design, Symbole, Pop-up-Größe und Benachrichtigungen",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "Import & Export",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "Lesezeichen über die Tools-Seitenleiste exportieren und importieren",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "Speichern",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "Sprache, Design und Symbole",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "Pop-up",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "Benachrichtigungen",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "Baum und Sortierung",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "Links",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "Löschen",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "Ordnervorschläge",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "Sprache",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "Lesezeichenanalyse und Berichte konfigurieren",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "Daten",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "Tools für Import, Export und Datenverarbeitung konfigurieren",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "Max. Kategorien",

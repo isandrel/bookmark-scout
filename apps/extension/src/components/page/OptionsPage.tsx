@@ -15,7 +15,6 @@ import {
   Search,
   Settings2,
   ShieldAlert,
-  Sliders,
   Sparkles,
   Sun,
   TriangleAlert,
@@ -43,7 +42,6 @@ const tabIcons: Record<string, React.ReactNode> = {
   appearance: <Palette className="h-4 w-4" />,
   search: <Search className="h-4 w-4" />,
   behavior: <Settings2 className="h-4 w-4" />,
-  advanced: <Sliders className="h-4 w-4" />,
   ai: <Sparkles className="h-4 w-4" />,
   aiTools: <Sparkles className="h-4 w-4" />,
   maintenance: <Wrench className="h-4 w-4" />,
@@ -323,9 +321,58 @@ const OptionsPage: React.FC = () => {
     });
   };
 
-  const renderCategoryHeader = (categoryKey: string, headingLevel: 'h2' | 'h3' = 'h3') => {
+  /** The panel a section draws after its fields; in a search, only when it matched. */
+  const renderPanel = (panel: SettingsPanelId | undefined, matchesOnly: boolean) => {
+    switch (panel) {
+      case 'aiServices':
+        if (!matchesOnly) return <AIServicesPanel />;
+        return aiPanelMatches > 0 ? (
+          <AIServicesPanel showAdvanced={aiPanelFieldMatches.some((field) => field.advanced)} />
+        ) : null;
+      case 'aiActivity':
+        return matchesOnly ? null : <AIActivityPanel />;
+      case 'promptLibrary':
+        return matchesOnly ? null : <PromptLibraryPanel />;
+      default:
+        return null;
+    }
+  };
+
+  /**
+   * A category's titled sections, the page's second level. With `matches` (a search), only the
+   * matching settings and the sections that hold them.
+   */
+  const renderSections = (categoryKey: string, matches?: ReadonlySet<keyof Settings>) => (
+    <div className="space-y-8">
+      {categories[categoryKey].sections.map((section) => {
+        const fields = matches
+          ? section.fields.filter((fieldKey) => matches.has(fieldKey))
+          : section.fields;
+        const panel = renderPanel(section.panel, Boolean(matches));
+        if (fields.length === 0 && !panel) return null;
+        const headingId = `settings-section-${categoryKey}-${section.id}`;
+        return (
+          <section
+            key={section.id}
+            data-settings-section={section.id}
+            aria-labelledby={section.label ? headingId : undefined}
+            className="space-y-3"
+          >
+            {section.label ? (
+              <h3 id={headingId} className="text-base font-semibold text-foreground">
+                {section.label}
+              </h3>
+            ) : null}
+            {renderSettingsFields(fields)}
+            {panel}
+          </section>
+        );
+      })}
+    </div>
+  );
+
+  const renderCategoryHeader = (categoryKey: string) => {
     const category = categories[categoryKey];
-    const Heading = headingLevel;
     if (categoryKey === 'ai') {
       return (
         <div className="mb-6 rounded-lg border bg-card p-4">
@@ -334,7 +381,7 @@ const OptionsPage: React.FC = () => {
               <Sparkles className="h-5 w-5" />
             </div>
             <div className="min-w-0">
-              <Heading className="text-lg font-semibold">{category.label}</Heading>
+              <h2 className="text-lg font-semibold">{category.label}</h2>
               <p className="text-sm text-muted-foreground">{category.description}</p>
             </div>
           </div>
@@ -343,7 +390,7 @@ const OptionsPage: React.FC = () => {
     }
     return (
       <div className="mb-4">
-        <Heading className="text-lg font-semibold">{category.label}</Heading>
+        <h2 className="text-lg font-semibold">{category.label}</h2>
         <p className="text-sm text-muted-foreground">{category.description}</p>
       </div>
     );
@@ -456,42 +503,17 @@ const OptionsPage: React.FC = () => {
                     )
                     .map(([categoryKey, fields]) => (
                       <div key={categoryKey} data-search-category={categoryKey}>
-                        {renderCategoryHeader(categoryKey, 'h2')}
-                        <div className="space-y-3">
-                          {renderSettingsFields(fields)}
-                          {categoryKey === 'ai' &&
-                            aiPanelMatches > 0 && (
-                              <AIServicesPanel
-                                showAdvanced={aiPanelFieldMatches.some((field) => field.advanced)}
-                              />
-                            )}
-                        </div>
+                        {renderCategoryHeader(categoryKey)}
+                        {renderSections(categoryKey, new Set(fields))}
                       </div>
                     ))
                 )}
               </section>
             ) : (
-              Object.entries(categories).map(([categoryKey, category]) => (
+              Object.keys(categories).map((categoryKey) => (
                 <TabsContent key={categoryKey} value={categoryKey} className="mt-0">
                   {renderCategoryHeader(categoryKey)}
-                  <div className="space-y-3">
-                    {categoryKey === 'ai' ? (
-                      // Services come right after the AI switch: they are what the switch turns on.
-                      <>
-                        {renderSettingsFields(category.fields.slice(0, 1))}
-                        <AIServicesPanel />
-                        {renderSettingsFields(category.fields.slice(1))}
-                        <AIActivityPanel />
-                      </>
-                    ) : categoryKey === 'aiTools' ? (
-                      <>
-                        <PromptLibraryPanel />
-                        {renderSettingsFields(category.fields)}
-                      </>
-                    ) : (
-                      renderSettingsFields(category.fields)
-                    )}
-                  </div>
+                  {renderSections(categoryKey)}
                 </TabsContent>
               ))
             )}

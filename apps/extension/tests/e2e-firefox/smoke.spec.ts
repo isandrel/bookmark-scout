@@ -221,6 +221,11 @@ test('options saves a setting to sync storage and keeps it after reload', async 
   await setSettings(extension, { language: 'en', showFavicons: true });
 
   await extension.open('options.html');
+  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  await extension.find('[role="tab"]');
+  await extension.driver
+    .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
+    .click();
   const switchSelector = '[data-setting="showFavicons"] [role="switch"]';
   await (await extension.find(switchSelector)).click();
 
@@ -235,6 +240,10 @@ test('options saves a setting to sync storage and keeps it after reload', async 
     .toBe('');
 
   await extension.driver.navigate().refresh();
+  await extension.find('[role="tab"]');
+  await extension.driver
+    .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
+    .click();
   await expect
     .poll(async () => (await extension.find(switchSelector)).getAttribute('aria-checked'))
     .toBe('false');
@@ -259,7 +268,12 @@ test('AI waits for data collection consent, and there is no browser icon cache s
   // A synced "AI on" without consent (for example from before consent existed) counts as off.
   await setSettings(extension, { language: 'en', aiEnabled: true });
   await extension.open('options.html');
-  // Appearance opens first. Firefox has no icon cache for extensions, so that setting is absent.
+  // Firefox has no icon cache for extensions, so that setting is absent from Appearance.
+  // Saving & Search opens first; wait for the tabs, then switch to Appearance.
+  await extension.find('[role="tab"]');
+  await extension.driver
+    .findElement(By.xpath('//button[@role="tab" and normalize-space()="Appearance"]'))
+    .click();
   await extension.find('[data-setting="showFavicons"]');
   expect(
     await extension.driver.executeScript<boolean>(

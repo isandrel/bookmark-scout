@@ -40,9 +40,10 @@ async function readServices(worker: Worker) {
   });
 }
 
+/** Opens Options on Appearance (language, theme, icons), where most of these checks start. */
 async function openOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await expect(page.getByRole('tab', { name: 'Appearance' })).toBeVisible();
+  await page.getByRole('tab', { name: 'Appearance' }).click();
 }
 
 test('non-default selects survive reload and never block saving other settings', async ({
@@ -61,6 +62,7 @@ test('non-default selects survive reload and never block saving other settings',
   await expect.poll(async () => (await readSettings(extensionWorker)).showFavicons).toBe(false);
 
   await page.reload();
+  await page.getByRole('tab', { name: 'Appearance' }).click();
   await expect(page.getByRole('combobox', { name: 'Theme' })).toHaveText('Dark');
   await page.getByRole('switch', { name: 'Show Favicons' }).click();
   await expect
@@ -161,7 +163,7 @@ test('a setting error uses the dark-mode-safe error text color', async ({
 }) => {
   await setSettings(extensionWorker, { language: 'en', theme: 'dark' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await page.getByRole('tab', { name: 'Saving & Search' }).click();
   const row = settingRow(page, 'defaultNewFolderName');
   await row.getByRole('textbox').fill('');
   const alert = row.getByRole('alert');
@@ -182,7 +184,7 @@ test('a save error clears once the field is reset or its saved value is typed ag
 }) => {
   await setSettings(extensionWorker, { language: 'en' });
   await openOptions(page, extensionId);
-  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await page.getByRole('tab', { name: 'Saving & Search' }).click();
   const row = settingRow(page, 'defaultNewFolderName');
   const input = row.getByRole('textbox');
   const status = page.getByTestId('settings-save-status');
@@ -210,7 +212,7 @@ test('invalid text shows a localized inline error and is not silently saved', as
 }) => {
   await setSettings(extensionWorker, { language: 'ja', defaultNewFolderName: 'Inbox' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: '動作' }).click();
+  await page.getByRole('tab', { name: '保存と検索' }).click();
   const row = settingRow(page, 'defaultNewFolderName');
   await row.getByRole('textbox').fill('');
   await expect(row.getByRole('alert')).toHaveText('この項目は空にできません。');
@@ -336,7 +338,7 @@ test('settings search shows matches from every tab and controls have accessible 
   await expect(page.getByText('No settings match your search.', { exact: true })).toBeVisible();
 
   await page.getByRole('searchbox', { name: 'Search settings...' }).fill('');
-  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Max Categories' })).toHaveAttribute(
     'placeholder',
     'No limit',
@@ -398,6 +400,7 @@ test('options layout fits a 480px window without squeezed labels', async ({
   await setSettings(extensionWorker, { language: 'ja' });
   await page.setViewportSize({ width: 480, height: 900 });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
+  await page.getByRole('tab', { name: '外観' }).click();
   const themeLabel = page.locator('#setting-theme-label');
   await expect(themeLabel).toHaveText('テーマ');
   const labelBox = await themeLabel.boundingBox();
@@ -451,7 +454,7 @@ for (const mode of ['reload', 'close'] as const) {
     await setSettings(extensionWorker, { language: 'en' });
     const page = await context.newPage();
     await openOptions(page, extensionId);
-    await page.getByRole('tab', { name: 'Behavior' }).click();
+    await page.getByRole('tab', { name: 'Saving & Search' }).click();
     const value = `Flushed on ${mode}`;
     await settingRow(page, 'defaultNewFolderName').getByRole('textbox').fill(value);
     // Well inside the autosave debounce.
@@ -462,7 +465,7 @@ for (const mode of ['reload', 'close'] as const) {
       .poll(async () => (await readSettings(extensionWorker)).defaultNewFolderName)
       .toBe(value);
     if (mode === 'reload') {
-      await page.getByRole('tab', { name: 'Behavior' }).click();
+      await page.getByRole('tab', { name: 'Saving & Search' }).click();
       await expect(settingRow(page, 'defaultNewFolderName').getByRole('textbox')).toHaveValue(
         value,
       );
@@ -482,8 +485,9 @@ test('an invalid edit pending at close is not saved and does not block valid one
   });
   const page = await context.newPage();
   await openOptions(page, extensionId);
-  await page.getByRole('tab', { name: 'Behavior' }).click();
+  await page.getByRole('tab', { name: 'Saving & Search' }).click();
   await settingRow(page, 'defaultNewFolderName').getByRole('textbox').fill('');
+  await page.getByRole('tab', { name: 'Behavior' }).click();
   await settingRow(page, 'confirmBeforeDelete').getByRole('switch').click();
   await page.close({ runBeforeUnload: true });
 
@@ -560,7 +564,7 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
 }) => {
   await setSettings(extensionWorker, { language: 'en', aiMaxCategories: -1 });
   await openOptions(page, extensionId);
-  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  await page.getByRole('tab', { name: 'AI Tools', exact: true }).click();
   const field = page.getByRole('textbox', { name: 'Max Categories' });
   await expect(field).toHaveValue('');
   await expect(field).toHaveAttribute('placeholder', 'No limit');
@@ -596,6 +600,7 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(100);
 
   // Values outside the range are clamped when the field is committed.
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
   const recent = page.getByRole('textbox', { name: 'Max Recommendations' });
   await recent.fill('99');
   await recent.blur();
@@ -612,7 +617,7 @@ test('a long unit such as Japanese milliseconds stays on one line', async ({
 }) => {
   await setSettings(extensionWorker, { language: 'ja' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
-  await page.getByRole('tab', { name: '詳細' }).click();
+  await page.getByRole('tab', { name: '外観' }).click();
   const unit = settingRow(page, 'toastDurationMs').locator('[data-slot="setting-unit"]');
   await expect(unit).toHaveText('ミリ秒');
   const lineHeight = await unit.evaluate((element) =>
@@ -632,6 +637,8 @@ test('changing a switch back to its default keeps it under the pointer', async (
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'Behavior' }).click();
   const toggle = page.getByRole('switch', { name: 'Confirm Before Delete' });
+  // Clear of the sticky footer, so clicking does not scroll the page and move the switch.
+  await toggle.evaluate((element) => element.scrollIntoView({ block: 'center' }));
   const before = await toggle.boundingBox();
   await toggle.click();
   await expect(page.getByRole('button', { name: /Reset Confirm Before Delete/ })).toBeVisible();

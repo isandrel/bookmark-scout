@@ -363,17 +363,9 @@
         "message": "Apparence",
         "description": "Appearance category label"
     },
-    "settings_appearanceDesc": {
-        "message": "Personnalisez l'affichage des favoris",
-        "description": "Appearance category description"
-    },
     "settings_search": {
         "message": "Recherche",
         "description": "Search category label"
-    },
-    "settings_searchDesc": {
-        "message": "Configurez le comportement de la recherche",
-        "description": "Search category description"
     },
     "settings_behavior": {
         "message": "Comportement",
@@ -383,13 +375,57 @@
         "message": "Contrôlez le comportement de l'extension",
         "description": "Behavior category description"
     },
-    "settings_advanced": {
-        "message": "Avancé",
-        "description": "Advanced category label"
+    "settings_savingSearch": {
+        "message": "Enregistrement et recherche",
+        "description": "Settings category: saving pages into folders and searching"
     },
-    "settings_advancedDesc": {
-        "message": "Paramètres avancés",
-        "description": "Advanced category description"
+    "settings_savingSearchDesc": {
+        "message": "Enregistrez les pages dans le bon dossier et retrouvez dossiers et favoris",
+        "description": "Settings category description: Saving & Search"
+    },
+    "settings_appearanceDesc": {
+        "message": "Langue, thème, icônes, taille de la fenêtre pop-up et notifications",
+        "description": "Settings category description: Appearance"
+    },
+    "settings_importExport": {
+        "message": "Importation et exportation",
+        "description": "Settings category: exporting and importing bookmarks"
+    },
+    "settings_importExportDesc": {
+        "message": "Exportez et importez des favoris depuis la barre latérale Outils",
+        "description": "Settings category description: Import & Export"
+    },
+    "settings_sectionSaving": {
+        "message": "Enregistrement",
+        "description": "Settings section heading: recent folders and new folders used when saving a page"
+    },
+    "settings_sectionThemeIcons": {
+        "message": "Langue, thème et icônes",
+        "description": "Settings section heading: language, theme, and site icons"
+    },
+    "settings_sectionPopup": {
+        "message": "Fenêtre pop-up",
+        "description": "Settings section heading: popup size and how long titles may be"
+    },
+    "settings_sectionNotifications": {
+        "message": "Notifications",
+        "description": "Settings section heading: notification (toast) settings"
+    },
+    "settings_sectionTree": {
+        "message": "Arborescence et tri",
+        "description": "Settings section heading: how the bookmark tree is ordered and grouped"
+    },
+    "settings_sectionLinks": {
+        "message": "Liens",
+        "description": "Settings section heading: how clicked links open"
+    },
+    "settings_sectionDeleting": {
+        "message": "Suppression",
+        "description": "Settings section heading: deleting bookmarks and folders"
+    },
+    "settings_sectionSuggestions": {
+        "message": "Suggestions de dossier",
+        "description": "Settings section heading: AI folder suggestions for the current page"
     },
     "settings_language": {
         "message": "Langue",
@@ -1732,14 +1768,6 @@
     "settings_analyticsDesc": {
         "message": "Configurez l'analyse des favoris et les rapports",
         "description": "Analytics settings tab description"
-    },
-    "settings_data": {
-        "message": "Données",
-        "description": "Data settings tab label"
-    },
-    "settings_dataDesc": {
-        "message": "Configurez les outils d'importation, d'exportation et de gestion des données",
-        "description": "Data settings tab description"
     },
     "settings_aiMaxCategories": {
         "message": "Nombre maximal de catégories",
