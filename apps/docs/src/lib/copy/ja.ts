@@ -53,7 +53,7 @@ export const ja: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "ポップアップのフォルダツリーと、「docs」で検索して一致部分が強調表示された画面",
+      "2 つのポップアップ: 検索ボックスに「pas」と入力し、フォルダに保存 で Pasta フォルダ（Recipes / Italian）を選んだ画面と、Enter を押してページを Pasta に保存した後の画面",
     manager:
       "フォルダツリー、タイトルと URL のフィルター、ブックマークの表を表示したブックマークマネージャー",
     duplicates:

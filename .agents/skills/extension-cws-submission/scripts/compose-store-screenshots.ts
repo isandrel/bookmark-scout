@@ -17,8 +17,9 @@ const THEMES = {
   light: { paper: '#f4f7fb', ink: '#0f2135', soft: '#4a5b70', line: '#d6dfea', shadow: 'rgba(15,33,53,.14)' },
   dark: { paper: '#0d1b2a', ink: '#e8eff6', soft: '#9fb2c6', line: '#23394f', shadow: 'rgba(0,0,0,.5)' },
 } as const;
-const HEADING = 'Find and file bookmarks from the toolbar';
-const SUBHEADING = 'Folder tree, instant search with match options, and one-click save to any folder';
+// The save flow the listing leads with: type part of a folder's name, then save there.
+const HEADING = 'Save every page to the right folder';
+const SUBHEADING = "Type part of a folder's name, even one deep in the tree, and save without leaving the keyboard";
 const POPUP_CROP = '400x500+0+0';
 
 const magick = (...args: string[]) => {
@@ -41,7 +42,7 @@ for (const [target, source] of Object.entries(files)) copyFileSync(path.join(sho
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 for (const [scheme, t] of Object.entries(THEMES)) {
-  for (const name of ['popup-tree', 'popup-search']) {
+  for (const name of ['popup-match', 'popup-saved']) {
     magick(path.join(shots, `${name}-${scheme}.png`), '-crop', POPUP_CROP, '+repage', path.join(shots, `crop-${name}-${scheme}.png`));
   }
   const html = `<!doctype html><html><head><style>
@@ -53,7 +54,7 @@ p{font:400 19px/1.4 Body;color:${t.soft};text-align:center;margin:0}
 .row{display:flex;gap:56px;justify-content:center;margin-top:40px}
 img{width:400px;height:500px;border-radius:14px;border:1px solid ${t.line};box-shadow:0 18px 40px ${t.shadow}}
 </style></head><body><h1>${HEADING}</h1><p>${SUBHEADING}</p>
-<div class="row"><img src="file://${shots}/crop-popup-tree-${scheme}.png"><img src="file://${shots}/crop-popup-search-${scheme}.png"></div>
+<div class="row"><img src="file://${shots}/crop-popup-match-${scheme}.png"><img src="file://${shots}/crop-popup-saved-${scheme}.png"></div>
 </body></html>`;
   const htmlPath = path.join(shots, `compose-${scheme}.html`);
   await Bun.write(htmlPath, html);
@@ -63,5 +64,8 @@ img{width:400px;height:500px;border-radius:14px;border:1px solid ${t.line};box-s
 }
 await browser.close();
 
-magick('mogrify', '-alpha', 'off', '-type', 'TrueColor', '-define', 'png:color-type=2', path.join(out, '*.png'));
+// Bun.spawnSync runs no shell, so expand the file list here rather than passing a glob.
+const outputs = [...new Bun.Glob('*.png').scanSync(out)].map((file) => path.join(out, file));
+// ImageMagick 7.1.2-33 cannot tell mogrify's output format without -format.
+magick('mogrify', '-format', 'png', '-alpha', 'off', '-type', 'TrueColor', '-define', 'png:color-type=2', ...outputs);
 console.log(`Store screenshots: ${out}`);

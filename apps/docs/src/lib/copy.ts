@@ -57,7 +57,7 @@ const en = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      'The popup folder tree, and a search for "docs" with the matches highlighted',
+      "Two popups: \"pas\" typed in the search box with the Pasta folder (Recipes / Italian) selected under Save to folder, and the same popup after Enter, with the page saved in Pasta",
     manager:
       "The bookmarks manager with the folder tree, the title and URL filters, and the bookmark table",
     duplicates:

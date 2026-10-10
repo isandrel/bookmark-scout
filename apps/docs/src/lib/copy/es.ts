@@ -51,7 +51,7 @@ export const es: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      'El árbol de carpetas de la ventana emergente y una búsqueda de "docs" con las coincidencias resaltadas',
+      "Dos ventanas emergentes: \"pas\" escrito en el cuadro de búsqueda con la carpeta Pasta (Recipes / Italian) seleccionada en Guardar en carpeta, y la misma ventana después de pulsar Enter, con la página guardada en Pasta",
     manager:
       "El administrador de marcadores con el árbol de carpetas, los filtros de título y URL, y la tabla de marcadores",
     duplicates:

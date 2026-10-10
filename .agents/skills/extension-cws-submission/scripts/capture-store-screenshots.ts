@@ -18,8 +18,15 @@ const seed = async () => {
   await mk(recipes.id, 'Weeknight Pasta', 'https://www.example.com/recipes/weeknight-pasta');
   await mk(recipes.id, 'Weeknight Pasta (copy)', 'https://www.example.com/recipes/weeknight-pasta');
   await mk(recipes.id, 'Sourdough Starter Guide', 'https://www.example.org/baking/sourdough');
+  // Nested folders, so the popup's folder matches show a folder deep in the tree.
+  const italian = await mk(recipes.id, 'Italian');
+  const pasta = await mk(italian.id, 'Pasta');
+  await mk(pasta.id, 'Cacio e Pepe', 'https://www.example.com/recipes/cacio-e-pepe');
+  const baking = await mk(recipes.id, 'Baking');
+  await mk(baking.id, 'Pastry');
   const travel = await mk(bar, 'Travel');
-  await mk(travel.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
+  const japan = await mk(travel.id, 'Japan');
+  await mk(japan.id, 'Kyoto Itinerary', 'https://www.example.com/travel/kyoto');
   await mk(travel.id, 'Packing List', 'https://www.example.org/travel/packing');
   await mk(travel.id, 'Wikivoyage', 'https://en.wikivoyage.org/');
   const research = await mk(bar, 'Research');
@@ -41,13 +48,13 @@ const seed = async () => {
   await mk(bar, 'GitHub', 'https://github.com/');
 };
 
-// Pages open as tabs, so the popup's "current tab" would be itself; report a public page instead.
+// Pages open as tabs, so the popup's "current tab" would be itself; report a sample page instead.
 const stubActiveTab = () => {
   const original = chrome.tabs.query.bind(chrome.tabs);
   // @ts-expect-error capture-only override
   chrome.tabs.query = async (query: chrome.tabs.QueryInfo) =>
     query?.active
-      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'MDN Web Docs', url: 'https://developer.mozilla.org/en-US/' }]
+      ? [{ id: 999, index: 0, windowId: 1, active: true, highlighted: true, pinned: false, incognito: false, title: 'Weeknight carbonara in 20 minutes', url: 'https://www.example.com/recipes/weeknight-carbonara' }]
       : original(query);
 };
 
@@ -98,25 +105,29 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await shot(page, `options-ai-${scheme}`);
     await page.close();
 
-    for (const [name, query] of [['popup-tree', ''], ['popup-search', 'docs']] as const) {
-      const popup = await context.newPage();
-      await popup.setViewportSize(POPUP);
-      await popup.emulateMedia({ colorScheme: scheme });
-      await popup.addInitScript(stubActiveTab);
-      await popup.goto(url('popup.html'));
-      await popup.waitForTimeout(SETTLE_MS);
-      const search = popup.getByPlaceholder(/Search bookmarks/);
-      if (query) {
-        await search.fill(query);
-      } else {
-        await popup.getByText('Bookmarks Bar', { exact: true }).first().click();
-        await popup.getByText('Dev Docs', { exact: true }).first().click();
-        await popup.getByText('Dev Docs', { exact: true }).first().hover();
-      }
-      await search.blur();
-      await popup.waitForTimeout(SETTLE_MS);
-      await shot(popup, `${name}-${scheme}`);
-      await popup.close();
-    }
+    // The save flow: type part of a folder's name, pick the match with ↓, then Enter saves.
+    const popup = await context.newPage();
+    await popup.setViewportSize(POPUP);
+    await popup.emulateMedia({ colorScheme: scheme });
+    await popup.addInitScript(stubActiveTab);
+    await popup.goto(url('popup.html'));
+    await popup.waitForTimeout(SETTLE_MS);
+    const search = popup.getByPlaceholder(/Search bookmarks/);
+    await search.pressSequentially('pas', { delay: 80 });
+    await popup.waitForTimeout(SETTLE_MS);
+    await search.press('ArrowDown');
+    await popup.waitForTimeout(SETTLE_MS / 2);
+    await shot(popup, `popup-match-${scheme}`);
+    await popup.keyboard.press('Enter');
+    await popup.getByText('Bookmark saved', { exact: true }).first().waitFor({ timeout: 5_000 }).catch(() => log('[popup] no save toast text found'));
+    await popup.waitForTimeout(SETTLE_MS / 2);
+    await shot(popup, `popup-saved-${scheme}`);
+    // Undo the save and its recent folder, so the light and dark runs start from the same state.
+    await sw.evaluate(async () => {
+      const [hit] = await chrome.bookmarks.search({ url: 'https://www.example.com/recipes/weeknight-carbonara' });
+      if (hit) await chrome.bookmarks.remove(hit.id);
+      await chrome.storage.local.remove('bookmark-scout-recent-folders');
+    });
+    await popup.close();
   }
 };

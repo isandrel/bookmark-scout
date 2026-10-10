@@ -51,7 +51,7 @@ export const de: DocsCopy = {
   /** Alt text for the shared screenshots, by name in `SCREENSHOTS` of `@bookmark-scout/config`. */
   screenshots: {
     popup:
-      "Der Ordnerbaum im Pop-up und eine Suche nach „docs“ mit hervorgehobenen Treffern",
+      "Zwei Pop-ups: „pas“ im Suchfeld, unter „In Ordner speichern“ ist der Ordner Pasta (Recipes / Italian) ausgewählt, und dasselbe Pop-up nach Enter, mit der Seite in Pasta gespeichert",
     manager:
       "Der Lesezeichen-Manager mit Ordnerbaum, den Filtern für Titel und URL und der Lesezeichentabelle",
     duplicates:
