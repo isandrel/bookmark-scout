@@ -1,4 +1,7 @@
-# Privacy Scanner tool. It always scans all bookmarks, so it has no default scope.
+# Defaults for Options > Security.
+
+[privacy_scanner]
+# Always scans all bookmarks.
 enabled = true
 scan_titles = false
 scan_query_params = true

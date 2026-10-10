@@ -1,23 +1,37 @@
-# Defaults for Options > Search. Numeric settings list their default with the bounds and step
-# that Options and validation share.
+# Defaults for Options > Saving & Search. Each table is one section of that tab, in the same
+# order; numeric settings list their default with the bounds and step that Options and
+# validation share. Read by src/lib/settings-schema.ts.
 
+[folder_matches]
+# List the folders that match the search above the results, to save the current page there
+enabled = true
+# How many matching folders to list
+max = { default = 5, min = 1, max = 10, step = 1 }
+# Let a longer search word match a folder name with one typo ("rect" finds React)
+typos = true
+
+[search]
+# Maximum number of search results to display: 10, 20, 50, or 100
+max_results = 20
+# Automatically expand folders when searching
+expand_folders = true
+# Remember and display recent searches
+history = true
 # Delay in milliseconds before search starts after typing
 debounce_ms = { default = 300, min = 50, max = 1000, step = 50 }
 
-# Maximum number of search results to display: 10, 20, 50, or 100
-max_results = 20
+[saving]
+# Enable recent folders quick select panel
+recent_folders_enabled = true
+# Maximum number of recent folders to show for quick select
+recent_folders_max = { default = 5, min = 1, max = 10, step = 1 }
+# Default name for newly created folders
+default_new_folder_name = { default = "New Folder", min_length = 1, max_length = 100 }
 
-# Automatically expand folders when searching
-expand_folders_on_search = true
-
-# Remember and display recent searches
-search_history = true
-
-# List the folders that match the search above the results, to save the current page there
-folder_matches_enabled = true
-
-# How many matching folders to list
-folder_matches_max = { default = 5, min = 1, max = 10, step = 1 }
-
-# Let a longer search word match a folder name with one typo ("rect" finds React)
-folder_matches_typos = true
+[context_menu]
+# Enable right-click context menu for quick bookmark saving. Off by default: Chrome and Edge
+# grant the optional `contextMenus` permission only when the user turns it on.
+enabled = false
+# Source for bookmark title when saving via context menu
+# Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)
+bookmark_naming = "link_text"

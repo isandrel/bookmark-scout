@@ -1,0 +1,41 @@
+# Defaults for Options > AI Tools, one table per tool section. `default_scope` is "folder" or
+# "all"; a tool that always runs on one scope has none.
+
+[context_packer]
+enabled = true
+default_scope = "folder"
+output_format = "markdown"
+include_folder_path = true
+include_dates = true
+include_tags = true
+include_summaries = true
+max_items = { default = 200, min = 1, max = 2000, step = 10 }
+max_depth = { default = 8, min = 1, max = 20, step = 1 }
+excerpt_length = { default = 240, min = 40, max = 2000, step = 10 }
+
+[auto_tagging]
+# Always runs on the current folder.
+enabled = true
+min_tags = { default = 2, min = 1, max = 20, step = 1 }
+max_tags = { default = 5, min = 1, max = 20, step = 1 }
+tag_style = "kebab-case"
+merge_mode = "append"
+dedupe_tags = true
+
+[summarizer]
+# Always runs on the current folder.
+enabled = true
+summary_length = { default = 160, min = 40, max = 1000, step = 10 }
+include_domain_hint = true
+merge_mode = "replace"
+
+[reorganization]
+enabled = true
+default_scope = "folder"
+dry_run_first = true
+min_confidence = { default = 0.55, min = 0, max = 1, step = 0.05 }
+batch_size = { default = 100, min = 1, max = 1000, step = 10 }
+# Plan limits; -1 means no limit where `unlimited` is set
+max_categories = { default = -1, min = 1, max = 100, step = 1, integer = true, unlimited = true }
+min_items_per_folder = { default = 1, min = 1, max = 100, step = 1 }
+max_items_per_folder = { default = -1, min = 1, max = 500, step = 1, integer = true, unlimited = true }

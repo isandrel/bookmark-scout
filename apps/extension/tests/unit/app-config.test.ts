@@ -28,7 +28,7 @@ afterEach(() => {
 describe('config loader', () => {
   it('loads every config file in the repository', () => {
     const tree = loadAppConfig(readConfigTomlFiles());
-    expect(tree).toHaveProperty('settings.tools.dead_links.enabled', true);
+    expect(tree).toHaveProperty('settings.maintenance.dead_links.enabled', true);
     expect(tree).toHaveProperty('ai.providers.openai.name', 'OpenAI');
     expect(Object.isFrozen(tree)).toBe(true);
   });
@@ -150,14 +150,17 @@ describe('settings config', () => {
 
   it('fails to load when a settings file has an unknown key', async () => {
     const files = readConfigTomlFiles();
-    files['settings/search.toml'] += '\ndebounce_msec = 200\n';
+    files['settings/search.toml'] = files['settings/search.toml'].replace(
+      'debounce_ms =',
+      'debounce_msec = 200\ndebounce_ms =',
+    );
     const reader = createConfigReader(loadAppConfig(files));
     vi.doMock('@/lib/app-config', () => ({
       readConfig: reader.read,
       getConfigClaims: reader.claims,
     }));
     await expect(import('@/lib/settings-schema')).rejects.toThrow(
-      /Unknown config key settings\.search\.debounce_msec/,
+      /Unknown config key settings\.search\.search\.debounce_msec/,
     );
   });
 
@@ -173,7 +176,7 @@ describe('settings config', () => {
       getConfigClaims: reader.claims,
     }));
     await expect(import('@/lib/settings-schema')).rejects.toThrow(
-      /settings\.search\.debounce_ms: default is outside/,
+      /settings\.search\.search\.debounce_ms: default is outside/,
     );
   });
 });

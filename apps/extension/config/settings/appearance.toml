@@ -1,18 +1,28 @@
-# Defaults for Options > Appearance. Read by src/lib/settings-schema.ts, which also holds the
-# option lists for language, theme, and favicon size.
+# Defaults for Options > Appearance, one table per section. Read by src/lib/settings-schema.ts,
+# which also holds the option lists for language, theme, and favicon size.
 
+[theme_icons]
 # Language preference: "auto" (follow browser) or a public/_locales folder name such as "ja" or "zh_CN"
 language = "auto"
-
 # Theme preference: "system", "light", or "dark"
 theme = "system"
-
 # Whether to display favicon icons next to bookmarks
 show_favicons = true
-
 # Chrome and Edge: also show icons from the browser's own icon cache, for sites without an icon
 # saved by Refresh Site Icons. Needs the optional `favicon` permission, asked for when turned on.
 browser_icon_cache = false
-
 # Size of favicon icons in pixels: 16, 24, or 32
 favicon_size = 16
+
+[popup]
+# Popup window size in pixels. Chrome and Edge cap extension popups at 800x600, so larger stored
+# values snap to the limit (clamp) instead of resetting. src/entrypoints/popup/index.html opens at
+# the defaults and minimums; a unit test keeps it in step with these values.
+width = { default = 400, min = 300, max = 800, step = 50, clamp = true }
+height = { default = 500, min = 300, max = 600, step = 50, clamp = true }
+# Maximum characters before truncating bookmark titles
+truncate_length = { default = 50, min = 20, max = 200, step = 10 }
+
+[notifications]
+# Duration in milliseconds before toast notifications auto-dismiss
+toast_duration_ms = { default = 4000, min = 2000, max = 10000, step = 500 }
