@@ -92,6 +92,7 @@ function BookmarkDetailsContent({
     }
   };
   const bookmarkUrl = bookmark.url;
+  const onLinkClick = useLinkClick();
 
   const saveMetadata = async () => {
     setMetadataSaving(true);
@@ -132,7 +133,11 @@ function BookmarkDetailsContent({
           {getBookmarkDisplayTitle(bookmark.title)}
         </DetailField>
         <DetailField label={t('bookmarks_detailsUrl')} testId="bookmark-details-url">
-          <span className="break-all">{bookmark.url || t('bookmarks_detailsUnavailable')}</span>
+          {bookmark.url ? (
+            <UrlLink href={bookmark.url} className="break-all" />
+          ) : (
+            <span className="break-all">{t('bookmarks_detailsUnavailable')}</span>
+          )}
         </DetailField>
         <DetailField label={t('bookmarks_detailsFolderPath')} testId="bookmark-details-path">
           {pathError
@@ -236,6 +241,7 @@ function BookmarkDetailsContent({
             href={bookmarkUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(event) => onLinkClick(event, bookmarkUrl)}
           >
             {t('bookmarks_detailsOpenLink')}
           </a>

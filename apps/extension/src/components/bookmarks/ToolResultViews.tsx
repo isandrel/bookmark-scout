@@ -232,7 +232,9 @@ export function DuplicateResultsView({
                     </span>
                     {index === 0 ? <Badge>{t('state_keep')}</Badge> : null}
                   </div>
-                  <p className="break-all text-xs text-muted-foreground">{item.node.url}</p>
+                  <p className="break-all text-xs text-muted-foreground">
+                    <UrlLink href={item.node.url ?? ''} />
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {item.pathLabel || t('tools_rootFolder')}
                   </p>
@@ -277,10 +279,10 @@ export function UrlCleanerResultsView({
               {preview.folderPath || t('tools_rootFolder')}
             </div>
             <div className="break-all rounded-md bg-muted/40 p-2 text-xs">
-              {preview.originalUrl}
+              <UrlLink href={preview.originalUrl} />
             </div>
             <div className="break-all rounded-md bg-success-wash p-2 text-xs text-success">
-              {preview.cleanedUrl}
+              <UrlLink href={preview.cleanedUrl} />
             </div>
             <div className="flex flex-wrap gap-2">
               {preview.removedParams.map((param) => (
@@ -385,7 +387,9 @@ export function DeadLinkResultsView({
             </>
           }
         >
-          <ResultLine>{item.url}</ResultLine>
+          <ResultLine>
+            <UrlLink href={item.url} />
+          </ResultLine>
           <ResultLine>{describeDeadLink(item)}</ResultLine>
         </ToolResultRow>
       ))}
@@ -447,7 +451,9 @@ export function MetadataResultsView({
                 ) : undefined
               }
             >
-              <ResultLine>{item.url}</ResultLine>
+              <ResultLine>
+            <UrlLink href={item.url} />
+          </ResultLine>
               {item.status === 'ok' && item.suggestedTitle ? (
                 <div className="text-sm">{t('tools_suggestedTitle', item.suggestedTitle)}</div>
               ) : null}
@@ -551,7 +557,7 @@ export function SiteIconResultsView({
             )}
             <div className="min-w-0 flex-1 space-y-1">
               <div className="flex items-center justify-between gap-2">
-                <span className="break-all font-medium">{item.origin}</span>
+                <UrlLink href={item.origin} className="break-all font-medium" />
                 <Badge
                   variant={
                     item.status === 'failed'
@@ -604,7 +610,9 @@ export function PrivacyResultsView({ result }: { result: PrivacyScanResult | nul
             </Badge>
           }
         >
-          <ResultLine>{item.url}</ResultLine>
+          <ResultLine>
+            <UrlLink href={item.url} />
+          </ResultLine>
           <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
             {item.findings.map((finding) => (
               <li key={`${item.id}-${privacyFindingKey(finding)}`}>
@@ -647,7 +655,9 @@ export function AIMetadataResultsView({
     <div className="space-y-4">
       {items.map((item) => (
         <ToolResultRow key={item.bookmarkId} title={getBookmarkDisplayTitle(item.title)}>
-          <ResultLine>{item.url}</ResultLine>
+          <ResultLine>
+            <UrlLink href={item.url} />
+          </ResultLine>
           {item.tags ? (
             <div className="flex flex-wrap gap-2">
               {item.tags.map((tag) => (

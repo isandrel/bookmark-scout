@@ -8,6 +8,7 @@ import type { BookmarkTreeNode } from '@/types';
 
 export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
   const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
+  const onLinkClick = useLinkClick();
 
   return (
     // At least one icon-button tall; a larger site icon grows the row instead of touching the next.
@@ -18,6 +19,9 @@ export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
         {...{ [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark' }}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={(event) => {
+          if (isOpenableUrl(node.url)) onLinkClick(event, node.url);
+        }}
         data-slot="drag-handle"
         className={cn(
           'flex min-w-0 flex-1 cursor-grab items-center focus-visible:outline-none active:cursor-grabbing',

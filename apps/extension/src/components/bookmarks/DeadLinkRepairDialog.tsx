@@ -180,7 +180,9 @@ export function DeadLinkRepairDialog({ result, onClose, onChanged }: DeadLinkRep
                       </Badge>
                     </div>
                   </div>
-                  <p className="break-all text-xs text-muted-foreground">{item.url}</p>
+                  <p className="break-all text-xs text-muted-foreground">
+                    <UrlLink href={item.url} />
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     {item.folderPath || t('tools_rootFolder')}
                   </p>

@@ -178,6 +178,12 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   groupByFolders: tested(POPUP, [
     e2e('popup-tree.spec.ts', 'groupByFolders lists folders before links under date and alphabetical order'),
   ]),
+  linkOpenTarget: tested('components/ui/url-link.tsx', [
+    e2e(
+      'link-open-target.spec.ts',
+      'linkOpenTarget opens a manager URL in a new tab, a background tab, or the current tab',
+    ),
+  ], 'Popup rows, tool results, and dialogs share the same click handler.'),
   confirmBeforeDelete: tested('hooks/use-bookmark-deletion.tsx', [
     e2e(
       'bookmark-workflows.spec.ts',

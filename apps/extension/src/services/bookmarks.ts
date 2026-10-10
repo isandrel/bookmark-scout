@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import type { LinkOpenTarget } from '@/lib/settings-schema';
 import type { BookmarkTreeNode } from '@/types';
 
 const undoConfig = readConfig(
@@ -718,6 +719,18 @@ export async function applyBookmarkChanges(
  */
 export async function openBookmarkInNewTab(url: string): Promise<void> {
   await browser.tabs.create({ url, active: true });
+}
+
+/**
+ * Opens a clicked link where Settings > Behavior > Open links in says. The current tab is the
+ * page showing the link: the manager or options tab, or the page behind the popup or side panel.
+ */
+export async function openUrl(url: string, target: LinkOpenTarget): Promise<void> {
+  if (target === 'current_tab') {
+    await browser.tabs.update({ url });
+    return;
+  }
+  await browser.tabs.create({ url, active: target === 'new_tab' });
 }
 
 /** The manager page, which Chrome and Edge also show as their Bookmarks page. */

@@ -99,7 +99,9 @@ export function RecommendedFolderDialog({
               {t('ai_currentPageLabel')}
             </div>
             <div className="mt-1 break-words font-medium">{bookmark.title}</div>
-            <div className="mt-1 break-all text-xs text-muted-foreground">{bookmark.url}</div>
+            <div className="mt-1 break-all text-xs text-muted-foreground">
+              <UrlLink href={bookmark.url} />
+            </div>
           </div>
           <p className="text-xs text-muted-foreground">{recommendation.reason}</p>
           {error && (

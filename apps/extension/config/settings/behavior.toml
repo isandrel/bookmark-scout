@@ -6,6 +6,10 @@ sort_order = "date"
 # Organize bookmarks by folder structure
 group_by_folders = true
 
+# Where a clicked link opens: "new_tab" (switch to it), "background_tab" (stay here), or
+# "current_tab" (replace the page). Middle-click and Ctrl/Cmd-click keep the browser's behavior.
+link_open_target = "new_tab"
+
 # Show confirmation dialog before deleting items
 confirm_before_delete = true
 

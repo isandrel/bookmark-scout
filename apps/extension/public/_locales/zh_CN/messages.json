@@ -499,6 +499,26 @@
         "message": "书签的默认排序方式",
         "description": "Sort order setting description"
     },
+    "settings_linkOpenTarget": {
+        "message": "链接打开位置",
+        "description": "Settings > Behavior: label of the setting that chooses where clicked links open"
+    },
+    "settings_linkOpenTargetDesc": {
+        "message": "在 Bookmark Scout 中点击链接时在哪里打开。中键点击和 Ctrl/Cmd+点击仍按浏览器的方式打开。",
+        "description": "Settings > Behavior: description of the Open links in setting"
+    },
+    "settings_linkOpenNewTab": {
+        "message": "新标签页",
+        "description": "Open links in option: a new tab that becomes the active tab"
+    },
+    "settings_linkOpenBackgroundTab": {
+        "message": "后台新标签页",
+        "description": "Open links in option: a new tab that opens behind the current one"
+    },
+    "settings_linkOpenCurrentTab": {
+        "message": "当前标签页",
+        "description": "Open links in option: replace the page in the current tab"
+    },
     "settings_sortDate": {
         "message": "添加日期",
         "description": "Date sort option"

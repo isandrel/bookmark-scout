@@ -1,5 +1,11 @@
 # bookmark-scout
 
+## Unreleased
+
+### Features
+
+- URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
+
 ## 0.3.2
 
 ### Languages
