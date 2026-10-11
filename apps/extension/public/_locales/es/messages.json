@@ -5810,5 +5810,109 @@
     "popup_shortcutSetUp": {
         "message": "Configurarlo",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "actionName_searchBookmarks": {
+        "message": "Buscar marcadores",
+        "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
+    },
+    "actionName_listFolders": {
+        "message": "Ver la lista de carpetas",
+        "description": "Name of the bookmark action that lists folders"
+    },
+    "actionName_getBookmarks": {
+        "message": "Consultar detalles de marcadores",
+        "description": "Name of the bookmark action that looks up details of bookmarks"
+    },
+    "actionName_getCurrentPage": {
+        "message": "Consultar la página actual",
+        "description": "Name of the bookmark action that checks the page in the active tab"
+    },
+    "actionName_readPage": {
+        "message": "Leer páginas",
+        "description": "Name of the bookmark action that reads page text (only with Read page content on)"
+    },
+    "actionName_findDuplicates": {
+        "message": "Buscar duplicados",
+        "description": "Name of the bookmark action that finds duplicate bookmarks"
+    },
+    "actionName_checkLinks": {
+        "message": "Comprobar enlaces",
+        "description": "Name of the bookmark action that checks whether links still work"
+    },
+    "actionName_suggestFolders": {
+        "message": "Sugerir carpetas",
+        "description": "Name of the bookmark action that suggests folders for a page"
+    },
+    "actionName_moveBookmarks": {
+        "message": "Mover marcadores y carpetas",
+        "description": "Name of the bookmark action that moves bookmarks and folders"
+    },
+    "actionName_renameBookmark": {
+        "message": "Cambiar el nombre de marcadores y carpetas",
+        "description": "Name of the bookmark action that renames bookmarks and folders"
+    },
+    "actionName_deleteBookmarks": {
+        "message": "Eliminar marcadores y carpetas",
+        "description": "Name of the bookmark action that deletes bookmarks and folders"
+    },
+    "actionName_createFolder": {
+        "message": "Crear carpetas",
+        "description": "Name of the bookmark action that creates folders"
+    },
+    "actionName_saveBookmark": {
+        "message": "Guardar páginas",
+        "description": "Name of the bookmark action that saves a page as a bookmark"
+    },
+    "actionName_undoChange": {
+        "message": "Deshacer sus cambios",
+        "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_proposeChanges": {
+        "message": "Proponer cambios para aprobar",
+        "description": "Name of the bookmark action that proposes a plan of changes for the user to approve"
+    },
+    "actionName_applyChanges": {
+        "message": "Aplicar cambios aprobados",
+        "description": "Name of the bookmark action that applies a plan the user approved"
+    },
+    "actionName_suggestActions": {
+        "message": "Sugerir próximos pasos como botones",
+        "description": "Name of the bookmark action that offers suggestion buttons under an answer"
+    },
+    "settings_managerMenuActions": {
+        "message": "Menús del administrador de marcadores",
+        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+    },
+    "settings_managerMenuActionsDesc": {
+        "message": "Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden dentro de cada grupo.",
+        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_askAiDisabledActions": {
+        "message": "Qué puede hacer Preguntar a la IA",
+        "description": "Options > AI: panel title for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledActionsDesc": {
+        "message": "Desactiva lo que no quieras que haga la IA; así no se le ofrece en absoluto. Aplicar un plan de cambios siempre te pide permiso primero.",
+        "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_actionMoveUp": {
+        "message": "Subir $1",
+        "description": "Button that moves a menu item up within its group. $1 is the item name."
+    },
+    "settings_actionMoveDown": {
+        "message": "Bajar $1",
+        "description": "Button that moves a menu item down within its group. $1 is the item name."
+    },
+    "settings_actionsReset": {
+        "message": "Restablecer valores predeterminados",
+        "description": "Button that restores the default bookmark manager menu or AI actions"
+    },
+    "settings_askAiReads": {
+        "message": "Consultar",
+        "description": "Options > AI: group heading for the read-only Ask AI actions"
+    },
+    "settings_askAiWrites": {
+        "message": "Cambiar marcadores",
+        "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
     }
 }

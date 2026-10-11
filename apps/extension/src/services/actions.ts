@@ -42,6 +42,11 @@ export function getAction(id: ActionId): ActionDefinition<unknown, unknown> {
   return ACTIONS[id] as unknown as ActionDefinition<unknown, unknown>;
 }
 
+/** Whether the user turned this action off for the agent making the call (Options > AI). */
+function turnedOffFor(id: ActionId, context: ActionContext): boolean {
+  return context.client.kind === 'askAI' && context.settings.askAiDisabledActions.includes(id);
+}
+
 /** Why `action` cannot run in `context` (a missing permission first), or nothing. */
 async function whyUnavailable(
   action: ActionDefinition<unknown, unknown>,
@@ -57,7 +62,9 @@ async function whyUnavailable(
 
 /** The actions AI agents may call in this context, so a model is offered only those. */
 export async function agentActionIds(context: ActionContext): Promise<ActionId[]> {
-  const exposed = ACTION_IDS.filter((id) => getAction(id).agent && getAction(id).execute);
+  const exposed = ACTION_IDS.filter(
+    (id) => getAction(id).agent && getAction(id).execute && !turnedOffFor(id, context),
+  );
   const blocked = await Promise.all(exposed.map((id) => whyUnavailable(getAction(id), context)));
   return exposed.filter((_, index) => !blocked[index]);
 }
@@ -77,6 +84,9 @@ export async function runAction(
   const action = getAction(id);
   if (!action.input || !action.execute) {
     return actionError('not_allowed', `${id} can only be used from a menu.`);
+  }
+  if (turnedOffFor(id, context)) {
+    return actionError('not_allowed', `The user turned off ${id} for Ask AI.`);
   }
   const parsed = action.input.safeParse(input ?? {});
   if (!parsed.success) {

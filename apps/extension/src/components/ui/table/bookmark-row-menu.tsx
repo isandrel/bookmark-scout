@@ -44,6 +44,7 @@ type BookmarkActionMenuItemsProps = {
  * the destructive color. Used inside a dropdown (⋯) or a right-click menu.
  */
 export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActionMenuItemsProps) {
+  const { value: visible } = useSetting('managerMenuActions');
   // Menu items live inside a clickable row; keep clicks from reaching it.
   const renderItem = (id: ActionId) => {
     const action = getAction(id);
@@ -68,10 +69,12 @@ export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActio
     );
   };
 
-  return getItemMenuSections(items, host, sections).map((section, index) => (
-    <DropdownMenuGroup key={section.join()}>
-      {index > 0 && <DropdownMenuSeparator />}
-      {section.map(renderItem)}
-    </DropdownMenuGroup>
-  ));
+  return getItemMenuSections(items, host, sections ?? customizeItemMenu(visible)).map(
+    (section, index) => (
+      <DropdownMenuGroup key={section.join()}>
+        {index > 0 && <DropdownMenuSeparator />}
+        {section.map(renderItem)}
+      </DropdownMenuGroup>
+    ),
+  );
 }

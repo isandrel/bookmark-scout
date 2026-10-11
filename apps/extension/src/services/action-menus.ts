@@ -123,3 +123,24 @@ export function getItemMenuLabel(
   const action = getAction(id);
   return action.itemMenu?.label?.(items, host) ?? t(action.labelKey ?? 'error_unknown');
 }
+
+/**
+ * The item menu as the user arranged it (Options > Behavior, `managerMenuActions`): the
+ * configured sections, each keeping only the actions the user shows, in the user's order. An
+ * empty setting is the configured menu; an action the setting does not name is hidden.
+ */
+export function customizeItemMenu(
+  visible: readonly string[],
+  sections: readonly (readonly ActionId[])[] = ACTION_MENUS.item,
+): ActionId[][] {
+  if (visible.length === 0) return sections.map((section) => [...section]);
+  const order = new Map(visible.map((id, index) => [id, index]));
+  return sections
+    .map((section) =>
+      section
+        .filter((id) => order.has(id))
+        .sort((left, right) => (order.get(left) ?? 0) - (order.get(right) ?? 0)),
+    )
+    .filter((section) => section.length > 0);
+}
+

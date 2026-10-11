@@ -113,6 +113,7 @@ const moveInput = z.object({
 
 const moveBookmarks = defineAction({
   risk: 'write',
+  labelKey: 'actionName_moveBookmarks',
   targets: ['bookmark', 'folder'],
   input: moveInput,
   output: z.object({ moved: z.number().int(), folder: z.string(), ...changeOutput }),
@@ -165,6 +166,7 @@ const moveBookmarks = defineAction({
 
 const renameBookmark = defineAction({
   risk: 'write',
+  labelKey: 'actionName_renameBookmark',
   targets: ['bookmark', 'folder'],
   input: z.object({
     ref: z.string().describe('A bookmark ref (b:<id>) or folder ref (f:<id>)'),
@@ -197,6 +199,7 @@ const renameBookmark = defineAction({
 
 const deleteBookmarks = defineAction({
   risk: 'destructive',
+  labelKey: 'actionName_deleteBookmarks',
   targets: ['bookmark', 'folder'],
   input: z.object({ refs: refList('Bookmark refs (b:<id>) or folder refs (f:<id>) to delete') }),
   output: z.object({ deleted: z.number().int(), ...changeOutput }),
@@ -235,6 +238,7 @@ const deleteBookmarks = defineAction({
 
 const createFolder = defineAction({
   risk: 'write',
+  labelKey: 'actionName_createFolder',
   targets: ['folder'],
   input: z.object({
     parent: folderSpecInput.describe('The folder to create it in'),
@@ -269,6 +273,7 @@ const createFolder = defineAction({
 
 const saveBookmark = defineAction({
   risk: 'write',
+  labelKey: 'actionName_saveBookmark',
   targets: ['url', 'page'],
   agent: {
     description:
@@ -332,6 +337,7 @@ const saveBookmark = defineAction({
 
 const undoChange = defineAction({
   risk: 'write',
+  labelKey: 'actionName_undoChange',
   targets: ['library'],
   agent: {
     description:

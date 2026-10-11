@@ -5802,5 +5802,109 @@
     "popup_shortcutSetUp": {
         "message": "설정하기",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "actionName_searchBookmarks": {
+        "message": "북마크 검색",
+        "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
+    },
+    "actionName_listFolders": {
+        "message": "폴더 목록 보기",
+        "description": "Name of the bookmark action that lists folders"
+    },
+    "actionName_getBookmarks": {
+        "message": "북마크 세부 정보 조회",
+        "description": "Name of the bookmark action that looks up details of bookmarks"
+    },
+    "actionName_getCurrentPage": {
+        "message": "현재 페이지 확인",
+        "description": "Name of the bookmark action that checks the page in the active tab"
+    },
+    "actionName_readPage": {
+        "message": "페이지 읽기",
+        "description": "Name of the bookmark action that reads page text (only with Read page content on)"
+    },
+    "actionName_findDuplicates": {
+        "message": "중복 찾기",
+        "description": "Name of the bookmark action that finds duplicate bookmarks"
+    },
+    "actionName_checkLinks": {
+        "message": "링크 확인",
+        "description": "Name of the bookmark action that checks whether links still work"
+    },
+    "actionName_suggestFolders": {
+        "message": "폴더 제안",
+        "description": "Name of the bookmark action that suggests folders for a page"
+    },
+    "actionName_moveBookmarks": {
+        "message": "북마크와 폴더 이동",
+        "description": "Name of the bookmark action that moves bookmarks and folders"
+    },
+    "actionName_renameBookmark": {
+        "message": "북마크와 폴더 이름 바꾸기",
+        "description": "Name of the bookmark action that renames bookmarks and folders"
+    },
+    "actionName_deleteBookmarks": {
+        "message": "북마크와 폴더 삭제",
+        "description": "Name of the bookmark action that deletes bookmarks and folders"
+    },
+    "actionName_createFolder": {
+        "message": "폴더 만들기",
+        "description": "Name of the bookmark action that creates folders"
+    },
+    "actionName_saveBookmark": {
+        "message": "페이지 저장",
+        "description": "Name of the bookmark action that saves a page as a bookmark"
+    },
+    "actionName_undoChange": {
+        "message": "자신의 변경 되돌리기",
+        "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_proposeChanges": {
+        "message": "승인할 변경 제안",
+        "description": "Name of the bookmark action that proposes a plan of changes for the user to approve"
+    },
+    "actionName_applyChanges": {
+        "message": "승인된 변경 적용",
+        "description": "Name of the bookmark action that applies a plan the user approved"
+    },
+    "actionName_suggestActions": {
+        "message": "다음 단계를 버튼으로 제안",
+        "description": "Name of the bookmark action that offers suggestion buttons under an answer"
+    },
+    "settings_managerMenuActions": {
+        "message": "북마크 관리자 메뉴",
+        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+    },
+    "settings_managerMenuActionsDesc": {
+        "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
+        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_askAiDisabledActions": {
+        "message": "AI에게 묻기가 할 수 있는 일",
+        "description": "Options > AI: panel title for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledActionsDesc": {
+        "message": "AI가 하지 않았으면 하는 일은 끄세요. 끈 작업은 AI에 아예 제공되지 않습니다. 변경 계획을 적용할 때는 항상 먼저 확인합니다.",
+        "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_actionMoveUp": {
+        "message": "$1 위로 이동",
+        "description": "Button that moves a menu item up within its group. $1 is the item name."
+    },
+    "settings_actionMoveDown": {
+        "message": "$1 아래로 이동",
+        "description": "Button that moves a menu item down within its group. $1 is the item name."
+    },
+    "settings_actionsReset": {
+        "message": "기본값 복원",
+        "description": "Button that restores the default bookmark manager menu or AI actions"
+    },
+    "settings_askAiReads": {
+        "message": "조회",
+        "description": "Options > AI: group heading for the read-only Ask AI actions"
+    },
+    "settings_askAiWrites": {
+        "message": "북마크 변경",
+        "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
     }
 }

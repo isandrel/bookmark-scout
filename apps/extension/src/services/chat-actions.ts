@@ -125,6 +125,7 @@ async function resolveSuggestion(
 
 const suggestActions = defineAction({
   risk: 'read',
+  labelKey: 'actionName_suggestActions',
   targets: ['library', 'page'],
   agent: {
     description:

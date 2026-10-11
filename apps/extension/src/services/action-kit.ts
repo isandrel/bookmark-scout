@@ -102,6 +102,11 @@ export type ActionAgentExposure = {
    * is in a conversation, every write asks the user first.
    */
   untrusted?: boolean;
+  /**
+   * It only reads but exists to change bookmarks (proposing a plan), so settings list it with
+   * the actions that change bookmarks.
+   */
+  partOfChanges?: boolean;
 };
 
 /** The icon an action shows in menus, by name; the menus map names to components. */
