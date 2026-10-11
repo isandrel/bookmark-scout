@@ -1,0 +1,13 @@
+# Every change a local AI agent asks for waits in an approval window (Options > AI > Local AI
+# agents). Read by src/services/agent-approvals.ts.
+
+# Seconds before an unanswered request is declined. The bridge program waits a little longer
+# (call_timeout_seconds in packages/mcp-bridge/config/bridge.toml).
+timeout_seconds = 300
+# Requests waiting at once; more are refused until one is answered.
+max_pending = 5
+# Size of the approval window, in pixels.
+window_width = 440
+window_height = 600
+# Toolbar badge color while requests wait; the badge shows how many.
+badge_color = "#b45309"

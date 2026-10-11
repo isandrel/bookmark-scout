@@ -39,6 +39,8 @@ shared = [
 [scopes]
 # Build Extension, Extension Tests, Edge E2E, Firefox E2E smoke
 extension = ["apps/extension/**"]
+# Bridge E2E: the bookmark-scout-mcp binary with the extension in a real browser
+bridge = ["packages/mcp-bridge/**", "apps/extension/**"]
 # Website and Docs
 # The website also reads the extension's AI provider list from apps/extension/config.
 sites = ["apps/website/**", "apps/docs/**", "apps/extension/config/**"]

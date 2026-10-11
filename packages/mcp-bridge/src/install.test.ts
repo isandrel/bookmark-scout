@@ -96,6 +96,29 @@ describe("planInstall", () => {
   });
 });
 
+describe("manifest folder override", () => {
+  test("writes one browser's manifest into the given folder, with no registry value", () => {
+    const plan = planInstall(environment("win32", { LOCALAPPDATA: "C:/x" }), {
+      browsers: ["chrome"],
+      extensionIds: [DEV_ID],
+      launcher,
+      manifestDir: "/profile/NativeMessagingHosts",
+    });
+    expect(plan.files[1]?.path).toBe(
+      join("/profile/NativeMessagingHosts", `${NATIVE_HOST_NAME}.json`),
+    );
+    expect(plan.registry).toEqual([]);
+    expect(() =>
+      planInstall(environment("linux"), {
+        browsers: [],
+        extensionIds: [],
+        launcher,
+        manifestDir: "/x",
+      }),
+    ).toThrow("exactly one --browser");
+  });
+});
+
 describe("launcherScript", () => {
   test("quotes paths for the shell and passes the browser's arguments on", () => {
     expect(launcherScript(launcher, "darwin")).toContain(

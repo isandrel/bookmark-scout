@@ -94,6 +94,15 @@ describe('what local agents are offered', () => {
     }
     // Chat buttons only work in Ask AI.
     expect(ids).not.toContain('suggestActions');
+    // Allow changes adds the writes (each still waits for approval), never the chat buttons.
+    await saveSettings({ agentBridgeWrites: true });
+    const withWrites = await agentActionIds(
+      await createAgentBridgeContext(await getSettings(), agent),
+    );
+    for (const write of ['saveBookmark', 'proposeChanges', 'applyChanges', 'undoChange']) {
+      expect(withWrites).toContain(write);
+    }
+    expect(withWrites).not.toContain('suggestActions');
 
     const search = toBridgeTool('searchBookmarks');
     expect(search.inputSchema).toMatchObject({ type: 'object', properties: { query: {} } });

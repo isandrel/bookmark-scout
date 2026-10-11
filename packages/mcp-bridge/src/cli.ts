@@ -8,6 +8,7 @@
  *   uninstall    removes what install wrote
  *   doctor       shows what is installed and connected
  */
+import { appendFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { parseArgs } from "node:util";
 import { config } from "./config";
@@ -25,6 +26,9 @@ import { runNativeHost } from "./native-host";
 import { currentEnvironment } from "./runtime";
 import { runServe } from "./serve";
 
+/** A file the native host also writes its messages to, for debugging what the browser started. */
+const LOG_FILE_ENV = "BOOKMARK_SCOUT_MCP_LOG";
+
 const USAGE = `bookmark-scout-mcp ${config.version}
 
 Usage:
@@ -36,7 +40,9 @@ Usage:
 serve picks the most recently connected browser profile unless --browser or --profile
 (a profile id or its start, as doctor shows) narrows it down.
 install registers with every browser found unless --browser names some
-(${Object.keys(config.browsers).join(", ")}); --extension-id also allows a development build.`;
+(${Object.keys(config.browsers).join(", ")}); --extension-id also allows a development build.
+For tests, --home <dir> puts the launcher under another home folder, and --manifest-dir <dir>
+writes the one --browser's manifest into a folder such as a test profile's NativeMessagingHosts.`;
 
 /**
  * Browsers start a native host with arguments of their own: Chromium passes the caller's origin
@@ -51,8 +57,12 @@ export function isBrowserLaunch(args: readonly string[]): boolean {
   );
 }
 
-function installEnvironment(): InstallEnvironment {
-  return { ...currentEnvironment(), home: homedir() };
+/** This user's environment, or one rooted at `home` (for tests) with no data-folder overrides. */
+function installEnvironment(home?: string): InstallEnvironment {
+  const environment = currentEnvironment();
+  if (!home) return { ...environment, home: homedir() };
+  const { XDG_DATA_HOME: _data, LOCALAPPDATA: _local, ...env } = environment.env;
+  return { ...environment, env, home };
 }
 
 async function main(argv: string[]): Promise<number> {
@@ -60,15 +70,27 @@ async function main(argv: string[]): Promise<number> {
   const rest = isBrowserLaunch(argv) ? [] : argv.slice(1);
 
   if (mode === "native-host") {
+    const log = (message: string) => {
+      const line = `bookmark-scout-mcp: ${message}\n`;
+      process.stderr.write(line);
+      // The browser keeps a native host's stderr to itself; this file is where to look.
+      const logFile = process.env[LOG_FILE_ENV];
+      if (logFile) appendFileSync(logFile, `${new Date().toISOString()} ${line}`);
+    };
+    process.on("uncaughtException", (error) => {
+      log(`Stopped by an error: ${error.stack ?? error.message}`);
+      process.exit(1);
+    });
     const host = runNativeHost({
       input: process.stdin,
       output: process.stdout,
       environment: currentEnvironment(),
-      log: (message) => process.stderr.write(`bookmark-scout-mcp: ${message}\n`),
+      log,
     });
     process.on("SIGTERM", host.stop);
     process.on("SIGINT", host.stop);
     await host.done;
+    log("The browser closed the connection.");
     return 0;
   }
 
@@ -92,13 +114,16 @@ async function main(argv: string[]): Promise<number> {
         browser: { type: "string", multiple: true },
         "extension-id": { type: "string", multiple: true },
         "dry-run": { type: "boolean" },
+        home: { type: "string" },
+        "manifest-dir": { type: "string" },
       },
     });
     const launcher = currentLauncher();
-    const plan = planInstall(installEnvironment(), {
+    const plan = planInstall(installEnvironment(values.home), {
       browsers: (values.browser ?? []).flatMap((value) => value.split(",")).filter(Boolean),
       extensionIds: values["extension-id"] ?? [],
       launcher,
+      ...(values["manifest-dir"] ? { manifestDir: values["manifest-dir"] } : {}),
     });
     const lines = applyInstall(plan, values["dry-run"] ?? false);
     console.log(

@@ -3904,7 +3904,7 @@
         "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
     },
     "permission_agentBridgeDetail": {
-        "message": "エージェントは調べることしかできず、ブックマークを変更することはできません。Bookmark Scout がこれらのデータを受け取ることはありませんが、エージェントは読み取った内容を自身の AI プロバイダーに送信する場合があります。設定をオフにすれば、いつでも停止できます。",
+        "message": "エージェントがブックマークを変更できるのは「変更を許可」もオンにした場合だけで、その場合も変更ごとにあなたの承認を待ちます。Bookmark Scout がこれらのデータを受け取ることはありませんが、エージェントは読み取った内容を自身の AI プロバイダーに送信する場合があります。設定をオフにすれば、いつでも停止できます。",
         "description": "Privacy note in the dialog shown before turning on access for local AI agents"
     },
     "permission_agentBridgeDenied": {
@@ -5915,6 +5915,14 @@
         "message": "このコンピューターの AI エージェント（Claude Code、Codex、Cursor など）が bookmark-scout-mcp プログラムを通じてブックマークを調べられるようにします。このデバイスのみ。",
         "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
     },
+    "settings_agentBridgeWrites": {
+        "message": "変更を許可",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "エージェントにページの保存や、移動・名前の変更・削除・新しいフォルダーの提案も許可します。変更ごとに Bookmark Scout のウィンドウが開き、承認または拒否できます。ブックマークマネージャーで元に戻すこともできます。",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
     "settings_agentBridgeRedactUrls": {
         "message": "非公開の値を隠す",
         "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
@@ -5928,7 +5936,7 @@
         "description": "Options > AI: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
-        "message": "エージェントに調べてほしくない操作をオフにすると、その操作はエージェントに一切提示されません。ローカルエージェントはブックマークを変更できません。",
+        "message": "エージェントにしてほしくない操作をオフにすると、その操作はエージェントに一切提示されません。変更には「変更を許可」も必要で、変更ごとにあなたの承認を待ちます。",
         "description": "Options > AI: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
@@ -5962,6 +5970,22 @@
     "agentBridge_retry": {
         "message": "再試行",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "変更の承認",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "このコンピューターの AI エージェントがブックマークの変更を求めています。承認するまで何も変更されず、承認した変更はブックマークマネージャーで元に戻せます。",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "「$1」から（エージェントが名乗った名前）",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "承認を待っているものはありません。",
+        "description": "Approval window when no request is waiting"
     },
     "settings_actionMoveUp": {
         "message": "$1 を上へ移動",

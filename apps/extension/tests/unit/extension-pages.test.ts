@@ -19,8 +19,15 @@ const uiPages = pages.filter((page) => !HIDDEN_PAGES.includes(page));
 afterEach(() => setLanguage('auto'));
 
 describe('extension pages', () => {
-  it('finds the four extension pages and the hidden AI host page', () => {
-    expect(pages.sort()).toEqual(['ai-host', 'bookmarks', 'options', 'popup', 'sidepanel']);
+  it('finds the extension pages, the approval window, and the hidden AI host page', () => {
+    expect(pages.sort()).toEqual([
+      'agent-approval',
+      'ai-host',
+      'bookmarks',
+      'options',
+      'popup',
+      'sidepanel',
+    ]);
   });
 
   it.each(uiPages)('%s renders into the root element through mountExtensionPage', (page) => {

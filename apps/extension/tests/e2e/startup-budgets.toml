@@ -18,5 +18,7 @@
 "bookmarks.html" = 1370
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
+# The window where the user approves changes local AI agents ask for (615 on 2026-10-11).
+"agent-approval.html" = 690
 # Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
 "ai-host.html" = 370

@@ -99,6 +99,11 @@ export const STORAGE_ITEMS = {
   agentBridgeProfile: { area: 'local', name: 'agent-bridge.profile', v: 1, backup: 'exclude' },
   /** Session: whether the bridge for local AI agents is running, for Options to show. */
   agentBridgeStatus: { area: 'session', name: 'agent-bridge.status', v: 1, backup: 'exclude' },
+  /**
+   * Session: changes local AI agents asked to make, waiting for the user's approval in the
+   * approval window (the action, its input, and the agent's name); each waits a few minutes.
+   */
+  agentApprovals: { area: 'session', name: 'agent-bridge.approvals', v: 1, backup: 'exclude' },
 } as const satisfies Record<string, StorageItem>;
 
 export type StorageItemId = keyof typeof STORAGE_ITEMS;
@@ -118,6 +123,7 @@ export const DEVICE_SETTING_KEYS = [
   'askAiWebSearch',
   /** Access for local AI agents: the bridge program is installed on one computer. */
   'agentBridgeEnabled',
+  'agentBridgeWrites',
   'agentBridgeRedactUrls',
   'agentBridgeDisabledActions',
 ] as const;
