@@ -57,6 +57,23 @@ export default defineConfig<ExtensionProjectOptions>({
       use: { extensionBrowser: 'msedge', extensionBuild: 'edge-mv3' },
     },
     {
+      // Latency and scrolling measurements on a large library (tests/perf/README.md). Not part of
+      // the E2E suites: one worker, so measurements do not compete for the CPU, and no retries,
+      // so a slow run is reported rather than retried away.
+      name: 'perf',
+      testDir: './tests/perf',
+      fullyParallel: false,
+      workers: 1,
+      retries: 0,
+      timeout: 20 * 60_000,
+      use: {
+        extensionBrowser: 'chromium',
+        extensionBuild: 'chrome-mv3',
+        screenshot: 'off',
+        trace: 'off',
+      },
+    },
+    {
       // Playwright cannot open moz-extension:// pages, so this project drives Firefox through
       // geckodriver; see tests/e2e-firefox/fixtures.ts. Kept to one worker: the suite is short and
       // each test starts geckodriver and Firefox, which is not proven safe to run side by side.
