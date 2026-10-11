@@ -6,7 +6,7 @@ import {
   parseBookmarkColumnSizing,
   toSavedColumnSizing,
 } from '@/lib/bookmark-table-column-sizes';
-import { parseBookmarkTableView } from '@/lib/bookmark-table-view-storage';
+import { parseBookmarkTableLayout } from '@/lib/bookmark-table-view-storage';
 
 const DEFAULT_VISIBLE = ['select', 'type', 'folderPath', 'url', 'title', 'dateAdded', 'actions'];
 
@@ -72,20 +72,17 @@ describe('bookmark table column sizes', () => {
     expect(toSavedColumnSizing({ select: 80, obsolete: 100 }, {}, {})).toEqual({});
   });
 
-  it('round-trips widths through the saved table view', () => {
-    expect(parseBookmarkTableView({ version: 1, columnSizing: { url: 320 } }).columnSizing).toEqual(
-      {
-        url: 320,
-      },
-    );
-    // A malformed width drops that width, not the rest of the saved view.
-    const view = parseBookmarkTableView({
-      version: 1,
+  it('round-trips widths through the saved table layout', () => {
+    expect(parseBookmarkTableLayout({ columnSizing: { url: 320 } }).columnSizing).toEqual({
+      url: 320,
+    });
+    // A malformed width drops that width, not the rest of the saved layout.
+    const view = parseBookmarkTableLayout({
       pageSize: 20,
       columnSizing: { url: 'wide', title: 300 },
     });
     expect(view.pageSize).toBe(20);
     expect(view.columnSizing).toEqual({ title: 300 });
-    expect(parseBookmarkTableView({ version: 1 }).columnSizing).toEqual({});
+    expect(parseBookmarkTableLayout({}).columnSizing).toEqual({});
   });
 });

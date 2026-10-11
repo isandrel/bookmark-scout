@@ -1,3 +1,8 @@
+/**
+ * The manager table's saved view, in two items: which columns show, their order, and the sort
+ * sync (`STORAGE_ITEMS.tableView`), so the layout follows the user; column widths and the page
+ * size stay on this device (`STORAGE_ITEMS.tableLayout`), since they suit one screen.
+ */
 import { z } from 'zod';
 
 // The saved view covers every column in the registry (components/ui/table/columns.tsx) except
@@ -15,32 +20,39 @@ const SORTABLE_COLUMN_IDS = new Set(
 );
 const ALLOWED_COLUMN_IDS = new Set<string>(BOOKMARK_TABLE_COLUMN_IDS);
 
-const tableViewSchema = z.object({
-  version: z.literal(1).default(1),
+const columnsSchema = z.object({
   columnVisibility: z.record(z.string(), z.boolean()).default({}),
   columnOrder: z.array(z.string()).default([...BOOKMARK_TABLE_COLUMN_IDS]),
-  pageSize: managerPageSizeSchema.default(DEFAULT_MANAGER_PAGE_SIZE),
   sorting: z.array(z.object({ id: z.string(), desc: z.boolean() })).default([]),
   browserOrder: z.boolean().default(false),
-  // Parsed separately so one bad width drops that width instead of the whole saved view.
+});
+
+const layoutSchema = z.object({
+  pageSize: managerPageSizeSchema.default(DEFAULT_MANAGER_PAGE_SIZE),
+  // Parsed separately so one bad width drops that width instead of the whole layout.
   columnSizing: z.unknown().optional(),
 });
 
-export type BookmarkTableView = {
-  version: 1;
+/** What syncs: the columns shown, their order, and the sort. */
+export type BookmarkTableColumns = {
   columnVisibility: Record<string, boolean>;
   columnOrder: string[];
-  /** One of MANAGER_PAGE_SIZES. */
-  pageSize: number;
   sorting: Array<{ id: string; desc: boolean }>;
   /** Show the current folder in the browser's own order so row moves are visible. */
   browserOrder: boolean;
+};
+
+/** What stays on this device. */
+export type BookmarkTableLayout = {
+  /** One of MANAGER_PAGE_SIZES. */
+  pageSize: number;
   /** Widths of the columns the user resized, in pixels. */
   columnSizing: BookmarkColumnSizing;
 };
 
-export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
-  version: 1,
+export type BookmarkTableView = BookmarkTableColumns & BookmarkTableLayout;
+
+const DEFAULT_COLUMNS: BookmarkTableColumns = {
   columnVisibility: Object.fromEntries(
     SAVED_COLUMNS.filter((column) => column.defaultVisible === false).map((column) => [
       column.id,
@@ -48,30 +60,31 @@ export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
     ]),
   ),
   columnOrder: [...BOOKMARK_TABLE_COLUMN_IDS],
-  pageSize: DEFAULT_MANAGER_PAGE_SIZE,
   sorting: [],
   browserOrder: false,
+};
+
+const DEFAULT_LAYOUT: BookmarkTableLayout = {
+  pageSize: DEFAULT_MANAGER_PAGE_SIZE,
   columnSizing: {},
 };
 
-function cloneDefaultTableView(): BookmarkTableView {
-  return {
-    ...DEFAULT_BOOKMARK_TABLE_VIEW,
-    columnVisibility: { ...DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility },
-    columnOrder: [...DEFAULT_BOOKMARK_TABLE_VIEW.columnOrder],
-    sorting: [],
-    columnSizing: {},
-  };
-}
+export const DEFAULT_BOOKMARK_TABLE_VIEW: BookmarkTableView = {
+  ...DEFAULT_COLUMNS,
+  ...DEFAULT_LAYOUT,
+};
+
+const COLUMN_KEYS = Object.keys(DEFAULT_COLUMNS) as (keyof BookmarkTableColumns)[];
+const LAYOUT_KEYS = Object.keys(DEFAULT_LAYOUT) as (keyof BookmarkTableLayout)[];
 
 /**
- * Validates persisted state and migrates the original unversioned shape to version 1.
- * Unknown columns are discarded, while newly introduced columns are appended in their
- * default order so future releases can extend the table without invalidating a saved view.
+ * Validates the synced columns. Unknown columns are discarded, while newly introduced columns are
+ * appended in their default order so future releases can extend the table without invalidating
+ * a saved view. Anything malformed reads as the default.
  */
-export function parseBookmarkTableView(value: unknown): BookmarkTableView {
-  const parsed = tableViewSchema.safeParse(value);
-  if (!parsed.success) return cloneDefaultTableView();
+export function parseBookmarkTableColumns(value: unknown): BookmarkTableColumns {
+  const parsed = columnsSchema.safeParse(value ?? {});
+  if (!parsed.success) return structuredClone(DEFAULT_COLUMNS);
 
   const seenColumns = new Set<string>();
   const columnOrder = parsed.data.columnOrder.filter((id) => {
@@ -83,7 +96,7 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
     if (!seenColumns.has(id)) columnOrder.push(id);
   }
 
-  const columnVisibility = { ...DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility };
+  const columnVisibility = { ...DEFAULT_COLUMNS.columnVisibility };
   for (const [id, visible] of Object.entries(parsed.data.columnVisibility)) {
     if (ALLOWED_COLUMN_IDS.has(id)) columnVisibility[id] = visible;
   }
@@ -95,42 +108,76 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
     return true;
   });
 
+  return { columnVisibility, columnOrder, sorting, browserOrder: parsed.data.browserOrder };
+}
+
+/** Validates this device's layout; a malformed page size reads as the default. */
+export function parseBookmarkTableLayout(value: unknown): BookmarkTableLayout {
+  const parsed = layoutSchema.safeParse(value ?? {});
+  if (!parsed.success) return structuredClone(DEFAULT_LAYOUT);
   return {
-    version: 1,
-    columnVisibility,
-    columnOrder,
     pageSize: parsed.data.pageSize,
-    sorting,
-    browserOrder: parsed.data.browserOrder,
     columnSizing: parseBookmarkColumnSizing(parsed.data.columnSizing),
   };
 }
 
-/**
- * `version` is the payload's own schema version, not a WXT item version, so no `$` metadata key
- * is written. Synced, so the layout follows the user to other devices.
- */
-export const bookmarkTableViewValue = defineStoredValue<BookmarkTableView>(
+/** Synced, so the columns and sort follow the user to other devices. */
+export const bookmarkTableViewValue = defineStoredValue<BookmarkTableColumns>(
   STORAGE_ITEMS.tableView,
   {
-    parse: parseBookmarkTableView,
-    empty: DEFAULT_BOOKMARK_TABLE_VIEW,
+    parse: parseBookmarkTableColumns,
+    empty: DEFAULT_COLUMNS,
+    isEmpty: (columns) => isSameJson(columns, DEFAULT_COLUMNS),
+  },
+);
+
+/** This device's column widths and page size. */
+export const bookmarkTableLayoutValue = defineStoredValue<BookmarkTableLayout>(
+  STORAGE_ITEMS.tableLayout,
+  {
+    parse: parseBookmarkTableLayout,
+    empty: DEFAULT_LAYOUT,
+    isEmpty: (layout) => isSameJson(layout, DEFAULT_LAYOUT),
   },
 );
 
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
   try {
-    return await bookmarkTableViewValue.get();
+    const [columns, layout] = await Promise.all([
+      bookmarkTableViewValue.get(),
+      bookmarkTableLayoutValue.get(),
+    ]);
+    return { ...columns, ...layout };
   } catch (error) {
     uiLogger.error({ error }, 'Error reading bookmark table view');
-    return cloneDefaultTableView();
+    return structuredClone(DEFAULT_BOOKMARK_TABLE_VIEW);
   }
 }
 
-export async function saveBookmarkTableView(view: BookmarkTableView): Promise<void> {
-  await bookmarkTableViewValue.set(view);
+const pick = <K extends keyof BookmarkTableView>(
+  changes: Partial<BookmarkTableView>,
+  keys: readonly K[],
+): Partial<Pick<BookmarkTableView, K>> =>
+  Object.fromEntries(
+    keys.filter((key) => key in changes).map((key) => [key, changes[key]]),
+  ) as Partial<Pick<BookmarkTableView, K>>;
+
+/**
+ * Stores the parts of the view that changed, each in its item, on top of what is stored now, so
+ * a change made in another manager tab to another part is kept.
+ */
+export async function updateBookmarkTableView(changes: Partial<BookmarkTableView>): Promise<void> {
+  const columns = pick(changes, COLUMN_KEYS);
+  const layout = pick(changes, LAYOUT_KEYS);
+  if (Object.keys(columns).length > 0) {
+    await bookmarkTableViewValue.update((current) => ({ ...current, ...columns }));
+  }
+  if (Object.keys(layout).length > 0) {
+    await bookmarkTableLayoutValue.update((current) => ({ ...current, ...layout }));
+  }
 }
 
 export async function resetBookmarkTableView(): Promise<void> {
-  await bookmarkTableViewValue.set(cloneDefaultTableView());
+  await bookmarkTableViewValue.clear();
+  await bookmarkTableLayoutValue.clear();
 }

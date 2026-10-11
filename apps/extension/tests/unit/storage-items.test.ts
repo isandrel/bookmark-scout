@@ -10,7 +10,10 @@ import {
 } from '@/lib/ai-provider-storage';
 import { aiServicesValue } from '@/lib/ai-services-storage';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
-import { bookmarkTableViewValue } from '@/lib/bookmark-table-view-storage';
+import {
+  bookmarkTableLayoutValue,
+  bookmarkTableViewValue,
+} from '@/lib/bookmark-table-view-storage';
 import { dismissedNoticesValue } from '@/lib/dismissed-notices-storage';
 import { promptLibraryIndexValue } from '@/lib/prompt-library-storage';
 import { recentFoldersValue } from '@/lib/recent-folders-storage';
@@ -41,6 +44,7 @@ const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
   settings: settingsOverrideValues.sync,
   deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
+  tableLayout: bookmarkTableLayoutValue,
   promptIndex: promptLibraryIndexValue,
   recentFolders: recentFoldersValue,
   aiCredentials: aiProviderConfigValue,

@@ -525,7 +525,6 @@ test('Back returns to the table page that was open', async ({
   // A reload keeps that page too; the saved table view loading afterwards must not reset it.
   // The saved view hides Date Added, so its header disappearing shows the view has loaded.
   await writeStored(extensionWorker, STORAGE_ITEMS.tableView, {
-    version: 1,
     columnVisibility: { dateAdded: false },
   });
   await page.reload();

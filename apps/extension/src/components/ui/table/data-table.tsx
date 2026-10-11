@@ -128,6 +128,8 @@ export function DataTable<TData extends RowData>({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
   const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
+  // The view as last loaded or stored, so a change stores only the parts that changed.
+  const storedViewRef = React.useRef<BookmarkTableView | null>(null);
   const tableFrameRef = React.useRef<HTMLDivElement>(null);
   const [tableWidth, setTableWidth] = React.useState<number>();
 
@@ -155,6 +157,7 @@ export function DataTable<TData extends RowData>({
       setBrowserOrder(view.browserOrder);
       setColumnSizing(view.columnSizing);
       setSavedColumnSizing(view.columnSizing);
+      storedViewRef.current = view;
       setIsTableViewLoaded(true);
     });
     return () => {
@@ -163,16 +166,26 @@ export function DataTable<TData extends RowData>({
   }, []);
 
   React.useEffect(() => {
-    if (!isTableViewLoaded) return;
-    void saveBookmarkTableView({
-      version: 1,
+    const stored = storedViewRef.current;
+    if (!isTableViewLoaded || !stored) return;
+    const view: BookmarkTableView = {
       sorting,
       columnVisibility,
       columnOrder,
-      pageSize: pagination.pageSize as BookmarkTableView['pageSize'],
+      pageSize: pagination.pageSize,
       browserOrder,
       columnSizing: savedColumnSizing,
-    }).catch((error) => console.error('Failed to save bookmark table view:', error));
+    };
+    const changes = Object.fromEntries(
+      Object.entries(view).filter(
+        ([key, value]) => !isSameJson(value, stored[key as keyof BookmarkTableView]),
+      ),
+    ) as Partial<BookmarkTableView>;
+    if (Object.keys(changes).length === 0) return;
+    storedViewRef.current = view;
+    void updateBookmarkTableView(changes).catch((error) =>
+      console.error('Failed to save bookmark table view:', error),
+    );
   }, [
     browserOrder,
     columnOrder,
@@ -291,6 +304,7 @@ export function DataTable<TData extends RowData>({
     setBrowserOrder(DEFAULT_BOOKMARK_TABLE_VIEW.browserOrder);
     setColumnSizing({});
     setSavedColumnSizing({});
+    storedViewRef.current = structuredClone(DEFAULT_BOOKMARK_TABLE_VIEW);
     void resetBookmarkTableView().catch((error) =>
       console.error('Failed to reset bookmark table view:', error),
     );

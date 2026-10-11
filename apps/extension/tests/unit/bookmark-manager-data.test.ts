@@ -13,7 +13,7 @@ import {
   pruneNestedSelection,
   resolveManagerFolder,
 } from '@/lib/bookmark-manager-data';
-import { parseBookmarkTableView } from '@/lib/bookmark-table-view-storage';
+import { parseBookmarkTableColumns } from '@/lib/bookmark-table-view-storage';
 import {
   getBlockedEditUrl,
   getRegistrableDomain,
@@ -49,7 +49,10 @@ describe('resolveManagerFolder', () => {
   });
 
   it('shows the parent folder for a bookmark ID', () => {
-    expect(resolveManagerFolder('12', items, '0')).toEqual({ folderId: '10', status: 'not-folder' });
+    expect(resolveManagerFolder('12', items, '0')).toEqual({
+      folderId: '10',
+      status: 'not-folder',
+    });
   });
 
   it('falls back to the nearest surviving ancestor of a deleted folder, else the root', () => {
@@ -61,7 +64,10 @@ describe('resolveManagerFolder', () => {
       folderId: '10',
       status: 'missing',
     });
-    expect(resolveManagerFolder('bogus', items, '0')).toEqual({ folderId: null, status: 'missing' });
+    expect(resolveManagerFolder('bogus', items, '0')).toEqual({
+      folderId: null,
+      status: 'missing',
+    });
   });
 });
 
@@ -159,14 +165,18 @@ describe('url domains', () => {
 
 describe('table view browser order', () => {
   it('defaults to off and persists when enabled', () => {
-    expect(parseBookmarkTableView({}).browserOrder).toBe(false);
-    expect(parseBookmarkTableView({ version: 1, browserOrder: true }).browserOrder).toBe(true);
+    expect(parseBookmarkTableColumns({}).browserOrder).toBe(false);
+    expect(parseBookmarkTableColumns({ browserOrder: true }).browserOrder).toBe(true);
   });
 });
 
 describe('partitionSelectionByVisibility', () => {
   it('keeps only selected rows the filters show and counts the hidden ones', () => {
-    const selected = [link('a', '1', 'Keep me', 'Bar'), link('b', '1', 'Target X', 'Bar'), link('c', '1', 'Also keep', 'Bar')];
+    const selected = [
+      link('a', '1', 'Keep me', 'Bar'),
+      link('b', '1', 'Target X', 'Bar'),
+      link('c', '1', 'Also keep', 'Bar'),
+    ];
     const result = partitionSelectionByVisibility(selected, new Set(['b', 'z']), (row) => row.id);
     expect(result.visible.map((row) => row.id)).toEqual(['b']);
     expect(result.hiddenCount).toBe(2);
@@ -183,9 +193,18 @@ describe('partitionSelectionByVisibility', () => {
 
 describe('getBlockedEditUrl', () => {
   it('names the script scheme that was entered', () => {
-    expect(getBlockedEditUrl('javascript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
-    expect(getBlockedEditUrl(' VBScript:msgbox(1)')).toEqual({ kind: 'script', prefix: 'vbscript:' });
-    expect(getBlockedEditUrl('java\tscript:alert(1)')).toEqual({ kind: 'script', prefix: 'javascript:' });
+    expect(getBlockedEditUrl('javascript:alert(1)')).toEqual({
+      kind: 'script',
+      prefix: 'javascript:',
+    });
+    expect(getBlockedEditUrl(' VBScript:msgbox(1)')).toEqual({
+      kind: 'script',
+      prefix: 'vbscript:',
+    });
+    expect(getBlockedEditUrl('java\tscript:alert(1)')).toEqual({
+      kind: 'script',
+      prefix: 'javascript:',
+    });
   });
 
   it('rejects data: URLs that open as a page but allows inert data', () => {

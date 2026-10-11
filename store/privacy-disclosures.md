@@ -24,7 +24,8 @@ What the extension does with data at version `0.3.0`, checked against the source
 | Settings the user changed from their defaults (`settings`), including the AI on/off switch; no AI provider, model, or key | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
 | Device settings (`settings` in `storage.local`): the quick save folder (a folder id), the site icon cache size, AI activity recording, and Ask AI web search | `storage.local` | No |
 | AI services (`ai.services`): each service's name, provider, and model | `storage.local` | No |
-| Bookmark table view (`manager.table-view`): visible columns, order, widths, page size, sort | `storage.sync` | Same as settings. Contains no bookmark content. |
+| Bookmark table view (`manager.table-view`): visible columns, their order, and the sort | `storage.sync` | Same as settings. Contains no bookmark content. |
+| Bookmark table layout (`manager.table-layout`): column widths and page size | `storage.local` | No |
 | AI provider settings (`ai.credentials`): API key, Base URL, extra headers, and provider-specific fields, per AI service | `storage.local` | The key and headers are sent only to the configured provider, as request authentication |
 | Model lists fetched from each AI service (`ai.model-cache`): model ids and names, offered for 7 days | `storage.local` | No |
 | Tags and summaries (`bookmarks.metadata`) | `storage.local` | Included in AI context exports when the user turns that on; otherwise no |
