@@ -141,6 +141,12 @@ export type ActionCall<Input, Output> = {
   output: z.ZodType<Output>;
   /** Why the action cannot run in this context, beyond its permission, or nothing. */
   unavailable?: (context: ActionContext) => Promise<ActionError | undefined>;
+  /**
+   * Why this call would fail now (a plan that no longer exists, a change already undone), checked
+   * before the user is asked to approve it, so nobody approves a call that cannot work. Running
+   * the call checks the same again.
+   */
+  precheck?: (input: Input, context: ActionContext) => Promise<ActionError | undefined>;
   /** What a call did, in the user's language, such as the chat's step text. */
   describe: (input: Partial<Input>) => string;
   execute: (input: Input, context: ActionContext) => Promise<Output | ActionError>;
@@ -244,6 +250,54 @@ export function pageOf<T>(
   };
 }
 
+const REF_KIND_NAMES: Record<ActionRefKind, { name: string; ref: (id: string) => string }> = {
+  bookmark: { name: 'bookmark', ref: toBookmarkRef },
+  folder: { name: 'folder', ref: toFolderRef },
+};
+
+/**
+ * Why `ref` names nothing of the kinds `wanted`, said so an agent can fix the call: a bare id or
+ * a ref of the wrong kind gets the ref to use instead (`b:5 is a folder; use f:5 for folders`),
+ * and one that names nothing is pointed to the lookups.
+ */
+export function refProblem(
+  library: ActionLibrary,
+  ref: string,
+  wanted: readonly ActionRefKind[] = ['bookmark', 'folder'],
+): ActionError {
+  const parsed = parseActionRef(ref);
+  const id = parsed?.id ?? ref.trim();
+  const actual: ActionRefKind | undefined = library.folderById.has(id)
+    ? 'folder'
+    : library.bookmarkById.has(id)
+      ? 'bookmark'
+      : undefined;
+  const examples = 'refs look like b:<id> for bookmarks and f:<id> for folders';
+  const lookup = { hint: 'Find current refs with searchBookmarks or listFolders.' };
+  if (!parsed) {
+    const use = actual ? ` Use ${REF_KIND_NAMES[actual].ref(id)} for this ${actual}.` : '';
+    return actionError('invalid_input', `"${ref}" is not a ref; ${examples}.${use}`, lookup);
+  }
+  if (!actual) {
+    return actionError(
+      'not_found',
+      `There is no ${wanted.map((kind) => REF_KIND_NAMES[kind].name).join(' or ')} ${ref}; it may have been deleted.`,
+      lookup,
+    );
+  }
+  const asked = wanted.map((kind) => REF_KIND_NAMES[kind].ref('<id>')).join(' or ');
+  if (actual !== parsed.kind) {
+    const right = REF_KIND_NAMES[actual].ref(id);
+    const fits = wanted.includes(actual) ? '' : ` This needs ${asked}.`;
+    return actionError(
+      'invalid_input',
+      `${ref} is a ${actual}; use ${right} for ${actual}s.${fits}`,
+      lookup,
+    );
+  }
+  return actionError('invalid_input', `${ref} is a ${actual}; this needs ${asked}.`, lookup);
+}
+
 /** The folder a reference or path names, or an error with candidates to choose from. */
 export function resolveActionFolder(
   library: ActionLibrary,
@@ -255,20 +309,21 @@ export function resolveActionFolder(
       .map((folder) => toActionFolder(folder, { counts: false }));
   const ref = parseActionRef(spec);
   if (ref) {
-    if (ref.kind !== 'folder') {
+    const folder = ref.kind === 'folder' ? library.folderById.get(ref.id) : undefined;
+    if (folder) return folder;
+    if (ref.kind === 'bookmark' && library.bookmarkById.has(ref.id)) {
       return actionError('invalid_input', `${spec} is a bookmark, not a folder.`, {
-        hint: 'Pass its folderRef instead.',
+        hint: 'Pass the folderRef its lookup returned, or a folder path.',
       });
     }
-    return (
-      library.folderById.get(ref.id) ??
-      actionError('not_found', `There is no folder ${spec}; it may have been deleted.`, {
-        hint: 'Call listFolders for current folder references.',
-      })
-    );
+    return refProblem(library, spec, ['folder']);
   }
   const matches = findFoldersByPath(library, spec);
   if (matches.length === 1) return matches[0];
+  // A bare folder id, such as "5" for f:5.
+  if (matches.length === 0 && library.folderById.has(spec.trim())) {
+    return refProblem(library, spec, ['folder']);
+  }
   if (matches.length > 1) {
     return actionError('ambiguous', `Several folders match "${spec}".`, {
       hint: 'Pass one of the candidates by its ref, or its full path.',
