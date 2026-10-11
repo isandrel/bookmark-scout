@@ -63,6 +63,7 @@ function sendFromBridge(worker: Worker, message: unknown) {
 }
 
 test('Options turns on access for local AI agents, which look up bookmarks through the bridge', async ({
+  extensionBrowser,
   extensionId,
   extensionWorker,
   page,
@@ -88,7 +89,9 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
     .poll(async () => (await bridgeState(extensionWorker)).connects)
     .toEqual(['com.bookmark_scout.bridge']);
   const [hello] = (await bridgeState(extensionWorker)).posted;
-  expect(hello).toMatchObject({ type: 'hello', protocol: 1, browser: 'chrome' });
+  // The build's browser: the Edge build reports itself as edge.
+  const extensionBrowserId = extensionBrowser === 'msedge' ? 'edge' : 'chrome';
+  expect(hello).toMatchObject({ type: 'hello', protocol: 1, browser: extensionBrowserId });
   const tools = ((hello?.tools ?? []) as { name: string }[]).map((tool) => tool.name);
   expect(tools).toContain('searchBookmarks');
   expect(tools).not.toContain('applyChanges');
