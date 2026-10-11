@@ -7,9 +7,9 @@ import {
   removeStored,
   STORAGE_ITEMS,
   type StorageTarget,
+  seedAIServices,
   setSettings,
   updateStored,
-  writeStored,
 } from '../../../../apps/extension/tests/e2e/storage';
 
 const SCHEMES = ['light', 'dark'] as const;
@@ -77,15 +77,16 @@ const AI_SUGGESTIONS = JSON.stringify({
 });
 
 const enableStubAI = async (sw: StorageTarget, baseUrl: string) => {
-  await setSettings(sw, { aiEnabled: true, aiProvider: 'custom', aiModel: 'demo-model', aiMaxRecommendations: 2 });
-  await writeStored(sw, STORAGE_ITEMS.aiCredentials, { custom: { baseUrl, customModel: 'demo-model' } });
+  await setSettings(sw, { aiEnabled: true, aiMaxRecommendations: 2 });
+  await seedAIServices(sw, [{ provider: 'custom', model: 'demo-model', credentials: { baseUrl } }]);
 };
 
 const disableStubAI = async (sw: StorageTarget) => {
   await updateStored<Record<string, unknown>>(sw, STORAGE_ITEMS.settings, (current = {}) => {
-    const { aiEnabled, aiProvider, aiModel, aiMaxRecommendations, ...rest } = current;
+    const { aiEnabled, aiMaxRecommendations, ...rest } = current;
     return rest;
   });
+  await removeStored(sw, STORAGE_ITEMS.aiServices);
   await removeStored(sw, STORAGE_ITEMS.aiCredentials);
 };
 

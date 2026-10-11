@@ -2,15 +2,23 @@ import type { BrowserContext, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { setSettings } from './popup-helpers';
-import { STORAGE_ITEMS, writeStored } from './storage';
+import { seedAIServices } from './storage';
 
 // Website access is pre-granted, so Refresh and Verify never wait on the permission prompt.
 test.use({ grantWebHostAccess: true });
 
 const BASE_URL = 'https://provider.invalid/v1';
 
-async function seedProvider(worker: Worker, provider: string, config: Record<string, string>) {
-  await writeStored(worker, STORAGE_ITEMS.aiCredentials, { [provider]: config });
+/** A custom service with a synthetic key and the mocked Base URL. */
+async function seedCustomService(worker: Worker, model?: string) {
+  await seedAIServices(worker, [
+    {
+      provider: 'custom',
+      name: 'Custom Provider',
+      model,
+      credentials: { apiKey: 'synthetic-key', baseUrl: BASE_URL },
+    },
+  ]);
 }
 
 /** Serves an OpenAI-style model list, and counts requests that would spend tokens. */
@@ -41,13 +49,8 @@ test('[mocked provider contract] Refresh Models lists models and keeps them afte
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, {
-    language: 'en',
-    aiEnabled: true,
-    aiProvider: 'custom',
-    aiModel: 'gpt-4o-mini',
-  });
-  await seedProvider(extensionWorker, 'custom', { apiKey: 'synthetic-key', baseUrl: BASE_URL });
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedCustomService(extensionWorker, 'gpt-4o-mini');
   const seen = await mockModelList(context, 200, {
     data: [{ id: 'listed-model-b' }, { id: 'listed-model-a' }],
   });
@@ -76,13 +79,8 @@ test('[mocked provider contract] Verify Service checks the model list instead of
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, {
-    language: 'en',
-    aiEnabled: true,
-    aiProvider: 'custom',
-    aiModel: 'gpt-4o-mini',
-  });
-  await seedProvider(extensionWorker, 'custom', { apiKey: 'synthetic-key', baseUrl: BASE_URL });
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedCustomService(extensionWorker, 'gpt-4o-mini');
   const seen = await mockModelList(context, 200, { data: [{ id: 'other-model' }] });
 
   await openAIOptions(page, extensionId);
@@ -104,8 +102,8 @@ test('[mocked provider contract] Verify Service explains a rejected key', async 
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiEnabled: true, aiProvider: 'custom' });
-  await seedProvider(extensionWorker, 'custom', { apiKey: 'synthetic-key', baseUrl: BASE_URL });
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedCustomService(extensionWorker);
   await mockModelList(context, 401, { error: { message: 'Incorrect API key' } });
 
   await openAIOptions(page, extensionId);
@@ -123,7 +121,7 @@ test('[mocked provider contract] the provider picker searches the catalog and li
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiEnabled: true, aiProvider: 'openai' });
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
   let authorization = '';
   await context.route('https://api.together.xyz/v1/**', async (route) => {
     authorization = (await route.request().headerValue('authorization')) ?? '';

@@ -10,8 +10,8 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 - **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances.
 - Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
 - Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Tout réinitialiser** rétablit tous les paramètres.
-- **Exporter** enregistre vos paramètres dans un fichier JSON, et **Importer** les restaure à partir d'un tel fichier. Aucun des deux ne touche à vos favoris.
-- Les paramètres sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. La clé API du fournisseur d'IA, l'**URL de base** et les **En-têtes supplémentaires (JSON)** font exception : ils restent sur cet appareil. Consultez [Confidentialité](/privacy).
+- **Exporter** enregistre dans un fichier JSON les paramètres que vous avez modifiés, et **Importer** les restaure à partir d'un tel fichier. Aucun des deux ne touche à vos favoris.
+- Les paramètres sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. Quelques paramètres propres à un appareil y restent : le dossier choisi pour l'enregistrement rapide, la limite de stockage des icônes, l'enregistrement de l'activité IA et la recherche web de Demander à l'IA. Les services d'IA, avec leurs clés API, l'**URL de base** et les **En-têtes supplémentaires (JSON)**, restent aussi sur cet appareil. Consultez [Confidentialité](/privacy).
 
 ## Enregistrement et recherche [#search]
 
@@ -150,7 +150,7 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
 | **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
+Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
 ## Métadonnées et contenu [#metadata--content]
 

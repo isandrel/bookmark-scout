@@ -1689,21 +1689,9 @@
         "message": "AIを使ったブックマークワークフローを有効にします。AI ツールは、必要なブックマークのタイトル、URL、フォルダ名、表示中のページのタイトルと URL、「AI に質問」のメッセージを、選択したプロバイダーへ直接送信します。AI ツールを使うまでは何も送信されません。Firefox では、オンにするとこのデータの共有の許可を求められます。",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "AIプロバイダー",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "AIツールで使うプロバイダーを選択します",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "AIモデル",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "AIツールで使うモデルを選択します",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "最大候補数",
@@ -4834,6 +4822,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "フォルダの提案、自動タグ付け、コンテンツ要約で、タイトルと URL に加えて各ページの本文も送信し、結果の精度を高めます。ページは Cookie なしでダウンロードされ、ローカルネットワーク上のページは読み込まれません。オンにするとウェブサイトへのアクセス許可を求めます。",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "AI リクエストを記録",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "最近の AI リクエストを、送信内容と応答とともにこのデバイスに保存します。",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "AI に質問: ウェブ検索",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "このデバイスで、AI プロバイダー経由のウェブ検索を AI への質問に使います。",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "この設定でページを読むにはウェブサイトへのアクセスが必要です。オフのままになります。",

@@ -1,16 +1,31 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { defaultSettings } from '@/lib/settings-schema';
+import { syncItemBytes } from '@/lib/prompt-library-storage';
 import {
+  defaultSettings,
+  getSettingScope,
+  getSettingsFieldMeta,
+  type NumberSetting,
+  SETTING_KEYS_BY_SCOPE,
+  SETTING_NUMBER_BOUNDS,
+  type Settings,
+  settingsSchema,
+} from '@/lib/settings-schema';
+import {
+  exportSettings,
   getSettings,
   importSettings,
   registerSettingsSaveListener,
+  resetSettings,
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
   SettingsValidationError,
+  settingsValue,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
+import { DEVICE_SETTING_KEYS, storageAreaKey } from '@/lib/storage/registry';
+import { toStoredEnvelope } from '@/lib/storage/stored-value';
 import {
   coerceSelectValue,
   commitNumberSetting,
@@ -25,8 +40,16 @@ import {
 import { setLanguage } from '@/hooks/use-i18n';
 import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
+/** What sync storage holds for settings. */
 async function readStored() {
   return (await readStoredData(STORAGE_ITEMS.settings)) as Record<string, unknown> | undefined;
+}
+
+/** What this device's storage holds for settings. */
+async function readStoredOnDevice() {
+  return (await readStoredData(STORAGE_ITEMS.deviceSettings)) as
+    | Record<string, unknown>
+    | undefined;
 }
 
 beforeEach(() => {
@@ -109,22 +132,55 @@ describe('settings validation', () => {
 });
 
 describe('settings persistence', () => {
-  it('a single invalid field does not block saving other fields', async () => {
-    await seedStored(STORAGE_ITEMS.settings, {
-      ...defaultSettings,
-      theme: 'dark',
-      faviconSize: 32,
+  it('stores only settings that differ from the default, and removes one set back to it', async () => {
+    await saveSettings({ theme: 'dark', showFavicons: defaultSettings.showFavicons });
+    expect(await readStored()).toEqual({ theme: 'dark' });
+    expect(await getSettings()).toEqual({ ...defaultSettings, theme: 'dark' });
+
+    await saveSettings({ theme: defaultSettings.theme });
+    expect(await readStored()).toBeUndefined();
+    expect(await getSettings()).toEqual(defaultSettings);
+  });
+
+  it('keeps device settings on this device and the rest in sync storage', async () => {
+    await saveSettings({ quickSaveFixedFolder: '42', siteIconsMaxCacheKb: 1024, theme: 'dark' });
+    expect(await readStored()).toEqual({ theme: 'dark' });
+    expect(await readStoredOnDevice()).toEqual({
+      quickSaveFixedFolder: '42',
+      siteIconsMaxCacheKb: 1024,
     });
+    for (const key of DEVICE_SETTING_KEYS) expect(getSettingScope(key)).toBe('device');
+    expect(getSettingScope('theme')).toBe('sync');
+
+    // A device setting another device synced by mistake is not read.
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', quickSaveFixedFolder: '7' });
+    expect((await getSettings()).quickSaveFixedFolder).toBe('42');
+  });
+
+  it('keeps settings a newer release stored when it saves its own', async () => {
+    await seedStored(STORAGE_ITEMS.settings, {
+      theme: 'dark',
+      settingFromANewerRelease: 'kept',
+      faviconSize: 48,
+    });
+    await saveSettings({ showFavicons: false });
+    expect(await readStored()).toEqual({
+      theme: 'dark',
+      settingFromANewerRelease: 'kept',
+      faviconSize: 48,
+      showFavicons: false,
+    });
+    expect((await getSettings()).faviconSize).toBe(defaultSettings.faviconSize);
+  });
+
+  it('a single invalid field does not block saving other fields', async () => {
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', faviconSize: 32 });
     const { errors } = await saveValidSettings({
       showFavicons: false,
       theme: '' as never,
     });
     expect(Object.keys(errors)).toEqual(['theme']);
-    expect(await readStored()).toMatchObject({
-      showFavicons: false,
-      theme: 'dark',
-      faviconSize: 32,
-    });
+    expect(await readStored()).toEqual({ showFavicons: false, theme: 'dark', faviconSize: 32 });
   });
 
   it('saveSettings rejects with a readable, field-level error', async () => {
@@ -140,6 +196,76 @@ describe('settings persistence', () => {
     const settings = await getSettings();
     expect(settings.theme).toBe('dark');
     expect(settings.faviconSize).toBe(defaultSettings.faviconSize);
+  });
+
+  it('resets both scopes but keeps what a newer release stored', async () => {
+    await saveSettings({ theme: 'dark', quickSaveFixedFolder: '42' });
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', settingFromANewerRelease: 1 });
+    await resetSettings();
+    expect(await readStored()).toEqual({ settingFromANewerRelease: 1 });
+    expect(await readStoredOnDevice()).toBeUndefined();
+    expect(await getSettings()).toEqual(defaultSettings);
+  });
+
+  it('follows changes to either scope live', async () => {
+    const seen: Settings[] = [];
+    const stop = settingsValue.observe((settings) => seen.push(settings));
+    await vi.waitFor(() => expect(seen).toHaveLength(1));
+    await saveSettings({ theme: 'dark' });
+    await seedStored(STORAGE_ITEMS.deviceSettings, { siteIconsMaxCacheKb: 2048 });
+    await vi.waitFor(() =>
+      expect(seen.at(-1)).toMatchObject({ theme: 'dark', siteIconsMaxCacheKb: 2048 }),
+    );
+    stop();
+  });
+
+  it('caps the synced settings item within the 8,192-byte sync quota at its largest', () => {
+    // Every synced setting at its largest stored form: lists full of the longest names, text at
+    // its maximum length in the costliest character (Chrome stores `<` as 6 bytes), numbers at
+    // their longest form, and each choice at its longest option.
+    const meta = getSettingsFieldMeta();
+    const bounds: Partial<Record<keyof Settings, NumberSetting>> = SETTING_NUMBER_BOUNDS;
+    const longestOf = <T>(values: T[]) =>
+      values.reduce((a, b) => (JSON.stringify(b).length > JSON.stringify(a).length ? b : a));
+    const largest = Object.fromEntries(
+      SETTING_KEYS_BY_SCOPE.sync.map((key) => {
+        const field = meta[key];
+        const fallback = defaultSettings[key];
+        if (field.list) {
+          expect(field.maxItems, `${key} has no item limit`).toBeGreaterThan(0);
+          const item = field.list === 'string' ? 'x'.repeat(field.maxLength ?? 0) : 599;
+          return [key, Array.from({ length: field.maxItems ?? 0 }, () => item)];
+        }
+        if (typeof fallback === 'string') {
+          const options = field.options?.map((option) => String(option.value)) ?? [];
+          expect(field.maxLength ?? options.length, `${key} has no length limit`).toBeGreaterThan(
+            0,
+          );
+          return [key, options.length > 0 ? longestOf(options) : '<'.repeat(field.maxLength ?? 0)];
+        }
+        if (typeof fallback === 'number') {
+          const range = bounds[key];
+          if (!range) return [key, longestOf((field.options ?? []).map((option) => option.value))];
+          const candidates = [range.min, range.max, -1];
+          if (!range.integer) candidates.push(range.min + (range.max - range.min) / 3);
+          return [key, longestOf(candidates)];
+        }
+        return [key, false];
+      }),
+    );
+    expect(settingsSchema.safeParse({ ...defaultSettings, ...largest }).success).toBe(true);
+    // A name takes one byte a character: the characters that take more are not allowed.
+    for (const name of ['a"b', 'a<b', 'a\\b', 'äb', 'a b']) {
+      expect(settingsSchema.shape.urlCleanerRemoveParams.safeParse([name]).success, name).toBe(
+        false,
+      );
+    }
+
+    const bytes = syncItemBytes(
+      storageAreaKey(STORAGE_ITEMS.settings),
+      toStoredEnvelope(STORAGE_ITEMS.settings, largest),
+    );
+    expect(bytes).toBeLessThanOrEqual(8192);
   });
 });
 
@@ -166,37 +292,35 @@ describe('saving from a closing page', () => {
   });
 });
 
-describe('removed settings', () => {
-  it('drops the unused metadataFetcherFetchFavicons key from stored and imported data', async () => {
-    expect('metadataFetcherFetchFavicons' in defaultSettings).toBe(false);
-    expect(
-      'metadataFetcherFetchFavicons' in
-        sanitizeSettings({ metadataFetcherFetchFavicons: false, theme: 'dark' }),
-    ).toBe(false);
-
-    await seedStored(STORAGE_ITEMS.settings, {
+describe('settings export and import', () => {
+  it('exports only the settings that differ from the default, from both scopes', async () => {
+    expect(JSON.parse(await exportSettings())).toEqual({});
+    await saveSettings({ theme: 'dark', quickSaveFixedFolder: '42' });
+    expect(JSON.parse(await exportSettings())).toEqual({
       theme: 'dark',
-      metadataFetcherFetchFavicons: false,
+      quickSaveFixedFolder: '42',
     });
-    expect(
-      await importSettings(
-        JSON.stringify({ metadataFetcherFetchFavicons: true, defaultNewFolderName: 'Inbox' }),
-      ),
-    ).toEqual(['defaultNewFolderName']);
-    const stored = await readStored();
-    expect(stored).toMatchObject({ theme: 'dark', defaultNewFolderName: 'Inbox' });
-    expect(stored).not.toHaveProperty('metadataFetcherFetchFavicons');
   });
-});
 
-describe('settings import', () => {
+  it('round-trips an export, and an export of defaults changes nothing', async () => {
+    await saveSettings({ theme: 'dark', siteIconsMaxCacheKb: 1024, groupByFolders: false });
+    const exported = await exportSettings();
+    await resetSettings();
+    expect((await importSettings(exported)).sort()).toEqual([
+      'groupByFolders',
+      'siteIconsMaxCacheKb',
+      'theme',
+    ]);
+    expect(await readStored()).toEqual({ theme: 'dark', groupByFolders: false });
+    expect(await readStoredOnDevice()).toEqual({ siteIconsMaxCacheKb: 1024 });
+    expect(await importSettings('{}')).toEqual([]);
+  });
+
   it('merges a partial file onto current settings and returns what changed', async () => {
-    await seedStored(STORAGE_ITEMS.settings, { ...defaultSettings, defaultNewFolderName: 'Inbox' });
+    await seedStored(STORAGE_ITEMS.settings, { defaultNewFolderName: 'Inbox' });
     const changed = await importSettings(JSON.stringify({ theme: 'dark', unknownKey: true }));
     expect(changed).toEqual(['theme']);
-    const stored = await readStored();
-    expect(stored).toMatchObject({ theme: 'dark', defaultNewFolderName: 'Inbox' });
-    expect(stored).not.toHaveProperty('unknownKey');
+    expect(await readStored()).toEqual({ theme: 'dark', defaultNewFolderName: 'Inbox' });
   });
 
   it.each([
@@ -221,7 +345,7 @@ describe('settings form helpers', () => {
     expect(coerceSelectValue('faviconSize', '24')).toBe(24);
     expect(coerceSelectValue('maxSearchResults', '50')).toBe(50);
     expect(coerceSelectValue('theme', 'dark')).toBe('dark');
-    expect(coerceSelectValue('aiModel', '42')).toBe('42');
+    expect(coerceSelectValue('theme', '42')).toBe('42');
     expect(coerceSelectValue('theme', '')).toBeUndefined();
     expect(coerceSelectValue('faviconSize', '')).toBeUndefined();
   });

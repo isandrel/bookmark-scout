@@ -5,7 +5,7 @@ import {
   readAIServices,
 } from './ai-helpers';
 import { expect, test } from './fixtures';
-import { STORAGE_ITEMS, writeStored } from './storage';
+import { seedAIServices } from './storage';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 /**
@@ -33,7 +33,7 @@ test('[real local server] Refresh Models and Verify Service reach the local serv
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiEnabled: true, aiProvider: 'openai' });
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
   await openAIOptions(page, extensionId);
 
   const service = await addAIServiceInOptions(page, {
@@ -95,13 +95,15 @@ test('[real local server] auto-tagging previews tags from a real model without c
   await setSettings(extensionWorker, {
     language: 'en',
     aiEnabled: true,
-    aiProvider: PROVIDER,
-    aiModel: MODEL,
     autoTaggingEnabled: true,
   });
-  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
-    [PROVIDER]: { apiKey: KEY, ...(BASE_URL ? { baseUrl: BASE_URL } : {}) },
-  });
+  await seedAIServices(extensionWorker, [
+    {
+      provider: PROVIDER,
+      model: MODEL,
+      credentials: { apiKey: KEY, ...(BASE_URL ? { baseUrl: BASE_URL } : {}) },
+    },
+  ]);
 
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();

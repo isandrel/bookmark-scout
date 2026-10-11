@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openPopup, setSettings } from './popup-helpers';
+import { seedAIServices } from './storage';
 
 async function openAIOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
@@ -74,7 +75,8 @@ test('an AI service follows changes saved in another Options tab', async ({
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiProvider: 'openai' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: 'openai' }]);
   await openAIOptions(page, extensionId);
   const other = await context.newPage();
   await openAIOptions(other, extensionId);

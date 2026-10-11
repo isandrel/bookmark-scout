@@ -1713,21 +1713,9 @@
         "message": "Ativa os fluxos de trabalho de favoritos com IA. As ferramentas de IA enviam os títulos, URLs e nomes de pastas de que precisam, o título e o URL da página atual e suas mensagens do Perguntar à IA diretamente ao provedor que você escolher. Nada é enviado até você usar uma ferramenta de IA. No Firefox, ao ativar, será pedida permissão para compartilhar esses dados.",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "Provedor de IA",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "Escolha o provedor usado pelas ferramentas de IA",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "Modelo de IA",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "Escolha o modelo usado pelas ferramentas de IA",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "Máximo de recomendações",
@@ -4858,6 +4846,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "As recomendações de pasta, Tags automáticas e Gerador de resumos também enviam o texto legível de cada página, não só o título e o URL, para obter resultados melhores. As páginas são baixadas sem seus cookies, páginas da rede local nunca são lidas, e ao ativar será pedido acesso aos sites.",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "Registrar solicitações de IA",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "Guarda neste dispositivo as últimas solicitações de IA, com o que foi enviado e recebido.",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "Pesquisa na web em Perguntar à IA",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "Permite que Perguntar à IA pesquise na web pelo seu provedor de IA, neste dispositivo.",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "Esta configuração precisa de acesso aos sites para ler as páginas. Ela continua desativada.",

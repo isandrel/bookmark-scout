@@ -1,6 +1,13 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { readSettings, readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
+import {
+  readSettings,
+  readStored,
+  STORAGE_ITEMS,
+  seedAIServices,
+  setSettings,
+  writeStored,
+} from './storage';
 
 function settingRow(page: Page, key: string) {
   return page.locator(`[data-setting="${key}"]`);
@@ -55,9 +62,13 @@ test('non-default selects survive reload and never block saving other settings',
   await page.getByRole('tab', { name: 'Appearance' }).click();
   await expect(themeChoice(page, 'Dark')).toBeChecked();
   await page.getByRole('switch', { name: 'Show Favicons' }).click();
-  await expect
-    .poll(() => readSettings(extensionWorker))
-    .toMatchObject({ showFavicons: true, theme: 'dark', faviconSize: 32, language: 'en' });
+  // Back at its default, Show Favicons is no longer stored.
+  await expect.poll(async () => (await readSettings(extensionWorker)).showFavicons).toBeUndefined();
+  expect(await readSettings(extensionWorker)).toMatchObject({
+    theme: 'dark',
+    faviconSize: 32,
+    language: 'en',
+  });
   // Autosave shows no success message; the status only speaks up when a save fails.
   await expect(page.getByTestId('settings-save-status')).toBeEmpty();
   await expect(page.getByText(/Invalid settings|invalid_/)).toHaveCount(0);
@@ -266,7 +277,8 @@ test('rejected API keys and unsafe Base URLs are never persisted', async ({
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiProvider: 'openai' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: 'openai' }]);
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
 
@@ -394,8 +406,6 @@ test('options layout fits a 480px window without squeezed labels', async ({
   );
 });
 
-const DEFAULT_SUCCESS_STATUSES = [200, 201, 202, 204, 301, 302, 307, 308];
-
 test('options follows theme changes made from the popup', async ({
   context,
   extensionId,
@@ -487,9 +497,11 @@ test('the last status code cannot be cleared, and reset restores the default cod
   await expect(codes.getByRole('checkbox', { name: '200 OK' })).toBeDisabled();
 
   await page.getByRole('button', { name: 'Reset Success Status Codes to default' }).click();
+  // Back at the default codes, the setting is no longer stored.
   await expect
     .poll(async () => (await readSettings(extensionWorker)).deadLinksSuccessStatuses)
-    .toEqual(DEFAULT_SUCCESS_STATUSES);
+    .toBeUndefined();
+  await expect(codes.getByRole('checkbox', { name: '201 Created' })).toBeChecked();
   await expect(codes.getByRole('checkbox', { name: '200 OK' })).toBeEnabled();
   await expect(page.getByTestId('settings-save-status')).toBeEmpty();
 });
@@ -499,7 +511,8 @@ test('settings search finds AI service fields, including ones under More setting
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiProvider: 'custom' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: 'custom' }]);
   await openOptions(page, extensionId);
   const search = page.getByRole('searchbox', { name: 'Search settings...' });
 
@@ -540,9 +553,12 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await field.blur();
   await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(12);
 
+  // Empty is "No limit" (-1), the default, which is not stored.
   await field.fill('');
   await field.blur();
-  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(-1);
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).aiMaxCategories)
+    .toBeUndefined();
 
   // -1 also means no limit, as the description says; other values below the minimum clamp.
   await field.fill('7');
@@ -550,7 +566,9 @@ test('number steppers step, accept typing, and leave an unlimited field empty fo
   await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(7);
   await field.fill('-1');
   await field.blur();
-  await expect.poll(async () => (await readSettings(extensionWorker)).aiMaxCategories).toBe(-1);
+  await expect
+    .poll(async () => (await readSettings(extensionWorker)).aiMaxCategories)
+    .toBeUndefined();
   await expect(field).toHaveValue('');
   await expect(field).toHaveAttribute('placeholder', 'No limit');
   await field.fill('0');
@@ -627,9 +645,11 @@ test('related switches are one checklist that saves each option and resets toget
     .toBe(false);
 
   await page.getByRole('button', { name: 'Reset Include in AI Context to default' }).click();
+  // Back at its default (on), the option is no longer stored.
   await expect
     .poll(async () => (await readSettings(extensionWorker)).aiContextPackerIncludeDates)
-    .toBe(true);
+    .toBeUndefined();
+  await expect(group.getByRole('checkbox', { name: /Include Dates/ })).toBeChecked();
 });
 
 test('an invalid Base URL does not block saving valid Extra Headers', async ({
@@ -637,7 +657,8 @@ test('an invalid Base URL does not block saving valid Extra Headers', async ({
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, { language: 'en', aiProvider: 'openai' });
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [{ provider: 'openai' }]);
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
   const readAI = async () =>

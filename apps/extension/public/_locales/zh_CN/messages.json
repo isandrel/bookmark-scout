@@ -1713,21 +1713,9 @@
         "message": "启用由 AI 驱动的书签功能。AI 工具会将所需的书签标题、网址和文件夹名称、当前网页的标题和网址，以及你在“询问 AI”中发送的消息直接发送给你选择的服务商。在你使用 AI 工具之前不会发送任何内容。在 Firefox 中，开启此项时会请求共享这些数据的许可。",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "AI 服务商",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "选择 AI 工具使用的服务商",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "AI 模型",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "选择 AI 工具使用的模型",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "最大推荐数",
@@ -4674,6 +4662,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "文件夹推荐、自动标签和内容摘要除了发送网页的标题和网址外，还会发送每个网页的可读文本，以获得更好的结果。下载网页时不会附带你的 Cookie，绝不会读取本地网络中的网页，开启此项时会请求网站访问权限。",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "记录 AI 请求",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "在此设备上保留最近的 AI 请求，包括发送的内容和返回的内容。",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "询问 AI 时搜索网络",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "在此设备上，询问 AI 时通过你的 AI 服务商搜索网络。",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "此设置需要网站访问权限才能读取网页。它将保持关闭。",

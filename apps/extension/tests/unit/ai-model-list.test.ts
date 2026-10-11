@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { setLanguage } from '@/hooks/use-i18n';
+import { saveSettings } from '@/lib/settings-storage';
 import type { AISettings } from '@/services/ai-client';
 import {
   AIConnectionError,
@@ -21,7 +22,9 @@ const json = (body: unknown, status = 200) =>
 
 const fetchMock = vi.fn<typeof fetch>();
 
-beforeEach(() => {
+beforeEach(async () => {
+  // Requests read settings (whether to record them), which applies the stored language.
+  await saveSettings({ language: 'en' });
   setLanguage('en');
   fetchMock.mockReset();
   vi.stubGlobal('fetch', fetchMock);

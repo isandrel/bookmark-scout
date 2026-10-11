@@ -75,7 +75,7 @@ async function configuredExtraHeaderNames(): Promise<string[]> {
 export function createLoggingFetch(context: AIActivityContext): typeof fetch {
   return async (input, init) => {
     await assertPermission(AI_ACTIVITY_PERMISSIONS[context.source]);
-    if (!(await aiActivityRecordingValue.get().catch(() => false))) {
+    if (!(await getSettings()).aiActivityRecording) {
       return fetch(input, init);
     }
     const started = performance.now();

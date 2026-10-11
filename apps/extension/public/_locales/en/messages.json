@@ -1713,21 +1713,9 @@
         "message": "Enable AI-powered bookmark workflows. AI tools send the bookmark titles, URLs, and folder names they need, the current page's title and URL, and your Ask AI messages directly to the provider you choose. Nothing is sent until you use an AI tool. In Firefox, turning this on asks to share this data.",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "AI Provider",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "Choose the provider used for AI-powered tools",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "AI Model",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "Choose the model used for AI-powered tools",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "Max Recommendations",
@@ -4858,6 +4846,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "Folder recommendations, Auto-Tagging, and Content Summarizer also send the readable text of each page, not only its title and URL, for better results. Pages are downloaded without your cookies, local network pages are never read, and turning this on asks for website access.",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "Record AI Requests",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "Keep the last AI requests on this device, with what was sent and what came back.",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "Ask AI Web Search",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "Let Ask AI search the web through your AI provider, on this device.",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "This setting needs website access to read pages. It stays off.",

@@ -42,8 +42,13 @@ export type StorageItem = {
 export type StorageKey = `${StorageAreaName}:${string}`;
 
 export const STORAGE_ITEMS = {
-  /** Synced: the user's choices follow them to every device. */
+  /**
+   * Synced: the settings the user changed (only those that differ from the default), so their
+   * choices follow them to every device. Device settings (`DEVICE_SETTING_KEYS`) are left out.
+   */
   settings: { area: 'sync', name: 'settings', v: 1, backup: 'include' },
+  /** Local: the changed settings that belong to this device only (`DEVICE_SETTING_KEYS`). */
+  deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'include' },
   /** Synced: the manager table's columns and sort, so the layout follows the user. */
   tableView: { area: 'sync', name: 'manager.table-view', v: 1, backup: 'include' },
   /** Synced: which custom prompts exist and which one each task uses. */
@@ -60,10 +65,6 @@ export const STORAGE_ITEMS = {
   aiServices: { area: 'local', name: 'ai.services', v: 1, backup: 'include' },
   /** Local: the opt-in AI request log holds bookmark titles and URLs. */
   aiActivity: { area: 'local', name: 'ai.activity-log', v: 1, backup: 'exclude' },
-  /** Local: recording AI requests is a per-device debugging choice. */
-  aiActivityRecording: { area: 'local', name: 'ai.activity-recording', v: 1, backup: 'exclude' },
-  /** Local: whether Ask AI adds the provider's web search, chosen per device. */
-  askAiWebSearch: { area: 'local', name: 'ask-ai.web-search', v: 1, backup: 'exclude' },
   /** Local: tags and summaries are keyed by bookmark id, which differs on every device. */
   bookmarkMetadata: { area: 'local', name: 'bookmarks.metadata', v: 1, backup: 'exclude' },
   /** Local: queries can reveal bookmark contents. */
@@ -77,6 +78,23 @@ export const STORAGE_ITEMS = {
 } as const satisfies Record<string, StorageItem>;
 
 export type StorageItemId = keyof typeof STORAGE_ITEMS;
+
+/**
+ * Settings stored for this device only (`STORAGE_ITEMS.deviceSettings`); every other setting syncs
+ * (`STORAGE_ITEMS.settings`).
+ */
+export const DEVICE_SETTING_KEYS = [
+  /** A bookmark folder id, which differs on every device. */
+  'quickSaveFixedFolder',
+  /** How much of this device's local storage saved site icons may take. */
+  'siteIconsMaxCacheKb',
+  /** Recording AI requests is a debugging choice for one device; the log stays on it too. */
+  'aiActivityRecording',
+  /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */
+  'askAiWebSearch',
+] as const;
+
+export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
 
 /** The storage key of `item`, or of the entry `id` in a collection. */
 export function storageKey(item: StorageItem, id?: string): StorageKey {

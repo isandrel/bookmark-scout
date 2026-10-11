@@ -43,23 +43,16 @@ describe('API key format message', () => {
 });
 
 describe('named AI services', () => {
-  it('derives services from a single-provider setup without writing anything', async () => {
-    await saveSettings({ aiProvider: 'anthropic', aiModel: 'claude-x' });
-    await saveStoredAIProviderConfig('anthropic', { apiKey: 'sk-ant-synthetic' });
-    await saveStoredAIProviderConfig('groq', { apiKey: 'gsk_synthetic' });
-
-    const state = await getAIServicesState();
-    expect(state.defaultServiceId).toBe('anthropic');
-    expect(state.services.map((service) => [service.id, service.model])).toEqual([
-      ['anthropic', 'claude-x'],
-      ['groq', expect.any(String)],
-    ]);
+  it('starts with no services and no default, and stores nothing until one is added', async () => {
+    expect(await getAIServicesState()).toEqual({ services: [], defaultServiceId: undefined });
+    await expect(getActiveAISettings(true)).rejects.toThrow();
     expect(await readStoredRaw(STORAGE_ITEMS.aiServices)).toBeUndefined();
-    // The derived default resolves to the same settings as before named services.
-    await saveSettings({ aiEnabled: true });
+
+    const first = await addAIService('anthropic');
+    await saveStoredAIProviderConfig(first.id, { apiKey: 'sk-ant-synthetic' });
+    expect((await getAIServicesState()).defaultServiceId).toBe(first.id);
     await expect(getActiveAISettings(true)).resolves.toMatchObject({
       provider: 'anthropic',
-      model: 'claude-x',
       apiKey: 'sk-ant-synthetic',
     });
   });
@@ -100,11 +93,10 @@ describe('named AI services', () => {
   });
 
   it('falls back to the next enabled service when the default is turned off', async () => {
-    // A fresh install already implies one service: the default synced provider.
-    const initial = await getAIServicesState();
-    expect(initial.services).toHaveLength(1);
+    const first = await addAIService('openai');
     const second = await addAIService('groq');
-    await updateAIService(initial.defaultServiceId ?? '', { enabled: false });
+    expect((await getAIServicesState()).defaultServiceId).toBe(first.id);
+    await updateAIService(first.id, { enabled: false });
     expect((await getAIServicesState()).defaultServiceId).toBe(second.id);
   });
 });

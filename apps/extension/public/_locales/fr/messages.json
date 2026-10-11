@@ -1713,21 +1713,9 @@
         "message": "Active les fonctionnalités de favoris basées sur l'IA. Les outils d'IA envoient directement au fournisseur de votre choix les titres de favoris, URL et noms de dossiers dont ils ont besoin, le titre et l'URL de la page actuelle, ainsi que vos messages Demander à l'IA. Rien n'est envoyé tant que vous n'utilisez pas un outil d'IA. Dans Firefox, l'activation de cette option demande l'autorisation de partager ces données.",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "Fournisseur d'IA",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "Choisissez le fournisseur utilisé par les outils d'IA",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "Modèle d'IA",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "Choisissez le modèle utilisé par les outils d'IA",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "Nombre maximal de recommandations",
@@ -4858,6 +4846,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "Les recommandations de dossiers, l'étiquetage automatique et le générateur de résumés envoient aussi le texte lisible de chaque page, et pas seulement son titre et son URL, pour de meilleurs résultats. Les pages sont téléchargées sans vos cookies, les pages du réseau local ne sont jamais lues, et l'activation de cette option demande l'accès aux sites Web.",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "Enregistrer les requêtes IA",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "Conserve sur cet appareil les dernières requêtes IA, avec ce qui a été envoyé et reçu.",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "Recherche web dans Demander à l'IA",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "Permet à Demander à l'IA de chercher sur le web via votre fournisseur d'IA, sur cet appareil.",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "Ce paramètre a besoin d'accéder aux sites Web pour lire les pages. Il reste désactivé.",

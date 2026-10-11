@@ -1,6 +1,12 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { readSettings, STORAGE_ITEMS, writeStored, writeStoredItems } from './storage';
+import {
+  readSettings,
+  replaceSettings,
+  STORAGE_ITEMS,
+  seedAIServices,
+  writeStored,
+} from './storage';
 
 test.use({ grantWebHostAccess: true });
 
@@ -17,24 +23,20 @@ A healthy starter smells pleasantly sour and is full of bubbles.</p>
 type ProviderCall = { system: string; prompt: string };
 
 async function seed(worker: Worker, readPageContent: boolean) {
-  await writeStoredItems(worker, [
-    [
-      STORAGE_ITEMS.settings,
-      {
-        language: 'en',
-        aiEnabled: true,
-        aiProvider: 'custom',
-        aiModel: 'reader-model',
-        aiMaxRecommendations: 1,
-        aiAutoTriggerOnOpen: false,
-        aiReadPageContent: readPageContent,
-        recentFoldersEnabled: false,
-      },
-    ],
-    [
-      STORAGE_ITEMS.aiCredentials,
-      { custom: { baseUrl: 'https://provider.e2e.invalid/v1', apiKey: 'reader-key' } },
-    ],
+  await replaceSettings(worker, {
+    language: 'en',
+    aiEnabled: true,
+    aiMaxRecommendations: 1,
+    aiAutoTriggerOnOpen: false,
+    aiReadPageContent: readPageContent,
+    recentFoldersEnabled: false,
+  });
+  await seedAIServices(worker, [
+    {
+      provider: 'custom',
+      model: 'reader-model',
+      credentials: { baseUrl: 'https://provider.e2e.invalid/v1', apiKey: 'reader-key' },
+    },
   ]);
   await worker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();

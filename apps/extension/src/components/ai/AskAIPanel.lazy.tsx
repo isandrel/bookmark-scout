@@ -26,18 +26,10 @@ import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
-/** Per device: whether Ask AI adds the provider's web search. */
-export const askAiWebSearchValue = defineStoredValue<boolean>(STORAGE_ITEMS.askAiWebSearch, {
-  parse: (raw) => raw === true,
-  empty: false,
-});
-
 /** Builds the agent per message, so the current service and settings always apply. */
 class AskAITransport implements ChatTransport<UIMessage> {
-  constructor(private readonly getOptions: () => AskAIOptions) {}
-
   async sendMessages(options: Parameters<ChatTransport<UIMessage>['sendMessages']>[0]) {
-    const agent = await createAskAIAgent(this.getOptions());
+    const agent = await createAskAIAgent();
     const transport = new DirectChatTransport({
       agent,
       sendSources: true,
@@ -168,12 +160,8 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
   const provider = service?.provider;
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
-  const { value: webSearch } = useStoredValue(askAiWebSearchValue);
-  const webSearchRef = useRef(false);
-  webSearchRef.current = canSearchWeb && webSearch;
-  const [transport] = useState(
-    () => new AskAITransport(() => ({ webSearch: webSearchRef.current })),
-  );
+  const { value: webSearch, setValue: setWebSearch } = useSetting('askAiWebSearch');
+  const [transport] = useState(() => new AskAITransport());
   const { messages, sendMessage, status, stop, error, regenerate, setMessages, clearError } =
     useChat({ transport });
   const [draft, setDraft] = useState('');
@@ -326,11 +314,9 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
               title={t('askAI_webSearch')}
               className={webSearch ? 'bg-ai/10 text-ai hover:bg-ai/15 hover:text-ai' : ''}
               onClick={() => {
-                void askAiWebSearchValue
-                  .update((current) => !current)
-                  .catch((error) => {
-                    aiLogger.error({ error }, 'Failed to save the web search choice');
-                  });
+                void setWebSearch(!webSearch).catch((error) => {
+                  aiLogger.error({ error }, 'Failed to save the web search choice');
+                });
               }}
             >
               <Globe className="h-4 w-4" />

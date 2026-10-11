@@ -9,8 +9,9 @@ import {
   settingsSchema,
 } from '@/lib/settings-schema';
 
-// The legacy provider and model fields are edited through AI services, not as settings rows.
-const EDITED_ELSEWHERE = new Set(['aiProvider', 'aiModel']);
+// Device settings changed where they apply: the AI activity panel's recording switch and Ask AI's
+// web search button.
+const EDITED_ELSEWHERE = new Set(['aiActivityRecording', 'askAiWebSearch']);
 
 describe('Options layout', () => {
   const categories = Object.values(getSettingsCategories());

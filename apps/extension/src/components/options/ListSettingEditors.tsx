@@ -16,7 +16,9 @@ const listSettingsConfig = readConfig(
       urlCleanerRemoveParams: z.array(z.string().min(1)),
       privacyScannerSensitiveParams: z.array(z.string().min(1)),
     }),
-    status_codes: z.array(z.strictObject({ code: httpStatusCodeSchema, reason: z.string().min(1) })),
+    status_codes: z.array(
+      z.strictObject({ code: httpStatusCodeSchema, reason: z.string().min(1) }),
+    ),
   }),
 );
 
@@ -85,12 +87,23 @@ export function TokenListEditor({
 }: EditorProps<string> & { fieldKey: TokenListSetting }) {
   const [draft, setDraft] = useState('');
   const suggestionsId = useId();
-  const suggestions = listSettingsConfig.suggestions[fieldKey].filter(
-    (name) => !value.includes(name),
-  );
+  // Settings sync, so lists are capped (config/settings/*.toml); a full list takes no more names.
+  const { maxItems = Number.POSITIVE_INFINITY, maxLength } = getSettingsFieldMeta()[fieldKey];
+  const room = Math.max(0, maxItems - value.length);
+  const suggestions =
+    room > 0
+      ? listSettingsConfig.suggestions[fieldKey].filter((name) => !value.includes(name))
+      : [];
 
   const add = (raw: string) => {
-    const added = parseListTokens(raw).filter((name) => !value.includes(name));
+    const added = parseListTokens(raw)
+      .filter(
+        (name) =>
+          !value.includes(name) &&
+          isQueryParamName(name) &&
+          (maxLength === undefined || name.length <= maxLength),
+      )
+      .slice(0, room);
     if (added.length > 0) onChange([...value, ...added]);
     setDraft('');
   };
@@ -111,6 +124,8 @@ export function TokenListEditor({
           aria-labelledby={labelledBy}
           aria-describedby={describedBy}
           placeholder={t('settings_listAddPlaceholder')}
+          maxLength={maxLength}
+          disabled={room === 0}
           onChange={(event) => {
             const next = event.target.value;
             // A typed or pasted separator commits what came before it.
@@ -130,7 +145,10 @@ export function TokenListEditor({
         />
       </div>
       {suggestions.length > 0 && (
-        <fieldset aria-labelledby={suggestionsId} className="m-0 flex min-w-0 flex-wrap items-center gap-1.5 border-0 p-0">
+        <fieldset
+          aria-labelledby={suggestionsId}
+          className="m-0 flex min-w-0 flex-wrap items-center gap-1.5 border-0 p-0"
+        >
           <span id={suggestionsId} className="text-xs text-muted-foreground">
             {t('settings_listSuggestions')}
           </span>
@@ -166,6 +184,10 @@ export function StatusCodeEditor({
 }: EditorProps<number>) {
   const [draft, setDraft] = useState('');
   const [error, setError] = useState<string | null>(null);
+  // Settings sync, so the list is capped (config/settings/maintenance.toml).
+  const full =
+    value.length >=
+    (getSettingsFieldMeta().deadLinksSuccessStatuses.maxItems ?? Number.POSITIVE_INFINITY);
   const errorId = `${id}-error`;
   const known = new Set(listSettingsConfig.status_codes.map(({ code }) => code));
   const others = value.filter((code) => !known.has(code));
@@ -209,8 +231,8 @@ export function StatusCodeEditor({
                   <Checkbox
                     id={controlId}
                     checked={checked}
-                    // The setting needs at least one code.
-                    disabled={checked && value.length === 1}
+                    // The setting needs at least one code, and holds a limited number.
+                    disabled={checked ? value.length === 1 : full}
                     onCheckedChange={(next) => toggle(code, next === true)}
                   />
                   <span className="font-mono tabular-nums">{code}</span>
@@ -243,6 +265,7 @@ export function StatusCodeEditor({
             aria-invalid={Boolean(error)}
             aria-describedby={error ? errorId : undefined}
             placeholder={t('settings_statusAddPlaceholder')}
+            disabled={full}
             onChange={(event) => {
               setDraft(event.target.value);
               setError(null);
@@ -255,7 +278,7 @@ export function StatusCodeEditor({
             }}
             className="h-8 w-24"
           />
-          <Button type="button" variant="outline" size="sm" onClick={addOther}>
+          <Button type="button" variant="outline" size="sm" onClick={addOther} disabled={full}>
             {t('settings_listAdd')}
           </Button>
         </div>

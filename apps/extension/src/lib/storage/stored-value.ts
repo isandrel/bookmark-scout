@@ -72,6 +72,12 @@ export type StoredValue<T> = {
   observe: (callback: (value: T) => void) => () => void;
 };
 
+/**
+ * A value read and watched like a stored value; a derived one (`defineDerivedValue`) is written
+ * through the stored values it is computed from.
+ */
+export type ReadableStoredValue<T> = Pick<StoredValue<T>, 'get' | 'watch' | 'observe'>;
+
 /** A write refused because a newer release stored the item. */
 export class NewerStoredValueError extends Error {
   constructor(readonly key: StorageKey) {
@@ -259,26 +265,92 @@ export function defineStoredValue<T>(
         live.publish(parseData(null));
       }),
     watch,
-    observe(callback) {
-      let delivered: StoredSnapshot<T> | undefined;
-      const notify = () => {
-        const snapshot = live.getSnapshot();
-        if (snapshot.isLoading || snapshot === delivered) return;
-        delivered = snapshot;
-        callback(snapshot.value);
-      };
-      const unsubscribe = live.subscribe(notify);
-      notify();
-      return unsubscribe;
-    },
+    observe: (callback) => observeLive(live, callback),
   };
   liveValues.set(storedValue, live as LiveValue<unknown>);
   return storedValue;
 }
 
-function liveValueOf<T>(storedValue: StoredValue<T>): LiveValue<T> {
-  const live = liveValues.get(storedValue);
-  if (!live) throw new Error(`${storedValue.key} was not created by defineStoredValue`);
+/** Calls back with the live value once it is loaded, then after each change. */
+function observeLive<T>(live: LiveValue<T>, callback: (value: T) => void): () => void {
+  let delivered: StoredSnapshot<T> | undefined;
+  const notify = () => {
+    const snapshot = live.getSnapshot();
+    if (snapshot.isLoading || snapshot === delivered) return;
+    delivered = snapshot;
+    callback(snapshot.value);
+  };
+  const unsubscribe = live.subscribe(notify);
+  notify();
+  return unsubscribe;
+}
+
+/**
+ * A value computed from several stored values. Its live copy follows theirs, so it changes as
+ * soon as any of them changes, from this page (before the storage event) or any other.
+ */
+export function defineDerivedValue<S extends readonly unknown[], T>(
+  sources: { readonly [K in keyof S]: StoredValue<S[K]> },
+  combine: (values: S) => T,
+  empty: T,
+): ReadableStoredValue<T> {
+  const lives = (sources as readonly StoredValue<unknown>[]).map(liveValueOf);
+  let snapshot: StoredSnapshot<T> = { value: empty, isLoading: true };
+  let stops: (() => void)[] | undefined;
+  const listeners = new Set<() => void>();
+
+  const recompute = () => {
+    const parts = lives.map((live) => live.getSnapshot());
+    if (parts.some((part) => part.isLoading)) return;
+    const value = combine(parts.map((part) => part.value) as unknown as S);
+    if (!snapshot.isLoading && isSameJson(snapshot.value, value)) return;
+    snapshot = { value, isLoading: false };
+    for (const listener of [...listeners]) listener();
+  };
+
+  const live: LiveValue<T> = {
+    subscribe(listener) {
+      listeners.add(listener);
+      if (!stops) {
+        stops = lives.map((source) => source.subscribe(recompute));
+        recompute();
+      }
+      return () => {
+        listeners.delete(listener);
+        if (listeners.size > 0) return;
+        for (const stop of stops ?? []) stop();
+        stops = undefined;
+        snapshot = { value: snapshot.value, isLoading: true };
+      };
+    },
+    getSnapshot: () => snapshot,
+    publish: () => undefined,
+  };
+
+  const derived: ReadableStoredValue<T> = {
+    get: async () =>
+      combine(
+        (await Promise.all(
+          (sources as readonly StoredValue<unknown>[]).map((source) => source.get()),
+        )) as unknown as S,
+      ),
+    watch(callback) {
+      // Changes only: the value loaded first is not one.
+      let loaded = false;
+      return observeLive(live, (value) => {
+        if (loaded) callback(value);
+        loaded = true;
+      });
+    },
+    observe: (callback) => observeLive(live, callback),
+  };
+  liveValues.set(derived, live as LiveValue<unknown>);
+  return derived;
+}
+
+function liveValueOf<T>(value: ReadableStoredValue<T>): LiveValue<T> {
+  const live = liveValues.get(value);
+  if (!live) throw new Error('Not a stored or derived value');
   return live as LiveValue<T>;
 }
 
@@ -287,7 +359,7 @@ function liveValueOf<T>(storedValue: StoredValue<T>): LiveValue<T> {
  * (`hooks/use-stored-value.ts`) reads it with `useSyncExternalStore`.
  */
 export function getStoredValueStore<T>(
-  storedValue: StoredValue<T>,
+  storedValue: ReadableStoredValue<T>,
 ): Pick<LiveValue<T>, 'subscribe' | 'getSnapshot'> {
   const { subscribe, getSnapshot } = liveValueOf(storedValue);
   return { subscribe, getSnapshot };
