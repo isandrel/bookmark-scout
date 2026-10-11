@@ -90,6 +90,7 @@ Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier 
 • Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA (funciona sin IA y no envía nada)
 • Preguntar a la IA: chatea sobre tus marcadores; la IA puede buscar marcadores coincidentes, los nombres de tus carpetas y la página actual
 • Leer el contenido de la página (desactivado de forma predeterminada): envía el texto legible de cada página, no solo su título y URL, para obtener mejores sugerencias
+• Agentes de IA locales (desactivado de forma predeterminada): los agentes de IA de tu equipo, como Claude Code, consultan tus marcadores a través del programa de código abierto bookmark-scout-mcp, que se instala aparte; cada cambio que pidan espera tu aprobación
 
 Cuando usas una función de IA, los datos que necesita se envían directamente desde tu navegador al proveedor que elegiste, según las condiciones de ese proveedor: títulos de marcadores, URLs, nombres de carpetas, y etiquetas y resúmenes guardados; el título y la URL de la página actual; tus mensajes de Preguntar a la IA; y, solo con Leer el contenido de la página activado, el texto de las páginas implicadas. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. El uso del proveedor puede ser de pago.
 

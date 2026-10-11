@@ -31,6 +31,8 @@
 
 - Local AI agents can also change bookmarks once you turn on **Allow changes** (off by default): save pages, propose moves, renames, deletions, and new folders, and undo their changes. Each change opens a Bookmark Scout window that shows it as it will be made, with the agent's name, and waits for your approval; declining, closing the window, or not answering within 5 minutes changes nothing, and an approved change can be undone in the bookmark manager.
 
+- New docs guide, [Use with local AI agents](https://docs.bookmark-scout.com/guides/local-agents): installing `bookmark-scout-mcp`, adding it to Claude Code, Codex, or Cursor (with a Cursor install link), approvals, and troubleshooting with `bookmark-scout-mcp doctor`. The program can also run under Node from an npm package, and a manual workflow builds it for Linux, macOS, and Windows on x64 and arm64.
+
 ### Stored data
 
 - **This update resets your saved data.** Bookmark Scout stores its data in a new format and removes what older versions stored instead of converting it. After updating, your settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, recent searches, recent folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. To keep your settings, click **Export** at the bottom of Settings before updating, and **Import** the file afterwards.

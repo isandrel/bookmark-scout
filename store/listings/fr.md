@@ -90,6 +90,7 @@ Activez l'IA dans les paramètres et choisissez un fournisseur d'IA dans le clou
 • Exportation des favoris sélectionnés au format Markdown ou XML comme contexte pour une discussion avec une IA (fonctionne sans IA et n'envoie rien)
 • Demander à l'IA : discutez de vos favoris ; l'IA peut rechercher les favoris correspondants, les noms de vos dossiers et la page actuelle
 • Lire le contenu des pages (désactivé par défaut) : envoie le texte lisible de chaque page, et pas seulement son titre et son URL, pour de meilleures suggestions
+• Agents d'IA locaux (désactivé par défaut) : les agents d'IA de votre ordinateur, comme Claude Code, consultent vos favoris via le programme open source bookmark-scout-mcp, installé à part ; chaque modification qu'ils demandent attend votre accord
 
 Lorsque vous utilisez une fonctionnalité d'IA, les données dont elle a besoin sont envoyées directement de votre navigateur au fournisseur que vous avez choisi, selon les conditions de ce fournisseur : titres de favoris, URL, noms de dossiers, ainsi que les étiquettes et résumés enregistrés ; le titre et l'URL de la page actuelle ; vos messages Demander à l'IA ; et, uniquement si Lire le contenu des pages est activé, le texte des pages concernées. Rien n'est envoyé à Bookmark Scout. Votre clé API est conservée dans le stockage local des extensions de ce navigateur et n'est pas synchronisée. L'utilisation du fournisseur peut être payante.
 

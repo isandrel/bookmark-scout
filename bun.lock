@@ -153,15 +153,13 @@
       "name": "@bookmark-scout/mcp-bridge",
       "version": "0.1.0",
       "bin": {
-        "bookmark-scout-mcp": "./src/cli.ts",
-      },
-      "dependencies": {
-        "@modelcontextprotocol/server": "2.3.1",
-        "zod": "^4.6.5",
+        "bookmark-scout-mcp": "./dist/cli.js",
       },
       "devDependencies": {
+        "@modelcontextprotocol/server": "2.3.1",
         "@types/bun": "1.4.2",
         "typescript": "^7.0.2",
+        "zod": "^4.6.5",
       },
     },
   },

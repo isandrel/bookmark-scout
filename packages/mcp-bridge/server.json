@@ -1,0 +1,23 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.isandrel/bookmark-scout",
+  "title": "Bookmark Scout",
+  "description": "Search, save, and organize the bookmarks in your browser through the Bookmark Scout extension.",
+  "websiteUrl": "https://docs.bookmark-scout.com/guides/local-agents",
+  "repository": {
+    "url": "https://github.com/isandrel/bookmark-scout",
+    "source": "github",
+    "subfolder": "packages/mcp-bridge"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@bookmark-scout/mcp-bridge",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" },
+      "packageArguments": [{ "type": "positional", "value": "serve" }]
+    }
+  ]
+}

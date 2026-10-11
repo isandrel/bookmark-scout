@@ -1,0 +1,11 @@
+{
+  "name": "bookmark-scout",
+  "owner": { "name": "isandrel", "url": "https://github.com/isandrel" },
+  "plugins": [
+    {
+      "name": "bookmark-scout",
+      "source": "./",
+      "description": "Search, save, and organize the bookmarks in your browser through the Bookmark Scout extension."
+    }
+  ]
+}
