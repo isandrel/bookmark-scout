@@ -45,10 +45,16 @@ export function BookmarkBulkActions({
     setMoving(true);
     let moved = 0;
     try {
-      for (const item of items) {
-        await moveBookmark(item.id, { parentId: targetId });
-        moved += 1;
-      }
+      // One history entry, so Ctrl+Z puts every item back where it was.
+      await recordBookmarkWrites(
+        { action: 'move', title: items[0]?.title, count: items.length },
+        async (writer) => {
+          for (const item of items) {
+            await writer.move(item.id, { parentId: targetId });
+            moved += 1;
+          }
+        },
+      );
       toast.success({
         title: moved === 1 ? t('bookmarks_bulkMovedOne') : t('bookmarks_bulkMoved', String(moved)),
       });

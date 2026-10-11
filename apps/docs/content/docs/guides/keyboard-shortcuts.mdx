@@ -3,7 +3,7 @@ title: Keyboard shortcuts
 description: Search, move through folders, save the current page, and work the manager's table without the mouse.
 ---
 
-Bookmark Scout's shortcuts inside its own pages never use `Ctrl` or `Cmd`, so browser shortcuts such as `Ctrl/Cmd+L`, `T`, `W`, `N`, `R`, and `D` keep working. They pause while you type in a text field (`Esc` in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
+Shortcuts in the popup and side panel never use `Ctrl` or `Cmd`, so browser shortcuts such as `Ctrl/Cmd+L`, `T`, `W`, `N`, `R`, and `D` keep working. The bookmarks manager replaces the browser's own, so it also takes that manager's `Ctrl` shortcuts (`Cmd` on a Mac): select all, undo, redo, and open in new tabs. Shortcuts pause while you type in a text field (`Esc` in the search box is the exception), while an input method is composing text, and while a dialog or menu is open.
 
 ## On any page
 
@@ -34,18 +34,27 @@ Hover the search box for a reminder.
 
 ## Bookmarks manager
 
-Press `?`, or click the keyboard button in the header, to see this list in the manager.
+Press `?`, or click the keyboard button in the header, to see this list in the manager. The keys follow Chrome's bookmark manager; where a Mac differs, its key is second.
 
 | Key | Action |
 | --- | --- |
 | `/` | Focus the title filter |
 | `Backspace` or `Alt+↑` | Go to the parent folder |
-| `j` / `k` | Move to the next or previous table row (a folder row, or a bookmark row's actions menu) |
-| `Enter` on a folder row | Open the folder |
+| `↓` / `↑`, `Home` / `End` | Move between rows and select the row; with `Shift`, extend the selection; with `Ctrl` (`Cmd`), move without selecting |
+| `j` / `k` | Move to the next or previous row |
+| `Space` | Select or unselect the focused row |
+| `Ctrl+A` / `Cmd+A` | Select every row the filters show, on every page |
+| `Esc` | Clear the selection, or close a dialog or menu |
+| `Enter` / `Cmd+O` | Open the selected folder, or the selected bookmarks in tabs |
+| `Ctrl+Enter` / `Cmd+Enter` | Open the selection in new background tabs |
+| `Shift+Enter` | Open the selection in a new window |
+| `F2` / `Enter` | Edit the selected bookmark, or rename the folder |
+| `Delete` / `Delete` or `Cmd+Backspace` | Delete the selection |
+| `Ctrl+Z` / `Cmd+Z` | Undo the last change |
+| `Ctrl+Y` or `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Redo |
 | `s` | Open saved searches |
 | `?` | Show the keyboard shortcuts |
-| `Esc` | Close a dialog or menu |
 
-In the table, focus the edge of a column header and press `←` or `→` to resize that column.
+The table is one stop when you press `Tab`; the arrow keys move between its rows. Opening more than 15 tabs at once asks first; a folder opens the bookmarks directly inside it. In the table, focus the edge of a column header and press `←` or `→` to resize that column.
 
 Keyboard shortcuts are covered by the Chromium and Edge automated tests, not by the Firefox ones.

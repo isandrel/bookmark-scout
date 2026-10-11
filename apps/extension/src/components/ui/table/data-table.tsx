@@ -27,7 +27,7 @@ const stickyColumnClass = cn(
   'group-hover:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:bg-[color-mix(in_srgb,var(--color-muted)_50%,var(--color-background))]',
   'group-[.is-folder]:group-hover:bg-[color-mix(in_srgb,var(--color-muted)_70%,var(--color-background))]',
-  'group-data-[state=selected]:bg-muted!',
+  'group-data-[state=selected]:bg-accent!',
 );
 
 // An unsized column before the row actions takes any width the sized columns leave, so each
@@ -69,10 +69,15 @@ interface DataTableProps<TData extends RowData> {
     hiddenCount: number,
     clearSelection: () => void,
   ) => React.ReactNode;
-  onRowClick?: (row: TData) => void;
-  /** Rows that open on click also open with Enter or Space when focused. */
-  isRowActivatable?: (row: TData) => boolean;
+  /** Double-click: open a folder, or a bookmark in a tab. */
+  onRowOpen?: (row: TData) => void;
+  /** Middle-click: open a bookmark in a background tab. */
+  onRowOpenInBackground?: (row: TData) => void;
   rowClassName?: (row: TData) => string;
+  /** Receives the table's selection commands, for the page's keyboard shortcuts. */
+  handleRef?: React.Ref<DataTableHandle<TData>>;
+  /** Accessible name of the grid. */
+  label?: string;
   /** Enables saved searches, which need to know and change the folder the manager shows. */
   savedSearchContext?: DataTableSavedSearchContext;
   /** The title filter, kept by the page (it is the address's `?q=`). */
@@ -84,6 +89,21 @@ interface DataTableProps<TData extends RowData> {
    */
   revealRow?: DataTableRevealRequest | null;
 }
+
+/**
+ * What the page's keyboard shortcuts ask of the table. The rows are a grid with one focused row
+ * (roving tabindex) and a selection, as in Chrome's manager.
+ */
+export type DataTableHandle<TData> = {
+  /** The selected rows the filters show, in display order; else the focused row; else none. */
+  getCommandRows: () => TData[];
+  /** Selects every selectable row the filters show, on every page. */
+  selectAll: () => void;
+  /** Clears the selection; false when nothing was selected. */
+  clearSelection: () => boolean;
+  /** Moves focus one row down or up (to the next page if needed) and selects that row. */
+  moveFocus: (step: 1 | -1) => boolean;
+};
 
 export type DataTableRevealRequest = {
   rowId: string;
@@ -104,6 +124,17 @@ export type DataTableSavedSearchContext = {
 
 const NO_FOLDER_IDS: ReadonlySet<string> = new Set();
 
+/**
+ * Whether a mouse event on a row came from a control inside it (a button, link, checkbox, or a
+ * menu rendered in a portal, whose React events still reach the row), which handles it itself.
+ */
+function isFromControl(event: React.MouseEvent): boolean {
+  const target = event.target as Element | null;
+  return Boolean(
+    target?.closest?.('button, a[href], input, [role="checkbox"], [role="menu"], [role="menuitem"]'),
+  );
+}
+
 function resolveUpdater<T>(updater: Updater<T>, previous: T): T {
   return typeof updater === 'function' ? (updater as (old: T) => T)(previous) : updater;
 }
@@ -120,9 +151,11 @@ export function DataTable<TData extends RowData>({
   onPageIndexChange,
   facetOptions,
   renderSelectionActions,
-  onRowClick,
-  isRowActivatable,
+  onRowOpen,
+  onRowOpenInBackground,
   rowClassName,
+  handleRef,
+  label,
   savedSearchContext,
   searchQuery,
   onSearchQueryChange,
@@ -164,6 +197,12 @@ export function DataTable<TData extends RowData>({
   const [columnResizing, setColumnResizing] =
     React.useState<columnResizingState>(IDLE_COLUMN_RESIZING);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  // The row a Shift range starts from, and the row with tabindex 0 (roving tabindex): the grid is
+  // one tab stop, and the arrow keys move between rows.
+  const anchorRowIdRef = React.useRef<string | null>(null);
+  const [focusedRowId, setFocusedRowId] = React.useState<string | null>(null);
+  // A row to focus once it is rendered (on another page, or after Show in folder).
+  const pendingFocusRowIdRef = React.useRef<string | null>(null);
   const [applyToCurrentFolder, setApplyToCurrentFolder] = React.useState(false);
   const [isTableViewLoaded, setIsTableViewLoaded] = React.useState(false);
   // The view as last loaded or stored, so a change stores only the parts that changed.
@@ -254,6 +293,7 @@ export function DataTable<TData extends RowData>({
   React.useEffect(() => {
     setPagination((previous) => ({ ...previous, pageIndex: initialPageIndexRef.current }));
     setRowSelection({});
+    anchorRowIdRef.current = null;
     if (lastResetKeyRef.current !== resetKey) {
       pendingRowFocusRef.current = {
         rowId: lastResetKeyRef.current ?? null,
@@ -266,7 +306,6 @@ export function DataTable<TData extends RowData>({
   // Show in folder: drop the filters so the folder's rows show, then (below, once the table shows
   // that folder) open the row's page, select it, and focus it.
   const pendingRevealRef = React.useRef<DataTableRevealRequest | null>(null);
-  const pendingRevealFocusRef = React.useRef<string | null>(null);
   React.useEffect(() => {
     if (!revealRow) return;
     pendingRevealRef.current = revealRow;
@@ -479,18 +518,19 @@ export function DataTable<TData extends RowData>({
       pageIndex: Math.floor(index / previous.pageSize),
     }));
     setRowSelection({ [pending.rowId]: true });
-    pendingRevealFocusRef.current = pending.rowId;
+    anchorRowIdRef.current = pending.rowId;
+    pendingFocusRowIdRef.current = pending.rowId;
   });
   React.useEffect(() => {
-    const rowId = pendingRevealFocusRef.current;
+    const rowId = pendingFocusRowIdRef.current;
     if (!rowId) return;
     const row = tableFrameRef.current?.querySelector<HTMLElement>(
       `tbody tr[data-row-id="${CSS.escape(rowId)}"]`,
     );
     if (!row) return;
-    pendingRevealFocusRef.current = null;
+    pendingFocusRowIdRef.current = null;
     row.scrollIntoView({ block: 'nearest' });
-    getTableRowFocusTarget(row)?.focus();
+    row.focus();
   });
 
   // Selection is keyed by bookmark ID and belongs to the rows the table can show: the current
@@ -523,6 +563,155 @@ export function DataTable<TData extends RowData>({
     partitionSelectionByVisibility(selectedRows, shownRowIds, getRowId);
   const clearSelection = React.useCallback(() => setRowSelection({}), []);
 
+  // Clicks, the arrow keys, and the page's shortcuts change the selection through these. They
+  // read the latest rows from a ref, so the handle stays one object.
+  const { shownRowIdsInOrder, shownRowsById } = React.useMemo(
+    () => ({
+      shownRowIdsInOrder: shownRows.map((row) => row.id),
+      shownRowsById: new Map(shownRows.map((row) => [row.id, row])),
+    }),
+    [shownRows],
+  );
+  const latestRef = React.useRef({
+    shownRows,
+    shownRowIdsInOrder,
+    shownRowsById,
+    rowSelection,
+    focusedRowId,
+  });
+  latestRef.current = { shownRows, shownRowIdsInOrder, shownRowsById, rowSelection, focusedRowId };
+  const canSelectRowRef = React.useRef(canSelectRow);
+  canSelectRowRef.current = canSelectRow;
+  const pageSizeRef = React.useRef(pagination.pageSize);
+  pageSizeRef.current = pagination.pageSize;
+
+  const canSelectId = React.useCallback((id: string) => {
+    const row = latestRef.current.shownRowsById.get(id);
+    const select = canSelectRowRef.current;
+    return row !== undefined && (!select || select(row.original));
+  }, []);
+
+  const changeSelection = React.useCallback(
+    (targetId: string, change: RowSelectionChange) => {
+      const { shownRowIdsInOrder: ids, rowSelection: current } = latestRef.current;
+      const next = selectRows(
+        {
+          selected: new Set(Object.keys(current).filter((id) => current[id])),
+          anchorId: anchorRowIdRef.current,
+        },
+        ids,
+        targetId,
+        change,
+        canSelectId,
+      );
+      anchorRowIdRef.current = next.anchorId;
+      setRowSelection(Object.fromEntries([...next.selected].map((id) => [id, true])));
+    },
+    [canSelectId],
+  );
+
+  /** Focuses the row at `index` of the shown rows, opening its page first if needed. */
+  const focusRowAt = React.useCallback((index: number) => {
+    const { shownRowIdsInOrder: ids } = latestRef.current;
+    const rowId = ids[Math.min(ids.length - 1, Math.max(0, index))];
+    if (!rowId) return undefined;
+    const pageIndex = Math.floor(ids.indexOf(rowId) / pageSizeRef.current);
+    setPagination((previous) =>
+      previous.pageIndex === pageIndex ? previous : { ...previous, pageIndex },
+    );
+    setFocusedRowId(rowId);
+    pendingFocusRowIdRef.current = rowId;
+    return rowId;
+  }, []);
+
+  /** Arrow keys, Home, and End: move focus, and select as Chrome's list does. */
+  const moveRowFocus = React.useCallback(
+    (to: 'next' | 'previous' | 'first' | 'last', modifiers = { shiftKey: false, toggleKey: false }) => {
+      const { shownRowIdsInOrder: ids, focusedRowId: current } = latestRef.current;
+      if (ids.length === 0) return false;
+      const currentIndex = current ? ids.indexOf(current) : -1;
+      const index = {
+        next: currentIndex < 0 ? 0 : currentIndex + 1,
+        previous: currentIndex < 0 ? ids.length - 1 : currentIndex - 1,
+        first: 0,
+        last: ids.length - 1,
+      }[to];
+      const rowId = focusRowAt(index);
+      if (!rowId) return false;
+      if (modifiers.toggleKey && !modifiers.shiftKey) {
+        // Ctrl (Cmd) moves focus only; the next Shift range starts here.
+        anchorRowIdRef.current = rowId;
+      } else {
+        if (modifiers.shiftKey && anchorRowIdRef.current === null && current) {
+          anchorRowIdRef.current = current;
+        }
+        changeSelection(rowId, { clear: !modifiers.toggleKey, range: modifiers.shiftKey, toggle: false });
+      }
+      return true;
+    },
+    [changeSelection, focusRowAt],
+  );
+
+  React.useImperativeHandle(
+    handleRef,
+    (): DataTableHandle<TData> => ({
+      getCommandRows: () => {
+        const { shownRows: rows, rowSelection: selection, focusedRowId: focused } =
+          latestRef.current;
+        const selected = rows.filter((row) => selection[row.id]).map((row) => row.original);
+        if (selected.length > 0) return selected;
+        const focusedRow = rows.find((row) => row.id === focused);
+        return focusedRow ? [focusedRow.original] : [];
+      },
+      selectAll: () => {
+        const { shownRowIdsInOrder: ids } = latestRef.current;
+        setRowSelection(Object.fromEntries(ids.filter(canSelectId).map((id) => [id, true])));
+      },
+      clearSelection: () => {
+        const { rowSelection: selection } = latestRef.current;
+        if (!Object.values(selection).some(Boolean)) return false;
+        setRowSelection({});
+        return true;
+      },
+      moveFocus: (step) => moveRowFocus(step === 1 ? 'next' : 'previous'),
+    }),
+    [canSelectId, moveRowFocus],
+  );
+
+  const handleRowClick = (event: React.MouseEvent<HTMLElement>, rowId: string) => {
+    // The second click of a double click opens the row; it must not undo a Ctrl selection.
+    if (event.detail > 1 || isFromControl(event)) return;
+    const toggleKey = isApplePlatform() ? event.metaKey : event.ctrlKey;
+    changeSelection(rowId, rowSelectionChangeFor({ shiftKey: event.shiftKey, toggleKey }));
+    setFocusedRowId(rowId);
+  };
+
+  const handleRowKeyDown = (event: React.KeyboardEvent<HTMLElement>, rowId: string) => {
+    if (event.target !== event.currentTarget || event.altKey) return;
+    const toggleKey = isApplePlatform() ? event.metaKey : event.ctrlKey;
+    const move = {
+      ArrowDown: 'next',
+      ArrowUp: 'previous',
+      Home: 'first',
+      End: 'last',
+    }[event.key] as 'next' | 'previous' | 'first' | 'last' | undefined;
+    if (move) {
+      event.preventDefault();
+      moveRowFocus(move, { shiftKey: event.shiftKey, toggleKey });
+      return;
+    }
+    if (event.key === ' ') {
+      event.preventDefault();
+      changeSelection(rowId, { clear: false, range: false, toggle: true });
+    }
+  };
+
+  // The row that takes Tab focus: the focused row while it is on this page, else the first row.
+  const pageRows = table.getRowModel().rows;
+  const tabStopRowId = pageRows.some((row) => row.id === focusedRowId)
+    ? focusedRowId
+    : pageRows[0]?.id;
+
   return (
     <div className="min-w-0 space-y-4">
       <DataTableToolbar
@@ -542,16 +731,22 @@ export function DataTable<TData extends RowData>({
             : undefined
         }
       />
-      {selectedRows.length > 0 &&
-        renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
       <div ref={tableFrameRef} className="rounded-md border bg-card">
         <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
           {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
-          <Table className="table-fixed" style={{ minWidth: table.getTotalSize() }}>
+          <Table
+            className="table-fixed"
+            style={{ minWidth: table.getTotalSize() }}
+            role="grid"
+            aria-multiselectable="true"
+            aria-rowcount={shownRows.length + 1}
+            aria-label={label}
+            data-testid="bookmark-grid"
+          >
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow key={headerGroup.id} aria-rowindex={1}>
                   {headerGroup.headers.map((header) => (
                     <React.Fragment key={header.id}>
                       {header.column.id === STICKY_COLUMN_ID && (
@@ -577,24 +772,38 @@ export function DataTable<TData extends RowData>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => {
-                  const activatable =
-                    Boolean(onRowClick) && (isRowActivatable?.(row.original) ?? false);
+                pageRows.map((row, rowIndex) => {
+                  const selectable = row.getCanSelect();
                   return (
                     <TableRow
                       key={row.id}
                       data-row-id={row.id}
                       data-state={row.getIsSelected() && 'selected'}
-                      className={rowClassName?.(row.original)}
-                      tabIndex={activatable ? 0 : undefined}
-                      onClick={() => onRowClick?.(row.original)}
-                      onKeyDown={(event) => {
-                        if (!activatable || event.target !== event.currentTarget) return;
-                        if (event.key === 'Enter' || event.key === ' ') {
-                          event.preventDefault();
-                          onRowClick?.(row.original);
-                        }
+                      aria-selected={selectable ? row.getIsSelected() : undefined}
+                      // The header row is 1; rows count across pages.
+                      aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
+                      className={cn(
+                        'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+                        rowClassName?.(row.original),
+                      )}
+                      tabIndex={row.id === tabStopRowId ? 0 : -1}
+                      onFocus={(event) => {
+                        if (event.target === event.currentTarget) setFocusedRowId(row.id);
                       }}
+                      onMouseDown={(event) => {
+                        // Shift+click selects rows, not text.
+                        if (event.shiftKey) event.preventDefault();
+                      }}
+                      onClick={(event) => handleRowClick(event, row.id)}
+                      onDoubleClick={(event) => {
+                        if (!isFromControl(event)) onRowOpen?.(row.original);
+                      }}
+                      onAuxClick={(event) => {
+                        if (event.button !== 1 || !onRowOpenInBackground) return;
+                        event.preventDefault();
+                        onRowOpenInBackground(row.original);
+                      }}
+                      onKeyDown={(event) => handleRowKeyDown(event, row.id)}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <React.Fragment key={cell.id}>
@@ -629,6 +838,13 @@ export function DataTable<TData extends RowData>({
         </MoveDisabledReasonContext.Provider>
       </div>
       <DataTablePagination table={table} />
+      {/* After the rows, so selecting never moves them (a double click's second click would
+          land on another row), and sticky, so it stays in view at the bottom of a long page. */}
+      {selectedRows.length > 0 && (
+        <div className="sticky bottom-0 z-20 bg-background pb-1">
+          {renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,12 @@
 /**
  * Key matching and guards shared by the popup and manager keyboard shortcuts.
  *
- * Shortcuts never use Ctrl or Cmd, so browser-reserved combinations (Ctrl/Cmd+L, T, W, N, R, D,
- * and so on) always reach the browser. They are also ignored while the user types, while an
- * IME composition is in progress, and while a dialog or menu owns the keyboard.
+ * Popup and side panel shortcuts never use Ctrl or Cmd, so browser-reserved combinations
+ * (Ctrl/Cmd+L, T, W, N, R, D, and so on) always reach the browser. The manager page, which
+ * replaces the browser's own manager, also binds the Ctrl (Cmd on Apple platforms) shortcuts of
+ * that manager (select all, undo, redo, open in new tabs), marked `mod` in the config. Shortcuts
+ * are ignored while the user types, while an IME composition is in progress, and while a dialog
+ * or menu owns the keyboard.
  */
 
 import { z } from 'zod';
@@ -11,6 +14,8 @@ import { z } from 'zod';
 /** The parts of a keyboard event the guards read, so they can be tested without a DOM. */
 export type ShortcutKeyEvent = {
   key: string;
+  /** `KeyboardEvent.code`, which names a letter key on any layout (`KeyA`). */
+  code?: string;
   ctrlKey: boolean;
   metaKey: boolean;
   altKey: boolean;
@@ -27,14 +32,28 @@ export type ShortcutBinding = {
   alt?: boolean;
   /** Required Shift state. Ignored for punctuation, whose Shift state depends on the layout. */
   shift?: boolean;
+  /** Ctrl, or Cmd on Apple platforms. Manager only. */
+  mod?: boolean;
 };
 
-const bindingsSchema = z
+/** Which platforms a configured binding applies to: Apple's (`mac`) or the others. */
+type BindingPlatform = 'mac' | 'other';
+
+const bindingFields = {
+  key: z.string().min(1),
+  alt: z.boolean().optional(),
+  shift: z.boolean().optional(),
+};
+
+const bindingsSchema = z.array(z.strictObject(bindingFields)).min(1);
+
+// The manager may use Ctrl/Cmd, and a binding may apply to one platform only.
+const managerBindingsSchema = z
   .array(
     z.strictObject({
-      key: z.string().min(1),
-      alt: z.boolean().optional(),
-      shift: z.boolean().optional(),
+      ...bindingFields,
+      mod: z.boolean().optional(),
+      platform: z.enum(['mac', 'other']).optional(),
     }),
   )
   .min(1);
@@ -43,26 +62,66 @@ const shortcutsConfig = readConfig(
   'ui/shortcuts',
   z.strictObject({
     manager: z.strictObject({
-      focus_filter: bindingsSchema,
-      show_help: bindingsSchema,
-      parent_folder: bindingsSchema,
-      next_row: bindingsSchema,
-      previous_row: bindingsSchema,
-      open_saved_searches: bindingsSchema,
+      focus_filter: managerBindingsSchema,
+      show_help: managerBindingsSchema,
+      parent_folder: managerBindingsSchema,
+      next_row: managerBindingsSchema,
+      previous_row: managerBindingsSchema,
+      open_saved_searches: managerBindingsSchema,
+      select_all: managerBindingsSchema,
+      clear_selection: managerBindingsSchema,
+      delete: managerBindingsSchema,
+      rename: managerBindingsSchema,
+      open: managerBindingsSchema,
+      open_in_new_tabs: managerBindingsSchema,
+      open_in_new_window: managerBindingsSchema,
+      undo: managerBindingsSchema,
+      redo: managerBindingsSchema,
     }),
     popup: z.strictObject({ focus_search: bindingsSchema }),
   }),
 );
 
+/** macOS, iPadOS, and iOS, where key caps use Apple's symbols and Cmd stands in for Ctrl. */
+export function isApplePlatform(): boolean {
+  const nav = globalThis.navigator as
+    | (Navigator & { userAgentData?: { platform?: string } })
+    | undefined;
+  const platform = nav?.userAgentData?.platform || nav?.platform || '';
+  return /mac|iphone|ipad|ipod/i.test(platform);
+}
+
+/** The configured bindings that apply on this platform, without the platform field. */
+export function bindingsForPlatform(
+  bindings: readonly (ShortcutBinding & { platform?: BindingPlatform })[],
+  apple: boolean = isApplePlatform(),
+): ShortcutBinding[] {
+  const platform: BindingPlatform = apple ? 'mac' : 'other';
+  return bindings
+    .filter((binding) => !binding.platform || binding.platform === platform)
+    .map(({ platform: _platform, ...binding }) => binding);
+}
+
+const managerConfig = shortcutsConfig.manager;
+
 /** Bindings per action, from config/ui/shortcuts.toml; the help dialog lists the same ones. */
 export const SHORTCUT_BINDINGS = {
   manager: {
-    focusFilter: shortcutsConfig.manager.focus_filter,
-    showHelp: shortcutsConfig.manager.show_help,
-    parentFolder: shortcutsConfig.manager.parent_folder,
-    nextRow: shortcutsConfig.manager.next_row,
-    previousRow: shortcutsConfig.manager.previous_row,
-    openSavedSearches: shortcutsConfig.manager.open_saved_searches,
+    focusFilter: bindingsForPlatform(managerConfig.focus_filter),
+    showHelp: bindingsForPlatform(managerConfig.show_help),
+    parentFolder: bindingsForPlatform(managerConfig.parent_folder),
+    nextRow: bindingsForPlatform(managerConfig.next_row),
+    previousRow: bindingsForPlatform(managerConfig.previous_row),
+    openSavedSearches: bindingsForPlatform(managerConfig.open_saved_searches),
+    selectAll: bindingsForPlatform(managerConfig.select_all),
+    clearSelection: bindingsForPlatform(managerConfig.clear_selection),
+    delete: bindingsForPlatform(managerConfig.delete),
+    rename: bindingsForPlatform(managerConfig.rename),
+    open: bindingsForPlatform(managerConfig.open),
+    openInNewTabs: bindingsForPlatform(managerConfig.open_in_new_tabs),
+    openInNewWindow: bindingsForPlatform(managerConfig.open_in_new_window),
+    undo: bindingsForPlatform(managerConfig.undo),
+    redo: bindingsForPlatform(managerConfig.redo),
   },
   popup: {
     focusSearch: shortcutsConfig.popup.focus_search,
@@ -77,6 +136,8 @@ const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
   ArrowRight: '→',
   Enter: '↵',
   Escape: 'Esc',
+  Control: 'Ctrl',
+  ' ': 'Space',
 };
 
 /** Apple keyboards print symbols on these keys, and macOS menus name them the same way. */
@@ -84,22 +145,25 @@ const APPLE_KEY_CAP_LABELS: Readonly<Record<string, string>> = {
   ...KEY_CAP_LABELS,
   Alt: '⌥',
   Shift: '⇧',
+  Meta: '⌘',
   Backspace: '⌫',
   Delete: '⌦',
 };
 
-/** macOS, iPadOS, and iOS, where key caps use Apple's symbols. */
-export function isApplePlatform(): boolean {
-  const nav = globalThis.navigator as
-    | (Navigator & { userAgentData?: { platform?: string } })
-    | undefined;
-  const platform = nav?.userAgentData?.platform || nav?.platform || '';
-  return /mac|iphone|ipad|ipod/i.test(platform);
+/**
+ * Modifier names, which `aria-keyshortcuts` and printed key caps share, in the order each
+ * platform prints them: Ctrl, Alt, Shift elsewhere; ⌥⇧⌘ on Apple platforms.
+ */
+function bindingModifiers(binding: ShortcutBinding, apple = isApplePlatform()): string[] {
+  const alt = binding.alt ? ['Alt'] : [];
+  const shift = binding.shift ? ['Shift'] : [];
+  if (!binding.mod) return [...alt, ...shift];
+  return apple ? [...alt, ...shift, 'Meta'] : ['Control', ...alt, ...shift];
 }
 
-/** Modifier names, which `aria-keyshortcuts` and printed key caps share. */
-function bindingModifiers(binding: ShortcutBinding): string[] {
-  return [...(binding.alt ? ['Alt'] : []), ...(binding.shift ? ['Shift'] : [])];
+/** The key as printed: a letter typed with Ctrl or Cmd shows in capitals, as on the keycap. */
+function bindingKeyName(binding: ShortcutBinding): string {
+  return binding.mod && binding.key.length === 1 ? binding.key.toUpperCase() : binding.key;
 }
 
 /**
@@ -108,12 +172,14 @@ function bindingModifiers(binding: ShortcutBinding): string[] {
  */
 export function shortcutKeyCaps(binding: ShortcutBinding): string[] {
   const labels = isApplePlatform() ? APPLE_KEY_CAP_LABELS : KEY_CAP_LABELS;
-  return [...bindingModifiers(binding), binding.key].map((key) => labels[key] ?? key);
+  return [...bindingModifiers(binding), bindingKeyName(binding)].map((key) => labels[key] ?? key);
 }
 
 /** An `aria-keyshortcuts` value for the bindings, e.g. `Alt+ArrowUp Backspace`. */
 export function ariaKeyShortcuts(bindings: readonly ShortcutBinding[]): string {
-  return bindings.map((binding) => [...bindingModifiers(binding), binding.key].join('+')).join(' ');
+  return bindings
+    .map((binding) => [...bindingModifiers(binding), bindingKeyName(binding)].join('+'))
+    .join(' ');
 }
 
 export type ShortcutGuardOptions = {
@@ -121,6 +187,8 @@ export type ShortcutGuardOptions = {
   allowWhileTyping?: boolean;
   /** Handle the key even while a dialog, menu, or listbox is open (used for Escape). */
   allowWithOverlay?: boolean;
+  /** Let bindings with `mod` match Ctrl (Cmd) combinations; the manager page only. */
+  allowModifiers?: boolean;
   /** Document to check for open overlays; defaults to the global document when there is one. */
   root?: Pick<Document, 'querySelector'> | null;
 };
@@ -191,11 +259,28 @@ export function hasOpenOverlay(root?: Pick<Document, 'querySelector'> | null): b
 
 const isPunctuationKey = (key: string) => key.length === 1 && !/[\p{L}\p{N}\s]/u.test(key);
 
-/** Exact key and modifier match. Ctrl and Cmd never match, so no browser combo is taken. */
-export function matchesShortcut(event: ShortcutKeyEvent, binding: ShortcutBinding): boolean {
-  if (isBrowserReservedCombo(event)) return false;
+/**
+ * Exact key and modifier match. Ctrl and Cmd match only a binding with `mod` (Ctrl, or Cmd on
+ * Apple platforms; the other one never), so no other browser combination is taken.
+ */
+export function matchesShortcut(
+  event: ShortcutKeyEvent,
+  binding: ShortcutBinding,
+  apple: boolean = isApplePlatform(),
+): boolean {
+  const mod = apple ? event.metaKey : event.ctrlKey;
+  const otherMod = apple ? event.ctrlKey : event.metaKey;
+  if (otherMod || mod !== (binding.mod ?? false)) return false;
   if (event.altKey !== (binding.alt ?? false)) return false;
   if (!isPunctuationKey(binding.key) && event.shiftKey !== (binding.shift ?? false)) return false;
+  if (binding.mod && /^[a-z]$/i.test(binding.key)) {
+    // With Ctrl or Cmd, `key` can be either case, or another script's letter; the key's position
+    // (`code`) is what the browser's own shortcuts use.
+    return (
+      event.key.toLowerCase() === binding.key.toLowerCase() ||
+      event.code === `Key${binding.key.toUpperCase()}`
+    );
+  }
   // Letters compare exactly, so Shift+J (`J`) does not match `j`.
   return event.key === binding.key;
 }
@@ -203,11 +288,16 @@ export function matchesShortcut(event: ShortcutKeyEvent, binding: ShortcutBindin
 /** Whether a shortcut may act on this event at all. */
 export function canHandleShortcut(
   event: ShortcutKeyEvent,
-  { allowWhileTyping = false, allowWithOverlay = false, root }: ShortcutGuardOptions = {},
+  {
+    allowWhileTyping = false,
+    allowWithOverlay = false,
+    allowModifiers = false,
+    root,
+  }: ShortcutGuardOptions = {},
 ): boolean {
   if (event.defaultPrevented) return false;
   if (isComposingEvent(event)) return false;
-  if (isBrowserReservedCombo(event)) return false;
+  if (!allowModifiers && isBrowserReservedCombo(event)) return false;
   if (!allowWhileTyping && isTypingTarget(event.target)) return false;
   if (!allowWithOverlay && hasOpenOverlay(root)) return false;
   return true;

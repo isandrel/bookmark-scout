@@ -31,7 +31,9 @@ export const FAKE_ROOT_ID = '0';
 
 export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
   type Stored = { id: string; parentId?: string; title: string; url?: string; children?: string[] };
-  const nodes = new Map<string, Stored>([[FAKE_ROOT_ID, { id: FAKE_ROOT_ID, title: '', children: [] }]]);
+  const nodes = new Map<string, Stored>([
+    [FAKE_ROOT_ID, { id: FAKE_ROOT_ID, title: '', children: [] }],
+  ]);
   let nextId = 1000;
   const fail = {
     update: new Set<string>(),
@@ -59,7 +61,10 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       ...(stored.children ? { children: stored.children.map((child) => toNode(need(child))) } : {}),
     } as Node;
   };
-  const add = (details: { parentId?: string; index?: number; title?: string; url?: string }, id = String(nextId++)) => {
+  const add = (
+    details: { parentId?: string; index?: number; title?: string; url?: string },
+    id = String(nextId++),
+  ) => {
     const parentId = details.parentId ?? FAKE_ROOT_ID;
     const parent = need(parentId);
     if (!parent.children) throw new Error('Parent is not a folder.');
@@ -126,9 +131,15 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
     const from = need(node.parentId ?? FAKE_ROOT_ID);
     const to = need(destination.parentId ?? node.parentId ?? FAKE_ROOT_ID);
     if (!to.children) throw new Error('Parent is not a folder.');
-    from.children?.splice(from.children.indexOf(id), 1);
-    const index = destination.index ?? to.children.length;
-    if (index > to.children.length) throw new Error('Index out of bounds.');
+    const oldIndex = from.children?.indexOf(id) ?? -1;
+    const requested = destination.index;
+    if (requested !== undefined && requested > to.children.length) {
+      throw new Error('Index out of bounds.');
+    }
+    from.children?.splice(oldIndex, 1);
+    // As in Chrome, the index counts the moved item itself within its own folder.
+    let index = requested ?? to.children.length;
+    if (requested !== undefined && from === to && requested > oldIndex) index -= 1;
     to.children.splice(index, 0, id);
     node.parentId = to.id;
     writes.push(`move ${id}`);

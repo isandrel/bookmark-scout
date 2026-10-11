@@ -255,6 +255,30 @@ test('bookmark manager keeps the search in the address and links to its own page
     .toEqual([`${extension.url('bookmarks.html')}?id=${folder.folderId}`]);
 });
 
+test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', async ({
+  extension,
+}) => {
+  await setSettings(extension, { confirmBeforeDelete: false });
+  const folder = await seedFolder(extension, 'E2E Firefox Undo', [
+    { title: 'Undo Keep', url: 'https://e2e.invalid/keep' },
+    { title: 'Undo Gone', url: 'https://e2e.invalid/gone' },
+  ]);
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await expect.poll(() => visibleRows(extension)).toBe(2);
+
+  // A click on a cell selects and focuses its row; keys then go to the focused row.
+  await (await extension.findByText('tbody td', 'Undo Gone')).click();
+  const { driver } = extension;
+  await driver.actions().sendKeys(Key.DELETE).perform();
+  await expect.poll(async () => (await childrenOf(extension, folder.folderId)).length).toBe(1);
+
+  const mod = process.platform === 'darwin' ? Key.COMMAND : Key.CONTROL;
+  await driver.actions().keyDown(mod).sendKeys('z').keyUp(mod).perform();
+  await expect
+    .poll(async () => (await childrenOf(extension, folder.folderId)).map((item) => item.title))
+    .toEqual(['Undo Keep', 'Undo Gone']);
+});
+
 test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
   // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
   // locks. Hold a lock in one extension page and look for it from another.

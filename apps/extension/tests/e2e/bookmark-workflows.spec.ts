@@ -495,7 +495,7 @@ test('navigates folders and filters bookmarks by title and URL', async ({
   await expect(rows.first()).toContainText('Beta Item');
   await page.getByRole('button', { name: 'Reset' }).click();
 
-  await rows.filter({ hasText: 'Nested Folder' }).click();
+  await rows.filter({ hasText: 'Nested Folder' }).dblclick();
   await expect(page).toHaveURL(new RegExp(`id=${folder.ids['Nested Folder']}$`));
   await expect(rows).toHaveCount(1);
   await expect(rows.first()).toContainText('Inside Nested');

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ariaKeyShortcuts,
+  bindingsForPlatform,
   canHandleShortcut,
   findShortcut,
   hasOpenOverlay,
@@ -212,5 +213,67 @@ describe('configured bindings', () => {
     expect(shortcutKeyCaps({ key: 'k', alt: true, shift: true })).toEqual(['⌥', '⇧', 'k']);
     expect(shortcutKeyCaps({ key: 'Escape' })).toEqual(['Esc']);
     expect(ariaKeyShortcuts(SHORTCUT_BINDINGS.manager.parentFolder)).toBe('Alt+ArrowUp Backspace');
+  });
+});
+
+describe('Ctrl and Cmd bindings (manager only)', () => {
+  const undo = { key: 'z', mod: true };
+  const redo = { key: 'z', mod: true, shift: true };
+
+  it('match Ctrl elsewhere and Cmd on Apple platforms, never the other one', () => {
+    expect(matchesShortcut(keyEvent('z', { ctrlKey: true }), undo, false)).toBe(true);
+    expect(matchesShortcut(keyEvent('z', { metaKey: true }), undo, false)).toBe(false);
+    expect(matchesShortcut(keyEvent('z', { metaKey: true }), undo, true)).toBe(true);
+    expect(matchesShortcut(keyEvent('z', { ctrlKey: true }), undo, true)).toBe(false);
+    expect(matchesShortcut(keyEvent('z'), undo, false)).toBe(false);
+    // A plain binding never matches with Ctrl or Cmd held.
+    expect(matchesShortcut(keyEvent('j', { ctrlKey: true }), { key: 'j' }, false)).toBe(false);
+  });
+
+  it('match a letter in either case, or by its position on another layout', () => {
+    expect(matchesShortcut(keyEvent('Z', { ctrlKey: true, shiftKey: true }), redo, false)).toBe(
+      true,
+    );
+    expect(matchesShortcut(keyEvent('z', { metaKey: true, shiftKey: true }), redo, true)).toBe(
+      true,
+    );
+    expect(matchesShortcut(keyEvent('z', { ctrlKey: true, shiftKey: true }), undo, false)).toBe(
+      false,
+    );
+    const russian = keyEvent('я', { ctrlKey: true, code: 'KeyZ' });
+    expect(matchesShortcut(russian, undo, false)).toBe(true);
+  });
+
+  it('are only considered when the caller allows modifiers', () => {
+    vi.stubGlobal('navigator', { platform: 'Win32' });
+    const event = keyEvent('a', { ctrlKey: true, code: 'KeyA' });
+    expect(findShortcut(event, { selectAll: [{ key: 'a', mod: true }] }, { root: noOverlay })).toBe(
+      null,
+    );
+    expect(
+      findShortcut(
+        event,
+        { selectAll: [{ key: 'a', mod: true }] },
+        { root: noOverlay, allowModifiers: true },
+      ),
+    ).toBe('selectAll');
+  });
+
+  it('keep the bindings for this platform', () => {
+    const rename = [
+      { key: 'F2', platform: 'other' as const },
+      { key: 'Enter', platform: 'mac' as const },
+    ];
+    expect(bindingsForPlatform(rename, false)).toEqual([{ key: 'F2' }]);
+    expect(bindingsForPlatform(rename, true)).toEqual([{ key: 'Enter' }]);
+  });
+
+  it('print Ctrl first elsewhere and ⌘ last on Apple platforms', () => {
+    vi.stubGlobal('navigator', { platform: 'Win32' });
+    expect(shortcutKeyCaps(redo)).toEqual(['Ctrl', 'Shift', 'Z']);
+    expect(ariaKeyShortcuts([redo])).toBe('Control+Shift+Z');
+    vi.stubGlobal('navigator', { platform: 'MacIntel' });
+    expect(shortcutKeyCaps(redo)).toEqual(['⇧', '⌘', 'Z']);
+    expect(ariaKeyShortcuts([redo])).toBe('Shift+Meta+Z');
   });
 });

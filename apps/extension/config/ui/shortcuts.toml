@@ -1,7 +1,13 @@
-# Single-key shortcuts. Each action lists one or more bindings: `key` is the KeyboardEvent.key
-# value ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`. Ctrl and Cmd are never
-# used, so browser shortcuts keep working. Shortcuts pause while typing, during IME composition,
-# and while a dialog or menu is open. The manager's shortcuts help lists these same bindings.
+# Keyboard shortcuts. Each action lists one or more bindings: `key` is the KeyboardEvent.key value
+# ("/", "j", "ArrowUp", "Backspace"), with optional `alt` and `shift`. Shortcuts pause while
+# typing, during IME composition, and while a dialog or menu is open. The manager's shortcuts help
+# lists these same bindings.
+#
+# The popup and side panel never use Ctrl or Cmd, so browser shortcuts keep working there. The
+# bookmark manager replaces the browser's own manager, so it also takes that manager's Ctrl
+# shortcuts: `mod = true` is Ctrl, or Cmd on a Mac. A manager binding can apply to one platform
+# only, `platform = "mac"` or `"other"`, as Chrome's manager does (F2 renames elsewhere, Enter on a
+# Mac).
 
 # Bookmark manager page.
 [manager]
@@ -11,6 +17,21 @@ parent_folder = [{ key = "ArrowUp", alt = true }, { key = "Backspace" }]
 next_row = [{ key = "j" }]
 previous_row = [{ key = "k" }]
 open_saved_searches = [{ key = "s" }]
+# The rows the filters show, on every page of the table
+select_all = [{ key = "a", mod = true }]
+clear_selection = [{ key = "Escape" }]
+# Backspace alone goes to the parent folder, so a Mac deletes with Cmd+Backspace (as in Finder)
+delete = [{ key = "Delete" }, { key = "Backspace", mod = true, platform = "mac" }]
+rename = [{ key = "F2", platform = "other" }, { key = "Enter", platform = "mac" }]
+# A folder opens in the manager; bookmarks open in tabs, the first in front
+open = [{ key = "Enter", platform = "other" }, { key = "o", mod = true, platform = "mac" }]
+open_in_new_tabs = [{ key = "Enter", mod = true }]
+open_in_new_window = [{ key = "Enter", shift = true }]
+undo = [{ key = "z", mod = true }]
+redo = [
+  { key = "y", mod = true, platform = "other" },
+  { key = "z", mod = true, shift = true },
+]
 
 # Popup and side panel. Arrow keys, Home, End, Enter, and Escape in the search box and the tree
 # follow the standard tree and combobox keyboard patterns and are not listed here.

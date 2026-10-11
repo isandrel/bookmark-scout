@@ -63,9 +63,12 @@ function BookmarkEditForm({
 
     setSaving(true);
     try {
-      await updateBookmark(
-        bookmark.id,
-        urlChanged ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
+      // Recorded, so Ctrl+Z in the manager restores the previous name and URL.
+      await recordBookmarkWrites({ action: 'edit', title: bookmark.title }, (writer) =>
+        writer.update(
+          bookmark.id,
+          urlChanged ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
+        ),
       );
       await onSaved();
       toast.success({ title: t('bookmarks_editSaved') });

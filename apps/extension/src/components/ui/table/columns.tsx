@@ -334,7 +334,12 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
             <div className="pointer-events-none absolute right-full top-1/2 mr-1 -translate-y-1/2 rounded-md border bg-background p-1 opacity-0 shadow-sm transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover:pointer-events-auto group-hover:opacity-100">
               <MoveBookmarkButtons
                 position={position}
-                onMove={(direction) => moveBookmarkWithinFolder(bookmark, direction)}
+                onMove={async (direction) => {
+                  // Recorded, so Ctrl+Z puts the item back.
+                  await recordBookmarkWrites({ action: 'move', title: bookmark.title }, (writer) =>
+                    moveBookmarkWithinFolder(bookmark, direction, writer.move),
+                  );
+                }}
               />
             </div>
           )}

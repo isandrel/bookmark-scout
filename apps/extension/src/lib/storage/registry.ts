@@ -82,6 +82,11 @@ export const STORAGE_ITEMS = {
   dismissedNotices: { area: 'local', name: 'ui.dismissed-notices', v: 1, backup: 'exclude' },
   /** Session: the last quick save, for Undo and Move; gone when the browser closes. */
   quickSave: { area: 'session', name: 'quick-save.last', v: 1, backup: 'exclude' },
+  /**
+   * Session: the manager's undo and redo history of bookmark changes. It names bookmark ids,
+   * which belong to this browser, and like Chrome's own it ends when the browser closes.
+   */
+  bookmarkHistory: { area: 'session', name: 'bookmarks.history', v: 1, backup: 'exclude' },
 } as const satisfies Record<string, StorageItem>;
 
 export type StorageItemId = keyof typeof STORAGE_ITEMS;

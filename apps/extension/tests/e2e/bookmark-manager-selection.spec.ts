@@ -75,7 +75,7 @@ test('folder navigation clears the selection, including Back and Forward', async
   await expect(page.getByText('2 of 3 row(s) selected.', { exact: true })).toBeVisible();
 
   // Opening a subfolder starts with nothing selected.
-  await row(page, 'Nav Sub').click();
+  await row(page, 'Nav Sub').dblclick();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Nav Sub']}$`));
   await expect(row(page, 'Nav Inside')).toBeVisible();
   await expect(bulk).toHaveCount(0);

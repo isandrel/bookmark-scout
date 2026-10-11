@@ -1,5 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { OPEN_KEY } from './manager-keys';
 import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -142,7 +143,7 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   ).toBeVisible();
 
   // Deleting the open folder elsewhere falls back to its parent with a notice.
-  await row(page, 'Live Child').click();
+  await row(page, 'Live Child').dblclick();
   await expect(breadcrumbCurrent(page)).toHaveText('Live Child');
   await extensionWorker.evaluate((id) => chrome.bookmarks.removeTree(id), seeded.ids['Live Child']);
   await expect(page.getByTestId('folder-notice')).toContainText(
@@ -241,7 +242,7 @@ test('browser Back and Forward follow folder navigation only', async ({
   const historyLength = () => page.evaluate(() => window.history.length);
   const start = await historyLength();
 
-  await row(page, 'History Child').click();
+  await row(page, 'History Child').dblclick();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['History Child']}$`));
   await expect(row(page, 'Child Link')).toBeVisible();
   expect(await historyLength()).toBe(start + 1);
@@ -300,7 +301,8 @@ test('date filter includes today and the calendar lays out and highlights days',
   await page.getByRole('checkbox', { name: 'Current folder only' }).check();
 
   await toolbar(page).getByRole('button', { name: 'Date Added' }).click();
-  const grid = page.getByRole('grid').first();
+  // The calendar's grid, not the bookmark table (also a grid).
+  const grid = page.locator('[role="grid"]:not([data-testid="bookmark-grid"])').first();
   const weekdays = grid.locator('thead th');
   await expect(weekdays).toHaveCount(7);
   const boxes = await weekdays.evaluateAll((cells) =>
@@ -341,7 +343,8 @@ test('filters, date picker, and fallbacks are localized in Japanese', async ({
   await page.keyboard.press('Escape');
 
   await toolbar(page).getByRole('button', { name: '追加日' }).click();
-  const grid = page.getByRole('grid').first();
+  // The calendar's grid, not the bookmark table (also a grid).
+  const grid = page.locator('[role="grid"]:not([data-testid="bookmark-grid"])').first();
   await expect(grid.locator('thead th').first()).toHaveText('日');
   await expect(page.getByText(/\d{4}年\d{1,2}月/).first()).toBeVisible();
   await page.getByRole('button', { name: /今日/ }).first().click();
@@ -451,7 +454,7 @@ test('narrow windows keep view options and page jumps; collapsed sidebars leave 
   // Folder rows open from the keyboard, and the tree has no nested buttons.
   await expect(page.locator('button button')).toHaveCount(0);
   await row(page, 'Narrow Folder').focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press(OPEN_KEY);
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Narrow Folder']}$`));
 });
 

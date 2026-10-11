@@ -39,6 +39,7 @@ What the extension does with data in the source after version `0.3.2` (the next 
 | Saved searches (`search.saved`) | `storage.local` | No | Yes |
 | Recent folders (`folders.recent`, for the popup, the right-click menu, and quick save) | `storage.local` | No | No |
 | Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No | No |
+| Manager undo history (`bookmarks.history`): the bookmarks changed in the manager (ids, titles, URLs, folders, positions), with copies of deleted ones and their tags and summaries, for Ctrl+Z and Ctrl+Y; at most the last 100 changes and 4 MB (`apps/extension/config/bookmarks/history.toml`) | `storage.session`, cleared when the browser closes | No | No |
 | Recent searches (`search.history`) | `storage.local`, can be turned off in Settings | No | No |
 | Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No | No |
 | Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No | No |

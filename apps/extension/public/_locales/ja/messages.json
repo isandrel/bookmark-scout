@@ -67,9 +67,49 @@
         "message": "次または前の行に移動",
         "description": "Keyboard shortcut description: j and k move between table rows"
     },
-    "shortcuts_openFolder": {
-        "message": "フォーカス中のフォルダを開く",
-        "description": "Keyboard shortcut description: Enter opens the focused folder row"
+    "shortcuts_selectAll": {
+        "message": "フィルタで表示中の行をすべて選択",
+        "description": "Manager shortcuts help: select every row the filters show"
+    },
+    "shortcuts_clearSelection": {
+        "message": "選択を解除",
+        "description": "Manager shortcuts help: clear the row selection"
+    },
+    "shortcuts_deleteSelection": {
+        "message": "選択した項目を削除",
+        "description": "Manager shortcuts help: delete the selected rows"
+    },
+    "shortcuts_rename": {
+        "message": "選択した項目を編集または名前を変更",
+        "description": "Manager shortcuts help: edit a bookmark or rename a folder"
+    },
+    "shortcuts_open": {
+        "message": "選択したフォルダを開く、またはブックマークをタブで開く",
+        "description": "Manager shortcuts help: open the selected folder, or the selected bookmarks in tabs"
+    },
+    "shortcuts_openInNewTabs": {
+        "message": "新しいバックグラウンドタブで開く",
+        "description": "Manager shortcuts help: open the selected bookmarks in background tabs"
+    },
+    "shortcuts_openInNewWindow": {
+        "message": "新しいウィンドウで開く",
+        "description": "Manager shortcuts help: open the selected bookmarks in a new window"
+    },
+    "shortcuts_undo": {
+        "message": "直前の変更を元に戻す",
+        "description": "Manager shortcuts help: undo the last change"
+    },
+    "shortcuts_redo": {
+        "message": "元に戻した変更をやり直す",
+        "description": "Manager shortcuts help: redo the change undone last"
+    },
+    "shortcuts_moveRowFocus": {
+        "message": "行を移動。Shift を押しながらで選択範囲を広げる",
+        "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
+    },
+    "shortcuts_toggleRow": {
+        "message": "フォーカス中の行を選択または選択解除",
+        "description": "Manager shortcuts help: Space selects or unselects the focused row"
     },
     "shortcuts_showHelp": {
         "message": "キーボードショートカットを表示",
@@ -152,6 +192,66 @@
     "toast_deleteRestored": {
         "message": "削除を元に戻しました",
         "description": "Toast title after restoring a deletion"
+    },
+    "history_add": {
+        "message": "「$1」を追加",
+        "description": "Undo history label for adding one item. $1 is its title."
+    },
+    "history_addMany": {
+        "message": "$1件を追加",
+        "description": "Undo history label for adding several items. $1 is how many."
+    },
+    "history_edit": {
+        "message": "「$1」を編集",
+        "description": "Undo history label for editing a bookmark or renaming a folder. $1 is its title."
+    },
+    "history_move": {
+        "message": "「$1」を移動",
+        "description": "Undo history label for moving one item. $1 is its title."
+    },
+    "history_moveMany": {
+        "message": "$1件を移動",
+        "description": "Undo history label for moving several items. $1 is how many."
+    },
+    "history_delete": {
+        "message": "「$1」を削除",
+        "description": "Undo history label for deleting one item. $1 is its title."
+    },
+    "history_deleteMany": {
+        "message": "$1件を削除",
+        "description": "Undo history label for deleting several items. $1 is how many."
+    },
+    "history_sort": {
+        "message": "「$1」を並べ替え",
+        "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
+    },
+    "toast_undone": {
+        "message": "元に戻しました: $1",
+        "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
+    },
+    "toast_redone": {
+        "message": "やり直しました: $1",
+        "description": "Toast after redoing a change in the bookmark manager. $1 is the change."
+    },
+    "toast_nothingToUndo": {
+        "message": "元に戻す操作はありません",
+        "description": "Toast when undo is pressed with no change to undo"
+    },
+    "toast_nothingToRedo": {
+        "message": "やり直す操作はありません",
+        "description": "Toast when redo is pressed with no change to redo"
+    },
+    "toast_historySkipped": {
+        "message": "その後ブックマークが変更されたためスキップ: $1 件。",
+        "description": "Toast detail when part of an undo or redo was left out. $1 is how many changes were left out."
+    },
+    "toast_undoChanged": {
+        "message": "その後ブックマークが変更されたため、元に戻せません。",
+        "description": "Error toast when nothing of an undo could be applied because the bookmarks changed"
+    },
+    "toast_redoChanged": {
+        "message": "その後ブックマークが変更されたため、やり直せません。",
+        "description": "Error toast when nothing of a redo could be applied because the bookmarks changed"
     },
     "toast_deleteRestoredDesc": {
         "message": "「$title$」を復元しました。",
@@ -3036,6 +3136,18 @@
     "bookmarks_breadcrumb": {
         "message": "フォルダのパス",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_openManyTitle": {
+        "message": "$1 個のタブを開きますか？",
+        "description": "Title of the confirmation before opening many bookmarks at once. $1 is how many tabs."
+    },
+    "bookmarks_openManyDescription": {
+        "message": "$1 件のブックマークを一度に開きます。",
+        "description": "Text of the confirmation before opening many bookmarks at once. $1 is how many."
+    },
+    "bookmarks_openManyConfirm": {
+        "message": "すべて開く",
+        "description": "Confirm button that opens many bookmarks at once"
     },
     "bookmarks_copyFolderLink": {
         "message": "このフォルダへのリンクをコピー",

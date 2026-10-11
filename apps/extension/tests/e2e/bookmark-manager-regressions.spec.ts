@@ -5,6 +5,7 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { OPEN_KEY } from './manager-keys';
 import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -218,9 +219,10 @@ test('keyboard folder navigation keeps focus in the table', async ({
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
 
-  // Enter opens the folder; focus moves to its first row instead of falling to the page.
+  // Enter (Cmd+O on a Mac) opens the folder; focus moves to its first row instead of falling to
+  // the page.
   await row(page, 'Focus Child').focus();
-  await page.keyboard.press('Enter');
+  await page.keyboard.press(OPEN_KEY);
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Focus Child']}$`));
   await expect.poll(() => focusedRowText(page)).toContain('Focus Leaf');
 
