@@ -42,23 +42,31 @@ export class RecommendedFolderError extends Error {
 
 /**
  * Zod schema for single recommendation.
- * Note: All fields must be required for OpenAI structured output compatibility.
+ * Note: All fields must be required for OpenAI structured output compatibility. The confidence
+ * has no bounds here: some models answer 85 for 85%, which `toFolderRecommendations` rescales.
  */
 const singleRecommendationSchema = z.object({
   type: z.enum(['existing', 'new']),
   folderPath: z.string().describe('Full folder path like "AI/Tools" or new folder name'),
   parentPath: z.string().describe('Parent path for new folder, empty string if type is existing'),
-  confidence: z.number().min(0).max(1).describe('Confidence score 0-1'),
+  confidence: z.number().describe('Confidence score from 0 to 1'),
   reason: z.string().describe('Brief reason for this recommendation'),
 });
 
+type RawFolderRecommendation = z.infer<typeof singleRecommendationSchema>;
+
 /**
- * Schema for multiple recommendations. It has no upper bound: providers do not always honor the
- * requested count, and one extra suggestion must not fail the whole request. The result is cut
- * to the requested count afterwards.
+ * Schema for multiple recommendations, shared by the popup and AI quick save (through the AI host
+ * page). It has no bounds: providers do not always honor the requested count, an empty list means
+ * no suggestion rather than a broken answer, and a malformed suggestion is dropped on its own
+ * instead of failing the others. The result is checked and cut to the requested count afterwards
+ * (`toFolderRecommendations`).
  */
 export const folderRecommendationsSchema = z.object({
-  recommendations: z.array(singleRecommendationSchema).min(1),
+  recommendations: z
+    // `catch` keeps the item's JSON Schema for the provider and turns a bad item into undefined.
+    .array(singleRecommendationSchema.optional().catch(undefined))
+    .transform((items) => items.filter((item): item is RawFolderRecommendation => !!item)),
 });
 
 export type FolderRecommendationsObject = z.infer<typeof folderRecommendationsSchema>;
@@ -73,12 +81,14 @@ export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; pat
 
 /** The one suggestion for a library without folders: a new folder at the top. */
 export function noFoldersRecommendation(): FolderRecommendation[] {
-  return [{
-    type: 'new',
-    folderPath: t('bookmarks_root'),
-    confidence: 1,
-    reason: t('ai_recommendationNoFolders'),
-  }];
+  return [
+    {
+      type: 'new',
+      folderPath: t('bookmarks_root'),
+      confidence: 1,
+      reason: t('ai_recommendationNoFolders'),
+    },
+  ];
 }
 
 /** The system prompt and the JSON the model reads, for one page and the folder list. */
@@ -104,19 +114,59 @@ export async function buildFolderRecommendationRequest(
   };
 }
 
-/** The model's answer cut to the setting's count, with each existing path's folder id. */
+/** A confidence from 0 to 1; a model that answered in percent (85) is rescaled. */
+export function normalizeConfidence(confidence: number): number {
+  const fraction = confidence > 1 ? confidence / 100 : confidence;
+  return Math.min(1, Math.max(0, fraction));
+}
+
+/**
+ * The model's answer checked against the tree and cut to the setting's count. The model's own
+ * `type` is not trusted: a suggestion whose whole path exists is an existing folder, with its id
+ * and real path, and any other is a new one. Suggestions that cannot be saved (an empty path)
+ * are dropped, and two that lead to the same folder are shown once, the first one kept.
+ */
 export function toFolderRecommendations(
   object: FolderRecommendationsObject,
-  folderList: readonly { id: string; path: string }[],
+  folders: readonly BookmarkTreeNode[],
   maxRecommendations: number,
 ): FolderRecommendation[] {
-  return object.recommendations.slice(0, maxRecommendations).map((rec) => {
-    const matchedFolder = folderList.find((f) => f.path === rec.folderPath);
-    return {
-      ...rec,
-      folderId: matchedFolder?.id,
-    };
-  });
+  const seen = new Set<string>();
+  const result: FolderRecommendation[] = [];
+  for (const raw of object.recommendations) {
+    if (result.length >= maxRecommendations) break;
+    const rec = { ...raw, confidence: normalizeConfidence(raw.confidence) };
+    let resolved: ResolvedFolderPath;
+    try {
+      resolved = resolveRecommendedFolderPath(rec, folders);
+    } catch {
+      continue;
+    }
+    const exists = resolved.newTitles.length === 0;
+    const key = exists
+      ? `id:${resolved.folder.id}`
+      : `new:${resolved.folder.id}:${resolved.newTitles.map((title) => title.toLocaleLowerCase()).join('\n')}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(
+      exists
+        ? {
+            ...rec,
+            type: 'existing',
+            folderPath: resolved.existingTitles.join(AI_FOLDER_PATH_SEPARATOR),
+            parentPath: '',
+            folderId: resolved.folder.id,
+          }
+        : // An "existing" folder that is not there is offered as a new one, with its review.
+          { ...rec, type: 'new' },
+    );
+  }
+  return result;
+}
+
+/** A stable key for a suggestion, from what it leads to (unique after `toFolderRecommendations`). */
+export function folderRecommendationKey(rec: FolderRecommendation): string {
+  return rec.folderId ? `id:${rec.folderId}` : `new:${rec.parentPath ?? ''}\n${rec.folderPath}`;
 }
 
 /**
@@ -146,7 +196,7 @@ export async function recommendFoldersVia(
     maxRecommendations,
   );
   const answer = await run.generate({ schema: 'folderRecommendations', ...request });
-  return toFolderRecommendations(answer, folderList, maxRecommendations);
+  return toFolderRecommendations(answer, folders, maxRecommendations);
 }
 
 /**

@@ -6014,5 +6014,19 @@
     "settings_askAiWrites": {
         "message": "Cambiar marcadores",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "No hay carpetas sugeridas para esta página",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "La lista está ordenada por fecha o nombre, así que aquí solo se pueden soltar elementos en otras carpetas. Para reordenarlos, elige el orden «$sort$».",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

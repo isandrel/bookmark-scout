@@ -24,6 +24,8 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
           [POPUP_TREE_ROW_ID_ATTRIBUTE]: node.id,
           [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark',
         }}
+        // Long titles are cut off, so hovering shows the whole title and where the link goes.
+        title={bookmarkRowTooltip(node)}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(event) => {

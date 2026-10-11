@@ -6014,5 +6014,19 @@
     "settings_askAiWrites": {
         "message": "Lesezeichen ändern",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "Keine Ordnervorschläge für diese Seite",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "Die Liste ist nach Datum oder Name sortiert, daher lassen sich Einträge hier nur in andere Ordner ziehen. Zum Umsortieren die Sortierung „$sort$“ wählen.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }
