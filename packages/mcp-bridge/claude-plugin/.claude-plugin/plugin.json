@@ -1,0 +1,10 @@
+{
+  "name": "bookmark-scout",
+  "version": "0.1.0",
+  "description": "Search, save, and organize the bookmarks in your browser through the Bookmark Scout extension. Needs the bookmark-scout-mcp program and access for local AI agents turned on in Bookmark Scout's Options.",
+  "author": { "name": "isandrel", "url": "https://github.com/isandrel" },
+  "homepage": "https://docs.bookmark-scout.com/guides/local-agents",
+  "repository": "https://github.com/isandrel/bookmark-scout",
+  "license": "AGPL-3.0",
+  "keywords": ["bookmarks", "browser", "mcp"]
+}

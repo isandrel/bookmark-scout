@@ -8,8 +8,9 @@
  *   uninstall    removes what install wrote
  *   doctor       shows what is installed and connected
  */
-import { appendFileSync } from "node:fs";
+import { appendFileSync, realpathSync } from "node:fs";
 import { homedir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { config } from "./config";
 import { runDoctor } from "./doctor";
@@ -160,7 +161,20 @@ async function main(argv: string[]): Promise<number> {
   return mode === undefined || mode === "help" || mode === "--help" || mode === "-h" ? 0 : 2;
 }
 
-if (import.meta.main) {
+/** Run as a program (Bun, the compiled binary, or Node through the npm package's bin link). */
+function isEntryPoint(): boolean {
+  const meta = import.meta as ImportMeta & { main?: boolean };
+  if (typeof meta.main === "boolean") return meta.main;
+  const script = process.argv[1];
+  if (!script) return false;
+  try {
+    return realpathSync(script) === realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+}
+
+if (isEntryPoint()) {
   main(process.argv.slice(2)).then(
     (code) => process.exit(code),
     (error: unknown) => {

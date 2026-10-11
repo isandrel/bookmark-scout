@@ -93,6 +93,7 @@ Turn on AI in Settings and choose a cloud AI provider, any OpenAI-compatible end
 • Export selected bookmarks as Markdown or XML context for an AI chat (works without AI and sends nothing)
 • Ask AI: chat about your bookmarks; the AI can look up matching bookmarks, your folder names, and the current page
 • Read page content (off by default): send each page's readable text, not only its title and URL, for better suggestions
+• Local AI agents (off by default): let AI agents on your computer, such as Claude Code, look up your bookmarks through the separate open-source bookmark-scout-mcp program; every change they ask for waits for your approval
 
 When you use an AI feature, the data it needs is sent directly from your browser to the provider you chose, under that provider's terms: bookmark titles, URLs, folder names, and saved tags and summaries; the current page's title and URL; your Ask AI messages; and, only with Read page content on, the text of the pages involved. Nothing is sent to Bookmark Scout. Your API key is kept in this browser's local extension storage and is not synced. Provider usage may cost money.
 

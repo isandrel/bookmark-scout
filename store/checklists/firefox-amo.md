@@ -78,6 +78,8 @@ Linter notes:
 AI features are off by default and need the user's own provider key (Settings > AI); a local Ollama server works without a key. The data collection categories are optional: Firefox asks for them when the user turns on AI (or clicks Verify Service, for authenticationInfo only), and the extension sends nothing to a provider without that consent. Nothing is ever sent to the developer. Check Dead Links, Metadata Fetcher, and Refresh Site Icons declare no data collection: each request goes only to the bookmarked site itself, without cookies.
 
 At install the extension asks only for bookmarks, storage, activeTab, and contextMenus (Firefox does not allow contextMenus as optional; the menu appears only after the user turns it on). tabs and website access (http/https) are optional and requested only when the user runs a feature that needs them.
+
+nativeMessaging is optional too, requested with the bookmarksInfo, browsingActivity, and websiteContent categories when the user turns on "Allow local AI agents" (Settings > AI, off by default). It lets AI agents the user runs on the same computer look up bookmarks through the open-source bookmark-scout-mcp program the user installs separately (packages/mcp-bridge in the sources; its manifest allows only this add-on's id). The program talks to agents only over a per-user socket, never a network port, and nothing is sent to the developer. Every change an agent asks for waits for the user's approval in an extension window.
 ```
 
 ## 5. Submit and follow up

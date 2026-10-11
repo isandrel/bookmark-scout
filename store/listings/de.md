@@ -90,6 +90,7 @@ Aktivieren Sie KI in den Einstellungen und wählen Sie einen Cloud-KI-Anbieter, 
 • Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren (funktioniert ohne KI und sendet nichts)
 • KI fragen: Chat über Ihre Lesezeichen; die KI kann passende Lesezeichen, Ihre Ordnernamen und die aktuelle Seite nachschlagen
 • Seiteninhalt lesen (standardmäßig deaktiviert): für bessere Vorschläge den lesbaren Text jeder Seite senden, nicht nur Titel und URL
+• Lokale KI-Agenten (standardmäßig deaktiviert): KI-Agenten auf Ihrem Computer, etwa Claude Code, schlagen Ihre Lesezeichen über das separate Open-Source-Programm bookmark-scout-mcp nach; jede Änderung, die sie anfragen, wartet auf Ihre Zustimmung
 
 Wenn Sie eine KI-Funktion verwenden, werden die benötigten Daten direkt von Ihrem Browser an den von Ihnen gewählten Anbieter gesendet und unterliegen dessen Bedingungen: Lesezeichentitel, URLs, Ordnernamen sowie gespeicherte Tags und Zusammenfassungen; Titel und URL der aktuellen Seite; Ihre Nachrichten an „KI fragen“; und nur bei aktiviertem „Seiteninhalt lesen“ der Text der betroffenen Seiten. An Bookmark Scout wird nichts gesendet. Ihr API-Schlüssel wird im lokalen Erweiterungsspeicher dieses Browsers aufbewahrt und nicht synchronisiert. Die Nutzung des Anbieters kann kostenpflichtig sein.
 
