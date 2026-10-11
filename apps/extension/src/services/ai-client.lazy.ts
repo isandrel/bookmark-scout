@@ -14,13 +14,16 @@ import { generateObject, generateText, type LanguageModel } from 'ai';
 export async function createAIModel(
   settings: AISettings,
   source: AIActivitySource = 'ai',
+  /** Sends the requests instead of the logging fetch; see `AIModelRequest.transport`. */
+  transport?: typeof globalThis.fetch,
 ): Promise<LanguageModel> {
   validateAISettings(settings);
 
   const modelId =
     settings.customModel?.trim() || settings.model || getDefaultModel(settings.provider);
   const kind = getProviderKind(settings.provider);
-  const fetch = createLoggingFetch({ source, provider: settings.provider, model: modelId });
+  const fetch =
+    transport ?? createLoggingFetch({ source, provider: settings.provider, model: modelId });
 
   switch (kind) {
     case 'native':
@@ -71,18 +74,21 @@ export async function createAIModel(
  * surviving auto-import name as a missed import.
  */
 export async function requestAIObject<T>(request: AIObjectRequest<T>): Promise<{ object: T }> {
-  const { settings, source, ...options } = request;
+  const { settings, source, transport, ...options } = request;
   const { object } = await generateObject({
     ...options,
-    model: await createAIModel(settings, source),
+    model: await createAIModel(settings, source, transport),
   });
   return { object };
 }
 
 /** `generateText` on the model for `request.settings`, for Verify Service's one-word prompt. */
 export async function requestAIText(request: AITextRequest): Promise<{ text: string }> {
-  const { settings, source, ...prompt } = request;
-  const { text } = await generateText({ ...prompt, model: await createAIModel(settings, source) });
+  const { settings, source, transport, ...prompt } = request;
+  const { text } = await generateText({
+    ...prompt,
+    model: await createAIModel(settings, source, transport),
+  });
   return { text };
 }
 

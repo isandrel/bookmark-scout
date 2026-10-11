@@ -278,6 +278,17 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit(SETTINGS_UNIT, 'names bookmarks from the page title or the link URL when selected'),
     unit('context-menu.test.ts', 'prefers Firefox linkText, then selection, then page title'),
   ]),
+  quickSaveFolderStrategy: tested('services/quick-save.ts', [
+    unit(
+      'quick-save.test.ts',
+      'each strategy picks its own folder and offers ranked, then recent, alternatives',
+    ),
+    e2e('quick-save.spec.ts', 'the last used and chosen folder strategies decide where quick save goes'),
+  ]),
+  quickSaveFixedFolder: tested('services/quick-save.ts', [
+    unit('quick-save.test.ts', 'a chosen folder that no longer exists falls back and says so'),
+    e2e('quick-save.spec.ts', 'the last used and chosen folder strategies decide where quick save goes'),
+  ]),
 
   // AI context packer
   aiContextPackerEnabled: tested(TOOL_TABLE, [toolFlags]),

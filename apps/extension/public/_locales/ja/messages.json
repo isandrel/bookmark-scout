@@ -5150,5 +5150,137 @@
     "ai_newFolderPathNew": {
         "message": "新規",
         "description": "Badge after a folder in the reviewed path that does not exist yet and will be created"
+    },
+    "command_quickSave": {
+        "message": "現在のページをクイック保存",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "現在のページを AI でクイック保存",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "AI がフォルダーを選んでいます...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "$1 に保存しました",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "すでに $1 にあります",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "ブックマークを削除しました",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "このタブには保存できるページがありません",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "AI クイック保存は設定されていません",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "設定 > AI で AI をオンにしてサービスを選んでください。何も保存されていません。",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "AI がフォルダーを選べませんでした",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "このページを保存できませんでした",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "このページに合うフォルダーがなかったため、最後に使ったフォルダーかブックマークバーに保存しました。",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "クイック保存用のフォルダーがなくなっていたため、最後に使ったフォルダーかブックマークバーに保存しました。",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "AI 設定を開く",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "移動先",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "そのフォルダーはもう存在しません。",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "AI クイック保存を開始できませんでした。もう一度お試しください。",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "直前のクイック保存",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "クイック保存ショートカット",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "クイック保存のフォルダー",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "クイック保存ショートカットで現在のページを保存する場所です。「最適な一致」は、ページをフォルダー名とその中のブックマークとこの端末上で比べます。AI ショートカットは常に AI の提案を使います。",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "最適な一致",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "最後に使用",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "指定のフォルダー",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "保存先フォルダー",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "「クイック保存のフォルダー」が「指定のフォルダー」のときに使います。このフォルダーが削除された場合は、最後に使ったフォルダーを使います。",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "未選択",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "削除されたフォルダー",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "キーボードショートカット",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "拡張機能のウィンドウを開かずに、どのサイトからでも現在のページを保存できます。AI ショートカットは AI をオンにする必要があり、ポップアップの AI フォルダー提案と同じ内容を送信します。",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "未設定",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "ショートカットを変更",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "about:addons を開き、歯車ボタンから「拡張機能のショートカットキーを管理」を選んで変更することもできます。",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

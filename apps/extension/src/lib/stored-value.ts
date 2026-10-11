@@ -1,5 +1,5 @@
 /**
- * One value in extension storage (`local` or `sync`), read and written as a whole.
+ * One value in extension storage (`local`, `sync`, or `session`), read and written as a whole.
  *
  * Every read goes through `parse`, so callers only ever see valid data, whatever an older release
  * or another device stored. Writes to one key run one at a time on this page (`update` re-reads
@@ -12,7 +12,7 @@
  */
 
 /** A WXT storage key, `<area>:<name>`; released keys are listed in STORAGE_KEYS. */
-export type StoredValueKey = `local:${string}` | `sync:${string}`;
+export type StoredValueKey = `local:${string}` | `sync:${string}` | `session:${string}`;
 
 export type StoredValueOptions<T> = {
   key: StoredValueKey;

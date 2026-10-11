@@ -51,6 +51,12 @@ export type DetectedAIModel = {
 type AIModelRequest = {
   settings: AISettings;
   source: AIActivitySource;
+  /**
+   * Sends the provider requests instead of the logging fetch, for a context without the storage
+   * and permissions APIs (Chrome's offscreen document). It must hand them to code that does use
+   * the logging fetch, as quick save's AI host page does through the background.
+   */
+  transport?: typeof fetch;
 };
 
 export type AIObjectRequest<T> = AIModelRequest & {

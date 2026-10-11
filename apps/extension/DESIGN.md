@@ -113,6 +113,7 @@ components:
   skeleton: "sunken bars at row height; pulse disabled under reduced motion"
   dialog: "surface, 1px line, rounded.xl, title in section-title, footer actions right-aligned"
   toast: "surface, 1px line, rounded.lg, semantic icon; progress bar in teal"
+  quick-save-notification: "in a web page: 360px max, fixed 16px from the top right, surface, 1px line, rounded.lg, one soft shadow, semantic icon, title, path in meta type, outline Undo, chip alternatives, 2px teal countdown bar"
 ---
 
 ## Overview
@@ -170,7 +171,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 ## Elevation and depth
 
 - Depth comes from the surface ladder (`paper` to `surface` to `sunken`) and 1px `line` borders.
-- Popovers, menus, and dialogs are the only elements with a shadow: one soft shadow so they separate from the page under them.
+- Popovers, menus, and dialogs are the only elements with a shadow: one soft shadow so they separate from the page under them. The quick save notification, drawn over web pages, has the same kind of shadow.
 - Dragged rows lift with the same shadow and a 2px teal drop indicator. Never blue or other hard-coded colors.
 
 ## Shapes
@@ -209,6 +210,12 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 **`error-state`**: what failed and a Retry button, in `danger` text. Every page has a localized error boundary.
 
 **`searchable-select`** (`src/components/ui/searchable-select.tsx`): a select whose popup starts with a search box, for lists too long to scan, such as the AI provider picker. Options can be grouped under small labels.
+
+**`quick-save-notification`** (`src/entrypoints/quick-save-toast/toast.ts`): what a quick save shortcut shows inside the web page, drawn without React in a closed shadow root, so neither the page's CSS nor its scripts reach it. The page has none of the extension's CSS, so the file repeats the color tokens above (light, and dark for the `theme` setting or, on System, the page's `prefers-color-scheme`) in a constructed stylesheet that page CSP does not block, and the fonts fall back to the system stack because a page cannot load the bundled ones. Layout: a 16px semantic icon (success check, ink-soft info for "Already in", danger alert, teal spinner while AI chooses), the title ("Saved to React") in 14px 600, the path in meta type, an optional note, then an outline **Undo** (or a teal **Open AI settings**), then **Move to** and the alternatives as 24px pill chips. It is the one floating element with a shadow outside dialogs, because it sits over arbitrary pages. A 2px teal bar counts down the auto-close (`config/ui/quick-save.toml`); hover and focus pause it, and reduced motion hides it and stops the spinner. It is a polite `role="status"` region named "Bookmark Scout", never takes focus, `Esc` closes it, and only trusted clicks act. The popup shows the same content as **`QuickSaveResultPanel`** when the page could not show it.
+
+**`folder-setting`** (`FolderSettingSelect`): a setting of type `folder`, drawn as a `searchable-select` of every folder by its path ("Bookmarks bar / Work"), with **Not chosen** first; a chosen folder that was deleted stays listed as **Deleted folder**.
+
+**`shortcuts-panel`** (`ShortcutsPanel`): an `options-panel` listing each browser command with its current keys as keycaps (or **Not set**) and **Change shortcuts**, which opens the browser's shortcut page.
 
 **`dialog`**, **`toast`**, **`table`**: the existing primitives in `src/components/ui/`, themed by tokens only. Dialogs open in place with a fade and a slight zoom; they do not slide in from an edge.
 

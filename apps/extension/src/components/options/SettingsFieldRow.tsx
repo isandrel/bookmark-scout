@@ -700,6 +700,18 @@ export function SettingsFieldRow({
         );
       }
 
+      case 'folder':
+        return (
+          <FolderSettingSelect
+            id={controlId}
+            aria-labelledby={labelId}
+            aria-describedby={describedBy}
+            aria-invalid={Boolean(invalid)}
+            value={String(value ?? '')}
+            onChange={(folderId) => onChange(folderId)}
+          />
+        );
+
       case 'text':
         if (meta.list === 'number') {
           return (

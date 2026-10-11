@@ -56,7 +56,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "La extensión no tiene scripts de contenido y no lee las páginas abiertas en tus pestañas. Solo cuando activas Leer el contenido de la página descarga las páginas por separado, como se describe más abajo."
+                        "text": "La extensión no declara scripts de contenido y no lee las páginas abiertas en tus pestañas. Cuando pulsas un atajo de guardado rápido, muestra una pequeña notificación solo en esa pestaña, que no lee nada de la página. Solo cuando activas Leer el contenido de la página descarga las páginas por separado, como se describe más abajo."
                     }
                 ]
             },
@@ -96,7 +96,7 @@
                     {
                         "type": "ul",
                         "items": [
-                            "Sugerencias de carpeta: el título y la URL de la página actual, y los nombres de tus carpetas de marcadores.",
+                            "Sugerencias de carpeta (en la ventana emergente, en el panel lateral o al pulsar el atajo de guardado rápido con IA): el título y la URL de la página actual, y los nombres de tus carpetas de marcadores.",
                             "Etiquetado automático, Generador de resúmenes y Reorganización de carpetas con IA: los títulos, las URLs y las rutas de carpeta de los marcadores del ámbito que elegiste.",
                             "Solo si activas Leer el contenido de la página (desactivado de forma predeterminada): las sugerencias de carpeta, el Etiquetado automático y el Generador de resúmenes también descargan cada página a partir de su URL, sin tus cookies, y envían su texto principal. Las páginas de tu red local nunca se descargan. La Reorganización de carpetas con IA nunca envía el contenido de las páginas.",
                             "Preguntar a la IA: tus mensajes y la conversación hasta ese momento, además de lo que la IA consulta para responder: marcadores coincidentes (títulos, URLs, rutas de carpeta, y etiquetas y resúmenes guardados), los nombres de tus carpetas, el título y la URL de la página actual y, solo con Leer el contenido de la página activado, el texto de las páginas que lee. Si activas su búsqueda web (desactivada de forma predeterminada), el proveedor también busca en la Web. La conversación no se guarda; termina cuando la cierras."
@@ -142,7 +142,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Al instalarse, Bookmark Scout solo pide <code>bookmarks</code>, <code>storage</code> y <code>activeTab</code>, además de <code>sidePanel</code> en Chrome y Edge y <code>contextMenus</code> en Firefox, que no permite que las extensiones lo pidan más tarde. Todo lo demás es opcional y solo se pide cuando activas o ejecutas la función que lo necesita:"
+                        "text": "Al instalarse, Bookmark Scout solo pide <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> y <code>scripting</code> (que muestra la notificación de guardado rápido en la pestaña donde pulsaste el atajo), además de <code>sidePanel</code> y <code>offscreen</code> (que ejecuta la solicitud del guardado rápido con IA en una página oculta de la extensión) en Chrome y Edge, y <code>contextMenus</code> en Firefox, que no permite que las extensiones lo pidan más tarde. Todo lo demás es opcional y solo se pide cuando activas o ejecutas la función que lo necesita:"
                     },
                     {
                         "type": "ul",

@@ -1,0 +1,33 @@
+# Local folder ranking for quick save (Settings > Saving & Search > Quick save, "Best match").
+# Each folder is a document made of its own name, the names of its parents, and the titles and
+# site names of the bookmarks directly in it; the page's title, site name, and URL path words are
+# the query. Folders are scored with BM25. Read by src/lib/folder-ranking.ts.
+
+# BM25 term-frequency saturation: higher lets repeated words keep adding to a folder's score.
+k1 = 1.2
+# BM25 length normalization, 0 to 1: higher favors small folders over large ones with the same words.
+b = 0.75
+# A folder must score at least this to be chosen; below it quick save falls back to the last used
+# folder, then the bookmarks bar. One distinctive shared word scores about 2 to 4.
+min_score = 2.0
+
+# How much each part of a folder counts. A word in the folder's own name says more about what
+# belongs there than the same word in one of its bookmarks.
+name_weight = 3
+path_weight = 1
+bookmark_weight = 1
+
+# Words shorter than this are ignored. A Chinese, Japanese, or Korean character counts as two, so
+# single-character words in those languages are kept.
+min_token_length = 2
+# Words that say nothing about a topic, compared after lowercasing. Site name parts such as "www"
+# and "com" are dropped too: only the part before the public suffix counts.
+stop_words = [
+  "a", "an", "and", "are", "as", "at", "be", "by", "for", "from", "how", "in", "is", "it", "its",
+  "of", "on", "or", "that", "the", "this", "to", "was", "what", "when", "where", "who", "why",
+  "will", "with", "you", "your", "our", "we", "my", "me", "can", "do", "does", "not", "no", "new",
+  "www", "http", "https", "html", "htm", "php", "aspx", "index", "home", "page",
+  "der", "die", "das", "und", "les", "des", "est", "une", "el", "la", "los", "las", "y", "de",
+  "の", "は", "を", "に", "が", "と", "で", "も", "た", "て", "的", "了", "和", "是", "在", "与",
+  "이", "가", "을", "를", "은", "는", "의", "에",
+]
