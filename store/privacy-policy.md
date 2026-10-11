@@ -16,7 +16,7 @@ This policy is also available in other languages. If a translation differs from 
 
 ## Summary
 
-Bookmark Scout works inside your browser. It has no account, no analytics, no ads, and no server of its own. The developer does not receive your bookmarks or any other data from the extension. Data leaves your browser only when you use an optional feature that needs the network, and then it goes directly to the service you chose.
+Bookmark Scout works inside your browser. It has no account, no analytics, no ads, and no server of its own. The developer does not receive your bookmarks or any other data from the extension. Data leaves your browser only when you use an optional feature that needs the network, and then it goes directly to the service you chose. The one exception without a network request is access for local AI agents (off by default), which passes bookmark data to the AI agents you run on your own computer.
 
 Bookmark Scout's use of information received through browser extension APIs adheres to the Chrome Web Store User Data Policy, including the Limited Use requirements.
 
@@ -34,12 +34,12 @@ The extension declares no content scripts and does not read the pages open in yo
 Everything is kept in your browser's extension storage:
 
 - **Settings** you changed from their default are kept in the browser's sync storage; settings left at their default are not stored. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on, but not your AI provider, model, or API key. (Version 0.3.2 and earlier also kept the AI provider and model you chose in synced settings.)
-- **A few settings stay on this device only**, in local storage: the folder you chose for quick save, the site icon storage limit, AI activity recording, and Ask AI's web search.
+- **A few settings stay on this device only**, in local storage: the folder you chose for quick save, the site icon storage limit, AI activity recording, and Ask AI's web search. The settings for local AI agents are set on each device too.
 - **Custom prompts** you write under Prompts in the AI Tools settings (each prompt's name, task, and text, and which prompt each task uses; up to 10) are kept in the browser's sync storage, so they sync through your browser account like settings. When an AI tool uses one of your prompts, its text is sent to your AI provider with the request.
 - **The bookmark manager's table**: which columns are shown, their order, and the sort sync like settings. Column widths and page size stay on this device.
 - **AI services** (each service's name, provider, and model) and their **connection settings** (API key, base URL, extra headers, and any provider-specific fields) are kept in local storage on this device only. They are not synced, and connection settings are never written to a backup file. Where the browser supports it (Chrome 140 and later), local storage is also closed to any script the extension places in a web page.
 - **Model lists** fetched from your AI services (model names and ids) are kept in local storage on this device for 7 days.
-- **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
+- **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. They also list each lookup a local AI agent made, with the name the agent gave. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
 - **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
@@ -61,6 +61,10 @@ AI features run only after you turn them on in Settings and choose a provider. W
 If you also turn on Auto-recommend on Open (off by default), folder suggestions run each time you open the popup or side panel.
 
 Your API key is sent to that provider to authenticate the request. The provider handles the data under its own terms and privacy policy, which you accept with them directly. Bookmark Scout does not send this data anywhere else. If you point the extension at a model running on your own computer (for example Ollama), the data stays on your machine.
+
+### Local AI agents (off by default)
+
+If you turn on Allow local AI agents in the AI settings (off by default, set separately on each device), AI agents you run on your own computer, such as Claude Code, Codex, or Cursor, can look up your bookmarks through the bookmark-scout-mcp program you install there. The extension passes that program what an agent asks for: matching bookmarks (titles, URLs, folder paths, dates added, saved tags and summaries), your folder names, the current page's title and URL, whether bookmarked links still work (only after you allowed website access), and, only with Read page content on, the text of a bookmarked page or the current page. Agents cannot change your bookmarks, and you can turn off each kind of lookup. Unless you turn it off, sensitive values in titles and web addresses (such as tokens, email addresses, and the parameters the Privacy Scanner lists) are replaced before they are passed on. The program talks to agents only on your computer, never over the network, and works without an AI provider set up in Bookmark Scout. What an agent does with what it reads, including sending it to its own AI provider, is governed by that agent and its provider.
 
 ### Dead link checks, title fetching, and site icons
 
@@ -88,6 +92,7 @@ At install, Bookmark Scout asks only for `bookmarks`, `storage`, `activeTab`, an
 - Access to all websites, when you first run Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turn on Read page content.
 - Access to one provider's site, when you click Verify Service or Refresh Models in the AI settings.
 - In Firefox, your consent to share data with your AI provider, when you turn on AI or click Verify Service.
+- Communicating with the bookmark-scout-mcp program on your computer (`nativeMessaging`), when you turn on Allow local AI agents; in Firefox, together with your consent to share bookmark data with it.
 
 If you decline, the feature stays off. You can withdraw a permission in the browser's extension settings at any time, and the feature that needs it turns off.
 

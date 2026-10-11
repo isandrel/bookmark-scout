@@ -1,32 +1,38 @@
 /**
- * Options > AI > What Ask AI may do: the bookmark actions Ask AI is offered, read ones and ones
- * that change bookmarks (`askAiDisabledActions` lists those turned off). An action turned off is
- * left out of the AI's tools and refused if called anyway. Applying a plan always asks first,
- * whatever is chosen here (`actionApproval`).
+ * Options > AI: which bookmark actions an AI agent may use, looking things up and changing
+ * bookmarks in separate groups, for Ask AI (`askAiDisabledActions`) and for local agents
+ * (`agentBridgeDisabledActions`). An action turned off is left out of the agent's tools and
+ * refused if called anyway. Applying a plan always asks first, whatever is chosen here
+ * (`actionApproval`).
  */
 
-const PANEL_ID = 'ask-ai-actions';
+type AgentActionsPanelProps = {
+  kind: ActionClient['kind'];
+  setting: 'askAiDisabledActions' | 'agentBridgeDisabledActions';
+  panelId: string;
+  titleKey: MessageKey;
+  descriptionKey: MessageKey;
+};
 
-const changesBookmarks = (id: ActionId) =>
-  getAction(id).risk !== 'read' || Boolean(getAction(id).agent?.partOfChanges);
-
-/** Ask AI's actions, those that only look first, each group in registry order. */
-function agentActionGroups(): { titleKey: MessageKey; ids: ActionId[] }[] {
-  const agentIds = ACTION_IDS.filter((id) => getAction(id).agent);
+/** The agent's actions, those that only look first, each group in registry order. */
+function agentActionGroups(
+  kind: ActionClient['kind'],
+): { titleKey: MessageKey; ids: ActionId[] }[] {
+  const ids = agentActionChoices(kind);
   return [
-    {
-      titleKey: 'settings_askAiReads',
-      ids: agentIds.filter((id) => !changesBookmarks(id)),
-    },
-    {
-      titleKey: 'settings_askAiWrites',
-      ids: agentIds.filter(changesBookmarks),
-    },
-  ];
+    { titleKey: 'settings_askAiReads' as const, ids: ids.filter((id) => !changesBookmarks(id)) },
+    { titleKey: 'settings_askAiWrites' as const, ids: ids.filter(changesBookmarks) },
+  ].filter((group) => group.ids.length > 0);
 }
 
-export function AskAIActionsPanel() {
-  const { value: disabled, setValue } = useSetting('askAiDisabledActions');
+function AgentActionsPanel({
+  kind,
+  setting,
+  panelId,
+  titleKey,
+  descriptionKey,
+}: AgentActionsPanelProps) {
+  const { value: disabled, setValue } = useSetting(setting);
   const off = new Set(disabled);
   const toggle = (id: ActionId, allowed: boolean) => {
     const next = allowed ? disabled.filter((other) => other !== id) : [...disabled, id];
@@ -35,10 +41,10 @@ export function AskAIActionsPanel() {
 
   return (
     <OptionsPanel
-      id={PANEL_ID}
-      data-testid="ask-ai-actions"
-      title={t('settings_askAiDisabledActions')}
-      description={t('settings_askAiDisabledActionsDesc')}
+      id={panelId}
+      data-testid={panelId}
+      title={t(titleKey)}
+      description={t(descriptionKey)}
       actions={
         <Button
           type="button"
@@ -51,7 +57,7 @@ export function AskAIActionsPanel() {
         </Button>
       }
     >
-      {agentActionGroups().map((group) => (
+      {agentActionGroups(kind).map((group) => (
         <fieldset key={group.titleKey} className="space-y-1">
           <legend className="text-sm font-medium">{t(group.titleKey)}</legend>
           <ul className="divide-y rounded-md border">
@@ -60,11 +66,11 @@ export function AskAIActionsPanel() {
               return (
                 <li key={id} data-action={id} className="flex min-h-10 items-center gap-2 px-3">
                   <Checkbox
-                    id={`${PANEL_ID}-${id}`}
+                    id={`${panelId}-${id}`}
                     checked={!off.has(id)}
                     onCheckedChange={(checked) => toggle(id, checked === true)}
                   />
-                  <label htmlFor={`${PANEL_ID}-${id}`} className="flex-1 text-sm">
+                  <label htmlFor={`${panelId}-${id}`} className="flex-1 text-sm">
                     {labelKey ? t(labelKey) : id}
                   </label>
                 </li>
@@ -74,5 +80,29 @@ export function AskAIActionsPanel() {
         </fieldset>
       ))}
     </OptionsPanel>
+  );
+}
+
+export function AskAIActionsPanel() {
+  return (
+    <AgentActionsPanel
+      kind="askAI"
+      setting="askAiDisabledActions"
+      panelId="ask-ai-actions"
+      titleKey="settings_askAiDisabledActions"
+      descriptionKey="settings_askAiDisabledActionsDesc"
+    />
+  );
+}
+
+export function AgentBridgeActionsPanel() {
+  return (
+    <AgentActionsPanel
+      kind="external"
+      setting="agentBridgeDisabledActions"
+      panelId="agent-bridge-actions"
+      titleKey="settings_agentBridgeDisabledActions"
+      descriptionKey="settings_agentBridgeDisabledActionsDesc"
+    />
   );
 }

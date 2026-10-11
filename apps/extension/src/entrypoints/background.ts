@@ -33,6 +33,9 @@ export default defineBackground(() => {
   // Quick save shortcuts; listeners must be added synchronously so a key press can wake the worker.
   registerQuickSave();
 
+  // Access for local AI agents, while the user has it on (Options > AI).
+  registerAgentBridge();
+
   // A background worker may be started by any event, not only install or startup.
   void initializeContextMenu().catch((error) => {
     console.error('[Background] Failed to initialize context menu:', error);

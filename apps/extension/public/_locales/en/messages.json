@@ -3927,6 +3927,22 @@
         "message": "Bookmark Scout never receives page content. Pages on your local network are never read. Turn the setting off to stop at any time.",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "Allow local AI agents",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "AI agents you run on this computer, such as Claude Code, Codex, or Cursor, can then look up your bookmarks through the bookmark-scout-mcp program you install: bookmark titles, URLs, and folder names, the current page's title and URL, and page text while Read page content is on. Your browser asks to let the extension communicate with that program.",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "Agents can only look things up; they cannot change your bookmarks. Bookmark Scout never receives this data, but an agent may send what it reads to its own AI provider. Turn the setting off to stop at any time.",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "Access for local AI agents stays off. Turning it on asks your browser to let the extension communicate with the bookmark-scout-mcp program.",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Nothing was sent. Your browser asks before the extension shares your API key with the provider.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5894,6 +5910,66 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Turn off what you do not want the AI to do; it is then not offered to it at all. Applying a plan of changes always asks you first.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "Local AI agents",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "Allow local AI agents",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "Let AI agents on this computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program. For this device only.",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "Hide private values",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "Replace sensitive URL parameters, tokens, and email addresses in the titles and URLs agents receive, using the Privacy Scanner's list.",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "What local agents may do",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "Turn off what you do not want agents to look up; it is then not offered to them at all. Local agents cannot change bookmarks.",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "Bridge program",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "Install the bookmark-scout-mcp program on this computer and run “$1” once. It registers itself with your browsers and prints how to add it to Claude Code, Codex, or Cursor.",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "Not running. Turn on the switch above and allow access when your browser asks.",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "Starting the bridge program…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "Ready. AI agents on this computer can reach this browser profile.",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "The bridge program is not installed, or not registered with this browser yet.",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "The bridge program could not start or stopped. Bookmark Scout tries again by itself.",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "Try again",
+        "description": "Button: try to start the bridge program again now"
     },
     "settings_actionMoveUp": {
         "message": "Move $1 up",

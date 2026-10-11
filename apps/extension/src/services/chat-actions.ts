@@ -128,6 +128,7 @@ const suggestActions = defineAction({
   labelKey: 'actionName_suggestActions',
   targets: ['library', 'page'],
   agent: {
+    only: 'askAI',
     description:
       'Offer the user buttons under your answer, at most ' +
       `${ASK_AI_CONFIG.max_suggestions}: next questions they may ask, saving a page to a ` +

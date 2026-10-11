@@ -34,7 +34,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "O Bookmark Scout funciona dentro do seu navegador. Ele não tem conta, análises de uso, anúncios nem servidor próprio. O desenvolvedor não recebe seus favoritos nem quaisquer outros dados da extensão. Os dados só saem do seu navegador quando você usa um recurso opcional que precisa da rede e, nesse caso, vão diretamente para o serviço que você escolheu."
+                        "text": "O Bookmark Scout funciona dentro do seu navegador. Ele não tem conta, análises de uso, anúncios nem servidor próprio. O desenvolvedor não recebe seus favoritos nem quaisquer outros dados da extensão. Os dados só saem do seu navegador quando você usa um recurso opcional que precisa da rede e, nesse caso, vão diretamente para o serviço que você escolheu. A única exceção sem solicitação de rede é o acesso para agentes de IA locais (desativado por padrão), que passa dados de favoritos aos agentes de IA que você executa no seu próprio computador."
                     },
                     {
                         "type": "p",
@@ -71,12 +71,12 @@
                         "type": "ul",
                         "items": [
                             "<strong>As configurações</strong> que você alterou em relação ao padrão ficam no armazenamento sincronizado do navegador; as que continuam no padrão não são armazenadas. Se a sincronização do navegador estiver ativada, o navegador pode copiá-las para seus outros dispositivos pela sua conta do navegador (por exemplo, Google, Mozilla ou Microsoft). As configurações incluem se a IA está ativada, mas não seu provedor de IA, seu modelo nem sua chave de API. (A versão 0.3.2 e anteriores também guardavam nas configurações sincronizadas o provedor de IA e o modelo que você escolheu.)",
-                            "<strong>Algumas configurações ficam somente neste dispositivo</strong>, no armazenamento local: a pasta escolhida para o salvamento rápido, o limite de armazenamento de ícones dos sites, o registro de atividade de IA e a pesquisa na web de Perguntar à IA.",
+                            "<strong>Algumas configurações ficam somente neste dispositivo</strong>, no armazenamento local: a pasta escolhida para o salvamento rápido, o limite de armazenamento de ícones dos sites, o registro de atividade de IA e a pesquisa na web de Perguntar à IA. As configurações de agentes de IA locais também são definidas em cada dispositivo.",
                             "<strong>Os prompts personalizados</strong> que você escreve em Prompts, nas configurações de Ferramentas de IA (o nome, a tarefa e o texto de cada prompt, e qual prompt cada tarefa usa; até 10), ficam no armazenamento sincronizado do navegador, então são sincronizados pela sua conta do navegador como as configurações. Quando uma ferramenta de IA usa um dos seus prompts, o texto dele é enviado ao seu provedor de IA com a solicitação.",
                             "<strong>A tabela do gerenciador de favoritos</strong>: quais colunas aparecem, a ordem delas e a ordenação são sincronizadas como as configurações. A largura das colunas e o tamanho da página ficam neste dispositivo.",
                             "<strong>Os serviços de IA</strong> (nome, provedor e modelo de cada serviço) e suas <strong>configurações de conexão</strong> (chave de API, URL base, cabeçalhos extras e campos específicos do provedor) ficam no armazenamento local somente deste dispositivo. Eles não são sincronizados, e as configurações de conexão nunca são gravadas em um arquivo de backup. Quando o navegador oferece suporte (Chrome 140 e posteriores), o armazenamento local também fica fechado para qualquer script que a extensão coloque em uma página da web.",
                             "<strong>As listas de modelos</strong> obtidas dos seus serviços de IA (nomes e IDs dos modelos) ficam no armazenamento local deste dispositivo por 7 dias.",
-                            "<strong>A atividade de IA</strong>, somente se você ativar Registrar solicitações em Atividade da IA, nas configurações de IA (desativado por padrão e definido separadamente em cada dispositivo): as últimas solicitações de IA, com o que foi enviado ao seu provedor e o que voltou. Elas contêm títulos, URLs e caminhos de pasta dos favoritos e, com Ler conteúdo da página ativado, o texto das páginas. Chaves de API, cabeçalhos de autenticação, seus cabeçalhos extras e chaves em endereços da web são removidos antes de qualquer armazenamento. Esse histórico fica no armazenamento local deste dispositivo, nunca é sincronizado e é excluído quando você desativa o registro.",
+                            "<strong>A atividade de IA</strong>, somente se você ativar Registrar solicitações em Atividade da IA, nas configurações de IA (desativado por padrão e definido separadamente em cada dispositivo): as últimas solicitações de IA, com o que foi enviado ao seu provedor e o que voltou. Elas contêm títulos, URLs e caminhos de pasta dos favoritos e, com Ler conteúdo da página ativado, o texto das páginas. Chaves de API, cabeçalhos de autenticação, seus cabeçalhos extras e chaves em endereços da web são removidos antes de qualquer armazenamento. Esse histórico fica no armazenamento local deste dispositivo, nunca é sincronizado e é excluído quando você desativa o registro. Ele também lista cada consulta feita por um agente de IA local, com o nome que o agente informou.",
                             "<strong>Tags, resumos, pesquisas salvas, pastas recentes e pesquisas recentes</strong> ficam no armazenamento local somente deste dispositivo. Você pode desativar as pesquisas recentes nas Configurações.",
                             "<strong>Os ícones dos sites</strong> que você salva com Atualizar ícones dos sites ficam no armazenamento local somente deste dispositivo, até um limite de tamanho que você pode alterar nas Configurações. Você pode excluí-los a qualquer momento com Limpar ícones salvos.",
                             "<strong>Seu último salvamento rápido</strong> (o título e o URL da página e onde ela foi salva) fica no armazenamento da sessão até o navegador ser fechado, para Desfazer e Mover para.",
@@ -116,6 +116,14 @@
                     {
                         "type": "p",
                         "text": "Sua chave de API é enviada a esse provedor para autenticar a solicitação. O provedor trata os dados de acordo com os próprios termos e política de privacidade, que você aceita diretamente com ele. O Bookmark Scout não envia esses dados para nenhum outro lugar. Se você configurar a extensão para usar um modelo executado no seu próprio computador (por exemplo, o Ollama), os dados ficam na sua máquina."
+                    },
+                    {
+                        "type": "h3",
+                        "text": "Agentes de IA locais (desativado por padrão)"
+                    },
+                    {
+                        "type": "p",
+                        "text": "Se você ativar Permitir agentes de IA locais nas configurações de IA (desativado por padrão, definido em cada dispositivo), os agentes de IA que você executa no seu próprio computador, como Claude Code, Codex ou Cursor, podem consultar seus favoritos pelo programa bookmark-scout-mcp que você instalar ali. A extensão passa a esse programa o que um agente pede: favoritos correspondentes (títulos, URLs, caminhos de pastas, datas de inclusão, tags e resumos salvos), os nomes das suas pastas, o título e a URL da página atual, se os links salvos ainda funcionam (só depois que você permitir o acesso a sites) e, só com Ler conteúdo da página ativado, o texto de uma página salva ou da página atual. Os agentes não podem alterar seus favoritos, e você pode desativar cada tipo de consulta. A menos que você desative isso, valores sensíveis em títulos e endereços da web (como tokens, endereços de e-mail e os parâmetros da lista do Verificador de privacidade) são substituídos antes de serem passados. O programa conversa com os agentes só no seu computador, nunca pela rede, e funciona sem um provedor de IA configurado no Bookmark Scout. O que um agente faz com o que lê, inclusive enviar ao próprio provedor de IA, é regido por esse agente e pelo provedor dele."
                     },
                     {
                         "type": "h3",
@@ -167,7 +175,8 @@
                             "O cache de ícones do navegador (<code>favicon</code>, Chrome e Edge), quando você ativa Usar o cache de ícones do navegador nas Configurações.",
                             "Acesso a todos os sites, quando você executa pela primeira vez Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites, ou ativa Ler conteúdo da página.",
                             "Acesso ao site de um provedor, quando você clica em Verificar serviço ou Atualizar modelos nas configurações de IA.",
-                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, quando você ativa a IA ou clica em Verificar serviço."
+                            "No Firefox, seu consentimento para compartilhar dados com seu provedor de IA, quando você ativa a IA ou clica em Verificar serviço.",
+                            "Comunicar-se com o programa bookmark-scout-mcp no seu computador (<code>nativeMessaging</code>), quando você ativa Permitir agentes de IA locais; no Firefox, junto com seu consentimento para compartilhar dados de favoritos com ele."
                         ]
                     },
                     {

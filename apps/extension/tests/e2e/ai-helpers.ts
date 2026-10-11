@@ -1,6 +1,32 @@
-import type { Page } from '@playwright/test';
+import type { Page, Route } from '@playwright/test';
 import { expect } from './fixtures';
 import { readStored, STORAGE_ITEMS } from './storage';
+
+/** Streams an OpenAI-style chat completion as server-sent events, for a stubbed provider. */
+export function streamChunks(
+  route: Route,
+  deltas: Record<string, unknown>[],
+  finishReason: string,
+) {
+  const chunk = (delta: Record<string, unknown>, finish: string | null) =>
+    `data: ${JSON.stringify({
+      id: 'chat-e2e',
+      object: 'chat.completion.chunk',
+      created: 1,
+      model: 'ask-model',
+      choices: [{ index: 0, delta, finish_reason: finish }],
+    })}\n\n`;
+  const body = [
+    ...deltas.map((delta) => chunk(delta, null)),
+    chunk({}, finishReason),
+    'data: [DONE]\n\n',
+  ].join('');
+  return route.fulfill({
+    status: 200,
+    headers: { 'access-control-allow-origin': '*', 'content-type': 'text/event-stream' },
+    body,
+  });
+}
 
 export async function openAIOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);

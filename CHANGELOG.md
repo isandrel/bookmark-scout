@@ -27,6 +27,7 @@
 - Ask AI can end an answer with buttons: a follow-up question, a few options or ideas to pick from, saving the page to a suggested folder (with Undo), or opening or showing a bookmark. Nothing happens until you click, and each button works once.
 
 - Options > Behavior > **Bookmark manager menus** chooses which commands the manager's right-click and ⋯ menus show and their order within each group, and Options > AI > **What Ask AI may do** turns off lookups or changes you do not want Ask AI to make; it is then not offered them at all. Applying a plan of changes always asks first.
+- Local AI agents: Options > AI > **Local AI agents** (off by default, per device) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the new `bookmark-scout-mcp` program (`packages/mcp-bridge`), an MCP server that talks to the extension through the browser's native messaging. Turning it on asks for the `nativeMessaging` permission (and in Firefox, consent to share bookmark data with that program). Agents get the same lookups as Ask AI, as tools with JSON Schemas; they cannot change bookmarks; private values in titles and URLs are hidden unless you turn that off; you can turn off each lookup; and every call is in AI activity, with the name the agent gave, while recording is on. Newly sent: bookmark titles, URLs, folder paths, the current page's title and URL, and with Read page content, page text, to that program on your computer and the agents you run there.
 
 ### Stored data
 

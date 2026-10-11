@@ -16,6 +16,7 @@ const EDITED_ELSEWHERE = new Set([
   'askAiWebSearch',
   // Edited in their Options panels (ManagerMenusPanel, AskAIActionsPanel).
   'askAiDisabledActions',
+  'agentBridgeDisabledActions',
   'managerMenuActions',
 ]);
 

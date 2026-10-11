@@ -46,7 +46,8 @@ export type SettingsPanelId =
   | 'promptLibrary'
   | 'shortcuts'
   | 'managerMenus'
-  | 'askAiActions';
+  | 'askAiActions'
+  | 'agentBridge';
 
 /** A titled group of settings inside a category: the Options page's second level. */
 export type SettingsSectionMeta = {
@@ -613,6 +614,12 @@ const fields = {
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
   askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
+  agentBridgeEnabled: switchField('ai.agent_bridge.enabled', 'agentBridgeEnabled'),
+  agentBridgeRedactUrls: switchField('ai.agent_bridge.redact_urls', 'agentBridgeRedactUrls'),
+  agentBridgeDisabledActions: actionIdListField(
+    'ai.agent_bridge.disabled_actions',
+    'agentBridgeDisabledActions',
+  ),
   managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
@@ -1140,6 +1147,14 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         fields: ['aiReadPageContent'],
       },
       { id: 'askAiActions', fields: [], panel: 'askAiActions' },
+      // Local agents bring their own model, so this works with AI off.
+      {
+        id: 'agentBridge',
+        labelKey: 'settings_agentBridge',
+        toggle: 'agentBridgeEnabled',
+        fields: ['agentBridgeRedactUrls'],
+        panel: 'agentBridge',
+      },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
     aiTools: category('settings_aiTools', 'settings_aiToolsDesc', [
@@ -1321,6 +1336,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
 export const SETTING_PERMISSIONS = {
   aiEnabled: 'ai',
   aiReadPageContent: 'pageReading',
+  agentBridgeEnabled: 'agentBridge',
   browserIconCache: 'browserIcons',
   contextMenuEnabled: 'contextMenu',
 } as const satisfies Partial<Record<keyof Settings, PermissionFeature>>;

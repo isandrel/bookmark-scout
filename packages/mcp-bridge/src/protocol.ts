@@ -99,6 +99,17 @@ export const agentMessageSchema = z.discriminatedUnion("type", [
 ]);
 export type AgentMessage = z.infer<typeof agentMessageSchema>;
 
+/** The native host is listening, so agents can reach this profile; sent once after the first hello. */
+export const readyMessageSchema = z.object({ type: z.literal("ready") });
+
+/** What the native host sends the extension: agents' calls and cancels, and that it is ready. */
+export const hostMessageSchema = z.discriminatedUnion("type", [
+  callMessageSchema,
+  cancelMessageSchema,
+  readyMessageSchema,
+]);
+export type HostMessage = z.infer<typeof hostMessageSchema>;
+
 /** The error shape inside a result with `isError`, matching the extension's action errors. */
 export function bridgeError(code: string, message: string, hint?: string): Record<string, unknown> {
   return { error: { code, message, ...(hint ? { hint } : {}) } };

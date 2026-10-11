@@ -175,6 +175,22 @@ function analyzeBookmark(node: BookmarkTreeNode, options: ExportPrivacyOptions):
   return { title, url: url ?? '', fields: uniqueFields(fields) };
 }
 
+/**
+ * A title or URL with every possibly private value replaced, as an export writes it; used for
+ * what local AI agents receive. Either may be passed alone.
+ */
+export function redactPrivateText(
+  text: { title?: string; url?: string },
+  options: Omit<ExportPrivacyOptions, 'includeUrls'>,
+): { title?: string; url?: string } {
+  const fields: ExportPrivacyField[] = [];
+  const all = { ...options, includeUrls: true };
+  return {
+    ...(text.title === undefined ? {} : { title: redactTitle(text.title, all, fields) }),
+    ...(text.url === undefined ? {} : { url: redactUrl(text.url, all, fields) }),
+  };
+}
+
 /** Lists the bookmarks under `nodes` whose exported title or URL holds a possibly private value. */
 export function reviewExportPrivacy(
   nodes: BookmarkTreeNode[],

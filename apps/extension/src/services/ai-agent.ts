@@ -24,19 +24,13 @@ export function supportsWebSearch(provider: AIProvider): provider is WebSearchPr
   return (WEB_SEARCH_PROVIDERS as readonly string[]).includes(provider);
 }
 
-/** The page in the active tab, as Ask AI's tools see it. */
-async function readActiveTab(): Promise<ActionPage | undefined> {
-  const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
-  return tab?.url ? { title: tab.title ?? '', url: tab.url } : undefined;
-}
-
 /** What Ask AI's tool calls may use: the active tab, and page reading when it is on and allowed. */
 export async function createAskAIToolContext(settings: Settings): Promise<ActionContext> {
   const readPages = settings.aiReadPageContent && (await hasPermission('pageReading'));
   return {
     client: { kind: 'askAI' },
     settings,
-    activeTab: readActiveTab,
+    activeTab: activeTabPage,
     ...(readPages ? { readPage: readPageText } : {}),
   };
 }

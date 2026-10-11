@@ -15,6 +15,7 @@ export const AI_ACTIVITY_SOURCES = {
   reorganization: 'tools_aiReorganize',
   folderRecommendation: 'ai_folderRecommendation',
   askAI: 'askAI_title',
+  agentBridge: 'settings_agentBridge',
 } as const satisfies Record<string, MessageKey>;
 
 export type AIActivitySource = keyof typeof AI_ACTIVITY_SOURCES;
@@ -32,6 +33,7 @@ const AI_ACTIVITY_PERMISSIONS: Record<AIActivitySource, PermissionFeature> = {
   reorganization: 'ai',
   folderRecommendation: 'ai',
   askAI: 'ai',
+  agentBridge: 'agentBridge',
 };
 
 export type AIActivityContext = {
@@ -131,6 +133,8 @@ export const AI_ACTIVITY_ACTION_METHOD = 'ACTION';
  */
 export async function recordActionActivity(entry: {
   source: AIActivitySource;
+  /** The local agent that made the call, as it named itself. */
+  client?: string;
   action: string;
   input: unknown;
   result: unknown;
@@ -144,6 +148,7 @@ export async function recordActionActivity(entry: {
     await recordAIActivity({
       at: Date.now(),
       source: entry.source,
+      ...(entry.client ? { client: entry.client } : {}),
       method: AI_ACTIVITY_ACTION_METHOD,
       url: `action:${entry.action}`,
       durationMs: entry.durationMs,

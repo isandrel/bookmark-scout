@@ -5,13 +5,16 @@
 # first use, and raise one only with a reason in the pull request.
 [eager_kib]
 # Raised from 260 for the quick save shortcuts, which run in the background with no page open
-# (273 on 2026-10-10: folder ranking, quick save, and the AI quick save request path).
-"background.js" = 305
+# (273 on 2026-10-10: folder ranking, quick save, and the AI quick save request path), then from
+# 305 for access for local AI agents (352 on 2026-10-11): the action registry and JSON Schema
+# conversion answer the bridge's calls in the service worker, which cannot load code later.
+"background.js" = 395
 "popup.html" = 950
 "sidepanel.html" = 950
 # Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
-# library in Options shows (1,032 on 2026-10-11).
-"options.html" = 1045
+# library in Options shows (1,032 on 2026-10-11), then from 1045 for the Local AI agents section
+# (1,046 on 2026-10-11).
+"options.html" = 1060
 "bookmarks.html" = 1370
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14

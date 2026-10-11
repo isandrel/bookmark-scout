@@ -3919,6 +3919,22 @@
         "message": "Bookmark Scout는 페이지 내용을 받지 않습니다. 로컬 네트워크의 페이지는 읽지 않습니다. 설정을 끄면 언제든지 중단할 수 있습니다.",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "로컬 AI 에이전트 허용",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "이 컴퓨터에서 실행하는 AI 에이전트(Claude Code, Codex, Cursor 등)가 설치한 bookmark-scout-mcp 프로그램을 통해 북마크를 조회할 수 있게 됩니다. 북마크 제목, URL, 폴더 이름, 현재 페이지의 제목과 URL, 그리고 페이지 내용 읽기가 켜져 있는 동안에는 페이지 텍스트가 대상입니다. 브라우저가 확장 프로그램이 그 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "에이전트는 조회만 할 수 있으며 북마크를 변경할 수 없습니다. Bookmark Scout는 이 데이터를 받지 않지만, 에이전트는 읽은 내용을 자체 AI 제공자에게 보낼 수 있습니다. 설정을 끄면 언제든지 중지할 수 있습니다.",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "로컬 AI 에이전트 접근은 꺼진 상태로 유지됩니다. 켜면 브라우저가 확장 프로그램이 bookmark-scout-mcp 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5886,6 +5902,66 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "AI가 하지 않았으면 하는 일은 끄세요. 끈 작업은 AI에 아예 제공되지 않습니다. 변경 계획을 적용할 때는 항상 먼저 확인합니다.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "로컬 AI 에이전트",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "로컬 AI 에이전트 허용",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "이 컴퓨터의 AI 에이전트(Claude Code, Codex, Cursor 등)가 bookmark-scout-mcp 프로그램을 통해 북마크를 조회할 수 있게 합니다. 이 기기에만 적용됩니다.",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "개인 값 숨기기",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "에이전트가 받는 제목과 URL에 포함된 민감한 URL 매개변수, 토큰, 이메일 주소를 개인정보 스캐너의 목록에 따라 바꿉니다.",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "로컬 에이전트가 할 수 있는 일",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "에이전트가 조회하지 않기를 원하는 작업을 끄면 에이전트에 아예 제공되지 않습니다. 로컬 에이전트는 북마크를 변경할 수 없습니다.",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "브리지 프로그램",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "이 컴퓨터에 bookmark-scout-mcp 프로그램을 설치하고 “$1”을 한 번 실행하세요. 브라우저에 등록되고 Claude Code, Codex, Cursor에 추가하는 방법이 표시됩니다.",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "실행 중이 아닙니다. 위의 스위치를 켜고 브라우저가 물으면 접근을 허용하세요.",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "브리지 프로그램을 시작하는 중…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "준비되었습니다. 이 컴퓨터의 AI 에이전트가 이 브라우저 프로필에 접근할 수 있습니다.",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "브리지 프로그램이 설치되지 않았거나 아직 이 브라우저에 등록되지 않았습니다.",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "브리지 프로그램을 시작하지 못했거나 중지되었습니다. Bookmark Scout가 자동으로 다시 시도합니다.",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "다시 시도",
+        "description": "Button: try to start the bridge program again now"
     },
     "settings_actionMoveUp": {
         "message": "$1 위로 이동",
