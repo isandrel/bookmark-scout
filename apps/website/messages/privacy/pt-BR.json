@@ -70,10 +70,16 @@
                     {
                         "type": "ul",
                         "items": [
-                            "<strong>As configurações</strong> ficam no armazenamento sincronizado do navegador. Se a sincronização do navegador estiver ativada, o navegador pode copiá-las para seus outros dispositivos pela sua conta do navegador (por exemplo, Google, Mozilla ou Microsoft). As configurações incluem se a IA está ativada e qual provedor e modelo você escolheu, mas não sua chave de API.",
-                            "<strong>As configurações do provedor de IA</strong>, incluindo sua chave de API, o URL base e eventuais cabeçalhos extras, ficam no armazenamento local somente deste dispositivo. Elas não são sincronizadas.",
+                            "<strong>As configurações</strong> que você alterou em relação ao padrão ficam no armazenamento sincronizado do navegador; as que continuam no padrão não são armazenadas. Se a sincronização do navegador estiver ativada, o navegador pode copiá-las para seus outros dispositivos pela sua conta do navegador (por exemplo, Google, Mozilla ou Microsoft). As configurações incluem se a IA está ativada, mas não seu provedor de IA, seu modelo nem sua chave de API. (A versão 0.3.2 e anteriores também guardavam nas configurações sincronizadas o provedor de IA e o modelo que você escolheu.)",
+                            "<strong>Algumas configurações ficam somente neste dispositivo</strong>, no armazenamento local: a pasta escolhida para o salvamento rápido, o limite de armazenamento de ícones dos sites, o registro de atividade de IA e a pesquisa na web de Perguntar à IA.",
+                            "<strong>Os prompts personalizados</strong> que você escreve em Prompts, nas configurações de Ferramentas de IA (o nome, a tarefa e o texto de cada prompt, e qual prompt cada tarefa usa; até 10), ficam no armazenamento sincronizado do navegador, então são sincronizados pela sua conta do navegador como as configurações. Quando uma ferramenta de IA usa um dos seus prompts, o texto dele é enviado ao seu provedor de IA com a solicitação.",
+                            "<strong>A tabela do gerenciador de favoritos</strong>: quais colunas aparecem, a ordem delas e a ordenação são sincronizadas como as configurações. A largura das colunas e o tamanho da página ficam neste dispositivo.",
+                            "<strong>Os serviços de IA</strong> (nome, provedor e modelo de cada serviço) e suas <strong>configurações de conexão</strong> (chave de API, URL base, cabeçalhos extras e campos específicos do provedor) ficam no armazenamento local somente deste dispositivo. Eles não são sincronizados, e as configurações de conexão nunca são gravadas em um arquivo de backup. Quando o navegador oferece suporte (Chrome 140 e posteriores), o armazenamento local também fica fechado para qualquer script que a extensão coloque em uma página da web.",
+                            "<strong>As listas de modelos</strong> obtidas dos seus serviços de IA (nomes e IDs dos modelos) ficam no armazenamento local deste dispositivo por 7 dias.",
+                            "<strong>A atividade de IA</strong>, somente se você ativar Registrar solicitações em Atividade da IA, nas configurações de IA (desativado por padrão e definido separadamente em cada dispositivo): as últimas solicitações de IA, com o que foi enviado ao seu provedor e o que voltou. Elas contêm títulos, URLs e caminhos de pasta dos favoritos e, com Ler conteúdo da página ativado, o texto das páginas. Chaves de API, cabeçalhos de autenticação, seus cabeçalhos extras e chaves em endereços da web são removidos antes de qualquer armazenamento. Esse histórico fica no armazenamento local deste dispositivo, nunca é sincronizado e é excluído quando você desativa o registro.",
                             "<strong>Tags, resumos, pesquisas salvas, pastas recentes e pesquisas recentes</strong> ficam no armazenamento local somente deste dispositivo. Você pode desativar as pesquisas recentes nas Configurações.",
-                            "<strong>Os ícones dos sites</strong> que você salva com Atualizar ícones dos sites ficam no armazenamento local somente deste dispositivo, até um limite de tamanho que você pode alterar nas Configurações. Você pode excluí-los a qualquer momento com Limpar ícones salvos."
+                            "<strong>Os ícones dos sites</strong> que você salva com Atualizar ícones dos sites ficam no armazenamento local somente deste dispositivo, até um limite de tamanho que você pode alterar nas Configurações. Você pode excluí-los a qualquer momento com Limpar ícones salvos.",
+                            "<strong>Seu último salvamento rápido</strong> (o título e o URL da página e onde ela foi salva) fica no armazenamento da sessão até o navegador ser fechado, para Desfazer e Mover para."
                         ]
                     },
                     {
@@ -120,11 +126,19 @@
                     },
                     {
                         "type": "h3",
-                        "text": "Exportações"
+                        "text": "Exportações e backups"
                     },
                     {
                         "type": "p",
-                        "text": "As exportações de favoritos e de contexto para IA são salvas como arquivos no seu computador. Antes de salvar, a extensão pode mostrar uma revisão de privacidade que permite ocultar valores confidenciais. Nada é enviado."
+                        "text": "As exportações de favoritos e de contexto para IA são salvas como arquivos no seu computador. Uma exportação de favoritos em JSON também traz as tags e o resumo de cada favorito incluído. Antes de salvar, a extensão pode mostrar uma revisão de privacidade que permite ocultar valores confidenciais."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Exportar, nas Configurações, salva um arquivo de backup (<code>bookmark-scout-backup.json</code>) com as configurações que você alterou, seus prompts personalizados, seus serviços de IA (nome, provedor e modelo), suas pesquisas salvas e as colunas e a ordenação da tabela de favoritos. Ele nunca contém chaves de API nem outras configurações de conexão de IA. O arquivo não é criptografado. Importar, nas Configurações, o restaura."
+                    },
+                    {
+                        "type": "p",
+                        "text": "A extensão não envia nenhum desses arquivos. Eles ficam somente onde você os salvar."
                     }
                 ]
             },

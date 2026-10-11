@@ -1,8 +1,8 @@
 # Bookmark Scout Privacy Policy
 
-> **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
+> **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with a translation for every website language at `https://bookmark-scout.com/<locale>/privacy/`. The website copy lives in `apps/website/messages/privacy/<locale>.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, every message file, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 10, 2026
+**Effective date:** October 11, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in other languages. If a translation differs from the English version, the English version applies.
@@ -33,10 +33,16 @@ The extension declares no content scripts and does not read the pages open in yo
 
 Everything is kept in your browser's extension storage:
 
-- **Settings** are kept in the browser's sync storage. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on and which provider and model you chose, but not your API key.
-- **AI provider settings**, including your API key, base URL, and any extra headers, are kept in local storage on this device only. They are not synced.
+- **Settings** you changed from their default are kept in the browser's sync storage; settings left at their default are not stored. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on, but not your AI provider, model, or API key. (Version 0.3.2 and earlier also kept the AI provider and model you chose in synced settings.)
+- **A few settings stay on this device only**, in local storage: the folder you chose for quick save, the site icon storage limit, AI activity recording, and Ask AI's web search.
+- **Custom prompts** you write under Prompts in the AI Tools settings (each prompt's name, task, and text, and which prompt each task uses; up to 10) are kept in the browser's sync storage, so they sync through your browser account like settings. When an AI tool uses one of your prompts, its text is sent to your AI provider with the request.
+- **The bookmark manager's table**: which columns are shown, their order, and the sort sync like settings. Column widths and page size stay on this device.
+- **AI services** (each service's name, provider, and model) and their **connection settings** (API key, base URL, extra headers, and any provider-specific fields) are kept in local storage on this device only. They are not synced, and connection settings are never written to a backup file. Where the browser supports it (Chrome 140 and later), local storage is also closed to any script the extension places in a web page.
+- **Model lists** fetched from your AI services (model names and ids) are kept in local storage on this device for 7 days.
+- **AI activity**, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.
 - **Tags, summaries, saved searches, recent folders, and recent searches** are kept in local storage on this device only. You can turn off recent searches in Settings.
 - **Site icons** you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.
+- **Your last quick save** (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.
 
 Uninstalling the extension removes the data it stored in this browser. Your bookmarks themselves stay in the browser.
 
@@ -59,9 +65,13 @@ Your API key is sent to that provider to authenticate the request. The provider 
 
 Check Dead Links and Metadata Fetcher request the bookmarked pages themselves to see whether they load and what their titles are. Refresh Site Icons requests one bookmarked page for each website and then an icon file from that website's own domain, so bookmarks can show the site's icon. The browser asks for your permission the first time you run one of these tools. Requests go directly to each website, without cookies, and the results stay in the extension. No third-party icon service is used. As with any visit, the website can see your IP address and that the page or icon was requested.
 
-### Exports
+### Exports and backups
 
-Bookmark exports and AI context exports are saved as files on your computer. Before saving, the extension can show a privacy review that lets you redact sensitive values. Nothing is uploaded.
+Bookmark exports and AI context exports are saved as files on your computer. A JSON bookmark export also holds the tags and summary of each bookmark in it. Before saving, the extension can show a privacy review that lets you redact sensitive values.
+
+Export in Settings saves a backup file (`bookmark-scout-backup.json`) with the settings you changed, your custom prompts, your AI services (name, provider, and model), your saved searches, and the bookmark table's columns and sort. It never contains API keys or other AI connection settings. The file is not encrypted. Import in Settings restores it.
+
+The extension uploads none of these files. They go only where you save them.
 
 ## What the developer receives
 

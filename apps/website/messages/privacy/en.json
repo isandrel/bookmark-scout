@@ -70,10 +70,16 @@
                     {
                         "type": "ul",
                         "items": [
-                            "<strong>Settings</strong> are kept in the browser's sync storage. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on and which provider and model you chose, but not your API key.",
-                            "<strong>AI provider settings</strong>, including your API key, base URL, and any extra headers, are kept in local storage on this device only. They are not synced.",
+                            "<strong>Settings</strong> you changed from their default are kept in the browser's sync storage; settings left at their default are not stored. If you have browser sync turned on, your browser may copy them to your other devices through your browser account (for example Google, Mozilla, or Microsoft). Settings include whether AI is on, but not your AI provider, model, or API key. (Version 0.3.2 and earlier also kept the AI provider and model you chose in synced settings.)",
+                            "<strong>A few settings stay on this device only</strong>, in local storage: the folder you chose for quick save, the site icon storage limit, AI activity recording, and Ask AI's web search.",
+                            "<strong>Custom prompts</strong> you write under Prompts in the AI Tools settings (each prompt's name, task, and text, and which prompt each task uses; up to 10) are kept in the browser's sync storage, so they sync through your browser account like settings. When an AI tool uses one of your prompts, its text is sent to your AI provider with the request.",
+                            "<strong>The bookmark manager's table</strong>: which columns are shown, their order, and the sort sync like settings. Column widths and page size stay on this device.",
+                            "<strong>AI services</strong> (each service's name, provider, and model) and their <strong>connection settings</strong> (API key, base URL, extra headers, and any provider-specific fields) are kept in local storage on this device only. They are not synced, and connection settings are never written to a backup file. Where the browser supports it (Chrome 140 and later), local storage is also closed to any script the extension places in a web page.",
+                            "<strong>Model lists</strong> fetched from your AI services (model names and ids) are kept in local storage on this device for 7 days.",
+                            "<strong>AI activity</strong>, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.",
                             "<strong>Tags, summaries, saved searches, recent folders, and recent searches</strong> are kept in local storage on this device only. You can turn off recent searches in Settings.",
-                            "<strong>Site icons</strong> you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons."
+                            "<strong>Site icons</strong> you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.",
+                            "<strong>Your last quick save</strong> (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes."
                         ]
                     },
                     {
@@ -120,11 +126,19 @@
                     },
                     {
                         "type": "h3",
-                        "text": "Exports"
+                        "text": "Exports and backups"
                     },
                     {
                         "type": "p",
-                        "text": "Bookmark exports and AI context exports are saved as files on your computer. Before saving, the extension can show a privacy review that lets you redact sensitive values. Nothing is uploaded."
+                        "text": "Bookmark exports and AI context exports are saved as files on your computer. A JSON bookmark export also holds the tags and summary of each bookmark in it. Before saving, the extension can show a privacy review that lets you redact sensitive values."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Export in Settings saves a backup file (<code>bookmark-scout-backup.json</code>) with the settings you changed, your custom prompts, your AI services (name, provider, and model), your saved searches, and the bookmark table's columns and sort. It never contains API keys or other AI connection settings. The file is not encrypted. Import in Settings restores it."
+                    },
+                    {
+                        "type": "p",
+                        "text": "The extension uploads none of these files. They go only where you save them."
                     }
                 ]
             },
