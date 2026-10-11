@@ -22,7 +22,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
     setExportFormat(settings.dataDefaultExportFormat);
   }, [settings.dataDefaultExportFormat]);
 
-  const handleExport = (scope: BookmarkToolScope) => {
+  const handleExport = async (scope: BookmarkToolScope) => {
     const scopeNodes = getScopedNodes(folders, currentFolderId, scope);
     if (scopeNodes.length === 0) return;
     setIsExporting(true);
@@ -36,6 +36,8 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
         showToolOutcome(nothingToExportOutcome());
         return;
       }
+      // JSON keeps tags and summaries, so importing the file gives them back.
+      const metadata = format === jsonFormat ? await bookmarkMetadataValue.get() : undefined;
       const writeExport = (children: BookmarkTreeNode[]) => {
         const exportRoot = { ...root, children };
         const content = exportBookmarks(exportRoot, format, {
@@ -44,6 +46,7 @@ export function ExportToolCard({ environment, currentFolderName }: DataToolProps
           jsonIndentSize: settings.exportJsonIndentSize,
           htmlIndentSpaces: settings.exportHtmlIndentSpaces,
           markdownIndentSpaces: settings.exportMarkdownIndentSpaces,
+          metadata,
         });
         const scopeName =
           scope === 'folder' && currentFolderId

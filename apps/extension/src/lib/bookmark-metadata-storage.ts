@@ -108,7 +108,11 @@ export async function reconcileStoredBookmarkMetadata(validBookmarkIds: string[]
   );
 }
 
-function parseBookmarkMetadata(raw: unknown): StoredBookmarkMetadataById {
+/**
+ * Valid tags and summaries by key (a bookmark id in storage, a URL in a JSON export); malformed
+ * entries and empty ones are dropped.
+ */
+export function parseBookmarkMetadata(raw: unknown): StoredBookmarkMetadataById {
   if (!isPlainObject(raw)) return {};
   return Object.fromEntries(
     Object.entries(raw).flatMap(([bookmarkId, value]) => {

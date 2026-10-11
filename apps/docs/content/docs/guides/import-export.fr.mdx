@@ -31,7 +31,7 @@ Détails des fichiers :
 - Les fichiers CSV commencent par une marque d'ordre des octets UTF-8. La colonne Folder relie les dossiers par `/`, et écrit un `/` présent dans un nom de dossier sous la forme `\/` et une barre oblique inverse sous la forme `\\`.
 - **Inclure les dates** et **Inclure les URL**, ainsi que l'indentation de chaque format, se trouvent dans l'onglet **Données** des [Paramètres](/settings).
 
-Les étiquettes et les résumés ne sont pas inclus dans les exportations de favoris. Pour transmettre des favoris avec leurs étiquettes et résumés à un outil d'IA, utilisez le **Préparateur de contexte IA** ; consultez [Configurer les outils d'IA](/guides/ai-tools#export-context-for-an-ai-chat).
+Une exportation en JSON inclut les étiquettes et le résumé de chaque favori, et l'importation de ce fichier les attribue aux favoris qu'elle crée, mais pas à ceux qu'elle ignore comme doublons. Les exportations HTML, Markdown et CSV ne les incluent pas. Pour transmettre des favoris avec leurs étiquettes et résumés à un outil d'IA, utilisez le **Préparateur de contexte IA** ; consultez [Configurer les outils d'IA](/guides/ai-tools#export-context-for-an-ai-chat).
 
 ## Importer des favoris [#import-bookmarks]
 
@@ -57,4 +57,4 @@ Rien n'est écrit tant que vous n'avez pas cliqué sur **Importer**. Si vos favo
 
 ## Les fichiers de paramètres sont distincts [#settings-files-are-separate]
 
-Les boutons **Exporter** et **Importer** situés en bas de la page des paramètres enregistrent et restaurent les paramètres de Bookmark Scout dans un fichier JSON. Ils ne touchent pas aux favoris.
+Les boutons **Exporter** et **Importer** situés en bas de la page des paramètres enregistrent et restaurent une sauvegarde des paramètres de Bookmark Scout, des prompts personnalisés, des services d'IA (sans clés API) et des recherches enregistrées. Ils ne touchent ni aux favoris, ni aux étiquettes et résumés. Le contenu de la sauvegarde est détaillé dans [Paramètres](/settings).

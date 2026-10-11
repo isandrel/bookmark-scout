@@ -31,7 +31,7 @@ Detalles del archivo:
 - Los archivos CSV empiezan con una marca de orden de bytes UTF-8. La columna Folder une las carpetas con `/`, y escribe una `/` dentro de un nombre de carpeta como `\/` y una barra invertida como `\\`.
 - **Incluir fechas** e **Incluir URLs**, y los tamaños de sangría de cada formato, están en la pestaña **Datos** de la [Configuración](/settings).
 
-Las etiquetas y los resúmenes no se incluyen en las exportaciones de marcadores. Para pasar marcadores con sus etiquetas y resúmenes a una herramienta de IA, usa el **Empaquetador de contexto para IA**; consulta [Configurar las herramientas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
+Una exportación en JSON incluye las etiquetas y el resumen de cada marcador, e importar ese archivo se los asigna a los marcadores que crea, pero no a los que omite por duplicados. Las exportaciones en HTML, Markdown y CSV no los incluyen. Para pasar marcadores con sus etiquetas y resúmenes a una herramienta de IA, usa el **Empaquetador de contexto para IA**; consulta [Configurar las herramientas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
 
 ## Importar marcadores [#import-bookmarks]
 
@@ -57,4 +57,4 @@ No se escribe nada hasta que haces clic en **Importar**. Si tus marcadores cambi
 
 ## Los archivos de configuración son aparte [#settings-files-are-separate]
 
-Los botones **Exportar** e **Importar** de la parte inferior de la página de configuración guardan y restauran la configuración de Bookmark Scout como archivo JSON. No tocan los marcadores.
+Los botones **Exportar** e **Importar** de la parte inferior de la página de configuración guardan y restauran una copia de seguridad de la configuración de Bookmark Scout, los prompts personalizados, los servicios de IA (sin claves de API) y las búsquedas guardadas. No tocan los marcadores, las etiquetas ni los resúmenes. Consulta en [Configuración](/settings) qué incluye la copia.

@@ -303,13 +303,13 @@
         "message": "Erreur lors de la réinitialisation des paramètres",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "Paramètres exportés",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "Sauvegarde exportée",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "Le fichier de paramètres a été téléchargé.",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "Le fichier contient vos paramètres, prompts, services d'IA et recherches enregistrées. Les clés API n'y figurent jamais.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "Échec de l'exportation",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "Fichier de paramètres non valide",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "Fichier de sauvegarde non valide",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "Une version plus récente de Bookmark Scout a enregistré ces données. Mettez à jour l'extension pour les modifier.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "$1 paramètres modifiés : $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "Sauvegarde restaurée",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "Vos paramètres, prompts, services d'IA et recherches enregistrées ont été restaurés. Les sauvegardes ne contiennent pas de clés API : ajoutez celles qui manquent dans Paramètres > IA.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "Passer au thème clair",

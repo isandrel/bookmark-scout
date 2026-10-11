@@ -9,5 +9,6 @@ import_change_preview_limit = 5
 # Category shown when the page opens; a key of the settings categories in lib/settings-schema.ts.
 default_category = "search"
 
-# File name of a settings export.
-settings_export_filename = "bookmark-scout-settings.json"
+# File name of a backup (Export): settings, prompts, AI services without their keys, and saved
+# searches.
+backup_filename = "bookmark-scout-backup.json"

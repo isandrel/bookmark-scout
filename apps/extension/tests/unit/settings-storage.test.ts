@@ -12,7 +12,6 @@ import {
   settingsSchema,
 } from '@/lib/settings-schema';
 import {
-  exportSettings,
   getSettings,
   importSettings,
   registerSettingsSaveListener,
@@ -292,21 +291,10 @@ describe('saving from a closing page', () => {
   });
 });
 
-describe('settings export and import', () => {
-  it('exports only the settings that differ from the default, from both scopes', async () => {
-    expect(JSON.parse(await exportSettings())).toEqual({});
-    await saveSettings({ theme: 'dark', quickSaveFixedFolder: '42' });
-    expect(JSON.parse(await exportSettings())).toEqual({
-      theme: 'dark',
-      quickSaveFixedFolder: '42',
-    });
-  });
-
-  it('round-trips an export, and an export of defaults changes nothing', async () => {
-    await saveSettings({ theme: 'dark', siteIconsMaxCacheKb: 1024, groupByFolders: false });
-    const exported = await exportSettings();
-    await resetSettings();
-    expect((await importSettings(exported)).sort()).toEqual([
+describe('settings file import', () => {
+  it('places each setting in its scope, and an empty file changes nothing', async () => {
+    const file = { theme: 'dark', siteIconsMaxCacheKb: 1024, groupByFolders: false };
+    expect((await importSettings(JSON.stringify(file))).sort()).toEqual([
       'groupByFolders',
       'siteIconsMaxCacheKb',
       'theme',

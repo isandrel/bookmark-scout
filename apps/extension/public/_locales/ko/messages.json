@@ -303,13 +303,13 @@
         "message": "설정 초기화 오류",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "설정이 내보내졌습니다",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "백업을 내보냈습니다",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "설정 파일이 다운로드되었습니다",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "파일에는 설정, 프롬프트, AI 서비스, 저장한 검색이 들어 있습니다. API 키는 포함되지 않습니다.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "내보내기 실패",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "잘못된 설정 파일입니다",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "잘못된 백업 파일입니다",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "최신 버전의 Bookmark Scout에서 저장한 데이터입니다. 변경하려면 확장 프로그램을 업데이트하세요.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "설정 $1개를 변경했습니다: $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "백업을 복원했습니다",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "설정, 프롬프트, AI 서비스, 저장한 검색을 복원했습니다. 백업에는 API 키가 없으므로, 없는 키는 설정 > AI에서 추가하세요.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "밝은 테마로 전환",

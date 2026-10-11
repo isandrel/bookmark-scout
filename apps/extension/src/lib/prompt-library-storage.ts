@@ -84,7 +84,7 @@ export const promptLibraryIndexValue = defineStoredValue<PromptLibraryIndex>(
 );
 
 /** One sync item per prompt, so each stays under the per-item quota. */
-const promptItems = defineStoredCollection<CustomPrompt | null>(STORAGE_ITEMS.prompt, {
+export const customPromptItems = defineStoredCollection<CustomPrompt | null>(STORAGE_ITEMS.prompt, {
   parse: (raw) => {
     const parsed = customPromptSchema.safeParse(raw);
     return parsed.success ? parsed.data : null;
@@ -93,7 +93,7 @@ const promptItems = defineStoredCollection<CustomPrompt | null>(STORAGE_ITEMS.pr
   isEmpty: (prompt) => prompt === null,
 });
 
-const promptValue = (id: string) => promptItems.entry(id);
+const promptValue = (id: string) => customPromptItems.entry(id);
 
 /** Characters Chrome's JSON writer escapes as `\uXXXX` although JSON.stringify keeps them. */
 const CHROME_ESCAPED_CHARS = /[<\u2028\u2029]/g;
@@ -151,7 +151,7 @@ export function validateCustomPrompt(draft: CustomPromptDraft): string | undefin
 export async function getPromptLibrary(): Promise<PromptLibrary> {
   const index = await promptLibraryIndexValue.get();
   // Every listed prompt in one storage read.
-  const stored = await promptItems.getMany(index.ids);
+  const stored = await customPromptItems.getMany(index.ids);
   const prompts = index.ids
     .map((id) => stored[id])
     .filter((prompt): prompt is CustomPrompt => prompt !== null && prompt !== undefined);
@@ -226,8 +226,8 @@ export async function deleteCustomPrompt(id: string): Promise<void> {
  */
 export async function removeOrphanPrompts(now = Date.now()): Promise<string[]> {
   const listed = new Set((await promptLibraryIndexValue.get()).ids);
-  const unlisted = (await promptItems.listIds()).filter((id) => !listed.has(id));
-  const stored = await promptItems.getMany(unlisted);
+  const unlisted = (await customPromptItems.listIds()).filter((id) => !listed.has(id));
+  const stored = await customPromptItems.getMany(unlisted);
   const orphans = unlisted.filter((id) => {
     const prompt = stored[id];
     return !prompt || now - prompt.updatedAt > ORPHAN_GRACE_MS;

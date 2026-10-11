@@ -303,13 +303,13 @@
         "message": "重設設定時發生錯誤",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "已匯出設定",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "已匯出備份",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "設定檔已下載。",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "檔案包含你的設定、提示詞、AI 服務和已儲存的搜尋。API 金鑰一律不會包含在內。",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "匯出失敗",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "設定檔無效",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "無效的備份檔案",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "這些資料由較新版本的 Bookmark Scout 儲存。請更新擴充功能後再變更。",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "已變更 $1 項設定：$2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "已還原備份",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "已還原你的設定、提示詞、AI 服務和已儲存的搜尋。備份中沒有 API 金鑰：缺少的金鑰請在「設定 > AI」中新增。",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "切換為淺色主題",

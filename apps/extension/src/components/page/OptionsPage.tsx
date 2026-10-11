@@ -33,7 +33,7 @@ const optionsConfig = readConfig(
     default_category: z
       .string()
       .refine((key) => key in getSettingsCategories(), 'not a settings category'),
-    settings_export_filename: z.string().min(1),
+    backup_filename: z.string().min(1),
   }),
 );
 
@@ -194,14 +194,10 @@ const OptionsPage: React.FC = () => {
 
   const handleExport = async () => {
     try {
-      downloadExport(
-        await exportSettings(),
-        optionsConfig.settings_export_filename,
-        jsonFormat.mimeType,
-      );
+      downloadExport(await exportBackup(), optionsConfig.backup_filename, jsonFormat.mimeType);
       toast.success({
-        title: t('toast_settingsExported'),
-        description: t('toast_settingsExportedDescription'),
+        title: t('toast_backupExported'),
+        description: t('toast_backupExportedDescription'),
       });
     } catch (error) {
       toast.error({ title: t('toast_exportFailed'), description: getErrorMessage(error) });
@@ -213,7 +209,17 @@ const OptionsPage: React.FC = () => {
     if (!file) return;
 
     try {
-      const changed = await importSettings(await file.text());
+      const content = await file.text();
+      // A backup restores everything it holds; any other JSON is read as a settings file.
+      if (isBackupFile(content)) {
+        await restoreBackup(content);
+        toast.success({
+          title: t('toast_backupRestored'),
+          description: t('toast_backupRestoredDescription'),
+        });
+        return;
+      }
+      const changed = await importSettings(content);
       const meta = getSettingsFieldMeta();
       const labels = changed.map((key) => meta[key].label);
       toast.success({
@@ -231,10 +237,8 @@ const OptionsPage: React.FC = () => {
         title: t('toast_importFailed'),
         description: getErrorMessage(error, 'error_invalidSettingsFile'),
       });
-    }
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    } finally {
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 

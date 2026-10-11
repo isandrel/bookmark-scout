@@ -303,13 +303,13 @@
         "message": "Error resetting settings",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "Settings exported",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "Backup exported",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "Settings file has been downloaded.",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "The file holds your settings, prompts, AI services, and saved searches. API keys are never included.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "Export failed",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "Invalid settings file",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "Invalid backup file",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "A newer version of Bookmark Scout saved this. Update the extension to change it.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "$1 settings changed: $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "Backup restored",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "Your settings, prompts, AI services, and saved searches were restored. Backups have no API keys: add any that are missing in Settings > AI.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "Switch to light theme",

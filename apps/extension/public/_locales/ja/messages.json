@@ -299,13 +299,13 @@
         "message": "設定のリセットに失敗しました",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "設定をエクスポートしました",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "バックアップをエクスポートしました",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "設定ファイルがダウンロードされました",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "ファイルには設定、プロンプト、AI サービス、保存した検索が含まれます。API キーは含まれません。",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "エクスポートに失敗しました",
@@ -326,6 +326,10 @@
     "error_invalidSettingsFile": {
         "message": "無効な設定ファイルです",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "無効なバックアップファイルです",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "新しいバージョンの Bookmark Scout で保存されたデータです。変更するには拡張機能を更新してください。",
@@ -2976,6 +2980,14 @@
     "toast_settingsImportedChanges": {
         "message": "$1 件の設定を変更しました: $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "バックアップを復元しました",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "設定、プロンプト、AI サービス、保存した検索を復元しました。バックアップに API キーは含まれないため、足りないキーは 設定 > AI で追加してください。",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "ライトテーマに切り替え",
