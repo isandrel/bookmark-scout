@@ -145,16 +145,17 @@ const NOT_APPROVED: Record<Exclude<ApprovalOutcome, 'approved'>, [string, string
 
 /**
  * Every change a local agent asks for waits for the user's approval in the browser, whatever the
- * agent says about it. Calls that would be refused anyway (turned off, invalid input) are not
- * shown; `runAction` refuses them. Undefined when the call may run.
+ * agent says about it. A call that would be refused or fail anyway (turned off, invalid input, a
+ * plan that no longer exists, a change already undone) is answered at once with the reason and
+ * never shown. Undefined when the call may run.
  */
 async function approvalFor(
   call: CallMessage,
   context: ActionContext,
 ): Promise<CallAnswer | undefined> {
   if (!isActionId(call.tool) || getAction(call.tool).risk === 'read') return undefined;
-  if (!(await agentActionIds(context)).includes(call.tool)) return undefined;
-  if (!getAction(call.tool).input?.safeParse(call.args).success) return undefined;
+  const problem = await checkActionCall(call.tool, call.args, context);
+  if (problem) return { isError: true, result: problem };
   const outcome = await requestAgentApproval({
     id: call.id,
     client: call.client.name,

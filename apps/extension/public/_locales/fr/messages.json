@@ -5531,6 +5531,34 @@
         "message": "Ce plan a expiré ou a déjà été appliqué. Redemandez-le pour le recréer.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
     },
+    "askAI_undoMissing": {
+        "message": "Cette modification a déjà été annulée ou n’est plus dans l’historique : il n’y a rien à annuler.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Retirer « $1 »",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Retirer le dossier « $1 » et tout son contenu ($2 éléments)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Remettre « $1 » dans $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Renommer « $1 » à nouveau en « $2 »",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Rétablir l’adresse de « $1 » à $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Replacer « $1 » dans $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
     "askAI_approve": {
         "message": "Approuver",
         "description": "Ask AI approval card: button that approves the change"

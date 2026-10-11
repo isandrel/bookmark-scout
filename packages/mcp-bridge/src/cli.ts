@@ -42,8 +42,9 @@ serve picks the most recently connected browser profile unless --browser or --pr
 (a profile id or its start, as doctor shows) narrows it down.
 install registers with every browser found unless --browser names some
 (${Object.keys(config.browsers).join(", ")}); --extension-id also allows a development build.
-For tests, --home <dir> puts the launcher under another home folder, and --manifest-dir <dir>
-writes the one --browser's manifest into a folder such as a test profile's NativeMessagingHosts.`;
+For tests, install, uninstall, and doctor take --home <dir>, which puts the launcher under
+another home folder, and --manifest-dir <dir>, a folder such as a test profile's
+NativeMessagingHosts that holds the manifest (install also needs the one --browser).`;
 
 /**
  * Browsers start a native host with arguments of their own: Chromium passes the caller's origin
@@ -64,6 +65,19 @@ function installEnvironment(home?: string): InstallEnvironment {
   if (!home) return { ...environment, home: homedir() };
   const { XDG_DATA_HOME: _data, LOCALAPPDATA: _local, ...env } = environment.env;
   return { ...environment, env, home };
+}
+
+/**
+ * `--home` and `--manifest-dir`, which install, uninstall, and doctor all take, so a test can
+ * install, check, and remove a registration without touching the user's own folders.
+ */
+const TEST_LOCATION_OPTIONS = {
+  home: { type: "string" },
+  "manifest-dir": { type: "string" },
+} as const;
+
+function manifestDirOption(values: { "manifest-dir"?: string }): { manifestDir?: string } {
+  return values["manifest-dir"] ? { manifestDir: values["manifest-dir"] } : {};
 }
 
 async function main(argv: string[]): Promise<number> {
@@ -115,8 +129,7 @@ async function main(argv: string[]): Promise<number> {
         browser: { type: "string", multiple: true },
         "extension-id": { type: "string", multiple: true },
         "dry-run": { type: "boolean" },
-        home: { type: "string" },
-        "manifest-dir": { type: "string" },
+        ...TEST_LOCATION_OPTIONS,
       },
     });
     const launcher = currentLauncher();
@@ -124,7 +137,7 @@ async function main(argv: string[]): Promise<number> {
       browsers: (values.browser ?? []).flatMap((value) => value.split(",")).filter(Boolean),
       extensionIds: values["extension-id"] ?? [],
       launcher,
-      ...(values["manifest-dir"] ? { manifestDir: values["manifest-dir"] } : {}),
+      ...manifestDirOption(values),
     });
     const lines = applyInstall(plan, values["dry-run"] ?? false);
     console.log(
@@ -141,14 +154,24 @@ async function main(argv: string[]): Promise<number> {
   }
 
   if (mode === "uninstall") {
-    const { values } = parseArgs({ args: rest, options: { "dry-run": { type: "boolean" } } });
-    const lines = applyUninstall(planUninstall(installEnvironment()), values["dry-run"] ?? false);
+    const { values } = parseArgs({
+      args: rest,
+      options: { "dry-run": { type: "boolean" }, ...TEST_LOCATION_OPTIONS },
+    });
+    const plan = planUninstall(installEnvironment(values.home), manifestDirOption(values));
+    const lines = applyUninstall(plan, values["dry-run"] ?? false);
     console.log(lines.length > 0 ? lines.join("\n") : "Nothing to remove.");
     return 0;
   }
 
   if (mode === "doctor") {
-    console.log((await runDoctor(installEnvironment(), currentLauncher())).join("\n"));
+    const { values } = parseArgs({ args: rest, options: TEST_LOCATION_OPTIONS });
+    const lines = await runDoctor(
+      installEnvironment(values.home),
+      currentLauncher(),
+      manifestDirOption(values),
+    );
+    console.log(lines.join("\n"));
     return 0;
   }
 

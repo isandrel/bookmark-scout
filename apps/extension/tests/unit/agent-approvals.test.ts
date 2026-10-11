@@ -132,3 +132,148 @@ describe('approving changes from local agents', () => {
     expect(await waitingIds()).toEqual([]);
   });
 });
+
+describe('calls that cannot work are answered at once, without asking', () => {
+  const agentCall = (id: string, tool: string, args: Record<string, unknown>) => ({
+    type: 'call' as const,
+    id,
+    client: { name: 'Agent' },
+    tool,
+    args,
+  });
+
+  /** Answers the approval `id` once it is shown. */
+  async function approve(id: string) {
+    await vi.waitFor(async () => expect(await waitingIds()).toContain(id));
+    await answerFrom(pageSender(), id, true);
+  }
+
+  /** The answer, or `hung` while it still waits (for an approval nobody gives) a second later. */
+  function settled<T>(answer: Promise<T>): Promise<T | 'hung'> {
+    return Promise.race([
+      answer,
+      new Promise<'hung'>((resolve) => setTimeout(() => resolve('hung'), 1_000)),
+    ]);
+  }
+
+  beforeEach(() => {
+    installFakeBookmarks([
+      { id: 'bar', title: 'Bookmarks Bar' },
+      { id: 'docs', parentId: 'bar', title: 'Docs' },
+      { id: 'work', parentId: 'bar', title: 'Work' },
+      { id: 'b1', parentId: 'docs', title: 'Rust book', url: 'https://doc.rust-lang.org/book/' },
+    ]);
+  });
+
+  it('refuses a plan that does not exist or was already applied, with what to do instead', async () => {
+    const create = vi.spyOn(fakeBrowser.windows, 'create');
+    expect(
+      await settled(answerAgentCall(agentCall('4.1', 'applyChanges', { planId: 'no-such-plan' }))),
+    ).toEqual({
+      isError: true,
+      result: {
+        error: {
+          code: 'not_found',
+          message:
+            'Plan no-such-plan does not exist, expired, or was already applied; call proposeChanges again.',
+          hint: 'Propose the changes again with proposeChanges, then apply the new planId.',
+        },
+      },
+    });
+    expect(create).not.toHaveBeenCalled();
+    expect(await waitingIds()).toEqual([]);
+
+    const proposed = await answerAgentCall(
+      agentCall('4.2', 'proposeChanges', {
+        summary: 'File the book',
+        changes: [{ action: 'moveBookmarks', input: { refs: ['b:b1'], to: 'f:work' } }],
+      }),
+    );
+    const { planId } = proposed.result as { planId: string };
+    const applying = answerAgentCall(agentCall('4.3', 'applyChanges', { planId }));
+    await approve('4.3');
+    expect(await applying).toMatchObject({ isError: false, result: { applied: 1 } });
+    expect((await fakeBrowser.bookmarks.get('b1'))[0]?.parentId).toBe('work');
+
+    // The same plan again: refused at once, and no second window.
+    create.mockClear();
+    expect(await settled(answerAgentCall(agentCall('4.4', 'applyChanges', { planId })))).toEqual({
+      isError: true,
+      result: {
+        error: expect.objectContaining({
+          code: 'not_found',
+          message: `Plan ${planId} does not exist, expired, or was already applied; call proposeChanges again.`,
+        }),
+      },
+    });
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('refuses a plan whose items changed since it was proposed', async () => {
+    const proposed = await answerAgentCall(
+      agentCall('5.1', 'proposeChanges', {
+        summary: 'File the book',
+        changes: [{ action: 'moveBookmarks', input: { refs: ['b:b1'], to: 'f:work' } }],
+      }),
+    );
+    const { planId } = proposed.result as { planId: string };
+    await fakeBrowser.bookmarks.update('b1', { title: 'The Rust book' });
+    expect(
+      await settled(answerAgentCall(agentCall('5.2', 'applyChanges', { planId }))),
+    ).toMatchObject({
+      isError: true,
+      result: {
+        error: {
+          code: 'unavailable',
+          message: `Plan ${planId} is out of date: "Rust book" changed since it was proposed; call proposeChanges again.`,
+        },
+      },
+    });
+    expect(await waitingIds()).toEqual([]);
+  });
+
+  it('refuses to undo a change that does not exist or was already undone', async () => {
+    const saving = answerAgentCall(
+      agentCall('6.1', 'saveBookmark', { url: 'https://example.com/a', folder: 'f:docs' }),
+    );
+    await approve('6.1');
+    const { change } = (await saving).result as { change: string };
+
+    const undoing = answerAgentCall(agentCall('6.2', 'undoChange', { change }));
+    await approve('6.2');
+    expect(await undoing).toMatchObject({ isError: false, result: { undone: 1 } });
+
+    const create = vi.spyOn(fakeBrowser.windows, 'create');
+    for (const [id, gone] of [
+      ['6.3', change],
+      ['6.4', 'no-such-change'],
+    ]) {
+      expect(
+        await settled(answerAgentCall(agentCall(id, 'undoChange', { change: gone }))),
+      ).toMatchObject({
+        isError: true,
+        result: {
+          error: {
+            code: 'not_found',
+            message: `Change ${gone} does not exist or was already undone; there is nothing to undo.`,
+          },
+        },
+      });
+    }
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('refuses a save into a folder named by a bookmark ref, before asking', async () => {
+    expect(
+      await settled(
+        answerAgentCall(
+          agentCall('7.1', 'saveBookmark', { url: 'https://example.com/a', folder: 'b:docs' }),
+        ),
+      ),
+    ).toMatchObject({
+      isError: true,
+      result: { error: { message: 'b:docs is a folder; use f:docs for folders.' } },
+    });
+    expect(await waitingIds()).toEqual([]);
+  });
+});

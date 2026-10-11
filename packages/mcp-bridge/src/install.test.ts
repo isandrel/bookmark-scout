@@ -153,6 +153,51 @@ describe("applyInstall and uninstall", () => {
   });
 });
 
+describe("test locations on every command", () => {
+  const CLI = join(import.meta.dir, "cli.ts");
+  const run = (...args: string[]) => {
+    const result = Bun.spawnSync([process.execPath, CLI, ...args], {
+      env: { ...process.env, BOOKMARK_SCOUT_MCP_RUNTIME_DIR: join(home, "run") },
+    });
+    expect(result.exitCode).toBe(0);
+    return result.stdout.toString();
+  };
+
+  test("uninstall removes only what install --home --manifest-dir wrote", () => {
+    const manifestDir = join(home, "profile", "NativeMessagingHosts");
+    const fakeHome = join(home, "user");
+    const where = ["--home", fakeHome, "--manifest-dir", manifestDir];
+    // A registration in the (test) home's own browser folder that the test flags must not touch.
+    const own = planInstall(environment(process.platform), {
+      browsers: ["chrome"],
+      extensionIds: [],
+      launcher,
+    });
+    applyInstall({ ...own, files: own.files.slice(1) }, false);
+    const ownManifest = own.files[1]?.path ?? "";
+
+    run("install", "--browser", "chromium", "--extension-id", DEV_ID, ...where);
+    const manifest = join(manifestDir, `${NATIVE_HOST_NAME}.json`);
+    const launcherFile = JSON.parse(readFileSync(manifest, "utf8")).path as string;
+    expect(launcherFile.startsWith(fakeHome)).toBe(true);
+
+    expect(run("doctor", ...where)).toContain(
+      `Manifest folder: installed (2 extension ids allowed)`,
+    );
+    expect(run("uninstall", "--dry-run", ...where)).toBe(
+      `Would remove ${launcherFile}\nWould remove ${manifest}\n`,
+    );
+    expect(existsSync(manifest)).toBe(true);
+
+    run("uninstall", ...where);
+    expect(existsSync(manifest)).toBe(false);
+    expect(existsSync(launcherFile)).toBe(false);
+    expect(existsSync(ownManifest)).toBe(true);
+    expect(run("doctor", ...where)).toContain("Manifest folder: not installed");
+    expect(run("uninstall", ...where)).toBe("Nothing to remove.\n");
+  });
+});
+
 test("client snippets name the server and start serve", () => {
   const text = clientSnippets({ command: "/usr/local/bin/bookmark-scout-mcp", args: [] });
   expect(text).toContain(
