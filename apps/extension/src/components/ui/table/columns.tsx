@@ -55,6 +55,10 @@ export type Bookmark = {
   unmodifiable?: 'managed';
   /** Direct child of the browser's bookmark root (e.g. Bookmarks Bar); cannot be edited or removed. */
   isRootFolder?: boolean;
+  /** Top-level folders only: the browser's kind of permanent folder, such as `bookmarks-bar`. */
+  folderType?: string;
+  /** Top-level folders only: stored in the signed-in account rather than only on this device. */
+  syncing?: boolean;
 };
 
 const bookmarkDomains = new WeakMap<Bookmark, string>();

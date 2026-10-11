@@ -53,6 +53,7 @@ export function toBookmarkTreeNode(node: BrowserBookmarkNode): BookmarkTreeNode 
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     ...(node.folderType ? { folderType: node.folderType } : {}),
+    ...(typeof node.syncing === 'boolean' ? { syncing: node.syncing } : {}),
     ...(node.unmodifiable ? { unmodifiable: node.unmodifiable } : {}),
     children: node.children
       ? node.children.map(toBookmarkTreeNode)

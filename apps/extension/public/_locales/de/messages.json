@@ -3289,13 +3289,17 @@
         "message": "Dieses Element ist kein Ordner. Der Ordner, der es enthält, wird angezeigt.",
         "description": "Notice when the manager URL points at a bookmark instead of a folder"
     },
-    "bookmarks_expandFolder": {
-        "message": "„$1“ ausklappen",
-        "description": "Folder tree expand button label; $1 is the folder title"
+    "bookmarks_folderTree": {
+        "message": "Ordner",
+        "description": "Accessible name of the bookmark manager's folder tree"
     },
-    "bookmarks_collapseFolder": {
-        "message": "„$1“ einklappen",
-        "description": "Folder tree collapse button label; $1 is the folder title"
+    "bookmarks_accountSection": {
+        "message": "In Ihrem Konto",
+        "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
+    },
+    "bookmarks_localSection": {
+        "message": "Nur auf diesem Gerät",
+        "description": "Folder tree heading over the bookmarks kept only on this device, not in the browser account"
     },
     "bookmarks_breadcrumb": {
         "message": "Ordnerpfad",

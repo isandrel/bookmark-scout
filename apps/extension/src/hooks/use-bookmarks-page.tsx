@@ -25,7 +25,13 @@ const processNode = (
     dateAdded: node.dateAdded,
     dateGroupModified: node.dateGroupModified,
     unmodifiable: node.unmodifiable,
-    ...(isRootFolder ? { isRootFolder } : {}),
+    ...(isRootFolder
+      ? {
+          isRootFolder,
+          ...(node.folderType ? { folderType: node.folderType } : {}),
+          ...(node.syncing !== undefined ? { syncing: node.syncing } : {}),
+        }
+      : {}),
   };
 };
 
@@ -40,6 +46,8 @@ const ROW_FIELDS = [
   'dateGroupModified',
   'unmodifiable',
   'isRootFolder',
+  'folderType',
+  'syncing',
 ] as const satisfies readonly (keyof Bookmark)[];
 
 /**

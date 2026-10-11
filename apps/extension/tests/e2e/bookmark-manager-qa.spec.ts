@@ -136,10 +136,10 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   await expect(row(page, 'Doomed Live Link')).toHaveCount(0);
   await expect(breadcrumbCurrent(page)).toHaveText('E2E Live Renamed');
   await expect(
-    tree(page).getByRole('button', { name: 'E2E Live Renamed', exact: true }),
+    tree(page).getByRole('treeitem', { name: 'E2E Live Renamed', exact: true }),
   ).toBeVisible();
   await expect(
-    tree(page).getByRole('button', { name: 'E2E External Folder', exact: true }),
+    tree(page).getByRole('treeitem', { name: 'E2E External Folder', exact: true }),
   ).toBeVisible();
 
   // Deleting the open folder elsewhere falls back to its parent with a notice.
@@ -151,7 +151,7 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   );
   await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
   await expect(breadcrumbCurrent(page)).toHaveText('E2E Live Renamed');
-  await expect(tree(page).getByRole('button', { name: 'Live Child', exact: true })).toHaveCount(0);
+  await expect(tree(page).getByRole('treeitem', { name: 'Live Child', exact: true })).toHaveCount(0);
 });
 
 test('external folder renames and moves update the paths of everything inside', async ({
@@ -204,7 +204,7 @@ test('in-page rename and delete refresh the folder tree', async ({
     { title: 'Scratch', children: [] },
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
-  await expect(tree(page).getByRole('button', { name: 'Dev', exact: true })).toBeVisible();
+  await expect(tree(page).getByRole('treeitem', { name: 'Dev', exact: true })).toBeVisible();
 
   await openRowMenu(page, 'Dev');
   await page.getByRole('menuitem', { name: 'Rename' }).click();
@@ -212,8 +212,8 @@ test('in-page rename and delete refresh the folder tree', async ({
   await expect(dialog).toContainText('Change the name of this folder.');
   await dialog.getByLabel('Name').fill('  Development  ');
   await dialog.getByRole('button', { name: 'Save' }).click();
-  await expect(tree(page).getByRole('button', { name: 'Development', exact: true })).toBeVisible();
-  await expect(tree(page).getByRole('button', { name: 'Dev', exact: true })).toHaveCount(0);
+  await expect(tree(page).getByRole('treeitem', { name: 'Development', exact: true })).toBeVisible();
+  await expect(tree(page).getByRole('treeitem', { name: 'Dev', exact: true })).toHaveCount(0);
   await expect
     .poll(() =>
       extensionWorker.evaluate(
@@ -225,7 +225,7 @@ test('in-page rename and delete refresh the folder tree', async ({
 
   await openRowMenu(page, 'Scratch');
   await page.getByRole('menuitem', { name: 'Delete' }).click();
-  await expect(tree(page).getByRole('button', { name: 'Scratch', exact: true })).toHaveCount(0);
+  await expect(tree(page).getByRole('treeitem', { name: 'Scratch', exact: true })).toHaveCount(0);
 });
 
 test('browser Back and Forward follow folder navigation only', async ({

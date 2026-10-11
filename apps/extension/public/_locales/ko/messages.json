@@ -3281,13 +3281,17 @@
         "message": "해당 항목은 폴더가 아닙니다. 이 항목이 들어 있는 폴더를 표시합니다.",
         "description": "Notice when the manager URL points at a bookmark instead of a folder"
     },
-    "bookmarks_expandFolder": {
-        "message": "\"$1\" 펼치기",
-        "description": "Folder tree expand button label; $1 is the folder title"
+    "bookmarks_folderTree": {
+        "message": "폴더",
+        "description": "Accessible name of the bookmark manager's folder tree"
     },
-    "bookmarks_collapseFolder": {
-        "message": "\"$1\" 접기",
-        "description": "Folder tree collapse button label; $1 is the folder title"
+    "bookmarks_accountSection": {
+        "message": "계정에 저장됨",
+        "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
+    },
+    "bookmarks_localSection": {
+        "message": "이 기기에만 저장됨",
+        "description": "Folder tree heading over the bookmarks kept only on this device, not in the browser account"
     },
     "bookmarks_breadcrumb": {
         "message": "폴더 경로",

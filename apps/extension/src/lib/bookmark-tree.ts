@@ -2,6 +2,9 @@ import type { BookmarkTreeNode } from '@/types';
 
 type TreeNodeIdentity = Pick<BookmarkTreeNode, 'id' | 'parentId'>;
 
+/** Chrome 134+ and Edge mark the bookmarks bar with this `folderType`. */
+export const BOOKMARKS_BAR_FOLDER_TYPE = 'bookmarks-bar';
+
 // Firefox exposes the mobile folder under a fixed GUID and has no `folderType`.
 const MOBILE_FOLDER_IDS: ReadonlySet<string> = new Set(['mobile______']);
 

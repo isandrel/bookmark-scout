@@ -30,18 +30,6 @@ export const POPUP_TREE_FOLDER_ATTRIBUTE = 'data-folder-trigger';
 export const POPUP_TREE_CAN_SAVE_ATTRIBUTE = 'data-can-save';
 const TREE_ROW_SELECTOR = `[${POPUP_TREE_ROW_ATTRIBUTE}]`;
 
-/** Tree navigation keys (the standard tree pattern), exported so hints can name them. */
-export const POPUP_TREE_BINDINGS = {
-  next: [{ key: 'ArrowDown' }],
-  previous: [{ key: 'ArrowUp' }],
-  first: [{ key: 'Home' }],
-  last: [{ key: 'End' }],
-  expand: [{ key: 'ArrowRight' }],
-  collapse: [{ key: 'ArrowLeft' }],
-  activate: [{ key: 'Enter' }],
-  toggle: [{ key: ' ' }],
-} as const satisfies Record<string, readonly ShortcutBinding[]>;
-
 /** Keys the search box handles itself: Escape clears or leaves it, ArrowDown enters the tree. */
 export const POPUP_SEARCH_INPUT_BINDINGS = {
   escape: [{ key: 'Escape' }],
@@ -67,14 +55,14 @@ const POPUP_SHORTCUT_HINTS: readonly {
 }[] = [
   { bindings: SHORTCUT_BINDINGS.popup.focusSearch, actionKey: 'shortcuts_popupHintSearch' },
   {
-    bindings: [...POPUP_TREE_BINDINGS.next, ...POPUP_TREE_BINDINGS.previous],
+    bindings: [...TREE_KEY_BINDINGS.next, ...TREE_KEY_BINDINGS.previous],
     actionKey: 'shortcuts_popupHintMove',
   },
   {
-    bindings: [...POPUP_TREE_BINDINGS.expand, ...POPUP_TREE_BINDINGS.collapse],
+    bindings: [...TREE_KEY_BINDINGS.expand, ...TREE_KEY_BINDINGS.collapse],
     actionKey: 'shortcuts_popupHintOpenClose',
   },
-  { bindings: POPUP_TREE_BINDINGS.activate, actionKey: 'shortcuts_popupHintSave' },
+  { bindings: TREE_KEY_BINDINGS.activate, actionKey: 'shortcuts_popupHintSave' },
   { bindings: POPUP_SEARCH_INPUT_BINDINGS.escape, actionKey: 'shortcuts_popupHintClear' },
   { bindings: POPUP_SEARCH_HISTORY_BINDINGS.open, actionKey: 'shortcuts_popupHintRecent' },
 ];
@@ -182,7 +170,7 @@ export function usePopupTreeKeys({
       const row = event.target as HTMLElement;
       // Only rows navigate; action buttons and the new-folder input keep their own keys.
       if (!row.hasAttribute?.(POPUP_TREE_ROW_ATTRIBUTE)) return;
-      const action = findShortcut(event.nativeEvent, POPUP_TREE_BINDINGS);
+      const action = findShortcut(event.nativeEvent, TREE_KEY_BINDINGS);
       if (!action) return;
 
       const isFolder = row.getAttribute(POPUP_TREE_ROW_ATTRIBUTE) === 'folder';

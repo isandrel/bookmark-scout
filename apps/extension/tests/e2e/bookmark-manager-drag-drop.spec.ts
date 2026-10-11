@@ -17,7 +17,7 @@ function row(page: Page, title: string) {
 }
 
 function treeFolder(page: Page, title: string) {
-  return page.getByTestId('folder-tree').getByRole('button', { name: title, exact: true });
+  return page.getByTestId('folder-tree').getByRole('treeitem', { name: title, exact: true });
 }
 
 /** Drags `source` onto `target` at `fraction` of the target's height. */

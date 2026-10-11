@@ -2,8 +2,12 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { setLanguage } from '@/hooks/use-i18n';
 import {
   buildFolderOptions,
+  buildManagerFolderSections,
   buildManagerFolderTree,
   canMoveWithinFolder,
+  flattenManagerTree,
+  MANAGER_SECTION_IDS,
+  MANAGER_TREE_ROOT_ID,
   getManagerFolderAncestors,
   getMoveTargetFolders,
   getSpaceHiddenColumnIds,
@@ -248,5 +252,71 @@ describe('getSpaceHiddenColumnIds', () => {
     expect(getSpaceHiddenColumnIds(990)).toEqual([]);
     expect(getSpaceHiddenColumnIds(920)).toEqual(['folderPath']);
     expect(getSpaceHiddenColumnIds(790)).toEqual(['folderPath', 'url']);
+  });
+});
+
+describe('folder tree sections and rows', () => {
+  const root = (id: string, title: string, index: number, folderType: string, syncing: boolean) =>
+    ({
+      ...folder(id, '0', title, 'Root', index),
+      isRootFolder: true,
+      folderType,
+      syncing,
+    }) satisfies ManagerItem;
+  // Chrome with account storage: an account bar and other folder, and a bar only on this device.
+  const accountItems: ManagerItem[] = [
+    root('a1', 'Bar', 0, 'bookmarks-bar', true),
+    root('a2', 'Other', 1, 'other', true),
+    root('l1', 'Bar', 2, 'bookmarks-bar', false),
+    folder('a10', 'a1', 'Work', 'Bar', 0),
+    folder('a11', 'a10', 'Docs', 'Bar / Work', 0),
+  ];
+
+  it('splits the account and device folders only when both bookmarks bars exist', () => {
+    expect(
+      buildManagerFolderSections(accountItems).map(({ section, folders }) => [
+        section,
+        folders.map(({ id }) => id),
+      ]),
+    ).toEqual([
+      ['account', ['a1', 'a2']],
+      ['local', ['l1']],
+    ]);
+    const deviceOnly = accountItems.filter((item) => item.id !== 'a1' && item.id !== 'a2');
+    expect(buildManagerFolderSections(deviceOnly).map(({ section }) => section)).toEqual([null]);
+    // Firefox and older Chrome report no `syncing`: one list.
+    expect(buildManagerFolderSections(items).map(({ section }) => section)).toEqual([null]);
+  });
+
+  it('lists the rows shown, with ARIA levels and positions', () => {
+    const sections = buildManagerFolderSections(accountItems);
+    const rows = flattenManagerTree(sections, new Set([MANAGER_SECTION_IDS.account, 'a1', 'a10']));
+    expect(
+      rows.map(({ id, level, posInSet, setSize, parentId, expanded }) => [
+        id,
+        level,
+        `${posInSet}/${setSize}`,
+        parentId ?? '-',
+        expanded,
+      ]),
+    ).toEqual([
+      [MANAGER_TREE_ROOT_ID, 1, '1/3', '-', false],
+      [MANAGER_SECTION_IDS.account, 1, '2/3', '-', true],
+      ['a1', 2, '1/2', MANAGER_SECTION_IDS.account, true],
+      ['a10', 3, '1/1', 'a1', true],
+      ['a11', 4, '1/1', 'a10', false],
+      ['a2', 2, '2/2', MANAGER_SECTION_IDS.account, false],
+      [MANAGER_SECTION_IDS.local, 1, '3/3', '-', false],
+    ]);
+  });
+
+  it('puts top-level folders beside the top-level row without sections', () => {
+    const rows = flattenManagerTree(buildManagerFolderSections(items), new Set(['1']));
+    expect(rows.slice(0, 3).map(({ id, posInSet, setSize }) => [id, posInSet, setSize])).toEqual([
+      [MANAGER_TREE_ROOT_ID, 1, 3],
+      ['1', 2, 3],
+      ['10', 1, 3],
+    ]);
+    expect(rows.at(-1)).toMatchObject({ id: '2', level: 1, posInSet: 3, hasChildren: true });
   });
 });

@@ -279,6 +279,32 @@ test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', as
     .toEqual(['Undo Keep', 'Undo Gone']);
 });
 
+test('manager folder tree moves with the arrow keys and opens a folder with Enter', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Tree', [
+    { title: 'Tree First', children: [] },
+    { title: 'Tree Second', children: [] },
+  ]);
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  const { driver } = extension;
+  const focusedTitle = () =>
+    driver.executeScript<string>(`return document.activeElement?.textContent?.trim() ?? ''`);
+  // Firefox has no account storage, so there are no headings: the seeded folder is level 2.
+  const current = await extension.find(`[role="treeitem"][data-folder-id="${folder.folderId}"]`);
+  expect(await current.getAttribute('aria-level')).toBe('2');
+  expect(await current.getAttribute('tabindex')).toBe('0');
+  await driver.executeScript(
+    `document.querySelector('[role="treeitem"][data-folder-id="${folder.folderId}"]').focus()`,
+  );
+  await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
+  await expect.poll(focusedTitle).toBe('Tree Second');
+  await driver.actions().sendKeys(Key.ENTER).perform();
+  await expect
+    .poll(() => driver.getCurrentUrl())
+    .toContain(`id=${folder.ids['Tree Second']}`);
+});
+
 test('manager right-click menu copies and pastes, without private windows unless allowed', async ({
   extension,
 }) => {
@@ -345,13 +371,11 @@ test('manager drag and drop reorders rows and turns dropped links into bookmarks
     target.dispatchEvent(new DragEvent('drop', at));
     source.dispatchEvent(new DragEvent('dragend', { bubbles: true }));
   `);
-  await expect
-    .poll(() => titles(folder.folderId))
-    .toEqual(['Drag First', 'Drag Last', 'Drag Box']);
+  await expect.poll(() => titles(folder.folderId)).toEqual(['Drag First', 'Drag Last', 'Drag Box']);
 
   // A link dropped from another page on a folder in the tree goes into it.
   await extension.driver.executeScript(`
-    const target = [...document.querySelectorAll('[data-testid="folder-tree"] button')].find((item) => item.textContent.trim() === 'Drag Box');
+    const target = [...document.querySelectorAll('[data-testid="folder-tree"] [role="treeitem"]')].find((item) => item.textContent.trim() === 'Drag Box');
     const transfer = new DataTransfer();
     transfer.setData('text/x-moz-url', 'https://e2e.invalid/dropped\\nDropped Page');
     const at = { bubbles: true, cancelable: true, dataTransfer: transfer };

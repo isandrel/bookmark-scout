@@ -145,7 +145,7 @@ test('Open all in new window opens the bookmarks of a folder from the tree', asy
   await page.goto(managerUrl(extensionId, seeded.folderId));
   const treeFolder = page
     .getByTestId('folder-tree')
-    .getByRole('button', { name: 'Tree Target', exact: true });
+    .getByRole('treeitem', { name: 'Tree Target', exact: true });
   await expect(treeFolder).toBeVisible();
   await treeFolder.click({ button: 'right' });
   expect(await menuItemNames(page)).toContain('Rename');
@@ -196,7 +196,7 @@ test('cut and copy put URLs on the clipboard; paste moves or copies into a folde
   await waitForNoOverlay(page);
   const box = page
     .getByTestId('folder-tree')
-    .getByRole('button', { name: 'Clip Box', exact: true });
+    .getByRole('treeitem', { name: 'Clip Box', exact: true });
   await box.click({ button: 'right' });
   await menu(page).getByRole('menuitem', { name: 'Paste' }).click();
   await expect

@@ -3289,13 +3289,17 @@
         "message": "Cet élément n'est pas un dossier. Affichage du dossier qui le contient.",
         "description": "Notice when the manager URL points at a bookmark instead of a folder"
     },
-    "bookmarks_expandFolder": {
-        "message": "Développer « $1 »",
-        "description": "Folder tree expand button label; $1 is the folder title"
+    "bookmarks_folderTree": {
+        "message": "Dossiers",
+        "description": "Accessible name of the bookmark manager's folder tree"
     },
-    "bookmarks_collapseFolder": {
-        "message": "Réduire « $1 »",
-        "description": "Folder tree collapse button label; $1 is the folder title"
+    "bookmarks_accountSection": {
+        "message": "Dans votre compte",
+        "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
+    },
+    "bookmarks_localSection": {
+        "message": "Uniquement sur cet appareil",
+        "description": "Folder tree heading over the bookmarks kept only on this device, not in the browser account"
     },
     "bookmarks_breadcrumb": {
         "message": "Chemin du dossier",

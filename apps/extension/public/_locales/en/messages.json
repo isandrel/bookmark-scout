@@ -3289,13 +3289,17 @@
         "message": "That item isn't a folder. Showing the folder that contains it.",
         "description": "Notice when the manager URL points at a bookmark instead of a folder"
     },
-    "bookmarks_expandFolder": {
-        "message": "Expand \"$1\"",
-        "description": "Folder tree expand button label; $1 is the folder title"
+    "bookmarks_folderTree": {
+        "message": "Folders",
+        "description": "Accessible name of the bookmark manager's folder tree"
     },
-    "bookmarks_collapseFolder": {
-        "message": "Collapse \"$1\"",
-        "description": "Folder tree collapse button label; $1 is the folder title"
+    "bookmarks_accountSection": {
+        "message": "In your account",
+        "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
+    },
+    "bookmarks_localSection": {
+        "message": "Only on this device",
+        "description": "Folder tree heading over the bookmarks kept only on this device, not in the browser account"
     },
     "bookmarks_breadcrumb": {
         "message": "Folder path",

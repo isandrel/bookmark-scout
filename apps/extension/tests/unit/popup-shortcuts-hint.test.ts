@@ -4,10 +4,9 @@ import { setLanguage } from '@/hooks/use-i18n';
 import {
   POPUP_SEARCH_HISTORY_BINDINGS,
   POPUP_SEARCH_INPUT_BINDINGS,
-  POPUP_TREE_BINDINGS,
   popupShortcutsHint,
 } from '@/hooks/use-popup-shortcuts';
-import { SHORTCUT_BINDINGS, shortcutKeyCaps } from '@/lib/keyboard-shortcuts';
+import { SHORTCUT_BINDINGS, shortcutKeyCaps, TREE_KEY_BINDINGS } from '@/lib/keyboard-shortcuts';
 import { saveSettings } from '@/lib/settings-storage';
 
 const caps = (bindings: readonly { key: string; alt?: boolean }[]) =>
@@ -30,11 +29,11 @@ describe('popup shortcuts tooltip', () => {
     const hint = popupShortcutsHint();
     const keys = [
       ...caps(SHORTCUT_BINDINGS.popup.focusSearch),
-      ...caps(POPUP_TREE_BINDINGS.next),
-      ...caps(POPUP_TREE_BINDINGS.previous),
-      ...caps(POPUP_TREE_BINDINGS.expand),
-      ...caps(POPUP_TREE_BINDINGS.collapse),
-      ...caps(POPUP_TREE_BINDINGS.activate),
+      ...caps(TREE_KEY_BINDINGS.next),
+      ...caps(TREE_KEY_BINDINGS.previous),
+      ...caps(TREE_KEY_BINDINGS.expand),
+      ...caps(TREE_KEY_BINDINGS.collapse),
+      ...caps(TREE_KEY_BINDINGS.activate),
       ...caps(POPUP_SEARCH_INPUT_BINDINGS.escape),
       ...caps(POPUP_SEARCH_HISTORY_BINDINGS.open),
     ];

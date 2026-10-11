@@ -15,8 +15,6 @@ const undoConfig = readConfig(
 /** How long a deletion can be undone from the popup or side panel. */
 export const BOOKMARK_DELETION_UNDO_WINDOW_MS = undoConfig.deletion_undo_window_ms;
 
-/** Chrome 134+ and Edge mark the bookmarks bar with this `folderType`. */
-const BOOKMARKS_BAR_FOLDER_TYPE = 'bookmarks-bar';
 /** Firefox's bookmarks toolbar has a fixed GUID and no `folderType`. */
 const FIREFOX_TOOLBAR_FOLDER_ID = 'toolbar_____';
 
