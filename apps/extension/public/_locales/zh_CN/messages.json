@@ -5119,8 +5119,56 @@
         "message": "更改快捷键",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "也可以打开 about:addons，点击齿轮按钮，然后选择“管理扩展快捷键”。",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "在该页面中找到 Bookmark Scout。",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "点击快捷键输入框，然后按下新的组合键。按 Esc 取消。",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "$1的快捷键",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "请按键…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "$1的快捷键已设为 $2",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "请按住 Ctrl 或 Alt 再按键。只有功能键可以单独使用。",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "请按住 Command、Control 或 Option 再按键。只有功能键可以单独使用。",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "最多使用两个修饰键。",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "此键不能用于快捷键。请使用字母、数字、功能键或方向键。",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "已被“$1”使用。",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "浏览器未接受此快捷键。请换一个试试。",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "未设置快速保存快捷键",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "去设置",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

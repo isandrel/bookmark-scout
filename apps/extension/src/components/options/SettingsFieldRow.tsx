@@ -87,7 +87,7 @@ function ListSettingInput({
  * The reset button's slot is always there, so a control never moves when its value returns to
  * the default and the button disappears; the pointer stays on the control.
  */
-function ResetSlot({
+export function ResetSlot({
   visible,
   label,
   onReset,

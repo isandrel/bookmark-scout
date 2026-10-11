@@ -5303,8 +5303,56 @@
         "message": "Modifier les raccourcis",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "Vous pouvez aussi ouvrir about:addons, cliquer sur le bouton en forme d'engrenage et choisir Gérer les raccourcis d'extensions.",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "Cherchez Bookmark Scout sur cette page.",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "Cliquez sur un champ de raccourci et appuyez sur la nouvelle combinaison de touches. Échap annule.",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "Raccourci pour $1",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "Appuyez sur les touches…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "Raccourci pour $1 défini sur $2",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Maintenez Ctrl ou Alt en appuyant sur la touche. Seules les touches de fonction marchent seules.",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Maintenez Commande, Contrôle ou Option en appuyant sur la touche. Seules les touches de fonction marchent seules.",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "Utilisez au plus deux touches de modification.",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "Cette touche ne peut pas faire partie d’un raccourci. Utilisez une lettre, un chiffre, une touche de fonction ou une flèche.",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "Déjà utilisé par « $1 ».",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "Le navigateur a refusé ce raccourci. Essayez-en un autre.",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "Raccourci d’enregistrement rapide non défini",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "Le définir",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

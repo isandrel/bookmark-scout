@@ -33,6 +33,7 @@ What the extension does with data at version `0.3.0`, checked against the source
 | Recent folders (for the popup, the right-click menu, and quick save) | `storage.local` | No |
 | Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No |
 | Recent searches | `storage.local`, can be turned off in Settings | No |
+| Dismissed notices (`ui.dismissed-notices`): which popup notices the user closed, such as the missing quick save shortcut line | `storage.local` | No |
 | Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No |
 | Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No |
 

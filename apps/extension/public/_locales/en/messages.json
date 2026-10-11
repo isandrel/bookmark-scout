@@ -5303,8 +5303,56 @@
         "message": "Change shortcuts",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "You can also open about:addons, click the gear button, and choose Manage Extension Shortcuts.",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "Find Bookmark Scout on that page.",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "Click a shortcut field and press the new key combination. Press Esc to cancel.",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "Shortcut for $1",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "Press keys…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "Shortcut for $1 set to $2",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Hold Ctrl or Alt while you press the key. Only function keys work on their own.",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Hold Command, Control, or Option while you press the key. Only function keys work on their own.",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "Use at most two modifier keys.",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "This key can't be part of a shortcut. Use a letter, number, function key, or arrow key.",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "Already used by “$1”.",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "The browser didn't accept this shortcut. Try another one.",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "Quick save shortcut not set",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "Set it up",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

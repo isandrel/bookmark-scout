@@ -5303,8 +5303,56 @@
         "message": "Kürzel ändern",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "Du kannst auch about:addons öffnen, auf das Zahnrad klicken und Tastenkombinationen für Erweiterungen verwalten wählen.",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "Suche auf dieser Seite nach Bookmark Scout.",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "Klicke in ein Kürzelfeld und drücke die neue Tastenkombination. Esc bricht ab.",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "Kürzel für $1",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "Tasten drücken …",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "Kürzel für $1 auf $2 gesetzt",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Halte Strg oder Alt gedrückt, während du die Taste drückst. Nur Funktionstasten funktionieren allein.",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Halte Befehl, Control oder Option gedrückt, während du die Taste drückst. Nur Funktionstasten funktionieren allein.",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "Verwende höchstens zwei Zusatztasten.",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "Diese Taste kann nicht Teil eines Kürzels sein. Verwende einen Buchstaben, eine Ziffer, eine Funktions- oder eine Pfeiltaste.",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "Wird schon von „$1“ verwendet.",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "Der Browser hat dieses Kürzel nicht angenommen. Versuche ein anderes.",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "Kein Kürzel zum Schnellspeichern festgelegt",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "Einrichten",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

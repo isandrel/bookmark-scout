@@ -5303,8 +5303,56 @@
         "message": "Alterar atalhos",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "Você também pode abrir about:addons, clicar no botão de engrenagem e escolher Gerenciar atalhos de extensões.",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "Procure o Bookmark Scout nessa página.",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "Clique em um campo de atalho e pressione a nova combinação de teclas. Pressione Esc para cancelar.",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "Atalho para $1",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "Pressione as teclas…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "Atalho para $1 definido como $2",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Segure Ctrl ou Alt enquanto pressiona a tecla. Só as teclas de função funcionam sozinhas.",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Segure Command, Control ou Option enquanto pressiona a tecla. Só as teclas de função funcionam sozinhas.",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "Use no máximo duas teclas modificadoras.",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "Esta tecla não pode fazer parte de um atalho. Use uma letra, um número, uma tecla de função ou uma seta.",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "Já usado por “$1”.",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "O navegador não aceitou este atalho. Tente outro.",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "Atalho de salvamento rápido não definido",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "Configurar",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }
