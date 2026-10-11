@@ -1,0 +1,38 @@
+# Latency and scrolling measurements (tests/perf/README.md). Read by tests/perf/harness.ts.
+
+# The synthetic library: areas in the bookmarks bar, topics in each area, pages in each topic.
+# 30 x 50 x 13 is 1,530 folders and 19,500 bookmarks, a heavy but real-world library.
+[library]
+areas = 30
+topics_per_area = 50
+pages_per_topic = 13
+
+[run]
+# CPU slowdown applied with the DevTools protocol; 4 approximates a mid-range laptop on battery.
+cpu_throttle = 4
+# Each scenario runs this many times; the report gives the median and the worst run.
+repeats = 5
+# Mouse-wheel scrolling: steps of this many pixels, one per frame.
+scroll_steps = 40
+scroll_step_px = 400
+# A frame longer than this counts as a visible stutter.
+long_frame_ms = 50
+
+# Upper bounds for the median of each metric, in milliseconds. A metric without a budget is only
+# reported. Set at about 2.5x the first local baseline (2026-10-10, 19,500 bookmarks, 4x throttle),
+# since CI runners are slower; lower them as fixes land. Known problems have no budget until their
+# fix lands: popup.expandAll (freezes the popup on this library), popup.scroll.*, and
+# options.search.keystroke (about 200-350 ms per key).
+[budgets_ms]
+"popup.open" = 1000
+"popup.search.results" = 800
+"popup.search.keystroke" = 200
+"popup.save" = 1000
+"manager.open" = 2000
+"manager.openFolder" = 300
+"manager.filter.results" = 400
+"manager.filter.keystroke" = 400
+"manager.outsideChange" = 1000
+"options.open" = 1000
+"options.search.results" = 300
+"options.stepper" = 300

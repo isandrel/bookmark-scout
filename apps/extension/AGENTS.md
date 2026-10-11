@@ -84,6 +84,7 @@ unless the task explicitly concerns generated artifacts or debugging generated o
 - Chromium end-to-end tests: `nx run extension:test:e2e`
 - Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
+- latency and scrolling measurements on a large library: `nx run extension:test:perf` (`tests/perf/README.md`; run it before and after a change meant to make something faster, and quote both numbers)
 
 Equivalent scripts also exist in `apps/extension/package.json` when working directly in this app.
 

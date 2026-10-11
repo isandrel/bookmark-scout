@@ -102,6 +102,15 @@
                 "cwd": "apps/extension"
             }
         },
+        "test:perf": {
+            "command": "playwright install --no-shell chromium && playwright test --config playwright.config.ts --project=perf",
+            "dependsOn": [
+                "build:chrome"
+            ],
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
         "test:e2e:firefox": {
             "command": "playwright test --config playwright.config.ts --project=firefox",
             "dependsOn": [

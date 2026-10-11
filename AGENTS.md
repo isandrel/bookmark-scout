@@ -146,6 +146,7 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 - extension end-to-end tests: `nx run extension:test:e2e`
 - extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - extension Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
+- extension performance measurements: `nx run extension:test:perf`
 - website build: `nx run website:build`
 - docs build: `nx run docs:build`
 
