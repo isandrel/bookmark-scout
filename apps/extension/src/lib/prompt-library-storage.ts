@@ -6,7 +6,6 @@
  * prompt ids and the active prompt per task. Prompts are written only when saved, never per
  * keystroke, which keeps clear of the sync write limits.
  */
-import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 export type CustomPrompt = {
@@ -188,37 +187,30 @@ export async function deleteCustomPrompt(id: string): Promise<void> {
 }
 
 /**
- * Live prompt library for React, following edits from any page or synced device. Only the latest
- * refresh is applied, so a slow earlier read never replaces a newer one.
+ * Calls back with the library after every edit from any page or synced device, and returns the
+ * unwatch function. Only the latest read is delivered, so a slow earlier read never replaces a
+ * newer one.
  */
-export function usePromptLibrary(): { library: PromptLibrary; isLoading: boolean } {
-  const [library, setLibrary] = useState<PromptLibrary>({ prompts: [], active: {} });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let active = true;
-    let latest = 0;
-    let unwatchPrompts: (() => void)[] = [];
-    const refresh = async () => {
-      const request = ++latest;
-      const next = await getPromptLibrary();
-      if (!active || request !== latest) return;
-      setLibrary(next);
-      setIsLoading(false);
-      // Prompt items change on their own when edited, so each one is watched too.
-      for (const unwatch of unwatchPrompts) unwatch();
-      unwatchPrompts = next.prompts.map((prompt) =>
-        promptValue(prompt.id).watch(() => void refresh()),
-      );
-    };
-    void refresh();
-    const unwatchIndex = indexValue.watch(() => void refresh());
-    return () => {
-      active = false;
-      unwatchIndex();
-      for (const unwatch of unwatchPrompts) unwatch();
-    };
-  }, []);
-
-  return { library, isLoading };
+export function watchPromptLibrary(listener: (library: PromptLibrary) => void): () => void {
+  let active = true;
+  let latest = 0;
+  let unwatchPrompts: (() => void)[] = [];
+  const refresh = async () => {
+    const request = ++latest;
+    const next = await getPromptLibrary();
+    if (!active || request !== latest) return;
+    listener(next);
+    // Prompt items change on their own when edited, so each one is watched too.
+    for (const unwatch of unwatchPrompts) unwatch();
+    unwatchPrompts = next.prompts.map((prompt) =>
+      promptValue(prompt.id).watch(() => void refresh()),
+    );
+  };
+  void refresh();
+  const unwatchIndex = indexValue.watch(() => void refresh());
+  return () => {
+    active = false;
+    unwatchIndex();
+    for (const unwatch of unwatchPrompts) unwatch();
+  };
 }
