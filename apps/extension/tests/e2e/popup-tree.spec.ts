@@ -50,7 +50,7 @@ async function setSettings(worker: Worker, updates: Record<string, unknown>) {
 }
 
 function topLevelFolders(page: Page) {
-  return page.locator('.accordion-container > .accordion-item > .folder-item');
+  return page.locator('.folder-item:has([role="treeitem"][aria-level="1"])');
 }
 
 function folderTrigger(page: Page, title: string) {
@@ -63,7 +63,7 @@ async function openPopup(page: Page, extensionId: string) {
 }
 
 async function visibleOrder(page: Page, titles: string[]) {
-  const text = await page.locator('.accordion-container').innerText();
+  const text = await page.getByRole('tree').innerText();
   return titles
     .filter((title) => text.includes(title))
     .sort((left, right) => text.indexOf(left) - text.indexOf(right));

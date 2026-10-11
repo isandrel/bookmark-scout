@@ -123,7 +123,7 @@ test('search box is focused on open and the result limit notice stays visible', 
   await expect(notice).toBeVisible();
   const lastResult = page.locator('.bookmark-item').last();
   await expect(lastResult).not.toBeInViewport();
-  await page.locator('.accordion-container').hover();
+  await page.getByRole('tree').hover();
   await page.mouse.wheel(0, 5_000);
   await expect(lastResult).toBeInViewport();
   await expect(notice).toBeInViewport();

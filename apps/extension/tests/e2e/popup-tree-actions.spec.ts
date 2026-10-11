@@ -207,7 +207,7 @@ test('row actions have no nested buttons and appear on keyboard focus', async ({
   // The action group, not each button, carries the hover/focus opacity.
   const actions = deleteButton.locator('..');
   await expect(actions).toHaveCSS('opacity', '0');
-  await row.getByRole('button', { name: 'E2E Keyboard Row' }).focus();
+  await row.getByRole('treeitem', { name: 'E2E Keyboard Row' }).focus();
   await page.keyboard.press('Tab');
   await expect(row.getByRole('button', { name: 'Add current page' })).toBeFocused();
   await expect(actions).toHaveCSS('opacity', '1');

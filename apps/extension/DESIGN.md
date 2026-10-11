@@ -182,7 +182,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`search-field`** (`BookmarkSearch`): sunken fill, Search icon, placeholder in `ink-soft`, and a keycap hint (`/`, which focuses the field) at the end that hides while typing. Option toggles (case, whole word, regex) are 24px ghost icon buttons with `aria-pressed`. Search history opens as a listbox under the field on click or `Alt+↓`; a plain `↓` always moves into the tree. The text stops before the option toggles, and when the field is too narrow for the full placeholder it shows a short one and drops the keycap hint, and no placeholder at all when even the short one would be cut off (the 300px popup with AI on). Ghost icon buttons follow the field on the same row: expand or collapse all results (while searching), **Open bookmark manager** (`LibraryBig`; opens `bookmarks.html` in a new tab, and is the only way into the manager in Firefox), the theme toggle, and the AI buttons when AI is on.
 
-**`tree-row`** (`FolderItem`, `BookmarkItem`): a 32px row (a bookmark row grows with a larger favicon size so icons never touch) in this order: chevron slot (16px), icon (favicon or folder), title, then a count in metadata type. Hover is `sunken`, keyboard-active is `teal-wash` with a teal icon, and focus-visible adds a 2px teal ring inset. Children indent by the chevron slot plus its gap.
+**`tree-row`** (`FolderRow`, `BookmarkRow`, inside `PopupTree`): a 32px row (a bookmark row grows with a larger favicon size so icons never touch) in this order: chevron slot (16px), icon (favicon or folder), title, then a count in metadata type. Hover is `sunken`, keyboard-active is `teal-wash` with a teal icon, and focus-visible adds a 2px teal ring inset. Children indent by the chevron slot plus its gap (`config/ui/popup-tree-view.toml`). The tree renders only the rows on screen (`flattenVisibleTree` and TanStack Virtual), so expanding everything or scrolling a library of thousands of bookmarks stays fast; rows are ARIA `treeitem`s with their level, position, and set size, and a folder opens and closes without animation, as in other large trees. Do not wrap tree rows in a component that tracks animations per row, such as Base UI's Accordion or Collapsible: each one queried `getAnimations()` after opening, which froze the popup for minutes on a large library.
 
 **`row-actions`**: icon buttons (24px) overlaid at the row's end on the row's current fill, shown on hover and focus-within, and never reserving width when hidden. Each one has an `aria-label` and a tooltip.
 
@@ -238,7 +238,7 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 - Use tokens through Tailwind theme colors (`bg-accent`, `text-muted-foreground`, `border-border`). Add a token in `theme.css` before reaching for a palette color.
 - Use one icon color per surface: `ink-soft` for navigation, `teal` for active, violet only for AI.
 - Give every icon-only button an `aria-label`, and every test target a `data-slot`, `data-testid`, or semantic class.
-- Respect `prefers-reduced-motion`. Motion is 150 to 200ms fades and small scales on popovers, menus, dialogs, and the accordion; nothing else animates.
+- Respect `prefers-reduced-motion`. Motion is 150 to 200ms fades and small scales on popovers, menus, and dialogs, and the tree chevron's turn; nothing else animates.
 
 ### Don't
 

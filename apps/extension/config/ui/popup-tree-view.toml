@@ -1,0 +1,15 @@
+# Rendering of the popup and side panel bookmark tree. Read by
+# src/components/bookmark/PopupTree.tsx, which renders only the rows on screen.
+
+# Height of a row before it is measured. Rows grow with a larger site icon and are then measured.
+row_height_px = 32
+
+# Rows rendered beyond each edge of the visible area, so scrolling and arrow keys reach rendered
+# rows before new ones are needed
+overscan_rows = 12
+
+# Space above the first row and below the last
+padding_px = 8
+
+# Indent per folder level: the chevron slot and its gap, so children start under the folder icon
+indent_px = 20

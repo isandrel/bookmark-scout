@@ -203,6 +203,10 @@
         "message": "($1)",
         "description": "Number of items in a folder, shown after its name in the popup tree"
     },
+    "popup_bookmarkTree": {
+        "message": "북마크",
+        "description": "Popup and side panel: accessible name of the bookmark tree, read by screen readers"
+    },
     "popup_deleteBookmark": {
         "message": "북마크 삭제",
         "description": "Delete bookmark tooltip"

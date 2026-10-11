@@ -315,13 +315,8 @@ export const useBookmarkStore = create<BookmarkState>()(
         const originalNode = findNode(folders, node.id);
         if (!originalNode) return false;
 
-        const childFolderIds = folderIds(originalNode.children ?? []);
         const expanded = new Set(expandedFolders);
-        return (
-          childFolderIds.length > 0 &&
-          expanded.has(node.id) &&
-          childFolderIds.every((id) => expanded.has(id))
-        );
+        return expanded.has(node.id) && areAllSubfoldersExpanded(originalNode, expanded);
       },
 
       applyFilter: () => {

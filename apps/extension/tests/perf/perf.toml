@@ -20,14 +20,19 @@ long_frame_ms = 50
 
 # Upper bounds for the median of each metric, in milliseconds. A metric without a budget is only
 # reported. Set at about 2.5x the first local baseline (2026-10-10, 19,500 bookmarks, 4x throttle),
-# since CI runners are slower; lower them as fixes land. Known problems have no budget until their
-# fix lands: popup.expandAll (freezes the popup on this library), popup.scroll.*, and
-# options.search.keystroke (about 200-350 ms per key).
+# since CI runners are slower; lower them as fixes land. popup.expandAll and popup.scroll.* are
+# from 2026-10-11, after the virtualized tree (before it, expand all froze the popup for over a
+# minute). options.search.keystroke (about 200-350 ms per key) has no budget until its fix lands.
+# popup.scroll.longFrames is a count of frames, not milliseconds.
 [budgets_ms]
 "popup.open" = 1000
 "popup.search.results" = 800
 "popup.search.keystroke" = 200
 "popup.save" = 1000
+"popup.expandAll" = 500
+"popup.scroll.longFrames" = 25
+"popup.scroll.worstFrame" = 200
+"popup.scroll.p95Frame" = 125
 "manager.open" = 2000
 "manager.openFolder" = 300
 "manager.filter.results" = 400
