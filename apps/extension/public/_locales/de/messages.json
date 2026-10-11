@@ -309,6 +309,18 @@
         "message": "Nichts zum Einfügen",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Nichts wurde eingefügt",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID kopiert",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "Keine Links zum Hinzufügen: Der abgelegte Text enthält keine Webadresse.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Einfügen fehlgeschlagen",
         "description": "Error toast when pasting bookmarks fails"
@@ -3429,6 +3441,10 @@
         "message": "$1 Elemente gelöscht. Innerhalb von $2 Sekunden rückgängig machen.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "Er ist zu groß für den Rückgängig-Verlauf, daher kann ihn nur „Rückgängig“ hier wiederherstellen.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "$1 Elemente wiederhergestellt.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5570,6 +5586,10 @@
     "error_bookmarkNotFound": {
         "message": "Lesezeichen nicht gefunden.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "Ausschneiden und Kopieren umfassen höchstens $1 Elemente. Wählen Sie weniger aus oder einen Ordner, der sie enthält.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "Dieses Element kann nicht wiederhergestellt werden, da es keinen übergeordneten Ordner hat.",

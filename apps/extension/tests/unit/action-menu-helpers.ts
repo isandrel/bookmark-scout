@@ -31,6 +31,7 @@ export function createItemHost(overrides: Partial<ActionItemHost> = {}): ActionI
     isOutsideOpenFolder: () => false,
     showInFolder: vi.fn(),
     copyFolderLink: vi.fn(),
+    copyId: vi.fn(),
     openableUrls: (items) => items.flatMap((item) => (item.url ? [item.url] : [])),
     open: vi.fn(),
     privateWindowsAllowed: true,

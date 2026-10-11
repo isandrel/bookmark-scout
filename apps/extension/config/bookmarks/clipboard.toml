@@ -1,0 +1,6 @@
+# The bookmark manager's Cut, Copy, and Paste. Read by src/services/bookmark-organize.ts. What
+# Cut or Copy holds is kept in session storage, so every manager tab can paste it until the
+# browser closes.
+
+# Most items one Cut or Copy holds (a folder counts once, with everything in it)
+max_items = 10000

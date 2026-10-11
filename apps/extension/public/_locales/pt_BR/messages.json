@@ -309,6 +309,18 @@
         "message": "Nada para colar",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Nada foi colado",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID copiado",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "Nenhum link para adicionar: o texto solto não tem endereço da web.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Não foi possível colar",
         "description": "Error toast when pasting bookmarks fails"
@@ -3429,6 +3441,10 @@
         "message": "$1 itens foram excluídos. Você pode desfazer em até $2 segundos.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "É grande demais para o histórico de desfazer, então só Desfazer aqui pode recuperá-la.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "$1 itens restaurados.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5570,6 +5586,10 @@
     "error_bookmarkNotFound": {
         "message": "Favorito não encontrado.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "Recortar e Copiar comportam no máximo $1 itens. Selecione menos ou uma pasta que os contenha.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "Este item não pode ser recuperado porque não tem pasta superior.",

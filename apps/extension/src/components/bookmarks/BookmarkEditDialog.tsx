@@ -43,7 +43,10 @@ function BookmarkEditForm({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmedUrl = url.trim();
+    // `example.com/path` gets `https://`, as in the browser's own add dialog; an unchanged URL is
+    // kept exactly as stored.
+    const typedUrl = url.trim();
+    const trimmedUrl = typedUrl === bookmark?.url ? typedUrl : withDefaultScheme(typedUrl);
     const trimmedTitle = title.trim();
     // Bookmarks may be untitled, as in the browser; a folder needs a name to be found again.
     if (!isLink && !trimmedTitle) {

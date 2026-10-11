@@ -309,6 +309,18 @@
         "message": "붙여넣을 항목이 없습니다",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "붙여넣은 항목이 없습니다",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID를 복사했습니다",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "추가할 링크가 없습니다. 놓은 텍스트에 웹 주소가 없습니다.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "붙여넣지 못했습니다",
         "description": "Error toast when pasting bookmarks fails"
@@ -3421,6 +3433,10 @@
         "message": "$1개 항목을 삭제했습니다. $2초 안에 실행 취소할 수 있습니다.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "실행 취소 기록에 담기에는 너무 커서 여기의 실행 취소로만 되돌릴 수 있습니다.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "$1개 항목을 복원했습니다.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5562,6 +5578,10 @@
     "error_bookmarkNotFound": {
         "message": "북마크를 찾을 수 없습니다.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "잘라내기와 복사는 최대 $1개 항목까지 가능합니다. 더 적게 선택하거나 해당 항목이 들어 있는 폴더를 선택하세요.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "상위 폴더가 없어 이 항목은 복원할 수 없습니다.",

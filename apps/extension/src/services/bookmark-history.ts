@@ -13,6 +13,11 @@
  * how many were skipped. A bookmark recreated by undo or redo gets a new id from the browser, and
  * every entry that named the old id is rewritten to the new one, so older entries keep working.
  *
+ * The history has a size limit (`config/bookmarks/history.toml`). A large entry, such as a
+ * deleted folder with thousands of bookmarks, is stored gzip-compressed; the oldest entries make
+ * room for a new one; and an entry too large even on its own is not stored, leaving the earlier
+ * ones as they were (`RecordedBookmarkChange.stored` says so, and its toast says it).
+ *
  * No React here: the background may record changes too.
  */
 import { z } from 'zod';
@@ -22,8 +27,16 @@ const historyConfig = readConfig(
   z.strictObject({
     max_entries: z.number().int().positive(),
     max_bytes: z.number().int().positive(),
+    compress_above_bytes: z.number().int().positive(),
   }),
 );
+
+type HistoryLimits = { maxEntries: number; maxBytes: number };
+
+const HISTORY_LIMITS: HistoryLimits = {
+  maxEntries: historyConfig.max_entries,
+  maxBytes: historyConfig.max_bytes,
+};
 
 /** Where an item sits: its folder and its position among the folder's children. */
 export type BookmarkPlace = {
@@ -61,11 +74,20 @@ export type BookmarkHistoryEntry = {
   operations: BookmarkHistoryOperation[];
 };
 
+/** A large entry as stored: its operations as gzip-compressed JSON, in base64. */
+export type PackedBookmarkHistoryEntry = {
+  id: string;
+  label: BookmarkHistoryLabel;
+  packed: string;
+};
+
+export type StoredBookmarkHistoryEntry = BookmarkHistoryEntry | PackedBookmarkHistoryEntry;
+
 export type BookmarkHistory = {
   /** Oldest first; the last entry is the next undo. */
-  undo: BookmarkHistoryEntry[];
+  undo: StoredBookmarkHistoryEntry[];
   /** Oldest first; the last entry is the next redo. */
-  redo: BookmarkHistoryEntry[];
+  redo: StoredBookmarkHistoryEntry[];
 };
 
 export type BookmarkHistoryOutcome = {
@@ -107,16 +129,44 @@ const operationSchema: z.ZodType<BookmarkHistoryOperation> = z.discriminatedUnio
   }),
   z.object({ kind: z.literal('move'), id: z.string(), from: placeSchema, to: placeSchema }),
 ]);
-const entrySchema = z.object({
-  id: z.string(),
-  label: z.object({
-    action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change']),
-    title: z.string().optional(),
-    count: z.number().int().positive().optional(),
-  }),
-  operations: z.array(operationSchema).min(1),
+const labelSchema = z.object({
+  action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change']),
+  title: z.string().optional(),
+  count: z.number().int().positive().optional(),
 });
+const entrySchema: z.ZodType<StoredBookmarkHistoryEntry> = z.union([
+  z.object({ id: z.string(), label: labelSchema, operations: z.array(operationSchema).min(1) }),
+  z.object({ id: z.string(), label: labelSchema, packed: z.string().min(1) }),
+]);
 const historySchema = z.object({ undo: z.array(entrySchema), redo: z.array(entrySchema) });
+const operationsSchema = z.array(operationSchema).min(1);
+
+const isPacked = (entry: StoredBookmarkHistoryEntry): entry is PackedBookmarkHistoryEntry =>
+  'packed' in entry;
+
+/** The entry as stored: compressed when its JSON is larger than `compress_above_bytes`. */
+export async function packBookmarkHistoryEntry(
+  entry: StoredBookmarkHistoryEntry,
+): Promise<StoredBookmarkHistoryEntry> {
+  if (isPacked(entry)) return entry;
+  const json = JSON.stringify(entry.operations);
+  if (json.length <= historyConfig.compress_above_bytes) return entry;
+  return { id: entry.id, label: entry.label, packed: await gzipToBase64(json) };
+}
+
+/** The entry with its operations, whether it was stored compressed or not. */
+export async function unpackBookmarkHistoryEntry(
+  entry: StoredBookmarkHistoryEntry,
+): Promise<BookmarkHistoryEntry> {
+  if (!isPacked(entry)) return entry;
+  const operations = operationsSchema.parse(JSON.parse(await gunzipFromBase64(entry.packed)));
+  return { id: entry.id, label: entry.label, operations };
+}
+
+/** Whether a history holding only `entry` stays within the size limit. */
+function fitsAlone(entry: StoredBookmarkHistoryEntry, limits: HistoryLimits): boolean {
+  return JSON.stringify({ undo: [entry], redo: [] }).length <= limits.maxBytes;
+}
 
 const EMPTY_HISTORY: BookmarkHistory = { undo: [], redo: [] };
 
@@ -132,10 +182,7 @@ export const bookmarkHistoryValue = defineStoredValue<BookmarkHistory>(
 /** Drops the oldest entries (undo first, then redo) until the history fits its limits. */
 export function trimBookmarkHistory(
   history: BookmarkHistory,
-  limits: { maxEntries: number; maxBytes: number } = {
-    maxEntries: historyConfig.max_entries,
-    maxBytes: historyConfig.max_bytes,
-  },
+  limits: HistoryLimits = HISTORY_LIMITS,
 ): BookmarkHistory {
   const undo = history.undo.slice(-limits.maxEntries);
   const redo = history.redo.slice(-limits.maxEntries);
@@ -147,12 +194,29 @@ export function trimBookmarkHistory(
   return { undo, redo };
 }
 
-/** Rewrites every id in `history` that `ids` maps to a new one (a recreated bookmark). */
-export function remapBookmarkHistoryIds(
+/**
+ * Rewrites every id in `history` that `ids` maps to a new one (a recreated bookmark), in
+ * compressed entries too.
+ */
+export async function remapBookmarkHistoryIds(
   history: BookmarkHistory,
   ids: ReadonlyMap<string, string>,
-): BookmarkHistory {
+): Promise<BookmarkHistory> {
   if (ids.size === 0) return history;
+  const remap = async (entry: StoredBookmarkHistoryEntry) =>
+    isPacked(entry)
+      ? packBookmarkHistoryEntry(remapEntryIds(await unpackBookmarkHistoryEntry(entry), ids))
+      : remapEntryIds(entry, ids);
+  return {
+    undo: await Promise.all(history.undo.map(remap)),
+    redo: await Promise.all(history.redo.map(remap)),
+  };
+}
+
+function remapEntryIds(
+  entry: BookmarkHistoryEntry,
+  ids: ReadonlyMap<string, string>,
+): BookmarkHistoryEntry {
   const id = (value: string) => ids.get(value) ?? value;
   const place = (at: BookmarkPlace): BookmarkPlace => ({
     ...at,
@@ -176,11 +240,7 @@ export function remapBookmarkHistoryIds(
         return { ...op, id: id(op.id), from: place(op.from), to: place(op.to) };
     }
   };
-  const entry = (value: BookmarkHistoryEntry) => ({
-    ...value,
-    operations: value.operations.map(operation),
-  });
-  return { undo: history.undo.map(entry), redo: history.redo.map(entry) };
+  return { ...entry, operations: entry.operations.map(operation) };
 }
 
 /** Changes bookmarks and notes each change, for one history entry. */
@@ -314,8 +374,34 @@ function completeLabel(
   };
 }
 
-/** A recorded change; `stored` is false when it was too large for the history. */
+/**
+ * A recorded change; `stored` is false when it could not be kept in the history (too large even
+ * compressed, or storage failed), so only the caller's own undo (a toast's) can undo it.
+ */
 export type RecordedBookmarkChange = { entry: BookmarkHistoryEntry; stored: boolean };
+
+/**
+ * Adds `entry` as the newest change (clearing what could be redone), dropping the oldest changes
+ * when it needs their room. A change too large for the history even on its own is left out, and
+ * every earlier change is kept.
+ */
+async function addBookmarkHistoryEntry(
+  entry: BookmarkHistoryEntry,
+  limits: HistoryLimits,
+): Promise<boolean> {
+  const packed = await packBookmarkHistoryEntry(entry);
+  if (!fitsAlone(packed, limits)) {
+    console.warn('A bookmark change is too large for the undo history; earlier changes are kept.');
+    await bookmarkHistoryValue.update((history) =>
+      history.redo.length === 0 ? history : { undo: history.undo, redo: [] },
+    );
+    return false;
+  }
+  const history = await bookmarkHistoryValue.update((current) =>
+    trimBookmarkHistory({ undo: [...current.undo, packed], redo: [] }, limits),
+  );
+  return history.undo.some((kept) => kept.id === entry.id);
+}
 
 /**
  * Runs `write` with a writer that records what it changes, and adds it to the history as one
@@ -340,13 +426,12 @@ export async function recordBookmarkWrites<T>(
         operations,
       };
       // The bookmarks changed either way; a history that cannot be stored only loses undo.
-      const stored = await bookmarkHistoryValue
-        .update((history) => trimBookmarkHistory({ undo: [...history.undo, entry], redo: [] }))
-        .then((history) => history.undo.some((kept) => kept.id === entry.id))
-        .catch((error: unknown) => {
+      const stored = await addBookmarkHistoryEntry(entry, HISTORY_LIMITS).catch(
+        (error: unknown) => {
           console.error('Failed to record bookmark change:', error);
           return false;
-        });
+        },
+      );
       recorded = { entry, stored };
     }
   }
@@ -460,11 +545,7 @@ async function replayEntry(
       result.skipped += 1;
     }
   }
-  const updated = remapBookmarkHistoryIds(
-    { undo: [{ ...entry, operations }], redo: [] },
-    result.ids,
-  ).undo[0];
-  return { ...result, entry: updated };
+  return { ...result, entry: remapEntryIds({ ...entry, operations }, result.ids) };
 }
 
 async function step(
@@ -478,21 +559,20 @@ async function step(
       entryId === undefined
         ? from.length - 1
         : from.findIndex((candidate) => candidate.id === entryId);
-    const entry = from[position];
-    if (!entry) return history;
+    const stored = from[position];
+    if (!stored) return history;
+    const entry = await unpackBookmarkHistoryEntry(stored);
     const replayed = await replayEntry(entry, direction);
     outcome = { label: entry.label, applied: replayed.applied, skipped: replayed.skipped };
     const rest = from.filter((_, index) => index !== position);
     // Undoing an older entry out of order (a toast's Undo) drops what could be redone.
     const outOfOrder = position !== from.length - 1;
+    const moved = await packBookmarkHistoryEntry(replayed.entry);
     const next: BookmarkHistory =
       direction === 'undo'
-        ? {
-            undo: rest,
-            redo: outOfOrder ? [] : [...history.redo, replayed.entry],
-          }
-        : { undo: [...history.undo, replayed.entry], redo: rest };
-    return trimBookmarkHistory(remapBookmarkHistoryIds(next, replayed.ids));
+        ? { undo: rest, redo: outOfOrder ? [] : [...history.redo, moved] }
+        : { undo: [...history.undo, moved], redo: rest };
+    return trimBookmarkHistory(await remapBookmarkHistoryIds(next, replayed.ids));
   });
   return outcome;
 }

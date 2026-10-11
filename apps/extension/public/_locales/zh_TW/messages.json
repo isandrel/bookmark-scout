@@ -309,6 +309,18 @@
         "message": "沒有可貼上的內容",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "未貼上任何內容",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "已複製 ID",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "沒有可新增的連結：拖放的文字中沒有網址。",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "無法貼上",
         "description": "Error toast when pasting bookmarks fails"
@@ -3413,6 +3425,10 @@
         "message": "已刪除 $1 個項目。可在 $2 秒內復原。",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "內容太大，無法存入復原紀錄，只能透過這裡的「復原」還原。",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "已還原 $1 個項目。",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5378,6 +5394,10 @@
     "error_bookmarkNotFound": {
         "message": "找不到書籤。",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "剪下和複製最多可包含 $1 個項目。請少選一些，或選取包含它們的資料夾。",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "這個項目沒有上層資料夾，因此無法復原。",
