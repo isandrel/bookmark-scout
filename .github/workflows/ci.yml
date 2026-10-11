@@ -74,7 +74,10 @@ jobs:
       - name: Type-check the extension
         run: bunx nx run extension:typecheck
 
-      - name: Test the workspace config and scripts
+      - name: Type-check the MCP bridge
+        run: bun run --cwd packages/mcp-bridge typecheck
+
+      - name: Test the workspace config, scripts, and MCP bridge
         run: bun test packages scripts apps/website/lib
 
       - name: Check generated READMEs match templates

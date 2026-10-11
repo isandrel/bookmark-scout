@@ -1,0 +1,92 @@
+# Bookmark Scout MCP bridge settings, read once by src/config.ts.
+#
+# The bridge is one program with two ends: the browser starts it as a native messaging host
+# (`native-host`), and a local AI agent starts it as an MCP server (`serve`). The two meet on a
+# per-user socket (a named pipe on Windows); nothing listens on the network.
+#
+# The Chrome Web Store id comes from `stores.chrome.url` in config/project.toml. The Firefox
+# add-on id below must match FIREFOX_ADDON_ID in apps/extension/manifest.config.ts (a test checks).
+
+[extension]
+firefox_id = "bookmark-scout@isandrel.github.io"
+# Chromium extension ids the host accepts besides the Chrome Web Store one, such as the
+# Microsoft Edge Add-ons id once that listing is live. `install --extension-id` adds more locally.
+chromium_ids = []
+
+[limits]
+# Largest framed message read from the extension or an agent connection, in bytes.
+max_message_bytes = 8388608
+# Largest tool call forwarded to the extension, in bytes (Chrome caps messages to a host's
+# extension at 1 MiB).
+max_call_bytes = 262144
+# How long an agent's tool call waits for the extension, in seconds. Changes wait for the user to
+# approve them in the browser, so this is longer than the extension's own approval timeout.
+call_timeout_seconds = 330
+# Agent connections one browser profile serves at once.
+max_connections = 8
+
+[serve]
+# The server name agents show, and the name the printed client snippets register.
+server_name = "bookmark-scout"
+# How often `serve` looks for a browser again while none is connected, in seconds.
+reconnect_seconds = 3
+# How long `serve` and `doctor` wait for a browser's socket to answer, in milliseconds.
+connect_timeout_ms = 1500
+
+[paths]
+# Folder for sockets and discovery files: under $XDG_RUNTIME_DIR, else the user's temp folder
+# with the user id appended. Tests point BOOKMARK_SCOUT_MCP_RUNTIME_DIR elsewhere.
+runtime_dir_name = "bookmark-scout-mcp"
+# Where `install` puts the launcher and Windows manifests, under the user's data folder
+# (~/Library/Application Support on macOS, $XDG_DATA_HOME or ~/.local/share on Linux,
+# %LOCALAPPDATA% on Windows).
+data_dir_name = "BookmarkScout"
+launcher_name = "bookmark-scout-mcp-host"
+
+# Browsers `install` registers the native host with. `macos` is under ~/Library/Application
+# Support, `linux` under the home folder, and `windows` is a registry key under HKEY_CURRENT_USER.
+# A browser without a path for a platform is skipped there. `install` registers every browser
+# whose profile folder exists (all of them on Windows) unless --browser names some; the profile
+# folder is the one holding NativeMessagingHosts unless `macos_profile` or `linux_profile` says.
+[browsers.chrome]
+name = "Google Chrome"
+family = "chromium"
+macos = "Google/Chrome/NativeMessagingHosts"
+linux = ".config/google-chrome/NativeMessagingHosts"
+windows = 'Software\Google\Chrome\NativeMessagingHosts'
+
+[browsers.edge]
+name = "Microsoft Edge"
+family = "chromium"
+macos = "Microsoft Edge/NativeMessagingHosts"
+linux = ".config/microsoft-edge/NativeMessagingHosts"
+windows = 'Software\Microsoft\Edge\NativeMessagingHosts'
+
+[browsers.chromium]
+name = "Chromium"
+family = "chromium"
+macos = "Chromium/NativeMessagingHosts"
+linux = ".config/chromium/NativeMessagingHosts"
+windows = 'Software\Chromium\NativeMessagingHosts'
+
+[browsers.brave]
+name = "Brave"
+family = "chromium"
+macos = "BraveSoftware/Brave-Browser/NativeMessagingHosts"
+linux = ".config/BraveSoftware/Brave-Browser/NativeMessagingHosts"
+windows = 'Software\BraveSoftware\Brave-Browser\NativeMessagingHosts'
+
+[browsers.vivaldi]
+name = "Vivaldi"
+family = "chromium"
+macos = "Vivaldi/NativeMessagingHosts"
+linux = ".config/vivaldi/NativeMessagingHosts"
+
+[browsers.firefox]
+name = "Firefox"
+family = "firefox"
+macos = "Mozilla/NativeMessagingHosts"
+macos_profile = "Firefox"
+linux = ".mozilla/native-messaging-hosts"
+linux_profile = ".mozilla/firefox"
+windows = 'Software\Mozilla\NativeMessagingHosts'

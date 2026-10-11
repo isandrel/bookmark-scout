@@ -8,7 +8,8 @@ import { join } from "node:path";
  * - the root: Nx analyzes source imports with it, and on 7 the project graph silently loses every
  *   dependency between projects (with or without the `@nx/js` plugin entry in nx.json);
  * - the website: typescript-eslint, through eslint-config-next, refuses to run on 7.
- * The extension and docs only run `tsc` (and `next build`), which 7 handles about 5x faster.
+ * The extension, docs, and MCP bridge only run `tsc` (and `next build`), which 7 handles about 5x
+ * faster.
  */
 const TYPESCRIPT_MAJOR: Record<string, number> = {
   ".": 6,
@@ -16,6 +17,7 @@ const TYPESCRIPT_MAJOR: Record<string, number> = {
   "packages/config": 6,
   "apps/extension": 7,
   "apps/docs": 7,
+  "packages/mcp-bridge": 7,
 };
 
 const root = join(import.meta.dir, "..");
