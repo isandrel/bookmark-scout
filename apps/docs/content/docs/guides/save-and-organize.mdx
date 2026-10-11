@@ -36,11 +36,13 @@ Where the page goes is **Quick Save Folder** in [Settings](/settings#quick-save)
 
 When no folder matches well, or the chosen folder was deleted, the page goes to your last used folder, then the bookmarks bar, and the notification says so.
 
-Press `Alt+Shift+D` to save the page to the folder AI suggests instead. It uses the same AI service, page reading, and suggestion count as the popup's AI suggestions, and sends the same data (see [Set up AI tools](/guides/ai-tools)). The notification shows **Choosing a folder with AI...** while it waits, then lists the other suggestions under **Move to**; a suggested folder that does not exist yet is created, and **Undo** removes it again. With AI off or not set up, nothing is saved and the notification offers **Open AI settings**.
+Press `Alt+Shift+D` to save the page to the folder AI suggests instead. It uses the same AI service, page reading, and suggestion count as the popup's AI suggestions, and sends the same data (see [Set up AI tools](/guides/ai-tools)). The notification shows **Choosing a folder with AI...** while it waits, then lists the other suggestions under **Move to**; a suggested folder that does not exist yet is created, and **Undo** removes it again. With AI off or not set up, nothing is saved and the notification offers **Open AI settings**. When AI cannot choose a folder, the notification offers **Retry**, which asks AI again, and **Save without AI**, which saves the page to the folder **Quick Save Folder** picks. If you leave the page before AI answers, the result shows in the popup instead, under the page's title.
 
 A page you have already bookmarked is not saved again: the notification says where it is and offers to move it.
 
-Some pages do not let extensions show anything on them, such as the browser's own pages, the extension store, and the PDF viewer. There the toolbar icon shows ✓ or ✗ for a moment, and the popup opens (where the browser allows it) with the same **Undo** and **Move to**.
+**Undo** and **Move to** work on your latest quick save only. If you quick save in another tab and then press **Undo** in the first tab's notification, it says a newer quick save replaced it; change that bookmark in the bookmark manager instead.
+
+Some pages do not let extensions show anything on them, such as the browser's own pages, the extension store, and the PDF viewer, and a few pages hide what is drawn over them. There the toolbar icon shows ✓ or ✗ for a moment, and the popup opens (where the browser allows it) with the page's title and the same buttons.
 
 To change the keys, open **Keyboard shortcuts** in [Settings](/settings#quick-save):
 

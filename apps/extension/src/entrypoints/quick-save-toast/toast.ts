@@ -4,12 +4,20 @@
  * to the page. Every string arrives from the background already in the app language, and is set as
  * text, never as HTML. It never takes focus: it is a polite live region the keyboard can tab to,
  * Escape closes it, and its countdown pauses while it is hovered or focused.
+ *
+ * The host hangs off `<html>`, not `<body>`, and goes in the top layer (a manual popover) where the
+ * browser has one, so a `filter`, `transform`, or `zoom` on the page's elements cannot move,
+ * scale, or recolor it; its inline `!important` styles reset what the page could still pass
+ * down, direction included. After drawing, it checks it is really on screen, and removes itself
+ * when not, so the background can show the result in the popup instead.
  */
 
 import {
   QUICK_SAVE_MESSAGE,
   type QuickSaveActionMessage,
   type QuickSaveActionResponse,
+  type QuickSaveRenderResult,
+  type QuickSaveToastBinding,
   type QuickSaveToastView,
 } from '@/lib/quick-save-protocol';
 
@@ -22,6 +30,38 @@ const HOST_ATTRIBUTE = 'data-bookmark-scout';
 const HOST_VALUE = 'quick-save';
 
 /**
+ * The host's own box, set inline with `!important` so no page rule wins over it. `all` resets
+ * everything but `direction` and `unicode-bidi`, which `render` sets from the view; the rest
+ * repeats, by name, what a page most often uses to move, scale, or hide its content.
+ */
+const HOST_STYLES: Readonly<Record<string, string>> = {
+  all: 'initial',
+  display: 'block',
+  position: 'fixed',
+  inset: 'auto',
+  'inset-block-start': '16px',
+  'inset-inline-end': '16px',
+  width: 'min(360px, calc(100vw - 32px))',
+  height: 'auto',
+  margin: '0',
+  padding: '0',
+  border: '0',
+  background: 'transparent',
+  overflow: 'visible',
+  'z-index': '2147483647',
+  'unicode-bidi': 'isolate',
+  'writing-mode': 'horizontal-tb',
+  filter: 'none',
+  transform: 'none',
+  translate: 'none',
+  rotate: 'none',
+  scale: 'none',
+  opacity: '1',
+  visibility: 'visible',
+  'pointer-events': 'auto',
+};
+
+/**
  * Brand tokens from apps/extension/DESIGN.md; the page has none of the extension's CSS. Light
  * values first, dark in the `[data-theme=dark]` rule.
  */
@@ -31,8 +71,7 @@ const STYLES = `
   --surface: #ffffff; --sunken: #e9eef5; --ink: #0f2135; --ink-soft: #4a5b70; --line: #d6dfea;
   --teal: #0b7a80; --teal-ink: #ffffff; --teal-wash: #e1eff1; --violet: #5b3fd6;
   --success: #1d7a4a; --danger: #b42318; --warning: #8a5a00;
-  box-sizing: border-box; position: fixed; top: 16px; right: 16px; z-index: 2147483647;
-  width: min(360px, calc(100vw - 32px)); margin: 0; padding: 12px 12px 14px;
+  box-sizing: border-box; position: relative; width: 100%; margin: 0; padding: 12px 12px 14px;
   overflow: hidden; display: flex; flex-direction: column; gap: 10px;
   background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 8px;
   box-shadow: 0 8px 24px rgba(15, 33, 53, 0.18);
@@ -51,7 +90,8 @@ const STYLES = `
 .icon { flex: none; width: 16px; height: 16px; margin-top: 2px; }
 .icon svg { display: block; width: 16px; height: 16px; }
 .toast[data-status="saved"] .icon { color: var(--success); }
-.toast[data-status="duplicate"] .icon, .toast[data-status="removed"] .icon { color: var(--ink-soft); }
+.toast[data-status="duplicate"] .icon, .toast[data-status="removed"] .icon,
+.toast[data-status="expired"] .icon { color: var(--ink-soft); }
 .toast[data-status="failed"] .icon { color: var(--danger); }
 .toast[data-status="saving"] .icon { color: var(--teal); }
 .text { flex: 1; min-width: 0; }
@@ -66,7 +106,8 @@ button:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
 button:disabled { cursor: default; opacity: 0.6; }
 .close {
   flex: none; display: inline-grid; place-items: center; width: 24px; height: 24px; padding: 0;
-  margin: -2px -2px 0 0; border: 0; border-radius: 6px; background: transparent; color: var(--ink-soft);
+  margin: -2px 0 0; margin-inline-end: -2px; border: 0; border-radius: 6px; background: transparent;
+  color: var(--ink-soft);
 }
 .close:hover { background: var(--sunken); color: var(--ink); }
 .close svg { width: 14px; height: 14px; }
@@ -90,6 +131,7 @@ button:disabled { cursor: default; opacity: 0.6; }
   display: block; height: 100%; background: var(--teal); transform-origin: left;
   animation: countdown var(--duration) linear forwards;
 }
+.toast[dir="rtl"] .progress span { transform-origin: right; }
 .toast[data-paused] .progress span { animation-play-state: paused; }
 @keyframes countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 .spin { animation: spin 0.9s linear infinite; transform-origin: 50% 50%; }
@@ -107,6 +149,7 @@ const ICONS: Record<QuickSaveToastView['status'] | 'close', string[]> = {
   saved: ['M21.801 10A10 10 0 1 1 17 3.335', 'm9 11 3 3L22 4'],
   duplicate: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 16v-4', 'M12 8h.01'],
   removed: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 16v-4', 'M12 8h.01'],
+  expired: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 16v-4', 'M12 8h.01'],
   failed: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z', 'M12 8v4', 'M12 16h.01'],
   saving: ['M21 12a9 9 0 1 1-6.219-8.56'],
   close: ['M18 6 6 18', 'm6 6 12 12'],
@@ -159,6 +202,81 @@ function applyStyles(root: ShadowRoot): void {
   }
 }
 
+/** Where the notification ended up, as measured in the page. */
+export type ToastPlacement = {
+  rect: { left: number; top: number; right: number; bottom: number };
+  viewport: { width: number; height: number };
+  /** Whether the page's hit test at the notification's center reaches it. */
+  hitsCenter: boolean;
+};
+
+/**
+ * Whether the notification is really on screen: inside the viewport, give or take `tolerancePx`,
+ * and on top at its center. A `transform` or `filter` on an ancestor, where the top layer is not
+ * available, can leave it scrolled away or under the page's own fixed elements.
+ */
+export function isToastOnScreen(placement: ToastPlacement, tolerancePx: number): boolean {
+  const { rect, viewport, hitsCenter } = placement;
+  return (
+    hitsCenter &&
+    rect.right > rect.left &&
+    rect.bottom > rect.top &&
+    rect.left >= -tolerancePx &&
+    rect.top >= -tolerancePx &&
+    rect.right <= viewport.width + tolerancePx &&
+    rect.bottom <= viewport.height + tolerancePx
+  );
+}
+
+function withoutFragment(url: string): string {
+  try {
+    const parsed = new URL(url);
+    parsed.hash = '';
+    return parsed.href;
+  } catch {
+    return url;
+  }
+}
+
+/**
+ * Whether the page still shows what `binding` names: the same document (its token) and the same
+ * address, ignoring the `#fragment`, which scrolling within the page changes.
+ */
+export function isBoundPage(
+  binding: QuickSaveToastBinding | undefined,
+  current: { document: string; url: string },
+): boolean {
+  if (binding?.document !== undefined && binding.document !== current.document) return false;
+  return (
+    binding?.url === undefined || withoutFragment(binding.url) === withoutFragment(current.url)
+  );
+}
+
+/**
+ * The `zoom` that cancels a `zoom` on `<html>` (0.5 under `html { zoom: 2 }`), so the notification
+ * keeps its size. The browser's own page zoom is not CSS zoom and is left alone.
+ */
+export function counterZoom(rootZoom: string): string {
+  const zoom = Number.parseFloat(rootZoom);
+  return Number.isFinite(zoom) && zoom > 0 && zoom !== 1 ? String(1 / zoom) : '1';
+}
+
+/** A random id for this document; `crypto.randomUUID` is missing on plain `http:` pages. */
+function newDocumentToken(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function measure(host: HTMLElement): ToastPlacement {
+  const box = host.getBoundingClientRect();
+  const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+  return {
+    rect: { left: box.left, top: box.top, right: box.right, bottom: box.bottom },
+    viewport: { width: window.innerWidth, height: window.innerHeight },
+    hitsCenter: hit === host,
+  };
+}
+
 type Mounted = {
   host: HTMLElement;
   toast: HTMLElement;
@@ -177,6 +295,8 @@ type Mounted = {
  */
 export function createQuickSaveToast(send: QuickSaveToastSend) {
   let mounted: Mounted | undefined;
+  // One controller per document: a page the tab navigated to gets a new one, with a new token.
+  const documentToken = newDocumentToken();
 
   const stopTimer = (state: Mounted) => {
     if (state.timer !== undefined) clearTimeout(state.timer);
@@ -237,6 +357,12 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
   function mount(): Mounted {
     const host = document.createElement('div');
     host.setAttribute(HOST_ATTRIBUTE, HOST_VALUE);
+    // A manual popover: no light dismiss, and the page's own popovers do not close it.
+    const topLayer = typeof host.showPopover === 'function';
+    if (topLayer) host.setAttribute('popover', 'manual');
+    for (const [name, value] of Object.entries(HOST_STYLES)) {
+      host.style.setProperty(name, value, 'important');
+    }
     const root = host.attachShadow({ mode: 'closed' });
     applyStyles(root);
     const toast = element('section', 'toast');
@@ -261,11 +387,26 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
       syncTimer(state);
     });
     document.addEventListener('keydown', onKeyDown, true);
-    (document.body ?? document.documentElement).append(host);
+    // Under <html>, not <body>: a body with a transform or filter would hold a fixed box in place.
+    document.documentElement.append(host);
+    if (topLayer) {
+      try {
+        host.showPopover();
+      } catch {
+        // Not shown as a popover; it stays a fixed box, and the check in `render` decides.
+      }
+    }
     return state;
   }
 
-  function render(view: QuickSaveToastView): boolean {
+  function render(
+    view: QuickSaveToastView,
+    binding?: QuickSaveToastBinding,
+  ): QuickSaveRenderResult {
+    // The tab moved on to another page since this quick save began: the popup shows the result.
+    if (!isBoundPage(binding, { document: documentToken, url: location.href })) {
+      return { shown: false, document: documentToken };
+    }
     // A new quick save replaces the one on screen; the same one updates in place, so the live
     // region announces the change.
     if (mounted?.view && mounted.view.id !== view.id) dismiss(false);
@@ -273,10 +414,17 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
     mounted = state;
     stopTimer(state);
     state.view = view;
-    const { toast } = state;
+    const { host, toast } = state;
+    host.style.setProperty('direction', view.dir, 'important');
+    host.style.setProperty(
+      'zoom',
+      counterZoom(getComputedStyle(document.documentElement).zoom),
+      'important',
+    );
     toast.dataset.status = view.status;
     toast.dataset.theme = resolveTheme(view.theme);
     toast.setAttribute('lang', view.lang);
+    toast.setAttribute('dir', view.dir);
     toast.setAttribute('aria-label', view.label);
     toast.setAttribute('aria-busy', String(view.status === 'saving'));
 
@@ -300,12 +448,11 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
 
     if (view.actions.length > 0) {
       const actions = element('div', 'actions');
-      view.actions.forEach((action, index) => {
+      view.actions.forEach((action) => {
         const button = element('button', 'action', action.label);
         button.type = 'button';
         button.dataset.action = action.id;
-        if (index === 0 && action.id === 'openAISettings')
-          button.toggleAttribute('data-primary', true);
+        if (action.primary) button.toggleAttribute('data-primary', true);
         button.addEventListener('click', (event) =>
           act({ type: QUICK_SAVE_MESSAGE.action, id: view.id, action: action.id }, event),
         );
@@ -351,11 +498,15 @@ export function createQuickSaveToast(send: QuickSaveToastSend) {
     }
     toast.replaceChildren(...parts);
 
+    if (!isToastOnScreen(measure(host), view.visibleTolerancePx)) {
+      dismiss(false);
+      return { shown: false, document: documentToken };
+    }
     state.remaining = view.autoDismissMs ?? undefined;
     // The pointer may already rest where the notification appears.
     state.hovered = toast.matches(':hover');
     syncTimer(state);
-    return true;
+    return { shown: true, document: documentToken };
   }
 
   return { render, dismiss: () => dismiss(false) };

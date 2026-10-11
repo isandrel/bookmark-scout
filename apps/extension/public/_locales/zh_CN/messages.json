@@ -5527,6 +5527,18 @@
         "message": "上次快速保存",
         "description": "Heading of the popup panel that shows the last quick save"
     },
+    "quickSave_saveWithoutAI": {
+        "message": "不使用 AI 保存",
+        "description": "Quick save notification button after a failed AI quick save: saves the page to the folder the Quick save setting picks, without AI"
+    },
+    "quickSave_replaced": {
+        "message": "已被更新的快速保存取代",
+        "description": "Quick save notification title when its Undo or Move to was pressed after a newer quick save replaced it"
+    },
+    "quickSave_replacedNote": {
+        "message": "“撤消”和“移动到”仅适用于最近一次快速保存。请在书签管理器中更改此书签。",
+        "description": "Quick save notification note under quickSave_replaced: why its buttons no longer work and where to change the bookmark instead"
+    },
     "settings_sectionQuickSave": {
         "message": "快速保存快捷键",
         "description": "Options section heading for the quick save keyboard shortcuts"

@@ -12,7 +12,7 @@ export const quickSaveActionSchema = z.union([
   z.strictObject({
     type: z.literal(QUICK_SAVE_MESSAGE.action),
     id: messageId,
-    action: z.enum(['undo', 'dismiss', 'openAISettings']),
+    action: z.enum(['dismiss', ...QUICK_SAVE_TOAST_ACTIONS]),
   }),
   z.strictObject({
     type: z.literal(QUICK_SAVE_MESSAGE.action),

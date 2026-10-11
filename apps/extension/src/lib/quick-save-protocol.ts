@@ -15,11 +15,23 @@ export const QUICK_SAVE_MESSAGE = {
   hostFetch: 'quick-save/ai-host-fetch',
 } as const;
 
-export type QuickSaveStatus = 'saving' | 'saved' | 'duplicate' | 'failed' | 'removed';
+/**
+ * What the notification says. `expired` is only ever shown, never stored: a newer quick save
+ * replaced the one an older notification belongs to, so its buttons no longer act.
+ */
+export type QuickSaveStatus = 'saving' | 'saved' | 'duplicate' | 'failed' | 'removed' | 'expired';
 
 export type QuickSaveTheme = 'light' | 'dark' | 'system';
 
-export type QuickSaveToastActionId = 'undo' | 'openAISettings';
+/** Buttons the notification can show; each is also an action message the background answers. */
+export const QUICK_SAVE_TOAST_ACTIONS = [
+  'undo',
+  'openAISettings',
+  'retry',
+  'saveWithoutAI',
+] as const;
+
+export type QuickSaveToastActionId = (typeof QUICK_SAVE_TOAST_ACTIONS)[number];
 
 /** Everything the notification shows, with every string already in the app language. */
 export type QuickSaveToastView = {
@@ -29,6 +41,8 @@ export type QuickSaveToastView = {
   theme: QuickSaveTheme;
   /** The language tag of the strings, for `lang`. */
   lang: string;
+  /** The writing direction of that language; the page's own direction never applies. */
+  dir: 'ltr' | 'rtl';
   /** The landmark's name, such as "Bookmark Scout". */
   label: string;
   title: string;
@@ -36,20 +50,38 @@ export type QuickSaveToastView = {
   detail?: string;
   /** A sentence about a fallback or failure. */
   note?: string;
-  actions: { id: QuickSaveToastActionId; label: string }[];
+  /** The first `primary` one is drawn filled. */
+  actions: { id: QuickSaveToastActionId; label: string; primary?: boolean }[];
   /** "Move to", over the alternatives. */
   alternativesLabel: string;
   alternatives: { index: number; label: string; title: string }[];
   dismissLabel: string;
   /** Milliseconds before it closes on its own, paused on hover and focus; null stays open. */
   autoDismissMs: number | null;
+  /** CSS pixels the notification may stick out of the viewport and still count as shown. */
+  visibleTolerancePx: number;
+};
+
+/**
+ * The page a notification must be drawn in: the document that showed this quick save before (its
+ * token from an earlier `render`), and the address it was saved from. Either one differing means
+ * the tab has moved on, and the result goes to the popup instead.
+ */
+export type QuickSaveToastBinding = { document?: string; url?: string };
+
+/** What `render` did: whether the notification is on screen, and this document's token. */
+export type QuickSaveRenderResult = { shown: boolean; document: string };
+
+/** What the injected script installs once per document (`entrypoints/quick-save-toast`). */
+export type QuickSaveToastController = {
+  render: (view: QuickSaveToastView, binding?: QuickSaveToastBinding) => QuickSaveRenderResult;
 };
 
 export type QuickSaveActionMessage = {
   type: typeof QUICK_SAVE_MESSAGE.action;
   /** The quick save the notification shows; a stale notification cannot act on a newer one. */
   id: string;
-} & ({ action: 'undo' | 'dismiss' | 'openAISettings' } | { action: 'move'; index: number });
+} & ({ action: 'dismiss' | QuickSaveToastActionId } | { action: 'move'; index: number });
 
 /** The background's answer to an action: the notification's next state, or null to close it. */
 export type QuickSaveActionResponse = { view: QuickSaveToastView | null };

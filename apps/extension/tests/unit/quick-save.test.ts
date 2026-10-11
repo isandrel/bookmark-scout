@@ -1,16 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
+import { quickSaveActionSchema } from '@/lib/quick-save-validation';
 import { addRecentFolder } from '@/lib/recent-folders-storage';
 import { defaultSettings, type Settings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import { quickSaveActionSchema } from '@/lib/quick-save-validation';
 import { fetchBookmarkTree } from '@/services/bookmarks';
 import {
   buildQuickSaveView,
   handleQuickSaveAction,
   moveQuickSave,
   type QuickSaveRecord,
+  quickSaveActions,
   quickSaveRecordValue,
   runQuickSave,
   undoQuickSave,
@@ -215,7 +216,10 @@ describe('runQuickSave', () => {
     expect(bookmarks.writes.filter((write) => write.startsWith('create'))).toEqual([]);
     const view = buildQuickSaveView(record, settings());
     expect(view.title).toBe('AI quick save is not set up');
-    expect(view.actions).toEqual([{ id: 'openAISettings', label: 'Open AI settings' }]);
+    expect(view.actions).toEqual([
+      { id: 'openAISettings', label: 'Open AI settings', primary: true },
+      { id: 'saveWithoutAI', label: 'Save without AI' },
+    ]);
   });
 
   it('reports a tab without a page instead of saving', async () => {
@@ -398,8 +402,9 @@ describe('quick save messages', () => {
       { view: null },
     );
     expect(
-      await handleQuickSaveAction({ ...undo, id: 'old' }, { ...self, tab: tab('', '') }),
-    ).toEqual({ view: null });
+      (await handleQuickSaveAction({ ...undo, id: 'old' }, { ...self, tab: tab('', '') }))?.view
+        ?.status,
+    ).toBe('expired');
     expect(
       await handleQuickSaveAction(undo, { id: 'another-extension', tab: tab('', '') }),
     ).toEqual({ view: null });
@@ -409,5 +414,143 @@ describe('quick save messages', () => {
     const response = await handleQuickSaveAction(undo, { ...self, tab: tab('', '') });
     expect(response?.view?.title).toBe('Bookmark removed');
     expect(bookmarks.get(record.bookmarkId ?? '')).toBeUndefined();
+  });
+
+  it('an older notification says a newer quick save replaced it and changes nothing', async () => {
+    const first = await runQuickSave('quick-save', tab('https://react.dev/first', 'React first'));
+    const second = await runQuickSave('quick-save', {
+      ...tab('https://react.dev/second', 'React second'),
+      id: 8,
+    });
+    const self = { id: fakeBrowser.runtime.id, tab: tab('', '') };
+    const response = await handleQuickSaveAction(
+      { type: 'quick-save/action', id: first.id, action: 'undo' },
+      self,
+    );
+    expect(response?.view).toMatchObject({
+      id: first.id,
+      status: 'expired',
+      title: 'A newer quick save replaced this one',
+      note: 'Undo and Move to work on the latest quick save only. Change this bookmark in the bookmark manager.',
+      actions: [],
+      alternatives: [],
+    });
+    expect(bookmarks.get(first.bookmarkId ?? '')).toBeDefined();
+    expect(bookmarks.get(second.bookmarkId ?? '')).toBeDefined();
+    expect((await quickSaveRecordValue.get())?.id).toBe(second.id);
+    // Closing it is quiet, and the popup (no tab) never gets the message.
+    expect(
+      await handleQuickSaveAction(
+        { type: 'quick-save/action', id: first.id, action: 'dismiss' },
+        self,
+      ),
+    ).toEqual({ view: null });
+    expect(
+      await handleQuickSaveAction(
+        { type: 'quick-save/action', id: first.id, action: 'undo' },
+        { id: fakeBrowser.runtime.id, url: fakeBrowser.runtime.getURL('/popup.html') },
+      ),
+    ).toEqual({ view: null });
+  });
+});
+
+describe('a failed AI quick save', () => {
+  const failed = (overrides: Partial<QuickSaveRecord> = {}): QuickSaveRecord => ({
+    id: 'q-failed',
+    mode: 'ai',
+    status: 'failed',
+    failure: 'aiFailed',
+    error: 'The provider answered with HTTP 400.',
+    at: Date.now(),
+    tabId: 7,
+    documentToken: 'doc-1',
+    delivery: 'page',
+    page: { title: 'Quick Start – React', url: 'https://react.dev/learn' },
+    path: [],
+    createdFolderIds: [],
+    origin: { kind: 'created' },
+    alternatives: [],
+    ...overrides,
+  });
+
+  it('offers Retry and Save without AI, and only for a page that failed with AI', () => {
+    const labels = (record: QuickSaveRecord) =>
+      quickSaveActions(record).map(({ id, primary }) => (primary ? `${id}*` : id));
+    expect(labels(failed())).toEqual(['retry*', 'saveWithoutAI']);
+    expect(labels(failed({ failure: 'saveFailed' }))).toEqual(['retry*', 'saveWithoutAI']);
+    expect(labels(failed({ failure: 'aiUnavailable' }))).toEqual([
+      'openAISettings*',
+      'saveWithoutAI',
+    ]);
+    // Without AI there is nothing to retry differently, and without a page nothing to save.
+    expect(labels(failed({ mode: 'local', failure: 'saveFailed' }))).toEqual([]);
+    expect(labels(failed({ failure: 'noPage', page: { title: '', url: '' } }))).toEqual([]);
+    expect(labels(failed({ status: 'saved', bookmarkId: 'b1', failure: undefined }))).toEqual([
+      'undo',
+    ]);
+    expect(buildQuickSaveView(failed(), settings()).actions.map(({ label }) => label)).toEqual([
+      'Retry',
+      'Save without AI',
+    ]);
+  });
+
+  it('Save without AI saves the same page with the Quick save setting, in place', async () => {
+    await quickSaveRecordValue.update(() => failed());
+    const self = { id: fakeBrowser.runtime.id, tab: tab('', '') };
+    const response = await handleQuickSaveAction(
+      { type: 'quick-save/action', id: 'q-failed', action: 'saveWithoutAI' },
+      self,
+    );
+    expect(response?.view).toMatchObject({ id: 'q-failed', title: 'Saved to React' });
+    const stored = await quickSaveRecordValue.get();
+    expect(stored).toMatchObject({
+      id: 'q-failed',
+      mode: 'local',
+      status: 'saved',
+      folderId: 'react',
+      page: { url: 'https://react.dev/learn' },
+    });
+    expect(bookmarks.get(stored?.bookmarkId ?? '')).toMatchObject({
+      parentId: 'react',
+      url: 'https://react.dev/learn',
+    });
+  });
+
+  it('Retry asks AI again for the same page', async () => {
+    await quickSaveRecordValue.update(() => failed());
+    const response = await handleQuickSaveAction(
+      { type: 'quick-save/action', id: 'q-failed', action: 'retry' },
+      { id: fakeBrowser.runtime.id, tab: tab('', '') },
+    );
+    // AI is off in these tests, so the retry ends where AI starts: not set up.
+    expect(response?.view).toMatchObject({ id: 'q-failed', title: 'AI quick save is not set up' });
+    expect(await quickSaveRecordValue.get()).toMatchObject({
+      id: 'q-failed',
+      mode: 'ai',
+      failure: 'aiUnavailable',
+    });
+    expect(bookmarks.writes.filter((write) => write.startsWith('create'))).toEqual([]);
+  });
+
+  it('does nothing for a quick save that did not fail', async () => {
+    await quickSaveRecordValue.update(() =>
+      failed({ status: 'saved', failure: undefined, bookmarkId: 'r1', folderId: 'react' }),
+    );
+    await handleQuickSaveAction(
+      { type: 'quick-save/action', id: 'q-failed', action: 'saveWithoutAI' },
+      { id: fakeBrowser.runtime.id, tab: tab('', '') },
+    );
+    expect(bookmarks.writes.filter((write) => write.startsWith('create'))).toEqual([]);
+  });
+});
+
+describe('the notification view', () => {
+  it('takes its direction from the app language, never from the page', async () => {
+    const record = await runQuickSave('quick-save', tab('https://react.dev/learn', 'Quick Start'));
+    expect(buildQuickSaveView(record, settings()).dir).toBe('ltr');
+    expect(buildQuickSaveView(record, settings({ language: 'ja' }))).toMatchObject({
+      lang: 'ja',
+      dir: 'ltr',
+    });
   });
 });

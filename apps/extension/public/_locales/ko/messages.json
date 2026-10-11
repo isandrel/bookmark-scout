@@ -5711,6 +5711,18 @@
         "message": "최근 빠른 저장",
         "description": "Heading of the popup panel that shows the last quick save"
     },
+    "quickSave_saveWithoutAI": {
+        "message": "AI 없이 저장",
+        "description": "Quick save notification button after a failed AI quick save: saves the page to the folder the Quick save setting picks, without AI"
+    },
+    "quickSave_replaced": {
+        "message": "더 최근의 빠른 저장이 이 항목을 대체했습니다",
+        "description": "Quick save notification title when its Undo or Move to was pressed after a newer quick save replaced it"
+    },
+    "quickSave_replacedNote": {
+        "message": "실행 취소와 이동은 가장 최근의 빠른 저장에만 적용됩니다. 이 북마크는 북마크 관리자에서 변경하세요.",
+        "description": "Quick save notification note under quickSave_replaced: why its buttons no longer work and where to change the bookmark instead"
+    },
     "settings_sectionQuickSave": {
         "message": "빠른 저장 단축키",
         "description": "Options section heading for the quick save keyboard shortcuts"

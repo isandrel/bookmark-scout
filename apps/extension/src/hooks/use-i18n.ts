@@ -69,6 +69,32 @@ export function toLanguageTag(locale: SupportedLocale): string {
 }
 
 /**
+ * Scripts and languages written right to left, for engines without `Intl.Locale` text info
+ * (Firefox): a script subtag decides first, then the language.
+ */
+const RTL_SCRIPTS = new Set(['Adlm', 'Arab', 'Hebr', 'Mand', 'Nkoo', 'Rohg', 'Syrc', 'Thaa']);
+const RTL_LANGUAGES = new Set(['ar', 'ckb', 'dv', 'fa', 'he', 'ks', 'ps', 'sd', 'ug', 'ur', 'yi']);
+
+type LocaleTextInfo = { direction?: string };
+
+/** The writing direction of a language tag (`ar` is `rtl`); `ltr` for a tag it cannot read. */
+export function languageDirection(tag: string): 'ltr' | 'rtl' {
+  try {
+    const locale = new Intl.Locale(tag) as Intl.Locale & {
+      getTextInfo?: () => LocaleTextInfo;
+      textInfo?: LocaleTextInfo;
+    };
+    const direction = (locale.getTextInfo?.() ?? locale.textInfo)?.direction;
+    if (direction === 'rtl' || direction === 'ltr') return direction;
+    const script = locale.maximize().script;
+    if (script) return RTL_SCRIPTS.has(script) ? 'rtl' : 'ltr';
+    return RTL_LANGUAGES.has(locale.language) ? 'rtl' : 'ltr';
+  } catch {
+    return 'ltr';
+  }
+}
+
+/**
  * Browser languages that belong to a different bundled locale than their own tag suggests:
  * Chinese scripts and regions. Keys and values are lowercase language tags.
  */
