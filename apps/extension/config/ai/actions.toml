@@ -23,6 +23,14 @@ summary_chars = 300
 max_page_chars = 20000
 # Characters one tool result may take as JSON; a larger one asks the agent to narrow it
 max_result_chars = 60000
+# Changes one proposeChanges plan may hold
+max_plan_operations = 50
+# Plans kept waiting for approval at a time; the oldest is dropped first
+max_plans = 10
+# Minutes a plan can still be applied after it was proposed
+plan_ttl_minutes = 60
+# Bookmarks a plan may delete in all, counting the bookmarks inside deleted folders
+max_plan_deleted_bookmarks = 200
 # Bookmark search score per query word found in the title
 search_title_weight = 2
 # Bookmark search score per query word found in the URL, folder path, saved tags, or summary

@@ -9,7 +9,9 @@
 "background.js" = 305
 "popup.html" = 950
 "sidepanel.html" = 950
-"options.html" = 1030
+# Raised from 1030 for the Ask AI prompt that explains saving, plans, and undo, which the prompt
+# library in Options shows (1,032 on 2026-10-11).
+"options.html" = 1045
 "bookmarks.html" = 1370
 # The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
 "quick-save-toast.js" = 14
