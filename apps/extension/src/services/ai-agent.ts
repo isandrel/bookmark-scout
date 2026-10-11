@@ -5,16 +5,6 @@
  * and allowed. The loop needs the AI SDK, so it lives in ai-agent.lazy.ts and loads with the
  * first message.
  */
-import { z } from 'zod';
-
-const config = readConfig(
-  'ai/agent',
-  z.strictObject({
-    max_steps: z.number().int().positive(),
-    web_search_max_uses: z.number().int().positive(),
-  }),
-);
-
 /** Providers whose own built-in web search Ask AI can add (tools in ai-agent.lazy.ts). */
 const WEB_SEARCH_PROVIDERS = ['openai', 'anthropic', 'google', 'xai'] as const;
 
@@ -66,7 +56,7 @@ export async function createAskAIAgent() {
     instructions: system,
     toolContext: await createAskAIToolContext(appSettings),
     webSearch: appSettings.askAiWebSearch,
-    maxSteps: config.max_steps,
-    webSearchMaxUses: config.web_search_max_uses,
+    maxSteps: ASK_AI_CONFIG.max_steps,
+    webSearchMaxUses: ASK_AI_CONFIG.web_search_max_uses,
   });
 }

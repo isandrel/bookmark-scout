@@ -27,6 +27,7 @@ import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ActionApprovalRequest } from './ActionApproval.lazy';
+import { ChatSuggestions } from './ChatSuggestions.lazy';
 
 /** Builds the agent per message, so the current service and settings always apply. */
 class AskAITransport implements ChatTransport<UIMessage> {
@@ -67,10 +68,16 @@ type ApprovalResponder = (response: { id: string; approved: boolean }) => void;
 function MessageView({
   message,
   respond,
+  busy,
+  send,
 }: {
   message: UIMessage;
   /** Answers a tool call that waits for the user's approval. */
   respond: ApprovalResponder;
+  /** The chat is answering; suggestion buttons wait. */
+  busy: boolean;
+  /** Sends a suggested question or option as the user's next message. */
+  send: (text: string) => void;
 }) {
   if (message.role === 'user') {
     const text = message.parts
@@ -111,6 +118,16 @@ function MessageView({
           );
         }
         if (isToolUIPart(part)) {
+          if (getToolName(part) === SUGGEST_ACTIONS_ID && part.state === 'output-available') {
+            return (
+              <ChatSuggestions
+                key={key}
+                suggestions={readChatSuggestions(part.output)}
+                busy={busy}
+                send={send}
+              />
+            );
+          }
           if (part.state === 'approval-requested' && !part.approval.isAutomatic) {
             const { id } = part.approval;
             return (
@@ -298,6 +315,8 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
               key={message.id}
               message={message}
               respond={(response) => void addToolApprovalResponse(response)}
+              busy={busy}
+              send={send}
             />
           ))
         )}

@@ -5427,6 +5427,42 @@
         "message": "승인된 변경 사항을 적용함",
         "description": "Ask AI step: the agent applied changes the user approved"
     },
+    "askAI_toolSuggest": {
+        "message": "다음 단계를 제안함",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "제안",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "$1에 저장",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "새 폴더 $1에 저장",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "\"$1\" 열기",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "관리자에서 \"$1\" 보기",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savedTo": {
+        "message": "$1에 저장했습니다",
+        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    },
+    "askAI_alreadySaved": {
+        "message": "이미 $1에 저장되어 있습니다",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "페이지를 저장하지 못했습니다",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
     "askAI_approvalTitle": {
         "message": "이 변경을 승인할까요?",
         "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"

@@ -1,7 +1,13 @@
-# Ask AI chat in the popup and side panel. Read by src/services/ai-agent.ts. The tools' own
+# Ask AI chat in the popup and side panel. Read by src/lib/ask-ai-config.ts. The tools' own
 # limits are in actions.toml.
 
 # Model calls in one answer at most, counting each round of tool use
 max_steps = 8
 # Web searches per answer at most, where the provider lets the limit be set (Anthropic)
 web_search_max_uses = 3
+# Suggestion buttons under one answer at most (next questions, saves, options, open or show)
+max_suggestions = 6
+# Characters a suggestion's button text may have; longer text is cut
+suggestion_label_chars = 60
+# Characters of the message a question or option button sends
+suggestion_text_chars = 300

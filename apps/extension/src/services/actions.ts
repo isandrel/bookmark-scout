@@ -24,6 +24,7 @@ export const ACTIONS = {
   ...ITEM_ACTIONS,
   ...WRITE_ACTIONS,
   ...PLAN_ACTIONS,
+  ...CHAT_ACTIONS,
 };
 
 export type ActionId = keyof typeof ACTIONS;

@@ -5435,6 +5435,42 @@
         "message": "Ha aplicado los cambios aprobados",
         "description": "Ask AI step: the agent applied changes the user approved"
     },
+    "askAI_toolSuggest": {
+        "message": "Ha sugerido próximos pasos",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "Sugerencias",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "Guardar en $1",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "Guardar en la carpeta nueva $1",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "Abrir «$1»",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "Mostrar «$1» en el administrador",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savedTo": {
+        "message": "Guardado en $1",
+        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    },
+    "askAI_alreadySaved": {
+        "message": "Ya está guardado en $1",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "No se pudo guardar la página",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
     "askAI_approvalTitle": {
         "message": "¿Aprobar este cambio?",
         "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"

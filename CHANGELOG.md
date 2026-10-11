@@ -24,6 +24,8 @@
 
 - Ask AI can change bookmarks when you ask: it saves pages, and it proposes moves, renames, deletions, and new folders as a plan shown in the chat, which changes nothing until you approve it. Once it has read a web page or searched the web, it asks before saving too. The root, the browser's permanent folders, and managed folders are never changed, and every change is one step you can undo, also with Ctrl+Z in the bookmark manager.
 
+- Ask AI can end an answer with buttons: a follow-up question, a few options or ideas to pick from, saving the page to a suggested folder (with Undo), or opening or showing a bookmark. Nothing happens until you click, and each button works once.
+
 ### Stored data
 
 - **This update resets your saved data.** Bookmark Scout stores its data in a new format and removes what older versions stored instead of converting it. After updating, your settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, recent searches, recent folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. To keep your settings, click **Export** at the bottom of Settings before updating, and **Import** the file afterwards.

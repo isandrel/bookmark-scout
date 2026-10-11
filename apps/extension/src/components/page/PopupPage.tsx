@@ -579,6 +579,8 @@ function PopupPage() {
             requestAnimationFrame(() => inputRef.current?.focus());
           }}
         />
+        {/* Ask AI's suggestion buttons report saves here, with Undo. */}
+        <Toaster />
       </div>
     );
   }

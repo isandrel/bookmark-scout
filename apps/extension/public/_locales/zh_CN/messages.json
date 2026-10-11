@@ -5243,6 +5243,42 @@
         "message": "已应用批准的更改",
         "description": "Ask AI step: the agent applied changes the user approved"
     },
+    "askAI_toolSuggest": {
+        "message": "建议了后续操作",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "建议",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "保存到 $1",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "保存到新文件夹 $1",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "打开“$1”",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "在管理器中显示“$1”",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savedTo": {
+        "message": "已保存到 $1",
+        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    },
+    "askAI_alreadySaved": {
+        "message": "已保存在 $1 中",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "无法保存该网页",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
     "askAI_approvalTitle": {
         "message": "批准此更改吗？",
         "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
