@@ -26,14 +26,18 @@ const WEB_SEARCH_TOOLS: Record<
 export async function createAgentToolSet(context: ActionContext): Promise<ToolSet> {
   const names = await agentActionIds(context);
   return Object.fromEntries(
-    names.map((name) => {
+    names.flatMap((name) => {
+      const { agent, input } = getAction(name);
+      if (!agent || !input) return [];
       return [
-        name,
-        tool({
-          description: getAction(name).agent?.description ?? '',
-          inputSchema: getAction(name).input,
-          execute: (input) => runAction(name, input, context),
-        }),
+        [
+          name,
+          tool({
+            description: agent.description,
+            inputSchema: input,
+            execute: (args: unknown) => runAction(name, args, context),
+          }),
+        ],
       ];
     }),
   );
