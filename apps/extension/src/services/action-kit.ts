@@ -24,6 +24,10 @@ export const actionLimits = readConfig(
     summary_chars: z.number().int().positive(),
     max_page_chars: z.number().int().positive(),
     max_result_chars: z.number().int().positive(),
+    max_plan_operations: z.number().int().positive(),
+    max_plans: z.number().int().positive(),
+    plan_ttl_minutes: z.number().positive(),
+    max_plan_deleted_bookmarks: z.number().int().positive(),
     search_title_weight: z.number().nonnegative(),
     search_text_weight: z.number().nonnegative(),
   }),
@@ -42,6 +46,11 @@ export type ActionContext = {
   activeTab: () => Promise<ActionPage | undefined>;
   /** Reads a page's text; absent while Read page content is off or not allowed. */
   readPage?: (url: string) => Promise<{ title?: string; text: string } | undefined>;
+  /**
+   * The history writer of a larger change this call is part of (an approved plan), so all of it
+   * is one undo step; without it, a write action records its own entry.
+   */
+  writer?: BookmarkWriter;
 };
 
 export type ActionErrorCode =
@@ -140,7 +149,45 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
   agent?: ActionAgentExposure;
   itemMenu?: ActionItemMenu;
   folderMenu?: ActionFolderMenu;
+  /**
+   * For a write that agents make through a plan (`proposeChanges`): checks the input against the
+   * library now, and says what the user approves and what the items must still be when applied.
+   */
+  plan?: (input: Input, library: ActionLibrary) => PlannedChange | ActionError;
 } & (ActionCall<Input, Output> | { [Key in keyof ActionCall<Input, Output>]?: never });
+
+/** One line of a plan as the approval shows it; titles and paths, never the model's words. */
+export type PlannedChangePreview = {
+  kind: 'move' | 'rename' | 'delete' | 'createFolder';
+  title: string;
+  /** The folder it is in now, for a move or deletion. */
+  from?: string;
+  /** Where it goes, its new title, or where a new folder is created. */
+  to?: string;
+  /** Bookmarks inside a folder that is deleted. */
+  contains?: number;
+};
+
+/** What an item must still be when a planned change is applied; it is skipped otherwise. */
+export type PlannedExpectation = { id: string; parentId?: string; title: string; url?: string };
+
+export type PlannedChange = {
+  preview: PlannedChangePreview[];
+  expect: PlannedExpectation[];
+  /** Bookmarks the change deletes, counting those inside deleted folders. */
+  deletes?: number;
+};
+
+/** Why an item may not be changed by an agent: the root, a permanent folder, or a managed one. */
+export function unchangeableReason(library: ActionLibrary, id: string): string | undefined {
+  const folder = library.folderById.get(id);
+  const node = folder?.node ?? library.bookmarkById.get(id)?.node;
+  if (!node) return 'It no longer exists.';
+  if (!node.parentId) return 'It is the bookmarks root.';
+  if (node.unmodifiable) return 'The browser manages it (a policy folder).';
+  if (folder && !folder.parent) return "It is one of the browser's permanent folders.";
+  return undefined;
+}
 
 /** What the model is told when an action's permission is missing, by permission feature. */
 export const PERMISSION_HINTS: Partial<Record<PermissionFeature, string>> = {
