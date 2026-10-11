@@ -22,6 +22,8 @@ export const STORAGE_KEYS = {
   searchHistory: 'local:bookmark-scout-search-history',
   savedSearches: 'local:bookmark-scout-saved-searches',
   siteIcons: 'local:bookmark-scout-site-icons',
+  /** The last quick save, for Undo and Move from its notification or the popup; cleared on restart. */
+  quickSave: 'session:bookmark-scout-quick-save',
 } as const;
 
 export type StorageKey = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

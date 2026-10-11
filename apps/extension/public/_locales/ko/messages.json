@@ -5150,5 +5150,137 @@
     "page_options": {
         "message": "옵션",
         "description": "Name of the options page, used in its tab title"
+    },
+    "command_quickSave": {
+        "message": "현재 페이지 빠른 저장",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "AI로 현재 페이지 빠른 저장",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "AI가 폴더를 고르는 중...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "$1에 저장했습니다",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "이미 $1에 있습니다",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "북마크를 삭제했습니다",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "이 탭에는 저장할 페이지가 없습니다",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "AI 빠른 저장이 설정되지 않았습니다",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "설정 > AI에서 AI를 켜고 서비스를 선택하세요. 아무것도 저장되지 않았습니다.",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "AI가 폴더를 고르지 못했습니다",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "이 페이지를 저장하지 못했습니다",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "이 페이지와 맞는 폴더가 없어 마지막으로 사용한 폴더나 북마크바에 저장했습니다.",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "빠른 저장 폴더가 더 이상 없어 마지막으로 사용한 폴더나 북마크바에 저장했습니다.",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "AI 설정 열기",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "이동",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "그 폴더는 더 이상 없습니다.",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "AI 빠른 저장을 시작하지 못했습니다. 다시 시도하세요.",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "최근 빠른 저장",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "빠른 저장 단축키",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "빠른 저장 폴더",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "빠른 저장 단축키로 현재 페이지를 저장할 위치입니다. 최적 일치는 이 기기에서 페이지를 폴더 이름과 그 안의 북마크와 비교합니다. AI 단축키는 항상 AI 제안을 사용합니다.",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "최적 일치",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "최근 사용",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "지정한 폴더",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "저장할 폴더",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "빠른 저장 폴더가 지정한 폴더일 때 사용합니다. 이 폴더가 삭제되면 마지막으로 사용한 폴더를 사용합니다.",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "선택 안 함",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "삭제된 폴더",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "키보드 단축키",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "확장 프로그램 창을 열지 않고 어느 웹사이트에서나 현재 페이지를 저장합니다. AI 단축키는 AI를 켜야 하며 팝업의 AI 폴더 제안과 같은 내용을 보냅니다.",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "설정 안 됨",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "단축키 변경",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "about:addons를 열고 톱니바퀴 버튼을 누른 뒤 확장 기능 단축키 관리를 선택해도 됩니다.",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

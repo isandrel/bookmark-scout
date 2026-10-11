@@ -97,6 +97,15 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       return node as Node;
     }),
   );
+  vi.spyOn(api, 'search').mockImplementation((async (query: string | { url?: string }) => {
+    const url = typeof query === 'string' ? undefined : query.url;
+    return [...nodes.values()]
+      .filter((node) => node.url !== undefined && (url === undefined || node.url === url))
+      .map((node) => {
+        const { children: _children, ...found } = toNode(node);
+        return found as Node;
+      });
+  }) as typeof api.search);
   vi.spyOn(api, 'create').mockImplementation(async (details) => {
     if (fail.create.has(details.title ?? '')) throw new Error(`create failed: ${details.title}`);
     const created = add(details);

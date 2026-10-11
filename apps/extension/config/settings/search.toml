@@ -35,3 +35,13 @@ enabled = false
 # Source for bookmark title when saving via context menu
 # Options: "link_text" (text of the link), "page_title" (title of the page), "link_url" (URL of the link)
 bookmark_naming = "link_text"
+
+[quick_save]
+# Where the quick save shortcut (Alt+Shift+S unless the user rebinds it) saves the current page:
+# "best_match" (the folder whose name and bookmarks best match the page, ranked on this device),
+# "last_used" (the most recent of the recent folders), or "fixed" (fixed_folder below). A best
+# match below the minimum score, or a fixed folder that no longer exists, falls back to the last
+# used folder, then the bookmarks bar.
+folder_strategy = "best_match"
+# Bookmark id of the folder for "fixed"; empty until the user picks one in Options.
+fixed_folder = ""

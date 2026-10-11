@@ -56,7 +56,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "Die Erweiterung hat keine Content-Skripte und liest nicht die Seiten, die in Ihren Tabs geöffnet sind. Nur wenn Sie „Seiteninhalt lesen“ aktivieren, lädt sie Seiten separat herunter, wie unten beschrieben."
+                        "text": "Die Erweiterung deklariert keine Content-Skripte und liest nicht die Seiten, die in Ihren Tabs geöffnet sind. Nachdem Sie ein Tastenkürzel zum Schnellspeichern gedrückt haben, zeigt sie nur in diesem Tab eine kleine Benachrichtigung an, die nichts von der Seite liest. Nur wenn Sie „Seiteninhalt lesen“ aktivieren, lädt sie Seiten separat herunter, wie unten beschrieben."
                     }
                 ]
             },
@@ -96,7 +96,7 @@
                     {
                         "type": "ul",
                         "items": [
-                            "Ordnervorschläge: Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner.",
+                            "Ordnervorschläge (im Pop-up, in der Seitenleiste oder wenn Sie das Tastenkürzel zum KI-Schnellspeichern drücken): Titel und URL der aktuellen Seite sowie die Namen Ihrer Lesezeichenordner.",
                             "Automatische Tags, Inhaltszusammenfassung und KI-Ordnerneuordnung: Titel, URLs und Ordnerpfade der Lesezeichen im gewählten Bereich.",
                             "Nur wenn Sie „Seiteninhalt lesen“ aktivieren (standardmäßig deaktiviert): Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung laden zusätzlich jede Seite über ihre URL ohne Ihre Cookies herunter und senden ihren Haupttext. Seiten in Ihrem lokalen Netzwerk werden nie heruntergeladen. Die KI-Ordnerneuordnung sendet nie Seiteninhalte.",
                             "KI fragen: Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI für ihre Antwort nachschlägt: passende Lesezeichen (Titel, URLs, Ordnerpfade, gespeicherte Tags und Zusammenfassungen), Ihre Ordnernamen, Titel und URL der aktuellen Seite und, nur bei aktiviertem „Seiteninhalt lesen“, der Text der Seiten, die sie liest. Wenn Sie die Websuche aktivieren (standardmäßig deaktiviert), durchsucht der Anbieter zusätzlich das Web. Das Gespräch wird nicht gespeichert; es endet, wenn Sie es schließen."
@@ -142,7 +142,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Bei der Installation fordert Bookmark Scout nur <code>bookmarks</code>, <code>storage</code> und <code>activeTab</code> an, dazu <code>sidePanel</code> in Chrome und Edge sowie <code>contextMenus</code> in Firefox, da Firefox Erweiterungen nicht erlaubt, diese Berechtigung später anzufordern. Alles andere ist optional und wird erst angefordert, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt:"
+                        "text": "Bei der Installation fordert Bookmark Scout nur <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> und <code>scripting</code> an (zeigt die Schnellspeichern-Benachrichtigung in dem Tab, in dem Sie das Tastenkürzel gedrückt haben), dazu <code>sidePanel</code> und <code>offscreen</code> (führt die Anfrage des KI-Schnellspeicherns in einer verborgenen Seite der Erweiterung aus) in Chrome und Edge sowie <code>contextMenus</code> in Firefox, da Firefox Erweiterungen nicht erlaubt, diese Berechtigung später anzufordern. Alles andere ist optional und wird erst angefordert, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt:"
                     },
                     {
                         "type": "ul",

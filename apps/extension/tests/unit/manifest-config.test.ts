@@ -27,13 +27,26 @@ describe('manifest config', () => {
   it('asks at install only for what the extension cannot work without', () => {
     for (const browser of ['chrome', 'edge']) {
       const manifest = createManifest({ browser });
-      expect(manifest.permissions).toEqual(['bookmarks', 'storage', 'activeTab', 'sidePanel']);
+      expect(manifest.permissions).toEqual([
+        'bookmarks',
+        'storage',
+        'activeTab',
+        'sidePanel',
+        'scripting',
+        'offscreen',
+      ]);
       expect(manifest.optional_permissions).toEqual(['tabs', 'favicon', 'contextMenus']);
       expect(manifest.optional_host_permissions).toEqual(['http://*/*', 'https://*/*']);
     }
     // Firefox cannot make contextMenus optional and has no favicon or sidePanel permission.
     const firefox = createManifest({ browser: 'firefox' });
-    expect(firefox.permissions).toEqual(['bookmarks', 'storage', 'activeTab', 'contextMenus']);
+    expect(firefox.permissions).toEqual([
+      'bookmarks',
+      'storage',
+      'activeTab',
+      'scripting',
+      'contextMenus',
+    ]);
     expect(firefox.optional_permissions).toEqual(['tabs']);
   });
 

@@ -1,15 +1,15 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.3.0`, checked against the source on 2026-10-03, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
+What the extension does with data at version `0.3.0`, checked against the source on 2026-10-10, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 
 - No analytics, telemetry, crash reporting, ads, or accounts. A search of `apps/extension/src` for analytics and telemetry libraries found none; the only hard-coded external URLs are the default AI provider endpoints.
 - The developer runs no server for the extension. Nothing is sent to Bookmark Scout.
-- No content scripts. The extension does not read the pages you visit in their tabs; it reads only the active tab's title and URL, when the user saves the page or asks for a folder suggestion: through `activeTab` from the toolbar popup, or through the optional `tabs` permission, asked for from the side panel. With the opt-in Read page content setting, AI tools download a page again by its URL, without cookies (see below).
+- No declared content scripts. The extension does not read the pages you visit in their tabs; it reads only the active tab's title and URL, when the user saves the page or asks for a folder suggestion: through `activeTab` from the toolbar popup or a quick save keyboard shortcut, or through the optional `tabs` permission, asked for from the side panel. After a quick save shortcut, the extension injects its own notification script (`quick-save-toast.js`, through `scripting` and that moment's `activeTab`) into that one tab; it reads nothing from the page, and its buttons only message the extension (`src/services/quick-save.ts`). With the opt-in Read page content setting, AI tools download a page again by its URL, without cookies (see below).
 - Every permission a browser lets an extension ask for later is optional and asked for when the user first turns on or runs the feature that needs it (`store/permissions.md`). In Firefox, AI features also ask for data collection consent first (below).
 - Network requests happen only after a user action, in these features:
-  - **AI features** (off by default): requests go from the browser straight to the provider endpoint the user configured (`src/services/ai-client.ts`).
+  - **AI features** (off by default): requests go from the browser straight to the provider endpoint the user configured (`src/services/ai-client.ts`). AI quick save (a keyboard shortcut) builds the same folder-suggestion request in a hidden extension page (an offscreen document in Chrome and Edge, a frame of the background page in Firefox) and the background sends it through the same logging fetch (`src/services/quick-save-ai-host.ts`).
   - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use. The dead-link repair option "archived copy" only builds a `https://web.archive.org/web/<URL>` link locally; it does not contact the Wayback Machine (`src/services/dead-link-repair.ts`).
   - **Refresh Site Icons**: for each origin in scope, one GET for the first bookmarked page on it (only the `<head>` is read), then at most three icon files the page declares on the bookmark's own registrable domain, and the origin's `/favicon.ico`, until one is a real image under the size cap (`src/services/site-icons.ts`). Same transport as above: `credentials: 'omit'`, the same optional website access, and redirects the site answers with are followed. No third-party icon service is contacted.
   - **Read page content** (off by default; AI must also be on): folder suggestions, Auto-Tagging, and Content Summarizer GET each page by its URL with `credentials: 'omit'`, keep the article text with Mozilla Readability, and send up to the configured character limit per page to the chosen AI provider (`src/services/page-reader.ts`). Turning the setting on requests the same optional website access. Hosts on the local network (loopback, private and link-local addresses, `localhost`, `.local`, `.internal`, `.lan`, `.home.arpa`) are never requested.
@@ -20,13 +20,14 @@ What the extension does with data at version `0.3.0`, checked against the source
 | Data | Stored where | Leaves the device? |
 | --- | --- | --- |
 | Bookmarks (titles, URLs, folders) | The browser's own bookmark store | Only as described under "AI features", "Network tools", and "Exports" below. Browser bookmark sync is the browser's feature, not the extension's. |
-| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions, when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page |
+| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions (including the AI quick save shortcut), when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page |
 | Settings (`bookmark-scout-settings`), including the AI on/off switch, provider name, and model name | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
 | Bookmark table view (`bookmark-scout-table-view`): visible columns, order, widths, page size, sort | `storage.sync` | Same as settings. Contains no bookmark content. |
 | AI provider settings (`bookmark-scout-ai`): API key, Base URL, extra headers, per provider | `storage.local` | The key and headers are sent only to the configured provider, as request authentication |
 | Tags and summaries (`bookmark-scout-bookmark-metadata`) | `storage.local` | Included in AI context exports when the user turns that on; otherwise no |
 | Saved searches | `storage.local` | No |
-| Recent folders (for the right-click menu) | `storage.local` | No |
+| Recent folders (for the popup, the right-click menu, and quick save) | `storage.local` | No |
+| Last quick save (`bookmark-scout-quick-save`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No |
 | Recent searches | `storage.local`, can be turned off in Settings | No |
 | Site icons (`bookmark-scout-site-icons`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No |
 | Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No |
@@ -37,7 +38,7 @@ Only when AI is turned on and the user starts the feature (or turned on Auto-rec
 
 | Feature | Sent to the chosen provider |
 | --- | --- |
-| Folder suggestions (popup, side panel) | Current page title and URL, and the names and paths of all bookmark folders. With Read page content on, also the page's own title and main text |
+| Folder suggestions (popup, side panel, AI quick save shortcut) | Current page title and URL, and the names and paths of all bookmark folders. With Read page content on, also the page's own title and main text |
 | Auto-Tagging | ID, title, URL, and folder path of each bookmark in the current folder. With Read page content on, also each page's own title and main text |
 | Content Summarizer | ID, title, URL, folder path, and optionally the domain of each bookmark in the current folder. With Read page content on, also each page's own title and main text |
 | AI Folder Reorganization | Titles, URLs, and folder paths of the bookmarks in the chosen scope |

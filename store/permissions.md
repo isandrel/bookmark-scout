@@ -1,6 +1,6 @@
 # Permission Justifications
 
-Derived on 2026-10-03 from the built manifests, which `apps/extension/manifest.config.ts` generates per browser (checked by `tests/unit/manifest-config.test.ts`):
+Derived on 2026-10-10 from the built manifests, which `apps/extension/manifest.config.ts` generates per browser (checked by `tests/unit/manifest-config.test.ts`):
 
 ```bash
 NX_DAEMON=false bunx nx run extension:build:chrome
@@ -18,17 +18,18 @@ Every permission that a browser lets an extension ask for later is optional and 
 | Key | Chrome `chrome-mv3` | Edge `edge-mv3` | Firefox `firefox-mv2` |
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
-| `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `contextMenus` |
+| `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `contextMenus` |
 | `optional_permissions` | `tabs`, `favicon`, `contextMenus` | Same as Chrome | `tabs`, `http://*/*`, `https://*/*` |
 | Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*` | Same as Chrome | In `optional_permissions` (MV2) |
 | Host permissions at install | None | None | None |
 | `chrome_url_overrides` | `bookmarks` → `bookmarks.html` | Same as Chrome | Absent |
 | Side panel or sidebar | `side_panel.default_path` | Same as Chrome | `sidebar_action.default_panel` |
 | `web_accessible_resources` | None | None | None |
-| Content scripts | None | None | None |
+| Content scripts | None declared. After a quick save shortcut, `quick-save-toast.js` is injected into that one tab with `scripting.executeScript` | Same as Chrome | Same as Chrome |
+| `commands` | `quick-save` (Alt+Shift+S), `ai-quick-save` (Alt+Shift+D) | Same as Chrome | Same as Chrome |
 | `browser_specific_settings.gecko` | Not applicable | Not applicable | `id`: `bookmark-scout@isandrel.github.io`, `strict_min_version`: `140.0`, `data_collection_permissions`: `required: ["none"]`, `optional: ["authenticationInfo", "bookmarksInfo", "browsingActivity", "websiteContent"]` (see [`privacy-disclosures.md`](privacy-disclosures.md#firefox-add-ons-data-collection-declaration)); `gecko_android.strict_min_version`: `142.0` |
 
-Why the rest stay required: `bookmarks` is the product; `storage` holds settings every page reads, has no warning, and cannot be optional in Firefox; `activeTab` has no warning and gives the toolbar popup and right-click menu the current page; `sidePanel` has no warning, and Chrome registers a side panel granted at runtime only after the extension reloads. Firefox cannot make `contextMenus` optional, so it stays required there (it shows no prompt).
+Why the rest stay required: `bookmarks` is the product; `storage` holds settings every page reads, has no warning, and cannot be optional in Firefox; `activeTab` has no warning and gives the toolbar popup and right-click menu the current page; `sidePanel` has no warning, and Chrome registers a side panel granted at runtime only after the extension reloads; `scripting` and `offscreen` have no warning, and quick save needs them at the moment a shortcut is pressed, with no page open to ask from. Firefox cannot make `contextMenus` optional, so it stays required there (it shows no prompt).
 
 ### Install-time warnings
 
@@ -74,10 +75,26 @@ Code: `apps/extension/src/services/bookmarks.ts` and the background listeners in
 ### `activeTab`
 
 ```text
-When the user clicks the toolbar button or the right-click menu, the extension reads the title and URL of that tab only, so the popup can save the page the user is viewing into a chosen folder (and, if the user turned on AI, suggest a folder for it), and a right-click save can be named after the page title. No access to other tabs and no browsing history.
+When the user clicks the toolbar button or the right-click menu, or presses a quick save keyboard shortcut, the extension reads the title and URL of that tab only, so the popup or the shortcut can save the page the user is viewing into a folder (and, if the user turned on AI, suggest a folder for it), and a right-click save can be named after the page title. After a quick save it also shows a small notification in that tab. No access to other tabs and no browsing history.
 ```
 
-Code: `getCurrentTab` in `src/services/bookmarks.ts`, `PopupPage.tsx`, `getBookmarkTitle` in `src/services/context-menu.ts`.
+Code: `getCurrentTab` in `src/services/bookmarks.ts`, `PopupPage.tsx`, `getBookmarkTitle` in `src/services/context-menu.ts`, `runQuickSave` in `src/services/quick-save.ts`.
+
+### `scripting`
+
+```text
+Shows the quick save notification. When the user presses a quick save keyboard shortcut, the extension saves the current page and then injects one small script, packaged with the extension, into that tab only (allowed by activeTab for that moment) to show where the page was saved, with Undo and other folders to move it to. The script reads nothing from the page and sends nothing anywhere; its buttons only message the extension. On pages the browser does not allow (browser pages, the extension store), nothing is injected and the toolbar badge and popup show the result instead.
+```
+
+Code: `showInTab` in `src/services/quick-save.ts`, `src/entrypoints/quick-save-toast/`. No warning in any browser.
+
+### `offscreen` (Chrome and Edge)
+
+```text
+Used only by AI quick save, a keyboard shortcut the user presses after turning on AI. The background service worker cannot load the AI library or parse HTML, so it opens a hidden extension page (an offscreen document) for the duration of that one request: it builds the request to the AI provider the user configured and, if the user turned on Read page content, reads the page's text. The request itself is sent and logged by the background, exactly like AI folder suggestions in the popup. The page closes when the request ends.
+```
+
+Code: `src/services/quick-save-ai-host.ts`, `src/services/quick-save-ai-runner.ts`, `src/entrypoints/ai-host/`. No warning. Firefox's background is a page, so it holds the same page in a frame and the Firefox manifest has no `offscreen`.
 
 ### `tabs` (optional)
 

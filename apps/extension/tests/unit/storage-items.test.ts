@@ -51,7 +51,7 @@ describe('storage key registry', () => {
   it('lists every released key exactly once', () => {
     const keys = Object.values(STORAGE_KEYS);
     expect(new Set(keys).size).toBe(keys.length);
-    for (const key of keys) expect(key).toMatch(/^(sync|local):bookmark-scout-[a-z0-9-]+$/);
+    for (const key of keys) expect(key).toMatch(/^(sync|local|session):bookmark-scout-[a-z0-9-]+$/);
     // Released values; never edit these to make the test pass.
     expect(STORAGE_KEYS).toMatchObject({
       settings: 'sync:bookmark-scout-settings',
@@ -64,7 +64,7 @@ describe('storage key registry', () => {
 
   it('includes every storage key literal used in src', () => {
     const registry = new Set<string>([...Object.values(STORAGE_KEYS), THEME_CACHE_STORAGE_KEY]);
-    const bareKeys = new Set([...registry].map((key) => key.replace(/^(sync|local):/, '')));
+    const bareKeys = new Set([...registry].map((key) => key.replace(/^(sync|local|session):/, '')));
     const unlisted = sourceFiles(path.join(appRoot, 'src')).flatMap((file) =>
       [
         ...readFileSync(file, 'utf8').matchAll(

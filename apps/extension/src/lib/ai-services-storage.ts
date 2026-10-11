@@ -4,8 +4,6 @@
  * service id, so a service created from an older single-provider setup keeps its provider id as
  * its own id and needs no data copied. Everything here stays on this device.
  */
-import { useEffect, useState } from 'react';
-
 export type AIService = {
   id: string;
   /** User-facing label; defaults to the provider name. */
@@ -157,39 +155,4 @@ export async function deleteAIService(id: string): Promise<void> {
     services: state.services.filter((service) => service.id !== id),
   }));
   await clearStoredAIProviderConfig(id);
-}
-
-/**
- * Live services state for React, following changes from any page. Before the first save,
- * services derive from the synced provider and stored keys, so those are followed too. Only the
- * latest refresh is applied, so a slow earlier read never replaces a newer one.
- */
-export function useAIServices(): { state: AIServicesState; isLoading: boolean } {
-  const [state, setState] = useState<AIServicesState>({ services: [] });
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let latest = 0;
-    let active = true;
-    const refresh = () => {
-      const request = ++latest;
-      void getAIServicesState().then((next) => {
-        if (!active || request !== latest) return;
-        setState(next);
-        setIsLoading(false);
-      });
-    };
-    refresh();
-    const unwatchers = [
-      aiServicesValue.watch(refresh),
-      subscribeToSettings(refresh),
-      aiProviderConfigValue.watch(refresh),
-    ];
-    return () => {
-      active = false;
-      for (const unwatch of unwatchers) unwatch();
-    };
-  }, []);
-
-  return { state, isLoading };
 }

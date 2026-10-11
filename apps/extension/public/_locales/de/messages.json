@@ -5150,5 +5150,137 @@
     "page_options": {
         "message": "Optionen",
         "description": "Name of the options page, used in its tab title"
+    },
+    "command_quickSave": {
+        "message": "Aktuelle Seite schnell speichern",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "Aktuelle Seite mit KI schnell speichern",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "KI wählt einen Ordner...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "In $1 gespeichert",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "Bereits in $1",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "Lesezeichen entfernt",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "Dieser Tab enthält keine Seite zum Speichern",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "KI-Schnellspeichern ist nicht eingerichtet",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "Schalte KI ein und wähle einen Dienst unter Einstellungen > KI. Nichts wurde gespeichert.",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "KI konnte keinen Ordner wählen",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "Diese Seite konnte nicht gespeichert werden",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "Kein Ordner passte zu dieser Seite, daher wurde sie im zuletzt verwendeten Ordner oder in der Lesezeichenleiste gespeichert.",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "Dein Schnellspeicher-Ordner existiert nicht mehr, daher wurde die Seite im zuletzt verwendeten Ordner oder in der Lesezeichenleiste gespeichert.",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "KI-Einstellungen öffnen",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "Verschieben nach",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "Dieser Ordner existiert nicht mehr.",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "KI-Schnellspeichern konnte nicht starten. Versuche es erneut.",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "Letztes Schnellspeichern",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "Tastenkürzel zum Schnellspeichern",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "Ordner für Schnellspeichern",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "Wohin das Tastenkürzel die aktuelle Seite speichert. Beste Übereinstimmung vergleicht die Seite auf diesem Gerät mit deinen Ordnernamen und den Lesezeichen darin. Das KI-Kürzel verwendet immer den KI-Vorschlag.",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "Beste Übereinstimmung",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "Zuletzt verwendet",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "Gewählter Ordner",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "Zielordner",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "Wird verwendet, wenn Ordner für Schnellspeichern auf Gewählter Ordner steht. Wird dieser Ordner gelöscht, wird der zuletzt verwendete Ordner genutzt.",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "Nicht gewählt",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "Gelöschter Ordner",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "Tastenkürzel",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "Speichere die aktuelle Seite von jeder Website aus, ohne ein Fenster der Erweiterung zu öffnen. Das KI-Kürzel braucht eingeschaltete KI und sendet dasselbe wie die KI-Ordnervorschläge im Pop-up.",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "Nicht festgelegt",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "Kürzel ändern",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "Du kannst auch about:addons öffnen, auf das Zahnrad klicken und Tastenkombinationen für Erweiterungen verwalten wählen.",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

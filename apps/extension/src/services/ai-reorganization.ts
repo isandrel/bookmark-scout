@@ -18,13 +18,6 @@ export interface BookmarkInfo {
   currentFolderPath: string;
 }
 
-export interface FolderInfo {
-  id: string;
-  title: string;
-  path: string;
-  bookmarkCount: number;
-}
-
 /** Move a bookmark to another folder, creating the folder when the model suggested a new one. */
 export interface MoveBookmarkOp {
   type: 'move';
@@ -137,9 +130,6 @@ const reorganizationResultSchema = z.object({
 // Helper Functions
 // ============================================================================
 
-/** Joins folder names in the paths AI tools send and receive, e.g. "Bookmarks Bar/Work". */
-export const AI_FOLDER_PATH_SEPARATOR = '/';
-
 /**
  * A plan path without its leading `folderTitle` segment, for display: most paths start with the
  * bookmarks bar, whose title differs by browser and language.
@@ -175,27 +165,6 @@ export function collectBookmarks(
         node.url ? parentPath : currentPath,
         node.id
       ));
-    }
-  }
-  return result;
-}
-
-export function collectFolders(
-  nodes: BookmarkTreeNode[],
-  parentPath = ''
-): FolderInfo[] {
-  const result: FolderInfo[] = [];
-  for (const node of nodes) {
-    if (node.url) continue;
-    const currentPath = parentPath && node.title
-      ? `${parentPath}${AI_FOLDER_PATH_SEPARATOR}${node.title}`
-      : node.title || '';
-    if (node.title) {
-      const bookmarkCount = node.children?.filter(c => c.url).length ?? 0;
-      result.push({ id: node.id, title: node.title, path: currentPath, bookmarkCount });
-    }
-    if (node.children) {
-      result.push(...collectFolders(node.children, currentPath));
     }
   }
   return result;

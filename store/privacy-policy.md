@@ -2,7 +2,7 @@
 
 > **Published** at <https://bookmark-scout.com/en/privacy/> (live once the website is next deployed from `main`), with Japanese and Korean versions at <https://bookmark-scout.com/ja/privacy/> and <https://bookmark-scout.com/ko/privacy/>. The website copy lives in `apps/website/messages/privacy/{en,ja,ko}.json` and the effective date in `config/project.toml` (`[legal] privacy_effective_date`). Keep this file, the three message files, and the date in step: change all of them together, and set a new effective date when the policy changes. Use the English URL as the privacy policy URL in every store.
 
-**Effective date:** October 8, 2026
+**Effective date:** October 10, 2026
 **Applies to:** the Bookmark Scout browser extension for Chrome, Microsoft Edge, and Firefox, version 0.3.0 and later; the website `bookmark-scout.com`; and the documentation site `docs.bookmark-scout.com`
 
 This policy is also available in other languages. If a translation differs from the English version, the English version applies.
@@ -27,7 +27,7 @@ Bookmark Scout's use of information received through browser extension APIs adhe
 - **Site icons from your browser's own icon cache** (Chrome and Edge), to show next to bookmarks. No network request is made for them.
 - **Site icons from the bookmarked websites**, only when you run Refresh Site Icons (see below).
 
-The extension has no content scripts and does not read the pages open in your tabs. Only when you turn on Read page content does it download pages separately, as described below.
+The extension declares no content scripts and does not read the pages open in your tabs. After you press a quick save shortcut, it shows a small notification in that one tab, which reads nothing from the page. Only when you turn on Read page content does it download pages separately, as described below.
 
 ## What the extension stores
 
@@ -46,7 +46,7 @@ Uninstalling the extension removes the data it stored in this browser. Your book
 
 AI features run only after you turn them on in Settings and choose a provider. When you use one, the extension sends the data that feature needs directly from your browser to the provider endpoint you configured:
 
-- Folder suggestions: the current page's title and URL, and the names of your bookmark folders.
+- Folder suggestions (in the popup, in the side panel, or when you press the AI quick save shortcut): the current page's title and URL, and the names of your bookmark folders.
 - Auto-Tagging, Content Summarizer, and AI Folder Reorganization: the titles, URLs, and folder paths of the bookmarks in the scope you chose.
 - Only if you turn on Read page content (off by default): folder suggestions, Auto-Tagging, and Content Summarizer also download each page by its URL, without your cookies, and send its main text. Pages on your local network are never downloaded. AI Folder Reorganization never sends page content.
 - Ask AI: your messages and the conversation so far, plus what the AI looks up to answer: matching bookmarks (titles, URLs, folder paths, saved tags and summaries), your folder names, the current page's title and URL, and, only with Read page content on, the text of pages it reads. If you turn on its web search (off by default), the provider also searches the web. The conversation is not saved; it ends when you close it.
@@ -69,7 +69,7 @@ Nothing. The extension does not send data to the developer, and there is no tele
 
 ## Permissions
 
-At install, Bookmark Scout asks only for `bookmarks`, `storage`, and `activeTab`, plus `sidePanel` in Chrome and Edge and `contextMenus` in Firefox, which does not let extensions ask for it later. Everything else is optional and requested only when you turn on or run the feature that needs it:
+At install, Bookmark Scout asks only for `bookmarks`, `storage`, `activeTab`, and `scripting` (which shows the quick save notification in the tab where you pressed the shortcut), plus `sidePanel` and `offscreen` (which runs AI quick save's request in a hidden extension page) in Chrome and Edge, and `contextMenus` in Firefox, which does not let extensions ask for it later. Everything else is optional and requested only when you turn on or run the feature that needs it:
 
 - Access to your tabs (`tabs`), when you save the current page or ask for folder suggestions from the side panel. The toolbar popup does not need it.
 - The right-click menu (`contextMenus`, Chrome and Edge), when you turn on Context Menu in Settings.

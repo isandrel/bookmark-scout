@@ -56,7 +56,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "A extensão não tem scripts de conteúdo e não lê as páginas abertas nas suas guias. Somente quando você ativa Ler conteúdo da página ela baixa páginas separadamente, como descrito abaixo."
+                        "text": "A extensão não declara scripts de conteúdo e não lê as páginas abertas nas suas guias. Quando você pressiona um atalho de salvamento rápido, ela mostra uma pequena notificação somente nessa guia, que não lê nada da página. Somente quando você ativa Ler conteúdo da página ela baixa páginas separadamente, como descrito abaixo."
                     }
                 ]
             },
@@ -96,7 +96,7 @@
                     {
                         "type": "ul",
                         "items": [
-                            "Sugestões de pasta: o título e o URL da página atual e os nomes das suas pastas de favoritos.",
+                            "Sugestões de pasta (no pop-up, no painel lateral ou quando você pressiona o atalho de salvamento rápido com IA): o título e o URL da página atual e os nomes das suas pastas de favoritos.",
                             "Tags automáticas, Gerador de resumos e Reorganização de pastas com IA: os títulos, URLs e caminhos de pasta dos favoritos no escopo que você escolheu.",
                             "Somente se você ativar Ler conteúdo da página (desativado por padrão): as sugestões de pasta, Tags automáticas e Gerador de resumos também baixam cada página pelo URL, sem seus cookies, e enviam o texto principal dela. Páginas da sua rede local nunca são baixadas. A Reorganização de pastas com IA nunca envia o conteúdo das páginas.",
                             "Perguntar à IA: suas mensagens e a conversa até o momento, além do que a IA consulta para responder: favoritos correspondentes (títulos, URLs, caminhos de pasta, tags e resumos salvos), os nomes das suas pastas, o título e o URL da página atual e, somente com Ler conteúdo da página ativado, o texto das páginas que ela lê. Se você ativar a pesquisa na web (desativada por padrão), o provedor também pesquisa na web. A conversa não é salva; ela termina quando você a fecha."
@@ -142,7 +142,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "Na instalação, o Bookmark Scout pede somente <code>bookmarks</code>, <code>storage</code> e <code>activeTab</code>, além de <code>sidePanel</code> no Chrome e no Edge e <code>contextMenus</code> no Firefox, que não permite que extensões solicitem essa permissão depois. Todo o resto é opcional e só é solicitado quando você ativa ou executa o recurso que depende disso:"
+                        "text": "Na instalação, o Bookmark Scout pede somente <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> e <code>scripting</code> (que mostra a notificação de salvamento rápido na guia em que você pressionou o atalho), além de <code>sidePanel</code> e <code>offscreen</code> (que executa a solicitação do salvamento rápido com IA em uma página oculta da extensão) no Chrome e no Edge, e <code>contextMenus</code> no Firefox, que não permite que extensões solicitem essa permissão depois. Todo o resto é opcional e só é solicitado quando você ativa ou executa o recurso que depende disso:"
                     },
                     {
                         "type": "ul",

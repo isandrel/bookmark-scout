@@ -4,6 +4,7 @@
 
 ### Features
 
+- Quick save shortcuts: press Alt+Shift+S on any page to save it without opening Bookmark Scout, to the folder that best matches it (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose (Settings > Saving & Search > Quick Save Shortcuts). Alt+Shift+D saves it to the first AI suggestion instead. A notification in the page says where it went, with Undo and other folders to move it to; a page already bookmarked is not saved twice. On pages extensions cannot draw on, the toolbar badge shows the result and the popup offers Undo. Rebind the keys in the browser's shortcut settings.
 - Settings that were typed as comma-separated text have proper editors: query parameter lists are chips you add with Enter or pick from suggestions, and **Success Status Codes** is a checklist of common HTTP codes with a box for any other code. Timeouts and notification duration are set in seconds, the icon cache in MB, and reorganization confidence shows as a percentage. A minimum (tags per bookmark, bookmarks per folder) can no longer be set above its maximum, and settings with only one possible value (the fixed scopes of Auto-Tagging, Content Summarizer, Duplicate Cleaner, and Privacy Scanner) are no longer shown.
 - Settings take less space: each tool's on/off switch sits beside its heading and folds the tool's settings while it is off; technical settings (timeouts, concurrency, retries, status codes, batch size, file names, indentation, icon sizes) sit under a closed **Advanced settings** that a search opens; popup width and height, tags per bookmark, and bookmarks per folder share one row each; and **Show Favicons** and **Recent Folders** each lead one row with the settings they control.
 - Settings are regrouped so each page has titled sections: **Saving & Search** comes first (folder matches, search, recent folders, right-click menu), **Appearance** takes the popup size and notification settings that were under **Advanced**, AI Folder Reorganization limits move to **AI Tools**, and every tool on the Maintenance, Metadata & Content, Security, Analytics, and AI Tools pages has its own heading. **Data** is now **Import & Export**. No setting or default changed.
@@ -11,6 +12,10 @@
 - Pressing Down right after typing in the search box now moves to the new results instead of the previous ones.
 - The popup footer says **Save here** while a folder is selected, since Enter saves the page there.
 - URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
+
+### Permissions and privacy
+
+- New install-time permissions without a warning: `scripting` in every browser (shows the quick save notification in the tab where the shortcut was pressed) and `offscreen` in Chrome and Edge (runs AI quick save's request in a hidden extension page). The AI quick save shortcut sends the same data as AI folder suggestions in the popup, to the AI provider you set up.
 
 ## 0.3.2
 
