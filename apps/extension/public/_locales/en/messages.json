@@ -5539,6 +5539,34 @@
         "message": "This plan has expired or was already applied. Ask again to make it once more.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
     },
+    "askAI_undoMissing": {
+        "message": "This change was already undone or is no longer in the undo history, so there is nothing to undo.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Remove “$1”",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Remove the folder “$1” and everything in it ($2 items)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Put “$1” back in $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Rename “$1” back to “$2”",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Change the address of “$1” back to $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Move “$1” back to $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
     "askAI_approve": {
         "message": "Approve",
         "description": "Ask AI approval card: button that approves the change"

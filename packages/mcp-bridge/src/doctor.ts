@@ -12,6 +12,7 @@ import {
   clientSnippets,
   type InstallEnvironment,
   type Launcher,
+  resolveTargets,
 } from "./install";
 import { extensionMessageSchema, type HelloMessage, PROTOCOL_VERSION } from "./protocol";
 import { type DiscoveryEntry, listDiscovery, runtimeDir } from "./runtime";
@@ -69,14 +70,21 @@ function manifestStatus(target: BrowserTarget, platform: NodeJS.Platform): strin
 export async function runDoctor(
   environment: InstallEnvironment,
   launcher: Launcher,
+  options: { manifestDir?: string } = {},
 ): Promise<string[]> {
   const lines = [`Bookmark Scout MCP bridge ${config.version} (protocol ${PROTOCOL_VERSION})`, ""];
 
   lines.push("Native host registrations:");
-  for (const target of browserTargets(environment)) {
+  const { manifestDir } = options;
+  // In a manifest folder every browser's manifest is the same file, so it is shown once.
+  const targets =
+    manifestDir === undefined
+      ? browserTargets(environment)
+      : resolveTargets(environment, manifestDir).slice(0, 1);
+  for (const target of targets) {
     const status = manifestStatus(target, environment.platform);
-    if (status === "not installed" && !target.detected) continue;
-    lines.push(`  ${target.entry.name}: ${status}`);
+    if (status === "not installed" && !target.detected && manifestDir === undefined) continue;
+    lines.push(`  ${manifestDir === undefined ? target.entry.name : "Manifest folder"}: ${status}`);
     lines.push(`    ${target.registryKey ?? target.manifestPath}`);
   }
 

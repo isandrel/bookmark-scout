@@ -190,10 +190,30 @@ test('an MCP client searches, moves a bookmark after approval in the extension, 
     const undoWindow = context.waitForEvent('page', (page) =>
       page.url().includes('agent-approval'),
     );
-    const undoing = serve.call('undoChange', { change: applied.structuredContent?.change }, 60_000);
-    await approveNext(undoWindow, /Undo/);
+    const change = applied.structuredContent?.change as string;
+    const undoing = serve.call('undoChange', { change }, 60_000);
+    // The approval lists what the undo puts back, not just "Undo a change".
+    await approveNext(undoWindow, /Move “The Rust Programming Language” back to Bridge Inbox/);
     expect((await undoing).isError).toBeFalsy();
     expect(await parentOf(extensionWorker, book)).toBe(inbox);
+
+    // Applying the same plan or undoing the same change again is answered at once, with what to
+    // do instead, and opens no approval window.
+    const opened: string[] = [];
+    const onPage = (page: Page) => opened.push(page.url());
+    context.on('page', onPage);
+    const again = await serve.call('applyChanges', { planId }, 10_000);
+    expect(again.isError).toBe(true);
+    expect(again.content?.[0]?.text).toContain(
+      `Plan ${planId} does not exist, expired, or was already applied; call proposeChanges again.`,
+    );
+    const undoAgain = await serve.call('undoChange', { change }, 10_000);
+    expect(undoAgain.isError).toBe(true);
+    expect(undoAgain.content?.[0]?.text).toContain(
+      `Change ${change} does not exist or was already undone; there is nothing to undo.`,
+    );
+    context.off('page', onPage);
+    expect(opened.filter((url) => url.includes('agent-approval'))).toEqual([]);
   } finally {
     serve.child.kill();
   }
