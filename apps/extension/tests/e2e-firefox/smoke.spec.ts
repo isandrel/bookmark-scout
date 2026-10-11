@@ -300,9 +300,7 @@ test('manager folder tree moves with the arrow keys and opens a folder with Ente
   await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
   await expect.poll(focusedTitle).toBe('Tree Second');
   await driver.actions().sendKeys(Key.ENTER).perform();
-  await expect
-    .poll(() => driver.getCurrentUrl())
-    .toContain(`id=${folder.ids['Tree Second']}`);
+  await expect.poll(() => driver.getCurrentUrl()).toContain(`id=${folder.ids['Tree Second']}`);
 });
 
 test('manager right-click menu copies and pastes, without private windows unless allowed', async ({
@@ -468,6 +466,17 @@ test('a quick save command without keys shows the popup notice, and Options reco
   await extension.driver.actions().sendKeys('j').perform();
   await extension.find('[data-command="ai-quick-save"] [aria-invalid="true"]');
   expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+  // Another row recording keys clears that explanation, which was about the keys before.
+  await clickCentered(extension, '[data-command="quick-save"] [data-slot="shortcut-recorder"]');
+  await extension.driver.actions().sendKeys(Key.F9).perform();
+  await expect.poll(() => shortcutOf(extension, 'quick-save')).toBe('F9');
+  await expect
+    .poll(() =>
+      extension.driver.executeScript<number>(
+        'return document.querySelectorAll(\'[data-command="ai-quick-save"] [aria-invalid="true"]\').length',
+      ),
+    )
+    .toBe(0);
   // Tab is not recorded: it moves on to the field's reset button.
   await clickCentered(extension, recorder);
   await extension.driver.actions().sendKeys(Key.TAB).perform();

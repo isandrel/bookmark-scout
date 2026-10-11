@@ -471,6 +471,18 @@
         "message": "所有設定均已還原為預設值。",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "已還原你的設定",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "重設所有設定？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "所有分頁中的每項設定都會還原為預設值，包括在你的裝置間同步的設定和只保存在此裝置上的設定。你的書籤、AI 服務、已儲存的提示詞和已儲存的搜尋不會改變。重設後可以立即復原。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "重設設定時發生錯誤",
         "description": "Toast title for settings reset error"

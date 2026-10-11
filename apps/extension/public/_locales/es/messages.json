@@ -479,6 +479,18 @@
         "message": "Todos los ajustes volvieron a sus valores predeterminados.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Tu configuración se ha restaurado",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "¿Restablecer toda la configuración?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Todos los ajustes de todas las pestañas vuelven a su valor predeterminado: tanto los que se sincronizan entre tus dispositivos como los que solo se guardan en este. Tus marcadores, servicios de IA, prompts guardados y búsquedas guardadas no cambian. Puedes deshacerlo justo después.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Error al restablecer la configuración",
         "description": "Toast title for settings reset error"
