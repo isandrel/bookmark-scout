@@ -8,7 +8,7 @@
  * cannot reach. It is read through the browser's accessibility tree and clicked with real mouse
  * input, as a user would.
  */
-import type { Page, Worker } from '@playwright/test';
+import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect } from './fixtures';
 import { readStored, removeStored, STORAGE_ITEMS } from './storage';
 
@@ -20,6 +20,19 @@ export type QuickSaveRecord = {
   folderId?: string;
   createdFolderIds: string[];
 };
+
+/**
+ * Answers `url` with a small article titled `title`, so quick save has a web page to act on
+ * without a server.
+ */
+export async function routeArticle(context: BrowserContext, url: string, title: string) {
+  await context.route(url, (route) =>
+    route.fulfill({
+      contentType: 'text/html; charset=utf-8',
+      body: `<!doctype html><title>${title}</title><h1>${title}</h1><p>An article.</p>`,
+    }),
+  );
+}
 
 /** Fires the command for the tab showing `page`, as the browser does on the key press. */
 export async function pressShortcut(
