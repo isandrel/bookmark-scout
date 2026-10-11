@@ -222,6 +222,39 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.findByText('tbody tr', 'Inside');
 });
 
+test('bookmark manager keeps the search in the address and links to its own page', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Address', [
+    { title: 'Gamma Item', url: 'https://e2e.invalid/gamma' },
+    { title: 'Delta Item', url: 'https://e2e.invalid/delta' },
+  ]);
+  const { driver } = extension;
+
+  await extension.open('bookmarks.html?q=Gamma');
+  await expect.poll(() => visibleRows(extension)).toBe(1);
+  await extension.findByText('tbody tr', 'Gamma Item');
+
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await expect.poll(() => visibleRows(extension)).toBe(2);
+  await (await extension.find('input[placeholder="Filter titles..."]')).sendKeys('Delta');
+  await expect
+    .poll(async () => new URL(await driver.getCurrentUrl()).searchParams.get('q'))
+    .toBe('Delta');
+
+  // Firefox has no browser manager to replace, so the link opens the extension page itself.
+  await driver.executeScript(`
+    window.__copied = [];
+    Object.defineProperty(navigator.clipboard, 'writeText', {
+      value: async (text) => { window.__copied.push(text); },
+    });
+  `);
+  await (await extension.find('button[aria-label="Copy link to this folder"]')).click();
+  await expect
+    .poll(() => driver.executeScript<string[]>('return window.__copied'))
+    .toEqual([`${extension.url('bookmarks.html')}?id=${folder.folderId}`]);
+});
+
 test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
   // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
   // locks. Hold a lock in one extension page and look for it from another.

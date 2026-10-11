@@ -5,6 +5,7 @@
  */
 
 import { Wrench } from 'lucide-react';
+import { memo } from 'react';
 
 type ToolSectionProps = {
   title: string;
@@ -80,7 +81,11 @@ interface ToolsSidebarProps {
   currentFolderName?: string;
 }
 
-export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSidebarProps) {
+// Memoized: the page re-renders on every keystroke of the title search (it is in the address).
+export const ToolsSidebar = memo(function ToolsSidebar({
+  currentFolderId,
+  currentFolderName,
+}: ToolsSidebarProps) {
   const { folders, refresh } = useBookmarks();
   const { settings, isLoading } = useSettings();
   const exportPrivacyReview = useExportPrivacyReview();
@@ -141,4 +146,4 @@ export function ToolsSidebar({ currentFolderId, currentFolderName }: ToolsSideba
       <ExportPrivacyReviewDialog {...exportPrivacyReview.dialogProps} />
     </div>
   );
-}
+});

@@ -3,7 +3,16 @@
  * adding an action is one new entry here and needs no change to the menu or table components.
  */
 
-import { Copy, ExternalLink, Info, type LucideIcon, Pencil, Trash2 } from 'lucide-react';
+import {
+  Copy,
+  ExternalLink,
+  FolderSearch,
+  Info,
+  Link2,
+  type LucideIcon,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 
 /** What row actions can ask of the manager page. */
 export type BookmarkRowActionContext = {
@@ -13,6 +22,12 @@ export type BookmarkRowActionContext = {
   requestDeletion: (bookmark: Bookmark) => void;
   /** Reports a failed action in an error toast titled with the message `titleKey`. */
   reportError: (titleKey: string, error: unknown) => void;
+  /** Whether the row is a search result from a folder other than the one open. */
+  isOutsideOpenFolder: (bookmark: Bookmark) => boolean;
+  /** Opens the row's folder without the search, with the row selected (Show in folder). */
+  showInFolder: (bookmark: Bookmark) => void;
+  /** Copies the manager address that opens this folder. */
+  copyFolderLink: (folderId: string) => void;
 };
 
 export type BookmarkRowAction = {
@@ -21,7 +36,7 @@ export type BookmarkRowAction = {
   labelKey: string;
   icon: LucideIcon;
   /** Whether the menu offers the action for a row (default: always). */
-  isAvailable?: (bookmark: Bookmark) => boolean;
+  isAvailable?: (bookmark: Bookmark, context: BookmarkRowActionContext) => boolean;
   /** Destructive actions come last, after a separator, in the destructive color. */
   isDestructive?: boolean;
   run: (bookmark: Bookmark, context: BookmarkRowActionContext) => void | Promise<void>;
@@ -43,6 +58,15 @@ export const BOOKMARK_ROW_ACTIONS: readonly BookmarkRowAction[] = [
     },
   },
   {
+    id: 'showInFolder',
+    labelKey: 'table_showInFolder',
+    icon: FolderSearch,
+    // As in Chrome: search results only, and not the top-level folders, which have no folder.
+    isAvailable: (bookmark, context) =>
+      !bookmark.isRootFolder && Boolean(bookmark.parentId) && context.isOutsideOpenFolder(bookmark),
+    run: (bookmark, context) => context.showInFolder(bookmark),
+  },
+  {
     id: 'edit',
     labelKey: 'table_edit',
     icon: Pencil,
@@ -54,6 +78,13 @@ export const BOOKMARK_ROW_ACTIONS: readonly BookmarkRowAction[] = [
     labelKey: 'bookmarks_viewDetails',
     icon: Info,
     run: (bookmark, context) => context.showDetails(bookmark),
+  },
+  {
+    id: 'copyFolderLink',
+    labelKey: 'bookmarks_copyFolderLink',
+    icon: Link2,
+    isAvailable: (bookmark) => bookmark.type === ItemTypeEnum.Folder,
+    run: (bookmark, context) => context.copyFolderLink(bookmark.id),
   },
   {
     id: 'copyId',
@@ -75,8 +106,9 @@ export const BOOKMARK_ROW_ACTIONS: readonly BookmarkRowAction[] = [
 export function getAvailableRowActions(
   bookmark: Bookmark,
   actions: readonly BookmarkRowAction[],
+  context: BookmarkRowActionContext,
 ): { regular: BookmarkRowAction[]; destructive: BookmarkRowAction[] } {
-  const available = actions.filter((action) => action.isAvailable?.(bookmark) ?? true);
+  const available = actions.filter((action) => action.isAvailable?.(bookmark, context) ?? true);
   return {
     regular: available.filter((action) => !action.isDestructive),
     destructive: available.filter((action) => action.isDestructive),

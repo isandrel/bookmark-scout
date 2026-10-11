@@ -1057,6 +1057,10 @@
         "message": "編輯",
         "description": "Bookmark row action that edits the item"
     },
+    "table_showInFolder": {
+        "message": "在資料夾中顯示",
+        "description": "Bookmark row action on a search result: opens the folder that holds the item, with the item selected"
+    },
     "table_openInNewTab": {
         "message": "在新分頁中開啟",
         "description": "Bookmark row action that opens a link in a new tab"
@@ -3049,6 +3053,14 @@
         "message": "資料夾路徑",
         "description": "Accessible name of the manager breadcrumb navigation"
     },
+    "bookmarks_copyFolderLink": {
+        "message": "複製此資料夾的連結",
+        "description": "Bookmark manager button and folder row action that copies the address that opens the folder"
+    },
+    "bookmarks_folderLinkCopied": {
+        "message": "已複製連結",
+        "description": "Toast after the folder link was copied"
+    },
     "table_clearSort": {
         "message": "清除排序",
         "description": "Column header menu item that removes sorting by the column"
@@ -4986,6 +4998,14 @@
     "page_bookmarks": {
         "message": "書籤",
         "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_managerFolderTitle": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+    },
+    "page_managerSearchTitle": {
+        "message": "搜尋「$1」 - $2",
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
     },
     "page_options": {
         "message": "選項",

@@ -44,12 +44,18 @@ const folder: Bookmark = {
   title: 'Reading',
 };
 
-function createActionContext(): BookmarkRowActionContext {
+function createActionContext(
+  overrides: Partial<BookmarkRowActionContext> = {},
+): BookmarkRowActionContext {
   return {
     showDetails: vi.fn(),
     edit: vi.fn(),
     requestDeletion: vi.fn(),
     reportError: vi.fn(),
+    isOutsideOpenFolder: () => false,
+    showInFolder: vi.fn(),
+    copyFolderLink: vi.fn(),
+    ...overrides,
   };
 }
 
@@ -139,6 +145,8 @@ describe('bookmark table column registry', () => {
         allData: [link, folder],
         getRowId: (row: Bookmark) => row.id,
         facetOptions: { parentId: [], domain: [] },
+        searchQuery: '',
+        onSearchQueryChange: () => undefined,
       }),
     );
     expect(markup).toContain('test_columnVisits');
@@ -158,7 +166,7 @@ describe('bookmark table column registry', () => {
     expect(linkMenu.indexOf('test_actionArchive')).toBeLessThan(linkMenu.indexOf('Delete'));
     expect(renderRowMenu(folder, actions)).not.toContain('test_actionArchive');
 
-    const { regular, destructive } = getAvailableRowActions(link, actions);
+    const { regular, destructive } = getAvailableRowActions(link, actions, createActionContext());
     expect(regular.map((action) => action.id)).toEqual([
       'openInNewTab',
       'edit',
@@ -175,8 +183,25 @@ describe('bookmark table column registry', () => {
 
   it('keeps edit and delete off rows the browser does not allow changing', () => {
     const rootFolder: Bookmark = { ...folder, id: '1', isRootFolder: true };
-    const { regular, destructive } = getAvailableRowActions(rootFolder, BOOKMARK_ROW_ACTIONS);
-    expect(regular.map((action) => action.id)).toEqual(['viewDetails', 'copyId']);
+    const { regular, destructive } = getAvailableRowActions(
+      rootFolder,
+      BOOKMARK_ROW_ACTIONS,
+      createActionContext({ isOutsideOpenFolder: () => true }),
+    );
+    expect(regular.map((action) => action.id)).toEqual(['viewDetails', 'copyFolderLink', 'copyId']);
     expect(destructive).toEqual([]);
+  });
+
+  it('offers Show in folder only on search results from another folder', () => {
+    const ids = (context: BookmarkRowActionContext) =>
+      getAvailableRowActions(link, BOOKMARK_ROW_ACTIONS, context).regular.map(
+        (action) => action.id,
+      );
+    expect(ids(createActionContext())).not.toContain('showInFolder');
+    const showInFolder = vi.fn();
+    const context = createActionContext({ isOutsideOpenFolder: () => true, showInFolder });
+    expect(ids(context)).toEqual(['openInNewTab', 'showInFolder', 'edit', 'viewDetails', 'copyId']);
+    BOOKMARK_ROW_ACTIONS.find((action) => action.id === 'showInFolder')?.run(link, context);
+    expect(showInFolder).toHaveBeenCalledWith(link);
   });
 });

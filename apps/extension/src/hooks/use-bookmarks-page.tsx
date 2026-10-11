@@ -1,14 +1,12 @@
 /**
  * Navigation and data loading for the bookmark manager page.
  * The whole tree is loaded once and refreshed on bookmark events; the current folder is
- * derived from it, synced with `?id=` and the browser history.
+ * derived from it. The folder and the title search are synced with the address (`?id=` and
+ * `?q=`, see `lib/manager-url.ts`) and the browser history.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { BookmarkTreeNode } from '@/types';
-
-/** The manager page's query parameter for the open folder: `bookmarks.html?id=<folder id>`. */
-export const FOLDER_QUERY_PARAM = 'id';
 
 const processNode = (
   node: BookmarkTreeNode,
@@ -102,19 +100,31 @@ export function readPageIndexFromHistory(state: unknown): number {
     : 0;
 }
 
-function readFolderIdFromUrl(): string | null {
-  return new URLSearchParams(window.location.search).get(FOLDER_QUERY_PARAM) || null;
+function readLocation(): ManagerLocation {
+  return readManagerLocation(window.location.search);
 }
 
-function folderUrl(folderId: string | null): string {
-  const url = new URL(window.location.href);
-  if (folderId) {
-    url.searchParams.set(FOLDER_QUERY_PARAM, folderId);
-  } else {
-    url.searchParams.delete(FOLDER_QUERY_PARAM);
+/**
+ * Writes the address for `next` to history: a new entry, the current one replaced, or (`sync`)
+ * the current one corrected only when it differs.
+ */
+function writeHistory(next: ManagerLocation, write: HistoryWrite | 'sync') {
+  const url = buildManagerHistoryUrl(window.location, next);
+  const state = { folderId: next.folderId };
+  if (write === 'push') {
+    window.history.pushState(state, '', url);
+  } else if (
+    write === 'replace' ||
+    new URL(url, window.location.href).href !== window.location.href
+  ) {
+    window.history.replaceState(state, '', url);
   }
-  return url.toString();
 }
+
+export type NavigateOptions = {
+  /** Clears the title search too, in the same history entry (Show in folder). */
+  clearSearch?: boolean;
+};
 
 const noticeKeys = {
   missing: 'bookmarks_folderUnavailable',
@@ -122,12 +132,16 @@ const noticeKeys = {
 } as const;
 
 /**
- * Hook for bookmark folder navigation.
+ * Hook for bookmark folder navigation and the title search in the address.
  * Folder navigation adds exactly one history entry; refreshes, edits, and fallbacks from
- * missing folders replace the current entry instead.
+ * missing folders replace the current entry instead. Search changes follow
+ * `createSearchHistoryDwell`: one entry per burst of typing.
  */
 export function useBookmarkNavigation() {
-  const [currentFolder, setCurrentFolder] = useState<string | null>(readFolderIdFromUrl);
+  const [currentFolder, setCurrentFolder] = useState<string | null>(() => readLocation().folderId);
+  const [searchQuery, setSearchQueryState] = useState(() => readLocation().query);
+  const searchQueryRef = useRef(searchQuery);
+  const [searchHistoryDwell] = useState(() => createSearchHistoryDwell());
   const [allData, setAllData] = useState<Bookmark[]>([]);
   const [rootId, setRootId] = useState<string | undefined>();
   const [isLoading, setIsLoading] = useState(true);
@@ -155,9 +169,14 @@ export function useBookmarkNavigation() {
   );
 
   const showFolder = useCallback(
-    (requestedId: string | null, history: 'push' | 'replace' | 'none') => {
+    (requestedId: string | null, history: 'push' | 'none') => {
+      // Links from Chrome 154 to 156 name the fixed folders by UUID.
+      const alias =
+        requestedId === null
+          ? undefined
+          : resolveManagerFolderAlias(requestedId, treeRef.current?.[0]?.children ?? []);
       const resolution = resolveManagerFolder(
-        requestedId,
+        alias === undefined ? requestedId : alias,
         itemsRef.current,
         rootIdRef.current,
         previousParentIds,
@@ -172,13 +191,24 @@ export function useBookmarkNavigation() {
       const changed = folderId !== currentFolderRef.current;
       currentFolderRef.current = folderId;
       setCurrentFolder(folderId);
-      if (history === 'push' && changed) {
-        window.history.pushState({ folderId }, '', folderUrl(folderId));
-      } else if (resolution.status !== 'ok' || (history === 'replace' && changed)) {
-        window.history.replaceState({ folderId }, '', folderUrl(folderId));
-      }
+      // Anything else (a fallback, a UUID link, a deleted folder) corrects the current entry.
+      const push = history === 'push' && changed;
+      writeHistory({ folderId, query: searchQueryRef.current }, push ? 'push' : 'sync');
+      // A search set right after (a saved search) joins this entry instead of adding one.
+      if (push) searchHistoryDwell();
     },
-    [previousParentIds],
+    [previousParentIds, searchHistoryDwell],
+  );
+
+  /** Sets the title search and writes it to the address, one entry per burst of typing. */
+  const setSearchQuery = useCallback(
+    (query: string) => {
+      if (query === searchQueryRef.current) return;
+      searchQueryRef.current = query;
+      setSearchQueryState(query);
+      writeHistory({ folderId: currentFolderRef.current, query }, searchHistoryDwell());
+    },
+    [searchHistoryDwell],
   );
 
   const setTree = useCallback(
@@ -236,22 +266,34 @@ export function useBookmarkNavigation() {
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
       setFolderPageIndex(readPageIndexFromHistory(event.state));
+      const { folderId, query } = readLocation();
+      searchQueryRef.current = query;
+      setSearchQueryState(query);
       if (!hasLoadedRef.current) {
         // Resolved against the tree once the first load finishes.
-        currentFolderRef.current = readFolderIdFromUrl();
-        setCurrentFolder(currentFolderRef.current);
+        currentFolderRef.current = folderId;
+        setCurrentFolder(folderId);
         return;
       }
-      showFolder(readFolderIdFromUrl(), 'none');
+      showFolder(folderId, 'none');
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [showFolder]);
 
   const navigateToFolder = useCallback(
-    (folderId: string | null) => {
-      if (folderId === currentFolderRef.current) return;
+    (folderId: string | null, { clearSearch = false }: NavigateOptions = {}) => {
+      const clearsSearch = clearSearch && searchQueryRef.current !== '';
+      if (folderId === currentFolderRef.current && !clearsSearch) return;
       setFolderPageIndex(0);
+      if (clearsSearch) {
+        searchQueryRef.current = '';
+        setSearchQueryState('');
+      }
+      if (folderId === currentFolderRef.current) {
+        writeHistory({ folderId, query: '' }, 'push');
+        return;
+      }
       showFolder(folderId, 'push');
     },
     [showFolder],
@@ -278,6 +320,8 @@ export function useBookmarkNavigation() {
     notice,
     dismissNotice: useCallback(() => setNotice(null), []),
     navigateToFolder,
+    searchQuery,
+    setSearchQuery,
     folderPageIndex,
     rememberPageIndex,
     refresh,

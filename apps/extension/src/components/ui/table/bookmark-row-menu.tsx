@@ -32,7 +32,7 @@ export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuP
 
 /** The menu's label and items; destructive actions follow a separator. */
 export function BookmarkRowMenuItems({ bookmark, actions, context }: BookmarkRowMenuProps) {
-  const { regular, destructive } = getAvailableRowActions(bookmark, actions);
+  const { regular, destructive } = getAvailableRowActions(bookmark, actions, context);
 
   // Menu items live inside a clickable row; keep clicks from navigating into folders.
   const renderItem = (action: BookmarkRowAction) => (

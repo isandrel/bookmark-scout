@@ -235,7 +235,8 @@ test.describe('manager keyboard shortcuts', () => {
     // Backspace edits the filter instead of leaving the folder.
     await page.keyboard.press('Backspace');
     await expect(filter).toHaveValue('a/');
-    await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
+    // The address keeps the folder and follows the filter (`?q=`).
+    await expect(page).toHaveURL(new RegExp(`\\?id=${seeded.folderId}&q=a%2F$`));
   });
 
   test('? opens the shortcuts help, which pauses other shortcuts until it closes', async ({
