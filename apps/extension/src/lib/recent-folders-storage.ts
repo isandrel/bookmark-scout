@@ -2,8 +2,6 @@
  * Folders where bookmarks were recently added, for quick access, in the local storage area.
  */
 
-import { useEffect, useState } from 'react';
-
 /** Upper bound of the recentFoldersMax setting; readers apply the user's own limit. */
 export const RECENT_FOLDERS_STORAGE_LIMIT = SETTING_NUMBER_BOUNDS.recentFoldersMax.max;
 
@@ -114,25 +112,4 @@ export async function updateRecentFolderTitle(id: string, title: string): Promis
   await recentFoldersValue.update((current) =>
     current.map((folder) => (folder.id === id ? { ...folder, title } : folder)),
   );
-}
-
-/**
- * Live recent folders for React. The list is pruned against the bookmark tree once on mount,
- * and stays loading until then, so deleted folders never flash.
- */
-export function useRecentFolders(): { recentFolders: RecentFolder[]; isLoading: boolean } {
-  const { value: recentFolders, isLoading } = useStoredValue(recentFoldersValue);
-  const [isReconciled, setIsReconciled] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-    void getRecentFolders().finally(() => {
-      if (active) setIsReconciled(true);
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  return { recentFolders, isLoading: isLoading || !isReconciled };
 }

@@ -24,6 +24,12 @@ export const API_PERMISSIONS = {
   activeTab: { chrome: 'required', edge: 'required', firefox: 'required' },
   // No warning, and a side panel granted at runtime is only registered after a reload.
   sidePanel: { chrome: 'required', edge: 'required' },
+  // No warning. Quick save shows its notification in the tab the shortcut was pressed in, which
+  // activeTab opens to the extension for that moment only.
+  scripting: { chrome: 'required', edge: 'required', firefox: 'required' },
+  // No warning. AI quick save runs the AI request and page reading in an offscreen document,
+  // because a service worker cannot load the AI SDK or parse HTML. Firefox's background is a page.
+  offscreen: { chrome: 'required', edge: 'required' },
   tabs: { chrome: 'optional', edge: 'optional', firefox: 'optional' },
   favicon: { chrome: 'optional', edge: 'optional' },
   contextMenus: { chrome: 'optional', edge: 'optional', firefox: 'required' },

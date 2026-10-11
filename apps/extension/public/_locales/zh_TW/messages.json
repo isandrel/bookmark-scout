@@ -4966,5 +4966,137 @@
     "page_options": {
         "message": "選項",
         "description": "Name of the options page, used in its tab title"
+    },
+    "command_quickSave": {
+        "message": "快速儲存目前頁面",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "用 AI 快速儲存目前頁面",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "AI 正在選擇資料夾...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "已儲存到 $1",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "已在 $1 中",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "已刪除書籤",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "此分頁沒有可儲存的頁面",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "AI 快速儲存尚未設定",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "請在「設定 > AI」中開啟 AI 並選擇服務。未儲存任何內容。",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "AI 無法選擇資料夾",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "無法儲存此頁面",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "沒有與此頁面相符的資料夾，因此儲存到上次使用的資料夾或書籤列。",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "快速儲存資料夾已不存在，因此頁面儲存到上次使用的資料夾或書籤列。",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "開啟 AI 設定",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "移動到",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "該資料夾已不存在。",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "AI 快速儲存無法啟動，請再試一次。",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "上次快速儲存",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "快速儲存快捷鍵",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "快速儲存資料夾",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "快速儲存快捷鍵儲存目前頁面的位置。「最佳相符」會在本裝置上將頁面與資料夾名稱及其中的書籤比較。AI 快捷鍵一律使用 AI 的建議。",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "最佳相符",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "上次使用",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "指定資料夾",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "儲存到的資料夾",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "當「快速儲存資料夾」為「指定資料夾」時使用。如果此資料夾被刪除，快速儲存會使用上次使用的資料夾。",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "未選擇",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "已刪除的資料夾",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "鍵盤快捷鍵",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "不必開啟擴充功能視窗，就能在任何網站儲存目前頁面。AI 快捷鍵需要開啟 AI，傳送的內容與彈出視窗中的 AI 資料夾建議相同。",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "未設定",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "變更快捷鍵",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "也可以開啟 about:addons，點擊齒輪按鈕，然後選擇「管理擴充套件快速鍵」。",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

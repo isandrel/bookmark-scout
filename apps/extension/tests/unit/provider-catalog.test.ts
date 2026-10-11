@@ -13,6 +13,7 @@ import {
   getProviderBaseUrl,
   getProviderKind,
   getProviderModelListStyle,
+  isAvailableProvider,
   isCatalogProvider,
   providerRequiresApiKey,
   providerSupportsCustomModel,
@@ -51,6 +52,14 @@ describe('bundled models.dev provider catalog', () => {
     expect(ids.indexOf('togetherai')).toBeGreaterThan(ids.indexOf('custom'));
     expect(new Set(ids).size).toBe(ids.length);
     expect(catalogIds.length).toBeGreaterThan(150);
+  });
+
+  it('knows featured and catalog providers, and no other id', () => {
+    expect(isAvailableProvider('openai')).toBe(true);
+    expect(isAvailableProvider('togetherai')).toBe(true);
+    expect(isAvailableProvider('no-such-provider')).toBe(false);
+    expect(settingsSchema.shape.aiProvider.safeParse('togetherai').success).toBe(true);
+    expect(settingsSchema.shape.aiProvider.safeParse('no-such-provider').success).toBe(false);
   });
 
   it('keeps featured definitions when the catalog has the same id', () => {

@@ -5150,5 +5150,137 @@
     "page_options": {
         "message": "Opciones",
         "description": "Name of the options page, used in its tab title"
+    },
+    "command_quickSave": {
+        "message": "Guardado rápido de la página actual",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "Guardado rápido de la página actual con IA",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "La IA está eligiendo una carpeta...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "Guardado en $1",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "Ya está en $1",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "Marcador eliminado",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "Esta pestaña no tiene ninguna página que guardar",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "El guardado rápido con IA no está configurado",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "Activa la IA y elige un servicio en Configuración > IA. No se guardó nada.",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "La IA no pudo elegir una carpeta",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "No se pudo guardar esta página",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "Ninguna carpeta coincidía con esta página, así que se guardó en la última carpeta usada o en la barra de marcadores.",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "Tu carpeta de guardado rápido ya no existe, así que la página se guardó en la última carpeta usada o en la barra de marcadores.",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "Abrir configuración de IA",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "Mover a",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "Esa carpeta ya no existe.",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "No se pudo iniciar el guardado rápido con IA. Inténtalo de nuevo.",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "Último guardado rápido",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "Atajos de guardado rápido",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "Carpeta de guardado rápido",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "Dónde guarda la página actual el atajo de guardado rápido. Mejor coincidencia compara la página con los nombres de tus carpetas y los marcadores que contienen, en este dispositivo. El atajo de IA siempre usa la sugerencia de la IA.",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "Mejor coincidencia",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "Última usada",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "Carpeta elegida",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "Carpeta de destino",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "Se usa cuando Carpeta de guardado rápido es Carpeta elegida. Si se elimina esta carpeta, el guardado rápido usa la última carpeta usada.",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "Sin elegir",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "Carpeta eliminada",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "Atajos de teclado",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "Guarda la página actual desde cualquier sitio web, sin abrir ninguna ventana de la extensión. El atajo de IA necesita la IA activada y envía lo mismo que las sugerencias de carpeta con IA de la ventana emergente.",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "Sin asignar",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "Cambiar atajos",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "También puedes abrir about:addons, pulsar el botón del engranaje y elegir Administrar atajos de extensiones.",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

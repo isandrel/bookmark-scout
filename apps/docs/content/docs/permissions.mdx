@@ -3,7 +3,7 @@ title: Permissions
 description: Each browser permission Bookmark Scout asks for, why it needs it, and the optional website access it requests only when you run a tool.
 ---
 
-These are the permissions in the built extension for each browser. Bookmark Scout has no content scripts, so it never reads the pages you visit. It asks at install only for what it cannot work without; everything else is asked for when you turn on or run the feature that needs it.
+These are the permissions in the built extension for each browser. Bookmark Scout declares no content scripts and never reads the pages you visit; after a quick save shortcut it only shows its own notification in that tab. It asks at install only for what it cannot work without; everything else is asked for when you turn on or run the feature that needs it.
 
 ## Granted at install
 
@@ -11,8 +11,10 @@ These are the permissions in the built extension for each browser. Bookmark Scou
 | --- | --- | --- |
 | `bookmarks` | All | Show and search your bookmarks, and create, edit, move, and delete them when you act in the popup, side panel, manager, or right-click menu |
 | `storage` | All | Save your settings, and on this device only, your AI provider settings, tags, summaries, saved searches, recent folders, recent searches, and site icons saved with **Refresh Site Icons** |
-| `activeTab` | All | When you click the toolbar button or the right-click menu, read that tab's title and URL, so you can save the page you are on. No other tabs, no history |
+| `activeTab` | All | When you click the toolbar button or the right-click menu, or press a quick save shortcut, read that tab's title and URL, so you can save the page you are on. No other tabs, no history |
+| `scripting` | All | After a quick save shortcut, show the notification in that tab only. It reads nothing from the page |
 | `sidePanel` | Chrome, Edge | Provide the side panel view. Firefox declares the same page as a sidebar instead |
+| `offscreen` | Chrome, Edge | Run AI quick save's request in a hidden extension page, which the browser closes when it ends. Firefox's background page does this itself |
 | `contextMenus` | Firefox | Firefox does not let extensions ask for it later. The menu still appears only after you turn on **Context Menu** |
 
 In Chrome and Edge the extension also replaces the browser's bookmarks page with the Bookmark Scout manager. That is a page override, not a permission. Firefox does not allow it, so there the manager opens from **Open bookmark manager** in the popup; see [Browser support](/browser-support).
@@ -40,7 +42,7 @@ To take access back, open the browser's page for the extension (for example `chr
 
 ## What is not requested
 
-- No access to page content, and no content scripts
+- No access to page content, and no declared content scripts
 - No history, downloads, or cookies permissions
 - No host access at install
 

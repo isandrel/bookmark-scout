@@ -90,6 +90,7 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 - [x] 📥 **Save to a Folder by Name** — Type part of a folder's name, even a nested folder or a path such as `work/react`, then press ↓ and Enter to save the current page there; small typos still match and recently used folders come first
 - [x] 🤖 **AI Folder Recommendations** — Smart folder suggestions powered by OpenAI, Anthropic, Google AI, Groq, Mistral, DeepSeek, xAI, Azure OpenAI, OpenRouter, Ollama, CLIProxyAPI, about 200 more from the models.dev catalog, or custom OpenAI-compatible providers. A suggested new folder opens a review dialog; confirming creates the missing folders and saves the page there
+- [x] ⚡ **Quick Save Shortcuts** — Press Alt+Shift+S on any page to save it to the best matching folder (ranked on your device from folder names and the bookmarks in them), the last used folder, or a folder you choose, or Alt+Shift+D to save it where AI suggests. A small notification shows where it went, with Undo and other folders to move it to; no extension window needs to be open
 - [x] 🔍 **Instant Search** — Quickly find bookmarks with debounced search and folder filtering
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
@@ -283,8 +284,10 @@ Bookmark Scout asks at install only for what it cannot work without. Everything 
 | -------------- | ------------------------------------- | ------------------------------------ |
 | `bookmarks`    | Install                               | Read and write bookmarks             |
 | `storage`      | Install                               | Save user preferences                |
-| `activeTab`    | Install                               | Read the current tab when you click the toolbar button |
+| `activeTab`    | Install                               | Read the current tab when you click the toolbar button or press a quick save shortcut |
 | `sidePanel`    | Install (Chrome, Edge)                | Enable the side panel                |
+| `scripting`    | Install                               | Show the quick save notification in the tab where you pressed the shortcut |
+| `offscreen`    | Install (Chrome, Edge)                | Run AI quick save's request in a hidden extension page |
 | `tabs`         | Saving the current page from the side panel | Read the active tab's title and URL |
 | `contextMenus` | Turning on Context Menu (install in Firefox) | Save links from the right-click menu |
 | `favicon`      | Turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |

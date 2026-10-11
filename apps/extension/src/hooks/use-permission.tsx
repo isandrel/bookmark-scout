@@ -111,6 +111,12 @@ type GateOptions = {
   tryFirst?: boolean;
 };
 
+/** Shows the toast for a declined request; the feature stays off. */
+export function notifyPermissionDenied(feature: PermissionFeature): void {
+  const { denied } = PERMISSION_FEATURES[feature];
+  toast.error({ title: t(denied.titleKey), description: t(denied.descriptionKey) });
+}
+
 /**
  * Runs work that needs `feature`: at once when granted, otherwise after asking. A feature with an
  * explanation opens `PermissionDialog` first and requests from its Allow button; others request

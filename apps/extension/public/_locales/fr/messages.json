@@ -5150,5 +5150,137 @@
     "page_options": {
         "message": "Options",
         "description": "Name of the options page, used in its tab title"
+    },
+    "command_quickSave": {
+        "message": "Enregistrement rapide de la page actuelle",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "command_aiQuickSave": {
+        "message": "Enregistrement rapide de la page actuelle avec l'IA",
+        "description": "Keyboard shortcut name in the browser's shortcut settings"
+    },
+    "quickSave_aiSaving": {
+        "message": "L'IA choisit un dossier...",
+        "description": "Quick save notification while the AI chooses a folder"
+    },
+    "quickSave_savedTo": {
+        "message": "Enregistré dans $1",
+        "description": "Quick save notification title; $1 is the folder name"
+    },
+    "quickSave_alreadyIn": {
+        "message": "Déjà dans $1",
+        "description": "Quick save notification when the page is already bookmarked; $1 is the folder name"
+    },
+    "quickSave_removed": {
+        "message": "Favori supprimé",
+        "description": "Quick save notification after Undo removed the bookmark"
+    },
+    "quickSave_noPage": {
+        "message": "Cet onglet ne contient aucune page à enregistrer",
+        "description": "Quick save notification when the tab has no page address"
+    },
+    "quickSave_aiUnavailable": {
+        "message": "L'enregistrement rapide avec l'IA n'est pas configuré",
+        "description": "Quick save notification title when AI is off or has no usable service"
+    },
+    "quickSave_aiUnavailableDesc": {
+        "message": "Activez l'IA et choisissez un service dans Paramètres > IA. Rien n'a été enregistré.",
+        "description": "Quick save notification text under quickSave_aiUnavailable"
+    },
+    "quickSave_aiFailed": {
+        "message": "L'IA n'a pas pu choisir de dossier",
+        "description": "Quick save notification title when the AI request failed"
+    },
+    "quickSave_failed": {
+        "message": "Impossible d'enregistrer cette page",
+        "description": "Quick save notification title when saving failed"
+    },
+    "quickSave_noMatchNote": {
+        "message": "Aucun dossier ne correspondait à cette page : elle a été enregistrée dans le dernier dossier utilisé ou dans la barre de favoris.",
+        "description": "Quick save notification note when no folder matched the page"
+    },
+    "quickSave_fixedMissingNote": {
+        "message": "Votre dossier d'enregistrement rapide n'existe plus : la page a été enregistrée dans le dernier dossier utilisé ou dans la barre de favoris.",
+        "description": "Quick save notification note when the chosen quick save folder was deleted"
+    },
+    "quickSave_openAISettings": {
+        "message": "Ouvrir les paramètres de l'IA",
+        "description": "Button in the quick save notification that opens Settings > AI"
+    },
+    "quickSave_moveTo": {
+        "message": "Déplacer vers",
+        "description": "Label before the other folders in the quick save notification"
+    },
+    "quickSave_folderGone": {
+        "message": "Ce dossier n'existe plus.",
+        "description": "Quick save notification note when the chosen folder was deleted meanwhile"
+    },
+    "quickSave_aiHostUnavailable": {
+        "message": "L'enregistrement rapide avec l'IA n'a pas pu démarrer. Réessayez.",
+        "description": "Quick save notification note when the AI page could not start"
+    },
+    "quickSave_lastTitle": {
+        "message": "Dernier enregistrement rapide",
+        "description": "Heading of the popup panel that shows the last quick save"
+    },
+    "settings_sectionQuickSave": {
+        "message": "Raccourcis d'enregistrement rapide",
+        "description": "Options section heading for the quick save keyboard shortcuts"
+    },
+    "settings_quickSaveFolderStrategy": {
+        "message": "Dossier d'enregistrement rapide",
+        "description": "Setting label: which folder the quick save shortcut uses"
+    },
+    "settings_quickSaveFolderStrategyDesc": {
+        "message": "Où le raccourci d'enregistrement rapide range la page actuelle. Meilleure correspondance compare la page aux noms de vos dossiers et aux favoris qu'ils contiennent, sur cet appareil. Le raccourci IA utilise toujours la suggestion de l'IA.",
+        "description": "Setting description for settings_quickSaveFolderStrategy"
+    },
+    "settings_quickSaveBestMatch": {
+        "message": "Meilleure correspondance",
+        "description": "Quick save folder option: the folder that best matches the page"
+    },
+    "settings_quickSaveLastUsed": {
+        "message": "Dernier utilisé",
+        "description": "Quick save folder option: the most recently used folder"
+    },
+    "settings_quickSaveFixed": {
+        "message": "Dossier choisi",
+        "description": "Quick save folder option: a folder the user chooses"
+    },
+    "settings_quickSaveFixedFolder": {
+        "message": "Dossier de destination",
+        "description": "Setting label: the folder used when the quick save folder is Chosen folder"
+    },
+    "settings_quickSaveFixedFolderDesc": {
+        "message": "Utilisé quand Dossier d'enregistrement rapide est Dossier choisi. Si ce dossier est supprimé, l'enregistrement rapide utilise le dernier dossier utilisé.",
+        "description": "Setting description for settings_quickSaveFixedFolder"
+    },
+    "settings_folderNotChosen": {
+        "message": "Non choisi",
+        "description": "Folder setting value when no folder is chosen"
+    },
+    "settings_folderMissing": {
+        "message": "Dossier supprimé",
+        "description": "Folder setting value when the chosen folder was deleted"
+    },
+    "settings_shortcuts": {
+        "message": "Raccourcis clavier",
+        "description": "Heading of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutsDesc": {
+        "message": "Enregistrez la page actuelle depuis n'importe quel site, sans ouvrir de fenêtre de l'extension. Le raccourci IA nécessite l'IA activée et envoie la même chose que les suggestions de dossier par IA de la fenêtre contextuelle.",
+        "description": "Description of the keyboard shortcuts panel in Options"
+    },
+    "settings_shortcutNotSet": {
+        "message": "Non défini",
+        "description": "Shown instead of keys for a shortcut that has no keys"
+    },
+    "settings_shortcutsChange": {
+        "message": "Modifier les raccourcis",
+        "description": "Button that opens the browser's extension shortcut settings"
+    },
+    "settings_shortcutsFirefoxHint": {
+        "message": "Vous pouvez aussi ouvrir about:addons, cliquer sur le bouton en forme d'engrenage et choisir Gérer les raccourcis d'extensions.",
+        "description": "How to change extension shortcuts in Firefox"
     }
 }

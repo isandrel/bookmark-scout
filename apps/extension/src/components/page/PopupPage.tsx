@@ -604,6 +604,9 @@ function PopupPage() {
           onClearHistory={searchHistory.clear}
         />
 
+        {/* A quick save made on a page that could not show its notification. */}
+        <QuickSaveResultPanel />
+
         {/* Recent Folders Panel */}
         {!recentFoldersLoading && recentFoldersEnabled && (
           <RecentFoldersPanel

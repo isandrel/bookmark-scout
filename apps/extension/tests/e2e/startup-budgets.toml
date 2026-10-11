@@ -1,0 +1,17 @@
+# Upper bounds for the JavaScript each page and the background load before any of it runs (the
+# entry and every chunk it imports statically), in KiB. Read by tests/e2e/startup-code.spec.ts;
+# every page needs one. Set about 12% above the Chrome build of 2026-10-10 (background 234,
+# popup and side panel 850, options 920, bookmarks manager 1,224); lower them as code moves to
+# first use, and raise one only with a reason in the pull request.
+[eager_kib]
+# Raised from 260 for the quick save shortcuts, which run in the background with no page open
+# (273 on 2026-10-10: folder ranking, quick save, and the AI quick save request path).
+"background.js" = 305
+"popup.html" = 950
+"sidepanel.html" = 950
+"options.html" = 1030
+"bookmarks.html" = 1370
+# The quick save notification, injected into web pages (10 on 2026-10-10); no framework, keep it small.
+"quick-save-toast.js" = 14
+# Hidden page that runs AI quick save's request (329 on 2026-10-10); loads only on that shortcut.
+"ai-host.html" = 370

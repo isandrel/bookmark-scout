@@ -56,7 +56,7 @@
                     },
                     {
                         "type": "p",
-                        "text": "L'extension n'a pas de scripts de contenu et ne lit pas les pages ouvertes dans vos onglets. Ce n'est que si vous activez Lire le contenu des pages qu'elle télécharge des pages séparément, comme décrit ci-dessous."
+                        "text": "L'extension ne déclare aucun script de contenu et ne lit pas les pages ouvertes dans vos onglets. Quand vous appuyez sur un raccourci d'enregistrement rapide, elle affiche une petite notification dans cet onglet seulement, qui ne lit rien de la page. Ce n'est que si vous activez Lire le contenu des pages qu'elle télécharge des pages séparément, comme décrit ci-dessous."
                     }
                 ]
             },
@@ -96,7 +96,7 @@
                     {
                         "type": "ul",
                         "items": [
-                            "Suggestions de dossiers : le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris.",
+                            "Suggestions de dossiers (dans la fenêtre contextuelle, dans le panneau latéral ou quand vous appuyez sur le raccourci d'enregistrement rapide avec l'IA) : le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers de favoris.",
                             "Étiquetage automatique, Générateur de résumés et Réorganisation des dossiers par IA : les titres, les URL et les chemins de dossier des favoris de la portée que vous avez choisie.",
                             "Uniquement si vous activez Lire le contenu des pages (désactivé par défaut) : les suggestions de dossiers, l'étiquetage automatique et le générateur de résumés téléchargent aussi chaque page à partir de son URL, sans vos cookies, et envoient son texte principal. Les pages de votre réseau local ne sont jamais téléchargées. La réorganisation des dossiers par IA n'envoie jamais le contenu des pages.",
                             "Demander à l'IA : vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte pour répondre : les favoris correspondants (titres, URL, chemins de dossier, étiquettes et résumés enregistrés), les noms de vos dossiers, le titre et l'URL de la page actuelle et, uniquement si Lire le contenu des pages est activé, le texte des pages qu'elle lit. Si vous activez sa recherche sur le Web (désactivée par défaut), le fournisseur effectue aussi des recherches sur le Web. La conversation n'est pas enregistrée ; elle se termine lorsque vous la fermez."
@@ -142,7 +142,7 @@
                 "blocks": [
                     {
                         "type": "p",
-                        "text": "À l'installation, Bookmark Scout demande uniquement <code>bookmarks</code>, <code>storage</code> et <code>activeTab</code>, ainsi que <code>sidePanel</code> dans Chrome et Edge et <code>contextMenus</code> dans Firefox, qui ne permet pas aux extensions de la demander plus tard. Tout le reste est facultatif et n'est demandé que lorsque vous activez ou lancez la fonctionnalité qui en a besoin :"
+                        "text": "À l'installation, Bookmark Scout demande uniquement <code>bookmarks</code>, <code>storage</code>, <code>activeTab</code> et <code>scripting</code> (qui affiche la notification d'enregistrement rapide dans l'onglet où vous avez appuyé sur le raccourci), ainsi que <code>sidePanel</code> et <code>offscreen</code> (qui exécute la requête de l'enregistrement rapide avec l'IA dans une page cachée de l'extension) dans Chrome et Edge, et <code>contextMenus</code> dans Firefox, qui ne permet pas aux extensions de la demander plus tard. Tout le reste est facultatif et n'est demandé que lorsque vous activez ou lancez la fonctionnalité qui en a besoin :"
                     },
                     {
                         "type": "ul",

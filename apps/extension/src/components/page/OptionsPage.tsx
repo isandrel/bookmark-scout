@@ -37,6 +37,14 @@ const optionsConfig = readConfig(
   }),
 );
 
+/** `options.html?category=ai` opens on that category, as quick save's "Open AI settings" does. */
+function initialCategory(): string {
+  const requested = new URLSearchParams(window.location.search).get('category');
+  return requested && requested in getSettingsCategories()
+    ? requested
+    : optionsConfig.default_category;
+}
+
 // Tab icons mapping
 const tabIcons: Record<string, React.ReactNode> = {
   appearance: <Palette className="h-4 w-4" />,
@@ -65,7 +73,7 @@ const OptionsPage: React.FC = () => {
   const { settings, isLoading, resetToDefaults } = useSettings();
   const { resolvedTheme, setTheme } = useTheme();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeTab, setActiveTab] = useState(optionsConfig.default_category);
+  const [activeTab, setActiveTab] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const [values, setValues] = useState<Settings>(settings);
   const [saveErrors, setSaveErrors] = useState<SettingsFieldErrors>({});
@@ -349,6 +357,8 @@ const OptionsPage: React.FC = () => {
         return matchesOnly ? null : <AIActivityPanel />;
       case 'promptLibrary':
         return matchesOnly ? null : <PromptLibraryPanel />;
+      case 'shortcuts':
+        return matchesOnly ? null : <ShortcutsPanel />;
       default:
         return null;
     }

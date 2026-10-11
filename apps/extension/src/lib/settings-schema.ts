@@ -6,7 +6,8 @@
 
 import { z } from 'zod';
 
-type SettingsFieldType = 'switch' | 'select' | 'number' | 'text';
+/** `folder` stores a bookmark folder id, chosen from the user's folders by path. */
+type SettingsFieldType = 'switch' | 'select' | 'number' | 'text' | 'folder';
 
 export type SettingsFieldMeta = {
   label: string;
@@ -35,7 +36,7 @@ export type SettingsFieldMeta = {
 };
 
 /** Options content that is not synced settings, drawn by its own component. */
-export type SettingsPanelId = 'aiServices' | 'aiActivity' | 'promptLibrary';
+export type SettingsPanelId = 'aiServices' | 'aiActivity' | 'promptLibrary' | 'shortcuts';
 
 /** A titled group of settings inside a category: the Options page's second level. */
 export type SettingsSectionMeta = {
@@ -153,8 +154,9 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 // Value types shared with the rest of the extension
 // ============================================================================
 
-// Featured providers from config/ai/providers plus the bundled models.dev catalog.
-const aiProviderSchema = z.enum(getAvailableProviders().map((provider) => provider.id));
+// Featured providers from config/ai/providers plus the bundled models.dev catalog. A refinement,
+// not an enum of every id: listing them would validate the catalog on load of every page.
+const aiProviderSchema = z.string().refine(isAvailableProvider);
 
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
@@ -177,6 +179,8 @@ export const httpStatusCodeSchema = z.number().int().min(100).max(599);
 
 const toolScopeSchema = z.enum(['folder', 'all']);
 const contextMenuNamingSchema = z.enum(['link_text', 'page_title', 'link_url']);
+export const quickSaveFolderStrategySchema = z.enum(['best_match', 'last_used', 'fixed']);
+export type QuickSaveFolderStrategy = z.infer<typeof quickSaveFolderStrategySchema>;
 const aiContextFormatSchema = z.enum(['markdown', 'xml']);
 const mergeModeSchema = z.enum(['append', 'replace']);
 const tagStyleSchema = z.enum(['kebab-case', 'snake_case', 'lowercase']);
@@ -311,6 +315,16 @@ function textField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.Z
       ? z.string().default(setting)
       : z.string().min(setting.min_length).max(setting.max_length).default(setting.default);
   return { schema, section: sectionOf(path), meta: () => ({ ...fieldLabels(stem), type: 'text' }) };
+}
+
+/** A bookmark folder, stored by id; empty means none chosen. */
+function folderField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.ZodString>> {
+  const schema = z.string().max(200);
+  return {
+    section: sectionOf(path),
+    schema: schema.default(configValue(path, schema)),
+    meta: () => ({ ...fieldLabels(stem), type: 'folder' }),
+  };
 }
 
 function listField<S extends z.ZodArray<z.ZodType<string | number>>>(
@@ -559,6 +573,19 @@ const fields = {
         link_url: t('settings_namingLinkUrl'),
       })[value],
   ),
+
+  quickSaveFolderStrategy: enumField(
+    'search.quick_save.folder_strategy',
+    'quickSaveFolderStrategy',
+    quickSaveFolderStrategySchema,
+    (value) =>
+      ({
+        best_match: t('settings_quickSaveBestMatch'),
+        last_used: t('settings_quickSaveLastUsed'),
+        fixed: t('settings_quickSaveFixed'),
+      })[value],
+  ),
+  quickSaveFixedFolder: folderField('search.quick_save.fixed_folder', 'quickSaveFixedFolder'),
 
   aiContextPackerEnabled: switchField('ai_tools.context_packer.enabled', 'aiContextPackerEnabled'),
   aiContextPackerDefaultScope: scopeField(
@@ -959,6 +986,12 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'saving',
         labelKey: 'settings_sectionSaving',
         fields: ['recentFoldersEnabled', 'recentFoldersMax', 'defaultNewFolderName'],
+      },
+      {
+        id: 'quickSave',
+        labelKey: 'settings_sectionQuickSave',
+        fields: ['quickSaveFolderStrategy', 'quickSaveFixedFolder'],
+        panel: 'shortcuts',
       },
       {
         id: 'contextMenu',

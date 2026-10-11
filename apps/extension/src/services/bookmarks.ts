@@ -209,6 +209,18 @@ export async function getBookmarkChildren(
   return requireBookmarksApi().getChildren(id);
 }
 
+/** Bookmarks saved with exactly this URL, anywhere in the tree; none for a URL the API rejects. */
+export async function findBookmarksByUrl(
+  url: string,
+): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  try {
+    const found = await requireBookmarksApi().search({ url });
+    return found.filter((node) => Boolean(node.url));
+  } catch {
+    return [];
+  }
+}
+
 /**
  * Creates a new bookmark or folder.
  * @param details - The bookmark creation details

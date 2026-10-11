@@ -2,10 +2,9 @@
  * Reads the main text of web pages for AI tools: downloads the page without cookies, keeps the
  * article with Mozilla Readability, and converts it to compact Markdown. Page text is untrusted
  * input; callers send it to the model as data, never as instructions. Limits come from
- * config/ai/page-reading.toml.
+ * config/ai/page-reading.toml. Readability and Turndown are in page-reader.lazy.ts and load on
+ * the first page read, so pages that never read one do not parse them at start.
  */
-import { Readability } from '@mozilla/readability';
-import TurndownService from 'turndown';
 import { z } from 'zod';
 
 const config = readConfig(
@@ -87,36 +86,13 @@ export function isReadablePageUrl(url: string): boolean {
   return !config.skip_private_hosts || !isPrivateHost(new URL(url).hostname);
 }
 
-function createTurndown(): TurndownService {
-  const turndown = new TurndownService({ headingStyle: 'atx', codeBlockStyle: 'fenced' });
-  // Keep link and image text only: addresses cost tokens and say little about the topic.
-  turndown.addRule('linkText', { filter: 'a', replacement: (content) => content });
-  turndown.remove(config.drop_elements as TurndownService.Filter);
-  return turndown;
-}
-
-function collapseText(text: string): string {
-  return text
-    .replace(/[ \t]+/g, ' ')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
 /** The readable text of a parsed page, or undefined when it has none. */
-export function extractPageText(doc: Document, maxChars = config.max_chars_per_page): PageText | undefined {
-  const title = doc.querySelector('title')?.textContent?.replace(/\s+/g, ' ').trim() || undefined;
-  const description =
-    doc.querySelector('meta[name="description"], meta[property="og:description"]')
-      ?.getAttribute('content')
-      ?.trim() ?? '';
-  // Readability changes the document it reads, so it gets a copy.
-  const article = new Readability(doc.cloneNode(true) as Document).parse();
-  const body = article?.content
-    ? createTurndown().turndown(article.content)
-    : (doc.body?.textContent ?? '');
-  const text = collapseText([description, body].filter(Boolean).join('\n\n'));
-  if (!text) return undefined;
-  return { title: article?.title?.trim() || title, text: text.slice(0, maxChars) };
+export async function extractPageText(
+  doc: Document,
+  maxChars = config.max_chars_per_page,
+): Promise<PageText | undefined> {
+  const { extractReadableText } = await import('./page-reader.lazy');
+  return extractReadableText(doc, { maxChars, dropElements: config.drop_elements });
 }
 
 /** Downloads and reads one page; undefined when it cannot or may not be read. */
@@ -131,7 +107,7 @@ export async function readPageText(url: string): Promise<PageText | undefined> {
       allowUrl: isReadablePageUrl,
     });
     if (!html) return undefined;
-    return extractPageText(new DOMParser().parseFromString(html, 'text/html'));
+    return await extractPageText(new DOMParser().parseFromString(html, 'text/html'));
   } catch {
     // Unreachable pages are sent with their title and URL only.
     return undefined;

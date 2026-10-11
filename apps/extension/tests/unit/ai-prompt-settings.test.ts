@@ -14,7 +14,7 @@ vi.mock('@/services/ai-client', () => ({
 const { suggestBookmarkTags, summarizeBookmarksWithAI } = await import(
   '@/services/ai-bookmark-tools'
 );
-const { recommendFolders } = await import('@/services/ai-recommendation');
+const { recommendFolders } = await import('@/services/ai-recommendation-call');
 
 const settings: AISettings = {
   enabled: true,

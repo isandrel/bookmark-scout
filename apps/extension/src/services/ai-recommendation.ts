@@ -1,6 +1,9 @@
 /**
- * AI-powered folder recommendation service.
- * Uses the shared AI client for multi-provider support.
+ * AI folder suggestions: the request, the answer's shape, and saving into a suggested folder,
+ * creating the folders it names. The call itself is `recommendFolders`
+ * (`ai-recommendation-call.ts`) in pages, and `recommendFoldersVia` in the background, which hands
+ * page reading and the request to quick save's AI host page. Nothing here reads pages or loads the
+ * AI client, so the background can use it without bundling either.
  */
 
 import { z } from 'zod';
@@ -54,9 +57,11 @@ const singleRecommendationSchema = z.object({
  * requested count, and one extra suggestion must not fail the whole request. The result is cut
  * to the requested count afterwards.
  */
-const recommendationsSchema = z.object({
+export const folderRecommendationsSchema = z.object({
   recommendations: z.array(singleRecommendationSchema).min(1),
 });
+
+export type FolderRecommendationsObject = z.infer<typeof folderRecommendationsSchema>;
 
 /**
  * Extracts folder paths from bookmark tree.
@@ -66,54 +71,45 @@ export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; pat
   return collectFolders(nodes).map(({ id, path }) => ({ id, path }));
 }
 
-/**
- * Recommends multiple folders for a bookmark using AI.
- * Returns up to maxRecommendations folder suggestions ranked by confidence.
- */
-export async function recommendFolders(
-  bookmark: { title: string; url: string },
-  folders: BookmarkTreeNode[],
-  settings: AISettings,
-  maxRecommendations: number = defaultSettings.aiMaxRecommendations,
-  /** Send the page's readable text too; needs website access. */
-  readPage = false,
-): Promise<FolderRecommendation[]> {
-  validateAISettings(settings);
+/** The one suggestion for a library without folders: a new folder at the top. */
+export function noFoldersRecommendation(): FolderRecommendation[] {
+  return [{
+    type: 'new',
+    folderPath: t('bookmarks_root'),
+    confidence: 1,
+    reason: t('ai_recommendationNoFolders'),
+  }];
+}
 
-  const folderList = extractFolderPaths(folders);
-  const folderPaths = folderList.map((f) => f.path);
-
-  if (folderPaths.length === 0) {
-    return [{
-      type: 'new',
-      folderPath: t('bookmarks_root'),
-      confidence: 1,
-      reason: t('ai_recommendationNoFolders'),
-    }];
-  }
-
-  const [page] = await addPageText([bookmark], readPage);
+/** The system prompt and the JSON the model reads, for one page and the folder list. */
+export async function buildFolderRecommendationRequest(
+  page: { title: string; url: string; pageTitle?: string; pageText?: string },
+  folderPaths: readonly string[],
+  maxRecommendations: number,
+): Promise<{ system: string; prompt: string }> {
   const { system } = await buildPrompt(
     'folder_recommendation',
     { aiMaxRecommendations: maxRecommendations },
     { hasPageText: Boolean(page.pageText) },
   );
-
-  const { object } = await generateAIObject({
-    settings,
-    source: 'folderRecommendation',
-    schema: recommendationsSchema,
+  return {
     system,
     prompt: JSON.stringify({
-      title: bookmark.title,
-      url: bookmark.url,
+      title: page.title,
+      url: page.url,
       pageTitle: page.pageTitle,
       pageText: page.pageText,
       folders: folderPaths,
     }),
-  });
+  };
+}
 
-  // Never show more than the setting allows. Map folderPaths back to folderIds
+/** The model's answer cut to the setting's count, with each existing path's folder id. */
+export function toFolderRecommendations(
+  object: FolderRecommendationsObject,
+  folderList: readonly { id: string; path: string }[],
+  maxRecommendations: number,
+): FolderRecommendation[] {
   return object.recommendations.slice(0, maxRecommendations).map((rec) => {
     const matchedFolder = folderList.find((f) => f.path === rec.folderPath);
     return {
@@ -121,6 +117,31 @@ export async function recommendFolders(
       folderId: matchedFolder?.id,
     };
   });
+}
+
+/**
+ * `recommendFolders` for a context that cannot load the AI SDK (the background): reading the
+ * page and the request itself go to `run`, the AI host page. Settings must be checked already.
+ */
+export async function recommendFoldersVia(
+  run: {
+    readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
+    generate: (request: { system: string; prompt: string }) => Promise<FolderRecommendationsObject>;
+  },
+  bookmark: { title: string; url: string },
+  folders: BookmarkTreeNode[],
+  maxRecommendations: number,
+  readPage: boolean,
+): Promise<FolderRecommendation[]> {
+  const folderList = extractFolderPaths(folders);
+  if (folderList.length === 0) return noFoldersRecommendation();
+  const pageText = readPage ? await run.readPage(bookmark.url) : null;
+  const request = await buildFolderRecommendationRequest(
+    { ...bookmark, pageTitle: pageText?.title, pageText: pageText?.text },
+    folderList.map((f) => f.path),
+    maxRecommendations,
+  );
+  return toFolderRecommendations(await run.generate(request), folderList, maxRecommendations);
 }
 
 /**
@@ -205,40 +226,77 @@ export function resolveRecommendedFolderPath(
   };
 }
 
-export async function createRecommendedFolderBookmark(
+export type RecommendedFolderPathResult = {
+  folderId: string;
+  /** Titles of the folders on the path, from the permanent folder down to the folder. */
+  folderTitles: string[];
+  /** Folders this call created, outermost first. */
+  createdFolderIds: string[];
+};
+
+/**
+ * Creates the folders a recommendation names that do not exist yet. When one fails, the ones it
+ * already created are removed again before the error is thrown.
+ */
+export async function createRecommendedFolderPath(
   recommendation: FolderRecommendation,
-  bookmark: { title: string; url: string },
-  folders: BookmarkTreeNode[],
-): Promise<RecommendedFolderBookmarkResult> {
+  folders: readonly BookmarkTreeNode[],
+): Promise<RecommendedFolderPathResult> {
   const { folder, existingTitles, newTitles } = resolveRecommendedFolderPath(
     recommendation,
     folders,
   );
-  const folderTitles = [...existingTitles, ...newTitles];
-  const createdFolderIds: string[] = [];
-
   // Only the first new folder can collide; the ones below it go into brand-new folders.
   const conflict = newTitles[0]
     ? folder.children?.find((child) => child.url && sameTitle(child.title, newTitles[0]))
     : undefined;
   if (conflict) throw new RecommendedFolderError('path-conflict', newTitles[0]);
 
-  let currentFolderId = folder.id;
+  const createdFolderIds: string[] = [];
+  let folderId = folder.id;
   try {
     for (const title of newTitles) {
-      const created = await createBookmark({ parentId: currentFolderId, title });
+      const created = await createBookmark({ parentId: folderId, title });
       createdFolderIds.push(created.id);
-      currentFolderId = created.id;
+      folderId = created.id;
     }
+  } catch (error) {
+    await removeCreatedFolders(createdFolderIds);
+    throw error;
+  }
+  return { folderId, folderTitles: [...existingTitles, ...newTitles], createdFolderIds };
+}
 
-    const children = await getBookmarkChildren(currentFolderId);
+/** Removes folders a save created, innermost first, best effort. */
+async function removeCreatedFolders(createdFolderIds: readonly string[]): Promise<void> {
+  for (const folderId of [...createdFolderIds].reverse()) {
+    try {
+      await deleteBookmark(folderId);
+    } catch {
+      // Continue best-effort rollback for the remaining folders created by this transaction.
+    }
+  }
+}
+
+export async function createRecommendedFolderBookmark(
+  recommendation: FolderRecommendation,
+  bookmark: { title: string; url: string },
+  folders: BookmarkTreeNode[],
+): Promise<RecommendedFolderBookmarkResult> {
+  const { folderId, folderTitles, createdFolderIds } = await createRecommendedFolderPath(
+    recommendation,
+    folders,
+  );
+
+  try {
+    const children = await getBookmarkChildren(folderId);
     const duplicate = children.find(
       (child) => child.url && comparableUrl(child.url) === comparableUrl(bookmark.url),
     );
     if (duplicate) {
       return {
         status: 'duplicate',
-        folderId: currentFolderId,
+        folderId,
         folderTitles,
         bookmarkId: duplicate.id,
         createdFolderIds,
@@ -246,26 +304,20 @@ export async function createRecommendedFolderBookmark(
     }
 
     const createdBookmark = await createBookmark({
-      parentId: currentFolderId,
+      parentId: folderId,
       title: bookmark.title || t('popup_newBookmark'),
       url: bookmark.url,
     });
 
     return {
       status: 'created',
-      folderId: currentFolderId,
+      folderId,
       folderTitles,
       bookmarkId: createdBookmark.id,
       createdFolderIds,
     };
   } catch (error) {
-    for (const folderId of [...createdFolderIds].reverse()) {
-      try {
-        await deleteBookmark(folderId);
-      } catch {
-        // Continue best-effort rollback for the remaining folders created by this transaction.
-      }
-    }
+    await removeCreatedFolders(createdFolderIds);
     throw error;
   }
 }

@@ -1,8 +1,9 @@
 /**
  * Schema of config/provider-catalog.json, the models.dev snapshot. The sync script
  * (scripts/sync-provider-catalog.ts) validates with it before writing, and the extension
- * validates the bundled file with it on load, so data fetched from the network reaches neither
- * the file system nor the provider picker unchecked. Pure zod so the Bun script can use it.
+ * validates the bundled file with it on first use, so data fetched from the network reaches
+ * neither the file system nor the provider picker unchecked. Pure zod so the Bun script can use
+ * it.
  */
 import { z } from 'zod';
 

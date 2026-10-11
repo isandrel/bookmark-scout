@@ -6,9 +6,9 @@ import {
   createRecommendedFolderBookmark,
   type RecommendedFolderError,
   type FolderRecommendation,
-  recommendFolders,
   resolveRecommendedFolderPath,
 } from '@/services/ai-recommendation';
+import { recommendFolders } from '@/services/ai-recommendation-call';
 import { createBookmark, deleteBookmark, getBookmarkChildren } from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
 

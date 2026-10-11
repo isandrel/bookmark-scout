@@ -12,14 +12,18 @@ const pages = readdirSync(entrypoints, { withFileTypes: true }).flatMap((entry) 
     : [],
 );
 
+/** Never shown: runs AI quick save's request for the background (services/quick-save-ai-runner.ts). */
+const HIDDEN_PAGES = ['ai-host'];
+const uiPages = pages.filter((page) => !HIDDEN_PAGES.includes(page));
+
 afterEach(() => setLanguage('auto'));
 
 describe('extension pages', () => {
-  it('finds the four HTML entrypoints', () => {
-    expect(pages.sort()).toEqual(['bookmarks', 'options', 'popup', 'sidepanel']);
+  it('finds the four extension pages and the hidden AI host page', () => {
+    expect(pages.sort()).toEqual(['ai-host', 'bookmarks', 'options', 'popup', 'sidepanel']);
   });
 
-  it.each(pages)('%s renders into the root element through mountExtensionPage', (page) => {
+  it.each(uiPages)('%s renders into the root element through mountExtensionPage', (page) => {
     const html = readFileSync(path.join(entrypoints, page, 'index.html'), 'utf8');
     const main = readFileSync(path.join(entrypoints, page, 'main.tsx'), 'utf8');
     expect(html).toContain(`<div id="${EXTENSION_ROOT_ID}"></div>`);
