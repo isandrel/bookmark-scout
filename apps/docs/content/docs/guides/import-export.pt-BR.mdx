@@ -31,7 +31,7 @@ Detalhes dos arquivos:
 - Os arquivos CSV começam com uma marca de ordem de bytes (BOM) UTF-8. A coluna Pasta junta as pastas com `/` e grava uma `/` dentro do nome de uma pasta como `\/` e uma barra invertida como `\\`.
 - **Incluir datas** e **Incluir URLs**, além dos tamanhos de recuo de cada formato, ficam na guia **Dados** das [Configurações](/settings).
 
-As tags e os resumos não são incluídos nas exportações de favoritos. Para entregar favoritos com as tags e os resumos deles a uma ferramenta de IA, use o **Empacotador de contexto para IA**; consulte [Configurar as ferramentas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
+Uma exportação em JSON inclui as tags e o resumo de cada favorito, e importar esse arquivo os atribui aos favoritos que a importação cria, mas não aos que ela ignora por serem duplicados. As exportações em HTML, Markdown e CSV não os incluem. Para entregar favoritos com as tags e os resumos deles a uma ferramenta de IA, use o **Empacotador de contexto para IA**; consulte [Configurar as ferramentas de IA](/guides/ai-tools#export-context-for-an-ai-chat).
 
 ## Importar favoritos [#import-bookmarks]
 
@@ -57,4 +57,4 @@ Nada é gravado até você clicar em **Importar**. Se os seus favoritos mudarem 
 
 ## Os arquivos de configurações são separados [#settings-files-are-separate]
 
-Os botões **Exportar** e **Importar** na parte de baixo da página de Configurações salvam e restauram as configurações do Bookmark Scout como um arquivo JSON. Eles não mexem nos favoritos.
+Os botões **Exportar** e **Importar** na parte de baixo da página de Configurações salvam e restauram um backup das configurações do Bookmark Scout, dos prompts personalizados, dos serviços de IA (sem chaves de API) e das pesquisas salvas. Eles não mexem nos favoritos, nas tags nem nos resumos. Veja em [Configurações](/settings) o que o backup inclui.

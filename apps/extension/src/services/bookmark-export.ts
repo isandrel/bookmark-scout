@@ -36,6 +36,8 @@ export interface ExportOptions {
   htmlIndentSpaces?: number;
   /** Markdown list indentation size */
   markdownIndentSpaces?: number;
+  /** Tags and summaries by bookmark id; JSON writes them keyed by URL, so an import can match them. */
+  metadata?: StoredBookmarkMetadataById;
 }
 
 export interface ExportFormat {
@@ -83,7 +85,9 @@ export const htmlFormat: ExportFormat = {
 
       if (n.url) {
         const dateAttr =
-          includeDates && n.dateAdded ? ` ADD_DATE="${Math.floor(n.dateAdded / MS_PER_SECOND)}"` : '';
+          includeDates && n.dateAdded
+            ? ` ADD_DATE="${Math.floor(n.dateAdded / MS_PER_SECOND)}"`
+            : '';
         return `${nodeIndent}<DT><A HREF="${escapeHtml(n.url)}"${dateAttr}>${escapeHtml(n.title)}</A>\n`;
       }
 
@@ -143,9 +147,22 @@ export const jsonFormat: ExportFormat = {
       return result;
     };
 
+    // Tags and summaries by URL: bookmark ids differ on every browser, URLs do not.
+    const metadata: Record<string, StoredBookmarkMetadata> = {};
+    const collectMetadata = (n: BookmarkTreeNode) => {
+      const stored = n.url ? options?.metadata?.[n.id] : undefined;
+      if (n.url && stored) metadata[n.url] = stored;
+      for (const child of n.children ?? []) collectMetadata(child);
+    };
+    collectMetadata(root);
+
     // The container keeps a title for readability; importers take its children as top level.
     return JSON.stringify(
-      { title: root.title, children: (root.children ?? []).map(cleanNode) },
+      {
+        title: root.title,
+        children: (root.children ?? []).map(cleanNode),
+        ...(Object.keys(metadata).length > 0 ? { metadata } : {}),
+      },
       null,
       indentSize,
     );
@@ -168,9 +185,7 @@ export function escapeMarkdownText(text: string): string {
  * {@link escapeMarkdownText}, which already covers `*`, `_`, backticks, and `>`.
  */
 export function escapeMarkdownLineStart(text: string): string {
-  return text
-    .replace(/^(\s*)(\d+)([.)])/, '$1$2\\$3')
-    .replace(/^(\s*)([#+\-=~])/, '$1\\$2');
+  return text.replace(/^(\s*)(\d+)([.)])/, '$1$2\\$3').replace(/^(\s*)([#+\-=~])/, '$1\\$2');
 }
 
 /** Percent-encodes characters that would end or break a Markdown link destination. */
@@ -304,7 +319,7 @@ export function getFormatName(format: ExportFormat): string {
 export function exportBookmarks(
   node: BookmarkTreeNode,
   format: ExportFormat,
-  options?: ExportOptions
+  options?: ExportOptions,
 ): string {
   return format.serialize(node, options);
 }
@@ -312,11 +327,7 @@ export function exportBookmarks(
 /**
  * Trigger a file download in the browser
  */
-export function downloadExport(
-  content: string,
-  filename: string,
-  mimeType: string
-): void {
+export function downloadExport(content: string, filename: string, mimeType: string): void {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

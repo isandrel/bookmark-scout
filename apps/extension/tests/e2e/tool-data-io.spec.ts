@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, toastRegion } from './fixtures';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 function localDate() {
@@ -173,6 +174,52 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
   expect(topLevel).toEqual(exported.children.map((node) => node.title));
   expect(topLevel).not.toContain('Untitled');
   expect(topLevel).not.toContain('Untitled Folder');
+});
+
+test('a JSON export carries tags and summaries by URL, and importing it gives them back', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const folder = await seedFolder(extensionWorker, 'E2E Tagged', [
+    { title: 'Tagged Link', url: 'https://e2e.invalid/tagged' },
+  ]);
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [folder.ids['Tagged Link']]: { tags: ['docs'], summary: 'A guide' },
+  });
+  await setSettings(extensionWorker, { dataDefaultExportFormat: 'json' });
+
+  await openTools(page, extensionId, folder.folderId);
+  const downloadPromise = page.waitForEvent('download');
+  await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
+  const raw = await readFile(await (await downloadPromise).path(), 'utf8');
+  expect(JSON.parse(raw).metadata).toEqual({
+    'https://e2e.invalid/tagged': { tags: ['docs'], summary: 'A guide' },
+  });
+
+  const target = await seedFolder(extensionWorker, 'E2E Tag Target', []);
+  await openTools(page, extensionId, target.folderId);
+  await page.locator('#bookmark-import-input').setInputFiles({
+    name: 'tagged.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(raw),
+  });
+  const preview = page.getByRole('dialog', { name: 'Import preview' });
+  await preview.getByRole('combobox', { name: 'Duplicates' }).click();
+  await page.getByRole('option', { name: 'Import everything, including duplicates' }).click();
+  await preview.getByRole('button', { name: 'Import', exact: true }).click();
+  await expect(toastRegion(page).getByText('✓ Import Complete', { exact: true })).toBeVisible();
+
+  const [importedFolder] = await childrenOf(extensionWorker, target.folderId);
+  const [imported] = await childrenOf(extensionWorker, importedFolder.id);
+  await expect
+    .poll(
+      async () =>
+        (
+          await readStored<Record<string, unknown>>(extensionWorker, STORAGE_ITEMS.bookmarkMetadata)
+        )?.[imported.id],
+    )
+    .toEqual({ tags: ['docs'], summary: 'A guide' });
 });
 
 test('import reports an empty file as a failure without opening a preview', async ({

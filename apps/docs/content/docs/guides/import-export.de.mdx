@@ -31,7 +31,7 @@ Details zur Datei:
 - CSV-Dateien beginnen mit einer UTF-8-Bytereihenfolgemarke (BOM). Die Spalte „Ordner“ verbindet Ordner mit `/` und schreibt ein `/` innerhalb eines Ordnernamens als `\/` und einen Backslash als `\\`.
 - **Datum einschließen** und **URLs einschließen** sowie die Einrückung für jedes Format befinden sich im Tab **Daten** der [Einstellungen](/settings).
 
-Tags und Zusammenfassungen sind nicht in Lesezeichen-Exporten enthalten. Um Lesezeichen mit ihren Tags und Zusammenfassungen an ein KI-Tool zu übergeben, verwenden Sie das **KI-Kontextpaket**; siehe [KI-Tools einrichten](/guides/ai-tools#export-context-for-an-ai-chat).
+Ein JSON-Export enthält die Tags und die Zusammenfassung jedes Lesezeichens, und ein Import dieser Datei überträgt sie auf die Lesezeichen, die er anlegt, aber nicht auf die, die er als Duplikate überspringt. HTML-, Markdown- und CSV-Exporte enthalten sie nicht. Um Lesezeichen mit ihren Tags und Zusammenfassungen an ein KI-Tool zu übergeben, verwenden Sie das **KI-Kontextpaket**; siehe [KI-Tools einrichten](/guides/ai-tools#export-context-for-an-ai-chat).
 
 ## Lesezeichen importieren [#import-bookmarks]
 
@@ -57,4 +57,4 @@ Es wird nichts geschrieben, bevor Sie auf **Importieren** klicken. Ändern sich 
 
 ## Einstellungsdateien sind getrennt [#settings-files-are-separate]
 
-Die Schaltflächen **Exportieren** und **Importieren** unten auf der Einstellungsseite speichern die Einstellungen von Bookmark Scout als JSON-Datei und stellen sie daraus wieder her. Lesezeichen bleiben davon unberührt.
+Die Schaltflächen **Exportieren** und **Importieren** unten auf der Einstellungsseite speichern eine Sicherungsdatei mit den Einstellungen von Bookmark Scout, eigenen Prompts, KI-Diensten (ohne API-Schlüssel) und gespeicherten Suchen und stellen sie daraus wieder her. Lesezeichen, Tags und Zusammenfassungen bleiben davon unberührt. Was die Sicherung enthält, steht unter [Einstellungen](/settings).

@@ -286,23 +286,6 @@ export async function resetSettings(): Promise<void> {
   );
 }
 
-/** The settings that differ from their default, from both scopes. */
-export function getSettingsOverrides(settings: Settings): Partial<Settings> {
-  return Object.fromEntries(
-    Object.entries(settings).filter(
-      ([key, value]) => !isSameJson(value, defaultSettings[key as keyof Settings]),
-    ),
-  ) as Partial<Settings>;
-}
-
-/**
- * Export settings as a JSON string: only those that differ from their default, so a file never
- * pins a default that a later release improves.
- */
-export async function exportSettings(): Promise<string> {
-  return JSON.stringify(getSettingsOverrides(await getSettings()), null, 2);
-}
-
 /**
  * Import settings from a JSON string, merging recognized fields onto the current settings.
  * Rejects the whole file if it is not a settings object or any recognized field is invalid. An

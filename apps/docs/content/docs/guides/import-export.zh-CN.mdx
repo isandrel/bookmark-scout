@@ -31,7 +31,7 @@ description: 将书签导出为 HTML、JSON、Markdown 或 CSV，导出前会进
 - CSV 文件以 UTF-8 字节顺序标记（BOM）开头。Folder 列用 `/` 连接各级文件夹，并将文件夹名称中的 `/` 写为 `\/`，将反斜杠写为 `\\`。
 - **包含日期**和**包含网址**以及各格式的缩进大小，位于[设置](/settings)的**数据**标签页中。
 
-书签导出文件中不包含标签和摘要。如需将书签连同其标签和摘要一起提供给 AI 工具，请使用 **AI 上下文打包**；请参阅[设置 AI 工具](/guides/ai-tools#export-context-for-an-ai-chat)。
+JSON 导出文件会包含每个书签的标签和摘要。导入该文件时，新建的书签会获得这些标签和摘要，但作为重复项跳过的书签不会。HTML、Markdown 和 CSV 导出文件不包含它们。如需将书签连同其标签和摘要一起提供给 AI 工具，请使用 **AI 上下文打包**；请参阅[设置 AI 工具](/guides/ai-tools#export-context-for-an-ai-chat)。
 
 ## 导入书签 [#import-bookmarks]
 
@@ -57,4 +57,4 @@ description: 将书签导出为 HTML、JSON、Markdown 或 CSV，导出前会进
 
 ## 设置文件是独立的 [#settings-files-are-separate]
 
-设置页面底部的**导出**和**导入**按钮会将 Bookmark Scout 的设置保存为 JSON 文件，或从该文件恢复设置。它们不会影响书签。
+设置页面底部的**导出**和**导入**按钮会将 Bookmark Scout 的设置、自定义提示词、AI 服务（不含 API 密钥）和已保存的搜索保存为备份文件，或从备份文件恢复。它们不会影响书签、标签或摘要。备份包含的内容请参阅[设置](/settings)。

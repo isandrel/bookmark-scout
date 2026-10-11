@@ -303,13 +303,13 @@
         "message": "Erro ao redefinir configurações",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "Configurações exportadas",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "Backup exportado",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "O arquivo de configurações foi baixado.",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "O arquivo contém suas configurações, prompts, serviços de IA e pesquisas salvas. Chaves de API nunca são incluídas.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "Falha na exportação",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "Arquivo de configurações inválido",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "Arquivo de backup inválido",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "Uma versão mais recente do Bookmark Scout salvou estes dados. Atualize a extensão para alterá-los.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "$1 configurações alteradas: $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "Backup restaurado",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "Suas configurações, prompts, serviços de IA e pesquisas salvas foram restaurados. Backups não têm chaves de API: adicione as que faltarem em Configurações > IA.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "Mudar para o tema claro",

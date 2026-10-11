@@ -9,6 +9,8 @@ import {
   parseBookmarks,
   planImport,
 } from '@/services/bookmark-import';
+import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
+import { buildExportRoot, jsonFormat } from '@/services/bookmark-export';
 import type { BookmarkTreeNode } from '@/types';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -313,6 +315,48 @@ describe('applying an import plan', () => {
     const [, folderId] = bookmarks.childIds('target');
     expect(titles(folderId)).toEqual(['Inner']);
     expect(outcome.createdRootIds).toEqual(bookmarks.childIds('target'));
+  });
+
+  it('gives created bookmarks the tags and summaries a JSON export holds for their URL', async () => {
+    const exported = jsonFormat.serialize(
+      buildExportRoot([
+        {
+          id: 'f',
+          title: 'Saved',
+          children: [
+            { id: 'a', parentId: 'f', title: 'Tagged', url: 'https://e2e.invalid/tagged' },
+            { id: 'b', parentId: 'f', title: 'Plain', url: 'https://e2e.invalid/plain' },
+            { id: 'c', parentId: 'f', title: 'Dup', url: 'https://e2e.invalid/a' },
+          ],
+        },
+      ]),
+      {
+        metadata: {
+          a: { tags: ['docs'], summary: 'A guide' },
+          c: { tags: ['skipped'] },
+          other: { tags: ['not exported'] },
+        },
+      },
+    );
+    expect(JSON.parse(exported).metadata).toEqual({
+      'https://e2e.invalid/tagged': { tags: ['docs'], summary: 'A guide' },
+      'https://e2e.invalid/a': { tags: ['skipped'] },
+    });
+
+    const plan = planImport(
+      parseBookmarks(exported, jsonImportFormat),
+      browserTree(),
+      'target',
+      'skip-anywhere',
+    );
+    await applyImportPlan(plan);
+    const [folderId] = bookmarks.childIds('target');
+    const [tagged, plain] = bookmarks.childIds(folderId);
+    // The duplicate was skipped, so its tags have no bookmark to go to.
+    expect(await bookmarkMetadataValue.get()).toEqual({
+      [tagged]: { tags: ['docs'], summary: 'A guide' },
+    });
+    expect(plain).toBeDefined();
   });
 
   it('undo removes created items but keeps an imported folder the user added to', async () => {

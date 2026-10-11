@@ -14,6 +14,8 @@ export interface ParsedImport {
   bookmarks: BookmarkTreeNode[];
   /** Entries dropped because they were not valid bookmarks or folders */
   skipped: number;
+  /** Tags and summaries by URL, from a JSON export; given to the bookmarks the import creates. */
+  metadataByUrl?: Record<string, StoredBookmarkMetadata>;
 }
 
 export interface ImportResult extends ParsedImport {
@@ -227,15 +229,17 @@ export const jsonImportFormat: ImportFormat = {
         .filter((node): node is BookmarkTreeNode => node !== null);
 
     let bookmarks: BookmarkTreeNode[];
+    let metadataByUrl: Record<string, StoredBookmarkMetadata> | undefined;
     if (Array.isArray(parsed)) {
       bookmarks = parseList(parsed);
     } else if (isPlainObject(parsed) && Array.isArray(parsed.children) && !parsed.url) {
       // An exported container: its children are the top-level entries.
       bookmarks = parseList(parsed.children);
+      metadataByUrl = parseBookmarkMetadata(parsed.metadata);
     } else {
       bookmarks = parseList([parsed]);
     }
-    return { bookmarks, skipped };
+    return { bookmarks, skipped, ...(metadataByUrl ? { metadataByUrl } : {}) };
   },
 };
 
@@ -271,11 +275,8 @@ export function detectFormat(filename: string): ImportFormat | null {
 /**
  * Parse file content and return bookmarks
  */
-export function parseBookmarks(
-  content: string,
-  format: ImportFormat
-): ImportResult {
-  const { bookmarks, skipped } = format.parse(content);
+export function parseBookmarks(content: string, format: ImportFormat): ImportResult {
+  const { bookmarks, skipped, metadataByUrl } = format.parse(content);
 
   // Count items
   let bookmarkCount = 0;
@@ -301,6 +302,7 @@ export function parseBookmarks(
     skipped,
     bookmarkCount,
     folderCount,
+    ...(metadataByUrl ? { metadataByUrl } : {}),
   };
 }
 
@@ -365,6 +367,8 @@ export type ImportPlan = {
   nodes: ImportPlanNode[];
   counts: ImportPlanCounts;
   conflicts: ImportConflict[];
+  /** Tags and summaries by URL, for the bookmarks the import creates. */
+  metadataByUrl?: Record<string, StoredBookmarkMetadata>;
 };
 
 export type ImportTarget = { id: string; label: string };
@@ -502,6 +506,7 @@ export function planImport(
     nodes: parsed.bookmarks.map(planNode),
     counts,
     conflicts,
+    ...(parsed.metadataByUrl ? { metadataByUrl: parsed.metadataByUrl } : {}),
   };
 }
 
@@ -534,6 +539,7 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
     createdRootIds: [],
   };
 
+  const metadata: Record<string, StoredBookmarkMetadata> = {};
   const createNode = async (node: ImportPlanNode, parentId: string, isTopLevel: boolean) => {
     if (node.action === 'skip') return;
     try {
@@ -546,6 +552,8 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       if (isTopLevel) outcome.createdRootIds.push(created.id);
       if (node.url) {
         outcome.bookmarksCreated += 1;
+        const saved = plan.metadataByUrl?.[node.url];
+        if (saved) metadata[created.id] = saved;
         return;
       }
       outcome.foldersCreated += 1;
@@ -563,6 +571,17 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
 
   for (const node of plan.nodes) {
     await createNode(node, plan.targetFolderId, true);
+  }
+  if (Object.keys(metadata).length > 0) {
+    try {
+      await mergeStoredBookmarkMetadata(metadata, {
+        tagMode: 'replace',
+        summaryMode: 'replace',
+        dedupeTags: true,
+      });
+    } catch (err) {
+      outcome.errors.push(getErrorMessage(err));
+    }
   }
   let undone: Promise<ImportUndoResult> | undefined;
   return { ...outcome, undo: () => (undone ??= removeImported(outcome)) };

@@ -303,13 +303,13 @@
         "message": "Fehler beim Zurücksetzen der Einstellungen",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "Einstellungen exportiert",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "Sicherung exportiert",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "Die Einstellungsdatei wurde heruntergeladen.",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "Die Datei enthält Ihre Einstellungen, Prompts, KI-Dienste und gespeicherten Suchen. API-Schlüssel sind nie enthalten.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "Export fehlgeschlagen",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "Ungültige Einstellungsdatei",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "Ungültige Sicherungsdatei",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "Eine neuere Version von Bookmark Scout hat dies gespeichert. Aktualisieren Sie die Erweiterung, um es zu ändern.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "$1 Einstellungen geändert: $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "Sicherung wiederhergestellt",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "Ihre Einstellungen, Prompts, KI-Dienste und gespeicherten Suchen wurden wiederhergestellt. Sicherungen enthalten keine API-Schlüssel: Fügen Sie fehlende unter Einstellungen > KI hinzu.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "Zum hellen Design wechseln",

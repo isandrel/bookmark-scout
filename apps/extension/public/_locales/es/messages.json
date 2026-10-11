@@ -303,13 +303,13 @@
         "message": "Error al restablecer la configuración",
         "description": "Toast title for settings reset error"
     },
-    "toast_settingsExported": {
-        "message": "Configuración exportada",
-        "description": "Toast title for settings export success"
+    "toast_backupExported": {
+        "message": "Copia de seguridad exportada",
+        "description": "Toast title after Export in Settings downloaded a backup file"
     },
-    "toast_settingsExportedDescription": {
-        "message": "Se descargó el archivo de configuración.",
-        "description": "Toast description for settings export success"
+    "toast_backupExportedDescription": {
+        "message": "El archivo contiene tu configuración, prompts, servicios de IA y búsquedas guardadas. Nunca incluye claves de API.",
+        "description": "Toast description after a backup was exported: what the file holds and that API keys are left out"
     },
     "toast_exportFailed": {
         "message": "Error al exportar",
@@ -330,6 +330,10 @@
     "error_invalidSettingsFile": {
         "message": "Archivo de configuración no válido",
         "description": "Error message for invalid settings import"
+    },
+    "error_invalidBackupFile": {
+        "message": "Archivo de copia de seguridad no válido",
+        "description": "Error when a backup file cannot be read"
     },
     "error_storedByNewerVersion": {
         "message": "Una versión más reciente de Bookmark Scout guardó estos datos. Actualiza la extensión para cambiarlos.",
@@ -3000,6 +3004,14 @@
     "toast_settingsImportedChanges": {
         "message": "Ajustes cambiados ($1): $2",
         "description": "Import toast listing changed settings"
+    },
+    "toast_backupRestored": {
+        "message": "Copia de seguridad restaurada",
+        "description": "Toast title after Import in Settings restored a backup file"
+    },
+    "toast_backupRestoredDescription": {
+        "message": "Se restauraron tu configuración, prompts, servicios de IA y búsquedas guardadas. Las copias de seguridad no tienen claves de API: añade las que falten en Configuración > IA.",
+        "description": "Toast description after a backup was restored; API keys are not in backups"
     },
     "action_switchToLight": {
         "message": "Cambiar al tema claro",
