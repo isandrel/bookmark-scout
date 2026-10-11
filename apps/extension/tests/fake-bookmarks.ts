@@ -14,6 +14,10 @@ export type FakeBookmarkSeed = {
   title: string;
   /** Leave out for a folder. */
   url?: string;
+  /** Epoch milliseconds. */
+  dateAdded?: number;
+  /** A folder the browser manages (`'managed'`). */
+  unmodifiable?: 'managed';
 };
 
 export type FakeBookmarks = {
@@ -30,7 +34,15 @@ export type FakeBookmarks = {
 export const FAKE_ROOT_ID = '0';
 
 export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
-  type Stored = { id: string; parentId?: string; title: string; url?: string; children?: string[] };
+  type Stored = {
+    id: string;
+    parentId?: string;
+    title: string;
+    url?: string;
+    children?: string[];
+    dateAdded?: number;
+    unmodifiable?: 'managed';
+  };
   const nodes = new Map<string, Stored>([
     [FAKE_ROOT_ID, { id: FAKE_ROOT_ID, title: '', children: [] }],
   ]);
@@ -57,12 +69,21 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       syncing: false,
       ...(stored.parentId ? { parentId: stored.parentId } : {}),
       ...(stored.url ? { url: stored.url } : {}),
+      ...(stored.dateAdded ? { dateAdded: stored.dateAdded } : {}),
+      ...(stored.unmodifiable ? { unmodifiable: stored.unmodifiable } : {}),
       ...(index !== undefined && index >= 0 ? { index } : {}),
       ...(stored.children ? { children: stored.children.map((child) => toNode(need(child))) } : {}),
     } as Node;
   };
   const add = (
-    details: { parentId?: string; index?: number; title?: string; url?: string },
+    details: {
+      parentId?: string;
+      index?: number;
+      title?: string;
+      url?: string;
+      dateAdded?: number;
+      unmodifiable?: 'managed';
+    },
     id = String(nextId++),
   ) => {
     const parentId = details.parentId ?? FAKE_ROOT_ID;
@@ -75,6 +96,8 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
       parentId,
       title: details.title ?? '',
       ...(details.url ? { url: details.url } : { children: [] }),
+      ...(details.dateAdded ? { dateAdded: details.dateAdded } : {}),
+      ...(details.unmodifiable ? { unmodifiable: details.unmodifiable } : {}),
     });
     parent.children.splice(index, 0, id);
     return need(id);

@@ -5167,9 +5167,17 @@
         "message": "已在書籤中搜尋「$1」",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "已查看書籤",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "已列出資料夾",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "已查看書籤詳細資料",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "已查看目前網頁",
@@ -5178,6 +5186,22 @@
     "askAI_toolReadPage": {
         "message": "已讀取 $1",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "已讀取一個已加入書籤的網頁",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "已尋找重複的書籤",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "已檢查書籤連結",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "已尋找相符的資料夾",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
     },
     "askAI_toolWebSearch": {
         "message": "已搜尋網路",

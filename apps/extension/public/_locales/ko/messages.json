@@ -5351,9 +5351,17 @@
         "message": "북마크에서 “$1” 검색함",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "북마크를 살펴봄",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "폴더 목록을 확인함",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "북마크 세부 정보를 확인함",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "현재 페이지를 확인함",
@@ -5362,6 +5370,22 @@
     "askAI_toolReadPage": {
         "message": "$1 읽음",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "북마크한 페이지를 읽음",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "중복 북마크를 찾음",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "북마크 링크를 확인함",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "알맞은 폴더를 찾음",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
     },
     "askAI_toolWebSearch": {
         "message": "웹을 검색함",

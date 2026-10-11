@@ -55,21 +55,9 @@ function hostOf(url: unknown): string {
 
 /** What a tool call did, in words, from its name and input. */
 function describeTool(name: string, input: unknown): string {
-  const args = isPlainObject(input) ? input : {};
   if (ASK_AI_WEB_SEARCH_TOOL_NAMES.has(name)) return t('askAI_toolWebSearch');
-  switch (name) {
-    case ASK_AI_TOOL_NAMES.searchBookmarks:
-      return t('askAI_toolSearchBookmarks', String(args.query ?? ''));
-    case ASK_AI_TOOL_NAMES.listFolders:
-      return t('askAI_toolListFolders');
-    case ASK_AI_TOOL_NAMES.getCurrentPage:
-      return t('askAI_toolCurrentPage');
-    case ASK_AI_TOOL_NAMES.readPage:
-      return t('askAI_toolReadPage', hostOf(args.url));
-    default:
-      // A provider's own tool; its internal name means nothing to the user.
-      return t('askAI_toolOther');
-  }
+  // A provider's own tool has no description; its internal name means nothing to the user.
+  return describeAgentToolCall(name, input) ?? t('askAI_toolOther');
 }
 
 function MessageView({ message }: { message: UIMessage }) {
