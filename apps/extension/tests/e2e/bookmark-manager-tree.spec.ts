@@ -119,7 +119,8 @@ test('account and device bookmarks sit under two headings, the device ones close
   await expect(account).not.toHaveAttribute('aria-selected');
   await expect(device).toHaveAttribute('aria-expanded', 'false');
   await expect(item(page, 'Device Bar')).toHaveCount(0);
-  const bar = tree(page).getByRole('treeitem', { name: 'Bookmarks Bar', exact: true });
+  // Chrome's bookmarks bar is id 1; its title differs between platforms.
+  const bar = tree(page).locator('[role="treeitem"][data-folder-id="1"]');
   await expect(bar).toHaveAttribute('aria-level', '2');
 
   // A heading opens and closes; it is not a folder to show.
