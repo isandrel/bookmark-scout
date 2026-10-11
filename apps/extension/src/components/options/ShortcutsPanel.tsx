@@ -1,83 +1,58 @@
 /**
  * Options > Saving & Search > Quick save shortcuts: the keys each command has now, read from the
- * browser (`commands.getAll`), and the way to change them. Browsers own the bindings, so this
- * panel only links to their shortcut settings; it re-reads the keys when the page regains focus.
+ * browser (`useCommandShortcuts`), and the way to change them. Where the extension can set
+ * shortcuts itself (Firefox), each command gets a `ShortcutRecorder`; elsewhere the keys are shown
+ * as key caps and **Change shortcuts** opens the browser's shortcut page, which lists every
+ * extension. `options.html#quick-save-shortcuts` scrolls here, as the popup's notice links.
  */
 
 import { Keyboard } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
-
-/** Chromium's shortcut settings page per build; Firefox has an API that opens its own. */
-const SHORTCUT_SETTINGS_URLS: Partial<Record<PermissionBrowser, string>> = {
-  chrome: 'chrome://extensions/shortcuts',
-  edge: 'edge://extensions/shortcuts',
-};
-
-/** Firefox 137+ opens its Manage Extension Shortcuts page; Chrome's types do not know it. */
-type FirefoxCommands = { openShortcutSettings?: () => Promise<void> };
-
-function firefoxCommands(): FirefoxCommands | undefined {
-  return browser.commands as FirefoxCommands | undefined;
-}
-
-/** The keys of a browser shortcut string: "Alt+Shift+S", or macOS glyphs such as "⌥⇧S". */
-function shortcutKeys(shortcut: string): string[] {
-  return shortcut.includes('+') ? shortcut.split('+') : [...shortcut];
-}
+import { useEffect } from 'react';
 
 export function ShortcutsPanel() {
-  const [bindings, setBindings] = useState<Record<string, string> | null>(null);
-  const browserName = CURRENT_PERMISSION_BROWSER;
-  const settingsUrl = SHORTCUT_SETTINGS_URLS[browserName];
-  const canOpenFirefoxSettings =
-    browserName === 'firefox' && typeof firefoxCommands()?.openShortcutSettings === 'function';
-
-  const load = useCallback(() => {
-    browser.commands
-      ?.getAll()
-      .then((commands) =>
-        setBindings(
-          Object.fromEntries(
-            commands.map((command) => [command.name ?? '', command.shortcut ?? '']),
-          ),
-        ),
-      )
-      .catch(() => setBindings({}));
-  }, []);
+  const { shortcuts, reload } = useCommandShortcuts();
+  const editable = canEditCommandShortcuts();
+  const canOpenSettings = canOpenBrowserShortcutSettings();
+  // Chrome and Edge list every extension on one page; Firefox's opens on this one.
+  const listsAllExtensions = canOpenSettings && !editable;
+  const apple = isApplePlatform();
 
   useEffect(() => {
-    load();
-    window.addEventListener('focus', load);
-    return () => window.removeEventListener('focus', load);
-  }, [load]);
-
-  const openSettings = () => {
-    if (settingsUrl) {
-      void browser.tabs.create({ url: settingsUrl, active: true });
-    } else if (canOpenFirefoxSettings) {
-      void firefoxCommands()?.openShortcutSettings?.();
-    }
-  };
+    if (window.location.hash !== `#${SHORTCUTS_PANEL_ID}`) return;
+    document.getElementById(`${SHORTCUTS_PANEL_ID}-heading`)?.scrollIntoView({ block: 'start' });
+  }, []);
 
   return (
     <OptionsPanel
-      id="quick-save-shortcuts"
+      id={SHORTCUTS_PANEL_ID}
       data-testid="quick-save-shortcuts"
       title={t('settings_shortcuts')}
       description={t('settings_shortcutsDesc')}
       actionsLayout="wrap"
       actions={
-        settingsUrl || canOpenFirefoxSettings ? (
-          <Button type="button" variant="outline" size="sm" onClick={openSettings}>
-            <Keyboard aria-hidden="true" className="h-4 w-4" />
-            {t('settings_shortcutsChange')}
-          </Button>
+        canOpenSettings ? (
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => void openBrowserShortcutSettings()}
+            >
+              <Keyboard aria-hidden="true" className="h-4 w-4" />
+              {t('settings_shortcutsChange')}
+            </Button>
+            {listsAllExtensions && (
+              <span data-testid="shortcuts-page-hint" className="text-xs text-muted-foreground">
+                {t('settings_shortcutsFindExtension')}
+              </span>
+            )}
+          </span>
         ) : undefined
       }
     >
       <ul className="divide-y rounded-md border">
         {(Object.keys(EXTENSION_COMMANDS) as ExtensionCommand[]).map((name) => {
-          const shortcut = bindings?.[name] ?? '';
+          const shortcut = shortcuts?.[name] ?? '';
           return (
             <li
               key={name}
@@ -85,9 +60,16 @@ export function ShortcutsPanel() {
               className="flex min-h-10 items-center justify-between gap-3 px-3 py-2 text-sm"
             >
               <span className="min-w-0">{t(EXTENSION_COMMANDS[name].descriptionKey)}</span>
-              {bindings === null ? null : shortcut ? (
+              {shortcuts === null ? null : editable ? (
+                <ShortcutRecorder
+                  name={name}
+                  shortcut={shortcut}
+                  otherShortcuts={shortcuts}
+                  onChanged={reload}
+                />
+              ) : shortcut ? (
                 <span className="flex shrink-0 items-center gap-1">
-                  {shortcutKeys(shortcut).map((key, index) => (
+                  {commandShortcutKeyCaps(shortcut, { apple }).map((key, index) => (
                     // biome-ignore lint/suspicious/noArrayIndexKey: a binding's keys never reorder.
                     <Kbd key={`${index}-${key}`}>{key}</Kbd>
                   ))}
@@ -101,8 +83,8 @@ export function ShortcutsPanel() {
           );
         })}
       </ul>
-      {browserName === 'firefox' && (
-        <p className="text-sm text-muted-foreground">{t('settings_shortcutsFirefoxHint')}</p>
+      {editable && (
+        <p className="text-sm text-muted-foreground">{t('settings_shortcutRecorderHint')}</p>
       )}
     </OptionsPanel>
   );

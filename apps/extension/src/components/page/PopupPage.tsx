@@ -716,6 +716,7 @@ function PopupPage() {
             </div>
           )}
         </div>
+        <QuickSaveShortcutNotice />
         {!isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />}
       </div>
       <BookmarkDeleteDialog

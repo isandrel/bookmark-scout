@@ -237,6 +237,87 @@ test('extension pages share Web Locks, which serialize storage writes', async ({
   expect(held).toContain('sync:settings');
 });
 
+/**
+ * Clicks `css` after scrolling it to the middle, clear of the sticky footer. Options sections
+ * above can still be growing as they load, so it scrolls again until the click lands.
+ */
+async function clickCentered(extension: FirefoxExtension, css: string) {
+  await expect
+    .poll(async () => {
+      const element = await extension.find(css);
+      await extension.driver.executeScript(
+        'arguments[0].scrollIntoView({ block: "center" })',
+        element,
+      );
+      return element.click().then(
+        () => true,
+        (error: Error) => {
+          if (error.name === 'ElementClickInterceptedError') return false;
+          throw error;
+        },
+      );
+    })
+    .toBe(true);
+}
+
+/** The keys Firefox has for a command now (`''` for none). */
+function shortcutOf(extension: FirefoxExtension, name: string) {
+  return extension.call(
+    async (browser, command) =>
+      (await browser.commands.getAll()).find((entry) => entry.name === command)?.shortcut ?? null,
+    name,
+  );
+}
+
+test('a quick save command without keys shows the popup notice, and Options records and resets keys', async ({
+  extension,
+}) => {
+  await setSettings(extension, { language: 'en' });
+  // Firefox can clear a shortcut, as Chrome does when another extension already has the keys.
+  await extension.call(async (browser) => {
+    type Update = (detail: { name: string; shortcut: string }) => Promise<void>;
+    await (browser.commands as unknown as { update: Update }).update({
+      name: 'ai-quick-save',
+      shortcut: '',
+    });
+  }, null);
+  await extension.open('popup.html');
+  await extension.findByText(
+    '[data-testid="quick-save-shortcut-notice"]',
+    'Quick save shortcut not set',
+  );
+
+  await extension.open('options.html');
+  const recorder = '[data-command="ai-quick-save"] [data-slot="shortcut-recorder"]';
+  await clickCentered(extension, recorder);
+  await extension.driver
+    .actions()
+    .keyDown(Key.ALT)
+    .keyDown(Key.SHIFT)
+    .sendKeys('k')
+    .keyUp(Key.SHIFT)
+    .keyUp(Key.ALT)
+    .perform();
+  await expect.poll(() => shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+
+  // A letter on its own is explained under the field and not saved.
+  await clickCentered(extension, recorder);
+  await extension.driver.actions().sendKeys('j').perform();
+  await extension.find('[data-command="ai-quick-save"] [aria-invalid="true"]');
+  expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+  // Tab is not recorded: it moves on to the field's reset button.
+  await clickCentered(extension, recorder);
+  await extension.driver.actions().sendKeys(Key.TAB).perform();
+  expect(
+    await extension.driver.executeScript<string | null>(
+      'return document.activeElement?.getAttribute("aria-label") ?? null',
+    ),
+  ).toBe('Reset Quick save the current page with AI to default');
+
+  await clickCentered(extension, '[data-command="ai-quick-save"] button[aria-label^="Reset"]');
+  await expect.poll(() => shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+D');
+});
+
 test('options saves a setting to sync storage and keeps it after reload', async ({ extension }) => {
   await setSettings(extension, { language: 'en', showFavicons: true });
 
