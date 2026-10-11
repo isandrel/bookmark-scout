@@ -90,6 +90,7 @@ Ative a IA nas Configurações e escolha um provedor de IA na nuvem, qualquer en
 • Exportação dos favoritos selecionados como contexto em Markdown ou XML para uma conversa com IA (funciona sem IA e não envia nada)
 • Perguntar à IA: converse sobre seus favoritos; a IA pode consultar favoritos correspondentes, os nomes das suas pastas e a página atual
 • Ler conteúdo da página (desativado por padrão): envia o texto legível de cada página, não só o título e o URL, para sugestões melhores
+• Agentes de IA locais (desativado por padrão): agentes de IA do seu computador, como o Claude Code, consultam seus favoritos pelo programa de código aberto bookmark-scout-mcp, instalado à parte; cada alteração que pedirem aguarda sua aprovação
 
 Quando você usa um recurso de IA, os dados de que ele precisa são enviados diretamente do seu navegador ao provedor escolhido, de acordo com os termos desse provedor: títulos, URLs e nomes de pastas dos favoritos, além das tags e resumos salvos; o título e o URL da página atual; suas mensagens do Perguntar à IA; e, somente com Ler conteúdo da página ativado, o texto das páginas envolvidas. Nada é enviado ao Bookmark Scout. Sua chave de API fica no armazenamento local de extensões deste navegador e não é sincronizada. O uso do provedor pode ser cobrado.
 

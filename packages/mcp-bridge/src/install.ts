@@ -5,7 +5,7 @@
  * on Windows). Chromium manifests allow the extension by origin, Firefox's by add-on id.
  */
 import { spawnSync } from "node:child_process";
-import { chmodSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { type BrowserEntry, config } from "./config";
 import { NATIVE_HOST_NAME } from "./protocol";
@@ -13,14 +13,22 @@ import type { RuntimeEnvironment } from "./runtime";
 
 export type InstallEnvironment = RuntimeEnvironment & { home: string };
 
-/** How to start this program: the compiled binary, or Bun running the source. */
+/** How to start this program: the compiled binary, or Bun or Node running a script. */
 export type Launcher = { command: string; args: string[] };
 
+/** A Bun-compiled binary runs its code from an embedded file system. */
+export function isCompiledBinary(moduleUrl: string = import.meta.url): boolean {
+  return moduleUrl.includes("$bunfs") || moduleUrl.includes("~BUN");
+}
+
 export function currentLauncher(): Launcher {
-  const compiled = import.meta.path.includes("$bunfs") || import.meta.path.includes("~BUN");
-  return compiled
-    ? { command: process.execPath, args: [] }
-    : { command: process.execPath, args: [resolve(import.meta.dir, "cli.ts")] };
+  if (isCompiledBinary()) return { command: process.execPath, args: [] };
+  // The script this process runs: src/cli.ts under Bun, or dist/cli.js from the npm package.
+  const script = process.argv[1];
+  return {
+    command: process.execPath,
+    args: script ? [realpathSync(resolve(script))] : [],
+  };
 }
 
 /** The folder `install` writes the launcher (and the Windows manifests) to. */

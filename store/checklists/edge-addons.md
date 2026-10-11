@@ -61,6 +61,8 @@ AI features are off by default and need the reviewer's own provider API key (Set
 
 At install the extension asks only for bookmarks, storage, activeTab, and sidePanel. Everything else is optional and requested when the user turns on or runs the feature that needs it: tabs when saving the current page from the side panel (the toolbar popup uses activeTab), contextMenus when the user turns on Context Menu in Settings (off by default), favicon when the user turns on "Use the browser's icon cache", and website access (http/https) when the user runs Check Dead Links, Metadata Fetcher, or Refresh Site Icons, turns on Read page content, or clicks Verify Service for an AI provider (that origin only).
 
+nativeMessaging is optional and requested only when the user turns on "Allow local AI agents" (Settings > AI, off by default). It lets AI agents the user runs on the same computer look up bookmarks through the open-source bookmark-scout-mcp program the user installs separately (packages/mcp-bridge in the repository); it never opens a network port and sends nothing to the developer. Every change an agent asks for waits for the user's approval in an extension window.
+
 Source code: https://github.com/isandrel/bookmark-scout (AGPL-3.0).
 ```
 
