@@ -268,7 +268,7 @@ Type rules:
 - avoid `any`
 - keep runtime and type boundaries explicit when working with browser APIs and provider payloads
 - a `tsconfig.json` change also needs an E2E run: Playwright loads the extension's tsconfig itself and failed on a value `tsc` accepted (`"baseUrl": null`)
-- run `nx run extension:typecheck` (it runs `wxt prepare` first, then TypeScript 7's native `tsc`, under a second warm); `main` type-checks clean and the CI Lint job runs it, so do not add errors or silence them with casts that hide a real mismatch. After renaming an auto-imported export, the incremental build info can keep the old name ("Cannot find name" although `.wxt/types/imports.d.ts` lists it); delete `node_modules/.tmp/tsconfig.app.tsbuildinfo` and run it again
+- run `nx run extension:typecheck` (it runs `wxt prepare` first, then TypeScript 7's native `tsc`, about two seconds); `main` type-checks clean and the CI Lint job runs it, so do not add errors or silence them with casts that hide a real mismatch. Keep `incremental` off in `tsconfig.json`: TypeScript 7.0's incremental check does not recheck other files when a global declaration changes, and every WXT auto-import is one (`.wxt/types/imports.d.ts`), so a warm run passed with real errors and kept stale "Cannot find name" errors after a rename. A full check costs about 0.6 seconds more
 
 ## Security and privacy
 
