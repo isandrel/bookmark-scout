@@ -25,14 +25,22 @@ It does not read the content of the pages you visit. After a quick save shortcut
 
 | Data | Where | Synced |
 | --- | --- | --- |
-| Settings, including whether AI is on and which provider and model you chose | Browser sync storage | Yes, through your browser account when browser sync is on |
-| Bookmark table layout in the manager | Browser sync storage | Same as settings |
-| AI provider settings: API key, Base URL, extra headers | Local storage on this device | No |
+| Settings you changed from their default, including whether AI is on; not your AI provider, model, or API key | Browser sync storage | Yes, through your browser account when browser sync is on |
+| Device settings: the folder chosen for quick save, the icon storage limit, AI activity recording, and Ask AI's web search | Local storage on this device | No |
+| Custom prompts (**Prompts** under **AI Tools**): each prompt's name, task, and text, and which prompt each task uses; up to 10 | Browser sync storage | Same as settings |
+| Bookmark table in the manager: shown columns, their order, and the sort | Browser sync storage | Same as settings |
+| Bookmark table column widths and page size | Local storage on this device | No |
+| AI services: each service's name, provider, and model | Local storage on this device | No |
+| AI connection settings: API key, Base URL, extra headers, provider-specific fields | Local storage on this device | No, and never in a backup file |
+| Model lists fetched from your AI services, kept for 7 days | Local storage on this device | No |
+| AI activity, only while **Record requests** is on (off by default, per device): the last AI requests with what was sent and what came back, including bookmark titles, URLs, folder paths, and with **Read page content** on, page text. API keys and other credentials are removed before storing; turning recording off deletes it | Local storage on this device | No |
 | Tags, summaries, saved searches, recent folders, recent searches | Local storage on this device | No |
 | Site icons saved with **Refresh Site Icons**, up to 4096 KB by default | Local storage on this device | No |
 | The last quick save (the page's title and URL, and where it went), for **Undo** and **Move to** | Session storage on this device, cleared when the browser closes | No |
 
 Scan results from the Tools sidebar are kept only while their dialog is open. Uninstalling the extension removes what it stored; your bookmarks stay in the browser.
+
+**Export** at the bottom of Settings saves a backup file with the settings you changed, your custom prompts, AI services (name, provider, and model), saved searches, and the table's columns and sort. It never holds API keys or other AI connection settings, and it is not encrypted. See [Settings](/settings).
 
 ## When data leaves your browser
 
@@ -46,7 +54,7 @@ Only when you use one of these, and only to the place named:
 | Check Dead Links, Metadata Fetcher | Each bookmarked website | A request for the page, without cookies, after you allow website access |
 | Refresh Site Icons | Each bookmarked website | A request for one bookmarked page per site and for an icon file on that site's domain, without cookies, after you allow website access. No third-party icon service is used |
 
-A provider running on your own computer, such as Ollama, keeps AI requests on your machine. Exports, including **AI Context Packer**, are saved as files on your computer and uploaded nowhere; a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
+A provider running on your own computer, such as Ollama, keeps AI requests on your machine. Bookmark exports, **AI Context Packer** files, and the settings backup are saved as files on your computer and uploaded nowhere. A JSON bookmark export also holds each bookmark's tags and summary; for bookmark and AI context exports, a privacy review can redact sensitive values first. The exact data each AI tool sends is listed in [Set up AI tools](/guides/ai-tools#what-each-tool-sends), and each permission is explained in [Permissions](/permissions).
 
 ## This docs site
 

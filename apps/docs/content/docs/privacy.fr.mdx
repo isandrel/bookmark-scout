@@ -25,13 +25,22 @@ Elle ne lit pas le contenu des pages que vous consultez.
 
 | Données | Emplacement | Synchronisées |
 | --- | --- | --- |
-| Paramètres, y compris l'activation de l'IA et le fournisseur et le modèle choisis | Stockage synchronisé du navigateur | Oui, via votre compte de navigateur lorsque la synchronisation du navigateur est activée |
-| Disposition du tableau des favoris dans le gestionnaire | Stockage synchronisé du navigateur | Comme les paramètres |
-| Paramètres du fournisseur d'IA : clé API, URL de base, en-têtes supplémentaires | Stockage local de cet appareil | Non |
+| Paramètres que vous avez modifiés par rapport à leur valeur par défaut, y compris l'activation de l'IA ; pas votre fournisseur d'IA, votre modèle ni votre clé API | Stockage synchronisé du navigateur | Oui, via votre compte de navigateur lorsque la synchronisation du navigateur est activée |
+| Paramètres propres à l'appareil : le dossier choisi pour l'enregistrement rapide, la limite de stockage des icônes, l'enregistrement de l'activité de l'IA et la recherche web de Demander à l'IA | Stockage local de cet appareil | Non |
+| Prompts personnalisés (**Prompts** dans **Outils d'IA**) : le nom, la tâche et le texte de chaque prompt, et le prompt utilisé par chaque tâche ; 10 au maximum | Stockage synchronisé du navigateur | Comme les paramètres |
+| Tableau des favoris dans le gestionnaire : colonnes affichées, leur ordre et le tri | Stockage synchronisé du navigateur | Comme les paramètres |
+| Largeur des colonnes et taille de page du tableau des favoris | Stockage local de cet appareil | Non |
+| Services d'IA : nom, fournisseur et modèle de chaque service | Stockage local de cet appareil | Non |
+| Paramètres de connexion à l'IA : clé API, URL de base, en-têtes supplémentaires, champs propres au fournisseur | Stockage local de cet appareil | Non, et jamais dans un fichier de sauvegarde |
+| Listes de modèles récupérées auprès de vos services d'IA, conservées 7 jours | Stockage local de cet appareil | Non |
+| Activité de l'IA, uniquement tant que **Enregistrer les requêtes** est activé (désactivé par défaut, par appareil) : les dernières requêtes d'IA avec ce qui a été envoyé et ce qui est revenu, y compris des titres, des URL et des chemins de dossiers de favoris et, si **Lire le contenu des pages** est activé, le texte des pages. Les clés API et autres identifiants sont supprimés avant le stockage ; désactiver l'enregistrement l'efface | Stockage local de cet appareil | Non |
 | Étiquettes, résumés, recherches enregistrées, dossiers récents, recherches récentes | Stockage local de cet appareil | Non |
 | Icônes de site enregistrées avec **Actualiser les icônes de site**, jusqu'à 4096 Ko par défaut | Stockage local de cet appareil | Non |
+| Le dernier enregistrement rapide (le titre et l'URL de la page, et l'endroit où elle a été enregistrée), pour **Annuler** et **Déplacer vers** | Stockage de session de cet appareil, vidé à la fermeture du navigateur | Non |
 
 Les résultats d'analyse de la barre latérale Outils ne sont conservés que tant que leur boîte de dialogue est ouverte. La désinstallation de l'extension supprime ce qu'elle a stocké ; vos favoris restent dans le navigateur.
+
+**Exporter**, en bas des paramètres, enregistre un fichier de sauvegarde contenant les paramètres que vous avez modifiés, vos prompts personnalisés, les services d'IA (nom, fournisseur et modèle), les recherches enregistrées, ainsi que les colonnes et le tri du tableau. Il ne contient jamais de clé API ni d'autre paramètre de connexion à l'IA, et il n'est pas chiffré. Consultez [Paramètres](/settings).
 
 ## Quand les données quittent votre navigateur [#when-data-leaves-your-browser]
 
@@ -45,7 +54,7 @@ Uniquement lorsque vous utilisez l'une de ces fonctionnalités, et uniquement ve
 | Vérifier les liens morts, Récupération des métadonnées | Chaque site enregistré en favori | Une requête pour la page, sans cookies, après que vous avez autorisé l'accès aux sites Web |
 | Actualiser les icônes de site | Chaque site enregistré en favori | Une requête pour une page enregistrée en favori par site et pour un fichier d'icône sur le domaine de ce site, sans cookies, après que vous avez autorisé l'accès aux sites Web. Aucun service d'icônes tiers n'est utilisé |
 
-Un fournisseur qui s'exécute sur votre propre ordinateur, comme Ollama, garde les requêtes d'IA sur votre machine. Les exportations, y compris celles du **Préparateur de contexte IA**, sont enregistrées sous forme de fichiers sur votre ordinateur et ne sont mises en ligne nulle part ; une vérification de confidentialité peut d'abord masquer les valeurs sensibles. Les données exactes envoyées par chaque outil d'IA sont détaillées dans [Configurer les outils d'IA](/guides/ai-tools#what-each-tool-sends), et chaque autorisation est expliquée dans [Autorisations](/permissions).
+Un fournisseur qui s'exécute sur votre propre ordinateur, comme Ollama, garde les requêtes d'IA sur votre machine. Les exportations de favoris, les fichiers du **Préparateur de contexte IA** et la sauvegarde des paramètres sont enregistrés sous forme de fichiers sur votre ordinateur et ne sont mis en ligne nulle part. Une exportation de favoris au format JSON contient aussi les étiquettes et le résumé de chaque favori ; pour les exportations de favoris et de contexte IA, une vérification de confidentialité peut d'abord masquer les valeurs sensibles. Les données exactes envoyées par chaque outil d'IA sont détaillées dans [Configurer les outils d'IA](/guides/ai-tools#what-each-tool-sends), et chaque autorisation est expliquée dans [Autorisations](/permissions).
 
 ## Ce site de documentation [#this-docs-site]
 

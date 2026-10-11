@@ -70,10 +70,16 @@
                     {
                         "type": "ul",
                         "items": [
-                            "<strong>La configuración</strong> se guarda en el almacenamiento sincronizado del navegador. Si tienes activada la sincronización del navegador, este puede copiarla a tus otros dispositivos a través de tu cuenta del navegador (por ejemplo, de Google, Mozilla o Microsoft). La configuración incluye si la IA está activada y qué proveedor y modelo elegiste, pero no tu clave de API.",
-                            "<strong>La configuración del proveedor de IA</strong>, incluidos tu clave de API, la URL base y los encabezados adicionales, se guarda en el almacenamiento local, solo en este dispositivo. No se sincroniza.",
+                            "<strong>La configuración</strong> que cambias respecto a su valor predeterminado se guarda en el almacenamiento sincronizado del navegador; los ajustes que mantienen su valor predeterminado no se guardan. Si tienes activada la sincronización del navegador, este puede copiarla a tus otros dispositivos a través de tu cuenta del navegador (por ejemplo, de Google, Mozilla o Microsoft). La configuración incluye si la IA está activada, pero no tu proveedor de IA, tu modelo ni tu clave de API. (La versión 0.3.2 y anteriores también guardaban en la configuración sincronizada el proveedor de IA y el modelo que elegiste.)",
+                            "<strong>Algunos ajustes se quedan solo en este dispositivo</strong>, en el almacenamiento local: la carpeta que elegiste para el guardado rápido, el límite de almacenamiento de iconos de sitios, el registro de actividad de IA y la búsqueda web de Preguntar a la IA.",
+                            "<strong>Los prompts personalizados</strong> que escribes en Prompts, dentro de la configuración de Herramientas de IA (el nombre, la tarea y el texto de cada prompt, y qué prompt usa cada tarea; hasta 10), se guardan en el almacenamiento sincronizado del navegador, así que se sincronizan con tu cuenta del navegador igual que la configuración. Cuando una herramienta de IA usa uno de tus prompts, su texto se envía a tu proveedor de IA junto con la solicitud.",
+                            "<strong>La tabla del administrador de marcadores</strong>: qué columnas se muestran, su orden y la ordenación se sincronizan igual que la configuración. El ancho de las columnas y el tamaño de página se quedan en este dispositivo.",
+                            "<strong>Los servicios de IA</strong> (el nombre, el proveedor y el modelo de cada servicio) y su <strong>configuración de conexión</strong> (clave de API, URL base, encabezados adicionales y cualquier campo propio del proveedor) se guardan en el almacenamiento local, solo en este dispositivo. No se sincronizan, y la configuración de conexión nunca se escribe en un archivo de copia de seguridad. Cuando el navegador lo admite (Chrome 140 y posteriores), el almacenamiento local además queda cerrado a cualquier script que la extensión coloque en una página web.",
+                            "<strong>Las listas de modelos</strong> obtenidas de tus servicios de IA (nombres e identificadores de modelos) se guardan en el almacenamiento local de este dispositivo durante 7 días.",
+                            "<strong>La actividad de IA</strong>, solo si activas Registrar solicitudes en Actividad de IA, dentro de la configuración de IA (desactivado de forma predeterminada y configurado por separado en cada dispositivo): las últimas solicitudes de IA, con lo que se envió a tu proveedor y lo que respondió. Contienen títulos, URL y rutas de carpeta de marcadores y, con Leer el contenido de la página activado, el texto de las páginas. Las claves de API, los encabezados de autenticación, tus encabezados adicionales y las claves incluidas en direcciones web se eliminan antes de guardar nada. Este historial se queda en el almacenamiento local de este dispositivo, nunca se sincroniza y se elimina cuando desactivas el registro.",
                             "<strong>Las etiquetas, los resúmenes, las búsquedas guardadas, las carpetas recientes y las búsquedas recientes</strong> se guardan en el almacenamiento local, solo en este dispositivo. Puedes desactivar las búsquedas recientes en Configuración.",
-                            "<strong>Los iconos de sitios</strong> que guardas con Actualizar iconos de sitios se guardan en el almacenamiento local, solo en este dispositivo, hasta un límite de tamaño que puedes cambiar en Configuración. Puedes eliminarlos en cualquier momento con Borrar los iconos guardados."
+                            "<strong>Los iconos de sitios</strong> que guardas con Actualizar iconos de sitios se guardan en el almacenamiento local, solo en este dispositivo, hasta un límite de tamaño que puedes cambiar en Configuración. Puedes eliminarlos en cualquier momento con Borrar los iconos guardados.",
+                            "<strong>Tu último guardado rápido</strong> (el título y la URL de la página y dónde se guardó), para Deshacer y Mover a, se guarda en el almacenamiento de sesión hasta que cierras el navegador."
                         ]
                     },
                     {
@@ -120,11 +126,19 @@
                     },
                     {
                         "type": "h3",
-                        "text": "Exportaciones"
+                        "text": "Exportaciones y copias de seguridad"
                     },
                     {
                         "type": "p",
-                        "text": "Las exportaciones de marcadores y las exportaciones de contexto para IA se guardan como archivos en tu equipo. Antes de guardar, la extensión puede mostrar una revisión de privacidad que te permite censurar los valores sensibles. No se sube nada."
+                        "text": "Las exportaciones de marcadores y las exportaciones de contexto para IA se guardan como archivos en tu equipo. Una exportación de marcadores en JSON también incluye las etiquetas y el resumen de cada marcador que contiene. Antes de guardar, la extensión puede mostrar una revisión de privacidad que te permite censurar los valores sensibles."
+                    },
+                    {
+                        "type": "p",
+                        "text": "Exportar, en Configuración, guarda un archivo de copia de seguridad (<code>bookmark-scout-backup.json</code>) con los ajustes que cambiaste, tus prompts personalizados, tus servicios de IA (nombre, proveedor y modelo), tus búsquedas guardadas y las columnas y la ordenación de la tabla de marcadores. Nunca contiene claves de API ni otros ajustes de conexión de IA. El archivo no está cifrado. Importar, en Configuración, lo restaura."
+                    },
+                    {
+                        "type": "p",
+                        "text": "La extensión no sube ninguno de estos archivos. Solo van a donde los guardes."
                     }
                 ]
             },

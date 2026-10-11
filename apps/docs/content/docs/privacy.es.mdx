@@ -25,13 +25,22 @@ No lee el contenido de las páginas que visitas.
 
 | Datos | Dónde | Se sincroniza |
 | --- | --- | --- |
-| La configuración, incluido si la IA está activada y qué proveedor y modelo elegiste | Almacenamiento sincronizado del navegador | Sí, a través de tu cuenta del navegador cuando la sincronización del navegador está activada |
-| El diseño de la tabla de marcadores del administrador | Almacenamiento sincronizado del navegador | Igual que la configuración |
-| La configuración del proveedor de IA: clave de API, URL base, encabezados adicionales | Almacenamiento local en este dispositivo | No |
+| Los ajustes que cambiaste respecto a su valor predeterminado, incluido si la IA está activada; no tu proveedor de IA, tu modelo ni tu clave de API | Almacenamiento sincronizado del navegador | Sí, a través de tu cuenta del navegador cuando la sincronización del navegador está activada |
+| Ajustes propios del dispositivo: la carpeta elegida para el guardado rápido, el límite de almacenamiento de iconos, el registro de actividad de IA y la búsqueda web de Preguntar a la IA | Almacenamiento local en este dispositivo | No |
+| Prompts personalizados (**Prompts** en **Herramientas de IA**): el nombre, la tarea y el texto de cada prompt, y qué prompt usa cada tarea; hasta 10 | Almacenamiento sincronizado del navegador | Igual que la configuración |
+| La tabla de marcadores del administrador: columnas visibles, su orden y la ordenación | Almacenamiento sincronizado del navegador | Igual que la configuración |
+| El ancho de las columnas y el tamaño de página de la tabla de marcadores | Almacenamiento local en este dispositivo | No |
+| Servicios de IA: el nombre, el proveedor y el modelo de cada servicio | Almacenamiento local en este dispositivo | No |
+| Ajustes de conexión de IA: clave de API, URL base, encabezados adicionales, campos propios del proveedor | Almacenamiento local en este dispositivo | No, y nunca están en una copia de seguridad |
+| Listas de modelos obtenidas de tus servicios de IA, durante 7 días | Almacenamiento local en este dispositivo | No |
+| Actividad de IA, solo mientras **Registrar solicitudes** está activado (desactivado de forma predeterminada, por dispositivo): las últimas solicitudes de IA con lo que se envió y lo que volvió, que incluyen títulos, URL y rutas de carpeta de marcadores y, con **Leer el contenido de la página** activado, el texto de las páginas. Las claves de API y otras credenciales se eliminan antes de guardar; desactivar el registro lo borra | Almacenamiento local en este dispositivo | No |
 | Etiquetas, resúmenes, búsquedas guardadas, carpetas recientes, búsquedas recientes | Almacenamiento local en este dispositivo | No |
 | Iconos de sitios guardados con **Actualizar iconos de sitios**, hasta 4096 KB de forma predeterminada | Almacenamiento local en este dispositivo | No |
+| El último guardado rápido (el título y la URL de la página, y dónde se guardó), para **Deshacer** y **Mover a** | Almacenamiento de sesión en este dispositivo, que se borra al cerrar el navegador | No |
 
 Los resultados de los análisis de la barra lateral de herramientas solo se conservan mientras su diálogo está abierto. Al desinstalar la extensión se elimina lo que guardó; tus marcadores se quedan en el navegador.
+
+**Exportar**, al final de Configuración, guarda un archivo de copia de seguridad con los ajustes que cambiaste, tus prompts personalizados, los servicios de IA (nombre, proveedor y modelo), las búsquedas guardadas y las columnas y la ordenación de la tabla. Nunca contiene claves de API ni otros ajustes de conexión de IA, y no está cifrado. Consulta [Configuración](/settings).
 
 ## Cuándo salen datos de tu navegador [#when-data-leaves-your-browser]
 
@@ -45,7 +54,7 @@ Solo cuando usas alguna de estas funciones, y solo hacia el destino indicado:
 | Comprobar enlaces rotos, Extractor de metadatos | Cada sitio web guardado en marcadores | Una solicitud de la página, sin cookies, después de que permitas el acceso a sitios web |
 | Actualizar iconos de sitios | Cada sitio web guardado en marcadores | Una solicitud de una página guardada por sitio y de un archivo de icono del dominio de ese sitio, sin cookies, después de que permitas el acceso a sitios web. No se usa ningún servicio de iconos de terceros |
 
-Un proveedor que se ejecuta en tu propio equipo, como Ollama, mantiene las solicitudes de IA en tu equipo. Las exportaciones, incluido el **Empaquetador de contexto para IA**, se guardan como archivos en tu equipo y no se suben a ningún sitio; una revisión de privacidad puede censurar antes los valores sensibles. Los datos exactos que envía cada herramienta de IA se indican en [Configurar las herramientas de IA](/guides/ai-tools#what-each-tool-sends), y cada permiso se explica en [Permisos](/permissions).
+Un proveedor que se ejecuta en tu propio equipo, como Ollama, mantiene las solicitudes de IA en tu equipo. Las exportaciones de marcadores, los archivos del **Empaquetador de contexto para IA** y la copia de seguridad de la configuración se guardan como archivos en tu equipo y no se suben a ningún sitio. Una exportación de marcadores en JSON también incluye las etiquetas y el resumen de cada marcador; en las exportaciones de marcadores y de contexto para IA, una revisión de privacidad puede censurar antes los valores sensibles. Los datos exactos que envía cada herramienta de IA se indican en [Configurar las herramientas de IA](/guides/ai-tools#what-each-tool-sends), y cada permiso se explica en [Permisos](/permissions).
 
 ## Este sitio de documentación [#this-docs-site]
 

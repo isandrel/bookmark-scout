@@ -1,6 +1,6 @@
 # Privacy Disclosures
 
-What the extension does with data at version `0.3.0`, checked against the source on 2026-10-10, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
+What the extension does with data in the source after version `0.3.2` (the next release), checked against the source on 2026-10-11, and the answers to each store's privacy questions. The public-facing summary is the [privacy policy](privacy-policy.md), published at <https://bookmark-scout.com/en/privacy/>.
 
 ## Facts checked in the code
 
@@ -13,29 +13,35 @@ What the extension does with data at version `0.3.0`, checked against the source
   - **Check Dead Links and Metadata Fetcher**: requests go to each bookmarked URL, with `credentials: 'omit'` so no cookies are sent (`src/services/bookmark-network-tools.ts`). They need optional website access, requested on first use. The dead-link repair option "archived copy" only builds a `https://web.archive.org/web/<URL>` link locally; it does not contact the Wayback Machine (`src/services/dead-link-repair.ts`).
   - **Refresh Site Icons**: for each origin in scope, one GET for the first bookmarked page on it (only the `<head>` is read), then at most three icon files the page declares on the bookmark's own registrable domain, and the origin's `/favicon.ico`, until one is a real image under the size cap (`src/services/site-icons.ts`). Same transport as above: `credentials: 'omit'`, the same optional website access, and redirects the site answers with are followed. No third-party icon service is contacted.
   - **Read page content** (off by default; AI must also be on): folder suggestions, Auto-Tagging, and Content Summarizer GET each page by its URL with `credentials: 'omit'`, keep the article text with Mozilla Readability, and send up to the configured character limit per page to the chosen AI provider (`src/services/page-reader.ts`). Turning the setting on requests the same optional website access. Hosts on the local network (loopback, private and link-local addresses, `localhost`, `.local`, `.internal`, `.lan`, `.home.arpa`) are never requested.
-- AI provider credentials are stored with `local:` storage items only (`src/lib/ai-provider-storage.ts`) and are not synced. Where the browser supports it (Chrome 140 and later), `storage.local` is also closed to content scripts (`src/lib/storage/cleanup.ts`). Every stored key is listed in `src/lib/storage/registry.ts`, with its area; the key names in the table below come from there.
+- Every stored key is listed in `src/lib/storage/registry.ts`, with its area and what the backup file does with it; the key names below come from there. Settings are stored as overrides: only the settings the user changed from their default are kept (`src/lib/settings-storage.ts`). Most go to `storage.sync`; the device settings in `DEVICE_SETTING_KEYS` (the quick save folder, the site icon storage limit, AI activity recording, Ask AI web search) stay in `storage.local`. AI services and their credentials are no longer settings and never sync.
+- AI provider credentials (API key, Base URL, extra headers, provider-specific fields) are stored with `local:` storage items only (`src/lib/ai-provider-storage.ts`, registry `backup: 'secret'`): they are not synced and never written to the backup file. Where the browser supports it (Chrome 140 and later), `storage.local` is also closed to content scripts (`src/lib/storage/cleanup.ts`).
+- Custom prompts (Settings > AI Tools > Prompts) are in `storage.sync`, one item per prompt plus an index, at most `max_prompts` of them (`apps/extension/config/ai/prompt-library.toml`, `src/lib/prompt-library-storage.ts`). A prompt's text is sent to the AI provider as the instructions of the task that uses it.
+- The AI activity log (Settings > AI > AI activity) records nothing until the user turns on recording, a device setting that is off by default. It then keeps the last AI requests, with their request and response bodies, in `storage.local` on this device; the count and body length are set in `apps/extension/config/ai/activity.toml`. Credential headers, the user's extra headers, and API keys in URLs are redacted before an entry is stored, and headers whose names look like credentials are redacted again when it is read (`src/lib/ai-activity-storage.ts`). Turning recording off deletes the log (`src/hooks/use-ai-activity.ts`).
 
 ## Data inventory
 
-| Data | Stored where | Leaves the device? |
-| --- | --- | --- |
-| Bookmarks (titles, URLs, folders) | The browser's own bookmark store | Only as described under "AI features", "Network tools", and "Exports" below. Browser bookmark sync is the browser's feature, not the extension's. |
-| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions (including the AI quick save shortcut), when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page |
-| Settings the user changed from their defaults (`settings`), including the AI on/off switch; no AI provider, model, or key | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
-| Device settings (`settings` in `storage.local`): the quick save folder (a folder id), the site icon cache size, AI activity recording, and Ask AI web search | `storage.local` | No |
-| AI services (`ai.services`): each service's name, provider, and model | `storage.local` | No |
-| Bookmark table view (`manager.table-view`): visible columns, their order, and the sort | `storage.sync` | Same as settings. Contains no bookmark content. |
-| Bookmark table layout (`manager.table-layout`): column widths and page size | `storage.local` | No |
-| AI provider settings (`ai.credentials`): API key, Base URL, extra headers, and provider-specific fields, per AI service | `storage.local` | The key and headers are sent only to the configured provider, as request authentication |
-| Model lists fetched from each AI service (`ai.model-cache`): model ids and names, offered for 7 days | `storage.local` | No |
-| Tags and summaries (`bookmarks.metadata`) | `storage.local` | Included in AI context exports when the user turns that on; otherwise no |
-| Saved searches | `storage.local` | No |
-| Recent folders (for the popup, the right-click menu, and quick save) | `storage.local` | No |
-| Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No |
-| Recent searches | `storage.local`, can be turned off in Settings | No |
-| Dismissed notices (`ui.dismissed-notices`): which popup notices the user closed, such as the missing quick save shortcut line | `storage.local` | No |
-| Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No |
-| Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No |
+"In the backup file" is the registry's `backup` policy: whether Settings > Export writes the item to the backup file (see "Files the user saves" below).
+
+| Data | Stored where | Leaves the device? | In the backup file |
+| --- | --- | --- | --- |
+| Bookmarks (titles, URLs, folders) | The browser's own bookmark store | Only as described under "What each AI feature sends", the network tools under "Facts checked in the code", and "Files the user saves" below. Browser bookmark sync is the browser's feature, not the extension's. | No; bookmark exports are separate files |
+| Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions (including the AI quick save shortcut), when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page | No |
+| Settings the user changed from their defaults (`settings`), including the AI on/off switch; no AI provider, model, or key | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on | Yes |
+| Device settings (`settings` in `storage.local`), only those changed from their defaults: the quick save folder (a folder id), the site icon storage limit, AI activity recording, and Ask AI web search | `storage.local` | No | Yes |
+| Custom prompts (`prompts.index`, `prompts.prompt/<id>`): each prompt's name, task, and text, and which prompt each task uses; at most 10 | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on. A prompt's text is sent to the AI provider as the instructions of the task that uses it | Yes |
+| AI services (`ai.services`): each service's name, provider, and model | `storage.local` | No | Yes |
+| Bookmark table view (`manager.table-view`): visible columns, their order, and the sort | `storage.sync` | Same as settings. Contains no bookmark content. | Yes |
+| Bookmark table layout (`manager.table-layout`): column widths and page size | `storage.local` | No | No |
+| AI provider settings (`ai.credentials`): API key, Base URL, extra headers, and provider-specific fields, per AI service | `storage.local`, never synced | The key and headers are sent only to the configured provider, as request authentication | Never |
+| Model lists fetched from each AI service (`ai.model-cache`): model ids and names, offered for 7 days | `storage.local` | No | No |
+| AI activity log (`ai.activity-log`), only while the user has AI activity recording on (off by default, per device): the last AI requests with their request and response bodies, which hold bookmark titles, URLs, folder paths, and with Read page content, page text; credentials redacted before storing; deleted when recording is turned off | `storage.local` | No; never synced. The user can copy an entry to the clipboard | No |
+| Tags and summaries (`bookmarks.metadata`) | `storage.local` | Sent to the AI provider by Ask AI for the bookmarks it looks up. Written into JSON bookmark exports (keyed by URL) and into AI context exports when the user turns that on | No |
+| Saved searches (`search.saved`) | `storage.local` | No | Yes |
+| Recent folders (`folders.recent`, for the popup, the right-click menu, and quick save) | `storage.local` | No | No |
+| Last quick save (`quick-save.last`): the page title and URL, where it was saved, and the folders offered, for Undo and Move | `storage.session`, cleared when the browser closes | No | No |
+| Recent searches (`search.history`) | `storage.local`, can be turned off in Settings | No | No |
+| Site icons (`site-icons.cache`): one `data:` image URL and download time per origin, saved only after the user reviews a refresh; total capped by the `siteIconsMaxCacheKb` setting (default 4096 KB) | `storage.local` | No | No |
+| Scan results (duplicates, dead links, metadata, site icons before saving, privacy scan, statistics) | Memory only, while the dialog is open | No | No |
 
 ## What each AI feature sends
 
@@ -54,6 +60,14 @@ Only when AI is turned on and the user starts the feature (or turned on Auto-rec
 
 Ollama and custom endpoints can point to a server on the user's own machine, in which case nothing leaves the device.
 
+## Files the user saves
+
+The extension uploads none of these files; each is downloaded to wherever the user saves it, and what happens to it then is up to the user.
+
+- **Backup file** (Settings > Export, `bookmark-scout-backup.json`, named in `apps/extension/config/ui/options.toml`): every registry item marked `backup: 'include'` (the "In the backup file" column above), as stored: the changed settings (synced and device ones, including the quick save folder id), custom prompts, AI services (name, provider, and model), saved searches, and the table view (columns and sort). Never `ai.credentials`: no API key, Base URL, extra headers, or other AI connection field (`src/services/backup.ts`). It is plain JSON, not encrypted. Settings > Import restores it, replacing each item the file holds.
+- **Bookmark exports** (HTML, JSON, Markdown, CSV), with an optional privacy review that can redact sensitive values first. A JSON export also holds each exported bookmark's tags and summary, keyed by URL, and importing it gives them to the bookmarks it creates (`src/services/bookmark-export.ts`).
+- **AI context exports** (AI Context Packer): bookmarks, and tags and summaries when the user turns that on, in a file for an AI chat. Nothing is sent to a provider.
+
 ## Chrome Web Store: Privacy practices tab
 
 ### Data usage
@@ -71,7 +85,7 @@ Submitted for 0.3.0 (2026-10-08): the maintainer left every category unchecked, 
 | Personal communications | No | Not collected |
 | Location | No | Not collected |
 | Web history | Yes | Bookmark URLs and the active tab URL are sent to the user's AI provider when the user uses AI features |
-| User activity | No | No clicks, keystrokes, or usage are recorded or sent |
+| User activity | No | No clicks, keystrokes, or usage are sent anywhere. The opt-in AI activity log records only the extension's own AI requests, on this device |
 | Website content | Yes | Bookmark titles and the active tab title are sent to the AI provider; page heads are read locally by the Metadata Fetcher and Refresh Site Icons, and site icons are stored locally |
 
 Certifications (all true for this code):
