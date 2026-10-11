@@ -81,6 +81,24 @@ export default defineConfig<ExtensionProjectOptions>({
       },
     },
     {
+      // Real AI features against a real provider (tests/live/README.md). Opt-in: every test skips
+      // without the BS_LIVE_AI_* variables, and no pull request check runs it. One worker, so
+      // calls do not compete for the provider's rate limit, and no retries, so a real failure is
+      // reported. Nothing that could hold the API key is saved: no traces, screenshots, or video.
+      name: 'live',
+      testDir: './tests/live',
+      fullyParallel: false,
+      workers: 1,
+      retries: 0,
+      use: {
+        extensionBrowser: 'chromium',
+        extensionBuild: 'chrome-mv3',
+        screenshot: 'off',
+        trace: 'off',
+        video: 'off',
+      },
+    },
+    {
       // Playwright cannot open moz-extension:// pages, so this project drives Firefox through
       // geckodriver; see tests/e2e-firefox/fixtures.ts. Kept to one worker: the suite is short and
       // each test starts geckodriver and Firefox, which is not proven safe to run side by side.
