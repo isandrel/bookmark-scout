@@ -147,7 +147,6 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
     autoTaggingEnabled: true,
     summarizerEnabled: true,
     reorganizationEnabled: true,
-    reorganizationDryRunFirst: true,
   });
   await seedAIServices(extensionWorker, [
     { provider: 'openai', model: 'gpt-4o-mini', credentials: { apiKey: 'sk-synthetic-e2e-key' } },
@@ -496,7 +495,6 @@ test('[mocked provider contract] reorganization creates suggested folders, skips
   await useMockCustomProvider(extensionWorker);
   await setSettings(extensionWorker, {
     reorganizationEnabled: true,
-    reorganizationDryRunFirst: true,
     reorganizationMinConfidence: 0.5,
   });
   await page.route(`${MOCK_PROVIDER_BASE_URL}/**`, async (route) => {

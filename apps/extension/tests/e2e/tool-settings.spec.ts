@@ -77,7 +77,6 @@ test('enabled flags hide all tool cards and live settings restore selected cards
     autoTaggingEnabled: true,
     autoTaggingDefaultScope: 'all',
     reorganizationEnabled: true,
-    reorganizationDryRunFirst: false,
     siteIconsEnabled: true,
   });
 
@@ -114,8 +113,7 @@ test('enabled flags hide all tool cards and live settings restore selected cards
   await expect(autoTaggingCard.getByRole('combobox')).toHaveCount(0);
   await expect(autoTaggingCard.getByRole('button', { name: 'Analyze' })).toBeVisible();
   const reorganizationCard = toolCard(page, 'AI Folder Reorganization');
-  await expect(reorganizationCard.getByRole('button', { name: 'Apply Changes' })).toBeVisible();
-  await setSettings(extensionWorker, { reorganizationDryRunFirst: true });
+  // An AI plan is always reviewed first, so the card only ever offers Analyze.
   await expect(reorganizationCard.getByRole('button', { name: 'Analyze' })).toBeVisible();
   await setSettings(extensionWorker, { statisticsDefaultScope: 'folder' });
   await expect(statisticsCard.getByRole('combobox')).toContainText('E2E Tool A');

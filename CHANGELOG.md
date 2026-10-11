@@ -52,6 +52,7 @@
 
 ### Fixes
 
+- AI Folder Reorganization always shows its plan for review before it moves anything; the **Always Preview First** setting, which let it apply straight away, is gone. URL Cleaner, Metadata Fetcher, Auto-Tagging, and Content Summarizer now offer **Undo** after applying, which skips anything changed since. Folders an AI folder suggestion created are removed again after a failed save only while still empty.
 - Setting sliders follow a mouse drag again; before, only the arrow keys moved them.
 - The Firefox popup no longer clips its rounded corners and edges.
 - The manifest summary describes the extension in full.

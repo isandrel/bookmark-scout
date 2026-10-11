@@ -12,7 +12,8 @@
 
 export const AI_HOST_PATH = '/ai-host.html';
 
-type ActiveCall = { provider: string; model: string };
+/** An AI call in progress: its service, and what made it, which its log entries name. */
+type ActiveCall = { provider: string; model: string; source: AIActivitySource };
 
 /** AI calls in progress, by token; the host's provider requests must carry one of them. */
 const activeCalls = new Map<string, ActiveCall>();
@@ -70,24 +71,35 @@ async function askHost(request: QuickSaveHostRequest): Promise<QuickSaveHostResp
   return response;
 }
 
+/** What each schema the AI host page knows (`AIHostSchemaName`) answers with. */
+export type AIHostSchemaOutputs = {
+  folderRecommendations: FolderRecommendationsObject;
+};
+
 export type AIHostSession = {
   readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
-  generate: (request: { system: string; prompt: string }) => Promise<FolderRecommendationsObject>;
+  generate: <Name extends AIHostSchemaName>(request: {
+    schema: Name;
+    system: string;
+    prompt: string;
+  }) => Promise<AIHostSchemaOutputs[Name]>;
 };
 
 /**
- * Runs `work` with the AI host page open, then closes it once no other call needs it. Errors from
- * the provider come back already described in `locale`.
+ * Runs `work` with the AI host page open, then closes it once no other call needs it. Every
+ * provider request it makes is logged under `source`. Errors from the provider come back already
+ * described in `locale`.
  */
 export async function withAIHost<T>(
   settings: AISettings,
-  locale: SupportedLocale,
+  { locale, source }: { locale: SupportedLocale; source: AIActivitySource },
   work: (session: AIHostSession) => Promise<T>,
 ): Promise<T> {
   const token = crypto.randomUUID();
   activeCalls.set(token, {
     provider: settings.provider,
     model: settings.model,
+    source,
   });
   try {
     hostReady ??= openHost().catch((error: unknown) => {
@@ -102,18 +114,27 @@ export async function withAIHost<T>(
         const response = await askHost({ type: QUICK_SAVE_MESSAGE.hostReadPage, token, url });
         return response.ok ? (response.page ?? null) : null;
       },
-      generate: async ({ system, prompt }) => {
+      generate: async <Name extends AIHostSchemaName>({
+        schema,
+        system,
+        prompt,
+      }: {
+        schema: Name;
+        system: string;
+        prompt: string;
+      }) => {
         const response = await askHost({
           type: QUICK_SAVE_MESSAGE.hostGenerate,
           token,
           settings,
-          source: 'folderRecommendation',
+          source,
           locale,
-          schema: 'folderRecommendations',
+          schema,
           system,
           prompt,
         });
-        return (response.ok ? response.object : undefined) as FolderRecommendationsObject;
+        // The host parsed the answer with this schema before sending it.
+        return (response.ok ? response.object : undefined) as AIHostSchemaOutputs[Name];
       },
     });
   } finally {
@@ -141,7 +162,7 @@ export async function forwardAIHostFetch(
   if (!call) return { ok: false, error: 'No AI call in progress' };
   const { url, method, headers, body } = parsed.data;
   try {
-    const logged = createLoggingFetch({ source: 'folderRecommendation', ...call });
+    const logged = createLoggingFetch(call);
     const response = await logged(url, { method, headers, body });
     return {
       ok: true,

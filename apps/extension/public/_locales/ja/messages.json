@@ -1697,6 +1697,18 @@
         "message": "元に戻した移動: $1 件。元に戻せなかった移動: $2 件。",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "変更を元に戻しました",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "一部の変更は元に戻せませんでした",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "元に戻した変更: $1 件。元に戻せなかった変更: $2 件。",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "読み込みに失敗しました: $1",
         "description": "Error message for failed bookmark import"
@@ -2272,14 +2284,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "AIフォルダ再整理の既定の範囲",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "常に先にプレビュー",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "変更を適用する前に再整理プランを表示します",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "最小信頼度",

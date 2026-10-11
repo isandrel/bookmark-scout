@@ -174,13 +174,44 @@ function isComplete(counts: ChangeCounts): boolean {
   return counts.skipped === 0 && counts.failed === 0;
 }
 
-/** The success or partial-success report for a batch of reviewed bookmark changes. */
-function reportChanges(counts: ChangeCounts, keys: ChangeMessageKeys): ToolOutcome {
+/** What reverting a batch of reviewed changes reports. */
+function reportUndone({ restored, failed }: BookmarkChangesUndoResult): ToolOutcome {
+  return {
+    title: failed ? t('toast_changesUndonePartial') : t('toast_changesUndone'),
+    description: t('toast_changesUndoneDesc', [String(restored), String(failed)]),
+    variant: failed ? 'destructive' : 'success',
+  };
+}
+
+/** The undo a reviewed batch offers, when it changed anything. */
+function undoOffer(
+  applied: number,
+  undo: () => Promise<BookmarkChangesUndoResult>,
+  expiresAt?: number,
+): Pick<ToolOutcome, 'undo' | 'undoExpiresAt'> {
+  if (applied === 0) return {};
+  return {
+    undo: async () => reportUndone(await undo()),
+    ...(expiresAt !== undefined ? { undoExpiresAt: expiresAt } : {}),
+  };
+}
+
+/**
+ * The success or partial-success report for a batch of reviewed bookmark changes, with the undo
+ * `applyBookmarkChanges` returned.
+ */
+function reportChanges(
+  counts: ChangeCounts,
+  keys: ChangeMessageKeys,
+  result: Pick<BookmarkChangesResult, 'undo' | 'expiresAt'>,
+): ToolOutcome {
+  const undo = undoOffer(counts.applied, result.undo, result.expiresAt);
   return isComplete(counts)
     ? {
         title: t(keys.appliedTitle),
         description: tPlural(keys.appliedDescription, counts.applied),
         variant: 'success',
+        ...undo,
       }
     : {
         title: t(keys.partialTitle),
@@ -190,20 +221,28 @@ function reportChanges(counts: ChangeCounts, keys: ChangeMessageKeys): ToolOutco
           String(counts.failed),
         ]),
         variant: 'destructive',
+        ...undo,
       };
 }
 
 /** The report for saved AI suggestions, naming how many were skipped as stale. */
 function reportMetadataSaved(
-  { saved, skipped }: ReviewedMetadataSaveResult,
+  { saved, skipped, undo }: ReviewedMetadataSaveResult,
   descriptionKey: string,
 ): ToolOutcome {
+  const offer = undoOffer(saved, undo);
   return skipped === 0
-    ? { title: t('bookmarks_metadataSaved'), description: t(descriptionKey), variant: 'success' }
+    ? {
+        title: t('bookmarks_metadataSaved'),
+        description: t(descriptionKey),
+        variant: 'success',
+        ...offer,
+      }
     : {
         title: t('bookmarks_metadataPartlySaved'),
         description: t('bookmarks_metadataPartlySavedDesc', [String(saved), String(skipped)]),
         variant: 'destructive',
+        ...offer,
       };
 }
 
@@ -301,12 +340,11 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     icon: Sparkles,
     titleKey: 'tools_aiReorganize',
     descriptionKey: 'tools_aiReorganizeDesc',
-    actionKey: (settings) =>
-      settings.reorganizationDryRunFirst ? 'action_analyze' : 'action_applyChanges',
+    // An AI plan is always reviewed before it moves anything.
+    actionKey: () => 'action_analyze',
     requiresAI: true,
     changesBookmarks: true,
     reviewWhileScanning: true,
-    autoApply: (settings) => !settings.reorganizationDryRunFirst,
     scanFailureKey: 'ai_reorgAnalyzeFailed',
     async scan({ nodes, options, aiSettings }) {
       return generateReorganizationPlan(nodes, await aiSettings(), options.reorganization);
@@ -422,12 +460,16 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
     scan: ({ nodes, options }) => previewCleanUrls(nodes, options.urlCleaner),
     async apply(result) {
       const changes = await applyBookmarkChanges(getUrlCleanerChanges(result.previews));
-      return reportChanges(changes, {
-        appliedTitle: 'toast_urlCleanerApplied',
-        appliedDescription: 'toast_urlCleanerAppliedDesc',
-        partialTitle: 'toast_urlCleanerPartial',
-        partialDescription: 'toast_urlCleanerPartialDesc',
-      });
+      return reportChanges(
+        changes,
+        {
+          appliedTitle: 'toast_urlCleanerApplied',
+          appliedDescription: 'toast_urlCleanerAppliedDesc',
+          partialTitle: 'toast_urlCleanerPartial',
+          partialDescription: 'toast_urlCleanerPartialDesc',
+        },
+        changes,
+      );
     },
   },
   deadLinks: {
@@ -467,6 +509,7 @@ export const TOOL_DEFINITIONS: ToolDefinitions = {
           partialTitle: 'toast_metadataPartial',
           partialDescription: 'toast_metadataPartialDesc',
         },
+        changes,
       );
     },
   },

@@ -156,6 +156,8 @@ export type ReviewedMetadataSaveResult = {
   saved: number;
   /** Suggestions for bookmarks deleted or pointed at another URL since the scan. */
   skipped: number;
+  /** Puts back the tags and summaries the save replaced, once. */
+  undo: () => Promise<BookmarkMetadataUndoResult>;
 };
 
 /**
@@ -173,13 +175,14 @@ export async function saveReviewedBookmarkMetadata<
   const reviewed = items.filter((item) => item.url);
   const live = await Promise.all(reviewed.map((item) => getLiveBookmark(item.bookmarkId)));
   const current = reviewed.filter((item, index) => live[index]?.url === item.url);
-  if (current.length > 0) {
-    await mergeStoredBookmarkMetadata(
-      Object.fromEntries(current.map((item) => [item.bookmarkId, patch(item)])),
-      options,
-    );
-  }
-  return { saved: current.length, skipped: reviewed.length - current.length };
+  const { undo } =
+    current.length > 0
+      ? await mergeStoredBookmarkMetadataWithUndo(
+          Object.fromEntries(current.map((item) => [item.bookmarkId, patch(item)])),
+          options,
+        )
+      : { undo: async () => ({ restored: 0, failed: 0 }) };
+  return { saved: current.length, skipped: reviewed.length - current.length, undo };
 }
 
 export async function suggestBookmarkTags(

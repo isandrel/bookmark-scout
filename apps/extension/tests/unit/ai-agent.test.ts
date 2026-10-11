@@ -25,7 +25,9 @@ const tree: BookmarkTreeNode[] = [
         node('11', 'Design systems handbook', 'https://example.com/handbook'),
         node('12', 'Color tools', 'https://colors.example.com/'),
       ]),
-      node('2', 'Rust', undefined, [node('21', 'Ownership guide', 'https://rust.example/ownership')]),
+      node('2', 'Rust', undefined, [
+        node('21', 'Ownership guide', 'https://rust.example/ownership'),
+      ]),
     ],
   } as BookmarkTreeNode,
 ];
@@ -36,6 +38,15 @@ describe('searchBookmarksForAI', () => {
     expect(hits.map((hit) => hit.title)).toEqual(['Design systems handbook', 'Color tools']);
     expect(hits[0]).toMatchObject({ folder: 'Design', url: 'https://example.com/handbook' });
     expect(hits[1].tags).toEqual(['design']);
+  });
+
+  it('writes folder paths the way listFolders does', () => {
+    const nested = [
+      node('1', 'Work', undefined, [
+        node('2', 'Docs', undefined, [node('3', 'Spec', 'https://example.com/spec')]),
+      ]),
+    ];
+    expect(searchBookmarksForAI(nested, {}, 'spec')[0]?.folder).toBe('Work/Docs');
   });
 
   it('matches several words, ignores case, and respects the limit', () => {

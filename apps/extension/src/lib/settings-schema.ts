@@ -727,10 +727,6 @@ const fields = {
     'reorganizationDefaultScope',
     TOOL_SCOPE_CAPABILITIES.reorganization,
   ),
-  reorganizationDryRunFirst: switchField(
-    'ai_tools.reorganization.dry_run_first',
-    'reorganizationDryRunFirst',
-  ),
   reorganizationMinConfidence: numberField(
     'ai_tools.reorganization.min_confidence',
     'reorganizationMinConfidence',
@@ -1160,7 +1156,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'reorganization',
         labelKey: 'tools_aiReorganize',
         toggle: 'reorganizationEnabled',
-        fields: ['reorganizationDefaultScope', 'reorganizationDryRunFirst'],
+        fields: ['reorganizationDefaultScope'],
         advanced: [
           'reorganizationMinConfidence',
           'reorganizationBatchSize',
