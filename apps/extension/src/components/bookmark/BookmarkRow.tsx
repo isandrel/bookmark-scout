@@ -48,6 +48,7 @@ export function BookmarkRow({ row }: { row: PopupTreeRow }) {
         )}
         {node.title.trim() ? (
           <HighlightedText
+            showTitle={false}
             className="truncate text-sm"
             text={node.title}
             ranges={node.searchMatchRanges}
