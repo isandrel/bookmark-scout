@@ -326,6 +326,48 @@ describe('Ask AI action settings', () => {
   });
 });
 
+describe('refs that name the wrong kind of item, or are not refs', () => {
+  const message = async (name: string, input: unknown) =>
+    ((await run(name, input)) as { error?: { message: string } }).error?.message;
+
+  it('says which ref to use instead', async () => {
+    // A folder named with the bookmark prefix, and the other way round.
+    expect(await message('searchBookmarks', { folder: 'b:docs' })).toBe(
+      'b:docs is a folder; use f:docs for folders.',
+    );
+    expect(await message('suggestFolders', { ref: 'f:docs' })).toBe(
+      'f:docs is a folder; this needs b:<id>.',
+    );
+    // A bare id.
+    expect(await message('suggestFolders', { ref: 'b1' })).toBe(
+      '"b1" is not a ref; refs look like b:<id> for bookmarks and f:<id> for folders. Use b:b1 for this bookmark.',
+    );
+    expect(await message('searchBookmarks', { folder: 'cicd' })).toBe(
+      '"cicd" is not a ref; refs look like b:<id> for bookmarks and f:<id> for folders. Use f:cicd for this folder.',
+    );
+    expect(await message('suggestFolders', { ref: 'nothing' })).toBe(
+      '"nothing" is not a ref; refs look like b:<id> for bookmarks and f:<id> for folders.',
+    );
+    // A ref of the right shape that names nothing.
+    expect(await message('suggestFolders', { ref: 'b:gone' })).toBe(
+      'There is no bookmark b:gone; it may have been deleted.',
+    );
+    await saveSettings({ agentBridgeWrites: true });
+    expect(
+      await message('proposeChanges', {
+        summary: 'Move',
+        changes: [{ action: 'moveBookmarks', input: { refs: ['b:work'], to: 'f:rust' } }],
+      }),
+    ).toBe('Change 1: b:work is a folder; use f:work for folders.');
+    expect(
+      await message('proposeChanges', {
+        summary: 'Delete',
+        changes: [{ action: 'deleteBookmarks', input: { refs: ['f:b1'] } }],
+      }),
+    ).toBe('Change 1: f:b1 is a bookmark; use b:b1 for bookmarks.');
+  });
+});
+
 describe('runAction', () => {
   it('rejects unknown tools and invalid input, and turns a thrown error into a result', async () => {
     expect(await run('deleteEverything', {})).toMatchObject({ error: { code: 'not_found' } });

@@ -49,11 +49,7 @@ function changeableItems(
     const id = parsed?.id ?? '';
     const folder = parsed?.kind === 'folder' ? library.folderById.get(id) : undefined;
     const bookmark = parsed?.kind === 'bookmark' ? library.bookmarkById.get(id) : undefined;
-    if (!folder && !bookmark) {
-      return actionError('not_found', `There is no bookmark or folder ${ref}.`, {
-        hint: 'Find current refs with searchBookmarks or listFolders.',
-      });
-    }
+    if (!folder && !bookmark) return refProblem(library, ref);
     const reason = unchangeableReason(library, id);
     if (reason) return actionError('not_allowed', `${ref} cannot be changed. ${reason}`);
     items.push({ id, ...(folder ? { folder } : {}), ...(bookmark ? { bookmark } : {}) });
@@ -271,6 +267,17 @@ const createFolder = defineAction({
   },
 });
 
+/** The folder a page is saved into, or why it cannot be saved there. */
+function saveTarget(
+  input: { url: string; folder: string },
+  library: ActionLibrary,
+): LibraryFolder | ActionError {
+  if (!isWebUrl(input.url)) {
+    return actionError('invalid_input', 'Only http and https pages can be saved.');
+  }
+  return targetFolder(library, input.folder);
+}
+
 const saveBookmark = defineAction({
   risk: 'write',
   labelKey: 'actionName_saveBookmark',
@@ -294,12 +301,13 @@ const saveBookmark = defineAction({
     ...changeOutput,
   }),
   describe: (input) => t('askAI_toolSave', input.title || input.url || ''),
+  async precheck(input) {
+    const target = saveTarget(input, await loadActionLibrary());
+    return isActionError(target) ? target : undefined;
+  },
   async execute(input, context) {
-    if (!isWebUrl(input.url)) {
-      return actionError('invalid_input', 'Only http and https pages can be saved.');
-    }
     const library = await loadActionLibrary();
-    const target = targetFolder(library, input.folder);
+    const target = saveTarget(input, library);
     if (isActionError(target)) return target;
     const folderPath = input.newFolder
       ? `${target.path}${AI_FOLDER_PATH_SEPARATOR}${input.newFolder}`
@@ -335,6 +343,15 @@ const saveBookmark = defineAction({
   },
 });
 
+/** What an agent is told when the change it asks to undo is not in the undo history. */
+function changeGone(change: string): ActionError {
+  return actionError(
+    'not_found',
+    `Change ${change} does not exist or was already undone; there is nothing to undo.`,
+    { hint: 'Use the change id a write returned in this browser session; it can be undone once.' },
+  );
+}
+
 const undoChange = defineAction({
   risk: 'write',
   labelKey: 'actionName_undoChange',
@@ -350,13 +367,12 @@ const undoChange = defineAction({
     skipped: z.number().int().describe('Parts left alone because they changed since'),
   }),
   describe: () => t('askAI_toolUndo'),
+  async precheck(input) {
+    return (await getUndoableBookmarkChange(input.change)) ? undefined : changeGone(input.change);
+  },
   async execute(input) {
     const outcome = await undoBookmarkChange(input.change);
-    if (!outcome) {
-      return actionError('not_found', 'That change can no longer be undone.', {
-        hint: 'It was undone already, or the browser was restarted since.',
-      });
-    }
+    if (!outcome) return changeGone(input.change);
     return { undone: outcome.applied, skipped: outcome.skipped };
   },
 });

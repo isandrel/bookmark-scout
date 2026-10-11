@@ -5519,6 +5519,34 @@
         "message": "이 계획은 만료되었거나 이미 적용되었습니다. 다시 요청하면 새로 만듭니다.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
     },
+    "askAI_undoMissing": {
+        "message": "이 변경은 이미 실행 취소되었거나 기록에 더 이상 없어 실행 취소할 내용이 없습니다.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "\"$1\" 삭제",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "폴더 \"$1\"과(와) 그 안의 모든 항목 삭제($2개)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "\"$1\"을(를) $2에 복원",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "\"$1\"의 이름을 \"$2\"(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "\"$1\"의 주소를 $2(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "\"$1\"을(를) $2(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
     "askAI_approve": {
         "message": "승인",
         "description": "Ask AI approval card: button that approves the change"
