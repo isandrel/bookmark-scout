@@ -7,14 +7,14 @@ import { useEffect, useState } from 'react';
 const HINTS: readonly { bindings: readonly ShortcutBinding[]; label: MessageKey }[] = [
   { bindings: SHORTCUT_BINDINGS.popup.focusSearch.slice(0, 1), label: 'popup_hintSearch' },
   {
-    bindings: [...POPUP_TREE_BINDINGS.previous, ...POPUP_TREE_BINDINGS.next],
+    bindings: [...TREE_KEY_BINDINGS.previous, ...TREE_KEY_BINDINGS.next],
     label: 'popup_hintMove',
   },
   {
-    bindings: [...POPUP_TREE_BINDINGS.collapse, ...POPUP_TREE_BINDINGS.expand],
+    bindings: [...TREE_KEY_BINDINGS.collapse, ...TREE_KEY_BINDINGS.expand],
     label: 'popup_hintExpand',
   },
-  { bindings: POPUP_TREE_BINDINGS.activate, label: 'popup_hintEnter' },
+  { bindings: TREE_KEY_BINDINGS.activate, label: 'popup_hintEnter' },
 ];
 
 /** Whether Enter on the focused element saves the current page (a folder row that can hold it). */

@@ -128,6 +128,21 @@ export const SHORTCUT_BINDINGS = {
   },
 } as const satisfies Record<string, Record<string, readonly ShortcutBinding[]>>;
 
+/**
+ * Keys of the standard ARIA tree pattern, shared by the popup's tree and the manager's folder
+ * tree; not configurable, so every tree in the extension answers the same keys.
+ */
+export const TREE_KEY_BINDINGS = {
+  next: [{ key: 'ArrowDown' }],
+  previous: [{ key: 'ArrowUp' }],
+  first: [{ key: 'Home' }],
+  last: [{ key: 'End' }],
+  expand: [{ key: 'ArrowRight' }],
+  collapse: [{ key: 'ArrowLeft' }],
+  activate: [{ key: 'Enter' }],
+  toggle: [{ key: ' ' }],
+} as const satisfies Record<string, readonly ShortcutBinding[]>;
+
 /** Key caps as printed on keyboards, for keys whose `KeyboardEvent.key` name is not. */
 const KEY_CAP_LABELS: Readonly<Record<string, string>> = {
   ArrowUp: '↑',

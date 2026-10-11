@@ -513,7 +513,7 @@ test('Back returns to the table page that was open', async ({
 
   await page
     .getByTestId('folder-tree')
-    .getByRole('button', { name: 'Back Sub Folder', exact: true })
+    .getByRole('treeitem', { name: 'Back Sub Folder', exact: true })
     .click();
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Back Sub Folder']}$`));
   await expect(page.getByText('Page 1 of 1')).toBeVisible();

@@ -18,6 +18,11 @@ export interface BookmarkTreeNode {
   children?: BookmarkTreeNode[];
   /** Browser-reported permanent folder kind, e.g. `bookmarks-bar` or `mobile` (Chrome only). */
   folderType?: string;
+  /**
+   * Chrome 134+: whether the node is stored in the signed-in account (synced) rather than only
+   * on this device. With both kinds, there are two bookmarks bars.
+   */
+  syncing?: boolean;
   /** Set when the browser forbids modifying this node, e.g. admin-managed bookmarks. */
   unmodifiable?: 'managed';
   /** UI-only flag marking a node whose title matched the active search query. */

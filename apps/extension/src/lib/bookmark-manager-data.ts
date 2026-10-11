@@ -15,6 +15,10 @@ export type ManagerItem = {
   type: string;
   index?: number;
   isRootFolder?: boolean;
+  /** Top-level folders only: the browser's kind of permanent folder (Chrome and Edge). */
+  folderType?: string;
+  /** Top-level folders only: stored in the signed-in account (Chrome 134+). */
+  syncing?: boolean;
 };
 
 const itemsByIdCache = new WeakMap<readonly ManagerItem[], ReadonlyMap<string, ManagerItem>>();
@@ -103,7 +107,13 @@ export function buildFolderOptions(
   });
 }
 
-export type ManagerFolderNode = { id: string; title: string; children: ManagerFolderNode[] };
+export type ManagerFolderNode = {
+  id: string;
+  title: string;
+  /** The browser's own top-level folders, which never move. */
+  isRootFolder: boolean;
+  children: ManagerFolderNode[];
+};
 
 /** Folder hierarchy in browser order, starting at the permanent top-level folders. */
 export function buildManagerFolderTree(items: readonly ManagerItem[]): ManagerFolderNode[] {
@@ -117,6 +127,7 @@ export function buildManagerFolderTree(items: readonly ManagerItem[]): ManagerFo
   const toNode = (folder: ManagerItem): ManagerFolderNode => ({
     id: folder.id,
     title: folder.title,
+    isRootFolder: Boolean(folder.isRootFolder),
     children: (childrenByParent.get(folder.id) ?? [])
       .sort((left, right) => (left.index ?? 0) - (right.index ?? 0))
       .map(toNode),
@@ -125,6 +136,133 @@ export function buildManagerFolderTree(items: readonly ManagerItem[]): ManagerFo
     .filter((item) => item.type === ItemTypeEnum.Folder && item.isRootFolder)
     .sort((left, right) => (left.index ?? 0) - (right.index ?? 0))
     .map(toNode);
+}
+
+/**
+ * Where a top-level folder is stored, when Chrome keeps both kinds: in the signed-in account, or
+ * only on this device. The ids are Chrome's for its two headings.
+ */
+export const MANAGER_SECTION_IDS = { account: 'account_heading', local: 'local_heading' } as const;
+export type ManagerSection = keyof typeof MANAGER_SECTION_IDS;
+
+export type ManagerFolderSection = {
+  /** Null when the browser keeps one kind only, so the tree shows no headings. */
+  section: ManagerSection | null;
+  folders: ManagerFolderNode[];
+};
+
+/**
+ * The folder tree split as Chrome's manager splits it: when there is both an account bookmarks
+ * bar and one only on this device, the account folders under one heading and the device's under
+ * another; otherwise one list without headings.
+ */
+export function buildManagerFolderSections(items: readonly ManagerItem[]): ManagerFolderSection[] {
+  const folders = buildManagerFolderTree(items);
+  const byId = getManagerItemsById(items);
+  const syncing = (folder: ManagerFolderNode) => byId.get(folder.id)?.syncing === true;
+  const bars = folders.filter(
+    (folder) => byId.get(folder.id)?.folderType === BOOKMARKS_BAR_FOLDER_TYPE,
+  );
+  if (!bars.some(syncing) || bars.every(syncing)) return [{ section: null, folders }];
+  return [
+    { section: 'account', folders: folders.filter(syncing) },
+    { section: 'local', folders: folders.filter((folder) => !syncing(folder)) },
+  ];
+}
+
+/** A row of the manager's folder tree as it shows: the top level, a section heading, or a folder. */
+export type ManagerTreeRow = {
+  /** A folder id, a `MANAGER_SECTION_IDS` value, or `MANAGER_TREE_ROOT_ID`. */
+  id: string;
+  kind: 'root' | 'section' | 'folder';
+  folder?: ManagerFolderNode;
+  section?: ManagerSection;
+  /** From 1, as `aria-level` counts. */
+  level: number;
+  /** Position among its siblings, from 1, and how many there are. */
+  posInSet: number;
+  setSize: number;
+  /** The row it is inside; undefined at the top. */
+  parentId: string | undefined;
+  hasChildren: boolean;
+  expanded: boolean;
+};
+
+/** The tree row for the top level ("Bookmarks"), which shows every top-level folder. */
+export const MANAGER_TREE_ROOT_ID = 'root';
+
+/** Marks the chevron that opens or closes a folder tree row; a drag hovering a folder clicks it. */
+export const FOLDER_TREE_TOGGLE_ATTRIBUTE = 'data-tree-toggle';
+
+/**
+ * The rows the folder tree shows, depth first: the top level, then each section heading (when
+ * there are sections) or top-level folder, and the children of every expanded row.
+ */
+export function flattenManagerTree(
+  sections: readonly ManagerFolderSection[],
+  expanded: ReadonlySet<string>,
+): ManagerTreeRow[] {
+  const rows: ManagerTreeRow[] = [];
+  // Top-level folders sit beside the top-level row, so their positions count it: `before`.
+  const visit = (
+    folders: readonly ManagerFolderNode[],
+    level: number,
+    parentId?: string,
+    before = 0,
+  ) => {
+    folders.forEach((folder, index) => {
+      const hasChildren = folder.children.length > 0;
+      const isOpen = hasChildren && expanded.has(folder.id);
+      rows.push({
+        id: folder.id,
+        kind: 'folder',
+        folder,
+        level,
+        posInSet: before + index + 1,
+        setSize: before + folders.length,
+        parentId,
+        hasChildren,
+        expanded: isOpen,
+      });
+      if (isOpen) visit(folder.children, level + 1, folder.id);
+    });
+  };
+  const headed = sections.filter(
+    (entry): entry is ManagerFolderSection & { section: ManagerSection } => entry.section !== null,
+  );
+  const topCount = 1 + (headed.length > 0 ? headed.length : (sections[0]?.folders.length ?? 0));
+  rows.push({
+    id: MANAGER_TREE_ROOT_ID,
+    kind: 'root',
+    level: 1,
+    posInSet: 1,
+    setSize: topCount,
+    parentId: undefined,
+    hasChildren: false,
+    expanded: false,
+  });
+  if (headed.length === 0) {
+    visit(sections[0]?.folders ?? [], 1, undefined, 1);
+    return rows;
+  }
+  headed.forEach((entry, index) => {
+    const { section } = entry;
+    const id = MANAGER_SECTION_IDS[section];
+    const isOpen = entry.folders.length > 0 && expanded.has(id);
+    rows.push({
+      id,
+      kind: 'section',
+      section,
+      level: 1,
+      posInSet: index + 2,
+      setSize: topCount,
+      parentId: undefined,
+      hasChildren: entry.folders.length > 0,
+      expanded: isOpen,
+    });
+    if (isOpen) visit(entry.folders, 2, id);
+  });
+  return rows;
 }
 
 function hasAncestorIn(

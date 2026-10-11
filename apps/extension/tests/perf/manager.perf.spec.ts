@@ -32,7 +32,7 @@ test('bookmarks manager: open, open a folder, filter, update after an outside ch
       () =>
         page
           .getByTestId('folder-tree')
-          .getByRole('button', { name: libraryNames.area(area), exact: true })
+          .getByRole('treeitem', { name: libraryNames.area(area), exact: true })
           .click(),
       // Any topic of the area: the table's first page depends on the sort order.
       { selector: 'tbody tr', text: `Topic ${area}-` },

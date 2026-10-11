@@ -240,7 +240,8 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           expandTimer.current = {
             id: folder.id,
             timer: setTimeout(() => {
-              element?.querySelector<HTMLElement>('button[aria-expanded="false"]')?.click();
+              if (element?.getAttribute('aria-expanded') !== 'false') return;
+              element.querySelector<HTMLElement>(`[${FOLDER_TREE_TOGGLE_ATTRIBUTE}]`)?.click();
             }, MANAGER_DRAG_AUTO_EXPAND_MS),
           };
         }
