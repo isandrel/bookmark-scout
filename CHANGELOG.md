@@ -53,6 +53,10 @@
 - New install-time permissions without a warning: `scripting` in every browser (shows the quick save notification in the tab where the shortcut was pressed) and `offscreen` in Chrome and Edge (runs AI quick save's request in a hidden extension page). The AI quick save shortcut sends the same data as AI folder suggestions in the popup, to the AI provider you set up.
 - The privacy policy (website, store, and docs, in every language) now covers what this version stores: only changed settings sync, and no longer the AI provider and model, which stay on the device with your AI services; custom prompts sync through your browser account; the opt-in AI activity log stays on the device, with keys removed; the manager's column widths and page size stay on the device; and what the backup file and JSON bookmark exports hold. Nothing new is sent anywhere.
 
+### Fixes
+
+- Backups now keep each AI service's Base URL and provider-specific fields (never its API key or extra headers), and after a restore, services that need a key or headers entered again are marked **Needs setup** in Settings > AI. JSON bookmark exports keep each bookmark's own tags and summary, even when several bookmarks share a URL.
+
 ## 0.3.2
 
 ### Languages
