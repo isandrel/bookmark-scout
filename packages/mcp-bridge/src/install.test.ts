@@ -104,7 +104,9 @@ describe("manifest folder override", () => {
       launcher,
       manifestDir: "/profile/NativeMessagingHosts",
     });
-    expect(plan.files[1]?.path).toBe(join("/profile/NativeMessagingHosts", `${NATIVE_HOST_NAME}.json`));
+    expect(plan.files[1]?.path).toBe(
+      join("/profile/NativeMessagingHosts", `${NATIVE_HOST_NAME}.json`),
+    );
     expect(plan.registry).toEqual([]);
     expect(() =>
       planInstall(environment("linux"), {

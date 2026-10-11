@@ -198,6 +198,7 @@ Run Chromium and Firefox end-to-end tests locally. Edge (`nx run extension:test:
 
 - `bun run --cwd packages/mcp-bridge typecheck`
 - `bun test packages/mcp-bridge` (the integration tests start `native-host` and `serve` as real processes, with the test playing the extension and the MCP client)
+- `nx run extension:test:e2e:bridge` when the bridge or the extension's side of it changes: the compiled binary as Chromium's native host and an MCP client driving `serve` (the `Bridge E2E` CI job; on macOS, set `BOOKMARK_SCOUT_MCP_BIN` to a copy of the binary outside `~/Documents`, which the browser cannot run from without a privacy prompt)
 - when the message shapes in `src/protocol.ts` change, the extension side too (`PROTOCOL_VERSION` goes up when old and new ends could no longer talk)
 
 ### Shared or cross-app changes

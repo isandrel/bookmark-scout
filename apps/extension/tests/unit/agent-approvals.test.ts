@@ -49,7 +49,12 @@ beforeEach(async () => {
 describe('approving changes from local agents', () => {
   it('opens the approval window and waits for the answer from the approval page', async () => {
     const create = vi.spyOn(fakeBrowser.windows, 'create');
-    const outcome = requestAgentApproval({ id: '1.1', client: 'Agent', tool: 'saveBookmark', input: {} });
+    const outcome = requestAgentApproval({
+      id: '1.1',
+      client: 'Agent',
+      tool: 'saveBookmark',
+      input: {},
+    });
     await vi.waitFor(async () => expect(await waitingIds()).toEqual(['1.1']));
     expect(create).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'popup', url: expect.stringContaining(AGENT_APPROVAL_PATH) }),
@@ -65,13 +70,23 @@ describe('approving changes from local agents', () => {
 
   it('declines when the window is closed, and stops waiting when the agent cancels', async () => {
     const create = vi.spyOn(fakeBrowser.windows, 'create');
-    const first = requestAgentApproval({ id: '1.2', client: 'Agent', tool: 'undoChange', input: {} });
+    const first = requestAgentApproval({
+      id: '1.2',
+      client: 'Agent',
+      tool: 'undoChange',
+      input: {},
+    });
     await vi.waitFor(async () => expect(await waitingIds()).toEqual(['1.2']));
     const window = await create.mock.results[0]?.value;
     await fakeBrowser.windows.onRemoved.trigger(window?.id ?? -1);
     expect(await first).toBe('declined');
 
-    const second = requestAgentApproval({ id: '1.3', client: 'Agent', tool: 'undoChange', input: {} });
+    const second = requestAgentApproval({
+      id: '1.3',
+      client: 'Agent',
+      tool: 'undoChange',
+      input: {},
+    });
     await vi.waitFor(async () => expect(await waitingIds()).toEqual(['1.3']));
     cancelAgentApproval('1.3');
     expect(await second).toBe('cancelled');

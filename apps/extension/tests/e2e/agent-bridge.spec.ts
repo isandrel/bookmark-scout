@@ -1,6 +1,6 @@
 import type { Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { seedFolder } from './popup-helpers';
+import { childTitles, seedFolder } from './popup-helpers';
 import { readSettings, setSettings } from './storage';
 
 /**
@@ -150,4 +150,58 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
   await toggle.click();
   await expect(toggle).not.toBeChecked();
   await expect.poll(async () => (await bridgeState(extensionWorker)).disconnects).toBe(1);
+});
+
+test('a local agent saves a page only after the user approves it in the approval window', async ({
+  context,
+  extensionWorker,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'Agent Inbox', []);
+  await installFakeBridge(extensionWorker);
+  await setSettings(extensionWorker, {
+    language: 'en',
+    agentBridgeEnabled: true,
+    agentBridgeWrites: true,
+  });
+  await expect.poll(async () => (await bridgeState(extensionWorker)).connects).toHaveLength(1);
+  await expect
+    .poll(async () => {
+      const [hello] = (await bridgeState(extensionWorker)).posted;
+      return ((hello?.tools ?? []) as { name: string }[]).map((tool) => tool.name);
+    })
+    .toContain('saveBookmark');
+
+  const save = (id: string, title: string) =>
+    sendFromBridge(extensionWorker, {
+      type: 'call',
+      id,
+      client: { name: 'E2E agent' },
+      tool: 'saveBookmark',
+      args: { url: `https://agent.e2e.invalid/${id}`, title, folder: `f:${folderId}` },
+    });
+  const result = (id: string) =>
+    expect.poll(async () => (await bridgeState(extensionWorker)).posted.find((m) => m.id === id));
+
+  // The request opens the approval window, which names the agent and the change.
+  const opened = context.waitForEvent('page', (page) => page.url().includes('agent-approval'));
+  await save('2.1', 'Approved page');
+  const approvals = await opened;
+  const request = approvals.getByTestId('agent-approval');
+  await expect(request).toContainText('From “E2E agent” (the name the agent gave)');
+  await expect(request).toContainText('Save “Approved page” to');
+  // Nothing is saved before the answer.
+  expect(await childTitles(extensionWorker, folderId)).toEqual([]);
+  await request.getByRole('button', { name: 'Approve' }).click();
+  await result('2.1').toMatchObject({ type: 'result', isError: false, result: { created: true } });
+  expect(await childTitles(extensionWorker, folderId)).toEqual(['Approved page']);
+
+  // Declined: the agent is told, and nothing changes.
+  const reopened = context.waitForEvent('page', (page) => page.url().includes('agent-approval'));
+  await save('2.2', 'Declined page');
+  await (await reopened).getByRole('button', { name: 'Decline' }).click();
+  await result('2.2').toMatchObject({
+    isError: true,
+    result: { error: { code: 'not_allowed', message: 'The user declined this change.' } },
+  });
+  expect(await childTitles(extensionWorker, folderId)).toEqual(['Approved page']);
 });
