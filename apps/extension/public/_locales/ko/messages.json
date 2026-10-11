@@ -107,6 +107,18 @@
         "message": "실행 취소한 변경 다시 실행",
         "description": "Manager shortcuts help: redo the change undone last"
     },
+    "shortcuts_copy": {
+        "message": "선택한 항목 복사",
+        "description": "Keyboard shortcuts help: copy the selected bookmarks"
+    },
+    "shortcuts_cut": {
+        "message": "선택한 항목을 잘라내어 붙여넣기로 이동",
+        "description": "Keyboard shortcuts help: cut the selected bookmarks to move them with paste"
+    },
+    "shortcuts_paste": {
+        "message": "항목 또는 다른 앱에서 복사한 링크 붙여넣기",
+        "description": "Keyboard shortcuts help: paste copied or cut items, or links from another app"
+    },
     "shortcuts_moveRowFocus": {
         "message": "행 사이 이동, Shift를 누르면 선택 범위 확장",
         "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
@@ -300,6 +312,14 @@
     "toast_sortFailed": {
         "message": "폴더를 정렬하지 못했습니다",
         "description": "Error toast when sorting a folder fails"
+    },
+    "toast_linksAdded": {
+        "message": "북마크 $1개 추가됨",
+        "description": "Toast after links dropped on the manager become bookmarks. $1 is how many."
+    },
+    "toast_linksAddFailed": {
+        "message": "링크를 추가하지 못했습니다",
+        "description": "Error toast when links dropped on the manager could not be added"
     },
     "toast_deleteRestoredDesc": {
         "message": "\"$title$\" 항목을 복원했습니다.",

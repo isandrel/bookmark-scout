@@ -73,9 +73,12 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       }
     };
 
-    const pasteInto = async (target: { parentId: string; index?: number }) => {
+    const pasteInto = async (
+      target: { parentId: string; index?: number },
+      systemText?: string,
+    ) => {
       try {
-        const result = await pasteBookmarks(target);
+        const result = await pasteBookmarks(target, systemText);
         if (!result) {
           toast({ title: t('toast_nothingToPaste') });
           return;
@@ -92,12 +95,47 @@ export function useManagerCommands(options: ManagerCommandOptions) {
     };
 
     /** Pastes after the last of `items` in the folder shown, else at its end. */
-    const pasteNextTo = (items: Bookmark[]) => {
+    const pasteNextTo = (items: Bookmark[], systemText?: string) => {
       const folder = currentFolder();
-      if (!folder) return;
+      if (!canAddTo(folder) || !folder) return;
       const inFolder = items.filter((item) => item.parentId === folder.id);
       const last = Math.max(-1, ...inFolder.map((item) => item.index ?? -1));
-      void pasteInto({ parentId: folder.id, ...(last >= 0 ? { index: last + 1 } : {}) });
+      void pasteInto(
+        { parentId: folder.id, ...(last >= 0 ? { index: last + 1 } : {}) },
+        systemText,
+      );
+    };
+
+    /**
+     * Ctrl/Cmd+C, X, and V, as the browser's copy, cut, and paste events (Chrome's manager does
+     * the same): the event carries the clipboard, so no clipboard permission is needed. Copy and
+     * cut write the rows' URLs into it; paste pastes this page's items, or the URLs another app
+     * put there.
+     */
+    const clipboardEvents = {
+      copyOrCut: (event: ClipboardEvent, rows: Bookmark[]) => {
+        const mode = event.type === 'cut' ? 'cut' : 'copy';
+        if (rows.length === 0 || (mode === 'cut' && !rows.every(isModifiableBookmark))) return;
+        if (mode === 'copy' && rows.some((row) => row.isRootFolder)) return;
+        event.preventDefault();
+        const { text, html } = bookmarkClipboardData(rows);
+        event.clipboardData?.setData('text/plain', text);
+        event.clipboardData?.setData('text/html', html);
+        const ids = pruneNestedSelection(rows, latest.current.allData).map((item) => item.id);
+        void setBookmarkClipboard(mode, ids).then(
+          () => reportClipboard(mode, rows),
+          (error: unknown) =>
+            toast.error({
+              title: t('bookmarks_detailsCopyFailed'),
+              description: getErrorMessage(error),
+            }),
+        );
+      },
+      paste: (event: ClipboardEvent, rows: Bookmark[]) => {
+        if (!canAddTo(currentFolder())) return;
+        event.preventDefault();
+        pasteNextTo(rows, event.clipboardData?.getData('text/plain') ?? undefined);
+      },
     };
 
     const base = {
@@ -122,7 +160,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       },
       isOutsideOpenFolder: (bookmark) =>
         !latest.current.folderItems.some((item) => item.id === bookmark.id),
-      paste: pasteNextTo,
+      paste: (items) => pasteNextTo(items),
       canPaste: () => hasBookmarkClipboard() && canAddTo(currentFolder()),
     };
 
@@ -170,6 +208,6 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       paste: () => pasteNextTo([]),
     };
 
-    return { tableItemContext, treeItemContext, folderContext };
+    return { tableItemContext, treeItemContext, folderContext, clipboardEvents };
   }, []);
 }

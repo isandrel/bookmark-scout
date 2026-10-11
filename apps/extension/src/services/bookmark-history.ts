@@ -192,6 +192,11 @@ export type BookmarkWriter = {
   }) => Promise<Browser.bookmarks.BookmarkTreeNode>;
   update: (id: string, changes: BookmarkFields) => Promise<void>;
   move: (id: string, to: { parentId: string; index?: number }) => Promise<void>;
+  /**
+   * Moves the item into `parentId` right before `beforeId`, or to the end when it is null or no
+   * longer there; the same in every browser, whatever its move index counts.
+   */
+  moveBefore: (id: string, parentId: string, beforeId: string | null) => Promise<void>;
   /** Removes the item and everything inside it; undo recreates it with its tags and summary. */
   remove: (id: string) => Promise<void>;
 };
@@ -261,6 +266,18 @@ function createWriter(operations: BookmarkHistoryOperation[]): BookmarkWriter {
       if (!live) throw new Error(t('error_bookmarkNotFound'));
       const from = placeOf(live);
       const moved = await moveBookmark(id, to);
+      operations.push({ kind: 'move', id, from, to: placeOf(moved) });
+    },
+    async moveBefore(id, parentId, beforeId) {
+      const live = await readNode(id);
+      if (!live) throw new Error(t('error_bookmarkNotFound'));
+      const from = placeOf(live);
+      const siblings = await getBookmarkChildren(parentId);
+      const before = beforeId ? siblings.findIndex((sibling) => sibling.id === beforeId) : -1;
+      const position = before < 0 ? siblings.length : before;
+      // Leaving its own place shifts everything after it up by one.
+      const final = live.parentId === parentId && from.index < position ? position - 1 : position;
+      const moved = await moveBookmarkToPosition(id, { parentId, index: final });
       operations.push({ kind: 'move', id, from, to: placeOf(moved) });
     },
     async remove(id) {

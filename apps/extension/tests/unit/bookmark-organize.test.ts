@@ -1,13 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import { urlsInText } from '@/lib/bookmark-drop';
 import { undoBookmarkChange } from '@/services/bookmark-history';
 import {
+  addDroppedLinks,
   bookmarkClipboardData,
+  moveBookmarksTo,
   pasteBookmarks,
   setBookmarkClipboard,
   sortBookmarkFolder,
   sortedFolderOrder,
-  urlsInText,
 } from '@/services/bookmark-organize';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -105,5 +107,39 @@ describe('cut, copy, and paste', () => {
     // The text this page put there pastes the copied items instead.
     await pasteBookmarks({ parentId: 'g' }, 'https://e2e.invalid/2');
     expect(titles('g')).toEqual(['https://a.example/x', 'https://b.example/', 'item 2']);
+  });
+});
+
+describe('drag and drop', () => {
+  it('moves the dragged items, in order, before the drop target as one undo step', async () => {
+    await expect(moveBookmarksTo(['b2', 'b10'], { parentId: 'f', beforeId: 'sub' })).resolves.toBe(
+      2,
+    );
+    expect(titles('f')).toEqual(['item 2', 'Item 10', 'Zeta folder', 'Alpha folder']);
+    await expect(undoBookmarkChange()).resolves.toMatchObject({
+      label: { action: 'move', count: 2 },
+      skipped: 0,
+    });
+    expect(titles('f')).toEqual(['Item 10', 'Zeta folder', 'item 2', 'Alpha folder']);
+  });
+
+  it('moves to the end of a folder, its own or another', async () => {
+    await moveBookmarksTo(['b10'], { parentId: 'f', beforeId: null });
+    expect(titles('f')).toEqual(['Zeta folder', 'item 2', 'Alpha folder', 'Item 10']);
+    await moveBookmarksTo(['a'], { parentId: 'sub', beforeId: null });
+    expect(titles('sub')).toEqual(['Inside', 'Alpha folder']);
+  });
+
+  it('adds dropped links before the drop target as one undo step', async () => {
+    const links = [
+      { url: 'https://a.example/', title: 'A' },
+      { url: 'https://b.example/', title: 'B' },
+    ];
+    await expect(addDroppedLinks(links, { parentId: 'f', beforeId: 'b2' })).resolves.toBe(2);
+    expect(titles('f')).toEqual(['Item 10', 'Zeta folder', 'A', 'B', 'item 2', 'Alpha folder']);
+    await expect(undoBookmarkChange()).resolves.toMatchObject({
+      label: { action: 'add', count: 2 },
+    });
+    expect(titles('f')).toEqual(['Item 10', 'Zeta folder', 'item 2', 'Alpha folder']);
   });
 });

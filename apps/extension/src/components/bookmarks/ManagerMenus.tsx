@@ -6,7 +6,7 @@
  */
 
 import { MoreVertical } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import { type HTMLAttributes, type ReactNode, useState } from 'react';
 
 type FolderMenu = keyof typeof FOLDER_ACTION_MENUS;
 
@@ -73,6 +73,8 @@ type ItemContextMenuProps = {
   folderContext?: FolderActionContext;
   className?: string;
   testId: string;
+  /** More props for the area, such as drag and drop handlers. */
+  areaProps?: HTMLAttributes<HTMLDivElement>;
 };
 
 /**
@@ -87,12 +89,13 @@ export function ItemContextMenu({
   folderContext,
   className,
   testId,
+  areaProps,
 }: ItemContextMenuProps) {
   const [items, setItems] = useState<Bookmark[]>([]);
   return (
     <ContextMenuRoot>
       <ContextMenuTrigger
-        render={<div className={className} data-testid={testId} />}
+        render={<div className={className} data-testid={testId} {...areaProps} />}
         onContextMenu={(event) => {
           const resolved = resolveItems(event.target);
           if (resolved.length === 0 && !folderContext) {

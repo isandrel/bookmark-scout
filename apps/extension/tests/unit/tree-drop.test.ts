@@ -9,7 +9,7 @@ import type { BookmarkTreeNode } from '@/types';
 import { readConfigToml } from '../config-files';
 
 const { folder_edge_fraction: edge, bookmark_split_fraction: split } = readConfigToml(
-  'ui/popup-tree.toml',
+  'ui/drag-drop.toml',
 ) as { folder_edge_fraction: number; bookmark_split_fraction: number };
 
 const folderNode: BookmarkTreeNode = {

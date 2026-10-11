@@ -107,6 +107,18 @@
         "message": "Rückgängig gemachte Änderung wiederholen",
         "description": "Manager shortcuts help: redo the change undone last"
     },
+    "shortcuts_copy": {
+        "message": "Ausgewählte Elemente kopieren",
+        "description": "Keyboard shortcuts help: copy the selected bookmarks"
+    },
+    "shortcuts_cut": {
+        "message": "Ausgewählte Elemente ausschneiden, um sie mit Einfügen zu verschieben",
+        "description": "Keyboard shortcuts help: cut the selected bookmarks to move them with paste"
+    },
+    "shortcuts_paste": {
+        "message": "Elemente oder aus einer anderen App kopierte Links einfügen",
+        "description": "Keyboard shortcuts help: paste copied or cut items, or links from another app"
+    },
     "shortcuts_moveRowFocus": {
         "message": "Zwischen Zeilen wechseln; mit Umschalt die Auswahl erweitern",
         "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
@@ -300,6 +312,18 @@
     "toast_sortFailed": {
         "message": "Ordner konnte nicht sortiert werden",
         "description": "Error toast when sorting a folder fails"
+    },
+    "toast_linksAdded": {
+        "message": "$1 Lesezeichen hinzugefügt",
+        "description": "Toast after links dropped on the manager become bookmarks. $1 is how many."
+    },
+    "toast_linksAddFailed": {
+        "message": "Links konnten nicht hinzugefügt werden",
+        "description": "Error toast when links dropped on the manager could not be added"
+    },
+    "toast_linksAdded_one": {
+        "message": "$1 Lesezeichen hinzugefügt",
+        "description": "Toast after one dropped link becomes a bookmark. $1 is 1."
     },
     "toast_pasted_one": {
         "message": "$1 Element eingefügt",

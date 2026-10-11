@@ -59,6 +59,11 @@ export type ManagerShortcutOptions = {
   onNavigate: (folderId: string | null) => void;
   table: RefObject<DataTableHandle<Bookmark> | null>;
   commands: ManagerRowCommands;
+  /** Ctrl/Cmd+C, X, and V on the rows, through the browser's clipboard events. */
+  clipboard: {
+    copyOrCut: (event: ClipboardEvent, rows: Bookmark[]) => void;
+    paste: (event: ClipboardEvent, rows: Bookmark[]) => void;
+  };
 };
 
 const ROW_ACTIONS = new Set(['delete', 'rename', 'open', 'openInNewTabs', 'openInNewWindow']);
@@ -138,8 +143,26 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
       if (handled) event.preventDefault();
     };
 
+    const handleClipboard = (event: ClipboardEvent) => {
+      if (event.defaultPrevented || isTypingTarget(event.target) || hasOpenOverlay()) return;
+      // Text selected in the page copies as text.
+      if (event.type !== 'paste' && (window.getSelection()?.toString() ?? '') !== '') return;
+      const { table, clipboard } = latest.current;
+      const rows = table.current?.getCommandRows() ?? [];
+      if (event.type === 'paste') clipboard.paste(event, rows);
+      else clipboard.copyOrCut(event, rows);
+    };
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    for (const type of ['copy', 'cut', 'paste'] as const) {
+      document.addEventListener(type, handleClipboard);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      for (const type of ['copy', 'cut', 'paste'] as const) {
+        document.removeEventListener(type, handleClipboard);
+      }
+    };
   }, []);
 
   return { helpOpen, setHelpOpen };

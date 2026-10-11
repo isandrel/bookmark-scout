@@ -103,6 +103,18 @@
         "message": "元に戻した変更をやり直す",
         "description": "Manager shortcuts help: redo the change undone last"
     },
+    "shortcuts_copy": {
+        "message": "選択した項目をコピー",
+        "description": "Keyboard shortcuts help: copy the selected bookmarks"
+    },
+    "shortcuts_cut": {
+        "message": "選択した項目を切り取り、貼り付けで移動",
+        "description": "Keyboard shortcuts help: cut the selected bookmarks to move them with paste"
+    },
+    "shortcuts_paste": {
+        "message": "項目、または他のアプリでコピーしたリンクを貼り付け",
+        "description": "Keyboard shortcuts help: paste copied or cut items, or links from another app"
+    },
     "shortcuts_moveRowFocus": {
         "message": "行を移動。Shift を押しながらで選択範囲を広げる",
         "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
@@ -296,6 +308,14 @@
     "toast_sortFailed": {
         "message": "フォルダを並べ替えられませんでした",
         "description": "Error toast when sorting a folder fails"
+    },
+    "toast_linksAdded": {
+        "message": "$1件のブックマークを追加しました",
+        "description": "Toast after links dropped on the manager become bookmarks. $1 is how many."
+    },
+    "toast_linksAddFailed": {
+        "message": "リンクを追加できませんでした",
+        "description": "Error toast when links dropped on the manager could not be added"
     },
     "toast_deleteRestoredDesc": {
         "message": "「$title$」を復元しました。",
