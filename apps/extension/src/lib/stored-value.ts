@@ -6,9 +6,10 @@
  * inside that queue), so concurrent read-modify-write callers never overwrite each other. Each
  * page keeps one live copy per key, shared by every `useStoredValue` and `observe` caller; a
  * value delivered by the storage watcher always wins over an initial read that resolves later.
+ *
+ * No React here: the background reads stored values too. The hook is in
+ * `hooks/use-stored-value.ts`.
  */
-
-import { useSyncExternalStore } from 'react';
 
 /** A WXT storage key, `<area>:<name>`; released keys are listed in STORAGE_KEYS. */
 export type StoredValueKey = `local:${string}` | `sync:${string}`;
@@ -184,28 +185,13 @@ function liveValueOf<T>(storedValue: StoredValue<T>): LiveValue<T> {
   return live as LiveValue<T>;
 }
 
-const identity = <T>(value: T) => value;
-
 /**
- * The live stored value for React: `empty` and `isLoading` until the first read, then every change
- * from any page or device. All components on a page share one storage read and one watcher per key.
- * `select` picks a part of the value (return a part, not a new object), so a component re-renders
- * only when that part changes.
+ * The page's live copy of a stored value as an external store: `useStoredValue`
+ * (`hooks/use-stored-value.ts`) reads it with `useSyncExternalStore`.
  */
-export function useStoredValue<T>(storedValue: StoredValue<T>): StoredSnapshot<T>;
-export function useStoredValue<T, S>(
+export function getStoredValueStore<T>(
   storedValue: StoredValue<T>,
-  select: (value: T) => S,
-): StoredSnapshot<S>;
-export function useStoredValue<T, S>(
-  storedValue: StoredValue<T>,
-  select: (value: T) => S = identity as (value: T) => S,
-): StoredSnapshot<S> {
-  const live = liveValueOf(storedValue);
-  const readValue = () => select(live.getSnapshot().value);
-  const readLoading = () => live.getSnapshot().isLoading;
-  // The same snapshot serves server rendering (unit tests render components to a string).
-  const value = useSyncExternalStore(live.subscribe, readValue, readValue);
-  const isLoading = useSyncExternalStore(live.subscribe, readLoading, readLoading);
-  return { value, isLoading };
+): Pick<LiveValue<T>, 'subscribe' | 'getSnapshot'> {
+  const { subscribe, getSnapshot } = liveValueOf(storedValue);
+  return { subscribe, getSnapshot };
 }

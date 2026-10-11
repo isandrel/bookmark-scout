@@ -7,9 +7,10 @@
  * from the extension's own `_locales/` files, and only when the browser does not already show
  * that locale. `t()` stays synchronous: a newly selected language is applied once its messages
  * have loaded, and until then `t()` keeps showing the previous one.
+ *
+ * No React here: the background imports `t()`, and a React import would bundle React into it.
+ * The hooks that re-render on a language change are in `use-language.ts`.
  */
-
-import { useSyncExternalStore } from 'react';
 
 export type BundledMessage = {
   message: string;
@@ -250,19 +251,6 @@ export function getLanguageName(locale: SupportedLocale): string {
  */
 export function getLanguage() {
   return currentLanguage;
-}
-
-/** The language `t()` shows, re-rendering the component after it changes. */
-export function useLanguage(): LanguagePreference {
-  return useSyncExternalStore(subscribeToLanguage, getLanguage, getLanguage);
-}
-
-/**
- * Counts changes to the messages `t()` shows, re-rendering the component after each. Unlike
- * `useLanguage`, it also changes when 'auto' starts showing loaded messages (`zh-HK` → `zh_TW`).
- */
-export function useLanguageRevision(): number {
-  return useSyncExternalStore(subscribeToLanguage, getLanguageRevision, getLanguageRevision);
 }
 
 /** Changes whenever the messages `t()` shows change; a cache of translated text keys on it. */

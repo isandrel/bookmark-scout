@@ -153,8 +153,9 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 // Value types shared with the rest of the extension
 // ============================================================================
 
-// Featured providers from config/ai/providers plus the bundled models.dev catalog.
-const aiProviderSchema = z.enum(getAvailableProviders().map((provider) => provider.id));
+// Featured providers from config/ai/providers plus the bundled models.dev catalog. A refinement,
+// not an enum of every id: listing them would validate the catalog on load of every page.
+const aiProviderSchema = z.string().refine(isAvailableProvider);
 
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;

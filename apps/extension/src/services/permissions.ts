@@ -9,7 +9,8 @@
  *   permission turns the feature off without rewriting the synced setting, so a revoke on one
  *   device does not switch the feature off on another where it is still granted.
  *
- * `hooks/use-permission.tsx` wraps these for pages: `usePermission` and `usePermissionGate`.
+ * `hooks/use-permission.tsx` wraps these for pages: `usePermission`, `usePermissionGate`, and
+ * `notifyPermissionDenied`. This file stays free of UI code: the background imports it.
  */
 
 /** The browser this build is for, as the permission tables name it. */
@@ -76,10 +77,4 @@ export function watchPermissions(listener: () => void): () => void {
     events?.onAdded?.removeListener(handler);
     events?.onRemoved?.removeListener(handler);
   };
-}
-
-/** Shows the toast for a declined request; the feature stays off. */
-export function notifyPermissionDenied(feature: PermissionFeature): void {
-  const { denied } = PERMISSION_FEATURES[feature];
-  toast.error({ title: t(denied.titleKey), description: t(denied.descriptionKey) });
 }

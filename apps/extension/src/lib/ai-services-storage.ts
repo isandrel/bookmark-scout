@@ -35,11 +35,10 @@ export const aiServicesValue = defineStoredValue<AIServicesState | null>({
  */
 async function deriveLegacyServices(): Promise<AIServicesState> {
   const [settings, configs] = await Promise.all([getSettings(), aiProviderConfigValue.get()]);
-  const providerIds = new Set(getAvailableProviders().map((provider) => provider.id));
   const ids = [
     settings.aiProvider,
     ...Object.keys(configs).filter((id) => id !== settings.aiProvider),
-  ].filter((id) => providerIds.has(id));
+  ].filter(isAvailableProvider);
   return {
     defaultServiceId: settings.aiProvider,
     services: ids.map((provider) => ({
@@ -57,8 +56,7 @@ async function deriveLegacyServices(): Promise<AIServicesState> {
 
 /** Drops services whose provider no longer exists and repairs a missing default. */
 function normalizeServices(state: AIServicesState): AIServicesState {
-  const providerIds = new Set(getAvailableProviders().map((provider) => provider.id));
-  const services = state.services.filter((service) => providerIds.has(service.provider));
+  const services = state.services.filter((service) => isAvailableProvider(service.provider));
   const defaultService =
     services.find((service) => service.id === state.defaultServiceId && service.enabled) ??
     services.find((service) => service.enabled);
