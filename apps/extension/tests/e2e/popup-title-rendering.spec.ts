@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 
 const SETTINGS_KEY = 'bookmark-scout-settings';
 const BOOKMARK_PAYLOAD = '<img src=x onerror=alert(1)><style>*{display:none}</style>';
-const FOLDER_PAYLOAD = '<style>.accordion-container{display:none}</style>Harmless folder';
+const FOLDER_PAYLOAD = '<style>[role="tree"]{display:none}</style>Harmless folder';
 
 async function seed(worker: Worker) {
   return worker.evaluate(
@@ -55,7 +55,7 @@ test('bookmark and folder titles containing markup render as literal text', asyn
   const folderRow = page.locator('.folder-item').filter({ hasText: 'Harmless folder' }).first();
   await expect(folderRow).toBeVisible();
   await expect(folderRow.getByText(FOLDER_PAYLOAD, { exact: true })).toBeVisible();
-  await expect(page.locator('.accordion-container')).toBeVisible();
+  await expect(page.locator('[role="tree"]')).toBeVisible();
 
   await folderRow.click();
   const bookmarkRow = page.locator('.bookmark-item').filter({ hasText: 'onerror' });
@@ -64,8 +64,8 @@ test('bookmark and folder titles containing markup render as literal text', asyn
     'title',
     BOOKMARK_PAYLOAD,
   );
-  await expect(page.locator('.accordion-container img[src="x"]')).toHaveCount(0);
-  await expect(page.locator('.accordion-container style')).toHaveCount(0);
+  await expect(page.locator('[role="tree"] img[src="x"]')).toHaveCount(0);
+  await expect(page.locator('[role="tree"] style')).toHaveCount(0);
   await expect(page.getByText('Tom & Jerry <b>not bold</b>', { exact: true })).toBeVisible();
 
   // Highlighting wraps matches in <mark> without re-interpreting the rest of the title.

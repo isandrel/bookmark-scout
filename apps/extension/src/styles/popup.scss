@@ -55,24 +55,3 @@
   }
 }
 
-// Accordion styles
-.accordion-content {
-  overflow: hidden !important;
-  position: relative;
-
-  .accordion-content {
-    overflow: hidden;
-  }
-}
-
-.accordion-item {
-  overflow: visible !important;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.accordion-container {
-  max-height: 100%;
-  overflow-y: auto;
-  position: relative;
-}

@@ -39,6 +39,8 @@ function tryResolveFolderPath(
 
 function PopupPage() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const treeRef = useRef<PopupTreeHandle>(null);
+  const treeScrollRef = useRef<HTMLDivElement>(null);
   // The control that opened a dialog or the new-folder input, to get focus back afterwards.
   const focusReturnRef = useRef<{ opener: HTMLElement | null; folderId?: string } | null>(null);
 
@@ -66,7 +68,6 @@ function PopupPage() {
     createFolder,
     handleDrop,
     toggleExpandAllChildren,
-    areAllChildrenExpanded,
   } = useBookmarkStore();
 
   // Get searchOptions separately to pass to BookmarkSearch
@@ -279,7 +280,12 @@ function PopupPage() {
 
   const clearQuery = useCallback(() => setQuery(''), [setQuery]);
   const applyQuery = useCallback(() => setDebouncedQuery(query), [query, setDebouncedQuery]);
-  usePopupShortcuts({ searchInputRef: inputRef, onClearQuery: clearQuery, onApplyQuery: applyQuery });
+  usePopupShortcuts({
+    searchInputRef: inputRef,
+    treeRef,
+    onClearQuery: clearQuery,
+    onApplyQuery: applyQuery,
+  });
   const setFolderExpanded = useCallback(
     (folderId: string, expanded: boolean) =>
       setExpandedFolders((prev) =>
@@ -289,6 +295,7 @@ function PopupPage() {
   );
   const handleTreeKeyDown = usePopupTreeKeys({
     searchInputRef: inputRef,
+    treeRef,
     setFolderExpanded,
     onSaveToFolder: saveCurrentPage,
   });
@@ -635,7 +642,7 @@ function PopupPage() {
           </p>
         )}
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div ref={treeScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden">
           {isLoading ? (
             <div className="space-y-1 p-2">
               <Skeleton className="h-8 w-full" />
@@ -677,13 +684,12 @@ function PopupPage() {
               )}
             </div>
           ) : (
-            <div className="p-2">
+            <div>
               <PopupTreeProvider
                 folders={folders}
                 favicon={favicon}
                 newFolderName={newFolderName}
                 addingToFolderIds={addingToFolderIds}
-                areAllChildrenExpanded={areAllChildrenExpanded}
                 onDrop={handleDropWithToast}
                 onAddBookmark={saveCurrentPage}
                 onAddFolder={handleAddFolder}
@@ -694,17 +700,14 @@ function PopupPage() {
                 onNewFolderNameChange={setNewFolderName}
                 onToggleExpandAllChildren={toggleExpandAllChildren}
               >
-                <Accordion
-                  multiple
-                  value={expandedFolders}
-                  onValueChange={(value) => setExpandedFolders([...value])}
+                <PopupTree
+                  roots={displayFolders}
+                  expandedIds={expandedFolders}
+                  setFolderExpanded={setFolderExpanded}
+                  scrollRef={treeScrollRef}
                   onKeyDown={handleTreeKeyDown}
-                  className="w-full accordion-container"
-                >
-                  {displayFolders.map((node) => (
-                    <FolderItem key={node.id} node={node} />
-                  ))}
-                </Accordion>
+                  handleRef={treeRef}
+                />
               </PopupTreeProvider>
             </div>
           )}

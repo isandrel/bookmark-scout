@@ -118,28 +118,7 @@
     'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, monospace;
   --font-display: 'Bricolage Grotesque Variable', var(--font-sans);
 
-  /* Base UI exposes the panel height as --accordion-panel-height, which tw-animate-css does not read. */
-  --animate-accordion-down: accordion-panel-down 0.2s ease-out;
-  --animate-accordion-up: accordion-panel-up 0.2s ease-out;
   --animate-toast-progress: toast-progress var(--toast-duration, 4000ms) linear forwards;
-
-  @keyframes accordion-panel-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--accordion-panel-height);
-    }
-  }
-
-  @keyframes accordion-panel-up {
-    from {
-      height: var(--accordion-panel-height);
-    }
-    to {
-      height: 0;
-    }
-  }
 
   @keyframes toast-progress {
     from {

@@ -106,7 +106,6 @@ test('popup: expand all and scroll', async ({
   test.setTimeout(4 * 60_000);
   await seedLibrary(extensionWorker);
   const report = new PerfReport();
-  const { areas, topics_per_area } = perfConfig.library;
 
   for (let run = 0; run < perfConfig.run.repeats; run++) {
     // From a freshly opened popup, as a user would.
@@ -121,7 +120,9 @@ test('popup: expand all and scroll', async ({
       // The bookmarks bar's own button expands every folder under it.
       () =>
         page.getByRole('button', { name: 'Expand all subfolders', exact: true }).first().click(),
-      { selector: '.folder-item', minCount: areas * topics_per_area },
+      // The bar's button turns into "Collapse all subfolders" once every folder is open. The
+      // tree renders only the rows on screen, so counting rows would never reach the library.
+      { selector: 'button[aria-label="Collapse all subfolders"]' },
     );
     // A frozen popup cannot be measured again in this browser.
     if (!report.addInteraction('popup.expandAll', expanded)) {

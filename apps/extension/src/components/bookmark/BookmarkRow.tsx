@@ -1,13 +1,13 @@
 /**
- * BookmarkItem component.
- * Renders a single bookmark row of the popup tree, with drag-and-drop and delete.
+ * A bookmark row of the popup tree, with drag and drop and delete. Render it inside a
+ * `PopupTreeProvider`.
  */
 
 import { Trash2 } from 'lucide-react';
-import type { BookmarkTreeNode } from '@/types';
 
-export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
+export function BookmarkRow({ row }: { row: PopupTreeRow }) {
   const { favicon, rowRef, draggingId, onDeleteBookmark } = usePopupTree();
+  const { node } = row;
   const onLinkClick = useLinkClick();
 
   return (
@@ -16,7 +16,14 @@ export function BookmarkItem({ node }: { node: BookmarkTreeNode }) {
       <a
         ref={rowRef(node, 'bookmark')}
         href={node.url}
-        {...{ [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark' }}
+        role="treeitem"
+        aria-level={row.level}
+        aria-posinset={row.posInSet}
+        aria-setsize={row.setSize}
+        {...{
+          [POPUP_TREE_ROW_ID_ATTRIBUTE]: node.id,
+          [POPUP_TREE_ROW_ATTRIBUTE]: 'bookmark',
+        }}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(event) => {

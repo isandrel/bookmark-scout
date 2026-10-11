@@ -72,7 +72,7 @@ test.describe('popup keyboard shortcuts', () => {
     const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
     const bar = folderTrigger(page, seeded.barId);
     const keysFolder = folderTrigger(page, seeded.folderId);
-    const alpha = page.getByRole('link', { name: 'Key Alpha' });
+    const alpha = page.getByRole('treeitem', { name: 'Key Alpha' });
 
     await expect(search).toBeFocused();
     await search.press('ArrowDown');
