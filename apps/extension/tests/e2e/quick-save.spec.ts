@@ -70,7 +70,12 @@ async function startServer(): Promise<LocalServer> {
   return {
     origin: `http://127.0.0.1:${port}`,
     ai,
-    close: () => new Promise((resolve) => server.close(() => resolve())),
+    // The browser keeps connections alive; drop them so close() cannot hang the hook.
+    close: () =>
+      new Promise((resolve) => {
+        server.close(() => resolve());
+        server.closeAllConnections();
+      }),
   };
 }
 
