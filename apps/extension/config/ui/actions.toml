@@ -1,0 +1,18 @@
+# Which bookmark actions each bookmark manager menu shows, by section (menus put a separator
+# between sections), in order. Ids are entries of the action registry (src/services/actions.ts);
+# an action appears only where it is available for the items clicked. Read by
+# src/services/action-menus.ts, which fails at load on an unknown id or one with no entry for
+# that kind of menu.
+
+[menus]
+# A row's ⋯ menu, the right-click menu on rows (acting on the selection), and on tree folders
+item = [
+  ["showInFolder", "edit", "viewDetails"],
+  ["cut", "copy", "paste", "copyFolderLink", "copyId"],
+  ["openInNewTab", "openInNewWindow", "openInPrivateWindow"],
+  ["delete"],
+]
+# The header's ⋮ Organize menu, on the folder shown
+organize = [["sortByName"], ["addBookmark", "addFolder"]]
+# The right-click menu on the table's empty space, on the folder shown
+empty_space = [["addBookmark", "addFolder"], ["paste"]]

@@ -3,12 +3,11 @@ import type { MouseEvent } from 'react';
 
 type BookmarkRowMenuProps = {
   bookmark: Bookmark;
-  actions: readonly BookmarkRowAction[];
-  context: BookmarkRowActionContext;
+  host: ActionItemHost;
 };
 
-/** A row's ⋯ menu: the item-action registry for that row. */
-export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuProps) {
+/** A row's ⋯ menu: the item menu's actions for that row. */
+export function BookmarkRowMenu({ bookmark, host }: BookmarkRowMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -27,7 +26,7 @@ export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuP
         <DropdownMenuGroup>
           <DropdownMenuLabel>{t('table_actions')}</DropdownMenuLabel>
         </DropdownMenuGroup>
-        <BookmarkActionMenuItems items={[bookmark]} actions={actions} context={context} />
+        <BookmarkActionMenuItems items={[bookmark]} host={host} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -35,41 +34,44 @@ export function BookmarkRowMenu({ bookmark, actions, context }: BookmarkRowMenuP
 
 type BookmarkActionMenuItemsProps = {
   items: Bookmark[];
-  actions: readonly BookmarkRowAction[];
-  context: BookmarkRowActionContext;
+  host: ActionItemHost;
+  /** The menu's sections of action ids; the configured item menu by default. */
+  sections?: readonly (readonly ActionId[])[];
 };
 
 /**
- * The available actions for `items`, by section with separators, destructive ones last in the
- * destructive color. Used inside a dropdown (⋯) or a right-click menu.
+ * The bookmark actions available for `items`, by section with separators, destructive ones in
+ * the destructive color. Used inside a dropdown (⋯) or a right-click menu.
  */
-export function BookmarkActionMenuItems({ items, actions, context }: BookmarkActionMenuItemsProps) {
-  const sections = getAvailableRowActions(items, actions, context);
-
+export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActionMenuItemsProps) {
   // Menu items live inside a clickable row; keep clicks from reaching it.
-  const renderItem = (action: BookmarkRowAction) => (
-    <DropdownMenuItem
-      key={action.id}
-      data-action={action.id}
-      className={
-        action.group === 'destructive'
-          ? 'text-destructive-text focus:text-destructive-text'
-          : undefined
-      }
-      onClick={(event: MouseEvent) => {
-        event.stopPropagation();
-        void action.run(items, context);
-      }}
-    >
-      <action.icon className="h-4 w-4" />
-      {getRowActionLabel(action, items, context)}
-    </DropdownMenuItem>
-  );
+  const renderItem = (id: ActionId) => {
+    const action = getAction(id);
+    const Icon = action.icon ? ACTION_ICONS[action.icon] : undefined;
+    return (
+      <DropdownMenuItem
+        key={id}
+        data-action={id}
+        className={
+          action.risk === 'destructive'
+            ? 'text-destructive-text focus:text-destructive-text'
+            : undefined
+        }
+        onClick={(event: MouseEvent) => {
+          event.stopPropagation();
+          void action.itemMenu?.run(items, host);
+        }}
+      >
+        {Icon && <Icon className="h-4 w-4" />}
+        {getItemMenuLabel(id, items, host)}
+      </DropdownMenuItem>
+    );
+  };
 
-  return sections.map((section, index) => (
-    <DropdownMenuGroup key={section.group}>
+  return getItemMenuSections(items, host, sections).map((section, index) => (
+    <DropdownMenuGroup key={section.join()}>
       {index > 0 && <DropdownMenuSeparator />}
-      {section.actions.map(renderItem)}
+      {section.map(renderItem)}
     </DropdownMenuGroup>
   ));
 }

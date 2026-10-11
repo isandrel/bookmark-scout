@@ -1,36 +1,37 @@
 /**
  * The manager's command menus, after Chrome's: right-click on rows (the selection's item actions,
  * or the folder actions on empty space), right-click on folders in the tree, and the header's
- * Organize menu. The items come from the item-action registry (`bookmark-row-actions.ts`) and the
- * folder-action registry (`folder-actions.ts`).
+ * Organize menu. The items are bookmark actions from the registry (`services/actions.ts`), in the
+ * order and sections `config/ui/actions.toml` gives each menu (`services/action-menus.ts`).
  */
 
 import { MoreVertical } from 'lucide-react';
 import { type HTMLAttributes, type ReactNode, useState } from 'react';
 
-type FolderMenu = keyof typeof FOLDER_ACTION_MENUS;
-
 function FolderActionMenuItems({
   menu,
-  context,
+  host,
 }: {
-  menu: FolderMenu;
-  context: FolderActionContext;
+  menu: 'organize' | 'emptySpace';
+  host: ActionFolderHost;
 }) {
-  return FOLDER_ACTION_MENUS[menu].map((section, index) => (
+  return ACTION_MENUS[menu].map((section, index) => (
     <DropdownMenuGroup key={section.join()}>
       {index > 0 && <DropdownMenuSeparator />}
       {section.map((id) => {
-        const action = FOLDER_ACTIONS[id];
+        const action = getAction(id);
+        const entry = action.folderMenu;
+        if (!entry) return null;
+        const Icon = action.icon ? ACTION_ICONS[action.icon] : undefined;
         return (
           <DropdownMenuItem
             key={id}
             data-action={id}
-            disabled={!action.isEnabled(context)}
-            onClick={() => action.run(context)}
+            disabled={!entry.enabled(host)}
+            onClick={() => entry.run(host)}
           >
-            <action.icon className="h-4 w-4" />
-            {t(action.labelKey)}
+            {Icon && <Icon className="h-4 w-4" />}
+            {action.labelKey ? t(action.labelKey) : id}
           </DropdownMenuItem>
         );
       })}
@@ -39,7 +40,7 @@ function FolderActionMenuItems({
 }
 
 /** The header's ⋮ menu: Sort by name, Add new bookmark, Add new folder. */
-export function OrganizeMenu({ context }: { context: FolderActionContext }) {
+export function OrganizeMenu({ host }: { host: ActionFolderHost }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -57,7 +58,7 @@ export function OrganizeMenu({ context }: { context: FolderActionContext }) {
         <MoreVertical className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <FolderActionMenuItems menu="organize" context={context} />
+        <FolderActionMenuItems menu="organize" host={host} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -67,10 +68,9 @@ type ItemContextMenuProps = {
   children: ReactNode;
   /** The items a right click at `target` acts on; empty for the empty-space menu. */
   resolveItems: (target: EventTarget | null) => Bookmark[];
-  actions: readonly BookmarkRowAction[];
-  itemContext: BookmarkRowActionContext;
+  itemHost: ActionItemHost;
   /** The empty-space menu; without it, right clicks outside items show no menu items. */
-  folderContext?: FolderActionContext;
+  folderHost?: ActionFolderHost;
   className?: string;
   testId: string;
   /** More props for the area, such as drag and drop handlers. */
@@ -84,9 +84,8 @@ type ItemContextMenuProps = {
 export function ItemContextMenu({
   children,
   resolveItems,
-  actions,
-  itemContext,
-  folderContext,
+  itemHost,
+  folderHost,
   className,
   testId,
   areaProps,
@@ -98,7 +97,7 @@ export function ItemContextMenu({
         render={<div className={className} data-testid={testId} {...areaProps} />}
         onContextMenu={(event) => {
           const resolved = resolveItems(event.target);
-          if (resolved.length === 0 && !folderContext) {
+          if (resolved.length === 0 && !folderHost) {
             // Nothing to offer here: leave the browser's own menu alone.
             (event as { preventBaseUIHandler?: () => void }).preventBaseUIHandler?.();
             return;
@@ -110,9 +109,9 @@ export function ItemContextMenu({
       </ContextMenuTrigger>
       <ContextMenuContent>
         {items.length > 0 ? (
-          <BookmarkActionMenuItems items={items} actions={actions} context={itemContext} />
-        ) : folderContext ? (
-          <FolderActionMenuItems menu="emptySpace" context={folderContext} />
+          <BookmarkActionMenuItems items={items} host={itemHost} />
+        ) : folderHost ? (
+          <FolderActionMenuItems menu="emptySpace" host={folderHost} />
         ) : null}
       </ContextMenuContent>
     </ContextMenuRoot>

@@ -1,13 +1,16 @@
 /**
  * The one registry of bookmark actions. Every surface takes its actions from here instead of
  * keeping its own list: Ask AI turns the entries with an `agent` exposure into its tools
- * (`ai-agent.lazy.ts`), and the MCP bridge offers the same entries to local agents. An entry is
- * defined, limited, and tested once; the entries come from the tables in `read-actions.ts`, and
- * their building blocks are in `action-kit.ts`.
+ * (`ai-agent.lazy.ts`), the MCP bridge offers the same entries to local agents, and the bookmark
+ * manager's menus show the entries `config/ui/actions.toml` lists (`action-menus.ts`). An entry is
+ * defined, limited, and tested once; the entries come from the tables in `read-actions.ts` and
+ * `item-actions.ts`, and their building blocks are in `action-kit.ts`.
  *
- * How to add an action: add an entry (risk, targets, permission, input and output schemas,
- * `describe`, `execute`, and `agent` when AI may call it) to the table for its kind, add the
- * messages `describe` uses in every locale, and test it in `tests/unit/actions.test.ts`.
+ * How to add an action: add an entry to the table for its kind with its risk, targets, and
+ * permission; a call (input and output schemas, `describe`, `execute`) and `agent` when AI may
+ * call it; a label, icon, and `itemMenu` or `folderMenu` when a menu shows it, plus its id in
+ * `config/ui/actions.toml`. Add its messages in every locale and test it in
+ * `tests/unit/actions.test.ts` (calls) or `tests/unit/action-menus.test.ts` (menus).
  *
  * `runAction` is the only way a call runs: it checks the input, the permission, and whether the
  * action can run here; it never throws (an action that cannot act answers with an `ActionError`
@@ -15,7 +18,7 @@
  */
 import { z } from 'zod';
 
-export const ACTIONS = { ...READ_ACTIONS };
+export const ACTIONS = { ...READ_ACTIONS, ...ITEM_ACTIONS };
 
 export type ActionId = keyof typeof ACTIONS;
 
@@ -47,7 +50,7 @@ async function whyUnavailable(
 
 /** The actions AI agents may call in this context, so a model is offered only those. */
 export async function agentActionIds(context: ActionContext): Promise<ActionId[]> {
-  const exposed = ACTION_IDS.filter((id) => getAction(id).agent);
+  const exposed = ACTION_IDS.filter((id) => getAction(id).agent && getAction(id).execute);
   const blocked = await Promise.all(exposed.map((id) => whyUnavailable(getAction(id), context)));
   return exposed.filter((_, index) => !blocked[index]);
 }
@@ -65,6 +68,9 @@ export async function runAction(
     return actionError('not_found', `There is no action named ${id}.`);
   }
   const action = getAction(id);
+  if (!action.input || !action.execute) {
+    return actionError('not_allowed', `${id} can only be used from a menu.`);
+  }
   const parsed = action.input.safeParse(input ?? {});
   if (!parsed.success) {
     return actionError('invalid_input', z.prettifyError(parsed.error));
@@ -91,5 +97,5 @@ export async function runAction(
 /** What a call did, for the chat's steps, or undefined for an id that is not an action. */
 export function describeActionCall(id: string, input: unknown): string | undefined {
   if (!isActionId(id)) return undefined;
-  return getAction(id).describe(isPlainObject(input) ? input : {});
+  return getAction(id).describe?.(isPlainObject(input) ? input : {});
 }

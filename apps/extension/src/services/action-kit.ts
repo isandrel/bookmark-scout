@@ -1,8 +1,9 @@
 /**
  * What every bookmark action is built from: the definition shape, the context a call runs in,
  * the error an action returns instead of throwing, paging, and naming a folder by reference or
- * path. The actions themselves are tables (`read-actions.ts`); `actions.ts` joins them into the
- * one registry every surface uses: Ask AI's tools, the MCP bridge, and the bookmark menus.
+ * path. The actions themselves are tables (`read-actions.ts`, `item-actions.ts`); `actions.ts`
+ * joins them into the one registry every surface uses: Ask AI's tools, the MCP bridge, and the
+ * bookmark manager's menus.
  *
  * Text for the model (agent descriptions, errors, and hints) stays English, and the model answers
  * in the user's language. Everything the user sees (labels, chat steps) goes through `t()`.
@@ -94,13 +95,26 @@ export type ActionAgentExposure = {
   untrusted?: boolean;
 };
 
-export type ActionDefinition<Input = unknown, Output = unknown> = {
-  risk: ActionRisk;
-  targets: readonly ActionTarget[];
-  /** An optional permission it needs; it is not offered, and refuses, while that is missing. */
-  permission?: PermissionFeature;
-  /** Present when AI agents may call it. */
-  agent?: ActionAgentExposure;
+/** The icon an action shows in menus, by name; the menus map names to components. */
+export type ActionIconName =
+  | 'appWindow'
+  | 'bookmarkPlus'
+  | 'clipboardPaste'
+  | 'copy'
+  | 'externalLink'
+  | 'folderPlus'
+  | 'folderSearch'
+  | 'hash'
+  | 'info'
+  | 'link'
+  | 'pencil'
+  | 'scissors'
+  | 'sortAZ'
+  | 'trash'
+  | 'venetianMask';
+
+/** Running an action with input, as AI agents, chat buttons, and the MCP bridge do. */
+export type ActionCall<Input, Output> = {
   input: z.ZodType<Input>;
   output: z.ZodType<Output>;
   /** Why the action cannot run in this context, beyond its permission, or nothing. */
@@ -110,6 +124,24 @@ export type ActionDefinition<Input = unknown, Output = unknown> = {
   execute: (input: Input, context: ActionContext) => Promise<Output | ActionError>;
 };
 
+/**
+ * One bookmark action. Every surface takes what it needs from the same entry: a call for agents
+ * and buttons, `itemMenu` and `folderMenu` for the manager's menus (`action-menus.ts`).
+ */
+export type ActionDefinition<Input = unknown, Output = unknown> = {
+  risk: ActionRisk;
+  targets: readonly ActionTarget[];
+  /** An optional permission it needs; it is not offered, and refuses, while that is missing. */
+  permission?: PermissionFeature;
+  /** What menus and settings call it. */
+  labelKey?: MessageKey;
+  icon?: ActionIconName;
+  /** Present when AI agents may call it. */
+  agent?: ActionAgentExposure;
+  itemMenu?: ActionItemMenu;
+  folderMenu?: ActionFolderMenu;
+} & (ActionCall<Input, Output> | { [Key in keyof ActionCall<Input, Output>]?: never });
+
 /** What the model is told when an action's permission is missing, by permission feature. */
 export const PERMISSION_HINTS: Partial<Record<PermissionFeature, string>> = {
   webAccess:
@@ -118,10 +150,17 @@ export const PERMISSION_HINTS: Partial<Record<PermissionFeature, string>> = {
   currentTab: 'The user can let Bookmark Scout see the current tab from the side panel.',
 };
 
-/** Keeps each definition's input and output types tied together. */
+/** Keeps a callable definition's input and output types tied together. */
 export function defineAction<Input, Output>(
-  definition: ActionDefinition<Input, Output>,
-): ActionDefinition<Input, Output> {
+  definition: ActionDefinition<Input, Output> & ActionCall<Input, Output>,
+): ActionDefinition<Input, Output> & ActionCall<Input, Output> {
+  return definition;
+}
+
+/** An action only the menus offer, without a call. */
+export function defineMenuAction(
+  definition: ActionDefinition & { labelKey: MessageKey; icon: ActionIconName },
+): ActionDefinition & { labelKey: MessageKey; icon: ActionIconName } {
   return definition;
 }
 
