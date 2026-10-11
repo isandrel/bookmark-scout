@@ -2,7 +2,14 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { matchAIServicesSearch } from '@/components/options/AIServiceEditor';
 import { setLanguage, t } from '@/hooks/use-i18n';
-import { getStoredAIProviderConfig, saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
+import {
+  aiModelListValue,
+  aiProviderConfigValue,
+  getCachedModelList,
+  getStoredAIProviderConfig,
+  saveCachedModelList,
+  saveStoredAIProviderConfig,
+} from '@/lib/ai-provider-storage';
 import {
   addAIService,
   deleteAIService,
@@ -14,7 +21,7 @@ import {
 } from '@/lib/ai-services-storage';
 import { saveSettings } from '@/lib/settings-storage';
 import { getActiveAISettings } from '@/services/ai-settings';
-import { readStoredRaw, STORAGE_ITEMS } from './storage-helpers';
+import { readStoredRaw, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 beforeEach(async () => {
   fakeBrowser.reset();
@@ -28,7 +35,9 @@ describe('AI services search text', () => {
     expect(matchAIServicesSearch('api key')).toEqual([
       expect.objectContaining({ advanced: false }),
     ]);
-    expect(matchAIServicesSearch('base url')).toEqual([expect.objectContaining({ advanced: true })]);
+    expect(matchAIServicesSearch('base url')).toEqual([
+      expect.objectContaining({ advanced: true }),
+    ]);
     expect(matchAIServicesSearch('extra headers')).toHaveLength(1);
     expect(matchAIServicesSearch('  ')).toEqual([]);
   });
@@ -98,5 +107,70 @@ describe('named AI services', () => {
     expect((await getAIServicesState()).defaultServiceId).toBe(first.id);
     await updateAIService(first.id, { enabled: false });
     expect((await getAIServicesState()).defaultServiceId).toBe(second.id);
+  });
+});
+
+describe('stored AI data', () => {
+  const service = (id: string, provider = 'openai') => ({
+    id,
+    name: id,
+    provider,
+    model: 'gpt-4o-mini',
+    enabled: true,
+  });
+
+  it('drops a malformed service, a repeated id, or an unknown provider on its own', async () => {
+    await seedStored(STORAGE_ITEMS.aiServices, {
+      services: [
+        service('a'),
+        { id: 'b', provider: 'openai' },
+        service('a', 'groq'),
+        service('c', 'no-such-provider'),
+        service('d', 'groq'),
+      ],
+      defaultServiceId: 'a',
+    });
+    const state = await getAIServicesState();
+    expect(state.services.map(({ id, provider }) => [id, provider])).toEqual([
+      ['a', 'openai'],
+      ['d', 'groq'],
+    ]);
+    expect(state.defaultServiceId).toBe('a');
+  });
+
+  it('drops malformed credentials per service and stores no model with them', async () => {
+    await seedStored(STORAGE_ITEMS.aiCredentials, {
+      good: { apiKey: 'sk-synthetic', options: { organization: 'org' } },
+      bad: { apiKey: 42 },
+      text: 'nope',
+    });
+    expect(await aiProviderConfigValue.get()).toEqual({
+      good: { apiKey: 'sk-synthetic', options: { organization: 'org' } },
+    });
+  });
+
+  it('keeps a model list per service until it expires, and removes it with the service', async () => {
+    const day = 24 * 60 * 60 * 1000;
+    const first = await addAIService('custom', 'First');
+    const second = await addAIService('custom', 'Second');
+    const list = (id: string, fetchedAt: number) => ({
+      endpoint: 'https://a.test/v1',
+      models: [{ id, name: id }],
+      fetchedAt,
+    });
+    await saveCachedModelList(first.id, list('one', 0), 0);
+    await saveCachedModelList(second.id, list('two', 0), 0);
+
+    expect((await getCachedModelList(first.id, 'https://a.test/v1', day))?.models).toEqual([
+      { id: 'one', name: 'one' },
+    ]);
+    expect(await getCachedModelList(first.id, 'https://other.test/v1', day)).toBeUndefined();
+    // Past the configured age (7 days) a list is no longer offered, and the next save drops it.
+    expect(await getCachedModelList(first.id, 'https://a.test/v1', 8 * day)).toBeUndefined();
+    await saveCachedModelList(second.id, list('two', 8 * day), 8 * day);
+    expect(Object.keys(await aiModelListValue.get())).toEqual([second.id]);
+
+    await deleteAIService(second.id);
+    expect(await readStoredRaw(STORAGE_ITEMS.aiModelCache)).toBeUndefined();
   });
 });

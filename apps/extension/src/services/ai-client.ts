@@ -36,7 +36,6 @@ export type AISettings = {
   model: string;
   apiKey: string;
   baseUrl?: string;
-  customModel?: string;
   extraHeaders?: Record<string, string>;
   /** Provider-specific connection fields such as OpenAI's organization or Azure's resource. */
   providerOptions?: Partial<Record<AIProviderExtraField, string>>;
@@ -93,7 +92,7 @@ export function validateAISettings(settings: AISettings): void {
     throw new Error(t('error_aiApiKeyRequired'));
   }
 
-  if (!settings.model && !settings.customModel) {
+  if (!settings.model) {
     throw new Error(t('error_aiModelRequired'));
   }
 }
@@ -125,8 +124,7 @@ export async function verifyAIService(settings: AISettings): Promise<AIServiceCh
   }
   try {
     const models = await listProviderModels(settings, { source: 'verifyService' });
-    const modelId = settings.customModel?.trim() || settings.model;
-    return { models, modelListed: models.some((model) => model.id === modelId) };
+    return { models, modelListed: models.some((model) => model.id === settings.model) };
   } catch (error) {
     if (error instanceof AIConnectionError && error.code === 'rate_limited') {
       return { models: [], rateLimited: true };

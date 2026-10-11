@@ -87,7 +87,7 @@ export async function withAIHost<T>(
   const token = crypto.randomUUID();
   activeCalls.set(token, {
     provider: settings.provider,
-    model: settings.customModel?.trim() || settings.model,
+    model: settings.model,
   });
   try {
     hostReady ??= openHost().catch((error: unknown) => {

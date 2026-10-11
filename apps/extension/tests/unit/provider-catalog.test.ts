@@ -17,9 +17,16 @@ import {
   providerRequiresApiKey,
   providerSupportsCustomModel,
 } from '@/services/ai-models';
-import { buildAISettingsFromProvider } from '@/services/ai-settings';
+import { buildAISettingsFromService } from '@/services/ai-settings';
 import providerCatalog from '../../config/provider-catalog.json';
 import { configRoot, listConfigFiles, readConfigToml } from '../config-files';
+
+/** Settings of a service with the provider's id, whose credentials are stored under that id. */
+const settingsFor = (provider: string, model: string, enabled: boolean) =>
+  buildAISettingsFromService(
+    { id: provider, name: provider, provider, model, enabled: true },
+    enabled,
+  );
 
 const mocks = vi.hoisted(() => ({
   chatModel: vi.fn((model: string) => ({ model })),
@@ -141,7 +148,7 @@ describe('local and custom presets', () => {
 describe('[mocked provider contract] catalog providers', () => {
   it('call Chat Completions through the OpenAI-compatible package', async () => {
     await saveStoredAIProviderConfig('togetherai', { apiKey: 'synthetic-key' });
-    await createAIModel(await buildAISettingsFromProvider('togetherai', 'meta-llama/x', true));
+    await createAIModel(await settingsFor('togetherai', 'meta-llama/x', true));
     expect(mocks.createOpenAICompatible).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'togetherai',
@@ -160,7 +167,7 @@ describe('[mocked provider contract] catalog providers', () => {
     expect(anthropicCatalogId).toBeDefined();
     const id = anthropicCatalogId as string;
     await saveStoredAIProviderConfig(id, { apiKey: 'synthetic-key' });
-    await createAIModel(await buildAISettingsFromProvider(id, 'some-model', true));
+    await createAIModel(await settingsFor(id, 'some-model', true));
     expect(mocks.createAnthropic).toHaveBeenCalledWith(
       expect.objectContaining({
         baseURL: getProviderBaseUrl(id),

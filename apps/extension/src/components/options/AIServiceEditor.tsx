@@ -198,7 +198,7 @@ export function AIServiceEditor({
       show(stored, false);
       // Offer the list fetched earlier from the same endpoint.
       const endpoint = getProviderEndpoint(provider, stored.baseUrl, stored.options);
-      const cached = await getCachedModelList(provider, endpoint);
+      const cached = await getCachedModelList(service.id, endpoint);
       if (active && cached?.models.length) setDetectedModels(cached.models.map((m) => m.id));
     });
     // Another Options tab, or a reset, can change the stored values while this one is open.
@@ -299,7 +299,7 @@ export function AIServiceEditor({
   /** Keeps a fetched list for the model picker, here and after reloads. */
   const rememberModels = async (settings: AISettings, models: DetectedAIModel[]) => {
     const endpoint = getProviderEndpoint(provider, settings.baseUrl, settings.providerOptions);
-    if (endpoint) await saveCachedModelList(provider, { endpoint, models, fetchedAt: Date.now() });
+    if (endpoint) await saveCachedModelList(service.id, { endpoint, models, fetchedAt: Date.now() });
     const ids = models.map((model) => model.id);
     setDetectedModels(ids);
     if (!ids.includes(service.model)) setModel(ids[0]);
@@ -315,7 +315,7 @@ export function AIServiceEditor({
       if (check.models.length > 0) {
         const endpoint = getProviderEndpoint(provider, settings.baseUrl, settings.providerOptions);
         if (endpoint) {
-          await saveCachedModelList(provider, {
+          await saveCachedModelList(service.id, {
             endpoint,
             models: check.models,
             fetchedAt: Date.now(),
