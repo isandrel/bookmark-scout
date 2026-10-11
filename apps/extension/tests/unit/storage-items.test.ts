@@ -99,7 +99,7 @@ describe('storage registry', () => {
     const uses = new Map<string, number>();
     for (const file of sourceFiles(path.join(appRoot, 'src'))) {
       for (const [, id] of readFileSync(file, 'utf8').matchAll(
-        /defineStoredValue<[^(]*>\(\s*STORAGE_ITEMS\.(\w+)/g,
+        /defineStored(?:Value|Collection)<[^(]*>\(\s*STORAGE_ITEMS\.(\w+)/g,
       )) {
         uses.set(id, (uses.get(id) ?? 0) + 1);
       }

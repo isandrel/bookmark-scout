@@ -4727,6 +4727,10 @@
         "message": "프롬프트가 너무 길어 동기화할 수 없습니다. $1 이하로 줄이세요.",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "브라우저 동기화 용량에 맞도록 사용자 지정 프롬프트는 $1개까지 보관할 수 있습니다. 추가하려면 하나를 삭제하세요.",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "프롬프트를 저장하지 못했습니다. 동기화 저장 공간이 가득 찼을 수 있습니다. 사용하지 않는 프롬프트를 삭제한 뒤 다시 시도하세요.",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"

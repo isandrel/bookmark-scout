@@ -1,12 +1,15 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { formatKilobytes, setLanguage } from '@/hooks/use-i18n';
 import {
   MAX_PROMPT_BYTES,
+  MAX_PROMPTS,
   PromptValidationError,
   customPromptBytes,
   deleteCustomPrompt,
   getPromptLibrary,
+  registerPromptCleanup,
+  removeOrphanPrompts,
   saveCustomPrompt,
   setActivePrompt,
   syncItemBytes,
@@ -21,7 +24,7 @@ import {
   findUnknownPromptVariables,
   getPromptVariables,
 } from '@/services/prompt-config';
-import { STORAGE_ITEMS } from './storage-helpers';
+import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 beforeEach(() => {
   fakeBrowser.reset();
@@ -188,5 +191,84 @@ describe('prompt library', () => {
     expect(findUnknownPromptVariables('auto_tagging', '{{maxTags}} {{nope}} {{nope}}')).toEqual([
       'nope',
     ]);
+  });
+});
+
+describe('prompt library storage', () => {
+  const draft = (name: string) => ({ task: 'auto_tagging' as const, name, system: 'Text' });
+
+  it('fits the most prompts at their largest, with the other synced items, in the sync quota', () => {
+    // Settings, table view, and prompt index are capped at the 8,192-byte item quota each.
+    const otherSyncedItems = Object.values(STORAGE_ITEMS).filter(
+      (item) => item.area === 'sync' && !('collection' in item),
+    );
+    expect(otherSyncedItems).toHaveLength(3);
+    expect(MAX_PROMPTS * MAX_PROMPT_BYTES + otherSyncedItems.length * 8192).toBeLessThanOrEqual(
+      102_400,
+    );
+  });
+
+  it('refuses a prompt past the limit and stores nothing for it', async () => {
+    for (let index = 0; index < MAX_PROMPTS; index += 1) await saveCustomPrompt(draft(`P${index}`));
+    await expect(saveCustomPrompt(draft('One too many'))).rejects.toThrow(
+      `You can keep up to ${MAX_PROMPTS} custom prompts so they fit in browser sync. Delete one to add another.`,
+    );
+    const library = await getPromptLibrary();
+    expect(library.prompts).toHaveLength(MAX_PROMPTS);
+    expect(Object.keys(await fakeBrowser.storage.sync.get(null))).toHaveLength(MAX_PROMPTS + 1);
+    // Editing a saved prompt is not adding one.
+    await expect(
+      saveCustomPrompt({ ...draft('Renamed'), id: library.prompts[0].id }),
+    ).resolves.toMatchObject({ name: 'Renamed' });
+  });
+
+  it('reads every listed prompt in one storage call, in index order, skipping malformed ones', async () => {
+    const first = await saveCustomPrompt(draft('First'));
+    const second = await saveCustomPrompt(draft('Second'));
+    await seedStored(STORAGE_ITEMS.prompt, { id: 'bad', task: 'no-such-task' }, 'bad');
+    await seedStored(STORAGE_ITEMS.promptIndex, {
+      ids: [second.id, 'bad', first.id, second.id, 7],
+      active: { auto_tagging: first.id, unknown_task: second.id },
+    });
+    const get = vi.spyOn(fakeBrowser.storage.sync, 'get');
+    const library = await getPromptLibrary();
+    expect(get).toHaveBeenCalledTimes(2);
+    expect(library.prompts.map((prompt) => prompt.name)).toEqual(['Second', 'First']);
+    expect(library.active).toEqual({ auto_tagging: first.id });
+  });
+
+  it('removes unlisted prompts only once they are older than the grace period', async () => {
+    const hour = 60 * 60 * 1000;
+    const listed = await saveCustomPrompt(draft('Listed'));
+    const prompt = (id: string, updatedAt: number) => ({
+      id,
+      task: 'auto_tagging',
+      name: id,
+      system: 'Text',
+      updatedAt,
+    });
+    await seedStored(STORAGE_ITEMS.prompt, prompt('stale', 0), 'stale');
+    await seedStored(STORAGE_ITEMS.prompt, prompt('arriving', 30 * hour), 'arriving');
+    await seedStored(STORAGE_ITEMS.prompt, 'broken', 'broken');
+
+    expect((await removeOrphanPrompts(36 * hour)).sort()).toEqual(['broken', 'stale']);
+    expect(Object.keys(await fakeBrowser.storage.sync.get(null)).sort()).toEqual(
+      [
+        storageAreaKey(STORAGE_ITEMS.promptIndex),
+        storageAreaKey(STORAGE_ITEMS.prompt, 'arriving'),
+        storageAreaKey(STORAGE_ITEMS.prompt, listed.id),
+      ].sort(),
+    );
+  });
+
+  it('removes leftover prompts when the browser starts', async () => {
+    registerPromptCleanup();
+    await seedStored(
+      STORAGE_ITEMS.prompt,
+      { id: 'stale', task: 'auto_tagging', name: 'Stale', system: 'Text', updatedAt: 0 },
+      'stale',
+    );
+    await fakeBrowser.runtime.onStartup.trigger();
+    await vi.waitFor(async () => expect(await fakeBrowser.storage.sync.get(null)).toEqual({}));
   });
 });

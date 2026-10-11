@@ -4727,6 +4727,10 @@
         "message": "O prompt é longo demais para sincronizar. Mantenha-o dentro de $1.",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "Você pode manter até $1 prompts personalizados para que caibam na sincronização do navegador. Exclua um para adicionar outro.",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "Não foi possível salvar o prompt. O armazenamento de sincronização pode estar cheio; exclua os prompts que você não usa mais e tente novamente.",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
