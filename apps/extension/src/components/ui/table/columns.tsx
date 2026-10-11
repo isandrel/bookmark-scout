@@ -17,11 +17,6 @@ import { Folder, Link } from 'lucide-react';
 import type { ComponentType, MouseEvent, ReactNode } from 'react';
 import type { DateRange } from 'react-day-picker';
 
-export enum ItemTypeEnum {
-  Folder = 'folder',
-  Link = 'link',
-}
-
 const ITEM_TYPES: Record<ItemTypeEnum, { labelKey: MessageKey; icon: ItemType['icon'] }> = {
   [ItemTypeEnum.Folder]: { labelKey: 'table_typeFolder', icon: Folder },
   [ItemTypeEnum.Link]: { labelKey: 'table_typeLink', icon: Link },
@@ -42,25 +37,6 @@ type ItemType = {
   icon: ComponentType<{ className?: string }>;
 };
 
-export type Bookmark = {
-  type: ItemTypeEnum;
-  id: string;
-  parentId?: string;
-  folderPath: string;
-  index?: number;
-  title: string;
-  url?: string;
-  dateAdded?: number;
-  dateGroupModified?: number;
-  unmodifiable?: 'managed';
-  /** Direct child of the browser's bookmark root (e.g. Bookmarks Bar); cannot be edited or removed. */
-  isRootFolder?: boolean;
-  /** Top-level folders only: the browser's kind of permanent folder, such as `bookmarks-bar`. */
-  folderType?: string;
-  /** Top-level folders only: stored in the signed-in account rather than only on this device. */
-  syncing?: boolean;
-};
-
 const bookmarkDomains = new WeakMap<Bookmark, string>();
 
 /**
@@ -77,20 +53,9 @@ export function getBookmarkDomain(bookmark: Bookmark): string {
   return domain;
 }
 
-/** Whether the browser allows renaming, moving, or deleting this item. */
-export function isModifiableBookmark(bookmark: Bookmark): boolean {
-  return !bookmark.isRootFolder && !bookmark.unmodifiable;
-}
-
-/** Whether the manager can open this item in a tab (bookmarklets cannot be opened from here). */
-export function isOpenableBookmark(bookmark: Bookmark): boolean {
-  return bookmark.type === ItemTypeEnum.Link && Boolean(bookmark.url) && !isScriptUrl(bookmark.url);
-}
-
-/** What column cells can use beyond the row: the row actions and what they may ask the page. */
+/** What column cells can use beyond the row: what the row's menu actions may ask the page. */
 export type BookmarkColumnContext = {
-  rowActions: readonly BookmarkRowAction[];
-  actionContext: BookmarkRowActionContext;
+  actionHost: ActionItemHost;
 };
 
 export type BookmarkCellContext = CellContext<BookmarkTableFeatures, Bookmark, unknown>;
@@ -325,7 +290,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
   },
   {
     id: 'actions',
-    cell: ({ row, table }, { rowActions, actionContext }) => {
+    cell: ({ row, table }, { actionHost }) => {
       const bookmark = row.original;
       // Moves are only enabled while the table shows the whole folder in browser order, so the
       // table data is the folder's children and the index says where the item sits among them.
@@ -347,7 +312,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
               />
             </div>
           )}
-          <BookmarkRowMenu bookmark={bookmark} actions={rowActions} context={actionContext} />
+          <BookmarkRowMenu bookmark={bookmark} host={actionHost} />
         </div>
       );
     },

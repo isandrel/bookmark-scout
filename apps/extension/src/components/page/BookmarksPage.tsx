@@ -167,8 +167,7 @@ export default function BookmarksPage() {
   const columns = useMemo(
     () =>
       createColumns({
-        rowActions: BOOKMARK_ROW_ACTIONS,
-        actionContext: managerCommands.tableItemContext,
+        actionHost: managerCommands.tableItemHost,
       }),
     [managerCommands],
   );
@@ -302,8 +301,7 @@ export default function BookmarksPage() {
           </div>
           <ItemContextMenu
             resolveItems={resolveTreeMenuItems}
-            actions={BOOKMARK_ROW_ACTIONS}
-            itemContext={managerCommands.treeItemContext}
+            itemHost={managerCommands.treeItemHost}
             testId="folder-tree-menu-area"
             areaProps={dragDrop.treeProps}
           >
@@ -359,7 +357,7 @@ export default function BookmarksPage() {
               open={shortcuts.helpOpen}
               onOpenChange={shortcuts.setHelpOpen}
             />
-            <OrganizeMenu context={managerCommands.folderContext} />
+            <OrganizeMenu host={managerCommands.folderHost} />
             <Button
               variant="ghost"
               size="icon"
@@ -435,9 +433,8 @@ export default function BookmarksPage() {
               renderFrame={(frame) => (
                 <ItemContextMenu
                   resolveItems={resolveRowMenuItems}
-                  actions={BOOKMARK_ROW_ACTIONS}
-                  itemContext={managerCommands.tableItemContext}
-                  folderContext={managerCommands.folderContext}
+                  itemHost={managerCommands.tableItemHost}
+                  folderHost={managerCommands.folderHost}
                   testId="bookmark-table-menu-area"
                   areaProps={dragDrop.frameProps}
                 >

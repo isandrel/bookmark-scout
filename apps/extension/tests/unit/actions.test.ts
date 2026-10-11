@@ -320,8 +320,8 @@ describe('runAction', () => {
   });
 
   it('describes every tool step in the user language', () => {
-    for (const name of ACTION_IDS) {
-      expect(describeActionCall(name, {})).not.toMatch(/^askAI_/);
+    for (const name of ACTION_IDS.filter((id) => getAction(id).agent)) {
+      expect(describeActionCall(name, {}), name).toMatch(/^(?!askAI_)\S/);
     }
     expect(describeActionCall('searchBookmarks', { query: 'rust' })).toBe(
       'Searched your bookmarks for “rust”',
