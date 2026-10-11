@@ -4,7 +4,7 @@
  * folder), cut, copy, and paste, and the open commands with their counts.
  */
 import type { Page, Worker } from '@playwright/test';
-import { expect, test, toastRegion } from './fixtures';
+import { type ExtensionBrowser, expect, test, toastRegion } from './fixtures';
 import { setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
@@ -67,11 +67,17 @@ async function waitForNoOverlay(page: Page) {
 
 test.use({ viewport: { width: 1400, height: 900 } });
 
+/** Edge calls private windows InPrivate. */
+function privateWindow(browser: ExtensionBrowser) {
+  return browser === 'msedge' ? 'InPrivate' : 'incognito';
+}
+
 test.beforeEach(async ({ extensionWorker }) => {
   await setSettings(extensionWorker, { confirmBeforeDelete: false, sortOrder: 'alphabetical' });
 });
 
 test('right-click acts on the selection, or selects the row clicked', async ({
+  extensionBrowser,
   extensionId,
   extensionWorker,
   page,
@@ -94,7 +100,7 @@ test('right-click acts on the selection, or selects the row clicked', async ({
     'Copy Bookmark ID',
     'Open in new tab',
     'Open in new window',
-    'Open in incognito window',
+    `Open in ${privateWindow(extensionBrowser)} window`,
     'Delete',
   ]);
   await page.keyboard.press('Escape');
@@ -108,7 +114,7 @@ test('right-click acts on the selection, or selects the row clicked', async ({
     'Copy',
     'Open all (2)',
     'Open all (2) in new window',
-    'Open all (2) in incognito window',
+    `Open all (2) in ${privateWindow(extensionBrowser)} window`,
     'Delete',
   ]);
   await menu(page).getByRole('menuitem', { name: 'Delete' }).click();
