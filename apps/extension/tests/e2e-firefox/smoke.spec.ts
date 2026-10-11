@@ -279,6 +279,45 @@ test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', as
     .toEqual(['Undo Keep', 'Undo Gone']);
 });
 
+test('manager right-click menu copies and pastes, without private windows unless allowed', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Menu', [
+    { title: 'Menu Target', children: [] },
+    { title: 'Menu Link', url: 'https://e2e.invalid/menu' },
+  ]);
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await expect.poll(() => visibleRows(extension)).toBe(2);
+  const { driver } = extension;
+  const menuItems = () =>
+    driver.executeScript<string[]>(
+      `return [...document.querySelectorAll('[role="menu"] [role="menuitem"]')].map((item) => item.textContent.trim())`,
+    );
+
+  await driver
+    .actions()
+    .contextClick(await extension.findByText('tbody td', 'Menu Link'))
+    .perform();
+  await expect.poll(menuItems).toContain('Copy');
+  // A temporary add-on is not allowed in private windows, so Firefox offers none.
+  expect(await menuItems()).toContain('Open in new window');
+  expect(await menuItems()).not.toContain('Open in private window');
+  await (await extension.findByText('[role="menuitem"]', 'Copy')).click();
+
+  await driver
+    .actions()
+    .contextClick(await extension.findByText('tbody td', 'Menu Target'))
+    .perform();
+  await expect.poll(menuItems).toContain('Paste');
+  await driver.executeScript(
+    `[...document.querySelectorAll('[role="menuitem"]')].find((item) => item.textContent.trim() === 'Paste').click()`,
+  );
+  // A row's Paste goes next to the row, in the folder shown, as in Chrome.
+  await expect
+    .poll(async () => (await childrenOf(extension, folder.folderId)).map((item) => item.title))
+    .toEqual(['Menu Target', 'Menu Link', 'Menu Link']);
+});
+
 test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
   // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
   // locks. Hold a lock in one extension page and look for it from another.

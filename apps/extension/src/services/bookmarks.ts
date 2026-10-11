@@ -786,25 +786,41 @@ export async function openBookmarkInNewTab(url: string): Promise<void> {
   await browser.tabs.create({ url, active: true });
 }
 
-/** Where the manager opens several bookmarks: Chrome's Open, Open all in new tabs, new window. */
-export type BookmarkOpenTarget = 'tabs' | 'background-tabs' | 'window';
+/**
+ * Where the manager opens several bookmarks: Chrome's Open, Open all in new tabs, in a new
+ * window, and in an incognito (private) window.
+ */
+export type BookmarkOpenTarget = 'tabs' | 'background-tabs' | 'window' | 'private-window';
 
 /**
  * Opens `urls` in new tabs (`tabs`: the first in front, as Enter does in Chrome's manager;
- * `background-tabs`: none in front) or together in a new window.
+ * `background-tabs`: none in front) or together in a new (private) window.
  */
 export async function openBookmarkUrls(
   urls: readonly string[],
   target: BookmarkOpenTarget,
 ): Promise<void> {
   if (urls.length === 0) return;
-  if (target === 'window') {
-    await browser.windows.create({ url: [...urls] });
+  if (target === 'window' || target === 'private-window') {
+    await browser.windows.create({
+      url: [...urls],
+      ...(target === 'private-window' ? { incognito: true } : {}),
+    });
     return;
   }
   for (const [index, url] of urls.entries()) {
     await browser.tabs.create({ url, active: target === 'tabs' && index === 0 });
   }
+}
+
+/**
+ * Whether the manager can open a private window. Chrome and Edge let any extension create an
+ * incognito (InPrivate) window unless a policy turns incognito off, which only the attempt
+ * reveals; Firefox needs the extension to be allowed in private windows.
+ */
+export async function canOpenPrivateWindows(): Promise<boolean> {
+  if (import.meta.env.BROWSER !== 'firefox') return true;
+  return browser.extension.isAllowedIncognitoAccess().catch(() => false);
 }
 
 /**

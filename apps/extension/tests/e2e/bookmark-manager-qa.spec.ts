@@ -207,7 +207,7 @@ test('in-page rename and delete refresh the folder tree', async ({
   await expect(tree(page).getByRole('button', { name: 'Dev', exact: true })).toBeVisible();
 
   await openRowMenu(page, 'Dev');
-  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  await page.getByRole('menuitem', { name: 'Rename' }).click();
   const dialog = page.getByRole('dialog', { name: 'Edit folder' });
   await expect(dialog).toContainText('Change the name of this folder.');
   await dialog.getByLabel('Name').fill('  Development  ');

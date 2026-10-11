@@ -253,6 +253,50 @@
         "message": "その後ブックマークが変更されたため、やり直せません。",
         "description": "Error toast when nothing of a redo could be applied because the bookmarks changed"
     },
+    "toast_itemCopied": {
+        "message": "$1 をコピーしました",
+        "description": "Toast after copying one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCopied": {
+        "message": "$1件をコピーしました",
+        "description": "Toast after copying several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_itemCut": {
+        "message": "$1 を切り取りました",
+        "description": "Toast after cutting one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCut": {
+        "message": "$1件を切り取りました",
+        "description": "Toast after cutting several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_cutHint": {
+        "message": "別のフォルダに貼り付けるまで、元の場所に残ります。",
+        "description": "Toast text after cutting: cut items stay where they are until pasted"
+    },
+    "toast_pasted": {
+        "message": "$1件を貼り付けました",
+        "description": "Toast after pasting bookmarks. $1 is how many."
+    },
+    "toast_pasteSkipped": {
+        "message": "削除済み、または自分自身の中に入るためスキップ: $1 件。",
+        "description": "Toast text when some cut items could not be pasted. $1 is how many."
+    },
+    "toast_nothingToPaste": {
+        "message": "貼り付けるものがありません",
+        "description": "Toast when Paste finds nothing to paste"
+    },
+    "toast_pasteFailed": {
+        "message": "貼り付けられませんでした",
+        "description": "Error toast when pasting bookmarks fails"
+    },
+    "toast_folderSorted": {
+        "message": "フォルダを名前順に並べ替えました",
+        "description": "Toast after sorting a folder by name"
+    },
+    "toast_sortFailed": {
+        "message": "フォルダを並べ替えられませんでした",
+        "description": "Error toast when sorting a folder fails"
+    },
     "toast_deleteRestoredDesc": {
         "message": "「$title$」を復元しました。",
         "description": "Toast description after restoring a deletion",
@@ -1132,6 +1176,74 @@
     "table_edit": {
         "message": "編集",
         "description": "Bookmark row action that edits the item"
+    },
+    "menu_rename": {
+        "message": "名前を変更",
+        "description": "Menu item that renames a folder"
+    },
+    "menu_cut": {
+        "message": "切り取り",
+        "description": "Menu item that cuts the selected bookmarks, to paste them into another folder"
+    },
+    "menu_copy": {
+        "message": "コピー",
+        "description": "Menu item that copies the selected bookmarks (their URLs go on the clipboard)"
+    },
+    "menu_paste": {
+        "message": "貼り付け",
+        "description": "Menu item that pastes cut or copied bookmarks"
+    },
+    "menu_openAll": {
+        "message": "すべて開く ($1)",
+        "description": "Menu item that opens every bookmark of the selection (or directly in a folder) in new tabs. $1 is how many."
+    },
+    "menu_openInNewWindow": {
+        "message": "新しいウィンドウで開く",
+        "description": "Menu item that opens a bookmark in a new window"
+    },
+    "menu_openAllInNewWindow": {
+        "message": "すべて ($1) を新しいウィンドウで開く",
+        "description": "Menu item that opens every bookmark of the selection in a new window. $1 is how many."
+    },
+    "menu_openIncognito": {
+        "message": "シークレット ウィンドウで開く",
+        "description": "Menu item (Chrome) that opens a bookmark in an incognito window"
+    },
+    "menu_openAllIncognito": {
+        "message": "すべて ($1) をシークレット ウィンドウで開く",
+        "description": "Menu item (Chrome) that opens every bookmark of the selection in an incognito window. $1 is how many."
+    },
+    "menu_openInPrivate": {
+        "message": "InPrivate ウィンドウで開く",
+        "description": "Menu item (Edge) that opens a bookmark in an InPrivate window"
+    },
+    "menu_openAllInPrivate": {
+        "message": "すべて ($1) を InPrivate ウィンドウで開く",
+        "description": "Menu item (Edge) that opens every bookmark of the selection in an InPrivate window. $1 is how many."
+    },
+    "menu_openPrivate": {
+        "message": "プライベートウィンドウで開く",
+        "description": "Menu item (Firefox) that opens a bookmark in a private window"
+    },
+    "menu_openAllPrivate": {
+        "message": "すべて ($1) をプライベートウィンドウで開く",
+        "description": "Menu item (Firefox) that opens every bookmark of the selection in a private window. $1 is how many."
+    },
+    "menu_organize": {
+        "message": "整理",
+        "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_sortByName": {
+        "message": "名前順に並べ替え",
+        "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
+    },
+    "menu_addBookmark": {
+        "message": "ブックマークを追加",
+        "description": "Menu item that adds a new bookmark to the folder shown"
+    },
+    "menu_addFolder": {
+        "message": "フォルダを追加",
+        "description": "Menu item that adds a new folder to the folder shown"
     },
     "table_showInFolder": {
         "message": "フォルダ内に表示",
@@ -3136,6 +3248,26 @@
     "bookmarks_breadcrumb": {
         "message": "フォルダのパス",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_addBookmarkTitle": {
+        "message": "ブックマークを追加",
+        "description": "Title of the dialog that adds a bookmark"
+    },
+    "bookmarks_addBookmarkDescription": {
+        "message": "名前と URL を入力してください。このフォルダの末尾に追加されます。",
+        "description": "Text of the dialog that adds a bookmark"
+    },
+    "bookmarks_addFolderTitle": {
+        "message": "フォルダを追加",
+        "description": "Title of the dialog that adds a folder"
+    },
+    "bookmarks_addFolderDescription": {
+        "message": "新しいフォルダの名前を入力してください。このフォルダの末尾に追加されます。",
+        "description": "Text of the dialog that adds a folder"
+    },
+    "bookmarks_added": {
+        "message": "$1 を追加しました",
+        "description": "Toast after adding a bookmark or folder. $1 is its quoted title."
     },
     "bookmarks_openManyTitle": {
         "message": "$1 個のタブを開きますか？",

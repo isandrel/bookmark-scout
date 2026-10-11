@@ -125,7 +125,7 @@ test('row menu edits, deletes, and undoes deletion of manager items', async ({
   // Folders only expose a title field and no "open in new tab".
   await openRowMenu(page, 'Editable Folder');
   await expect(page.getByRole('menuitem', { name: 'Open in new tab' })).toHaveCount(0);
-  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  await page.getByRole('menuitem', { name: 'Rename' }).click();
   const folderDialog = page.getByRole('dialog', { name: 'Edit folder' });
   await expect(folderDialog.getByLabel('URL')).toHaveCount(0);
   await folderDialog.getByLabel('Name').fill('Renamed Folder');

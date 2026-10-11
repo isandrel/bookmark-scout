@@ -257,6 +257,50 @@
         "message": "그 사이 북마크가 변경되어 다시 실행할 수 없습니다.",
         "description": "Error toast when nothing of a redo could be applied because the bookmarks changed"
     },
+    "toast_itemCopied": {
+        "message": "$1 복사함",
+        "description": "Toast after copying one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCopied": {
+        "message": "항목 $1개 복사함",
+        "description": "Toast after copying several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_itemCut": {
+        "message": "$1 잘라냄",
+        "description": "Toast after cutting one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCut": {
+        "message": "항목 $1개 잘라냄",
+        "description": "Toast after cutting several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_cutHint": {
+        "message": "다른 폴더에 붙여넣을 때까지 원래 위치에 남아 있습니다.",
+        "description": "Toast text after cutting: cut items stay where they are until pasted"
+    },
+    "toast_pasted": {
+        "message": "항목 $1개 붙여넣음",
+        "description": "Toast after pasting bookmarks. $1 is how many."
+    },
+    "toast_pasteSkipped": {
+        "message": "삭제되었거나 자기 자신 안으로 들어가게 되어 건너뜀: $1개.",
+        "description": "Toast text when some cut items could not be pasted. $1 is how many."
+    },
+    "toast_nothingToPaste": {
+        "message": "붙여넣을 항목이 없습니다",
+        "description": "Toast when Paste finds nothing to paste"
+    },
+    "toast_pasteFailed": {
+        "message": "붙여넣지 못했습니다",
+        "description": "Error toast when pasting bookmarks fails"
+    },
+    "toast_folderSorted": {
+        "message": "폴더를 이름순으로 정렬했습니다",
+        "description": "Toast after sorting a folder by name"
+    },
+    "toast_sortFailed": {
+        "message": "폴더를 정렬하지 못했습니다",
+        "description": "Error toast when sorting a folder fails"
+    },
     "toast_deleteRestoredDesc": {
         "message": "\"$title$\" 항목을 복원했습니다.",
         "description": "Toast description after restoring a deletion",
@@ -1156,6 +1200,74 @@
     "table_edit": {
         "message": "편집",
         "description": "Bookmark row action that edits the item"
+    },
+    "menu_rename": {
+        "message": "이름 바꾸기",
+        "description": "Menu item that renames a folder"
+    },
+    "menu_cut": {
+        "message": "잘라내기",
+        "description": "Menu item that cuts the selected bookmarks, to paste them into another folder"
+    },
+    "menu_copy": {
+        "message": "복사",
+        "description": "Menu item that copies the selected bookmarks (their URLs go on the clipboard)"
+    },
+    "menu_paste": {
+        "message": "붙여넣기",
+        "description": "Menu item that pastes cut or copied bookmarks"
+    },
+    "menu_openAll": {
+        "message": "모두 열기($1)",
+        "description": "Menu item that opens every bookmark of the selection (or directly in a folder) in new tabs. $1 is how many."
+    },
+    "menu_openInNewWindow": {
+        "message": "새 창에서 열기",
+        "description": "Menu item that opens a bookmark in a new window"
+    },
+    "menu_openAllInNewWindow": {
+        "message": "모두($1) 새 창에서 열기",
+        "description": "Menu item that opens every bookmark of the selection in a new window. $1 is how many."
+    },
+    "menu_openIncognito": {
+        "message": "시크릿 창에서 열기",
+        "description": "Menu item (Chrome) that opens a bookmark in an incognito window"
+    },
+    "menu_openAllIncognito": {
+        "message": "모두($1) 시크릿 창에서 열기",
+        "description": "Menu item (Chrome) that opens every bookmark of the selection in an incognito window. $1 is how many."
+    },
+    "menu_openInPrivate": {
+        "message": "InPrivate 창에서 열기",
+        "description": "Menu item (Edge) that opens a bookmark in an InPrivate window"
+    },
+    "menu_openAllInPrivate": {
+        "message": "모두($1) InPrivate 창에서 열기",
+        "description": "Menu item (Edge) that opens every bookmark of the selection in an InPrivate window. $1 is how many."
+    },
+    "menu_openPrivate": {
+        "message": "사생활 보호 창에서 열기",
+        "description": "Menu item (Firefox) that opens a bookmark in a private window"
+    },
+    "menu_openAllPrivate": {
+        "message": "모두($1) 사생활 보호 창에서 열기",
+        "description": "Menu item (Firefox) that opens every bookmark of the selection in a private window. $1 is how many."
+    },
+    "menu_organize": {
+        "message": "정리",
+        "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_sortByName": {
+        "message": "이름순 정렬",
+        "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
+    },
+    "menu_addBookmark": {
+        "message": "새 북마크 추가",
+        "description": "Menu item that adds a new bookmark to the folder shown"
+    },
+    "menu_addFolder": {
+        "message": "새 폴더 추가",
+        "description": "Menu item that adds a new folder to the folder shown"
     },
     "table_showInFolder": {
         "message": "폴더에서 보기",
@@ -3160,6 +3272,26 @@
     "bookmarks_breadcrumb": {
         "message": "폴더 경로",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_addBookmarkTitle": {
+        "message": "북마크 추가",
+        "description": "Title of the dialog that adds a bookmark"
+    },
+    "bookmarks_addBookmarkDescription": {
+        "message": "이름과 URL을 입력하세요. 이 폴더의 맨 끝에 추가됩니다.",
+        "description": "Text of the dialog that adds a bookmark"
+    },
+    "bookmarks_addFolderTitle": {
+        "message": "폴더 추가",
+        "description": "Title of the dialog that adds a folder"
+    },
+    "bookmarks_addFolderDescription": {
+        "message": "새 폴더의 이름을 입력하세요. 이 폴더의 맨 끝에 추가됩니다.",
+        "description": "Text of the dialog that adds a folder"
+    },
+    "bookmarks_added": {
+        "message": "$1 추가함",
+        "description": "Toast after adding a bookmark or folder. $1 is its quoted title."
     },
     "bookmarks_openManyTitle": {
         "message": "탭 $1개를 여시겠습니까?",

@@ -8,8 +8,9 @@ import {
   type BookmarkRowAction,
   type BookmarkRowActionContext,
   getAvailableRowActions,
+  getRowActionLabel,
 } from '@/components/ui/table/bookmark-row-actions';
-import { BookmarkRowMenuItems } from '@/components/ui/table/bookmark-row-menu';
+import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import {
   BOOKMARK_COLUMNS,
   type Bookmark,
@@ -55,8 +56,29 @@ function createActionContext(
     isOutsideOpenFolder: () => false,
     showInFolder: vi.fn(),
     copyFolderLink: vi.fn(),
+    openableUrls: (items) => items.flatMap((item) => (item.url ? [item.url] : [])),
+    open: vi.fn(),
+    privateWindowsAllowed: true,
+    cut: vi.fn(),
+    copy: vi.fn(),
+    paste: vi.fn(),
+    canPaste: () => false,
     ...overrides,
   };
+}
+
+/** Available action ids for `items`, by section. */
+function availableIds(
+  items: Bookmark[],
+  actions: readonly BookmarkRowAction[],
+  context = createActionContext(),
+) {
+  return Object.fromEntries(
+    getAvailableRowActions(items, actions, context).map((section) => [
+      section.group,
+      section.actions.map((action) => action.id),
+    ]),
+  );
 }
 
 // A metadata column and an action defined outside the table, as a future feature would add them.
@@ -71,9 +93,10 @@ const visitsColumn: BookmarkColumn = {
 };
 const archiveAction: BookmarkRowAction = {
   id: 'archive',
+  group: 'main',
   labelKey: 'test_actionArchive',
   icon: Archive,
-  isAvailable: (bookmark) => bookmark.type === ItemTypeEnum.Link,
+  isAvailable: (items) => items.every((item) => item.type === ItemTypeEnum.Link),
   run: vi.fn(),
 };
 
@@ -84,8 +107,8 @@ function renderRowMenu(bookmark: Bookmark, actions: readonly BookmarkRowAction[]
     createElement(
       MenuPrimitive.Root,
       { open: true, modal: false },
-      createElement(BookmarkRowMenuItems, {
-        bookmark,
+      createElement(BookmarkActionMenuItems, {
+        items: [bookmark],
         actions,
         context: createActionContext(),
       }),
@@ -166,42 +189,68 @@ describe('bookmark table column registry', () => {
     expect(linkMenu.indexOf('test_actionArchive')).toBeLessThan(linkMenu.indexOf('Delete'));
     expect(renderRowMenu(folder, actions)).not.toContain('test_actionArchive');
 
-    const { regular, destructive } = getAvailableRowActions(link, actions, createActionContext());
-    expect(regular.map((action) => action.id)).toEqual([
-      'openInNewTab',
-      'edit',
-      'viewDetails',
-      'copyId',
-      'archive',
-    ]);
-    expect(destructive.map((action) => action.id)).toEqual(['delete']);
+    expect(availableIds([link], actions)).toEqual({
+      main: ['edit', 'viewDetails', 'archive'],
+      clipboard: ['cut', 'copy', 'copyId'],
+      open: ['openInNewTab', 'openInNewWindow', 'openInPrivateWindow'],
+      destructive: ['delete'],
+    });
 
     const context = createActionContext();
-    await regular.find((action) => action.id === 'archive')?.run(link, context);
-    expect(archiveAction.run).toHaveBeenCalledWith(link, context);
+    await actions.find((action) => action.id === 'archive')?.run([link], context);
+    expect(archiveAction.run).toHaveBeenCalledWith([link], context);
   });
 
-  it('keeps edit and delete off rows the browser does not allow changing', () => {
+  it('keeps edit, cut, and delete off rows the browser does not allow changing', () => {
     const rootFolder: Bookmark = { ...folder, id: '1', isRootFolder: true };
-    const { regular, destructive } = getAvailableRowActions(
-      rootFolder,
-      BOOKMARK_ROW_ACTIONS,
-      createActionContext({ isOutsideOpenFolder: () => true }),
-    );
-    expect(regular.map((action) => action.id)).toEqual(['viewDetails', 'copyFolderLink', 'copyId']);
-    expect(destructive).toEqual([]);
+    const context = createActionContext({ isOutsideOpenFolder: () => true });
+    expect(availableIds([rootFolder], BOOKMARK_ROW_ACTIONS, context)).toEqual({
+      main: ['viewDetails'],
+      clipboard: ['copyFolderLink', 'copyId'],
+    });
+  });
+
+  it('acts on several items: no single-item actions, and Open all counts the bookmarks', () => {
+    const second: Bookmark = { ...link, id: 'link-2', url: 'https://example.org/' };
+    const context = createActionContext({ canPaste: () => true });
+    expect(availableIds([link, second], BOOKMARK_ROW_ACTIONS, context)).toEqual({
+      clipboard: ['cut', 'copy', 'paste'],
+      open: ['openInNewTab', 'openInNewWindow', 'openInPrivateWindow'],
+      destructive: ['delete'],
+    });
+    const open = BOOKMARK_ROW_ACTIONS.find((action) => action.id === 'openInNewTab');
+    if (!open) throw new Error('missing');
+    expect(getRowActionLabel(open, [link, second], context)).toBe('Open all (2)');
+    expect(getRowActionLabel(open, [link], context)).toBe('Open in new tab');
+    void open.run([link, second], context);
+    expect(context.open).toHaveBeenCalledWith([link, second], 'background-tabs');
+    // A private window is offered only where the browser allows it.
+    expect(
+      availableIds(
+        [link],
+        BOOKMARK_ROW_ACTIONS,
+        createActionContext({ privateWindowsAllowed: false }),
+      ).open,
+    ).toEqual(['openInNewTab', 'openInNewWindow']);
+  });
+
+  it('names a folder edit Rename', () => {
+    const edit = BOOKMARK_ROW_ACTIONS.find((action) => action.id === 'edit');
+    if (!edit) throw new Error('missing');
+    expect(getRowActionLabel(edit, [folder], createActionContext())).toBe('Rename');
+    expect(getRowActionLabel(edit, [link], createActionContext())).toBe('Edit');
   });
 
   it('offers Show in folder only on search results from another folder', () => {
-    const ids = (context: BookmarkRowActionContext) =>
-      getAvailableRowActions(link, BOOKMARK_ROW_ACTIONS, context).regular.map(
-        (action) => action.id,
-      );
-    expect(ids(createActionContext())).not.toContain('showInFolder');
+    expect(availableIds([link], BOOKMARK_ROW_ACTIONS).main).not.toContain('showInFolder');
     const showInFolder = vi.fn();
     const context = createActionContext({ isOutsideOpenFolder: () => true, showInFolder });
-    expect(ids(context)).toEqual(['openInNewTab', 'showInFolder', 'edit', 'viewDetails', 'copyId']);
-    BOOKMARK_ROW_ACTIONS.find((action) => action.id === 'showInFolder')?.run(link, context);
+    expect(availableIds([link], BOOKMARK_ROW_ACTIONS, context).main).toEqual([
+      'showInFolder',
+      'edit',
+      'viewDetails',
+    ]);
+    BOOKMARK_ROW_ACTIONS.find((action) => action.id === 'showInFolder')?.run([link], context);
     expect(showInFolder).toHaveBeenCalledWith(link);
   });
 });

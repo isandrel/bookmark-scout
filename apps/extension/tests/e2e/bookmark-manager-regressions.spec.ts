@@ -302,7 +302,7 @@ test('edits explain a blank folder name and a URL without a scheme in the dialog
   await page.goto(managerUrl(extensionId, seeded.folderId));
 
   await row(page, 'Named Folder').getByRole('button', { name: 'Open menu' }).click();
-  await page.getByRole('menuitem', { name: 'Edit' }).click();
+  await page.getByRole('menuitem', { name: 'Rename' }).click();
   let dialog = page.getByRole('dialog', { name: 'Edit folder' });
   await dialog.getByLabel('Name').fill('   ');
   await dialog.getByRole('button', { name: 'Save' }).click();

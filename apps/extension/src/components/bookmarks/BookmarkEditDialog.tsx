@@ -10,24 +10,33 @@ function isAbsoluteUrl(url: string): boolean {
   }
 }
 
+/** Edit an item, or add a bookmark or folder at the end of `parentId` (Chrome's add dialog). */
+export type BookmarkEditTarget =
+  | { mode: 'edit'; bookmark: Bookmark }
+  | { mode: 'add'; kind: 'bookmark' | 'folder'; parentId: string };
+
 type BookmarkEditDialogProps = {
-  bookmark: Bookmark | null;
+  target: BookmarkEditTarget | null;
   onClose: () => void;
   onSaved: () => void | Promise<void>;
 };
 
+const isFolderTarget = (target: BookmarkEditTarget) =>
+  target.mode === 'edit' ? target.bookmark.type === ItemTypeEnum.Folder : target.kind === 'folder';
+
 function BookmarkEditForm({
-  bookmark,
+  target,
   onClose,
   onSaved,
 }: {
-  bookmark: Bookmark;
+  target: BookmarkEditTarget;
   onClose: () => void;
   onSaved: () => void | Promise<void>;
 }) {
-  const isLink = bookmark.type === ItemTypeEnum.Link;
-  const [title, setTitle] = useState(bookmark.title);
-  const [url, setUrl] = useState(bookmark.url ?? '');
+  const bookmark = target.mode === 'edit' ? target.bookmark : undefined;
+  const isLink = !isFolderTarget(target);
+  const [title, setTitle] = useState(bookmark?.title ?? '');
+  const [url, setUrl] = useState(bookmark?.url ?? '');
   const [titleError, setTitleError] = useState('');
   const [urlError, setUrlError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -46,7 +55,7 @@ function BookmarkEditForm({
       return;
     }
     // Only a new URL is checked, so existing bookmarklets can still be renamed.
-    const urlChanged = isLink && trimmedUrl !== bookmark.url;
+    const urlChanged = isLink && trimmedUrl !== bookmark?.url;
     if (urlChanged && !isAbsoluteUrl(trimmedUrl)) {
       setUrlError(t('bookmarks_editUrlInvalid'));
       return;
@@ -63,10 +72,21 @@ function BookmarkEditForm({
 
     setSaving(true);
     try {
+      if (target.mode === 'add') {
+        await addBookmarkItem({
+          parentId: target.parentId,
+          title: trimmedTitle,
+          ...(isLink ? { url: trimmedUrl } : {}),
+        });
+        await onSaved();
+        toast.success({ title: t('bookmarks_added', getBookmarkDisplayTitle(trimmedTitle)) });
+        onClose();
+        return;
+      }
       // Recorded, so Ctrl+Z in the manager restores the previous name and URL.
-      await recordBookmarkWrites({ action: 'edit', title: bookmark.title }, (writer) =>
+      await recordBookmarkWrites({ action: 'edit', title: target.bookmark.title }, (writer) =>
         writer.update(
-          bookmark.id,
+          target.bookmark.id,
           urlChanged ? { title: trimmedTitle, url: trimmedUrl } : { title: trimmedTitle },
         ),
       );
@@ -135,32 +155,39 @@ function BookmarkEditForm({
   );
 }
 
-/** Edits a bookmark's title and URL, or a folder's title. */
-export function BookmarkEditDialog({ bookmark, onClose, onSaved }: BookmarkEditDialogProps) {
+/** Title and description keys by mode and kind. */
+const DIALOG_TEXT = {
+  edit: {
+    folder: ['bookmarks_editFolder', 'bookmarks_editFolderDescription'],
+    bookmark: ['bookmarks_editBookmark', 'bookmarks_editDescription'],
+  },
+  add: {
+    folder: ['bookmarks_addFolderTitle', 'bookmarks_addFolderDescription'],
+    bookmark: ['bookmarks_addBookmarkTitle', 'bookmarks_addBookmarkDescription'],
+  },
+} as const satisfies Record<string, Record<string, readonly [MessageKey, MessageKey]>>;
+
+/** Edits a bookmark's title and URL or a folder's title, or adds a bookmark or folder. */
+export function BookmarkEditDialog({ target, onClose, onSaved }: BookmarkEditDialogProps) {
+  const [titleKey, descriptionKey] = target
+    ? DIALOG_TEXT[target.mode][isFolderTarget(target) ? 'folder' : 'bookmark']
+    : DIALOG_TEXT.edit.bookmark;
   return (
     <Dialog
-      open={bookmark !== null}
+      open={target !== null}
       onOpenChange={(open) => {
         if (!open) onClose();
       }}
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {bookmark?.type === ItemTypeEnum.Folder
-              ? t('bookmarks_editFolder')
-              : t('bookmarks_editBookmark')}
-          </DialogTitle>
-          <DialogDescription>
-            {bookmark?.type === ItemTypeEnum.Folder
-              ? t('bookmarks_editFolderDescription')
-              : t('bookmarks_editDescription')}
-          </DialogDescription>
+          <DialogTitle>{t(titleKey)}</DialogTitle>
+          <DialogDescription>{t(descriptionKey)}</DialogDescription>
         </DialogHeader>
-        {bookmark ? (
+        {target ? (
           <BookmarkEditForm
-            key={bookmark.id}
-            bookmark={bookmark}
+            key={target.mode === 'edit' ? target.bookmark.id : `add-${target.kind}`}
+            target={target}
             onClose={onClose}
             onSaved={onSaved}
           />
