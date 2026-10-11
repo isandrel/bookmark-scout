@@ -235,10 +235,17 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       '[mocked provider contract] provider-backed AI previews stop at opt-in without making external requests',
     ),
   ]),
-  // Read by the AI services store, which derives the default service from them before any
-  // service is saved.
-  aiProvider: tested('lib/ai-services-storage.ts', [popupAi]),
-  aiModel: tested('lib/ai-services-storage.ts', [popupAi]),
+  aiActivityRecording: tested('services/ai-activity.ts', [
+    unit('ai-activity.test.ts', 'records nothing while recording is off'),
+    unit('ai-activity.test.ts', 'records the call with credentials redacted and leaves the response readable'),
+    e2e(
+      'ai-activity.spec.ts',
+      '[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on',
+    ),
+  ], 'A device setting: it never syncs.'),
+  askAiWebSearch: tested('services/ai-agent.ts', [
+    unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on"),
+  ], 'A device setting, switched with the globe button in Ask AI.'),
   aiMaxRecommendations: tested(POPUP, [
     popupAi,
     unit('ai-prompt-settings.test.ts', 'asks for and returns at most the saved number of folder recommendations'),

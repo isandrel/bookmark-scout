@@ -1,8 +1,14 @@
-import type { BrowserContext, Route } from '@playwright/test';
+import type { BrowserContext, Route, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-import { STORAGE_ITEMS, writeStoredItems } from './storage';
+import { replaceSettings, seedAIServices } from './storage';
 
 const BASE_URL = 'https://ask.e2e.invalid/v1';
+
+function seedAskService(worker: Worker) {
+  return seedAIServices(worker, [
+    { provider: 'custom', model: 'ask-model', credentials: { baseUrl: BASE_URL } },
+  ]);
+}
 
 type ChatRequest = { messages: { role: string; content: unknown }[]; stream?: boolean };
 
@@ -72,19 +78,12 @@ test('[mocked provider contract] Ask AI searches bookmarks with a tool and answe
   extensionWorker,
   page,
 }) => {
-  await writeStoredItems(extensionWorker, [
-    [
-      STORAGE_ITEMS.settings,
-      {
-        language: 'en',
-        aiEnabled: true,
-        aiProvider: 'custom',
-        aiModel: 'ask-model',
-        aiAutoTriggerOnOpen: false,
-      },
-    ],
-    [STORAGE_ITEMS.aiCredentials, { custom: { baseUrl: BASE_URL } }],
-  ]);
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
   await extensionWorker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();
     const parent = root.children?.find((node) => node.children !== undefined);
@@ -134,13 +133,8 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
   extensionWorker,
   page,
 }) => {
-  await writeStoredItems(extensionWorker, [
-    [
-      STORAGE_ITEMS.settings,
-      { language: 'en', aiEnabled: true, aiProvider: 'custom', aiModel: 'ask-model' },
-    ],
-    [STORAGE_ITEMS.aiCredentials, { custom: { baseUrl: BASE_URL } }],
-  ]);
+  await replaceSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedAskService(extensionWorker);
   // 4xx answers are not retried by the SDK, so each error reaches the chat.
   const failures = [
     { status: 401, message: 'Invalid API key' },

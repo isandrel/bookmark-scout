@@ -3,11 +3,6 @@
 [enable]
 # Enable AI-powered folder recommendations
 enabled = false
-# Default AI provider (an id from config/ai/providers/ or the provider catalog), shown in the AI
-# service panel under the switch
-provider = "openai"
-# Default model to use (must match a model id of that provider)
-model = "gpt-4o-mini"
 
 [suggestions]
 # Auto-trigger AI recommendations when popup opens
@@ -19,3 +14,13 @@ max_recommendations = { default = 5, min = 1, max = 10, step = 1 }
 # Send the readable text of each page, not only its title and URL, to folder recommendations,
 # Auto-Tagging, and Content Summarizer. Needs website access, which is asked for when turned on.
 read_page_content = false
+
+[activity]
+# Record the last AI requests on this device (Options > AI > AI activity). A device setting: it
+# never syncs, and neither does the log.
+recording = false
+
+[ask_ai]
+# Ask AI adds the provider's web search, where the provider has one. Chosen in the Ask AI panel,
+# for this device only.
+web_search = false

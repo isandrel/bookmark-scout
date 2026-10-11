@@ -8,8 +8,8 @@ import {
   readStored,
   removeStored,
   STORAGE_ITEMS,
+  seedAIServices,
   writeStored,
-  writeStoredItems,
 } from './storage';
 
 /**
@@ -331,7 +331,8 @@ test.describe('quick save in the page', () => {
       .poll(async () => (await bookmarksWithUrl(extensionWorker, page.url()))[0]?.parentId)
       .toBe(rust.folderId);
     expect(await bookmarksWithUrl(extensionWorker, page.url())).toHaveLength(1);
-    // Undo after the move puts it back where it was.
+    // Undo after the move puts it back where it was. The notification redraws after the move.
+    await expect.poll(() => toastButtons(page)).toContain('Undo');
     await clickToastButton(page, 'Undo');
     await expect
       .poll(async () => (await bookmarksWithUrl(extensionWorker, page.url()))[0]?.parentId)
@@ -382,17 +383,12 @@ test.describe('quick save in the page', () => {
     const dev = await seedFolder(extensionWorker, 'Dev', []);
     await setSettings(extensionWorker, {
       aiEnabled: true,
-      aiProvider: 'custom',
-      aiModel: 'e2e-model',
       aiMaxRecommendations: 3,
-    });
-    await writeStoredItems(extensionWorker, [
-      [
-        STORAGE_ITEMS.aiCredentials,
-        { custom: { baseUrl: `${server.origin}/v1`, customModel: 'e2e-model' } },
-      ],
       // Recording on, to see the request go through the logging fetch.
-      [STORAGE_ITEMS.aiActivityRecording, true],
+      aiActivityRecording: true,
+    });
+    await seedAIServices(extensionWorker, [
+      { provider: 'custom', model: 'e2e-model', credentials: { baseUrl: `${server.origin}/v1` } },
     ]);
     server.ai.recommendations = [
       { type: 'new', folderPath: `${dev.barTitle}/Dev/Databases`, parentPath: '' },

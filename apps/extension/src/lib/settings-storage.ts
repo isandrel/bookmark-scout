@@ -1,6 +1,8 @@
 /**
- * Settings storage backed by a WXT storage item in the sync area.
- * Invalid stored or submitted fields are isolated so one bad value never blocks the rest.
+ * Settings storage. Only settings that differ from their default are stored: synced ones in
+ * `STORAGE_ITEMS.settings`, this device's own (`DEVICE_SETTING_KEYS`) in
+ * `STORAGE_ITEMS.deviceSettings`. Saving a setting back to its default removes it. Invalid stored
+ * or submitted fields are isolated so one bad value never blocks the rest.
  */
 
 import type { z } from 'zod';
@@ -106,19 +108,100 @@ export function sanitizeSettings(stored: unknown): Settings {
   return validateSettingsUpdate(defaultSettings, input).settings;
 }
 
+/** Settings that differ from the default, as stored, including keys a newer release added. */
+export type StoredOverrides = Record<string, unknown>;
+
+const parseOverrides = (raw: unknown): StoredOverrides => (isPlainObject(raw) ? raw : {});
+
+/** What each scope stores; read settings through `settingsValue`, change them through `saveSettings`. */
+export const settingsOverrideValues: Record<SettingScope, StoredValue<StoredOverrides>> = {
+  sync: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.settings, {
+    parse: parseOverrides,
+    empty: {},
+    isEmpty: (overrides) => Object.keys(overrides).length === 0,
+  }),
+  device: defineStoredValue<StoredOverrides>(STORAGE_ITEMS.deviceSettings, {
+    parse: parseOverrides,
+    empty: {},
+    isEmpty: (overrides) => Object.keys(overrides).length === 0,
+  }),
+};
+
+/** Valid settings from what each scope stores; a key stored in the wrong scope is ignored. */
+function composeSettings(sync: StoredOverrides, device: StoredOverrides): Settings {
+  const pick = (overrides: StoredOverrides, scope: SettingScope) =>
+    Object.fromEntries(
+      Object.entries(overrides).filter(
+        ([key]) => isSettingsKey(key) && getSettingScope(key) === scope,
+      ),
+    );
+  return sanitizeSettings({ ...pick(sync, 'sync'), ...pick(device, 'device') });
+}
+
 /**
- * Synced settings. Stored data may predate the current schema, so every read is sanitized, and
- * every read or change also sets the language `t()` uses, so a page follows a language change
- * made anywhere.
+ * What a scope stores after a change from `before` to `after`: changed settings are stored, or
+ * removed when back at their default; everything else stays as stored, so a setting another
+ * release understands better (a newer option, a newer key) survives this release's writes.
  */
-export const settingsValue = defineStoredValue<Settings>(STORAGE_ITEMS.settings, {
-  parse: (raw) => {
-    const settings = sanitizeSettings(raw);
+function nextOverrides(
+  stored: StoredOverrides,
+  scope: SettingScope,
+  before: Settings,
+  after: Settings,
+): StoredOverrides {
+  const next = { ...stored };
+  for (const key of SETTING_KEYS_BY_SCOPE[scope]) {
+    if (isSameJson(after[key], before[key])) continue;
+    if (isSameJson(after[key], defaultSettings[key])) delete next[key];
+    else next[key] = after[key];
+  }
+  return next;
+}
+
+/**
+ * Every setting, from both scopes. Every read or change also sets the language `t()` uses, so a
+ * page follows a language change made anywhere.
+ */
+export const settingsValue = defineDerivedValue(
+  [settingsOverrideValues.sync, settingsOverrideValues.device] as const,
+  ([sync, device]) => {
+    const settings = composeSettings(sync, device);
     setLanguage(settings.language);
     return settings;
   },
-  empty: defaultSettings,
-});
+  defaultSettings,
+);
+
+/**
+ * Applies `change` to the current settings and stores the result in both scopes, each under its
+ * own lock (synced first, then this device's, in that order everywhere). Nothing is stored when
+ * `change` throws. Resolves to the settings before and after.
+ */
+async function changeSettings(
+  change: (current: Settings) => Settings,
+  storeScope: (
+    scope: SettingScope,
+    stored: StoredOverrides,
+    before: Settings,
+    after: Settings,
+  ) => StoredOverrides = (scope, stored, before, after) =>
+    nextOverrides(stored, scope, before, after),
+): Promise<{ before: Settings; after: Settings }> {
+  let result: { before: Settings; after: Settings } | undefined;
+  await settingsOverrideValues.sync.update(async (sync) => {
+    let nextSync = sync;
+    await settingsOverrideValues.device.update((device) => {
+      const before = composeSettings(sync, device);
+      const after = change(before);
+      result = { before, after };
+      nextSync = storeScope('sync', sync, before, after);
+      return storeScope('device', device, before, after);
+    });
+    return nextSync;
+  });
+  if (!result) throw new Error('Settings were not changed');
+  return result;
+}
 
 /**
  * Get settings from sync storage; defaults when storage cannot be read.
@@ -136,7 +219,7 @@ export async function getSettings(): Promise<Settings> {
  * Save settings. Rejects with SettingsValidationError when any field is invalid; nothing is saved.
  */
 export async function saveSettings(settings: Partial<Settings>): Promise<void> {
-  await settingsValue.update((current) => {
+  await changeSettings((current) => {
     const { settings: next, errors } = validateSettingsUpdate(current, settings);
     if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
     return next;
@@ -150,12 +233,12 @@ export async function saveValidSettings(
   updates: Partial<Settings>,
 ): Promise<{ settings: Settings; errors: SettingsFieldErrors }> {
   let errors: SettingsFieldErrors = {};
-  const settings = await settingsValue.update((current) => {
+  const { after } = await changeSettings((current) => {
     const result = validateSettingsUpdate(current, updates);
     errors = result.errors;
     return result.settings;
   });
-  return { settings, errors };
+  return { settings: after, errors };
 }
 
 /** Message `type` of a save a closing page hands to the background. */
@@ -189,23 +272,41 @@ export function registerSettingsSaveListener(): void {
 }
 
 /**
- * Reset settings to defaults.
+ * Reset every setting this release knows to its default, in both scopes.
  */
 export async function resetSettings(): Promise<void> {
-  await settingsValue.set(defaultSettings);
+  await changeSettings(
+    () => defaultSettings,
+    (scope, stored) =>
+      Object.fromEntries(
+        Object.entries(stored).filter(
+          ([key]) => !isSettingsKey(key) || getSettingScope(key) !== scope,
+        ),
+      ),
+  );
+}
+
+/** The settings that differ from their default, from both scopes. */
+export function getSettingsOverrides(settings: Settings): Partial<Settings> {
+  return Object.fromEntries(
+    Object.entries(settings).filter(
+      ([key, value]) => !isSameJson(value, defaultSettings[key as keyof Settings]),
+    ),
+  ) as Partial<Settings>;
 }
 
 /**
- * Export settings as JSON string.
+ * Export settings as a JSON string: only those that differ from their default, so a file never
+ * pins a default that a later release improves.
  */
 export async function exportSettings(): Promise<string> {
-  const settings = await getSettings();
-  return JSON.stringify(settings, null, 2);
+  return JSON.stringify(getSettingsOverrides(await getSettings()), null, 2);
 }
 
 /**
  * Import settings from a JSON string, merging recognized fields onto the current settings.
- * Rejects the whole file if it is not a settings object or any recognized field is invalid.
+ * Rejects the whole file if it is not a settings object or any recognized field is invalid. An
+ * empty object (an export of default settings) changes nothing.
  * Returns the keys whose values changed.
  */
 export async function importSettings(json: string): Promise<(keyof Settings)[]> {
@@ -218,22 +319,23 @@ export async function importSettings(json: string): Promise<(keyof Settings)[]> 
   if (!isPlainObject(parsed)) throw new Error(t('error_invalidSettingsFile'));
 
   const updates = Object.fromEntries(Object.entries(parsed).filter(([key]) => isSettingsKey(key)));
-  if (Object.keys(updates).length === 0) throw new Error(t('error_invalidSettingsFile'));
+  // An export of default settings is empty; a file with only unknown keys is something else.
+  if (Object.keys(updates).length === 0 && Object.keys(parsed).length > 0) {
+    throw new Error(t('error_invalidSettingsFile'));
+  }
 
-  let changed: (keyof Settings)[] = [];
-  await settingsValue.update((current) => {
+  const { before, after } = await changeSettings((current) => {
     const { settings, errors } = validateSettingsUpdate(current, updates);
     if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
-    changed = (Object.keys(settings) as (keyof Settings)[]).filter(
-      (key) => !isSameJson(settings[key], current[key]),
-    );
     return settings;
   });
-  return changed;
+  return (Object.keys(after) as (keyof Settings)[]).filter(
+    (key) => !isSameJson(after[key], before[key]),
+  );
 }
 
 /**
- * Call `listener` with sanitized settings whenever synced settings change (any page or device).
+ * Call `listener` with sanitized settings whenever settings change (any page or device).
  */
 export function subscribeToSettings(listener: (settings: Settings) => void): () => void {
   return settingsValue.watch(listener);

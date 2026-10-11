@@ -2,7 +2,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import enMessages from '../../public/_locales/en/messages.json';
 import {
-  aiActivityRecordingValue,
   aiActivityValue,
   MAX_AI_ACTIVITY_BODY_CHARS,
   MAX_AI_ACTIVITY_ENTRIES,
@@ -14,6 +13,7 @@ import {
 } from '@/lib/ai-activity-storage';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
+import { saveSettings } from '@/lib/settings-storage';
 import { AI_ACTIVITY_SOURCES, createLoggingFetch } from '@/services/ai-activity';
 import { readConfigToml } from '../config-files';
 import { STORAGE_ITEMS, seedStored } from './storage-helpers';
@@ -145,7 +145,7 @@ describe('createLoggingFetch', () => {
   });
 
   it('records the call with credentials redacted and leaves the response readable', async () => {
-    await aiActivityRecordingValue.set(true);
+    await saveSettings({ aiActivityRecording: true });
     const fetch = createLoggingFetch({ source: 'autoTagging', provider: 'openai', model: 'm' });
     const response = await fetch('https://api.example.invalid/v1/chat', {
       method: 'POST',
@@ -168,7 +168,7 @@ describe('createLoggingFetch', () => {
   });
 
   it('never records the values of extra headers a service configured, whatever their name', async () => {
-    await aiActivityRecordingValue.set(true);
+    await saveSettings({ aiActivityRecording: true });
     await saveStoredAIProviderConfig('service-1', {
       extraHeaders: '{"X-Tenant":"tenant-secret","X-Title":"Bookmark Scout"}',
     });
@@ -186,7 +186,7 @@ describe('createLoggingFetch', () => {
   });
 
   it('records a failed call and still throws it to the caller', async () => {
-    await aiActivityRecordingValue.set(true);
+    await saveSettings({ aiActivityRecording: true });
     respond.mockRejectedValueOnce(new TypeError('Failed to fetch'));
     const fetch = createLoggingFetch({ source: 'modelList' });
     await expect(fetch('https://api.example.invalid/v1/models')).rejects.toThrow('Failed to fetch');

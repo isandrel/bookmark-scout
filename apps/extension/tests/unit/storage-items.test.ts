@@ -2,8 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
-import { askAiWebSearchValue } from '@/components/ai/AskAIPanel.lazy';
-import { aiActivityRecordingValue, aiActivityValue } from '@/lib/ai-activity-storage';
+import { aiActivityValue } from '@/lib/ai-activity-storage';
 import {
   aiModelListValue,
   aiProviderConfigValue,
@@ -16,7 +15,7 @@ import { promptLibraryIndexValue } from '@/lib/prompt-library-storage';
 import { recentFoldersValue } from '@/lib/recent-folders-storage';
 import { savedSearchesValue } from '@/lib/saved-searches-storage';
 import { searchHistoryValue } from '@/lib/search-history-storage';
-import { settingsValue } from '@/lib/settings-storage';
+import { settingsOverrideValues } from '@/lib/settings-storage';
 import { siteIconCacheValue } from '@/lib/site-icon-storage';
 import {
   registerStorageCleanup,
@@ -38,7 +37,8 @@ import { readStoredData, storedEntry } from './storage-helpers';
 
 /** Every single (non-collection) item's stored value; a new registry item must be added here. */
 const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
-  settings: settingsValue,
+  settings: settingsOverrideValues.sync,
+  deviceSettings: settingsOverrideValues.device,
   tableView: bookmarkTableViewValue,
   promptIndex: promptLibraryIndexValue,
   recentFolders: recentFoldersValue,
@@ -46,8 +46,6 @@ const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
   aiModelCache: aiModelListValue,
   aiServices: aiServicesValue,
   aiActivity: aiActivityValue,
-  aiActivityRecording: aiActivityRecordingValue,
-  askAiWebSearch: askAiWebSearchValue,
   bookmarkMetadata: bookmarkMetadataValue,
   searchHistory: searchHistoryValue,
   savedSearches: savedSearchesValue,
@@ -86,7 +84,8 @@ describe('storage registry', () => {
     expect(isRegisteredKey('sync', 'prompts.prompt/abc')).toBe(true);
     expect(isRegisteredKey('sync', 'prompts.prompt/')).toBe(false);
     expect(isRegisteredKey('sync', 'settings')).toBe(true);
-    expect(isRegisteredKey('local', 'settings')).toBe(false);
+    expect(isRegisteredKey('local', 'settings')).toBe(true);
+    expect(isRegisteredKey('local', 'prompts.index')).toBe(false);
     expect(isRegisteredKey('sync', 'bookmark-scout-settings')).toBe(false);
   });
 

@@ -9,12 +9,12 @@ export function useAIActivity(): {
   setRecording: (recording: boolean) => Promise<void>;
 } {
   const { value: entries } = useStoredValue(aiActivityValue);
-  const { value: recording } = useStoredValue(aiActivityRecordingValue);
+  const { value: recording, setValue: saveRecording } = useSetting('aiActivityRecording');
   return {
     entries,
     recording,
     setRecording: async (next: boolean) => {
-      await aiActivityRecordingValue.set(next);
+      await saveRecording(next);
       // Turning recording off also drops what was recorded.
       if (!next) await clearAIActivity();
     },

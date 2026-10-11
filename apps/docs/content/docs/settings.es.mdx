@@ -10,8 +10,8 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 - **Buscar en la configuración...**, en la parte superior, encuentra un ajuste en cualquier pestaña e indica cuántos coinciden.
 - Cada pestaña se divide en secciones con título. El interruptor de cada herramienta está junto a su título; mientras está desactivado, el resto de sus ajustes se pliega. Los ajustes técnicos, como los tiempos de espera y la longitud de los nombres de archivo, están en **Configuración avanzada**, que permanece cerrada hasta que la abres o una búsqueda encuentra algo dentro.
 - Un ajuste cambiado se marca como **Modificado**, con un botón para restablecer su valor predeterminado. **Restablecer todo** restablece todos los ajustes.
-- **Exportar** guarda tu configuración como archivo JSON, e **Importar** la restaura desde uno. Ninguno de los dos toca tus marcadores.
-- La configuración se guarda en el almacenamiento sincronizado del navegador, así que te sigue a otros dispositivos cuando la sincronización del navegador está activada. La clave de API del proveedor de IA, la **URL base** y los **Encabezados adicionales (JSON)** son la excepción: se quedan en este dispositivo. Consulta [Privacidad](/privacy).
+- **Exportar** guarda como archivo JSON los ajustes que cambiaste, e **Importar** la restaura desde uno. Ninguno de los dos toca tus marcadores.
+- La configuración se guarda en el almacenamiento sincronizado del navegador, así que te sigue a otros dispositivos cuando la sincronización del navegador está activada. Algunos ajustes propios de cada dispositivo se quedan en él: la carpeta elegida para el guardado rápido, el límite de almacenamiento de iconos, el registro de actividad de IA y la búsqueda web de Preguntar a la IA. Los servicios de IA, con sus claves de API, la **URL base** y los **Encabezados adicionales (JSON)**, también se quedan en este dispositivo. Consulta [Privacidad](/privacy).
 
 ## Guardar y buscar [#search]
 
@@ -150,7 +150,7 @@ El Etiquetado automático y el Generador de resúmenes siempre trabajan con la c
 | **Limpiador de URLs** | **Quitar fragmentos** desactivado; **Ordenar parámetros de consulta** y **Quitar parámetros de consulta repetidos** activados; listas **Parámetros que se conservan** y **Parámetros que se quitan** |
 | **Comprobar enlaces rotos** | **Tiempo de espera de la solicitud** 8 s; **Solicitudes simultáneas** 4; **Número de reintentos** 1; **Seguir redirecciones** activado; **Códigos de estado correctos** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
+Las listas como **Parámetros que se quitan** se editan como etiquetas: escribe un nombre y pulsa Enter, o elige una sugerencia. **Códigos de estado correctos** es una lista de casillas con los códigos habituales, y puedes añadir otros. Para que la configuración quepa en la sincronización del navegador, cada lista admite hasta 20 entradas, y cada nombre de parámetro hasta 32 caracteres (letras, números y signos de URL). Las listas predeterminadas están en [Limpiar duplicados y URLs con seguimiento](/guides/clean-up#strip-tracking-parameters). Consulta también [Encontrar y reparar enlaces rotos](/guides/dead-links).
 
 ## Metadatos y contenido [#metadata--content]
 

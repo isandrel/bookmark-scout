@@ -17,8 +17,10 @@ default_scope = "folder"
 remove_hash = false
 sort_query_params = true
 dedupe_query_params = true
-preserve_params = [ "id", "page", "q", "p", "lang" ]
-remove_params = [
+# Query parameter names kept and removed. Settings sync, so each list is capped to keep every
+# synced setting within the browser's 8 KB item quota.
+preserve_params = { max_items = 20, max_length = 32, default = [ "id", "page", "q", "p", "lang" ] }
+remove_params = { max_items = 20, max_length = 32, default = [
   "utm_source",
   "utm_medium",
   "utm_campaign",
@@ -32,7 +34,7 @@ remove_params = [
   "ref",
   "ref_src",
   "si",
-]
+] }
 
 [dead_links]
 enabled            = true
@@ -41,4 +43,4 @@ request_timeout_ms = { default = 8000, min = 1000, max = 60000, step = 500 }
 concurrency        = { default = 4, min = 1, max = 20, step = 1 }
 retry_count        = { default = 1, min = 0, max = 10, step = 1 }
 follow_redirects   = true
-success_statuses   = [ 200, 201, 202, 204, 301, 302, 307, 308 ]
+success_statuses   = { max_items = 20, default = [ 200, 201, 202, 204, 301, 302, 307, 308 ] }

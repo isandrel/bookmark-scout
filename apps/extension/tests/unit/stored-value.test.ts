@@ -141,15 +141,13 @@ describe('defineStoredValue', () => {
   });
 
   it('reads data that fails the schema as empty', async () => {
-    const flag = defineStoredValue<boolean>(STORAGE_ITEMS.askAiWebSearch, {
-      schema: z.boolean(),
-      empty: false,
-    });
+    const item: StorageItem = { area: 'local', name: 'test.flag', v: 1, backup: 'exclude' };
+    const flag = defineStoredValue<boolean>(item, { schema: z.boolean(), empty: false });
     expect(await flag.get()).toBe(false);
-    await seedStored(STORAGE_ITEMS.askAiWebSearch, 'yes');
+    await seedStored(item, 'yes');
     expect(await flag.get()).toBe(false);
     await flag.set(true);
-    expect(await readStoredRaw(STORAGE_ITEMS.askAiWebSearch)).toEqual({ v: 1, data: true });
+    expect(await readStoredRaw(item)).toEqual({ v: 1, data: true });
   });
 
   it('runs concurrent updates one at a time, each on the latest value', async () => {

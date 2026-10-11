@@ -8,13 +8,13 @@ const identity = <T>(value: T) => value;
  * `select` picks a part of the value (return a part, not a new object), so a component re-renders
  * only when that part changes.
  */
-export function useStoredValue<T>(storedValue: StoredValue<T>): StoredSnapshot<T>;
+export function useStoredValue<T>(storedValue: ReadableStoredValue<T>): StoredSnapshot<T>;
 export function useStoredValue<T, S>(
-  storedValue: StoredValue<T>,
+  storedValue: ReadableStoredValue<T>,
   select: (value: T) => S,
 ): StoredSnapshot<S>;
 export function useStoredValue<T, S>(
-  storedValue: StoredValue<T>,
+  storedValue: ReadableStoredValue<T>,
   select: (value: T) => S = identity as (value: T) => S,
 ): StoredSnapshot<S> {
   const live = getStoredValueStore(storedValue);

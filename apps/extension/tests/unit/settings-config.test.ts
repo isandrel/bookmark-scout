@@ -101,9 +101,9 @@ describe('settings config layout', () => {
         }
       }
     }
-    // The AI service panel, under the AI switch, edits the provider and model.
-    shownIn.set('aiProvider', 'ai.enable');
-    shownIn.set('aiModel', 'ai.enable');
+    // Changed where they apply: the AI activity panel and Ask AI's web search button.
+    shownIn.set('aiActivityRecording', 'ai.activity');
+    shownIn.set('askAiWebSearch', 'ai.ask_ai');
     // A tool limited to one scope has no setting to show and no default in its config.
     const fixedScopes = Object.entries(TOOL_SCOPE_CAPABILITIES)
       .filter(([, capability]) => capability !== 'both')

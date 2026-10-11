@@ -1,0 +1,5 @@
+# Named AI services (Options > AI). Read by src/lib/ai-services-storage.ts.
+
+# The provider the Add service dialog starts with: an id from config/ai/providers/ or the
+# provider catalog
+default_provider = "openai"

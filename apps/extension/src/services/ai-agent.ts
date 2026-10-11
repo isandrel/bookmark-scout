@@ -94,14 +94,11 @@ export function searchBookmarksForAI(
     .map(({ hit }) => hit);
 }
 
-export type AskAIOptions = {
-  /** Add the provider's built-in web search, where it has one. */
-  webSearch: boolean;
-};
-
-/** A new agent for the current default service and settings; built per message, so switching
- * services or settings applies to the next message. */
-export async function createAskAIAgent(options: AskAIOptions) {
+/**
+ * A new agent for the current default service and settings; built per message, so switching
+ * services or settings (such as Ask AI's web search) applies to the next message.
+ */
+export async function createAskAIAgent() {
   const appSettings = await getSettings();
   const settings = await getActiveAISettings(appSettings.aiEnabled);
   const readPages = appSettings.aiReadPageContent && (await hasPermission('pageReading'));
@@ -112,7 +109,7 @@ export async function createAskAIAgent(options: AskAIOptions) {
     settings,
     instructions: system,
     readPages,
-    webSearch: options.webSearch,
+    webSearch: appSettings.askAiWebSearch,
     maxSteps: config.max_steps,
     webSearchMaxUses: config.web_search_max_uses,
   });

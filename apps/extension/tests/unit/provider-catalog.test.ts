@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
-import { settingsSchema } from '@/lib/settings-schema';
 import { createAIModel } from '@/services/ai-client.lazy';
 import {
   getAvailableProviders,
@@ -58,8 +57,6 @@ describe('bundled models.dev provider catalog', () => {
     expect(isAvailableProvider('openai')).toBe(true);
     expect(isAvailableProvider('togetherai')).toBe(true);
     expect(isAvailableProvider('no-such-provider')).toBe(false);
-    expect(settingsSchema.shape.aiProvider.safeParse('togetherai').success).toBe(true);
-    expect(settingsSchema.shape.aiProvider.safeParse('no-such-provider').success).toBe(false);
   });
 
   it('keeps featured definitions when the catalog has the same id', () => {
@@ -93,10 +90,6 @@ describe('bundled models.dev provider catalog', () => {
     expect(getProviderLogoUrl('ollama')).toBe('/provider-logos/ollama-cloud.svg');
     expect(getProviderLogoUrl('togetherai')).toBe('/provider-logos/togetherai.svg');
     expect(getProviderLogoUrl('custom')).toBeUndefined();
-  });
-
-  it('accepts catalog provider ids in synced settings', () => {
-    expect(settingsSchema.shape.aiProvider.parse('togetherai')).toBe('togetherai');
   });
 });
 

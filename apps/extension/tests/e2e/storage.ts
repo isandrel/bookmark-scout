@@ -5,6 +5,7 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import {
+  DEVICE_SETTING_KEYS,
   STORAGE_ITEMS,
   type StorageAreaName,
   type StorageItem,
@@ -105,18 +106,101 @@ export async function removeStored(
   );
 }
 
-/** Merges `updates` into the stored settings. */
+const deviceSettingKeys = new Set<string>(DEVICE_SETTING_KEYS);
+
+/** `settings` split into what sync storage holds and what this device's storage holds. */
+function splitSettings(settings: Record<string, unknown>) {
+  const entries = Object.entries(settings);
+  return {
+    sync: Object.fromEntries(entries.filter(([key]) => !deviceSettingKeys.has(key))),
+    device: Object.fromEntries(entries.filter(([key]) => deviceSettingKeys.has(key))),
+  };
+}
+
+/**
+ * Merges `updates` into the stored settings, each in its scope (device settings in local
+ * storage). Stored as given: a value equal to the default is kept, which the extension reads the
+ * same as a missing one.
+ */
 export async function setSettings(
   target: StorageTarget,
   updates: Record<string, unknown>,
 ): Promise<void> {
-  await updateStored<Record<string, unknown>>(target, STORAGE_ITEMS.settings, (current) => ({
-    ...current,
-    ...updates,
-  }));
+  const { sync, device } = splitSettings(updates);
+  type Overrides = Record<string, unknown>;
+  if (Object.keys(sync).length > 0) {
+    await updateStored<Overrides>(target, STORAGE_ITEMS.settings, (current) => ({
+      ...current,
+      ...sync,
+    }));
+  }
+  if (Object.keys(device).length > 0) {
+    await updateStored<Overrides>(target, STORAGE_ITEMS.deviceSettings, (current) => ({
+      ...current,
+      ...device,
+    }));
+  }
 }
 
-/** The stored settings (only what was saved, not the defaults). */
+/** Replaces every stored setting with `settings` (the rest read as their defaults). */
+export async function replaceSettings(
+  target: StorageTarget,
+  settings: Record<string, unknown>,
+): Promise<void> {
+  const { sync, device } = splitSettings(settings);
+  await writeStoredItems(target, [
+    [STORAGE_ITEMS.settings, sync],
+    [STORAGE_ITEMS.deviceSettings, device],
+  ]);
+}
+
+/**
+ * The stored settings from both scopes. Only settings that differ from their default are stored,
+ * so a setting at its default reads as undefined.
+ */
 export async function readSettings(target: StorageTarget): Promise<Record<string, unknown>> {
-  return (await readStored<Record<string, unknown>>(target, STORAGE_ITEMS.settings)) ?? {};
+  type Overrides = Record<string, unknown>;
+  return {
+    ...(await readStored<Overrides>(target, STORAGE_ITEMS.settings)),
+    ...(await readStored<Overrides>(target, STORAGE_ITEMS.deviceSettings)),
+  };
+}
+
+export type SeededAIService = {
+  provider: string;
+  /** Defaults to the provider id, as the service id the credentials are keyed by. */
+  id?: string;
+  name?: string;
+  /** Empty means the provider default. */
+  model?: string;
+  enabled?: boolean;
+  /** API key, Base URL, and the rest, as stored for the service. */
+  credentials?: Record<string, unknown>;
+};
+
+/** Stores `services` as the named AI services, the first one the default, with credentials. */
+export async function seedAIServices(
+  target: StorageTarget,
+  services: readonly SeededAIService[],
+): Promise<void> {
+  const stored = services.map(
+    ({ provider, id = provider, name = provider, model = '', enabled = true }) => ({
+      id,
+      name,
+      provider,
+      model,
+      enabled,
+    }),
+  );
+  await writeStoredItems(target, [
+    [STORAGE_ITEMS.aiServices, { services: stored, defaultServiceId: stored[0]?.id }],
+    [
+      STORAGE_ITEMS.aiCredentials,
+      Object.fromEntries(
+        services.flatMap((service) =>
+          service.credentials ? [[service.id ?? service.provider, service.credentials]] : [],
+        ),
+      ),
+    ],
+  ]);
 }

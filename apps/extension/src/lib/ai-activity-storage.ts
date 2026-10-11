@@ -55,15 +55,6 @@ export const aiActivityValue = defineStoredValue<AIActivityEntry[]>(STORAGE_ITEM
   empty: [],
 });
 
-/** Per device: whether AI requests are recorded. */
-export const aiActivityRecordingValue = defineStoredValue<boolean>(
-  STORAGE_ITEMS.aiActivityRecording,
-  {
-    parse: (raw) => raw === true,
-    empty: false,
-  },
-);
-
 /** Stored in place of a credential. */
 export const REDACTED_VALUE = '[redacted]';
 

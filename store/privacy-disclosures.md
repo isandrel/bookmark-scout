@@ -21,7 +21,9 @@ What the extension does with data at version `0.3.0`, checked against the source
 | --- | --- | --- |
 | Bookmarks (titles, URLs, folders) | The browser's own bookmark store | Only as described under "AI features", "Network tools", and "Exports" below. Browser bookmark sync is the browser's feature, not the extension's. |
 | Active tab title and URL | Not stored, unless the user saves the page as a bookmark | Sent to the AI provider only when the user asks for folder suggestions (including the AI quick save shortcut), when the user turned on both AI and Auto-recommend on Open (both off by default), or when the model in Ask AI asks for the current page |
-| Settings (`settings`), including the AI on/off switch, provider name, and model name | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
+| Settings the user changed from their defaults (`settings`), including the AI on/off switch; no AI provider, model, or key | `storage.sync` | Synced by the browser vendor's sync service when the user has browser sync on |
+| Device settings (`settings` in `storage.local`): the quick save folder (a folder id), the site icon cache size, AI activity recording, and Ask AI web search | `storage.local` | No |
+| AI services (`ai.services`): each service's name, provider, and model | `storage.local` | No |
 | Bookmark table view (`manager.table-view`): visible columns, order, widths, page size, sort | `storage.sync` | Same as settings. Contains no bookmark content. |
 | AI provider settings (`ai.credentials`): API key, Base URL, extra headers, per provider | `storage.local` | The key and headers are sent only to the configured provider, as request authentication |
 | Tags and summaries (`bookmarks.metadata`) | `storage.local` | Included in AI context exports when the user turns that on; otherwise no |

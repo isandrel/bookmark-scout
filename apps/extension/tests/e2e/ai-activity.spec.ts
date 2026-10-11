@@ -1,7 +1,7 @@
 import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions } from './ai-helpers';
 import { setSettings } from './popup-helpers';
-import { readStoredRaw, STORAGE_ITEMS, writeStored } from './storage';
+import { readStoredRaw, STORAGE_ITEMS, seedAIServices } from './storage';
 
 test.use({ grantWebHostAccess: true });
 
@@ -13,20 +13,21 @@ test('[mocked provider contract] AI activity records a request with its key and 
   extensionWorker,
   page,
 }) => {
-  await setSettings(extensionWorker, {
-    language: 'en',
-    aiEnabled: true,
-    aiProvider: 'custom',
-    aiModel: 'listed-model',
-  });
-  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
-    custom: {
-      apiKey: 'synthetic-activity-key',
-      baseUrl: BASE_URL,
-      // A gateway credential under a name no pattern knows, and one that a pattern catches.
-      extraHeaders: '{"X-Tenant":"synthetic-tenant-value","X-Auth-Token":"synthetic-token-value"}',
+  await setSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedAIServices(extensionWorker, [
+    {
+      provider: 'custom',
+      name: 'Custom Provider',
+      model: 'listed-model',
+      credentials: {
+        apiKey: 'synthetic-activity-key',
+        baseUrl: BASE_URL,
+        // A gateway credential under a name no pattern knows, and one that a pattern catches.
+        extraHeaders:
+          '{"X-Tenant":"synthetic-tenant-value","X-Auth-Token":"synthetic-token-value"}',
+      },
     },
-  });
+  ]);
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await context.route(`${BASE_URL}/models`, (route) =>
     route.fulfill({

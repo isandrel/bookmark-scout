@@ -1,10 +1,10 @@
 /**
  * Named AI services: any number of saved provider configurations, one of them the default.
  * A service's credentials and endpoint overrides live in the AI credentials item
- * (`STORAGE_ITEMS.aiCredentials`) under the service id, so a service created from an older
- * single-provider setup keeps its provider id as its own id and needs no data copied. Everything
- * here stays on this device.
+ * (`STORAGE_ITEMS.aiCredentials`) under the service id. Everything here stays on this device.
  */
+import { z } from 'zod';
+
 export type AIService = {
   id: string;
   /** User-facing label; defaults to the provider name. */
@@ -20,37 +20,12 @@ export type AIServicesState = {
   defaultServiceId?: string;
 };
 
-/** `null` until services are first saved; until then they derive from the older setup. */
+/** `null` until services are first saved. */
 export const aiServicesValue = defineStoredValue<AIServicesState | null>(STORAGE_ITEMS.aiServices, {
   parse: (raw) =>
     isPlainObject(raw) && Array.isArray(raw.services) ? (raw as AIServicesState) : null,
   empty: null,
 });
-
-/**
- * The services a setup from before named services implies: one per provider with stored
- * credentials, plus the selected provider, which is the default. Nothing is written.
- */
-async function deriveLegacyServices(): Promise<AIServicesState> {
-  const [settings, configs] = await Promise.all([getSettings(), aiProviderConfigValue.get()]);
-  const ids = [
-    settings.aiProvider,
-    ...Object.keys(configs).filter((id) => id !== settings.aiProvider),
-  ].filter(isAvailableProvider);
-  return {
-    defaultServiceId: settings.aiProvider,
-    services: ids.map((provider) => ({
-      id: provider,
-      name: getLocalizedProviderName(provider),
-      provider,
-      model:
-        provider === settings.aiProvider
-          ? configs[provider]?.customModel?.trim() || settings.aiModel
-          : configs[provider]?.customModel?.trim() || getDefaultModel(provider),
-      enabled: true,
-    })),
-  };
-}
 
 /** Drops services whose provider no longer exists and repairs a missing default. */
 function normalizeServices(state: AIServicesState): AIServicesState {
@@ -61,13 +36,19 @@ function normalizeServices(state: AIServicesState): AIServicesState {
   return { services, defaultServiceId: defaultService?.id };
 }
 
-async function resolveServices(stored: AIServicesState | null): Promise<AIServicesState> {
-  return normalizeServices(stored ?? (await deriveLegacyServices()));
+function resolveServices(stored: AIServicesState | null): AIServicesState {
+  return normalizeServices(stored ?? { services: [] });
 }
 
 export async function getAIServicesState(): Promise<AIServicesState> {
   return resolveServices(await aiServicesValue.get());
 }
+
+/** The provider the Add service dialog starts with. */
+export const DEFAULT_SERVICE_PROVIDER: AIProvider = readConfig(
+  'ai/services',
+  z.strictObject({ default_provider: z.string().refine(isAvailableProvider) }),
+).default_provider;
 
 export async function getDefaultAIService(): Promise<AIService | undefined> {
   const state = await getAIServicesState();
@@ -77,8 +58,8 @@ export async function getDefaultAIService(): Promise<AIService | undefined> {
 async function updateServices(
   change: (state: AIServicesState) => AIServicesState,
 ): Promise<AIServicesState> {
-  const next = await aiServicesValue.update(async (stored) =>
-    normalizeServices(change(await resolveServices(stored))),
+  const next = await aiServicesValue.update((stored) =>
+    normalizeServices(change(resolveServices(stored))),
   );
   return next ?? { services: [] };
 }

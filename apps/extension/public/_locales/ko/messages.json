@@ -1713,21 +1713,9 @@
         "message": "AI 기반 북마크 워크플로를 활성화합니다. AI 도구는 필요한 북마크 제목, URL, 폴더 이름, 현재 페이지의 제목과 URL, 'AI에게 묻기' 메시지를 사용자가 선택한 제공자에게 직접 보냅니다. AI 도구를 사용하기 전에는 아무것도 전송되지 않습니다. Firefox에서는 켜면 이 데이터 공유 허용을 요청합니다.",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "AI 제공자",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "AI 도구에 사용할 제공자를 선택합니다",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "AI 모델",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "AI 도구에 사용할 모델을 선택합니다",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "최대 추천 수",
@@ -4858,6 +4846,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "폴더 추천, 자동 태그, 콘텐츠 요약에서 제목과 URL뿐 아니라 각 페이지의 본문도 보내 더 나은 결과를 얻습니다. 페이지는 쿠키 없이 다운로드되며 로컬 네트워크의 페이지는 읽지 않습니다. 켜면 웹사이트 접근 권한을 요청합니다.",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "AI 요청 기록",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "최근 AI 요청을 보낸 내용과 받은 응답과 함께 이 기기에 보관합니다.",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "AI에게 묻기 웹 검색",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "이 기기에서 AI 제공업체를 통한 웹 검색을 AI에게 묻기에 사용합니다.",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "이 설정으로 페이지를 읽으려면 웹사이트 접근 권한이 필요합니다. 꺼진 상태로 유지됩니다.",

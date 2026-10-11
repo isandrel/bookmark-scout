@@ -49,7 +49,7 @@ function AddServiceDialog({
   onOpenChange: (open: boolean) => void;
   onAdded: (service: AIService) => void;
 }) {
-  const [provider, setProvider] = useState<string>(defaultSettings.aiProvider);
+  const [provider, setProvider] = useState<string>(DEFAULT_SERVICE_PROVIDER);
   const [name, setName] = useState('');
   const options = providerOptions();
 

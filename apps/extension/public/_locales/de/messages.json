@@ -1713,21 +1713,9 @@
         "message": "KI-gestützte Lesezeichen-Workflows aktivieren. KI-Tools senden die benötigten Lesezeichentitel, URLs und Ordnernamen, Titel und URL der aktuellen Seite sowie Ihre Nachrichten an „KI fragen“ direkt an den von Ihnen gewählten Anbieter. Es wird nichts gesendet, bevor Sie ein KI-Tool verwenden. In Firefox wird beim Aktivieren um die Freigabe dieser Daten gebeten.",
         "description": "AI feature toggle description"
     },
-    "settings_aiProvider": {
-        "message": "KI-Anbieter",
-        "description": "AI provider setting label"
-    },
-    "settings_aiProviderDesc": {
-        "message": "Anbieter für KI-gestützte Tools auswählen",
-        "description": "AI provider setting description"
-    },
     "settings_aiModel": {
         "message": "KI-Modell",
         "description": "AI model setting label"
-    },
-    "settings_aiModelDesc": {
-        "message": "Modell für KI-gestützte Tools auswählen",
-        "description": "AI model setting description"
     },
     "settings_aiMaxRecommendations": {
         "message": "Max. Vorschläge",
@@ -4858,6 +4846,22 @@
     "settings_aiReadPageContentDesc": {
         "message": "Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden für bessere Ergebnisse auch den lesbaren Text jeder Seite, nicht nur Titel und URL. Seiten werden ohne Ihre Cookies heruntergeladen, Seiten im lokalen Netzwerk werden nie gelesen, und beim Aktivieren wird um Zugriff auf Websites gebeten.",
         "description": "Settings: description of Read page content"
+    },
+    "settings_aiActivityRecording": {
+        "message": "KI-Anfragen aufzeichnen",
+        "description": "Setting name: record AI requests in the AI activity log on this device"
+    },
+    "settings_aiActivityRecordingDesc": {
+        "message": "Speichert die letzten KI-Anfragen auf diesem Gerät, mit Gesendetem und Antwort.",
+        "description": "Setting description: what recording AI requests does"
+    },
+    "settings_askAiWebSearch": {
+        "message": "Websuche in „KI fragen“",
+        "description": "Setting name: Ask AI uses the AI provider's web search"
+    },
+    "settings_askAiWebSearchDesc": {
+        "message": "„KI fragen“ darf auf diesem Gerät über Ihren KI-Anbieter im Web suchen.",
+        "description": "Setting description: Ask AI adds the provider's web search on this device"
     },
     "settings_hostAccessDeniedDesc": {
         "message": "Diese Einstellung benötigt Zugriff auf Websites, um Seiten zu lesen. Sie bleibt deaktiviert.",

@@ -1,6 +1,6 @@
 import { readConfigToml } from '../config-files';
 import { expect, test } from './fixtures';
-import { STORAGE_ITEMS, writeStored } from './storage';
+import { STORAGE_ITEMS, seedAIServices } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 test('[mocked provider contract] a custom prompt saved in Options is what auto-tagging sends', async ({
@@ -15,14 +15,16 @@ test('[mocked provider contract] a custom prompt saved in Options is what auto-t
   await setSettings(extensionWorker, {
     language: 'en',
     aiEnabled: true,
-    aiProvider: 'custom',
-    aiModel: 'e2e-model',
     autoTaggingEnabled: true,
     autoTaggingMaxTags: 3,
   });
-  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
-    custom: { baseUrl: 'https://prompt.e2e.invalid/v1' },
-  });
+  await seedAIServices(extensionWorker, [
+    {
+      provider: 'custom',
+      model: 'e2e-model',
+      credentials: { baseUrl: 'https://prompt.e2e.invalid/v1' },
+    },
+  ]);
   const bodies: string[] = [];
   await context.route('https://prompt.e2e.invalid/v1/**', async (route) => {
     bodies.push(route.request().postData() ?? '');

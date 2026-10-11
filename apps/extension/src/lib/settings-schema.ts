@@ -24,6 +24,10 @@ export type SettingsFieldMeta = {
   unlimited?: boolean;
   /** Comma-separated list input; values are parsed when the input is committed. */
   list?: 'string' | 'number';
+  /** Most entries a list may hold. */
+  maxItems?: number;
+  /** Longest text, or longest entry of a list of names. */
+  maxLength?: number;
   /** Numbers use a stepper; a slider suits only fractional values such as a confidence. */
   control?: 'slider';
   /**
@@ -60,7 +64,11 @@ export type SettingsSectionMeta = {
 
 /** Every field of a section, in display order: the heading switch, the fields, then the fold. */
 export function getSectionFields(section: SettingsSectionMeta): (keyof Settings)[] {
-  return [...(section.toggle ? [section.toggle] : []), ...section.fields, ...(section.advanced ?? [])];
+  return [
+    ...(section.toggle ? [section.toggle] : []),
+    ...section.fields,
+    ...(section.advanced ?? []),
+  ];
 }
 
 export type SettingsCategoryMeta = {
@@ -104,6 +112,28 @@ const numberSettingSchema = z
   });
 
 export type NumberSetting = z.output<typeof numberSettingSchema>;
+
+/**
+ * A list setting in the TOML: `{ default, max_items }`, plus `max_length` for each name in a list of
+ * names. Settings sync, so every list is capped; the sync item quota test adds them all up.
+ */
+const listSettingSchema = z
+  .strictObject({
+    default: z.array(z.union([z.string(), z.number()])),
+    max_items: z.number().int().positive(),
+    max_length: z.number().int().positive().optional(),
+  })
+  .refine(
+    (setting) => setting.default.length <= setting.max_items,
+    'default has more than max_items',
+  )
+  .refine(
+    (setting) =>
+      setting.default.every(
+        (item) => typeof item !== 'string' || item.length <= (setting.max_length ?? Infinity),
+      ),
+    'a default entry is longer than max_length',
+  );
 
 /** A text setting with length limits: `{ default, min_length, max_length }`. */
 const textSettingSchema = z
@@ -153,10 +183,6 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 // ============================================================================
 // Value types shared with the rest of the extension
 // ============================================================================
-
-// Featured providers from config/ai/providers plus the bundled models.dev catalog. A refinement,
-// not an enum of every id: listing them would validate the catalog on load of every page.
-const aiProviderSchema = z.string().refine(isAvailableProvider);
 
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
@@ -314,7 +340,12 @@ function textField(path: string, stem: string): FieldDefinition<z.ZodDefault<z.Z
     typeof setting === 'string'
       ? z.string().default(setting)
       : z.string().min(setting.min_length).max(setting.max_length).default(setting.default);
-  return { schema, section: sectionOf(path), meta: () => ({ ...fieldLabels(stem), type: 'text' }) };
+  const maxLength = typeof setting === 'string' ? undefined : setting.max_length;
+  return {
+    schema,
+    section: sectionOf(path),
+    meta: () => ({ ...fieldLabels(stem), type: 'text', ...(maxLength ? { maxLength } : {}) }),
+  };
 }
 
 /** A bookmark folder, stored by id; empty means none chosen. */
@@ -327,17 +358,55 @@ function folderField(path: string, stem: string): FieldDefinition<z.ZodDefault<z
   };
 }
 
-function listField<S extends z.ZodArray<z.ZodType<string | number>>>(
-  path: string,
-  stem: string,
-  schema: S,
-  list: 'string' | 'number',
-): FieldDefinition<z.ZodDefault<S>> {
-  const value = configValue(path, schema);
+/**
+ * Query parameter names: printable ASCII without the characters JSON or Chrome's sync storage
+ * escapes (`"`, `\`, `<`) or the list editor splits at (`,`), so each takes one byte in sync
+ * storage.
+ */
+const QUERY_PARAM_NAME_PATTERN = /^(?:(?![",<\\])[\x21-\x7e])+$/;
+
+export function isQueryParamName(name: string): boolean {
+  return QUERY_PARAM_NAME_PATTERN.test(name);
+}
+
+/** A list of query parameter names, each at most `max_length` long, at most `max_items` of them. */
+function nameListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
+  const config = configValue(path, listSettingSchema);
+  const maxLength = config.max_length;
+  if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
+  const schema = z
+    .array(z.string().max(maxLength).regex(QUERY_PARAM_NAME_PATTERN))
+    .max(config.max_items);
   return {
     section: sectionOf(path),
-    schema: schema.default(value as z.util.NoUndefined<z.output<S>>),
-    meta: () => ({ ...fieldLabels(stem), type: 'text', list }),
+    schema: schema.default(schema.parse(config.default)),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'text',
+      list: 'string',
+      maxItems: config.max_items,
+      maxLength,
+    }),
+  };
+}
+
+/** A list of numbers that each pass `item`, at least one and at most `max_items`. */
+function numberListField(
+  path: string,
+  stem: string,
+  item: z.ZodType<number>,
+): FieldDefinition<z.ZodType<number[]>> {
+  const config = configValue(path, listSettingSchema);
+  const schema = z.array(item).min(1).max(config.max_items);
+  return {
+    section: sectionOf(path),
+    schema: schema.default(schema.parse(config.default)),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'text',
+      list: 'number',
+      maxItems: config.max_items,
+    }),
   };
 }
 
@@ -407,9 +476,7 @@ function scopeField(
 ): FieldDefinition {
   const scopes = capability === 'both' ? toolScopeSchema.options : [capability];
   const fallback =
-    capability === 'both'
-      ? configValue(`${section}.default_scope`, toolScopeSchema)
-      : capability;
+    capability === 'both' ? configValue(`${section}.default_scope`, toolScopeSchema) : capability;
   const schema =
     capability === 'both'
       ? toolScopeSchema.catch(fallback).default(fallback)
@@ -428,37 +495,6 @@ function scopeField(
 const sameAsValue = (value: string) => value;
 const mergeModeLabel = (mode: z.infer<typeof mergeModeSchema>) =>
   mode === 'append' ? t('settings_mergeAppend') : t('settings_mergeReplace');
-
-const aiProviderField: FieldDefinition<z.ZodDefault<typeof aiProviderSchema>> = {
-  schema: aiProviderSchema.default(configValue('ai.enable.provider', aiProviderSchema)),
-  section: 'ai.enable',
-  meta: () => ({
-    ...fieldLabels('aiProvider'),
-    type: 'select',
-    searchable: true,
-    options: getAvailableProviders().map((provider) => ({
-      value: provider.id,
-      label: getLocalizedProviderName(provider.id),
-      iconUrl: getProviderLogoUrl(provider.id),
-      group: t(providerGroupLabelKeys[getProviderGroup(provider.id)]),
-    })),
-  }),
-};
-
-const aiModelField: FieldDefinition<z.ZodDefault<z.ZodString>> = {
-  schema: z.string().default(configValue('ai.enable.model', z.string())),
-  section: 'ai.enable',
-  meta: () => ({
-    ...fieldLabels('aiModel'),
-    type: 'select',
-    options: getAvailableProviders().flatMap((provider) =>
-      getModelsForProvider(provider.id).map((model) => ({
-        value: model.id,
-        label: `${model.name} (${getLocalizedProviderName(provider.id)})`,
-      })),
-    ),
-  }),
-};
 
 const fields = {
   language: enumField('appearance.theme_icons.language', 'language', languageSchema, (value) =>
@@ -532,26 +568,38 @@ const fields = {
 
   popupWidth: numberField('appearance.popup.width', 'popupWidth', { unit: 'px' }),
   popupHeight: numberField('appearance.popup.height', 'popupHeight', { unit: 'px' }),
-  truncateLength: numberField('appearance.popup.truncate_length', 'truncateLength', { unit: 'chars' }),
+  truncateLength: numberField('appearance.popup.truncate_length', 'truncateLength', {
+    unit: 'chars',
+  }),
   toastDurationMs: numberField('appearance.notifications.toast_duration_ms', 'toastDuration', {
     unit: 'ms',
     display: IN_SECONDS,
   }),
 
   aiEnabled: switchField('ai.enable.enabled', 'aiEnabled'),
-  aiProvider: aiProviderField,
-  aiModel: aiModelField,
   aiMaxRecommendations: numberField('ai.suggestions.max_recommendations', 'aiMaxRecommendations'),
   aiAutoTriggerOnOpen: switchField('ai.suggestions.auto_trigger_on_open', 'aiAutoTrigger'),
   aiReadPageContent: switchField('ai.page_reading.read_page_content', 'aiReadPageContent'),
+  aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
+  askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
-  aiMinItemsPerFolder: numberField('ai_tools.reorganization.min_items_per_folder', 'aiMinItemsPerFolder'),
-  aiMaxItemsPerFolder: numberField('ai_tools.reorganization.max_items_per_folder', 'aiMaxItemsPerFolder'),
+  aiMinItemsPerFolder: numberField(
+    'ai_tools.reorganization.min_items_per_folder',
+    'aiMinItemsPerFolder',
+  ),
+  aiMaxItemsPerFolder: numberField(
+    'ai_tools.reorganization.max_items_per_folder',
+    'aiMaxItemsPerFolder',
+  ),
 
   exportFilenamePrefix: textField('data.export.filename_prefix', 'exportFilenamePrefix'),
-  exportFilenameMaxLength: numberField('data.export.filename_max_length', 'exportFilenameMaxLength', {
-    unit: 'chars',
-  }),
+  exportFilenameMaxLength: numberField(
+    'data.export.filename_max_length',
+    'exportFilenameMaxLength',
+    {
+      unit: 'chars',
+    },
+  ),
   exportJsonIndentSize: numberField('data.export.json_indent_size', 'exportJsonIndentSize'),
   exportHtmlIndentSpaces: numberField('data.export.html_indent_spaces', 'exportHtmlIndentSpaces'),
   exportMarkdownIndentSpaces: numberField(
@@ -711,7 +759,10 @@ const fields = {
         title_only: t('settings_duplicatesMatchTitleOnly'),
       })[value],
   ),
-  duplicatesNormalizeWww: switchField('maintenance.duplicates.normalize_www', 'duplicatesNormalizeWww'),
+  duplicatesNormalizeWww: switchField(
+    'maintenance.duplicates.normalize_www',
+    'duplicatesNormalizeWww',
+  ),
   duplicatesIgnoreProtocol: switchField(
     'maintenance.duplicates.ignore_protocol',
     'duplicatesIgnoreProtocol',
@@ -748,17 +799,13 @@ const fields = {
     'maintenance.url_cleaner.dedupe_query_params',
     'urlCleanerDedupeQueryParams',
   ),
-  urlCleanerPreserveParams: listField(
+  urlCleanerPreserveParams: nameListField(
     'maintenance.url_cleaner.preserve_params',
     'urlCleanerPreserveParams',
-    z.array(z.string()),
-    'string',
   ),
-  urlCleanerRemoveParams: listField(
+  urlCleanerRemoveParams: nameListField(
     'maintenance.url_cleaner.remove_params',
     'urlCleanerRemoveParams',
-    z.array(z.string()),
-    'string',
   ),
 
   deadLinksEnabled: switchField('maintenance.dead_links.enabled', 'deadLinksEnabled'),
@@ -778,14 +825,16 @@ const fields = {
     'maintenance.dead_links.follow_redirects',
     'deadLinksFollowRedirects',
   ),
-  deadLinksSuccessStatuses: listField(
+  deadLinksSuccessStatuses: numberListField(
     'maintenance.dead_links.success_statuses',
     'deadLinksSuccessStatuses',
-    z.array(httpStatusCodeSchema).min(1),
-    'number',
+    httpStatusCodeSchema,
   ),
 
-  metadataFetcherEnabled: switchField('metadata_content.metadata_fetcher.enabled', 'metadataFetcherEnabled'),
+  metadataFetcherEnabled: switchField(
+    'metadata_content.metadata_fetcher.enabled',
+    'metadataFetcherEnabled',
+  ),
   metadataFetcherDefaultScope: scopeField(
     'metadata_content.metadata_fetcher',
     'metadataFetcherDefaultScope',
@@ -815,16 +864,24 @@ const fields = {
     'siteIconsDefaultScope',
     TOOL_SCOPE_CAPABILITIES.siteIcons,
   ),
-  siteIconsPreferredSize: numberField('metadata_content.site_icons.preferred_size', 'siteIconsPreferredSize', {
-    unit: 'px',
-  }),
+  siteIconsPreferredSize: numberField(
+    'metadata_content.site_icons.preferred_size',
+    'siteIconsPreferredSize',
+    {
+      unit: 'px',
+    },
+  ),
   siteIconsMaxIconKb: numberField('metadata_content.site_icons.max_icon_kb', 'siteIconsMaxIconKb', {
     unit: 'kb',
   }),
-  siteIconsMaxCacheKb: numberField('metadata_content.site_icons.max_cache_kb', 'siteIconsMaxCacheKb', {
-    unit: 'kb',
-    display: { unit: 'mb', scale: 1024 },
-  }),
+  siteIconsMaxCacheKb: numberField(
+    'metadata_content.site_icons.max_cache_kb',
+    'siteIconsMaxCacheKb',
+    {
+      unit: 'kb',
+      display: { unit: 'mb', scale: 1024 },
+    },
+  ),
 
   privacyScannerEnabled: switchField('security.privacy_scanner.enabled', 'privacyScannerEnabled'),
   privacyScannerDefaultScope: scopeField(
@@ -844,11 +901,9 @@ const fields = {
     'security.privacy_scanner.scan_fragments',
     'privacyScannerScanFragments',
   ),
-  privacyScannerSensitiveParams: listField(
+  privacyScannerSensitiveParams: nameListField(
     'security.privacy_scanner.sensitive_params',
     'privacyScannerSensitiveParams',
-    z.array(z.string()),
-    'string',
   ),
   privacyScannerEmailDetection: switchField(
     'security.privacy_scanner.email_detection',
@@ -931,6 +986,25 @@ export const settingsSchema = z.object(settingsShape).superRefine((value, ctx) =
 
 export type Settings = z.infer<typeof settingsSchema>;
 export const defaultSettings: Settings = settingsSchema.parse({});
+
+/** Where a setting is stored: synced to every device, or kept on this one (`DEVICE_SETTING_KEYS`). */
+export type SettingScope = 'sync' | 'device';
+
+const deviceSettingKeys = new Set<string>(DEVICE_SETTING_KEYS);
+
+export function getSettingScope(key: keyof Settings): SettingScope {
+  return deviceSettingKeys.has(key) ? 'device' : 'sync';
+}
+
+/** Every setting stored in `scope`. */
+export const SETTING_KEYS_BY_SCOPE: Readonly<Record<SettingScope, readonly (keyof Settings)[]>> = {
+  sync: (Object.keys(defaultSettings) as (keyof Settings)[]).filter(
+    (key) => getSettingScope(key) === 'sync',
+  ),
+  device: (Object.keys(defaultSettings) as (keyof Settings)[]).filter(
+    (key) => getSettingScope(key) === 'device',
+  ),
+};
 
 type NumberSettingKey = {
   [K in SettingsKey]: SettingsFields[K] extends NumberFieldDefinition ? K : never;
@@ -1052,7 +1126,11 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
           'aiContextPackerIncludeTags',
           'aiContextPackerIncludeSummaries',
         ],
-        advanced: ['aiContextPackerMaxItems', 'aiContextPackerMaxDepth', 'aiContextPackerExcerptLength'],
+        advanced: [
+          'aiContextPackerMaxItems',
+          'aiContextPackerMaxDepth',
+          'aiContextPackerExcerptLength',
+        ],
       },
       {
         id: 'autoTagging',
@@ -1082,10 +1160,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'reorganization',
         labelKey: 'tools_aiReorganize',
         toggle: 'reorganizationEnabled',
-        fields: [
-          'reorganizationDefaultScope',
-          'reorganizationDryRunFirst',
-        ],
+        fields: ['reorganizationDefaultScope', 'reorganizationDryRunFirst'],
         advanced: [
           'reorganizationMinConfidence',
           'reorganizationBatchSize',
@@ -1127,10 +1202,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'deadLinks',
         labelKey: 'tools_checkDeadLinks',
         toggle: 'deadLinksEnabled',
-        fields: [
-          'deadLinksDefaultScope',
-          'deadLinksFollowRedirects',
-        ],
+        fields: ['deadLinksDefaultScope', 'deadLinksFollowRedirects'],
         advanced: [
           'deadLinksRequestTimeoutMs',
           'deadLinksConcurrency',
@@ -1156,9 +1228,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'siteIcons',
         labelKey: 'tools_siteIcons',
         toggle: 'siteIconsEnabled',
-        fields: [
-          'siteIconsDefaultScope',
-        ],
+        fields: ['siteIconsDefaultScope'],
         advanced: ['siteIconsPreferredSize', 'siteIconsMaxIconKb', 'siteIconsMaxCacheKb'],
       },
     ]),
@@ -1200,11 +1270,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       {
         id: 'export',
         labelKey: 'tools_export',
-        fields: [
-          'dataDefaultExportFormat',
-          'exportIncludeDates',
-          'exportIncludeUrls',
-        ],
+        fields: ['dataDefaultExportFormat', 'exportIncludeDates', 'exportIncludeUrls'],
         advanced: [
           'exportFilenamePrefix',
           'exportFilenameMaxLength',
@@ -1275,13 +1341,6 @@ const localizedProviderNameKeys: Partial<Record<AIProvider, string>> = {
   custom_anthropic: 'settings_aiProviderCustomAnthropic',
 };
 
-const providerGroupLabelKeys: Record<AIProviderGroup, string> = {
-  featured: 'settings_aiProviderGroupFeatured',
-  local: 'settings_aiProviderGroupLocal',
-  custom: 'settings_aiProviderGroupCustom',
-  catalog: 'settings_aiProviderGroupCatalog',
-};
-
 /** Brand names stay as configured; generic provider names are translated. */
 export function getLocalizedProviderName(provider: AIProvider): string {
   const key = localizedProviderNameKeys[provider];
@@ -1298,7 +1357,9 @@ export function getSettingsConfigSections(): Record<keyof Settings, string> {
   ) as Record<keyof Settings, string>;
 }
 
-let fieldMetaCache: { revision: number; meta: Record<keyof Settings, SettingsFieldMeta> } | undefined;
+let fieldMetaCache:
+  | { revision: number; meta: Record<keyof Settings, SettingsFieldMeta> }
+  | undefined;
 
 /**
  * Labels, units, and options of every setting, in the language `t()` shows. Built once per
@@ -1349,7 +1410,12 @@ function group(spec: GroupSpec): SettingsFieldGroup {
 /** Related settings that read better as one row than as separate rows. */
 export function getSettingsFieldGroups(): SettingsFieldGroup[] {
   return [
-    group({ id: 'popupSize', kind: 'pair', labelKey: 'settings_groupPopupSize', fields: ['popupWidth', 'popupHeight'] }),
+    group({
+      id: 'popupSize',
+      kind: 'pair',
+      labelKey: 'settings_groupPopupSize',
+      fields: ['popupWidth', 'popupHeight'],
+    }),
     group({
       id: 'tagsPerBookmark',
       kind: 'pair',
@@ -1362,13 +1428,22 @@ export function getSettingsFieldGroups(): SettingsFieldGroup[] {
       labelKey: 'settings_groupItemsPerFolder',
       fields: ['aiMinItemsPerFolder', 'aiMaxItemsPerFolder'],
     }),
-    group({ id: 'recentFolders', kind: 'switch', fields: ['recentFoldersEnabled', 'recentFoldersMax'] }),
-    group({ id: 'favicons', kind: 'switch', fields: ['showFavicons', 'faviconSize', 'browserIconCache'] }),
+    group({
+      id: 'recentFolders',
+      kind: 'switch',
+      fields: ['recentFoldersEnabled', 'recentFoldersMax'],
+    }),
+    group({
+      id: 'favicons',
+      kind: 'switch',
+      fields: ['showFavicons', 'faviconSize', 'browserIconCache'],
+    }),
     ...CHECKLISTS.map((spec) => group({ ...spec, kind: 'checklist' })),
   ];
 }
 
-const CHECKLISTS: readonly { id: string; labelKey: string; fields: readonly (keyof Settings)[] }[] = [
+const CHECKLISTS: readonly { id: string; labelKey: string; fields: readonly (keyof Settings)[] }[] =
+  [
     {
       id: 'exportInclude',
       labelKey: 'settings_groupExportInclude',
@@ -1430,4 +1505,4 @@ const CHECKLISTS: readonly { id: string; labelKey: string; fields: readonly (key
       labelKey: 'settings_groupDataShow',
       fields: ['dataShowExport', 'dataShowImport'],
     },
-];
+  ];

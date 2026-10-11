@@ -1,7 +1,7 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { setSettings } from './popup-helpers';
-import { STORAGE_ITEMS, writeStoredItems } from './storage';
+import { replaceSettings, seedAIServices } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
@@ -41,28 +41,15 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
 }
 
 async function configureStubProvider(worker: Worker, settings: Record<string, unknown> = {}) {
-  await writeStoredItems(worker, [
-    [
-      STORAGE_ITEMS.settings,
-      {
-        aiEnabled: true,
-        aiProvider: 'custom',
-        aiModel: 'e2e-model',
-        aiMaxRecommendations: 1,
-        aiAutoTriggerOnOpen: false,
-        recentFoldersEnabled: false,
-        ...settings,
-      },
-    ],
-    [
-      STORAGE_ITEMS.aiCredentials,
-      {
-        custom: {
-          baseUrl: 'https://e2e.invalid/v1',
-          customModel: 'e2e-model',
-        },
-      },
-    ],
+  await replaceSettings(worker, {
+    aiEnabled: true,
+    aiMaxRecommendations: 1,
+    aiAutoTriggerOnOpen: false,
+    recentFoldersEnabled: false,
+    ...settings,
+  });
+  await seedAIServices(worker, [
+    { provider: 'custom', model: 'e2e-model', credentials: { baseUrl: 'https://e2e.invalid/v1' } },
   ]);
 }
 

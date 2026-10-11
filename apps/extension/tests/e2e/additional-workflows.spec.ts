@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-import { STORAGE_ITEMS, setSettings, updateStored } from './storage';
+import { STORAGE_ITEMS, seedAIServices, setSettings, updateStored } from './storage';
 
 // Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
 test.use({ grantWebHostAccess: true });
@@ -41,17 +41,6 @@ async function setBookmarkMetadata(
       [bookmarkId]: metadata,
     }),
   );
-}
-
-async function setAIProviderConfig(
-  worker: Worker,
-  provider: string,
-  config: Record<string, string>,
-) {
-  await updateStored<Record<string, unknown>>(worker, STORAGE_ITEMS.aiCredentials, (current) => ({
-    ...current,
-    [provider]: config,
-  }));
 }
 
 function toolCard(page: Page, title: string) {
@@ -154,15 +143,15 @@ test('[mocked provider contract] provider-backed AI previews stop at opt-in with
   ]);
   await setSettings(extensionWorker, {
     aiEnabled: false,
-    aiProvider: 'openai',
-    aiModel: 'gpt-4o-mini',
     aiContextPackerEnabled: true,
     autoTaggingEnabled: true,
     summarizerEnabled: true,
     reorganizationEnabled: true,
     reorganizationDryRunFirst: true,
   });
-  await setAIProviderConfig(extensionWorker, 'openai', { apiKey: 'sk-synthetic-e2e-key' });
+  await seedAIServices(extensionWorker, [
+    { provider: 'openai', model: 'gpt-4o-mini', credentials: { apiKey: 'sk-synthetic-e2e-key' } },
+  ]);
   let providerRequests = 0;
   await page.route('https://api.openai.com/**', async (route) => {
     providerRequests += 1;
@@ -201,11 +190,14 @@ const MOCK_PROVIDER_CORS_HEADERS = {
 };
 
 async function useMockCustomProvider(worker: Worker) {
-  await setSettings(worker, { aiEnabled: true, aiProvider: 'custom', aiModel: 'e2e-model' });
-  await setAIProviderConfig(worker, 'custom', {
-    apiKey: 'synthetic-e2e-key',
-    baseUrl: MOCK_PROVIDER_BASE_URL,
-  });
+  await setSettings(worker, { aiEnabled: true });
+  await seedAIServices(worker, [
+    {
+      provider: 'custom',
+      model: 'e2e-model',
+      credentials: { apiKey: 'synthetic-e2e-key', baseUrl: MOCK_PROVIDER_BASE_URL },
+    },
+  ]);
 }
 
 // Minimal Chat Completions envelope, the API OpenAI-compatible providers share; asserts our
