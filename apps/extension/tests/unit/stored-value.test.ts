@@ -224,6 +224,17 @@ describe('writes from several pages', () => {
   });
 
   it('loses no update when two pages change the same item at once', async () => {
+    // One lock manager for every page, as the browser has per extension origin (Node may lack it).
+    const held = new Map<string, Promise<unknown>>();
+    const request = (name: string, task: () => Promise<unknown>) => {
+      const run = (held.get(name) ?? Promise.resolve()).then(task, task);
+      held.set(
+        name,
+        run.catch(() => undefined),
+      );
+      return run;
+    };
+    vi.stubGlobal('navigator', { locks: { request } });
     slowReads();
     const [first, second] = await definePerPage(2);
     await Promise.all([
