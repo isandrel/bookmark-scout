@@ -662,8 +662,11 @@ async function revertMoves(moves: readonly AppliedMove[]): Promise<BookmarkChang
   return result;
 }
 
-/** Removes created folders newest first, only while nothing was put in them since. */
-async function removeCreatedFolders(ids: readonly string[]): Promise<void> {
+/**
+ * Removes folders a change created, newest (innermost) first, only while they are still empty:
+ * one the user or another change put something in since is kept. Best effort; never throws.
+ */
+export async function removeEmptyFolders(ids: readonly string[]): Promise<void> {
   for (const id of [...ids].reverse()) {
     const children = await getBookmarkChildren(id).catch(() => undefined);
     if (children?.length !== 0) continue;
@@ -752,7 +755,7 @@ export async function applyBookmarkChanges(
     undone ??= (async () => {
       const reverted = await revertUpdates(updates);
       const movedBack = await revertMoves(moves);
-      await removeCreatedFolders(createdFolders);
+      await removeEmptyFolders(createdFolders);
       const restored = await restoreBookmarkDeletions(deletions);
       return {
         restored: reverted.restored + movedBack.restored + restored.restored,

@@ -352,10 +352,6 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Reorganization
   reorganizationEnabled: tested(TOOL_TABLE, [toolFlags]),
   reorganizationDefaultScope: tested(TOOL_TABLE, [duplicateSettings]),
-  reorganizationDryRunFirst: tested(TOOL_TABLE, [
-    toolFlags,
-    unit('ai-reorganization.test.ts', 'allows apply without preview confirmation when dry-run-first is disabled'),
-  ]),
   reorganizationMinConfidence: tested(TOOL_OPTIONS, [reorgSafety]),
   reorganizationBatchSize: tested(TOOL_OPTIONS, [reorgSafety]),
 

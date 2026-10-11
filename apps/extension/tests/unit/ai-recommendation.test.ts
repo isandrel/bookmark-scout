@@ -4,12 +4,17 @@ import { SETTING_NUMBER_BOUNDS } from '@/lib/settings-schema';
 import { generateAIObject } from '@/services/ai-client';
 import {
   createRecommendedFolderBookmark,
-  type RecommendedFolderError,
   type FolderRecommendation,
+  type RecommendedFolderError,
   resolveRecommendedFolderPath,
 } from '@/services/ai-recommendation';
 import { recommendFolders } from '@/services/ai-recommendation-call';
-import { createBookmark, deleteBookmark, getBookmarkChildren } from '@/services/bookmarks';
+import {
+  createBookmark,
+  deleteBookmark,
+  getBookmarkChildren,
+  removeEmptyFolders,
+} from '@/services/bookmarks';
 import type { BookmarkTreeNode } from '@/types';
 
 vi.mock('@/services/bookmarks', async (importOriginal) => ({
@@ -17,6 +22,7 @@ vi.mock('@/services/bookmarks', async (importOriginal) => ({
   createBookmark: vi.fn(),
   deleteBookmark: vi.fn(),
   getBookmarkChildren: vi.fn(),
+  removeEmptyFolders: vi.fn(),
 }));
 vi.mock('@/services/ai-client', () => ({
   generateAIObject: vi.fn(),
@@ -255,6 +261,8 @@ describe('recommended folder bookmark creation', () => {
         folderTree([{ id: 'parent', title: 'E2E Parent', children: [] }]),
       ),
     ).rejects.toThrow('Synthetic bookmark failure');
-    expect(deleteBookmark).toHaveBeenCalledWith('research');
+    // Only while still empty: removeTree would also take whatever was put in it meanwhile.
+    expect(removeEmptyFolders).toHaveBeenCalledWith(['research']);
+    expect(deleteBookmark).not.toHaveBeenCalled();
   });
 });

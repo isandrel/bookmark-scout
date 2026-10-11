@@ -1729,6 +1729,18 @@
         "message": "Zurückverschoben: $1. Nicht zurückverschoben: $2.",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "Änderungen rückgängig gemacht",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "Einige Änderungen wurden nicht rückgängig gemacht",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "Wiederhergestellt: $1. Nicht wiederhergestellt: $2.",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "Import fehlgeschlagen: $1",
         "description": "Error message for failed bookmark import"
@@ -2304,14 +2316,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "Standardbereich für die KI-Ordnerneuordnung",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "Immer zuerst Vorschau anzeigen",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "Vorgeschlagenen Neuordnungsplan anzeigen, bevor Änderungen übernommen werden",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "Mindestkonfidenz",

@@ -69,6 +69,15 @@ export type QuickSaveHostFetchResponse =
   | { ok: true; status: number; statusText: string; headers: [string, string][]; body: string }
   | { ok: false; error: string };
 
+/**
+ * The answer shapes the AI host page can ask a model for, by name; the host holds the schema for
+ * each (`AI_HOST_SCHEMAS` in `quick-save-ai-runner.ts`). A new structured AI call from the
+ * background is a new name here and a schema there.
+ */
+export const AI_HOST_SCHEMA_NAMES = ['folderRecommendations'] as const;
+
+export type AIHostSchemaName = (typeof AI_HOST_SCHEMA_NAMES)[number];
+
 /** A message for the AI host page: one structured AI call, or reading one page's text. */
 export type QuickSaveHostRequest =
   | {
@@ -79,7 +88,7 @@ export type QuickSaveHostRequest =
       source: string;
       /** The locale error messages are written in; the host page cannot read the settings. */
       locale: string;
-      schema: 'folderRecommendations';
+      schema: AIHostSchemaName;
       system: string;
       prompt: string;
     }

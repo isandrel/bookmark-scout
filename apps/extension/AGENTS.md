@@ -213,7 +213,9 @@ When working in AI-related files, check whether the logic already belongs in:
 - `src/services/ai-model-list.ts`: model lists, Verify, and error classification
 - `src/services/ai-settings.ts`: named services and `getActiveAISettings` (the default service; there is no provider or model setting)
 - `src/services/ai-activity.ts`: the logging fetch every provider call goes through
-- `src/services/ai-agent.ts` (facade) with `ai-agent.lazy.ts` (agent loop) and `src/services/ai-bookmark-tools.ts`: the Ask AI agent and its read-only tools; the chat UI is `components/ai/AskAIPanel.lazy.tsx` behind the small `AskAIPanel.tsx`
+- `src/services/ai-agent.ts` (facade, search) with `ai-agent.lazy.ts` (the agent loop and its read-only tools): Ask AI; the chat UI is `components/ai/AskAIPanel.lazy.tsx` behind the small `AskAIPanel.tsx`
+- `src/services/ai-bookmark-tools.ts`: Auto-Tagging, Summarizer, and the AI context pack, and saving their reviewed results with undo
+- `src/services/quick-save-ai-host.ts` (`withAIHost`, background side) and `quick-save-ai-runner.ts` (the AI host page): structured AI calls started from the background; each call names its activity log source, and each answer shape is a name in `AI_HOST_SCHEMA_NAMES` with its schema in `AI_HOST_SCHEMAS`
 - `src/services/page-reader.ts`: page reading; Readability and Turndown are in `page-reader.lazy.ts`, loaded on the first page read
 - `src/services/prompt-config.ts` and `src/lib/prompt-library-storage.ts`: prompt tasks, `buildPrompt`, and saved prompts
 - `src/services/ai-recommendation.ts` and `src/services/ai-reorganization.ts`: folder suggestions and reorganization

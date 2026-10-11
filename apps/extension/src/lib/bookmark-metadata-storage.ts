@@ -67,31 +67,82 @@ export async function saveBookmarkMetadata(
   );
 }
 
+/** `current` with each patch merged in; an entry left without tags or summary is removed. */
+function applyMetadataPatches(
+  current: StoredBookmarkMetadataById,
+  patches: Record<string, BookmarkMetadataPatch>,
+  options: BookmarkMetadataMergeOptions,
+): StoredBookmarkMetadataById {
+  const stored = { ...current };
+  for (const [bookmarkId, patch] of Object.entries(patches)) {
+    const existing = stored[bookmarkId] ?? {};
+    const tags =
+      patch.tags === undefined
+        ? (existing.tags ?? [])
+        : mergeTags(existing.tags ?? [], patch.tags, options.tagMode, options.dedupeTags);
+    const summary =
+      patch.summary === undefined
+        ? (existing.summary ?? '')
+        : mergeSummary(existing.summary ?? '', patch.summary, options.summaryMode);
+    const normalized = normalizeMetadata({ tags, summary });
+    if (normalized) {
+      stored[bookmarkId] = normalized;
+    } else {
+      delete stored[bookmarkId];
+    }
+  }
+  return stored;
+}
+
 export function mergeStoredBookmarkMetadata(
   patches: Record<string, BookmarkMetadataPatch>,
   options: BookmarkMetadataMergeOptions,
 ): Promise<StoredBookmarkMetadataById> {
-  return bookmarkMetadataValue.update((current) => {
-    const stored = { ...current };
-    for (const [bookmarkId, patch] of Object.entries(patches)) {
-      const existing = stored[bookmarkId] ?? {};
-      const tags =
-        patch.tags === undefined
-          ? (existing.tags ?? [])
-          : mergeTags(existing.tags ?? [], patch.tags, options.tagMode, options.dedupeTags);
-      const summary =
-        patch.summary === undefined
-          ? (existing.summary ?? '')
-          : mergeSummary(existing.summary ?? '', patch.summary, options.summaryMode);
-      const normalized = normalizeMetadata({ tags, summary });
-      if (normalized) {
-        stored[bookmarkId] = normalized;
-      } else {
-        delete stored[bookmarkId];
-      }
-    }
-    return stored;
+  return bookmarkMetadataValue.update((current) => applyMetadataPatches(current, patches, options));
+}
+
+/** What reverting saved tags and summaries did. */
+export type BookmarkMetadataUndoResult = { restored: number; failed: number };
+
+/**
+ * `mergeStoredBookmarkMetadata` that can be reverted once: `undo` puts back each bookmark's tags
+ * and summary as they were, but only while they are still what this merge wrote, so it never
+ * overwrites a newer edit (that bookmark counts as failed). A later call returns the first
+ * call's result.
+ */
+export async function mergeStoredBookmarkMetadataWithUndo(
+  patches: Record<string, BookmarkMetadataPatch>,
+  options: BookmarkMetadataMergeOptions,
+): Promise<{ undo: () => Promise<BookmarkMetadataUndoResult> }> {
+  const ids = Object.keys(patches);
+  let before: StoredBookmarkMetadataById = {};
+  const after = await bookmarkMetadataValue.update((current) => {
+    before = current;
+    return applyMetadataPatches(current, patches, options);
   });
+  let undone: Promise<BookmarkMetadataUndoResult> | undefined;
+  const undo = () => {
+    undone ??= (async () => {
+      let result: BookmarkMetadataUndoResult = { restored: 0, failed: 0 };
+      await bookmarkMetadataValue.update((current) => {
+        result = { restored: 0, failed: 0 };
+        const restored = { ...current };
+        for (const id of ids) {
+          if (!isSameJson(current[id], after[id])) {
+            result.failed += 1;
+            continue;
+          }
+          if (before[id]) restored[id] = before[id];
+          else delete restored[id];
+          result.restored += 1;
+        }
+        return restored;
+      });
+      return result;
+    })();
+    return undone;
+  };
+  return { undo };
 }
 
 export async function removeStoredBookmarkMetadata(bookmarkIds: string[]): Promise<void> {

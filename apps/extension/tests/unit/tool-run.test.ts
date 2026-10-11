@@ -243,11 +243,31 @@ describe('URL cleaner', () => {
     expect(bookmarks.get('1')?.url).toBe('https://e2e.invalid/a');
     expect(bookmarks.get('2')?.url).toBe('https://e2e.invalid/edited');
     expect(run.getState()).toMatchObject({ phase: 'done', open: false });
-    expect(notices[0].outcome).toEqual({
+    expect(notices[0].outcome).toMatchObject({
       title: 'Some URLs were not cleaned',
       description: 'Updated: 1. Skipped because they changed after the preview: 1. Failed: 1.',
       variant: 'destructive',
     });
+
+    // Undo restores the cleaned URL and leaves the one edited since alone.
+    await notices[0].undo?.run();
+    expect(bookmarks.get('1')?.url).toBe('https://e2e.invalid/a?utm_source=x');
+    expect(bookmarks.get('2')?.url).toBe('https://e2e.invalid/edited');
+    expect(notices[1].outcome).toEqual({
+      title: 'Changes undone',
+      description: 'Restored: 1. Could not restore: 0.',
+      variant: 'success',
+    });
+  });
+
+  it('offers no undo when nothing was cleaned', async () => {
+    seed([{ id: '1', title: 'One', url: 'https://e2e.invalid/a?utm_source=x' }]);
+    tree = await readTree();
+    const run = createToolRun(TOOL_DEFINITIONS.urlCleaner, deps());
+    await run.run('all');
+    await fakeBrowser.bookmarks.update('1', { url: 'https://e2e.invalid/edited' });
+
+    await run.apply();
     expect(notices[0].undo).toBeUndefined();
   });
 });
@@ -288,6 +308,9 @@ describe('network tools', () => {
       title: 'Some titles were not updated',
       description: 'Updated: 1. Skipped because they changed after the scan: 1. Failed: 0.',
     });
+
+    await notices[0].undo?.run();
+    expect(titles()).toEqual(['Old one', 'Renamed by user', 'Script']);
   });
 
   it('opens the dead-link review without an apply step', async () => {
@@ -356,6 +379,45 @@ describe('AI tools', () => {
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({ '1': { tags: ['research'] } });
     expect(notices[0].outcome).toMatchObject({ title: 'Metadata saved.', variant: 'success' });
     expect(run.getState()).toMatchObject({ phase: 'done', open: false, result: null });
+
+    await notices[0].undo?.run();
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({});
+    expect(notices[1].outcome).toMatchObject({ title: 'Changes undone' });
+  });
+
+  it('[mocked provider contract] undoing saved tags restores the old ones and keeps newer edits', async () => {
+    seed([
+      { id: '1', title: 'Paper', url: 'https://e2e.invalid/paper' },
+      { id: '2', title: 'Notes', url: 'https://e2e.invalid/notes' },
+    ]);
+    tree = await readTree();
+    await bookmarkMetadataValue.set({ '1': { tags: ['old'] } });
+    settings = { ...settings, aiEnabled: true, autoTaggingMergeMode: 'replace' };
+    mocks.generateAIObject.mockResolvedValue({
+      object: {
+        items: ['1', '2'].map((bookmarkId) => ({
+          bookmarkId,
+          title: bookmarkId,
+          tags: ['new'],
+          reason: 'r',
+        })),
+      },
+    });
+    const run = createToolRun(TOOL_DEFINITIONS.autoTagging, deps());
+    await run.run('folder');
+    await run.apply();
+    await bookmarkMetadataValue.update((current) => ({ ...current, '2': { tags: ['mine'] } }));
+
+    await notices[0].undo?.run();
+    await expect(bookmarkMetadataValue.get()).resolves.toEqual({
+      '1': { tags: ['old'] },
+      '2': { tags: ['mine'] },
+    });
+    expect(notices[1].outcome).toEqual({
+      title: 'Some changes were not undone',
+      description: 'Restored: 1. Could not restore: 1.',
+      variant: 'destructive',
+    });
   });
 
   it('[mocked provider contract] skips suggestions for bookmarks deleted or moved since the scan', async () => {
@@ -383,7 +445,7 @@ describe('AI tools', () => {
 
     await run.apply();
     await expect(bookmarkMetadataValue.get()).resolves.toEqual({ '1': { summary: 'About 1' } });
-    expect(notices[0].outcome).toEqual({
+    expect(notices[0].outcome).toMatchObject({
       title: 'Some suggestions were not saved',
       description:
         'Saved: 1. Skipped because the bookmark was deleted or its URL changed since the scan: 2.',
@@ -398,7 +460,7 @@ describe('AI tools', () => {
       { id: 'b1', parentId: 'bar', title: 'Report', url: 'https://e2e.invalid/report' },
     ]);
     tree = await readTree();
-    settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
+    settings = { ...settings, aiEnabled: true };
     mocks.generateAIObject.mockResolvedValue({
       object: {
         operations: [
@@ -440,7 +502,7 @@ describe('AI tools', () => {
       { id: 'b2', parentId: 'bar', title: 'Recipe', url: 'https://e2e.invalid/recipe' },
     ]);
     tree = await readTree();
-    settings = { ...settings, aiEnabled: true, reorganizationDryRunFirst: true };
+    settings = { ...settings, aiEnabled: true };
     mocks.generateAIObject.mockResolvedValue({
       object: {
         operations: [

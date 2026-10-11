@@ -9,10 +9,7 @@ export type ToolId = keyof typeof TOOL_SCOPE_CAPABILITIES;
 export type ToolScopeCapability = (typeof TOOL_SCOPE_CAPABILITIES)[ToolId];
 
 /** Reorganization settings the plan carries; folder limits come from the prompt settings. */
-export type ReorganizationToolOptions = Pick<
-  ReorganizationConfig,
-  'dryRunFirst' | 'minConfidence' | 'batchSize'
->;
+export type ReorganizationToolOptions = Pick<ReorganizationConfig, 'minConfidence' | 'batchSize'>;
 
 export type ToolOptions = {
   aiContextPacker: AIContextPackOptions;
@@ -51,7 +48,6 @@ const TOOL_OPTIONS: { [Tool in ToolId]: (settings: Settings) => ToolOptions[Tool
     readPages: settings.aiReadPageContent,
   }),
   reorganization: (settings) => ({
-    dryRunFirst: settings.reorganizationDryRunFirst,
     minConfidence: settings.reorganizationMinConfidence,
     batchSize: settings.reorganizationBatchSize,
   }),

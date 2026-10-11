@@ -1729,6 +1729,18 @@
         "message": "Movidos de volta: $1. Não foi possível mover de volta: $2.",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "Alterações desfeitas",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "Algumas alterações não foram desfeitas",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "Restaurados: $1. Não foi possível restaurar: $2.",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "Falha na importação: $1",
         "description": "Error message for failed bookmark import"
@@ -2304,14 +2316,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "Escopo padrão usado na reorganização de pastas com IA",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "Sempre mostrar prévia",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "Mostrar o plano de reorganização proposto antes de aplicar as alterações",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "Confiança mínima",

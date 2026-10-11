@@ -83,7 +83,8 @@ export function searchBookmarksForAI(
       const hit: BookmarkSearchHit = {
         title: bookmark.node.title,
         url: bookmark.node.url ?? '',
-        folder: bookmark.pathLabel,
+        // The same path format as listFolders, so the model can pass one result to the other.
+        folder: bookmark.folderPath.join(AI_FOLDER_PATH_SEPARATOR),
         ...(saved.tags?.length ? { tags: saved.tags } : {}),
         ...(saved.summary ? { summary: saved.summary } : {}),
       };
