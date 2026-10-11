@@ -5435,6 +5435,42 @@
         "message": "Freigegebene Änderungen übernommen",
         "description": "Ask AI step: the agent applied changes the user approved"
     },
+    "askAI_toolSuggest": {
+        "message": "Nächste Schritte vorgeschlagen",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "Vorschläge",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "In $1 speichern",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "In neuem Ordner $1 speichern",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "„$1“ öffnen",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "„$1“ in der Verwaltung zeigen",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savedTo": {
+        "message": "In $1 gespeichert",
+        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    },
+    "askAI_alreadySaved": {
+        "message": "Bereits in $1 gespeichert",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "Die Seite konnte nicht gespeichert werden",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
     "askAI_approvalTitle": {
         "message": "Diese Änderung freigeben?",
         "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"

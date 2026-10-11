@@ -1,5 +1,5 @@
 import type { BrowserContext, Route, Worker } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { replaceSettings, seedAIServices } from './storage';
 
 const BASE_URL = 'https://ask.e2e.invalid/v1';
@@ -307,4 +307,127 @@ test('[mocked provider contract] Ask AI leaves bookmarks alone when the user dec
   await chat.getByTestId('ask-ai-approval').getByRole('button', { name: 'Decline' }).click();
   await expect(chat.getByTestId('ask-ai-tool').filter({ hasText: 'declined' })).toBeVisible();
   expect(await parentOf(extensionWorker, bookmarkId)).toBe(inboxId);
+});
+
+test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and show', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
+  const requests: ChatRequest[] = [];
+  await context.route(`${BASE_URL}/**`, async (route) => {
+    const request = JSON.parse(route.request().postData() ?? '{}') as ChatRequest;
+    requests.push(request);
+    const last = request.messages.at(-1);
+    const userTurns = request.messages.filter((message) => message.role === 'user').length;
+    if (last?.role === 'user' && userTurns === 1) {
+      await streamChunks(
+        route,
+        [
+          {
+            role: 'assistant',
+            tool_calls: [
+              {
+                index: 0,
+                id: 'call_suggest',
+                type: 'function',
+                function: {
+                  name: 'suggestActions',
+                  arguments: JSON.stringify({
+                    suggestions: [
+                      { kind: 'ask', label: 'More on ownership?', text: 'Explain borrowing' },
+                      { kind: 'option', label: 'A Reading folder', text: 'Make a Reading folder' },
+                      {
+                        kind: 'save',
+                        url: 'https://rust.e2e.invalid/borrowing',
+                        title: 'Borrowing',
+                        folder: `f:${folderId}`,
+                      },
+                      { kind: 'open', ref: `b:${bookmarkId}` },
+                      { kind: 'show', ref: `b:${bookmarkId}` },
+                    ],
+                  }),
+                },
+              },
+            ],
+          },
+        ],
+        'tool_calls',
+      );
+      return;
+    }
+    const asked = typeof last?.content === 'string' ? last.content : JSON.stringify(last?.content);
+    const reply =
+      last?.role === 'tool'
+        ? 'Here are some next steps.'
+        : asked.includes('Reading')
+          ? 'A Reading folder it is.'
+          : 'Borrowing lends a value.';
+    await streamChunks(route, [{ role: 'assistant', content: reply }], 'stop');
+  });
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Tell me about my Rust bookmarks');
+  await box.press('Enter');
+  await expect(chat.getByText('Here are some next steps.')).toBeVisible();
+
+  const buttons = chat.getByRole('list', { name: 'Suggestions' });
+  // Save, open, and show are labeled by the extension, never by the model.
+  await expect(buttons.getByRole('button')).toHaveText([
+    'More on ownership?',
+    'A Reading folder',
+    /^Save to .+\/Rust$/,
+    'Open “Ownership guide”',
+    'Show “Ownership guide” in the manager',
+  ]);
+
+  // Save: the click is the approval; the page lands in the folder, with Undo in the toast.
+  await buttons.getByRole('button', { name: /^Save to / }).click();
+  await expect(toastRegion(page)).toContainText(/Saved to .+\/Rust/);
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.getChildren(id)).map((node) => node.url),
+        folderId,
+      ),
+    )
+    .toEqual(['https://rust.e2e.invalid/borrowing']);
+  await expect(buttons.getByRole('button', { name: /^Save to / })).toBeDisabled();
+
+  // Open and show open tabs: the bookmark itself, and the manager at its folder.
+  await context.route('https://rust.e2e.invalid/**', (route) =>
+    route.fulfill({ contentType: 'text/html', body: '<title>Ownership</title>' }),
+  );
+  const opened = context.waitForEvent('page');
+  await buttons.getByRole('button', { name: 'Open “Ownership guide”' }).click();
+  await (await opened).waitForURL('https://rust.e2e.invalid/ownership');
+  const shown = context.waitForEvent('page');
+  await buttons.getByRole('button', { name: /^Show / }).click();
+  const manager = await shown;
+  await manager.waitForURL(/bookmarks\.html\?id=/);
+  expect(new URL(manager.url()).searchParams.get('id')).toBe(inboxId);
+
+  // An option sends its text as the next message, once.
+  await buttons.getByRole('button', { name: 'A Reading folder' }).click();
+  await expect(chat.getByText('A Reading folder it is.')).toBeVisible();
+  await expect(buttons.getByRole('button', { name: 'A Reading folder' })).toBeDisabled();
+
+  // Ask: sends the question as the next message, once.
+  await buttons.getByRole('button', { name: 'More on ownership?' }).click();
+  await expect(chat.getByText('Borrowing lends a value.')).toBeVisible();
+  await expect(
+    chat.locator('[data-role="user"]').filter({ hasText: 'Explain borrowing' }),
+  ).toBeVisible();
+  await expect(buttons.getByRole('button', { name: 'More on ownership?' })).toBeDisabled();
 });
