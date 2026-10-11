@@ -64,9 +64,7 @@ export function FolderRow({
   const itemCount = node.children?.length ?? 0;
   const hasSubfolders = node.children?.some((child) => child.children !== undefined) ?? false;
   const allSubfoldersExpanded =
-    hasSubfolders &&
-    row.expanded &&
-    areAllSubfoldersExpanded(fullNode(node.id) ?? node, expandedIds);
+    hasSubfolders && row.expanded && areAllSubfoldersExpanded(fullNode(node.id) ?? node, expandedIds);
   const isAddingBookmark = addingToFolderIds.includes(node.id);
   const expandAllLabel = allSubfoldersExpanded
     ? t('popup_collapseAllSubfolders')

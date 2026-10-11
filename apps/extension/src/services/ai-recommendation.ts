@@ -81,14 +81,12 @@ export function extractFolderPaths(nodes: BookmarkTreeNode[]): { id: string; pat
 
 /** The one suggestion for a library without folders: a new folder at the top. */
 export function noFoldersRecommendation(): FolderRecommendation[] {
-  return [
-    {
-      type: 'new',
-      folderPath: t('bookmarks_root'),
-      confidence: 1,
-      reason: t('ai_recommendationNoFolders'),
-    },
-  ];
+  return [{
+    type: 'new',
+    folderPath: t('bookmarks_root'),
+    confidence: 1,
+    reason: t('ai_recommendationNoFolders'),
+  }];
 }
 
 /** The system prompt and the JSON the model reads, for one page and the folder list. */

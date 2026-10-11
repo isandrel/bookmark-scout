@@ -209,8 +209,7 @@ export function findFolderMatches(
     if (titleScore === MATCH_SCORE.none) continue;
 
     const names = [...parents.map(normalize), title];
-    if (!earlierWords.every((word) => names.some((name) => scoreWord(word, name, allowTypos) > 0)))
-      continue;
+    if (!earlierWords.every((word) => names.some((name) => scoreWord(word, name, allowTypos) > 0))) continue;
 
     const recentRank = recentFolderIds.indexOf(folder.id);
     const recentScore =

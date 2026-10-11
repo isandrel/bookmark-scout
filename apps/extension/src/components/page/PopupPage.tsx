@@ -84,8 +84,7 @@ function PopupPage() {
   // In memory only: reopening the popup starts on the bookmarks, with no chat history.
   const [askAIOpen, setAskAIOpen] = useState(false);
   const { value: recentFoldersMax } = useSetting('recentFoldersMax');
-  const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } =
-    useSetting('recentFoldersEnabled');
+  const { value: recentFoldersEnabled, isLoading: recentFoldersLoading } = useSetting('recentFoldersEnabled');
   const { value: truncateLength } = useSetting('truncateLength');
   const { value: showFavicons } = useSetting('showFavicons');
   const { value: faviconSize } = useSetting('faviconSize');
@@ -104,8 +103,7 @@ function PopupPage() {
   const { value: recentFolders } = useStoredValue(recentFoldersValue);
   const recentFolderIds = useMemo(() => recentFolders.map((folder) => folder.id), [recentFolders]);
   const setExpandFoldersOnSearch = useBookmarkStore((state) => state.setExpandFoldersOnSearch);
-  const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } =
-    useSetting('aiAutoTriggerOnOpen');
+  const { value: aiAutoTriggerOnOpen, isLoading: aiAutoTriggerLoading } = useSetting('aiAutoTriggerOnOpen');
   const [aiLoading, setAILoading] = useState(false);
   const [aiRecommendations, setAIRecommendations] = useState<FolderRecommendation[]>([]);
   const [currentTabInfo, setCurrentTabInfo] = useState<{ title: string; url: string } | null>(null);
@@ -205,14 +203,7 @@ function PopupPage() {
       // Without access to the current tab there is nothing to suggest for; it never asks unprompted.
       handleAIRecommend().catch(() => undefined);
     }
-  }, [
-    aiAutoTriggerLoading,
-    isLoading,
-    aiEnabled,
-    aiAutoTriggerOnOpen,
-    folders.length,
-    handleAIRecommend,
-  ]);
+  }, [aiAutoTriggerLoading, isLoading, aiEnabled, aiAutoTriggerOnOpen, folders.length, handleAIRecommend]);
 
   // Toast wrapper for operations
   const withToast = useCallback(
@@ -497,11 +488,7 @@ function PopupPage() {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      await withToast(
-        () => handleDrop(operation),
-        t('toast_itemMoved'),
-        t('toast_errorMovingItem'),
-      );
+      await withToast(() => handleDrop(operation), t('toast_itemMoved'), t('toast_errorMovingItem'));
     },
     [handleDrop, withToast],
   );
@@ -661,92 +648,91 @@ function PopupPage() {
           </p>
         )}
 
-        <div className="relative flex min-h-0 flex-1 flex-col">
-          {draggingId && !canReorder && (
-            // Over the tree, not above it, so rows do not shift under the pointer mid-drag.
-            <p
-              role="status"
-              data-testid="tree-drag-hint"
-              className="pointer-events-none absolute inset-x-2 bottom-2 z-10 rounded-md border bg-popover px-3 py-2 text-xs text-muted-foreground shadow-md"
-            >
-              {t('popup_dragSortedHint', t('settings_sortFolders'))}
+        <div ref={treeScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden">
+          {isLoading ? (
+            <div className="space-y-1 p-2">
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="ml-5 h-8 w-11/12" />
+              <Skeleton className="ml-5 h-8 w-10/12" />
+              <Skeleton className="h-8 w-full" />
+              <Skeleton className="ml-5 h-8 w-9/12" />
+            </div>
+          ) : displayFolders.length === 0 && folderMatches.length > 0 ? (
+            // Folders matched but no bookmark did: a quiet note, so the matches stay the focus.
+            <p className="px-4 py-3 text-xs text-muted-foreground" role="status">
+              {t('state_noBookmarksFound')}
             </p>
-          )}
-          <div ref={treeScrollRef} className="flex-1 overflow-y-auto overflow-x-hidden">
-            {isLoading ? (
-              <div className="space-y-1 p-2">
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="ml-5 h-8 w-11/12" />
-                <Skeleton className="ml-5 h-8 w-10/12" />
-                <Skeleton className="h-8 w-full" />
-                <Skeleton className="ml-5 h-8 w-9/12" />
-              </div>
-            ) : displayFolders.length === 0 && folderMatches.length > 0 ? (
-              // Folders matched but no bookmark did: a quiet note, so the matches stay the focus.
-              <p className="px-4 py-3 text-xs text-muted-foreground" role="status">
-                {t('state_noBookmarksFound')}
+          ) : displayFolders.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center gap-1 p-8 text-center">
+              {query ? (
+                <SearchX aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
+              ) : (
+                <BookmarkIcon aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
+              )}
+              <p className="text-sm text-foreground">
+                {query ? t('state_noBookmarksFound') : t('state_noBookmarksYet')}
               </p>
-            ) : displayFolders.length === 0 ? (
-              <div className="flex h-full flex-col items-center justify-center gap-1 p-8 text-center">
-                {query ? (
-                  <SearchX aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
-                ) : (
-                  <BookmarkIcon aria-hidden="true" className="mb-2 size-6 text-muted-foreground" />
-                )}
-                <p className="text-sm text-foreground">
-                  {query ? t('state_noBookmarksFound') : t('state_noBookmarksYet')}
-                </p>
-                {query && (
-                  <>
-                    <p className="text-xs text-muted-foreground">{t('state_tryDifferentSearch')}</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-3"
-                      onClick={() => {
-                        clearQuery();
-                        inputRef.current?.focus();
-                      }}
-                    >
-                      {t('search_clear')}
-                    </Button>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div>
-                <PopupTreeProvider
-                  folders={folders}
-                  favicon={favicon}
-                  newFolderName={newFolderName}
-                  addingToFolderIds={addingToFolderIds}
-                  onDrop={handleDropWithToast}
-                  onAddBookmark={saveCurrentPage}
-                  onAddFolder={handleAddFolder}
-                  onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
-                  onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
-                  onCreateFolder={handleCreateFolder}
-                  onCancelCreateFolder={handleCancelCreateFolder}
-                  onNewFolderNameChange={setNewFolderName}
-                  onToggleExpandAllChildren={toggleExpandAllChildren}
-                  canReorder={canReorder}
-                  onDraggingChange={setDraggingId}
-                >
-                  <PopupTree
-                    roots={displayFolders}
-                    expandedIds={expandedFolders}
-                    setFolderExpanded={setFolderExpanded}
-                    scrollRef={treeScrollRef}
-                    onKeyDown={handleTreeKeyDown}
-                    handleRef={treeRef}
-                  />
-                </PopupTreeProvider>
-              </div>
-            )}
-          </div>
+              {query && (
+                <>
+                  <p className="text-xs text-muted-foreground">{t('state_tryDifferentSearch')}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-3"
+                    onClick={() => {
+                      clearQuery();
+                      inputRef.current?.focus();
+                    }}
+                  >
+                    {t('search_clear')}
+                  </Button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              <PopupTreeProvider
+                folders={folders}
+                favicon={favicon}
+                newFolderName={newFolderName}
+                addingToFolderIds={addingToFolderIds}
+                onDrop={handleDropWithToast}
+                onAddBookmark={saveCurrentPage}
+                onAddFolder={handleAddFolder}
+                onDeleteFolder={(node) => handleDeleteRequest(node, 'folder')}
+                onDeleteBookmark={(node) => handleDeleteRequest(node, 'bookmark')}
+                onCreateFolder={handleCreateFolder}
+                onCancelCreateFolder={handleCancelCreateFolder}
+                onNewFolderNameChange={setNewFolderName}
+                onToggleExpandAllChildren={toggleExpandAllChildren}
+                canReorder={canReorder}
+                onDraggingChange={setDraggingId}
+              >
+                <PopupTree
+                  roots={displayFolders}
+                  expandedIds={expandedFolders}
+                  setFolderExpanded={setFolderExpanded}
+                  scrollRef={treeScrollRef}
+                  onKeyDown={handleTreeKeyDown}
+                  handleRef={treeRef}
+                />
+              </PopupTreeProvider>
+            </div>
+          )}
         </div>
         <QuickSaveShortcutNotice />
-        {!isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />}
+        {draggingId && !canReorder ? (
+          // In place of the key hints, below the tree, so no row moves or hides under the drag.
+          <p
+            role="status"
+            data-testid="tree-drag-hint"
+            className="shrink-0 border-t bg-muted px-3 py-1.5 text-xs text-muted-foreground"
+          >
+            {t('popup_dragSortedHint', t('settings_sortFolders'))}
+          </p>
+        ) : (
+          !isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />
+        )}
       </div>
       <BookmarkDeleteDialog
         deletion={deletion}
