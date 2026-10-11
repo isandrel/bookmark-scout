@@ -37,6 +37,16 @@ The manager's table has more precise filters. In Chrome, open the browser's book
 - **Type**, **Parent ID**, **Domain**, and **Date Added** narrow the rows further.
 - **Current folder only** limits the filters to the folder you are in. When it is off, filters search all bookmarks.
 - Sort by any column from its header.
+- In a search across folders, a row's menu offers **Show in folder**: it clears the filters and opens the folder that holds the item, with the item selected.
+
+## Link to a folder or a search
+
+The manager's address follows what you look at, so browser **Back** and **Forward** step through folders and searches, and you can bookmark or share a view.
+
+- `?id=` names the open folder, as in Chrome's own manager: `chrome://bookmarks/?id=12` opens folder 12 in Chrome, and `edge://favorites/?id=12` in Edge. Links from Chrome 154 to 156, which named the Bookmarks bar, Other bookmarks, and Mobile bookmarks by a long ID, open those folders too.
+- `?q=` is the title filter: `chrome://bookmarks/?q=react` opens the manager searching titles for "react". While you type in **Filter titles...**, the address follows, and one burst of typing is one **Back** step. A search wins over the folder; the folder still applies when **Current folder only** is checked.
+- **Copy link to this folder**, next to the folder path in the header and in a folder row's menu, copies that address. In Firefox it copies the manager page's own address. Chrome and Edge keep showing the address you opened the manager with, even as you move between folders.
+- The tab title names the folder, or the search while you search.
 
 ## Save a search
 

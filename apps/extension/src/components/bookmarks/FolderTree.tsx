@@ -5,7 +5,7 @@
  */
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 type FolderTreeProps = {
   items: Bookmark[];
@@ -90,7 +90,14 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
   );
 }
 
-export function FolderTree({ items, selectedFolderId, onFolderSelect }: FolderTreeProps) {
+// Memoized: the page re-renders on every keystroke of the title search (it is in the address).
+// A memoized component skips the page's language re-render, so it follows the language itself.
+export const FolderTree = memo(function FolderTree({
+  items,
+  selectedFolderId,
+  onFolderSelect,
+}: FolderTreeProps) {
+  useLanguageRevision();
   const tree = useMemo(() => buildManagerFolderTree(items), [items]);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
   const hasAutoExpandedRef = useRef(false);
@@ -158,4 +165,4 @@ export function FolderTree({ items, selectedFolderId, onFolderSelect }: FolderTr
       </div>
     </div>
   );
-}
+});

@@ -1057,6 +1057,10 @@
         "message": "Editar",
         "description": "Bookmark row action that edits the item"
     },
+    "table_showInFolder": {
+        "message": "Mostrar na pasta",
+        "description": "Bookmark row action on a search result: opens the folder that holds the item, with the item selected"
+    },
     "table_openInNewTab": {
         "message": "Abrir em nova guia",
         "description": "Bookmark row action that opens a link in a new tab"
@@ -3056,6 +3060,14 @@
     "bookmarks_breadcrumb": {
         "message": "Caminho da pasta",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_copyFolderLink": {
+        "message": "Copiar link para esta pasta",
+        "description": "Bookmark manager button and folder row action that copies the address that opens the folder"
+    },
+    "bookmarks_folderLinkCopied": {
+        "message": "Link copiado",
+        "description": "Toast after the folder link was copied"
     },
     "table_clearSort": {
         "message": "Remover classificação",
@@ -5170,6 +5182,14 @@
     "page_bookmarks": {
         "message": "Favoritos",
         "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_managerFolderTitle": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+    },
+    "page_managerSearchTitle": {
+        "message": "Pesquisa \"$1\" - $2",
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
     },
     "page_options": {
         "message": "Opções",

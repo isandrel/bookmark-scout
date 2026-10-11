@@ -4,8 +4,17 @@
  * Features: Left sidebar (folders), collapsible right sidebar (tools), breadcrumb navigation.
  */
 
-import { CircleAlert, Info, PanelLeft, PanelLeftClose, PanelRight, PanelRightClose, X } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  CircleAlert,
+  Info,
+  Link2,
+  PanelLeft,
+  PanelLeftClose,
+  PanelRight,
+  PanelRightClose,
+  X,
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 const layout = readConfig(
@@ -27,6 +36,21 @@ const BOTH_SIDEBARS_QUERY = `(min-width: ${layout.both_sidebars_min_width}px)`;
 const fitsBothSidebars = () => window.matchMedia(BOTH_SIDEBARS_QUERY).matches;
 const isFolderRow = (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder;
 
+/** Copies the address that opens `folderId` (null: the top level) and says so in a toast. */
+async function copyManagerFolderLink(folderId: string | null) {
+  const link = getManagerFolderLink(
+    folderId,
+    import.meta.env.BROWSER,
+    browser.runtime.getURL(BOOKMARK_MANAGER_PATH),
+  );
+  try {
+    await navigator.clipboard.writeText(link);
+    toast.success({ title: t('bookmarks_folderLinkCopied') });
+  } catch (error) {
+    toast.error({ title: t('bookmarks_detailsCopyFailed'), description: getErrorMessage(error) });
+  }
+}
+
 function toDeletionTarget(bookmark: Bookmark): BookmarkDeletionTarget {
   return {
     id: bookmark.id,
@@ -46,10 +70,16 @@ export default function BookmarksPage() {
     notice,
     dismissNotice,
     navigateToFolder,
+    searchQuery,
+    setSearchQuery,
     folderPageIndex,
     rememberPageIndex,
     refresh,
   } = useBookmarkNavigation();
+  const [revealRow, setRevealRow] = useState<DataTableRevealRequest | null>(null);
+  // Rows of the open folder, for telling search results from elsewhere apart (Show in folder).
+  const openFolderIdsRef = useRef<ReadonlySet<string>>(new Set());
+  openFolderIdsRef.current = useMemo(() => new Set(data.map((bookmark) => bookmark.id)), [data]);
   const shortcuts = useManagerShortcuts({
     currentFolderId: currentFolder,
     items: allData,
@@ -84,6 +114,15 @@ export default function BookmarksPage() {
   const { value: language } = useSetting('language');
   const deletion = useBookmarkDeletion({ onChanged: refresh });
   const { requestDeletion } = deletion;
+  const showInFolder = useCallback(
+    (bookmark: Bookmark) => {
+      const folderId = bookmark.parentId;
+      if (!folderId) return;
+      navigateToFolder(folderId, { clearSearch: true });
+      setRevealRow({ rowId: bookmark.id, resetKey: folderId });
+    },
+    [navigateToFolder],
+  );
   const columns = useMemo(
     () =>
       createColumns({
@@ -94,9 +133,12 @@ export default function BookmarksPage() {
           requestDeletion: (bookmark) => void requestDeletion(toDeletionTarget(bookmark)),
           reportError: (titleKey, actionError) =>
             toast.error({ title: t(titleKey), description: getErrorMessage(actionError) }),
+          isOutsideOpenFolder: (bookmark) => !openFolderIdsRef.current.has(bookmark.id),
+          showInFolder,
+          copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
         },
       }),
-    [requestDeletion],
+    [requestDeletion, showInFolder],
   );
   const sortAccessors = useMemo(
     () => ({
@@ -150,6 +192,14 @@ export default function BookmarksPage() {
     const folder = allData.find((bookmark) => bookmark.id === currentFolder);
     return folder ? getBookmarkDisplayTitle(folder.title) : undefined;
   }, [allData, currentFolder, language]);
+
+  // The tab names the search or the folder; it runs after the page title the mount sets, also
+  // when the language changes.
+  const languageRevision = useLanguageRevision();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the title.
+  useEffect(() => {
+    document.title = getManagerPageTitle(currentFolderName, searchQuery);
+  }, [currentFolderName, searchQuery, languageRevision]);
 
   const renderSelectionActions = useCallback(
     (rows: Bookmark[], hiddenCount: number, clearSelection: () => void) => (
@@ -238,6 +288,16 @@ export default function BookmarksPage() {
                 currentFolderId={currentFolder}
                 onNavigate={navigateToFolder}
               />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                title={t('bookmarks_copyFolderLink')}
+                aria-label={t('bookmarks_copyFolderLink')}
+                onClick={() => void copyManagerFolderLink(currentFolder)}
+              >
+                <Link2 className="h-4 w-4" />
+              </Button>
             </div>
             <ManagerShortcutsHelp
               open={shortcuts.helpOpen}
@@ -310,6 +370,9 @@ export default function BookmarksPage() {
               facetOptions={facetOptions}
               renderSelectionActions={renderSelectionActions}
               savedSearchContext={savedSearchContext}
+              searchQuery={searchQuery}
+              onSearchQueryChange={setSearchQuery}
+              revealRow={revealRow}
               isRowActivatable={isFolderRow}
               rowClassName={(row: Bookmark) => {
                 const baseClass = 'cursor-pointer hover:bg-muted/50';

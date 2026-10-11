@@ -75,7 +75,24 @@ interface DataTableProps<TData extends RowData> {
   rowClassName?: (row: TData) => string;
   /** Enables saved searches, which need to know and change the folder the manager shows. */
   savedSearchContext?: DataTableSavedSearchContext;
+  /** The title filter, kept by the page (it is the address's `?q=`). */
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
+  /**
+   * Shows a row in the folder the table switches to (Show in folder): clears the filters, opens
+   * the page that holds it, selects it, and focuses it. A new object repeats the request.
+   */
+  revealRow?: DataTableRevealRequest | null;
 }
+
+export type DataTableRevealRequest = {
+  rowId: string;
+  /** The `resetKey` (folder) the row is in; the request waits until the table shows it. */
+  resetKey: string | null;
+};
+
+/** The column the page-level title search filters. */
+const SEARCH_COLUMN_ID = 'title';
 
 export type DataTableSavedSearchContext = {
   /** The folder shown; null is the top level. */
@@ -107,9 +124,30 @@ export function DataTable<TData extends RowData>({
   isRowActivatable,
   rowClassName,
   savedSearchContext,
+  searchQuery,
+  onSearchQueryChange,
+  revealRow,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>(DEFAULT_BOOKMARK_TABLE_VIEW.sorting);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  // Filters other than the title search, which the page keeps (`searchQuery`).
+  const [otherColumnFilters, setOtherColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const columnFilters = React.useMemo<ColumnFiltersState>(
+    () =>
+      searchQuery
+        ? [{ id: SEARCH_COLUMN_ID, value: searchQuery }, ...otherColumnFilters]
+        : otherColumnFilters,
+    [otherColumnFilters, searchQuery],
+  );
+  const columnFiltersRef = React.useRef(columnFilters);
+  columnFiltersRef.current = columnFilters;
+  const onSearchQueryChangeRef = React.useRef(onSearchQueryChange);
+  onSearchQueryChangeRef.current = onSearchQueryChange;
+  /** Splits filters into the title search, which goes to the page, and the rest. */
+  const setColumnFilters = React.useCallback((filters: ColumnFiltersState) => {
+    const search = filters.find((filter) => filter.id === SEARCH_COLUMN_ID)?.value;
+    onSearchQueryChangeRef.current(typeof search === 'string' ? search : '');
+    setOtherColumnFilters(filters.filter((filter) => filter.id !== SEARCH_COLUMN_ID));
+  }, []);
   const [columnVisibility, setColumnVisibility] = React.useState<ColumnVisibilityState>(
     DEFAULT_BOOKMARK_TABLE_VIEW.columnVisibility,
   );
@@ -225,6 +263,18 @@ export function DataTable<TData extends RowData>({
     }
   }, [resetKey]);
 
+  // Show in folder: drop the filters so the folder's rows show, then (below, once the table shows
+  // that folder) open the row's page, select it, and focus it.
+  const pendingRevealRef = React.useRef<DataTableRevealRequest | null>(null);
+  const pendingRevealFocusRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (!revealRow) return;
+    pendingRevealRef.current = revealRow;
+    pendingRowFocusRef.current = null;
+    setOtherColumnFilters([]);
+    setApplyToCurrentFolder(false);
+  }, [revealRow]);
+
   const onPageIndexChangeRef = React.useRef(onPageIndexChange);
   onPageIndexChangeRef.current = onPageIndexChange;
   React.useEffect(() => {
@@ -239,10 +289,10 @@ export function DataTable<TData extends RowData>({
   // current page; filter and sort changes still return to the first page.
   const handleColumnFiltersChange = React.useCallback(
     (updater: Updater<ColumnFiltersState>) => {
-      setColumnFilters((previous) => resolveUpdater(updater, previous));
+      setColumnFilters(resolveUpdater(updater, columnFiltersRef.current));
       goToFirstPage();
     },
-    [goToFirstPage],
+    [goToFirstPage, setColumnFilters],
   );
   const handleSortingChange = React.useCallback(
     (updater: Updater<SortingState>) => {
@@ -286,14 +336,15 @@ export function DataTable<TData extends RowData>({
     (query: SavedSearchQuery) => {
       const context = savedSearchContextRef.current;
       const resolved = resolveSavedSearchQuery(query, context?.folderIds ?? NO_FOLDER_IDS);
+      // The folder first: its history entry then also takes the search (see the page's dwell).
+      if (resolved.folderId !== undefined) context?.onNavigateToFolder(resolved.folderId);
       setColumnFilters(resolved.columnFilters);
       setSorting(resolved.sorting);
       setApplyToCurrentFolder(resolved.folderId !== undefined);
-      if (resolved.folderId !== undefined) context?.onNavigateToFolder(resolved.folderId);
       goToFirstPage();
       return { missingFolderCount: resolved.missingFolderCount };
     },
-    [goToFirstPage],
+    [goToFirstPage, setColumnFilters],
   );
 
   const resetView = React.useCallback(() => {
@@ -413,6 +464,33 @@ export function DataTable<TData extends RowData>({
         return;
       }
     }
+  });
+
+  // A Show in folder request, once the table shows the folder unfiltered.
+  React.useEffect(() => {
+    const pending = pendingRevealRef.current;
+    if (!pending || !isTableViewLoaded) return;
+    if (pending.resetKey !== resetKey || columnFilters.length > 0) return;
+    pendingRevealRef.current = null;
+    const index = table.getPrePaginatedRowModel().rows.findIndex((row) => row.id === pending.rowId);
+    if (index < 0) return;
+    setPagination((previous) => ({
+      ...previous,
+      pageIndex: Math.floor(index / previous.pageSize),
+    }));
+    setRowSelection({ [pending.rowId]: true });
+    pendingRevealFocusRef.current = pending.rowId;
+  });
+  React.useEffect(() => {
+    const rowId = pendingRevealFocusRef.current;
+    if (!rowId) return;
+    const row = tableFrameRef.current?.querySelector<HTMLElement>(
+      `tbody tr[data-row-id="${CSS.escape(rowId)}"]`,
+    );
+    if (!row) return;
+    pendingRevealFocusRef.current = null;
+    row.scrollIntoView({ block: 'nearest' });
+    getTableRowFocusTarget(row)?.focus();
   });
 
   // Selection is keyed by bookmark ID and belongs to the rows the table can show: the current

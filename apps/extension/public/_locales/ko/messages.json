@@ -1057,6 +1057,10 @@
         "message": "편집",
         "description": "Bookmark row action that edits the item"
     },
+    "table_showInFolder": {
+        "message": "폴더에서 보기",
+        "description": "Bookmark row action on a search result: opens the folder that holds the item, with the item selected"
+    },
     "table_openInNewTab": {
         "message": "새 탭에서 열기",
         "description": "Bookmark row action that opens a link in a new tab"
@@ -3056,6 +3060,14 @@
     "bookmarks_breadcrumb": {
         "message": "폴더 경로",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_copyFolderLink": {
+        "message": "이 폴더 링크 복사",
+        "description": "Bookmark manager button and folder row action that copies the address that opens the folder"
+    },
+    "bookmarks_folderLinkCopied": {
+        "message": "링크를 복사했습니다",
+        "description": "Toast after the folder link was copied"
     },
     "table_clearSort": {
         "message": "정렬 해제",
@@ -5170,6 +5182,14 @@
     "page_bookmarks": {
         "message": "북마크",
         "description": "Name of the bookmark manager page, used in its tab title"
+    },
+    "page_managerFolderTitle": {
+        "message": "$1 - $2",
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+    },
+    "page_managerSearchTitle": {
+        "message": "\"$1\" 검색 - $2",
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
     },
     "page_options": {
         "message": "옵션",
