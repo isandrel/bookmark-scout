@@ -632,7 +632,7 @@ function PopupPage() {
         {!isLoading && folderMatches.length > 0 && (
           <FolderMatchesPanel
             matches={folderMatches}
-            query={activeQuery}
+            query={query}
             barTitle={barTitle}
             truncateLength={truncateLength}
             pendingFolderIds={addingToFolderIds}

@@ -1,9 +1,9 @@
-import { type KeyboardEvent, useLayoutEffect, useRef, useState } from 'react';
+import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { BookmarkPlus, Folder, LoaderCircle } from 'lucide-react';
 
 type FolderMatchesPanelProps = {
   matches: readonly FolderMatch[];
-  /** The search the matches are for; a new one shows its own order at once. */
+  /** The typed search; any change to it shows the current order at once. */
   query: string;
   /** Title of the bookmarks bar, left out of the paths because most folders live there. */
   barTitle: string | undefined;
@@ -49,10 +49,16 @@ export function FolderMatchesPanel({
 }: FolderMatchesPanelProps) {
   const [pointerInside, setPointerInside] = useState(false);
   const [focusInside, setFocusInside] = useState(false);
+  // Typing moves attention to the search box: a pointer resting on the list holds it again only
+  // once it moves.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs for each change of the query.
+  useEffect(() => setPointerInside(false), [query]);
   const matches = useHeldMatchOrder(rankedMatches, query, pointerInside || focusInside);
   return (
     <section
-      onPointerEnter={() => setPointerInside(true)}
+      onPointerMove={() => {
+        if (!pointerInside) setPointerInside(true);
+      }}
       onPointerLeave={() => setPointerInside(false)}
       onFocus={() => setFocusInside(true)}
       onBlur={(event) => {
