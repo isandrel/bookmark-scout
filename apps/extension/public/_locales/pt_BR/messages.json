@@ -3936,7 +3936,7 @@
         "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
     },
     "permission_agentBridgeDetail": {
-        "message": "Os agentes só podem consultar; não podem alterar seus favoritos. O Bookmark Scout nunca recebe esses dados, mas um agente pode enviar o que lê ao próprio provedor de IA. Desative a configuração para parar a qualquer momento.",
+        "message": "Os agentes só podem alterar seus favoritos se você também ativar Permitir alterações, e então cada alteração aguarda sua aprovação. O Bookmark Scout nunca recebe esses dados, mas um agente pode enviar o que lê ao próprio provedor de IA. Desative a configuração para parar a qualquer momento.",
         "description": "Privacy note in the dialog shown before turning on access for local AI agents"
     },
     "permission_agentBridgeDenied": {
@@ -5923,6 +5923,14 @@
         "message": "Permite que agentes de IA deste computador, como Claude Code, Codex ou Cursor, consultem seus favoritos pelo programa bookmark-scout-mcp. Somente neste dispositivo.",
         "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
     },
+    "settings_agentBridgeWrites": {
+        "message": "Permitir alterações",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "Permite que os agentes também salvem páginas e proponham movimentações, renomeações, exclusões e novas pastas. Cada alteração abre uma janela do Bookmark Scout onde você aprova ou recusa, e é possível desfazê-la no gerenciador de favoritos.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
     "settings_agentBridgeRedactUrls": {
         "message": "Ocultar valores privados",
         "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
@@ -5936,7 +5944,7 @@
         "description": "Options > AI: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
-        "message": "Desative o que você não quer que os agentes consultem; isso nem é oferecido a eles. Agentes locais não podem alterar favoritos.",
+        "message": "Desative o que você não quer que os agentes façam; isso nem é oferecido a eles. Alterações também precisam de Permitir alterações, e cada uma aguarda sua aprovação.",
         "description": "Options > AI: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
@@ -5970,6 +5978,22 @@
     "agentBridge_retry": {
         "message": "Tentar novamente",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "Aprovar alterações",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "Um agente de IA deste computador pede para alterar seus favoritos. Nada muda até você aprovar, e uma alteração aprovada pode ser desfeita no gerenciador de favoritos.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "De “$1” (o nome que o agente informou)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "Nada está aguardando sua aprovação.",
+        "description": "Approval window when no request is waiting"
     },
     "settings_actionMoveUp": {
         "message": "Mover $1 para cima",

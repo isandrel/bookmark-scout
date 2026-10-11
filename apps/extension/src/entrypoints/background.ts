@@ -34,6 +34,7 @@ export default defineBackground(() => {
   registerQuickSave();
 
   // Access for local AI agents, while the user has it on (Options > AI).
+  registerAgentApprovals();
   registerAgentBridge();
 
   // A background worker may be started by any event, not only install or startup.
