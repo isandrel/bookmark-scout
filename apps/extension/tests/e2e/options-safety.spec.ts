@@ -40,12 +40,15 @@ test('the empty notification area takes no clicks, so the bottom edge of a foote
   expect(await notification.evaluate((element) => getComputedStyle(element).pointerEvents)).toBe(
     'auto',
   );
-  const exportButton = page.getByRole('button', { name: 'Export', exact: true });
-  const exportBox = await exportButton.boundingBox();
-  if (!exportBox) throw new Error('Export is not on the page');
-  const download = page.waitForEvent('download');
-  await page.mouse.click(exportBox.x + exportBox.width / 2, exportBox.y + exportBox.height - 3);
-  expect((await download).suggestedFilename()).toMatch(/\.json$/);
+  // The area's own padding beside the notification hits the page under it, not the area.
+  const regionBox = await region.boundingBox();
+  const notificationBox = await notification.boundingBox();
+  if (!regionBox || !notificationBox) throw new Error('No notification area');
+  const hit = await page.evaluate(
+    ([x, y]) => document.elementFromPoint(x, y)?.closest('[role="region"]') !== null,
+    [regionBox.x + 2, notificationBox.y + notificationBox.height / 2],
+  );
+  expect(hit).toBe(false);
 });
 
 test('Reset All asks first, says what it resets, and Undo restores both scopes', async ({
@@ -87,7 +90,7 @@ test('Reset All asks first, says what it resets, and Undo restores both scopes',
     aiActivityRecording: true,
   });
   await expect(
-    toastRegion(page).getByText('Your settings are back', { exact: true }),
+    toastRegion(page).getByText('✓ Your settings are back', { exact: true }),
   ).toBeVisible();
 });
 
@@ -114,7 +117,7 @@ test('a number field left in another Options tab does not write its old text ove
   await expect(field(first)).toHaveValue('7');
 
   // Leaving the first tab's field shows the newer value instead of saving its old text again.
-  await field(first).blur();
+  await field(first).press('Tab');
   await expect(field(first)).toHaveValue('9');
   await first.waitForTimeout(1_000);
   expect(await stored()).toBe(9);

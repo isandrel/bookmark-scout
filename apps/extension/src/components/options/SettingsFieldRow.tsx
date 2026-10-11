@@ -4,7 +4,7 @@
 
 import { NumberField } from '@base-ui/react/number-field';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 
 type SettingValue = Settings[keyof Settings];
 type SelectOption = { value: string | number; label: string; group?: string; iconUrl?: string };
@@ -160,6 +160,7 @@ function NumberStepper({
   const scale = meta.displayScale ?? 1;
   // The stored value when the field took focus, then the last value it wrote.
   const ownValueRef = useRef<number | undefined>(undefined);
+  const [, showStoredValue] = useReducer((renders: number) => renders + 1, 0);
   const shown =
     scale === 1
       ? meta
@@ -190,6 +191,8 @@ function NumberStepper({
           // another Options tab, stays, and the field shows it instead of the old text.
           if (details.reason === 'input-blur' && stored === ownValueRef.current) {
             details.cancel();
+            // The field shows its stored value again on the next render; ask for one.
+            showStoredValue();
             return;
           }
           ownValueRef.current = stored;
