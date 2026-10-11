@@ -5,6 +5,7 @@
  * offered tools and every tool result so far) and returns the next tool calls or the answer.
  * It proves what the tools and rules allow, not how a real model behaves.
  */
+import type { ModelMessage } from 'ai';
 import { MockLanguageModelV4 } from 'ai/test';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { ActionContext } from '@/services/action-kit';
@@ -100,12 +101,25 @@ const settings: AISettings = {
   baseUrl: 'https://provider.invalid/v1',
 };
 
-/** Runs one user message through the Ask AI agent with a scripted model. */
+/** An approval the agent asked for, and what the scripted user answered. */
+export type SeenApproval = { toolName: string; input: unknown; reason?: string; approved: boolean };
+
+/**
+ * Runs one user message through the Ask AI agent with a scripted model. When the agent stops to
+ * ask for approval, `approve` answers as the user would (decline when left out) and the run
+ * carries on, as the chat does.
+ */
 export async function runScriptedAgent(
   message: string,
   steps: ScriptStep[],
   toolContext: ActionContext,
-  { maxSteps = 8 }: { maxSteps?: number } = {},
+  {
+    maxSteps = 8,
+    approve,
+  }: {
+    maxSteps?: number;
+    approve?: (request: { toolName: string; input: unknown; reason?: string }) => boolean;
+  } = {},
 ) {
   const { model, calls } = scriptedModel(steps);
   const agent = await buildAskAIAgent({
@@ -117,8 +131,29 @@ export async function runScriptedAgent(
     webSearchMaxUses: 1,
     model,
   });
-  const result = await agent.generate({ prompt: message });
-  return { result, calls, views: calls.map(viewOf) };
+  const messages: ModelMessage[] = [{ role: 'user', content: message }];
+  const approvals: SeenApproval[] = [];
+  let result = await agent.generate({ messages });
+  for (;;) {
+    messages.push(...result.responseMessages);
+    const requests = result.content.flatMap((part) =>
+      part.type === 'tool-approval-request' && !part.isAutomatic ? [part] : [],
+    );
+    if (requests.length === 0) break;
+    const responses = requests.map((request) => {
+      const seen = {
+        toolName: request.toolCall.toolName,
+        input: request.toolCall.input,
+        ...(request.reason ? { reason: request.reason } : {}),
+      };
+      const approved = approve?.(seen) ?? false;
+      approvals.push({ ...seen, approved });
+      return { type: 'tool-approval-response' as const, approvalId: request.approvalId, approved };
+    });
+    messages.push({ role: 'tool', content: responses });
+    result = await agent.generate({ messages });
+  }
+  return { result, calls, views: calls.map(viewOf), approvals };
 }
 
 /** The whole tree as titles, URLs, and nesting, to compare before and after a run. */

@@ -237,6 +237,14 @@
         "message": "「$1」を並べ替え",
         "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
     },
+    "history_change": {
+        "message": "変更: $1",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is the plan's short summary."
+    },
+    "history_changeMany": {
+        "message": "$1件の変更",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is how many."
+    },
     "toast_undone": {
         "message": "元に戻しました: $1",
         "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
@@ -5362,6 +5370,94 @@
     "askAI_toolSuggestFolders": {
         "message": "合うフォルダを探しました",
         "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
+    },
+    "askAI_toolMove": {
+        "message": "ブックマークを移動",
+        "description": "Ask AI step or button: moving bookmarks to another folder"
+    },
+    "askAI_toolRename": {
+        "message": "「$1」に名前を変更",
+        "description": "Ask AI step or button: renaming a bookmark or folder. $1 is the new title."
+    },
+    "askAI_toolDelete": {
+        "message": "ブックマークを削除",
+        "description": "Ask AI step or button: deleting bookmarks"
+    },
+    "askAI_toolCreateFolder": {
+        "message": "フォルダ「$1」を作成",
+        "description": "Ask AI step or button: creating a folder. $1 is its name."
+    },
+    "askAI_toolSave": {
+        "message": "「$1」を保存しました",
+        "description": "Ask AI step: the agent saved a page as a bookmark. $1 is the page title or URL."
+    },
+    "askAI_toolUndo": {
+        "message": "変更を元に戻しました",
+        "description": "Ask AI step: the agent undid one of its changes"
+    },
+    "askAI_toolPropose": {
+        "message": "承認用の変更を用意しました",
+        "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
+    },
+    "askAI_toolApply": {
+        "message": "承認された変更を適用しました",
+        "description": "Ask AI step: the agent applied changes the user approved"
+    },
+    "askAI_approvalTitle": {
+        "message": "この変更を承認しますか？",
+        "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
+    },
+    "askAI_approvalUntrusted": {
+        "message": "このチャットは Web の内容を読み込んでいます。そこには AI 向けの指示が含まれている場合があります。依頼した内容と一致しているか確認してください。",
+        "description": "Ask AI: note on an approval card when the chat has read page text or web search results, which could have steered the AI"
+    },
+    "askAI_approvalSave": {
+        "message": "「$1」を $2 に保存",
+        "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalUndo": {
+        "message": "以前の変更を元に戻す",
+        "description": "Ask AI approval line: undoing a change made earlier"
+    },
+    "askAI_planMove": {
+        "message": "「$1」を $2 から $3 に移動",
+        "description": "Ask AI approval line for a planned move. $1 is the title, $2 the folder it is in, $3 the folder it goes to."
+    },
+    "askAI_planRename": {
+        "message": "「$1」の名前を「$2」に変更",
+        "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planDelete": {
+        "message": "$2 から「$1」を削除",
+        "description": "Ask AI approval line for a planned deletion of a bookmark. $1 is its title, $2 its folder."
+    },
+    "askAI_planDeleteFolder": {
+        "message": "$2 からフォルダ「$1」を、中の $3 件のブックマークごと削除",
+        "description": "Ask AI approval line for a planned deletion of a folder. $1 is its title, $2 the folder it is in, $3 how many bookmarks it holds."
+    },
+    "askAI_planCreateFolder": {
+        "message": "$2 にフォルダ「$1」を作成",
+        "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
+    },
+    "askAI_planMissing": {
+        "message": "このプランは期限切れか、すでに適用されています。もう一度依頼すると作り直します。",
+        "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_approve": {
+        "message": "承認",
+        "description": "Ask AI approval card: button that approves the change"
+    },
+    "askAI_deny": {
+        "message": "拒否",
+        "description": "Ask AI approval card: button that declines the change"
+    },
+    "askAI_denied": {
+        "message": "拒否済み",
+        "description": "Ask AI: marks a step the user declined"
+    },
+    "askAI_failed": {
+        "message": "失敗",
+        "description": "Ask AI: marks a step that failed, such as a tool call the extension rejected"
     },
     "askAI_toolWebSearch": {
         "message": "ウェブを検索しました",

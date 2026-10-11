@@ -10,6 +10,7 @@
  * changed (`unchangeableReason`).
  */
 import { z } from 'zod';
+import type { BookmarkTreeNode } from '@/types';
 
 const refList = (what: string) =>
   z.array(z.string()).min(1).max(actionLimits.max_plan_operations).describe(what);
@@ -80,7 +81,9 @@ function expectOf(node: BookmarkTreeNode): PlannedExpectation {
 }
 
 function bookmarksInside(node: BookmarkTreeNode): number {
-  return node.url ? 1 : (node.children ?? []).reduce((sum, child) => sum + bookmarksInside(child), 0);
+  return node.url
+    ? 1
+    : (node.children ?? []).reduce((sum, child) => sum + bookmarksInside(child), 0);
 }
 
 const titleOf = (item: { folder?: LibraryFolder; bookmark?: LibraryBookmark }) =>
@@ -113,7 +116,7 @@ const moveBookmarks = defineAction({
   targets: ['bookmark', 'folder'],
   input: moveInput,
   output: z.object({ moved: z.number().int(), folder: z.string(), ...changeOutput }),
-  describe: (input) => tPlural('askAI_toolMove', input.refs?.length ?? 1),
+  describe: () => t('askAI_toolMove'),
   plan(input, library) {
     const items = changeableItems(library, input.refs);
     if (isActionError(items)) return items;
@@ -128,8 +131,15 @@ const moveBookmarks = defineAction({
       ? `${target.path}${AI_FOLDER_PATH_SEPARATOR}${input.newFolder}`
       : target.path;
     return {
-      preview: items.map((item) => ({ kind: 'move', title: titleOf(item), from: pathOf(item), to })),
-      expect: items.map((item) => expectOf((item.folder?.node ?? item.bookmark?.node) as BookmarkTreeNode)),
+      preview: items.map((item) => ({
+        kind: 'move',
+        title: titleOf(item),
+        from: pathOf(item),
+        to,
+      })),
+      expect: items.map((item) =>
+        expectOf((item.folder?.node ?? item.bookmark?.node) as BookmarkTreeNode),
+      ),
     };
   },
   async execute(input, context) {
@@ -190,11 +200,13 @@ const deleteBookmarks = defineAction({
   targets: ['bookmark', 'folder'],
   input: z.object({ refs: refList('Bookmark refs (b:<id>) or folder refs (f:<id>) to delete') }),
   output: z.object({ deleted: z.number().int(), ...changeOutput }),
-  describe: (input) => tPlural('askAI_toolDelete', input.refs?.length ?? 1),
+  describe: () => t('askAI_toolDelete'),
   plan(input, library) {
     const items = changeableItems(library, input.refs);
     if (isActionError(items)) return items;
-    const nodes = items.map((item) => (item.folder?.node ?? item.bookmark?.node) as BookmarkTreeNode);
+    const nodes = items.map(
+      (item) => (item.folder?.node ?? item.bookmark?.node) as BookmarkTreeNode,
+    );
     return {
       preview: items.map((item, index) => ({
         kind: 'delete',
@@ -299,12 +311,16 @@ const saveBookmark = defineAction({
       return { ref: toBookmarkRef(existing.id), folder: folderPath, created: false };
     }
     const title = input.title?.trim() || input.url;
-    const { result, change } = await writeChange(context, { action: 'add', title }, async (writer) => {
-      const parentId = input.newFolder
-        ? await folderNamed(writer, target.node.id, input.newFolder)
-        : target.node.id;
-      return writer.create({ parentId, title, url: input.url });
-    });
+    const { result, change } = await writeChange(
+      context,
+      { action: 'add', title },
+      async (writer) => {
+        const parentId = input.newFolder
+          ? await folderNamed(writer, target.node.id, input.newFolder)
+          : target.node.id;
+        return writer.create({ parentId, title, url: input.url });
+      },
+    );
     return {
       ref: toBookmarkRef(result.id),
       folder: folderPath,

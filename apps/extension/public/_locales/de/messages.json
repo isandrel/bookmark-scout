@@ -241,6 +241,14 @@
         "message": "„$1“ sortieren",
         "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
     },
+    "history_change": {
+        "message": "Änderung: $1",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is the plan's short summary."
+    },
+    "history_changeMany": {
+        "message": "$1 Änderungen",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is how many."
+    },
     "toast_undone": {
         "message": "Rückgängig gemacht: $1",
         "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
@@ -5394,6 +5402,94 @@
     "askAI_toolSuggestFolders": {
         "message": "Nach passenden Ordnern gesucht",
         "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
+    },
+    "askAI_toolMove": {
+        "message": "Lesezeichen verschieben",
+        "description": "Ask AI step or button: moving bookmarks to another folder"
+    },
+    "askAI_toolRename": {
+        "message": "In „$1“ umbenennen",
+        "description": "Ask AI step or button: renaming a bookmark or folder. $1 is the new title."
+    },
+    "askAI_toolDelete": {
+        "message": "Lesezeichen löschen",
+        "description": "Ask AI step or button: deleting bookmarks"
+    },
+    "askAI_toolCreateFolder": {
+        "message": "Ordner „$1“ erstellen",
+        "description": "Ask AI step or button: creating a folder. $1 is its name."
+    },
+    "askAI_toolSave": {
+        "message": "„$1“ gespeichert",
+        "description": "Ask AI step: the agent saved a page as a bookmark. $1 is the page title or URL."
+    },
+    "askAI_toolUndo": {
+        "message": "Eine Änderung rückgängig gemacht",
+        "description": "Ask AI step: the agent undid one of its changes"
+    },
+    "askAI_toolPropose": {
+        "message": "Änderungen zur Freigabe vorbereitet",
+        "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
+    },
+    "askAI_toolApply": {
+        "message": "Freigegebene Änderungen übernommen",
+        "description": "Ask AI step: the agent applied changes the user approved"
+    },
+    "askAI_approvalTitle": {
+        "message": "Diese Änderung freigeben?",
+        "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
+    },
+    "askAI_approvalUntrusted": {
+        "message": "Dieser Chat hat Webinhalte gelesen, die Anweisungen an die KI enthalten können. Prüfen Sie, ob dies Ihrer Anfrage entspricht.",
+        "description": "Ask AI: note on an approval card when the chat has read page text or web search results, which could have steered the AI"
+    },
+    "askAI_approvalSave": {
+        "message": "„$1“ in $2 speichern",
+        "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalUndo": {
+        "message": "Eine frühere Änderung rückgängig machen",
+        "description": "Ask AI approval line: undoing a change made earlier"
+    },
+    "askAI_planMove": {
+        "message": "„$1“ von $2 nach $3 verschieben",
+        "description": "Ask AI approval line for a planned move. $1 is the title, $2 the folder it is in, $3 the folder it goes to."
+    },
+    "askAI_planRename": {
+        "message": "„$1“ in „$2“ umbenennen",
+        "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planDelete": {
+        "message": "„$1“ aus $2 löschen",
+        "description": "Ask AI approval line for a planned deletion of a bookmark. $1 is its title, $2 its folder."
+    },
+    "askAI_planDeleteFolder": {
+        "message": "Ordner „$1“ samt den $3 Lesezeichen darin aus $2 löschen",
+        "description": "Ask AI approval line for a planned deletion of a folder. $1 is its title, $2 the folder it is in, $3 how many bookmarks it holds."
+    },
+    "askAI_planCreateFolder": {
+        "message": "Ordner „$1“ in $2 erstellen",
+        "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
+    },
+    "askAI_planMissing": {
+        "message": "Dieser Plan ist abgelaufen oder wurde schon übernommen. Fragen Sie erneut, um ihn neu zu erstellen.",
+        "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_approve": {
+        "message": "Freigeben",
+        "description": "Ask AI approval card: button that approves the change"
+    },
+    "askAI_deny": {
+        "message": "Ablehnen",
+        "description": "Ask AI approval card: button that declines the change"
+    },
+    "askAI_denied": {
+        "message": "abgelehnt",
+        "description": "Ask AI: marks a step the user declined"
+    },
+    "askAI_failed": {
+        "message": "fehlgeschlagen",
+        "description": "Ask AI: marks a step that failed, such as a tool call the extension rejected"
     },
     "askAI_toolWebSearch": {
         "message": "Im Web gesucht",

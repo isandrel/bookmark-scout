@@ -3,8 +3,9 @@
  * keeping its own list: Ask AI turns the entries with an `agent` exposure into its tools
  * (`ai-agent.lazy.ts`), the MCP bridge offers the same entries to local agents, and the bookmark
  * manager's menus show the entries `config/ui/actions.toml` lists (`action-menus.ts`). An entry is
- * defined, limited, and tested once; the entries come from the tables in `read-actions.ts` and
- * `item-actions.ts`, and their building blocks are in `action-kit.ts`.
+ * defined, limited, and tested once; the entries come from the tables in `read-actions.ts`,
+ * `item-actions.ts`, `write-actions.ts`, and `plan-actions.ts`, and their building blocks are in
+ * `action-kit.ts`.
  *
  * How to add an action: add an entry to the table for its kind with its risk, targets, and
  * permission; a call (input and output schemas, `describe`, `execute`) and `agent` when AI may
@@ -18,7 +19,12 @@
  */
 import { z } from 'zod';
 
-export const ACTIONS = { ...READ_ACTIONS, ...ITEM_ACTIONS };
+export const ACTIONS = {
+  ...READ_ACTIONS,
+  ...ITEM_ACTIONS,
+  ...WRITE_ACTIONS,
+  ...PLAN_ACTIONS,
+};
 
 export type ActionId = keyof typeof ACTIONS;
 
@@ -77,19 +83,29 @@ export async function runAction(
   }
   const blocked = await whyUnavailable(action, context);
   if (blocked) return blocked;
+  const started = performance.now();
   let result: unknown;
   try {
     result = await action.execute(parsed.data, context);
   } catch (error) {
-    return actionError('failed', getErrorMessage(error));
+    result = actionError('failed', getErrorMessage(error));
   }
-  if (!isActionError(result)) {
-    const size = JSON.stringify(result).length;
-    if (size > actionLimits.max_result_chars) {
-      return actionError('too_large', `The result is too large to send (${size} characters).`, {
-        hint: 'Ask for less: narrow the search, start under a folder, or pass fewer refs.',
-      });
-    }
+  // Every change, and every call a local agent makes, is in the AI activity log when it is on.
+  if (action.risk !== 'read' || context.client.kind !== 'askAI') {
+    void recordActionActivity({
+      source: 'askAI',
+      action: id,
+      input: parsed.data,
+      result,
+      durationMs: Math.round(performance.now() - started),
+    });
+  }
+  if (isActionError(result)) return result;
+  const size = JSON.stringify(result).length;
+  if (size > actionLimits.max_result_chars) {
+    return actionError('too_large', `The result is too large to send (${size} characters).`, {
+      hint: 'Ask for less: narrow the search, start under a folder, or pass fewer refs.',
+    });
   }
   return result;
 }
@@ -99,3 +115,25 @@ export function describeActionCall(id: string, input: unknown): string | undefin
   if (!isActionId(id)) return undefined;
   return getAction(id).describe?.(isPlainObject(input) ? input : {});
 }
+
+/**
+ * Whether a call waits for the user's approval: `always` for a destructive action (applying a
+ * plan, which can delete); `untrusted` for any other write once text nobody reviewed (a page,
+ * a web search) has entered the conversation, since it may have steered the request; `none`
+ * otherwise. Reads never wait. The check is here, in code, never left to the model.
+ */
+export function actionApproval(
+  id: string,
+  { untrustedContentSeen }: { untrustedContentSeen: boolean },
+): 'none' | 'always' | 'untrusted' {
+  if (!isActionId(id)) return 'none';
+  const { risk } = getAction(id);
+  if (risk === 'destructive') return 'always';
+  if (risk === 'write') return untrustedContentSeen ? 'untrusted' : 'none';
+  return 'none';
+}
+
+/** Actions whose results carry text nobody reviewed (`agent.untrusted`). */
+export const UNTRUSTED_ACTION_IDS: ReadonlySet<string> = new Set(
+  ACTION_IDS.filter((id) => getAction(id).agent?.untrusted),
+);

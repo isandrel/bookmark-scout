@@ -38,7 +38,8 @@ export type BookmarkPlace = {
 };
 
 /** What a history entry says it did, kept as ids and counts so it shows in the current language. */
-export type BookmarkHistoryAction = 'add' | 'edit' | 'move' | 'delete' | 'sort';
+/** `change`: several kinds at once, such as an AI agent's approved plan. */
+export type BookmarkHistoryAction = 'add' | 'edit' | 'move' | 'delete' | 'sort' | 'change';
 
 export type BookmarkHistoryLabel = {
   action: BookmarkHistoryAction;
@@ -109,7 +110,7 @@ const operationSchema: z.ZodType<BookmarkHistoryOperation> = z.discriminatedUnio
 const entrySchema = z.object({
   id: z.string(),
   label: z.object({
-    action: z.enum(['add', 'edit', 'move', 'delete', 'sort']),
+    action: z.enum(['add', 'edit', 'move', 'delete', 'sort', 'change']),
     title: z.string().optional(),
     count: z.number().int().positive().optional(),
   }),
@@ -526,6 +527,7 @@ const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: Messag
   move: { one: 'history_move', many: 'history_moveMany' },
   delete: { one: 'history_delete', many: 'history_deleteMany' },
   sort: { one: 'history_sort' },
+  change: { one: 'history_change', many: 'history_changeMany' },
 };
 
 /** What an entry did, in the current language: `Delete "News"`, `Move 3 items`. */

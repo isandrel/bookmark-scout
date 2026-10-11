@@ -182,3 +182,129 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
   await chat.getByRole('button', { name: 'Try again' }).click();
   await expect(chat.getByText('Recovered answer')).toBeVisible();
 });
+
+/** A model that plans a move, applies it after the user approves, and then answers. */
+async function stubPlanningProvider(context: BrowserContext, bookmarkId: string, folderId: string) {
+  await context.route(`${BASE_URL}/**`, async (route) => {
+    const request = JSON.parse(route.request().postData() ?? '{}') as ChatRequest;
+    const toolMessages = request.messages.filter((message) => message.role === 'tool');
+    const toolCall = (id: string, name: string, args: object) =>
+      streamChunks(
+        route,
+        [
+          {
+            role: 'assistant',
+            tool_calls: [
+              {
+                index: 0,
+                id,
+                type: 'function',
+                function: { name, arguments: JSON.stringify(args) },
+              },
+            ],
+          },
+        ],
+        'tool_calls',
+      );
+    if (toolMessages.length === 0) {
+      await toolCall('call_propose', 'proposeChanges', {
+        summary: 'Move the guide to Rust',
+        changes: [
+          { action: 'moveBookmarks', input: { refs: [`b:${bookmarkId}`], to: `f:${folderId}` } },
+        ],
+      });
+      return;
+    }
+    if (toolMessages.length === 1) {
+      const { planId } = JSON.parse(String(toolMessages[0].content)) as { planId: string };
+      await toolCall('call_apply', 'applyChanges', { planId });
+      return;
+    }
+    await streamChunks(route, [{ role: 'assistant', content: 'Moved it to Rust.' }], 'stop');
+  });
+}
+
+/** An Inbox folder with one bookmark, and an empty Rust folder to move it to. */
+function seedInboxAndRust(worker: Worker) {
+  return worker.evaluate(async () => {
+    const [root] = await chrome.bookmarks.getTree();
+    const parent = root.children?.find((node) => node.children !== undefined);
+    if (!parent) throw new Error('No writable bookmark root');
+    const inbox = await chrome.bookmarks.create({ parentId: parent.id, title: 'Inbox' });
+    const rust = await chrome.bookmarks.create({ parentId: parent.id, title: 'Rust' });
+    const guide = await chrome.bookmarks.create({
+      parentId: inbox.id,
+      title: 'Ownership guide',
+      url: 'https://rust.e2e.invalid/ownership',
+    });
+    return { bookmarkId: guide.id, folderId: rust.id, inboxId: inbox.id };
+  });
+}
+
+function parentOf(worker: Worker, id: string) {
+  return worker.evaluate(async (bookmarkId) => {
+    const [node] = await chrome.bookmarks.get(bookmarkId);
+    return node?.parentId;
+  }, id);
+}
+
+test('[mocked provider contract] Ask AI moves a bookmark only after the user approves the plan', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
+  await stubPlanningProvider(context, bookmarkId, folderId);
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Move my ownership guide to Rust');
+  await box.press('Enter');
+
+  // The plan waits for approval, shown from the stored plan, and nothing has moved yet.
+  const approval = chat.getByTestId('ask-ai-approval');
+  await expect(approval).toContainText('Approve this change?');
+  await expect(approval).toContainText('Move the guide to Rust');
+  await expect(approval.getByRole('listitem')).toHaveText(
+    /^Move “Ownership guide” from .+\/Inbox to .+\/Rust$/,
+  );
+  expect(await parentOf(extensionWorker, bookmarkId)).toBe(inboxId);
+
+  await approval.getByRole('button', { name: 'Approve' }).click();
+  await expect(chat.getByText('Moved it to Rust.')).toBeVisible();
+  expect(await parentOf(extensionWorker, bookmarkId)).toBe(folderId);
+  await expect(
+    chat.getByTestId('ask-ai-tool').filter({ hasText: 'Applied the approved changes' }),
+  ).toBeVisible();
+});
+
+test('[mocked provider contract] Ask AI leaves bookmarks alone when the user declines', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, { language: 'en', aiEnabled: true });
+  await seedAskService(extensionWorker);
+  const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
+  await stubPlanningProvider(context, bookmarkId, folderId);
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Move my ownership guide to Rust');
+  await box.press('Enter');
+  await chat.getByTestId('ask-ai-approval').getByRole('button', { name: 'Decline' }).click();
+  await expect(chat.getByTestId('ask-ai-tool').filter({ hasText: 'declined' })).toBeVisible();
+  expect(await parentOf(extensionWorker, bookmarkId)).toBe(inboxId);
+});

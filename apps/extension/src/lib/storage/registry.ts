@@ -87,6 +87,11 @@ export const STORAGE_ITEMS = {
    * which belong to this browser, and like Chrome's own it ends when the browser closes.
    */
   bookmarkHistory: { area: 'session', name: 'bookmarks.history', v: 1, backup: 'exclude' },
+  /**
+   * Session: bookmark changes an AI agent proposed, waiting for the user's approval. They name
+   * bookmark ids and expire within the hour, so they stay in memory until the browser closes.
+   */
+  actionPlans: { area: 'session', name: 'ai.action-plans', v: 1, backup: 'exclude' },
 } as const satisfies Record<string, StorageItem>;
 
 export type StorageItemId = keyof typeof STORAGE_ITEMS;
