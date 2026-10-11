@@ -4,9 +4,11 @@
  * bridge program through native messaging, tells it which actions agents may use (the registry's
  * entries as JSON Schema), and answers their calls through `runAction`, like Ask AI's tools.
  *
- * Local agents only look things up. What an agent may use is decided here and in `runAction`,
- * never by the bridge program or the agent: the tool list leaves out what the user turned off, a
- * call for anything else is refused, and calls are rate limited. Titles and URLs in results have
+ * Local agents look things up, and change bookmarks only while the user allows it, each change
+ * after the user approves it in the browser (`agent-approvals.ts`). What an agent may use is
+ * decided here and in `runAction`, never by the bridge program or the agent: the tool list leaves
+ * out what the user turned off, a call for anything else is refused, and calls are rate limited.
+ * Titles and URLs in results have
  * private values hidden unless the user turned that off. Calls are in the AI activity log, with
  * the name the agent gave, while recording is on.
  */
@@ -133,6 +135,37 @@ const refused = (code: ActionErrorCode, message: string, hint?: string): CallAns
   result: actionError(code, message, hint ? { hint } : {}),
 });
 
+/** What the agent is told when a change was not approved. */
+const NOT_APPROVED: Record<Exclude<ApprovalOutcome, 'approved'>, [string, string]> = {
+  declined: ['The user declined this change.', 'Ask the user what they want instead.'],
+  expired: ['Nobody answered the approval in time; nothing was changed.', 'Ask the user first.'],
+  cancelled: ['The request was cancelled before it was answered.', 'Try again if still needed.'],
+  busy: ['Too many changes are waiting for approval.', 'Wait for the user to answer them.'],
+};
+
+/**
+ * Every change a local agent asks for waits for the user's approval in the browser, whatever the
+ * agent says about it. Calls that would be refused anyway (turned off, invalid input) are not
+ * shown; `runAction` refuses them. Undefined when the call may run.
+ */
+async function approvalFor(
+  call: CallMessage,
+  context: ActionContext,
+): Promise<CallAnswer | undefined> {
+  if (!isActionId(call.tool) || getAction(call.tool).risk === 'read') return undefined;
+  if (!(await agentActionIds(context)).includes(call.tool)) return undefined;
+  if (!getAction(call.tool).input?.safeParse(call.args).success) return undefined;
+  const outcome = await requestAgentApproval({
+    id: call.id,
+    client: call.client.name,
+    tool: call.tool,
+    input: call.args,
+  });
+  if (outcome === 'approved') return undefined;
+  const [message, hint] = NOT_APPROVED[outcome];
+  return refused('not_allowed', message, hint);
+}
+
 /** Start times of the calls in the last minute, and the calls running now. */
 const recentCalls: number[] = [];
 let runningCalls = 0;
@@ -157,11 +190,10 @@ export async function answerAgentCall(call: CallMessage): Promise<CallAnswer> {
     if (!settings.agentBridgeEnabled) {
       return refused('not_allowed', 'The user turned off access for local agents.');
     }
-    const result = await runAction(
-      call.tool,
-      call.args,
-      await createAgentBridgeContext(settings, call.client),
-    );
+    const context = await createAgentBridgeContext(settings, call.client);
+    const approval = await approvalFor(call, context);
+    if (approval) return approval;
+    const result = await runAction(call.tool, call.args, context);
     if (isActionError(result)) return { isError: true, result };
     // Only what the advertised output schema describes is sent.
     const output = isActionId(call.tool)
@@ -242,8 +274,11 @@ async function onHostMessage(from: Port, raw: unknown): Promise<void> {
     await setStatus({ state: 'ready' });
     return;
   }
-  // Calls that only look things up finish quickly, so a cancel needs nothing.
-  if (message.type === 'cancel') return;
+  // A cancelled change stops waiting for approval; a running lookup just finishes.
+  if (message.type === 'cancel') {
+    cancelAgentApproval(message.id);
+    return;
+  }
   const answer = await answerAgentCall(message);
   if (port === from) from.postMessage({ type: 'result', id: message.id, ...answer });
 }
@@ -265,6 +300,8 @@ async function connect(): Promise<void> {
     const reason = disconnectReason(opened);
     if (port !== opened) return;
     port = undefined;
+    // No one is left to receive the answer.
+    cancelAllAgentApprovals();
     void setStatus({
       state: reason && NOT_INSTALLED.test(reason) ? 'notInstalled' : 'failed',
       ...(reason ? { detail: reason.slice(0, 500) } : {}),
@@ -295,6 +332,7 @@ async function syncNow(): Promise<void> {
     const closing = port;
     port = undefined;
     closing?.disconnect();
+    cancelAllAgentApprovals();
     await setStatus({ state: 'off' });
     return;
   }

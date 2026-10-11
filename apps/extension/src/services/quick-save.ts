@@ -246,7 +246,8 @@ async function showInTab(tabId: number, view: QuickSaveToastView): Promise<boole
   }
 }
 
-function toolbarAction() {
+/** The toolbar button's API, for its badge. */
+export function toolbarAction() {
   // Firefox's Manifest V2 build has browserAction instead of action.
   return browser.action ?? browser.browserAction;
 }

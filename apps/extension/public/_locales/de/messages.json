@@ -3936,7 +3936,7 @@
         "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
     },
     "permission_agentBridgeDetail": {
-        "message": "Agenten können nur nachschlagen und Ihre Lesezeichen nicht ändern. Bookmark Scout erhält diese Daten nie, aber ein Agent kann Gelesenes an seinen eigenen KI-Anbieter senden. Schalten Sie die Einstellung aus, um jederzeit aufzuhören.",
+        "message": "Agenten können Ihre Lesezeichen nur ändern, wenn Sie auch „Änderungen erlauben“ aktivieren, und dann wartet jede Änderung auf Ihre Zustimmung. Bookmark Scout erhält diese Daten nie, aber ein Agent kann Gelesenes an seinen eigenen KI-Anbieter senden. Schalten Sie die Einstellung aus, um jederzeit aufzuhören.",
         "description": "Privacy note in the dialog shown before turning on access for local AI agents"
     },
     "permission_agentBridgeDenied": {
@@ -5923,6 +5923,14 @@
         "message": "KI-Agenten auf diesem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über das Programm bookmark-scout-mcp nachschlagen lassen. Nur für dieses Gerät.",
         "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
     },
+    "settings_agentBridgeWrites": {
+        "message": "Änderungen erlauben",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "Agenten dürfen auch Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen. Jede Änderung öffnet ein Bookmark-Scout-Fenster, in dem Sie zustimmen oder ablehnen, und Sie können sie in der Lesezeichenverwaltung rückgängig machen.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
     "settings_agentBridgeRedactUrls": {
         "message": "Private Werte ausblenden",
         "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
@@ -5936,7 +5944,7 @@
         "description": "Options > AI: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
-        "message": "Schalten Sie aus, was Agenten nicht nachschlagen sollen; es wird ihnen dann gar nicht angeboten. Lokale Agenten können keine Lesezeichen ändern.",
+        "message": "Schalten Sie aus, was Agenten nicht tun sollen; es wird ihnen dann gar nicht angeboten. Änderungen brauchen außerdem „Änderungen erlauben“, und jede wartet auf Ihre Zustimmung.",
         "description": "Options > AI: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
@@ -5970,6 +5978,22 @@
     "agentBridge_retry": {
         "message": "Erneut versuchen",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "Änderungen bestätigen",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "Ein KI-Agent auf diesem Computer möchte Ihre Lesezeichen ändern. Nichts ändert sich, bevor Sie zustimmen, und eine bestätigte Änderung können Sie in der Lesezeichenverwaltung rückgängig machen.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "Von „$1“ (der Name, den der Agent angegeben hat)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "Nichts wartet auf Ihre Zustimmung.",
+        "description": "Approval window when no request is waiting"
     },
     "settings_actionMoveUp": {
         "message": "$1 nach oben verschieben",

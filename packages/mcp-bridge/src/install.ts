@@ -124,10 +124,26 @@ export type InstallOptions = {
   /** Extension ids to allow besides the store ones, such as an unpacked development build. */
   extensionIds: readonly string[];
   launcher: Launcher;
+  /**
+   * Write the one browser's manifest into this folder instead of the browser's own (no registry
+   * value), such as a test browser profile's `NativeMessagingHosts` folder.
+   */
+  manifestDir?: string;
 };
 
 export function planInstall(environment: InstallEnvironment, options: InstallOptions): InstallPlan {
-  const available = browserTargets(environment);
+  const detected = browserTargets(environment);
+  const { manifestDir } = options;
+  if (manifestDir !== undefined && options.browsers.length !== 1) {
+    throw new Error("--manifest-dir needs exactly one --browser.");
+  }
+  const available = manifestDir
+    ? detected.map((target) => ({
+        ...target,
+        manifestPath: join(manifestDir, `${NATIVE_HOST_NAME}.json`),
+        registryKey: undefined,
+      }))
+    : detected;
   for (const id of options.browsers) {
     if (!available.some((target) => target.id === id)) {
       const known = available.map((target) => target.id).join(", ");

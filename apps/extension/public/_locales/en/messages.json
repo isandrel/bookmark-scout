@@ -3936,7 +3936,7 @@
         "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
     },
     "permission_agentBridgeDetail": {
-        "message": "Agents can only look things up; they cannot change your bookmarks. Bookmark Scout never receives this data, but an agent may send what it reads to its own AI provider. Turn the setting off to stop at any time.",
+        "message": "Agents can change your bookmarks only if you also turn on Allow changes, and then each change waits for your approval. Bookmark Scout never receives this data, but an agent may send what it reads to its own AI provider. Turn the setting off to stop at any time.",
         "description": "Privacy note in the dialog shown before turning on access for local AI agents"
     },
     "permission_agentBridgeDenied": {
@@ -5923,6 +5923,14 @@
         "message": "Let AI agents on this computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program. For this device only.",
         "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
     },
+    "settings_agentBridgeWrites": {
+        "message": "Allow changes",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "Let agents also save pages and propose moves, renames, deletions, and new folders. Each change opens a Bookmark Scout window where you approve or decline it, and you can undo it in the bookmark manager.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
     "settings_agentBridgeRedactUrls": {
         "message": "Hide private values",
         "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
@@ -5936,7 +5944,7 @@
         "description": "Options > AI: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
-        "message": "Turn off what you do not want agents to look up; it is then not offered to them at all. Local agents cannot change bookmarks.",
+        "message": "Turn off what you do not want agents to do; it is then not offered to them at all. Changes also need Allow changes, and each one waits for your approval.",
         "description": "Options > AI: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
@@ -5970,6 +5978,22 @@
     "agentBridge_retry": {
         "message": "Try again",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "Approve changes",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "An AI agent on this computer asks to change your bookmarks. Nothing changes until you approve, and you can undo an approved change in the bookmark manager.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "From “$1” (the name the agent gave)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "Nothing is waiting for your approval.",
+        "description": "Approval window when no request is waiting"
     },
     "settings_actionMoveUp": {
         "message": "Move $1 up",

@@ -615,6 +615,7 @@ const fields = {
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
   askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
   agentBridgeEnabled: switchField('ai.agent_bridge.enabled', 'agentBridgeEnabled'),
+  agentBridgeWrites: switchField('ai.agent_bridge.writes', 'agentBridgeWrites'),
   agentBridgeRedactUrls: switchField('ai.agent_bridge.redact_urls', 'agentBridgeRedactUrls'),
   agentBridgeDisabledActions: actionIdListField(
     'ai.agent_bridge.disabled_actions',
@@ -1152,7 +1153,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'agentBridge',
         labelKey: 'settings_agentBridge',
         toggle: 'agentBridgeEnabled',
-        fields: ['agentBridgeRedactUrls'],
+        fields: ['agentBridgeWrites', 'agentBridgeRedactUrls'],
         panel: 'agentBridge',
       },
       { id: 'activity', fields: [], panel: 'aiActivity' },

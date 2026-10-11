@@ -48,14 +48,10 @@ export function changesBookmarks(id: ActionId): boolean {
   return action.risk !== 'read' || Boolean(action.agent?.partOfChanges);
 }
 
-/**
- * Whether this kind of agent is offered the action at all, before the user's choices: it has an
- * agent exposure for that kind, and local agents only look things up for now.
- */
+/** Whether this kind of agent is offered the action at all: it has an agent exposure for it. */
 function offeredTo(id: ActionId, kind: ActionClient['kind']): boolean {
   const { agent } = getAction(id);
-  if (!agent || (agent.only && agent.only !== kind)) return false;
-  return kind === 'askAI' || !changesBookmarks(id);
+  return Boolean(agent && (!agent.only || agent.only === kind));
 }
 
 /** The actions the user can turn on or off for this kind of agent (Options > AI). */
@@ -72,10 +68,10 @@ const DISABLED_ACTIONS = {
 /** Why the agent making the call may not use this action, or nothing. */
 function refusedFor(id: ActionId, context: ActionContext): string | undefined {
   const { kind } = context.client;
-  if (!offeredTo(id, kind)) {
-    return kind === 'external' && getAction(id).agent && changesBookmarks(id)
-      ? 'Local agents can look things up but not change bookmarks.'
-      : `${id} is not offered to this agent.`;
+  if (!offeredTo(id, kind)) return `${id} is not offered to this agent.`;
+  // Local agents change bookmarks only once the user allows it; each change still asks first.
+  if (kind === 'external' && changesBookmarks(id) && !context.settings.agentBridgeWrites) {
+    return 'The user has not allowed local agents to change bookmarks.';
   }
   return context.settings[DISABLED_ACTIONS[kind]].includes(id)
     ? `The user turned off ${id} for ${kind === 'askAI' ? 'Ask AI' : 'local agents'}.`

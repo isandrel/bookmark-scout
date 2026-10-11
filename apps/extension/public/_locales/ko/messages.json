@@ -3928,7 +3928,7 @@
         "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
     },
     "permission_agentBridgeDetail": {
-        "message": "에이전트는 조회만 할 수 있으며 북마크를 변경할 수 없습니다. Bookmark Scout는 이 데이터를 받지 않지만, 에이전트는 읽은 내용을 자체 AI 제공자에게 보낼 수 있습니다. 설정을 끄면 언제든지 중지할 수 있습니다.",
+        "message": "에이전트는 변경 허용도 켠 경우에만 북마크를 변경할 수 있으며, 그때도 각 변경은 승인을 기다립니다. Bookmark Scout는 이 데이터를 받지 않지만, 에이전트는 읽은 내용을 자체 AI 제공자에게 보낼 수 있습니다. 설정을 끄면 언제든지 중지할 수 있습니다.",
         "description": "Privacy note in the dialog shown before turning on access for local AI agents"
     },
     "permission_agentBridgeDenied": {
@@ -5915,6 +5915,14 @@
         "message": "이 컴퓨터의 AI 에이전트(Claude Code, Codex, Cursor 등)가 bookmark-scout-mcp 프로그램을 통해 북마크를 조회할 수 있게 합니다. 이 기기에만 적용됩니다.",
         "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
     },
+    "settings_agentBridgeWrites": {
+        "message": "변경 허용",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "에이전트가 페이지를 저장하고 이동, 이름 변경, 삭제, 새 폴더를 제안하는 것도 허용합니다. 각 변경마다 Bookmark Scout 창이 열려 승인하거나 거절할 수 있으며, 북마크 관리자에서 실행 취소할 수 있습니다.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
     "settings_agentBridgeRedactUrls": {
         "message": "개인 값 숨기기",
         "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
@@ -5928,7 +5936,7 @@
         "description": "Options > AI: panel title for choosing what local AI agents may do"
     },
     "settings_agentBridgeDisabledActionsDesc": {
-        "message": "에이전트가 조회하지 않기를 원하는 작업을 끄면 에이전트에 아예 제공되지 않습니다. 로컬 에이전트는 북마크를 변경할 수 없습니다.",
+        "message": "에이전트가 하지 않기를 원하는 작업을 끄면 에이전트에 아예 제공되지 않습니다. 변경에는 변경 허용도 필요하며, 각 변경은 승인을 기다립니다.",
         "description": "Options > AI: description of the panel for choosing what local AI agents may do"
     },
     "agentBridge_statusTitle": {
@@ -5962,6 +5970,22 @@
     "agentBridge_retry": {
         "message": "다시 시도",
         "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "변경 승인",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "이 컴퓨터의 AI 에이전트가 북마크 변경을 요청합니다. 승인하기 전에는 아무것도 바뀌지 않으며, 승인한 변경은 북마크 관리자에서 실행 취소할 수 있습니다.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "“$1”에서 요청(에이전트가 밝힌 이름)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "승인을 기다리는 항목이 없습니다.",
+        "description": "Approval window when no request is waiting"
     },
     "settings_actionMoveUp": {
         "message": "$1 위로 이동",

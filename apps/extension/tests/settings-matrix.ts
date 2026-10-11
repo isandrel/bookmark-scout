@@ -252,6 +252,11 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit('agent-bridge.test.ts', 'connects through native messaging, announces the tools, and answers calls'),
     e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
   ], 'A device setting; turning it on asks for native messaging.'),
+  agentBridgeWrites: tested('services/actions.ts', [
+    unit('agent-approvals.test.ts', 'refuses changes without asking while changes are not allowed'),
+    unit('agent-approvals.test.ts', 'asks before a local agent saves a page, and saves nothing when declined'),
+    e2e('agent-bridge.spec.ts', 'a local agent saves a page only after the user approves it in the approval window'),
+  ], 'A device setting; every change still waits for approval.'),
   agentBridgeRedactUrls: tested('services/agent-bridge.ts', [
     unit('agent-bridge.test.ts', 'hides private values in the titles and URLs agents receive'),
     e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
