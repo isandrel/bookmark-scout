@@ -131,6 +131,14 @@ export function installFakeBookmarks(seed: FakeBookmarkSeed[]): FakeBookmarks {
     const from = need(node.parentId ?? FAKE_ROOT_ID);
     const to = need(destination.parentId ?? node.parentId ?? FAKE_ROOT_ID);
     if (!to.children) throw new Error('Parent is not a folder.');
+    // As in the browser, a folder cannot move into itself or anything inside it.
+    for (
+      let up: Stored | undefined = to;
+      up;
+      up = up.parentId ? nodes.get(up.parentId) : undefined
+    ) {
+      if (up.id === id) throw new Error("Can't move a folder into itself.");
+    }
     const oldIndex = from.children?.indexOf(id) ?? -1;
     const requested = destination.index;
     if (requested !== undefined && requested > to.children.length) {

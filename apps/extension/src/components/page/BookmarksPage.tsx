@@ -77,9 +77,6 @@ export default function BookmarksPage() {
     refresh,
   } = useBookmarkNavigation();
   const [revealRow, setRevealRow] = useState<DataTableRevealRequest | null>(null);
-  // Rows of the open folder, for telling search results from elsewhere apart (Show in folder).
-  const openFolderIdsRef = useRef<ReadonlySet<string>>(new Set());
-  openFolderIdsRef.current = useMemo(() => new Set(data.map((bookmark) => bookmark.id)), [data]);
   const tableRef = useRef<DataTableHandle<Bookmark>>(null);
   // Both open is narrowed to one by the effect below when the window is too small.
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(!layout.folders_open);
@@ -104,7 +101,7 @@ export default function BookmarksPage() {
     return () => query.removeEventListener('change', collapseFolders);
   }, [leftSidebarCollapsed, rightSidebarCollapsed]);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
-  const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null);
+  const [editTarget, setEditTarget] = useState<BookmarkEditTarget | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
   // Labels built in memos below must be rebuilt when the language changes.
   const { value: language } = useSetting('language');
@@ -131,17 +128,19 @@ export default function BookmarksPage() {
     onNavigate: navigateToFolder,
     table: tableRef,
     commands: {
-      deleteRows: (rows) => {
-        const items = pruneNestedSelection(rows, allData).map(toDeletionTarget);
-        const [first] = items;
-        if (first) void requestDeletion({ ...first, items: items.length > 1 ? items : undefined });
-      },
-      renameRow: setEditingBookmark,
+      deleteRows: (rows) => deleteItems(rows),
+      renameRow: (bookmark) => setEditTarget({ mode: 'edit', bookmark }),
       openRows,
       undo: history.undo,
       redo: history.redo,
     },
   });
+  // Deletes the items, leaving out those inside another deleted folder.
+  const deleteItems = (rows: Bookmark[]) => {
+    const items = pruneNestedSelection(rows, allData).map(toDeletionTarget);
+    const [first] = items;
+    if (first) void requestDeletion({ ...first, items: items.length > 1 ? items : undefined });
+  };
   const showInFolder = useCallback(
     (bookmark: Bookmark) => {
       const folderId = bookmark.parentId;
@@ -151,23 +150,42 @@ export default function BookmarksPage() {
     },
     [navigateToFolder],
   );
+  const managerCommands = useManagerCommands({
+    allData,
+    folderItems: data,
+    currentFolderId: currentFolder,
+    searchQuery,
+    showDetails: setSelectedBookmark,
+    edit: setEditTarget,
+    requestDeletion: deleteItems,
+    showInFolder,
+    copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
+    open: openRows,
+  });
   const columns = useMemo(
     () =>
       createColumns({
         rowActions: BOOKMARK_ROW_ACTIONS,
-        actionContext: {
-          showDetails: setSelectedBookmark,
-          edit: setEditingBookmark,
-          requestDeletion: (bookmark) => void requestDeletion(toDeletionTarget(bookmark)),
-          reportError: (titleKey, actionError) =>
-            toast.error({ title: t(titleKey), description: getErrorMessage(actionError) }),
-          isOutsideOpenFolder: (bookmark) => !openFolderIdsRef.current.has(bookmark.id),
-          showInFolder,
-          copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
-        },
+        actionContext: managerCommands.tableItemContext,
       }),
-    [requestDeletion, showInFolder],
+    [managerCommands],
   );
+  // A right click on a row acts on the selection when the row is in it, else on that row.
+  const resolveRowMenuItems = useCallback((target: EventTarget | null) => {
+    const row = target instanceof Element ? target.closest<HTMLElement>('tr[data-row-id]') : null;
+    const rowId = row?.dataset.rowId;
+    return rowId ? (tableRef.current?.targetRowsAt(rowId) ?? []) : [];
+  }, []);
+  const allDataRef = useRef(allData);
+  allDataRef.current = allData;
+  const resolveTreeMenuItems = useCallback((target: EventTarget | null) => {
+    const element =
+      target instanceof Element ? target.closest<HTMLElement>('[data-folder-id]') : null;
+    const folder = element?.dataset.folderId
+      ? getManagerItemsById(allDataRef.current).get(element.dataset.folderId)
+      : undefined;
+    return folder ? [folder] : [];
+  }, []);
   const sortAccessors = useMemo(
     () => ({
       getTitle: (bookmark: Bookmark) => bookmark.title,
@@ -280,11 +298,18 @@ export default function BookmarksPage() {
           <div className="flex h-14 items-center border-b px-4">
             <h2 className="text-sm font-semibold">{t('bookmarks_root')}</h2>
           </div>
-          <FolderTree
-            items={allData}
-            selectedFolderId={currentFolder}
-            onFolderSelect={navigateToFolder}
-          />
+          <ItemContextMenu
+            resolveItems={resolveTreeMenuItems}
+            actions={BOOKMARK_ROW_ACTIONS}
+            itemContext={managerCommands.treeItemContext}
+            testId="folder-tree-menu-area"
+          >
+            <FolderTree
+              items={allData}
+              selectedFolderId={currentFolder}
+              onFolderSelect={navigateToFolder}
+            />
+          </ItemContextMenu>
         </div>
       </aside>
 
@@ -331,6 +356,7 @@ export default function BookmarksPage() {
               open={shortcuts.helpOpen}
               onOpenChange={shortcuts.setHelpOpen}
             />
+            <OrganizeMenu context={managerCommands.folderContext} />
             <Button
               variant="ghost"
               size="icon"
@@ -402,6 +428,17 @@ export default function BookmarksPage() {
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
               handleRef={tableRef}
+              renderFrame={(frame) => (
+                <ItemContextMenu
+                  resolveItems={resolveRowMenuItems}
+                  actions={BOOKMARK_ROW_ACTIONS}
+                  itemContext={managerCommands.tableItemContext}
+                  folderContext={managerCommands.folderContext}
+                  testId="bookmark-table-menu-area"
+                >
+                  {frame}
+                </ItemContextMenu>
+              )}
               label={currentFolderName ?? t('bookmarks_root')}
               rowClassName={(row: Bookmark) =>
                 row.type === ItemTypeEnum.Folder
@@ -441,8 +478,8 @@ export default function BookmarksPage() {
         onOpenFolder={navigateToFolder}
       />
       <BookmarkEditDialog
-        bookmark={editingBookmark}
-        onClose={() => setEditingBookmark(null)}
+        target={editTarget}
+        onClose={() => setEditTarget(null)}
         onSaved={refresh}
       />
       <BookmarkDeleteDialog deletion={deletion} />

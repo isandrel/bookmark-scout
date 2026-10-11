@@ -32,6 +32,7 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
   return (
     <div>
       <div
+        data-folder-id={node.id}
         className={cn(
           'flex h-8 w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
           isSelected ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground hover:bg-muted',

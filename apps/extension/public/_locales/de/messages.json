@@ -257,6 +257,54 @@
         "message": "Wiederholen nicht möglich: Die Lesezeichen haben sich inzwischen geändert.",
         "description": "Error toast when nothing of a redo could be applied because the bookmarks changed"
     },
+    "toast_itemCopied": {
+        "message": "$1 kopiert",
+        "description": "Toast after copying one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCopied": {
+        "message": "$1 Elemente kopiert",
+        "description": "Toast after copying several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_itemCut": {
+        "message": "$1 ausgeschnitten",
+        "description": "Toast after cutting one bookmark. $1 is its quoted title."
+    },
+    "toast_itemsCut": {
+        "message": "$1 Elemente ausgeschnitten",
+        "description": "Toast after cutting several bookmarks. $1 is how many (2 or more)."
+    },
+    "toast_cutHint": {
+        "message": "Sie bleiben, wo sie sind, bis Sie sie in einen anderen Ordner einfügen.",
+        "description": "Toast text after cutting: cut items stay where they are until pasted"
+    },
+    "toast_pasted": {
+        "message": "$1 Elemente eingefügt",
+        "description": "Toast after pasting bookmarks. $1 is how many."
+    },
+    "toast_pasteSkipped": {
+        "message": "Übersprungen, weil sie gelöscht wurden oder in sich selbst eingefügt würden: $1.",
+        "description": "Toast text when some cut items could not be pasted. $1 is how many."
+    },
+    "toast_nothingToPaste": {
+        "message": "Nichts zum Einfügen",
+        "description": "Toast when Paste finds nothing to paste"
+    },
+    "toast_pasteFailed": {
+        "message": "Einfügen fehlgeschlagen",
+        "description": "Error toast when pasting bookmarks fails"
+    },
+    "toast_folderSorted": {
+        "message": "Ordner nach Name sortiert",
+        "description": "Toast after sorting a folder by name"
+    },
+    "toast_sortFailed": {
+        "message": "Ordner konnte nicht sortiert werden",
+        "description": "Error toast when sorting a folder fails"
+    },
+    "toast_pasted_one": {
+        "message": "$1 Element eingefügt",
+        "description": "Toast after pasting one bookmark. $1 is 1."
+    },
     "toast_deleteRestoredDesc": {
         "message": "„$title$“ wiederhergestellt.",
         "description": "Toast description after restoring a deletion",
@@ -1156,6 +1204,74 @@
     "table_edit": {
         "message": "Bearbeiten",
         "description": "Bookmark row action that edits the item"
+    },
+    "menu_rename": {
+        "message": "Umbenennen",
+        "description": "Menu item that renames a folder"
+    },
+    "menu_cut": {
+        "message": "Ausschneiden",
+        "description": "Menu item that cuts the selected bookmarks, to paste them into another folder"
+    },
+    "menu_copy": {
+        "message": "Kopieren",
+        "description": "Menu item that copies the selected bookmarks (their URLs go on the clipboard)"
+    },
+    "menu_paste": {
+        "message": "Einfügen",
+        "description": "Menu item that pastes cut or copied bookmarks"
+    },
+    "menu_openAll": {
+        "message": "Alle öffnen ($1)",
+        "description": "Menu item that opens every bookmark of the selection (or directly in a folder) in new tabs. $1 is how many."
+    },
+    "menu_openInNewWindow": {
+        "message": "In neuem Fenster öffnen",
+        "description": "Menu item that opens a bookmark in a new window"
+    },
+    "menu_openAllInNewWindow": {
+        "message": "Alle ($1) in neuem Fenster öffnen",
+        "description": "Menu item that opens every bookmark of the selection in a new window. $1 is how many."
+    },
+    "menu_openIncognito": {
+        "message": "In Inkognitofenster öffnen",
+        "description": "Menu item (Chrome) that opens a bookmark in an incognito window"
+    },
+    "menu_openAllIncognito": {
+        "message": "Alle ($1) in Inkognitofenster öffnen",
+        "description": "Menu item (Chrome) that opens every bookmark of the selection in an incognito window. $1 is how many."
+    },
+    "menu_openInPrivate": {
+        "message": "In InPrivate-Fenster öffnen",
+        "description": "Menu item (Edge) that opens a bookmark in an InPrivate window"
+    },
+    "menu_openAllInPrivate": {
+        "message": "Alle ($1) in InPrivate-Fenster öffnen",
+        "description": "Menu item (Edge) that opens every bookmark of the selection in an InPrivate window. $1 is how many."
+    },
+    "menu_openPrivate": {
+        "message": "In privatem Fenster öffnen",
+        "description": "Menu item (Firefox) that opens a bookmark in a private window"
+    },
+    "menu_openAllPrivate": {
+        "message": "Alle ($1) in privatem Fenster öffnen",
+        "description": "Menu item (Firefox) that opens every bookmark of the selection in a private window. $1 is how many."
+    },
+    "menu_organize": {
+        "message": "Organisieren",
+        "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_sortByName": {
+        "message": "Nach Name sortieren",
+        "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
+    },
+    "menu_addBookmark": {
+        "message": "Neues Lesezeichen hinzufügen",
+        "description": "Menu item that adds a new bookmark to the folder shown"
+    },
+    "menu_addFolder": {
+        "message": "Neuen Ordner hinzufügen",
+        "description": "Menu item that adds a new folder to the folder shown"
     },
     "table_showInFolder": {
         "message": "Im Ordner anzeigen",
@@ -3160,6 +3276,26 @@
     "bookmarks_breadcrumb": {
         "message": "Ordnerpfad",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_addBookmarkTitle": {
+        "message": "Lesezeichen hinzufügen",
+        "description": "Title of the dialog that adds a bookmark"
+    },
+    "bookmarks_addBookmarkDescription": {
+        "message": "Geben Sie einen Namen und die URL ein. Es wird am Ende dieses Ordners eingefügt.",
+        "description": "Text of the dialog that adds a bookmark"
+    },
+    "bookmarks_addFolderTitle": {
+        "message": "Ordner hinzufügen",
+        "description": "Title of the dialog that adds a folder"
+    },
+    "bookmarks_addFolderDescription": {
+        "message": "Geben Sie dem neuen Ordner einen Namen. Er wird am Ende dieses Ordners eingefügt.",
+        "description": "Text of the dialog that adds a folder"
+    },
+    "bookmarks_added": {
+        "message": "$1 hinzugefügt",
+        "description": "Toast after adding a bookmark or folder. $1 is its quoted title."
     },
     "bookmarks_openManyTitle": {
         "message": "$1 Tabs öffnen?",

@@ -76,6 +76,8 @@ interface DataTableProps<TData extends RowData> {
   rowClassName?: (row: TData) => string;
   /** Receives the table's selection commands, for the page's keyboard shortcuts. */
   handleRef?: React.Ref<DataTableHandle<TData>>;
+  /** Wraps the table's frame, for example in a right-click menu. */
+  renderFrame?: (frame: React.ReactElement) => React.ReactNode;
   /** Accessible name of the grid. */
   label?: string;
   /** Enables saved searches, which need to know and change the folder the manager shows. */
@@ -103,6 +105,11 @@ export type DataTableHandle<TData> = {
   clearSelection: () => boolean;
   /** Moves focus one row down or up (to the next page if needed) and selects that row. */
   moveFocus: (step: 1 | -1) => boolean;
+  /**
+   * The rows a right click on `rowId` acts on, as in Chrome: the selection when the row is in
+   * it; otherwise the row alone, which becomes the selection.
+   */
+  targetRowsAt: (rowId: string) => TData[];
 };
 
 export type DataTableRevealRequest = {
@@ -131,7 +138,9 @@ const NO_FOLDER_IDS: ReadonlySet<string> = new Set();
 function isFromControl(event: React.MouseEvent): boolean {
   const target = event.target as Element | null;
   return Boolean(
-    target?.closest?.('button, a[href], input, [role="checkbox"], [role="menu"], [role="menuitem"]'),
+    target?.closest?.(
+      'button, a[href], input, [role="checkbox"], [role="menu"], [role="menuitem"]',
+    ),
   );
 }
 
@@ -155,6 +164,7 @@ export function DataTable<TData extends RowData>({
   onRowOpenInBackground,
   rowClassName,
   handleRef,
+  renderFrame,
   label,
   savedSearchContext,
   searchQuery,
@@ -626,7 +636,10 @@ export function DataTable<TData extends RowData>({
 
   /** Arrow keys, Home, and End: move focus, and select as Chrome's list does. */
   const moveRowFocus = React.useCallback(
-    (to: 'next' | 'previous' | 'first' | 'last', modifiers = { shiftKey: false, toggleKey: false }) => {
+    (
+      to: 'next' | 'previous' | 'first' | 'last',
+      modifiers = { shiftKey: false, toggleKey: false },
+    ) => {
       const { shownRowIdsInOrder: ids, focusedRowId: current } = latestRef.current;
       if (ids.length === 0) return false;
       const currentIndex = current ? ids.indexOf(current) : -1;
@@ -645,7 +658,11 @@ export function DataTable<TData extends RowData>({
         if (modifiers.shiftKey && anchorRowIdRef.current === null && current) {
           anchorRowIdRef.current = current;
         }
-        changeSelection(rowId, { clear: !modifiers.toggleKey, range: modifiers.shiftKey, toggle: false });
+        changeSelection(rowId, {
+          clear: !modifiers.toggleKey,
+          range: modifiers.shiftKey,
+          toggle: false,
+        });
       }
       return true;
     },
@@ -656,8 +673,11 @@ export function DataTable<TData extends RowData>({
     handleRef,
     (): DataTableHandle<TData> => ({
       getCommandRows: () => {
-        const { shownRows: rows, rowSelection: selection, focusedRowId: focused } =
-          latestRef.current;
+        const {
+          shownRows: rows,
+          rowSelection: selection,
+          focusedRowId: focused,
+        } = latestRef.current;
         const selected = rows.filter((row) => selection[row.id]).map((row) => row.original);
         if (selected.length > 0) return selected;
         const focusedRow = rows.find((row) => row.id === focused);
@@ -674,8 +694,19 @@ export function DataTable<TData extends RowData>({
         return true;
       },
       moveFocus: (step) => moveRowFocus(step === 1 ? 'next' : 'previous'),
+      targetRowsAt: (rowId) => {
+        const { shownRows: rows, shownRowsById: byId, rowSelection: selection } = latestRef.current;
+        const row = byId.get(rowId);
+        if (!row) return [];
+        if (selection[rowId]) {
+          return rows.filter((shown) => selection[shown.id]).map((shown) => shown.original);
+        }
+        changeSelection(rowId, { clear: true, range: false, toggle: false });
+        setFocusedRowId(rowId);
+        return [row.original];
+      },
     }),
-    [canSelectId, moveRowFocus],
+    [canSelectId, changeSelection, moveRowFocus],
   );
 
   const handleRowClick = (event: React.MouseEvent<HTMLElement>, rowId: string) => {
@@ -706,6 +737,8 @@ export function DataTable<TData extends RowData>({
     }
   };
 
+  const wrapFrame = renderFrame ?? ((frame: React.ReactElement) => frame);
+
   // The row that takes Tab focus: the focused row while it is on this page, else the first row.
   const pageRows = table.getRowModel().rows;
   const tabStopRowId = pageRows.some((row) => row.id === focusedRowId)
@@ -731,112 +764,116 @@ export function DataTable<TData extends RowData>({
             : undefined
         }
       />
-      <div ref={tableFrameRef} className="rounded-md border bg-card">
-        <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
-          {/* Fixed layout applies the column sizes as given; the table only grows past the frame
+      {wrapFrame(
+        <div ref={tableFrameRef} className="rounded-md border bg-card">
+          <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
+            {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
-          <Table
-            className="table-fixed"
-            style={{ minWidth: table.getTotalSize() }}
-            role="grid"
-            aria-multiselectable="true"
-            aria-rowcount={shownRows.length + 1}
-            aria-label={label}
-            data-testid="bookmark-grid"
-          >
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} aria-rowindex={1}>
-                  {headerGroup.headers.map((header) => (
-                    <React.Fragment key={header.id}>
-                      {header.column.id === STICKY_COLUMN_ID && (
-                        <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
-                      )}
-                      <TableHead
-                        style={{ width: header.getSize() }}
-                        className={cn(
-                          header.column.getCanResize() && 'relative truncate',
-                          header.column.id === STICKY_COLUMN_ID &&
-                            'sticky right-0 z-10 border-l bg-card',
+            <Table
+              className="table-fixed"
+              style={{ minWidth: table.getTotalSize() }}
+              role="grid"
+              aria-multiselectable="true"
+              aria-rowcount={shownRows.length + 1}
+              aria-label={label}
+              data-testid="bookmark-grid"
+            >
+              <TableHeader>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <TableRow key={headerGroup.id} aria-rowindex={1}>
+                    {headerGroup.headers.map((header) => (
+                      <React.Fragment key={header.id}>
+                        {header.column.id === STICKY_COLUMN_ID && (
+                          <TableHead aria-hidden="true" className={FILLER_CELL_CLASS} />
                         )}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(header.column.columnDef.header, header.getContext())}
-                        {header.column.getCanResize() && <DataTableColumnResizer header={header} />}
-                      </TableHead>
-                    </React.Fragment>
-                  ))}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                pageRows.map((row, rowIndex) => {
-                  const selectable = row.getCanSelect();
-                  return (
-                    <TableRow
-                      key={row.id}
-                      data-row-id={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
-                      aria-selected={selectable ? row.getIsSelected() : undefined}
-                      // The header row is 1; rows count across pages.
-                      aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
-                      className={cn(
-                        'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
-                        rowClassName?.(row.original),
-                      )}
-                      tabIndex={row.id === tabStopRowId ? 0 : -1}
-                      onFocus={(event) => {
-                        if (event.target === event.currentTarget) setFocusedRowId(row.id);
-                      }}
-                      onMouseDown={(event) => {
-                        // Shift+click selects rows, not text.
-                        if (event.shiftKey) event.preventDefault();
-                      }}
-                      onClick={(event) => handleRowClick(event, row.id)}
-                      onDoubleClick={(event) => {
-                        if (!isFromControl(event)) onRowOpen?.(row.original);
-                      }}
-                      onAuxClick={(event) => {
-                        if (event.button !== 1 || !onRowOpenInBackground) return;
-                        event.preventDefault();
-                        onRowOpenInBackground(row.original);
-                      }}
-                      onKeyDown={(event) => handleRowKeyDown(event, row.id)}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <React.Fragment key={cell.id}>
-                          {cell.column.id === STICKY_COLUMN_ID && (
-                            <TableCell aria-hidden="true" className={FILLER_CELL_CLASS} />
+                        <TableHead
+                          style={{ width: header.getSize() }}
+                          className={cn(
+                            header.column.getCanResize() && 'relative truncate',
+                            header.column.id === STICKY_COLUMN_ID &&
+                              'sticky right-0 z-10 border-l bg-card',
                           )}
-                          <TableCell
-                            className={cn(
-                              cell.column.getCanResize() && 'truncate',
-                              cell.column.id === STICKY_COLUMN_ID && stickyColumnClass,
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getCanResize() && (
+                            <DataTableColumnResizer header={header} />
+                          )}
+                        </TableHead>
+                      </React.Fragment>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableHeader>
+              <TableBody>
+                {table.getRowModel().rows?.length ? (
+                  pageRows.map((row, rowIndex) => {
+                    const selectable = row.getCanSelect();
+                    return (
+                      <TableRow
+                        key={row.id}
+                        data-row-id={row.id}
+                        data-state={row.getIsSelected() && 'selected'}
+                        aria-selected={selectable ? row.getIsSelected() : undefined}
+                        // The header row is 1; rows count across pages.
+                        aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
+                        className={cn(
+                          'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+                          rowClassName?.(row.original),
+                        )}
+                        tabIndex={row.id === tabStopRowId ? 0 : -1}
+                        onFocus={(event) => {
+                          if (event.target === event.currentTarget) setFocusedRowId(row.id);
+                        }}
+                        onMouseDown={(event) => {
+                          // Shift+click selects rows, not text.
+                          if (event.shiftKey) event.preventDefault();
+                        }}
+                        onClick={(event) => handleRowClick(event, row.id)}
+                        onDoubleClick={(event) => {
+                          if (!isFromControl(event)) onRowOpen?.(row.original);
+                        }}
+                        onAuxClick={(event) => {
+                          if (event.button !== 1 || !onRowOpenInBackground) return;
+                          event.preventDefault();
+                          onRowOpenInBackground(row.original);
+                        }}
+                        onKeyDown={(event) => handleRowKeyDown(event, row.id)}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <React.Fragment key={cell.id}>
+                            {cell.column.id === STICKY_COLUMN_ID && (
+                              <TableCell aria-hidden="true" className={FILLER_CELL_CLASS} />
                             )}
-                          >
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
-                        </React.Fragment>
-                      ))}
-                    </TableRow>
-                  );
-                })
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={table.getVisibleLeafColumns().length + 1}
-                    className="h-24 text-center"
-                  >
-                    {t('table_noResults')}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </MoveDisabledReasonContext.Provider>
-      </div>
+                            <TableCell
+                              className={cn(
+                                cell.column.getCanResize() && 'truncate',
+                                cell.column.id === STICKY_COLUMN_ID && stickyColumnClass,
+                              )}
+                            >
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          </React.Fragment>
+                        ))}
+                      </TableRow>
+                    );
+                  })
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={table.getVisibleLeafColumns().length + 1}
+                      className="h-24 text-center"
+                    >
+                      {t('table_noResults')}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </MoveDisabledReasonContext.Provider>
+        </div>,
+      )}
       <DataTablePagination table={table} />
       {/* After the rows, so selecting never moves them (a double click's second click would
           land on another row), and sticky, so it stays in view at the bottom of a long page. */}
