@@ -1,5 +1,11 @@
-import { addAIServiceInOptions, openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
+import {
+  addAIServiceInOptions,
+  openAIOptions,
+  openMoreSettings,
+  readAIServices,
+} from './ai-helpers';
 import { expect, test } from './fixtures';
+import { STORAGE_ITEMS, writeStored } from './storage';
 import { childrenOf, openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 /**
@@ -21,7 +27,6 @@ test.skip(!KEY, 'Set BOOKMARK_SCOUT_LOCAL_AI_KEY to run checks against a real lo
 test.use({ grantWebHostAccess: true });
 // Real models answer in seconds, not milliseconds.
 test.setTimeout(120_000);
-
 
 test('[real local server] Refresh Models and Verify Service reach the local server', async ({
   extensionId,
@@ -62,7 +67,9 @@ test('[real local server] Refresh Models and Verify Service reach the local serv
     await expect(service.getByRole('combobox', { name: 'AI Model' })).toHaveText(MODEL);
   }
   await service.getByRole('button', { name: 'Verify Service' }).click();
-  await expect(page.getByTestId('ai-service-status').getByText('Service verified', { exact: true })).toBeVisible({
+  await expect(
+    page.getByTestId('ai-service-status').getByText('Service verified', { exact: true }),
+  ).toBeVisible({
     timeout: 15_000,
   });
   if (MODEL) {
@@ -92,12 +99,9 @@ test('[real local server] auto-tagging previews tags from a real model without c
     aiModel: MODEL,
     autoTaggingEnabled: true,
   });
-  await extensionWorker.evaluate(
-    async ({ provider, config }) => {
-      await chrome.storage.local.set({ 'bookmark-scout-ai': { [provider]: config } });
-    },
-    { provider: PROVIDER, config: { apiKey: KEY, ...(BASE_URL ? { baseUrl: BASE_URL } : {}) } },
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
+    [PROVIDER]: { apiKey: KEY, ...(BASE_URL ? { baseUrl: BASE_URL } : {}) },
+  });
 
   await openTools(page, extensionId, folderId);
   await toolCard(page, 'Auto-Tagging').getByRole('button', { name: 'Analyze' }).click();

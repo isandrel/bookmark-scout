@@ -1,9 +1,11 @@
 import type { Page, Worker } from '@playwright/test';
+import { storageAreaKey } from '../../src/lib/storage/registry';
 import { expect, test, toastRegion } from './fixtures';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string };
 
-const STORAGE_KEY = 'bookmark-scout-saved-searches';
+const SAVED_SEARCHES = STORAGE_ITEMS.savedSearches;
 
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
   return worker.evaluate(
@@ -30,19 +32,17 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
   );
 }
 
-function readStored(worker: Worker) {
-  return worker.evaluate(async (key) => {
-    const local = await chrome.storage.local.get(key);
-    const sync = await chrome.storage.sync.get(key);
-    return { local: local[key] as unknown, sync: sync[key] as unknown };
-  }, STORAGE_KEY);
+/** The stored saved searches, and whatever sync storage holds under the same key name. */
+async function readSavedSearches(worker: Worker) {
+  const sync = await worker.evaluate(
+    async (key) => (await chrome.storage.sync.get(key))[key] as unknown,
+    storageAreaKey(SAVED_SEARCHES),
+  );
+  return { local: await readStored(worker, SAVED_SEARCHES), sync };
 }
 
-async function writeStored(worker: Worker, value: unknown) {
-  await worker.evaluate(async ({ key, stored }) => chrome.storage.local.set({ [key]: stored }), {
-    key: STORAGE_KEY,
-    stored: value,
-  });
+async function writeSavedSearches(worker: Worker, value: unknown) {
+  await writeStored(worker, SAVED_SEARCHES, value);
 }
 
 const storedSearch = (id: string, name: string, query: unknown) => ({
@@ -119,22 +119,19 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
   await expect(savedEntry).toHaveAttribute('aria-current', 'true');
 
   // Only the query is stored, on this device: nothing about the matching bookmarks.
-  const stored = await readStored(extensionWorker);
+  const stored = await readSavedSearches(extensionWorker);
   expect(stored.sync).toBeUndefined();
-  expect(stored.local).toEqual({
-    version: 1,
-    searches: [
-      {
-        id: expect.any(String),
-        createdAt: expect.any(Number),
-        name: 'Docs pages',
-        query: {
-          filters: { title: 'Saved', url: 'docs.e2e.invalid' },
-          sorting: [{ id: 'title', desc: true }],
-        },
+  expect(stored.local).toEqual([
+    {
+      id: expect.any(String),
+      createdAt: expect.any(Number),
+      name: 'Docs pages',
+      query: {
+        filters: { title: 'Saved', url: 'docs.e2e.invalid' },
+        sorting: [{ id: 'title', desc: true }],
       },
-    ],
-  });
+    },
+  ]);
   const storedText = JSON.stringify(stored.local);
   await page.keyboard.press('Escape');
 
@@ -179,7 +176,7 @@ test('saves the current search, reopens it after a reload, and follows bookmark 
       expect.stringContaining('Saved Alpha Docs'),
     ]);
   await expect(row(page, 'Saved Gamma Docs')).toHaveCount(0);
-  expect(JSON.stringify((await readStored(extensionWorker)).local)).toBe(storedText);
+  expect(JSON.stringify((await readSavedSearches(extensionWorker)).local)).toBe(storedText);
 });
 
 test('renames and deletes saved searches from the keyboard, with undo', async ({
@@ -187,13 +184,10 @@ test('renames and deletes saved searches from the keyboard, with undo', async ({
   extensionWorker,
   page,
 }) => {
-  await writeStored(extensionWorker, {
-    version: 1,
-    searches: [
-      storedSearch('alpha', 'Alpha', { filters: { title: 'alpha' }, sorting: [] }),
-      storedSearch('beta', 'Beta', { filters: { title: 'beta' }, sorting: [] }),
-    ],
-  });
+  await writeSavedSearches(extensionWorker, [
+    storedSearch('alpha', 'Alpha', { filters: { title: 'alpha' }, sorting: [] }),
+    storedSearch('beta', 'Beta', { filters: { title: 'beta' }, sorting: [] }),
+  ]);
   await page.goto(managerUrl(extensionId));
   await expect(savedSearchesButton(page)).toHaveAttribute('aria-keyshortcuts', 's');
 
@@ -226,8 +220,8 @@ test('renames and deletes saved searches from the keyboard, with undo', async ({
   await expect(menu.getByRole('button', { name: 'Alpha renamed', exact: true })).toBeVisible();
   await expect
     .poll(async () => {
-      const stored = (await readStored(extensionWorker)).local as { searches: { name: string }[] };
-      return stored.searches.map((search) => search.name);
+      const stored = (await readSavedSearches(extensionWorker)).local as { name: string }[];
+      return stored.map((search) => search.name);
     })
     .toEqual(['Alpha renamed', 'Beta']);
 
@@ -235,9 +229,7 @@ test('renames and deletes saved searches from the keyboard, with undo', async ({
   await menu.getByRole('button', { name: 'Delete "Beta"' }).click();
   await expect(menu.getByRole('button', { name: 'Beta', exact: true })).toHaveCount(0);
   await expect
-    .poll(
-      async () => ((await readStored(extensionWorker)).local as { searches: unknown[] }).searches,
-    )
+    .poll(async () => (await readSavedSearches(extensionWorker)).local as unknown[])
     .toHaveLength(1);
   const toasts = toastRegion(page);
   await expect(toasts.getByText('✓ Deleted saved search "Beta"', { exact: true })).toBeVisible();
@@ -245,8 +237,8 @@ test('renames and deletes saved searches from the keyboard, with undo', async ({
   await toasts.getByRole('button', { name: 'Undo' }).click();
   await expect
     .poll(async () => {
-      const stored = (await readStored(extensionWorker)).local as { searches: { id: string }[] };
-      return stored.searches.map((search) => search.id);
+      const stored = (await readSavedSearches(extensionWorker)).local as { id: string }[];
+      return stored.map((search) => search.id);
     })
     .toEqual(['alpha', 'beta']);
   const reopened = await openSavedSearches(page);
@@ -286,16 +278,13 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   await expect(row(page, 'Scoped Report')).toBeVisible();
 
   // A search naming a deleted folder (scope and folder filter) skips those folders and says so.
-  await writeStored(extensionWorker, {
-    version: 1,
-    searches: [
-      storedSearch('stale', 'Stale folders', {
-        filters: { title: 'Scoped', parentId: [home.folderId, 'missing-folder-id'] },
-        sorting: [],
-        folderId: 'missing-scope-id',
-      }),
-    ],
-  });
+  await writeSavedSearches(extensionWorker, [
+    storedSearch('stale', 'Stale folders', {
+      filters: { title: 'Scoped', parentId: [home.folderId, 'missing-folder-id'] },
+      sorting: [],
+      folderId: 'missing-scope-id',
+    }),
+  ]);
   menu = await openSavedSearches(page);
   await menu.getByRole('button', { name: 'Stale folders', exact: true }).click();
   const toasts = toastRegion(page);
@@ -318,16 +307,13 @@ test('a folder-scoped search reopens its folder, and stale folder IDs are skippe
   await expect(page.getByTestId('folder-notice')).toContainText(
     "That folder doesn't exist anymore.",
   );
-  await writeStored(extensionWorker, {
-    version: 1,
-    searches: [
-      storedSearch('scoped', 'Work only', {
-        filters: { title: 'Scoped', type: ['link'] },
-        sorting: [],
-        folderId: work.folderId,
-      }),
-    ],
-  });
+  await writeSavedSearches(extensionWorker, [
+    storedSearch('scoped', 'Work only', {
+      filters: { title: 'Scoped', type: ['link'] },
+      sorting: [],
+      folderId: work.folderId,
+    }),
+  ]);
   menu = await openSavedSearches(page);
   await menu.getByRole('button', { name: 'Work only', exact: true }).click();
   await expect(
@@ -353,15 +339,12 @@ test('malformed saved searches are ignored and never break the manager', async (
     { title: 'Malformed Survivor', url: 'https://survivor.e2e.invalid/' },
   ]);
   const hostileName = '<img src=x onerror=alert(1)><style>*{display:none}</style>';
-  await writeStored(extensionWorker, {
-    version: 1,
-    searches: [
-      { id: 5 },
-      'not a search',
-      storedSearch('bad-query', 'Bad query', { filters: { title: 42 } }),
-      storedSearch('good', hostileName, { filters: { title: 'Survivor' }, sorting: [] }),
-    ],
-  });
+  await writeSavedSearches(extensionWorker, [
+    { id: 5 },
+    'not a search',
+    storedSearch('bad-query', 'Bad query', { filters: { title: 42 } }),
+    storedSearch('good', hostileName, { filters: { title: 'Survivor' }, sorting: [] }),
+  ]);
   await page.goto(managerUrl(extensionId));
   await expect(page.getByPlaceholder('Filter titles...')).toBeVisible();
 
@@ -372,8 +355,8 @@ test('malformed saved searches are ignored and never break the manager', async (
   await expect(rows(page)).toHaveCount(1);
   await expect(row(page, 'Malformed Survivor')).toBeVisible();
 
-  // A payload that is not an object at all reads as empty; saving replaces it.
-  await writeStored(extensionWorker, 'corrupted');
+  // A payload that is not a list at all reads as empty; saving replaces it.
+  await writeSavedSearches(extensionWorker, 'corrupted');
   await page.reload();
   await expect(page.getByPlaceholder('Filter titles...')).toBeVisible();
   await page.getByPlaceholder('Filter titles...').fill('Survivor');
@@ -382,8 +365,7 @@ test('malformed saved searches are ignored and never break the manager', async (
   await menu.getByLabel('Name for the current search').fill('Recovered');
   await page.keyboard.press('Enter');
   await expect(menu.getByRole('button', { name: 'Recovered', exact: true })).toBeVisible();
-  expect((await readStored(extensionWorker)).local).toMatchObject({
-    version: 1,
-    searches: [{ name: 'Recovered', query: { filters: { title: 'Survivor' } } }],
-  });
+  expect((await readSavedSearches(extensionWorker)).local).toMatchObject([
+    { name: 'Recovered', query: { filters: { title: 'Survivor' } } },
+  ]);
 });

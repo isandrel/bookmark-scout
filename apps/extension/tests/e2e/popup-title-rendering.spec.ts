@@ -1,7 +1,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { setSettings } from './storage';
 
-const SETTINGS_KEY = 'bookmark-scout-settings';
 const BOOKMARK_PAYLOAD = '<img src=x onerror=alert(1)><style>*{display:none}</style>';
 const FOLDER_PAYLOAD = '<style>[role="tree"]{display:none}</style>Harmless folder';
 
@@ -86,10 +86,7 @@ test('bookmark and folder titles containing markup render as literal text', asyn
   await expect(angle.locator('b')).toHaveCount(0);
 
   // The delete confirmation shows the exact title instead of a stripped one.
-  await extensionWorker.evaluate(async (key) => {
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: true } });
-  }, SETTINGS_KEY);
+  await setSettings(extensionWorker, { confirmBeforeDelete: true });
   await search.fill('onerror');
   await match.hover();
   await match.getByTitle('Delete bookmark').click();

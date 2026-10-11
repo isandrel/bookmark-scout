@@ -1,10 +1,8 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
-const METADATA_KEY = 'bookmark-scout-bookmark-metadata';
 
 /** Creates a folder under the first writable root and returns IDs keyed by title. */
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
@@ -26,21 +24,14 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
           if (entry.children) await create(created.id, entry.children);
         }
       };
-      const folder = await chrome.bookmarks.create({ parentId: writableRoot.id, title: folderTitle });
+      const folder = await chrome.bookmarks.create({
+        parentId: writableRoot.id,
+        title: folderTitle,
+      });
       await create(folder.id, entries);
       return { folderId: folder.id, rootId: writableRoot.id, ids };
     },
     { folderTitle: title, entries: items },
-  );
-}
-
-async function updateSettings(worker: Worker, patch: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: patch },
   );
 }
 
@@ -65,21 +56,16 @@ test('undo after delete restores tags and summaries for the whole subtree', asyn
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { confirmBeforeDelete: false });
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
   const seeded = await seedFolder(extensionWorker, 'E2E Metadata Restore', [
     {
       title: 'Tagged Folder',
       children: [{ title: 'Tagged Child', url: 'https://example.com/tagged-child' }],
     },
   ]);
-  await extensionWorker.evaluate(
-    async ({ key, childId }) => {
-      await chrome.storage.local.set({
-        [key]: { [childId]: { tags: ['keep-me'], summary: 'Survives undo' } },
-      });
-    },
-    { key: METADATA_KEY, childId: seeded.ids['Tagged Child'] },
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [seeded.ids['Tagged Child']]: { tags: ['keep-me'], summary: 'Survives undo' },
+  });
 
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await openRowMenu(page, 'Tagged Folder');
@@ -89,17 +75,18 @@ test('undo after delete restores tags and summaries for the whole subtree', asyn
   await expect(row(page, 'Tagged Folder')).toBeVisible();
 
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(
-        async ({ key, parentId }) => {
-          const [folder] = await chrome.bookmarks.getChildren(parentId);
-          const [child] = await chrome.bookmarks.getChildren(folder.id);
-          const stored = (await chrome.storage.local.get(key))[key] ?? {};
-          return { childTitle: child.title, metadata: stored[child.id] ?? null };
-        },
-        { key: METADATA_KEY, parentId: seeded.folderId },
-      ),
-    )
+    .poll(async () => {
+      const child = await extensionWorker.evaluate(async (parentId) => {
+        const [folder] = await chrome.bookmarks.getChildren(parentId);
+        const [bookmark] = await chrome.bookmarks.getChildren(folder.id);
+        return { id: bookmark.id, title: bookmark.title };
+      }, seeded.folderId);
+      const stored = await readStored<Record<string, unknown>>(
+        extensionWorker,
+        STORAGE_ITEMS.bookmarkMetadata,
+      );
+      return { childTitle: child.title, metadata: stored?.[child.id] ?? null };
+    })
     .toEqual({
       childTitle: 'Tagged Child',
       metadata: { tags: ['keep-me'], summary: 'Survives undo' },
@@ -130,24 +117,37 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   await page.goto(managerUrl(extensionId, seeded.folderId));
   await expect(page.locator('tbody tr')).toHaveCount(2);
 
-  await extensionWorker.evaluate(async ({ parentId, rootId, doomedId }) => {
-    await chrome.bookmarks.create({ parentId, title: 'External Link', url: 'https://example.com/ext' });
-    await chrome.bookmarks.create({ parentId: rootId, title: 'E2E External Folder' });
-    await chrome.bookmarks.remove(doomedId);
-    await chrome.bookmarks.update(parentId, { title: 'E2E Live Renamed' });
-  }, { parentId: seeded.folderId, rootId: seeded.rootId, doomedId: seeded.ids['Doomed Live Link'] });
+  await extensionWorker.evaluate(
+    async ({ parentId, rootId, doomedId }) => {
+      await chrome.bookmarks.create({
+        parentId,
+        title: 'External Link',
+        url: 'https://example.com/ext',
+      });
+      await chrome.bookmarks.create({ parentId: rootId, title: 'E2E External Folder' });
+      await chrome.bookmarks.remove(doomedId);
+      await chrome.bookmarks.update(parentId, { title: 'E2E Live Renamed' });
+    },
+    { parentId: seeded.folderId, rootId: seeded.rootId, doomedId: seeded.ids['Doomed Live Link'] },
+  );
 
   await expect(row(page, 'External Link')).toBeVisible();
   await expect(row(page, 'Doomed Live Link')).toHaveCount(0);
   await expect(breadcrumbCurrent(page)).toHaveText('E2E Live Renamed');
-  await expect(tree(page).getByRole('button', { name: 'E2E Live Renamed', exact: true })).toBeVisible();
-  await expect(tree(page).getByRole('button', { name: 'E2E External Folder', exact: true })).toBeVisible();
+  await expect(
+    tree(page).getByRole('button', { name: 'E2E Live Renamed', exact: true }),
+  ).toBeVisible();
+  await expect(
+    tree(page).getByRole('button', { name: 'E2E External Folder', exact: true }),
+  ).toBeVisible();
 
   // Deleting the open folder elsewhere falls back to its parent with a notice.
   await row(page, 'Live Child').click();
   await expect(breadcrumbCurrent(page)).toHaveText('Live Child');
   await extensionWorker.evaluate((id) => chrome.bookmarks.removeTree(id), seeded.ids['Live Child']);
-  await expect(page.getByTestId('folder-notice')).toContainText("That folder doesn't exist anymore");
+  await expect(page.getByTestId('folder-notice')).toContainText(
+    "That folder doesn't exist anymore",
+  );
   await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
   await expect(breadcrumbCurrent(page)).toHaveText('E2E Live Renamed');
   await expect(tree(page).getByRole('button', { name: 'Live Child', exact: true })).toHaveCount(0);
@@ -181,10 +181,10 @@ test('external folder renames and moves update the paths of everything inside', 
   await expect(row(page, 'Path Inner')).toContainText('E2E Paths / Path Renamed');
   await expect(breadcrumbCurrent(page)).toHaveText('Path Renamed');
 
-  await extensionWorker.evaluate(
-    ({ id, parentId }) => chrome.bookmarks.move(id, { parentId }),
-    { id: seeded.ids['Path Inner'], parentId: seeded.ids['Path Target'] },
-  );
+  await extensionWorker.evaluate(({ id, parentId }) => chrome.bookmarks.move(id, { parentId }), {
+    id: seeded.ids['Path Inner'],
+    parentId: seeded.ids['Path Target'],
+  });
   await expect(row(page, 'Path Inner')).toHaveCount(0);
 
   // A filter searches every bookmark: the moved folder's contents carry their new path.
@@ -197,7 +197,7 @@ test('in-page rename and delete refresh the folder tree', async ({
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { confirmBeforeDelete: false });
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
   const seeded = await seedFolder(extensionWorker, 'E2E Tree Sync', [
     { title: 'Dev', children: [] },
     { title: 'Scratch', children: [] },
@@ -214,7 +214,12 @@ test('in-page rename and delete refresh the folder tree', async ({
   await expect(tree(page).getByRole('button', { name: 'Development', exact: true })).toBeVisible();
   await expect(tree(page).getByRole('button', { name: 'Dev', exact: true })).toHaveCount(0);
   await expect
-    .poll(() => extensionWorker.evaluate(async (id) => (await chrome.bookmarks.get(id))[0].title, seeded.ids.Dev))
+    .poll(() =>
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.get(id))[0].title,
+        seeded.ids.Dev,
+      ),
+    )
     .toBe('Development');
 
   await openRowMenu(page, 'Scratch');
@@ -268,7 +273,9 @@ test('unknown or non-folder ids show a notice and fall back', async ({
     { title: 'Not A Folder', url: 'https://example.com/not-folder' },
   ]);
   await page.goto(managerUrl(extensionId, '999999'));
-  await expect(page.getByTestId('folder-notice')).toContainText("That folder doesn't exist anymore");
+  await expect(page.getByTestId('folder-notice')).toContainText(
+    "That folder doesn't exist anymore",
+  );
   await expect(page).not.toHaveURL(/id=/);
   await expect(page.locator('tbody tr').first()).toBeVisible();
 
@@ -304,7 +311,9 @@ test('date filter includes today and the calendar lays out and highlights days',
 
   const today = page.getByRole('button', { name: /^Today/ }).first();
   await today.click();
-  const selectedBackground = await today.evaluate((button) => getComputedStyle(button).backgroundColor);
+  const selectedBackground = await today.evaluate(
+    (button) => getComputedStyle(button).backgroundColor,
+  );
   expect(selectedBackground).not.toBe('rgba(0, 0, 0, 0)');
   await page.keyboard.press('Escape');
 
@@ -317,7 +326,7 @@ test('filters, date picker, and fallbacks are localized in Japanese', async ({
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { language: 'ja' });
+  await setSettings(extensionWorker, { language: 'ja' });
   const seeded = await seedFolder(extensionWorker, 'E2E Localized', [
     { title: '', url: 'https://example.com/untitled' },
   ]);
@@ -345,7 +354,7 @@ test('moves are explained until browser order is on, and keep the current page',
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { sortOrder: 'date' });
+  await setSettings(extensionWorker, { sortOrder: 'date' });
   const items = Array.from({ length: 12 }, (_, index) => ({
     title: `Paged Item ${String(index + 1).padStart(2, '0')}`,
     url: `https://example.com/paged/${index + 1}`,
@@ -359,7 +368,10 @@ test('moves are explained until browser order is on, and keep the current page',
   await expect(anyMove).toHaveAttribute('title', 'Turn on "Browser order" to move items');
 
   await page.getByRole('button', { name: 'Browser order' }).click();
-  await expect(page.getByRole('button', { name: 'Browser order' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Browser order' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await page.getByRole('button', { name: 'Go to next page' }).click();
   await expect(page.getByText('Page 2 of 2')).toBeVisible();
   await expect(page.locator('tbody tr').nth(0)).toContainText('Paged Item 11');
@@ -448,7 +460,7 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { confirmBeforeDelete: false });
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
   const seeded = await seedFolder(extensionWorker, 'E2E Bulk', [
     { title: 'Bulk Target', children: [] },
     { title: 'Bulk A', url: 'https://example.com/a' },
@@ -465,7 +477,13 @@ test('selection supports bulk delete with undo and bulk move, keyed by bookmark'
   await page.getByRole('checkbox', { name: 'Select "Bulk B"' }).check();
   // A new item shifts row positions; the selection must stay on the same bookmark.
   await extensionWorker.evaluate(
-    (parentId) => chrome.bookmarks.create({ parentId, index: 0, title: 'Bulk New', url: 'https://example.com/n' }),
+    (parentId) =>
+      chrome.bookmarks.create({
+        parentId,
+        index: 0,
+        title: 'Bulk New',
+        url: 'https://example.com/n',
+      }),
     seeded.folderId,
   );
   await expect(row(page, 'Bulk New')).toBeVisible();
@@ -532,7 +550,10 @@ test('edits trim titles and reject script URLs; untitled items and trimmed filte
   await expect(dialog).toHaveCount(0);
   await expect
     .poll(() =>
-      extensionWorker.evaluate(async (id) => (await chrome.bookmarks.get(id))[0].title, seeded.ids['GitHub Home']),
+      extensionWorker.evaluate(
+        async (id) => (await chrome.bookmarks.get(id))[0].title,
+        seeded.ids['GitHub Home'],
+      ),
     )
     .toBe('GitHub Spaced');
 
@@ -563,5 +584,7 @@ test('title and id headers show sort state and can be unsorted', async ({
   const stickyBackgrounds = await page
     .locator('tbody tr td:last-child')
     .evaluateAll((cells) => cells.map((cell) => getComputedStyle(cell).backgroundColor));
-  expect(stickyBackgrounds.every((color) => !color.startsWith('rgba') || color.endsWith(', 1)'))).toBe(true);
+  expect(
+    stickyBackgrounds.every((color) => !color.startsWith('rgba') || color.endsWith(', 1)')),
+  ).toBe(true);
 });

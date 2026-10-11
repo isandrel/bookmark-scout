@@ -1,26 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
-const AI_KEY = 'bookmark-scout-ai';
-const RECENT_KEY = 'bookmark-scout-recent-folders';
-
-async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: updates },
-  );
-}
-
-async function readSettings(worker: Worker): Promise<Record<string, unknown>> {
-  return worker.evaluate(async (key) => {
-    const stored = await chrome.storage.sync.get(key);
-    return (stored[key] ?? {}) as Record<string, unknown>;
-  }, SETTINGS_KEY);
-}
+import { readSettings, readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 function settingRow(page: Page, key: string) {
   return page.locator(`[data-setting="${key}"]`);
@@ -36,12 +16,10 @@ async function openMoreSettings(page: Page) {
 }
 
 async function readServices(worker: Worker) {
-  return worker.evaluate(async () => {
-    const stored = await chrome.storage.local.get('bookmark-scout-ai-services');
-    return stored['bookmark-scout-ai-services'] as
-      | { services: { provider: string; model: string; name: string }[]; defaultServiceId?: string }
-      | undefined;
-  });
+  return readStored<{
+    services: { provider: string; model: string; name: string }[];
+    defaultServiceId?: string;
+  }>(worker, STORAGE_ITEMS.aiServices);
 }
 
 /** Opens a section's closed "Advanced settings" fold. */
@@ -292,11 +270,11 @@ test('rejected API keys and unsafe Base URLs are never persisted', async ({
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
 
-  const readAI = () =>
-    extensionWorker.evaluate(async (key) => {
-      const stored = await chrome.storage.local.get(key);
-      return (stored[key] ?? {}) as Record<string, Record<string, string>>;
-    }, AI_KEY);
+  const readAI = async () =>
+    (await readStored<Record<string, Record<string, string>>>(
+      extensionWorker,
+      STORAGE_ITEMS.aiCredentials,
+    )) ?? {};
 
   const key = page.getByLabel('API Key', { exact: true });
   await key.fill('test-key-not-real');
@@ -371,30 +349,25 @@ test('settings search shows matches from every tab and controls have accessible 
 });
 
 test('recent folders drop deleted folders and follow renames', async ({ extensionWorker }) => {
-  const ids = await extensionWorker.evaluate(async (key) => {
+  const ids = await extensionWorker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();
     const parent = root.children?.find((node) => node.children !== undefined);
     if (!parent) throw new Error('No writable bookmark root found');
     const keep = await chrome.bookmarks.create({ parentId: parent.id, title: 'E2E Keep' });
     const drop = await chrome.bookmarks.create({ parentId: parent.id, title: 'E2E Drop' });
-    await chrome.storage.local.set({
-      [key]: [
-        { id: drop.id, title: 'E2E Drop', lastUsed: 2 },
-        { id: keep.id, title: 'E2E Keep', lastUsed: 1 },
-      ],
-    });
-    await chrome.bookmarks.remove(drop.id);
-    await chrome.bookmarks.update(keep.id, { title: 'E2E Kept' });
-    return { keep: keep.id };
-  }, RECENT_KEY);
+    return { keep: keep.id, drop: drop.id };
+  });
+  await writeStored(extensionWorker, STORAGE_ITEMS.recentFolders, [
+    { id: ids.drop, title: 'E2E Drop', lastUsed: 2 },
+    { id: ids.keep, title: 'E2E Keep', lastUsed: 1 },
+  ]);
+  await extensionWorker.evaluate(async ({ keep, drop }) => {
+    await chrome.bookmarks.remove(drop);
+    await chrome.bookmarks.update(keep, { title: 'E2E Kept' });
+  }, ids);
 
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(
-        async (key) => (await chrome.storage.local.get(key))[key],
-        RECENT_KEY,
-      ),
-    )
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.recentFolders))
     .toEqual([{ id: ids.keep, title: 'E2E Kept', lastUsed: 1 }]);
 });
 
@@ -667,11 +640,11 @@ test('an invalid Base URL does not block saving valid Extra Headers', async ({
   await setSettings(extensionWorker, { language: 'en', aiProvider: 'openai' });
   await openOptions(page, extensionId);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
-  const readAI = () =>
-    extensionWorker.evaluate(async (key) => {
-      const stored = await chrome.storage.local.get(key);
-      return (stored[key] ?? {}) as Record<string, Record<string, string>>;
-    }, AI_KEY);
+  const readAI = async () =>
+    (await readStored<Record<string, Record<string, string>>>(
+      extensionWorker,
+      STORAGE_ITEMS.aiCredentials,
+    )) ?? {};
 
   await openMoreSettings(page);
   await page.getByRole('textbox', { name: 'Base URL' }).fill('not a url');

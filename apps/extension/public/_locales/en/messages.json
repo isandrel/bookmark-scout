@@ -331,6 +331,10 @@
         "message": "Invalid settings file",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "A newer version of Bookmark Scout saved this. Update the extension to change it.",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "Export",
         "description": "Export button label"

@@ -1,5 +1,6 @@
 import type { BrowserContext, Route } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { STORAGE_ITEMS, writeStoredItems } from './storage';
 
 const BASE_URL = 'https://ask.e2e.invalid/v1';
 
@@ -71,17 +72,20 @@ test('[mocked provider contract] Ask AI searches bookmarks with a tool and answe
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (baseUrl) => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': {
+  await writeStoredItems(extensionWorker, [
+    [
+      STORAGE_ITEMS.settings,
+      {
         language: 'en',
         aiEnabled: true,
         aiProvider: 'custom',
         aiModel: 'ask-model',
         aiAutoTriggerOnOpen: false,
       },
-    });
-    await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl } } });
+    ],
+    [STORAGE_ITEMS.aiCredentials, { custom: { baseUrl: BASE_URL } }],
+  ]);
+  await extensionWorker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();
     const parent = root.children?.find((node) => node.children !== undefined);
     if (!parent) throw new Error('No writable bookmark root');
@@ -91,7 +95,7 @@ test('[mocked provider contract] Ask AI searches bookmarks with a tool and answe
       title: 'Ownership guide',
       url: 'https://rust.e2e.invalid/ownership',
     });
-  }, BASE_URL);
+  });
   const requests = await stubAgentProvider(context);
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
@@ -130,12 +134,13 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (baseUrl) => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': { language: 'en', aiEnabled: true, aiProvider: 'custom', aiModel: 'ask-model' },
-    });
-    await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl } } });
-  }, BASE_URL);
+  await writeStoredItems(extensionWorker, [
+    [
+      STORAGE_ITEMS.settings,
+      { language: 'en', aiEnabled: true, aiProvider: 'custom', aiModel: 'ask-model' },
+    ],
+    [STORAGE_ITEMS.aiCredentials, { custom: { baseUrl: BASE_URL } }],
+  ]);
   // 4xx answers are not retried by the SDK, so each error reaches the chat.
   const failures = [
     { status: 401, message: 'Invalid API key' },

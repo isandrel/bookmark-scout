@@ -1,8 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
-const TABLE_VIEW_KEY = 'bookmark-scout-table-view';
+import { readSettings, readStored, STORAGE_ITEMS, setSettings } from './storage';
 
 const titles = {
   testFolder: 'Sorting Test Root',
@@ -67,18 +65,7 @@ async function seedBookmarks(worker: Worker): Promise<BookmarkFixture> {
 }
 
 async function setSortOrder(worker: Worker, sortOrder: SortOrder) {
-  await worker.evaluate(
-    async ({ key, order }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({
-        [key]: {
-          ...(stored[key] ?? {}),
-          sortOrder: order,
-        },
-      });
-    },
-    { key: SETTINGS_KEY, order: sortOrder },
-  );
+  await setSettings(worker, { sortOrder });
 }
 
 async function expectTableOrder(page: Page, expectedTitles: string[]) {
@@ -162,13 +149,7 @@ test('applies an Options UI sorting change to an open bookmarks table', async ({
   await sortSetting.getByRole('radio', { name: 'Alphabetical' }).click();
 
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async (key) => {
-        const stored = await chrome.storage.sync.get(key);
-        const settings = stored[key] as { sortOrder?: string } | undefined;
-        return settings?.sortOrder;
-      }, SETTINGS_KEY),
-    )
+    .poll(async () => (await readSettings(extensionWorker)).sortOrder)
     .toBe('alphabetical');
   await expectTableOrder(page, [
     titles.folderAlpha,
@@ -205,12 +186,7 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await page.getByRole('option', { name: '20' }).click();
 
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async (key) => {
-        const stored = await chrome.storage.sync.get(key);
-        return stored[key];
-      }, TABLE_VIEW_KEY),
-    )
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.tableView))
     .toMatchObject({
       version: 1,
       columnVisibility: { url: false },
@@ -239,12 +215,7 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('button', { name: 'Reset view' }).click();
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async (key) => {
-        const stored = await chrome.storage.sync.get(key);
-        return stored[key];
-      }, TABLE_VIEW_KEY),
-    )
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.tableView))
     .toMatchObject({
       version: 1,
       pageSize: 10,

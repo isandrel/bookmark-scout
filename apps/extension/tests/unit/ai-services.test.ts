@@ -14,6 +14,7 @@ import {
 } from '@/lib/ai-services-storage';
 import { saveSettings } from '@/lib/settings-storage';
 import { getActiveAISettings } from '@/services/ai-settings';
+import { readStoredRaw, STORAGE_ITEMS } from './storage-helpers';
 
 beforeEach(async () => {
   fakeBrowser.reset();
@@ -53,7 +54,7 @@ describe('named AI services', () => {
       ['anthropic', 'claude-x'],
       ['groq', expect.any(String)],
     ]);
-    expect(await fakeBrowser.storage.local.get('bookmark-scout-ai-services')).toEqual({});
+    expect(await readStoredRaw(STORAGE_ITEMS.aiServices)).toBeUndefined();
     // The derived default resolves to the same settings as before named services.
     await saveSettings({ aiEnabled: true });
     await expect(getActiveAISettings(true)).resolves.toMatchObject({

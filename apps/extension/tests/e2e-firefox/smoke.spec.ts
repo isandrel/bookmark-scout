@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { Key } from 'selenium-webdriver';
+import { STORAGE_ITEMS, storageAreaKey } from '../../src/lib/storage/registry';
 import { By, expect, type FirefoxExtension, test } from './fixtures';
 
 /**
@@ -9,7 +10,7 @@ import { By, expect, type FirefoxExtension, test } from './fixtures';
  * APIs that differ in Firefox.
  */
 
-const SETTINGS_KEY = 'bookmark-scout-settings';
+const SETTINGS_KEY = storageAreaKey(STORAGE_ITEMS.settings);
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -52,18 +53,18 @@ function childrenOf(extension: FirefoxExtension, folderId: string) {
 
 function setSettings(extension: FirefoxExtension, values: Record<string, unknown>) {
   return extension.call(
-    async (browser, { key, updates }) => {
-      const stored = await browser.storage.sync.get(key);
-      await browser.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...updates } });
+    async (browser, { key, v, updates }) => {
+      const stored = (await browser.storage.sync.get(key))[key] as { data?: object } | undefined;
+      await browser.storage.sync.set({ [key]: { v, data: { ...stored?.data, ...updates } } });
     },
-    { key: SETTINGS_KEY, updates: values },
+    { key: SETTINGS_KEY, v: STORAGE_ITEMS.settings.v, updates: values },
   );
 }
 
 function readSettings(extension: FirefoxExtension) {
   return extension.call(async (browser, key) => {
-    const stored = await browser.storage.sync.get(key);
-    return (stored[key] ?? {}) as Record<string, unknown>;
+    const stored = (await browser.storage.sync.get(key))[key] as { data?: object } | undefined;
+    return (stored?.data ?? {}) as Record<string, unknown>;
   }, SETTINGS_KEY);
 }
 
@@ -173,13 +174,17 @@ test('popup shows saved site icons and a generic icon instead of a broken browse
     { title: 'Icon Saved Link', url: 'https://icons-saved.e2e.invalid/page' },
     { title: 'Icon Missing Link', url: 'https://icons-missing.e2e.invalid/page' },
   ]);
-  await extension.call(async (browser, value) => {
-    await browser.storage.local.set({
-      'bookmark-scout-site-icons': {
-        'https://icons-saved.e2e.invalid': { icon: value, fetchedAt: Date.now() },
-      },
-    });
-  }, icon);
+  await extension.call(
+    async (browser, { key, v, value }) => {
+      await browser.storage.local.set({
+        [key]: {
+          v,
+          data: { 'https://icons-saved.e2e.invalid': { icon: value, fetchedAt: Date.now() } },
+        },
+      });
+    },
+    { key: storageAreaKey(STORAGE_ITEMS.siteIcons), v: STORAGE_ITEMS.siteIcons.v, value: icon },
+  );
 
   await extension.open('popup.html');
   await (await extension.find('input[placeholder="Search bookmarks..."]')).sendKeys('Icon ');
@@ -215,6 +220,21 @@ test('bookmark manager loads a folder, filters titles, and opens subfolders', as
   await extension.open(`bookmarks.html?id=${folder.ids['Nested Folder']}`);
   await expect.poll(() => visibleRows(extension)).toBe(1);
   await extension.findByText('tbody tr', 'Inside');
+});
+
+test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
+  // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
+  // locks. Hold a lock in one extension page and look for it from another.
+  await extension.call(async () => {
+    void navigator.locks.request('sync:settings', () => new Promise(() => undefined));
+  }, null);
+  await extension.open('options.html');
+  await extension.find('[role="tab"]');
+  const held = await extension.driver.executeAsyncScript<string[]>(
+    `const done = arguments[arguments.length - 1];
+     navigator.locks.query().then((state) => done((state.held ?? []).map((lock) => lock.name)));`,
+  );
+  expect(held).toContain('sync:settings');
 });
 
 test('options saves a setting to sync storage and keeps it after reload', async ({ extension }) => {

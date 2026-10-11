@@ -37,20 +37,22 @@ export const MAX_PROMPT_BYTES = readConfig(
   z.strictObject({ prompt_max_bytes: z.number().int().positive().max(8192) }),
 ).prompt_max_bytes;
 
-const indexValue = defineStoredValue<PromptLibraryIndex>({
-  key: STORAGE_KEYS.promptLibraryIndex,
-  parse: (raw) => ({
-    ids:
-      isPlainObject(raw) && Array.isArray(raw.ids)
-        ? raw.ids.filter((id): id is string => typeof id === 'string')
-        : [],
-    active:
-      isPlainObject(raw) && isPlainObject(raw.active)
-        ? (raw.active as PromptLibraryIndex['active'])
-        : {},
-  }),
-  empty: { ids: [], active: {} },
-});
+export const promptLibraryIndexValue = defineStoredValue<PromptLibraryIndex>(
+  STORAGE_ITEMS.promptIndex,
+  {
+    parse: (raw) => ({
+      ids:
+        isPlainObject(raw) && Array.isArray(raw.ids)
+          ? raw.ids.filter((id): id is string => typeof id === 'string')
+          : [],
+      active:
+        isPlainObject(raw) && isPlainObject(raw.active)
+          ? (raw.active as PromptLibraryIndex['active'])
+          : {},
+    }),
+    empty: { ids: [], active: {} },
+  },
+);
 
 function parseCustomPrompt(raw: unknown): CustomPrompt | null {
   return isPlainObject(raw) && typeof raw.task === 'string' && raw.task in PROMPT_TASKS
@@ -64,8 +66,8 @@ const promptValues = new Map<string, StoredValue<CustomPrompt | null>>();
 function promptValue(id: string): StoredValue<CustomPrompt | null> {
   let value = promptValues.get(id);
   if (!value) {
-    value = defineStoredValue<CustomPrompt | null>({
-      key: `${STORAGE_KEYS.promptPrefix}${id}`,
+    value = defineStoredValue<CustomPrompt | null>(STORAGE_ITEMS.prompt, {
+      id,
       parse: parseCustomPrompt,
       empty: null,
       isEmpty: (prompt) => prompt === null,
@@ -105,18 +107,16 @@ function toStoredPrompt(draft: CustomPromptDraft, id: string, updatedAt: number)
   return { id, task: draft.task, name: draft.name.trim(), system: draft.system, updatedAt };
 }
 
-/** Sync storage key of a prompt item, without the `sync:` area prefix. */
-function promptSyncKey(id: string): string {
-  return `${STORAGE_KEYS.promptPrefix}${id}`.replace(/^sync:/, '');
-}
-
 /**
  * Bytes the prompt takes in sync storage once saved, as the browser counts them. A new prompt is
  * measured with an id of the length it will get.
  */
 export function customPromptBytes(draft: CustomPromptDraft): number {
   const id = draft.id ?? 'x'.repeat(newPromptId().length);
-  return syncItemBytes(promptSyncKey(id), toStoredPrompt(draft, id, Date.now()));
+  return syncItemBytes(
+    storageAreaKey(STORAGE_ITEMS.prompt, id),
+    toStoredEnvelope(STORAGE_ITEMS.prompt, toStoredPrompt(draft, id, Date.now())),
+  );
 }
 
 export class PromptValidationError extends Error {}
@@ -131,7 +131,7 @@ export function validateCustomPrompt(draft: CustomPromptDraft): string | undefin
 }
 
 export async function getPromptLibrary(): Promise<PromptLibrary> {
-  const index = await indexValue.get();
+  const index = await promptLibraryIndexValue.get();
   const stored = await Promise.all(index.ids.map((id) => promptValue(id).get()));
   const prompts = stored.filter((prompt): prompt is CustomPrompt => prompt !== null);
   const ids = new Set(prompts.map((prompt) => prompt.id));
@@ -144,7 +144,7 @@ export async function getPromptLibrary(): Promise<PromptLibrary> {
 
 /** Text of the task's active custom prompt, or undefined to use the built-in default. */
 export async function getActivePromptText(task: PromptTaskId): Promise<string | undefined> {
-  const id = (await indexValue.get()).active[task];
+  const id = (await promptLibraryIndexValue.get()).active[task];
   if (!id) return undefined;
   const prompt = await promptValue(id).get();
   return prompt?.task === task && prompt.system.trim() ? prompt.system : undefined;
@@ -160,7 +160,7 @@ export async function saveCustomPrompt(prompt: CustomPromptDraft): Promise<Custo
   if (error) throw new PromptValidationError(error);
   const saved = toStoredPrompt(prompt, id, Date.now());
   await promptValue(saved.id).set(saved);
-  await indexValue.update((index) =>
+  await promptLibraryIndexValue.update((index) =>
     index.ids.includes(saved.id) ? index : { ...index, ids: [...index.ids, saved.id] },
   );
   return saved;
@@ -168,7 +168,7 @@ export async function saveCustomPrompt(prompt: CustomPromptDraft): Promise<Custo
 
 /** Makes `id` the task's prompt; undefined goes back to the built-in default. */
 export async function setActivePrompt(task: PromptTaskId, id: string | undefined): Promise<void> {
-  await indexValue.update((index) => {
+  await promptLibraryIndexValue.update((index) => {
     const active = { ...index.active };
     if (id) active[task] = id;
     else delete active[task];
@@ -177,7 +177,7 @@ export async function setActivePrompt(task: PromptTaskId, id: string | undefined
 }
 
 export async function deleteCustomPrompt(id: string): Promise<void> {
-  await indexValue.update((index) => ({
+  await promptLibraryIndexValue.update((index) => ({
     ids: index.ids.filter((promptId) => promptId !== id),
     active: Object.fromEntries(
       Object.entries(index.active).filter(([, activeId]) => activeId !== id),
@@ -207,7 +207,7 @@ export function watchPromptLibrary(listener: (library: PromptLibrary) => void): 
     );
   };
   void refresh();
-  const unwatchIndex = indexValue.watch(() => void refresh());
+  const unwatchIndex = promptLibraryIndexValue.watch(() => void refresh());
   return () => {
     active = false;
     unwatchIndex();

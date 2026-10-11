@@ -42,8 +42,7 @@ export const MAX_AI_ACTIVITY_BODY_CHARS = activityConfig.max_body_chars;
  * Newest first; only this extension writes it. Headers are redacted again on every read, so an
  * entry an older release stored with a credential never reaches the panel or its Copy output.
  */
-export const aiActivityValue = defineStoredValue<AIActivityEntry[]>({
-  key: STORAGE_KEYS.aiActivity,
+export const aiActivityValue = defineStoredValue<AIActivityEntry[]>(STORAGE_ITEMS.aiActivity, {
   parse: (raw) =>
     Array.isArray(raw)
       ? (raw as AIActivityEntry[]).map((entry) => ({
@@ -57,11 +56,13 @@ export const aiActivityValue = defineStoredValue<AIActivityEntry[]>({
 });
 
 /** Per device: whether AI requests are recorded. */
-export const aiActivityRecordingValue = defineStoredValue<boolean>({
-  key: STORAGE_KEYS.aiActivityRecording,
-  parse: (raw) => raw === true,
-  empty: false,
-});
+export const aiActivityRecordingValue = defineStoredValue<boolean>(
+  STORAGE_ITEMS.aiActivityRecording,
+  {
+    parse: (raw) => raw === true,
+    empty: false,
+  },
+);
 
 /** Stored in place of a credential. */
 export const REDACTED_VALUE = '[redacted]';

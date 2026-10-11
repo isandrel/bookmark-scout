@@ -13,6 +13,13 @@
 - The popup footer says **Save here** while a folder is selected, since Enter saves the page there.
 - URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
 
+### Stored data
+
+- **This update resets your saved data.** Bookmark Scout stores its data in a new format and removes what older versions stored instead of converting it. After updating, your settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, recent searches, recent folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. To keep your settings, click **Export** at the bottom of Settings before updating, and **Import** the file afterwards.
+- Changes made at the same moment in two Bookmark Scout tabs, or in a tab and the background, no longer overwrite each other.
+- Data saved by a newer version of Bookmark Scout on another synced device is never overwritten by an older one; changing it asks you to update the extension.
+- In Chrome 140 and later, the storage that holds API keys is closed to scripts running in web pages.
+
 ### Permissions and privacy
 
 - New install-time permissions without a warning: `scripting` in every browser (shows the quick save notification in the tab where the shortcut was pressed) and `offscreen` in Chrome and Edge (runs AI quick save's request in a hidden extension page). The AI quick save shortcut sends the same data as AI folder suggestions in the popup, to the AI provider you set up.

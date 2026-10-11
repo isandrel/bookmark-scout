@@ -1,6 +1,7 @@
 import type { Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { seedFolder, setSettings } from './popup-helpers';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 
 /**
  * Playwright cannot open the native right-click menu, so these tests drive the real background
@@ -8,7 +9,6 @@ import { seedFolder, setSettings } from './popup-helpers';
  * Chrome would send, and read the result back from `chrome.bookmarks`.
  */
 
-const RECENT_KEY = 'bookmark-scout-recent-folders';
 const ROOT_ID = 'bookmark-scout::root';
 const RECENT_CATEGORY_ID = 'bookmark-scout::category::recent';
 const BOOKMARKS_BAR_ITEM_ID = 'bookmark-scout::static::1';
@@ -137,22 +137,17 @@ async function folderTitle(worker: Worker, folderId: string): Promise<string> {
 }
 
 async function seedRecentFolders(worker: Worker, folders: { id: string; title: string }[]) {
-  await worker.evaluate(
-    async ({ key, entries }) => {
-      const now = Date.now();
-      await chrome.storage.local.set({
-        [key]: entries.map((folder, position) => ({ ...folder, lastUsed: now - position })),
-      });
-    },
-    { key: RECENT_KEY, entries: folders },
+  const now = Date.now();
+  await writeStored(
+    worker,
+    STORAGE_ITEMS.recentFolders,
+    folders.map((folder, position) => ({ ...folder, lastUsed: now - position })),
   );
 }
 
 async function recentFolderIds(worker: Worker): Promise<string[]> {
-  return worker.evaluate(async (key) => {
-    const stored = (await chrome.storage.local.get(key))[key] as { id: string }[] | undefined;
-    return (stored ?? []).map((folder) => folder.id);
-  }, RECENT_KEY);
+  const stored = await readStored<{ id: string }[]>(worker, STORAGE_ITEMS.recentFolders);
+  return (stored ?? []).map((folder) => folder.id);
 }
 
 test.describe('context menu save', () => {

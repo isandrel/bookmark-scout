@@ -12,17 +12,14 @@ import { suggestBookmarkTags, summarizeBookmarksWithAI } from '@/services/ai-boo
 import type { AISettings } from '@/services/ai-client';
 import type { BookmarkTreeNode } from '@/types';
 import { setLanguage } from '@/hooks/use-i18n';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
-
-const BOOKMARK_METADATA_STORAGE_KEY = STORAGE_KEYS.bookmarkMetadata.replace(/^local:/, '');
+import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 const mocks = vi.hoisted(() => ({ generateObject: vi.fn() }));
 
 vi.mock('ai', () => ({ generateObject: mocks.generateObject }));
 
 async function readRawMetadata() {
-  const result = await fakeBrowser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
-  return result[BOOKMARK_METADATA_STORAGE_KEY];
+  return readStoredData(STORAGE_ITEMS.bookmarkMetadata);
 }
 
 describe('bookmark metadata storage', () => {
@@ -70,12 +67,10 @@ describe('bookmark metadata storage', () => {
   });
 
   it('ignores malformed stored values', async () => {
-    await fakeBrowser.storage.local.set({
-      [BOOKMARK_METADATA_STORAGE_KEY]: {
-        good: { tags: ['ok', 3, ''], summary: 'fine' },
-        bad: 'not-an-object',
-        empty: { tags: [] },
-      },
+    await seedStored(STORAGE_ITEMS.bookmarkMetadata, {
+      good: { tags: ['ok', 3, ''], summary: 'fine' },
+      bad: 'not-an-object',
+      empty: { tags: [] },
     });
 
     expect(await getStoredBookmarkMetadata(['good', 'bad', 'empty'])).toEqual({

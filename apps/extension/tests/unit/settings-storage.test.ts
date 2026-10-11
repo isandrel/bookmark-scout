@@ -4,10 +4,10 @@ import { defaultSettings } from '@/lib/settings-schema';
 import {
   getSettings,
   importSettings,
+  registerSettingsSaveListener,
   sanitizeSettings,
   saveSettings,
   saveValidSettings,
-  saveValidSettingsNow,
   SettingsValidationError,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
@@ -23,13 +23,10 @@ import {
   toUnlimitedSliderValue,
 } from '@/lib/settings-form';
 import { setLanguage } from '@/hooks/use-i18n';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
-
-const SETTINGS_SYNC_KEY = STORAGE_KEYS.settings.replace(/^sync:/, '');
+import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 async function readStored() {
-  const result = await fakeBrowser.storage.sync.get(SETTINGS_SYNC_KEY);
-  return result[SETTINGS_SYNC_KEY] as Record<string, unknown> | undefined;
+  return (await readStoredData(STORAGE_ITEMS.settings)) as Record<string, unknown> | undefined;
 }
 
 beforeEach(() => {
@@ -113,8 +110,10 @@ describe('settings validation', () => {
 
 describe('settings persistence', () => {
   it('a single invalid field does not block saving other fields', async () => {
-    await fakeBrowser.storage.sync.set({
-      [SETTINGS_SYNC_KEY]: { ...defaultSettings, theme: 'dark', faviconSize: 32 },
+    await seedStored(STORAGE_ITEMS.settings, {
+      ...defaultSettings,
+      theme: 'dark',
+      faviconSize: 32,
     });
     const { errors } = await saveValidSettings({
       showFavicons: false,
@@ -129,7 +128,7 @@ describe('settings persistence', () => {
   });
 
   it('saveSettings rejects with a readable, field-level error', async () => {
-    await fakeBrowser.storage.sync.set({ [SETTINGS_SYNC_KEY]: { language: 'en' } });
+    await seedStored(STORAGE_ITEMS.settings, { language: 'en' });
     const error = await saveSettings({ recentFoldersMax: 99 }).catch((reason) => reason);
     expect(error).toBeInstanceOf(SettingsValidationError);
     expect(error.message).toBe('These settings have invalid values: Recent Folders Max');
@@ -137,42 +136,33 @@ describe('settings persistence', () => {
   });
 
   it('reads invalid stored data without discarding valid fields', async () => {
-    await fakeBrowser.storage.sync.set({
-      [SETTINGS_SYNC_KEY]: { theme: 'dark', faviconSize: 0 },
-    });
+    await seedStored(STORAGE_ITEMS.settings, { theme: 'dark', faviconSize: 0 });
     const settings = await getSettings();
     expect(settings.theme).toBe('dark');
     expect(settings.faviconSize).toBe(defaultSettings.faviconSize);
   });
 });
 
-describe('saving before the page unloads', () => {
-  it('writes valid changes against the known settings without reading storage first', async () => {
-    const current = { ...defaultSettings, theme: 'dark' as const };
-    await fakeBrowser.storage.sync.set({ [SETTINGS_SYNC_KEY]: current });
-    const get = vi.spyOn(fakeBrowser.storage.sync, 'get');
+describe('saving from a closing page', () => {
+  it('hands the changes to the background, which saves the valid ones', async () => {
+    registerSettingsSaveListener();
+    await seedStored(STORAGE_ITEMS.settings, { language: 'en' });
+    const page = { id: fakeBrowser.runtime.id, url: fakeBrowser.runtime.getURL('/options.html') };
+    await fakeBrowser.runtime.onMessage.trigger(
+      { type: 'settings/save', updates: { theme: 'dark', recentFoldersMax: 99 } },
+      page,
+    );
+    await vi.waitFor(async () =>
+      expect(await readStored()).toMatchObject({ language: 'en', theme: 'dark' }),
+    );
 
-    const { settings, errors, saved } = saveValidSettingsNow(current, {
-      defaultNewFolderName: 'Flushed',
-      recentFoldersMax: 99,
-    });
-    expect(settings.defaultNewFolderName).toBe('Flushed');
-    expect(settings.recentFoldersMax).toBe(current.recentFoldersMax);
-    expect(Object.keys(errors)).toEqual(['recentFoldersMax']);
-    await saved;
-
-    expect(get).not.toHaveBeenCalled();
-    expect(await readStored()).toMatchObject({
-      theme: 'dark',
-      defaultNewFolderName: 'Flushed',
-      recentFoldersMax: current.recentFoldersMax,
-    });
-  });
-
-  it('skips the write when nothing valid changed', async () => {
-    const set = vi.spyOn(fakeBrowser.storage.sync, 'set');
-    await saveValidSettingsNow(defaultSettings, { recentFoldersMax: 99 }).saved;
-    expect(set).not.toHaveBeenCalled();
+    // Not from a script the extension injects into a web page.
+    await fakeBrowser.runtime.onMessage.trigger(
+      { type: 'settings/save', updates: { theme: 'light' } },
+      { id: fakeBrowser.runtime.id, url: 'https://example.com/' },
+    );
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(await readStored()).toMatchObject({ language: 'en', theme: 'dark' });
   });
 });
 
@@ -184,8 +174,9 @@ describe('removed settings', () => {
         sanitizeSettings({ metadataFetcherFetchFavicons: false, theme: 'dark' }),
     ).toBe(false);
 
-    await fakeBrowser.storage.sync.set({
-      [SETTINGS_SYNC_KEY]: { theme: 'dark', metadataFetcherFetchFavicons: false },
+    await seedStored(STORAGE_ITEMS.settings, {
+      theme: 'dark',
+      metadataFetcherFetchFavicons: false,
     });
     expect(
       await importSettings(
@@ -200,9 +191,7 @@ describe('removed settings', () => {
 
 describe('settings import', () => {
   it('merges a partial file onto current settings and returns what changed', async () => {
-    await fakeBrowser.storage.sync.set({
-      [SETTINGS_SYNC_KEY]: { ...defaultSettings, defaultNewFolderName: 'Inbox' },
-    });
+    await seedStored(STORAGE_ITEMS.settings, { ...defaultSettings, defaultNewFolderName: 'Inbox' });
     const changed = await importSettings(JSON.stringify({ theme: 'dark', unknownKey: true }));
     expect(changed).toEqual(['theme']);
     const stored = await readStored();
@@ -241,7 +230,11 @@ describe('settings form helpers', () => {
     expect(parseListSetting('ref, page,, ref ', 'string')).toEqual(['ref', 'page']);
     expect(parseListSetting('', 'string')).toEqual([]);
     // The list editor splits typed and pasted names at commas and whitespace.
-    expect(parseListTokens('utm_source, fbclid\n gclid  fbclid')).toEqual(['utm_source', 'fbclid', 'gclid']);
+    expect(parseListTokens('utm_source, fbclid\n gclid  fbclid')).toEqual([
+      'utm_source',
+      'fbclid',
+      'gclid',
+    ]);
     expect(parseListTokens(' , ')).toEqual([]);
     expect(parseListSetting('200, 301,404', 'number')).toEqual([200, 301, 404]);
     expect(parseListSetting('200, abc', 'number')).toBeNull();

@@ -28,11 +28,6 @@ export type SavedSearch = {
   query: SavedSearchQuery;
 };
 
-export type SavedSearchesPayload = {
-  version: 1;
-  searches: SavedSearch[];
-};
-
 const nameSchema = z.string().trim().min(1).max(SAVED_SEARCH_NAME_MAX_LENGTH);
 
 const savedSearchSchema = z.object({
@@ -42,26 +37,19 @@ const savedSearchSchema = z.object({
   query: z.unknown(),
 });
 
-// A payload without `version` is read as version 1, so the first schema needs no migration.
-const payloadSchema = z.object({
-  version: z.literal(1).default(1),
-  searches: z.array(z.unknown()),
-});
-
 const nameKey = (name: string) => name.trim().toLocaleLowerCase();
 
 /**
- * Validates stored saved searches. A malformed payload or an unsupported version yields an empty
- * list; a malformed entry, a repeated ID, and anything past the limit are dropped one by one, so
- * one bad entry never hides the others or breaks the manager.
+ * Validates stored saved searches. Anything but a list reads as no saved searches; a malformed
+ * entry, a repeated ID, and anything past the limit are dropped one by one, so one bad entry never
+ * hides the others or breaks the manager.
  */
 export function parseSavedSearches(value: unknown): SavedSearch[] {
-  const payload = payloadSchema.safeParse(value);
-  if (!payload.success) return [];
+  if (!Array.isArray(value)) return [];
 
   const searches: SavedSearch[] = [];
   const seenIds = new Set<string>();
-  for (const entry of payload.data.searches) {
+  for (const entry of value) {
     const parsed = savedSearchSchema.safeParse(entry);
     if (!parsed.success || seenIds.has(parsed.data.id)) continue;
     const query = parseSavedSearchQuery(parsed.data.query);
@@ -73,19 +61,15 @@ export function parseSavedSearches(value: unknown): SavedSearch[] {
   return searches;
 }
 
-/**
- * `version` is the payload's own schema version, so no WXT `$` metadata key is written. A
- * malformed or unsupported payload reads as no saved searches.
- */
-export const savedSearchesValue = defineStoredValue<SavedSearchesPayload>({
-  key: STORAGE_KEYS.savedSearches,
-  parse: (raw) => ({ version: 1, searches: parseSavedSearches(raw) }),
-  empty: { version: 1, searches: [] },
+/** In the order they were saved. */
+export const savedSearchesValue = defineStoredValue<SavedSearch[]>(STORAGE_ITEMS.savedSearches, {
+  parse: parseSavedSearches,
+  empty: [],
 });
 
 export async function getSavedSearches(): Promise<SavedSearch[]> {
   try {
-    return (await savedSearchesValue.get()).searches;
+    return await savedSearchesValue.get();
   } catch (error) {
     uiLogger.error({ error }, 'Error reading saved searches');
     return [];
@@ -152,8 +136,8 @@ async function updateSavedSearches(
 ): Promise<SavedSearchResult> {
   let result: SavedSearchResult = { ok: false, error: 'not-found' };
   await savedSearchesValue.update((current) => {
-    result = change(current.searches);
-    return result.ok ? { version: 1, searches: result.searches } : current;
+    result = change(current);
+    return result.ok ? result.searches : current;
   });
   return result;
 }
@@ -167,11 +151,7 @@ export function renameSavedSearch(id: string, name: string) {
 }
 
 export async function deleteSavedSearch(id: string): Promise<SavedSearch[]> {
-  const stored = await savedSearchesValue.update((current) => ({
-    version: 1,
-    searches: current.searches.filter((search) => search.id !== id),
-  }));
-  return stored.searches;
+  return savedSearchesValue.update((current) => current.filter((search) => search.id !== id));
 }
 
 /** Puts a deleted saved search back at its old position (undo). */

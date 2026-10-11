@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { STORAGE_ITEMS, setSettings, updateStored } from './storage';
 
 // Dead-link and metadata scans need the optional web host access; route mocks stand in for sites.
 test.use({ grantWebHostAccess: true });
@@ -27,28 +28,18 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
   );
 }
 
-async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(async (values) => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-  }, updates);
-}
-
 async function setBookmarkMetadata(
   worker: Worker,
   bookmarkId: string,
   metadata: { tags?: string[]; summary?: string },
 ) {
-  await worker.evaluate(
-    async ({ id, value }) => {
-      const key = 'bookmark-scout-bookmark-metadata';
-      const stored = await chrome.storage.local.get(key);
-      await chrome.storage.local.set({
-        [key]: { ...(stored[key] ?? {}), [id]: value },
-      });
-    },
-    { id: bookmarkId, value: metadata },
+  await updateStored<Record<string, unknown>>(
+    worker,
+    STORAGE_ITEMS.bookmarkMetadata,
+    (current) => ({
+      ...current,
+      [bookmarkId]: metadata,
+    }),
   );
 }
 
@@ -57,16 +48,10 @@ async function setAIProviderConfig(
   provider: string,
   config: Record<string, string>,
 ) {
-  await worker.evaluate(
-    async ({ providerId, providerConfig }) => {
-      const key = 'bookmark-scout-ai';
-      const stored = await chrome.storage.local.get(key);
-      await chrome.storage.local.set({
-        [key]: { ...(stored[key] ?? {}), [providerId]: providerConfig },
-      });
-    },
-    { providerId: provider, providerConfig: config },
-  );
+  await updateStored<Record<string, unknown>>(worker, STORAGE_ITEMS.aiCredentials, (current) => ({
+    ...current,
+    [provider]: config,
+  }));
 }
 
 function toolCard(page: Page, title: string) {

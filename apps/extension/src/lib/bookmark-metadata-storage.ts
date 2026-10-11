@@ -40,12 +40,14 @@ export type BookmarkMetadataMergeOptions = {
  * callers in one page (for example an undo restore and a stale-ID cleanup) never overwrite each
  * other.
  */
-export const bookmarkMetadataValue = defineStoredValue<StoredBookmarkMetadataById>({
-  key: STORAGE_KEYS.bookmarkMetadata,
-  parse: parseBookmarkMetadata,
-  empty: {},
-  isEmpty: (metadata) => Object.keys(metadata).length === 0,
-});
+export const bookmarkMetadataValue = defineStoredValue<StoredBookmarkMetadataById>(
+  STORAGE_ITEMS.bookmarkMetadata,
+  {
+    parse: parseBookmarkMetadata,
+    empty: {},
+    isEmpty: (metadata) => Object.keys(metadata).length === 0,
+  },
+);
 
 export async function getStoredBookmarkMetadata(
   bookmarkIds: string[],

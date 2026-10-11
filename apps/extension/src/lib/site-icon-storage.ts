@@ -79,8 +79,7 @@ export function normalizeSiteIconCache(raw: unknown): SiteIconCache {
 }
 
 /** Valid entries only; an empty cache removes the key. */
-export const siteIconCacheValue = defineStoredValue<SiteIconCache>({
-  key: STORAGE_KEYS.siteIcons,
+export const siteIconCacheValue = defineStoredValue<SiteIconCache>(STORAGE_ITEMS.siteIcons, {
   parse: normalizeSiteIconCache,
   empty: {},
   isEmpty: (cache) => Object.keys(cache).length === 0,

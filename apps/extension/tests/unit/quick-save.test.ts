@@ -17,6 +17,7 @@ import {
 } from '@/services/quick-save';
 import { chooseQuickSaveTarget } from '@/services/quick-save-target';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
 let bookmarks: FakeBookmarks;
 
@@ -177,8 +178,8 @@ describe('runQuickSave', () => {
       title: 'Quick Start – React',
       url: 'https://react.dev/learn',
     });
-    const recent = await fakeBrowser.storage.local.get('bookmark-scout-recent-folders');
-    expect((recent['bookmark-scout-recent-folders'] as { id: string }[])[0].id).toBe('react');
+    const recent = await readStoredData(STORAGE_ITEMS.recentFolders);
+    expect((recent as { id: string }[])[0].id).toBe('react');
     // Kept for Undo after the worker restarts; the page could not show it here, so the popup does.
     expect(await quickSaveRecordValue.get()).toMatchObject({ id: record.id, delivery: 'popup' });
   });

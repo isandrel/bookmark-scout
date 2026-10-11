@@ -111,8 +111,7 @@ export function sanitizeSettings(stored: unknown): Settings {
  * every read or change also sets the language `t()` uses, so a page follows a language change
  * made anywhere.
  */
-export const settingsValue = defineStoredValue<Settings>({
-  key: STORAGE_KEYS.settings,
+export const settingsValue = defineStoredValue<Settings>(STORAGE_ITEMS.settings, {
   parse: (raw) => {
     const settings = sanitizeSettings(raw);
     setLanguage(settings.language);
@@ -159,20 +158,34 @@ export async function saveValidSettings(
   return { settings, errors };
 }
 
+/** Message `type` of a save a closing page hands to the background. */
+const SAVE_SETTINGS_MESSAGE = 'settings/save';
+
 /**
- * Like `saveValidSettings`, but validates against `current` (the latest known stored settings)
- * instead of reading storage first, so the write starts right away. Use it when the page may
- * unload before an extra storage round trip completes.
+ * Saves every valid field in `updates` from a page that is about to close or reload. A save in the
+ * page itself waits for the storage lock and a read, which an unloading page never finishes; the
+ * message leaves at once and the background saves it. Nothing is reported back.
  */
-export function saveValidSettingsNow(
-  current: Settings,
-  updates: Partial<Settings>,
-): { settings: Settings; errors: SettingsFieldErrors; saved: Promise<void> } {
-  const result = validateSettingsUpdate(current, updates);
-  const saved = isSameJson(result.settings, current)
-    ? Promise.resolve()
-    : settingsValue.set(result.settings).then(() => undefined);
-  return { ...result, saved };
+export function saveSettingsFromClosingPage(updates: Partial<Settings>): void {
+  void browser.runtime
+    .sendMessage({ type: SAVE_SETTINGS_MESSAGE, updates })
+    .catch((error) => settingsLogger.error({ error }, 'Failed to hand settings to the background'));
+}
+
+/** Background: saves what closing extension pages send. Call once, synchronously, at startup. */
+export function registerSettingsSaveListener(): void {
+  browser.runtime.onMessage.addListener((message, sender) => {
+    if (!isPlainObject(message) || message.type !== SAVE_SETTINGS_MESSAGE) return undefined;
+    // Only the extension's own pages, not scripts it injects into web pages.
+    if (sender.id !== browser.runtime.id || !sender.url?.startsWith(browser.runtime.getURL('/'))) {
+      return undefined;
+    }
+    if (!isPlainObject(message.updates)) return undefined;
+    void saveValidSettings(message.updates as Partial<Settings>).catch((error) => {
+      settingsLogger.error({ error }, 'Failed to save settings from a closing page');
+    });
+    return undefined;
+  });
 }
 
 /**

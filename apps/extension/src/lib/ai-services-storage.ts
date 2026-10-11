@@ -1,8 +1,9 @@
 /**
  * Named AI services: any number of saved provider configurations, one of them the default.
- * A service's credentials and endpoint overrides live in `local:bookmark-scout-ai` under the
- * service id, so a service created from an older single-provider setup keeps its provider id as
- * its own id and needs no data copied. Everything here stays on this device.
+ * A service's credentials and endpoint overrides live in the AI credentials item
+ * (`STORAGE_ITEMS.aiCredentials`) under the service id, so a service created from an older
+ * single-provider setup keeps its provider id as its own id and needs no data copied. Everything
+ * here stays on this device.
  */
 export type AIService = {
   id: string;
@@ -20,8 +21,7 @@ export type AIServicesState = {
 };
 
 /** `null` until services are first saved; until then they derive from the older setup. */
-export const aiServicesValue = defineStoredValue<AIServicesState | null>({
-  key: STORAGE_KEYS.aiServices,
+export const aiServicesValue = defineStoredValue<AIServicesState | null>(STORAGE_ITEMS.aiServices, {
   parse: (raw) =>
     isPlainObject(raw) && Array.isArray(raw.services) ? (raw as AIServicesState) : null,
   empty: null,

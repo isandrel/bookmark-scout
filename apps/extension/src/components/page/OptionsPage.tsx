@@ -97,33 +97,30 @@ const OptionsPage: React.FC = () => {
     setValues((current) => ({ ...settings, ...getChangedSettings(previous, current) }));
   }, [settings, isLoading]);
 
-  const persist = useCallback(
-    async (changes: Partial<Settings>) => {
-      const keys = Object.keys(changes) as (keyof Settings)[];
-      if (keys.length === 0) return;
-      try {
-        const { settings: saved, errors } = await saveValidSettings(changes);
-        savedRef.current = saved;
-        setSaveErrors((current) => {
-          const next = { ...current };
-          for (const key of keys) {
-            if (errors[key]) next[key] = errors[key];
-            else delete next[key];
-          }
-          return next;
-        });
-      } catch (error) {
-        const message = getErrorMessage(error);
-        // Keep the edits and mark them unsaved so the footer never claims success.
-        setSaveErrors((current) => ({
-          ...current,
-          ...Object.fromEntries(keys.map((key) => [key, message])),
-        }));
-        toast.error({ title: t('toast_errorSavingSettings'), description: message });
-      }
-    },
-    [],
-  );
+  const persist = useCallback(async (changes: Partial<Settings>) => {
+    const keys = Object.keys(changes) as (keyof Settings)[];
+    if (keys.length === 0) return;
+    try {
+      const { settings: saved, errors } = await saveValidSettings(changes);
+      savedRef.current = saved;
+      setSaveErrors((current) => {
+        const next = { ...current };
+        for (const key of keys) {
+          if (errors[key]) next[key] = errors[key];
+          else delete next[key];
+        }
+        return next;
+      });
+    } catch (error) {
+      const message = getErrorMessage(error);
+      // Keep the edits and mark them unsaved so the footer never claims success.
+      setSaveErrors((current) => ({
+        ...current,
+        ...Object.fromEntries(keys.map((key) => [key, message])),
+      }));
+      toast.error({ title: t('toast_errorSavingSettings'), description: message });
+    }
+  }, []);
 
   // Debounced autosave of changed fields only.
   useEffect(() => {
@@ -136,15 +133,13 @@ const OptionsPage: React.FC = () => {
     return () => clearTimeout(timeoutId);
   }, [values, isLoading, persist]);
 
-  // Do not drop an edit made just before the page is closed, reloaded, or hidden. The write must
-  // start synchronously: an async read first would not finish before the page unloads.
+  // Save an edit made just before the page is hidden, closed, or reloaded without waiting for the
+  // autosave delay. The background does the save: it reads the stored settings under the same lock
+  // as every other save, which an unloading page would not live to finish.
   useEffect(() => {
     const flush = () => {
       const changes = getChangedSettings(savedRef.current, valuesRef.current);
-      if (Object.keys(changes).length === 0) return;
-      const { settings: saved, saved: done } = saveValidSettingsNow(savedRef.current, changes);
-      savedRef.current = saved;
-      done.catch((error) => settingsLogger.error({ error }, 'Failed to save settings on page hide'));
+      if (Object.keys(changes).length > 0) saveSettingsFromClosingPage(changes);
     };
     const flushWhenHidden = () => {
       if (document.visibilityState === 'hidden') flush();
@@ -379,7 +374,8 @@ const OptionsPage: React.FC = () => {
           const fields = pick(section.fields);
           const advanced = pick(section.advanced ?? []);
           const panel = renderPanel(section.panel, Boolean(matches));
-          const toggleShown = section.toggle !== undefined && (!matches || matches.has(section.toggle));
+          const toggleShown =
+            section.toggle !== undefined && (!matches || matches.has(section.toggle));
           if (fields.length === 0 && advanced.length === 0 && !panel && !toggleShown) return null;
           // A search shows what matched even in a section that is turned off.
           const folded =
@@ -523,9 +519,7 @@ const OptionsPage: React.FC = () => {
               {Object.entries(categories).map(([key, category]) => {
                 const matches = searchResults?.[key]?.length;
                 const count =
-                  matches === undefined
-                    ? undefined
-                    : matches + (key === 'ai' ? aiPanelMatches : 0);
+                  matches === undefined ? undefined : matches + (key === 'ai' ? aiPanelMatches : 0);
                 return (
                   <TabsTrigger
                     key={key}

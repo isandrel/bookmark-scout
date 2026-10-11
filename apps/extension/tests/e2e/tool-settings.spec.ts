@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { setSettings } from './storage';
 
 async function seedFolder(worker: Worker, title: string) {
   return worker.evaluate(async (folderTitle) => {
@@ -15,14 +16,6 @@ async function seedFolder(worker: Worker, title: string) {
     });
     return folder.id;
   }, title);
-}
-
-async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(async (values) => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-  }, updates);
 }
 
 function toolCard(page: Page, title: string) {
@@ -164,7 +157,10 @@ test('unsupported and malformed saved scopes fall back without resetting other t
     .getByText('Default scope used when cleaning bookmark URLs')
     .locator('..')
     .locator('..');
-  await expect(cleanerScopeSetting.getByRole('radio')).toHaveText(['Current Folder', 'All Bookmarks']);
+  await expect(cleanerScopeSetting.getByRole('radio')).toHaveText([
+    'Current Folder',
+    'All Bookmarks',
+  ]);
 
   await setSettings(extensionWorker, { statisticsDefaultScope: 'unsupported' });
   await expect(toolCard(page, 'Bookmark Statistics').getByRole('combobox')).toContainText(
@@ -217,9 +213,9 @@ test('tools sidebar headings, cards, scopes, and dialogs follow the selected lan
   await expect(page.getByRole('option', { name: 'E2E Tool Locale' })).toBeVisible();
   await expect(page.getByRole('option', { name: 'すべてのブックマーク' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(toolCard(page, 'ブックマークを書き出す').getByRole('combobox').first()).toContainText(
-    'HTML（Chrome）',
-  );
+  await expect(
+    toolCard(page, 'ブックマークを書き出す').getByRole('combobox').first(),
+  ).toContainText('HTML（Chrome）');
 
   await toolCard(page, '重複クリーナー').getByRole('button', { name: 'スキャン' }).click();
   const duplicates = page.getByRole('dialog', { name: '重複クリーナー' });

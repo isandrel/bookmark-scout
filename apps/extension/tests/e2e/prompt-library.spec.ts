@@ -1,5 +1,6 @@
 import { readConfigToml } from '../config-files';
 import { expect, test } from './fixtures';
+import { STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 test('[mocked provider contract] a custom prompt saved in Options is what auto-tagging sends', async ({
@@ -19,16 +20,16 @@ test('[mocked provider contract] a custom prompt saved in Options is what auto-t
     autoTaggingEnabled: true,
     autoTaggingMaxTags: 3,
   });
-  await extensionWorker.evaluate(async () => {
-    await chrome.storage.local.set({
-      'bookmark-scout-ai': { custom: { baseUrl: 'https://prompt.e2e.invalid/v1' } },
-    });
+  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
+    custom: { baseUrl: 'https://prompt.e2e.invalid/v1' },
   });
   const bodies: string[] = [];
   await context.route('https://prompt.e2e.invalid/v1/**', async (route) => {
     bodies.push(route.request().postData() ?? '');
     const content = JSON.stringify({
-      items: [{ bookmarkId: ids['Prompt Fixture'], title: 'Prompt Fixture', tags: ['e2e'], reason: 'r' }],
+      items: [
+        { bookmarkId: ids['Prompt Fixture'], title: 'Prompt Fixture', tags: ['e2e'], reason: 'r' },
+      ],
     });
     await route.fulfill({
       status: 200,
@@ -119,10 +120,10 @@ test('the prompt size counter and limit count the prompt as sync storage stores 
     `The prompt is too long to sync. Keep it within ${kilobytes(maxBytes)}.`,
   );
   await expect(editor).toBeVisible();
-  const stored = await extensionWorker.evaluate(async () =>
-    Object.keys(await chrome.storage.sync.get(null)).filter((key) =>
-      key.startsWith('bookmark-scout-prompt-'),
-    ),
+  const stored = await extensionWorker.evaluate(
+    async (prefix) =>
+      Object.keys(await chrome.storage.sync.get(null)).filter((key) => key.startsWith(prefix)),
+    `${STORAGE_ITEMS.prompt.name}/`,
   );
   expect(stored).toEqual([]);
 

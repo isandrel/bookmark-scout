@@ -1,6 +1,7 @@
 import { expect, test, toastRegion } from './fixtures';
 import { openAIOptions } from './ai-helpers';
 import { setSettings } from './popup-helpers';
+import { readStoredRaw, STORAGE_ITEMS, writeStored } from './storage';
 
 test.use({ grantWebHostAccess: true });
 
@@ -18,19 +19,14 @@ test('[mocked provider contract] AI activity records a request with its key and 
     aiProvider: 'custom',
     aiModel: 'listed-model',
   });
-  await extensionWorker.evaluate(async (baseUrl) => {
-    await chrome.storage.local.set({
-      'bookmark-scout-ai': {
-        custom: {
-          apiKey: 'synthetic-activity-key',
-          baseUrl,
-          // A gateway credential under a name no pattern knows, and one that a pattern catches.
-          extraHeaders:
-            '{"X-Tenant":"synthetic-tenant-value","X-Auth-Token":"synthetic-token-value"}',
-        },
-      },
-    });
-  }, BASE_URL);
+  await writeStored(extensionWorker, STORAGE_ITEMS.aiCredentials, {
+    custom: {
+      apiKey: 'synthetic-activity-key',
+      baseUrl: BASE_URL,
+      // A gateway credential under a name no pattern knows, and one that a pattern catches.
+      extraHeaders: '{"X-Tenant":"synthetic-tenant-value","X-Auth-Token":"synthetic-token-value"}',
+    },
+  });
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await context.route(`${BASE_URL}/models`, (route) =>
     route.fulfill({
@@ -47,7 +43,9 @@ test('[mocked provider contract] AI activity records a request with its key and 
 
   // Off by default: a check leaves no trace.
   await page.getByRole('button', { name: 'Verify Service' }).click();
-  await expect(page.getByTestId('ai-service-status').getByText('Custom Provider responded successfully.')).toBeVisible();
+  await expect(
+    page.getByTestId('ai-service-status').getByText('Custom Provider responded successfully.'),
+  ).toBeVisible();
   await expect(entries).toHaveCount(0);
 
   await activity.getByRole('switch', { name: 'Record requests' }).click();
@@ -66,8 +64,8 @@ test('[mocked provider contract] AI activity records a request with its key and 
   await expect(entry).toContainText('"x-tenant": "[redacted]"');
   const secrets = /synthetic-(activity-key|tenant-value|token-value)/;
   await expect(entry).not.toContainText(secrets);
-  const stored = await extensionWorker.evaluate(async () =>
-    JSON.stringify(await chrome.storage.local.get('bookmark-scout-ai-activity')),
+  const stored = JSON.stringify(
+    (await readStoredRaw(extensionWorker, STORAGE_ITEMS.aiActivity)) ?? null,
   );
   expect(stored).not.toMatch(secrets);
   await entry.getByRole('button', { name: 'Copy as JSON' }).click();

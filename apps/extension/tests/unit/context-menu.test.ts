@@ -4,6 +4,7 @@ import { addRecentFolder, getRecentFolders } from '@/lib/recent-folders-storage'
 import { createBookmark } from '@/services/bookmarks';
 import { installFakePermissions } from '../fake-permissions';
 import { serveExtensionFiles } from '../locale-files';
+import { readStoredData, STORAGE_ITEMS, seedStored, storedEntry } from './storage-helpers';
 
 vi.mock('@/services/bookmarks', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/services/bookmarks')>()),
@@ -15,14 +16,20 @@ vi.mock('@/lib/recent-folders-storage', async (importOriginal) => ({
   getRecentFolders: vi.fn(),
 }));
 
-const SETTINGS_KEY = 'bookmark-scout-settings';
+const SETTINGS = STORAGE_ITEMS.settings;
 const MENU_ID = 'bookmark-scout::static::1';
 
 type TreeFixture = Browser.bookmarks.BookmarkTreeNode[];
 
 const folder = (id: string, parentId: string, title: string, folderType?: string) =>
-  ({ id, parentId, title, syncing: false, children: [], ...(folderType ? { folderType } : {}) }) as
-    Browser.bookmarks.BookmarkTreeNode;
+  ({
+    id,
+    parentId,
+    title,
+    syncing: false,
+    children: [],
+    ...(folderType ? { folderType } : {}),
+  }) as Browser.bookmarks.BookmarkTreeNode;
 
 /** Chrome 134+: permanent folders carry `folderType`. */
 const chromeTree: TreeFixture = [
@@ -58,19 +65,16 @@ let contextMenu: typeof import('@/services/context-menu');
 let permissions: ReturnType<typeof installFakePermissions>;
 
 async function getStoredSettings(): Promise<Record<string, unknown>> {
-  const result = await fakeBrowser.storage.sync.get(SETTINGS_KEY);
-  return (result[SETTINGS_KEY] as Record<string, unknown> | undefined) ?? {};
+  return ((await readStoredData(SETTINGS)) as Record<string, unknown> | undefined) ?? {};
 }
 
 /** Seeds settings before the storage listener is registered, with the menu on unless given. */
 async function seedSettings(settings: Record<string, unknown>) {
-  await fakeBrowser.storage.sync.set({ [SETTINGS_KEY]: { contextMenuEnabled: true, ...settings } });
+  await seedStored(SETTINGS, { contextMenuEnabled: true, ...settings });
 }
 
 async function setSettings(updates: Record<string, unknown>) {
-  await fakeBrowser.storage.sync.set({
-    [SETTINGS_KEY]: { ...(await getStoredSettings()), ...updates },
-  });
+  await seedStored(SETTINGS, { ...(await getStoredSettings()), ...updates });
 }
 
 beforeEach(async () => {
@@ -113,7 +117,7 @@ beforeEach(async () => {
 
 describe('context menu settings', () => {
   it('is off on a fresh install', async () => {
-    await fakeBrowser.storage.sync.remove(SETTINGS_KEY);
+    await fakeBrowser.storage.sync.clear();
     await contextMenu.initializeContextMenu();
     expect(menus.size).toBe(0);
   });
@@ -245,9 +249,9 @@ describe('context menu settings', () => {
     const rebuilding = contextMenu.contextMenuManager.rebuildMenu();
     await vi.waitFor(() => expect(getItems).toHaveBeenCalledOnce());
     // Change the stored value without an onChanged event so only the in-flight rebuild re-checks it.
-    vi.spyOn(fakeBrowser.storage.sync, 'get').mockResolvedValue({
-      [SETTINGS_KEY]: { contextMenuEnabled: false },
-    });
+    vi.spyOn(fakeBrowser.storage.sync, 'get').mockResolvedValue(
+      storedEntry(SETTINGS, { contextMenuEnabled: false }),
+    );
     releaseProvider();
     await rebuilding;
 

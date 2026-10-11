@@ -27,8 +27,7 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 /** Per device: whether Ask AI adds the provider's web search. */
-const webSearchValue = defineStoredValue<boolean>({
-  key: STORAGE_KEYS.askAiWebSearch,
+export const askAiWebSearchValue = defineStoredValue<boolean>(STORAGE_ITEMS.askAiWebSearch, {
   parse: (raw) => raw === true,
   empty: false,
 });
@@ -83,7 +82,9 @@ function describeTool(name: string, input: unknown): string {
 
 function MessageView({ message }: { message: UIMessage }) {
   if (message.role === 'user') {
-    const text = message.parts.flatMap((part) => (part.type === 'text' ? [part.text] : [])).join('');
+    const text = message.parts
+      .flatMap((part) => (part.type === 'text' ? [part.text] : []))
+      .join('');
     return (
       <div className="flex justify-end" data-testid="ask-ai-message" data-role="user">
         <p className="max-w-[85%] rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground whitespace-pre-wrap [overflow-wrap:anywhere]">
@@ -102,7 +103,10 @@ function MessageView({ message }: { message: UIMessage }) {
         const key = `${message.id}-${index}`;
         if (part.type === 'text') {
           return (
-            <div key={key} className="ask-ai-markdown text-sm leading-relaxed [overflow-wrap:anywhere]">
+            <div
+              key={key}
+              className="ask-ai-markdown text-sm leading-relaxed [overflow-wrap:anywhere]"
+            >
               <Markdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -164,10 +168,12 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const service = state.services.find((candidate) => candidate.id === state.defaultServiceId);
   const provider = service?.provider;
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
-  const { value: webSearch } = useStoredValue(webSearchValue);
+  const { value: webSearch } = useStoredValue(askAiWebSearchValue);
   const webSearchRef = useRef(false);
   webSearchRef.current = canSearchWeb && webSearch;
-  const [transport] = useState(() => new AskAITransport(() => ({ webSearch: webSearchRef.current })));
+  const [transport] = useState(
+    () => new AskAITransport(() => ({ webSearch: webSearchRef.current })),
+  );
   const { messages, sendMessage, status, stop, error, regenerate, setMessages, clearError } =
     useChat({ transport });
   const [draft, setDraft] = useState('');
@@ -217,7 +223,10 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
         >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <h2 id="ask-ai-heading" className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium">
+        <h2
+          id="ask-ai-heading"
+          className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-medium"
+        >
           <Sparkles aria-hidden="true" className="h-4 w-4 shrink-0 text-ai" />
           <span className="shrink-0">{t('askAI_title')}</span>
           {service && (
@@ -317,9 +326,11 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
               title={t('askAI_webSearch')}
               className={webSearch ? 'bg-ai/10 text-ai hover:bg-ai/15 hover:text-ai' : ''}
               onClick={() => {
-                void webSearchValue.set(!webSearch).catch((error) => {
-                  aiLogger.error({ error }, 'Failed to save the web search choice');
-                });
+                void askAiWebSearchValue
+                  .update((current) => !current)
+                  .catch((error) => {
+                    aiLogger.error({ error }, 'Failed to save the web search choice');
+                  });
               }}
             >
               <Globe className="h-4 w-4" />

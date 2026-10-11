@@ -1,9 +1,8 @@
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
 
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
   return worker.evaluate(
@@ -32,13 +31,7 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
 }
 
 async function updateSettings(worker: Worker, patch: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: patch },
-  );
+  await setSettings(worker, patch);
 }
 
 function managerUrl(extensionId: string, folderId?: string) {
@@ -186,10 +179,7 @@ test('current-folder help tooltip shows its full text', async ({ extensionId, pa
   await page.setViewportSize({ width: 1400, height: 900 });
   await page.goto(managerUrl(extensionId));
   const helpText = 'When unchecked, filters search all bookmarks.';
-  await page
-    .getByTestId('bookmark-table-toolbar')
-    .getByRole('button', { name: helpText })
-    .hover();
+  await page.getByTestId('bookmark-table-toolbar').getByRole('button', { name: helpText }).hover();
 
   const tooltip = page.locator('[data-base-ui-portal]').getByText(helpText).first();
   await expect(tooltip).toBeVisible();

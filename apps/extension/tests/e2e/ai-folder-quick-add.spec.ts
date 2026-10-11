@@ -1,6 +1,7 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { setSettings } from './popup-helpers';
+import { STORAGE_ITEMS, writeStoredItems } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
@@ -40,27 +41,29 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
 }
 
 async function configureStubProvider(worker: Worker, settings: Record<string, unknown> = {}) {
-  await worker.evaluate(async (overrides) => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': {
+  await writeStoredItems(worker, [
+    [
+      STORAGE_ITEMS.settings,
+      {
         aiEnabled: true,
         aiProvider: 'custom',
         aiModel: 'e2e-model',
         aiMaxRecommendations: 1,
         aiAutoTriggerOnOpen: false,
         recentFoldersEnabled: false,
-        ...overrides,
+        ...settings,
       },
-    });
-    await chrome.storage.local.set({
-      'bookmark-scout-ai': {
+    ],
+    [
+      STORAGE_ITEMS.aiCredentials,
+      {
         custom: {
           baseUrl: 'https://e2e.invalid/v1',
           customModel: 'e2e-model',
         },
       },
-    });
-  }, settings);
+    ],
+  ]);
 }
 
 type StubRecommendation = {

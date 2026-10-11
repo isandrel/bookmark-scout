@@ -37,8 +37,7 @@ export function normalizeRecentFolders(value: unknown): RecentFolder[] {
 }
 
 /** Most recent first; malformed stored entries are dropped on read. */
-export const recentFoldersValue = defineStoredValue<RecentFolder[]>({
-  key: STORAGE_KEYS.recentFolders,
+export const recentFoldersValue = defineStoredValue<RecentFolder[]>(STORAGE_ITEMS.recentFolders, {
   parse: normalizeRecentFolders,
   empty: [],
 });

@@ -53,7 +53,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 ## Visual checks
 
 - Keep one screenshot step file per surface under `~/.cache/bookmark-scout-qa/<topic>/` (for example `popup.ts`, `manager.ts`, `options.ts`) and run them with the `extension-exploratory-qa` runner.
-- Set the theme by writing `bookmark-scout-settings` in `chrome.storage.sync` from `sw.evaluate`; capture light, dark, and a narrow width.
+- Set the theme with `setSettings(sw, { theme })` from `apps/extension/tests/e2e/storage.ts` (it writes the registry key and the `{ v, data }` envelope); capture light, dark, and a narrow width.
 - Also capture keyboard focus and a short page. Two bugs showed only there: a row-actions overlay covering the focus ring's right edge (fixed with a 2px inset), and an Options footer floating mid-screen on short pages (fixed with a full-height column).
 - The popup's width comes from settings (`src/hooks/use-popup-size.ts`), not the viewport. To see the 300px layout, set the popup size in settings; a 300px viewport alone does not.
 - When the user sends a screen recording, extract frames and build a contact sheet, then sample densely around the bug:

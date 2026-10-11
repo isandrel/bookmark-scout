@@ -1,13 +1,12 @@
 import { expect, test } from './fixtures';
+import { STORAGE_ITEMS, writeStored } from './storage';
 
 test('a closing dialog fades its backdrop out without flashing back', async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(() =>
-    chrome.storage.sync.set({ 'bookmark-scout-settings': { language: 'en', aiEnabled: true } }),
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en', aiEnabled: true });
   // The suite runs with reduced motion; this test needs the real exit animation.
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto(`chrome-extension://${extensionId}/options.html`);

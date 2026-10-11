@@ -28,7 +28,7 @@ Drive the real built extension like a user, in a throwaway profile, and report c
    The runner launches headless Chromium with the unpacked build and a persistent profile at `$QA_DIR/$RUN/profile`, exposes the extension service worker, saves screenshots to `$QA_DIR/$RUN/shots/`, and prints console errors, page errors, and your log lines. `HEADED=1` shows the browser. Delete the profile folder to reset.
 3. Write one step file per scenario. Start from `scripts/example-seed-step.ts`: seed synthetic data through `sw.evaluate` and `chrome.bookmarks`, open pages with `open('popup.html', 420, 600)`, act through the UI, verify through the APIs, and call `shot(page, name)`.
 
-Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmarks.html` (manager, 1400×900 and a narrow width; Tools sidebar toggle at the top right), `options.html`. Settings live in `chrome.storage.sync` under `bookmark-scout-settings`; bookmark metadata in `chrome.storage.local` under `bookmark-scout-bookmark-metadata`.
+Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmarks.html` (manager, 1400×900 and a narrow width; Tools sidebar toggle at the top right), `options.html`. Stored items are listed in `src/lib/storage/registry.ts` and stored as `{ v, data }` (settings in `chrome.storage.sync` under `settings`, tags and summaries in `chrome.storage.local` under `bookmarks.metadata`); seed and read them with the helpers in `apps/extension/tests/e2e/storage.ts` (`setSettings`, `writeStored`, `readStored`) instead of spelling keys.
 
 ## Rules
 

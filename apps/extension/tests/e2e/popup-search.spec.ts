@@ -4,10 +4,10 @@ import {
   folderRow,
   openPopup,
   otherBookmarksTitle,
-  SEARCH_HISTORY_KEY,
   seedFolder,
   setSettings,
 } from './popup-helpers';
+import { readSettings, readStored, STORAGE_ITEMS, writeStored } from './storage';
 
 test('expand all during a search keeps the filter and the result limit', async ({
   extensionId,
@@ -81,7 +81,9 @@ test('whole-word search matches CJK and symbol-edged terms, and invalid regex wa
   await page.getByRole('button', { name: 'Match whole word' }).click();
 
   await search.fill('ブックマーク');
-  await expect(bookmarkRow(page, '日本語のブックマーク').locator('mark')).toHaveText('ブックマーク');
+  await expect(bookmarkRow(page, '日本語のブックマーク').locator('mark')).toHaveText(
+    'ブックマーク',
+  );
   await search.fill('C++');
   await expect(bookmarkRow(page, 'Learn C++ today')).toBeVisible();
   await search.fill('C#');
@@ -137,11 +139,7 @@ test('search history ignores abandoned queries and supports the keyboard', async
   await seedFolder(extensionWorker, 'E2E History Keys', [
     { title: 'Keyboard Target', url: 'https://e2e.invalid/keys' },
   ]);
-  const storedHistory = () =>
-    extensionWorker.evaluate(
-      async (key) => (await chrome.storage.local.get(key))[key] as string[] | undefined,
-      SEARCH_HISTORY_KEY,
-    );
+  const storedHistory = () => readStored<string[]>(extensionWorker, STORAGE_ITEMS.searchHistory);
 
   await openPopup(page, extensionId);
   const search = page.getByPlaceholder('Search bookmarks...');
@@ -181,10 +179,7 @@ test('ArrowDown enters the tree even with search history, which Alt+ArrowDown op
   page,
 }) => {
   const seeded = await seedFolder(extensionWorker, 'E2E History Tree', []);
-  await extensionWorker.evaluate(
-    (key) => chrome.storage.local.set({ [key]: ['Older Query', 'Newer Query'] }),
-    SEARCH_HISTORY_KEY,
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.searchHistory, ['Older Query', 'Newer Query']);
 
   await openPopup(page, extensionId);
   const search = page.getByRole('combobox', { name: 'Search bookmarks...' });
@@ -209,14 +204,7 @@ test('ArrowDown enters the tree even with search history, which Alt+ArrowDown op
   await page.keyboard.press('Enter');
   await expect(history).toHaveCount(0);
   await expect(search).toBeFocused();
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(
-        async (key) => (await chrome.storage.local.get(key))[key],
-        SEARCH_HISTORY_KEY,
-      ),
-    )
-    .toBeUndefined();
+  await expect.poll(() => readStored(extensionWorker, STORAGE_ITEMS.searchHistory)).toBeUndefined();
 });
 
 test('theme toggle follows the system theme and AI button hides when AI is off', async ({
@@ -231,14 +219,7 @@ test('theme toggle follows the system theme and AI button hides when AI is off',
 
   await page.getByRole('button', { name: 'Light mode' }).click();
   await expect(page.locator('html')).not.toHaveClass(/dark/);
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
-        return stored['bookmark-scout-settings']?.theme;
-      }),
-    )
-    .toBe('light');
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('light');
 
   await setSettings(extensionWorker, { aiEnabled: true });
   await expect(page.getByRole('button', { name: 'AI folder recommendation' })).toBeVisible();

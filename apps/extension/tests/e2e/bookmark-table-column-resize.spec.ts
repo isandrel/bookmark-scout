@@ -1,8 +1,8 @@
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { readStored, STORAGE_ITEMS } from './storage';
 import { seedFolder } from './tool-helpers';
 
-const TABLE_VIEW_KEY = 'bookmark-scout-table-view';
 const LONG_TITLE = 'Resizable Title That Is Long Enough To Need An Ellipsis When Narrow';
 
 test.use({ viewport: { width: 1400, height: 900 } });
@@ -25,18 +25,16 @@ async function width(locator: Locator): Promise<number> {
   return box.width;
 }
 
+type StoredTableView = { columnSizing?: Record<string, number>; sorting?: unknown[] };
+
 async function savedColumnSizing(worker: Worker): Promise<Record<string, number>> {
-  return worker.evaluate(async (key) => {
-    const stored = await chrome.storage.sync.get(key);
-    return stored[key]?.columnSizing ?? {};
-  }, TABLE_VIEW_KEY);
+  const stored = await readStored<StoredTableView>(worker, STORAGE_ITEMS.tableView);
+  return stored?.columnSizing ?? {};
 }
 
 async function savedSorting(worker: Worker): Promise<unknown[]> {
-  return worker.evaluate(async (key) => {
-    const stored = await chrome.storage.sync.get(key);
-    return stored[key]?.sorting ?? [];
-  }, TABLE_VIEW_KEY);
+  const stored = await readStored<StoredTableView>(worker, STORAGE_ITEMS.tableView);
+  return stored?.sorting ?? [];
 }
 
 async function rowTitles(page: Page): Promise<string[]> {

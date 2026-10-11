@@ -13,7 +13,7 @@ const KINDS: { kind: string; pattern: RegExp }[] = [
   { kind: 'network request', pattern: /\bfetch\(|new Request\(|XMLHttpRequest|sendBeacon|new WebSocket\(|new EventSource\(/ },
   { kind: 'logging fetch (AI traffic)', pattern: /createLoggingFetch/ },
   { kind: 'hard-coded external URL', pattern: /['"`]https?:\/\/(?!localhost|127\.0\.0\.1)[^'"`\s]+/ },
-  { kind: 'synced storage (leaves via browser sync)', pattern: /['"`]sync:[\w-]+|storage\.sync\b/ },
+  { kind: 'synced storage (leaves via browser sync)', pattern: /area: ['"]sync['"]|['"`]sync:[\w-]+|storage\.sync\b/ },
   { kind: 'permission or data-collection request', pattern: /permissions\.request\(|data_collection|dataCollection:/ },
   { kind: 'opens or reads tabs and pages', pattern: /tabs\.query\(|scripting\.executeScript|['"]activeTab['"]|\bactiveTab:|tabs\.create\(/ },
   { kind: 'credentials or cookies', pattern: /credentials:\s*['"]|cookies\./ },

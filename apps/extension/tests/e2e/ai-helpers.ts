@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect } from './fixtures';
+import { readStored, STORAGE_ITEMS } from './storage';
 
 export async function openAIOptions(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/options.html`);
@@ -29,10 +30,8 @@ export async function addAIServiceInOptions(
 }
 
 export async function readAIServices(page: Page) {
-  return page.evaluate(async () => {
-    const stored = await chrome.storage.local.get('bookmark-scout-ai-services');
-    return stored['bookmark-scout-ai-services'] as
-      | { services: { id: string; provider: string; model: string; name: string }[] }
-      | undefined;
-  });
+  return readStored<{ services: { id: string; provider: string; model: string; name: string }[] }>(
+    page,
+    STORAGE_ITEMS.aiServices,
+  );
 }

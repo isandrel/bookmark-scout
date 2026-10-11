@@ -16,6 +16,7 @@ export default defineConfig({
         dirs: [
             'components/**',
             'lib',
+            'lib/storage',
             'services',
             'stores',
             '!**/index.ts',

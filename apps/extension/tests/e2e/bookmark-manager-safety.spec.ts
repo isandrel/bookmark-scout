@@ -1,9 +1,8 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
 
 /** Creates a folder under the first writable root and returns IDs keyed by title. */
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
@@ -37,13 +36,7 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
 }
 
 async function updateSettings(worker: Worker, patch: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: patch },
-  );
+  await setSettings(worker, patch);
 }
 
 function childTitles(worker: Worker, folderId: string) {
@@ -531,11 +524,10 @@ test('Back returns to the table page that was open', async ({
 
   // A reload keeps that page too; the saved table view loading afterwards must not reset it.
   // The saved view hides Date Added, so its header disappearing shows the view has loaded.
-  await extensionWorker.evaluate(() =>
-    chrome.storage.sync.set({
-      'bookmark-scout-table-view': { version: 1, columnVisibility: { dateAdded: false } },
-    }),
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableView, {
+    version: 1,
+    columnVisibility: { dateAdded: false },
+  });
   await page.reload();
   await expect(page.getByRole('columnheader', { name: 'Date Added' })).toHaveCount(0);
   await expect(page.getByText('Page 2 of 2')).toBeVisible();
