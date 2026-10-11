@@ -307,6 +307,25 @@ describe('findDuplicates, checkLinks, and suggestFolders', () => {
   });
 });
 
+describe('Ask AI action settings', () => {
+  it('leaves out and refuses the actions the user turned off for Ask AI', async () => {
+    const settings = {
+      ...defaultSettings,
+      language: 'en',
+      askAiDisabledActions: ['listFolders'],
+    } as Settings;
+    expect(await agentActionIds(context({ settings }))).not.toContain('listFolders');
+    expect(await agentActionIds(context())).toContain('listFolders');
+    expect(await run('listFolders', {}, { settings })).toMatchObject({
+      error: { code: 'not_allowed' },
+    });
+    // The setting is Ask AI's: another agent is not affected by it.
+    expect(
+      await run('listFolders', {}, { settings, client: { kind: 'external', name: 'test' } }),
+    ).toHaveProperty('folders');
+  });
+});
+
 describe('runAction', () => {
   it('rejects unknown tools and invalid input, and turns a thrown error into a result', async () => {
     expect(await run('deleteEverything', {})).toMatchObject({ error: { code: 'not_found' } });

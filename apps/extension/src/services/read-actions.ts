@@ -75,6 +75,7 @@ function wrapUntrusted(text: string): string {
 
 const searchBookmarks = defineAction({
   risk: 'read',
+  labelKey: 'actionName_searchBookmarks',
   targets: ['library'],
   agent: {
     description:
@@ -152,6 +153,7 @@ const searchBookmarks = defineAction({
 
 const listFolders = defineAction({
   risk: 'read',
+  labelKey: 'actionName_listFolders',
   targets: ['library'],
   agent: {
     description:
@@ -192,6 +194,7 @@ const listFolders = defineAction({
 
 const getBookmarks = defineAction({
   risk: 'read',
+  labelKey: 'actionName_getBookmarks',
   targets: ['bookmark', 'folder'],
   agent: {
     description:
@@ -235,6 +238,7 @@ const getBookmarks = defineAction({
 
 const getCurrentPage = defineAction({
   risk: 'read',
+  labelKey: 'actionName_getCurrentPage',
   targets: ['page'],
   agent: {
     description:
@@ -268,6 +272,7 @@ const getCurrentPage = defineAction({
 
 const readPage = defineAction({
   risk: 'read',
+  labelKey: 'actionName_readPage',
   targets: ['bookmark', 'page'],
   agent: {
     description:
@@ -341,6 +346,7 @@ const readPage = defineAction({
 
 const findDuplicates = defineAction({
   risk: 'read',
+  labelKey: 'actionName_findDuplicates',
   targets: ['library', 'folder'],
   agent: {
     description:
@@ -383,6 +389,7 @@ const findDuplicates = defineAction({
 
 const checkLinks = defineAction({
   risk: 'read',
+  labelKey: 'actionName_checkLinks',
   targets: ['bookmark', 'folder'],
   permission: 'webAccess',
   agent: {
@@ -446,6 +453,7 @@ const checkLinks = defineAction({
 
 const suggestFolders = defineAction({
   risk: 'read',
+  labelKey: 'actionName_suggestFolders',
   targets: ['bookmark', 'page', 'url'],
   agent: {
     description:

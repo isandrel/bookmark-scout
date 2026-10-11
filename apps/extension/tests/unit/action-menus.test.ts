@@ -4,10 +4,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
+import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import type { Bookmark } from '@/lib/manager-bookmark';
 import {
   ACTION_MENUS,
   type ActionItemHost,
+  customizeItemMenu,
   getItemMenuLabel,
   getItemMenuSections,
 } from '@/services/action-menus';
@@ -108,6 +110,31 @@ describe('bookmark action menus', () => {
       'openInNewTab',
       'openInNewWindow',
     ]);
+  });
+
+  it('hide and reorder item-menu actions as the user arranged them', () => {
+    expect(customizeItemMenu([])).toEqual(ACTION_MENUS.item);
+    // Order follows the setting within each configured group; unnamed actions are hidden.
+    expect(customizeItemMenu(['delete', 'viewDetails', 'copy', 'edit', 'cut'])).toEqual([
+      ['viewDetails', 'edit'],
+      ['copy', 'cut'],
+      ['delete'],
+    ]);
+    const custom = customizeItemMenu(['copyId', 'edit']);
+    expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([['edit'], ['copyId']]);
+  });
+
+  it('fits every menu and agent action id within the settings that list them', () => {
+    const meta = getSettingsFieldMeta();
+    const lists = {
+      managerMenuActions: ACTION_MENUS.item.flat(),
+      askAiDisabledActions: ACTION_IDS.filter((id) => getAction(id).agent),
+    } as const;
+    for (const [key, ids] of Object.entries(lists)) {
+      const field = meta[key as keyof typeof lists];
+      expect(ids.length, key).toBeLessThanOrEqual(field.maxItems ?? 0);
+      for (const id of ids) expect(id.length, id).toBeLessThanOrEqual(field.maxLength ?? 0);
+    }
   });
 
   it('names a folder edit Rename', () => {

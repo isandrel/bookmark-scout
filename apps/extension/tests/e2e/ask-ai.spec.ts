@@ -431,3 +431,44 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   ).toBeVisible();
   await expect(buttons.getByRole('button', { name: 'More on ownership?' })).toBeDisabled();
 });
+
+test('[mocked provider contract] Ask AI is not offered the actions turned off in Options', async ({
+  context,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await replaceSettings(extensionWorker, {
+    language: 'en',
+    aiEnabled: true,
+    aiAutoTriggerOnOpen: false,
+  });
+  await seedAskService(extensionWorker);
+  const requests = await stubAgentProvider(context);
+
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${extensionId}/options.html`);
+  await options.getByRole('tab', { name: 'AI', exact: true }).click();
+  const panel = options.getByTestId('ask-ai-actions');
+  // Deleting is not offered on its own: Ask AI deletes only through an approved plan.
+  await expect(panel.getByRole('checkbox', { name: 'Delete bookmarks and folders' })).toHaveCount(
+    0,
+  );
+  await panel.getByRole('checkbox', { name: 'List folders' }).click();
+  await panel.getByRole('checkbox', { name: 'Apply approved changes' }).click();
+  await expect(panel.getByRole('checkbox', { name: 'List folders' })).not.toBeChecked();
+
+  await page.goto(`chrome-extension://${extensionId}/popup.html`);
+  await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
+  const chat = page.getByTestId('ask-ai');
+  const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
+  await box.fill('Which Rust pages did I save?');
+  await box.press('Enter');
+  await expect(chat.getByTestId('ask-ai-tool')).toHaveText('Searched your bookmarks for “rust”');
+
+  const offered = JSON.stringify(requests[0]);
+  expect(offered).toContain('"searchBookmarks"');
+  expect(offered).not.toContain('"listFolders"');
+  expect(offered).not.toContain('"applyChanges"');
+  expect(offered).toContain('"proposeChanges"');
+});
