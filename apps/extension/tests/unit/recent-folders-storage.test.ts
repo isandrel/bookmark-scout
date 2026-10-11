@@ -8,12 +8,12 @@ import {
   removeRecentFolders,
   updateRecentFolderTitle,
 } from '@/lib/recent-folders-storage';
+import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
-const KEY = 'bookmark-scout-recent-folders';
 let folders: Map<string, string>;
 
 async function readStored() {
-  return (await fakeBrowser.storage.local.get(KEY))[KEY] as { id: string; title: string }[];
+  return (await readStoredData(STORAGE_ITEMS.recentFolders)) as { id: string; title: string }[];
 }
 
 beforeEach(() => {

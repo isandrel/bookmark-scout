@@ -2,6 +2,7 @@ import type { BrowserContext, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openAIOptions, openMoreSettings, readAIServices } from './ai-helpers';
 import { setSettings } from './popup-helpers';
+import { STORAGE_ITEMS, writeStored } from './storage';
 
 // Website access is pre-granted, so Refresh and Verify never wait on the permission prompt.
 test.use({ grantWebHostAccess: true });
@@ -9,14 +10,8 @@ test.use({ grantWebHostAccess: true });
 const BASE_URL = 'https://provider.invalid/v1';
 
 async function seedProvider(worker: Worker, provider: string, config: Record<string, string>) {
-  await worker.evaluate(
-    async ({ providerId, providerConfig }) => {
-      await chrome.storage.local.set({ 'bookmark-scout-ai': { [providerId]: providerConfig } });
-    },
-    { providerId: provider, providerConfig: config },
-  );
+  await writeStored(worker, STORAGE_ITEMS.aiCredentials, { [provider]: config });
 }
-
 
 /** Serves an OpenAI-style model list, and counts requests that would spend tokens. */
 async function mockModelList(context: BrowserContext, status = 200, body: unknown = {}) {
@@ -93,9 +88,11 @@ test('[mocked provider contract] Verify Service checks the model list instead of
   await openAIOptions(page, extensionId);
   await page.getByRole('button', { name: 'Verify Service' }).click();
   await expect(
-    page.getByTestId('ai-service-status').getByText(
-      'Connected to Custom Provider, but gpt-4o-mini is not in its model list. Pick another model.',
-    ),
+    page
+      .getByTestId('ai-service-status')
+      .getByText(
+        'Connected to Custom Provider, but gpt-4o-mini is not in its model list. Pick another model.',
+      ),
   ).toBeVisible();
   expect(seen.models).toBe(1);
   expect(seen.generations).toBe(0);
@@ -114,9 +111,9 @@ test('[mocked provider contract] Verify Service explains a rejected key', async 
   await openAIOptions(page, extensionId);
   await page.getByRole('button', { name: 'Verify Service' }).click();
   await expect(
-    page.getByTestId('ai-service-status').getByText(
-      'The provider rejected the API key. Check that it is correct and still active.',
-    ),
+    page
+      .getByTestId('ai-service-status')
+      .getByText('The provider rejected the API key. Check that it is correct and still active.'),
   ).toBeVisible();
 });
 

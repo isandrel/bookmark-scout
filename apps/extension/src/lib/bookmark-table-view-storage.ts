@@ -110,11 +110,13 @@ export function parseBookmarkTableView(value: unknown): BookmarkTableView {
  * `version` is the payload's own schema version, not a WXT item version, so no `$` metadata key
  * is written. Synced, so the layout follows the user to other devices.
  */
-export const bookmarkTableViewValue = defineStoredValue<BookmarkTableView>({
-  key: STORAGE_KEYS.tableView,
-  parse: parseBookmarkTableView,
-  empty: DEFAULT_BOOKMARK_TABLE_VIEW,
-});
+export const bookmarkTableViewValue = defineStoredValue<BookmarkTableView>(
+  STORAGE_ITEMS.tableView,
+  {
+    parse: parseBookmarkTableView,
+    empty: DEFAULT_BOOKMARK_TABLE_VIEW,
+  },
+);
 
 export async function getBookmarkTableView(): Promise<BookmarkTableView> {
   try {

@@ -20,9 +20,7 @@ import {
 } from '@/services/site-icons';
 import { lookupSiteIcon } from '@/stores/site-icon-store';
 import type { BookmarkTreeNode } from '@/types';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
-
-const SITE_ICON_STORAGE_KEY = STORAGE_KEYS.siteIcons.replace(/^local:/, '');
+import { readStoredRaw, STORAGE_ITEMS } from './storage-helpers';
 
 const PNG_BYTES = Uint8Array.from(
   atob(
@@ -102,15 +100,19 @@ describe('icon candidate parsing', () => {
 
   it('ignores links inside an unterminated comment', () => {
     expect(
-      parseIconCandidates('<link rel="icon" href="/a.png"><!-- <link rel="icon" href="/b.png">', 'https://a.test/')
-        .map((candidate) => candidate.url),
+      parseIconCandidates(
+        '<link rel="icon" href="/a.png"><!-- <link rel="icon" href="/b.png">',
+        'https://a.test/',
+      ).map((candidate) => candidate.url),
     ).toEqual(['https://a.test/a.png']);
   });
 
   it('resolves relative icons against the page when there is no base', () => {
     expect(
-      parseIconCandidates('<link rel="icon" href="../img/i.svg" sizes="any">', 'https://a.test/x/y/z')
-        .map((candidate) => [candidate.url, candidate.sizes]),
+      parseIconCandidates(
+        '<link rel="icon" href="../img/i.svg" sizes="any">',
+        'https://a.test/x/y/z',
+      ).map((candidate) => [candidate.url, candidate.sizes]),
     ).toEqual([['https://a.test/x/img/i.svg', 'any']]);
   });
 
@@ -257,7 +259,11 @@ describe('site icon refresh', () => {
       'https://gone.test/': { status: 404, type: 'text/html', body: '' },
     });
     const result = await refreshSiteIcons(
-      folder({ same: 'https://same.test/', down: 'https://down.test/', gone: 'https://gone.test/' }),
+      folder({
+        same: 'https://same.test/',
+        down: 'https://down.test/',
+        gone: 'https://gone.test/',
+      }),
       refreshOptions,
       { 'https://same.test': PNG_DATA_URL, 'https://down.test': PNG_DATA_URL },
     );
@@ -281,7 +287,11 @@ describe('site icon storage', () => {
   it('evicts the oldest icons to stay within the saved cache limit', async () => {
     const entry = (fetchedAt: number) => ({ icon: PNG_DATA_URL, fetchedAt });
     const size = PNG_DATA_URL.length;
-    const cache = { 'https://a.test': entry(1), 'https://b.test': entry(3), 'https://c.test': entry(2) };
+    const cache = {
+      'https://a.test': entry(1),
+      'https://b.test': entry(3),
+      'https://c.test': entry(2),
+    };
     expect(fitSiteIconCache(cache, size * 3)).toEqual({ cache, evicted: [] });
     const trimmed = fitSiteIconCache(cache, size * 2);
     expect(Object.keys(trimmed.cache).sort()).toEqual(['https://b.test', 'https://c.test']);
@@ -301,7 +311,7 @@ describe('site icon storage', () => {
     expect(Object.keys(await getSiteIconCache())).toHaveLength(3);
 
     await clearSiteIconCache();
-    expect(await fakeBrowser.storage.local.get(SITE_ICON_STORAGE_KEY)).toEqual({});
+    expect(await readStoredRaw(STORAGE_ITEMS.siteIcons)).toBeUndefined();
   });
 
   it('drops malformed stored icons and keys on read and save', async () => {
@@ -329,7 +339,10 @@ describe('site icon rendering', () => {
   it('looks up saved icons by origin, then by host under the other scheme or www', () => {
     const state = {
       byOrigin: { 'https://www.a.test': 'data:image/png;base64,QQ==' },
-      byHost: { 'www.a.test': 'data:image/png;base64,QQ==', 'b.test': 'data:image/png;base64,Qg==' },
+      byHost: {
+        'www.a.test': 'data:image/png;base64,QQ==',
+        'b.test': 'data:image/png;base64,Qg==',
+      },
     };
     expect(lookupSiteIcon(state, 'https://www.a.test/page')).toBe('data:image/png;base64,QQ==');
     expect(lookupSiteIcon(state, 'http://a.test/')).toBe('data:image/png;base64,QQ==');

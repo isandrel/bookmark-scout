@@ -1,5 +1,6 @@
 import type { BrowserContext } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { readStored, STORAGE_ITEMS, writeStoredItems } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
@@ -7,8 +8,20 @@ test.use({ grantPermissions: ['tabs'] });
 
 const SERVICES = {
   services: [
-    { id: 'custom-work', name: 'Work proxy', provider: 'custom', model: 'work-model', enabled: true },
-    { id: 'custom-home', name: 'Home proxy', provider: 'custom', model: 'home-model', enabled: true },
+    {
+      id: 'custom-work',
+      name: 'Work proxy',
+      provider: 'custom',
+      model: 'work-model',
+      enabled: true,
+    },
+    {
+      id: 'custom-home',
+      name: 'Home proxy',
+      provider: 'custom',
+      model: 'home-model',
+      enabled: true,
+    },
   ],
   defaultServiceId: 'custom-work',
 };
@@ -18,7 +31,13 @@ async function stubProxies(context: BrowserContext) {
   const calls: { host: string; model: string }[] = [];
   const text = JSON.stringify({
     recommendations: [
-      { type: 'existing', confidence: 0.9, folderPath: 'Reading', parentPath: '', reason: 'Fixture' },
+      {
+        type: 'existing',
+        confidence: 0.9,
+        folderPath: 'Reading',
+        parentPath: '',
+        reason: 'Fixture',
+      },
     ],
   });
   for (const host of ['work.e2e.invalid', 'home.e2e.invalid']) {
@@ -48,27 +67,32 @@ test('[mocked provider contract] two services of one provider keep their own end
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (services) => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': {
+  await writeStoredItems(extensionWorker, [
+    [
+      STORAGE_ITEMS.settings,
+      {
         language: 'en',
         aiEnabled: true,
         aiMaxRecommendations: 1,
         aiAutoTriggerOnOpen: false,
         recentFoldersEnabled: false,
       },
-    });
-    await chrome.storage.local.set({
-      'bookmark-scout-ai-services': services,
-      'bookmark-scout-ai': {
+    ],
+    [STORAGE_ITEMS.aiServices, SERVICES],
+    [
+      STORAGE_ITEMS.aiCredentials,
+      {
         'custom-work': { baseUrl: 'https://work.e2e.invalid/v1', apiKey: 'work-key' },
         'custom-home': { baseUrl: 'https://home.e2e.invalid/v1', apiKey: 'home-key' },
       },
-    });
+    ],
+  ]);
+  await extensionWorker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();
     const writableRoot = root.children?.find((node) => node.children !== undefined);
-    if (writableRoot) await chrome.bookmarks.create({ parentId: writableRoot.id, title: 'Reading' });
-  }, SERVICES);
+    if (writableRoot)
+      await chrome.bookmarks.create({ parentId: writableRoot.id, title: 'Reading' });
+  });
   const calls = await stubProxies(context);
 
   await context.route('https://current.e2e.invalid/article', (route) =>
@@ -93,12 +117,10 @@ test('[mocked provider contract] two services of one provider keep their own end
   await popup.getByRole('menuitemradio', { name: /Home proxy/ }).click();
   await expect(switcher).toHaveAccessibleName('AI service: Home proxy');
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.local.get('bookmark-scout-ai-services');
-        return (stored['bookmark-scout-ai-services'] as { defaultServiceId?: string })
-          .defaultServiceId;
-      }),
+    .poll(
+      async () =>
+        (await readStored<{ defaultServiceId?: string }>(extensionWorker, STORAGE_ITEMS.aiServices))
+          ?.defaultServiceId,
     )
     .toBe('custom-home');
 
@@ -112,10 +134,10 @@ test('Options lists saved services and Set as default moves the badge', async ({
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (services) => {
-    await chrome.storage.sync.set({ 'bookmark-scout-settings': { language: 'en' } });
-    await chrome.storage.local.set({ 'bookmark-scout-ai-services': services });
-  }, SERVICES);
+  await writeStoredItems(extensionWorker, [
+    [STORAGE_ITEMS.settings, { language: 'en' }],
+    [STORAGE_ITEMS.aiServices, SERVICES],
+  ]);
 
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
@@ -131,7 +153,10 @@ test('Options lists saved services and Set as default moves the badge', async ({
 
   await work.getByRole('button', { name: 'Actions for Work proxy' }).click();
   await page.getByRole('menuitem', { name: 'Delete' }).click();
-  await page.getByRole('dialog', { name: 'Delete Work proxy?' }).getByRole('button', { name: 'Delete' }).click();
+  await page
+    .getByRole('dialog', { name: 'Delete Work proxy?' })
+    .getByRole('button', { name: 'Delete' })
+    .click();
   await expect(page.getByTestId('ai-service')).toHaveCount(1);
   // The menu that opened the dialog went with the row, so focus moves to the next service.
   await expect(page.getByRole('button', { name: 'Edit Home proxy' })).toBeFocused();
@@ -156,10 +181,10 @@ test('an API key field shows the key format, or says required or optional in the
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (services) => {
-    await chrome.storage.sync.set({ 'bookmark-scout-settings': { language: 'ja' } });
-    await chrome.storage.local.set({ 'bookmark-scout-ai-services': services });
-  }, SERVICES);
+  await writeStoredItems(extensionWorker, [
+    [STORAGE_ITEMS.settings, { language: 'ja' }],
+    [STORAGE_ITEMS.aiServices, SERVICES],
+  ]);
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
   await expect(page.getByLabel('APIキー', { exact: true })).toHaveAttribute('placeholder', '任意');
@@ -173,18 +198,16 @@ test('an API key field shows the key format, or says required or optional in the
     { language: 'ko', label: 'API 키', provider: 'openai', placeholder: 'sk-...' },
   ];
   for (const { language, label, provider, placeholder } of cases) {
-    await extensionWorker.evaluate(
-      async ({ language, provider }) => {
-        await chrome.storage.sync.set({ 'bookmark-scout-settings': { language } });
-        await chrome.storage.local.set({
-          'bookmark-scout-ai-services': {
-            services: [{ id: provider, name: provider, provider, model: 'm', enabled: true }],
-            defaultServiceId: provider,
-          },
-        });
-      },
-      { language, provider },
-    );
+    await writeStoredItems(extensionWorker, [
+      [STORAGE_ITEMS.settings, { language }],
+      [
+        STORAGE_ITEMS.aiServices,
+        {
+          services: [{ id: provider, name: provider, provider, model: 'm', enabled: true }],
+          defaultServiceId: provider,
+        },
+      ],
+    ]);
     await page.reload();
     await page.getByRole('tab', { name: 'AI', exact: true }).click();
     await expect(page.getByLabel(label, { exact: true }), provider).toHaveAttribute(

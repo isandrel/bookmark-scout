@@ -1,11 +1,17 @@
 /**
  * Background script entrypoint for WXT.
- * Starts the context menu (and its click listener), the quick save shortcuts, and the bookmark
- * listeners.
+ * Starts the context menu (and its click listener), the quick save shortcuts, the bookmark
+ * listeners, and storage housekeeping.
  */
 
 // defineBackground is auto-imported by WXT
 export default defineBackground(() => {
+  // Data from older releases is not migrated: keys this release does not register are removed.
+  registerStorageCleanup();
+  void restrictLocalStorageAccess();
+  // Saves settings a closing Options page hands over.
+  registerSettingsSaveListener();
+
   browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
     const removedIds = subtreeIds(removeInfo.node);
     void removeStoredBookmarkMetadata(removedIds).catch((error) => {

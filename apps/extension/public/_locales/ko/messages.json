@@ -331,6 +331,10 @@
         "message": "잘못된 설정 파일입니다",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "최신 버전의 Bookmark Scout에서 저장한 데이터입니다. 변경하려면 확장 프로그램을 업데이트하세요.",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "내보내기",
         "description": "Export button label"

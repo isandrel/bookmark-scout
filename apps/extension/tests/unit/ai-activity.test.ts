@@ -16,6 +16,7 @@ import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { MAX_PROMPT_BYTES } from '@/lib/prompt-library-storage';
 import { AI_ACTIVITY_SOURCES, createLoggingFetch } from '@/services/ai-activity';
 import { readConfigToml } from '../config-files';
+import { STORAGE_ITEMS, seedStored } from './storage-helpers';
 
 const entry = (index: number) => ({
   at: index,
@@ -84,12 +85,10 @@ describe('AI activity redaction', () => {
     expect(redacted).toMatchObject({ 'x-tenant': REDACTED_VALUE, accept: 'application/json' });
   });
 
-  it('redacts credentials in entries an older release stored', async () => {
-    await fakeBrowser.storage.local.set({
-      'bookmark-scout-ai-activity': [
-        { ...entry(1), id: 'old', requestHeaders: { 'x-auth-token': 'old-secret', accept: '*/*' } },
-      ],
-    });
+  it('redacts credentials in entries stored with one', async () => {
+    await seedStored(STORAGE_ITEMS.aiActivity, [
+      { ...entry(1), id: 'old', requestHeaders: { 'x-auth-token': 'old-secret', accept: '*/*' } },
+    ]);
     const [stored] = await aiActivityValue.get();
     expect(stored?.requestHeaders).toEqual({ 'x-auth-token': REDACTED_VALUE, accept: '*/*' });
   });

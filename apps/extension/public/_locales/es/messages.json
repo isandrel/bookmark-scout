@@ -331,6 +331,10 @@
         "message": "Archivo de configuración no válido",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "Una versión más reciente de Bookmark Scout guardó estos datos. Actualiza la extensión para cambiarlos.",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "Exportar",
         "description": "Export button label"

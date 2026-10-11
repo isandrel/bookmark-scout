@@ -9,8 +9,7 @@ import {
   seedFolder,
   setSettings,
 } from './popup-helpers';
-
-const RECENT_KEY = 'bookmark-scout-recent-folders';
+import { STORAGE_ITEMS, writeStored } from './storage';
 
 async function childCount(worker: Worker, folderId: string) {
   return (await childTitles(worker, folderId)).length;
@@ -105,18 +104,10 @@ test.describe('saving the current page', () => {
   }) => {
     const doubled = await seedFolder(extensionWorker, 'E2E Recent Double', []);
     const sameTick = await seedFolder(extensionWorker, 'E2E Recent Tick', []);
-    await extensionWorker.evaluate(
-      async ({ key, recent }) => {
-        await chrome.storage.local.set({ [key]: recent });
-      },
-      {
-        key: RECENT_KEY,
-        recent: [
-          { id: doubled.folderId, title: 'E2E Recent Double', lastUsed: 2 },
-          { id: sameTick.folderId, title: 'E2E Recent Tick', lastUsed: 1 },
-        ],
-      },
-    );
+    await writeStored(extensionWorker, STORAGE_ITEMS.recentFolders, [
+      { id: doubled.folderId, title: 'E2E Recent Double', lastUsed: 2 },
+      { id: sameTick.folderId, title: 'E2E Recent Tick', lastUsed: 1 },
+    ]);
 
     await openPopup(page, extensionId);
     const doubleChip = page.getByRole('button', {

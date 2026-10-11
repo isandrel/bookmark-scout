@@ -1,6 +1,7 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { seedFolder } from './popup-helpers';
+import { readSettings, STORAGE_ITEMS, writeStored } from './storage';
 
 /**
  * Optional permissions are asked for when the user turns on the feature that needs them.
@@ -9,14 +10,10 @@ import { seedFolder } from './popup-helpers';
  * stubs `permissions.request`, and the granted path loads a copy with the permission granted.
  */
 
-const SETTINGS_KEY = 'bookmark-scout-settings';
 const ARTICLE_URL = 'https://current.e2e.invalid/permission-article';
 
 async function storedSettings(worker: Worker): Promise<Record<string, unknown>> {
-  return worker.evaluate(
-    async (key) => ((await chrome.storage.sync.get(key))[key] ?? {}) as Record<string, unknown>,
-    SETTINGS_KEY,
-  );
+  return readSettings(worker);
 }
 
 async function hasContextMenus(worker: Worker): Promise<boolean> {
@@ -181,9 +178,7 @@ test('Read page content explains website access before the browser asks, and Not
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async (key) => {
-    await chrome.storage.sync.set({ [key]: { language: 'en', aiEnabled: true } });
-  }, SETTINGS_KEY);
+  await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en', aiEnabled: true });
   // Count requests and decline them, since the real prompt cannot be answered headlessly.
   await page.addInitScript(() => {
     const calls: unknown[] = [];

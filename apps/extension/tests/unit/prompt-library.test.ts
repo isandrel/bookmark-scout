@@ -13,6 +13,7 @@ import {
   validateCustomPrompt,
 } from '@/lib/prompt-library-storage';
 import { defaultSettings } from '@/lib/settings-schema';
+import { storageAreaKey } from '@/lib/storage/registry';
 import {
   PROMPT_TASK_IDS,
   PROMPT_TASKS,
@@ -20,6 +21,7 @@ import {
   findUnknownPromptVariables,
   getPromptVariables,
 } from '@/services/prompt-config';
+import { STORAGE_ITEMS } from './storage-helpers';
 
 beforeEach(() => {
   fakeBrowser.reset();
@@ -27,7 +29,11 @@ beforeEach(() => {
 });
 
 const ONE_ITEM_RULE = 'Return exactly one item per bookmark and preserve bookmarkId/title exactly.';
-const tagging = { autoTaggingMinTags: 2, autoTaggingMaxTags: 3, autoTaggingTagStyle: 'kebab-case' } as const;
+const tagging = {
+  autoTaggingMinTags: 2,
+  autoTaggingMaxTags: 3,
+  autoTaggingTagStyle: 'kebab-case',
+} as const;
 
 describe('prompt variables', () => {
   it('fills every variable each task declares, for previews and runs alike', () => {
@@ -81,9 +87,9 @@ describe('prompt variables', () => {
     expect(plain).not.toContain('pageText');
     const withPages = (await buildPrompt('auto_tagging', tagging, { hasPageText: true })).system;
     expect(withPages).toContain(`${ONE_ITEM_RULE}\n\nSome items include pageText`);
-    expect((await buildPrompt('folder_recommendation', { aiMaxRecommendations: 7 })).system).toContain(
-      'Return exactly 7 folder recommendations',
-    );
+    expect(
+      (await buildPrompt('folder_recommendation', { aiMaxRecommendations: 7 })).system,
+    ).toContain('Return exactly 7 folder recommendations');
   });
 });
 
@@ -134,8 +140,8 @@ describe('prompt library', () => {
     const saved = await saveCustomPrompt({ task: 'auto_tagging', name: 'N', system: 'Text' });
     const stored = await fakeBrowser.storage.sync.get(null);
     expect(Object.keys(stored).sort()).toEqual([
-      `bookmark-scout-prompt-${saved.id}`,
-      'bookmark-scout-prompts',
+      storageAreaKey(STORAGE_ITEMS.promptIndex),
+      storageAreaKey(STORAGE_ITEMS.prompt, saved.id),
     ]);
   });
 
@@ -161,7 +167,7 @@ describe('prompt library', () => {
   it('counts the prompt as it is stored and rejects one too large to sync', async () => {
     const draft = { task: 'auto_tagging' as const, name: 'Quotes', system: 'Say "hi" <b>' };
     const saved = await saveCustomPrompt(draft);
-    const key = `bookmark-scout-prompt-${saved.id}`;
+    const key = storageAreaKey(STORAGE_ITEMS.prompt, saved.id);
     const stored = (await fakeBrowser.storage.sync.get(key))[key];
     expect(customPromptBytes(draft)).toBe(syncItemBytes(key, stored));
 

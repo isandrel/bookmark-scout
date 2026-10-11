@@ -12,9 +12,7 @@ import {
   deleteBookmark,
   restoreBookmarkDeletion,
 } from '@/services/bookmarks';
-import { STORAGE_KEYS } from '@/lib/storage-keys';
-
-const BOOKMARK_METADATA_STORAGE_KEY = STORAGE_KEYS.bookmarkMetadata.replace(/^local:/, '');
+import { readStoredData, STORAGE_ITEMS } from './storage-helpers';
 
 type FakeNode = {
   id: string;
@@ -247,8 +245,7 @@ describe('bookmark deletion recovery', () => {
       [restored.id]: { tags: ['folder-tag'] },
       [restoredDeep?.id ?? '']: { tags: ['deep'], summary: 'Deep summary' },
     });
-    const raw = await fakeBrowser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
-    expect(raw[BOOKMARK_METADATA_STORAGE_KEY]).toHaveProperty('10', {
+    expect(await readStoredData(STORAGE_ITEMS.bookmarkMetadata)).toHaveProperty('10', {
       summary: 'Outside the deleted subtree',
     });
   });
@@ -257,8 +254,7 @@ describe('bookmark deletion recovery', () => {
     const snapshot = await captureBookmarkDeletion(TARGET_FOLDER_ID, 0);
     await deleteBookmark(TARGET_FOLDER_ID);
     await restoreBookmarkDeletion(snapshot, 0);
-    const raw = await fakeBrowser.storage.local.get(BOOKMARK_METADATA_STORAGE_KEY);
-    expect(raw[BOOKMARK_METADATA_STORAGE_KEY]).toBeUndefined();
+    expect(await readStoredData(STORAGE_ITEMS.bookmarkMetadata)).toBeUndefined();
   });
 });
 

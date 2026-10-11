@@ -5,11 +5,9 @@
  */
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
-const TABLE_VIEW_KEY = 'bookmark-scout-table-view';
 
 /** Creates a folder under the first writable root and returns IDs keyed by title. */
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
@@ -39,16 +37,6 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
       return { folderId: folder.id, rootId: writableRoot.id, ids };
     },
     { folderTitle: title, entries: items },
-  );
-}
-
-async function updateSettings(worker: Worker, patch: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: patch },
   );
 }
 
@@ -87,10 +75,7 @@ test('a long page scrolls inside the manager, never the page itself', async ({
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(
-    (key) => chrome.storage.sync.set({ [key]: { version: 1, pageSize: 50 } }),
-    TABLE_VIEW_KEY,
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableView, { version: 1, pageSize: 50 });
   const seeded = await seedFolder(
     extensionWorker,
     'E2E Tall Page',
@@ -154,7 +139,7 @@ test('an open delete confirmation follows bookmarks deleted or renamed elsewhere
   extensionWorker,
   page,
 }) => {
-  await updateSettings(extensionWorker, { confirmBeforeDelete: true });
+  await setSettings(extensionWorker, { confirmBeforeDelete: true });
   const seeded = await seedFolder(extensionWorker, 'E2E Stale Confirmation', [
     { title: 'Stale A', url: 'https://example.com/a' },
     { title: 'Stale B', url: 'https://example.com/b' },

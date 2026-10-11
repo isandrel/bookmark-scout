@@ -1,5 +1,6 @@
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { readSettings, STORAGE_ITEMS, writeStored, writeStoredItems } from './storage';
 
 test.use({ grantWebHostAccess: true });
 
@@ -16,26 +17,30 @@ A healthy starter smells pleasantly sour and is full of bubbles.</p>
 type ProviderCall = { system: string; prompt: string };
 
 async function seed(worker: Worker, readPageContent: boolean) {
-  await worker.evaluate(async (read) => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': {
+  await writeStoredItems(worker, [
+    [
+      STORAGE_ITEMS.settings,
+      {
         language: 'en',
         aiEnabled: true,
         aiProvider: 'custom',
         aiModel: 'reader-model',
         aiMaxRecommendations: 1,
         aiAutoTriggerOnOpen: false,
-        aiReadPageContent: read,
+        aiReadPageContent: readPageContent,
         recentFoldersEnabled: false,
       },
-    });
-    await chrome.storage.local.set({
-      'bookmark-scout-ai': { custom: { baseUrl: 'https://provider.e2e.invalid/v1', apiKey: 'reader-key' } },
-    });
+    ],
+    [
+      STORAGE_ITEMS.aiCredentials,
+      { custom: { baseUrl: 'https://provider.e2e.invalid/v1', apiKey: 'reader-key' } },
+    ],
+  ]);
+  await worker.evaluate(async () => {
     const [root] = await chrome.bookmarks.getTree();
     const writableRoot = root.children?.find((node) => node.children !== undefined);
     if (writableRoot) await chrome.bookmarks.create({ parentId: writableRoot.id, title: 'Baking' });
-  }, readPageContent);
+  });
 }
 
 /** Serves the article page and a chat-completions provider that records each request. */
@@ -53,7 +58,13 @@ async function stubWeb(context: BrowserContext) {
       prompt: body.messages?.find((message) => message.role === 'user')?.content ?? '',
     });
     const recommendations = [
-      { type: 'existing', confidence: 0.9, folderPath: 'Baking', parentPath: '', reason: 'Fixture' },
+      {
+        type: 'existing',
+        confidence: 0.9,
+        folderPath: 'Baking',
+        parentPath: '',
+        reason: 'Fixture',
+      },
     ];
     await route.fulfill({
       status: 200,
@@ -131,22 +142,12 @@ test('Read page content turns on once website access is granted', async ({
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async () => {
-    await chrome.storage.sync.set({ 'bookmark-scout-settings': { language: 'en', aiEnabled: true } });
-  });
+  await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en', aiEnabled: true });
   await page.goto(`chrome-extension://${extensionId}/options.html`);
   await page.getByRole('tab', { name: 'AI', exact: true }).click();
   const toggle = page.getByRole('switch', { name: 'Read page content' });
   await expect(toggle).not.toBeChecked();
   await toggle.click();
   await expect(toggle).toBeChecked();
-  await expect
-    .poll(() =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
-        return (stored['bookmark-scout-settings'] as { aiReadPageContent?: boolean })
-          .aiReadPageContent;
-      }),
-    )
-    .toBe(true);
+  await expect.poll(async () => (await readSettings(extensionWorker)).aiReadPageContent).toBe(true);
 });

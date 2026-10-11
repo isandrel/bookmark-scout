@@ -1,9 +1,8 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
 
 /** Creates a folder under the first writable root and returns IDs keyed by title. */
 async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
@@ -25,7 +24,10 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
           if (entry.children) await create(created.id, entry.children);
         }
       };
-      const folder = await chrome.bookmarks.create({ parentId: writableRoot.id, title: folderTitle });
+      const folder = await chrome.bookmarks.create({
+        parentId: writableRoot.id,
+        title: folderTitle,
+      });
       await create(folder.id, entries);
       return { folderId: folder.id, ids };
     },
@@ -101,13 +103,7 @@ test('a refresh keeps selected rows that remain and drops deleted or moved rows'
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(
-    async ({ key }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: false } });
-    },
-    { key: SETTINGS_KEY },
-  );
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
   const seeded = await seedFolder(extensionWorker, 'E2E Selection Refresh', [
     { title: 'Elsewhere', children: [] },
     { title: 'Keep A', url: 'https://keep.example.com/' },

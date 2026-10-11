@@ -20,18 +20,22 @@ function parseRecord<T>(raw: unknown): Record<string, T> {
 }
 
 /** Credentials stay on this device: local area only, never sync. Keyed by service id. */
-export const aiProviderConfigValue = defineStoredValue<Record<string, StoredAIProviderConfig>>({
-  key: STORAGE_KEYS.aiProviders,
-  parse: parseRecord,
-  empty: {},
-});
+export const aiProviderConfigValue = defineStoredValue<Record<string, StoredAIProviderConfig>>(
+  STORAGE_ITEMS.aiCredentials,
+  {
+    parse: parseRecord,
+    empty: {},
+  },
+);
 
 /** Fetched model lists, so the model picker keeps them across reloads. Local only. */
-export const aiModelListValue = defineStoredValue<Record<string, CachedModelList>>({
-  key: STORAGE_KEYS.aiModelLists,
-  parse: parseRecord,
-  empty: {},
-});
+export const aiModelListValue = defineStoredValue<Record<string, CachedModelList>>(
+  STORAGE_ITEMS.aiModelCache,
+  {
+    parse: parseRecord,
+    empty: {},
+  },
+);
 
 export async function getStoredAIProviderConfig(provider: string): Promise<StoredAIProviderConfig> {
   return (await aiProviderConfigValue.get())[provider] ?? {};

@@ -93,15 +93,17 @@ const recordSchema = z.strictObject({
 export type QuickSaveRecord = z.infer<typeof recordSchema>;
 
 /** The last quick save; null when there is none or it was dismissed. */
-export const quickSaveRecordValue = defineStoredValue<QuickSaveRecord | null>({
-  key: STORAGE_KEYS.quickSave,
-  parse: (raw) => {
-    const parsed = recordSchema.safeParse(raw);
-    return parsed.success ? parsed.data : null;
+export const quickSaveRecordValue = defineStoredValue<QuickSaveRecord | null>(
+  STORAGE_ITEMS.quickSave,
+  {
+    parse: (raw) => {
+      const parsed = recordSchema.safeParse(raw);
+      return parsed.success ? parsed.data : null;
+    },
+    empty: null,
+    isEmpty: (value) => value === null,
   },
-  empty: null,
-  isEmpty: (value) => value === null,
-});
+);
 
 /** Stores `record` unless a newer quick save replaced it meanwhile; true when stored. */
 async function storeRecord(record: QuickSaveRecord, replace = false): Promise<boolean> {

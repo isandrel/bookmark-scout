@@ -327,6 +327,10 @@
         "message": "無効な設定ファイルです",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "新しいバージョンの Bookmark Scout で保存されたデータです。変更するには拡張機能を更新してください。",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "エクスポート",
         "description": "Export button label"

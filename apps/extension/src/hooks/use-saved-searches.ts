@@ -3,10 +3,8 @@
  * show up here too.
  */
 
-const selectSearches = (payload: SavedSearchesPayload) => payload.searches;
-
 export function useSavedSearches() {
-  const { value: searches } = useStoredValue(savedSearchesValue, selectSearches);
+  const { value: searches } = useStoredValue(savedSearchesValue);
   return {
     searches,
     create: createSavedSearch,

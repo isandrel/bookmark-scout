@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import type { Locator, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { readSettings, setSettings } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -88,6 +89,7 @@ test('side panel search and dark mode persist across reload', async ({
 
   await page.getByTitle('Dark mode').click();
   await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect.poll(async () => (await readSettings(extensionWorker)).theme).toBe('dark');
   await page.reload();
   await expect(page.locator('html')).toHaveClass(/dark/);
   await expect(page.getByTitle('Light mode')).toBeVisible();
@@ -102,13 +104,7 @@ test('popup uses selected Japanese and Korean language settings', async ({
     { title: 'Locale Delete', url: 'https://example.com/locale-delete' },
   ]);
   const setLanguage = (language: 'ja' | 'ko') =>
-    extensionWorker.evaluate(async (selectedLanguage) => {
-      const key = 'bookmark-scout-settings';
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({
-        [key]: { ...(stored[key] ?? {}), language: selectedLanguage, confirmBeforeDelete: true },
-      });
-    }, language);
+    setSettings(extensionWorker, { language, confirmBeforeDelete: true });
 
   const openDeleteDialog = async (
     placeholder: string,
@@ -136,7 +132,9 @@ test('popup uses selected Japanese and Korean language settings', async ({
   await expect(page.getByPlaceholder('북마크 검색...')).toBeVisible();
   await openDeleteDialog('북마크 검색...', '북마크 삭제', '취소');
   await expect
-    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Locale Delete']))
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Locale Delete']),
+    )
     .toHaveLength(1);
 });
 
@@ -151,11 +149,7 @@ test('updates popup ordering from synced settings and creates a folder', async (
   ]);
 
   const setSortOrder = (order: 'alphabetical' | 'folders') =>
-    extensionWorker.evaluate(async (sortOrder) => {
-      const key = 'bookmark-scout-settings';
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), sortOrder } });
-    }, order);
+    setSettings(extensionWorker, { sortOrder: order });
 
   const visibleLinkOrder = async () => {
     const text = await page.locator('body').innerText();
@@ -206,13 +200,7 @@ test('confirms bookmark and folder deletion, and cancels without changing the tr
     },
   ]);
 
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({
-      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: true },
-    });
-  });
+  await setSettings(extensionWorker, { confirmBeforeDelete: true });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
@@ -225,13 +213,17 @@ test('confirms bookmark and folder deletion, and cancels without changing the tr
   const bookmarkDialog = page.getByRole('dialog', { name: 'Delete bookmark' });
   await expect(bookmarkDialog).toContainText('Delete Me');
   await expect
-    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']))
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']),
+    )
     .toHaveLength(1);
   await bookmarkDialog.getByRole('button', { name: 'Cancel' }).click();
   await expect(bookmarkDialog).toHaveCount(0);
   await expect(bookmarkRow).toBeVisible();
   await expect
-    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']))
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => chrome.bookmarks.get(id), folder.ids['Delete Me']),
+    )
     .toHaveLength(1);
 
   await bookmarkRow.hover();
@@ -261,7 +253,10 @@ test('confirms bookmark and folder deletion, and cancels without changing the tr
   await expect(folderDialog).toHaveCount(0);
   await expect
     .poll(() =>
-      extensionWorker.evaluate(async (id) => chrome.bookmarks.getChildren(id), folder.ids['Removable Folder']),
+      extensionWorker.evaluate(
+        async (id) => chrome.bookmarks.getChildren(id),
+        folder.ids['Removable Folder'],
+      ),
     )
     .toHaveLength(1);
 
@@ -286,16 +281,13 @@ test('deletes bookmarks and folders immediately when confirmation is disabled', 
 }) => {
   const folder = await seedFolder(extensionWorker, 'E2E Immediate Delete', [
     { title: 'Immediate Bookmark', url: 'https://example.com/immediate' },
-    { title: 'Immediate Folder', children: [{ title: 'Nested', url: 'https://example.com/nested' }] },
+    {
+      title: 'Immediate Folder',
+      children: [{ title: 'Nested', url: 'https://example.com/nested' }],
+    },
   ]);
 
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({
-      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: false },
-    });
-  });
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
@@ -321,7 +313,9 @@ test('deletes bookmarks and folders immediately when confirmation is disabled', 
   await folderRow.getByTitle('Delete folder').click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await expect
-    .poll(() => extensionWorker.evaluate(async (id) => chrome.bookmarks.getChildren(id), folder.folderId))
+    .poll(() =>
+      extensionWorker.evaluate(async (id) => chrome.bookmarks.getChildren(id), folder.folderId),
+    )
     .toEqual([]);
 });
 
@@ -344,13 +338,7 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
     { title: 'Recovery Anchor', url: 'https://example.com/recovery-anchor' },
   ]);
 
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({
-      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: true },
-    });
-  });
+  await setSettings(extensionWorker, { confirmBeforeDelete: true });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
@@ -368,7 +356,9 @@ test('undo restores a deleted bookmark and its nested folder tree at the origina
   ).toBeVisible();
   await expect(notifications.getByText(/browser-generated|original IDs/)).toHaveCount(0);
   await page.getByRole('button', { name: 'Undo' }).click();
-  await expect(notifications.getByText('Restored "Recover Bookmark".', { exact: true })).toBeVisible();
+  await expect(
+    notifications.getByText('Restored "Recover Bookmark".', { exact: true }),
+  ).toBeVisible();
 
   await expect
     .poll(() =>
@@ -426,13 +416,7 @@ test('each repeated deletion keeps its own undo and missing parents fail safely'
     },
   ]);
 
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({
-      [key]: { ...(stored[key] ?? {}), confirmBeforeDelete: false },
-    });
-  });
+  await setSettings(extensionWorker, { confirmBeforeDelete: false });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   const search = page.getByPlaceholder('Search bookmarks...');
@@ -475,11 +459,12 @@ test('each repeated deletion keeps its own undo and missing parents fail safely'
   );
   await undoFor('Conflict Child').click();
   await expect(
-    notifications.getByText('The original folder no longer exists, so this item cannot be restored.'),
+    notifications.getByText(
+      'The original folder no longer exists, so this item cannot be restored.',
+    ),
   ).toBeVisible();
   await expect.poll(titles).toEqual(['First Deleted', 'Second Deleted']);
 });
-
 
 test('navigates folders and filters bookmarks by title and URL', async ({
   extensionId,
@@ -587,11 +572,7 @@ test('keeps full titles and URLs available past the former truncation limits', a
     { title: zuluTitle, url: longUrl },
     { title: alphaTitle, url: 'https://example.com/short' },
   ]);
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), sortOrder: 'alphabetical' } });
-  });
+  await setSettings(extensionWorker, { sortOrder: 'alphabetical' });
 
   await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
   const rows = page.locator('tbody tr');
@@ -665,11 +646,7 @@ test('moves a bookmark with the table controls and persists the new order', asyn
     { title: 'Third Link', url: 'https://example.com/third' },
   ]);
 
-  await extensionWorker.evaluate(async () => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), sortOrder: 'folders' } });
-  });
+  await setSettings(extensionWorker, { sortOrder: 'folders' });
 
   await page.goto(bookmarkPageUrl(extensionId, folder.folderId));
   const rows = page.locator('tbody tr');

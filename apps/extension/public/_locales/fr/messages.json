@@ -331,6 +331,10 @@
         "message": "Fichier de paramètres non valide",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "Une version plus récente de Bookmark Scout a enregistré ces données. Mettez à jour l'extension pour les modifier.",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "Exporter",
         "description": "Export button label"

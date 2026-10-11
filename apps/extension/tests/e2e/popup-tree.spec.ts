@@ -1,13 +1,11 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { otherBookmarksTitle } from './popup-helpers';
+import { readStored, STORAGE_ITEMS, setSettings } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
 test.use({ grantPermissions: ['tabs'] });
-
-const SETTINGS_KEY = 'bookmark-scout-settings';
-const SEARCH_HISTORY_KEY = 'bookmark-scout-search-history';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -36,16 +34,6 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
       return { folderId: folder.id, barId: bar.id, barTitle: bar.title };
     },
     { folderTitle: title, entries: items },
-  );
-}
-
-async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: updates },
   );
 }
 
@@ -205,7 +193,10 @@ test('expandFoldersOnSearch opens matching folders and ancestors only when enabl
       title: 'Deep Folder',
       children: [{ title: 'Deep Needle', url: 'https://e2e.invalid/deep' }],
     },
-    { title: 'Matching Parent', children: [{ title: 'Plain Child', url: 'https://e2e.invalid/c' }] },
+    {
+      title: 'Matching Parent',
+      children: [{ title: 'Plain Child', url: 'https://e2e.invalid/c' }],
+    },
   ]);
 
   await openPopup(page, extensionId);
@@ -256,11 +247,7 @@ test('search history records, reuses, clears, and respects the setting', async (
   await seedFolder(extensionWorker, 'E2E History', [
     { title: 'History Target', url: 'https://e2e.invalid/history' },
   ]);
-  const storedHistory = () =>
-    extensionWorker.evaluate(
-      async (key) => (await chrome.storage.local.get(key))[key] as string[] | undefined,
-      SEARCH_HISTORY_KEY,
-    );
+  const storedHistory = () => readStored<string[]>(extensionWorker, STORAGE_ITEMS.searchHistory);
 
   await openPopup(page, extensionId);
   const search = page.getByPlaceholder('Search bookmarks...');

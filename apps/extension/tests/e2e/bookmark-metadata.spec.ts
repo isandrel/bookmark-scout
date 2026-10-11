@@ -1,7 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
-
-const METADATA_KEY = 'bookmark-scout-bookmark-metadata';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 
 type SeedItem = { title: string; url: string };
 
@@ -29,10 +28,12 @@ async function seedFolders(worker: Worker, items: SeedItem[]) {
 }
 
 async function readMetadata(worker: Worker) {
-  return worker.evaluate(async (key) => {
-    const stored = await chrome.storage.local.get(key);
-    return (stored[key] ?? {}) as Record<string, { tags?: string[]; summary?: string }>;
-  }, METADATA_KEY);
+  return (
+    (await readStored<Record<string, { tags?: string[]; summary?: string }>>(
+      worker,
+      STORAGE_ITEMS.bookmarkMetadata,
+    )) ?? {}
+  );
 }
 
 async function openDetails(page: Page, extensionId: string, folderId: string, title: string) {
@@ -108,15 +109,10 @@ test('removes stored metadata when its bookmark is deleted', async ({ extensionW
   const deletedId = seeded.ids['Deleted Bookmark'];
   const keptId = seeded.ids['Kept Bookmark'];
 
-  await extensionWorker.evaluate(
-    async ({ key, value }) => {
-      await chrome.storage.local.set({ [key]: value });
-    },
-    {
-      key: METADATA_KEY,
-      value: { [deletedId]: { tags: ['gone'] }, [keptId]: { summary: 'Still here' } },
-    },
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
+    [deletedId]: { tags: ['gone'] },
+    [keptId]: { summary: 'Still here' },
+  });
 
   await extensionWorker.evaluate(async (id) => {
     await chrome.bookmarks.remove(id);

@@ -1,5 +1,7 @@
 import type { Locator, Page, Worker } from '@playwright/test';
 
+export { setSettings } from './storage';
+
 export type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
 /** Creates a folder of bookmarks under the first writable root and returns their IDs by title. */
@@ -30,14 +32,6 @@ export async function seedFolder(worker: Worker, title: string, items: SeedItem[
     },
     { folderTitle: title, entries: items },
   );
-}
-
-export async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(async (values) => {
-    const key = 'bookmark-scout-settings';
-    const stored = await chrome.storage.sync.get(key);
-    await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-  }, updates);
 }
 
 export async function childrenOf(worker: Worker, folderId: string) {

@@ -3,6 +3,14 @@
 // Refresh Site Icons, then captures every store frame in light and dark into the runner's shots/.
 import type { Page } from '@playwright/test';
 import type { Ctx } from '../../extension-exploratory-qa/scripts/explore-run';
+import {
+  removeStored,
+  STORAGE_ITEMS,
+  type StorageTarget,
+  setSettings,
+  updateStored,
+  writeStored,
+} from '../../../../apps/extension/tests/e2e/storage';
 
 const SCHEMES = ['light', 'dark'] as const;
 const PAGE = { width: 1280, height: 800 };
@@ -68,20 +76,17 @@ const AI_SUGGESTIONS = JSON.stringify({
   ],
 });
 
-const enableStubAI = async (baseUrl: string) => {
-  const key = 'bookmark-scout-settings';
-  const current = (await chrome.storage.sync.get(key))[key] ?? {};
-  await chrome.storage.sync.set({
-    [key]: { ...current, aiEnabled: true, aiProvider: 'custom', aiModel: 'demo-model', aiMaxRecommendations: 2 },
-  });
-  await chrome.storage.local.set({ 'bookmark-scout-ai': { custom: { baseUrl, customModel: 'demo-model' } } });
+const enableStubAI = async (sw: StorageTarget, baseUrl: string) => {
+  await setSettings(sw, { aiEnabled: true, aiProvider: 'custom', aiModel: 'demo-model', aiMaxRecommendations: 2 });
+  await writeStored(sw, STORAGE_ITEMS.aiCredentials, { custom: { baseUrl, customModel: 'demo-model' } });
 };
 
-const disableStubAI = async () => {
-  const key = 'bookmark-scout-settings';
-  const { aiEnabled, aiProvider, aiModel, aiMaxRecommendations, ...rest } = (await chrome.storage.sync.get(key))[key] ?? {};
-  await chrome.storage.sync.set({ [key]: rest });
-  await chrome.storage.local.remove('bookmark-scout-ai');
+const disableStubAI = async (sw: StorageTarget) => {
+  await updateStored<Record<string, unknown>>(sw, STORAGE_ITEMS.settings, (current = {}) => {
+    const { aiEnabled, aiProvider, aiModel, aiMaxRecommendations, ...rest } = current;
+    return rest;
+  });
+  await removeStored(sw, STORAGE_ITEMS.aiCredentials);
 };
 
 const runTool = async (page: Page, name: string) => {
@@ -150,7 +155,7 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await shot(match, `popup-match-${scheme}`);
     await match.close();
 
-    await sw.evaluate(enableStubAI, AI_BASE_URL);
+    await enableStubAI(sw, AI_BASE_URL);
     await context.route(`${AI_BASE_URL}/**`, (route) =>
       route.fulfill({
         status: 200,
@@ -171,6 +176,6 @@ export default async ({ context, id, sw, shot, log }: Ctx) => {
     await shot(ai, `popup-ai-${scheme}`);
     await ai.close();
     await context.unroute(`${AI_BASE_URL}/**`);
-    await sw.evaluate(disableStubAI);
+    await disableStubAI(sw);
   }
 };

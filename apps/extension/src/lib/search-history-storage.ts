@@ -11,8 +11,7 @@ export const MAX_SEARCH_HISTORY_ENTRIES = readConfig(
 ).max_entries;
 
 /** Non-blank queries, newest first. */
-export const searchHistoryValue = defineStoredValue<string[]>({
-  key: STORAGE_KEYS.searchHistory,
+export const searchHistoryValue = defineStoredValue<string[]>(STORAGE_ITEMS.searchHistory, {
   parse: (raw) =>
     Array.isArray(raw)
       ? raw.filter((entry): entry is string => typeof entry === 'string' && entry.trim() !== '')

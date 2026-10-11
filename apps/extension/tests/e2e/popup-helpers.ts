@@ -1,8 +1,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect } from './fixtures';
 
-export const SETTINGS_KEY = 'bookmark-scout-settings';
-export const SEARCH_HISTORY_KEY = 'bookmark-scout-search-history';
+export { setSettings } from './storage';
 
 export type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -32,16 +31,6 @@ export async function seedFolder(worker: Worker, title: string, items: SeedItem[
       return { folderId: folder.id, barId: bar.id, barTitle: bar.title, ids };
     },
     { folderTitle: title, entries: items },
-  );
-}
-
-export async function setSettings(worker: Worker, updates: Record<string, unknown>) {
-  await worker.evaluate(
-    async ({ key, values }) => {
-      const stored = await chrome.storage.sync.get(key);
-      await chrome.storage.sync.set({ [key]: { ...(stored[key] ?? {}), ...values } });
-    },
-    { key: SETTINGS_KEY, values: updates },
   );
 }
 

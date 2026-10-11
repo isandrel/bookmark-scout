@@ -3,6 +3,14 @@ import type { AddressInfo } from 'node:net';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openPopup, seedFolder, setSettings } from './popup-helpers';
+import {
+  readSettings,
+  readStored,
+  removeStored,
+  STORAGE_ITEMS,
+  writeStored,
+  writeStoredItems,
+} from './storage';
 
 /**
  * Quick save shortcuts. Playwright cannot press a browser command shortcut, so these tests fire
@@ -13,8 +21,6 @@ import { openPopup, seedFolder, setSettings } from './popup-helpers';
  * cannot reach. It is read through the browser's accessibility tree and clicked with real mouse
  * input, as a user would.
  */
-
-const RECORD_KEY = 'bookmark-scout-quick-save';
 
 type Recommendation = { type: 'new' | 'existing'; folderPath: string; parentPath: string };
 
@@ -93,9 +99,9 @@ async function pressShortcut(worker: Worker, page: Page, command: 'quick-save' |
   await page.bringToFront();
   const url = page.url();
   const title = await page.title();
+  await removeStored(worker, STORAGE_ITEMS.quickSave);
   await worker.evaluate(
     async ({ name, tabUrl, tabTitle }) => {
-      await chrome.storage.session.remove('bookmark-scout-quick-save');
       const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
       const event = chrome.commands.onCommand as unknown as {
         hasListeners(): boolean;
@@ -114,11 +120,7 @@ async function finishedRecord(worker: Worker): Promise<QuickSaveRecord> {
   await expect
     .poll(
       async () => {
-        record = await worker.evaluate(
-          async (key) =>
-            (await chrome.storage.session.get(key))[key] as QuickSaveRecord | undefined,
-          RECORD_KEY,
-        );
+        record = await readStored<QuickSaveRecord>(worker, STORAGE_ITEMS.quickSave);
         return record?.status;
       },
       { timeout: 15_000 },
@@ -298,10 +300,9 @@ test.describe('quick save in the page', () => {
     await expect.poll(() => toastTexts(page)).toContain('Saved to Frontend');
     // The folder it left is offered back, and the new one is now the most recent folder.
     expect(await toastButtons(page)).toContain('React');
-    const recent = await extensionWorker.evaluate(async () => {
-      const stored = await chrome.storage.local.get('bookmark-scout-recent-folders');
-      return (stored['bookmark-scout-recent-folders'] as { id: string }[])[0]?.id;
-    });
+    const recent = (
+      await readStored<{ id: string }[]>(extensionWorker, STORAGE_ITEMS.recentFolders)
+    )?.[0]?.id;
     expect(recent).toBe(frontend.folderId);
   });
 
@@ -343,14 +344,9 @@ test.describe('quick save in the page', () => {
   }) => {
     const inbox = await seedFolder(extensionWorker, 'Inbox', []);
     const later = await seedFolder(extensionWorker, 'Read later', []);
-    await extensionWorker.evaluate(
-      async ({ id }) => {
-        await chrome.storage.local.set({
-          'bookmark-scout-recent-folders': [{ id, title: 'Inbox', lastUsed: Date.now() }],
-        });
-      },
-      { id: inbox.folderId },
-    );
+    await writeStored(extensionWorker, STORAGE_ITEMS.recentFolders, [
+      { id: inbox.folderId, title: 'Inbox', lastUsed: Date.now() },
+    ]);
     const page = await context.newPage();
 
     await setSettings(extensionWorker, { quickSaveFolderStrategy: 'last_used' });
@@ -384,27 +380,20 @@ test.describe('quick save in the page', () => {
     extensionWorker,
   }) => {
     const dev = await seedFolder(extensionWorker, 'Dev', []);
-    await extensionWorker.evaluate(
-      async ({ baseUrl }) => {
-        const key = 'bookmark-scout-settings';
-        const stored = (await chrome.storage.sync.get(key))[key] ?? {};
-        await chrome.storage.sync.set({
-          [key]: {
-            ...stored,
-            aiEnabled: true,
-            aiProvider: 'custom',
-            aiModel: 'e2e-model',
-            aiMaxRecommendations: 3,
-          },
-        });
-        await chrome.storage.local.set({
-          'bookmark-scout-ai': { custom: { baseUrl, customModel: 'e2e-model' } },
-          // Recording on, to see the request go through the logging fetch.
-          'bookmark-scout-ai-activity-recording': true,
-        });
-      },
-      { baseUrl: `${server.origin}/v1` },
-    );
+    await setSettings(extensionWorker, {
+      aiEnabled: true,
+      aiProvider: 'custom',
+      aiModel: 'e2e-model',
+      aiMaxRecommendations: 3,
+    });
+    await writeStoredItems(extensionWorker, [
+      [
+        STORAGE_ITEMS.aiCredentials,
+        { custom: { baseUrl: `${server.origin}/v1`, customModel: 'e2e-model' } },
+      ],
+      // Recording on, to see the request go through the logging fetch.
+      [STORAGE_ITEMS.aiActivityRecording, true],
+    ]);
     server.ai.recommendations = [
       { type: 'new', folderPath: `${dev.barTitle}/Dev/Databases`, parentPath: '' },
       { type: 'existing', folderPath: `${dev.barTitle}/Dev`, parentPath: '' },
@@ -439,16 +428,14 @@ test.describe('quick save in the page', () => {
     // The request went through the background's logging fetch, which recorded it.
     expect(server.ai.requests).toBe(1);
     await expect
-      .poll(() =>
-        extensionWorker.evaluate(async () => {
-          const stored = await chrome.storage.local.get('bookmark-scout-ai-activity');
-          const entries = (stored['bookmark-scout-ai-activity'] ?? []) as {
-            source: string;
-            status?: number;
-          }[];
-          return entries.map(({ source, status }) => `${source} ${status}`);
-        }),
-      )
+      .poll(async () => {
+        const entries =
+          (await readStored<{ source: string; status?: number }[]>(
+            extensionWorker,
+            STORAGE_ITEMS.aiActivity,
+          )) ?? [];
+        return entries.map(({ source, status }) => `${source} ${status}`);
+      })
       .toEqual(['folderRecommendation 200']);
   });
 
@@ -484,14 +471,9 @@ test.describe('quick save where the page cannot show it', () => {
   }) => {
     await setSettings(extensionWorker, { language: 'en' });
     const reading = await seedFolder(extensionWorker, 'Reading', []);
-    await extensionWorker.evaluate(
-      async ({ id }) => {
-        await chrome.storage.local.set({
-          'bookmark-scout-recent-folders': [{ id, title: 'Reading', lastUsed: Date.now() }],
-        });
-      },
-      { id: reading.folderId },
-    );
+    await writeStored(extensionWorker, STORAGE_ITEMS.recentFolders, [
+      { id: reading.folderId, title: 'Reading', lastUsed: Date.now() },
+    ]);
     // Without activeTab or website access the extension cannot draw in this page.
     const page = await context.newPage();
     await openArticle(page, 'Unreachable-page');
@@ -546,12 +528,6 @@ test('Options shows the shortcut keys and saves the chosen quick save folder', a
   await page.getByRole('combobox', { name: 'Search...' }).fill('read later');
   await page.getByRole('option', { name: `${later.barTitle} / Read later` }).click();
   await expect
-    .poll(() =>
-      extensionWorker.evaluate(async () => {
-        const stored = await chrome.storage.sync.get('bookmark-scout-settings');
-        return (stored['bookmark-scout-settings'] as { quickSaveFixedFolder?: string })
-          .quickSaveFixedFolder;
-      }),
-    )
+    .poll(async () => (await readSettings(extensionWorker)).quickSaveFixedFolder)
     .toBe(later.folderId);
 });

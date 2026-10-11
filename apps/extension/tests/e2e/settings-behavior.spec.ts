@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, folderRow, openPopup, seedFolder as seedPopupFolder } from './popup-helpers';
+import { STORAGE_ITEMS, updateStored, writeStoredItems } from './storage';
 
 // The harness opens the popup as a tab, which gets no activeTab (the toolbar button grants it),
 // so these tests grant the optional tabs permission to read the current page.
@@ -20,13 +21,13 @@ async function downloadContextPack(page: Page) {
 }
 
 async function setBookmarkSummary(worker: Worker, bookmarkId: string, summary: string) {
-  await worker.evaluate(
-    async ({ id, value }) => {
-      const key = 'bookmark-scout-bookmark-metadata';
-      const stored = await chrome.storage.local.get(key);
-      await chrome.storage.local.set({ [key]: { ...(stored[key] ?? {}), [id]: { summary: value } } });
-    },
-    { id: bookmarkId, value: summary },
+  await updateStored<Record<string, unknown>>(
+    worker,
+    STORAGE_ITEMS.bookmarkMetadata,
+    (current) => ({
+      ...current,
+      [bookmarkId]: { summary },
+    }),
   );
 }
 
@@ -140,9 +141,10 @@ test('[mocked provider contract] popup AI model, auto-trigger, suggestion count,
   extensionWorker,
   page,
 }) => {
-  await extensionWorker.evaluate(async () => {
-    await chrome.storage.sync.set({
-      'bookmark-scout-settings': {
+  await writeStoredItems(extensionWorker, [
+    [
+      STORAGE_ITEMS.settings,
+      {
         aiEnabled: true,
         aiProvider: 'custom',
         aiModel: 'e2e-settings-model',
@@ -151,11 +153,9 @@ test('[mocked provider contract] popup AI model, auto-trigger, suggestion count,
         truncateLength: 20,
         recentFoldersEnabled: false,
       },
-    });
-    await chrome.storage.local.set({
-      'bookmark-scout-ai': { custom: { baseUrl: 'https://e2e.invalid/v1' } },
-    });
-  });
+    ],
+    [STORAGE_ITEMS.aiCredentials, { custom: { baseUrl: 'https://e2e.invalid/v1' } }],
+  ]);
   const requests = await stubRecommendations(context, ['Rec One', 'Rec Two', 'Rec Three']);
   await context.route('https://current.e2e.invalid/article', (route) =>
     route.fulfill({

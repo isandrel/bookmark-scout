@@ -3,13 +3,13 @@ import type { AddressInfo } from 'node:net';
 import type { Page, Route, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { bookmarkRow, openPopup } from './popup-helpers';
+import { readStored, STORAGE_ITEMS, writeStored } from './storage';
 import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 
 // Bookmarks without a saved icon show the browser's icon cache, which needs the optional favicon
 // permission and Use the browser's icon cache (set in the tests that compare the two).
 test.use({ grantPermissions: ['favicon'] });
 
-const SITE_ICONS_KEY = 'bookmark-scout-site-icons';
 // A real 1x1 PNG, so the browser decodes it instead of falling back to the generic icon.
 const PNG = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
@@ -20,10 +20,12 @@ const PNG_DATA_URL = `data:image/png;base64,${PNG.toString('base64')}`;
 const OVERSIZED_PNG = Buffer.concat([PNG, Buffer.alloc(2048 - PNG.length)]);
 
 async function readSiteIcons(worker: Worker) {
-  return worker.evaluate(async (key) => {
-    const stored = await chrome.storage.local.get(key);
-    return (stored[key] ?? null) as Record<string, { icon: string; fetchedAt: number }> | null;
-  }, SITE_ICONS_KEY);
+  return (
+    (await readStored<Record<string, { icon: string; fetchedAt: number }>>(
+      worker,
+      STORAGE_ITEMS.siteIcons,
+    )) ?? null
+  );
 }
 
 function managerRow(page: Page, title: string) {
@@ -265,7 +267,9 @@ test('site icon refresh asks for website access and requests nothing when it is 
   });
 
   await openTools(page, extensionId, folder.folderId);
-  await toolCard(page, 'Refresh Site Icons').getByRole('button', { name: 'Refresh', exact: true }).click();
+  await toolCard(page, 'Refresh Site Icons')
+    .getByRole('button', { name: 'Refresh', exact: true })
+    .click();
   const prompt = page.getByRole('dialog', { name: 'Allow access to websites?' });
   await expect(prompt).toContainText('site icon refreshes request each bookmarked page');
   await prompt.getByRole('button', { name: 'Allow access' }).click();
@@ -287,14 +291,9 @@ test('clearing saved site icons restores browser icons in the manager and popup'
     { title: 'Saved Icon Link', url: 'https://icons-saved.e2e.invalid/page' },
   ]);
   await setSettings(extensionWorker, { browserIconCache: true });
-  await extensionWorker.evaluate(
-    async ({ key, icon }) => {
-      await chrome.storage.local.set({
-        [key]: { 'https://icons-saved.e2e.invalid': { icon, fetchedAt: Date.now() } },
-      });
-    },
-    { key: SITE_ICONS_KEY, icon: PNG_DATA_URL },
-  );
+  await writeStored(extensionWorker, STORAGE_ITEMS.siteIcons, {
+    'https://icons-saved.e2e.invalid': { icon: PNG_DATA_URL, fetchedAt: Date.now() },
+  });
 
   const popup = await context.newPage();
   await openPopup(popup, extensionId);

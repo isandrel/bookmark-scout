@@ -1,6 +1,6 @@
 /**
  * Settings for one provider configuration. `configId` is the key of its credentials in
- * `local:bookmark-scout-ai`: the provider id for the single-provider setup, or a service id.
+ * the AI credentials item (`STORAGE_ITEMS.aiCredentials`): the provider id for the single-provider setup, or a service id.
  */
 async function buildAISettings({
   configId,

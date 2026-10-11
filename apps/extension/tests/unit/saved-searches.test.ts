@@ -21,8 +21,8 @@ import {
   restoreSavedSearchInList,
   type SavedSearch,
 } from '@/lib/saved-searches-storage';
+import { readStoredData, STORAGE_ITEMS, seedStored } from './storage-helpers';
 
-const KEY = 'bookmark-scout-saved-searches';
 const from = new Date(2026, 0, 5);
 const to = new Date(2026, 0, 20);
 
@@ -181,44 +181,39 @@ describe('saved search query', () => {
   });
 });
 
-describe('saved searches parsing and migration', () => {
-  it('reads a version 1 payload and migrates one without a version', () => {
+describe('saved searches parsing', () => {
+  it('reads a list of saved searches', () => {
     const search = savedSearch('a', 'Docs');
-    expect(parseSavedSearches({ version: 1, searches: [search] })).toEqual([search]);
-    expect(parseSavedSearches({ searches: [search] })).toEqual([search]);
+    expect(parseSavedSearches([search])).toEqual([search]);
   });
 
-  it('ignores malformed payloads and unsupported versions', () => {
-    for (const value of [null, undefined, 'text', 42, [], {}, { version: 2, searches: [] }]) {
+  it('reads anything but a list as no saved searches', () => {
+    for (const value of [null, undefined, 'text', 42, [], {}, { searches: [] }]) {
       expect(parseSavedSearches(value)).toEqual([]);
     }
-    expect(parseSavedSearches({ version: 1, searches: 'nope' })).toEqual([]);
   });
 
   it('drops only the malformed entries, repeated IDs, and anything past the limit', () => {
     const good = savedSearch('a', 'Docs');
-    const parsed = parseSavedSearches({
-      version: 1,
-      searches: [
-        good,
-        { ...savedSearch('b', 'Bad query'), query: { filters: { title: 7 } } },
-        { ...savedSearch('c', 'No name'), name: '   ' },
-        { id: 'd' },
-        null,
-        savedSearch('a', 'Repeated ID'),
-        {
-          ...savedSearch('e', 'Unknown sort'),
-          query: { filters: { title: 'x' }, sorting: [{ id: 'gone', desc: true }] },
-        },
-      ],
-    });
+    const parsed = parseSavedSearches([
+      good,
+      { ...savedSearch('b', 'Bad query'), query: { filters: { title: 7 } } },
+      { ...savedSearch('c', 'No name'), name: '   ' },
+      { id: 'd' },
+      null,
+      savedSearch('a', 'Repeated ID'),
+      {
+        ...savedSearch('e', 'Unknown sort'),
+        query: { filters: { title: 'x' }, sorting: [{ id: 'gone', desc: true }] },
+      },
+    ]);
     expect(parsed.map((search) => search.id)).toEqual(['a', 'e']);
     expect(parsed[1].query.sorting).toEqual([]);
 
     const many = Array.from({ length: MAX_SAVED_SEARCHES + 5 }, (_, index) =>
       savedSearch(`id-${index}`, `Search ${index}`),
     );
-    expect(parseSavedSearches({ version: 1, searches: many })).toHaveLength(MAX_SAVED_SEARCHES);
+    expect(parseSavedSearches(many)).toHaveLength(MAX_SAVED_SEARCHES);
   });
 });
 
@@ -289,19 +284,14 @@ describe('saved searches storage', () => {
     fakeBrowser.reset();
   });
 
-  it('keeps saved searches in local storage only, as a versioned payload', async () => {
+  it('keeps saved searches in local storage only', async () => {
     const result = await createSavedSearch('GitHub', query({ domain: ['github.com'] }));
     expect(result.ok).toBe(true);
 
     expect(await fakeBrowser.storage.sync.get()).toEqual({});
-    const stored = (await fakeBrowser.storage.local.get(KEY))[KEY];
-    expect(stored).toMatchObject({
-      version: 1,
-      searches: [{ name: 'GitHub', query: { filters: { domain: ['github.com'] } } }],
-    });
-    expect(
-      Object.keys(await fakeBrowser.storage.local.get()).some((key) => key.endsWith('$')),
-    ).toBe(false);
+    expect(await readStoredData(STORAGE_ITEMS.savedSearches)).toMatchObject([
+      { name: 'GitHub', query: { filters: { domain: ['github.com'] } } },
+    ]);
   });
 
   it('creates, renames, deletes, and restores through storage', async () => {
@@ -321,17 +311,14 @@ describe('saved searches storage', () => {
   });
 
   it('reads malformed stored data as empty and replaces it on the next save', async () => {
-    await fakeBrowser.storage.local.set({ [KEY]: { version: 1, searches: [{ id: 5 }] } });
+    await seedStored(STORAGE_ITEMS.savedSearches, [{ id: 5 }]);
     expect(await getSavedSearches()).toEqual([]);
 
-    await fakeBrowser.storage.local.set({ [KEY]: 'corrupted' });
+    await seedStored(STORAGE_ITEMS.savedSearches, 'corrupted');
     expect(await getSavedSearches()).toEqual([]);
 
     const result = await createSavedSearch('Docs', query({ title: 'docs' }));
     expect(result.ok).toBe(true);
-    expect((await fakeBrowser.storage.local.get(KEY))[KEY]).toMatchObject({
-      version: 1,
-      searches: [{ name: 'Docs' }],
-    });
+    expect(await readStoredData(STORAGE_ITEMS.savedSearches)).toMatchObject([{ name: 'Docs' }]);
   });
 });

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { bookmarkRow, openPopup, seedFolder, setSettings } from './popup-helpers';
+import { readSettings } from './storage';
 
 /**
  * The browser's icon cache at `_favicon/` is used only once the user turns on Use the browser's
@@ -45,16 +46,7 @@ test.describe('with the favicon permission granted', () => {
     await options.getByRole('tab', { name: 'Appearance' }).click();
     await options.getByRole('checkbox', { name: "Use the browser's icon cache" }).click();
     await expect
-      .poll(() =>
-        extensionWorker.evaluate(
-          async () =>
-            (
-              (await chrome.storage.sync.get('bookmark-scout-settings'))[
-                'bookmark-scout-settings'
-              ] as { browserIconCache?: boolean } | undefined
-            )?.browserIconCache,
-        ),
-      )
+      .poll(async () => (await readSettings(extensionWorker)).browserIconCache)
       .toBe(true);
 
     const icon = row.locator('img');

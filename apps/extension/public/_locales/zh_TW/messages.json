@@ -331,6 +331,10 @@
         "message": "設定檔無效",
         "description": "Error message for invalid settings import"
     },
+    "error_storedByNewerVersion": {
+        "message": "這些資料由較新版本的 Bookmark Scout 儲存。請更新擴充功能後再變更。",
+        "description": "Error when a change cannot be saved because a newer version of the extension (for example on another synced device) stored the data"
+    },
     "action_export": {
         "message": "匯出",
         "description": "Export button label"
