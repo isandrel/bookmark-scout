@@ -1,5 +1,5 @@
 # Ask AI chat in the popup and side panel. Read by src/services/ai-agent.ts. The tools' own
-# limits are in agent-tools.toml.
+# limits are in actions.toml.
 
 # Model calls in one answer at most, counting each round of tool use
 max_steps = 8

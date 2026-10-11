@@ -4,24 +4,17 @@ import { setLanguage } from '@/hooks/use-i18n';
 import { bookmarkMetadataValue } from '@/lib/bookmark-metadata-storage';
 import { defaultSettings } from '@/lib/settings-schema';
 import { saveSettings } from '@/lib/settings-storage';
-import type { AgentToolContext } from '@/services/agent-tool-kit';
-import { agentToolsConfig } from '@/services/agent-tool-kit';
-import {
-  AGENT_TOOL_NAMES,
-  availableAgentToolNames,
-  describeAgentToolCall,
-  runAgentTool,
-} from '@/services/agent-tools';
-import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
+import type { ActionContext } from '@/services/action-kit';
+import { actionLimits } from '@/services/action-kit';
+import { ACTION_IDS, agentActionIds, describeActionCall, runAction } from '@/services/actions';
+import { installFakeBookmarks } from '../fake-bookmarks';
 
 const DAY = 24 * 60 * 60 * 1000;
 const day = (date: string) => Date.parse(`${date}T12:00:00Z`);
 
-let bookmarks: FakeBookmarks;
-
 /** A small library: two top folders, nested work folders, a duplicate, and a managed folder. */
 function seedLibrary() {
-  bookmarks = installFakeBookmarks([
+  installFakeBookmarks([
     { id: 'bar', title: 'Bookmarks Bar' },
     { id: 'other', title: 'Other Bookmarks' },
     { id: 'work', parentId: 'bar', title: 'Work' },
@@ -61,15 +54,15 @@ function seedLibrary() {
   ]);
 }
 
-const context = (overrides: Partial<AgentToolContext> = {}): AgentToolContext => ({
+const context = (overrides: Partial<ActionContext> = {}): ActionContext => ({
   client: { kind: 'askAI' },
   settings: { ...defaultSettings, language: 'en' },
   activeTab: async () => undefined,
   ...overrides,
 });
 
-const run = (name: string, input: unknown, overrides: Partial<AgentToolContext> = {}) =>
-  runAgentTool(name, input, context(overrides)) as Promise<Record<string, unknown>>;
+const run = (name: string, input: unknown, overrides: Partial<ActionContext> = {}) =>
+  runAction(name, input, context(overrides)) as Promise<Record<string, unknown>>;
 
 beforeEach(async () => {
   fakeBrowser.reset();
@@ -80,10 +73,11 @@ beforeEach(async () => {
 });
 
 describe('searchBookmarks', () => {
-  it('returns refs, hosts, and full folder paths, best match first', async () => {
+  it('returns refs, hosts, and full folder paths, best match first, then newest', async () => {
     await bookmarkMetadataValue.set({ b3: { tags: ['handbook'] } });
     const result = await run('searchBookmarks', { query: 'handbook' });
     expect(result.results).toEqual([
+      expect.objectContaining({ ref: 'b:b4', folder: 'Other Bookmarks/Docs' }),
       {
         ref: 'b:b1',
         title: 'Design systems handbook',
@@ -93,7 +87,6 @@ describe('searchBookmarks', () => {
         folderRef: 'f:docs',
         added: '2026-01-10',
       },
-      expect.objectContaining({ ref: 'b:b4', folder: 'Other Bookmarks/Docs' }),
       expect.objectContaining({ ref: 'b:b3', tags: ['handbook'] }),
     ]);
     expect(result.total).toBe(3);
@@ -118,17 +111,17 @@ describe('searchBookmarks', () => {
   });
 
   it('pages long results with a cursor and a note on how to narrow them', async () => {
-    const many = Array.from({ length: agentToolsConfig.max_results + 5 }, (_, index) => ({
+    const many = Array.from({ length: actionLimits.max_results + 5 }, (_, index) => ({
       id: `m${index}`,
       parentId: 'bar',
       title: `Match ${index}`,
       url: `https://e2e.invalid/${index}`,
       dateAdded: day('2026-05-01') + index * DAY,
     }));
-    bookmarks = installFakeBookmarks([{ id: 'bar', title: 'Bookmarks Bar' }, ...many]);
+    installFakeBookmarks([{ id: 'bar', title: 'Bookmarks Bar' }, ...many]);
 
     const first = await run('searchBookmarks', { query: 'match' });
-    expect(first.results).toHaveLength(agentToolsConfig.max_results);
+    expect(first.results).toHaveLength(actionLimits.max_results);
     expect(first.total).toBe(many.length);
     expect(first.note).toContain('Narrow it with folder');
     const second = await run('searchBookmarks', { query: 'match', cursor: first.nextCursor });
@@ -198,7 +191,7 @@ describe('getBookmarks', () => {
   });
 
   it('refuses more refs than the limit', async () => {
-    const refs = Array.from({ length: agentToolsConfig.max_refs + 1 }, (_, i) => `b:${i}`);
+    const refs = Array.from({ length: actionLimits.max_refs + 1 }, (_, i) => `b:${i}`);
     expect(await run('getBookmarks', { refs })).toMatchObject({ error: { code: 'invalid_input' } });
   });
 });
@@ -217,9 +210,9 @@ describe('getCurrentPage and readPage', () => {
   });
 
   it('is offered only while page reading is on', async () => {
-    expect(await availableAgentToolNames(context())).not.toContain('readPage');
+    expect(await agentActionIds(context())).not.toContain('readPage');
     const readPage = vi.fn(async () => ({ title: 'T', text: 'Body' }));
-    expect(await availableAgentToolNames(context({ readPage }))).toContain('readPage');
+    expect(await agentActionIds(context({ readPage }))).toContain('readPage');
     expect(await run('readPage', { ref: 'b:b1' })).toMatchObject({
       error: { code: 'unavailable' },
     });
@@ -270,7 +263,7 @@ describe('findDuplicates, checkLinks, and suggestFolders', () => {
 
   it('checks links only with website access', async () => {
     vi.spyOn(fakeBrowser.permissions, 'contains').mockResolvedValue(false);
-    expect(await availableAgentToolNames(context())).not.toContain('checkLinks');
+    expect(await agentActionIds(context())).not.toContain('checkLinks');
     expect(await run('checkLinks', { refs: ['b:b1'] })).toMatchObject({
       error: { code: 'unavailable' },
     });
@@ -314,7 +307,7 @@ describe('findDuplicates, checkLinks, and suggestFolders', () => {
   });
 });
 
-describe('runAgentTool', () => {
+describe('runAction', () => {
   it('rejects unknown tools and invalid input, and turns a thrown error into a result', async () => {
     expect(await run('deleteEverything', {})).toMatchObject({ error: { code: 'not_found' } });
     expect(await run('listFolders', { depth: 'deep' })).toMatchObject({
@@ -327,15 +320,15 @@ describe('runAgentTool', () => {
   });
 
   it('describes every tool step in the user language', () => {
-    for (const name of AGENT_TOOL_NAMES) {
-      expect(describeAgentToolCall(name, {})).not.toMatch(/^askAI_/);
+    for (const name of ACTION_IDS) {
+      expect(describeActionCall(name, {})).not.toMatch(/^askAI_/);
     }
-    expect(describeAgentToolCall('searchBookmarks', { query: 'rust' })).toBe(
+    expect(describeActionCall('searchBookmarks', { query: 'rust' })).toBe(
       'Searched your bookmarks for “rust”',
     );
-    expect(describeAgentToolCall('readPage', { url: 'https://example.com/a' })).toBe(
+    expect(describeActionCall('readPage', { url: 'https://example.com/a' })).toBe(
       'Read example.com',
     );
-    expect(describeAgentToolCall('providerTool', {})).toBeUndefined();
+    expect(describeActionCall('providerTool', {})).toBeUndefined();
   });
 });

@@ -57,7 +57,7 @@ function hostOf(url: unknown): string {
 function describeTool(name: string, input: unknown): string {
   if (ASK_AI_WEB_SEARCH_TOOL_NAMES.has(name)) return t('askAI_toolWebSearch');
   // A provider's own tool has no description; its internal name means nothing to the user.
-  return describeAgentToolCall(name, input) ?? t('askAI_toolOther');
+  return describeActionCall(name, input) ?? t('askAI_toolOther');
 }
 
 function MessageView({ message }: { message: UIMessage }) {

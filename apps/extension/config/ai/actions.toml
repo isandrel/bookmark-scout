@@ -1,5 +1,5 @@
-# The bookmark tools AI agents use: Ask AI, and local agents through the MCP bridge.
-# Read by src/services/agent-tools.ts.
+# Limits of the bookmark actions (src/services/actions.ts) that AI agents call: Ask AI, and
+# local agents through the MCP bridge. Read by src/services/action-kit.ts.
 
 # Bookmarks or duplicate groups one search or scan returns per page at most
 max_results = 20

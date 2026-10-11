@@ -1,9 +1,9 @@
 /**
- * The Ask AI agent itself: the AI SDK tool-calling loop over the agent tool registry. It loads
+ * The Ask AI agent itself: the AI SDK tool-calling loop over the bookmark action registry. It loads
  * with the Ask AI chat through `createAskAIAgent` in ai-agent.ts; like every `*.lazy.ts` file it
  * is left out of auto-imports, so import it only with `import()` or from another lazy module.
  */
-import { isStepCount, type LanguageModel, type ToolSet, ToolLoopAgent, tool } from 'ai';
+import { isStepCount, type LanguageModel, ToolLoopAgent, type ToolSet, tool } from 'ai';
 import { createAIModel } from './ai-client.lazy';
 
 /**
@@ -22,18 +22,17 @@ const WEB_SEARCH_TOOLS: Record<
   xai: async () => (await import('@ai-sdk/xai')).xai.tools.webSearch({}),
 };
 
-/** The registry tools this context can run, as AI SDK tools that run through `runAgentTool`. */
-export async function createAgentToolSet(context: AgentToolContext): Promise<ToolSet> {
-  const names = await availableAgentToolNames(context);
+/** The registry actions AI may call in this context, as AI SDK tools that run `runAction`. */
+export async function createAgentToolSet(context: ActionContext): Promise<ToolSet> {
+  const names = await agentActionIds(context);
   return Object.fromEntries(
     names.map((name) => {
-      const definition = getAgentTool(name);
       return [
         name,
         tool({
-          description: definition.description,
-          inputSchema: definition.input,
-          execute: (input) => runAgentTool(name, input, context),
+          description: getAction(name).agent?.description ?? '',
+          inputSchema: getAction(name).input,
+          execute: (input) => runAction(name, input, context),
         }),
       ];
     }),
@@ -43,7 +42,7 @@ export async function createAgentToolSet(context: AgentToolContext): Promise<Too
 export type AskAIAgentOptions = {
   settings: AISettings;
   instructions: string;
-  toolContext: AgentToolContext;
+  toolContext: ActionContext;
   /** Add the provider's built-in web search, where it has one. */
   webSearch: boolean;
   maxSteps: number;

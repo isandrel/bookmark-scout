@@ -1,6 +1,6 @@
 /**
  * The Ask AI chat agent: a tool-calling loop over the user's default AI service, with the
- * bookmark tools from the agent tool registry (`agent-tools.ts`) and, when the user turns it on,
+ * bookmark actions AI may call (`actions.ts`) and, when the user turns it on,
  * the provider's built-in web search. Page reading is offered only while Read page content is on
  * and allowed. The loop needs the AI SDK, so it lives in ai-agent.lazy.ts and loads with the
  * first message.
@@ -35,13 +35,13 @@ export function supportsWebSearch(provider: AIProvider): provider is WebSearchPr
 }
 
 /** The page in the active tab, as Ask AI's tools see it. */
-async function readActiveTab(): Promise<AgentPage | undefined> {
+async function readActiveTab(): Promise<ActionPage | undefined> {
   const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
   return tab?.url ? { title: tab.title ?? '', url: tab.url } : undefined;
 }
 
 /** What Ask AI's tool calls may use: the active tab, and page reading when it is on and allowed. */
-export async function createAskAIToolContext(settings: Settings): Promise<AgentToolContext> {
+export async function createAskAIToolContext(settings: Settings): Promise<ActionContext> {
   const readPages = settings.aiReadPageContent && (await hasPermission('pageReading'));
   return {
     client: { kind: 'askAI' },

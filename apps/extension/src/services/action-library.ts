@@ -1,5 +1,5 @@
 /**
- * The bookmark library as the agent tools (`agent-tools.ts`) see it: every bookmark and folder
+ * The bookmark library as the actions (`actions.ts`) see it: every bookmark and folder
  * with a typed reference (`b:<id>`, `f:<id>`) and its full folder path. Paths are folder titles
  * joined with `AI_FOLDER_PATH_SEPARATOR`, the same in every tool, so a path or reference one tool
  * returns can be passed to another. Folders are named by reference or by path, and a path that
@@ -11,7 +11,7 @@ import { z } from 'zod';
 import type { BookmarkTreeNode } from '@/types';
 
 /** A bookmark as tools return it. */
-export const agentBookmarkSchema = z.object({
+export const actionBookmarkSchema = z.object({
   ref: z.string().describe('Bookmark reference, b:<id>'),
   title: z.string(),
   url: z.string(),
@@ -23,10 +23,10 @@ export const agentBookmarkSchema = z.object({
   summary: z.string().optional(),
 });
 
-export type AgentBookmark = z.infer<typeof agentBookmarkSchema>;
+export type ActionBookmark = z.infer<typeof actionBookmarkSchema>;
 
 /** A folder as tools return it. */
-export const agentFolderSchema = z.object({
+export const actionFolderSchema = z.object({
   ref: z.string().describe('Folder reference, f:<id>'),
   path: z.string(),
   bookmarks: z.number().int().optional().describe('Bookmarks directly inside'),
@@ -34,7 +34,7 @@ export const agentFolderSchema = z.object({
   managed: z.boolean().optional().describe('Managed by the browser or a policy; cannot change'),
 });
 
-export type AgentFolder = z.infer<typeof agentFolderSchema>;
+export type ActionFolder = z.infer<typeof actionFolderSchema>;
 
 /** One bookmark in the library, with what the tools search and show. */
 export type LibraryBookmark = {
@@ -53,7 +53,7 @@ export type LibraryFolder = {
   parent?: LibraryFolder;
 };
 
-export type AgentLibrary = {
+export type ActionLibrary = {
   tree: BookmarkTreeNode[];
   bookmarks: LibraryBookmark[];
   /** In tree order, parents before their children. */
@@ -64,20 +64,20 @@ export type AgentLibrary = {
 
 const REF_PREFIXES = { bookmark: 'b:', folder: 'f:' } as const;
 
-export type AgentRefKind = keyof typeof REF_PREFIXES;
+export type ActionRefKind = keyof typeof REF_PREFIXES;
 
-export function bookmarkRef(id: string): string {
+export function toBookmarkRef(id: string): string {
   return `${REF_PREFIXES.bookmark}${id}`;
 }
 
-export function folderRef(id: string): string {
+export function toFolderRef(id: string): string {
   return `${REF_PREFIXES.folder}${id}`;
 }
 
 /** The kind and browser id a reference names, or undefined when it is not a reference. */
-export function parseAgentRef(ref: string): { kind: AgentRefKind; id: string } | undefined {
+export function parseActionRef(ref: string): { kind: ActionRefKind; id: string } | undefined {
   const value = ref.trim();
-  for (const [kind, prefix] of Object.entries(REF_PREFIXES) as [AgentRefKind, string][]) {
+  for (const [kind, prefix] of Object.entries(REF_PREFIXES) as [ActionRefKind, string][]) {
     if (value.startsWith(prefix) && value.length > prefix.length) {
       return { kind, id: value.slice(prefix.length) };
     }
@@ -86,10 +86,10 @@ export function parseAgentRef(ref: string): { kind: AgentRefKind; id: string } |
 }
 
 /** Indexes a bookmark tree with the stored tags and summaries. */
-export function indexAgentLibrary(
+export function indexActionLibrary(
   tree: BookmarkTreeNode[],
   metadata: StoredBookmarkMetadataById,
-): AgentLibrary {
+): ActionLibrary {
   const bookmarks: LibraryBookmark[] = [];
   const folders: LibraryFolder[] = [];
   const visit = (node: BookmarkTreeNode, parent: LibraryFolder | undefined) => {
@@ -129,8 +129,8 @@ export function indexAgentLibrary(
 }
 
 /** Reads the whole library once, for one tool call. */
-export async function loadAgentLibrary(): Promise<AgentLibrary> {
-  return indexAgentLibrary(await fetchBookmarkTree(), await bookmarkMetadataValue.get());
+export async function loadActionLibrary(): Promise<ActionLibrary> {
+  return indexActionLibrary(await fetchBookmarkTree(), await bookmarkMetadataValue.get());
 }
 
 function isoDate(time: number | undefined): string | undefined {
@@ -138,19 +138,19 @@ function isoDate(time: number | undefined): string | undefined {
 }
 
 /** A bookmark as tools return it; `summaryChars` adds its saved summary, cut to that length. */
-export function toAgentBookmark(
+export function toActionBookmark(
   bookmark: LibraryBookmark,
   { summaryChars }: { summaryChars?: number } = {},
-): AgentBookmark {
+): ActionBookmark {
   const { node, folder, metadata } = bookmark;
   const added = isoDate(node.dateAdded);
   return {
-    ref: bookmarkRef(node.id),
+    ref: toBookmarkRef(node.id),
     title: node.title,
     url: node.url ?? '',
     host: bookmark.host,
     folder: folder.path,
-    folderRef: folderRef(folder.node.id),
+    folderRef: toFolderRef(folder.node.id),
     ...(added ? { added } : {}),
     ...(metadata.tags?.length ? { tags: metadata.tags } : {}),
     ...(summaryChars && metadata.summary
@@ -159,10 +159,13 @@ export function toAgentBookmark(
   };
 }
 
-export function toAgentFolder(folder: LibraryFolder, { counts }: { counts: boolean }): AgentFolder {
+export function toActionFolder(
+  folder: LibraryFolder,
+  { counts }: { counts: boolean },
+): ActionFolder {
   const children = folder.node.children ?? [];
   return {
-    ref: folderRef(folder.node.id),
+    ref: toFolderRef(folder.node.id),
     path: folder.path,
     ...(counts
       ? {
@@ -188,7 +191,7 @@ function comparablePath(path: string): string {
  * name, or its last few levels). Titles may contain the separator ("CI/CD"); whole paths are
  * compared, so that still matches.
  */
-export function findFoldersByPath(library: AgentLibrary, path: string): LibraryFolder[] {
+export function findFoldersByPath(library: ActionLibrary, path: string): LibraryFolder[] {
   const wanted = comparablePath(path);
   if (!wanted) return [];
   const paths = library.folders.map((folder) => comparablePath(folder.path));
@@ -199,7 +202,7 @@ export function findFoldersByPath(library: AgentLibrary, path: string): LibraryF
 }
 
 /** Folders whose own name contains the last part of `path`, for "did you mean" candidates. */
-export function findSimilarFolders(library: AgentLibrary, path: string): LibraryFolder[] {
+export function findSimilarFolders(library: ActionLibrary, path: string): LibraryFolder[] {
   const last = comparablePath(path).split(AI_FOLDER_PATH_SEPARATOR).at(-1);
   if (!last) return [];
   return library.folders.filter((folder) =>
