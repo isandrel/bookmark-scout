@@ -1,0 +1,6 @@
+# Opening several bookmarks at once from the manager (Enter, Ctrl+Enter, Shift+Enter, and the
+# Open all menu items). Read by src/hooks/use-bookmark-opener.ts.
+
+# More tabs than this asks first, as Chrome's manager does (15). A folder counts the bookmarks
+# directly inside it, not those in its subfolders.
+confirm_above = 15

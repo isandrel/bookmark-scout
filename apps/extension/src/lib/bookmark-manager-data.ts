@@ -225,6 +225,25 @@ export function getManagerFolderAncestors(
   return path;
 }
 
+/**
+ * The URLs to open for `rows`, as Chrome's manager does: a bookmark's own, and for a folder the
+ * bookmarks directly inside it, in folder order. Bookmarklets are left out.
+ */
+export function getOpenableUrls(
+  rows: readonly (ManagerItem & { url?: string })[],
+  items: readonly (ManagerItem & { url?: string })[],
+): string[] {
+  const openable = (item: ManagerItem & { url?: string }) =>
+    item.type === ItemTypeEnum.Link && Boolean(item.url) && !isScriptUrl(item.url);
+  return rows.flatMap((row) => {
+    if (row.type !== ItemTypeEnum.Folder) return openable(row) ? [row.url as string] : [];
+    return items
+      .filter((item) => item.parentId === row.id && openable(item))
+      .sort((left, right) => (left.index ?? 0) - (right.index ?? 0))
+      .map((item) => item.url as string);
+  });
+}
+
 /** Date range filter for epoch-millisecond values that includes the whole start and end days. */
 export function isWithinDateRange(
   value: unknown,

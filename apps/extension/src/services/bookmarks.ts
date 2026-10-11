@@ -21,6 +21,8 @@ const BOOKMARKS_BAR_FOLDER_TYPE = 'bookmarks-bar';
 const FIREFOX_TOOLBAR_FOLDER_ID = 'toolbar_____';
 
 export type RecoverableBookmarkNode = {
+  /** The browser id it had when captured; a recreated node gets a new one. */
+  id?: string;
   title: string;
   url?: string;
   index?: number;
@@ -80,17 +82,23 @@ export class BookmarkRestoreError extends Error {
 function toRecoverableNode(
   node: Browser.bookmarks.BookmarkTreeNode,
   metadataById: StoredBookmarkMetadataById,
+  keepIds: boolean,
 ): RecoverableBookmarkNode {
   const nodeType = (node as { type?: string }).type;
   const metadata = metadataById[node.id];
   return {
+    ...(keepIds ? { id: node.id } : {}),
     title: node.title,
     ...(node.url ? { url: node.url } : {}),
     ...(typeof node.index === 'number' ? { index: node.index } : {}),
     ...(nodeType === 'separator' ? { type: 'separator' as const } : {}),
     ...(metadata ? { metadata } : {}),
     ...(node.children
-      ? { children: node.children.map((child) => toRecoverableNode(child, metadataById)) }
+      ? {
+          children: node.children.map((child) =>
+            toRecoverableNode(child, metadataById, keepIds),
+          ),
+        }
       : {}),
   };
 }
@@ -249,12 +257,33 @@ export async function moveBookmark(
 }
 
 /**
+ * Moves an item so it ends up at `target.index` among the folder's children (clamped to the end).
+ * Chrome counts the moved item itself when it goes further down its own folder and Firefox does
+ * not, so the position is checked and corrected.
+ */
+export async function moveBookmarkToPosition(
+  id: string,
+  target: { parentId: string; index: number },
+): Promise<Browser.bookmarks.BookmarkTreeNode> {
+  const [live] = await requireBookmarksApi().get(id);
+  const siblings = await getBookmarkChildren(target.parentId);
+  const sameFolder = live?.parentId === target.parentId;
+  const position = Math.min(target.index, sameFolder ? siblings.length - 1 : siblings.length);
+  const index = sameFolder && (live?.index ?? 0) < position ? position + 1 : position;
+  const moved = await moveBookmark(id, { parentId: target.parentId, index });
+  if (moved.index === undefined || moved.index === position) return moved;
+  return moveBookmark(id, { parentId: target.parentId, index: position });
+}
+
+/**
  * Moves an item to the top or bottom of its folder, or one place up or down. Does nothing for an
  * item without a parent or one already at that end of its folder.
  */
 export async function moveBookmarkWithinFolder(
   item: { id: string; parentId?: string },
   direction: FolderMoveDirection,
+  /** Makes the move; a history writer's `move` records it for undo. */
+  move: (id: string, destination: { parentId: string; index: number }) => Promise<unknown> = moveBookmark,
 ): Promise<void> {
   const { id, parentId } = item;
   if (!parentId) return;
@@ -272,7 +301,7 @@ export async function moveBookmarkWithinFolder(
   }[direction];
   if (direction === 'down' && currentIndex >= siblings.length - 1) return;
   if ((direction === 'up' || direction === 'top') && currentIndex === 0) return;
-  await moveBookmark(id, { parentId, index: targetIndex });
+  await move(id, { parentId, index: targetIndex });
 }
 
 /**
@@ -297,28 +326,37 @@ export async function deleteBookmark(id: string): Promise<void> {
  * Captures an in-memory snapshot of a bookmark or folder subtree before deletion
  * so it can be recreated within {@link BOOKMARK_DELETION_UNDO_WINDOW_MS}.
  */
-export async function captureBookmarkDeletion(
+/** A bookmark or folder with everything inside it, its tags and summaries, and its place. */
+export type BookmarkSubtreeSnapshot = { parentId: string; node: RecoverableBookmarkNode };
+
+/**
+ * Reads a bookmark or folder with its subtree and stored metadata, so it can be recreated.
+ * `keepIds` keeps each node's id, so the caller can map the recreated ids onto the old ones.
+ */
+export async function captureBookmarkSubtree(
   id: string,
-  now: number = Date.now(),
-): Promise<BookmarkDeletionSnapshot> {
+  { keepIds = false }: { keepIds?: boolean } = {},
+): Promise<BookmarkSubtreeSnapshot> {
   const [node] = await getBookmarkSubTree(id);
   if (!node?.parentId) {
     throw new Error(t('error_bookmarkNoParent'));
   }
-
   // Tags and summaries are keyed by browser ID, which changes when the tree is recreated.
   const metadataById = await getStoredBookmarkMetadata(subtreeIds(node)).catch(
     () => ({}) as StoredBookmarkMetadataById,
   );
+  return { parentId: node.parentId, node: toRecoverableNode(node, metadataById, keepIds) };
+}
+
+export async function captureBookmarkDeletion(
+  id: string,
+  now: number = Date.now(),
+): Promise<BookmarkDeletionSnapshot> {
+  const { parentId, node } = await captureBookmarkSubtree(id);
   const expiresAt = now + BOOKMARK_DELETION_UNDO_WINDOW_MS;
   // Ordering is best effort: without it a restore falls back to the captured index.
-  await rememberSiblingOrder(node.parentId, id, expiresAt, now).catch(() => undefined);
-  return {
-    parentId: node.parentId,
-    node: toRecoverableNode(node, metadataById),
-    expiresAt,
-    id,
-  };
+  await rememberSiblingOrder(parentId, id, expiresAt, now).catch(() => undefined);
+  return { parentId, node, expiresAt, id };
 }
 
 async function recreateBookmarkNode(
@@ -326,6 +364,7 @@ async function recreateBookmarkNode(
   parentId: string,
   index: number | undefined,
   restoredMetadata: StoredBookmarkMetadataById,
+  ids: Map<string, string>,
 ): Promise<Browser.bookmarks.BookmarkTreeNode> {
   const restored = await createBookmark({
     parentId,
@@ -335,14 +374,63 @@ async function recreateBookmarkNode(
     ...(node.type ? { type: node.type } : {}),
   });
 
+  if (node.id) ids.set(node.id, restored.id);
   if (node.metadata) restoredMetadata[restored.id] = node.metadata;
 
   // Children are recreated in their captured order, so sequential indexes are always in bounds.
   const children = node.children ?? [];
   for (const [childIndex, child] of children.entries()) {
-    await recreateBookmarkNode(child, restored.id, childIndex, restoredMetadata);
+    await recreateBookmarkNode(child, restored.id, childIndex, restoredMetadata, ids);
   }
   return restored;
+}
+
+/**
+ * Creates `node` and everything inside it under `parentId` (at `index`, else at the end), with
+ * their tags and summaries. Resolves to the new root and the new id of every node that had one
+ * (`old id -> new id`). A partly created tree is removed again before the error is thrown.
+ */
+export async function recreateBookmarkSubtree(
+  node: RecoverableBookmarkNode,
+  parentId: string,
+  index?: number,
+): Promise<{ root: Browser.bookmarks.BookmarkTreeNode; ids: Map<string, string> }> {
+  const ids = new Map<string, string>();
+  const restoredMetadata: StoredBookmarkMetadataById = {};
+  let root: Browser.bookmarks.BookmarkTreeNode | undefined;
+  try {
+    root = await createBookmark({
+      parentId,
+      ...(typeof index === 'number' ? { index } : {}),
+      title: node.title,
+      ...(node.url ? { url: node.url } : {}),
+      ...(node.type ? { type: node.type } : {}),
+    });
+    if (node.id) ids.set(node.id, root.id);
+    if (node.metadata) restoredMetadata[root.id] = node.metadata;
+    const children = node.children ?? [];
+    for (const [childIndex, child] of children.entries()) {
+      await recreateBookmarkNode(child, root.id, childIndex, restoredMetadata, ids);
+    }
+  } catch (error) {
+    if (root) {
+      try {
+        await deleteBookmark(root.id);
+      } catch {
+        // Keep the original failure if best-effort rollback also fails.
+      }
+    }
+    throw error;
+  }
+  if (Object.keys(restoredMetadata).length > 0) {
+    // The bookmarks are already back; losing tags must not report the whole restore as failed.
+    await mergeStoredBookmarkMetadata(restoredMetadata, {
+      tagMode: 'replace',
+      summaryMode: 'replace',
+      dedupeTags: true,
+    }).catch((error: unknown) => console.error('Failed to restore bookmark metadata:', error));
+  }
+  return { root, ids };
 }
 
 /**
@@ -383,29 +471,14 @@ export async function restoreBookmarkDeletion(
       ? Math.min(snapshot.node.index, siblings.length)
       : undefined);
 
-  let restoredRoot: Browser.bookmarks.BookmarkTreeNode | undefined;
-  const restoredMetadata: StoredBookmarkMetadataById = {};
+  let restoredRoot: Browser.bookmarks.BookmarkTreeNode;
   try {
-    restoredRoot = await createBookmark({
-      parentId: snapshot.parentId,
-      ...(typeof index === 'number' ? { index } : {}),
-      title: snapshot.node.title,
-      ...(snapshot.node.url ? { url: snapshot.node.url } : {}),
-      ...(snapshot.node.type ? { type: snapshot.node.type } : {}),
-    });
-    if (snapshot.node.metadata) restoredMetadata[restoredRoot.id] = snapshot.node.metadata;
-    const children = snapshot.node.children ?? [];
-    for (const [childIndex, child] of children.entries()) {
-      await recreateBookmarkNode(child, restoredRoot.id, childIndex, restoredMetadata);
-    }
+    ({ root: restoredRoot } = await recreateBookmarkSubtree(
+      snapshot.node,
+      snapshot.parentId,
+      index,
+    ));
   } catch (error) {
-    if (restoredRoot) {
-      try {
-        await deleteBookmark(restoredRoot.id);
-      } catch {
-        // Keep the original restore failure if best-effort rollback also fails.
-      }
-    }
     throw new BookmarkRestoreError(
       getErrorMessage(error, 'toast_errorRestoringDeletion'),
       'restore-failed',
@@ -418,15 +491,6 @@ export async function restoreBookmarkDeletion(
     const siblingOrder = siblingOrders.get(snapshot.parentId);
     const position = siblingOrder?.indexOf(snapshot.id) ?? -1;
     if (siblingOrder && position >= 0) siblingOrder[position] = restoredRoot.id;
-  }
-
-  if (Object.keys(restoredMetadata).length > 0) {
-    // The bookmarks are already back; losing tags must not report the whole undo as failed.
-    await mergeStoredBookmarkMetadata(restoredMetadata, {
-      tagMode: 'replace',
-      summaryMode: 'replace',
-      dedupeTags: true,
-    }).catch((error: unknown) => console.error('Failed to restore bookmark metadata:', error));
   }
   return restoredRoot;
 }
@@ -720,6 +784,27 @@ export async function applyBookmarkChanges(
  */
 export async function openBookmarkInNewTab(url: string): Promise<void> {
   await browser.tabs.create({ url, active: true });
+}
+
+/** Where the manager opens several bookmarks: Chrome's Open, Open all in new tabs, new window. */
+export type BookmarkOpenTarget = 'tabs' | 'background-tabs' | 'window';
+
+/**
+ * Opens `urls` in new tabs (`tabs`: the first in front, as Enter does in Chrome's manager;
+ * `background-tabs`: none in front) or together in a new window.
+ */
+export async function openBookmarkUrls(
+  urls: readonly string[],
+  target: BookmarkOpenTarget,
+): Promise<void> {
+  if (urls.length === 0) return;
+  if (target === 'window') {
+    await browser.windows.create({ url: [...urls] });
+    return;
+  }
+  for (const [index, url] of urls.entries()) {
+    await browser.tabs.create({ url, active: target === 'tabs' && index === 0 });
+  }
 }
 
 /**

@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUp,
+  Command,
   CornerDownLeft,
   Delete,
   type LucideIcon,
@@ -15,7 +16,7 @@ type KeyCapIcon = { icon: LucideIcon; className?: string };
 
 /**
  * Key caps drawn as icons. As text they mix fonts: the bundled fonts' Latin subsets have ↑ and ↓
- * but not ← → ↵ or Apple's ⌥ ⇧ ⌫ ⌦, which then fall back to a system font at another size.
+ * but not ← → ↵ or Apple's ⌥ ⇧ ⌘ ⌫ ⌦, which then fall back to a system font at another size.
  */
 const KEY_CAP_ICONS: Readonly<Record<string, KeyCapIcon>> = {
   '↑': { icon: ArrowUp },
@@ -24,6 +25,7 @@ const KEY_CAP_ICONS: Readonly<Record<string, KeyCapIcon>> = {
   '→': { icon: ArrowRight },
   '↵': { icon: CornerDownLeft },
   '⌥': { icon: OptionIcon },
+  '⌘': { icon: Command },
   '⇧': { icon: ArrowBigUp },
   '⌫': { icon: Delete },
   // Forward delete's key cap is backspace's, mirrored.

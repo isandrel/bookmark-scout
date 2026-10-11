@@ -84,3 +84,15 @@ Delete a bookmark or folder from the popup, the side panel, or a manager row's m
 - **Confirm Before Delete** is on by default and shows a dialog naming what will be removed. Turn it off on the **Behavior** tab of Settings to delete immediately.
 - Every deletion shows **Undo** for 10 seconds. Undo restores the item, everything inside it, and its saved tags and summaries. A restored item is recreated, so it gets a new date added.
 - Permanent folders such as the Bookmarks Bar cannot be edited or deleted.
+
+## Select, undo, and redo in the manager
+
+The manager's table works like Chrome's bookmark manager:
+
+- Click a row to select it, `Ctrl`+click (`Cmd`+click on a Mac) to add or remove one, and `Shift`+click to select a range. The checkboxes work too. `Ctrl+A` (`Cmd+A`) selects every row the filters show, on every page, and `Esc` clears the selection.
+- Double-click a folder to open it, or a bookmark to open it in a tab. Middle-click a bookmark to open it in a background tab.
+- `Ctrl+Z` (`Cmd+Z`) undoes the manager's changes one at a time, newest first: edits, moves, reorders, and deletions. `Ctrl+Y` or `Ctrl+Shift+Z` (`Cmd+Shift+Z`) redoes them. Several items changed together, such as a move of a selection, are one step.
+- Undo leaves alone anything changed since in another way (in the browser's own bookmark UI, another window, or by sync) and says so.
+- The history is shared by every manager tab, survives reloading the page, and ends when the browser closes. It keeps the last 100 changes.
+
+The full list of keys is in [Keyboard shortcuts](/guides/keyboard-shortcuts#bookmarks-manager).

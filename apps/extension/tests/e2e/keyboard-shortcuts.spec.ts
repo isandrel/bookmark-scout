@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { OPEN_KEY } from './manager-keys';
 import { folderRow, openPopup, seedFolder, setSettings } from './popup-helpers';
 
 const isFocused = (page: Page, selector: string) =>
@@ -294,7 +295,7 @@ test.describe('manager keyboard shortcuts', () => {
     const dialog = page.getByRole('dialog', { name: 'Keyboard shortcuts' });
     // The bundled fonts lack these symbols; as text they fell back to a smaller system glyph.
     for (const key of ['⌥', '↑', '⌫']) {
-      const keyCap = dialog.locator('kbd', { hasText: key });
+      const keyCap = dialog.locator('kbd', { hasText: key }).first();
       await expect(keyCap.locator('[data-slot="kbd-icon"]'), key).toBeVisible();
     }
     await expect(dialog.locator('kbd', { hasText: 'j' }).locator('[data-slot="kbd-icon"]')).toHaveCount(0);
@@ -317,7 +318,8 @@ test.describe('manager keyboard shortcuts', () => {
     await expect(page).toHaveURL(new RegExp(`id=${seeded.barId}$`));
     await page.keyboard.press('Alt+ArrowUp');
     await expect(page).toHaveURL(managerUrl(extensionId));
-    // At the root there is no parent, and Ctrl/Cmd combinations are never taken.
+    // At the root there is no parent, and Ctrl/Cmd combinations the manager does not bind reach
+    // the browser.
     await page.keyboard.press('Backspace');
     await expect(page).toHaveURL(managerUrl(extensionId));
     await page.goto(managerUrl(extensionId, seeded.folderId));
@@ -327,7 +329,7 @@ test.describe('manager keyboard shortcuts', () => {
     await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
   });
 
-  test('j and k move row focus, and Enter opens the focused folder', async ({
+  test('j and k move row focus, and Enter (Cmd+O on a Mac) opens the focused folder', async ({
     extensionId,
     extensionWorker,
     page,
@@ -365,7 +367,7 @@ test.describe('manager keyboard shortcuts', () => {
     for (let step = 0; step < folderIndex; step += 1) await page.keyboard.press('j');
     const folderRowLocator = page.locator('tbody tr').filter({ hasText: 'Row Folder' });
     await expect(folderRowLocator).toBeFocused();
-    await page.keyboard.press('Enter');
+    await page.keyboard.press(OPEN_KEY);
     await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Row Folder']}$`));
   });
 });

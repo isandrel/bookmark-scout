@@ -32,6 +32,11 @@ export type BookmarkDeletionOptions = {
   onChanged: () => void | Promise<void>;
   /** Removes one item with everything inside it; the browser's bookmarks by default. */
   remove?: (id: string) => Promise<void>;
+  /**
+   * Records the deletion in the undo history (the manager), so Ctrl+Z restores it after the
+   * toast is gone. `remove` is not used then.
+   */
+  recordHistory?: boolean;
 };
 
 export type BookmarkDeletion = {
@@ -79,7 +84,7 @@ function isUnchanged(
  */
 export async function deleteBookmarksWithUndo(
   targets: readonly BookmarkDeletionTarget[],
-  { onChanged, remove = deleteBookmark }: BookmarkDeletionOptions,
+  { onChanged, remove = deleteBookmark, recordHistory = false }: BookmarkDeletionOptions,
 ): Promise<BookmarkDeletionOutcome> {
   const outcome: BookmarkDeletionOutcome = { deleted: 0, skipped: 0, failed: 0 };
   if (targets.length === 0) return outcome;
@@ -87,23 +92,39 @@ export async function deleteBookmarksWithUndo(
   const errorTitle =
     single?.type === 'folder' ? t('toast_errorDeletingFolder') : t('toast_errorDeletingBookmark');
 
-  const deleted: BookmarkDeletionSnapshot[] = [];
+  const deleted: { title: string }[] = [];
+  const snapshots: BookmarkDeletionSnapshot[] = [];
   let deletedType: BookmarkDeletionTarget['type'] | undefined;
   let firstFailure: unknown;
-  for (const target of targets) {
-    if (!isUnchanged(target, await getLiveBookmark(target.id))) {
-      outcome.skipped += 1;
-      continue;
+  const deleteEach = async (removeOne: (id: string) => Promise<void>) => {
+    for (const target of targets) {
+      const live = await getLiveBookmark(target.id);
+      if (!isUnchanged(target, live)) {
+        outcome.skipped += 1;
+        continue;
+      }
+      try {
+        await removeOne(target.id);
+        deleted.push({ title: live.title });
+        deletedType = target.type;
+      } catch (error) {
+        outcome.failed += 1;
+        firstFailure ??= error;
+      }
     }
-    try {
-      const snapshot = await captureBookmarkDeletion(target.id);
-      await remove(target.id);
-      deleted.push(snapshot);
-      deletedType = target.type;
-    } catch (error) {
-      outcome.failed += 1;
-      firstFailure ??= error;
-    }
+  };
+  let recorded: RecordedBookmarkChange | null = null;
+  if (recordHistory) {
+    // One history entry, so Ctrl+Z (and the toast's Undo) brings every item back together.
+    ({ recorded } = await recordBookmarkWrites({ action: 'delete' }, (writer) =>
+      deleteEach(writer.remove),
+    ));
+  } else {
+    await deleteEach(async (id) => {
+      const snapshot = await captureBookmarkDeletion(id);
+      await remove(id);
+      snapshots.push(snapshot);
+    });
   }
   outcome.deleted = deleted.length;
   await onChanged();
@@ -119,7 +140,16 @@ export async function deleteBookmarksWithUndo(
   }
 
   const seconds = String(BOOKMARK_DELETION_UNDO_WINDOW_MS / MS_PER_SECOND);
-  const deletedTitle = deleted.length === 1 ? await quoteToastItemTitle(deleted[0].node.title) : '';
+  const deletedTitle = deleted.length === 1 ? await quoteToastItemTitle(deleted[0].title) : '';
+  const restore = async () => {
+    if (!recorded) {
+      await restoreSnapshots(snapshots);
+      return;
+    }
+    const undone = await undoRecordedBookmarkChange(recorded);
+    // Null: undone already (Ctrl+Z). Nothing applied: the bookmarks changed since.
+    if (undone && undone.applied === 0) throw new Error(t('toast_undoChanged'));
+  };
   const undoWindow =
     deleted.length > 1
       ? t('toast_deleteManyUndoWindow', [String(deleted.length), seconds])
@@ -135,7 +165,7 @@ export async function deleteBookmarksWithUndo(
     variant: partial ? 'destructive' : 'success',
     onUndo: async () => {
       try {
-        await restoreSnapshots(deleted);
+        await restore();
         await onChanged();
         toast.success({
           title: t('toast_deleteRestored'),
@@ -153,7 +183,10 @@ export async function deleteBookmarksWithUndo(
       }
     },
   });
-  const expiresAt = Math.min(...deleted.map((snapshot) => snapshot.expiresAt));
+  // A recorded deletion stays undoable with Ctrl+Z; its toast closes with the usual undo window.
+  const expiresAt = recorded
+    ? Date.now() + BOOKMARK_DELETION_UNDO_WINDOW_MS
+    : Math.min(...snapshots.map((snapshot) => snapshot.expiresAt));
   setTimeout(undoToast.dismiss, Math.max(0, expiresAt - Date.now()));
   return outcome;
 }

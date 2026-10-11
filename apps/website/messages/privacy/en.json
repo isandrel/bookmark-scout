@@ -79,7 +79,8 @@
                             "<strong>AI activity</strong>, only if you turn on Record requests under AI activity in the AI settings (off by default, set separately on each device): the last AI requests, with what was sent to your provider and what came back. They contain bookmark titles, URLs, and folder paths, and with Read page content on, page text. API keys, authentication headers, your extra headers, and keys in web addresses are removed before anything is stored. The log stays in local storage on this device, is never synced, and is deleted when you turn recording off.",
                             "<strong>Tags, summaries, saved searches, recent folders, and recent searches</strong> are kept in local storage on this device only. You can turn off recent searches in Settings.",
                             "<strong>Site icons</strong> you save with Refresh Site Icons are kept in local storage on this device only, up to a size limit you can change in Settings. You can delete them at any time with Clear saved icons.",
-                            "<strong>Your last quick save</strong> (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes."
+                            "<strong>Your last quick save</strong> (the page's title and URL and where it went), for Undo and Move to, is kept in session storage until the browser closes.",
+                            "<strong>The bookmark manager's undo history</strong> (the bookmarks you changed there, with copies of the ones you deleted and their tags and summaries), for Undo and Redo, is kept in session storage until the browser closes."
                         ]
                     },
                     {

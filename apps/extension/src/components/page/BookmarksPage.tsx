@@ -80,11 +80,7 @@ export default function BookmarksPage() {
   // Rows of the open folder, for telling search results from elsewhere apart (Show in folder).
   const openFolderIdsRef = useRef<ReadonlySet<string>>(new Set());
   openFolderIdsRef.current = useMemo(() => new Set(data.map((bookmark) => bookmark.id)), [data]);
-  const shortcuts = useManagerShortcuts({
-    currentFolderId: currentFolder,
-    items: allData,
-    onNavigate: navigateToFolder,
-  });
+  const tableRef = useRef<DataTableHandle<Bookmark>>(null);
   // Both open is narrowed to one by the effect below when the window is too small.
   const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(!layout.folders_open);
   const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(!layout.tools_open);
@@ -112,8 +108,40 @@ export default function BookmarksPage() {
   const { value: sortOrder } = useSetting('sortOrder');
   // Labels built in memos below must be rebuilt when the language changes.
   const { value: language } = useSetting('language');
-  const deletion = useBookmarkDeletion({ onChanged: refresh });
+  const deletion = useBookmarkDeletion({ onChanged: refresh, recordHistory: true });
   const { requestDeletion } = deletion;
+  const opener = useBookmarkOpener();
+  const { open: openUrls } = opener;
+  const history = useBookmarkHistoryCommands();
+  // Enter opens one folder in the manager; anything else opens in tabs, as in Chrome's manager.
+  const openRows = useCallback(
+    (rows: Bookmark[], target: BookmarkOpenTarget) => {
+      const [first] = rows;
+      if (target === 'tabs' && rows.length === 1 && first?.type === ItemTypeEnum.Folder) {
+        navigateToFolder(first.id);
+        return;
+      }
+      openUrls(getOpenableUrls(rows, allData), target);
+    },
+    [allData, navigateToFolder, openUrls],
+  );
+  const shortcuts = useManagerShortcuts({
+    currentFolderId: currentFolder,
+    items: allData,
+    onNavigate: navigateToFolder,
+    table: tableRef,
+    commands: {
+      deleteRows: (rows) => {
+        const items = pruneNestedSelection(rows, allData).map(toDeletionTarget);
+        const [first] = items;
+        if (first) void requestDeletion({ ...first, items: items.length > 1 ? items : undefined });
+      },
+      renameRow: setEditingBookmark,
+      openRows,
+      undo: history.undo,
+      redo: history.redo,
+    },
+  });
   const showInFolder = useCallback(
     (bookmark: Bookmark) => {
       const folderId = bookmark.parentId;
@@ -373,19 +401,16 @@ export default function BookmarksPage() {
               searchQuery={searchQuery}
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
-              isRowActivatable={isFolderRow}
-              rowClassName={(row: Bookmark) => {
-                const baseClass = 'cursor-pointer hover:bg-muted/50';
-                const folderClass =
-                  row.type === ItemTypeEnum.Folder
-                    ? 'is-folder bg-muted/50 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-ring'
-                    : '';
-                return `${baseClass} ${folderClass}`;
-              }}
-              onRowClick={(row: Bookmark) => {
-                if (row.type === ItemTypeEnum.Folder) {
-                  navigateToFolder(row.id);
-                }
+              handleRef={tableRef}
+              label={currentFolderName ?? t('bookmarks_root')}
+              rowClassName={(row: Bookmark) =>
+                row.type === ItemTypeEnum.Folder
+                  ? 'is-folder bg-muted/50 hover:bg-muted/70'
+                  : 'hover:bg-muted/50'
+              }
+              onRowOpen={(row: Bookmark) => openRows([row], 'tabs')}
+              onRowOpenInBackground={(row: Bookmark) => {
+                if (row.type !== ItemTypeEnum.Folder) openRows([row], 'background-tabs');
               }}
             />
           )}
@@ -421,6 +446,7 @@ export default function BookmarksPage() {
         onSaved={refresh}
       />
       <BookmarkDeleteDialog deletion={deletion} />
+      <BookmarkOpenDialog opener={opener} />
       <Toaster />
     </div>
   );

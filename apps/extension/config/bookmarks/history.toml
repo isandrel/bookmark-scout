@@ -1,0 +1,11 @@
+# Undo and redo of bookmark changes (Ctrl+Z, Ctrl+Y in the manager). Read by
+# src/services/bookmark-history.ts. The history lives in session storage, so it ends when the
+# browser closes.
+
+# Changes kept for undo; the oldest is dropped when another is added
+max_entries = 100
+
+# The stored history's largest size, in bytes of JSON (a deleted folder keeps a copy of
+# everything in it). The oldest changes are dropped first; a single change larger than this
+# cannot be undone with Ctrl+Z (the undo toast after a deletion still works).
+max_bytes = 4000000

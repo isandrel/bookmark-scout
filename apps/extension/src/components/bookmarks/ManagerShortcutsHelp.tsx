@@ -17,12 +17,25 @@ const { manager } = SHORTCUT_BINDINGS;
 const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: MessageKey }[] = [
   { bindings: manager.focusFilter, label: 'shortcuts_focusFilter' },
   { bindings: manager.parentFolder, label: 'shortcuts_parentFolder' },
+  // The table's rows follow the grid keyboard pattern; these keys are not configurable.
+  {
+    bindings: [{ key: 'ArrowDown' }, { key: 'ArrowUp' }, { key: 'Home' }, { key: 'End' }],
+    label: 'shortcuts_moveRowFocus',
+  },
   { bindings: [...manager.nextRow, ...manager.previousRow], label: 'shortcuts_nextPreviousRow' },
-  // Folder rows open with Enter like any button, and Escape closes any dialog or menu; neither
-  // is configurable.
-  { bindings: [{ key: 'Enter' }], label: 'shortcuts_openFolder' },
+  { bindings: [{ key: ' ' }], label: 'shortcuts_toggleRow' },
+  { bindings: manager.selectAll, label: 'shortcuts_selectAll' },
+  { bindings: manager.clearSelection, label: 'shortcuts_clearSelection' },
+  { bindings: manager.open, label: 'shortcuts_open' },
+  { bindings: manager.openInNewTabs, label: 'shortcuts_openInNewTabs' },
+  { bindings: manager.openInNewWindow, label: 'shortcuts_openInNewWindow' },
+  { bindings: manager.rename, label: 'shortcuts_rename' },
+  { bindings: manager.delete, label: 'shortcuts_deleteSelection' },
+  { bindings: manager.undo, label: 'shortcuts_undo' },
+  { bindings: manager.redo, label: 'shortcuts_redo' },
   { bindings: manager.openSavedSearches, label: 'shortcuts_openSavedSearches' },
   { bindings: manager.showHelp, label: 'shortcuts_showHelp' },
+  // Escape closes any dialog or menu; not configurable.
   { bindings: [{ key: 'Escape' }], label: 'shortcuts_closeDialog' },
 ];
 
@@ -56,7 +69,8 @@ export function ManagerShortcutsHelp({ open, onOpenChange }: ManagerShortcutsHel
       >
         <Keyboard className="h-4 w-4" />
       </DialogTrigger>
-      <DialogContent>
+      {/* Many rows: wider than other dialogs, and it scrolls on short windows. */}
+      <DialogContent className="max-h-[calc(100dvh-2rem)] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>{t('shortcuts_title')}</DialogTitle>
           <DialogDescription>{t('shortcuts_pausedWhileTyping')}</DialogDescription>
