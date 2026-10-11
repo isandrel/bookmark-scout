@@ -318,6 +318,49 @@ test('manager right-click menu copies and pastes, without private windows unless
     .toEqual(['Menu Target', 'Menu Link', 'Menu Link']);
 });
 
+test('manager drag and drop reorders rows and turns dropped links into bookmarks', async ({
+  extension,
+}) => {
+  const folder = await seedFolder(extension, 'E2E Firefox Drag', [
+    { title: 'Drag Box', children: [] },
+    { title: 'Drag First', url: 'https://e2e.invalid/first' },
+    { title: 'Drag Last', url: 'https://e2e.invalid/last' },
+  ]);
+  await extension.open(`bookmarks.html?id=${folder.folderId}`);
+  await expect.poll(() => visibleRows(extension)).toBe(3);
+  await (await extension.findByText('button', 'Browser order')).click();
+  const titles = async (id: string) => (await childrenOf(extension, id)).map((item) => item.title);
+
+  // The browser's drag events, with one DataTransfer from dragstart to drop as a real drag has.
+  // Moving down within a folder is where Firefox's move index differs from Chrome's.
+  await extension.driver.executeScript(`
+    const row = (title) => [...document.querySelectorAll('tbody tr')].find((item) => item.textContent.includes(title));
+    const source = row('Drag Box');
+    const target = row('Drag Last');
+    const transfer = new DataTransfer();
+    const box = target.getBoundingClientRect();
+    const at = { bubbles: true, cancelable: true, dataTransfer: transfer, clientX: box.left + 200, clientY: box.bottom - 2 };
+    source.dispatchEvent(new DragEvent('dragstart', { bubbles: true, cancelable: true, dataTransfer: transfer }));
+    target.dispatchEvent(new DragEvent('dragover', at));
+    target.dispatchEvent(new DragEvent('drop', at));
+    source.dispatchEvent(new DragEvent('dragend', { bubbles: true }));
+  `);
+  await expect
+    .poll(() => titles(folder.folderId))
+    .toEqual(['Drag First', 'Drag Last', 'Drag Box']);
+
+  // A link dropped from another page on a folder in the tree goes into it.
+  await extension.driver.executeScript(`
+    const target = [...document.querySelectorAll('[data-testid="folder-tree"] button')].find((item) => item.textContent.trim() === 'Drag Box');
+    const transfer = new DataTransfer();
+    transfer.setData('text/x-moz-url', 'https://e2e.invalid/dropped\\nDropped Page');
+    const at = { bubbles: true, cancelable: true, dataTransfer: transfer };
+    target.dispatchEvent(new DragEvent('dragover', at));
+    target.dispatchEvent(new DragEvent('drop', at));
+  `);
+  await expect.poll(() => titles(folder.ids['Drag Box'])).toEqual(['Dropped Page']);
+});
+
 test('extension pages share Web Locks, which serialize storage writes', async ({ extension }) => {
   // The MV2 background page cannot be scripted here; it shares the pages' origin, and so their
   // locks. Hold a lock in one extension page and look for it from another.

@@ -60,6 +60,46 @@ export async function addBookmarkItem(details: {
   return result;
 }
 
+/**
+ * Moves `ids`, in order, into `destination.parentId` before `destination.beforeId` (the end when
+ * null): a drag and drop. One undo entry. Resolves to how many moved.
+ */
+export async function moveBookmarksTo(
+  ids: readonly string[],
+  destination: ManagerDropDestination,
+): Promise<number> {
+  let moved = 0;
+  await recordBookmarkWrites({ action: 'move', count: ids.length }, async (writer) => {
+    for (const id of ids) {
+      await writer.moveBefore(id, destination.parentId, destination.beforeId);
+      moved += 1;
+    }
+  });
+  return moved;
+}
+
+/** Creates a bookmark for each link dropped from another page or app; one undo entry. */
+export async function addDroppedLinks(
+  links: readonly { url: string; title: string }[],
+  destination: ManagerDropDestination,
+): Promise<number> {
+  await recordBookmarkWrites({ action: 'add', count: links.length }, async (writer) => {
+    for (const link of links) {
+      const siblings = await getBookmarkChildren(destination.parentId);
+      const before = destination.beforeId
+        ? siblings.findIndex((sibling) => sibling.id === destination.beforeId)
+        : -1;
+      await writer.create({
+        parentId: destination.parentId,
+        ...(before >= 0 ? { index: before } : {}),
+        title: link.title,
+        url: link.url,
+      });
+    }
+  });
+  return links.length;
+}
+
 type ClipboardContent =
   | { mode: 'cut'; ids: string[]; text: string }
   | { mode: 'copy'; nodes: RecoverableBookmarkNode[]; text: string };
@@ -135,20 +175,6 @@ export async function setBookmarkClipboard(
 /** Whether Paste has something of this page's to paste. */
 export function hasBookmarkClipboard(): boolean {
   return clipboard !== null;
-}
-
-/** The URLs in pasted text, one per line or separated by spaces, http(s), ftp, and file only. */
-export function urlsInText(text: string): string[] {
-  return text
-    .split(/\s+/)
-    .map((part) => part.trim())
-    .filter((part) => {
-      try {
-        return ['http:', 'https:', 'ftp:', 'file:'].includes(new URL(part).protocol);
-      } catch {
-        return false;
-      }
-    });
 }
 
 async function createCopy(

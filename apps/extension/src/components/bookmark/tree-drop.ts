@@ -1,18 +1,10 @@
 /**
  * Where a drop in the popup and side panel tree lands. Folder rows have three zones (before,
  * into, after) and bookmark rows two (before, after); the zone sizes come from
- * config/ui/popup-tree.toml. Pure, so it is unit tested; `use-tree-dnd.ts` wires it to the DOM.
+ * config/ui/drag-drop.toml through `dropZoneAt`. Pure, so it is unit tested; `use-tree-dnd.ts`
+ * wires it to the DOM.
  */
-import { z } from 'zod';
 import type { BookmarkTreeNode, DragOperation } from '@/types';
-
-const dropConfig = readConfig(
-  'ui/popup-tree',
-  z.strictObject({
-    folder_edge_fraction: z.number().gt(0).max(0.5),
-    bookmark_split_fraction: z.number().gt(0).lt(1),
-  }),
-);
 
 /** Parent id recorded for a node without one, such as the browser's own root folders. */
 const ROOT_PARENT_ID = 'root';
@@ -35,13 +27,8 @@ export type TreeDropPointer = { clientY: number; top: number; height: number };
 /** The zone of `target` under the pointer. */
 export function getTreeDropZone(target: TreeDropTarget, pointer: TreeDropPointer): TreeDropZone {
   const fraction = pointer.height > 0 ? (pointer.clientY - pointer.top) / pointer.height : 0.5;
-  if (target.kind === 'bookmark') {
-    return fraction < dropConfig.bookmark_split_fraction ? 'before' : 'after';
-  }
-  if (!target.movable) return 'into';
-  if (fraction < dropConfig.folder_edge_fraction) return 'before';
-  if (fraction > 1 - dropConfig.folder_edge_fraction) return 'after';
-  return 'into';
+  if (target.kind === 'folder' && !target.movable) return 'into';
+  return dropZoneAt(target.kind === 'folder', fraction);
 }
 
 /** The move a drop makes, or null when it would do nothing (a row dropped on itself). */

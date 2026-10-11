@@ -107,6 +107,18 @@
         "message": "重做已撤消的更改",
         "description": "Manager shortcuts help: redo the change undone last"
     },
+    "shortcuts_copy": {
+        "message": "复制所选项目",
+        "description": "Keyboard shortcuts help: copy the selected bookmarks"
+    },
+    "shortcuts_cut": {
+        "message": "剪切所选项目，粘贴时移动",
+        "description": "Keyboard shortcuts help: cut the selected bookmarks to move them with paste"
+    },
+    "shortcuts_paste": {
+        "message": "粘贴项目，或从其他应用复制的链接",
+        "description": "Keyboard shortcuts help: paste copied or cut items, or links from another app"
+    },
     "shortcuts_moveRowFocus": {
         "message": "在行之间移动；按住 Shift 可扩展选择",
         "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
@@ -300,6 +312,14 @@
     "toast_sortFailed": {
         "message": "无法排序文件夹",
         "description": "Error toast when sorting a folder fails"
+    },
+    "toast_linksAdded": {
+        "message": "已添加 $1 个书签",
+        "description": "Toast after links dropped on the manager become bookmarks. $1 is how many."
+    },
+    "toast_linksAddFailed": {
+        "message": "无法添加链接",
+        "description": "Error toast when links dropped on the manager could not be added"
     },
     "toast_deleteRestoredDesc": {
         "message": "已恢复“$title$”。",

@@ -33,6 +33,8 @@ function FolderItem({ node, level, selectedId, expandedIds, onSelect, onToggle }
     <div>
       <div
         data-folder-id={node.id}
+        // Top-level folders never move; others drag onto the table or other folders.
+        draggable={level > 0}
         className={cn(
           'flex h-8 w-full items-center gap-1 rounded-md pr-2 text-sm transition-colors',
           isSelected ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground hover:bg-muted',

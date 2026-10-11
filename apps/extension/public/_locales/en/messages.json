@@ -107,6 +107,18 @@
         "message": "Redo the undone change",
         "description": "Manager shortcuts help: redo the change undone last"
     },
+    "shortcuts_copy": {
+        "message": "Copy the selected items",
+        "description": "Keyboard shortcuts help: copy the selected bookmarks"
+    },
+    "shortcuts_cut": {
+        "message": "Cut the selected items, to move them with paste",
+        "description": "Keyboard shortcuts help: cut the selected bookmarks to move them with paste"
+    },
+    "shortcuts_paste": {
+        "message": "Paste items, or links copied from another app",
+        "description": "Keyboard shortcuts help: paste copied or cut items, or links from another app"
+    },
     "shortcuts_moveRowFocus": {
         "message": "Move between rows; with Shift, extend the selection",
         "description": "Manager shortcuts help: the arrow keys, Home, and End move between rows; with Shift they extend the selection"
@@ -300,6 +312,18 @@
     "toast_sortFailed": {
         "message": "Could not sort the folder",
         "description": "Error toast when sorting a folder fails"
+    },
+    "toast_linksAdded": {
+        "message": "Added $1 bookmarks",
+        "description": "Toast after links dropped on the manager become bookmarks. $1 is how many."
+    },
+    "toast_linksAddFailed": {
+        "message": "Could not add the links",
+        "description": "Error toast when links dropped on the manager could not be added"
+    },
+    "toast_linksAdded_one": {
+        "message": "Added $1 bookmark",
+        "description": "Toast after one dropped link becomes a bookmark. $1 is 1."
     },
     "toast_pasted_one": {
         "message": "Pasted $1 item",

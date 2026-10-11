@@ -78,6 +78,8 @@ interface DataTableProps<TData extends RowData> {
   handleRef?: React.Ref<DataTableHandle<TData>>;
   /** Wraps the table's frame, for example in a right-click menu. */
   renderFrame?: (frame: React.ReactElement) => React.ReactNode;
+  /** Extra props for a row, such as drag and drop handlers. */
+  getRowProps?: (row: TData) => React.HTMLAttributes<HTMLTableRowElement>;
   /** Accessible name of the grid. */
   label?: string;
   /** Enables saved searches, which need to know and change the folder the manager shows. */
@@ -110,6 +112,8 @@ export type DataTableHandle<TData> = {
    * it; otherwise the row alone, which becomes the selection.
    */
   targetRowsAt: (rowId: string) => TData[];
+  /** Whether the rows are the folder in the browser's order, so a drop between rows reorders. */
+  canReorderRows: () => boolean;
 };
 
 export type DataTableRevealRequest = {
@@ -165,6 +169,7 @@ export function DataTable<TData extends RowData>({
   rowClassName,
   handleRef,
   renderFrame,
+  getRowProps,
   label,
   savedSearchContext,
   searchQuery,
@@ -422,6 +427,8 @@ export function DataTable<TData extends RowData>({
       : showsAllBookmarks
         ? t('table_moveNeedsFolderView')
         : null;
+  const moveDisabledReasonRef = React.useRef(moveDisabledReason);
+  moveDisabledReasonRef.current = moveDisabledReason;
 
   // Columns the table shows, in order: saved visibility minus columns hidden for lack of room.
   const effectiveColumnVisibility = React.useMemo<ColumnVisibilityState>(
@@ -694,6 +701,7 @@ export function DataTable<TData extends RowData>({
         return true;
       },
       moveFocus: (step) => moveRowFocus(step === 1 ? 'next' : 'previous'),
+      canReorderRows: () => moveDisabledReasonRef.current === null,
       targetRowsAt: (rowId) => {
         const { shownRows: rows, shownRowsById: byId, rowSelection: selection } = latestRef.current;
         const row = byId.get(rowId);
@@ -840,6 +848,7 @@ export function DataTable<TData extends RowData>({
                           onRowOpenInBackground(row.original);
                         }}
                         onKeyDown={(event) => handleRowKeyDown(event, row.id)}
+                        {...getRowProps?.(row.original)}
                       >
                         {row.getVisibleCells().map((cell) => (
                           <React.Fragment key={cell.id}>

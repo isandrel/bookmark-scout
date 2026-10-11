@@ -122,19 +122,6 @@ export default function BookmarksPage() {
     },
     [allData, navigateToFolder, openUrls],
   );
-  const shortcuts = useManagerShortcuts({
-    currentFolderId: currentFolder,
-    items: allData,
-    onNavigate: navigateToFolder,
-    table: tableRef,
-    commands: {
-      deleteRows: (rows) => deleteItems(rows),
-      renameRow: (bookmark) => setEditTarget({ mode: 'edit', bookmark }),
-      openRows,
-      undo: history.undo,
-      redo: history.redo,
-    },
-  });
   // Deletes the items, leaving out those inside another deleted folder.
   const deleteItems = (rows: Bookmark[]) => {
     const items = pruneNestedSelection(rows, allData).map(toDeletionTarget);
@@ -162,6 +149,21 @@ export default function BookmarksPage() {
     copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
     open: openRows,
   });
+  const shortcuts = useManagerShortcuts({
+    currentFolderId: currentFolder,
+    items: allData,
+    onNavigate: navigateToFolder,
+    table: tableRef,
+    commands: {
+      deleteRows: (rows) => deleteItems(rows),
+      renameRow: (bookmark) => setEditTarget({ mode: 'edit', bookmark }),
+      openRows,
+      undo: history.undo,
+      redo: history.redo,
+    },
+    clipboard: managerCommands.clipboardEvents,
+  });
+  const dragDrop = useManagerDragDrop({ allData, currentFolderId: currentFolder, table: tableRef });
   const columns = useMemo(
     () =>
       createColumns({
@@ -303,6 +305,7 @@ export default function BookmarksPage() {
             actions={BOOKMARK_ROW_ACTIONS}
             itemContext={managerCommands.treeItemContext}
             testId="folder-tree-menu-area"
+            areaProps={dragDrop.treeProps}
           >
             <FolderTree
               items={allData}
@@ -428,6 +431,7 @@ export default function BookmarksPage() {
               onSearchQueryChange={setSearchQuery}
               revealRow={revealRow}
               handleRef={tableRef}
+              getRowProps={dragDrop.rowProps}
               renderFrame={(frame) => (
                 <ItemContextMenu
                   resolveItems={resolveRowMenuItems}
@@ -435,6 +439,7 @@ export default function BookmarksPage() {
                   itemContext={managerCommands.tableItemContext}
                   folderContext={managerCommands.folderContext}
                   testId="bookmark-table-menu-area"
+                  areaProps={dragDrop.frameProps}
                 >
                   {frame}
                 </ItemContextMenu>

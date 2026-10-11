@@ -33,6 +33,10 @@ const SHORTCUT_ROWS: readonly { bindings: readonly ShortcutBinding[]; label: Mes
   { bindings: manager.delete, label: 'shortcuts_deleteSelection' },
   { bindings: manager.undo, label: 'shortcuts_undo' },
   { bindings: manager.redo, label: 'shortcuts_redo' },
+  // The browser's own copy, cut, and paste keys, read from its clipboard events.
+  { bindings: [{ key: 'c', mod: true }], label: 'shortcuts_copy' },
+  { bindings: [{ key: 'x', mod: true }], label: 'shortcuts_cut' },
+  { bindings: [{ key: 'v', mod: true }], label: 'shortcuts_paste' },
   { bindings: manager.openSavedSearches, label: 'shortcuts_openSavedSearches' },
   { bindings: manager.showHelp, label: 'shortcuts_showHelp' },
   // Escape closes any dialog or menu; not configurable.

@@ -60,8 +60,10 @@ Hover a folder in the popup or side panel and click **Add folder**, then type th
 ## Move bookmarks and folders
 
 - **Drag and drop** in the popup or side panel. Dropping beside an item in another folder moves it into that folder. A folder cannot be moved into itself or one of its subfolders.
+- **Drag and drop** in the manager, as in Chrome's: drag a row, or a selection of rows, onto a folder row or a folder in the folder tree to move it there. Hovering a closed folder in the tree during a drag opens it. With **Browser order** on (see below), dropping between rows also reorders. Each drop is one `Ctrl+Z` step.
+- **Links from other pages and apps**: drop a link, or text with URLs, on the manager's table or a folder in its tree to bookmark it there. Dragging rows out to another app or page carries their URLs.
 - **Several at once** in the manager: select rows in the table, then use **Move to folder** and choose the destination. Items are added at the end of that folder.
-- **Reorder** in the manager: turn on **Browser order**, clear any column sort, then use the **Move up**, **Move down**, **Move to top**, and **Move to bottom** buttons on the row. They need the table to show one folder, so clear filters or check **Current folder only**.
+- **Reorder** in the manager: turn on **Browser order**, clear any column sort, then drag rows, or use the **Move up**, **Move down**, **Move to top**, and **Move to bottom** buttons on the row. They need the table to show one folder, so clear filters or check **Current folder only**.
 
 Reordering changes the browser's saved order. The popup shows that order only with the **Folders First** sort; date and alphabetical sorting keep re-sorting the list, and the confirmation says so.
 
@@ -102,7 +104,7 @@ The full list of keys is in [Keyboard shortcuts](/guides/keyboard-shortcuts#book
 Right-click a row, or a folder in the folder tree, for the same commands as Chrome's bookmark manager. A right click on a selected row acts on the whole selection; on any other row it selects that row first. The menu key or `Shift+F10` opens it from the keyboard. A row's ⋯ button opens the same menu for that row.
 
 - **Edit** (a bookmark) or **Rename** (a folder), **Show in folder** (search results), and **View Details**.
-- **Cut**, **Copy**, and **Paste**. Copy puts the bookmarks' URLs on the clipboard, one per line (and as links, for apps that take formatted text), so they paste into other apps too. Paste in a row's menu pastes after that row in the folder shown; in a folder's menu in the tree, it pastes into that folder. Copied items paste as copies, including everything inside a copied folder; cut items move when you paste them, and stay where they are until then.
+- **Cut**, **Copy**, and **Paste**. Copy puts the bookmarks' URLs on the clipboard, one per line (and as links, for apps that take formatted text), so they paste into other apps too. Paste in a row's menu pastes after that row in the folder shown; in a folder's menu in the tree, it pastes into that folder. Copied items paste as copies, including everything inside a copied folder; cut items move when you paste them, and stay where they are until then. `Ctrl+C`, `Ctrl+X`, and `Ctrl+V` (`Cmd` on a Mac) do the same for the selection, and `Ctrl+V` also turns URLs copied in another app into bookmarks.
 - **Open in new tab**, **Open in new window**, and **Open in incognito window** (InPrivate in Edge, a private window in Firefox, where it needs the extension to be allowed in private windows). For several items or a folder they read **Open all (12)** and open the bookmarks in the selection and those directly inside its folders, not in subfolders. More than 15 tabs asks first.
 - **Copy link to this folder** and **Copy Bookmark ID**, and **Delete**.
 
