@@ -75,7 +75,7 @@ test('a long page scrolls inside the manager, never the page itself', async ({
   extensionWorker,
   page,
 }) => {
-  await writeStored(extensionWorker, STORAGE_ITEMS.tableView, { version: 1, pageSize: 50 });
+  await writeStored(extensionWorker, STORAGE_ITEMS.tableLayout, { pageSize: 50 });
   const seeded = await seedFolder(
     extensionWorker,
     'E2E Tall Page',

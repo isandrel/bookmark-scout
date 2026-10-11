@@ -185,14 +185,16 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await pageSizeControl.click();
   await page.getByRole('option', { name: '20' }).click();
 
+  // Columns and sort sync; the page size stays on this device.
   await expect
     .poll(() => readStored(extensionWorker, STORAGE_ITEMS.tableView))
     .toMatchObject({
-      version: 1,
       columnVisibility: { url: false },
-      pageSize: 20,
       sorting: [{ id: 'title', desc: false }],
     });
+  await expect
+    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.tableLayout))
+    .toMatchObject({ pageSize: 20 });
 
   await page.reload();
   const headers = page.locator('thead th');
@@ -215,18 +217,12 @@ test('saves, restores, and resets the bookmark table view without reordering boo
   await page.getByRole('button', { name: 'Customize table view' }).click();
   await page.getByRole('button', { name: 'Reset view' }).click();
   await expect
-    .poll(() => readStored(extensionWorker, STORAGE_ITEMS.tableView))
-    .toMatchObject({
-      version: 1,
-      pageSize: 10,
-      sorting: [],
-      columnVisibility: {
-        id: false,
-        parentId: false,
-        dateGroupModified: false,
-        unmodifiable: false,
-      },
-    });
+    .poll(async () => [
+      await readStored(extensionWorker, STORAGE_ITEMS.tableView),
+      await readStored(extensionWorker, STORAGE_ITEMS.tableLayout),
+    ])
+    // Back at the defaults, nothing is stored.
+    .toEqual([undefined, undefined]);
 
   await page.reload();
   await expect(page.getByRole('columnheader', { name: 'URL' })).toBeVisible();

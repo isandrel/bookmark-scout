@@ -25,15 +25,15 @@ async function width(locator: Locator): Promise<number> {
   return box.width;
 }
 
-type StoredTableView = { columnSizing?: Record<string, number>; sorting?: unknown[] };
-
+/** Widths stay on this device, in the table layout; the sort syncs with the columns. */
 async function savedColumnSizing(worker: Worker): Promise<Record<string, number>> {
-  const stored = await readStored<StoredTableView>(worker, STORAGE_ITEMS.tableView);
+  type Layout = { columnSizing?: Record<string, number> };
+  const stored = await readStored<Layout>(worker, STORAGE_ITEMS.tableLayout);
   return stored?.columnSizing ?? {};
 }
 
 async function savedSorting(worker: Worker): Promise<unknown[]> {
-  const stored = await readStored<StoredTableView>(worker, STORAGE_ITEMS.tableView);
+  const stored = await readStored<{ sorting?: unknown[] }>(worker, STORAGE_ITEMS.tableView);
   return stored?.sorting ?? [];
 }
 

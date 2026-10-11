@@ -49,8 +49,10 @@ export const STORAGE_ITEMS = {
   settings: { area: 'sync', name: 'settings', v: 1, backup: 'include' },
   /** Local: the changed settings that belong to this device only (`DEVICE_SETTING_KEYS`). */
   deviceSettings: { area: 'local', name: 'settings', v: 1, backup: 'include' },
-  /** Synced: the manager table's columns and sort, so the layout follows the user. */
+  /** Synced: the manager table's columns (shown, order) and sort, so the layout follows the user. */
   tableView: { area: 'sync', name: 'manager.table-view', v: 1, backup: 'include' },
+  /** Local: the manager table's column widths and page size, which suit one screen. */
+  tableLayout: { area: 'local', name: 'manager.table-layout', v: 1, backup: 'exclude' },
   /** Synced: which custom prompts exist and which one each task uses. */
   promptIndex: { area: 'sync', name: 'prompts.index', v: 1, backup: 'include' },
   /** Synced: one item per custom prompt, so each stays under the 8,192-byte item quota. */
