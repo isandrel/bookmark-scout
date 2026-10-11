@@ -153,13 +153,16 @@ test("Chrome's folder UUID links open the matching folder", async ({
   );
 });
 
-test('Copy link to this folder copies the chrome://bookmarks address', async ({
+test("Copy link to this folder copies the browser manager's address", async ({
   context,
+  extensionBrowser,
   extensionId,
   extensionWorker,
   page,
 }) => {
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  // The page replaces chrome://bookmarks in Chrome and edge://favorites in Edge.
+  const base = extensionBrowser === 'msedge' ? 'edge://favorites/' : 'chrome://bookmarks/';
   const seeded = await seedFolder(extensionWorker, 'E2E Url Link', [
     { title: 'Linked Child', children: [] },
   ]);
@@ -167,14 +170,14 @@ test('Copy link to this folder copies the chrome://bookmarks address', async ({
   await page.getByRole('button', { name: 'Copy link to this folder' }).click();
   await expect(toastRegion(page).getByText('✓ Link copied', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    `chrome://bookmarks/?id=${seeded.folderId}`,
+    `${base}?id=${seeded.folderId}`,
   );
 
   await row(page, 'Linked Child').getByRole('button', { name: 'Open menu' }).click();
   await page.getByRole('menuitem', { name: 'Copy link to this folder' }).click();
   await expect
     .poll(() => page.evaluate(() => navigator.clipboard.readText()))
-    .toBe(`chrome://bookmarks/?id=${seeded.ids['Linked Child']}`);
+    .toBe(`${base}?id=${seeded.ids['Linked Child']}`);
 });
 
 test('Show in folder opens the folder of a search result with the row selected', async ({

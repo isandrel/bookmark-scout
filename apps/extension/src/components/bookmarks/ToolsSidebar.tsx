@@ -82,10 +82,12 @@ interface ToolsSidebarProps {
 }
 
 // Memoized: the page re-renders on every keystroke of the title search (it is in the address).
+// A memoized component skips the page's language re-render, so it follows the language itself.
 export const ToolsSidebar = memo(function ToolsSidebar({
   currentFolderId,
   currentFolderName,
 }: ToolsSidebarProps) {
+  useLanguageRevision();
   const { folders, refresh } = useBookmarks();
   const { settings, isLoading } = useSettings();
   const exportPrivacyReview = useExportPrivacyReview();
