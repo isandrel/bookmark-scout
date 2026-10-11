@@ -24,3 +24,5 @@ recording = false
 # Ask AI adds the provider's web search, where the provider has one. Chosen in the Ask AI panel,
 # for this device only.
 web_search = false
+# Actions Ask AI may not use, as action ids; empty lets it use all of them. Edited in Options > AI.
+disabled_actions = { default = [], max_items = 16, max_length = 20 }

@@ -243,6 +243,14 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       '[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on',
     ),
   ], 'A device setting: it never syncs.'),
+  askAiDisabledActions: tested('services/actions.ts', [
+    unit('actions.test.ts', 'leaves out and refuses the actions the user turned off for Ask AI'),
+    e2e('ask-ai.spec.ts', '[mocked provider contract] Ask AI is not offered the actions turned off in Options'),
+  ], 'Edited in Options > AI > What Ask AI may do (AskAIActionsPanel).'),
+  managerMenuActions: tested('components/ui/table/bookmark-row-menu.tsx', [
+    unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
+    e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),
+  ], 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).'),
   askAiWebSearch: tested('services/ai-agent.ts', [
     unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on"),
   ], 'A device setting, switched with the globe button in Ask AI.'),

@@ -91,6 +91,7 @@ const previewOutput = planSchema.shape.preview;
 
 const proposeChanges = defineAction({
   risk: 'read',
+  labelKey: 'actionName_proposeChanges',
   targets: ['bookmark', 'folder'],
   agent: {
     description:
@@ -98,6 +99,7 @@ const proposeChanges = defineAction({
       'renames, deletions, and new folders, checked against the library now. Nothing changes ' +
       'yet. Returns a planId and the changes as the user will see them; then call applyChanges ' +
       'with the planId, which asks the user. Folders are named by ref or full path.',
+    partOfChanges: true,
   },
   input: z.object({
     summary: z.string().trim().min(1).max(200).describe('One short sentence on what this does'),
@@ -183,6 +185,7 @@ function planLabel(plan: ActionPlan): BookmarkHistoryLabel {
 
 const applyChanges = defineAction({
   risk: 'destructive',
+  labelKey: 'actionName_applyChanges',
   targets: ['bookmark', 'folder'],
   agent: {
     description:

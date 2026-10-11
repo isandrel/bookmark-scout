@@ -278,3 +278,45 @@ test('Organize sorts the folder by name, and adds bookmarks and folders at its e
     .poll(async () => (await childTitles(extensionWorker, seeded.folderId)).at(-1))
     .toBe('Added Folder');
 });
+
+test('Options hides and reorders the manager menu items', async ({
+  extensionId,
+  extensionWorker,
+  page,
+  context,
+}) => {
+  const { folderId } = await seedFolder(extensionWorker, 'E2E Menu Layout', [
+    { title: 'Menu Row', url: 'https://menu.e2e.invalid/row' },
+  ]);
+
+  const options = await context.newPage();
+  await options.goto(`chrome-extension://${extensionId}/options.html`);
+  await options.getByRole('tab', { name: 'Behavior' }).click();
+  const panel = options.getByTestId('manager-menus');
+  await expect(panel).toBeVisible();
+  await panel.getByRole('checkbox', { name: 'Copy Bookmark ID' }).click();
+  await panel.getByRole('button', { name: 'Move View Details up' }).click();
+  await expect
+    .poll(() =>
+      extensionWorker.evaluate(async () => {
+        const stored = await chrome.storage.sync.get(null);
+        return JSON.stringify(stored);
+      }),
+    )
+    .toContain('managerMenuActions');
+
+  await page.goto(managerUrl(extensionId, folderId));
+  await row(page, 'Menu Row').click({ button: 'right' });
+  const names = await menuItemNames(page);
+  expect(names).not.toContain('Copy Bookmark ID');
+  expect(names.indexOf('View Details')).toBeLessThan(names.indexOf('Edit'));
+  await page.keyboard.press('Escape');
+
+  // Restore defaults brings the configured menu back.
+  await panel.getByRole('button', { name: 'Restore defaults' }).click();
+  await page.reload();
+  await row(page, 'Menu Row').click({ button: 'right' });
+  const restored = await menuItemNames(page);
+  expect(restored).toContain('Copy Bookmark ID');
+  expect(restored.indexOf('Edit')).toBeLessThan(restored.indexOf('View Details'));
+});
