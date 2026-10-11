@@ -5495,6 +5495,34 @@
         "message": "このプランは期限切れか、すでに適用されています。もう一度依頼すると作り直します。",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
     },
+    "askAI_undoMissing": {
+        "message": "この変更はすでに取り消されたか、履歴に残っていないため、取り消すものはありません。",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "「$1」を削除",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "フォルダ「$1」と中身をすべて削除（$2 項目）",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "「$1」を $2 に戻す",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "「$1」の名前を「$2」に戻す",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "「$1」のアドレスを $2 に戻す",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "「$1」を $2 に戻す",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
     "askAI_approve": {
         "message": "承認",
         "description": "Ask AI approval card: button that approves the change"

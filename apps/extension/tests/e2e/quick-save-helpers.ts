@@ -10,7 +10,7 @@
  */
 import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import type { Page, Worker } from '@playwright/test';
+import type { BrowserContext, Page, Worker } from '@playwright/test';
 import { expect } from './fixtures';
 import { readStored, removeStored, STORAGE_ITEMS } from './storage';
 
@@ -25,6 +25,19 @@ export type QuickSaveRecord = {
   createdFolderIds: string[];
   page: { title: string; url: string };
 };
+
+/**
+ * Answers `url` with a small article titled `title`, so quick save has a web page to act on
+ * without a server.
+ */
+export async function routeArticle(context: BrowserContext, url: string, title: string) {
+  await context.route(url, (route) =>
+    route.fulfill({
+      contentType: 'text/html; charset=utf-8',
+      body: `<!doctype html><title>${title}</title><h1>${title}</h1><p>An article.</p>`,
+    }),
+  );
+}
 
 export type Recommendation = { type: 'new' | 'existing'; folderPath: string; parentPath: string };
 

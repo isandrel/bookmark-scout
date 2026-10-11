@@ -168,6 +168,36 @@ async function changedSince(plan: ActionPlan): Promise<Set<string>> {
   return changed;
 }
 
+/** What an agent is told when the plan it names is gone: it has to propose the changes again. */
+function planGone(planId: string): ActionError {
+  return actionError(
+    'not_found',
+    `Plan ${planId} does not exist, expired, or was already applied; call proposeChanges again.`,
+    { hint: 'Propose the changes again with proposeChanges, then apply the new planId.' },
+  );
+}
+
+/** The live plan `planId` names for this client, or why it cannot be applied as it is now. */
+async function applicablePlan(
+  planId: string,
+  client: ActionClient,
+): Promise<ActionPlan | ActionError> {
+  const plan = await getActionPlan(planId);
+  if (!plan || plan.client !== clientName(client)) return planGone(planId);
+  const changed = await changedSince(plan);
+  if (changed.size === 0) return plan;
+  const titles = plan.expect
+    .filter((item) => changed.has(item.id))
+    .map((item) => `"${item.title}"`)
+    .slice(0, actionLimits.max_candidates);
+  return actionError(
+    'unavailable',
+    `Plan ${planId} is out of date: ${titles.join(', ')} changed since it was proposed; ` +
+      'call proposeChanges again.',
+    { hint: 'Look the items up again, then propose the changes again.' },
+  );
+}
+
 /** The history entry's label: the kind of change when all are alike, else "N changes". */
 function planLabel(plan: ActionPlan): BookmarkHistoryLabel {
   const kinds = new Set(plan.operations.map((operation) => operation.action));
@@ -190,8 +220,9 @@ const applyChanges = defineAction({
   agent: {
     description:
       'Apply a plan from proposeChanges. The user is always asked first and sees the plan; if ' +
-      'they decline, do not try again. Items changed since the plan was made are skipped. ' +
-      'Returns a change id for undoChange.',
+      'they decline, do not try again. A plan is applied once; one that expired, was applied, ' +
+      'or names items changed since is refused at once, so propose again. Items that change ' +
+      'while the user decides are skipped. Returns a change id for undoChange.',
   },
   input: z.object({ planId: z.string().min(1) }),
   output: z.object({
@@ -201,13 +232,13 @@ const applyChanges = defineAction({
     failed: z.array(z.string()),
   }),
   describe: () => t('askAI_toolApply'),
+  async precheck(input, context) {
+    const plan = await applicablePlan(input.planId, context.client);
+    return isActionError(plan) ? plan : undefined;
+  },
   async execute(input, context) {
     const plan = await getActionPlan(input.planId);
-    if (!plan || plan.client !== clientName(context.client)) {
-      return actionError('not_found', 'There is no such plan, or it expired.', {
-        hint: 'Propose the changes again with proposeChanges.',
-      });
-    }
+    if (!plan || plan.client !== clientName(context.client)) return planGone(input.planId);
     const changed = await changedSince(plan);
     const skipped: string[] = [];
     const failed: string[] = [];

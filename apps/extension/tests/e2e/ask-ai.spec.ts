@@ -1,5 +1,5 @@
 import type { BrowserContext, Worker } from '@playwright/test';
-import { streamChunks } from './ai-helpers';
+import { streamChunks, stubPlanningProvider } from './ai-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { replaceSettings, seedAIServices } from './storage';
 
@@ -162,47 +162,6 @@ test('[mocked provider contract] Ask AI shows a provider error with a retry', as
   await expect(chat.getByText('Recovered answer')).toBeVisible();
 });
 
-/** A model that plans a move, applies it after the user approves, and then answers. */
-async function stubPlanningProvider(context: BrowserContext, bookmarkId: string, folderId: string) {
-  await context.route(`${BASE_URL}/**`, async (route) => {
-    const request = JSON.parse(route.request().postData() ?? '{}') as ChatRequest;
-    const toolMessages = request.messages.filter((message) => message.role === 'tool');
-    const toolCall = (id: string, name: string, args: object) =>
-      streamChunks(
-        route,
-        [
-          {
-            role: 'assistant',
-            tool_calls: [
-              {
-                index: 0,
-                id,
-                type: 'function',
-                function: { name, arguments: JSON.stringify(args) },
-              },
-            ],
-          },
-        ],
-        'tool_calls',
-      );
-    if (toolMessages.length === 0) {
-      await toolCall('call_propose', 'proposeChanges', {
-        summary: 'Move the guide to Rust',
-        changes: [
-          { action: 'moveBookmarks', input: { refs: [`b:${bookmarkId}`], to: `f:${folderId}` } },
-        ],
-      });
-      return;
-    }
-    if (toolMessages.length === 1) {
-      const { planId } = JSON.parse(String(toolMessages[0].content)) as { planId: string };
-      await toolCall('call_apply', 'applyChanges', { planId });
-      return;
-    }
-    await streamChunks(route, [{ role: 'assistant', content: 'Moved it to Rust.' }], 'stop');
-  });
-}
-
 /** An Inbox folder with one bookmark, and an empty Rust folder to move it to. */
 function seedInboxAndRust(worker: Worker) {
   return worker.evaluate(async () => {
@@ -240,7 +199,7 @@ test('[mocked provider contract] Ask AI moves a bookmark only after the user app
   });
   await seedAskService(extensionWorker);
   const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
-  await stubPlanningProvider(context, bookmarkId, folderId);
+  await stubPlanningProvider(context, BASE_URL, { bookmarkId, folderId });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
@@ -275,7 +234,7 @@ test('[mocked provider contract] Ask AI leaves bookmarks alone when the user dec
   await replaceSettings(extensionWorker, { language: 'en', aiEnabled: true });
   await seedAskService(extensionWorker);
   const { bookmarkId, folderId, inboxId } = await seedInboxAndRust(extensionWorker);
-  await stubPlanningProvider(context, bookmarkId, folderId);
+  await stubPlanningProvider(context, BASE_URL, { bookmarkId, folderId });
 
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();

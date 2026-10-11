@@ -49,6 +49,24 @@ export function bookmarkRow(page: Page, title: string) {
   return page.locator('.bookmark-item').filter({ hasText: title });
 }
 
+/**
+ * The id of the folder the popup tree shows the row of `nodeId` in: the closest row above it one
+ * level up. The tree is a flat list of rows with ARIA levels, so nesting is read from those.
+ */
+export async function popupTreeParentId(page: Page, nodeId: string): Promise<string | null> {
+  return page.getByRole('tree').evaluate((tree, id) => {
+    const rows = [...tree.querySelectorAll('[role="treeitem"][data-tree-row-id]')].map((row) => ({
+      id: row.getAttribute('data-tree-row-id'),
+      level: Number(row.getAttribute('aria-level')),
+    }));
+    const index = rows.findIndex((row) => row.id === id);
+    for (let above = index - 1; index >= 0 && above >= 0; above -= 1) {
+      if (rows[above].level === rows[index].level - 1) return rows[above].id;
+    }
+    return null;
+  }, nodeId);
+}
+
 export async function openPopup(page: Page, extensionId: string) {
   await page.goto(`chrome-extension://${extensionId}/popup.html`);
   // By its label: a header full of buttons (AI on) shortens the placeholder.

@@ -1,5 +1,6 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { settingRow } from './options-helpers';
 import {
   readSettings,
   readStored,
@@ -8,10 +9,6 @@ import {
   setSettings,
   writeStored,
 } from './storage';
-
-function settingRow(page: Page, key: string) {
-  return page.locator(`[data-setting="${key}"]`);
-}
 
 function themeChoice(page: Page, name: 'Dark' | 'Light' | 'System') {
   return page.getByRole('radiogroup', { name: 'Theme' }).getByRole('radio', { name });
