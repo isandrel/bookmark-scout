@@ -6,9 +6,10 @@
  * Escape closes it, and its countdown pauses while it is hovered or focused.
  *
  * The host hangs off `<html>`, not `<body>`, and goes in the top layer (a manual popover) where the
- * browser has one, so a `filter`, `transform`, or `zoom` on the page's elements cannot move,
- * scale, or recolor it; its inline `!important` styles reset what the page could still pass
- * down, direction included. After drawing, it checks it is really on screen, and removes itself
+ * browser has one, so a `filter` or `transform` on the page's elements cannot move it (nor, in
+ * Chromium, recolor it; Firefox applies a filter on `<html>` to the top layer too); its inline
+ * `!important` styles reset what the page could still pass down, direction included, and cancel
+ * a `zoom` on `<html>`. After drawing, it checks it is really on screen, and removes itself
  * when not, so the background can show the result in the popup instead.
  */
 
