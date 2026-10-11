@@ -75,6 +75,11 @@ export const STORAGE_ITEMS = {
   savedSearches: { area: 'local', name: 'search.saved', v: 1, backup: 'include' },
   /** Local: downloaded icons are large and can be downloaded again. */
   siteIcons: { area: 'local', name: 'site-icons.cache', v: 1, backup: 'exclude' },
+  /**
+   * Local: the notices the user dismissed, such as the popup's missing quick save shortcut line.
+   * They describe this browser profile (shortcuts are not synced), so they stay on this device.
+   */
+  dismissedNotices: { area: 'local', name: 'ui.dismissed-notices', v: 1, backup: 'exclude' },
   /** Session: the last quick save, for Undo and Move; gone when the browser closes. */
   quickSave: { area: 'session', name: 'quick-save.last', v: 1, backup: 'exclude' },
 } as const satisfies Record<string, StorageItem>;

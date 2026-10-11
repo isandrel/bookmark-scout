@@ -5291,8 +5291,56 @@
         "message": "ショートカットを変更",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "about:addons を開き、歯車ボタンから「拡張機能のショートカットキーを管理」を選んで変更することもできます。",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "そのページで Bookmark Scout を探してください。",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "ショートカット欄をクリックして、新しいキーの組み合わせを押してください。Esc でキャンセルします。",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "$1 のショートカット",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "キーを押してください…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "$1 のショートカットを $2 に設定しました",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Ctrl か Alt を押しながらキーを押してください。単独で使えるのはファンクションキーだけです。",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Command、Control、Option のいずれかを押しながらキーを押してください。単独で使えるのはファンクションキーだけです。",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "修飾キーは 2 つまでにしてください。",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "このキーはショートカットに使えません。文字、数字、ファンクションキー、矢印キーを使ってください。",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "「$1」ですでに使われています。",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "ブラウザーがこのショートカットを受け付けませんでした。別の組み合わせを試してください。",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "クイック保存のショートカットが未設定です",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "設定する",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

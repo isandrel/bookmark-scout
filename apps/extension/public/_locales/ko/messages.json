@@ -5291,8 +5291,56 @@
         "message": "단축키 변경",
         "description": "Button that opens the browser's extension shortcut settings"
     },
-    "settings_shortcutsFirefoxHint": {
-        "message": "about:addons를 열고 톱니바퀴 버튼을 누른 뒤 확장 기능 단축키 관리를 선택해도 됩니다.",
-        "description": "How to change extension shortcuts in Firefox"
+    "settings_shortcutsFindExtension": {
+        "message": "그 페이지에서 Bookmark Scout를 찾으세요.",
+        "description": "Hint next to Change shortcuts in Chrome and Edge, whose shortcut page lists every extension"
+    },
+    "settings_shortcutRecorderHint": {
+        "message": "단축키 칸을 클릭하고 새 키 조합을 누르세요. Esc를 누르면 취소됩니다.",
+        "description": "How to use the shortcut fields where the extension can set keys"
+    },
+    "settings_shortcutFieldLabel": {
+        "message": "$1 단축키",
+        "description": "Accessible name of a shortcut field; $1 is the command name"
+    },
+    "settings_shortcutRecording": {
+        "message": "키를 누르세요…",
+        "description": "Placeholder of a focused shortcut field waiting for keys"
+    },
+    "settings_shortcutSet": {
+        "message": "$1 단축키를 $2(으)로 설정했습니다",
+        "description": "Screen reader announcement after a shortcut changed; $1 is the command name, $2 the keys"
+    },
+    "settings_shortcutNeedsModifier": {
+        "message": "Ctrl 또는 Alt를 누른 채로 키를 누르세요. 기능 키만 단독으로 쓸 수 있습니다.",
+        "description": "Error when a pressed key needs a modifier (Windows and Linux key names)"
+    },
+    "settings_shortcutNeedsModifierApple": {
+        "message": "Command, Control, Option 중 하나를 누른 채로 키를 누르세요. 기능 키만 단독으로 쓸 수 있습니다.",
+        "description": "Error when a pressed key needs a modifier (macOS key names: Command, Control, Option)"
+    },
+    "settings_shortcutTooManyModifiers": {
+        "message": "보조 키는 두 개까지만 쓸 수 있습니다.",
+        "description": "Error when more than two modifier keys are held"
+    },
+    "settings_shortcutUnsupportedKey": {
+        "message": "이 키는 단축키에 쓸 수 없습니다. 문자, 숫자, 기능 키, 화살표 키를 쓰세요.",
+        "description": "Error when the pressed key cannot be part of a shortcut"
+    },
+    "settings_shortcutInUse": {
+        "message": "이미 \"$1\"에서 쓰고 있습니다.",
+        "description": "Error when another command already has these keys; $1 is its name"
+    },
+    "settings_shortcutRejected": {
+        "message": "브라우저가 이 단축키를 받아들이지 않았습니다. 다른 조합을 써 보세요.",
+        "description": "Error when the browser refused to save the shortcut"
+    },
+    "popup_shortcutNotSet": {
+        "message": "빠른 저장 단축키가 설정되지 않음",
+        "description": "Popup and side panel line when a quick save command has no keys"
+    },
+    "popup_shortcutSetUp": {
+        "message": "설정하기",
+        "description": "Button in that line that opens where the shortcut can be set"
     }
 }

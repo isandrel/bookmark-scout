@@ -89,7 +89,7 @@ const APPLE_KEY_CAP_LABELS: Readonly<Record<string, string>> = {
 };
 
 /** macOS, iPadOS, and iOS, where key caps use Apple's symbols. */
-function isApplePlatform(): boolean {
+export function isApplePlatform(): boolean {
   const nav = globalThis.navigator as
     | (Navigator & { userAgentData?: { platform?: string } })
     | undefined;

@@ -14,6 +14,7 @@ import {
   bookmarkTableLayoutValue,
   bookmarkTableViewValue,
 } from '@/lib/bookmark-table-view-storage';
+import { dismissedNoticesValue } from '@/lib/dismissed-notices-storage';
 import { promptLibraryIndexValue } from '@/lib/prompt-library-storage';
 import { recentFoldersValue } from '@/lib/recent-folders-storage';
 import { savedSearchesValue } from '@/lib/saved-searches-storage';
@@ -54,6 +55,7 @@ const values: Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>> = {
   searchHistory: searchHistoryValue,
   savedSearches: savedSearchesValue,
   siteIcons: siteIconCacheValue,
+  dismissedNotices: dismissedNoticesValue,
   quickSave: quickSaveRecordValue,
 } as Record<Exclude<StorageItemId, 'prompt'>, StoredValue<unknown>>;
 
