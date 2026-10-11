@@ -54,6 +54,8 @@ export type StoredValue<T> = {
   readonly empty: T;
   /** Steps from each older version, as passed to `defineStoredValue`. */
   readonly migrations: Readonly<Record<number, StoredValueMigration>>;
+  /** The value for what storage holds under the key (an envelope, or nothing). */
+  parseStored: (raw: unknown) => T;
   /** The parsed stored value. Rejects when storage cannot be read. */
   get: () => Promise<T>;
   /** Parses and stores `value` (or removes the key when it is empty); resolves to what was stored. */
@@ -246,6 +248,7 @@ export function defineStoredValue<T>(
     key,
     empty,
     migrations,
+    parseStored: (raw) => readRaw(raw).value,
     get,
     set: (value) =>
       withKeyLock(key, async () => {
@@ -269,6 +272,54 @@ export function defineStoredValue<T>(
   };
   liveValues.set(storedValue, live as LiveValue<unknown>);
   return storedValue;
+}
+
+export type StoredCollection<T> = {
+  readonly item: StorageItem;
+  /** The entry `id`, as a stored value of its own (one per id on a page). */
+  entry: (id: string) => StoredValue<T>;
+  /** The entries `ids`, read in one storage call. */
+  getMany: (ids: readonly string[]) => Promise<Record<string, T>>;
+  /** The id of every entry stored in the collection. */
+  listIds: () => Promise<string[]>;
+};
+
+/**
+ * A collection item (`collection: true` in the registry): one stored value per id under
+ * `<area>:<name>/<id>`, each written on its own, so each stays within the per-item quota.
+ */
+export function defineStoredCollection<T>(
+  item: StorageItem,
+  options: Omit<StoredValueOptions<T>, 'id'>,
+): StoredCollection<T> {
+  const entries = new Map<string, StoredValue<T>>();
+  const entry = (id: string) => {
+    let value = entries.get(id);
+    if (!value) {
+      value = defineStoredValue<T>(item, { ...options, id } as StoredValueOptions<T>);
+      entries.set(id, value);
+    }
+    return value;
+  };
+  const prefix = `${storageKey(item, '')}`;
+  return {
+    item,
+    entry,
+    async getMany(ids) {
+      if (ids.length === 0) return {};
+      const stored = await storage.getItems(ids.map((id) => entry(id).key));
+      return Object.fromEntries(
+        ids.map((id, index) => [id, entry(id).parseStored(stored[index]?.value ?? null)]),
+      );
+    },
+    async listIds() {
+      const all = (await storage.snapshot(item.area)) as Record<string, unknown>;
+      const areaPrefix = prefix.slice(item.area.length + 1);
+      return Object.keys(all)
+        .filter((key) => key.startsWith(areaPrefix) && key.length > areaPrefix.length)
+        .map((key) => key.slice(areaPrefix.length));
+    },
+  };
 }
 
 /** Calls back with the live value once it is loaded, then after each change. */

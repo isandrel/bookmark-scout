@@ -11,6 +11,7 @@ export default defineBackground(() => {
   void restrictLocalStorageAccess();
   // Saves settings a closing Options page hands over.
   registerSettingsSaveListener();
+  registerPromptCleanup();
 
   browser.bookmarks.onRemoved.addListener((_id, removeInfo) => {
     const removedIds = subtreeIds(removeInfo.node);

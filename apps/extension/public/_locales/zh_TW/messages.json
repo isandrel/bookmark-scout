@@ -4543,6 +4543,10 @@
         "message": "提示詞過長，無法同步。請控制在 $1 以內。",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "為了能放進瀏覽器同步，最多可儲存 $1 個自訂提示詞。請先刪除一個再新增。",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "無法儲存提示詞。同步儲存空間可能已滿；請刪除不再使用的提示詞後再試一次。",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"

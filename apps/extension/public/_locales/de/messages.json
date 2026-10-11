@@ -4727,6 +4727,10 @@
         "message": "Der Prompt ist zu lang für die Synchronisierung. Halten Sie ihn unter $1.",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "Sie können bis zu $1 eigene Prompts speichern, damit sie in die Browsersynchronisierung passen. Löschen Sie einen, um einen neuen hinzuzufügen.",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "Der Prompt konnte nicht gespeichert werden. Der Synchronisierungsspeicher ist eventuell voll; löschen Sie nicht mehr benötigte Prompts und versuchen Sie es noch einmal.",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"

@@ -4703,6 +4703,10 @@
         "message": "プロンプトが長すぎて同期できません。$1 以内にしてください。",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "ブラウザの同期に収まるよう、カスタムプロンプトは $1 件まで保存できます。追加するには 1 件削除してください。",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "プロンプトを保存できませんでした。同期ストレージがいっぱいの可能性があります。使わないプロンプトを削除してから、もう一度お試しください。",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"

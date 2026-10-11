@@ -4727,6 +4727,10 @@
         "message": "The prompt is too long to sync. Keep it within $1.",
         "description": "Prompt validation: over the sync size limit"
     },
+    "prompt_errorLimit": {
+        "message": "You can keep up to $1 custom prompts so they fit in browser sync. Delete one to add another.",
+        "description": "Prompt library: saving a new prompt when the library already holds the maximum number; $1 is the maximum"
+    },
     "prompt_errorSaveFailed": {
         "message": "The prompt could not be saved. Sync storage may be full; delete prompts you no longer use and try again.",
         "description": "Prompt editor: saving failed for a reason other than validation, such as a full sync storage"
