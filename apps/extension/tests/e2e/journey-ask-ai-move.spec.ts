@@ -88,10 +88,7 @@ test('[mocked provider contract] an approved Ask AI move shows in the manager, a
   await expect(managerRow(manager, 'Ownership guide')).toHaveCount(1);
 });
 
-// Bug: the history label of an approved plan whose changes are all one kind (`planLabel` in
-// `src/services/plan-actions.ts`) has a count but no title, so undoing a one-bookmark move says
-// `Undone: Move "Untitled"` instead of naming the bookmark. Remove `fixme` once it is named.
-test.fixme('[mocked provider contract] undoing an approved Ask AI move names the bookmark', async ({
+test('[mocked provider contract] undoing an approved Ask AI move names the bookmark', async ({
   context,
   extensionId,
   extensionWorker,

@@ -65,6 +65,8 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
 
   const lines = planId ? (plan ? planLines(plan) : []) : directLines(toolName, args);
   const missing = Boolean(planId) && plan === null;
+  // A save names the exact address too, which a title can hide.
+  const url = toolName === 'saveBookmark' && typeof args.url === 'string' ? args.url : '';
   const respond = (approved: boolean) => {
     setAnswered(true);
     onRespond(approved);
@@ -94,6 +96,11 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
             <li key={line}>{line}</li>
           ))}
         </ul>
+      )}
+      {url && (
+        <p data-slot="approval-url" className="break-all font-mono text-xs text-muted-foreground">
+          {url}
+        </p>
       )}
       <div className="flex gap-2">
         <Button

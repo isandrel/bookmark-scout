@@ -533,6 +533,6 @@ const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: Messag
 /** What an entry did, in the current language: `Delete "News"`, `Move 3 items`. */
 export function describeBookmarkHistoryLabel(label: BookmarkHistoryLabel): string {
   const { one, many } = LABEL_KEYS[label.action];
-  if (many && (label.count ?? 1) > 1) return t(many, String(label.count));
+  if (many && label.count !== undefined && label.count > 1) return tPlural(many, label.count);
   return t(one, getBookmarkDisplayTitle(label.title));
 }

@@ -81,13 +81,13 @@ test('[mocked provider contract] a page saved from an Ask AI button appears in t
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
   const chat = page.getByTestId('ask-ai');
   const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
-  await box.fill('Where should this article go?');
+  await box.fill('Where should https://journey.e2e.invalid/new-article go?');
   await box.press('Enter');
   const save = chat.getByRole('list', { name: 'Suggestions' }).getByRole('button', {
-    name: /^Save to .+\/Reading$/,
+    name: /^Save to .+\/Reading/,
   });
   await save.click();
-  await expect(toastRegion(page)).toContainText(/Saved to .+\/Reading/);
+  await expect(toastRegion(page)).toContainText(/Saved “New article” to .+\/Reading/);
 
   // Manager: the new bookmark is in the folder.
   const manager = await context.newPage();
