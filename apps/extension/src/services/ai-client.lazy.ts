@@ -19,8 +19,7 @@ export async function createAIModel(
 ): Promise<LanguageModel> {
   validateAISettings(settings);
 
-  const modelId =
-    settings.customModel?.trim() || settings.model || getDefaultModel(settings.provider);
+  const modelId = settings.model || getDefaultModel(settings.provider);
   const kind = getProviderKind(settings.provider);
   const fetch =
     transport ?? createLoggingFetch({ source, provider: settings.provider, model: modelId });

@@ -1,28 +1,13 @@
 /**
- * Settings for one provider configuration. `configId` is the key of its credentials in
- * the AI credentials item (`STORAGE_ITEMS.aiCredentials`): the provider id for the single-provider setup, or a service id.
+ * Settings for one AI service: its provider and model, with the credentials and connection fields
+ * stored under its id (`STORAGE_ITEMS.aiCredentials`).
  */
-async function buildAISettings({
-  configId,
-  provider,
-  model,
-  enabled,
-  useStoredCustomModel,
-}: {
-  configId: string;
-  provider: AIProvider;
-  model: string;
-  enabled: boolean;
-  /** Services keep their model on the service itself, so only legacy reads use it. */
-  useStoredCustomModel: boolean;
-}): Promise<AISettings> {
-  const stored = await getStoredAIProviderConfig(configId);
-  const customModel =
-    useStoredCustomModel && providerSupportsCustomModel(provider)
-      ? stored.customModel?.trim() || undefined
-      : undefined;
-  const finalModel = customModel || model || getDefaultModel(provider);
-
+export async function buildAISettingsFromService(
+  service: AIService,
+  enabled: boolean,
+): Promise<AISettings> {
+  const { provider } = service;
+  const stored = await getStoredAIProviderConfig(service.id);
   const storedBaseUrl = stored.baseUrl?.trim();
   if (storedBaseUrl && !isValidProviderBaseUrl(storedBaseUrl)) {
     throw new Error(t('options_baseUrlInvalid'));
@@ -31,8 +16,7 @@ async function buildAISettings({
   const settings: AISettings = {
     enabled,
     provider,
-    model: finalModel,
-    customModel,
+    model: service.model || getDefaultModel(provider),
     apiKey: stored.apiKey?.trim() || '',
     baseUrl: storedBaseUrl || getProviderBaseUrl(provider),
     extraHeaders: parseExtraHeaders(stored.extraHeaders),
@@ -44,27 +28,6 @@ async function buildAISettings({
   }
 
   return settings;
-}
-
-export async function buildAISettingsFromProvider(
-  provider: AIProvider,
-  model: string,
-  enabled: boolean,
-): Promise<AISettings> {
-  return buildAISettings({ configId: provider, provider, model, enabled, useStoredCustomModel: true });
-}
-
-export async function buildAISettingsFromService(
-  service: AIService,
-  enabled: boolean,
-): Promise<AISettings> {
-  return buildAISettings({
-    configId: service.id,
-    provider: service.provider,
-    model: service.model,
-    enabled,
-    useStoredCustomModel: false,
-  });
 }
 
 /** Settings of the default AI service, which every AI tool uses. */

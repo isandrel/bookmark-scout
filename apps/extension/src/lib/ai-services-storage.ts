@@ -5,26 +5,44 @@
  */
 import { z } from 'zod';
 
-export type AIService = {
-  id: string;
+const serviceSchema = z.object({
+  id: z.string().min(1),
   /** User-facing label; defaults to the provider name. */
-  name: string;
-  provider: AIProvider;
+  name: z.string(),
+  provider: z.string(),
   /** Chosen model id; empty means the provider default. */
-  model: string;
-  enabled: boolean;
-};
+  model: z.string(),
+  enabled: z.boolean(),
+});
+
+export type AIService = z.infer<typeof serviceSchema> & { provider: AIProvider };
 
 export type AIServicesState = {
   services: AIService[];
   defaultServiceId?: string;
 };
 
-/** `null` until services are first saved. */
-export const aiServicesValue = defineStoredValue<AIServicesState | null>(STORAGE_ITEMS.aiServices, {
-  parse: (raw) =>
-    isPlainObject(raw) && Array.isArray(raw.services) ? (raw as AIServicesState) : null,
-  empty: null,
+const EMPTY_SERVICES: AIServicesState = { services: [] };
+
+/** A malformed service, or a repeat of an id, is dropped on its own. */
+function parseServices(raw: unknown): AIServicesState {
+  if (!isPlainObject(raw)) return EMPTY_SERVICES;
+  const seen = new Set<string>();
+  const services = parseValidList(raw.services, serviceSchema).filter((service) => {
+    if (seen.has(service.id)) return false;
+    seen.add(service.id);
+    return true;
+  });
+  const defaultServiceId =
+    typeof raw.defaultServiceId === 'string' ? raw.defaultServiceId : undefined;
+  return { services, ...(defaultServiceId ? { defaultServiceId } : {}) };
+}
+
+/** Every saved service and the default one, as stored. */
+export const aiServicesValue = defineStoredValue<AIServicesState>(STORAGE_ITEMS.aiServices, {
+  parse: parseServices,
+  empty: EMPTY_SERVICES,
+  isEmpty: (state) => state.services.length === 0,
 });
 
 /** Drops services whose provider no longer exists and repairs a missing default. */
@@ -36,12 +54,15 @@ function normalizeServices(state: AIServicesState): AIServicesState {
   return { services, defaultServiceId: defaultService?.id };
 }
 
-function resolveServices(stored: AIServicesState | null): AIServicesState {
-  return normalizeServices(stored ?? { services: [] });
-}
+/** The services that can be used, with the default repaired; follows changes live. */
+export const aiServicesStateValue = defineDerivedValue(
+  [aiServicesValue] as const,
+  ([stored]) => normalizeServices(stored),
+  EMPTY_SERVICES,
+);
 
 export async function getAIServicesState(): Promise<AIServicesState> {
-  return resolveServices(await aiServicesValue.get());
+  return aiServicesStateValue.get();
 }
 
 /** The provider the Add service dialog starts with. */
@@ -58,10 +79,7 @@ export async function getDefaultAIService(): Promise<AIService | undefined> {
 async function updateServices(
   change: (state: AIServicesState) => AIServicesState,
 ): Promise<AIServicesState> {
-  const next = await aiServicesValue.update((stored) =>
-    normalizeServices(change(resolveServices(stored))),
-  );
-  return next ?? { services: [] };
+  return aiServicesValue.update((stored) => normalizeServices(change(normalizeServices(stored))));
 }
 
 /** A new id that no stored service or credential entry uses yet. */

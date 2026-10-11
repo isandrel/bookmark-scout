@@ -1,0 +1,6 @@
+# Model lists fetched for each AI service (Options > AI), kept on this device. Read by
+# src/lib/ai-provider-storage.ts.
+
+# Days a fetched model list is offered in the model picker before Refresh Models or Verify
+# Service has to fetch it again
+max_age_days = 7

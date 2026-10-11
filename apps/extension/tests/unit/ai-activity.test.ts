@@ -85,6 +85,17 @@ describe('AI activity redaction', () => {
     expect(redacted).toMatchObject({ 'x-tenant': REDACTED_VALUE, accept: 'application/json' });
   });
 
+  it('drops malformed stored entries on their own and keeps at most the configured count', async () => {
+    const many = Array.from({ length: MAX_AI_ACTIVITY_ENTRIES + 3 }, (_, index) => ({
+      ...entry(index),
+      id: `e${index}`,
+    }));
+    await seedStored(STORAGE_ITEMS.aiActivity, [{ id: 'broken' }, 'text', ...many]);
+    const stored = await aiActivityValue.get();
+    expect(stored).toHaveLength(MAX_AI_ACTIVITY_ENTRIES);
+    expect(stored[0]?.id).toBe('e0');
+  });
+
   it('redacts credentials in entries stored with one', async () => {
     await seedStored(STORAGE_ITEMS.aiActivity, [
       { ...entry(1), id: 'old', requestHeaders: { 'x-auth-token': 'old-secret', accept: '*/*' } },
