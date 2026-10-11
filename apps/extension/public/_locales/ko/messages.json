@@ -1285,6 +1285,10 @@
         "message": "정리",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
     },
+    "menu_noActions": {
+        "message": "사용할 수 있는 작업이 없습니다",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
+    },
     "menu_sortByName": {
         "message": "이름순 정렬",
         "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
@@ -5894,6 +5898,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "$1 중 하나 이상은 항상 표시되므로 어떤 북마크나 폴더에도 메뉴에 명령이 있습니다.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI에게 묻기가 할 수 있는 일",

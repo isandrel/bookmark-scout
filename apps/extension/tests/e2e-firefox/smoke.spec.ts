@@ -279,7 +279,7 @@ test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', as
     .toEqual(['Undo Keep', 'Undo Gone']);
 });
 
-test('manager folder tree moves with the arrow keys and opens a folder with Enter', async ({
+test('manager folder tree moves with the arrow keys and opens a folder with Enter (Space on a Mac)', async ({
   extension,
 }) => {
   const folder = await seedFolder(extension, 'E2E Firefox Tree', [
@@ -299,10 +299,12 @@ test('manager folder tree moves with the arrow keys and opens a folder with Ente
   );
   await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
   await expect.poll(focusedTitle).toBe('Tree Second');
-  await driver.actions().sendKeys(Key.ENTER).perform();
-  await expect
-    .poll(() => driver.getCurrentUrl())
-    .toContain(`id=${folder.ids['Tree Second']}`);
+  // On a Mac, Enter renames the folder, as on the table's rows; Space opens it everywhere.
+  await driver
+    .actions()
+    .sendKeys(process.platform === 'darwin' ? Key.SPACE : Key.ENTER)
+    .perform();
+  await expect.poll(() => driver.getCurrentUrl()).toContain(`id=${folder.ids['Tree Second']}`);
 });
 
 test('manager right-click menu copies and pastes, without private windows unless allowed', async ({

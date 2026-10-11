@@ -7,7 +7,7 @@
 import type { Page, Worker } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
 import { DELETE_KEY, OPEN_KEY, RENAME_KEY } from './manager-keys';
-import { STORAGE_ITEMS, setSettings, writeStored } from './storage';
+import { readStored, STORAGE_ITEMS, setSettings, writeStored } from './storage';
 
 type SeedItem = { title: string; url?: string; children?: SeedItem[] };
 
@@ -48,6 +48,15 @@ const links = (prefix: string, count: number) =>
 
 function managerUrl(extensionId: string, folderId: string) {
   return `chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`;
+}
+
+/** How many changes the stored history can undo and redo. */
+async function historyDepths(page: Page) {
+  const history = await readStored<{ undo: unknown[]; redo: unknown[] }>(
+    page,
+    STORAGE_ITEMS.bookmarkHistory,
+  );
+  return { undo: history?.undo.length ?? 0, redo: history?.redo.length ?? 0 };
 }
 
 function row(page: Page, title: string) {
@@ -229,13 +238,23 @@ test('Delete removes the selection, and Ctrl/Cmd+Z and redo work after a reload'
   await row(page, 'Undo Sub').dblclick();
   await expect(row(page, 'Undo Inside')).toBeVisible();
   await page.goBack();
+  await expect(row(page, 'Gone 02')).toBeVisible();
 
+  // Each step finishes (the history is stored and the toast shown) before the next key: the page
+  // runs one step at a time and drops a key pressed while one is still running, as a held key
+  // would repeat. The bookmarks change before the step has stored the history, so they alone are
+  // not enough to wait on.
   await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect(
+    toastRegion(page).getByText('✓ Redone: Delete 2 items', { exact: true }),
+  ).toBeVisible();
   await expect
     .poll(() => childTitles(extensionWorker, seeded.folderId))
     .toEqual(['Gone 02', 'Gone 03']);
+  await expect.poll(() => historyDepths(page)).toEqual({ undo: 1, redo: 0 });
   await page.keyboard.press('ControlOrMeta+z');
   await expect.poll(() => childTitles(extensionWorker, seeded.folderId)).toHaveLength(4);
+  await expect.poll(() => historyDepths(page)).toEqual({ undo: 0, redo: 1 });
   await page.keyboard.press('ControlOrMeta+z');
   await expect(toastRegion(page).getByText('Nothing to undo', { exact: true })).toBeVisible();
 });

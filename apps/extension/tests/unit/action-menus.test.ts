@@ -4,14 +4,15 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { BookmarkActionMenuItems } from '@/components/ui/table/bookmark-row-menu';
 import { setLanguage } from '@/hooks/use-i18n';
-import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import type { Bookmark } from '@/lib/manager-bookmark';
+import { getSettingsFieldMeta } from '@/lib/settings-schema';
 import {
   ACTION_MENUS,
   type ActionItemHost,
   customizeItemMenu,
   getItemMenuLabel,
   getItemMenuSections,
+  ITEM_MENU_KEEP_ONE_OF,
 } from '@/services/action-menus';
 import { ACTION_IDS, type ActionId, getAction } from '@/services/actions';
 import enMessages from '../../public/_locales/en/messages.json';
@@ -122,6 +123,22 @@ describe('bookmark action menus', () => {
     ]);
     const custom = customizeItemMenu(['copyId', 'edit']);
     expect(getItemMenuSections([link], createItemHost(), custom)).toEqual([['edit'], ['copyId']]);
+  });
+
+  it('keeps one command for any single item, and says so when none applies', () => {
+    const rootFolder: Bookmark = { ...folder, id: '1', isRootFolder: true };
+    expect(ITEM_MENU_KEEP_ONE_OF.length).toBeGreaterThan(0);
+    for (const id of ITEM_MENU_KEEP_ONE_OF) {
+      for (const item of [link, folder, rootFolder]) {
+        const menu = getItemMenuSections([item], createItemHost(), customizeItemMenu([id]));
+        expect(menu, `${id} for ${item.title}`).toEqual([[id]]);
+      }
+    }
+    // Show in folder alone applies only to search results, so a row of the folder shown gets a
+    // disabled note rather than an empty menu.
+    const markup = renderMenu([link], [['showInFolder']]);
+    expect(markup).toContain('No actions available');
+    expect(markup).toContain('data-disabled');
   });
 
   it('fits every menu and agent action id within the settings that list them', () => {

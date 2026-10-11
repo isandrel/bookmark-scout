@@ -7,7 +7,8 @@
  *   links) for other apps, and their ids for this page and other manager tabs.
  * - Drops on rows reorder (only while the table shows the folder in the browser's order) or go
  *   into a folder row; drops on the table's empty space go to the end of the folder shown; drops
- *   on a folder in the tree go into it, and hovering a closed folder there opens it.
+ *   on a folder in the tree go into it, or beside it on its top and bottom edges (the zones of
+ *   the list), and hovering a closed folder there opens it.
  * - Links dropped from elsewhere become bookmarks where they land.
  *
  * Every drop is one undo history entry. The drop indicator is a `data-drop-zone` attribute on the
@@ -234,8 +235,24 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           accept(event, null, null, null);
           return;
         }
-        // Hovering a closed folder opens it, so a drag can reach the folders inside.
-        if (expandTimer.current?.id !== folder.id) {
+        // The top and bottom edges drop beside the folder, as on the table's rows; an open
+        // folder's bottom edge is where its first child starts, so it takes the drop into it.
+        const target = dropTargetFor(folder);
+        const box = element?.getBoundingClientRect();
+        const offset = box && box.height > 0 ? (event.clientY - box.top) / box.height : 0.5;
+        // A pointer outside the row (a drag event without a position) counts as its middle.
+        const fraction = offset >= 0 && offset <= 1 ? offset : 0.5;
+        const edgeZone = getManagerDropZone(target, fraction, true) ?? 'into';
+        const zone =
+          edgeZone === 'after' && element?.getAttribute('aria-expanded') === 'true'
+            ? 'into'
+            : edgeZone;
+        // Hovering the middle of a closed folder opens it, so a drag can reach the folders
+        // inside; the edges, which drop beside it, leave it closed.
+        if (zone !== 'into') {
+          if (expandTimer.current) clearTimeout(expandTimer.current.timer);
+          expandTimer.current = null;
+        } else if (expandTimer.current?.id !== folder.id) {
           if (expandTimer.current) clearTimeout(expandTimer.current.timer);
           expandTimer.current = {
             id: folder.id,
@@ -247,11 +264,11 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
         }
         const destination = resolveManagerDrop(
           draggedRef.current ?? [],
-          dropTargetFor(folder),
-          'into',
+          target,
+          zone,
           latest.current.allData,
         );
-        accept(event, destination, element, 'into');
+        accept(event, destination, element, zone);
       },
       onDragLeave: (event) => {
         if (!(event.currentTarget as Element).contains(event.relatedTarget as Node | null)) {

@@ -8,6 +8,8 @@
  * - One tab stop (roving tabindex). Up and Down move between visible rows, Home and End to the
  *   first and last; Right opens a folder or moves into it, Left closes it or moves to its parent;
  *   Enter or Space opens the folder in the table (a heading opens or closes).
+ * - On a folder, the page's row commands come first (`onFolderKey`): Delete, rename (F2, or Enter
+ *   on a Mac, where Cmd+O and Space open), and open in tabs or a window, as on the table's rows.
  */
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
@@ -17,6 +19,11 @@ type FolderTreeProps = {
   items: Bookmark[];
   selectedFolderId: string | null;
   onFolderSelect: (folderId: string | null) => void;
+  /**
+   * A key pressed on a folder row, before the tree's own keys: the page's commands (delete,
+   * rename, open) on that folder. True when it ran one.
+   */
+  onFolderKey?: (event: globalThis.KeyboardEvent, folderId: string) => boolean;
 };
 
 const SECTION_LABELS: Record<ManagerSection, MessageKey> = {
@@ -107,6 +114,7 @@ export const FolderTree = memo(function FolderTree({
   items,
   selectedFolderId,
   onFolderSelect,
+  onFolderKey,
 }: FolderTreeProps) {
   useLanguageRevision();
   const sections = useMemo(() => buildManagerFolderSections(items), [items]);
@@ -198,6 +206,11 @@ export const FolderTree = memo(function FolderTree({
     const index = rows.findIndex((row) => row.id === element?.getAttribute(ROW_ID_ATTRIBUTE));
     const row = rows[index];
     if (!row) return;
+    if (row.kind === 'folder' && !event.repeat && onFolderKey?.(event.nativeEvent, row.id)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     const action = findShortcut(event.nativeEvent, TREE_KEY_BINDINGS);
     if (!action) return;
     switch (action) {

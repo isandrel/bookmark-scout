@@ -9,13 +9,14 @@
  * - selectAll, clearSelection, undo, and redo work anywhere but a text field.
  * - delete, rename, open, openInNewTabs, and openInNewWindow act on the selected rows, or the
  *   focused row when none is selected, and only while a row (or nothing) has focus, so Enter on
- *   a button still presses it.
+ *   a button still presses it. A focused folder in the tree answers them too, for that folder
+ *   (`handleTreeFolderKey`), and so do Ctrl/Cmd+C, X, and V (paste goes into the folder).
  *
  * Keys are ignored while typing, during IME composition, and while a dialog or menu is open. Ctrl
  * (Cmd) combinations match only the bindings marked `mod`.
  */
 
-import { type RefObject, useEffect, useRef, useState } from 'react';
+import { type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 
 /** Grid rows take focus themselves (roving tabindex). */
 export function getTableRowFocusTarget(row: HTMLElement): HTMLElement | null {
@@ -38,11 +39,25 @@ function openSavedSearches(): boolean {
   return true;
 }
 
-/** Whether the key was pressed on a table row or with nothing focused. */
+/** Whether the key was pressed on a table row, the grid's frame, or with nothing focused. */
 function isRowOrPageTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) return true;
-  return target === document.body || target.matches('tr[data-row-id]');
+  return (
+    target === document.body ||
+    target.matches('tr[data-row-id]') ||
+    target.hasAttribute(GRID_FRAME_ATTRIBUTE)
+  );
 }
+
+/** The row shortcuts a focused folder in the tree answers too, after Chrome's tree. */
+const TREE_FOLDER_BINDINGS = {
+  delete: SHORTCUT_BINDINGS.manager.delete,
+  rename: SHORTCUT_BINDINGS.manager.rename,
+  open: SHORTCUT_BINDINGS.manager.open,
+  openInNewTabs: SHORTCUT_BINDINGS.manager.openInNewTabs,
+  openInNewWindow: SHORTCUT_BINDINGS.manager.openInNewWindow,
+};
+type TreeFolderAction = keyof typeof TREE_FOLDER_BINDINGS;
 
 /** What the row shortcuts do; the page owns dialogs, deletion, and opening. */
 export type ManagerRowCommands = {
@@ -59,14 +74,51 @@ export type ManagerShortcutOptions = {
   onNavigate: (folderId: string | null) => void;
   table: RefObject<DataTableHandle<Bookmark> | null>;
   commands: ManagerRowCommands;
-  /** Ctrl/Cmd+C, X, and V on the rows, through the browser's clipboard events. */
+  /** The folder of the tree row an event comes from, if it comes from one. */
+  treeFolderAt: (target: EventTarget | null) => Bookmark | undefined;
+  /**
+   * Ctrl/Cmd+C, X, and V on the rows, or on a folder in the tree, through the browser's
+   * clipboard events.
+   */
   clipboard: {
     copyOrCut: (event: ClipboardEvent, rows: Bookmark[]) => void;
     paste: (event: ClipboardEvent, rows: Bookmark[]) => void;
+    pasteInto: (event: ClipboardEvent, folder: Bookmark) => void;
   };
 };
 
-const ROW_ACTIONS = new Set(['delete', 'rename', 'open', 'openInNewTabs', 'openInNewWindow']);
+const ROW_ACTIONS = new Set<string>(Object.keys(TREE_FOLDER_BINDINGS));
+
+/** Runs a row command on `targets`; false when it does not apply to them. */
+function runRowCommand(
+  action: TreeFolderAction,
+  targets: Bookmark[],
+  commands: ManagerRowCommands,
+): boolean {
+  switch (action) {
+    case 'delete': {
+      const deletable = targets.filter(isModifiableBookmark);
+      if (deletable.length === 0) return false;
+      commands.deleteRows(deletable);
+      return true;
+    }
+    case 'rename': {
+      if (targets.length !== 1 || !isModifiableBookmark(targets[0])) return false;
+      commands.renameRow(targets[0]);
+      return true;
+    }
+    case 'open':
+    case 'openInNewTabs':
+    case 'openInNewWindow': {
+      if (targets.length === 0) return false;
+      const target = (
+        { open: 'tabs', openInNewTabs: 'background-tabs', openInNewWindow: 'window' } as const
+      )[action];
+      commands.openRows(targets, target);
+      return true;
+    }
+  }
+}
 
 export function useManagerShortcuts(options: ManagerShortcutOptions) {
   const [helpOpen, setHelpOpen] = useState(false);
@@ -105,33 +157,12 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
             return Boolean(table.current);
           case 'clearSelection':
             return table.current?.clearSelection() ?? false;
-          case 'delete': {
-            const targets = rows().filter(isModifiableBookmark);
-            if (targets.length === 0) return false;
-            commands.deleteRows(targets);
-            return true;
-          }
-          case 'rename': {
-            const targets = rows();
-            if (targets.length !== 1 || !isModifiableBookmark(targets[0])) return false;
-            commands.renameRow(targets[0]);
-            return true;
-          }
+          case 'delete':
+          case 'rename':
           case 'open':
           case 'openInNewTabs':
-          case 'openInNewWindow': {
-            const targets = rows();
-            if (targets.length === 0) return false;
-            const target = (
-              {
-                open: 'tabs',
-                openInNewTabs: 'background-tabs',
-                openInNewWindow: 'window',
-              } as const
-            )[action];
-            commands.openRows(targets, target);
-            return true;
-          }
+          case 'openInNewWindow':
+            return runRowCommand(action, rows(), commands);
           case 'undo':
             commands.undo();
             return true;
@@ -147,7 +178,14 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
       if (event.defaultPrevented || isTypingTarget(event.target) || hasOpenOverlay()) return;
       // Text selected in the page copies as text.
       if (event.type !== 'paste' && (window.getSelection()?.toString() ?? '') !== '') return;
-      const { table, clipboard } = latest.current;
+      const { table, clipboard, treeFolderAt } = latest.current;
+      // On a folder in the tree: copy or cut that folder, or paste into it.
+      const folder = treeFolderAt(event.target);
+      if (folder) {
+        if (event.type === 'paste') clipboard.pasteInto(event, folder);
+        else clipboard.copyOrCut(event, [folder]);
+        return;
+      }
       const rows = table.current?.getCommandRows() ?? [];
       if (event.type === 'paste') clipboard.paste(event, rows);
       else clipboard.copyOrCut(event, rows);
@@ -165,5 +203,17 @@ export function useManagerShortcuts(options: ManagerShortcutOptions) {
     };
   }, []);
 
-  return { helpOpen, setHelpOpen };
+  /**
+   * Delete, rename, and open on a focused folder in the tree (`FolderTree`'s `onFolderKey`).
+   * True when the key ran a command, so the tree leaves it alone.
+   */
+  const handleTreeFolderKey = useCallback((event: KeyboardEvent, folderId: string): boolean => {
+    const action = findShortcut(event, TREE_FOLDER_BINDINGS, { allowModifiers: true });
+    if (!action) return false;
+    const { items, commands } = latest.current;
+    const folder = getManagerItemsById(items).get(folderId);
+    return folder ? runRowCommand(action, [folder], commands) : false;
+  }, []);
+
+  return { helpOpen, setHelpOpen, handleTreeFolderKey };
 }

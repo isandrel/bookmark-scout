@@ -74,10 +74,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       }
     };
 
-    const pasteInto = async (
-      target: { parentId: string; index?: number },
-      systemText?: string,
-    ) => {
+    const pasteInto = async (target: { parentId: string; index?: number }, systemText?: string) => {
       try {
         const result = await pasteBookmarks(target, systemText);
         if (!result) {
@@ -137,6 +134,15 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         event.preventDefault();
         pasteNextTo(rows, event.clipboardData?.getData('text/plain') ?? undefined);
       },
+      /** Paste on a folder in the tree: at the end of that folder. */
+      pasteInto: (event: ClipboardEvent, folder: Bookmark) => {
+        if (!canAddTo(folder)) return;
+        event.preventDefault();
+        void pasteInto(
+          { parentId: folder.id },
+          event.clipboardData?.getData('text/plain') ?? undefined,
+        );
+      },
     };
 
     const base = {
@@ -147,8 +153,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         toast.error({ title: t(titleKey), description: getErrorMessage(error) }),
       showInFolder: (bookmark: Bookmark) => latest.current.showInFolder(bookmark),
       copyFolderLink: (folderId: string) => latest.current.copyFolderLink(folderId),
-      openableUrls: (items: readonly Bookmark[]) =>
-        getOpenableUrls(items, latest.current.allData),
+      openableUrls: (items: readonly Bookmark[]) => getOpenableUrls(items, latest.current.allData),
       open: (items: Bookmark[], target: BookmarkOpenTarget) => latest.current.open(items, target),
       cut: (items: Bookmark[]) => void setClipboard('cut', items),
       copy: (items: Bookmark[]) => void setClipboard('copy', items),

@@ -5,6 +5,7 @@
  */
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
+import { OPEN_KEY } from './manager-keys';
 import { seedFolder } from './popup-helpers';
 
 function managerUrl(extensionId: string, folderId?: string) {
@@ -53,9 +54,10 @@ test('the folder tree is one tab stop that the arrow keys, Home, End, Enter, and
   await expect(item(page, 'Tree Alpha')).toHaveAttribute('aria-expanded', 'false');
   await expect(item(page, 'Tree Inner')).toHaveCount(0);
 
-  // Moving focus does not open the folder; Enter does, and focus stays in the tree.
+  // Moving focus does not open the folder; the open key does (Enter, or Cmd+O on a Mac, where
+  // Enter renames as on the table's rows), and focus stays in the tree.
   await expect(page).toHaveURL(new RegExp(`id=${seeded.folderId}$`));
-  await page.keyboard.press('Enter');
+  await page.keyboard.press(OPEN_KEY);
   await expect(page).toHaveURL(new RegExp(`id=${seeded.ids['Tree Alpha']}$`));
   await expect(item(page, 'Tree Alpha')).toHaveAttribute('aria-selected', 'true');
   await expect(item(page, 'Tree Alpha')).toBeFocused();

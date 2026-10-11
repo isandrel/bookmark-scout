@@ -16,3 +16,9 @@ item = [
 organize = [["sortByName"], ["addBookmark", "addFolder"]]
 # The right-click menu on the table's empty space, on the folder shown
 empty_space = [["addBookmark", "addFolder"], ["paste"]]
+
+[item_menu]
+# Options > Behavior > Bookmark manager menus keeps at least one of these shown, so the item menu
+# always has a command for any one bookmark or folder. Each must be available for any single item
+# (tests/unit/action-menus.test.ts checks it).
+keep_one_of = ["viewDetails", "copyId"]

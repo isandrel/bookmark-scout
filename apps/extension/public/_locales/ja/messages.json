@@ -1261,6 +1261,10 @@
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
     },
+    "menu_noActions": {
+        "message": "使用できる操作はありません",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
+    },
     "menu_sortByName": {
         "message": "名前順に並べ替え",
         "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
@@ -5894,6 +5898,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "右クリックメニューと ⋯ メニューに表示するコマンドと、各グループ内の順序を選びます。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」のうち少なくとも 1 つは常に表示されるため、どのブックマークやフォルダにもメニューのコマンドが必ずあります。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI に質問でできること",
