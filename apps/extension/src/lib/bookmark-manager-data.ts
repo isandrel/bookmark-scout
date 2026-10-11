@@ -17,6 +17,23 @@ export type ManagerItem = {
   isRootFolder?: boolean;
 };
 
+const itemsByIdCache = new WeakMap<readonly ManagerItem[], ReadonlyMap<string, ManagerItem>>();
+
+/**
+ * The items of a list by ID. Built once per list, so the helpers below that run for the same
+ * render (navigation, breadcrumbs, move targets) share one lookup instead of each building one.
+ */
+export function getManagerItemsById<T extends ManagerItem>(
+  items: readonly T[],
+): ReadonlyMap<string, T> {
+  let byId = itemsByIdCache.get(items);
+  if (!byId) {
+    byId = new Map(items.map((item) => [item.id, item]));
+    itemsByIdCache.set(items, byId);
+  }
+  return byId as ReadonlyMap<string, T>;
+}
+
 export type FolderResolution = {
   /** The folder to show; null is the manager root. */
   folderId: string | null;
@@ -32,11 +49,11 @@ export function resolveManagerFolder(
   requestedId: string | null,
   items: readonly ManagerItem[],
   rootId: string | undefined,
-  previousParentIds: ReadonlyMap<string, string | undefined> = new Map(),
+  previousParentIds: Pick<ReadonlyMap<string, string | undefined>, 'get'> = new Map(),
 ): FolderResolution {
   if (requestedId === null || requestedId === rootId) return { folderId: null, status: 'ok' };
 
-  const byId = new Map(items.map((item) => [item.id, item]));
+  const byId = getManagerItemsById(items);
   const isFolder = (id: string | undefined) => byId.get(id ?? '')?.type === ItemTypeEnum.Folder;
   const requested = byId.get(requestedId);
   if (requested?.type === ItemTypeEnum.Folder) return { folderId: requestedId, status: 'ok' };
@@ -130,7 +147,7 @@ export function pruneNestedSelection<T extends ManagerItem>(
   selected: readonly T[],
   items: readonly ManagerItem[],
 ): T[] {
-  const byId = new Map(items.map((item) => [item.id, item]));
+  const byId = getManagerItemsById(items);
   const ids = new Set(selected.map((item) => item.id));
   return selected.filter((item) => !hasAncestorIn(item, ids, byId));
 }
@@ -178,7 +195,7 @@ export function getMoveTargetFolders(
   selected: readonly ManagerItem[],
   items: readonly ManagerItem[],
 ): ManagerItem[] {
-  const byId = new Map(items.map((item) => [item.id, item]));
+  const byId = getManagerItemsById(items);
   const ids = new Set(selected.map((item) => item.id));
   const parentIds = new Set(selected.map((item) => item.parentId));
   const sharedParentId = parentIds.size === 1 ? [...parentIds][0] : undefined;
@@ -196,7 +213,7 @@ export function getManagerFolderAncestors(
   items: readonly ManagerItem[],
   folderId: string | null,
 ): ManagerItem[] {
-  const byId = new Map(items.map((item) => [item.id, item]));
+  const byId = getManagerItemsById(items);
   const path: ManagerItem[] = [];
   const visited = new Set<string>();
   let current = folderId ? byId.get(folderId) : undefined;

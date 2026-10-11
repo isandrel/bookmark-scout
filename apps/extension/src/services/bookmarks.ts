@@ -124,25 +124,6 @@ export function getSiteIconUrl(
   return useBrowserCache ? getFaviconUrl(pageUrl, size) : null;
 }
 
-/**
- * Converts a Chrome bookmark node to our BookmarkTreeNode type.
- */
-function processNode(node: Browser.bookmarks.BookmarkTreeNode): BookmarkTreeNode {
-  return {
-    id: node.id,
-    parentId: node.parentId,
-    index: node.index,
-    title: node.title,
-    url: node.url,
-    dateAdded: node.dateAdded,
-    dateGroupModified: node.dateGroupModified,
-    ...(node.folderType ? { folderType: node.folderType } : {}),
-    ...(node.unmodifiable ? { unmodifiable: node.unmodifiable } : {}),
-    children: node.children ? node.children.map(processNode) : undefined,
-    isOpen: false,
-  };
-}
-
 function requireBookmarksApi(): typeof browser.bookmarks {
   if (!browser?.bookmarks) throw new Error(t('error_bookmarksApiUnavailable'));
   return browser.bookmarks;
@@ -154,7 +135,7 @@ function requireBookmarksApi(): typeof browser.bookmarks {
  */
 export async function fetchBookmarkTree(): Promise<BookmarkTreeNode[]> {
   const tree = await requireBookmarksApi().getTree();
-  return tree.map(processNode);
+  return tree.map(toBookmarkTreeNode);
 }
 
 /**
@@ -188,6 +169,14 @@ export async function getBookmark(id: string): Promise<Browser.bookmarks.Bookmar
   const [result] = await requireBookmarksApi().get(id);
   if (!result) throw new Error(t('error_bookmarkNotFound'));
   return result;
+}
+
+/** Bookmarks and folders by ID, without their children; rejects if any of them is missing. */
+export async function getBookmarksById(
+  ids: readonly string[],
+): Promise<Browser.bookmarks.BookmarkTreeNode[]> {
+  const [first, ...rest] = ids;
+  return first === undefined ? [] : requireBookmarksApi().get([first, ...rest]);
 }
 
 /**

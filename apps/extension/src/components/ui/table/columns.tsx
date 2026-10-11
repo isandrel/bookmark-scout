@@ -57,6 +57,22 @@ export type Bookmark = {
   isRootFolder?: boolean;
 };
 
+const bookmarkDomains = new WeakMap<Bookmark, string>();
+
+/**
+ * The registrable domain of a row's URL, worked out once per row: the domain facet and its
+ * counts read it for every bookmark whenever the list changes, and rows that did not change keep
+ * their identity.
+ */
+export function getBookmarkDomain(bookmark: Bookmark): string {
+  let domain = bookmarkDomains.get(bookmark);
+  if (domain === undefined) {
+    domain = getUrlDomain(bookmark.url);
+    bookmarkDomains.set(bookmark, domain);
+  }
+  return domain;
+}
+
 /** Whether the browser allows renaming, moving, or deleting this item. */
 export function isModifiableBookmark(bookmark: Bookmark): boolean {
   return !bookmark.isRootFolder && !bookmark.unmodifiable;
@@ -226,7 +242,7 @@ export const BOOKMARK_COLUMNS: readonly BookmarkColumn[] = [
   },
   {
     id: DOMAIN_COLUMN_ID,
-    accessor: (row) => getUrlDomain(row.url),
+    accessor: getBookmarkDomain,
     enableHiding: false,
     enableSorting: false,
     // Match by hostname so "bbc.co.uk" covers news.bbc.co.uk but not example.com/?q=bbc.co.uk.

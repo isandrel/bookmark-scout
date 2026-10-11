@@ -1,6 +1,7 @@
 # Fixed UI timings, in milliseconds. User-adjustable delays (search debounce, toast duration) are
 # settings in config/settings/ instead.
 
-# Bulk changes (imports, undoing a folder delete) fire many bookmark events; a page refreshes once
-# after this long without a new event.
-bookmark_event_debounce_ms = 150
+# Bulk changes (imports, undoing a folder delete) fire many bookmark events; a page applies them
+# together once this long passes without a new event. Pages patch their tree with the events
+# instead of reading it again, so a short wait is cheap; every change waits at least this long.
+bookmark_event_debounce_ms = 50
