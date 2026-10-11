@@ -74,8 +74,8 @@ describe('isPrivateHost', () => {
 });
 
 describe('extractPageText', () => {
-  it('keeps the article as Markdown without navigation, scripts, or link addresses', () => {
-    const page = extractPageText(parse(ARTICLE));
+  it('keeps the article as Markdown without navigation, scripts, or link addresses', async () => {
+    const page = await extractPageText(parse(ARTICLE));
     expect(page?.title).toBe('Rust ownership explained');
     expect(page?.text).toContain('A guide to borrowing.');
     expect(page?.text).toContain('Every value in Rust has a single owner.');
@@ -84,13 +84,13 @@ describe('extractPageText', () => {
     expect(page?.text).not.toContain('window.tracking');
   });
 
-  it('cuts the text to the configured length', () => {
-    const page = extractPageText(parse(ARTICLE), 40);
+  it('cuts the text to the configured length', async () => {
+    const page = await extractPageText(parse(ARTICLE), 40);
     expect(page?.text).toHaveLength(40);
   });
 
-  it('returns nothing for an empty page', () => {
-    expect(extractPageText(parse('<html><body></body></html>'))).toBeUndefined();
+  it('returns nothing for an empty page', async () => {
+    expect(await extractPageText(parse('<html><body></body></html>'))).toBeUndefined();
   });
 });
 

@@ -1,0 +1,11 @@
+# Upper bounds for the JavaScript each page and the background load before any of it runs (the
+# entry and every chunk it imports statically), in KiB. Read by tests/e2e/startup-code.spec.ts;
+# every page needs one. Set about 12% above the Chrome build of 2026-10-10 (background 234,
+# popup and side panel 850, options 920, bookmarks manager 1,224); lower them as code moves to
+# first use, and raise one only with a reason in the pull request.
+[eager_kib]
+"background.js" = 260
+"popup.html" = 950
+"sidepanel.html" = 950
+"options.html" = 1030
+"bookmarks.html" = 1370

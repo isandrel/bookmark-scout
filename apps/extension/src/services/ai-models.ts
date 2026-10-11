@@ -4,7 +4,7 @@ import {
   AI_PROVIDERS_CONFIG_PATH,
   aiProviderFilesSchema,
 } from '@/lib/config/ai-provider-schema';
-import { providerCatalogSchema } from '@/lib/config/provider-catalog-schema';
+import { type ProviderCatalog, providerCatalogSchema } from '@/lib/config/provider-catalog-schema';
 import providerCatalog from '../../config/provider-catalog.json';
 
 export type AIModel = {
@@ -50,15 +50,26 @@ const providerFiles = Object.entries(
   readConfig(AI_PROVIDERS_CONFIG_PATH, aiProviderFilesSchema),
 ).sort(([, left], [, right]) => left.order - right.order);
 
-/** Validated once on load, like the TOML config: a bad snapshot fails here, not in the picker. */
-const catalog = providerCatalogSchema.parse(providerCatalog);
+const featuredProviderIds = new Set(providerFiles.map(([id]) => id));
+
+let catalog: ProviderCatalog | undefined;
+
+/**
+ * The bundled snapshot, validated on first use: a bad snapshot fails here, not in the picker.
+ * Not on load: every page and the background read settings, and most never need more than the
+ * featured providers, so they skip validating about 200 catalog entries at start.
+ */
+function getCatalog(): ProviderCatalog {
+  catalog ??= providerCatalogSchema.parse(providerCatalog);
+  return catalog;
+}
 
 /**
  * Providers from the bundled models.dev snapshot, as provider configs. They have no built-in
  * model list: models come from Refresh Models, or a custom model.
  */
 function catalogProviders(): Record<string, AIProviderConfig> {
-  const entries = catalog.providers;
+  const entries = getCatalog().providers;
   return Object.fromEntries(
     Object.entries(entries).map(([id, entry]) => [
       id,
@@ -79,19 +90,28 @@ function catalogProviders(): Record<string, AIProviderConfig> {
   );
 }
 
-// Provider files come first and win over catalog entries with the same id.
-const providers: Record<string, AIProviderConfig> = (() => {
-  const featured = Object.fromEntries(
-    providerFiles.map(([id, provider]) => [id, { ...provider, source: 'featured' as const }]),
-  );
-  const catalog = Object.fromEntries(
-    Object.entries(catalogProviders()).filter(([id]) => !(id in featured)),
-  );
-  return { ...featured, ...catalog };
-})();
+let providers: Record<string, AIProviderConfig> | undefined;
 
-function getProviders() {
+// Provider files come first and win over catalog entries with the same id.
+function getProviders(): Record<string, AIProviderConfig> {
+  providers ??= (() => {
+    const featured = Object.fromEntries(
+      providerFiles.map(([id, provider]) => [id, { ...provider, source: 'featured' as const }]),
+    );
+    const catalog = Object.fromEntries(
+      Object.entries(catalogProviders()).filter(([id]) => !(id in featured)),
+    );
+    return { ...featured, ...catalog };
+  })();
   return providers;
+}
+
+/**
+ * Whether `provider` is one of `getAvailableProviders()`. A provider file answers without
+ * reading the catalog, so checking a stored setting does not validate the whole snapshot.
+ */
+export function isAvailableProvider(provider: string): provider is AIProvider {
+  return featuredProviderIds.has(provider) || Object.hasOwn(getProviders(), provider);
 }
 
 export function getAvailableProviders(): { id: AIProvider; name: string }[] {
@@ -154,7 +174,7 @@ export function getProviderDocUrl(provider: AIProvider): string | undefined {
   return getProviderConfig(provider)?.doc_url;
 }
 
-const logoIds = new Set(catalog.logos);
+let logoIds: Set<string> | undefined;
 
 /**
  * URL of the provider's bundled one-color logo, if the catalog has one. Provider files name their
@@ -163,6 +183,7 @@ const logoIds = new Set(catalog.logos);
 export function getProviderLogoUrl(provider: AIProvider): string | undefined {
   const providerConfig = getProviderConfig(provider);
   const id = providerConfig?.source === 'featured' ? providerConfig.logo : provider;
+  logoIds ??= new Set(getCatalog().logos);
   return id !== undefined && logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
 }
 
