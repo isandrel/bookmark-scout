@@ -153,6 +153,45 @@ test('manager, folder tree, and breadcrumb follow external bookmark changes', as
   await expect(tree(page).getByRole('button', { name: 'Live Child', exact: true })).toHaveCount(0);
 });
 
+test('external folder renames and moves update the paths of everything inside', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  const seeded = await seedFolder(extensionWorker, 'E2E Paths', [
+    {
+      title: 'Path Sub',
+      children: [
+        {
+          title: 'Path Inner',
+          children: [{ title: 'Path Deep Link', url: 'https://example.com/path-deep' }],
+        },
+      ],
+    },
+    { title: 'Path Target', children: [] },
+  ]);
+  await page.goto(managerUrl(extensionId, seeded.ids['Path Sub']));
+  await expect(row(page, 'Path Inner')).toContainText('E2E Paths / Path Sub');
+
+  // Events patch the open tree; the rows below a renamed folder get its new name.
+  await extensionWorker.evaluate(
+    (id) => chrome.bookmarks.update(id, { title: 'Path Renamed' }),
+    seeded.ids['Path Sub'],
+  );
+  await expect(row(page, 'Path Inner')).toContainText('E2E Paths / Path Renamed');
+  await expect(breadcrumbCurrent(page)).toHaveText('Path Renamed');
+
+  await extensionWorker.evaluate(
+    ({ id, parentId }) => chrome.bookmarks.move(id, { parentId }),
+    { id: seeded.ids['Path Inner'], parentId: seeded.ids['Path Target'] },
+  );
+  await expect(row(page, 'Path Inner')).toHaveCount(0);
+
+  // A filter searches every bookmark: the moved folder's contents carry their new path.
+  await page.getByPlaceholder('Filter titles...').fill('Path Deep Link');
+  await expect(row(page, 'Path Deep Link')).toContainText('E2E Paths / Path Target / Path Inner');
+});
+
 test('in-page rename and delete refresh the folder tree', async ({
   extensionId,
   extensionWorker,

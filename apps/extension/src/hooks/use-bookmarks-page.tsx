@@ -31,26 +31,67 @@ const processNode = (
   };
 };
 
-function flattenBookmarks(
-  nodes: readonly BookmarkTreeNode[],
-  rootIds: ReadonlySet<string>,
-  ancestorTitles: string[] = [],
-): Bookmark[] {
-  const bookmarks: Bookmark[] = [];
-  for (const node of nodes) {
-    const folderPath = ancestorTitles.length
-      ? ancestorTitles.join(FOLDER_PATH_SEPARATOR)
-      : t('bookmarks_root');
-    bookmarks.push(processNode(node, folderPath, isPermanentBookmarkFolder(node, rootIds)));
-    if (node.children) {
-      const childBookmarks = flattenBookmarks(node.children, rootIds, [
-        ...ancestorTitles,
-        getBookmarkDisplayTitle(node.title.trim()),
-      ]);
-      for (const child of childBookmarks) bookmarks.push(child);
+const ROW_FIELDS = [
+  'type',
+  'parentId',
+  'folderPath',
+  'index',
+  'title',
+  'url',
+  'dateAdded',
+  'dateGroupModified',
+  'unmodifiable',
+  'isRootFolder',
+] as const satisfies readonly (keyof Bookmark)[];
+
+/**
+ * Flattens the tree into the manager's rows. Event patches keep unchanged subtrees as the same
+ * objects, so their rows are reused as they are, and a row whose values did not change (a folder
+ * whose children changed) stays the same object: memoized work keyed on rows can skip it.
+ */
+function createBookmarkRowsBuilder() {
+  const subtreeRows = new WeakMap<BookmarkTreeNode, { folderPath: string; rows: Bookmark[] }>();
+  const rowsById = new Map<string, Bookmark>();
+
+  const rowFor = (node: BookmarkTreeNode, folderPath: string, isRootFolder: boolean) => {
+    const row = processNode(node, folderPath, isRootFolder);
+    const previous = rowsById.get(node.id);
+    if (previous && ROW_FIELDS.every((field) => previous[field] === row[field])) return previous;
+    rowsById.set(node.id, row);
+    return row;
+  };
+
+  const collect = (
+    node: BookmarkTreeNode,
+    folderPath: string,
+    childPath: (title: string) => string,
+    rootIds: ReadonlySet<string>,
+    out: Bookmark[],
+  ) => {
+    const cached = subtreeRows.get(node);
+    if (cached?.folderPath === folderPath) {
+      for (const row of cached.rows) out.push(row);
+      return;
     }
-  }
-  return bookmarks;
+    const rows = [rowFor(node, folderPath, isPermanentBookmarkFolder(node, rootIds))];
+    if (node.children) {
+      const path = childPath(getBookmarkDisplayTitle(node.title.trim()));
+      const below = (title: string) => `${path}${FOLDER_PATH_SEPARATOR}${title}`;
+      for (const child of node.children) collect(child, path, below, rootIds, rows);
+    }
+    subtreeRows.set(node, { folderPath, rows });
+    for (const row of rows) out.push(row);
+  };
+
+  return (tree: readonly BookmarkTreeNode[]): Bookmark[] => {
+    const rootIds = getBookmarkRootIds(tree);
+    const rootLabel = t('bookmarks_root');
+    const rows: Bookmark[] = [];
+    for (const node of tree[0]?.children ?? []) {
+      collect(node, rootLabel, (title) => title, rootIds, rows);
+    }
+    return rows;
+  };
 }
 
 /** Table page saved on a history entry, so Back returns to the page that was open. */
@@ -102,8 +143,16 @@ export function useBookmarkNavigation() {
   const itemsRef = useRef<Bookmark[]>([]);
   const rootIdRef = useRef<string | undefined>(undefined);
   const hasLoadedRef = useRef(false);
-  // Parents seen in the previous load let a deleted folder fall back to its nearest ancestor.
-  const previousParentsRef = useRef(new Map<string, string | undefined>());
+  const treeRef = useRef<readonly BookmarkTreeNode[] | undefined>(undefined);
+  const [buildRows] = useState(createBookmarkRowsBuilder);
+  // Rows of the previous tree let a deleted folder fall back to its nearest ancestor.
+  const previousItemsRef = useRef<Bookmark[]>([]);
+  const previousParentIds = useMemo(
+    () => ({
+      get: (id: string) => getManagerItemsById(previousItemsRef.current).get(id)?.parentId,
+    }),
+    [],
+  );
 
   const showFolder = useCallback(
     (requestedId: string | null, history: 'push' | 'replace' | 'none') => {
@@ -111,7 +160,7 @@ export function useBookmarkNavigation() {
         requestedId,
         itemsRef.current,
         rootIdRef.current,
-        previousParentsRef.current,
+        previousParentIds,
       );
       const folderId = resolution.folderId;
       if (resolution.status !== 'ok') {
@@ -129,44 +178,60 @@ export function useBookmarkNavigation() {
         window.history.replaceState({ folderId }, '', folderUrl(folderId));
       }
     },
-    [],
+    [previousParentIds],
   );
 
-  const refresh = useCallback(async () => {
-    const isInitialLoad = !hasLoadedRef.current;
-    setError(null);
-    try {
-      const tree = await fetchBookmarkTree();
-      const root = tree[0];
-      const bookmarks = flattenBookmarks(root?.children ?? [], getBookmarkRootIds(tree));
-      if (isInitialLoad) {
-        // Cleanup for bookmarks removed while the extension was not running must never block
-        // loading. It runs only once so it cannot race an undo that is re-keying metadata.
-        void reconcileStoredBookmarkMetadata(
-          bookmarks.filter((bookmark) => Boolean(bookmark.url)).map((bookmark) => bookmark.id),
-        ).catch(() => undefined);
-      }
-
+  const setTree = useCallback(
+    (tree: readonly BookmarkTreeNode[]) => {
+      const bookmarks = buildRows(tree);
+      treeRef.current = tree;
+      previousItemsRef.current = itemsRef.current;
       itemsRef.current = bookmarks;
-      rootIdRef.current = root?.id;
+      rootIdRef.current = tree[0]?.id;
       setAllData(bookmarks);
-      setRootId(root?.id);
+      setRootId(tree[0]?.id);
       showFolder(currentFolderRef.current, 'none');
-      previousParentsRef.current = new Map(bookmarks.map((item) => [item.id, item.parentId]));
       hasLoadedRef.current = true;
-    } catch (err) {
-      setError(getErrorMessage(err, 'error_failedToLoadBookmarks'));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [showFolder]);
+    },
+    [buildRows, showFolder],
+  );
+  const setTreeRef = useRef(setTree);
+  setTreeRef.current = setTree;
+
+  // Reloads and event patches run one at a time; see createBookmarkTreeSync.
+  const [sync] = useState(() =>
+    createBookmarkTreeSync({
+      getTree: () => treeRef.current,
+      setTree: (tree) => setTreeRef.current(tree),
+      reload: async () => {
+        const isInitialLoad = !hasLoadedRef.current;
+        setError(null);
+        try {
+          setTreeRef.current(await fetchBookmarkTree());
+          if (isInitialLoad) {
+            // Cleanup for bookmarks removed while the extension was not running must never
+            // block loading. It runs only once so it cannot race an undo re-keying metadata.
+            void reconcileStoredBookmarkMetadata(
+              itemsRef.current.filter((bookmark) => Boolean(bookmark.url)).map(({ id }) => id),
+            ).catch(() => undefined);
+          }
+        } catch (err) {
+          setError(getErrorMessage(err, 'error_failedToLoadBookmarks'));
+        } finally {
+          setIsLoading(false);
+        }
+      },
+    }),
+  );
+  // Reads the whole tree again; changes that arrive as events are patched in instead.
+  const refresh = sync.reload;
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
 
   // Changes from this page, other extension pages, the browser UI, and sync all land here.
-  useBookmarkEvents(refresh);
+  useBookmarkEvents(sync.applyBatch);
 
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {

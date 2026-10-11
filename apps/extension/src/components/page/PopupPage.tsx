@@ -57,6 +57,7 @@ function PopupPage() {
     newFolderName,
     fetchFolders,
     refreshFolders,
+    applyBookmarkEvents,
     setQuery,
     setDebouncedQuery,
     setExpandedFolders,
@@ -133,7 +134,7 @@ function PopupPage() {
   }, [fetchFolders]);
 
   // Follow changes made elsewhere (manager page, browser UI, sync) without losing expansion.
-  useBookmarkEvents(refreshFolders);
+  useBookmarkEvents(applyBookmarkEvents);
   usePopupSize();
 
   // Its title differs per browser and language, so it is read from the tree.

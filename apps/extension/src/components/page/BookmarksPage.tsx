@@ -123,7 +123,7 @@ export default function BookmarksPage() {
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const facetOptions = useMemo(() => {
     const domains = [
-      ...new Set(allData.map((bookmark) => getUrlDomain(bookmark.url)).filter(Boolean)),
+      ...new Set(allData.map(getBookmarkDomain).filter(Boolean)),
     ].sort((left, right) => left.localeCompare(right));
     return {
       parentId: buildFolderOptions(allData, t('popup_untitled')),

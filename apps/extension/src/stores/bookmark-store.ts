@@ -84,6 +84,8 @@ interface BookmarkState {
   fetchFolders: () => Promise<void>;
   /** Reload the tree without the loading skeleton, keeping expansion and search state. */
   refreshFolders: () => Promise<void>;
+  /** Patch the tree with bookmark events (`useBookmarkEvents`), or reload it when that fails. */
+  applyBookmarkEvents: (batch: BookmarkEventBatch) => Promise<void>;
   setQuery: (query: string) => void;
   setDebouncedQuery: (query: string) => void;
   setExpandedFolders: (folders: string[] | ((prev: string[]) => string[])) => void;
@@ -106,6 +108,35 @@ interface BookmarkState {
   applyFilter: () => void;
 }
 
+function replaceTree(data: BookmarkTreeNode[]): void {
+  useBookmarkStore.setState({ folders: data, filteredFolders: data, isLoading: false });
+  // Re-filter so a refresh during an active search keeps showing search results.
+  if (useBookmarkStore.getState().debouncedQuery) useBookmarkStore.getState().applyFilter();
+}
+
+// Reloads, event patches, and this page's own changes run one at a time, in order.
+const treeSync: BookmarkTreeSync = createBookmarkTreeSync({
+  getTree: (): BookmarkTreeNode[] | undefined => {
+    const { isLoading, folders } = useBookmarkStore.getState();
+    return isLoading ? undefined : folders;
+  },
+  setTree: replaceTree,
+  reload: async () => {
+    try {
+      replaceTree(await fetchBookmarkTree());
+    } catch (error) {
+      if (useBookmarkStore.getState().isLoading) {
+        useBookmarkStore.setState({
+          error: error instanceof Error ? error.message : t('error_unknown'),
+          isLoading: false,
+        });
+      } else {
+        bookmarkLogger.error({ error }, 'Failed to refresh bookmarks');
+      }
+    }
+  },
+});
+
 export const useBookmarkStore = create<BookmarkState>()(
   devtools(
     (set, get) => ({
@@ -126,30 +157,14 @@ export const useBookmarkStore = create<BookmarkState>()(
       addingToFolderIds: [],
 
       // Fetch folders from Chrome API
-      fetchFolders: async () => {
+      fetchFolders: () => {
         set({ isLoading: true, error: null });
-        try {
-          const data = await fetchBookmarkTree();
-          set({ folders: data, filteredFolders: data, isLoading: false });
-          // Re-filter so a refresh during an active search keeps showing search results.
-          if (get().debouncedQuery) get().applyFilter();
-        } catch (err) {
-          set({
-            error: err instanceof Error ? err.message : t('error_unknown'),
-            isLoading: false,
-          });
-        }
+        return treeSync.reload();
       },
 
-      refreshFolders: async () => {
-        try {
-          const data = await fetchBookmarkTree();
-          set({ folders: data, filteredFolders: data });
-          if (get().debouncedQuery) get().applyFilter();
-        } catch (error) {
-          bookmarkLogger.error({ error }, 'Failed to refresh bookmarks');
-        }
-      },
+      refreshFolders: () => treeSync.reload(),
+
+      applyBookmarkEvents: (batch) => treeSync.applyBatch(batch),
 
       // Setters
       setQuery: (query) => set({ query }),
@@ -209,12 +224,13 @@ export const useBookmarkStore = create<BookmarkState>()(
               };
             }
 
-            await createBookmark({
+            const created = await createBookmark({
               parentId: folderId,
               title: tab.title || t('popup_untitled'),
               url: tab.url || '',
             });
-            await get().refreshFolders();
+            // Shown right away; its event arrives later and finds it already there.
+            await treeSync.applyChanges([{ type: 'created', node: created }]);
 
             return {
               success: true,
@@ -235,8 +251,8 @@ export const useBookmarkStore = create<BookmarkState>()(
         runOnce(`folder\n${parentId}\n${name.trim()}`, async () => {
           try {
             const parentFolder = await getBookmark(parentId);
-            await createBookmark({ parentId, title: name.trim() });
-            await get().refreshFolders();
+            const created = await createBookmark({ parentId, title: name.trim() });
+            await treeSync.applyChanges([{ type: 'created', node: created }]);
             return {
               success: true,
               message: t('toast_folderCreatedDesc', [
@@ -260,12 +276,15 @@ export const useBookmarkStore = create<BookmarkState>()(
         try {
           const before = await getBookmark(operation.sourceId);
           // Always pass the parent: dropping beside an item in another folder moves it there.
-          await moveBookmark(operation.sourceId, {
+          const moved = await moveBookmark(operation.sourceId, {
             parentId: operation.targetParentId,
             index: operation.targetIndex,
           });
-
-          await get().refreshFolders();
+          await (moved.parentId !== undefined && moved.index !== undefined
+            ? treeSync.applyChanges([
+                { type: 'moved', id: moved.id, parentId: moved.parentId, index: moved.index },
+              ])
+            : treeSync.reload());
 
           const sourceItem = await getBookmark(operation.sourceId);
           // Dropping an item onto its own position (e.g. just below itself) changes nothing.
