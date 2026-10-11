@@ -1,0 +1,59 @@
+name: Live AI
+
+# The extension's AI features end to end against a real provider (apps/extension/tests/live). On
+# demand only, never a pull request check: it spends provider quota and depends on the provider.
+# Repository secrets: BS_LIVE_AI_BASE_URL, BS_LIVE_AI_API_KEY, BS_LIVE_AI_MODEL (required) and
+# BS_LIVE_AI_PROVIDER (optional, defaults to cliproxyapi). Without the required ones the run is
+# skipped. The base URL must be reachable from GitHub's runners.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  live:
+    name: Live AI tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check the secrets
+        id: secrets
+        env:
+          HAS_BASE_URL: ${{ secrets.BS_LIVE_AI_BASE_URL != '' }}
+          HAS_API_KEY: ${{ secrets.BS_LIVE_AI_API_KEY != '' }}
+          HAS_MODEL: ${{ secrets.BS_LIVE_AI_MODEL != '' }}
+        run: |
+          if [ "$HAS_BASE_URL" = true ] && [ "$HAS_API_KEY" = true ] && [ "$HAS_MODEL" = true ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Skipped: set the BS_LIVE_AI_BASE_URL, BS_LIVE_AI_API_KEY, and BS_LIVE_AI_MODEL repository secrets to run the live AI tests."
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.secrets.outputs.configured == 'true'
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        if: steps.secrets.outputs.configured == 'true'
+        uses: ./.github/actions/setup-workspace
+
+      - name: Install Chromium
+        if: steps.secrets.outputs.configured == 'true'
+        working-directory: apps/extension
+        run: bunx playwright install --with-deps --no-shell chromium
+
+      # The secrets reach only this step, not the dependency install before it.
+      - name: Run the live AI tests
+        if: steps.secrets.outputs.configured == 'true'
+        env:
+          BS_LIVE_AI_BASE_URL: ${{ secrets.BS_LIVE_AI_BASE_URL }}
+          BS_LIVE_AI_API_KEY: ${{ secrets.BS_LIVE_AI_API_KEY }}
+          BS_LIVE_AI_MODEL: ${{ secrets.BS_LIVE_AI_MODEL }}
+          BS_LIVE_AI_PROVIDER: ${{ secrets.BS_LIVE_AI_PROVIDER }}
+        run: bunx nx run extension:test:live

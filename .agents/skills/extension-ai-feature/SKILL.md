@@ -40,6 +40,8 @@ Read the "AI and provider guidance" section of `apps/extension/AGENTS.md` first.
 
 The opt-in local-server spec (`tests/e2e/ai-local-server.spec.ts`) reads the server key and model from `BOOKMARK_SCOUT_LOCAL_AI_KEY` and `BOOKMARK_SCOUT_LOCAL_AI_MODEL`. Load the key from the server's own config without printing it. These runs are not part of CI and do not prove compatibility with hosted providers; report them as manual checks.
 
+The live suite (`nx run extension:test:live`, `apps/extension/tests/live/README.md`) runs every AI feature end to end against the provider in `BS_LIVE_AI_BASE_URL`, `BS_LIVE_AI_API_KEY`, and `BS_LIVE_AI_MODEL` (or `apps/extension/.env.live.local`). Run it after changing a prompt, schema, tool, or provider wiring, and when a new feature calls AI, add its scenario there with its activity log source in the privacy check.
+
 ## Agent features (Ask AI)
 
 - Build a chat agent as an AI SDK `ToolLoopAgent` with `stopWhen: isStepCount(config.max_steps)`, created again for every message, so a changed service or setting applies to the next message without stale closures.

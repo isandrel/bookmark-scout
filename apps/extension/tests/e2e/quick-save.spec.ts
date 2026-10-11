@@ -4,22 +4,20 @@ import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openPopup, seedFolder, setSettings } from './popup-helpers';
 import {
-  readSettings,
-  readStored,
-  removeStored,
-  STORAGE_ITEMS,
-  seedAIServices,
-  writeStored,
-} from './storage';
+  bookmarksWithUrl,
+  clickToastButton,
+  finishedRecord,
+  pressShortcut,
+  readToast,
+  toastButtons,
+  toastTexts,
+} from './quick-save-helpers';
+import { readSettings, readStored, STORAGE_ITEMS, seedAIServices, writeStored } from './storage';
 
 /**
- * Quick save shortcuts. Playwright cannot press a browser command shortcut, so these tests fire
- * the background's real `commands.onCommand` listener from the service worker with the tab the
- * browser would pass, and read the result from `chrome.bookmarks` and session storage.
- *
- * The notification lives in a closed shadow root, which page scripts (and Playwright selectors)
- * cannot reach. It is read through the browser's accessibility tree and clicked with real mouse
- * input, as a user would.
+ * Quick save shortcuts, fired and read through `quick-save-helpers.ts`: the command goes to the
+ * background's real listener, and the notification is read and clicked through the browser's
+ * accessibility tree.
  */
 
 type Recommendation = { type: 'new' | 'existing'; folderPath: string; parentPath: string };
@@ -85,137 +83,11 @@ async function startServer(): Promise<LocalServer> {
   };
 }
 
-type QuickSaveRecord = {
-  id: string;
-  status: string;
-  delivery: string;
-  bookmarkId?: string;
-  folderId?: string;
-  createdFolderIds: string[];
-};
-
-/** Fires the command for the tab showing `page`, as the browser does on the key press. */
-async function pressShortcut(worker: Worker, page: Page, command: 'quick-save' | 'ai-quick-save') {
-  await page.bringToFront();
-  const url = page.url();
-  const title = await page.title();
-  await removeStored(worker, STORAGE_ITEMS.quickSave);
-  await worker.evaluate(
-    async ({ name, tabUrl, tabTitle }) => {
-      const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-      const event = chrome.commands.onCommand as unknown as {
-        hasListeners(): boolean;
-        dispatch(command: string, tab: unknown): void;
-      };
-      if (!event.hasListeners()) throw new Error('No command listener is registered');
-      event.dispatch(name, { ...tab, url: tabUrl, title: tabTitle });
-    },
-    { name: command, tabUrl: url, tabTitle: title },
-  );
-}
-
-/** The stored quick save once it has finished. */
-async function finishedRecord(worker: Worker): Promise<QuickSaveRecord> {
-  let record: QuickSaveRecord | undefined;
-  await expect
-    .poll(
-      async () => {
-        record = await readStored<QuickSaveRecord>(worker, STORAGE_ITEMS.quickSave);
-        return record?.status;
-      },
-      { timeout: 15_000 },
-    )
-    .toMatch(/^(saved|duplicate|failed|removed)$/);
-  return record as QuickSaveRecord;
-}
-
-async function bookmarksWithUrl(worker: Worker, url: string) {
-  return worker.evaluate(
-    async (pageUrl) =>
-      (await chrome.bookmarks.search({ url: pageUrl })).map(({ id, parentId, title }) => ({
-        id,
-        parentId,
-        title,
-      })),
-    url,
-  );
-}
-
 async function folderTitle(worker: Worker, id: string | undefined) {
   return worker.evaluate(
     async (folderId) => (await chrome.bookmarks.get(folderId))[0].title,
     id ?? '',
   );
-}
-
-type AXNode = {
-  nodeId: string;
-  role?: { value?: string };
-  name?: { value?: string };
-  childIds?: string[];
-  backendDOMNodeId?: number;
-  ignored?: boolean;
-};
-
-type ToastItem = { role: string; name: string; backendId?: number };
-
-/** The notification's accessibility tree: its texts and buttons, or null when none is shown. */
-async function readToast(page: Page): Promise<ToastItem[] | null> {
-  const cdp = await page.context().newCDPSession(page);
-  try {
-    const { nodes } = (await cdp.send('Accessibility.getFullAXTree')) as { nodes: AXNode[] };
-    const byId = new Map(nodes.map((node) => [node.nodeId, node]));
-    const root = nodes.find(
-      (node) => node.role?.value === 'status' && node.name?.value === 'Bookmark Scout',
-    );
-    if (!root) return null;
-    const items: ToastItem[] = [];
-    const visit = (node: AXNode) => {
-      const role = node.role?.value ?? '';
-      const name = node.name?.value ?? '';
-      if (!node.ignored && name && (role === 'StaticText' || role === 'button')) {
-        items.push({ role, name, backendId: node.backendDOMNodeId });
-      }
-      for (const child of node.childIds ?? []) {
-        const next = byId.get(child);
-        if (next) visit(next);
-      }
-    };
-    visit(root);
-    return items;
-  } finally {
-    await cdp.detach();
-  }
-}
-
-async function toastTexts(page: Page): Promise<string[]> {
-  return ((await readToast(page)) ?? [])
-    .filter((item) => item.role === 'StaticText')
-    .map((item) => item.name);
-}
-
-async function toastButtons(page: Page): Promise<string[]> {
-  return ((await readToast(page)) ?? [])
-    .filter((item) => item.role === 'button')
-    .map((item) => item.name);
-}
-
-/** Clicks a notification button with real mouse input at its position on screen. */
-async function clickToastButton(page: Page, name: string) {
-  const button = ((await readToast(page)) ?? []).find(
-    (item) => item.role === 'button' && item.name === name,
-  );
-  if (!button?.backendId) throw new Error(`No "${name}" button in the notification`);
-  const cdp = await page.context().newCDPSession(page);
-  try {
-    const { model } = (await cdp.send('DOM.getBoxModel', { backendNodeId: button.backendId })) as {
-      model: { content: number[] };
-    };
-    const [x1, y1, , , x3, y3] = model.content;
-    await page.mouse.click((x1 + x3) / 2, (y1 + y3) / 2);
-  } finally {
-    await cdp.detach();
-  }
 }
 
 let server: LocalServer;
