@@ -1,0 +1,29 @@
+# Limits of the bookmark actions (src/services/actions.ts) that AI agents call: Ask AI, and
+# local agents through the MCP bridge. Read by src/services/action-kit.ts.
+
+# Bookmarks or duplicate groups one search or scan returns per page at most
+max_results = 20
+# Folders one listFolders call returns per page at most
+max_folders = 100
+# Levels below the starting folder listFolders shows when the agent does not say
+default_folder_depth = 2
+# Deepest listFolders may go in one call
+max_folder_depth = 10
+# References one getBookmarks call may look up
+max_refs = 50
+# Links one checkLinks call checks at most; the rest are left for another call
+max_link_checks = 25
+# Folders suggestFolders returns at most
+max_suggestions = 5
+# Folders listed as candidates when a folder path is ambiguous or not found
+max_candidates = 5
+# Characters of a saved summary in detailed results
+summary_chars = 300
+# Characters of page text readPage returns; the page reader caps what it reads too
+max_page_chars = 20000
+# Characters one tool result may take as JSON; a larger one asks the agent to narrow it
+max_result_chars = 60000
+# Bookmark search score per query word found in the title
+search_title_weight = 2
+# Bookmark search score per query word found in the URL, folder path, saved tags, or summary
+search_text_weight = 1

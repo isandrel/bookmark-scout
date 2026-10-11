@@ -5359,9 +5359,17 @@
         "message": "Ihre Lesezeichen nach „$1“ durchsucht",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "Ihre Lesezeichen durchgesehen",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "Ihre Ordner aufgelistet",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "Lesezeichendetails nachgeschlagen",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "Aktuelle Seite geprüft",
@@ -5370,6 +5378,22 @@
     "askAI_toolReadPage": {
         "message": "$1 gelesen",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "Eine gespeicherte Seite gelesen",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "Nach doppelten Lesezeichen gesucht",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "Gespeicherte Links geprüft",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "Nach passenden Ordnern gesucht",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
     },
     "askAI_toolWebSearch": {
         "message": "Im Web gesucht",

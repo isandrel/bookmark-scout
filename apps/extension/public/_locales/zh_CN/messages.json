@@ -5167,9 +5167,17 @@
         "message": "在你的书签中搜索了“$1”",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "查看了你的书签",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "列出了你的文件夹",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "查看了书签详情",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "查看了当前网页",
@@ -5178,6 +5186,22 @@
     "askAI_toolReadPage": {
         "message": "读取了 $1",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "读取了一个已收藏的网页",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "查找了重复的书签",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "检查了书签链接",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "查找了匹配的文件夹",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
     },
     "askAI_toolWebSearch": {
         "message": "进行了联网搜索",

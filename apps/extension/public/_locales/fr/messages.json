@@ -5359,9 +5359,17 @@
         "message": "Recherche de « $1 » dans vos favoris",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "Parcours de vos favoris",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "Liste de vos dossiers",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "Consultation des détails de favoris",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "Vérification de la page actuelle",
@@ -5370,6 +5378,22 @@
     "askAI_toolReadPage": {
         "message": "Lecture de $1",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "Lecture d'une page enregistrée",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "Recherche de favoris en double",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "Vérification des liens enregistrés",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "Recherche de dossiers correspondants",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
     },
     "askAI_toolWebSearch": {
         "message": "Recherche sur le Web",

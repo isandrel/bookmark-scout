@@ -20,6 +20,8 @@
 - The bookmark manager's folder tree works like Chrome's: it is one `Tab` stop, the arrow keys move through it and open and close folders, `Home` and `End` go to the first and last folder, and `Enter` or `Space` shows a folder in the table; screen readers hear it as a tree with each folder's level and position. When Chrome keeps bookmarks both in your Google Account and only on this device, the tree shows them under **In your account** and **Only on this device**, the second closed at first, as Chrome's own manager does.
 - URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
 
+- Ask AI can do more to answer: search bookmarks by folder, tag, site, or date added as well as by words, look up tags and summaries, find duplicates, suggest folders for a page (ranked on your device), and, once website access is allowed for Check Dead Links, check whether bookmarked links still work. Long lists come a page at a time, and a folder name that fits several folders makes it ask which one. It reads only bookmarked pages and the page you are on, never another address it was given. Each step still shows in the chat.
+
 ### Stored data
 
 - **This update resets your saved data.** Bookmark Scout stores its data in a new format and removes what older versions stored instead of converting it. After updating, your settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, recent searches, recent folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. To keep your settings, click **Export** at the bottom of Settings before updating, and **Import** the file afterwards.
@@ -36,6 +38,7 @@
 
 ### Permissions and privacy
 
+- Ask AI now also sends your AI provider the date each bookmark it finds was added and, when it checks links, whether they still work; those checks request the bookmarked pages from your browser without cookies, as Check Dead Links does. The privacy policy, docs, and store disclosures say so in every language.
 - New install-time permissions without a warning: `scripting` in every browser (shows the quick save notification in the tab where the shortcut was pressed) and `offscreen` in Chrome and Edge (runs AI quick save's request in a hidden extension page). The AI quick save shortcut sends the same data as AI folder suggestions in the popup, to the AI provider you set up.
 - The privacy policy (website, store, and docs, in every language) now covers what this version stores: only changed settings sync, and no longer the AI provider and model, which stay on the device with your AI services; custom prompts sync through your browser account; the opt-in AI activity log stays on the device, with keys removed; the manager's column widths and page size stay on the device; and what the backup file and JSON bookmark exports hold. Nothing new is sent anywhere.
 
