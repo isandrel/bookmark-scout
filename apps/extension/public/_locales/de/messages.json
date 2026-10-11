@@ -3927,6 +3927,22 @@
         "message": "Bookmark Scout erhält nie Seiteninhalte. Seiten im lokalen Netzwerk werden nie gelesen. Deaktivieren Sie die Option, um dies jederzeit zu beenden.",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "Lokale KI-Agenten zulassen",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "KI-Agenten, die Sie auf diesem Computer ausführen, etwa Claude Code, Codex oder Cursor, können dann über das von Ihnen installierte Programm bookmark-scout-mcp Ihre Lesezeichen nachschlagen: Titel, URLs und Ordnernamen von Lesezeichen, Titel und URL der aktuellen Seite und, solange „Seiteninhalt lesen“ aktiviert ist, Seitentext. Ihr Browser fragt, ob die Erweiterung mit diesem Programm kommunizieren darf.",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "Agenten können nur nachschlagen und Ihre Lesezeichen nicht ändern. Bookmark Scout erhält diese Daten nie, aber ein Agent kann Gelesenes an seinen eigenen KI-Anbieter senden. Schalten Sie die Einstellung aus, um jederzeit aufzuhören.",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "Der Zugriff für lokale KI-Agenten bleibt aus. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit dem Programm bookmark-scout-mcp kommunizieren darf.",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Es wurde nichts gesendet. Ihr Browser fragt nach, bevor die Erweiterung Ihren API-Schlüssel an den Anbieter weitergibt.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5894,6 +5910,66 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "Schalten Sie aus, was die KI nicht tun soll; es wird ihr dann gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer gefragt.",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "Lokale KI-Agenten",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "Lokale KI-Agenten zulassen",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "KI-Agenten auf diesem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über das Programm bookmark-scout-mcp nachschlagen lassen. Nur für dieses Gerät.",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "Private Werte ausblenden",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "Sensible URL-Parameter, Tokens und E-Mail-Adressen in den Titeln und URLs, die Agenten erhalten, anhand der Liste der Datenschutzprüfung ersetzen.",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "Was lokale Agenten tun dürfen",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "Schalten Sie aus, was Agenten nicht nachschlagen sollen; es wird ihnen dann gar nicht angeboten. Lokale Agenten können keine Lesezeichen ändern.",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "Brückenprogramm",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "Installieren Sie das Programm bookmark-scout-mcp auf diesem Computer und führen Sie einmal „$1“ aus. Es meldet sich bei Ihren Browsern an und zeigt, wie Sie es zu Claude Code, Codex oder Cursor hinzufügen.",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "Läuft nicht. Schalten Sie den Schalter oben ein und erlauben Sie den Zugriff, wenn Ihr Browser fragt.",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "Brückenprogramm wird gestartet …",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "Bereit. KI-Agenten auf diesem Computer können dieses Browserprofil erreichen.",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "Das Brückenprogramm ist nicht installiert oder noch nicht bei diesem Browser angemeldet.",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "Das Brückenprogramm konnte nicht starten oder wurde beendet. Bookmark Scout versucht es selbst erneut.",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "Erneut versuchen",
+        "description": "Button: try to start the bridge program again now"
     },
     "settings_actionMoveUp": {
         "message": "$1 nach oben verschieben",

@@ -42,9 +42,44 @@ export function getAction(id: ActionId): ActionDefinition<unknown, unknown> {
   return ACTIONS[id] as unknown as ActionDefinition<unknown, unknown>;
 }
 
-/** Whether the user turned this action off for the agent making the call (Options > AI). */
-function turnedOffFor(id: ActionId, context: ActionContext): boolean {
-  return context.client.kind === 'askAI' && context.settings.askAiDisabledActions.includes(id);
+/** Whether an action changes bookmarks, or exists to (proposing a plan), for agents and settings. */
+export function changesBookmarks(id: ActionId): boolean {
+  const action = getAction(id);
+  return action.risk !== 'read' || Boolean(action.agent?.partOfChanges);
+}
+
+/**
+ * Whether this kind of agent is offered the action at all, before the user's choices: it has an
+ * agent exposure for that kind, and local agents only look things up for now.
+ */
+function offeredTo(id: ActionId, kind: ActionClient['kind']): boolean {
+  const { agent } = getAction(id);
+  if (!agent || (agent.only && agent.only !== kind)) return false;
+  return kind === 'askAI' || !changesBookmarks(id);
+}
+
+/** The actions the user can turn on or off for this kind of agent (Options > AI). */
+export function agentActionChoices(kind: ActionClient['kind']): ActionId[] {
+  return ACTION_IDS.filter((id) => offeredTo(id, kind));
+}
+
+/** The setting listing the actions the user turned off for each kind of agent. */
+const DISABLED_ACTIONS = {
+  askAI: 'askAiDisabledActions',
+  external: 'agentBridgeDisabledActions',
+} as const satisfies Record<ActionClient['kind'], keyof Settings>;
+
+/** Why the agent making the call may not use this action, or nothing. */
+function refusedFor(id: ActionId, context: ActionContext): string | undefined {
+  const { kind } = context.client;
+  if (!offeredTo(id, kind)) {
+    return kind === 'external' && getAction(id).agent && changesBookmarks(id)
+      ? 'Local agents can look things up but not change bookmarks.'
+      : `${id} is not offered to this agent.`;
+  }
+  return context.settings[DISABLED_ACTIONS[kind]].includes(id)
+    ? `The user turned off ${id} for ${kind === 'askAI' ? 'Ask AI' : 'local agents'}.`
+    : undefined;
 }
 
 /** Why `action` cannot run in `context` (a missing permission first), or nothing. */
@@ -63,7 +98,7 @@ async function whyUnavailable(
 /** The actions AI agents may call in this context, so a model is offered only those. */
 export async function agentActionIds(context: ActionContext): Promise<ActionId[]> {
   const exposed = ACTION_IDS.filter(
-    (id) => getAction(id).agent && getAction(id).execute && !turnedOffFor(id, context),
+    (id) => getAction(id).agent && getAction(id).execute && !refusedFor(id, context),
   );
   const blocked = await Promise.all(exposed.map((id) => whyUnavailable(getAction(id), context)));
   return exposed.filter((_, index) => !blocked[index]);
@@ -85,9 +120,8 @@ export async function runAction(
   if (!action.input || !action.execute) {
     return actionError('not_allowed', `${id} can only be used from a menu.`);
   }
-  if (turnedOffFor(id, context)) {
-    return actionError('not_allowed', `The user turned off ${id} for Ask AI.`);
-  }
+  const refusal = refusedFor(id, context);
+  if (refusal) return actionError('not_allowed', refusal);
   const parsed = action.input.safeParse(input ?? {});
   if (!parsed.success) {
     return actionError('invalid_input', z.prettifyError(parsed.error));
@@ -104,7 +138,8 @@ export async function runAction(
   // Every change, and every call a local agent makes, is in the AI activity log when it is on.
   if (action.risk !== 'read' || context.client.kind !== 'askAI') {
     void recordActionActivity({
-      source: 'askAI',
+      source: context.client.kind === 'askAI' ? 'askAI' : 'agentBridge',
+      ...(context.client.kind === 'external' ? { client: context.client.name } : {}),
       action: id,
       input: parsed.data,
       result,

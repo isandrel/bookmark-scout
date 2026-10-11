@@ -148,7 +148,8 @@ describe('proposeChanges and applyChanges', () => {
         { planId: plan.planId },
         { client: { kind: 'external', name: 'x' } },
       ),
-    ).toMatchObject({ error: { code: 'not_found' } });
+      // Local agents cannot change bookmarks at all.
+    ).toMatchObject({ error: { code: 'not_allowed' } });
     expect(bookmarks.get('b1')).toBeDefined();
   });
 });

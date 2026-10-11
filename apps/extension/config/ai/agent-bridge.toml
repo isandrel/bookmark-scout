@@ -1,0 +1,13 @@
+# Access for local AI agents through the bookmark-scout-mcp bridge (Options > AI). Read by
+# src/services/agent-bridge.ts. The bridge program's own limits are in
+# packages/mcp-bridge/config/bridge.toml.
+
+# Seconds to wait before connecting to the bridge again after it stopped or could not start, one
+# entry per attempt; the last one repeats. A change to the setting or the permission retries at once.
+reconnect_seconds = [2, 10, 60, 300]
+# Calls from local agents answered per minute; more are refused until the minute passes.
+max_calls_per_minute = 120
+# Calls from local agents running at once; more are refused.
+max_concurrent_calls = 4
+# Characters of a call's arguments accepted from an agent.
+max_argument_chars = 20000

@@ -107,16 +107,21 @@ function startHost() {
     stderr: "pipe",
     env: env(),
   });
+  /** Calls and cancels; the host's one `ready` goes to `ready`. */
   const calls = new Inbox<Record<string, unknown>>();
+  const ready = new Inbox<Record<string, unknown>>();
   const decoder = new FrameDecoder(config.limits.max_message_bytes);
   void pump(proc.stdout, (chunk) => {
-    for (const message of decoder.push(chunk)) calls.push(message as Record<string, unknown>);
+    for (const raw of decoder.push(chunk)) {
+      const message = raw as Record<string, unknown>;
+      (message.type === "ready" ? ready : calls).push(message);
+    }
   });
   const send = (message: unknown) => {
     proc.stdin.write(encodeFrame(message));
     proc.stdin.flush();
   };
-  return { proc, calls, send };
+  return { proc, calls, ready, send };
 }
 
 async function waitFor<T>(check: () => T | undefined, ms = 5000): Promise<T> {
@@ -143,6 +148,7 @@ describe("native-host", () => {
   test("announces itself, relays calls both ways, and cleans up when the browser disconnects", async () => {
     const host = startHost();
     host.send(HELLO);
+    expect(await host.ready.next()).toEqual({ type: "ready" });
     const entry = await waitFor(() => listDiscovery(runtime)[0]);
     expect(entry).toMatchObject({
       browser: "chrome",

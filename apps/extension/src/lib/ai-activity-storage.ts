@@ -11,6 +11,8 @@ const entrySchema = z.object({
   at: z.number(),
   /** What made the call, such as a tool; see AI_ACTIVITY_SOURCES. */
   source: z.string(),
+  /** The local AI agent that made the call, by the name it gave itself (not verified). */
+  client: z.string().optional(),
   provider: z.string().optional(),
   model: z.string().optional(),
   method: z.string(),

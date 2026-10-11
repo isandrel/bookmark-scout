@@ -3895,6 +3895,22 @@
         "message": "Bookmark Scout がページの内容を受け取ることはありません。ローカルネットワーク上のページは読み取りません。設定をオフにすれば、いつでも停止できます。",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "ローカル AI エージェントを許可",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "このコンピューターで実行する AI エージェント（Claude Code、Codex、Cursor など）が、インストールした bookmark-scout-mcp プログラムを通じてブックマークを調べられるようになります。対象はブックマークのタイトル、URL、フォルダー名、現在のページのタイトルと URL、そして「ページの内容を読む」がオンの間はページのテキストです。拡張機能がそのプログラムと通信することを許可するよう、ブラウザーから求められます。",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "エージェントは調べることしかできず、ブックマークを変更することはできません。Bookmark Scout がこれらのデータを受け取ることはありませんが、エージェントは読み取った内容を自身の AI プロバイダーに送信する場合があります。設定をオフにすれば、いつでも停止できます。",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "ローカル AI エージェントのアクセスはオフのままです。オンにすると、拡張機能が bookmark-scout-mcp プログラムと通信することを許可するよう、ブラウザーから求められます。",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "何も送信されませんでした。拡張機能が API キーをプロバイダーと共有する前に、ブラウザが確認します。",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5886,6 +5902,66 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "AI にさせたくないことはオフにします。オフにした操作は AI に一切提示されません。変更プランの適用は必ず事前に確認されます。",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "ローカル AI エージェント",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "ローカル AI エージェントを許可",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "このコンピューターの AI エージェント（Claude Code、Codex、Cursor など）が bookmark-scout-mcp プログラムを通じてブックマークを調べられるようにします。このデバイスのみ。",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "非公開の値を隠す",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "エージェントが受け取るタイトルと URL に含まれる機密性の高い URL パラメーター、トークン、メールアドレスを、プライバシースキャナーのリストに従って置き換えます。",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "ローカルエージェントにできること",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "エージェントに調べてほしくない操作をオフにすると、その操作はエージェントに一切提示されません。ローカルエージェントはブックマークを変更できません。",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "ブリッジプログラム",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "このコンピューターに bookmark-scout-mcp プログラムをインストールし、「$1」を一度実行します。ブラウザーに登録され、Claude Code、Codex、Cursor に追加する方法が表示されます。",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "実行されていません。上のスイッチをオンにし、ブラウザーから求められたらアクセスを許可してください。",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "ブリッジプログラムを起動しています…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "準備完了です。このコンピューターの AI エージェントがこのブラウザープロファイルにアクセスできます。",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "ブリッジプログラムがインストールされていないか、まだこのブラウザーに登録されていません。",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "ブリッジプログラムを起動できなかったか、停止しました。Bookmark Scout が自動的に再試行します。",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "再試行",
+        "description": "Button: try to start the bridge program again now"
     },
     "settings_actionMoveUp": {
         "message": "$1 を上へ移動",

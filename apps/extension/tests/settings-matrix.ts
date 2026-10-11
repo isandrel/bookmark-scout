@@ -247,6 +247,19 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
     unit('actions.test.ts', 'leaves out and refuses the actions the user turned off for Ask AI'),
     e2e('ask-ai.spec.ts', '[mocked provider contract] Ask AI is not offered the actions turned off in Options'),
   ], 'Edited in Options > AI > What Ask AI may do (AskAIActionsPanel).'),
+  agentBridgeEnabled: tested('services/agent-bridge.ts', [
+    unit('agent-bridge.test.ts', 'answers a call through the action registry and refuses one while access is off'),
+    unit('agent-bridge.test.ts', 'connects through native messaging, announces the tools, and answers calls'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ], 'A device setting; turning it on asks for native messaging.'),
+  agentBridgeRedactUrls: tested('services/agent-bridge.ts', [
+    unit('agent-bridge.test.ts', 'hides private values in the titles and URLs agents receive'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ]),
+  agentBridgeDisabledActions: tested('services/actions.ts', [
+    unit('agent-bridge.test.ts', 'leaves out and refuses the actions the user turned off for local agents'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ], 'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).'),
   managerMenuActions: tested('components/ui/table/bookmark-row-menu.tsx', [
     unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
     e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),

@@ -19,7 +19,7 @@ Every permission that a browser lets an extension ask for later is optional and 
 | --- | --- | --- | --- |
 | `manifest_version` | 3 | 3 | 2 |
 | `permissions` (granted at install) | `bookmarks`, `storage`, `activeTab`, `sidePanel`, `scripting`, `offscreen` | Same as Chrome | `bookmarks`, `storage`, `activeTab`, `scripting`, `contextMenus` |
-| `optional_permissions` | `tabs`, `favicon`, `contextMenus` | Same as Chrome | `tabs`, `http://*/*`, `https://*/*` |
+| `optional_permissions` | `tabs`, `favicon`, `contextMenus`, `nativeMessaging` | Same as Chrome | `tabs`, `nativeMessaging`, `http://*/*`, `https://*/*` |
 | Optional host access | `optional_host_permissions`: `http://*/*`, `https://*/*` | Same as Chrome | In `optional_permissions` (MV2) |
 | Host permissions at install | None | None | None |
 | `chrome_url_overrides` | `bookmarks` → `bookmarks.html` | Same as Chrome | Absent |
@@ -49,6 +49,7 @@ Why the rest stay required: `bookmarks` is the product; `storage` holds settings
 | One provider origin | All | The user clicks Verify Service or Refresh Models | The check still runs if the provider allows CORS | Not applicable |
 | Data collection: AI categories | Firefox | The user turns on **Enable AI** or Read page content | AI stays off | AI calls stop; the switch shows off |
 | Data collection: `authenticationInfo` | Firefox | The user clicks Verify Service or Refresh Models (same prompt as the provider origin) | Nothing is sent | Not applicable |
+| `nativeMessaging` (and in Firefox, data collection: `bookmarksInfo`, `browsingActivity`, `websiteContent`) | All | The user turns on **Allow local AI agents** in Settings > AI (off by default). A dialog explains it first. | The switch stays off; a toast explains | The bridge program is stopped and the switch shows off |
 
 A feature works only while its setting is on and its permission is granted. Revoking a permission turns the feature off at once (`permissions.onRemoved`), and Options shows the switch as off, but the synced setting is not rewritten, so a revoke on one device does not switch the feature off on another where it is still granted. Code: `src/services/permissions.ts`, `src/hooks/use-permission.tsx`, and `PermissionDialog`.
 
@@ -57,7 +58,7 @@ A feature works only while its setting is on and its permission is granted. Revo
 Paste into the "Single purpose" field:
 
 ```text
-Bookmark Scout helps users find, save, and organize their browser bookmarks. Every feature works on the user's own bookmarks: searching them, saving the current page or a link into a folder, editing and moving them, cleaning up duplicates, tracking parameters, and dead links, importing and exporting them, and, only if the user turns it on, asking an AI provider of the user's choice to suggest folders, tags, or summaries.
+Bookmark Scout helps users find, save, and organize their browser bookmarks. Every feature works on the user's own bookmarks: searching them, saving the current page or a link into a folder, editing and moving them, cleaning up duplicates, tracking parameters, and dead links, importing and exporting them, and, only if the user turns it on, asking an AI provider of the user's choice to suggest folders, tags, or summaries, or letting AI agents the user runs on their own computer look up their bookmarks.
 ```
 
 ## Per-permission justification
@@ -135,6 +136,14 @@ Optional in Chrome and Edge, never granted at install. When the user turns on Co
 ```
 
 Code: `src/services/context-menu.ts`. The menu is registered for `link` contexts only. Firefox does not allow `contextMenus` as an optional permission, so it is declared at install there (no prompt), and the menu still appears only after the user turns the setting on.
+
+### `nativeMessaging` (optional)
+
+```text
+Optional, never granted at install. When the user turns on "Allow local AI agents" in Settings > AI (off by default), the extension explains what agents can look up and asks for this permission. It then starts the bookmark-scout-mcp program the user installed on the same computer, which lets AI agents the user runs there (such as Claude Code, Codex, or Cursor) look up bookmarks: titles, URLs, folder paths, the current page's title and URL, and page text only while Read page content is on. Agents cannot change bookmarks. The program talks to agents only over a per-user socket or named pipe on that computer, never a network port, and nothing is sent to the developer. Turning the setting off stops the program.
+```
+
+Code: `agentBridge` in `src/lib/permission-catalog.ts`, `src/services/agent-bridge.ts`, and the program in `packages/mcp-bridge`. The native host name is `com.bookmark_scout.bridge`; its manifest allows only this extension's store id (`chrome-extension://<id>/`, or the Firefox add-on id).
 
 ### Optional host access: `http://*/*`, `https://*/*`
 

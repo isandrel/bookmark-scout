@@ -53,6 +53,14 @@ describe('permission catalog', () => {
       data_collection: ['authenticationInfo'],
     });
     expect(getPermissionRequest('aiProviderCheck', 'chrome')).toBeNull();
+    // Local AI agents: native messaging everywhere, plus what agents read in Firefox.
+    expect(getPermissionRequest('agentBridge', 'chrome')).toEqual({
+      permissions: ['nativeMessaging'],
+    });
+    expect(getPermissionRequest('agentBridge', 'firefox')).toEqual({
+      permissions: ['nativeMessaging'],
+      data_collection: ['bookmarksInfo', 'browsingActivity', 'websiteContent'],
+    });
   });
 
   it('marks a feature unsupported where the browser lacks its permission', () => {
@@ -64,11 +72,11 @@ describe('permission catalog', () => {
   it('builds the manifests and the Firefox declaration from the same table', () => {
     expect(getManifestApiPermissions('chrome')).toEqual({
       permissions: ['bookmarks', 'storage', 'activeTab', 'sidePanel', 'scripting', 'offscreen'],
-      optional: ['tabs', 'favicon', 'contextMenus'],
+      optional: ['tabs', 'favicon', 'contextMenus', 'nativeMessaging'],
     });
     expect(getManifestApiPermissions('firefox')).toEqual({
       permissions: ['bookmarks', 'storage', 'activeTab', 'scripting', 'contextMenus'],
-      optional: ['tabs'],
+      optional: ['tabs', 'nativeMessaging'],
     });
     expect(getFirefoxDataCollectionPermissions()).toEqual({
       required: ['none'],
@@ -81,6 +89,7 @@ describe('permission catalog', () => {
     expect(getSettingPermission('browserIconCache')).toBe('browserIcons');
     expect(getSettingPermission('aiEnabled')).toBe('ai');
     expect(getSettingPermission('aiReadPageContent')).toBe('pageReading');
+    expect(getSettingPermission('agentBridgeEnabled')).toBe('agentBridge');
     expect(getSettingPermission('showFavicons')).toBeUndefined();
   });
 });

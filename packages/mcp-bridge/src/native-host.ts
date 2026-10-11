@@ -17,6 +17,7 @@ import {
   type ExtensionMessage,
   extensionMessageSchema,
   type HelloMessage,
+  type HostMessage,
 } from "./protocol";
 import {
   endpointPath,
@@ -54,7 +55,7 @@ export function runNativeHost(options: NativeHostOptions): NativeHost {
     finish = resolve;
   });
 
-  const toExtension = (message: AgentMessage) => output.write(encodeFrame(message));
+  const toExtension = (message: HostMessage) => output.write(encodeFrame(message));
   const toAgent = (socket: Socket, message: ExtensionMessage) => {
     if (!socket.destroyed) socket.write(encodeFrame(message));
   };
@@ -83,8 +84,15 @@ export function runNativeHost(options: NativeHostOptions): NativeHost {
   }
 
   function listen(first: HelloMessage): void {
-    ensurePrivateDir(dir, environment);
-    const path = endpointPath(dir, first, environment);
+    let path: string;
+    try {
+      ensurePrivateDir(dir, environment);
+      path = endpointPath(dir, first, environment);
+    } catch (error) {
+      log(`Stopping: ${(error as Error).message}`);
+      stop();
+      return;
+    }
     // The folder is private, so a socket file here is a previous host's that did not clean up.
     if (environment.platform !== "win32") rmSync(path, { force: true });
     server = createServer(onConnection);
@@ -97,6 +105,7 @@ export function runNativeHost(options: NativeHostOptions): NativeHost {
       endpoint = path;
       startedAt = new Date().toISOString();
       announce();
+      toExtension({ type: "ready" });
     });
   }
 

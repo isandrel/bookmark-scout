@@ -12,8 +12,11 @@
 
 export const AI_HOST_PATH = '/ai-host.html';
 
-/** An AI call in progress: its service, and what made it, which its log entries name. */
-type ActiveCall = { provider: string; model: string; source: AIActivitySource };
+/**
+ * An AI call in progress: its service (none when it only reads pages, as for local agents), and
+ * what made it, which its log entries name.
+ */
+type ActiveCall = { provider?: string; model?: string; source: AIActivitySource };
 
 /** AI calls in progress, by token; the host's provider requests must carry one of them. */
 const activeCalls = new Map<string, ActiveCall>();
@@ -88,17 +91,16 @@ export type AIHostSession = {
 /**
  * Runs `work` with the AI host page open, then closes it once no other call needs it. Every
  * provider request it makes is logged under `source`. Errors from the provider come back already
- * described in `locale`.
+ * described in `locale`. Without `settings` the session can only read pages.
  */
 export async function withAIHost<T>(
-  settings: AISettings,
+  settings: AISettings | null,
   { locale, source }: { locale: SupportedLocale; source: AIActivitySource },
   work: (session: AIHostSession) => Promise<T>,
 ): Promise<T> {
   const token = crypto.randomUUID();
   activeCalls.set(token, {
-    provider: settings.provider,
-    model: settings.model,
+    ...(settings ? { provider: settings.provider, model: settings.model } : {}),
     source,
   });
   try {
@@ -123,6 +125,7 @@ export async function withAIHost<T>(
         system: string;
         prompt: string;
       }) => {
+        if (!settings) throw new Error('No AI service was given for this session.');
         const response = await askHost({
           type: QUICK_SAVE_MESSAGE.hostGenerate,
           token,

@@ -1,4 +1,5 @@
-import type { BrowserContext, Route, Worker } from '@playwright/test';
+import type { BrowserContext, Worker } from '@playwright/test';
+import { streamChunks } from './ai-helpers';
 import { expect, test, toastRegion } from './fixtures';
 import { replaceSettings, seedAIServices } from './storage';
 
@@ -11,28 +12,6 @@ function seedAskService(worker: Worker) {
 }
 
 type ChatRequest = { messages: { role: string; content: unknown }[]; stream?: boolean };
-
-/** Streams an OpenAI-style chat completion as server-sent events. */
-function streamChunks(route: Route, deltas: Record<string, unknown>[], finishReason: string) {
-  const chunk = (delta: Record<string, unknown>, finish: string | null) =>
-    `data: ${JSON.stringify({
-      id: 'chat-e2e',
-      object: 'chat.completion.chunk',
-      created: 1,
-      model: 'ask-model',
-      choices: [{ index: 0, delta, finish_reason: finish }],
-    })}\n\n`;
-  const body = [
-    ...deltas.map((delta) => chunk(delta, null)),
-    chunk({}, finishReason),
-    'data: [DONE]\n\n',
-  ].join('');
-  return route.fulfill({
-    status: 200,
-    headers: { 'access-control-allow-origin': '*', 'content-type': 'text/event-stream' },
-    body,
-  });
-}
 
 /** First turn: the model searches bookmarks. Second turn: it answers with a link. */
 async function stubAgentProvider(context: BrowserContext) {

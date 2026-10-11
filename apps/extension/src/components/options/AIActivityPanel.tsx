@@ -64,6 +64,9 @@ function ActivityRow({ entry }: { entry: AIActivityEntry }) {
           </span>
           <span className="min-w-0 flex-1 truncate">
             <span className="font-medium">{t(AI_ACTIVITY_SOURCES[entry.source])}</span>
+            {entry.client && (
+              <span className="text-muted-foreground">{` (${entry.client})`}</span>
+            )}
             <span className="text-muted-foreground">
               {` ${t('format_separator')} `}
               {entry.method} {url}

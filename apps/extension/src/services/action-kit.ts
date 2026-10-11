@@ -38,6 +38,12 @@ export type ActionClient = { kind: 'askAI' } | { kind: 'external'; name: string 
 
 export type ActionPage = { title: string; url: string };
 
+/** The page in the last focused window's active tab, when the browser shows its URL here. */
+export async function activeTabPage(): Promise<ActionPage | undefined> {
+  const [tab] = await browser.tabs.query({ active: true, lastFocusedWindow: true });
+  return tab?.url ? { title: tab.title ?? '', url: tab.url } : undefined;
+}
+
 /** What a tool call may use besides the bookmarks; each caller fills in what it can do. */
 export type ActionContext = {
   client: ActionClient;
@@ -107,6 +113,8 @@ export type ActionAgentExposure = {
    * the actions that change bookmarks.
    */
   partOfChanges?: boolean;
+  /** Offered to this kind of agent only, such as chat buttons, which only Ask AI can show. */
+  only?: ActionClient['kind'];
 };
 
 /** The icon an action shows in menus, by name; the menus map names to components. */

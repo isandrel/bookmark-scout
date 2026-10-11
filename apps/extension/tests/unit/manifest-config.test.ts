@@ -35,7 +35,12 @@ describe('manifest config', () => {
         'scripting',
         'offscreen',
       ]);
-      expect(manifest.optional_permissions).toEqual(['tabs', 'favicon', 'contextMenus']);
+      expect(manifest.optional_permissions).toEqual([
+        'tabs',
+        'favicon',
+        'contextMenus',
+        'nativeMessaging',
+      ]);
       expect(manifest.optional_host_permissions).toEqual(['http://*/*', 'https://*/*']);
     }
     // Firefox cannot make contextMenus optional and has no favicon or sidePanel permission.
@@ -47,7 +52,7 @@ describe('manifest config', () => {
       'scripting',
       'contextMenus',
     ]);
-    expect(firefox.optional_permissions).toEqual(['tabs']);
+    expect(firefox.optional_permissions).toEqual(['tabs', 'nativeMessaging']);
   });
 
   it('exposes no extension resources to web pages', () => {
@@ -66,7 +71,12 @@ describe('manifest config', () => {
 
     adaptManifestV2(manifest);
 
-    expect(manifest.optional_permissions).toEqual(['tabs', 'http://*/*', 'https://*/*']);
+    expect(manifest.optional_permissions).toEqual([
+      'tabs',
+      'nativeMessaging',
+      'http://*/*',
+      'https://*/*',
+    ]);
     expect(manifest).not.toHaveProperty('optional_host_permissions');
   });
 });

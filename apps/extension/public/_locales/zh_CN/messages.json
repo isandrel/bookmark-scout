@@ -3827,6 +3827,22 @@
         "message": "Bookmark Scout 不会收到网页内容。本地网络中的网页永远不会被读取。关闭此设置即可随时停止。",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "允许本地 AI 智能体",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "你在这台电脑上运行的 AI 智能体（如 Claude Code、Codex 或 Cursor）随后可以通过你安装的 bookmark-scout-mcp 程序查找你的书签：书签标题、URL 和文件夹名称，当前网页的标题和 URL，以及在“读取网页内容”开启时的网页文字。浏览器会请你允许扩展与该程序通信。",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "智能体只能查找信息，不能更改你的书签。Bookmark Scout 不会收到这些数据，但智能体可能会把读取到的内容发送给它自己的 AI 服务商。随时关闭此设置即可停止。",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "本地 AI 智能体的访问保持关闭。开启时，浏览器会请你允许扩展与 bookmark-scout-mcp 程序通信。",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "未发送任何内容。扩展程序将 API 密钥共享给服务商之前，浏览器会先征求你的同意。",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5702,6 +5718,66 @@
     "settings_askAiDisabledActionsDesc": {
         "message": "关闭你不希望 AI 执行的操作；关闭后它将完全不会提供给 AI。应用更改方案前总会先征求你的同意。",
         "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "本地 AI 智能体",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "允许本地 AI 智能体",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "让这台电脑上的 AI 智能体（如 Claude Code、Codex 或 Cursor）通过 bookmark-scout-mcp 程序查找你的书签。仅限此设备。",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "隐藏隐私值",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "按照隐私扫描的列表，替换智能体收到的标题和 URL 中的敏感 URL 参数、令牌和电子邮件地址。",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "本地智能体可以执行的操作",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "关闭你不希望智能体查找的操作，它将完全不会提供给智能体。本地智能体不能更改书签。",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "桥接程序",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "在这台电脑上安装 bookmark-scout-mcp 程序，并运行一次“$1”。它会在你的浏览器中注册自己，并显示如何将它添加到 Claude Code、Codex 或 Cursor。",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "未运行。请打开上方的开关，并在浏览器询问时允许访问。",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "正在启动桥接程序…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "已就绪。这台电脑上的 AI 智能体可以访问此浏览器配置文件。",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "桥接程序尚未安装，或尚未在此浏览器中注册。",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "桥接程序无法启动或已停止。Bookmark Scout 会自动重试。",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "重试",
+        "description": "Button: try to start the bridge program again now"
     },
     "settings_actionMoveUp": {
         "message": "上移 $1",

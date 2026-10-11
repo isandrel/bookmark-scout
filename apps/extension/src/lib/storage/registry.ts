@@ -92,6 +92,13 @@ export const STORAGE_ITEMS = {
    * bookmark ids and expire within the hour, so they stay in memory until the browser closes.
    */
   actionPlans: { area: 'session', name: 'ai.action-plans', v: 1, backup: 'exclude' },
+  /**
+   * Local: the random id that tells local AI agents which browser profile they reach through the
+   * bridge. It names this profile only, so it never syncs or goes into a backup.
+   */
+  agentBridgeProfile: { area: 'local', name: 'agent-bridge.profile', v: 1, backup: 'exclude' },
+  /** Session: whether the bridge for local AI agents is running, for Options to show. */
+  agentBridgeStatus: { area: 'session', name: 'agent-bridge.status', v: 1, backup: 'exclude' },
 } as const satisfies Record<string, StorageItem>;
 
 export type StorageItemId = keyof typeof STORAGE_ITEMS;
@@ -109,6 +116,10 @@ export const DEVICE_SETTING_KEYS = [
   'aiActivityRecording',
   /** Whether Ask AI adds the provider's web search, chosen where the chat runs. */
   'askAiWebSearch',
+  /** Access for local AI agents: the bridge program is installed on one computer. */
+  'agentBridgeEnabled',
+  'agentBridgeRedactUrls',
+  'agentBridgeDisabledActions',
 ] as const;
 
 export type DeviceSettingKey = (typeof DEVICE_SETTING_KEYS)[number];
