@@ -148,6 +148,8 @@ Use Bun for everything: `bun install`, `bun add`, `bun run`, and `bunx`. Never u
 - extension Edge end-to-end tests: `nx run extension:test:e2e:edge`
 - extension Firefox end-to-end smoke tests: `nx run extension:test:e2e:firefox`
 - extension performance measurements: `nx run extension:test:perf`
+- extension AI features against a real provider: `nx run extension:test:live` (on demand; skipped without the `BS_LIVE_AI_*` variables)
+- MCP bridge end to end with the extension: `nx run extension:test:e2e:bridge`
 - website build: `nx run website:build`
 - docs build: `nx run docs:build`
 
@@ -218,7 +220,7 @@ When reporting completion:
 
 ### Current repository constraint
 
-The current coverage map lives in the `extension-feature-test` skill; keep it current when tests change. Live network behavior and real provider compatibility are not covered, so do not represent lint or build success as test coverage.
+The current coverage map lives in the `extension-feature-test` skill; keep it current when tests change. Live network behavior is not covered, and real provider compatibility only by the on-demand live AI suite (`test:live`), never by a pull request check, so do not represent lint or build success as test coverage.
 
 ## Maintenance and dependencies
 

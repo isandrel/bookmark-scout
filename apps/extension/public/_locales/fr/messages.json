@@ -3627,10 +3627,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "La liste est triée par date ou par nom : l'ordre enregistré n'est visible qu'avec l'ordre de tri « Dossiers en premier ».",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "Impossible de déplacer l'élément. Veuillez réessayer.",
         "description": "Toast description when moving an item fails"

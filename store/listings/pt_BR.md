@@ -86,7 +86,7 @@ FERRAMENTAS DE IA OPCIONAIS (DESATIVADAS POR PADRÃO)
 Ative a IA nas Configurações e escolha um provedor de IA na nuvem, qualquer endpoint compatível com OpenAI ou um servidor de modelos no seu próprio computador, com sua própria chave de API quando o provedor exigir uma.
 • Sugestões de pasta para a página atual, incluindo a criação revisada de um novo caminho de pastas
 • Sugestões de tags e resumos curtos que você revisa antes de salvar
-• Planos de reorganização de pastas, com prévia antes de qualquer alteração (padrão)
+• Planos de reorganização de pastas, sempre com prévia antes de qualquer alteração
 • Exportação dos favoritos selecionados como contexto em Markdown ou XML para uma conversa com IA (funciona sem IA e não envia nada)
 • Perguntar à IA: converse sobre seus favoritos; a IA pode consultar favoritos correspondentes, os nomes das suas pastas e a página atual
 • Ler conteúdo da página (desativado por padrão): envia o texto legível de cada página, não só o título e o URL, para sugestões melhores

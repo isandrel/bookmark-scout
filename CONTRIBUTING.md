@@ -77,7 +77,7 @@ bun run dev
 bun run build
 
 # Build for Chrome
-bun run build:chrome
+bunx nx run extension:build:chrome
 
 # Build for Firefox
 bun run build:firefox
@@ -93,7 +93,7 @@ bun run build:edge
 1. Go to `chrome://extensions` or `edge://extensions`
 2. Enable "Developer mode"
 3. Click "Load unpacked"
-4. Select `apps/extension/dist/chrome-mv3`
+4. Select `apps/extension/dist/chrome-mv3` (Chrome) or `apps/extension/dist/edge-mv3` (Edge)
 
 **Firefox:**
 
@@ -184,7 +184,29 @@ bunx nx run extension:lint
 bun run test
 ```
 
-The test command runs sorting unit tests and headless Chromium E2E tests for popup, bookmarks manager, settings, maintenance, reports, and import/export flows. CI runs the same command without manual browser setup. Network-dependent and AI provider flows run offline: tests titled `[mocked provider contract]` stub AI providers (Vitest `ai` mocks and a Playwright-routed OpenAI-compatible endpoint) and route-mock network fetches; they verify Bookmark Scout's request/response contract, opt-in gating, and error handling, not live provider or website compatibility, which remains manually verified.
+The test command runs the unit tests and the headless Chromium E2E suite (popup, side panel, bookmarks manager, settings, quick save, maintenance, reports, import/export, Ask AI, and cross-surface journeys). CI runs the same suites without manual browser setup, plus the Edge suite and the Firefox smoke suite. Network-dependent and AI provider flows run offline: tests titled `[mocked provider contract]` stub AI providers (Vitest `ai` mocks and a Playwright-routed OpenAI-compatible endpoint) and route-mock network fetches; they verify Bookmark Scout's request/response contract, opt-in gating, and error handling, not live provider or website compatibility.
+
+Other suites, for the changes they cover:
+
+```bash
+# Edge and Firefox
+bunx nx run extension:test:e2e:edge
+bunx nx run extension:test:e2e:firefox
+
+# Local AI agents: the MCP bridge's own tests, then the compiled
+# bookmark-scout-mcp with the extension in Chromium (Linux and macOS)
+bun test packages/mcp-bridge
+bunx nx run extension:test:e2e:bridge
+
+# Latency and scrolling on a large library; run before and after a speed change
+bunx nx run extension:test:perf
+
+# AI features against a real provider; skipped unless the BS_LIVE_AI_* variables are set
+# (see apps/extension/tests/live/README.md)
+bunx nx run extension:test:live
+```
+
+CI runs the bridge tests when the extension or `packages/mcp-bridge` changes, the performance suite daily, and the live AI suite only on demand.
 
 ### TypeScript
 
@@ -204,18 +226,21 @@ The test command runs sorting unit tests and headless Chromium E2E tests for pop
 apps/extension/src/
 ├── components/     # Reusable UI components
 ├── hooks/          # Custom React hooks
-├── services/       # API/service layer
+├── services/       # Bookmark actions, AI, browser integrations, import/export
 ├── stores/         # Zustand stores
+├── lib/            # Storage, schemas, and low-level helpers
 ├── types/          # TypeScript types
 └── entrypoints/    # Extension entry points
 ```
+
+`packages/mcp-bridge` holds `bookmark-scout-mcp`, the MCP server and native messaging host that local AI agents use; its messages to the extension are defined in `packages/mcp-bridge/src/protocol.ts`.
 
 ## 🌐 Internationalization
 
 When adding user-facing text:
 
-1. Add strings to `public/_locales/{locale}/messages.json`
-2. Support all locales: `en`, `ja`, `ko`
+1. Add strings to `apps/extension/public/_locales/<locale>/messages.json`
+2. Add them to every locale listed under `[locales] extension` in `config/project.toml` (English, Japanese, Korean, Simplified and Traditional Chinese, Spanish, German, French, and Brazilian Portuguese)
 3. Use the existing i18n helper: `t("message_key")`
 
 ## 🤔 Questions?

@@ -3595,10 +3595,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "一覧は日付または名前で並べ替えられているため、保存した順序は並べ替え「フォルダ優先」でのみ表示されます。",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "項目を移動できませんでした。もう一度お試しください。",
         "description": "Toast description when moving an item fails"

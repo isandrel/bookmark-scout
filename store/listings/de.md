@@ -86,7 +86,7 @@ OPTIONALE KI-TOOLS (STANDARDMÄSSIG DEAKTIVIERT)
 Aktivieren Sie KI in den Einstellungen und wählen Sie einen Cloud-KI-Anbieter, einen beliebigen OpenAI-kompatiblen Endpunkt oder einen Modellserver auf Ihrem eigenen Computer, mit Ihrem eigenen API-Schlüssel, wenn der Anbieter einen verlangt.
 • Ordnervorschläge für die aktuelle Seite, einschließlich geprüfter Erstellung eines neuen Ordnerpfads
 • Tag-Vorschläge und kurze Zusammenfassungen, die Sie vor dem Speichern prüfen
-• Pläne zur Neuordnung von Ordnern, standardmäßig mit Vorschau, bevor etwas geändert wird
+• Pläne zur Neuordnung von Ordnern, immer mit Vorschau, bevor etwas geändert wird
 • Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren (funktioniert ohne KI und sendet nichts)
 • KI fragen: Chat über Ihre Lesezeichen; die KI kann passende Lesezeichen, Ihre Ordnernamen und die aktuelle Seite nachschlagen
 • Seiteninhalt lesen (standardmäßig deaktiviert): für bessere Vorschläge den lesbaren Text jeder Seite senden, nicht nur Titel und URL

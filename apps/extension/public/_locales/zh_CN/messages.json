@@ -3611,10 +3611,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "列表按日期或名称排序，因此保存的顺序只有在使用“文件夹优先”排序方式时才可见。",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "无法移动项目。请重试。",
         "description": "Toast description when moving an item fails"

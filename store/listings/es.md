@@ -86,7 +86,7 @@ HERRAMIENTAS DE IA OPCIONALES (DESACTIVADAS DE FORMA PREDETERMINADA)
 Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con tu propia clave de API si el proveedor la exige.
 • Sugerencias de carpeta para la página actual, incluida la creación revisada de una nueva ruta de carpetas
 • Sugerencias de etiquetas y resúmenes breves que revisas antes de guardar
-• Planes de reorganización de carpetas, con vista previa antes de cambiar nada (predeterminado)
+• Planes de reorganización de carpetas, siempre con vista previa antes de cambiar nada
 • Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA (funciona sin IA y no envía nada)
 • Preguntar a la IA: chatea sobre tus marcadores; la IA puede buscar marcadores coincidentes, los nombres de tus carpetas y la página actual
 • Leer el contenido de la página (desactivado de forma predeterminada): envía el texto legible de cada página, no solo su título y URL, para obtener mejores sugerencias

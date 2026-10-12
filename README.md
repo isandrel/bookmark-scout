@@ -95,29 +95,30 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 - [x] 📂 **Drag & Drop** — Organize bookmarks and folders with intuitive drag-and-drop
 - [x] ⚡ **Quick Add** — Save the current tab to any folder with one click
 - [x] 📱 **Side Panel** — Access your bookmarks from Chrome's side panel
-- [x] 🗂️ **Full Bookmarks Manager** — Replace Chrome's default bookmarks page with a custom table-based manager
+- [x] 🗂️ **Full Bookmarks Manager** — Replaces Chrome's bookmarks page and works like it: select rows with click, Ctrl/Cmd+click, and Shift+click, right-click menus (edit, cut, copy, paste, open all in tabs, a new window, or an incognito window, copy a folder link), drag and drop of rows, folders, and links from other pages, sort by name, add a bookmark or folder, `?id=` and `?q=` links (including Chrome's own folder links), an ARIA folder tree with Chrome's keys and separate account and device sections, and drawers in narrow windows. Choose which commands the menus show in Settings
 - [x] ↕️ **Configurable Sorting** — Sort bookmark views by date added, natural alphabetical order, or folders first
-- [x] ⚙️ **Options Page** — Configure appearance, search, behavior, AI, maintenance, metadata, security, analytics, and data settings
+- [x] ⚙️ **Options Page** — Ten categories (Saving & Search, Appearance, Behavior, AI, AI Tools, Maintenance, Metadata & Content, Security, Analytics, Import & Export) with a settings search, list and segment editors, and folded Advanced settings
 - [x] 🌙 **Dark Mode** — Use light, dark, or system theme settings
 - [x] 🎯 **Expand/Collapse All** — Quickly expand or collapse nested folders
 - [x] 📁 **Create Folders** — Create new folders directly from the popup
-- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page; in the manager, `/` filters, `?` lists shortcuts, Backspace or Alt+↑ goes up a folder, and `j`/`k` move between rows, and `s` opens saved searches
+- [x] ⌨️ **Keyboard Shortcuts** — In the popup, `/` searches, arrow keys move through and open folders, and Enter saves the current page, without taking any Ctrl/Cmd shortcut; in the manager, Chrome's keys: Ctrl/Cmd+A, C, X, V, Z, and Y, Enter to open, F2 to edit, Delete, `?` to list shortcuts, and `s` for saved searches
 - [x] 🔖 **Saved Searches** — Save the manager's filters, sort, and folder scope as named smart views, then open, rename, or delete them. Only the query is stored (on this device, not synced), so results always reflect your current bookmarks; deleted folders are skipped with a notice
-- [x] 🗑️ **Delete Items** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo
+- [x] 🗑️ **Delete and Undo** — Remove bookmarks and folders from the popup or manager with a confirmation dialog (on by default; can be turned off in Settings) and a 10-second Undo. The manager keeps an undo and redo history of the last 100 changes (Ctrl/Cmd+Z, Ctrl/Cmd+Y) for the browser session, including changes made from the popup, Ask AI, and local AI agents
 - [x] 🔗 **Duplicate Cleaner** — Find duplicate bookmarks and remove extras with configurable matching
-- [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes
+- [x] 🧹 **URL Cleaner** — Remove tracking parameters, normalize query strings, and preview URL changes, with undo
 - [x] 💀 **Dead Link Checker** — Scan selected bookmarks for unreachable links, then review and apply repairs (delete, redirect target, archived copy, or edited URL) with undo
 - [x] 🧾 **Metadata Fetcher** — Fetch page titles and descriptions, then apply only the titles you select; descriptions are shown for review and are not saved
 - [x] 🖼️ **Refresh Site Icons** — Download each bookmarked site's own icon (never from a third-party icon service), review the results, and keep them on this device so bookmarks show real icons even when the browser has none cached, and in Firefox
 - [x] 🛡️ **Privacy Scanner** — Detect sensitive query parameters, fragments, emails, and UUIDs in bookmarks
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
-- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
-- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
+- [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. JSON exports keep each bookmark's tags and summary. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
+- [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are always previewed before they apply, each with undo
+- [x] 💬 **Ask AI** — A chat in the popup and side panel that searches your bookmarks (by words, folder, tag, site, or date), finds duplicates, checks links, and suggests folders. When you ask, it saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it; answers can end with buttons for the next step. Choose what it may do in Settings
 - [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents](https://docs.bookmark-scout.com/guides/local-agents)
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on Context Menu in Settings
 - [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
-- [x] ⚙️ **Settings Sync** — Sync extension preferences with `chrome.storage.sync`
+- [x] ⚙️ **Settings Sync and Backup** — Only the settings you change sync with `chrome.storage.sync`; device-specific values and AI services stay on the device. A backup file saves and restores settings, custom prompts, AI services (never API keys), and saved searches
 
 > **🤖 AI Features Disclaimer**
 >
@@ -131,14 +132,14 @@ Visit **[https://bookmark-scout.com](https://bookmark-scout.com)** for the landi
 
 ### 🟡 Partial
 
-- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage: not synced, not searchable, and not included in bookmark exports (AI context exports include them when enabled)
+- [x] 🏷️ **Tags and Summaries** — Save, edit, and clear tags and summaries in Bookmark Details, or save reviewed AI suggestions. They are stored only in this browser's local extension storage and are not synced or searchable in the popup; JSON bookmark exports and imports carry them, Ask AI can look them up, and AI context exports include them when enabled
 - [x] 🎛️ **AI tool limits** — Tag count and style, summary length, and reorganization folder limits are sent to the provider as instructions; the provider's output is not checked against them
-- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a smoke suite in Firefox (popup, side panel page, manager, settings, import/export, and reports); both jobs are required checks. In Firefox, the browser's icon cache is unavailable (no favicon API), so bookmarks show icons saved with Refresh Site Icons or a generic icon, and the manager opens from the popup's Open bookmark manager button, because Firefox cannot replace the bookmarks page
+- [x] 🦊 **Firefox and Edge** — CI runs the full browser test suite in Edge and a 17-test smoke suite in Firefox (popup, side panel page, manager address, undo, folder tree keys, menus, and drag and drop, quick save shortcut setup, settings, import/export, and reports); both are required checks. In Firefox, the browser's icon cache is unavailable (no favicon API), so bookmarks show icons saved with Refresh Site Icons or a generic icon, and the manager opens from the popup's Open bookmark manager button, because Firefox cannot replace the bookmarks page
 
 ### 🚧 Current Focus
 
 - [ ] 🧪 **Browser Coverage** — Grow the Firefox smoke suite toward the full suite (context menus, drag and drop, network and AI tools)
-- [ ] 🛒 **Store Distribution** — Listing copy (en/ja/ko), permission justifications, privacy disclosures, a privacy policy draft, screenshots, and submission checklists are in [`store/`](store/). Submission is manual and awaits approval; the Firefox package has its permanent add-on ID and data collection declaration
+- [ ] 🛒 **Store Distribution** — The Chrome Web Store listing is live. Listing copy in nine languages, permission justifications, privacy disclosures, the privacy policy, screenshots, and submission checklists for Firefox Add-ons and Edge Add-ons are in [`store/`](store/); those submissions are manual and await approval. The Firefox package has its permanent add-on ID and data collection declaration
 
 ---
 
@@ -246,6 +247,9 @@ bun run build:all
 
 # Lint
 bun run lint
+
+# Extension unit and Chromium end-to-end tests
+bun run test
 ```
 
 ---
