@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
 import { getStoredAIProviderConfig, saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
-import { addAIService, getAIServicesState } from '@/lib/ai-services-storage';
+import { addAIService, getAIServicesState, updateAIService } from '@/lib/ai-services-storage';
 import { getBookmarkTableView, updateBookmarkTableView } from '@/lib/bookmark-table-view-storage';
 import { getPromptLibrary, saveCustomPrompt, setActivePrompt } from '@/lib/prompt-library-storage';
 import { createSavedSearch, getSavedSearches } from '@/lib/saved-searches-storage';
@@ -68,14 +68,15 @@ describe('backup file', () => {
     fakeBrowser.reset();
     await saveSettings({ language: 'en' });
 
-    await restoreBackup(json);
+    expect((await restoreBackup(json)).needsSetup).toEqual([{ name: 'Work', fields: ['apiKey'] }]);
     expect(await getSettings()).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '42' });
     expect((await getBookmarkTableView()).sorting).toEqual([{ id: 'title', desc: true }]);
     const library = await getPromptLibrary();
     expect(library.prompts.map((prompt) => prompt.name)).toEqual(['Mine']);
     expect(library.active.auto_tagging).toBe(library.prompts[0].id);
     expect((await getAIServicesState()).services.map((item) => item.id)).toEqual([service.id]);
-    expect(await getStoredAIProviderConfig(service.id)).toEqual({});
+    // The key never travels; the service waits for it.
+    expect(await getStoredAIProviderConfig(service.id)).toEqual({ pendingSecrets: ['apiKey'] });
     expect((await getSavedSearches()).map((search) => search.name)).toEqual(['Docs']);
     expect(await getSearchHistory()).toEqual([]);
   });
@@ -86,9 +87,64 @@ describe('backup file', () => {
     await saveSettings({ theme: 'light' });
     json.items['sync:settings'] = { v: 99, data: { theme: 'dark' } };
 
-    expect(await restoreBackup(JSON.stringify(json))).not.toContain('settings');
+    expect((await restoreBackup(JSON.stringify(json))).restored).not.toContain('settings');
     expect((await getPromptLibrary()).prompts).toEqual([]);
     expect((await getSettings()).theme).toBe('light');
+  });
+
+  it('keeps AI service endpoints, never their keys or headers, and says what to enter again', async () => {
+    const custom = await addAIService('custom', 'Local');
+    await updateAIService(custom.id, { model: 'my-model' });
+    await saveStoredAIProviderConfig(custom.id, {
+      baseUrl: 'http://localhost:8080/v1',
+      extraHeaders: '{"Authorization":"Bearer synthetic-header-secret"}',
+    });
+    const azure = await addAIService('azure', 'Cloud');
+    await saveStoredAIProviderConfig(azure.id, {
+      apiKey: 'synthetic-azure-key',
+      options: { resourceName: 'my-resource', apiVersion: '' },
+    });
+    const json = await exportBackup();
+    expect(json).not.toContain('synthetic-header-secret');
+    expect(json).not.toContain('synthetic-azure-key');
+    expect(JSON.parse(json).aiEndpoints).toEqual({
+      [custom.id]: { baseUrl: 'http://localhost:8080/v1', leftOut: ['extraHeaders'] },
+      [azure.id]: { options: { resourceName: 'my-resource' }, leftOut: ['apiKey'] },
+    });
+
+    fakeBrowser.reset();
+    await saveSettings({ language: 'en' });
+    const { needsSetup } = await restoreBackup(json);
+    expect(needsSetup).toEqual([
+      { name: 'Local', fields: ['extraHeaders'] },
+      { name: 'Cloud', fields: ['apiKey'] },
+    ]);
+    expect((await getAIServicesState()).services.find((item) => item.id === custom.id)?.model).toBe(
+      'my-model',
+    );
+    expect(await getStoredAIProviderConfig(custom.id)).toEqual({
+      baseUrl: 'http://localhost:8080/v1',
+      pendingSecrets: ['extraHeaders'],
+    });
+    expect(await getStoredAIProviderConfig(azure.id)).toEqual({
+      options: { resourceName: 'my-resource' },
+      pendingSecrets: ['apiKey'],
+    });
+
+    // Entering the key again finishes the setup.
+    await saveStoredAIProviderConfig(azure.id, { apiKey: 'synthetic-azure-key' });
+    expect(await getStoredAIProviderConfig(azure.id)).toEqual({
+      apiKey: 'synthetic-azure-key',
+      options: { resourceName: 'my-resource' },
+    });
+
+    // Restoring on a device that still has the secrets keeps them and needs nothing.
+    await saveStoredAIProviderConfig(custom.id, { extraHeaders: '{"X":"y"}' });
+    expect((await restoreBackup(json)).needsSetup).toEqual([]);
+    expect(await getStoredAIProviderConfig(custom.id)).toEqual({
+      baseUrl: 'http://localhost:8080/v1',
+      extraHeaders: '{"X":"y"}',
+    });
   });
 
   it('rejects a file that is not a backup', async () => {

@@ -33,7 +33,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 | Bookmark table in the manager: shown columns, their order, and the sort | Browser sync storage | Same as settings |
 | Bookmark table column widths and page size | Local storage on this device | No |
 | AI services: each service's name, provider, and model | Local storage on this device | No |
-| AI connection settings: API key, Base URL, extra headers, provider-specific fields | Local storage on this device | No, and never in a backup file |
+| AI connection settings: API key, Base URL, extra headers, provider-specific fields | Local storage on this device | No. A backup file holds the Base URL and provider-specific fields, never the API key or extra headers |
 | Model lists fetched from your AI services, kept for 7 days | Local storage on this device | No |
 | AI activity, only while **Record requests** is on (off by default, per device): the last AI requests with what was sent and what came back, including bookmark titles, URLs, folder paths, and with **Read page content** on, page text. API keys and other credentials are removed before storing; turning recording off deletes it | Local storage on this device | No |
 | Tags, summaries, saved searches, recent folders, recent searches | Local storage on this device | No |
@@ -43,7 +43,7 @@ It does not read the content of the pages you visit. After a quick save shortcut
 
 Scan results from the Tools sidebar are kept only while their dialog is open. Uninstalling the extension removes what it stored; your bookmarks stay in the browser.
 
-**Export** at the bottom of Settings saves a backup file with the settings you changed, your custom prompts, AI services (name, provider, and model), saved searches, and the table's columns and sort. It never holds API keys or other AI connection settings, and it is not encrypted. See [Settings](/settings).
+**Export** at the bottom of Settings saves a backup file with the settings you changed, your custom prompts, AI services (name, provider, model, Base URL, and provider-specific fields), saved searches, and the table's columns and sort. It never holds API keys or extra headers, and it is not encrypted. See [Settings](/settings).
 
 ## When data leaves your browser
 

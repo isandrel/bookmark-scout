@@ -3237,6 +3237,18 @@
         "message": "設定、プロンプト、AI サービス、保存した検索を復元しました。バックアップに API キーは含まれないため、足りないキーは 設定 > AI で追加してください。",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "設定、プロンプト、ベースURLを含むAIサービス、保存した検索を復元しました。バックアップに含まれないため復元されていないもの: $1。設定 > AI で入力し直してください。それまでこれらのサービスには「要設定」と表示されます。",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "「$1」の$2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "要設定",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "ライトテーマに切り替え",
         "description": "Theme toggle accessible name"
