@@ -1,0 +1,8 @@
+# The bookmark manager's folder tree. Read by src/components/bookmarks/FolderTree.tsx.
+
+# Indentation per level, in pixels
+indent_px = 12
+
+# Folders nested deeper than this many levels below the top indent no further and show their
+# depth instead, so deep folders keep room for their names in the sidebar
+max_indent_levels = 6

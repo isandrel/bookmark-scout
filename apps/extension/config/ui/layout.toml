@@ -1,9 +1,14 @@
-# Bookmark manager page layout. Read by src/components/page/BookmarksPage.tsx.
+# Bookmark manager page layout. Read by src/hooks/use-manager-sidebars.ts.
 
 [manager]
 # Narrower windows than this, in pixels, leave the table too little room beside both the folder
 # and the tools sidebar, so opening one sidebar closes the other.
 both_sidebars_min_width = 1280
+
+# Narrower windows than this, in pixels, show the folder and tools sidebars over the table, as
+# drawers, instead of beside it: they are closed when the page loads, and the folder drawer
+# closes once a folder is picked.
+sidebar_overlay_below_width = 768
 
 # Whether each sidebar is open when the page loads.
 folders_open = true

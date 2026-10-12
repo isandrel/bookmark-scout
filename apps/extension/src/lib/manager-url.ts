@@ -128,12 +128,13 @@ export function getManagerFolderLink(
 }
 
 /**
- * The manager's tab title: the search, or the open folder's name, before the extension name. The
- * top level keeps the page's usual title.
+ * The manager's tab title: the search, or the open folder's name, before the page's usual title
+ * ("Work - Bookmarks - Bookmark Scout"). The top level has the usual title alone.
  */
 export function getManagerPageTitle(folderName: string | undefined, query: string): string {
+  const pageTitle = getExtensionPageTitle('page_bookmarks');
   const search = query.trim();
-  if (search) return t('page_managerSearchTitle', [search, t('extName')]);
-  if (folderName) return t('page_managerFolderTitle', [folderName, t('extName')]);
-  return getExtensionPageTitle('page_bookmarks');
+  if (search) return t('page_managerSearchTitle', [search, pageTitle]);
+  if (folderName) return t('page_managerFolderTitle', [folderName, pageTitle]);
+  return pageTitle;
 }
