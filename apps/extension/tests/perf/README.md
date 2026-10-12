@@ -33,7 +33,7 @@ An action that does not finish within 60 seconds is reported as timed out, and t
 `harness.ts` measures from outside the app; the extension carries no measurement code.
 
 - `seedLibrary` creates the library in `perf.toml` (1,530 folders and 19,500 bookmarks by default) in about two seconds.
-- Each page opens with the CPU slowed by `cpu_throttle` through the DevTools protocol.
+- Each page opens with the CPU slowed by `cpu_throttle` through the DevTools protocol (`ci_cpu_throttle` when `CI` is set, since runners are already slower).
 - An init script records input timestamps, Long Animation Frames, and Event Timing entries, and a `requestAnimationFrame` check finds the first frame that shows the expected result. Only visible elements count: collapsed panels keep their rows in the page.
 - Each scenario runs `repeats` times; the report gives the median and the worst run.
 
