@@ -479,6 +479,18 @@
         "message": "Tous les paramètres ont retrouvé leurs valeurs par défaut.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Vos paramètres sont rétablis",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Réinitialiser tous les paramètres ?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Chaque paramètre de chaque onglet revient à sa valeur par défaut : ceux synchronisés entre vos appareils comme ceux gardés sur cet appareil uniquement. Vos favoris, services d’IA, prompts enregistrés et recherches enregistrées ne changent pas. Vous pourrez annuler juste après.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Erreur lors de la réinitialisation des paramètres",
         "description": "Toast title for settings reset error"
@@ -3272,6 +3284,18 @@
     "toast_backupRestoredDescription": {
         "message": "Vos paramètres, prompts, services d'IA et recherches enregistrées ont été restaurés. Les sauvegardes ne contiennent pas de clés API : ajoutez celles qui manquent dans Paramètres > IA.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
+    },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "Vos paramètres, prompts, services d’IA avec leurs URL de base et recherches enregistrées ont été restaurés. Non restauré, car une sauvegarde ne les contient jamais : $1. Saisissez-les à nouveau dans Paramètres > IA ; d’ici là, ces services affichent « À configurer ».",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "$2 de « $1 »",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "À configurer",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
     },
     "action_switchToLight": {
         "message": "Passer au thème clair",

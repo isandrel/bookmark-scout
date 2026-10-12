@@ -479,6 +479,18 @@
         "message": "All settings have been restored to defaults.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Your settings are back",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Reset all settings?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Every setting on every tab goes back to its default: both the ones synced across your devices and the ones kept on this device only. Your bookmarks, AI services, saved prompts, and saved searches are not changed. You can undo the reset right after.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Error resetting settings",
         "description": "Toast title for settings reset error"
@@ -3272,6 +3284,18 @@
     "toast_backupRestoredDescription": {
         "message": "Your settings, prompts, AI services, and saved searches were restored. Backups have no API keys: add any that are missing in Settings > AI.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
+    },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "Your settings, prompts, AI services with their Base URLs, and saved searches were restored. Not restored, because backups never hold them: $1. Enter them again in Settings > AI; until then those services show Needs setup.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "$2 for “$1”",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "Needs setup",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
     },
     "action_switchToLight": {
         "message": "Switch to light theme",

@@ -70,3 +70,57 @@ test('Export saves a backup without API keys, and Import restores it', async ({
     openai: { apiKey: 'sk-e2e-backup-secret' },
   });
 });
+
+test('a restored backup keeps AI endpoints, lists the secrets to enter again, and marks those services', async ({
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  await setSettings(extensionWorker, { language: 'en' });
+  await seedAIServices(extensionWorker, [
+    {
+      provider: 'custom',
+      name: 'Local',
+      model: 'my-model',
+      credentials: {
+        baseUrl: 'http://localhost:8080/v1',
+        extraHeaders: '{"Authorization":"Bearer e2e-header-secret"}',
+      },
+    },
+  ]);
+
+  await page.goto(`chrome-extension://${extensionId}/options.html`);
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export' }).click();
+  const raw = await readFile(await (await downloadPromise).path(), 'utf8');
+  expect(raw).not.toContain('e2e-header-secret');
+  expect(JSON.parse(raw).aiEndpoints).toEqual({
+    custom: { baseUrl: 'http://localhost:8080/v1', leftOut: ['extraHeaders'] },
+  });
+
+  // A new computer: nothing stored.
+  await extensionWorker.evaluate(async () => {
+    await Promise.all([chrome.storage.sync.clear(), chrome.storage.local.clear()]);
+  });
+  await writeStored(extensionWorker, STORAGE_ITEMS.settings, { language: 'en' });
+  await page.reload();
+  await page.getByLabel('Import', { exact: true }).setInputFiles({
+    name: 'bookmark-scout-backup.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(raw),
+  });
+  await expect(
+    toastRegion(page).getByText(
+      'Your settings, prompts, AI services with their Base URLs, and saved searches were restored. Not restored, because backups never hold them: Extra Headers JSON for “Local”. Enter them again in Settings > AI; until then those services show Needs setup.',
+      { exact: true },
+    ),
+  ).toBeVisible();
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.aiCredentials)).toEqual({
+    custom: { baseUrl: 'http://localhost:8080/v1', pendingSecrets: ['extraHeaders'] },
+  });
+
+  await page.getByRole('tab', { name: 'AI', exact: true }).click();
+  const service = page.getByTestId('ai-service').filter({ hasText: 'Local' });
+  await expect(service.getByTestId('ai-service-needs-setup')).toHaveText('Needs setup');
+  await expect(service).toContainText('my-model');
+});
