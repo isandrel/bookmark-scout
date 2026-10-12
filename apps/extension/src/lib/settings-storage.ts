@@ -272,10 +272,11 @@ export function registerSettingsSaveListener(): void {
 }
 
 /**
- * Reset every setting this release knows to its default, in both scopes.
+ * Reset every setting this release knows to its default, in both scopes (synced across devices
+ * and this device's own). Resolves to the settings before, for `undoResetSettings`.
  */
-export async function resetSettings(): Promise<void> {
-  await changeSettings(
+export async function resetSettings(): Promise<Settings> {
+  const { before } = await changeSettings(
     () => defaultSettings,
     (scope, stored) =>
       Object.fromEntries(
@@ -284,6 +285,17 @@ export async function resetSettings(): Promise<void> {
         ),
       ),
   );
+  return before;
+}
+
+/**
+ * Undoes `resetSettings`: every setting that `previous` had changed from its default gets that
+ * value back, in its own scope. A setting changed again since the reset keeps the newer value
+ * only where `previous` had left it at its default.
+ */
+export async function undoResetSettings(previous: Settings): Promise<void> {
+  const { errors } = await saveValidSettings(getChangedSettings(defaultSettings, previous));
+  if (Object.keys(errors).length > 0) throw new SettingsValidationError(errors);
 }
 
 /**

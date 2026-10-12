@@ -169,8 +169,11 @@ test('a backup made after changes in Options and the manager restores them, with
   expect(await readStored(extensionWorker, STORAGE_ITEMS.aiServices)).toMatchObject({
     services: [{ provider: 'openai', name: 'Work' }],
   });
-  // The key was never in the file, so it stays lost; tags were never in it either.
-  expect(await readStored(extensionWorker, STORAGE_ITEMS.aiCredentials)).toBeUndefined();
+  // The key was never in the file, so it stays lost and the service waits for it; tags were never
+  // in it either.
+  expect(await readStored(extensionWorker, STORAGE_ITEMS.aiCredentials)).toEqual({
+    openai: { pendingSecrets: ['apiKey'] },
+  });
   expect(await readStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata)).toBeUndefined();
 
   // The open pages show the restored values.

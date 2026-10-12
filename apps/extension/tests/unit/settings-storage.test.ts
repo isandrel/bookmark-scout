@@ -21,6 +21,7 @@ import {
   saveValidSettings,
   SettingsValidationError,
   settingsValue,
+  undoResetSettings,
   validateSettingsUpdate,
 } from '@/lib/settings-storage';
 import { DEVICE_SETTING_KEYS, storageAreaKey } from '@/lib/storage/registry';
@@ -204,6 +205,17 @@ describe('settings persistence', () => {
     expect(await readStored()).toEqual({ settingFromANewerRelease: 1 });
     expect(await readStoredOnDevice()).toBeUndefined();
     expect(await getSettings()).toEqual(defaultSettings);
+  });
+
+  it('undoes a reset in both scopes, keeping a change made since to a default setting', async () => {
+    await saveSettings({ theme: 'dark', quickSaveFixedFolder: '42' });
+    const previous = await resetSettings();
+    expect(previous).toMatchObject({ theme: 'dark', quickSaveFixedFolder: '42' });
+    await saveSettings({ showFavicons: false });
+
+    await undoResetSettings(previous);
+    expect(await readStored()).toEqual({ theme: 'dark', showFavicons: false });
+    expect(await readStoredOnDevice()).toEqual({ quickSaveFixedFolder: '42' });
   });
 
   it('follows changes to either scope live', async () => {

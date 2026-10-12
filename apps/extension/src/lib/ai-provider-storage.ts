@@ -4,12 +4,26 @@
  */
 import { z } from 'zod';
 
+/**
+ * The connection fields that may hold a secret: the API key, and extra headers, which often carry
+ * a key or token. They never leave the device, not even in a backup file; the endpoint fields
+ * (Base URL and the provider's extra fields) do go into a backup.
+ */
+export const AI_SECRET_FIELDS = ['apiKey', 'extraHeaders'] as const;
+
+export type AISecretField = (typeof AI_SECRET_FIELDS)[number];
+
 const credentialsSchema = z.object({
   apiKey: z.string().optional(),
   baseUrl: z.string().optional(),
   extraHeaders: z.string().optional(),
   /** Values of the provider's extra connection fields, keyed by field name. */
   options: z.record(z.string(), z.string()).optional(),
+  /**
+   * Secret fields a restored backup could not bring back and the user has not entered again
+   * since; the service shows as needing setup until they are.
+   */
+  pendingSecrets: z.array(z.enum(AI_SECRET_FIELDS)).optional(),
 });
 
 /** What is stored for one service. The model is the service's own (`AIService.model`). */
@@ -56,18 +70,25 @@ export const aiModelListValue = defineStoredValue<Record<string, CachedModelList
   },
 );
 
-export async function getStoredAIProviderConfig(serviceId: string): Promise<StoredAIProviderConfig> {
+export async function getStoredAIProviderConfig(
+  serviceId: string,
+): Promise<StoredAIProviderConfig> {
   return (await aiProviderConfigValue.get())[serviceId] ?? {};
 }
 
+/** Saves the given fields of a service; a secret entered again no longer waits for setup. */
 export async function saveStoredAIProviderConfig(
   serviceId: string,
   config: StoredAIProviderConfig,
 ): Promise<void> {
-  await aiProviderConfigValue.update((configs) => ({
-    ...configs,
-    [serviceId]: { ...(configs[serviceId] ?? {}), ...config },
-  }));
+  await aiProviderConfigValue.update((configs) => {
+    const { pendingSecrets, ...saved } = { ...(configs[serviceId] ?? {}), ...config };
+    const pending = pendingSecrets?.filter((field) => !config[field]);
+    return {
+      ...configs,
+      [serviceId]: { ...saved, ...(pending?.length ? { pendingSecrets: pending } : {}) },
+    };
+  });
 }
 
 /** Removes a service's credentials and its fetched model list. */

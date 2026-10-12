@@ -176,16 +176,21 @@ test('an all-bookmarks JSON export has no nameless wrapper and re-imports withou
   expect(topLevel).not.toContain('Untitled Folder');
 });
 
-test('a JSON export carries tags and summaries by URL, and importing it gives them back', async ({
+test("a JSON export carries each bookmark's own tags and summary, and importing it gives them back", async ({
   extensionId,
   extensionWorker,
   page,
 }) => {
+  // Two bookmarks of one page, each with its own tags and summary.
   const folder = await seedFolder(extensionWorker, 'E2E Tagged', [
     { title: 'Tagged Link', url: 'https://e2e.invalid/tagged' },
+    { title: 'Same page for work', url: 'https://e2e.invalid/same' },
+    { title: 'Same page at home', url: 'https://e2e.invalid/same' },
   ]);
   await writeStored(extensionWorker, STORAGE_ITEMS.bookmarkMetadata, {
     [folder.ids['Tagged Link']]: { tags: ['docs'], summary: 'A guide' },
+    [folder.ids['Same page for work']]: { tags: ['work'], summary: 'For work' },
+    [folder.ids['Same page at home']]: { tags: ['home'] },
   });
   await setSettings(extensionWorker, { dataDefaultExportFormat: 'json' });
 
@@ -193,9 +198,13 @@ test('a JSON export carries tags and summaries by URL, and importing it gives th
   const downloadPromise = page.waitForEvent('download');
   await toolCard(page, 'Export Bookmarks').getByRole('button', { name: 'Export' }).click();
   const raw = await readFile(await (await downloadPromise).path(), 'utf8');
-  expect(JSON.parse(raw).metadata).toEqual({
-    'https://e2e.invalid/tagged': { tags: ['docs'], summary: 'A guide' },
-  });
+  const file = JSON.parse(raw);
+  expect(file.metadata).toBeUndefined();
+  expect(file.children[0].children).toEqual([
+    expect.objectContaining({ title: 'Tagged Link', tags: ['docs'], summary: 'A guide' }),
+    expect.objectContaining({ title: 'Same page for work', tags: ['work'], summary: 'For work' }),
+    expect.objectContaining({ title: 'Same page at home', tags: ['home'] }),
+  ]);
 
   const target = await seedFolder(extensionWorker, 'E2E Tag Target', []);
   await openTools(page, extensionId, target.folderId);
@@ -211,15 +220,22 @@ test('a JSON export carries tags and summaries by URL, and importing it gives th
   await expect(toastRegion(page).getByText('✓ Import Complete', { exact: true })).toBeVisible();
 
   const [importedFolder] = await childrenOf(extensionWorker, target.folderId);
-  const [imported] = await childrenOf(extensionWorker, importedFolder.id);
+  const [tagged, work, home] = await childrenOf(extensionWorker, importedFolder.id);
+  const stored = async () => {
+    const all =
+      (await readStored<Record<string, unknown>>(
+        extensionWorker,
+        STORAGE_ITEMS.bookmarkMetadata,
+      )) ?? {};
+    return [all[tagged.id], all[work.id], all[home.id]];
+  };
   await expect
-    .poll(
-      async () =>
-        (
-          await readStored<Record<string, unknown>>(extensionWorker, STORAGE_ITEMS.bookmarkMetadata)
-        )?.[imported.id],
-    )
-    .toEqual({ tags: ['docs'], summary: 'A guide' });
+    .poll(stored)
+    .toEqual([
+      { tags: ['docs'], summary: 'A guide' },
+      { tags: ['work'], summary: 'For work' },
+      { tags: ['home'] },
+    ]);
 });
 
 test('import reports an empty file as a failure without opening a preview', async ({

@@ -106,6 +106,8 @@ function AddServiceDialog({
 
 export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boolean }) {
   const { state, isLoading } = useAIServices();
+  // Services a restored backup could not fully set up: their API key or headers are missing.
+  const { value: credentials } = useStoredValue(aiProviderConfigValue);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [deleting, setDeleting] = useState<AIService | null>(null);
@@ -173,6 +175,14 @@ export function AIServicesPanel({ showAdvanced = false }: { showAdvanced?: boole
                       {isDefault && (
                         <span className="rounded-sm bg-accent px-1.5 py-0.5 text-xs font-medium text-accent-foreground">
                           {t('options_aiServiceDefault')}
+                        </span>
+                      )}
+                      {Boolean(credentials[service.id]?.pendingSecrets?.length) && (
+                        <span
+                          data-testid="ai-service-needs-setup"
+                          className="shrink-0 rounded-sm border border-warning/40 bg-warning-wash px-1.5 py-0.5 text-xs font-medium text-warning"
+                        >
+                          {t('options_aiServiceNeedsSetup')}
                         </span>
                       )}
                     </span>
