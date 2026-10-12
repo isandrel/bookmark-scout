@@ -125,7 +125,8 @@ test('deep folders stop indenting in the tree, and a deep path collapses its mid
 
   // The path shows its first folder, a menu for the middle, and its last folders.
   const breadcrumb = page.getByTestId('breadcrumb');
-  await expect(breadcrumb.getByRole('button', { name: 'Bookmarks Bar' })).toBeVisible();
+  // The bar's name differs by browser (Edge: Favorites bar), so it comes from the seed.
+  await expect(breadcrumb.getByRole('button', { name: seeded.barTitle })).toBeVisible();
   await expect(breadcrumb.getByRole('button', { name: 'Deep 10' })).toBeVisible();
   await expect(breadcrumb.getByRole('button', { name: 'Deep 3', exact: true })).toHaveCount(0);
   await breadcrumb.getByTestId('breadcrumb-more').click();
