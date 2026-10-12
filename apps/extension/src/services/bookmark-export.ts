@@ -36,7 +36,10 @@ export interface ExportOptions {
   htmlIndentSpaces?: number;
   /** Markdown list indentation size */
   markdownIndentSpaces?: number;
-  /** Tags and summaries by bookmark id; JSON writes them keyed by URL, so an import can match them. */
+  /**
+   * Tags and summaries by bookmark id; JSON writes them on each bookmark's own entry, so an import
+   * gives them back to that bookmark, also when several bookmarks share a URL.
+   */
   metadata?: StoredBookmarkMetadataById;
 }
 
@@ -133,6 +136,9 @@ export const jsonFormat: ExportFormat = {
 
       if (n.url) {
         result.url = n.url;
+        const stored = options?.metadata?.[n.id];
+        if (stored?.tags?.length) result.tags = stored.tags;
+        if (stored?.summary) result.summary = stored.summary;
       }
 
       if (includeDates) {
@@ -147,21 +153,11 @@ export const jsonFormat: ExportFormat = {
       return result;
     };
 
-    // Tags and summaries by URL: bookmark ids differ on every browser, URLs do not.
-    const metadata: Record<string, StoredBookmarkMetadata> = {};
-    const collectMetadata = (n: BookmarkTreeNode) => {
-      const stored = n.url ? options?.metadata?.[n.id] : undefined;
-      if (n.url && stored) metadata[n.url] = stored;
-      for (const child of n.children ?? []) collectMetadata(child);
-    };
-    collectMetadata(root);
-
     // The container keeps a title for readability; importers take its children as top level.
     return JSON.stringify(
       {
         title: root.title,
         children: (root.children ?? []).map(cleanNode),
-        ...(Object.keys(metadata).length > 0 ? { metadata } : {}),
       },
       null,
       indentSize,

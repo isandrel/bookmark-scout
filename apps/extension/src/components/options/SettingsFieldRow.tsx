@@ -4,7 +4,7 @@
 
 import { NumberField } from '@base-ui/react/number-field';
 import { Minus, Plus, RotateCcw } from 'lucide-react';
-import { useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 
 type SettingValue = Settings[keyof Settings];
 type SelectOption = { value: string | number; label: string; group?: string; iconUrl?: string };
@@ -158,6 +158,9 @@ function NumberStepper({
   const unlimited = meta.unlimited && value === -1;
   // Edited in the shown unit (seconds for a value stored in ms) and stored in the stored unit.
   const scale = meta.displayScale ?? 1;
+  // The stored value when the field took focus, then the last value it wrote.
+  const ownValueRef = useRef<number | undefined>(undefined);
+  const [, showStoredValue] = useReducer((renders: number) => renders + 1, 0);
   const shown =
     scale === 1
       ? meta
@@ -179,10 +182,21 @@ function NumberStepper({
         max={shown.max}
         step={shown.step}
         allowOutOfRange={meta.unlimited}
-        onValueChange={(next) => {
+        onValueChange={(next, details) => {
           const committed = commitNumberSetting(next, shown);
           if (committed === undefined) return;
-          onChange(scale === 1 ? committed : Math.round(committed * scale));
+          const stored = scale === 1 ? committed : Math.round(committed * scale);
+          // Leaving the field commits its text again. When that is what this field already wrote
+          // (or had when focused), nothing new was typed: a newer value saved since, such as from
+          // another Options tab, stays, and the field shows it instead of the old text.
+          if (details.reason === 'input-blur' && stored === ownValueRef.current) {
+            details.cancel();
+            // The field shows its stored value again on the next render; ask for one.
+            showStoredValue();
+            return;
+          }
+          ownValueRef.current = stored;
+          onChange(stored);
         }}
       >
         <NumberField.Group className="flex h-8 items-center overflow-hidden rounded-md border border-input bg-card focus-within:ring-2 focus-within:ring-ring data-disabled:opacity-50">
@@ -193,6 +207,9 @@ function NumberStepper({
             <Minus className="h-3.5 w-3.5" />
           </NumberField.Decrement>
           <NumberField.Input
+            onFocus={() => {
+              ownValueRef.current = value;
+            }}
             aria-labelledby={labelledBy}
             aria-describedby={describedBy}
             aria-invalid={invalid}
