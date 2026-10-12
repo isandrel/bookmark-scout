@@ -55,7 +55,7 @@ Click **Apply Changes** to update them all, or close the dialog to change nothin
 </Step>
 </Steps>
 
-If a bookmark changed after the preview, it is skipped and counted in the message. URL cleanup has no undo, so check the preview before applying.
+If a bookmark changed after the preview, it is skipped and counted in the message. Click **Undo** in the message to put the old URLs back; a bookmark changed again since is left as it is.
 
 The rules are on the **Maintenance** tab of Settings:
 
@@ -83,7 +83,7 @@ Click **Save** (for example **Save 12 icons**) to keep them, or close the dialog
 
 For each website (origin) in scope, the tool requests one bookmarked page without cookies, reads only its head, and downloads the icon the page lists that is closest to **Preferred Icon Size**, or the site's `/favicon.ico`. Only icon files on the bookmark's own domain are used, never a third-party icon service. Files over **Maximum Icon File Size** (64 KB) or that are not images are skipped.
 
-Saved icons are stored in this browser's local storage, not synced, and show in the popup, side panel, and manager. They take priority over the browser's cached icon. The card shows how many are saved; **Clear saved icons** deletes them all. When the total reaches **Icon Storage Limit** (4096 KB), the oldest icons are removed first. A site that fails on a later refresh keeps the icon saved earlier.
+Saved icons are stored in this browser's local storage, not synced, and show in the popup, side panel, and manager. They take priority over the browser's cached icon. The card shows how many are saved; **Clear saved icons** deletes them all. When the total reaches **Icon Storage Limit** (4 MB), the oldest icons are removed first. A site that fails on a later refresh keeps the icon saved earlier.
 
 <Callout title="Firefox">
 In Firefox, open the manager with **Open bookmark manager** in the toolbar popup to run the tool. After you save icons there, the popup and side panel show them.
