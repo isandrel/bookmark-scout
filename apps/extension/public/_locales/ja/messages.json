@@ -305,6 +305,18 @@
         "message": "貼り付けるものがありません",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "何も貼り付けられませんでした",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID をコピーしました",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "追加するリンクがありません。ドロップしたテキストに Web アドレスが含まれていません。",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "貼り付けられませんでした",
         "description": "Error toast when pasting bookmarks fails"
@@ -3421,6 +3433,10 @@
         "message": "$1件を削除しました。$2秒以内なら元に戻せます。",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "元に戻す履歴に入りきらないため、ここで「元に戻す」を押した場合にのみ復元できます。",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "$1件を復元しました。",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5594,6 +5610,10 @@
     "error_bookmarkNotFound": {
         "message": "ブックマークが見つかりません。",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "切り取りとコピーは最大 $1 件までです。選択を減らすか、それらを含むフォルダを選択してください。",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "親フォルダがないため、この項目は復元できません。",

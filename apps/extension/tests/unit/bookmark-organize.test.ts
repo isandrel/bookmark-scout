@@ -5,6 +5,7 @@ import { undoBookmarkChange } from '@/services/bookmark-history';
 import {
   addDroppedLinks,
   bookmarkClipboardData,
+  bookmarkClipboardValue,
   moveBookmarksTo,
   pasteBookmarks,
   setBookmarkClipboard,
@@ -69,11 +70,11 @@ describe('cut, copy, and paste', () => {
     expect(bookmarkClipboardData([{ title: 'Only folder' }]).text).toBe('Only folder');
   });
 
-  it('pastes copies of copied items, folders with their contents, as they were when copied', async () => {
+  it('pastes copies of copied items, folders with their contents, as they are when pasted', async () => {
     await setBookmarkClipboard('copy', ['sub', 'b2']);
     await fakeBrowser.bookmarks.update('b2', { title: 'Renamed after copy' });
     await expect(pasteBookmarks({ parentId: 'g' })).resolves.toEqual({ pasted: 2, skipped: 0 });
-    expect(titles('g')).toEqual(['Zeta folder', 'item 2']);
+    expect(titles('g')).toEqual(['Zeta folder', 'Renamed after copy']);
     const [copy] = bookmarks.childIds('g');
     expect(titles(copy)).toEqual(['Inside']);
     // Copies paste again, and one undo removes a whole paste.
@@ -84,7 +85,7 @@ describe('cut, copy, and paste', () => {
     expect(titles('g')).toEqual([]);
   });
 
-  it('moves cut items on paste, once, skipping a folder pasted into itself', async () => {
+  it('moves cut items on paste, once; one that could not move stays cut', async () => {
     await setBookmarkClipboard('cut', ['b10', 'sub']);
     expect(titles('f')).toContain('Item 10');
     await expect(pasteBookmarks({ parentId: 'sub' })).resolves.toEqual({
@@ -92,7 +93,29 @@ describe('cut, copy, and paste', () => {
       skipped: 1,
     });
     expect(titles('sub')).toEqual(['Inside', 'Item 10']);
+    // The folder could not go inside itself, so it is still cut and pastes somewhere else.
+    await expect(bookmarkClipboardValue.get()).resolves.toMatchObject({
+      mode: 'cut',
+      ids: ['sub'],
+    });
+    await expect(pasteBookmarks({ parentId: 'g' })).resolves.toEqual({ pasted: 1, skipped: 0 });
+    expect(titles('g')).toEqual(['Zeta folder']);
     await expect(pasteBookmarks({ parentId: 'g' })).resolves.toBeNull();
+  });
+
+  it('keeps a failed cut whole, and drops items deleted since', async () => {
+    await setBookmarkClipboard('cut', ['sub', 'b2']);
+    await fakeBrowser.bookmarks.removeTree('b2');
+    // Only the folder is left, and it cannot go into itself: nothing moves, and it stays cut.
+    await expect(pasteBookmarks({ parentId: 'sub' })).resolves.toEqual({ pasted: 0, skipped: 2 });
+    await expect(bookmarkClipboardValue.get()).resolves.toMatchObject({ ids: ['sub'] });
+  });
+
+  it('pastes what another manager tab cut or copied, skipping items deleted since', async () => {
+    // Another tab stored the clipboard; this page has done nothing but read it.
+    await bookmarkClipboardValue.set({ mode: 'copy', ids: ['b2', 'gone'], textHash: '0', at: 1 });
+    await expect(pasteBookmarks({ parentId: 'g' })).resolves.toEqual({ pasted: 1, skipped: 1 });
+    expect(titles('g')).toEqual(['item 2']);
   });
 
   it('creates bookmarks for URLs another app put on the clipboard', async () => {

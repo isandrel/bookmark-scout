@@ -119,7 +119,7 @@ export const ITEM_ACTIONS = {
     icon: 'hash',
     itemMenu: {
       available: (items) => single(items) !== undefined,
-      run: (items) => navigator.clipboard.writeText(items[0].id),
+      run: (items, host) => host.copyId(items[0].id),
     },
   }),
   openInNewTab: defineMenuAction({

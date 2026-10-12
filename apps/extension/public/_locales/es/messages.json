@@ -309,6 +309,18 @@
         "message": "No hay nada que pegar",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "No se pegó nada",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID copiado",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "No hay enlaces para añadir: el texto soltado no contiene ninguna dirección web.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "No se pudo pegar",
         "description": "Error toast when pasting bookmarks fails"
@@ -3453,6 +3465,10 @@
         "message": "Se eliminaron $1 elementos. Puedes deshacerlo durante $2 segundos.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "Es demasiado grande para el historial de deshacer, así que solo Deshacer aquí puede recuperarla.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "Se restauraron $1 elementos.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5626,6 +5642,10 @@
     "error_bookmarkNotFound": {
         "message": "No se encontró el marcador.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "Cortar y Copiar admiten como máximo $1 elementos. Selecciona menos o una carpeta que los contenga.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "Este elemento no se puede recuperar porque no tiene carpeta superior.",

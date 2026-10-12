@@ -309,6 +309,18 @@
         "message": "Rien à coller",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Rien n'a été collé",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID copié",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "Aucun lien à ajouter : le texte déposé ne contient aucune adresse web.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Impossible de coller",
         "description": "Error toast when pasting bookmarks fails"
@@ -3453,6 +3465,10 @@
         "message": "$1 éléments supprimés. Vous pouvez annuler pendant $2 secondes.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "Elle est trop volumineuse pour l’historique d’annulation : seul Annuler ici peut la récupérer.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "$1 éléments restaurés.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5626,6 +5642,10 @@
     "error_bookmarkNotFound": {
         "message": "Favori introuvable.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "Couper et Copier contiennent au plus $1 éléments. Sélectionnez-en moins, ou un dossier qui les contient.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "Cet élément ne peut pas être récupéré, car il n'a pas de dossier parent.",

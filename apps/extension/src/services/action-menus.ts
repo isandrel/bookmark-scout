@@ -20,6 +20,8 @@ export type ActionItemHost = {
   showInFolder: (bookmark: Bookmark) => void;
   /** Copies the manager address that opens this folder. */
   copyFolderLink: (folderId: string) => void;
+  /** Copies the item's bookmark id, and says so. */
+  copyId: (id: string) => void;
   /** The URLs opening `items` would open: bookmarks, and the bookmarks directly in folders. */
   openableUrls: (items: readonly Bookmark[]) => string[];
   /** Opens `items` (asking first for many tabs). */
