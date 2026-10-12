@@ -24,6 +24,40 @@ Une page qui se trouve déjà dans le dossier n'est pas enregistrée deux fois�
 
 La fenêtre pop-up de la barre d'outils lit la page sur laquelle vous l'avez ouverte sans rien demander. Le panneau latéral, lui, reste ouvert lorsque vous changez d'onglet : la première fois que vous enregistrez depuis ce panneau, Bookmark Scout vous donne une explication, puis demande l'accès à vos onglets. Si vous refusez, rien n'est enregistré.
 
+## Enregistrer avec un raccourci clavier [#quick-save]
+
+Appuyez sur `Alt+Shift+S` sur n'importe quelle page pour l'enregistrer sans ouvrir Bookmark Scout. Une petite notification dans le coin supérieur de la page indique dans quel dossier elle a été enregistrée, avec **Annuler** et quelques autres dossiers sous **Déplacer vers**. Elle se ferme d'elle-même au bout de quelques secondes ; la survoler ou y accéder avec la touche Tab la garde ouverte, et `Esc` la ferme. Elle ne prend jamais le contrôle du clavier à la page.
+
+L'endroit où la page est enregistrée dépend de **Dossier d'enregistrement rapide** dans les [Paramètres](/settings#quick-save) :
+
+- **Meilleure correspondance** (par défaut) compare le titre, le site et l'adresse de la page avec les noms de vos dossiers, les dossiers qui les entourent, ainsi que les titres et les sites des favoris déjà présents dans chaque dossier, entièrement sur votre appareil. Les titres en chinois, en japonais et en coréen fonctionnent aussi. **Déplacer vers** propose les dossiers suivants les mieux classés.
+- **Dernier utilisé** enregistre dans le dossier où vous avez enregistré le plus récemment ; **Déplacer vers** propose vos autres dossiers récents.
+- **Dossier choisi** enregistre toujours dans le dossier que vous sélectionnez dans **Dossier de destination**.
+
+Lorsqu'aucun dossier ne correspond bien, ou que le dossier choisi a été supprimé, la page est enregistrée dans le dernier dossier utilisé, sinon dans la barre de favoris, et la notification l'indique.
+
+Appuyez sur `Alt+Shift+D` pour enregistrer plutôt la page dans le dossier que suggère l'IA. Ce raccourci utilise le même service d'IA, la même lecture des pages et le même nombre de suggestions que les suggestions d'IA de la fenêtre pop-up, et envoie les mêmes données (consultez [Configurer les outils d'IA](/guides/ai-tools)). La notification affiche **L'IA choisit un dossier...** pendant l'attente, puis liste les autres suggestions sous **Déplacer vers** ; un dossier suggéré qui n'existe pas encore est créé, et **Annuler** le supprime de nouveau. Si l'IA est désactivée ou non configurée, rien n'est enregistré et la notification propose **Ouvrir les paramètres de l'IA**. Lorsque l'IA ne parvient pas à choisir un dossier, la notification propose **Réessayer**, qui interroge de nouveau l'IA, et **Enregistrer sans IA**, qui enregistre la page dans le dossier déterminé par **Dossier d'enregistrement rapide**. Si vous quittez la page avant la réponse de l'IA, le résultat s'affiche plutôt dans la fenêtre pop-up, sous le titre de la page.
+
+Une page que vous avez déjà enregistrée en favori n'est pas enregistrée de nouveau : la notification indique où elle se trouve et propose de la déplacer.
+
+**Annuler** et **Déplacer vers** ne s'appliquent qu'à votre dernier enregistrement rapide. Si vous effectuez un enregistrement rapide dans un autre onglet, puis appuyez sur **Annuler** dans la notification du premier onglet, celle-ci indique qu'un enregistrement rapide plus récent l'a remplacé ; modifiez plutôt ce favori dans le gestionnaire de favoris.
+
+Certaines pages ne permettent pas aux extensions d'y afficher quoi que ce soit, comme les pages propres au navigateur, la boutique d'extensions et la visionneuse de PDF, et quelques pages masquent ce qui est dessiné par-dessus. Sur ces pages, l'icône de la barre d'outils affiche brièvement ✓ ou ✗, et la fenêtre pop-up s'ouvre (là où le navigateur le permet) avec le titre de la page et les mêmes boutons.
+
+Pour modifier les touches, ouvrez **Raccourcis clavier** dans les [Paramètres](/settings#quick-save) :
+
+- **Chrome et Edge** gèrent eux-mêmes les touches. **Modifier les raccourcis** ouvre `chrome://extensions/shortcuts` ou `edge://extensions/shortcuts`, qui liste toutes les extensions ; recherchez-y Bookmark Scout.
+- **Firefox** permet à Bookmark Scout de les définir. Cliquez sur un champ de raccourci et appuyez sur les nouvelles touches : maintenez `Ctrl` ou `Alt` (sur Mac, `Command`, `Control` ou `Option`), ajoutez `Shift` si vous le souhaitez, et appuyez sur une lettre, un chiffre, une touche de fonction ou une touche fléchée. Les touches de fonction fonctionnent aussi seules. `Esc` annule, `Tab` passe au champ suivant sans rien enregistrer, et le bouton de réinitialisation à côté d'un champ rétablit la valeur par défaut. Une combinaison que Firefox ne peut pas utiliser est expliquée sous le champ. **Modifier les raccourcis** ouvre plutôt la page **Gérer les raccourcis d'extensions** de Firefox.
+
+Si une autre extension utilise déjà une combinaison de touches, le navigateur laisse le raccourci non défini et les paramètres affichent **Non défini**. La fenêtre pop-up et le panneau latéral affichent alors **Raccourci d’enregistrement rapide non défini** au-dessus des indications de raccourcis, avec **Le définir**, qui vous amène à l'endroit décrit ci-dessus où vous pouvez le définir. Fermez cette ligne avec son bouton **Ignorer** si vous ne voulez pas du raccourci ; elle reste masquée sur cet appareil.
+
+### Utiliser Ctrl+D pour l'enregistrement rapide [#ctrl-d]
+
+`Ctrl+D` (`⌘D` sur Mac) ouvre la boîte de dialogue de favoris du navigateur, et aucun navigateur ne permet à une extension d'en faire une touche par défaut : l'enregistrement rapide utilise donc d'abord `Alt+Shift+S`.
+
+- **Chrome et Edge** vous permettent de l'attribuer vous-même à l'enregistrement rapide. Sous **Raccourcis clavier** dans les paramètres, **Utiliser Ctrl+D pour l’enregistrement rapide** ouvre la page des raccourcis du navigateur : recherchez Bookmark Scout, cliquez sur le crayon à côté de **Enregistrement rapide de la page actuelle**, puis appuyez sur `Ctrl+D`. Dès lors, `Ctrl+D` effectue un enregistrement rapide au lieu d'ouvrir la boîte de dialogue de favoris. Pour retrouver la boîte de dialogue, effacez ce raccourci sur la même page. Tant que vous ne l'avez pas fait, la fenêtre pop-up et le panneau latéral le proposent sur une ligne, **Utiliser Ctrl+D pour l’enregistrement rapide** ; **Le définir** ouvre ces étapes dans les paramètres, et **Ignorer** masque la ligne sur cet appareil.
+- **Firefox** gère toujours lui-même `Ctrl+D` (marquer cette page) et `Ctrl+Shift+D` (marquer tous les onglets), même lorsqu'une extension les définit : les champs de raccourci refusent donc ces deux combinaisons.
+
 ## Enregistrer un lien avec le menu contextuel [#save-a-link-with-the-right-click-menu]
 
 Activez d'abord le **Menu contextuel** dans les [Paramètres](/settings#data) ; il est désactivé par défaut. Effectuez ensuite un clic droit sur n'importe quel lien d'une page, choisissez **Enregistrer le favori dans…**, puis l'un de vos dossiers récents ou la Barre de favoris. Le paramètre **Source du nom du favori** détermine si le favori est nommé d'après le texte du lien, le titre de la page ou l'URL du lien. Désactivez le menu avec **Menu contextuel** (ces deux paramètres se trouvent dans l'onglet **Données**).
@@ -34,11 +68,13 @@ Survolez un dossier dans la fenêtre pop-up ou le panneau latéral, cliquez sur 
 
 ## Déplacer des favoris et des dossiers [#move-bookmarks-and-folders]
 
-- **Glisser-déposer** dans la fenêtre pop-up ou le panneau latéral. Déposer un élément à côté d'un élément d'un autre dossier le déplace dans ce dossier. Un dossier ne peut pas être déplacé dans lui-même ni dans l'un de ses sous-dossiers.
+- **Glisser-déposer** dans la fenêtre pop-up ou le panneau latéral. Déposer un élément à côté d'un élément d'un autre dossier le déplace dans ce dossier. La réorganisation à l'intérieur d'un dossier ne fonctionne qu'avec le tri **Dossiers en premier** ; avec les autres tris, un dépôt déplace l'élément dans un autre dossier, et une indication le précise pendant le glissement. Un dossier ne peut pas être déplacé dans lui-même ni dans l'un de ses sous-dossiers.
+- **Glisser-déposer** dans le gestionnaire, comme dans celui de Chrome : faites glisser une ligne, ou une sélection de lignes, sur une ligne de dossier ou sur un dossier de l'arborescence pour l'y déplacer ; les bords supérieur et inférieur d'un dossier de l'arborescence déposent plutôt l'élément à côté de lui. Survoler un dossier fermé de l'arborescence pendant un glissement l'ouvre. Avec **Ordre du navigateur** activé (voir ci-dessous), déposer entre deux lignes réorganise aussi. Chaque dépôt correspond à une étape de `Ctrl+Z`.
+- **Liens depuis d'autres pages et applications** : déposez un lien, ou du texte contenant des URL, sur le tableau du gestionnaire ou sur un dossier de son arborescence pour l'y enregistrer en favori. Faire glisser des lignes vers une autre application ou page transmet leurs URL.
 - **Plusieurs à la fois** dans le gestionnaire : sélectionnez des lignes dans le tableau, puis utilisez **Déplacer vers un dossier** et choisissez la destination. Les éléments sont ajoutés à la fin de ce dossier.
-- **Réorganiser** dans le gestionnaire : activez **Ordre du navigateur**, supprimez tout tri de colonne, puis utilisez les boutons **Monter**, **Descendre**, **Déplacer en haut** et **Déplacer en bas** de la ligne. Ils nécessitent que le tableau affiche un seul dossier : supprimez donc les filtres ou cochez **Dossier actuel uniquement**.
+- **Réorganiser** dans le gestionnaire : activez **Ordre du navigateur**, supprimez tout tri de colonne, puis faites glisser des lignes, ou utilisez les boutons **Monter**, **Descendre**, **Déplacer en haut** et **Déplacer en bas** de la ligne. Ils nécessitent que le tableau affiche un seul dossier : supprimez donc les filtres ou cochez **Dossier actuel uniquement**.
 
-La réorganisation modifie l'ordre enregistré par le navigateur. La fenêtre pop-up n'affiche cet ordre qu'avec le tri **Dossiers en premier** ; les tris par date et alphabétique trient à nouveau la liste, ce que la confirmation précise.
+La réorganisation modifie l'ordre enregistré par le navigateur. La fenêtre pop-up n'affiche cet ordre qu'avec le tri **Dossiers en premier** ; les tris par date et alphabétique trient à nouveau la liste.
 
 La fenêtre pop-up et le panneau latéral s'actualisent d'eux-mêmes lorsque des favoris sont modifiés ailleurs, par exemple dans le gestionnaire ou dans l'interface de favoris du navigateur.
 
@@ -59,3 +95,28 @@ Supprimez un favori ou un dossier depuis la fenêtre pop-up, le panneau latéral
 - **Confirmer avant de supprimer** est activé par défaut et affiche une boîte de dialogue qui indique ce qui va être supprimé. Désactivez cette option dans l'onglet **Comportement** des paramètres pour supprimer immédiatement.
 - Chaque suppression affiche **Annuler** pendant 10 secondes. L'annulation restaure l'élément, tout son contenu, ainsi que ses étiquettes et résumés enregistrés. Un élément restauré est recréé : il reçoit donc une nouvelle date d'ajout.
 - Les dossiers permanents, comme la Barre de favoris, ne peuvent être ni modifiés ni supprimés.
+
+## Sélectionner, annuler et rétablir dans le gestionnaire [#select-undo-and-redo-in-the-manager]
+
+Le tableau du gestionnaire fonctionne comme le gestionnaire de favoris de Chrome :
+
+- Cliquez sur une ligne pour la sélectionner, `Ctrl`+clic (`Cmd`+clic sur Mac) pour en ajouter ou en retirer une, et `Shift`+clic pour sélectionner une plage. Les cases à cocher fonctionnent aussi. `Ctrl+A` (`Cmd+A`) sélectionne toutes les lignes affichées par les filtres, sur toutes les pages, et `Esc` efface la sélection.
+- Double-cliquez sur un dossier pour l'ouvrir, ou sur un favori pour l'ouvrir dans un onglet. Cliquez avec le bouton du milieu sur un favori pour l'ouvrir dans un onglet en arrière-plan.
+- `Ctrl+Z` (`Cmd+Z`) annule les modifications du gestionnaire une par une, de la plus récente à la plus ancienne : modifications, déplacements, réorganisations et suppressions. Ce raccourci annule aussi les pages enregistrées, les dossiers créés et les éléments déplacés par glisser-déposer dans la fenêtre pop-up et le panneau latéral, ainsi que les modifications que vous avez approuvées depuis Demander à l'IA ou un agent d'IA local. `Ctrl+Y` ou `Ctrl+Shift+Z` (`Cmd+Shift+Z`) les rétablit. Plusieurs éléments modifiés ensemble, comme le déplacement d'une sélection, constituent une seule étape. Une suppression très volumineuse est conservée sous forme compressée ; une suppression trop volumineuse même ainsi est exclue de l'historique, qui conserve les modifications antérieures, et sa notification indique que seul son bouton **Annuler** peut la récupérer.
+- L'annulation laisse de côté tout ce qui a été modifié entre-temps par un autre moyen (dans l'interface de favoris du navigateur, une autre fenêtre ou par la synchronisation) et l'indique.
+- L'historique est partagé par tous les onglets du gestionnaire, survit au rechargement de la page et prend fin à la fermeture du navigateur. Il conserve les 100 dernières modifications.
+
+L'arborescence des dossiers, à gauche, fonctionne elle aussi comme celle de Chrome : les touches fléchées la parcourent et ouvrent ou ferment les dossiers, et `Enter` affiche un dossier dans le tableau. Si Chrome conserve certains de vos favoris dans votre compte Google et d'autres uniquement sur cet appareil, l'arborescence les affiche sous **Dans votre compte** et **Uniquement sur cet appareil**, la seconde section étant d'abord fermée.
+
+La liste complète des touches figure dans [Raccourcis clavier](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Menus contextuels dans le gestionnaire [#right-click-menus-in-the-manager]
+
+Effectuez un clic droit sur une ligne, ou sur un dossier de l'arborescence, pour obtenir les mêmes commandes que dans le gestionnaire de favoris de Chrome. Un clic droit sur une ligne sélectionnée agit sur toute la sélection ; sur toute autre ligne, il sélectionne d'abord cette ligne. La touche Menu ou `Shift+F10` l'ouvre au clavier. Le bouton ⋯ d'une ligne ouvre le même menu pour cette ligne.
+
+- **Modifier** (un favori) ou **Renommer** (un dossier), **Afficher dans le dossier** (résultats de recherche) et **Afficher les détails**.
+- **Couper**, **Copier** et **Coller**. Copier place les URL des favoris dans le presse-papiers, une par ligne (et sous forme de liens, pour les applications qui acceptent le texte mis en forme), afin de pouvoir les coller aussi dans d'autres applications. Coller depuis le menu d'une ligne colle après cette ligne dans le dossier affiché ; depuis le menu d'un dossier de l'arborescence, colle dans ce dossier. Les éléments copiés sont collés sous forme de copies des éléments tels qu'ils sont au moment du collage, y compris tout le contenu d'un dossier copié ; les éléments coupés sont déplacés lorsque vous les collez, et restent en place jusque-là. Ce que vous coupez ou copiez peut être collé dans n'importe quel onglet du gestionnaire et après un rechargement, jusqu'à la fermeture du navigateur ; les éléments supprimés entre-temps sont ignorés, et les éléments coupés qui n'ont pas pu être déplacés (un dossier collé dans lui-même) restent coupés. Ajouter un favori complète une adresse saisie sans protocole, comme `example.com/path`, en `https://`. `Ctrl+C`, `Ctrl+X` et `Ctrl+V` (`Cmd` sur Mac) font de même pour la sélection, et `Ctrl+V` transforme aussi en favoris les URL copiées dans une autre application.
+- **Ouvrir dans un nouvel onglet**, **Ouvrir dans une nouvelle fenêtre** et **Ouvrir dans une fenêtre de navigation privée** (InPrivate dans Edge, une fenêtre privée dans Firefox, où l'extension doit être autorisée dans les fenêtres privées). Pour plusieurs éléments ou un dossier, ces commandes deviennent **Tout ouvrir (12)** et ouvrent les favoris de la sélection et ceux qui se trouvent directement dans ses dossiers, mais pas dans les sous-dossiers. Au-delà de 15 onglets, une confirmation est demandée.
+- **Copier le lien vers ce dossier** et **Copier l'ID du favori**, et **Supprimer**.
+
+Effectuez un clic droit dans l'espace vide du tableau, ou ouvrez **Organiser** (⋮) dans l'en-tête, pour utiliser **Ajouter un favori** ou **Ajouter un dossier** à la fin du dossier affiché, ou **Coller**. **Organiser** propose aussi **Trier par nom**, qui réorganise le dossier dans le navigateur lui-même : les dossiers d'abord, puis par nom, dans l'ordre naturel (`2` avant `10`). Comme toute modification dans le gestionnaire, `Ctrl+Z` l'annule.

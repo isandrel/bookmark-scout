@@ -3,7 +3,7 @@ title: Permisos
 description: Cada permiso del navegador que pide Bookmark Scout, por qué lo necesita y el acceso opcional a sitios web que solo solicita cuando ejecutas una herramienta.
 ---
 
-Estos son los permisos de la extensión compilada para cada navegador. Bookmark Scout no tiene scripts de contenido, así que nunca lee las páginas que visitas. Al instalarse, solo pide lo que necesita para funcionar; todo lo demás se pide cuando activas o ejecutas la función que lo necesita.
+Estos son los permisos de la extensión compilada para cada navegador. Bookmark Scout no declara scripts de contenido y nunca lee las páginas que visitas; después de un atajo de guardado rápido, solo muestra su propia notificación en esa pestaña. Al instalarse, solo pide lo que necesita para funcionar; todo lo demás se pide cuando activas o ejecutas la función que lo necesita.
 
 ## Concedidos al instalar [#granted-at-install]
 
@@ -11,8 +11,10 @@ Estos son los permisos de la extensión compilada para cada navegador. Bookmark 
 | --- | --- | --- |
 | `bookmarks` | Todos | Mostrar y buscar tus marcadores, y crearlos, editarlos, moverlos y eliminarlos cuando actúas en la ventana emergente, el panel lateral, el administrador o el menú contextual |
 | `storage` | Todos | Guardar tu configuración y, solo en este dispositivo, la configuración de tu proveedor de IA, las etiquetas, los resúmenes, las búsquedas guardadas, las carpetas recientes, las búsquedas recientes y los iconos de sitios guardados con **Actualizar iconos de sitios** |
-| `activeTab` | Todos | Cuando haces clic en el botón de la barra de herramientas o en el menú contextual, leer el título y la URL de esa pestaña para que puedas guardar la página en la que estás. Ninguna otra pestaña, ningún historial |
+| `activeTab` | Todos | Cuando haces clic en el botón de la barra de herramientas o en el menú contextual, o pulsas un atajo de guardado rápido, leer el título y la URL de esa pestaña para que puedas guardar la página en la que estás. Ninguna otra pestaña, ningún historial |
+| `scripting` | Todos | Después de un atajo de guardado rápido, mostrar la notificación solo en esa pestaña. No lee nada de la página |
 | `sidePanel` | Chrome, Edge | Ofrecer la vista del panel lateral. Firefox declara la misma página como barra lateral |
+| `offscreen` | Chrome, Edge | Ejecutar la solicitud del guardado rápido con IA en una página oculta de la extensión, que el navegador cierra cuando termina. En Firefox, la página de fondo lo hace por sí misma |
 | `contextMenus` | Firefox | Firefox no permite que las extensiones lo pidan más adelante. El menú solo aparece después de que actives **Menú contextual** |
 
 En Chrome y Edge, la extensión también reemplaza la página de marcadores del navegador por el administrador de Bookmark Scout. Eso es un reemplazo de página, no un permiso. Firefox no lo permite, así que ahí el administrador se abre desde **Abrir el administrador de marcadores** en la ventana emergente; consulta [Compatibilidad con navegadores](/browser-support).
@@ -25,7 +27,7 @@ En Chrome y Edge, la extensión también reemplaza la página de marcadores del 
 | `contextMenus` | Chrome, Edge | Activas **Menú contextual** en [Configuración](/settings#data). Está desactivado de forma predeterminada, y Chrome lo concede sin preguntar |
 | `favicon` | Chrome, Edge | Activas **Usar la caché de iconos del navegador** en [Configuración](/settings#appearance), para mostrar los iconos que el navegador ya guardó |
 | Consentimiento para compartir datos | Firefox | Activas **Funciones de IA** o **Leer el contenido de la página**, o haces clic en **Verificar servicio**. Firefox pregunta antes de que la extensión envíe nada a tu proveedor de IA |
-| `nativeMessaging` | Todos | Activas **Permitir agentes de IA locales** en [Ajustes](/settings#agent-bridge), para que la extensión pueda comunicarse con el programa bookmark-scout-mcp de tu equipo. Primero aparece una breve explicación; en Firefox, la misma solicitud pide compartir con él datos de marcadores |
+| `nativeMessaging` | Todos | Activas **Permitir agentes de IA locales** en [Configuración](/settings#agent-bridge), para que la extensión pueda comunicarse con el programa bookmark-scout-mcp de tu equipo. Primero aparece una breve explicación; en Firefox, la misma solicitud pide compartir con él datos de marcadores |
 
 Si lo rechazas, la función sigue desactivada y no se envía nada. Si más adelante retiras un permiso en la configuración de extensiones del navegador, la función se desactiva; al volver a activarla, se vuelve a pedir.
 
@@ -41,7 +43,7 @@ Para retirar el acceso, abre la página de la extensión en el navegador (por ej
 
 ## Lo que no se solicita [#what-is-not-requested]
 
-- Ningún acceso al contenido de las páginas y ningún script de contenido
+- Ningún acceso al contenido de las páginas y ningún script de contenido declarado
 - Ningún permiso de historial, descargas ni cookies
 - Ningún acceso a hosts al instalar
 

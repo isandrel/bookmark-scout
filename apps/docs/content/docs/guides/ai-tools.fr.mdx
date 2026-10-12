@@ -71,11 +71,11 @@ L'**URL de base** remplace l'adresse du fournisseur pour chaque requête, par ex
 
 Les serveurs locaux doivent accepter les requêtes de l'extension :
 
-- **Ollama :** définissez `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` et redémarrez Ollama. Sinon, Ollama répond par une erreur 403 et la vérification indique que le serveur a refusé l'extension.
-- **LM Studio :** activez **Enable CORS** dans les paramètres du serveur, ou démarrez-le avec `lms server start --cors`.
-- **LocalAI :** définissez une clé API ; sa protection CSRF rejette les requêtes sans clé provenant du navigateur.
-- **text-generation-webui :** démarrez-le avec `--api`.
-- **CLIProxyAPI :** accepte les requêtes de l'extension avec sa configuration par défaut. Démarrez-le avant de cliquer sur **Vérifier le service** ; s'il n'est pas en cours d'exécution, la vérification indique qu'elle n'a pas pu joindre `localhost:8317`.
+- **Ollama :** définissez `OLLAMA_ORIGINS=chrome-extension://*,moz-extension://*` et redémarrez Ollama. Sinon, Ollama répond par une erreur 403 et la vérification indique que le serveur a refusé l'extension.
+- **LM Studio :** activez **Enable CORS** dans les paramètres du serveur, ou démarrez-le avec `lms server start --cors`.
+- **LocalAI :** définissez une clé API ; sa protection CSRF rejette les requêtes sans clé provenant du navigateur.
+- **text-generation-webui :** démarrez-le avec `--api`.
+- **CLIProxyAPI :** accepte les requêtes de l'extension avec sa configuration par défaut. Démarrez-le avant de cliquer sur **Vérifier le service** ; s'il n'est pas en cours d'exécution, la vérification indique qu'elle n'a pas pu joindre `localhost:8317`.
 
 ### En cas d'échec d'une vérification [#when-a-check-fails]
 
@@ -117,11 +117,14 @@ Les titres et les URL ne suffisent pas toujours à savoir de quoi parle une page
 
 Cliquez sur le bouton de discussion à côté du champ de recherche, dans la fenêtre pop-up ou le panneau latéral, pour poser des questions sur vos favoris, sur la page que vous consultez ou sur tout autre sujet. Cette fonctionnalité utilise votre service d'IA par défaut ; changez de service depuis le menu de son en-tête.
 
-- Pour répondre, l'IA peut rechercher dans vos favoris (aussi par dossier, étiquette, site ou date d'ajout), lister vos dossiers, consulter les étiquettes et résumés de favoris, trouver les doublons, suggérer des dossiers pour une page, consulter la page actuelle et, si **Lire le contenu des pages** est activé, lire une page enregistrée en favori ou la page ouverte, et aucune autre. Si vous avez autorisé l'accès aux sites Web pour Vérifier les liens morts, elle peut aussi vérifier si les liens de vos favoris fonctionnent encore. Si vous le demandez, elle peut aussi enregistrer une page, déplacer, renommer ou supprimer des favoris et créer des dossiers : elle présente d'abord ces changements sous forme de plan, et rien ne change tant que vous ne l'approuvez pas dans la discussion. Après avoir lu une page Web, elle demande aussi avant d'enregistrer. Chaque modification est une étape que vous pouvez annuler, y compris avec Ctrl+Z dans le gestionnaire de favoris. Chacune de ses étapes s'affiche dans la discussion.
-- Sous certaines réponses, des boutons proposent la suite : poser une question complémentaire, choisir parmi quelques options ou idées, enregistrer la page dans un dossier suggéré, ou ouvrir ou afficher un favori. Rien ne se passe tant que vous ne cliquez pas, chaque bouton ne sert qu'une fois, et un enregistrement peut être annulé depuis sa notification.
+- Pour répondre, l'IA peut rechercher dans vos favoris (aussi par dossier, étiquette, site ou date d'ajout), lister vos dossiers, consulter les étiquettes et résumés de favoris, trouver les doublons, suggérer des dossiers pour une page, consulter la page actuelle et, si **Lire le contenu des pages** est activé, lire une page enregistrée en favori ou la page ouverte, et aucune autre. Si vous avez autorisé l'accès aux sites Web pour Vérifier les liens morts, elle peut aussi vérifier si les liens de vos favoris fonctionnent encore. Si vous le demandez, elle peut aussi enregistrer une page, déplacer, renommer ou supprimer des favoris et créer des dossiers : elle présente d'abord ces changements sous forme de plan, et rien ne change tant que vous ne l'approuvez pas dans la discussion. Après avoir lu une page Web, elle demande aussi avant d'enregistrer. Chaque modification est une étape que vous pouvez annuler, y compris avec Ctrl+Z dans le gestionnaire de favoris. Chacune de ses étapes s'affiche dans la discussion.
+- Sous certaines réponses, des boutons proposent la suite : poser une question complémentaire, choisir parmi quelques options ou idées, enregistrer la page dans un dossier suggéré, ou ouvrir ou afficher un favori. Rien ne se passe tant que vous ne cliquez pas, chaque bouton ne sert qu'une fois, et un enregistrement peut être annulé depuis sa notification.
+- Un bouton d'enregistrement indique le dossier et, en dessous, le titre et le site de la page ; pointez dessus pour voir l'adresse complète. Il ne propose que la page que vous consultez, une page que l'IA a trouvée dans vos favoris ou lue, ou une adresse que vous avez saisie, jamais une adresse qui apparaît uniquement dans le texte d'une page Web. Une fois que la discussion a lu une page Web ou effectué une recherche sur le Web, cliquer sur ce bouton vous demande d'abord d'approuver l'enregistrement de cette page dans ce dossier.
 - OpenAI, Anthropic, Google Gemini et xAI peuvent aussi effectuer des recherches sur le Web. Activez cette option avec le bouton en forme de globe à côté du champ de message ; elle reste désactivée tant que vous ne l'activez pas, et c'est le fournisseur qui effectue la recherche lui-même.
 - La conversation n'est conservée que tant que la discussion est ouverte. **Nouvelle discussion** l'efface, et la fermeture de la fenêtre pop-up y met fin.
 - Les instructions qu'elle suit sont celles du prompt **Demander à l'IA** de la bibliothèque de prompts : vous pouvez donc les afficher ou les remplacer comme n'importe quel autre prompt.
+- **Ce que Demander à l'IA peut faire**, dans **Options**, puis **IA**, liste chaque consultation et chaque modification qu'elle peut effectuer. Si vous en désactivez une, elle n'est plus du tout proposée à Demander à l'IA. L'application d'un plan de modifications vous demande toujours d'abord votre accord.
+- Les agents d'IA de votre ordinateur, comme Claude Code, peuvent utiliser les mêmes consultations et modifications ; consultez [Utiliser avec des agents d'IA locaux](/guides/local-agents).
 
 ## Voir ce qui a été envoyé [#see-what-was-sent]
 

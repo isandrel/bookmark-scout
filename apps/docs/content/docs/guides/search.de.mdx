@@ -37,6 +37,16 @@ Die Tabelle des Managers bietet genauere Filter. Öffnen Sie in Chrome die Lesez
 - **Typ**, **Übergeordnete ID**, **Domain** und **Hinzugefügt am** grenzen die Zeilen weiter ein.
 - **Nur aktueller Ordner** beschränkt die Filter auf den Ordner, in dem Sie sich befinden. Ist die Option deaktiviert, durchsuchen die Filter alle Lesezeichen.
 - Sortieren Sie nach einer beliebigen Spalte über deren Kopfzeile.
+- Bei einer ordnerübergreifenden Suche bietet das Menü einer Zeile **Im Ordner anzeigen**: Damit werden die Filter gelöscht und der Ordner geöffnet, der das Element enthält, wobei das Element ausgewählt ist.
+
+## Auf einen Ordner oder eine Suche verlinken [#link-to-a-folder-or-a-search]
+
+Die Adresse des Managers folgt dem, was Sie gerade ansehen, sodass **Zurück** und **Vorwärts** im Browser durch Ordner und Suchen blättern und Sie eine Ansicht als Lesezeichen speichern oder teilen können.
+
+- `?id=` benennt den geöffneten Ordner, wie im eigenen Manager von Chrome: `chrome://bookmarks/?id=12` öffnet Ordner 12 in Chrome und `edge://favorites/?id=12` in Edge. Links aus Chrome 154 bis 156, die die Lesezeichenleiste, „Weitere Lesezeichen“ und „Mobile Lesezeichen“ mit einer langen ID benannten, öffnen diese Ordner ebenfalls.
+- `?q=` ist der Titelfilter: `chrome://bookmarks/?q=react` öffnet den Manager mit einer Titelsuche nach „react“. Während Sie in **Titel filtern...** tippen, folgt die Adresse, und eine zusammenhängende Eingabe zählt als ein Schritt mit **Zurück**. Eine Suche hat Vorrang vor dem Ordner; der Ordner gilt weiterhin, wenn **Nur aktueller Ordner** aktiviert ist.
+- **Link zu diesem Ordner kopieren**, neben dem Ordnerpfad in der Kopfzeile und im Menü einer Ordnerzeile, kopiert diese Adresse. In Firefox kopiert die Funktion die eigene Adresse der Managerseite. Chrome und Edge zeigen weiterhin die Adresse an, mit der Sie den Manager geöffnet haben, auch wenn Sie zwischen Ordnern wechseln.
+- Der Tab-Titel nennt den Ordner, oder während einer Suche die Suche.
 
 ## Eine Suche speichern [#save-a-search]
 

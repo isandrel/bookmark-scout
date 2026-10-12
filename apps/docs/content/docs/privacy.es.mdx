@@ -16,11 +16,11 @@ Esto es un resumen. La <SiteLink to="privacy">política de privacidad</SiteLink>
 ## Qué lee la extensión [#what-the-extension-reads]
 
 - Tus marcadores, para mostrarlos, buscarlos, editarlos, moverlos, eliminarlos, importarlos y exportarlos.
-- El título y la URL de la pestaña activa, cuando guardas la página en la que estás o pides una sugerencia de carpeta.
+- El título y la URL de la pestaña activa, cuando guardas la página en la que estás (desde la ventana emergente, el panel lateral o un atajo de guardado rápido) o pides una sugerencia de carpeta.
 - Los iconos de sitios de la propia caché de iconos del navegador, en Chrome y Edge, cuando activas **Usar la caché de iconos del navegador**.
 - Los iconos de sitios que descargas con **Actualizar iconos de sitios**, de cada sitio web guardado en marcadores.
 
-No lee el contenido de las páginas que visitas.
+No lee el contenido de las páginas que visitas. Después de un atajo de guardado rápido, muestra su propia notificación en esa pestaña, que no lee nada de la página.
 
 ## Qué guarda [#what-it-stores]
 
@@ -37,8 +37,9 @@ No lee el contenido de las páginas que visitas.
 | Listas de modelos obtenidas de tus servicios de IA, durante 7 días | Almacenamiento local en este dispositivo | No |
 | Actividad de IA, solo mientras **Registrar solicitudes** está activado (desactivado de forma predeterminada, por dispositivo): las últimas solicitudes de IA con lo que se envió y lo que volvió, que incluyen títulos, URL y rutas de carpeta de marcadores y, con **Leer el contenido de la página** activado, el texto de las páginas. Las claves de API y otras credenciales se eliminan antes de guardar; desactivar el registro lo borra | Almacenamiento local en este dispositivo | No |
 | Etiquetas, resúmenes, búsquedas guardadas, carpetas recientes, búsquedas recientes | Almacenamiento local en este dispositivo | No |
-| Iconos de sitios guardados con **Actualizar iconos de sitios**, hasta 4096 KB de forma predeterminada | Almacenamiento local en este dispositivo | No |
+| Iconos de sitios guardados con **Actualizar iconos de sitios**, hasta 4 MB de forma predeterminada | Almacenamiento local en este dispositivo | No |
 | El último guardado rápido (el título y la URL de la página, y dónde se guardó), para **Deshacer** y **Mover a** | Almacenamiento de sesión en este dispositivo, que se borra al cerrar el navegador | No |
+| El historial de deshacer del administrador (los marcadores que cambiaste allí, con copias de los eliminados y sus etiquetas y resúmenes), para deshacer y rehacer | Almacenamiento de sesión en este dispositivo, que se borra al cerrar el navegador | No |
 
 Los resultados de los análisis de la barra lateral de herramientas solo se conservan mientras su diálogo está abierto. Al desinstalar la extensión se elimina lo que guardó; tus marcadores se quedan en el navegador.
 
@@ -50,7 +51,7 @@ Solo cuando usas alguna de estas funciones, y solo hacia el destino indicado:
 
 | Función | Destino | Qué se envía |
 | --- | --- | --- |
-| Recomendaciones de carpetas con IA | El proveedor de IA que configuraste | El título y la URL de la página actual, y los nombres de tus carpetas. Con **Leer el contenido de la página** activado, también el texto principal de la página |
+| Recomendaciones de carpetas con IA, incluido el atajo de guardado rápido con IA | El proveedor de IA que configuraste | El título y la URL de la página actual, y los nombres de tus carpetas. Con **Leer el contenido de la página** activado, también el texto principal de la página |
 | Etiquetado automático, Generador de resúmenes, Reorganización de carpetas con IA | El proveedor de IA que configuraste | Títulos, URLs y rutas de carpeta de los marcadores incluidos en el ámbito. Con **Leer el contenido de la página** activado, el Etiquetado automático y el Generador de resúmenes también envían el texto principal de cada página; la Reorganización de carpetas con IA nunca lo hace |
 | Preguntar a la IA | El proveedor de IA que configuraste | Tus mensajes y la conversación hasta el momento, y lo que la IA consulta para responder: los marcadores que coinciden (con su carpeta, fecha en que se añadieron, etiquetas y resumen), los nombres de las carpetas, el título y la URL de la página actual, si los enlaces guardados que comprueba siguen funcionando y, con **Leer el contenido de la página** activado, el texto de las páginas que lee. Con su búsqueda web activada, el proveedor también busca en la web. La conversación no se guarda |
 | Comprobar enlaces rotos, Extractor de metadatos, comprobación de enlaces de Preguntar a la IA | Cada sitio web guardado en marcadores | Una solicitud de la página, sin cookies, después de que permitas el acceso a sitios web |

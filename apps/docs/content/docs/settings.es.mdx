@@ -11,7 +11,7 @@ Abre la página de configuración desde la entrada **Opciones** de la extensión
 - Cada pestaña se divide en secciones con título. El interruptor de cada herramienta está junto a su título; mientras está desactivado, el resto de sus ajustes se pliega. Los ajustes técnicos, como los tiempos de espera y la longitud de los nombres de archivo, están en **Configuración avanzada**, que permanece cerrada hasta que la abres o una búsqueda encuentra algo dentro.
 - Un ajuste cambiado se marca como **Modificado**, con un botón para restablecer su valor predeterminado. **Restablecer todo** restablece todos los ajustes.
 - **Exportar** guarda en un archivo de copia de seguridad los ajustes que cambiaste, los prompts personalizados, los servicios de IA (nombre, proveedor, modelo, **URL base** y campos propios del proveedor; nunca las claves de API ni los **Encabezados adicionales (JSON)**), las búsquedas guardadas y las columnas y el orden de la tabla del administrador. **Importar** restaura una copia, reemplazando cada parte que contiene el archivo, o combina un archivo de ajustes simple con tu configuración; después de restaurar una copia, vuelve a introducir las claves de API y los encabezados adicionales en [IA](#ai) para los servicios marcados con **Falta configurar**. Ninguno de los dos toca tus marcadores.
-- La configuración se guarda en el almacenamiento sincronizado del navegador, así que te sigue a otros dispositivos cuando la sincronización del navegador está activada. Algunos ajustes propios de cada dispositivo se quedan en él: la carpeta elegida para el guardado rápido, el límite de almacenamiento de iconos, el registro de actividad de IA y la búsqueda web de Preguntar a la IA. Los servicios de IA, con sus claves de API, la **URL base** y los **Encabezados adicionales (JSON)**, también se quedan en este dispositivo. Consulta [Privacidad](/privacy).
+- Los ajustes que cambias se guardan en el almacenamiento sincronizado del navegador, así que te siguen a otros dispositivos cuando la sincronización del navegador está activada. Algunos ajustes propios de cada dispositivo se quedan en él: la carpeta elegida para el guardado rápido, **Límite de almacenamiento de iconos**, el registro de actividad de IA y la búsqueda web de Preguntar a la IA. Los servicios de IA, con sus claves de API, la **URL base** y los **Encabezados adicionales (JSON)**, también se quedan en este dispositivo. Consulta [Privacidad](/privacy).
 
 ## Guardar y buscar [#search]
 
@@ -43,6 +43,15 @@ Consulta [Búsqueda y búsquedas guardadas](/guides/search).
 | **Nombre de carpeta predeterminado** | Nueva carpeta | El nombre con el que empieza una carpeta nueva |
 
 Consulta [Guardar y organizar](/guides/save-and-organize).
+
+### Atajos de guardado rápido [#quick-save]
+
+| Ajuste | Predeterminado | Qué hace |
+| --- | --- | --- |
+| **Carpeta de guardado rápido** | Mejor coincidencia | Dónde guarda `Alt+Shift+S` la página actual: en la carpeta que mejor le corresponde, en la última carpeta usada o en una carpeta elegida. El atajo de IA siempre usa la sugerencia de la IA |
+| **Carpeta de destino** | Sin elegir | La carpeta para **Carpeta elegida**. Si se elimina, el guardado rápido usa la última carpeta usada |
+
+Debajo, **Atajos de teclado** muestra las teclas que tiene cada atajo en tu navegador, con **Cambiar atajos**. En Firefox también puedes escribir ahí mismo teclas nuevas y restablecer las predeterminadas. En Chrome y Edge también explica cómo asignar `Ctrl+D` al guardado rápido. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save) y [Usar Ctrl+D para el guardado rápido](/guides/save-and-organize#ctrl-d).
 
 ### Menú contextual [#context-menu]
 
@@ -100,7 +109,7 @@ Consulta [Guardar y organizar](/guides/save-and-organize).
 
 ### Menús del administrador de marcadores [#manager-menus]
 
-Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y súbelos o bájalos dentro de cada grupo. **Restablecer valores predeterminados** recupera el menú completo. Siempre queda al menos un comando.
+Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y súbelos o bájalos dentro de cada grupo. **Restablecer valores predeterminados** recupera el menú completo. **Ver detalles** o **Copiar el ID del marcador** siempre se mantiene, para que el menú tenga un comando para cualquier marcador o carpeta; cuando no se aplica ninguno de los comandos que conservaste, el menú indica **No hay acciones disponibles**.
 
 ## IA [#ai]
 
@@ -145,7 +154,7 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 | **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** 200; **Profundidad máxima** 8; **Longitud del extracto** 240 |
 | **Etiquetado automático** | **Mínimo de etiquetas** 2; **Máximo de etiquetas** 5; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado |
 | **Generador de resúmenes** | **Longitud del resumen** 160; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
-| **Reorganización de carpetas con IA** | **Confianza mínima** 0.55 (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
+| **Reorganización de carpetas con IA** | **Confianza mínima** 55 % (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
 
 El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual.
 

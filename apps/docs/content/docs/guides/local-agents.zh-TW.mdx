@@ -1,0 +1,76 @@
+---
+title: 搭配本機 AI 代理使用
+description: 讓電腦上的 AI 代理 (例如 Claude Code、Codex 或 Cursor) 透過 Bookmark Scout 搜尋和整理你的書籤，而且每項變更都要在瀏覽器中核准。
+---
+
+在你電腦上執行的 AI 代理可以透過 Bookmark Scout 處理你的書籤：尋找書籤、列出資料夾、檢查連結、為網頁建議資料夾，以及在你允許時儲存網頁，並移動、重新命名或刪除書籤。代理會與一個小程式「**bookmark-scout-mcp**」通訊，這個程式再透過瀏覽器的原生訊息傳遞功能與擴充功能通訊。沒有任何程式在網路上監聽，Bookmark Scout 也沒有伺服器。
+
+<Callout type="warn" title="代理可以看到的內容">
+開啟存取權期間，代理可以讀取書籤標題、網址、資料夾名稱、已儲存的標籤和摘要，以及目前網頁的標題和網址；開啟「**讀取網頁內容**」時，還可以讀取網頁文字。代理可能會把讀取到的內容傳送給它自己的 AI 服務商。標題和網址中的敏感值預設會隱藏。請參閱「[隱私權](/privacy)」。
+</Callout>
+
+## 設定 [#set-it-up]
+
+<Steps>
+<Step>
+取得 **bookmark-scout-mcp**。一旦某個版本發布包含 Linux、macOS 和 Windows 的二進位檔，這些檔案就會附加在 <RepoLink path="/releases">GitHub 版本發布</RepoLink>中；請將適用於你系統的檔案以 `bookmark-scout-mcp` 的名稱放在 `PATH` 中。在此之前，請先安裝 [Bun](https://bun.sh)，再從存放區的複本建置：執行 `bun install`，然後執行 `bun run --cwd packages/mcp-bridge compile`，這會產生 `packages/mcp-bridge/dist/bookmark-scout-mcp`。
+</Step>
+<Step>
+在你的瀏覽器中註冊它：
+
+```sh
+bookmark-scout-mcp install
+```
+
+它會為找到的每個瀏覽器 (Chrome、Edge、Chromium、Brave、Vivaldi 和 Firefox；在 Windows 上還會在你的使用者下寫入一個登錄值) 寫入原生訊息傳遞資訊清單，並顯示如何將它加入你的代理。加上 `--browser chrome` 可以選擇瀏覽器，加上 `--dry-run` 則可以查看它會寫入哪些內容。
+</Step>
+<Step>
+在 Bookmark Scout 的設定中，前往「**AI**」>「**本機 AI 代理**」，然後開啟「**允許本機 AI 代理**」。瀏覽器會請你允許擴充功能與該程式通訊。之後開關下方的面板會顯示「**已就緒**」。不需要開啟「AI 功能」。
+</Step>
+<Step>
+將橋接程式加入你的代理 (請見下文)，然後向它詢問有關書籤的問題。
+</Step>
+</Steps>
+
+## 加入你的代理 [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**，在 `~/.codex/config.toml` 中：
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**：[加入 Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)，或將以下內容放入 `~/.cursor/mcp.json`：
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` 會以程式的完整路徑顯示這些設定。如果連線了多個瀏覽器或設定檔，代理會使用最後連線的那一個；在 `serve` 後面加上 `--browser edge` 或 `--profile <id>` 即可選擇。
+
+## 讓代理變更書籤 [#let-agents-change-bookmarks]
+
+在你同時開啟「**允許變更**」之前，代理只能查詢。開啟後，它們可以儲存網頁、以計畫的形式提議移動、重新命名、刪除和新增資料夾，以及復原自己所做的變更。<strong>每項變更都會等待你處理：</strong>系統會開啟 Bookmark Scout 視窗，依照實際會執行的方式顯示變更，並附上代理提供的名稱。在你按一下「**核准**」之前不會有任何變更；按「**拒絕**」、關閉視窗，或五分鐘內沒有回應，都不會做任何變更。已核准的變更可以在書籤管理員中用 `Ctrl+Z` (在 Mac 上為 `Cmd+Z`) 復原。
+
+在「**本機代理可以執行的動作**」中，關閉任何你不希望代理使用的查詢或變更。「**隱藏隱私值**」(預設開啟) 會依照隱私掃描工具的清單，替換代理收到的內容中的敏感網址參數、權杖和電子郵件地址。
+
+開啟「**AI 活動**」下的「**記錄要求**」後，代理發出的每次呼叫都會連同代理的名稱列在那裡。
+
+## 疑難排解 [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` 會列出它的註冊位置、已連線的瀏覽器，以及要加入代理的設定片段。
+- 面板中顯示「**橋接程式尚未安裝**」：請再次執行 `bookmark-scout-mcp install`，然後按一下「**重試**」。擴充功能的開發版本有自己的 ID；請使用 `--extension-id <id>` 加入。
+- 代理表示沒有連線的瀏覽器：請讓瀏覽器保持開啟，並開啟開關；橋接程式的 `bridgeStatus` 工具會說明它偵測到的狀態。
+- 如要查看瀏覽器啟動了什麼，請在啟動瀏覽器前將 `BOOKMARK_SCOUT_MCP_LOG` 設為檔案路徑；程式會將訊息寫入該檔案。
+
+## 移除 [#remove-it]
+
+關閉「**允許本機 AI 代理**」，從代理中移除伺服器 (`claude mcp remove bookmark-scout`)，然後執行 `bookmark-scout-mcp uninstall`，刪除它寫入的資訊清單和登錄值。

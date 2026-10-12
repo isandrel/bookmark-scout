@@ -10,9 +10,10 @@ Una lista de referencia de lo que incluye la versión actual. Para instrucciones
 | Superficie | Qué es |
 | --- | --- |
 | Ventana emergente | El botón de la barra de herramientas: búsqueda, árbol de carpetas, guardado y recomendaciones de carpetas con IA |
-| Panel lateral | La misma vista en el panel lateral del navegador (incluido Firefox), que sigue abierto mientras navegas |
-| Administrador de marcadores | Reemplaza la página de marcadores del navegador en Chrome y Edge: árbol de carpetas, ruta de navegación, una tabla de marcadores y la barra lateral **Herramientas** |
-| Configuración | La página de opciones de la extensión, con once pestañas. Consulta [Configuración](/settings) |
+| Panel lateral | La misma vista en el panel lateral del navegador (la barra lateral en Firefox), que sigue abierto mientras navegas |
+| Administrador de marcadores | Reemplaza la página de marcadores del navegador en Chrome y Edge: árbol de carpetas, ruta de navegación, una tabla de marcadores y la barra lateral **Herramientas**. En una ventana estrecha, el árbol de carpetas y **Herramientas** se abren sobre la tabla; una ruta de carpetas profunda agrupa sus carpetas intermedias en un menú **…** |
+| Configuración | La página de opciones de la extensión, con diez pestañas. Consulta [Configuración](/settings) |
+| Cualquier página | `Alt+Shift+S` y `Alt+Shift+D` hacen un guardado rápido de la página en la que estás, con una notificación en la página |
 | Menú contextual | **Guardar marcador en...** en cualquier enlace, cuando activas **Menú contextual** |
 
 ## Buscar [#find]
@@ -27,12 +28,17 @@ Guía: [Búsqueda y búsquedas guardadas](/guides/search).
 ## Guardar y organizar [#save-and-organize]
 
 - Guarda la página actual en cualquier carpeta, nunca dos veces en la misma carpeta, con un panel **Recientes** de las carpetas que usaste.
+- Escribe parte del nombre de una carpeta, o una ruta como `work/react`, y guarda en una de las carpetas coincidentes que aparecen encima de los resultados.
+- Guardado rápido con `Alt+Shift+S` en cualquier página, en la carpeta que mejor corresponde a la página (clasificada en tu dispositivo), en la última carpeta usada o en una carpeta que elijas; `Alt+Shift+D` guarda en la primera sugerencia de la IA. Una notificación en la página ofrece **Deshacer** y otras carpetas en **Mover a**. En Chrome y Edge puedes asignar `Ctrl+D` al guardado rápido.
 - Guarda enlaces desde el menú contextual en una carpeta reciente o en la Barra de marcadores.
 - Crea carpetas, arrastra y suelta marcadores y carpetas, y mueve varios a la vez en el administrador.
 - Ordena por fecha de creación, por orden alfabético natural o con las carpetas primero, sin cambiar el orden que guarda el navegador.
 - Edita nombres y URLs, y añade etiquetas y un resumen en **Detalles del marcador**.
 - Elimina con una confirmación opcional y la posibilidad de deshacer durante 10 segundos, que restaura todo lo que había dentro de una carpeta.
 - En el administrador, cambia el ancho de las columnas de la tabla arrastrando o con las teclas de flecha; **Restablecer vista** recupera el diseño original.
+- La dirección del administrador indica la carpeta o la búsqueda (`?id=`, `?q=`), así que **Atrás**, **Adelante** y los enlaces guardados en marcadores funcionan, los enlaces a carpetas propios de Chrome se abren y **Copiar enlace a esta carpeta** copia uno.
+- Cuando Chrome guarda marcadores tanto en tu cuenta de Google como solo en este dispositivo, el árbol de carpetas del administrador los muestra en dos secciones, como el de Chrome.
+- **Abrir enlaces en** elige si los enlaces en los que haces clic se abren en una pestaña nueva, en una pestaña en segundo plano o en la pestaña actual.
 
 Guía: [Guardar y organizar](/guides/save-and-organize).
 
@@ -52,7 +58,8 @@ Guías: [Limpiar duplicados y URLs con seguimiento](/guides/clean-up) y [Encontr
 
 - Exporta a HTML, JSON, Markdown o CSV, con una revisión de privacidad que puede censurar los valores sensibles del archivo.
 - Importa HTML o JSON después de una vista previa de la carpeta de destino, los recuentos y los duplicados, con opción de deshacer.
-- Haz una copia de seguridad de la configuración de la extensión, los prompts personalizados, los servicios de IA (sin claves de API) y las búsquedas guardadas en un archivo JSON, y restáurala.
+- Las exportaciones en JSON conservan las etiquetas y el resumen de cada marcador, y al importar un archivo así se restauran.
+- Haz una copia de seguridad de la configuración de la extensión, los prompts personalizados, los servicios de IA (sin claves de API), las búsquedas guardadas y las columnas de la tabla del administrador en un archivo JSON, y restáurala.
 
 Guía: [Importar y exportar](/guides/import-export).
 
@@ -60,15 +67,27 @@ Guía: [Importar y exportar](/guides/import-export).
 
 Desactivadas de forma predeterminada. Usa tu propia clave para OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter o unos 200 proveedores más del catálogo de models.dev, o usa Ollama, CLIProxyAPI o cualquier punto de conexión compatible con OpenAI.
 
-- Recomendaciones de carpetas en la ventana emergente, incluida una ruta de carpeta nueva que revisas antes.
-- **Etiquetado automático** y **Generador de resúmenes** para la carpeta actual, que solo se guardan después de que los revisas.
-- **Reorganización de carpetas con IA**, con vista previa antes de que se mueva nada.
+- Recomendaciones de carpetas en la ventana emergente, incluida una ruta de carpeta nueva que revisas antes, y el atajo de guardado rápido `Alt+Shift+D`.
+- **Preguntar a la IA** en la ventana emergente y en el panel lateral: responde preguntas buscando en tus marcadores, carpetas, etiquetas y resúmenes, encontrando duplicados y comprobando enlaces; guarda páginas y propone movimientos, cambios de nombre, eliminaciones y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas, y cada cambio se puede deshacer; y termina las respuestas con botones para lo que puedes hacer a continuación. **Qué puede hacer Preguntar a la IA** en la configuración desactiva cualquier consulta o cambio.
+- **Etiquetado automático** y **Generador de resúmenes** para la carpeta actual, que solo se guardan después de que los revisas, con opción de deshacer.
+- **Reorganización de carpetas con IA**, con vista previa antes de que se mueva nada, con opción de deshacer.
 - **Empaquetador de contexto para IA**, que exporta marcadores como Markdown o XML para un chat de IA y funciona con la IA desactivada.
 
-Las etiquetas y los resúmenes se quedan en este dispositivo. No se sincronizan ni se pueden buscar, pero las exportaciones de marcadores en JSON los incluyen. Guía: [Configurar las herramientas de IA](/guides/ai-tools).
+Las etiquetas y los resúmenes se quedan en este dispositivo. No se sincronizan ni se pueden buscar en la ventana emergente, pero Preguntar a la IA puede consultarlos y las exportaciones de marcadores en JSON los incluyen. Guía: [Configurar las herramientas de IA](/guides/ai-tools).
+
+## Agentes de IA locales (opcionales) [#local-ai-agents-optional]
+
+Desactivados de forma predeterminada, en cada dispositivo. Con **Permitir agentes de IA locales** activado, los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, usan las consultas de Bookmark Scout a través del programa `bookmark-scout-mcp`, un servidor MCP que se comunica con la extensión mediante la mensajería nativa del navegador. Si además activas **Permitir cambios**, pueden guardar páginas y proponer cambios; cada uno espera tu aprobación en una ventana de Bookmark Scout y se puede deshacer en el administrador. De forma predeterminada, los valores privados de los títulos y las URLs se les ocultan.
+
+Guía: [Usar con agentes de IA locales](/guides/local-agents).
 
 ## Teclado e idioma [#keyboard-and-language]
 
-- Combinaciones de teclas en la ventana emergente, el panel lateral y el administrador que nunca usan `Ctrl` ni `Cmd`, con un diálogo de ayuda `?` en el administrador. Consulta [Combinaciones de teclas](/guides/keyboard-shortcuts).
+- Atajos de guardado rápido en cualquier página, que puedes cambiar en la configuración de atajos del navegador o, en Firefox, directamente en la configuración de Bookmark Scout.
+- Combinaciones de teclas en la ventana emergente y el panel lateral que nunca usan `Ctrl` ni `Cmd`, y en el administrador las teclas del administrador de marcadores de Chrome (seleccionar todo, deshacer, rehacer, abrir en pestañas), con un diálogo de ayuda `?` allí. Consulta [Combinaciones de teclas](/guides/keyboard-shortcuts).
+- Selección en el administrador como en Chrome: clic, `Ctrl`+clic, `Shift`+clic y `Ctrl+A`; las teclas de flecha recorren la tabla y el árbol de carpetas, que los lectores de pantalla anuncian como un árbol.
+- Deshacer y rehacer las ediciones, los movimientos y las eliminaciones del administrador con `Ctrl+Z` y `Ctrl+Y`, durante toda la sesión del navegador.
+- Menús contextuales en las filas y carpetas del administrador: cortar, copiar y pegar, abrir todo en pestañas, en una ventana nueva o en una ventana de incógnito, cambiar nombre y eliminar; además de **Ordenar por nombre** y **Añadir marcador nuevo** o **carpeta nueva**. **Menús del administrador de marcadores** en la configuración elige qué comandos muestran y en qué orden.
+- Arrastrar y soltar en el administrador como en Chrome: sobre carpetas de la tabla o del árbol, entre filas en el orden del navegador, y enlaces desde otras páginas; `Ctrl/Cmd+C`, `X` y `V` copian, mueven y pegan.
 - Tema del sistema, claro u oscuro.
 - Inglés, chino simplificado, chino tradicional, japonés, coreano, español, alemán, francés y portugués de Brasil.

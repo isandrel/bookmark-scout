@@ -1,0 +1,76 @@
+---
+title: Utiliser avec des agents d'IA locaux
+description: Laissez des agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, rechercher et organiser vos favoris via Bookmark Scout, chaque modification étant approuvée dans le navigateur.
+---
+
+Les agents d'IA qui s'exécutent sur votre ordinateur peuvent travailler avec vos favoris via Bookmark Scout : trouver des favoris, lister les dossiers, vérifier les liens, suggérer des dossiers pour une page et, si vous l'autorisez, enregistrer des pages et déplacer, renommer ou supprimer des favoris. L'agent communique avec un petit programme, **bookmark-scout-mcp**, qui joint l'extension grâce à la messagerie native de votre navigateur. Rien n'écoute sur le réseau, et Bookmark Scout n'a pas de serveur.
+
+<Callout type="warn" title="Ce qu'un agent peut voir">
+Tant que l'accès est activé, un agent peut lire les titres et les URL des favoris, les noms des dossiers, les étiquettes et résumés enregistrés, ainsi que le titre et l'URL de la page actuelle ; si **Lire le contenu des pages** est activé, également le texte des pages. L'agent peut envoyer ce qu'il lit à son propre fournisseur d'IA. Les valeurs sensibles des titres et des URL sont masquées par défaut. Consultez [Confidentialité](/privacy).
+</Callout>
+
+## Configuration [#set-it-up]
+
+<Steps>
+<Step>
+Procurez-vous **bookmark-scout-mcp**. Des binaires pour Linux, macOS et Windows sont joints à une <RepoLink path="/releases">version GitHub</RepoLink> dès qu'une version les inclut ; placez celui de votre système dans votre `PATH` sous le nom `bookmark-scout-mcp`. D'ici là, si [Bun](https://bun.sh) est installé, compilez-le à partir d'un clone du dépôt : exécutez `bun install`, puis `bun run --cwd packages/mcp-bridge compile`, qui écrit `packages/mcp-bridge/dist/bookmark-scout-mcp`.
+</Step>
+<Step>
+Enregistrez-le auprès de vos navigateurs :
+
+```sh
+bookmark-scout-mcp install
+```
+
+Cette commande écrit un manifeste de messagerie native pour chaque navigateur qu'elle trouve (Chrome, Edge, Chromium, Brave, Vivaldi et Firefox ; sous Windows, également une valeur de registre pour votre utilisateur), et affiche comment l'ajouter à votre agent. Ajoutez `--browser chrome` pour choisir les navigateurs, ou `--dry-run` pour voir ce qu'elle écrirait.
+</Step>
+<Step>
+Dans les paramètres de Bookmark Scout, accédez à **IA** > **Agents d'IA locaux** et activez **Autoriser les agents d'IA locaux**. Votre navigateur demande d'autoriser l'extension à communiquer avec le programme. Le panneau situé sous l'interrupteur indique alors **Prêt**. Les fonctionnalités d'IA n'ont pas besoin d'être activées.
+</Step>
+<Step>
+Ajoutez la passerelle à votre agent (ci-dessous), puis interrogez-le sur vos favoris.
+</Step>
+</Steps>
+
+## Ajouter la passerelle à votre agent [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**, dans `~/.codex/config.toml` :
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor** : [l'ajouter à Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), ou placer ceci dans `~/.cursor/mcp.json` :
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` affiche ces lignes avec le chemin complet du programme. Lorsque plusieurs navigateurs ou profils sont connectés, l'agent utilise le dernier connecté ; ajoutez `--browser edge` ou `--profile <id>` après `serve` pour choisir.
+
+## Laisser les agents modifier les favoris [#let-agents-change-bookmarks]
+
+Les agents se contentent de consulter tant que vous n'activez pas aussi **Autoriser les modifications**. Ils peuvent alors enregistrer des pages, proposer sous forme de plan des déplacements, renommages, suppressions et nouveaux dossiers, et annuler leurs propres modifications. **Chaque modification attend votre accord** : une fenêtre Bookmark Scout s'ouvre et présente la modification telle qu'elle sera effectuée, avec le nom que l'agent a donné. Rien ne se passe tant que vous ne cliquez pas sur **Approuver** ; **Refuser**, fermer la fenêtre ou ne pas répondre pendant cinq minutes ne modifie rien. Une modification approuvée peut être annulée dans le gestionnaire de favoris avec `Ctrl+Z` (`Cmd+Z` sur Mac).
+
+Sous **Ce que les agents locaux peuvent faire**, désactivez toute consultation ou modification que vous ne voulez pas que les agents utilisent. **Masquer les valeurs privées** (activé par défaut) remplace les paramètres d'URL sensibles, les jetons et les adresses e-mail dans ce que reçoivent les agents, d'après la liste de l'Analyseur de confidentialité.
+
+Si **Enregistrer les requêtes** est activé sous **Activité de l'IA**, chaque appel d'un agent y figure avec le nom de l'agent.
+
+## Dépannage [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` indique où le programme est enregistré, quels navigateurs sont connectés, et les extraits de configuration pour les agents.
+- Le panneau indique que le programme **n'est pas installé** : exécutez de nouveau `bookmark-scout-mcp install`, puis cliquez sur **Réessayer**. Une version de développement de l'extension a son propre identifiant ; ajoutez-le avec `--extension-id <id>`.
+- L'agent indique qu'aucun navigateur n'est connecté : laissez le navigateur ouvert avec l'interrupteur activé ; l'outil `bridgeStatus` de la passerelle indique ce qu'il voit.
+- Pour examiner ce que le navigateur a lancé, définissez `BOOKMARK_SCOUT_MCP_LOG` sur un chemin de fichier avant de démarrer le navigateur ; le programme y écrit ses messages.
+
+## Supprimer la passerelle [#remove-it]
+
+Désactivez **Autoriser les agents d'IA locaux**, retirez le serveur de votre agent (`claude mcp remove bookmark-scout`), et exécutez `bookmark-scout-mcp uninstall` pour supprimer les manifestes et les valeurs de registre qu'il a écrits.

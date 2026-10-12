@@ -7,7 +7,7 @@ description: Encontre qualquer favorito pelo título ou pelo URL no pop-up ou no
 
 <Steps>
 <Step>
-Clique no ícone do Bookmark Scout na barra de ferramentas. Você também pode abrir o Bookmark Scout no painel lateral do navegador (inclusive no Firefox), que continua aberto enquanto você navega.
+Clique no ícone do Bookmark Scout na barra de ferramentas. Você também pode abrir o Bookmark Scout no painel lateral do navegador (a barra lateral, no Firefox), que continua aberto enquanto você navega.
 </Step>
 <Step>
 Digite em **Pesquisar favoritos...** (ou pressione `/` para ir até lá). Os resultados aparecem enquanto você digita, dentro das pastas deles, com cada correspondência destacada.
@@ -37,6 +37,16 @@ A tabela do gerenciador tem filtros mais precisos. No Chrome, abra a página de 
 - **Tipo**, **ID do pai**, **Domínio** e **Data de adição** restringem ainda mais as linhas.
 - **Somente a pasta atual** limita os filtros à pasta em que você está. Quando essa opção está desativada, os filtros pesquisam todos os favoritos.
 - Classifique por qualquer coluna pelo cabeçalho dela.
+- Em uma pesquisa em várias pastas, o menu de uma linha oferece **Mostrar na pasta**: ele limpa os filtros e abre a pasta que contém o item, com o item selecionado.
+
+## Criar um link para uma pasta ou uma pesquisa [#link-to-a-folder-or-a-search]
+
+O endereço do gerenciador acompanha o que você está vendo, então **Voltar** e **Avançar** do navegador percorrem as pastas e as pesquisas, e você pode salvar uma visualização nos favoritos ou compartilhá-la.
+
+- `?id=` indica a pasta aberta, como no próprio gerenciador do Chrome: `chrome://bookmarks/?id=12` abre a pasta 12 no Chrome, e `edge://favorites/?id=12` no Edge. Links do Chrome 154 ao 156, que indicavam a Barra de favoritos, Outros favoritos e Favoritos para dispositivos móveis por um ID longo, também abrem essas pastas.
+- `?q=` é o filtro de títulos: `chrome://bookmarks/?q=react` abre o gerenciador pesquisando "react" nos títulos. Enquanto você digita em **Filtrar títulos...**, o endereço acompanha, e uma sequência contínua de digitação equivale a um passo de **Voltar**. Uma pesquisa tem prioridade sobre a pasta; a pasta ainda vale quando **Somente a pasta atual** está marcada.
+- **Copiar link para esta pasta**, ao lado do caminho da pasta no cabeçalho e no menu da linha de uma pasta, copia esse endereço. No Firefox, ele copia o endereço da própria página do gerenciador. O Chrome e o Edge continuam mostrando o endereço com que você abriu o gerenciador, mesmo quando você muda de pasta.
+- O título da guia indica a pasta ou, durante uma pesquisa, a pesquisa.
 
 ## Salvar uma pesquisa [#save-a-search]
 

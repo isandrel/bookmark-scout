@@ -1,0 +1,76 @@
+---
+title: 配合本地 AI 智能体使用
+description: 让你电脑上的 AI 智能体（如 Claude Code、Codex 或 Cursor）通过 Bookmark Scout 搜索和整理书签，每项更改都要在浏览器中批准。
+---
+
+在你电脑上运行的 AI 智能体可以通过 Bookmark Scout 处理你的书签：查找书签、列出文件夹、检查链接、为网页推荐文件夹，并且在你允许的情况下保存网页，以及移动、重命名或删除书签。智能体与一个小程序 **bookmark-scout-mcp** 通信，该程序通过浏览器的原生消息传递与扩展程序连接。没有任何程序在网络上监听，Bookmark Scout 也没有服务器。
+
+<Callout type="warn" title="智能体可以看到的内容">
+访问权限开启期间，智能体可以读取书签标题、网址、文件夹名称、已保存的标签和摘要，以及当前网页的标题和网址；开启**读取网页内容**后，还可以读取网页文本。智能体可能会把读取的内容发送给它自己的 AI 服务商。标题和网址中的敏感值默认会被隐藏。请参阅[隐私](/privacy)。
+</Callout>
+
+## 设置 [#set-it-up]
+
+<Steps>
+<Step>
+获取 **bookmark-scout-mcp**。一旦某个版本包含了适用于 Linux、macOS 和 Windows 的二进制文件，它们就会附在 <RepoLink path="/releases">GitHub 版本发布</RepoLink>中；请将适合你系统的文件以 `bookmark-scout-mcp` 为名放到 `PATH` 中。在此之前，如果已安装 [Bun](https://bun.sh)，可以从代码仓库的克隆中构建它：运行 `bun install`，然后运行 `bun run --cwd packages/mcp-bridge compile`，它会生成 `packages/mcp-bridge/dist/bookmark-scout-mcp`。
+</Step>
+<Step>
+在浏览器中注册它：
+
+```sh
+bookmark-scout-mcp install
+```
+
+它会为找到的每个浏览器（Chrome、Edge、Chromium、Brave、Vivaldi 和 Firefox；在 Windows 上还会在你的用户下写入一个注册表值）写入原生消息传递清单，并显示如何将它添加到你的智能体中。加上 `--browser chrome` 可选择浏览器，加上 `--dry-run` 可查看它将写入的内容。
+</Step>
+<Step>
+在 Bookmark Scout 的设置中，前往 **AI** > **本地 AI 智能体**，然后开启**允许本地 AI 智能体**。浏览器会请你允许扩展与该程序通信。之后开关下方的面板会显示**已就绪**。无需开启 AI 功能。
+</Step>
+<Step>
+将桥接程序添加到你的智能体中（见下文），然后向它询问有关书签的问题。
+</Step>
+</Steps>
+
+## 添加到你的智能体 [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**，写入 `~/.codex/config.toml`：
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**：[将它添加到 Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)，或将以下内容写入 `~/.cursor/mcp.json`：
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` 会显示这些配置，并带上该程序的完整路径。如果连接了多个浏览器或配置文件，智能体会使用最后连接的那个；在 `serve` 后加上 `--browser edge` 或 `--profile <id>` 即可指定。
+
+## 允许智能体更改书签 [#let-agents-change-bookmarks]
+
+在你同时开启**允许更改**之前，智能体只能查询。开启后，它们可以保存网页，以方案的形式提议移动、重命名、删除和新建文件夹，并撤消自己做出的更改。<strong>每项更改都会等你确认：</strong>Bookmark Scout 窗口会打开，按实际执行的样子显示该更改，并附上智能体自称的名称。在你点击**批准**之前不会有任何变化；点击**拒绝**、关闭窗口或五分钟内未作答都不会做任何更改。已批准的更改可以在书签管理器中用 `Ctrl+Z`（在 Mac 上为 `Cmd+Z`）撤消。
+
+在**本地智能体可以执行的操作**下，关闭你不希望智能体使用的任何查询或更改。**隐藏隐私值**（默认开启）会按照隐私扫描的列表，替换智能体收到的内容中的敏感网址参数、令牌和电子邮件地址。
+
+在 **AI 活动记录**下开启**记录请求**后，智能体的每次调用都会连同智能体的名称一起列在那里。
+
+## 故障排除 [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` 会列出它注册在哪里、连接了哪些浏览器，以及用于智能体的配置片段。
+- 面板中显示**尚未安装**：再次运行 `bookmark-scout-mcp install`，然后点击**重试**。扩展程序的开发版本有自己的 ID；请用 `--extension-id <id>` 添加它。
+- 智能体提示没有连接浏览器：请保持浏览器打开并开启开关；桥接程序的 `bridgeStatus` 工具会说明它看到的情况。
+- 如需查看浏览器启动了什么，请在启动浏览器之前将 `BOOKMARK_SCOUT_MCP_LOG` 设为一个文件路径；该程序会将其消息写入该文件。
+
+## 移除 [#remove-it]
+
+关闭**允许本地 AI 智能体**，从你的智能体中移除该服务器（`claude mcp remove bookmark-scout`），然后运行 `bookmark-scout-mcp uninstall`，删除它写入的清单和注册表值。

@@ -16,11 +16,11 @@ Dies ist eine Zusammenfassung. Maßgeblich ist die vollständige <SiteLink to="p
 ## Was die Erweiterung liest [#what-the-extension-reads]
 
 - Ihre Lesezeichen, um sie anzuzeigen, zu durchsuchen, zu bearbeiten, zu verschieben, zu löschen, zu importieren und zu exportieren.
-- Titel und URL des aktiven Tabs, wenn Sie die aktuelle Seite speichern oder einen Ordnervorschlag anfordern.
+- Titel und URL des aktiven Tabs, wenn Sie die aktuelle Seite speichern (über das Pop-up, die Seitenleiste oder ein Tastenkürzel zum Schnellspeichern) oder einen Ordnervorschlag anfordern.
 - Website-Symbole aus dem eigenen Symbol-Cache des Browsers, in Chrome und Edge, sobald Sie **Symbol-Cache des Browsers verwenden** aktivieren.
 - Website-Symbole, die Sie mit **Website-Symbole aktualisieren** herunterladen, von der jeweiligen gespeicherten Website.
 
-Sie liest nicht den Inhalt der Seiten, die Sie besuchen.
+Sie liest nicht den Inhalt der Seiten, die Sie besuchen. Nach einem Tastenkürzel zum Schnellspeichern zeigt sie in diesem Tab ihre eigene Benachrichtigung an, die nichts aus der Seite liest.
 
 ## Was sie speichert [#what-it-stores]
 
@@ -37,8 +37,9 @@ Sie liest nicht den Inhalt der Seiten, die Sie besuchen.
 | Von Ihren KI-Diensten abgerufene Modelllisten, 7 Tage lang | Lokaler Speicher auf diesem Gerät | Nein |
 | KI-Aktivität, nur solange **Anfragen aufzeichnen** aktiviert ist (standardmäßig deaktiviert, pro Gerät): die letzten KI-Anfragen mit dem, was gesendet wurde und was zurückkam, einschließlich Lesezeichentiteln, URLs, Ordnerpfaden und bei aktiviertem **Seiteninhalt lesen** Seitentext. API-Schlüssel und andere Zugangsdaten werden vor dem Speichern entfernt; das Deaktivieren der Aufzeichnung löscht sie | Lokaler Speicher auf diesem Gerät | Nein |
 | Tags, Zusammenfassungen, gespeicherte Suchen, letzte Ordner, letzte Suchen | Lokaler Speicher auf diesem Gerät | Nein |
-| Mit **Website-Symbole aktualisieren** gespeicherte Website-Symbole, standardmäßig bis zu 4096 KB | Lokaler Speicher auf diesem Gerät | Nein |
+| Mit **Website-Symbole aktualisieren** gespeicherte Website-Symbole, standardmäßig bis zu 4 MB | Lokaler Speicher auf diesem Gerät | Nein |
 | Das letzte Schnellspeichern (Titel und URL der Seite und wohin sie gespeichert wurde), für **Rückgängig** und **Verschieben nach** | Sitzungsspeicher auf diesem Gerät, wird beim Schließen des Browsers geleert | Nein |
+| Der Rückgängig-Verlauf des Managers (die Lesezeichen, die Sie dort geändert haben, mit Kopien gelöschter Lesezeichen samt ihren Tags und Zusammenfassungen), zum Rückgängigmachen und Wiederholen | Sitzungsspeicher auf diesem Gerät, wird beim Schließen des Browsers geleert | Nein |
 
 Prüfergebnisse aus der Tools-Leiste werden nur aufbewahrt, solange ihr Dialog geöffnet ist. Wenn Sie die Erweiterung deinstallieren, wird entfernt, was sie gespeichert hat; Ihre Lesezeichen bleiben im Browser.
 
@@ -50,7 +51,7 @@ Nur wenn Sie eine dieser Funktionen verwenden, und nur an das genannte Ziel:
 
 | Funktion | Ziel | Was gesendet wird |
 | --- | --- | --- |
-| KI-Ordnervorschläge | Der von Ihnen eingerichtete KI-Anbieter | Titel und URL der aktuellen Seite sowie Ihre Ordnernamen. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite |
+| KI-Ordnervorschläge, einschließlich des KI-Tastenkürzels zum Schnellspeichern | Der von Ihnen eingerichtete KI-Anbieter | Titel und URL der aktuellen Seite sowie Ihre Ordnernamen. Mit aktiviertem **Seiteninhalt lesen** auch der Haupttext der Seite |
 | Automatische Tags, Inhaltszusammenfassung, KI-Ordnerneuordnung | Der von Ihnen eingerichtete KI-Anbieter | Titel, URLs und Ordnerpfade der Lesezeichen im Bereich. Mit aktiviertem **Seiteninhalt lesen** senden Automatische Tags und Inhaltszusammenfassung zusätzlich den Haupttext jeder Seite; die KI-Ordnerneuordnung tut das nie |
 | KI fragen | Der von Ihnen eingerichtete KI-Anbieter | Ihre Nachrichten und der bisherige Gesprächsverlauf sowie das, was die KI für die Antwort nachschlägt: passende Lesezeichen (mit Ordner, Datum des Hinzufügens, Tags und Zusammenfassung), Ordnernamen, Titel und URL der aktuellen Seite, ob von ihr geprüfte gespeicherte Links noch funktionieren und mit aktiviertem **Seiteninhalt lesen** der Text der Seiten, die sie liest. Ist die Websuche aktiviert, sucht der Anbieter zusätzlich im Web. Das Gespräch wird nicht gespeichert |
 | Defekte Links prüfen, Metadatenabruf, Linkprüfung in KI fragen | Jede gespeicherte Website | Eine Anfrage nach der Seite, ohne Cookies, nachdem Sie den Zugriff auf Websites erlaubt haben |

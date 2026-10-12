@@ -7,7 +7,7 @@ Contribuições são bem-vindas: relatos de bugs, correções, traduções e doc
 
 ## O repositório [#the-repository]
 
-Um monorepo Bun e Nx com três aplicativos e um pacote de configuração compartilhado:
+Um monorepo Bun e Nx com três aplicativos e dois pacotes:
 
 | Caminho | O que é |
 | --- | --- |
@@ -15,6 +15,7 @@ Um monorepo Bun e Nx com três aplicativos e um pacote de configuração compart
 | `apps/website` | O site de divulgação: Next.js, localizado com `next-intl` |
 | `apps/docs` | Este site: Next.js, Fumadocs e MDX em `content/docs` |
 | `packages/config` | Valores do projeto e do site lidos de `config/project.toml` e `config/web.toml` |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`, o servidor MCP e host de mensagens nativas para os [agentes de IA locais](/guides/local-agents) |
 
 ## Configurar [#set-up]
 
@@ -54,16 +55,19 @@ Isso compila a versão para o Chrome, instala o Chromium do Playwright e executa
 | Alteração | Execute |
 | --- | --- |
 | Código-fonte da extensão | `bunx nx run extension:lint` |
-| Lógica de classificação | `bun run test:unit` |
+| Serviços, hooks e outras lógicas | `bun run test:unit` |
 | Pop-up, configurações, gerenciador, ferramentas, importação e exportação | `bun run test:e2e` |
 | Comportamento no Edge | `bunx nx run extension:test:e2e:edge` |
 | Comportamento no Firefox | `bunx nx run extension:test:e2e:firefox` (um conjunto de testes básicos) |
+| Agentes de IA locais ou `packages/mcp-bridge` | `bun test packages/mcp-bridge` e `bunx nx run extension:test:e2e:bridge` (Linux e macOS) |
+| Velocidade em uma coleção grande | `bunx nx run extension:test:perf`, antes e depois da alteração |
+| Recursos de IA com um provedor real | `bunx nx run extension:test:live`, com as variáveis `BS_LIVE_AI_*` definidas; sem elas, o conjunto é ignorado |
 | Manifesto, provedor ou integração com o navegador | `bunx nx run extension:build:chrome` e a versão de cada navegador afetado |
 | Site | `bunx nx run website:build` |
 | Documentação | `bunx nx run docs:build` e depois `bunx nx run docs:verify` |
 | Alterações em vários aplicativos | `bun run lint` e `bun run build:all` |
 
-A CI executa o lint, as três compilações da extensão, os testes de unidade e de ponta a ponta do Chromium, o conjunto do Edge e o conjunto de testes básicos do Firefox como verificações obrigatórias em todo pull request. Uma compilação bem-sucedida não é cobertura de testes: diga quais testes você executou.
+A CI executa o lint, as três compilações da extensão, os testes de unidade e de ponta a ponta do Chromium, o conjunto do Edge e o conjunto de testes básicos do Firefox como verificações obrigatórias em todo pull request, e os testes da ponte quando a extensão ou a ponte mudam. O conjunto de desempenho é executado diariamente, e o conjunto de IA ao vivo, somente sob demanda. Uma compilação bem-sucedida não é cobertura de testes: diga quais testes você executou.
 
 ## Trabalhar na documentação [#work-on-the-docs]
 
