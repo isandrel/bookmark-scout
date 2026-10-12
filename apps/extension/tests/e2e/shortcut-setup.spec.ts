@@ -93,6 +93,21 @@ test('with every command bound, the popup offers the bookmark keys for quick sav
   await expect(shortcutsPage).toHaveURL(shortcutPageUrl(extensionBrowser));
 });
 
+test('the bookmark key offer gives way in a short popup, and a missing key does not', async ({
+  extensionId,
+  page,
+}) => {
+  await page.setViewportSize({ width: 400, height: 350 });
+  await openPopup(page, extensionId);
+  await expect(page.getByTestId('popup-hint-bar')).toBeVisible();
+  await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
+  await expect(notice(page)).toBeHidden();
+
+  await leaveAIQuickSaveUnset(page);
+  await page.reload();
+  await expect(missingNotice(page)).toBeVisible();
+});
+
 test('once quick save has the bookmark keys, the popup is quiet and Options says how to undo it', async ({
   extensionId,
   page,

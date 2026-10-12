@@ -4,6 +4,8 @@ type ShortcutNotice = {
   id: DismissibleNotice;
   message: string;
   open: () => Promise<void>;
+  /** An offer rather than a problem: it gives way to the tree in a very short popup. */
+  optional?: boolean;
 };
 
 /**
@@ -33,6 +35,7 @@ function pickNotice(
         ),
         // The steps need more room than this line; Options explains them beside the button.
         open: openCommandShortcutsInOptions,
+        optional: true,
       },
   ];
   return (
@@ -59,7 +62,11 @@ export function QuickSaveShortcutNotice() {
       aria-label={notice.message}
       data-testid="quick-save-shortcut-notice"
       data-notice={notice.id}
-      className="flex h-7 shrink-0 items-center gap-1.5 border-t pl-3 pr-1 text-xs text-muted-foreground"
+      // Below 400px of height (the popup goes down to 300), the tree needs every row it can get.
+      className={cn(
+        'flex h-7 shrink-0 items-center gap-1.5 border-t pl-3 pr-1 text-xs text-muted-foreground',
+        notice.optional && '[@media(max-height:399px)]:hidden',
+      )}
     >
       <Keyboard aria-hidden="true" className="size-3.5 shrink-0" />
       <span className="min-w-0 truncate" title={notice.message}>
