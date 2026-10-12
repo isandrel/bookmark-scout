@@ -88,6 +88,9 @@ test('Options turns on access for local AI agents, which look up bookmarks throu
   await expect
     .poll(async () => (await bridgeState(extensionWorker)).connects)
     .toEqual(['com.bookmark_scout.bridge']);
+  // The hello is posted just after the port connects; on a slower runner (Edge CI) it may not be
+  // there yet when the connection is first seen.
+  await expect.poll(async () => (await bridgeState(extensionWorker)).posted.length).toBeGreaterThan(0);
   const [hello] = (await bridgeState(extensionWorker)).posted;
   // The build's browser: the Edge build reports itself as edge.
   const extensionBrowserId = extensionBrowser === 'msedge' ? 'edge' : 'chrome';
