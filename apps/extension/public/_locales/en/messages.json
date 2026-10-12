@@ -309,6 +309,18 @@
         "message": "Nothing to paste",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Nothing was pasted",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "Copied ID",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "No links to add: the dropped text has no web address.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Could not paste",
         "description": "Error toast when pasting bookmarks fails"
@@ -3453,6 +3465,10 @@
         "message": "Deleted $1 items. Undo within $2 seconds.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
     },
+    "toast_deleteNotInHistory": {
+        "message": "It is too large to keep in the undo history, so only Undo here can bring it back.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
+    },
     "toast_itemsRestoredDesc": {
         "message": "Restored $1 items.",
         "description": "Toast description after undoing a multi-item deletion; $1 is the count"
@@ -5626,6 +5642,10 @@
     "error_bookmarkNotFound": {
         "message": "Bookmark not found.",
         "description": "Error when a bookmark no longer exists"
+    },
+    "error_clipboardTooManyItems": {
+        "message": "Cut and Copy hold at most $1 items. Select fewer, or a folder that contains them.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
     },
     "error_bookmarkNoParent": {
         "message": "This item cannot be recovered because it has no parent folder.",

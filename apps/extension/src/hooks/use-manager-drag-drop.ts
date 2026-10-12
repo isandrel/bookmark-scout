@@ -146,7 +146,11 @@ export function useManagerDragDrop({ allData, currentFolderId, table }: DragDrop
           plain: event.dataTransfer.getData('text/plain'),
           html: event.dataTransfer.getData('text/html'),
         });
-        if (links.length === 0) return;
+        // Text from another app can only be read on drop; say why nothing was added.
+        if (links.length === 0) {
+          toast({ title: t('toast_noLinksDropped') });
+          return;
+        }
         await addDroppedLinks(links, destination);
         toast.success({ title: tPlural('toast_linksAdded', links.length) });
       } catch (error) {

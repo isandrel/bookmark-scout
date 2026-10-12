@@ -6,6 +6,11 @@
 max_entries = 100
 
 # The stored history's largest size, in bytes of JSON (a deleted folder keeps a copy of
-# everything in it). The oldest changes are dropped first; a single change larger than this
-# cannot be undone with Ctrl+Z (the undo toast after a deletion still works).
+# everything in it). The oldest changes are dropped first to make room for a new one. A single
+# change larger than this even when compressed is not kept: the earlier changes stay, and the
+# toast after it says it cannot be undone once the toast is gone.
 max_bytes = 4000000
+
+# A change larger than this, in bytes of JSON, is stored gzip-compressed, so a large deletion
+# fits in the history without pushing out the earlier changes
+compress_above_bytes = 65536

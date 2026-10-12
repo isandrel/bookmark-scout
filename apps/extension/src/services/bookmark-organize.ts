@@ -3,14 +3,16 @@
  * a bookmark or folder, and cut, copy, and paste. Every change records one undo history entry
  * (`recordBookmarkWrites`).
  *
- * Cut and copy keep the items in this page's memory and put their URLs on the system clipboard
- * (plain text, one per line, and HTML links), so they paste into other apps too. Paste moves cut
- * items (they stay where they are until then, unlike Chrome, which removes them at once), or
- * creates copies of copied items as they were when copied. When the system clipboard holds other
- * text, paste creates a bookmark for each URL in it.
+ * Cut and copy remember the items' ids in session storage, so every manager tab, and the page
+ * after a reload, can paste them, and put their URLs on the system clipboard (plain text, one per
+ * line, and HTML links), so they paste into other apps too. Paste moves cut items (they stay where
+ * they are until then, unlike Chrome, which removes them at once), or creates copies of copied
+ * items as they are at that moment; items deleted since are skipped. When the system clipboard
+ * holds other text, paste creates a bookmark for each URL in it.
  *
  * No React here.
  */
+import { z } from 'zod';
 
 export type BookmarkFolderChild = { id: string; title: string; url?: string; index?: number };
 
@@ -100,11 +102,48 @@ export async function addDroppedLinks(
   return links.length;
 }
 
-type ClipboardContent =
-  | { mode: 'cut'; ids: string[]; text: string }
-  | { mode: 'copy'; nodes: RecoverableBookmarkNode[]; text: string };
+const clipboardConfig = readConfig(
+  'bookmarks/clipboard',
+  z.strictObject({ max_items: z.number().int().positive() }),
+);
 
-let clipboard: ClipboardContent | null = null;
+/**
+ * What Cut or Copy holds for Paste: the items' ids, whether they were cut, and a hash of the text
+ * the system clipboard got (to tell this page's text from another app's), with the time.
+ */
+export type BookmarkClipboard = {
+  mode: 'cut' | 'copy';
+  ids: string[];
+  textHash: string;
+  at: number;
+};
+
+/** Shared by every manager tab until the browser closes (`STORAGE_ITEMS.bookmarkClipboard`). */
+export const bookmarkClipboardValue = defineStoredValue<BookmarkClipboard | null>(
+  STORAGE_ITEMS.bookmarkClipboard,
+  {
+    schema: z
+      .object({
+        mode: z.enum(['cut', 'copy']),
+        ids: z.array(z.string().min(1)).min(1).max(clipboardConfig.max_items),
+        textHash: z.string(),
+        at: z.number().int().nonnegative(),
+      })
+      .nullable(),
+    empty: null,
+    isEmpty: (value) => value === null,
+  },
+);
+
+/** FNV-1a: a short, stable fingerprint of the clipboard text, so the text itself is not kept. */
+function hashText(text: string): string {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16);
+}
 
 const escapeHtml = (text: string) =>
   text.replace(
@@ -152,29 +191,38 @@ async function writeSystemClipboard({ text, html }: { text: string; html: string
   await navigator.clipboard.writeText(text);
 }
 
+/** Thrown when one Cut or Copy names more items than `max_items`. */
+export class BookmarkClipboardLimitError extends Error {
+  constructor(readonly limit: number) {
+    super(t('error_clipboardTooManyItems', String(limit)));
+    this.name = 'BookmarkClipboardLimitError';
+  }
+}
+
 /**
- * Remembers `ids` for Paste (moving them, or copying them as they are now) and returns what the
- * system clipboard should get. `toSystem` writes it there too (a menu command); a copy or cut
- * event writes it into the event instead.
+ * Remembers `ids` for Paste in every manager tab (moving them, or copying them as they are when
+ * pasted) and returns what the system clipboard should get. `toSystem` writes it there too (a
+ * menu command); a copy or cut event writes it into the event instead and passes that text as
+ * `systemText`, so Paste knows it from text another app copies later.
  */
 export async function setBookmarkClipboard(
   mode: 'cut' | 'copy',
   ids: readonly string[],
-  { toSystem = false }: { toSystem?: boolean } = {},
+  { toSystem = false, systemText }: { toSystem?: boolean; systemText?: string } = {},
 ): Promise<{ text: string; html: string }> {
+  if (ids.length > clipboardConfig.max_items) {
+    throw new BookmarkClipboardLimitError(clipboardConfig.max_items);
+  }
   const nodes = (await Promise.all(ids.map((id) => captureBookmarkSubtree(id).catch(() => null))))
     .filter((snapshot) => snapshot !== null)
     .map((snapshot) => snapshot.node);
   const data = bookmarkClipboardData(nodes);
-  clipboard =
-    mode === 'cut' ? { mode, ids: [...ids], text: data.text } : { mode, nodes, text: data.text };
+  const textHash = hashText(systemText ?? data.text);
+  await bookmarkClipboardValue.set(
+    ids.length > 0 ? { mode, ids: [...ids], textHash, at: Date.now() } : null,
+  );
   if (toSystem) await writeSystemClipboard(data);
   return data;
-}
-
-/** Whether Paste has something of this page's to paste. */
-export function hasBookmarkClipboard(): boolean {
-  return clipboard !== null;
 }
 
 async function createCopy(
@@ -198,17 +246,22 @@ async function createCopy(
 export type BookmarkPasteResult = { pasted: number; skipped: number };
 
 /**
- * Pastes into `parentId` at `index` (the end when absent): this page's cut or copied items, or,
- * when `systemText` holds something else (another app copied since), a bookmark for each URL in
- * it. One undo entry. Null when there was nothing to paste.
+ * Pastes into `parentId` at `index` (the end when absent): the items Cut or Copy holds (from this
+ * manager tab or another), or, when `systemText` holds something else (another app copied since),
+ * a bookmark for each URL in it. Items deleted since are skipped, and so is a folder pasted into
+ * itself. Cut items paste once: those that moved leave the clipboard, and those that could not
+ * move but still exist stay there to paste somewhere else. One undo entry. Null when there was
+ * nothing to paste.
  */
 export async function pasteBookmarks(
   target: { parentId: string; index?: number },
   systemText?: string,
 ): Promise<BookmarkPasteResult | null> {
-  const content = clipboard;
+  const content = await bookmarkClipboardValue.get();
   const fromSystem =
-    systemText !== undefined && systemText.trim() !== '' && systemText !== content?.text;
+    systemText !== undefined &&
+    systemText.trim() !== '' &&
+    hashText(systemText) !== content?.textHash;
   if (fromSystem) {
     const urls = urlsInText(systemText);
     if (urls.length === 0) return null;
@@ -226,33 +279,40 @@ export async function pasteBookmarks(
   }
   if (!content) return null;
   const result: BookmarkPasteResult = { pasted: 0, skipped: 0 };
+  const at = (offset: number) =>
+    target.index === undefined ? {} : { index: target.index + offset };
   if (content.mode === 'cut') {
-    await recordBookmarkWrites({ action: 'move', count: content.ids.length }, async (writer) => {
-      for (const [offset, id] of content.ids.entries()) {
-        try {
-          await writer.move(id, {
-            parentId: target.parentId,
-            ...(target.index === undefined ? {} : { index: target.index + offset }),
-          });
-          result.pasted += 1;
-        } catch {
-          // Deleted since, or a folder pasted into itself.
-          result.skipped += 1;
+    const left: string[] = [];
+    try {
+      await recordBookmarkWrites({ action: 'move', count: content.ids.length }, async (writer) => {
+        for (const id of content.ids) {
+          try {
+            await writer.move(id, { parentId: target.parentId, ...at(result.pasted) });
+            result.pasted += 1;
+          } catch {
+            // Deleted since, or a folder pasted into itself.
+            result.skipped += 1;
+            if (await getBookmark(id).then(Boolean, () => false)) left.push(id);
+          }
         }
-      }
-    });
-    // Cut items paste once, as in Chrome.
-    clipboard = null;
+      });
+    } finally {
+      // Cut items paste once, as in Chrome; one that could not move here can still go elsewhere.
+      await bookmarkClipboardValue.update((current) =>
+        current?.at === content.at ? (left.length > 0 ? { ...current, ids: left } : null) : current,
+      );
+    }
     return result;
   }
-  await recordBookmarkWrites({ action: 'add', count: content.nodes.length }, async (writer) => {
-    for (const [offset, node] of content.nodes.entries()) {
-      await createCopy(
-        writer,
-        node,
-        target.parentId,
-        target.index === undefined ? undefined : target.index + offset,
-      );
+  await recordBookmarkWrites({ action: 'add', count: content.ids.length }, async (writer) => {
+    for (const id of content.ids) {
+      // Copies are made from the items as they are now; one deleted since is skipped.
+      const snapshot = await captureBookmarkSubtree(id).catch(() => null);
+      if (!snapshot) {
+        result.skipped += 1;
+        continue;
+      }
+      await createCopy(writer, snapshot.node, target.parentId, at(result.pasted).index);
       result.pasted += 1;
     }
   });

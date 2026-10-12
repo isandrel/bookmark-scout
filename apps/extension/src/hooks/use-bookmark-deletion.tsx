@@ -150,10 +150,13 @@ export async function deleteBookmarksWithUndo(
     // Null: undone already (Ctrl+Z). Nothing applied: the bookmarks changed since.
     if (undone && undone.applied === 0) throw new Error(t('toast_undoChanged'));
   };
-  const undoWindow =
+  const undoWindow = [
     deleted.length > 1
       ? t('toast_deleteManyUndoWindow', [String(deleted.length), seconds])
-      : t('toast_deleteUndoWindow', [deletedTitle, seconds]);
+      : t('toast_deleteUndoWindow', [deletedTitle, seconds]),
+    // Too large for the undo history: this toast is the only way back.
+    ...(recorded && !recorded.stored ? [t('toast_deleteNotInHistory')] : []),
+  ].join(' ');
   const undoToast = toast.withUndo({
     title:
       deleted.length > 1
