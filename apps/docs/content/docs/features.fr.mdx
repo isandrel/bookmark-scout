@@ -10,9 +10,10 @@ Une liste de référence de ce qui est disponible aujourd'hui. Pour des instruct
 | Emplacement | Description |
 | --- | --- |
 | Fenêtre pop-up | Le bouton de la barre d'outils : recherche, arborescence des dossiers, enregistrement et recommandations de dossiers par IA |
-| Panneau latéral | La même vue dans le panneau latéral du navigateur (Firefox compris), qui reste ouvert pendant votre navigation |
-| Gestionnaire de favoris | Remplace la page Favoris du navigateur dans Chrome et Edge : arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale **Outils** |
-| Paramètres | La page d'options de l'extension, avec onze onglets. Consultez [Paramètres](/settings) |
+| Panneau latéral | La même vue dans le panneau latéral du navigateur (la barre latérale dans Firefox), qui reste ouvert pendant votre navigation |
+| Gestionnaire de favoris | Remplace la page Favoris du navigateur dans Chrome et Edge : arborescence des dossiers, fil d'Ariane, tableau des favoris et barre latérale **Outils**. Dans une fenêtre étroite, l'arborescence des dossiers et **Outils** s'ouvrent par-dessus le tableau ; un chemin de dossiers profond replie ses dossiers intermédiaires dans un menu **…** |
+| Paramètres | La page d'options de l'extension, avec dix onglets. Consultez [Paramètres](/settings) |
+| N'importe quelle page | `Alt+Shift+S` et `Alt+Shift+D` enregistrent rapidement la page sur laquelle vous êtes, avec une notification dans la page |
 | Menu contextuel | **Enregistrer le favori dans…** sur n'importe quel lien, une fois le **Menu contextuel** activé |
 
 ## Rechercher [#find]
@@ -27,12 +28,17 @@ Guide : [Recherche et recherches enregistrées](/guides/search).
 ## Enregistrer et organiser [#save-and-organize]
 
 - Enregistrement de la page actuelle dans n'importe quel dossier, jamais deux fois dans le même dossier, avec un panneau **Récents** qui liste les dossiers que vous avez utilisés.
+- Saisie d'une partie du nom d'un dossier, ou d'un chemin comme `work/react`, et enregistrement dans l'un des dossiers correspondants affichés au-dessus des résultats.
+- Enregistrement rapide avec `Alt+Shift+S` sur n'importe quelle page, dans le dossier qui correspond le mieux à la page (classement effectué sur votre appareil), dans le dernier dossier utilisé ou dans un dossier que vous choisissez ; `Alt+Shift+D` enregistre dans la première suggestion de l'IA. Une notification dans la page propose **Annuler** et d'autres dossiers sous **Déplacer vers**. Dans Chrome et Edge, vous pouvez attribuer `Ctrl+D` à l'enregistrement rapide.
 - Enregistrement de liens depuis le menu contextuel dans un dossier récent ou dans la Barre de favoris.
 - Création de dossiers, glisser-déposer de favoris et de dossiers, et déplacement de plusieurs éléments à la fois dans le gestionnaire.
 - Tri par date d'ajout, par ordre alphabétique naturel ou avec les dossiers en premier, sans modifier l'ordre enregistré par le navigateur.
 - Modification des noms et des URL, et ajout d'étiquettes et d'un résumé dans **Détails du favori**.
 - Suppression avec confirmation facultative et annulation possible pendant 10 secondes, qui restaure tout le contenu d'un dossier.
 - Dans le gestionnaire, redimensionnement des colonnes du tableau par glissement ou avec les touches fléchées ; **Réinitialiser l'affichage** restaure la disposition.
+- L'adresse du gestionnaire indique le dossier ou la recherche (`?id=`, `?q=`) : **Précédent**, **Suivant** et les liens enregistrés en favoris fonctionnent, les liens de dossier de Chrome s'ouvrent, et **Copier le lien vers ce dossier** en copie un.
+- Lorsque Chrome conserve des favoris à la fois dans votre compte Google et uniquement sur cet appareil, l'arborescence des dossiers du gestionnaire les affiche en deux sections, comme celle de Chrome.
+- **Ouvrir les liens dans** détermine si les liens sur lesquels vous cliquez s'ouvrent dans un nouvel onglet, un onglet en arrière-plan ou l'onglet actuel.
 
 Guide : [Enregistrer et organiser](/guides/save-and-organize).
 
@@ -52,7 +58,8 @@ Guides : [Nettoyer les doublons et les URL de suivi](/guides/clean-up) et [Trou
 
 - Exportation au format HTML, JSON, Markdown ou CSV, avec une vérification de confidentialité qui peut masquer les valeurs sensibles dans le fichier.
 - Importation de fichiers HTML ou JSON après un aperçu du dossier cible, des nombres d'éléments et des doublons, avec annulation possible.
-- Sauvegarde et restauration des paramètres de l'extension, des prompts personnalisés, des services d'IA (sans clés API) et des recherches enregistrées dans un fichier JSON.
+- Les exportations JSON conservent les étiquettes et le résumé de chaque favori, et l'importation d'un tel fichier les restaure.
+- Sauvegarde et restauration des paramètres de l'extension, des prompts personnalisés, des services d'IA (sans clés API), des recherches enregistrées et des colonnes du tableau du gestionnaire dans un fichier JSON.
 
 Guide : [Importation et exportation](/guides/import-export).
 
@@ -60,15 +67,27 @@ Guide : [Importation et exportation](/guides/import-export).
 
 Désactivés par défaut. Utilisez votre propre clé pour OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou environ 200 autres fournisseurs du catalogue models.dev, ou utilisez Ollama, CLIProxyAPI ou tout point de terminaison compatible OpenAI.
 
-- Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez.
-- **Étiquetage automatique** et **Générateur de résumés** pour le dossier actuel, avec enregistrement uniquement après votre vérification.
-- **Réorganisation des dossiers par IA**, avec un aperçu avant tout déplacement.
+- Recommandations de dossiers dans la fenêtre pop-up, y compris un nouveau chemin de dossiers que vous vérifiez, et le raccourci d'enregistrement rapide `Alt+Shift+D`.
+- **Demander à l'IA** dans la fenêtre pop-up et le panneau latéral : répond aux questions en cherchant dans vos favoris, dossiers, étiquettes et résumés, en trouvant les doublons et en vérifiant les liens ; enregistre des pages et propose des déplacements, renommages, suppressions et nouveaux dossiers sous forme de plan qui ne modifie rien avant votre accord, chaque modification pouvant être annulée ; et termine ses réponses par des boutons proposant la suite. **Ce que Demander à l'IA peut faire**, dans les Paramètres, désactive n'importe quelle consultation ou modification.
+- **Étiquetage automatique** et **Générateur de résumés** pour le dossier actuel, avec enregistrement uniquement après votre vérification, et annulation possible.
+- **Réorganisation des dossiers par IA**, avec un aperçu avant tout déplacement, et annulation possible.
 - **Préparateur de contexte IA**, qui exporte des favoris au format Markdown ou XML pour une discussion avec une IA, et fonctionne même lorsque l'IA est désactivée.
 
-Les étiquettes et les résumés restent sur cet appareil. Ils ne sont ni synchronisés, ni consultables par la recherche, mais les exportations de favoris en JSON les incluent. Guide : [Configurer les outils d'IA](/guides/ai-tools).
+Les étiquettes et les résumés restent sur cet appareil. Ils ne sont ni synchronisés, ni consultables par la recherche de la fenêtre pop-up, mais Demander à l'IA peut les consulter et les exportations de favoris en JSON les incluent. Guide : [Configurer les outils d'IA](/guides/ai-tools).
+
+## Agents d'IA locaux (facultatifs) [#local-ai-agents-optional]
+
+Désactivés par défaut, sur chaque appareil. Avec **Autoriser les agents d'IA locaux** activé, les agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, utilisent les fonctions de consultation de Bookmark Scout via le programme `bookmark-scout-mcp`, un serveur MCP qui communique avec l'extension grâce à la messagerie native du navigateur. Si **Autoriser les modifications** est aussi activé, ils peuvent enregistrer des pages et proposer des modifications, chacune attendant votre accord dans une fenêtre Bookmark Scout et pouvant être annulée dans le gestionnaire. Les valeurs privées des titres et des URL leur sont masquées par défaut.
+
+Guide : [Utiliser avec des agents d'IA locaux](/guides/local-agents).
 
 ## Clavier et langues [#keyboard-and-language]
 
-- Raccourcis dans la fenêtre pop-up, le panneau latéral et le gestionnaire, qui n'utilisent jamais `Ctrl` ni `Cmd`, avec une boîte de dialogue d'aide `?` dans le gestionnaire. Consultez [Raccourcis clavier](/guides/keyboard-shortcuts).
+- Raccourcis d'enregistrement rapide sur n'importe quelle page, que vous pouvez modifier dans les paramètres de raccourcis du navigateur, ou, dans Firefox, directement dans les Paramètres de Bookmark Scout.
+- Raccourcis dans la fenêtre pop-up et le panneau latéral qui n'utilisent jamais `Ctrl` ni `Cmd`, et dans le gestionnaire les touches du gestionnaire de favoris de Chrome (tout sélectionner, annuler, rétablir, ouvrir dans des onglets), avec une boîte de dialogue d'aide `?`. Consultez [Raccourcis clavier](/guides/keyboard-shortcuts).
+- Sélection dans le gestionnaire comme dans Chrome : clic, `Ctrl`+clic, `Shift`+clic et `Ctrl+A` ; les touches fléchées parcourent le tableau et l'arborescence des dossiers, que les lecteurs d'écran annoncent comme une arborescence.
+- Annulation et rétablissement des modifications, déplacements et suppressions du gestionnaire avec `Ctrl+Z` et `Ctrl+Y`, pendant toute la session du navigateur.
+- Menus contextuels sur les lignes et les dossiers du gestionnaire : couper, copier et coller, tout ouvrir dans des onglets, une nouvelle fenêtre ou une fenêtre de navigation privée, renommer et supprimer ; ainsi que **Trier par nom** et **Ajouter un favori** ou **Ajouter un dossier**. **Menus du gestionnaire de favoris**, dans les Paramètres, détermine les commandes qu'ils affichent, et dans quel ordre.
+- Glisser-déposer dans le gestionnaire comme dans Chrome : sur les dossiers du tableau ou de l'arborescence, entre les lignes dans l'ordre du navigateur, et des liens depuis d'autres pages ; `Ctrl/Cmd+C`, `X` et `V` copient, déplacent et collent.
 - Thème système, clair ou sombre.
 - Anglais, chinois simplifié, chinois traditionnel, japonais, coréen, espagnol, allemand, français et portugais du Brésil.

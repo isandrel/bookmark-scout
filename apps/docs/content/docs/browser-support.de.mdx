@@ -7,24 +7,28 @@ Chrome ist die primäre Zielplattform. Edge basiert auf Chromium und bietet dies
 
 ## Funktionsübersicht [#feature-matrix]
 
-Diese Tabelle beruht auf den Manifesten der für jeden Browser erstellten Erweiterung.
+Diese Tabelle beruht auf den Manifesten der für jeden Browser erstellten Erweiterung und den Browserprüfungen in ihrem Code.
 
 | Funktion | Chrome | Edge | Firefox |
 | --- | --- | --- | --- |
 | Pop-up in der Symbolleiste mit Suche und Speichern | Ja | Ja | Ja |
+| Tastenkürzel zum Schnellspeichern mit einer Benachrichtigung auf der Seite | Ja. Ändern Sie die Tasten unter `chrome://extensions/shortcuts`, wo Sie dem Schnellspeichern auch `Ctrl+D` zuweisen können | Ja. Ändern Sie die Tasten unter `edge://extensions/shortcuts`, einschließlich `Ctrl+D` | Ja. Ändern Sie die Tasten in den Einstellungen von Bookmark Scout oder unter **Tastenkombinationen für Erweiterungen verwalten** in Firefox. Firefox behält `Ctrl+D` und `Ctrl+Shift+D` für sich |
 | Seitenleiste | Ja | Ja | Ja, in der Firefox-Sidebar: Wählen Sie Bookmark Scout in der Sidebar aus |
 | Lesezeichen-Manager und Tools-Leiste | Ersetzt die Lesezeichenseite des Browsers und öffnet sich über **Lesezeichen-Manager öffnen** im Pop-up und in der Seitenleiste | Öffnet sich über **Lesezeichen-Manager öffnen**. Ob Edge die Ersetzung auch auf seine Favoritenseite anwendet, wurde nicht geprüft. | Öffnet sich über **Lesezeichen-Manager öffnen** im Pop-up. Firefox kann seine Lesezeichenseite nicht ersetzen. |
 | Gespeicherte Suchen, Wartungstools, Import und Export, Statistik, KI-Tools im Manager | Ja | Ja | Ja, im Manager. Automatisierte Tests decken Import und Export sowie die Berichte ab; die übrigen Tools werden manuell geprüft. |
 | Einstellungsseite | Ja | Ja | Ja |
+| „KI fragen“ und die anderen KI-Tools | Ja | Ja | Ja, nachdem Sie der Datenweitergabe an Ihren KI-Anbieter zugestimmt haben |
+| Lokale KI-Agenten über `bookmark-scout-mcp` | Ja | Ja | Ja; `bookmark-scout-mcp install` meldet es auch bei Firefox an. Nicht durch automatisierte Tests abgedeckt |
+| Im Inkognitofenster aus dem Manager öffnen | Ja | Ja, als InPrivate-Fenster | Ja, als privates Fenster, wenn die Erweiterung in privaten Fenstern erlaubt ist |
 | Rechtsklickmenü zum Speichern von Links | Ja, nachdem Sie **Kontextmenü** aktiviert haben (fragt nach einer Berechtigung) | Ebenso | Ja, nachdem Sie **Kontextmenü** aktiviert haben |
 | Website-Symbole neben Lesezeichen | Mit **Website-Symbole aktualisieren** gespeicherte Symbole sowie Symbole aus dem Symbol-Cache des Browsers, sobald Sie **Symbol-Cache des Browsers verwenden** aktivieren | Ebenso | Nur mit **Website-Symbole aktualisieren** gespeicherte Symbole; das Tool läuft im Manager. Firefox bietet Erweiterungen keine Favicon-API, daher zeigen andere Lesezeichen ein allgemeines Symbol. |
 | Optionaler Zugriff auf Websites für die Linkprüfung, das Abrufen von Titeln und das Aktualisieren von Website-Symbolen | Wird angefragt, wenn Sie das Tool ausführen | Ebenso | Ebenso |
 
 ## Was getestet wird [#what-is-tested]
 
-- **Chrome (Chromium)**: Unit-Tests und End-to-End-Tests für Pop-up, Seitenleiste, Manager, Einstellungen, Wartungstools, Berichte, Import und Export, Tastenkombinationen, gespeicherte Suchen, Speichern über das Kontextmenü, Drag-and-drop, Netzwerktools und KI-Tools mit simulierten Anbietern.
+- **Chrome (Chromium)**: Unit-Tests und End-to-End-Tests für Pop-up, Seitenleiste, Manager, Einstellungen, Wartungstools, Berichte, Import und Export, Tastenkombinationen, Schnellspeichern, gespeicherte Suchen, Speichern über das Kontextmenü, Drag-and-drop, Netzwerktools, KI-Tools mit simulierten Anbietern und Abläufe über mehrere davon hinweg. Brückentests führen das Programm `bookmark-scout-mcp` mit der Erweiterung in Chromium unter Linux und macOS aus.
 - **Edge**: Dieselbe End-to-End-Suite läuft mit dem Edge-Build.
-- **Firefox**: Eine Smoke-Test-Suite deckt die Suche und das Erstellen von Ordnern im Pop-up ab, die in einem Tab geladene Seite der Seitenleiste, das Öffnen des Managers aus dem Pop-up und der Seitenleiste, die Manager-Seite, das Speichern einer Einstellung, einen JSON-Export mit anschließendem Import, die Statistik- und Datenschutzberichte sowie gespeicherte Website-Symbole im Pop-up. Kontextmenüs, Drag-and-drop, Tastenkombinationen sowie Netzwerk- und KI-Tools (einschließlich **Website-Symbole aktualisieren** selbst) sind nicht abgedeckt.
+- **Firefox**: Eine Smoke-Test-Suite deckt die Suche und das Erstellen von Ordnern im Pop-up ab, die in einem Tab geladene Seite der Seitenleiste, das Öffnen des Managers aus dem Pop-up und der Seitenleiste, die Manager-Seite mit ihrer Adresse, `Delete` und Rückgängig, Tasten im Ordnerbaum, Rechtsklickmenü und Drag-and-drop (über skriptgesteuerte Drag-Ereignisse), den Hinweis zum Tastenkürzel für das Schnellspeichern und die Tastenaufnahme, die Einwilligung zur KI-Datenweitergabe, das Speichern einer Einstellung, einen JSON-Export mit anschließendem Import, die Statistik- und Datenschutzberichte sowie gespeicherte Website-Symbole im Pop-up. Das Speichern über das Rechtsklickmenü auf einer Seite, die übrigen Tastenkombinationen, Drag-and-drop im Pop-up, die Benachrichtigung beim Schnellspeichern selbst, lokale KI-Agenten sowie Netzwerk- und KI-Tools (einschließlich **Website-Symbole aktualisieren** selbst) sind nicht abgedeckt.
 
 Die Edge-Suite und die Firefox-Smoke-Tests sind wie die Chromium-Suite erforderliche CI-Prüfungen. Echte KI-Anbieter und Live-Websites werden manuell geprüft, nicht durch automatisierte Tests.
 

@@ -24,6 +24,40 @@ Uma página que já está na pasta não é salva duas vezes; a notificação avi
 
 O pop-up da barra de ferramentas lê a página em que você clicou nele sem perguntar. O painel lateral continua aberto enquanto você troca de guia, então, na primeira vez que você salva por ele, o Bookmark Scout explica o motivo e depois pede acesso às suas guias. Se você recusar, nada é salvo.
 
+## Salvar com um atalho de teclado [#quick-save]
+
+Pressione `Alt+Shift+S` em qualquer página para salvá-la sem abrir o Bookmark Scout. Uma pequena notificação no canto superior da página informa em qual pasta ela foi salva, com **Desfazer** e algumas outras pastas em **Mover para**. Ela se fecha sozinha depois de alguns segundos; passar o cursor sobre ela ou chegar até ela com a tecla Tab a mantém aberta, e `Esc` a fecha. Ela nunca tira o teclado da página.
+
+O destino da página é definido em **Pasta de salvamento rápido** nas [Configurações](/settings#quick-save):
+
+- **Melhor correspondência** (o padrão) compara o título, o site e o endereço da página com os nomes das suas pastas, as pastas ao redor delas e os títulos e sites dos favoritos que já estão em cada pasta, tudo no seu dispositivo. Títulos em chinês, japonês e coreano também funcionam. **Mover para** oferece as próximas melhores pastas.
+- **Última usada** salva na pasta em que você salvou por último; **Mover para** oferece suas outras pastas recentes.
+- **Pasta escolhida** sempre salva na pasta que você escolher em **Pasta de destino**.
+
+Quando nenhuma pasta corresponde bem, ou a pasta escolhida foi excluída, a página vai para a última pasta usada e, depois, para a barra de favoritos, e a notificação avisa isso.
+
+Pressione `Alt+Shift+D` para salvar a página na pasta sugerida pela IA. Esse atalho usa o mesmo serviço de IA, a mesma leitura da página e a mesma quantidade de sugestões que as sugestões de IA do pop-up, e envia os mesmos dados (consulte [Configurar as ferramentas de IA](/guides/ai-tools)). A notificação mostra **A IA está escolhendo uma pasta...** enquanto espera e, depois, lista as outras sugestões em **Mover para**; uma pasta sugerida que ainda não existe é criada, e **Desfazer** a remove de novo. Com a IA desativada ou não configurada, nada é salvo e a notificação oferece **Abrir configurações de IA**. Quando a IA não consegue escolher uma pasta, a notificação oferece **Tentar novamente**, que pergunta à IA de novo, e **Salvar sem IA**, que salva a página na pasta escolhida por **Pasta de salvamento rápido**. Se você sair da página antes de a IA responder, o resultado aparece no pop-up, abaixo do título da página.
+
+Uma página que você já salvou nos favoritos não é salva de novo: a notificação informa onde ela está e oferece movê-la.
+
+**Desfazer** e **Mover para** funcionam somente no seu salvamento rápido mais recente. Se você fizer um salvamento rápido em outra guia e depois pressionar **Desfazer** na notificação da primeira guia, ela avisa que um salvamento rápido mais recente a substituiu; nesse caso, altere esse favorito no gerenciador de favoritos.
+
+Algumas páginas não permitem que as extensões mostrem nada nelas, como as páginas do próprio navegador, a loja de extensões e o visualizador de PDF, e algumas páginas ocultam o que é desenhado sobre elas. Nesses casos, o ícone da barra de ferramentas mostra ✓ ou ✗ por um momento, e o pop-up se abre (quando o navegador permite) com o título da página e os mesmos botões.
+
+Para alterar as teclas, abra **Atalhos de teclado** nas [Configurações](/settings#quick-save):
+
+- **Chrome e Edge** controlam as teclas eles mesmos. **Alterar atalhos** abre `chrome://extensions/shortcuts` ou `edge://extensions/shortcuts`, que lista todas as extensões; procure o Bookmark Scout ali.
+- **Firefox** deixa o Bookmark Scout defini-las. Clique em um campo de atalho e pressione as novas teclas: mantenha `Ctrl` ou `Alt` pressionada (no Mac, `Command`, `Control` ou `Option`), adicione `Shift` se quiser e pressione uma letra, um número, uma tecla de função ou uma tecla de seta. As teclas de função também funcionam sozinhas. `Esc` cancela, `Tab` avança sem gravar, e o botão de redefinir ao lado de um campo restaura o padrão. Uma combinação que o Firefox não pode usar é explicada abaixo do campo. Nesse caso, **Alterar atalhos** abre a página **Gerenciar atalhos de extensões** do Firefox.
+
+Se outra extensão já usa uma tecla, o navegador deixa o atalho sem definição e as Configurações mostram **Não definido**. Então o pop-up e o painel lateral mostram **Atalho de salvamento rápido não definido** acima das dicas de atalhos, com **Configurar**, que leva você ao lugar descrito acima onde é possível defini-lo. Feche a linha com o botão **Dispensar** se não quiser o atalho; ela fica oculta nesse dispositivo.
+
+### Usar Ctrl+D para salvar rapidamente [#ctrl-d]
+
+`Ctrl+D` (`⌘D` no Mac) abre a janela de favoritos do próprio navegador, e nenhum navegador permite que uma extensão use essa tecla como padrão, então o salvamento rápido começa em `Alt+Shift+S`.
+
+- **Chrome e Edge** permitem que você mesmo a atribua ao salvamento rápido. Em **Atalhos de teclado** nas Configurações, **Usar Ctrl+D para salvar rapidamente** abre a página de atalhos do navegador: procure o Bookmark Scout, clique no lápis ao lado de **Salvar rapidamente a página atual** e pressione `Ctrl+D`. A partir daí, `Ctrl+D` faz um salvamento rápido em vez de abrir a janela de favoritos. Para ter a janela de volta, apague esse atalho na mesma página. Até você fazer isso, o pop-up e o painel lateral oferecem essa opção em uma linha, **Usar Ctrl+D para salvar rapidamente**; **Configurar** abre estas etapas nas Configurações, e **Dispensar** oculta a linha nesse dispositivo.
+- **Firefox** sempre trata `Ctrl+D` (adicionar esta página aos favoritos) e `Ctrl+Shift+D` (adicionar todas as abas aos favoritos) ele mesmo, mesmo quando uma extensão os define, então os campos de atalho recusam os dois.
+
 ## Salvar um link pelo menu de clique com o botão direito [#save-a-link-with-the-right-click-menu]
 
 Primeiro ative o **Menu de contexto** nas [Configurações](/settings#data); ele vem desativado por padrão. Depois clique com o botão direito do mouse em qualquer link de uma página, escolha **Salvar favorito em...** e selecione uma das suas pastas recentes ou a Barra de favoritos. A opção **Origem do nome do favorito** nas Configurações define se o favorito recebe o nome do texto do link, do título da página ou do URL do link. Desative o menu com o **Menu de contexto** (as duas opções ficam na guia **Dados**).
@@ -34,11 +68,13 @@ Passe o cursor sobre uma pasta no pop-up ou no painel lateral, clique em **Adici
 
 ## Mover favoritos e pastas [#move-bookmarks-and-folders]
 
-- **Arrastar e soltar** no pop-up ou no painel lateral. Soltar ao lado de um item em outra pasta move o item para essa pasta. Uma pasta não pode ser movida para dentro dela mesma nem para uma das subpastas dela.
+- **Arrastar e soltar** no pop-up ou no painel lateral. Soltar ao lado de um item em outra pasta move o item para essa pasta. Reordenar dentro de uma pasta só funciona com a classificação **Pastas primeiro**; com as outras classificações, soltar move o item para outra pasta, e uma dica avisa isso enquanto você arrasta. Uma pasta não pode ser movida para dentro dela mesma nem para uma das subpastas dela.
+- **Arrastar e soltar** no gerenciador, como no do Chrome: arraste uma linha, ou uma seleção de linhas, sobre a linha de uma pasta ou sobre uma pasta na árvore de pastas para movê-la para lá; as bordas superior e inferior de uma pasta na árvore soltam o item ao lado dela. Passar sobre uma pasta fechada na árvore durante o arraste a abre. Com **Ordem do navegador** ativada (veja abaixo), soltar entre linhas também reordena. Cada soltura é um passo de `Ctrl+Z`.
+- **Links de outras páginas e aplicativos**: solte um link, ou um texto com URLs, na tabela do gerenciador ou em uma pasta da árvore para salvá-lo nos favoritos ali. Arrastar linhas para outro aplicativo ou outra página leva os URLs delas.
 - **Vários itens de uma vez** no gerenciador: selecione linhas na tabela, use **Mover para pasta** e escolha o destino. Os itens são adicionados no final dessa pasta.
-- **Reordenar** no gerenciador: ative **Ordem do navegador**, remova qualquer classificação de coluna e use os botões **Mover para cima**, **Mover para baixo**, **Mover para o topo** e **Mover para o final** na linha. Eles exigem que a tabela mostre uma única pasta, então remova os filtros ou marque **Somente a pasta atual**.
+- **Reordenar** no gerenciador: ative **Ordem do navegador**, remova qualquer classificação de coluna e arraste as linhas ou use os botões **Mover para cima**, **Mover para baixo**, **Mover para o topo** e **Mover para o final** na linha. Eles exigem que a tabela mostre uma única pasta, então remova os filtros ou marque **Somente a pasta atual**.
 
-Reordenar altera a ordem salva no navegador. O pop-up só mostra essa ordem com a classificação **Pastas primeiro**; as classificações por data e em ordem alfabética continuam reordenando a lista, e a confirmação avisa isso.
+Reordenar altera a ordem salva no navegador. O pop-up só mostra essa ordem com a classificação **Pastas primeiro**; as classificações por data e em ordem alfabética continuam reordenando a lista.
 
 O pop-up e o painel lateral se atualizam sozinhos quando os favoritos mudam em outro lugar, como no gerenciador ou na interface de favoritos do próprio navegador.
 
@@ -59,3 +95,28 @@ Exclua um favorito ou uma pasta pelo pop-up, pelo painel lateral ou pelo menu de
 - **Confirmar antes de excluir** vem ativado por padrão e mostra uma caixa de diálogo com o nome do que será removido. Desative essa opção na guia **Comportamento** das Configurações para excluir imediatamente.
 - Toda exclusão mostra **Desfazer** por 10 segundos. Desfazer restaura o item, tudo o que havia dentro dele e as tags e os resumos salvos dele. Um item restaurado é recriado, então recebe uma nova data de adição.
 - Pastas permanentes, como a Barra de favoritos, não podem ser editadas nem excluídas.
+
+## Selecionar, desfazer e refazer no gerenciador [#select-undo-and-redo-in-the-manager]
+
+A tabela do gerenciador funciona como o gerenciador de favoritos do Chrome:
+
+- Clique em uma linha para selecioná-la, use `Ctrl`+clique (`Cmd`+clique no Mac) para adicionar ou remover uma linha e `Shift`+clique para selecionar um intervalo. As caixas de seleção também funcionam. `Ctrl+A` (`Cmd+A`) seleciona todas as linhas que os filtros mostram, em todas as páginas, e `Esc` limpa a seleção.
+- Clique duas vezes em uma pasta para abri-la, ou em um favorito para abri-lo em uma guia. Clique com o botão do meio em um favorito para abri-lo em uma guia em segundo plano.
+- `Ctrl+Z` (`Cmd+Z`) desfaz as alterações do gerenciador uma de cada vez, da mais recente para a mais antiga: edições, movimentações, reordenações e exclusões. Ele também desfaz páginas salvas, pastas criadas e itens arrastados no pop-up e no painel lateral, além de alterações que você aprovou em Perguntar à IA ou de um agente de IA local. `Ctrl+Y` ou `Ctrl+Shift+Z` (`Cmd+Shift+Z`) as refaz. Vários itens alterados juntos, como a movimentação de uma seleção, contam como um passo. Uma exclusão muito grande é guardada compactada; uma grande demais mesmo assim fica fora do histórico, que mantém as alterações anteriores, e a notificação dela avisa que só o **Desfazer** dela pode trazê-la de volta.
+- O desfazer não mexe em nada que tenha sido alterado depois de outra forma (na interface de favoritos do próprio navegador, em outra janela ou pela sincronização) e avisa isso.
+- O histórico é compartilhado por todas as guias do gerenciador, continua depois de recarregar a página e termina quando o navegador é fechado. Ele guarda as últimas 100 alterações.
+
+A árvore de pastas à esquerda também funciona como a do Chrome: as teclas de seta a percorrem e abrem e fecham pastas, e `Enter` mostra uma pasta na tabela. Se o Chrome guarda alguns dos seus favoritos na sua Conta do Google e outros somente neste dispositivo, a árvore os mostra em **Na sua conta** e **Somente neste dispositivo**, com a segunda seção fechada no início.
+
+A lista completa de teclas está em [Atalhos de teclado](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Menus de clique com o botão direito no gerenciador [#right-click-menus-in-the-manager]
+
+Clique com o botão direito em uma linha, ou em uma pasta na árvore de pastas, para ter os mesmos comandos do gerenciador de favoritos do Chrome. Um clique com o botão direito em uma linha selecionada age sobre toda a seleção; em qualquer outra linha, ele primeiro seleciona essa linha. A tecla de menu ou `Shift+F10` o abre pelo teclado. O botão ⋯ de uma linha abre o mesmo menu para essa linha.
+
+- **Editar** (um favorito) ou **Renomear** (uma pasta), **Mostrar na pasta** (resultados de pesquisa) e **Ver detalhes**.
+- **Recortar**, **Copiar** e **Colar**. Copiar coloca os URLs dos favoritos na área de transferência, um por linha (e como links, para aplicativos que aceitam texto formatado), então eles também podem ser colados em outros aplicativos. Colar no menu de uma linha cola depois dessa linha na pasta mostrada; no menu de uma pasta na árvore, cola dentro dessa pasta. Os itens copiados são colados como cópias dos itens no estado em que estão no momento em que você cola, incluindo tudo o que há dentro de uma pasta copiada; os itens recortados são movidos quando você os cola e ficam onde estão até lá. O que você recorta ou copia pode ser colado em qualquer guia do gerenciador e depois de recarregar a página, até o navegador ser fechado; os itens excluídos nesse meio-tempo são ignorados, e os itens recortados que não puderam ser movidos (uma pasta colada dentro dela mesma) continuam recortados. Adicionar novo favorito completa um endereço digitado sem esquema, como `example.com/path`, com `https://`. `Ctrl+C`, `Ctrl+X` e `Ctrl+V` (`Cmd` no Mac) fazem o mesmo com a seleção, e `Ctrl+V` também transforma em favoritos os URLs copiados em outro aplicativo.
+- **Abrir em nova guia**, **Abrir em nova janela** e **Abrir em janela anônima** (InPrivate no Edge, janela privativa no Firefox, onde a extensão precisa ter permissão para ser executada em janelas privativas). Para vários itens ou uma pasta, eles mostram **Abrir todos (12)** e abrem os favoritos da seleção e os que estão diretamente dentro das pastas dela, não os das subpastas. Mais de 15 guias pede confirmação antes.
+- **Copiar link para esta pasta** e **Copiar ID do favorito**, e **Excluir**.
+
+Clique com o botão direito no espaço vazio da tabela, ou abra **Organizar** (⋮) no cabeçalho, para **Adicionar novo favorito** ou **Adicionar nova pasta** no final da pasta mostrada, ou para **Colar**. **Organizar** também tem **Ordenar por nome**, que reordena a pasta no próprio navegador: pastas primeiro e depois por nome, em ordem natural (`2` antes de `10`). Como toda alteração no gerenciador, ela pode ser desfeita com `Ctrl+Z`.

@@ -3,7 +3,7 @@ title: Autorisations
 description: Chaque autorisation de navigateur demandée par Bookmark Scout, la raison pour laquelle elle est nécessaire, et l'accès facultatif aux sites Web, demandé uniquement lorsque vous lancez un outil.
 ---
 
-Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout n'a pas de scripts de contenu : il ne lit donc jamais les pages que vous consultez. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
+Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmark Scout ne déclare aucun script de contenu et ne lit jamais les pages que vous consultez ; après un raccourci d'enregistrement rapide, il se contente d'afficher sa propre notification dans cet onglet. À l'installation, il ne demande que ce dont il ne peut pas se passer ; tout le reste est demandé lorsque vous activez ou lancez la fonctionnalité qui en a besoin.
 
 ## Accordées à l'installation [#granted-at-install]
 
@@ -11,8 +11,10 @@ Voici les autorisations de l'extension compilée pour chaque navigateur. Bookmar
 | --- | --- | --- |
 | `bookmarks` | Tous | Afficher vos favoris et y effectuer des recherches, ainsi que les créer, les modifier, les déplacer et les supprimer lorsque vous agissez dans la fenêtre pop-up, le panneau latéral, le gestionnaire ou le menu contextuel |
 | `storage` | Tous | Enregistrer vos paramètres et, uniquement sur cet appareil, les paramètres de votre fournisseur d'IA, vos étiquettes, résumés, recherches enregistrées, dossiers récents, recherches récentes et les icônes de site enregistrées avec **Actualiser les icônes de site** |
-| `activeTab` | Tous | Lorsque vous cliquez sur le bouton de la barre d'outils ou sur le menu contextuel, lire le titre et l'URL de cet onglet, pour que vous puissiez enregistrer la page que vous consultez. Aucun autre onglet, aucun historique |
+| `activeTab` | Tous | Lorsque vous cliquez sur le bouton de la barre d'outils ou sur le menu contextuel, ou appuyez sur un raccourci d'enregistrement rapide, lire le titre et l'URL de cet onglet, pour que vous puissiez enregistrer la page que vous consultez. Aucun autre onglet, aucun historique |
+| `scripting` | Tous | Après un raccourci d'enregistrement rapide, afficher la notification dans cet onglet uniquement. Il ne lit rien de la page |
 | `sidePanel` | Chrome, Edge | Fournir la vue du panneau latéral. Firefox déclare cette même page comme barre latérale |
+| `offscreen` | Chrome, Edge | Exécuter la requête de l'enregistrement rapide avec l'IA dans une page d'extension masquée, que le navigateur ferme lorsqu'elle se termine. La page d'arrière-plan de Firefox s'en charge elle-même |
 | `contextMenus` | Firefox | Firefox ne permet pas aux extensions de la demander ultérieurement. Le menu n'apparaît toutefois qu'après l'activation du **Menu contextuel** |
 
 Dans Chrome et Edge, l'extension remplace également la page Favoris du navigateur par le gestionnaire Bookmark Scout. Il s'agit d'un remplacement de page, et non d'une autorisation. Firefox ne le permet pas : le gestionnaire s'y ouvre donc depuis **Ouvrir le gestionnaire de favoris** dans la fenêtre pop-up ; consultez [Compatibilité des navigateurs](/browser-support).
@@ -25,7 +27,7 @@ Dans Chrome et Edge, l'extension remplace également la page Favoris du navigate
 | `contextMenus` | Chrome, Edge | Vous activez le **Menu contextuel** dans les [Paramètres](/settings#data). Il est désactivé par défaut, et Chrome accorde cette autorisation sans demande de confirmation |
 | `favicon` | Chrome, Edge | Vous activez **Utiliser le cache d'icônes du navigateur** dans les [Paramètres](/settings#appearance), pour afficher les icônes que le navigateur a déjà enregistrées |
 | Consentement au partage de données | Firefox | Vous activez les **Fonctionnalités d'IA** ou **Lire le contenu des pages**, ou cliquez sur **Vérifier le service**. Firefox vous demande votre accord avant que l'extension n'envoie quoi que ce soit à votre fournisseur d'IA |
-| `nativeMessaging` | Tous | Vous activez **Autoriser les agents d'IA locaux** dans les [Réglages](/settings#agent-bridge), pour que l'extension puisse communiquer avec le programme bookmark-scout-mcp de votre ordinateur. Une courte explication s'affiche d'abord ; dans Firefox, la même demande porte aussi sur le partage des données de favoris avec lui |
+| `nativeMessaging` | Tous | Vous activez **Autoriser les agents d'IA locaux** dans les [Paramètres](/settings#agent-bridge), pour que l'extension puisse communiquer avec le programme bookmark-scout-mcp de votre ordinateur. Une courte explication s'affiche d'abord ; dans Firefox, la même demande porte aussi sur le partage des données de favoris avec lui |
 
 Si vous refusez, la fonctionnalité reste désactivée et rien n'est envoyé. Si vous retirez ultérieurement une autorisation dans les paramètres des extensions du navigateur, la fonctionnalité est désactivée ; la réactiver entraîne une nouvelle demande.
 
@@ -41,7 +43,7 @@ Pour retirer cet accès, ouvrez la page de l'extension dans le navigateur (par e
 
 ## Ce qui n'est pas demandé [#what-is-not-requested]
 
-- Aucun accès au contenu des pages, et aucun script de contenu
+- Aucun accès au contenu des pages, et aucun script de contenu déclaré
 - Aucune autorisation d'accès à l'historique, aux téléchargements ou aux cookies
 - Aucun accès aux hôtes à l'installation
 

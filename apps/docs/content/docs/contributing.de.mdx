@@ -7,7 +7,7 @@ Beiträge sind willkommen: Fehlerberichte, Korrekturen, Übersetzungen und Dokum
 
 ## Das Repository [#the-repository]
 
-Ein Bun- und Nx-Monorepo mit drei Apps und einem gemeinsamen Konfigurationspaket:
+Ein Bun- und Nx-Monorepo mit drei Apps und zwei Paketen:
 
 | Pfad | Inhalt |
 | --- | --- |
@@ -15,6 +15,7 @@ Ein Bun- und Nx-Monorepo mit drei Apps und einem gemeinsamen Konfigurationspaket
 | `apps/website` | Die Marketing-Website: Next.js, lokalisiert mit `next-intl` |
 | `apps/docs` | Diese Website: Next.js, Fumadocs und MDX in `content/docs` |
 | `packages/config` | Projekt- und Website-Werte, gelesen aus `config/project.toml` und `config/web.toml` |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`, der MCP-Server und Native-Messaging-Host für [lokale KI-Agenten](/guides/local-agents) |
 
 ## Einrichten [#set-up]
 
@@ -54,16 +55,19 @@ Dies erstellt das Chrome-Ziel, installiert das Chromium von Playwright und führ
 | Änderung | Ausführen |
 | --- | --- |
 | Quellcode der Erweiterung | `bunx nx run extension:lint` |
-| Sortierlogik | `bun run test:unit` |
+| Services, Hooks und andere Logik | `bun run test:unit` |
 | Pop-up, Einstellungen, Manager, Tools, Import und Export | `bun run test:e2e` |
 | Verhalten in Edge | `bunx nx run extension:test:e2e:edge` |
 | Verhalten in Firefox | `bunx nx run extension:test:e2e:firefox` (eine Smoke-Suite) |
+| Lokale KI-Agenten oder `packages/mcp-bridge` | `bun test packages/mcp-bridge` und `bunx nx run extension:test:e2e:bridge` (Linux und macOS) |
+| Geschwindigkeit bei einer großen Sammlung | `bunx nx run extension:test:perf`, vor und nach der Änderung |
+| KI-Funktionen mit einem echten Anbieter | `bunx nx run extension:test:live`, mit gesetzten `BS_LIVE_AI_*`-Variablen; ohne sie wird die Suite übersprungen |
 | Manifest, Anbieter oder Browserintegration | `bunx nx run extension:build:chrome` sowie jedes betroffene Browser-Ziel |
 | Website | `bunx nx run website:build` |
 | Dokumentation | `bunx nx run docs:build`, dann `bunx nx run docs:verify` |
 | Änderungen über mehrere Apps | `bun run lint` und `bun run build:all` |
 
-Die CI führt bei jedem Pull Request Lint, die drei Builds der Erweiterung, die Unit- und Chromium-End-to-End-Tests, die Edge-Suite und die Firefox-Smoke-Suite als erforderliche Prüfungen aus. Ein erfolgreicher Build ist keine Testabdeckung: Geben Sie an, welche Tests Sie ausgeführt haben.
+Die CI führt bei jedem Pull Request Lint, die drei Builds der Erweiterung, die Unit- und Chromium-End-to-End-Tests, die Edge-Suite und die Firefox-Smoke-Suite als erforderliche Prüfungen aus, und die Brückentests, wenn sich die Erweiterung oder die Brücke ändert. Die Leistungssuite läuft täglich, die Live-KI-Suite nur bei Bedarf. Ein erfolgreicher Build ist keine Testabdeckung: Geben Sie an, welche Tests Sie ausgeführt haben.
 
 ## An der Dokumentation arbeiten [#work-on-the-docs]
 

@@ -8,10 +8,10 @@ Ouvrez la page des paramètres depuis l'entrée **Options** de l'extension, par 
 ## Utiliser la page des paramètres [#using-the-settings-page]
 
 - **Rechercher dans les paramètres…**, en haut de la page, trouve un paramètre dans n'importe quel onglet et indique le nombre de correspondances.
-- Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
+- Chaque onglet est divisé en sections avec un titre. L'interrupteur de chaque outil se trouve à côté de son titre ; tant qu'il est désactivé, le reste de ses paramètres est replié. Les paramètres techniques, comme les délais d'attente et la longueur des noms de fichier, se trouvent dans **Paramètres avancés**, qui reste fermé jusqu'à ce que vous l'ouvriez ou qu'une recherche y trouve quelque chose.
 - Un paramètre modifié est signalé par **Modifié**, avec un bouton pour rétablir sa valeur par défaut. **Tout réinitialiser** rétablit tous les paramètres.
 - **Exporter** enregistre un fichier de sauvegarde avec les paramètres que vous avez modifiés, les prompts personnalisés, les services d'IA (nom, fournisseur, modèle, **URL de base** et champs propres au fournisseur, jamais les clés API ni les **En-têtes supplémentaires (JSON)**), les recherches enregistrées, ainsi que les colonnes et le tri du tableau du gestionnaire. **Importer** restaure une sauvegarde en remplaçant chaque partie que contient le fichier, ou fusionne un simple fichier de paramètres avec vos paramètres actuels ; après la restauration d'une sauvegarde, saisissez à nouveau les clés API et les en-têtes supplémentaires dans [IA](#ai) pour les services marqués **À configurer**. Aucun des deux ne touche à vos favoris.
-- Les paramètres sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. Quelques paramètres propres à un appareil y restent : le dossier choisi pour l'enregistrement rapide, la limite de stockage des icônes, l'enregistrement de l'activité IA et la recherche web de Demander à l'IA. Les services d'IA, avec leurs clés API, l'**URL de base** et les **En-têtes supplémentaires (JSON)**, restent aussi sur cet appareil. Consultez [Confidentialité](/privacy).
+- Les paramètres que vous modifiez sont stockés dans l'espace de stockage synchronisé du navigateur : ils vous suivent donc sur vos autres appareils lorsque la synchronisation du navigateur est activée. Quelques paramètres propres à un appareil y restent : le dossier choisi pour l'enregistrement rapide, la **Limite de stockage des icônes**, l'enregistrement de l'activité IA et la recherche web de Demander à l'IA. Les services d'IA, avec leurs clés API, l'**URL de base** et les **En-têtes supplémentaires (JSON)**, restent aussi sur cet appareil. Consultez [Confidentialité](/privacy).
 
 ## Enregistrement et recherche [#search]
 
@@ -43,6 +43,15 @@ Consultez [Recherche et recherches enregistrées](/guides/search).
 | **Nom de dossier par défaut** | Nouveau dossier | Le nom initial d'un nouveau dossier |
 
 Consultez [Enregistrer et organiser](/guides/save-and-organize).
+
+### Raccourcis d'enregistrement rapide [#quick-save]
+
+| Paramètre | Valeur par défaut | Effet |
+| --- | --- | --- |
+| **Dossier d'enregistrement rapide** | Meilleure correspondance | Où `Alt+Shift+S` enregistre la page actuelle : le dossier qui lui correspond le mieux, le dernier dossier utilisé ou un dossier choisi. Le raccourci IA utilise toujours la suggestion de l'IA |
+| **Dossier de destination** | Non choisi | Le dossier utilisé pour **Dossier choisi**. S'il est supprimé, l'enregistrement rapide utilise le dernier dossier utilisé |
+
+En dessous, **Raccourcis clavier** affiche les touches attribuées à chaque raccourci dans votre navigateur, avec **Modifier les raccourcis**. Dans Firefox, vous pouvez aussi saisir directement de nouvelles touches à cet endroit et rétablir celles par défaut. Dans Chrome et Edge, cette section explique aussi comment attribuer `Ctrl+D` à l'enregistrement rapide. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save) et [Utiliser Ctrl+D pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
 
 ### Menu contextuel [#context-menu]
 
@@ -90,7 +99,7 @@ Consultez [Enregistrer et organiser](/guides/save-and-organize).
 
 | Paramètre | Valeur par défaut | Effet |
 | --- | --- | --- |
-| **Ouvrir les liens dans** | Nouvel onglet | **Nouvel onglet**, **Nouvel onglet en arrière-plan** ou **Onglet actuel** : où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Ctrl/Cmd+clic fonctionnent toujours comme dans votre navigateur |
+| **Ouvrir les liens dans** | Nouvel onglet | **Nouvel onglet**, **Nouvel onglet en arrière-plan** ou **Onglet actuel** : où s'ouvre un lien lorsque vous cliquez dessus dans Bookmark Scout. Le clic du milieu et Ctrl/Cmd+clic fonctionnent toujours comme dans votre navigateur |
 
 ### Suppression [#deleting]
 
@@ -100,7 +109,7 @@ Consultez [Enregistrer et organiser](/guides/save-and-organize).
 
 ### Menus du gestionnaire de favoris [#manager-menus]
 
-Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionnaire, et déplacez-les vers le haut ou le bas dans chaque groupe. **Rétablir les valeurs par défaut** rétablit le menu complet. Au moins une commande reste toujours.
+Choisissez les commandes affichées par les menus contextuels et ⋯ du gestionnaire, et déplacez-les vers le haut ou le bas dans chaque groupe. **Rétablir les valeurs par défaut** rétablit le menu complet. **Afficher les détails** ou **Copier l'ID du favori** reste toujours présent, pour que le menu propose une commande pour n'importe quel favori ou dossier ; lorsqu'aucune des commandes que vous avez conservées ne s'applique, le menu indique **Aucune action disponible**.
 
 ## IA [#ai]
 
@@ -132,9 +141,9 @@ Tout ce que Demander à l'IA peut consulter et modifier figure ici, et tout est 
 
 ### Agents d'IA locaux [#agent-bridge]
 
-**Autoriser les agents d'IA locaux** (désactivé par défaut, pour cet appareil uniquement) permet aux agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, de consulter vos favoris via le programme bookmark-scout-mcp, que vous installez et enregistrez avec `bookmark-scout-mcp install`. L'activer demande à votre navigateur d'autoriser l'extension à communiquer avec ce programme. **Autoriser les modifications** (désactivé par défaut) leur permet aussi d'enregistrer des pages et de proposer des déplacements, renommages, suppressions et nouveaux dossiers ; chaque modification ouvre une fenêtre Bookmark Scout où vous l'acceptez ou la refusez, et vous pouvez l'annuler dans le gestionnaire de favoris. Le panneau sous l'interrupteur indique si le programme est en cours d'exécution.
+**Autoriser les agents d'IA locaux** (désactivé par défaut, pour cet appareil uniquement) permet aux agents d'IA de votre ordinateur, comme Claude Code, Codex ou Cursor, de consulter vos favoris via le programme bookmark-scout-mcp, que vous installez et enregistrez avec `bookmark-scout-mcp install`. L'activer demande à votre navigateur d'autoriser l'extension à communiquer avec ce programme. **Autoriser les modifications** (désactivé par défaut) leur permet aussi d'enregistrer des pages et de proposer des déplacements, renommages, suppressions et nouveaux dossiers ; chaque modification ouvre une fenêtre Bookmark Scout où vous l'acceptez ou la refusez, et vous pouvez l'annuler dans le gestionnaire de favoris. Le panneau sous l'interrupteur indique si le programme est en cours d'exécution.
 
-**Masquer les valeurs privées** (activé par défaut) remplace les paramètres d'URL sensibles, les jetons et les adresses e-mail dans les titres et URL que reçoivent les agents, d'après la liste de l'Analyseur de confidentialité. **Ce que les agents locaux peuvent faire** liste chaque consultation, toutes activées par défaut ; celle que vous désactivez ne leur est plus proposée du tout.
+**Masquer les valeurs privées** (activé par défaut) remplace les paramètres d'URL sensibles, les jetons et les adresses e-mail dans les titres et URL que reçoivent les agents, d'après la liste de l'Analyseur de confidentialité. **Ce que les agents locaux peuvent faire** liste chaque consultation, toutes activées par défaut ; celle que vous désactivez ne leur est plus proposée du tout.
 
 ## Outils d'IA [#ai-tools]
 
@@ -145,7 +154,7 @@ Chaque outil dispose d'un interrupteur **Activer** (activé par défaut). Le dé
 | **Préparateur de contexte IA** | **Format de sortie** Markdown ; **Inclure les chemins de dossier**, **Inclure les dates**, **Inclure les étiquettes enregistrées** et **Inclure les résumés enregistrés** activés ; **Nombre maximal d'éléments** 200 ; **Profondeur maximale** 8 ; **Longueur des extraits** 240 |
 | **Étiquetage automatique** | **Nombre minimal d'étiquettes** 2 ; **Nombre maximal d'étiquettes** 5 ; **Style des étiquettes** kebab-case ; **Mode de fusion** Ajouter ; **Supprimer les étiquettes en double** activé |
 | **Générateur de résumés** | **Longueur du résumé** 160 ; **Inclure le domaine** activé ; **Mode de fusion** Remplacer |
-| **Réorganisation des dossiers par IA** | **Confiance minimale** 0,55 (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
+| **Réorganisation des dossiers par IA** | **Confiance minimale** 55 % (les déplacements en dessous de ce seuil sont écartés) ; **Taille des lots** 100 favoris par requête |
 
 L'étiquetage automatique et le générateur de résumés portent toujours sur le dossier actuel.
 
@@ -164,7 +173,7 @@ L'étiquetage automatique et le générateur de résumés portent toujours sur l
 | **Nettoyeur d'URL** | **Supprimer les fragments** désactivé ; **Trier les paramètres de requête** et **Dédoublonner les paramètres de requête** activés ; listes **Paramètres à conserver** et **Paramètres à supprimer** |
 | **Vérifier les liens morts** | **Délai d'expiration des requêtes** 8 s ; **Requêtes simultanées** 4 ; **Nombre de nouvelles tentatives** 1 ; **Suivre les redirections** activé ; **Codes d'état de réussite** 200, 201, 202, 204, 301, 302, 307, 308 |
 
-Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
+Les listes telles que **Paramètres à supprimer** se modifient sous forme d'étiquettes : saisissez un nom puis appuyez sur Entrée, ou choisissez une suggestion. **Codes d'état de réussite** est une liste de cases à cocher des codes courants, et vous pouvez en ajouter d'autres. Pour que les paramètres tiennent dans la synchronisation du navigateur, chaque liste compte au plus 20 entrées, et un nom de paramètre au plus 32 caractères (lettres, chiffres et ponctuation d'URL). Les listes par défaut figurent dans [Nettoyer les doublons et les URL de suivi](/guides/clean-up#strip-tracking-parameters). Consultez aussi [Trouver et réparer les liens morts](/guides/dead-links).
 
 ## Métadonnées et contenu [#metadata--content]
 

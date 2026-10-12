@@ -24,6 +24,40 @@ Una página que ya está en la carpeta no se guarda dos veces; el mensaje indica
 
 La ventana emergente de la barra de herramientas lee la página en la que hiciste clic sin preguntar. El panel lateral sigue abierto mientras cambias de pestaña, así que la primera vez que guardas desde él, Bookmark Scout te lo explica y luego pide acceso a tus pestañas. Si lo rechazas, no se guarda nada.
 
+## Guardar con un atajo de teclado [#quick-save]
+
+Pulsa `Alt+Shift+S` en cualquier página para guardarla sin abrir Bookmark Scout. Una pequeña notificación en la esquina superior de la página indica en qué carpeta se guardó, con **Deshacer** y algunas otras carpetas en **Mover a**. Se cierra sola al cabo de unos segundos; si colocas el puntero sobre ella o llegas a ella con el tabulador, sigue abierta, y `Esc` la cierra. Nunca le quita el teclado a la página.
+
+El destino de la página lo decide **Carpeta de guardado rápido** en [Configuración](/settings#quick-save):
+
+- **Mejor coincidencia** (la opción predeterminada) compara el título, el sitio y la dirección de la página con los nombres de tus carpetas, las carpetas que las rodean y los títulos y sitios de los marcadores que ya hay en cada carpeta, todo en tu dispositivo. También funciona con títulos en chino, japonés y coreano. **Mover a** ofrece las siguientes mejores carpetas.
+- **Última usada** guarda en la carpeta en la que guardaste más recientemente; **Mover a** ofrece tus otras carpetas recientes.
+- **Carpeta elegida** guarda siempre en la carpeta que eliges en **Carpeta de destino**.
+
+Cuando ninguna carpeta coincide bien, o se eliminó la carpeta elegida, la página va a la última carpeta usada y, si no, a la barra de marcadores, y la notificación lo indica.
+
+Pulsa `Alt+Shift+D` para guardar la página en la carpeta que sugiere la IA. Usa el mismo servicio de IA, la misma lectura de páginas y el mismo número de sugerencias que las sugerencias de IA de la ventana emergente, y envía los mismos datos (consulta [Configurar las herramientas de IA](/guides/ai-tools)). Mientras espera, la notificación muestra **La IA está eligiendo una carpeta...** y después muestra las demás sugerencias en **Mover a**; una carpeta sugerida que aún no existe se crea, y **Deshacer** la vuelve a quitar. Con la IA desactivada o sin configurar, no se guarda nada y la notificación ofrece **Abrir configuración de IA**. Cuando la IA no puede elegir una carpeta, la notificación ofrece **Reintentar**, que vuelve a preguntar a la IA, y **Guardar sin IA**, que guarda la página en la carpeta que elige **Carpeta de guardado rápido**. Si sales de la página antes de que responda la IA, el resultado aparece en la ventana emergente, bajo el título de la página.
+
+Una página que ya tienes en marcadores no se vuelve a guardar: la notificación indica dónde está y ofrece moverla.
+
+**Deshacer** y **Mover a** solo funcionan con tu último guardado rápido. Si haces un guardado rápido en otra pestaña y luego pulsas **Deshacer** en la notificación de la primera pestaña, esta indica que un guardado rápido más reciente la reemplazó; cambia ese marcador en el administrador de marcadores.
+
+Algunas páginas no permiten que las extensiones muestren nada en ellas, como las páginas propias del navegador, la tienda de extensiones y el visor de PDF, y unas pocas páginas ocultan lo que se dibuja encima. En ellas, el icono de la barra de herramientas muestra ✓ o ✗ un momento, y se abre la ventana emergente (donde el navegador lo permite) con el título de la página y los mismos botones.
+
+Para cambiar las teclas, abre **Atajos de teclado** en [Configuración](/settings#quick-save):
+
+- **Chrome y Edge** gestionan las teclas ellos mismos. **Cambiar atajos** abre `chrome://extensions/shortcuts` o `edge://extensions/shortcuts`, que muestra todas las extensiones; busca allí Bookmark Scout.
+- **Firefox** permite que Bookmark Scout las asigne. Haz clic en un campo de atajo y pulsa las teclas nuevas: mantén pulsada `Ctrl` o `Alt` (en un Mac, `Command`, `Control` u `Option`), añade `Shift` si quieres y pulsa una letra, un número, una tecla de función o una flecha. Las teclas de función también funcionan solas. `Esc` cancela, `Tab` pasa al siguiente campo sin grabar y el botón de restablecer junto a un campo recupera el valor predeterminado. Si Firefox no puede usar una combinación, se explica debajo del campo. **Cambiar atajos** abre en su lugar la página **Administrar atajos de extensiones** de Firefox.
+
+Si otra extensión ya usa una tecla, el navegador deja el atajo sin asignar y la configuración muestra **Sin asignar**. Entonces la ventana emergente y el panel lateral muestran **Atajo de guardado rápido sin asignar** encima de las indicaciones de atajos, con **Configurarlo**, que te lleva al lugar mencionado arriba donde puedes asignarlo. Cierra esa línea con su botón **Descartar** si no quieres el atajo; seguirá oculta en ese dispositivo.
+
+### Usar Ctrl+D para el guardado rápido [#ctrl-d]
+
+`Ctrl+D` (`⌘D` en un Mac) abre el propio diálogo de marcadores del navegador, y ningún navegador permite que una extensión la use como tecla predeterminada, así que el guardado rápido empieza con `Alt+Shift+S`.
+
+- **Chrome y Edge** te permiten asignarla tú mismo al guardado rápido. En **Atajos de teclado** de la configuración, **Usar Ctrl+D para el guardado rápido** abre la página de atajos del navegador: busca Bookmark Scout, haz clic en el lápiz junto a **Guardado rápido de la página actual** y pulsa `Ctrl+D`. A partir de entonces, `Ctrl+D` hace un guardado rápido en lugar de abrir el diálogo de marcadores (o de favoritos). Para recuperar el diálogo, borra ese atajo en la misma página. Hasta que lo hagas, la ventana emergente y el panel lateral lo ofrecen en una línea, **Usar Ctrl+D para el guardado rápido**; **Configurarlo** abre estos pasos en la configuración, y **Descartar** oculta la línea en ese dispositivo.
+- **Firefox** siempre gestiona él mismo `Ctrl+D` (añadir esta página a marcadores) y `Ctrl+Shift+D` (añadir todas las pestañas a marcadores), aunque una extensión los asigne, así que los campos de atajo rechazan ambos.
+
 ## Guardar un enlace con el menú contextual [#save-a-link-with-the-right-click-menu]
 
 Primero activa **Menú contextual** en [Configuración](/settings#data); está desactivado de forma predeterminada. Después, haz clic con el botón derecho en cualquier enlace de una página, elige **Guardar marcador en...** y selecciona una de tus carpetas recientes o la Barra de marcadores. **Origen del nombre del marcador**, en la configuración, decide si el marcador recibe el nombre del texto del enlace, del título de la página o de la URL del enlace. Desactiva el menú con **Menú contextual** (ambos están en la pestaña **Datos**).
@@ -34,11 +68,13 @@ Coloca el puntero sobre una carpeta en la ventana emergente o el panel lateral, 
 
 ## Mover marcadores y carpetas [#move-bookmarks-and-folders]
 
-- **Arrastrar y soltar** en la ventana emergente o el panel lateral. Al soltar junto a un elemento de otra carpeta, se mueve a esa carpeta. Una carpeta no se puede mover dentro de sí misma ni de una de sus subcarpetas.
+- **Arrastrar y soltar** en la ventana emergente o el panel lateral. Al soltar junto a un elemento de otra carpeta, se mueve a esa carpeta. Reordenar dentro de una carpeta solo funciona con el orden **Carpetas primero**; con los demás órdenes, al soltar el elemento se mueve a otra carpeta, y una indicación lo avisa mientras arrastras. Una carpeta no se puede mover dentro de sí misma ni de una de sus subcarpetas.
+- **Arrastrar y soltar** en el administrador, como en el de Chrome: arrastra una fila, o una selección de filas, sobre una fila de carpeta o sobre una carpeta del árbol de carpetas para moverla allí; los bordes superior e inferior de una carpeta del árbol la sueltan al lado. Si colocas el puntero sobre una carpeta cerrada del árbol mientras arrastras, se abre. Con **Orden del navegador** activado (ver más abajo), soltar entre filas también reordena. Cada vez que sueltas es un paso de `Ctrl+Z`.
+- **Enlaces desde otras páginas y aplicaciones**: suelta un enlace, o texto con URLs, sobre la tabla del administrador o sobre una carpeta de su árbol para guardarlo ahí como marcador. Al arrastrar filas a otra aplicación o página, se llevan sus URLs.
 - **Varios a la vez** en el administrador: selecciona filas en la tabla, usa **Mover a una carpeta** y elige el destino. Los elementos se añaden al final de esa carpeta.
-- **Reordenar** en el administrador: activa **Orden del navegador**, quita cualquier ordenación por columna y usa los botones **Subir**, **Bajar**, **Mover al principio** y **Mover al final** de la fila. Necesitan que la tabla muestre una sola carpeta, así que borra los filtros o marca **Solo la carpeta actual**.
+- **Reordenar** en el administrador: activa **Orden del navegador**, quita cualquier ordenación por columna y arrastra las filas, o usa los botones **Subir**, **Bajar**, **Mover al principio** y **Mover al final** de la fila. Necesitan que la tabla muestre una sola carpeta, así que borra los filtros o marca **Solo la carpeta actual**.
 
-Reordenar cambia el orden guardado del navegador. La ventana emergente solo muestra ese orden con el orden **Carpetas primero**; los órdenes por fecha y alfabético siguen reordenando la lista, y la confirmación lo indica.
+Reordenar cambia el orden guardado del navegador. La ventana emergente solo muestra ese orden con el orden **Carpetas primero**; los órdenes por fecha y alfabético siguen reordenando la lista.
 
 La ventana emergente y el panel lateral se actualizan solos cuando los marcadores cambian en otro lugar, como en el administrador o en la propia interfaz de marcadores del navegador.
 
@@ -59,3 +95,28 @@ Elimina un marcador o una carpeta desde la ventana emergente, el panel lateral o
 - **Confirmar antes de eliminar** está activado de forma predeterminada y muestra un diálogo que indica lo que se va a quitar. Desactívalo en la pestaña **Comportamiento** de la configuración para eliminar al instante.
 - Cada eliminación muestra **Deshacer** durante 10 segundos. Deshacer restaura el elemento, todo lo que contiene y sus etiquetas y resúmenes guardados. Un elemento restaurado se vuelve a crear, así que recibe una nueva fecha de creación.
 - Las carpetas permanentes, como la Barra de marcadores, no se pueden editar ni eliminar.
+
+## Seleccionar, deshacer y rehacer en el administrador [#select-undo-and-redo-in-the-manager]
+
+La tabla del administrador funciona como el administrador de marcadores de Chrome:
+
+- Haz clic en una fila para seleccionarla, `Ctrl`+clic (`Cmd`+clic en un Mac) para añadir o quitar una, y `Shift`+clic para seleccionar un intervalo. Las casillas también funcionan. `Ctrl+A` (`Cmd+A`) selecciona todas las filas que muestran los filtros, en todas las páginas, y `Esc` borra la selección.
+- Haz doble clic en una carpeta para abrirla, o en un marcador para abrirlo en una pestaña. Haz clic con el botón central en un marcador para abrirlo en una pestaña en segundo plano.
+- `Ctrl+Z` (`Cmd+Z`) deshace los cambios del administrador de uno en uno, empezando por el más reciente: ediciones, movimientos, reordenaciones y eliminaciones. También deshace las páginas guardadas, las carpetas creadas y los elementos arrastrados en la ventana emergente y el panel lateral, y los cambios que aprobaste desde Preguntar a la IA o desde un agente de IA local. `Ctrl+Y` o `Ctrl+Shift+Z` (`Cmd+Shift+Z`) los rehace. Varios elementos cambiados a la vez, como el movimiento de una selección, son un solo paso. Una eliminación muy grande se guarda comprimida; si aun así es demasiado grande, se deja fuera del historial, se conservan los cambios anteriores y su mensaje indica que solo su **Deshacer** puede recuperarla.
+- Deshacer no toca nada que se haya cambiado después de otra forma (en la propia interfaz de marcadores del navegador, en otra ventana o por la sincronización) y lo indica.
+- Todas las pestañas del administrador comparten el historial, que se conserva al recargar la página y termina al cerrar el navegador. Guarda los últimos 100 cambios.
+
+El árbol de carpetas de la izquierda también funciona como el de Chrome: las teclas de flecha lo recorren y abren y cierran carpetas, y `Enter` muestra una carpeta en la tabla. Si Chrome guarda algunos de tus marcadores en tu cuenta de Google y otros solo en este dispositivo, el árbol los muestra en **En tu cuenta** y **Solo en este dispositivo**, con la segunda sección cerrada al principio.
+
+La lista completa de teclas está en [Combinaciones de teclas](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Menús contextuales en el administrador [#right-click-menus-in-the-manager]
+
+Haz clic con el botón derecho en una fila, o en una carpeta del árbol de carpetas, para ver los mismos comandos que en el administrador de marcadores de Chrome. Un clic con el botón derecho en una fila seleccionada actúa sobre toda la selección; en cualquier otra fila, primero selecciona esa fila. La tecla de menú o `Shift+F10` lo abre desde el teclado. El botón ⋯ de una fila abre el mismo menú para esa fila.
+
+- **Editar** (un marcador) o **Cambiar nombre** (una carpeta), **Mostrar en la carpeta** (resultados de búsqueda) y **Ver detalles**.
+- **Cortar**, **Copiar** y **Pegar**. Copiar pone las URLs de los marcadores en el portapapeles, una por línea (y como enlaces, para las aplicaciones que aceptan texto con formato), así que también se pegan en otras aplicaciones. Pegar en el menú de una fila pega después de esa fila en la carpeta que se muestra; en el menú de una carpeta del árbol, pega dentro de esa carpeta. Los elementos copiados se pegan como copias de los elementos tal como están al pegarlos, incluido todo lo que hay dentro de una carpeta copiada; los elementos cortados se mueven al pegarlos y, hasta entonces, se quedan donde están. Lo que cortas o copias se puede pegar en cualquier pestaña del administrador y después de recargar, hasta que se cierra el navegador; los elementos eliminados mientras tanto se omiten, y los elementos cortados que no se pudieron mover (una carpeta pegada dentro de sí misma) siguen cortados. Añadir marcador nuevo completa con `https://` una dirección escrita sin esquema, como `example.com/path`. `Ctrl+C`, `Ctrl+X` y `Ctrl+V` (`Cmd` en un Mac) hacen lo mismo con la selección, y `Ctrl+V` también convierte en marcadores las URLs copiadas en otra aplicación.
+- **Abrir en una pestaña nueva**, **Abrir en una ventana nueva** y **Abrir en ventana de incógnito** (InPrivate en Edge, una ventana privada en Firefox, donde la extensión necesita permiso en ventanas privadas). Para varios elementos o una carpeta, se muestran como **Abrir todo (12)** y abren los marcadores de la selección y los que están directamente dentro de sus carpetas, no en subcarpetas. Si son más de 15 pestañas, primero pregunta.
+- **Copiar enlace a esta carpeta** y **Copiar el ID del marcador**, y **Eliminar**.
+
+Haz clic con el botón derecho en el espacio vacío de la tabla, o abre **Organizar** (⋮) en el encabezado, para usar **Añadir marcador nuevo** o **Añadir carpeta nueva** al final de la carpeta que se muestra, o **Pegar**. **Organizar** también tiene **Ordenar por nombre**, que reordena la carpeta en el propio navegador: primero las carpetas y después por nombre, en orden natural (`2` antes que `10`). Como cualquier cambio en el administrador, `Ctrl+Z` lo deshace.
