@@ -5891,6 +5891,22 @@
         "message": "브라우저가 이 단축키를 받아들이지 않았습니다. 다른 조합을 써 보세요.",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "빠른 저장에 $1 사용",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "브라우저는 $1을(를) 자체 북마크 대화상자에 쓰고 기본적으로 확장 프로그램에 넘기지 않지만, 직접 지정할 수 있습니다. 단축키 페이지를 열고 Bookmark Scout를 찾아 \"$2\" 옆의 연필을 클릭한 다음 $1을(를) 누르세요.",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "이제 $1을(를) 누르면 브라우저의 북마크 대화상자 대신 빠른 저장이 실행됩니다. 대화상자를 되돌리려면 브라우저의 단축키 페이지에서 이 단축키를 지우세요.",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "$1은(는) 브라우저가 직접 쓰므로 Bookmark Scout에 전달되지 않습니다. 다른 단축키를 고르세요.",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "빠른 저장 단축키가 설정되지 않음",
         "description": "Popup and side panel line when a quick save command has no keys"
