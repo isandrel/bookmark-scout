@@ -55,7 +55,7 @@ export function AISuggestionsPanel({
       <div className="mt-1 min-h-0 space-y-1 overflow-y-auto px-2" data-slot="ai-suggestion-list">
         {recommendations.map((rec) => (
           <button
-            key={rec.folderPath}
+            key={folderRecommendationKey(rec)}
             type="button"
             onClick={() => onSelect(rec)}
             title={rec.reason}

@@ -14,7 +14,12 @@ export interface ParsedImport {
   bookmarks: BookmarkTreeNode[];
   /** Entries dropped because they were not valid bookmarks or folders */
   skipped: number;
-  /** Tags and summaries by URL, from a JSON export; given to the bookmarks the import creates. */
+  /**
+   * Tags and summaries from a JSON export, by the id the parsed entry has here: each bookmark's
+   * own, also when several share a URL. Given to the bookmark the import creates from that entry.
+   */
+  metadataById?: Record<string, StoredBookmarkMetadata>;
+  /** Tags and summaries by URL, from an export made before they were kept per entry. */
   metadataByUrl?: Record<string, StoredBookmarkMetadata>;
 }
 
@@ -178,6 +183,7 @@ export const jsonImportFormat: ImportFormat = {
   parse(content: string): ParsedImport {
     let skipped = 0;
     const generateId = createImportIdGenerator();
+    const metadataById: Record<string, StoredBookmarkMetadata> = {};
 
     let parsed: unknown;
     try {
@@ -214,6 +220,10 @@ export const jsonImportFormat: ImportFormat = {
           typeof raw.dateGroupModified === 'number' ? raw.dateGroupModified : undefined,
       };
 
+      // An exported bookmark carries its own tags and summary.
+      const metadata = url ? parseBookmarkMetadata({ [id]: raw })[id] : undefined;
+      if (metadata) metadataById[id] = metadata;
+
       if (!url && rawChildren) {
         node.children = rawChildren
           .map((child) => parseRawNode(child, id))
@@ -235,11 +245,17 @@ export const jsonImportFormat: ImportFormat = {
     } else if (isPlainObject(parsed) && Array.isArray(parsed.children) && !parsed.url) {
       // An exported container: its children are the top-level entries.
       bookmarks = parseList(parsed.children);
-      metadataByUrl = parseBookmarkMetadata(parsed.metadata);
+      const byUrl = parseBookmarkMetadata(parsed.metadata);
+      if (Object.keys(byUrl).length > 0) metadataByUrl = byUrl;
     } else {
       bookmarks = parseList([parsed]);
     }
-    return { bookmarks, skipped, ...(metadataByUrl ? { metadataByUrl } : {}) };
+    return {
+      bookmarks,
+      skipped,
+      ...(Object.keys(metadataById).length > 0 ? { metadataById } : {}),
+      ...(metadataByUrl ? { metadataByUrl } : {}),
+    };
   },
 };
 
@@ -276,7 +292,7 @@ export function detectFormat(filename: string): ImportFormat | null {
  * Parse file content and return bookmarks
  */
 export function parseBookmarks(content: string, format: ImportFormat): ImportResult {
-  const { bookmarks, skipped, metadataByUrl } = format.parse(content);
+  const { bookmarks, skipped, metadataById, metadataByUrl } = format.parse(content);
 
   // Count items
   let bookmarkCount = 0;
@@ -302,6 +318,7 @@ export function parseBookmarks(content: string, format: ImportFormat): ImportRes
     skipped,
     bookmarkCount,
     folderCount,
+    ...(metadataById ? { metadataById } : {}),
     ...(metadataByUrl ? { metadataByUrl } : {}),
   };
 }
@@ -336,6 +353,8 @@ export type ImportPlanNode = {
   action: 'create' | 'skip';
   /** Set when the URL already exists, whether or not the strategy skips it. */
   conflict?: ImportConflictKind;
+  /** Tags and summary the created bookmark gets. */
+  metadata?: StoredBookmarkMetadata;
   children?: ImportPlanNode[];
 };
 
@@ -367,8 +386,6 @@ export type ImportPlan = {
   nodes: ImportPlanNode[];
   counts: ImportPlanCounts;
   conflicts: ImportConflict[];
-  /** Tags and summaries by URL, for the bookmarks the import creates. */
-  metadataByUrl?: Record<string, StoredBookmarkMetadata>;
 };
 
 export type ImportTarget = { id: string; label: string };
@@ -479,11 +496,13 @@ export function planImport(
       }
       if (skip) counts.bookmarksToSkip += 1;
       else counts.bookmarksToCreate += 1;
+      const metadata = parsed.metadataById?.[node.id] ?? parsed.metadataByUrl?.[url];
       return {
         title: node.title,
         url,
         action: skip ? 'skip' : 'create',
         ...(conflict ? { conflict } : {}),
+        ...(metadata ? { metadata } : {}),
       };
     }
 
@@ -506,7 +525,6 @@ export function planImport(
     nodes: parsed.bookmarks.map(planNode),
     counts,
     conflicts,
-    ...(parsed.metadataByUrl ? { metadataByUrl: parsed.metadataByUrl } : {}),
   };
 }
 
@@ -552,8 +570,7 @@ export async function applyImportPlan(plan: ImportPlan): Promise<ImportApplyOutc
       if (isTopLevel) outcome.createdRootIds.push(created.id);
       if (node.url) {
         outcome.bookmarksCreated += 1;
-        const saved = plan.metadataByUrl?.[node.url];
-        if (saved) metadata[created.id] = saved;
+        if (node.metadata) metadata[created.id] = node.metadata;
         return;
       }
       outcome.foldersCreated += 1;

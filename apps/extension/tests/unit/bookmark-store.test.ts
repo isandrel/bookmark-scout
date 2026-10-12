@@ -3,6 +3,7 @@ import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage, t } from '@/hooks/use-i18n';
 import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import { saveSettings } from '@/lib/settings-storage';
+import { bookmarkHistoryValue } from '@/services/bookmark-history';
 import { useBookmarkStore } from '@/stores/bookmark-store';
 
 type FakeNode = {
@@ -235,6 +236,55 @@ describe('handleDrop', () => {
     expect(childTitles(folder.id)).toEqual(['A', 'B', 'C', 'D']);
     expect(below).toMatchObject({ skipped: true, silent: true });
     expect(above).toMatchObject({ skipped: true, silent: true });
+  });
+});
+
+describe('undo history', () => {
+  const undoEntries = async () =>
+    (await bookmarkHistoryValue.get()).undo.map((entry) => ({
+      label: entry.label,
+      kinds: entry.operations.map((operation) => operation.kind),
+    }));
+
+  it('records each popup change as one entry the manager can undo', async () => {
+    const { addBookmarkToFolder, createFolder, handleDrop } = useBookmarkStore.getState();
+    await addBookmarkToFolder(folder.id);
+    await createFolder(bar.id, 'Later');
+    const saved = findNode(folder.id).children?.[0];
+    await handleDrop({
+      type: 'bookmark-move',
+      sourceId: saved?.id ?? '',
+      sourceParentId: folder.id,
+      sourceIndex: 0,
+      targetId: bar.id,
+      targetParentId: bar.id,
+      targetIndex: 0,
+    });
+
+    expect(childTitles(bar.id)).toEqual([PAGE.title, 'Reading', 'Later']);
+    expect(await undoEntries()).toEqual([
+      { label: { action: 'add', title: PAGE.title }, kinds: ['create'] },
+      { label: { action: 'add', title: 'Later' }, kinds: ['create'] },
+      { label: { action: 'move', title: PAGE.title }, kinds: ['move'] },
+    ]);
+  });
+
+  it('records nothing for a save that was skipped or a drop in place', async () => {
+    const { addBookmarkToFolder, handleDrop } = useBookmarkStore.getState();
+    await addBookmarkToFolder(folder.id);
+    await addBookmarkToFolder(folder.id);
+    const saved = findNode(folder.id).children?.[0];
+    await handleDrop({
+      type: 'bookmark-reorder',
+      sourceId: saved?.id ?? '',
+      sourceParentId: folder.id,
+      sourceIndex: 0,
+      targetId: '',
+      targetParentId: folder.id,
+      targetIndex: 1,
+    });
+
+    expect((await undoEntries()).map((entry) => entry.label.action)).toEqual(['add']);
   });
 });
 

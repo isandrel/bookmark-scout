@@ -3261,6 +3261,18 @@
         "message": "설정, 프롬프트, AI 서비스, 저장한 검색을 복원했습니다. 백업에는 API 키가 없으므로, 없는 키는 설정 > AI에서 추가하세요.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "설정, 프롬프트, 기본 URL을 포함한 AI 서비스, 저장한 검색을 복원했습니다. 백업에는 포함되지 않아 복원되지 않은 항목: $1. 설정 > AI에서 다시 입력하세요. 그때까지 해당 서비스에는 \"설정 필요\"가 표시됩니다.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "\"$1\"의 $2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "설정 필요",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "밝은 테마로 전환",
         "description": "Theme toggle accessible name"
@@ -6054,5 +6066,19 @@
     "settings_askAiWrites": {
         "message": "북마크 변경",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "이 페이지에 대한 폴더 제안이 없습니다",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "날짜나 이름순으로 정렬되어 있어 여기서는 다른 폴더로만 옮길 수 있습니다. 순서를 바꾸려면 \"$sort$\" 정렬을 선택하세요.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

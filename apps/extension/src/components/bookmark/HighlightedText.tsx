@@ -9,9 +9,16 @@ interface HighlightedTextProps {
   text: string;
   ranges?: ReadonlyArray<readonly [start: number, end: number]>;
   className?: string;
+  /** Show the whole text on hover; off where the row around it has its own tooltip. */
+  showTitle?: boolean;
 }
 
-export function HighlightedText({ text, ranges, className }: HighlightedTextProps) {
+export function HighlightedText({
+  text,
+  ranges,
+  className,
+  showTitle = true,
+}: HighlightedTextProps) {
   const parts: ReactNode[] = [];
   let cursor = 0;
 
@@ -19,10 +26,7 @@ export function HighlightedText({ text, ranges, className }: HighlightedTextProp
     if (start < cursor || end <= start) continue;
     if (start > cursor) parts.push(text.slice(cursor, start));
     parts.push(
-      <mark
-        key={start}
-        className="rounded-sm bg-marker font-semibold text-marker-foreground"
-      >
+      <mark key={start} className="rounded-sm bg-marker font-semibold text-marker-foreground">
         {text.slice(start, end)}
       </mark>,
     );
@@ -31,7 +35,7 @@ export function HighlightedText({ text, ranges, className }: HighlightedTextProp
   if (cursor < text.length) parts.push(text.slice(cursor));
 
   return (
-    <span className={className} title={text}>
+    <span className={className} title={showTitle ? text : undefined}>
       {parts}
     </span>
   );

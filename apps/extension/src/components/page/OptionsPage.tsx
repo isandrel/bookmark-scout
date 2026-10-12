@@ -34,8 +34,22 @@ const optionsConfig = readConfig(
       .string()
       .refine((key) => key in getSettingsCategories(), 'not a settings category'),
     backup_filename: z.string().min(1),
+    restore_notice_duration_ms: z.number().int().positive(),
   }),
 );
+
+/** The secret fields each AI service needs entered again: `Work (API Key)`, as one list. */
+function describeServicesNeedingSetup(services: readonly ServiceNeedingSetup[]): string {
+  const labels: Record<AISecretField, MessageKey> = {
+    apiKey: 'options_apiKey',
+    extraHeaders: 'options_extraHeaders',
+  };
+  return formatList(
+    services.map(({ name, fields }) =>
+      t('toast_backupServiceNeeds', [name, formatList(fields.map((field) => t(labels[field])))]),
+    ),
+  );
+}
 
 /** `options.html?category=ai` opens on that category, as quick save's "Open AI settings" does. */
 function initialCategory(): string {
@@ -212,10 +226,15 @@ const OptionsPage: React.FC = () => {
       const content = await file.text();
       // A backup restores everything it holds; any other JSON is read as a settings file.
       if (isBackupFile(content)) {
-        await restoreBackup(content);
+        const { needsSetup } = await restoreBackup(content);
         toast.success({
           title: t('toast_backupRestored'),
-          description: t('toast_backupRestoredDescription'),
+          description:
+            needsSetup.length === 0
+              ? t('toast_backupRestoredDescription')
+              : t('toast_backupRestoredNeedsSetup', describeServicesNeedingSetup(needsSetup)),
+          // Long enough to read which services need what.
+          ...(needsSetup.length > 0 ? { duration: optionsConfig.restore_notice_duration_ms } : {}),
         });
         return;
       }

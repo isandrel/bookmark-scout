@@ -22,6 +22,14 @@ export type PopupTreeRow = {
   expanded: boolean;
 };
 
+/**
+ * The native tooltip of a bookmark row: its whole title, then its address on the next line. A
+ * plain `title` attribute, so the virtualized rows stay cheap.
+ */
+export function bookmarkRowTooltip(node: Pick<BookmarkTreeNode, 'title' | 'url'>): string {
+  return [getBookmarkDisplayTitle(node.title), node.url].filter(Boolean).join('\n');
+}
+
 function rowKind(node: BookmarkTreeNode): PopupTreeRowKind {
   if (node.isTemporary) return 'new-folder';
   return node.children ? 'folder' : 'bookmark';

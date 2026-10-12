@@ -33,7 +33,7 @@ Ela não lê o conteúdo das páginas que você visita.
 | Tabela de favoritos no gerenciador: colunas exibidas, a ordem delas e a ordenação | Armazenamento sincronizado do navegador | Igual às configurações |
 | Largura das colunas e tamanho da página da tabela de favoritos | Armazenamento local neste dispositivo | Não |
 | Serviços de IA: nome, provedor e modelo de cada serviço | Armazenamento local neste dispositivo | Não |
-| Configurações de conexão de IA: chave de API, URL base, cabeçalhos extras, campos específicos do provedor | Armazenamento local neste dispositivo | Não, e nunca entram em um arquivo de backup |
+| Configurações de conexão de IA: chave de API, URL base, cabeçalhos extras, campos específicos do provedor | Armazenamento local neste dispositivo | Não. Um arquivo de backup guarda a URL base e os campos específicos do provedor, nunca a chave de API nem os cabeçalhos extras |
 | Listas de modelos obtidas dos seus serviços de IA, mantidas por 7 dias | Armazenamento local neste dispositivo | Não |
 | Atividade de IA, somente enquanto **Registrar solicitações** está ativado (desativado por padrão, por dispositivo): as últimas solicitações de IA com o que foi enviado e o que voltou, incluindo títulos, URLs e caminhos de pasta dos favoritos e, com **Ler conteúdo da página** ativado, o texto das páginas. Chaves de API e outras credenciais são removidas antes de armazenar; desativar o registro o apaga | Armazenamento local neste dispositivo | Não |
 | Tags, resumos, pesquisas salvas, pastas recentes, pesquisas recentes | Armazenamento local neste dispositivo | Não |
@@ -42,7 +42,7 @@ Ela não lê o conteúdo das páginas que você visita.
 
 Os resultados das verificações da barra lateral Ferramentas são mantidos somente enquanto a caixa de diálogo deles está aberta. Desinstalar a extensão remove o que ela armazenou; seus favoritos continuam no navegador.
 
-**Exportar**, no fim das Configurações, salva um arquivo de backup com as configurações que você alterou, seus prompts personalizados, os serviços de IA (nome, provedor e modelo), as pesquisas salvas e as colunas e a ordenação da tabela. Ele nunca contém chaves de API nem outras configurações de conexão de IA, e não é criptografado. Consulte [Configurações](/settings).
+**Exportar**, no fim das Configurações, salva um arquivo de backup com as configurações que você alterou, seus prompts personalizados, os serviços de IA (nome, provedor, modelo, URL base e campos específicos do provedor), as pesquisas salvas e as colunas e a ordenação da tabela. Ele nunca contém chaves de API nem cabeçalhos extras, e não é criptografado. Consulte [Configurações](/settings).
 
 ## Quando os dados saem do seu navegador [#when-data-leaves-your-browser]
 
