@@ -7,7 +7,7 @@ import { saveSettings } from '@/lib/settings-storage';
 import type { ActionContext } from '@/services/action-kit';
 import { actionApproval, runAction } from '@/services/actions';
 import { hasUntrustedContent } from '@/services/ai-agent.lazy';
-import { bookmarkHistoryValue } from '@/services/bookmark-history';
+import { bookmarkHistoryValue, describeBookmarkHistoryLabel } from '@/services/bookmark-history';
 import { actionPlansValue } from '@/services/plan-actions';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -151,6 +151,90 @@ describe('proposeChanges and applyChanges', () => {
       // Local agents cannot change bookmarks at all.
     ).toMatchObject({ error: { code: 'not_allowed' } });
     expect(bookmarks.get('b1')).toBeDefined();
+  });
+
+  /** Proposes and applies `changes`, and returns the result with the undo label it recorded. */
+  async function applyPlan(changes: unknown[]) {
+    const plan = await propose(changes);
+    const applied = await run('applyChanges', { planId: plan.planId });
+    const [entry] = (await bookmarkHistoryValue.get()).undo.slice(-1);
+    return { plan, applied, label: describeBookmarkHistoryLabel(entry.label) };
+  }
+
+  it('plans a repeated change to the same item once, so preview, applied, and undo agree', async () => {
+    const { plan, applied, label } = await applyPlan([
+      { action: 'moveBookmarks', input: { refs: ['b:b1', 'b:b2', 'b:b1'], to: 'Work' } },
+      { action: 'moveBookmarks', input: { refs: ['b:b2'], to: 'f:work' } },
+    ]);
+    expect(plan.changes).toEqual([
+      expect.objectContaining({ kind: 'move', title: 'Spec' }),
+      expect.objectContaining({ kind: 'move', title: 'Notes' }),
+    ]);
+    expect(applied).toMatchObject({ applied: 2, skipped: [], failed: [] });
+    expect(label).toBe('Move 2 items');
+    expect(bookmarks.childIds('work')).toEqual(['b1', 'b2']);
+    const undone = await run('undoChange', { change: applied.change });
+    expect(undone).toEqual({ undone: 2, skipped: 0 });
+    expect(bookmarks.childIds('old')).toEqual(['b1', 'b2']);
+  });
+
+  it('keeps the first of two renames of one item, and of two identical new folders', async () => {
+    const plan = await propose([
+      { action: 'renameBookmark', input: { ref: 'b:b2', title: 'First' } },
+      { action: 'renameBookmark', input: { ref: 'b:b2', title: 'Second' } },
+      { action: 'createFolder', input: { parent: 'Bookmarks Bar', title: 'Archive' } },
+      { action: 'createFolder', input: { parent: 'f:bar', title: 'Archive' } },
+      { action: 'deleteBookmarks', input: { refs: ['b:b1', 'b:b1'] } },
+    ]);
+    expect(plan).toMatchObject({
+      changes: [
+        { kind: 'rename', title: 'Notes', to: 'First' },
+        { kind: 'createFolder', title: 'Archive' },
+        { kind: 'delete', title: 'Spec' },
+      ],
+      deletes: 1,
+    });
+    expect((await actionPlansValue.get())[0].operations).toHaveLength(3);
+  });
+
+  it('labels the undo step by the item for one change, and by a count for several', async () => {
+    expect(
+      (await applyPlan([{ action: 'moveBookmarks', input: { refs: ['b:b1'], to: 'Work' } }])).label,
+    ).toBe('Move "Spec"');
+    // A move into a new folder is two writes, but still one item.
+    expect(
+      (
+        await applyPlan([
+          { action: 'moveBookmarks', input: { refs: ['b:b2'], to: 'Work', newFolder: 'Notes' } },
+        ])
+      ).label,
+    ).toBe('Move "Notes"');
+    expect(
+      (await applyPlan([{ action: 'renameBookmark', input: { ref: 'b:b1', title: 'Specs' } }]))
+        .label,
+    ).toBe('Edit "Spec"');
+    // Several of one kind are counted; renames have no count label, so they count as changes.
+    expect(
+      (
+        await applyPlan([
+          { action: 'renameBookmark', input: { ref: 'b:b1', title: 'A' } },
+          { action: 'renameBookmark', input: { ref: 'b:b2', title: 'B' } },
+        ])
+      ).label,
+    ).toBe('2 changes');
+    expect(
+      (await applyPlan([{ action: 'deleteBookmarks', input: { refs: ['b:b1', 'b:b2'] } }])).label,
+    ).toBe('Delete 2 items');
+  });
+
+  it('labels a plan of mixed kinds by its count of changes', async () => {
+    const { applied, label } = await applyPlan([
+      { action: 'moveBookmarks', input: { refs: ['b:b1'], to: 'Work' } },
+      { action: 'renameBookmark', input: { ref: 'b:b2', title: 'Meeting notes' } },
+      { action: 'createFolder', input: { parent: 'Work', title: 'Later' } },
+    ]);
+    expect(applied).toMatchObject({ applied: 3 });
+    expect(label).toBe('3 changes');
   });
 });
 

@@ -2,8 +2,9 @@
  * How agents change bookmarks in bulk: `proposeChanges` checks a list of moves, renames,
  * deletions, and new folders against the library and stores it as a plan; `applyChanges` applies
  * a stored plan once the user approved it. The approval shows the plan as stored here, never the
- * model's own account of it, and applying skips any item changed since the plan was made. A plan
- * is one undo step (`undoChange` with the change id `applyChanges` returns, or Ctrl+Z in the
+ * model's own account of it, and applying skips any item changed since the plan was made. The
+ * same change to the same item listed twice is planned once (`withoutRepeats`). A plan is one
+ * undo step (`undoChange` with the change id `applyChanges` returns, or Ctrl+Z in the
  * manager).
  *
  * Plans live in session storage, shared by every page and the background; they expire, and only
@@ -87,6 +88,55 @@ const operationInput = z.discriminatedUnion('action', [
   z.object({ action: z.literal('createFolder'), input: PLANNABLE_ACTIONS.createFolder.input }),
 ]);
 
+type PlannedOperation = z.infer<typeof operationInput>;
+
+/** The key an item is planned under: its parsed ref, or the text when it is not a ref. */
+function itemKey(spec: string): string {
+  const parsed = parseActionRef(spec);
+  return parsed ? `${parsed.kind}:${parsed.id}` : spec.trim();
+}
+
+/**
+ * The plan with each change to an item made once: when the model lists the same kind of change
+ * to the same item again, the first listing is kept and the later ones are left out (a ref from
+ * a later list, or the whole later operation). So the approval, the applied count, and the undo
+ * label count each item once.
+ */
+function withoutRepeats(
+  changes: readonly PlannedOperation[],
+  library: ActionLibrary,
+): PlannedOperation[] {
+  const seen = new Set<string>();
+  // A parent folder can be named by ref or by path; both name the same folder.
+  const folderKey = (spec: string) => {
+    const folder = resolveActionFolder(library, spec);
+    return isActionError(folder) ? itemKey(spec) : itemKey(toFolderRef(folder.node.id));
+  };
+  const firstTime = (action: string, spec: string) => {
+    const key = `${action} ${itemKey(spec)}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  };
+  const kept: PlannedOperation[] = [];
+  for (const change of changes) {
+    if (change.action === 'moveBookmarks') {
+      const refs = change.input.refs.filter((ref) => firstTime(change.action, ref));
+      if (refs.length > 0) kept.push({ ...change, input: { ...change.input, refs } });
+    } else if (change.action === 'deleteBookmarks') {
+      const refs = change.input.refs.filter((ref) => firstTime(change.action, ref));
+      if (refs.length > 0) kept.push({ ...change, input: { ...change.input, refs } });
+    } else if (change.action === 'renameBookmark') {
+      if (firstTime(change.action, change.input.ref)) kept.push(change);
+    } else if (
+      firstTime(change.action, `${folderKey(change.input.parent)}\n${change.input.title}`)
+    ) {
+      kept.push(change);
+    }
+  }
+  return kept;
+}
+
 const previewOutput = planSchema.shape.preview;
 
 const proposeChanges = defineAction({
@@ -109,10 +159,11 @@ const proposeChanges = defineAction({
   describe: () => t('askAI_toolPropose'),
   async execute(input, context) {
     const library = await loadActionLibrary();
+    const changes = withoutRepeats(input.changes, library);
     const preview: ActionPlan['preview'] = [];
     const expect: ActionPlan['expect'] = [];
     let deletes = 0;
-    for (const [index, change] of input.changes.entries()) {
+    for (const [index, change] of changes.entries()) {
       const planned = PLANNABLE[change.action].plan?.(change.input, library);
       if (!planned || isActionError(planned)) {
         const problem = planned?.error;
@@ -140,7 +191,7 @@ const proposeChanges = defineAction({
       createdAt: now,
       client: clientName(context.client),
       summary: input.summary,
-      operations: input.changes,
+      operations: changes,
       preview,
       expect,
     };
@@ -198,19 +249,35 @@ async function applicablePlan(
   );
 }
 
-/** The history entry's label: the kind of change when all are alike, else "N changes". */
+/**
+ * The history label each kind of planned change gets, for one item (named by its title) and for
+ * several (counted). Several renames count as changes: the history has no "Edit N items" label.
+ */
+const PLAN_HISTORY_LABELS: Record<
+  PlannedOperation['action'],
+  { one: BookmarkHistoryLabel['action']; many: BookmarkHistoryLabel['action'] }
+> = {
+  moveBookmarks: { one: 'move', many: 'move' },
+  renameBookmark: { one: 'edit', many: 'change' },
+  deleteBookmarks: { one: 'delete', many: 'delete' },
+  createFolder: { one: 'add', many: 'add' },
+};
+
+/**
+ * The history entry's label: one item names it (`Move "Guide"`), several of one kind count them
+ * (`Move 3 items`), and mixed kinds count the changes. The count is the plan's items, as the
+ * approval listed them and `applied` reports them.
+ */
 function planLabel(plan: ActionPlan): BookmarkHistoryLabel {
   const kinds = new Set(plan.operations.map((operation) => operation.action));
-  const labels: Record<string, BookmarkHistoryLabel['action']> = {
-    moveBookmarks: 'move',
-    renameBookmark: 'edit',
-    deleteBookmarks: 'delete',
-    createFolder: 'add',
-  };
+  const count = plan.preview.length;
   const [only] = kinds;
-  return kinds.size === 1 && only
-    ? { action: labels[only], count: plan.preview.length }
-    : { action: 'change', title: plan.summary, count: plan.preview.length };
+  if (kinds.size !== 1 || !only) return { action: 'change', title: plan.summary, count };
+  const labels = PLAN_HISTORY_LABELS[only];
+  // The count is given even for one item, so the writes (a new folder and a move) do not count.
+  return count === 1
+    ? { action: labels.one, title: plan.preview[0].title, count }
+    : { action: labels.many, count };
 }
 
 const applyChanges = defineAction({
@@ -227,7 +294,7 @@ const applyChanges = defineAction({
   input: z.object({ planId: z.string().min(1) }),
   output: z.object({
     change: z.string().optional(),
-    applied: z.number().int(),
+    applied: z.number().int().describe('Items changed, as the plan listed them'),
     skipped: z.array(z.string()).describe('Titles left alone because they changed since'),
     failed: z.array(z.string()),
   }),
@@ -258,7 +325,7 @@ const applyChanges = defineAction({
         }
         const result = await action.execute?.(operation.input, { ...context, writer });
         if (!result || isActionError(result)) failed.push(title);
-        else applied += 1;
+        else applied += own.preview.length;
       }
     });
     await removeActionPlan(plan.id);
