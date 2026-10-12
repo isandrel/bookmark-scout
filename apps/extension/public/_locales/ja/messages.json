@@ -467,6 +467,18 @@
         "message": "すべての設定がデフォルトに戻りました",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "設定を元に戻しました",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "すべての設定をリセットしますか？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "すべてのタブのすべての設定がデフォルトに戻ります。デバイス間で同期される設定も、このデバイスだけに保存される設定も対象です。ブックマーク、AI サービス、保存したプロンプト、保存した検索は変わりません。リセットの直後なら元に戻せます。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "設定のリセットに失敗しました",
         "description": "Toast title for settings reset error"

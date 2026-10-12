@@ -15,8 +15,10 @@ const ToastViewport = React.forwardRef<
       render={<ol />}
       className={cn(
         // Capped at half the window and scrollable, so a stack of undo toasts never covers most of
-        // a small popup.
-        'fixed bottom-0 right-0 z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 md:max-w-[320px]',
+        // a small popup. The viewport itself takes no clicks (each toast does): its padding, the
+        // gaps between toasts, and the empty viewport would otherwise be a strip over the bottom
+        // of every page that swallows clicks on what is under it. Empty, it has no size at all.
+        'pointer-events-none fixed bottom-0 right-0 z-[100] flex max-h-[50vh] w-full flex-col gap-2 overflow-y-auto overflow-x-hidden p-3 empty:p-0 md:max-w-[320px]',
         className,
       )}
       {...props}
