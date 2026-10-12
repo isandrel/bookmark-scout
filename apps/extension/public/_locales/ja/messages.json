@@ -467,6 +467,18 @@
         "message": "すべての設定がデフォルトに戻りました",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "設定を元に戻しました",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "すべての設定をリセットしますか？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "すべてのタブのすべての設定がデフォルトに戻ります。デバイス間で同期される設定も、このデバイスだけに保存される設定も対象です。ブックマーク、AI サービス、保存したプロンプト、保存した検索は変わりません。リセットの直後なら元に戻せます。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "設定のリセットに失敗しました",
         "description": "Toast title for settings reset error"
@@ -1260,6 +1272,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "使用できる操作はありません",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "名前順に並べ替え",
@@ -5954,6 +5970,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "右クリックメニューと ⋯ メニューに表示するコマンドと、各グループ内の順序を選びます。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」のうち少なくとも 1 つは常に表示されるため、どのブックマークやフォルダにもメニューのコマンドが必ずあります。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI に質問でできること",

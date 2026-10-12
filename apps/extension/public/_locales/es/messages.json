@@ -479,6 +479,18 @@
         "message": "Todos los ajustes volvieron a sus valores predeterminados.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Tu configuración se ha restaurado",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "¿Restablecer toda la configuración?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Todos los ajustes de todas las pestañas vuelven a su valor predeterminado: tanto los que se sincronizan entre tus dispositivos como los que solo se guardan en este. Tus marcadores, servicios de IA, prompts guardados y búsquedas guardadas no cambian. Puedes deshacerlo justo después.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Error al restablecer la configuración",
         "description": "Toast title for settings reset error"
@@ -1292,6 +1304,10 @@
     "menu_organize": {
         "message": "Organizar",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "No hay acciones disponibles",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "Ordenar por nombre",
@@ -5962,6 +5978,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden dentro de cada grupo.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "Al menos uno de estos comandos sigue visible: $1. Así el menú siempre tiene un comando para cualquier marcador o carpeta.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "Qué puede hacer Preguntar a la IA",

@@ -75,6 +75,7 @@ const menuConfig = readConfig(
       organize: sectionsSchema,
       empty_space: sectionsSchema,
     }),
+    item_menu: z.strictObject({ keep_one_of: z.array(z.string()).min(1) }),
   }),
 );
 
@@ -84,6 +85,15 @@ export const ACTION_MENUS: Readonly<Record<ActionMenuKind, readonly (readonly Ac
   organize: checkMenu('organize', menuConfig.menus.organize),
   emptySpace: checkMenu('emptySpace', menuConfig.menus.empty_space),
 };
+
+/**
+ * Item-menu actions available for any single bookmark or folder, of which the user's menu always
+ * keeps at least one shown (`managerMenuActions`), so the menu never has nothing to offer for one
+ * item.
+ */
+export const ITEM_MENU_KEEP_ONE_OF: readonly ActionId[] = checkMenu('item', [
+  menuConfig.item_menu.keep_one_of,
+])[0];
 
 /** Fails at load when a menu names an action that is unknown or cannot appear in that menu. */
 function checkMenu(kind: ActionMenuKind, sections: string[][]): ActionId[][] {
@@ -143,4 +153,3 @@ export function customizeItemMenu(
     )
     .filter((section) => section.length > 0);
 }
-

@@ -205,7 +205,16 @@ export type ShortcutGuardOptions = {
   /** Let bindings with `mod` match Ctrl (Cmd) combinations; the manager page only. */
   allowModifiers?: boolean;
   /** Document to check for open overlays; defaults to the global document when there is one. */
-  root?: Pick<Document, 'querySelector'> | null;
+  root?: OverlayRoot | null;
+};
+
+/** What `hasOpenOverlay` reads of a document, so it can be tested without a DOM. */
+export type OverlayRoot = { querySelectorAll: (selectors: string) => ArrayLike<OverlayElement> };
+
+/** The parts of an overlay element `hasOpenOverlay` reads; missing ones count as open. */
+export type OverlayElement = {
+  closest?: (selectors: string) => unknown;
+  checkVisibility?: () => boolean;
 };
 
 // Inputs whose keys move a caret or pick a value; buttons, checkboxes, and radios are not typing.
@@ -225,15 +234,25 @@ const TEXT_ROLES = new Set(['textbox', 'searchbox', 'combobox', 'spinbutton']);
 /** keyCode of an IME's keydown; Chrome reports it for the keydown that ends a composition. */
 const IME_PROCESS_KEY_CODE = 229;
 
-// Base UI mounts dialogs, popovers (role dialog), menus, and select lists only while they are open.
-// Toasts would also match (Base UI gives them role dialog), so the Toast wrapper renders them as
-// role status.
-const OVERLAY_SELECTOR = [
+// Dialogs, popovers (role dialog), menus, and select lists. Toasts would also match (Base UI gives
+// them role dialog), so the Toast wrapper renders them as role status.
+export const KEYBOARD_OVERLAY_SELECTOR = [
   '[role="dialog"]',
   '[role="alertdialog"]',
   '[role="menu"]',
   '[role="listbox"]',
 ].join(',');
+
+// Base UI keeps some closed overlays in the page: a Select's list stays mounted inside a hidden,
+// `data-closed` popup once it has been opened, and a closing dialog is marked `data-closed` until
+// its animation ends. Those, and anything inert, no longer have the keyboard.
+const CLOSED_OVERLAY_SELECTOR = '[hidden], [inert], [data-closed]';
+
+/** Whether an overlay element is open: shown, and not inside a closed or inert container. */
+function isOpenOverlay(element: OverlayElement): boolean {
+  if (element.closest?.(CLOSED_OVERLAY_SELECTOR)) return false;
+  return typeof element.checkVisibility === 'function' ? element.checkVisibility() : true;
+}
 
 type ElementLike = {
   tagName?: string;
@@ -267,9 +286,10 @@ export function isBrowserReservedCombo(event: ShortcutKeyEvent): boolean {
 }
 
 /** True while a dialog, menu, popover, or open select has the keyboard. */
-export function hasOpenOverlay(root?: Pick<Document, 'querySelector'> | null): boolean {
-  const doc = root ?? (typeof document === 'undefined' ? null : document);
-  return Boolean(doc?.querySelector(OVERLAY_SELECTOR));
+export function hasOpenOverlay(root?: OverlayRoot | null): boolean {
+  const doc: OverlayRoot | null = root ?? (typeof document === 'undefined' ? null : document);
+  if (!doc) return false;
+  return Array.from(doc.querySelectorAll(KEYBOARD_OVERLAY_SELECTOR)).some(isOpenOverlay);
 }
 
 const isPunctuationKey = (key: string) => key.length === 1 && !/[\p{L}\p{N}\s]/u.test(key);

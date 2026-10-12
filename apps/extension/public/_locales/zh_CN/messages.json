@@ -471,6 +471,18 @@
         "message": "所有设置均已恢复为默认值。",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "已恢复你的设置",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "重置所有设置？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "所有标签页中的每项设置都会恢复为默认值，包括在你的设备间同步的设置和仅保存在此设备上的设置。你的书签、AI 服务、已保存的提示词和已保存的搜索不会改变。重置后可以立即撤销。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "重置设置时出错",
         "description": "Toast title for settings reset error"
@@ -1284,6 +1296,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "没有可用的操作",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "按名称排序",
@@ -5770,6 +5786,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "选择右键菜单和 ⋯ 菜单显示哪些命令，以及每组中的顺序。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "“$1”中至少有一项始终显示，这样菜单对任何书签或文件夹都有可用的命令。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "询问 AI 可以执行的操作",

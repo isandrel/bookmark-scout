@@ -7,7 +7,7 @@
  */
 
 import type { KeyboardEvent } from 'react';
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 const PROBLEM_MESSAGES: Record<CommandShortcutProblem, (apple: boolean) => string> = {
   needsModifier: (apple) =>
@@ -41,6 +41,14 @@ export function ShortcutRecorder({
   const [error, setError] = useState<string | null>(null);
   const [announcement, setAnnouncement] = useState('');
   const isDefault = shortcut === EXTENSION_COMMANDS[name].suggestedKey;
+
+  // An explanation is about the keys as they were when it was given. Once any command's keys
+  // change (another row recorded new ones), it may no longer be true, so it goes.
+  const keysNow = JSON.stringify([shortcut, otherShortcuts]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: clears when the keys change.
+  useEffect(() => {
+    setError(null);
+  }, [keysNow]);
 
   const announceSaved = async (change: () => Promise<void>, saved: string) => {
     setError(null);

@@ -479,6 +479,18 @@
         "message": "All settings have been restored to defaults.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Your settings are back",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Reset all settings?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Every setting on every tab goes back to its default: both the ones synced across your devices and the ones kept on this device only. Your bookmarks, AI services, saved prompts, and saved searches are not changed. You can undo the reset right after.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Error resetting settings",
         "description": "Toast title for settings reset error"
@@ -1292,6 +1304,10 @@
     "menu_organize": {
         "message": "Organize",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "No actions available",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "Sort by name",
@@ -5962,6 +5978,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Choose which commands the right-click and ⋯ menus show, and in what order within each group.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "At least one of $1 stays shown, so the menu always has a command for any bookmark or folder.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "What Ask AI may do",

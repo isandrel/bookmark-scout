@@ -479,6 +479,18 @@
         "message": "Alle Einstellungen wurden auf die Standardwerte zurückgesetzt.",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "Ihre Einstellungen sind wiederhergestellt",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Alle Einstellungen zurücksetzen?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Jede Einstellung auf jedem Tab wird auf den Standardwert zurückgesetzt: sowohl die zwischen Ihren Geräten synchronisierten als auch die nur auf diesem Gerät gespeicherten. Ihre Lesezeichen, KI-Dienste, gespeicherten Prompts und gespeicherten Suchen bleiben unverändert. Sie können das Zurücksetzen direkt danach rückgängig machen.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "Fehler beim Zurücksetzen der Einstellungen",
         "description": "Toast title for settings reset error"
@@ -1292,6 +1304,10 @@
     "menu_organize": {
         "message": "Organisieren",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "Keine Aktionen verfügbar",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "Nach Name sortieren",
@@ -5962,6 +5978,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge innerhalb jeder Gruppe.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "Mindestens einer der Befehle $1 bleibt sichtbar, damit das Menü für jedes Lesezeichen und jeden Ordner einen Befehl hat.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "Was „KI fragen“ tun darf",

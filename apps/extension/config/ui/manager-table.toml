@@ -8,6 +8,11 @@ default_page_size = 10
 # once resizing has stopped for this long, in milliseconds
 column_sizing_save_delay_ms = 400
 
+# When the focused row is deleted or moved away, focus goes to the next row once nothing else
+# holds it. A confirmation dialog gives focus back as it closes, which can be after the row is
+# gone, so the table waits this long, in milliseconds, for focus to come back from it
+removed_row_focus_wait_ms = 1500
+
 # Months shown side by side in the Date Added filter's calendar
 date_filter_months = 2
 

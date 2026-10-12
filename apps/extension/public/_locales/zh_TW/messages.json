@@ -471,6 +471,18 @@
         "message": "所有設定均已還原為預設值。",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "已還原你的設定",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "重設所有設定？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "所有分頁中的每項設定都會還原為預設值，包括在你的裝置間同步的設定和只保存在此裝置上的設定。你的書籤、AI 服務、已儲存的提示詞和已儲存的搜尋不會改變。重設後可以立即復原。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "重設設定時發生錯誤",
         "description": "Toast title for settings reset error"
@@ -1284,6 +1296,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "沒有可用的動作",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "依名稱排序",
@@ -5770,6 +5786,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "選擇右鍵選單和 ⋯ 選單顯示哪些命令，以及每組中的順序。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」中至少有一項會一直顯示，讓選單對任何書籤或資料夾都有可用的指令。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "詢問 AI 可以執行的動作",

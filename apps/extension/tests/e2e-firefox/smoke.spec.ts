@@ -279,7 +279,7 @@ test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', as
     .toEqual(['Undo Keep', 'Undo Gone']);
 });
 
-test('manager folder tree moves with the arrow keys and opens a folder with Enter', async ({
+test('manager folder tree moves with the arrow keys and opens a folder with Enter (Space on a Mac)', async ({
   extension,
 }) => {
   const folder = await seedFolder(extension, 'E2E Firefox Tree', [
@@ -299,7 +299,11 @@ test('manager folder tree moves with the arrow keys and opens a folder with Ente
   );
   await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
   await expect.poll(focusedTitle).toBe('Tree Second');
-  await driver.actions().sendKeys(Key.ENTER).perform();
+  // On a Mac, Enter renames the folder, as on the table's rows; Space opens it everywhere.
+  await driver
+    .actions()
+    .sendKeys(process.platform === 'darwin' ? Key.SPACE : Key.ENTER)
+    .perform();
   await expect.poll(() => driver.getCurrentUrl()).toContain(`id=${folder.ids['Tree Second']}`);
 });
 
@@ -478,6 +482,17 @@ test('a quick save command without keys shows the popup notice, and Options reco
   await extension.driver.actions().sendKeys('j').perform();
   await extension.find('[data-command="ai-quick-save"] [aria-invalid="true"]');
   expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+  // Another row recording keys clears that explanation, which was about the keys before.
+  await clickCentered(extension, '[data-command="quick-save"] [data-slot="shortcut-recorder"]');
+  await extension.driver.actions().sendKeys(Key.F9).perform();
+  await expect.poll(() => shortcutOf(extension, 'quick-save')).toBe('F9');
+  await expect
+    .poll(() =>
+      extension.driver.executeScript<number>(
+        'return document.querySelectorAll(\'[data-command="ai-quick-save"] [aria-invalid="true"]\').length',
+      ),
+    )
+    .toBe(0);
   // Tab is not recorded: it moves on to the field's reset button.
   await clickCentered(extension, recorder);
   await extension.driver.actions().sendKeys(Key.TAB).perform();

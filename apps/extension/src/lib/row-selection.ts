@@ -51,3 +51,26 @@ export function selectRows(
   else if (canSelect(targetId)) selected.add(targetId);
   return { selected, anchorId: targetId };
 }
+
+/**
+ * The row that takes focus when the focused row `removedId` leaves the list (deleted, or moved
+ * out of the folder), as in Chrome's manager: the next row that is still there, else the nearest
+ * one before it. Null when none of the earlier rows are left.
+ */
+export function rowAfterRemoval(
+  previousIds: readonly string[],
+  currentIds: readonly string[],
+  removedId: string,
+): string | null {
+  const index = previousIds.indexOf(removedId);
+  if (index < 0) return null;
+  const present = new Set(currentIds);
+  const next = previousIds.slice(index + 1).find((id) => present.has(id));
+  if (next) return next;
+  return (
+    previousIds
+      .slice(0, index)
+      .reverse()
+      .find((id) => present.has(id)) ?? null
+  );
+}

@@ -94,6 +94,7 @@ const OptionsPage: React.FC = () => {
   const [inputErrors, setInputErrors] = useState<SettingsFieldErrors>({});
   // Bumped by Reset All so rows drop unsaved input text, such as an invalid list draft.
   const [formVersion, setFormVersion] = useState(0);
+  const [confirmingReset, setConfirmingReset] = useState(false);
   const savedRef = useRef<Settings>(settings);
   const valuesRef = useRef<Settings>(values);
   valuesRef.current = values;
@@ -186,17 +187,34 @@ const OptionsPage: React.FC = () => {
     setFieldValue('theme', next);
   };
 
+  /** Drops what the rows show and hold that no longer applies, such as an invalid list draft. */
+  const clearDrafts = () => {
+    setSaveErrors({});
+    setInputErrors({});
+    setFormVersion((version) => version + 1);
+  };
+
   const handleReset = async () => {
     try {
-      await resetToDefaults();
+      const previous = await resetToDefaults();
       savedRef.current = defaultSettings;
       setValues(defaultSettings);
-      setSaveErrors({});
-      setInputErrors({});
-      setFormVersion((version) => version + 1);
-      toast.success({
+      clearDrafts();
+      toast.withUndo({
         title: t('toast_settingsReset'),
         description: t('toast_settingsResetDescription'),
+        onUndo: async () => {
+          try {
+            await undoResetSettings(previous);
+            clearDrafts();
+            toast.success({ title: t('toast_settingsResetUndone') });
+          } catch (error) {
+            toast.error({
+              title: t('toast_errorResettingSettings'),
+              description: getErrorMessage(error),
+            });
+          }
+        },
       });
     } catch (error) {
       toast.error({
@@ -635,7 +653,7 @@ const OptionsPage: React.FC = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={handleReset}
+              onClick={() => setConfirmingReset(true)}
               className="hover:bg-destructive-wash hover:text-destructive-text"
             >
               <RotateCcw className="mr-2 h-4 w-4" />
@@ -668,6 +686,14 @@ const OptionsPage: React.FC = () => {
           onCancel={() => setExplainingField(null)}
         />
       )}
+      <ConfirmDialog
+        open={confirmingReset}
+        onOpenChange={setConfirmingReset}
+        title={t('settings_resetAllTitle')}
+        description={t('settings_resetAllDescription')}
+        confirmLabel={t('action_resetAll')}
+        onConfirm={() => void handleReset()}
+      />
       <Toaster />
     </div>
   );

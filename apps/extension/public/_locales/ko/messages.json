@@ -471,6 +471,18 @@
         "message": "모든 설정이 기본값으로 복원되었습니다",
         "description": "Toast description for settings reset success"
     },
+    "toast_settingsResetUndone": {
+        "message": "설정을 되돌렸습니다",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "모든 설정을 초기화할까요?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "모든 탭의 모든 설정이 기본값으로 돌아갑니다. 기기 간에 동기화되는 설정과 이 기기에만 저장된 설정이 모두 포함됩니다. 북마크, AI 서비스, 저장한 프롬프트, 저장한 검색은 바뀌지 않습니다. 초기화 직후에는 실행 취소할 수 있습니다.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
+    },
     "toast_errorResettingSettings": {
         "message": "설정 초기화 오류",
         "description": "Toast title for settings reset error"
@@ -1284,6 +1296,10 @@
     "menu_organize": {
         "message": "정리",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "사용할 수 있는 작업이 없습니다",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "이름순 정렬",
@@ -5954,6 +5970,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "$1 중 하나 이상은 항상 표시되므로 어떤 북마크나 폴더에도 메뉴에 명령이 있습니다.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI에게 묻기가 할 수 있는 일",

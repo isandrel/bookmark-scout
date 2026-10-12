@@ -9,9 +9,10 @@ import {
   isComposingEvent,
   isTypingTarget,
   matchesShortcut,
+  type OverlayElement,
   SHORTCUT_BINDINGS,
-  shortcutKeyCaps,
   type ShortcutKeyEvent,
+  shortcutKeyCaps,
 } from '@/lib/keyboard-shortcuts';
 import { readConfigToml } from '../config-files';
 
@@ -19,8 +20,9 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-const noOverlay = { querySelector: () => null };
-const withOverlay = { querySelector: () => ({}) as Element };
+const overlays = (...elements: OverlayElement[]) => ({ querySelectorAll: () => elements });
+const noOverlay = overlays();
+const withOverlay = overlays({});
 
 function keyEvent(key: string, overrides: Partial<ShortcutKeyEvent> = {}): ShortcutKeyEvent {
   return {
@@ -88,6 +90,28 @@ describe('modifier and composition guards', () => {
   it('sees open dialogs and menus', () => {
     expect(hasOpenOverlay(withOverlay)).toBe(true);
     expect(hasOpenOverlay(noOverlay)).toBe(false);
+    expect(hasOpenOverlay(overlays({ closest: () => null, checkVisibility: () => true }))).toBe(
+      true,
+    );
+  });
+
+  it('ignores overlays that are closed but still in the page', () => {
+    // A Base UI Select keeps its list mounted in a hidden, data-closed popup after it closes.
+    const closedSelectList: OverlayElement = {
+      closest: (selectors) => (selectors.includes('[data-closed]') ? {} : null),
+      checkVisibility: () => false,
+    };
+    const hiddenByStyle: OverlayElement = { closest: () => null, checkVisibility: () => false };
+    const insideClosed: OverlayElement = { closest: () => ({}), checkVisibility: () => true };
+    expect(hasOpenOverlay(overlays(closedSelectList))).toBe(false);
+    expect(hasOpenOverlay(overlays(hiddenByStyle))).toBe(false);
+    expect(hasOpenOverlay(overlays(insideClosed))).toBe(false);
+    // One open overlay among closed ones still has the keyboard.
+    expect(hasOpenOverlay(overlays(closedSelectList, {}))).toBe(true);
+    const event = keyEvent('a', { metaKey: true, ctrlKey: true });
+    expect(
+      canHandleShortcut(event, { allowModifiers: true, root: overlays(closedSelectList) }),
+    ).toBe(true);
   });
 });
 
