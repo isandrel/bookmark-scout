@@ -3627,10 +3627,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "Die Liste ist nach Datum oder Name sortiert. Die gespeicherte Reihenfolge ist nur mit der Sortierung „Ordner zuerst“ sichtbar.",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "Element konnte nicht verschoben werden. Versuchen Sie es noch einmal.",
         "description": "Toast description when moving an item fails"

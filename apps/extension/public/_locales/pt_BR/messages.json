@@ -3627,10 +3627,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "A lista está classificada por data ou nome, então a ordem salva só fica visível com a ordem de classificação “Pastas primeiro”.",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "Falha ao mover o item. Tente novamente.",
         "description": "Toast description when moving an item fails"

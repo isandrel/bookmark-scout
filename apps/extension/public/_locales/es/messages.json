@@ -3627,10 +3627,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "La lista está ordenada por fecha o por nombre, así que el orden guardado solo se ve con el orden \"Carpetas primero\".",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "No se pudo mover el elemento. Vuelve a intentarlo.",
         "description": "Toast description when moving an item fails"

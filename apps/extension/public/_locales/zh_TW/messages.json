@@ -3611,10 +3611,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "清單目前依日期或名稱排序，因此只有在排序方式為「資料夾優先」時才看得到儲存的順序。",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "無法移動項目，請再試一次。",
         "description": "Toast description when moving an item fails"

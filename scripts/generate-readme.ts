@@ -16,6 +16,8 @@
  *   {{BROWSER_BADGES:<label>}} one shields.io badge per supported browser, labelled <label>
  *   {{STORE_BADGES:<label>}} one linked badge per live store listing, labelled <label>;
  *                            empty while no listing is live
+ *   {{STORE_LINKS:<label>}}  one Markdown list item per supported browser: its store listing
+ *                            when live, otherwise the latest GitHub release, labelled <label>
  *
  * A placeholder that cannot be filled fails the run.
  */
@@ -123,11 +125,25 @@ export function storeBadges(label: string, model: Site = site): string {
 		.join("\n");
 }
 
+/** Where each supported browser installs from: its live store listing, or the latest release. */
+export function storeLinks(releaseLabel: string, model: Site = site): string {
+	return model.browsers.supported
+		.map((browser) => {
+			const store = model.store(browser);
+			const target = store.live
+				? `[${store.name}](${store.url})`
+				: `[${releaseLabel}](${model.repo.releasesLatest})`;
+			return `- **${model.browsers.name(browser)}**: ${target}`;
+		})
+		.join("\n");
+}
+
 type RenderContext = {
 	values: Record<string, string>;
 	version: (name: string, workspace?: string) => string;
 	browserBadges: (label: string) => string;
 	storeBadges: (label: string) => string;
+	storeLinks: (label: string) => string;
 };
 
 /** Fills every placeholder in `template`; throws listing any it cannot fill. */
@@ -140,6 +156,7 @@ export function render(template: string, context: RenderContext, label = "templa
 		}
 		if (name === "BROWSER_BADGES" && argument) return context.browserBadges(argument);
 		if (name === "STORE_BADGES" && argument) return context.storeBadges(argument);
+		if (name === "STORE_LINKS" && argument) return context.storeLinks(argument);
 		const value = argument === undefined ? context.values[name] : undefined;
 		if (value === undefined) {
 			unknown.add(match);
@@ -163,6 +180,7 @@ if (import.meta.main) {
 		version: (name, workspace) => installedVersion(name, rootDir, workspace),
 		browserBadges: (label) => browserBadges(label),
 		storeBadges: (label) => storeBadges(label),
+		storeLinks: (label) => storeLinks(label),
 	};
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), context, `templates/${file}`);

@@ -3627,10 +3627,6 @@
             }
         }
     },
-    "toast_reorderHiddenBySort": {
-        "message": "The list is sorted by date or name, so the saved order is only visible with the \"Folders First\" sort order.",
-        "description": "Note added to the reorder toast when the popup sort order hides browser order"
-    },
     "toast_errorMovingItemDesc": {
         "message": "Failed to move item. Please try again.",
         "description": "Toast description when moving an item fails"

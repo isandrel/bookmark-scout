@@ -50,7 +50,7 @@ AI bookmarks
 
 ## Full description: Chrome Web Store and Edge Add-ons
 
-Plain text, 4,105 characters (2026-10-10). Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
+Plain text, 4,325 characters (2026-10-11). Name AI providers in general terms, not as a list of brands: the Chrome Web Store rejected 0.3.1 for "excessive keywords" (Yellow Argon) when this paragraph listed nine providers. Before using it for Edge, complete the Edge bookmarks-page check in `../checklists/edge-addons.md`; if the override does not apply in Edge, remove the "Bookmarks manager" and "Maintenance tools" sections and the manager-only AI tools.
 
 ```text
 Bookmark Scout saves every page to the right folder in seconds, then helps you find and tidy your bookmarks without leaving the browser.
@@ -89,7 +89,7 @@ OPT-IN AI TOOLS (OFF BY DEFAULT)
 Turn on AI in Settings and choose a cloud AI provider, any OpenAI-compatible endpoint, or a model server on your own computer, with your own API key where the provider requires one.
 • Folder suggestions for the current page, including reviewed creation of a new folder path
 • Tag suggestions and short summaries that you review before saving
-• Folder reorganization plans, previewed before anything changes (default)
+• Folder reorganization plans, always previewed before anything changes
 • Export selected bookmarks as Markdown or XML context for an AI chat (works without AI and sends nothing)
 • Ask AI: chat about your bookmarks; the AI can look up matching bookmarks, your folder names, and the current page
 • Read page content (off by default): send each page's readable text, not only its title and URL, for better suggestions

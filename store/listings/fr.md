@@ -86,7 +86,7 @@ OUTILS D'IA FACULTATIFS (DÉSACTIVÉS PAR DÉFAUT)
 Activez l'IA dans les paramètres et choisissez un fournisseur d'IA dans le cloud, n'importe quel point de terminaison compatible OpenAI ou un serveur de modèles sur votre propre ordinateur, avec votre propre clé API lorsque le fournisseur en exige une.
 • Suggestions de dossiers pour la page actuelle, y compris la création d'un nouveau chemin de dossiers après vérification
 • Suggestions d'étiquettes et courts résumés, que vous vérifiez avant de les enregistrer
-• Plans de réorganisation des dossiers, prévisualisés avant toute modification (par défaut)
+• Plans de réorganisation des dossiers, toujours prévisualisés avant toute modification
 • Exportation des favoris sélectionnés au format Markdown ou XML comme contexte pour une discussion avec une IA (fonctionne sans IA et n'envoie rien)
 • Demander à l'IA : discutez de vos favoris ; l'IA peut rechercher les favoris correspondants, les noms de vos dossiers et la page actuelle
 • Lire le contenu des pages (désactivé par défaut) : envoie le texte lisible de chaque page, et pas seulement son titre et son URL, pour de meilleures suggestions
