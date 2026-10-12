@@ -13,7 +13,8 @@ export function useSettings(): {
   settings: Settings;
   isLoading: boolean;
   updateSettings: (updates: Partial<Settings>) => Promise<void>;
-  resetToDefaults: () => Promise<void>;
+  /** Resolves to the settings before the reset, for `undoResetSettings`. */
+  resetToDefaults: () => Promise<Settings>;
 } {
   const { value: settings, isLoading } = useStoredValue(settingsValue);
   return { settings, isLoading, updateSettings: saveSettings, resetToDefaults: resetSettings };

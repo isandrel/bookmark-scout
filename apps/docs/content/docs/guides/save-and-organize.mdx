@@ -51,6 +51,13 @@ To change the keys, open **Keyboard shortcuts** in [Settings](/settings#quick-sa
 
 If another extension already uses a key, the browser leaves the shortcut unset and Settings shows **Not set**. The popup and side panel then show **Quick save shortcut not set** above the shortcut hints, with **Set it up**, which takes you to the place above where you can set it. Close the line with its **Dismiss** button if you do not want the shortcut; it stays hidden on that device.
 
+### Use Ctrl+D for quick save [#ctrl-d]
+
+`Ctrl+D` (`⌘D` on a Mac) opens the browser's own bookmark dialog, and no browser lets an extension take it as a default key, so quick save starts on `Alt+Shift+S`.
+
+- **Chrome and Edge** let you give it to quick save yourself. Under **Keyboard shortcuts** in Settings, **Use Ctrl+D for quick save** opens the browser's shortcut page: find Bookmark Scout, click the pencil next to **Quick save the current page**, and press `Ctrl+D`. From then on `Ctrl+D` saves with quick save instead of opening the bookmark (or favorites) dialog. To get the dialog back, clear that shortcut on the same page. Until you do, the popup and side panel offer it in one line, **Use Ctrl+D for quick save**; **Set it up** opens these steps in Settings, and **Dismiss** hides the line on that device.
+- **Firefox** always handles `Ctrl+D` (bookmark this page) and `Ctrl+Shift+D` (bookmark all tabs) itself, even when an extension sets them, so the shortcut fields refuse both.
+
 ## Save a link with the right-click menu
 
 First turn on **Context Menu** in [Settings](/settings#data); it is off by default. Then right-click any link on a page and choose **Save bookmark to...**, then pick one of your recent folders or the Bookmarks Bar. **Bookmark Name Source** in Settings chooses whether the bookmark is named after the link text, the page title, or the link URL. Turn the menu off with **Context Menu** (both are on the **Data** tab).
@@ -62,7 +69,7 @@ Hover a folder in the popup or side panel and click **Add folder**, then type th
 ## Move bookmarks and folders
 
 - **Drag and drop** in the popup or side panel. Dropping beside an item in another folder moves it into that folder. A folder cannot be moved into itself or one of its subfolders.
-- **Drag and drop** in the manager, as in Chrome's: drag a row, or a selection of rows, onto a folder row or a folder in the folder tree to move it there. Hovering a closed folder in the tree during a drag opens it. With **Browser order** on (see below), dropping between rows also reorders. Each drop is one `Ctrl+Z` step.
+- **Drag and drop** in the manager, as in Chrome's: drag a row, or a selection of rows, onto a folder row or a folder in the folder tree to move it there; the top and bottom edges of a folder in the tree drop beside it instead. Hovering a closed folder in the tree during a drag opens it. With **Browser order** on (see below), dropping between rows also reorders. Each drop is one `Ctrl+Z` step.
 - **Links from other pages and apps**: drop a link, or text with URLs, on the manager's table or a folder in its tree to bookmark it there. Dragging rows out to another app or page carries their URLs.
 - **Several at once** in the manager: select rows in the table, then use **Move to folder** and choose the destination. Items are added at the end of that folder.
 - **Reorder** in the manager: turn on **Browser order**, clear any column sort, then drag rows, or use the **Move up**, **Move down**, **Move to top**, and **Move to bottom** buttons on the row. They need the table to show one folder, so clear filters or check **Current folder only**.
@@ -95,7 +102,7 @@ The manager's table works like Chrome's bookmark manager:
 
 - Click a row to select it, `Ctrl`+click (`Cmd`+click on a Mac) to add or remove one, and `Shift`+click to select a range. The checkboxes work too. `Ctrl+A` (`Cmd+A`) selects every row the filters show, on every page, and `Esc` clears the selection.
 - Double-click a folder to open it, or a bookmark to open it in a tab. Middle-click a bookmark to open it in a background tab.
-- `Ctrl+Z` (`Cmd+Z`) undoes the manager's changes one at a time, newest first: edits, moves, reorders, and deletions. `Ctrl+Y` or `Ctrl+Shift+Z` (`Cmd+Shift+Z`) redoes them. Several items changed together, such as a move of a selection, are one step.
+- `Ctrl+Z` (`Cmd+Z`) undoes the manager's changes one at a time, newest first: edits, moves, reorders, and deletions. `Ctrl+Y` or `Ctrl+Shift+Z` (`Cmd+Shift+Z`) redoes them. Several items changed together, such as a move of a selection, are one step. A very large deletion is kept compressed; one too large even then is left out of the history, keeping the earlier changes, and its toast says that only its **Undo** can bring it back.
 - Undo leaves alone anything changed since in another way (in the browser's own bookmark UI, another window, or by sync) and says so.
 - The history is shared by every manager tab, survives reloading the page, and ends when the browser closes. It keeps the last 100 changes.
 
@@ -108,7 +115,7 @@ The full list of keys is in [Keyboard shortcuts](/guides/keyboard-shortcuts#book
 Right-click a row, or a folder in the folder tree, for the same commands as Chrome's bookmark manager. A right click on a selected row acts on the whole selection; on any other row it selects that row first. The menu key or `Shift+F10` opens it from the keyboard. A row's ⋯ button opens the same menu for that row.
 
 - **Edit** (a bookmark) or **Rename** (a folder), **Show in folder** (search results), and **View Details**.
-- **Cut**, **Copy**, and **Paste**. Copy puts the bookmarks' URLs on the clipboard, one per line (and as links, for apps that take formatted text), so they paste into other apps too. Paste in a row's menu pastes after that row in the folder shown; in a folder's menu in the tree, it pastes into that folder. Copied items paste as copies, including everything inside a copied folder; cut items move when you paste them, and stay where they are until then. `Ctrl+C`, `Ctrl+X`, and `Ctrl+V` (`Cmd` on a Mac) do the same for the selection, and `Ctrl+V` also turns URLs copied in another app into bookmarks.
+- **Cut**, **Copy**, and **Paste**. Copy puts the bookmarks' URLs on the clipboard, one per line (and as links, for apps that take formatted text), so they paste into other apps too. Paste in a row's menu pastes after that row in the folder shown; in a folder's menu in the tree, it pastes into that folder. Copied items paste as copies of the items as they are when you paste, including everything inside a copied folder; cut items move when you paste them, and stay where they are until then. What you cut or copy pastes in any manager tab and after a reload, until the browser closes; items deleted since are skipped, and cut items that could not move (a folder pasted into itself) stay cut. Add new bookmark completes an address typed without a scheme, such as `example.com/path`, to `https://`. `Ctrl+C`, `Ctrl+X`, and `Ctrl+V` (`Cmd` on a Mac) do the same for the selection, and `Ctrl+V` also turns URLs copied in another app into bookmarks.
 - **Open in new tab**, **Open in new window**, and **Open in incognito window** (InPrivate in Edge, a private window in Firefox, where it needs the extension to be allowed in private windows). For several items or a folder they read **Open all (12)** and open the bookmarks in the selection and those directly inside its folders, not in subfolders. More than 15 tabs asks first.
 - **Copy link to this folder** and **Copy Bookmark ID**, and **Delete**.
 

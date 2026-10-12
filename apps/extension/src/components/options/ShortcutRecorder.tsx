@@ -7,7 +7,7 @@
  */
 
 import type { KeyboardEvent } from 'react';
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
 const PROBLEM_MESSAGES: Record<CommandShortcutProblem, (apple: boolean) => string> = {
   needsModifier: (apple) =>
@@ -15,11 +15,6 @@ const PROBLEM_MESSAGES: Record<CommandShortcutProblem, (apple: boolean) => strin
   tooManyModifiers: () => t('settings_shortcutTooManyModifiers'),
   unsupportedKey: () => t('settings_shortcutUnsupportedKey'),
 };
-
-/** Key caps joined the way the browser shows them: `Alt+Shift+S`, or `⌥⇧S` on Apple platforms. */
-function formatKeyCaps(keys: readonly string[], apple: boolean): string {
-  return keys.join(apple ? '' : '+');
-}
 
 type ShortcutRecorderProps = {
   name: ExtensionCommand;
@@ -47,11 +42,19 @@ export function ShortcutRecorder({
   const [announcement, setAnnouncement] = useState('');
   const isDefault = shortcut === EXTENSION_COMMANDS[name].suggestedKey;
 
+  // An explanation is about the keys as they were when it was given. Once any command's keys
+  // change (another row recorded new ones), it may no longer be true, so it goes.
+  const keysNow = JSON.stringify([shortcut, otherShortcuts]);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: clears when the keys change.
+  useEffect(() => {
+    setError(null);
+  }, [keysNow]);
+
   const announceSaved = async (change: () => Promise<void>, saved: string) => {
     setError(null);
     try {
       await change();
-      const keys = formatKeyCaps(commandShortcutKeyCaps(saved, { apple }), apple);
+      const keys = formatCommandShortcut(saved, { apple });
       setAnnouncement(t('settings_shortcutSet', [label, keys]));
       onChanged();
     } catch {
@@ -60,6 +63,11 @@ export function ShortcutRecorder({
   };
 
   const save = (next: string) => {
+    // Firefox lets the extension take its bookmark keys, but still bookmarks the page with them.
+    if (isShortcutKeptByBrowser(next, apple)) {
+      setError(t('settings_shortcutKeptByBrowser', formatCommandShortcut(next, { apple })));
+      return;
+    }
     const owner = (Object.keys(otherShortcuts) as ExtensionCommand[]).find(
       (other) => other !== name && otherShortcuts[other] === next,
     );
@@ -106,10 +114,7 @@ export function ShortcutRecorder({
   };
 
   // While only modifiers are held, show them with a placeholder for the key still to come.
-  const shown = formatKeyCaps(
-    commandShortcutKeyCaps(held ? [...held, '…'].join('+') : shortcut, { apple }),
-    apple,
-  );
+  const shown = formatCommandShortcut(held ? [...held, '…'].join('+') : shortcut, { apple });
 
   return (
     <span className="flex shrink-0 items-start gap-1">

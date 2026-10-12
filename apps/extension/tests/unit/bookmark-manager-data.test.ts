@@ -5,13 +5,14 @@ import {
   buildManagerFolderSections,
   buildManagerFolderTree,
   canMoveWithinFolder,
+  collapseFolderPath,
   flattenManagerTree,
-  MANAGER_SECTION_IDS,
-  MANAGER_TREE_ROOT_ID,
   getManagerFolderAncestors,
   getMoveTargetFolders,
   getSpaceHiddenColumnIds,
   isWithinDateRange,
+  MANAGER_SECTION_IDS,
+  MANAGER_TREE_ROOT_ID,
   type ManagerItem,
   partitionSelectionByVisibility,
   pruneNestedSelection,
@@ -24,6 +25,7 @@ import {
   getUrlDomain,
   hostnameMatchesDomain,
   isScriptUrl,
+  withDefaultScheme,
 } from '@/lib/url-domain';
 
 beforeAll(() => setLanguage('en'));
@@ -229,6 +231,56 @@ describe('getBlockedEditUrl', () => {
   it('allows ordinary web URLs', () => {
     expect(getBlockedEditUrl('https://example.com/javascript:')).toBeNull();
     expect(getBlockedEditUrl('https://example.com/?u=data:text/html,x')).toBeNull();
+  });
+});
+
+describe('collapseFolderPath', () => {
+  const path = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+  it('keeps a path that fits whole', () => {
+    expect(collapseFolderPath(path.slice(0, 4), 4)).toEqual({
+      head: ['a', 'b', 'c', 'd'],
+      hidden: [],
+      tail: [],
+    });
+  });
+
+  it('shows the first folder and the last ones, the rest behind the menu', () => {
+    expect(collapseFolderPath(path, 4)).toEqual({
+      head: ['a'],
+      hidden: ['b', 'c'],
+      tail: ['d', 'e', 'f'],
+    });
+    expect(collapseFolderPath(path, 2)).toEqual({
+      head: ['a'],
+      hidden: ['b', 'c', 'd', 'e'],
+      tail: ['f'],
+    });
+  });
+});
+
+describe('withDefaultScheme', () => {
+  it('adds https:// to a typed host, as the browser does', () => {
+    expect(withDefaultScheme('example.com/path')).toBe('https://example.com/path');
+    expect(withDefaultScheme('example.com:8080/x?q=1')).toBe('https://example.com:8080/x?q=1');
+    expect(withDefaultScheme('localhost:3000')).toBe('https://localhost:3000');
+  });
+
+  it('keeps a scheme, bookmarklets, data, and text that names no host', () => {
+    for (const text of [
+      'http://example.com/',
+      'ftp://files.example/f',
+      'javascript:alert(1)',
+      ' JavaScript:alert(1)',
+      'data:text/html,<b>x</b>',
+      'mailto:someone@example.com',
+      'notaurl',
+      'two words.example',
+    ]) {
+      expect(withDefaultScheme(text)).toBe(text);
+    }
+    // Still refused after normalizing.
+    expect(getBlockedEditUrl(withDefaultScheme('javascript:alert(1)'))).not.toBeNull();
   });
 });
 

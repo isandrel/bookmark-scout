@@ -309,6 +309,18 @@
         "message": "Nichts zum Einfügen",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Nichts wurde eingefügt",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID kopiert",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "Keine Links zum Hinzufügen: Der abgelegte Text enthält keine Webadresse.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Einfügen fehlgeschlagen",
         "description": "Error toast when pasting bookmarks fails"
@@ -478,6 +490,18 @@
     "toast_settingsResetDescription": {
         "message": "Alle Einstellungen wurden auf die Standardwerte zurückgesetzt.",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "Ihre Einstellungen sind wiederhergestellt",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Alle Einstellungen zurücksetzen?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Jede Einstellung auf jedem Tab wird auf den Standardwert zurückgesetzt: sowohl die zwischen Ihren Geräten synchronisierten als auch die nur auf diesem Gerät gespeicherten. Ihre Lesezeichen, KI-Dienste, gespeicherten Prompts und gespeicherten Suchen bleiben unverändert. Sie können das Zurücksetzen direkt danach rückgängig machen.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "Fehler beim Zurücksetzen der Einstellungen",
@@ -1292,6 +1316,10 @@
     "menu_organize": {
         "message": "Organisieren",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "Keine Aktionen verfügbar",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "Nach Name sortieren",
@@ -3269,6 +3297,18 @@
         "message": "Ihre Einstellungen, Prompts, KI-Dienste und gespeicherten Suchen wurden wiederhergestellt. Sicherungen enthalten keine API-Schlüssel: Fügen Sie fehlende unter Einstellungen > KI hinzu.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "Ihre Einstellungen, Prompts, KI-Dienste mit ihren Basis-URLs und gespeicherten Suchen wurden wiederhergestellt. Nicht wiederhergestellt, weil Sicherungen sie nie enthalten: $1. Geben Sie sie unter Einstellungen > KI erneut ein; bis dahin zeigen diese Dienste „Einrichtung nötig“.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "$2 für „$1“",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "Einrichtung nötig",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "Zum hellen Design wechseln",
         "description": "Theme toggle accessible name"
@@ -3305,6 +3345,10 @@
         "message": "Ordner",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "$1 Ebenen tief",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "In Ihrem Konto",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3316,6 +3360,10 @@
     "bookmarks_breadcrumb": {
         "message": "Ordnerpfad",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "$1 weitere Ordner im Pfad anzeigen",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "Lesezeichen hinzufügen",
@@ -3424,6 +3472,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "$1 Elemente gelöscht. Innerhalb von $2 Sekunden rückgängig machen.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "Er ist zu groß für den Rückgängig-Verlauf, daher kann ihn nur „Rückgängig“ hier wiederherstellen.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "$1 Elemente wiederhergestellt.",
@@ -5599,6 +5651,10 @@
         "message": "Lesezeichen nicht gefunden.",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "Ausschneiden und Kopieren umfassen höchstens $1 Elemente. Wählen Sie weniger aus oder einen Ordner, der sie enthält.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "Dieses Element kann nicht wiederhergestellt werden, da es keinen übergeordneten Ordner hat.",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5657,7 +5713,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "Seitenleiste",
@@ -5669,11 +5725,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "Suche „$1“ - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "Optionen",
@@ -5863,6 +5919,22 @@
         "message": "Der Browser hat dieses Kürzel nicht angenommen. Versuche ein anderes.",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "$1 zum Schnellspeichern verwenden",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "Der Browser nutzt $1 für seinen eigenen Lesezeichen-Dialog und gibt es Erweiterungen nicht von selbst, aber du kannst es tun: Öffne die Kürzel-Seite, suche Bookmark Scout, klicke auf den Stift neben „$2“ und drücke $1.",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "$1 speichert jetzt schnell statt den Lesezeichen-Dialog des Browsers zu öffnen. Um den Dialog zurückzubekommen, lösche dieses Kürzel auf der Kürzel-Seite des Browsers.",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "Der Browser verwendet $1 selbst, daher würde es Bookmark Scout nie erreichen. Wähle ein anderes Kürzel.",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "Kein Kürzel zum Schnellspeichern festgelegt",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5946,6 +6018,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs zeigen und in welcher Reihenfolge innerhalb jeder Gruppe.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "Mindestens einer der Befehle $1 bleibt sichtbar, damit das Menü für jedes Lesezeichen und jeden Ordner einen Befehl hat.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "Was „KI fragen“ tun darf",
@@ -6058,5 +6134,19 @@
     "settings_askAiWrites": {
         "message": "Lesezeichen ändern",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "Keine Ordnervorschläge für diese Seite",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "Die Liste ist nach Datum oder Name sortiert, daher lassen sich Einträge hier nur in andere Ordner ziehen. Zum Umsortieren die Sortierung „$sort$“ wählen.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

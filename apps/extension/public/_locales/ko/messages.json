@@ -309,6 +309,18 @@
         "message": "붙여넣을 항목이 없습니다",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "붙여넣은 항목이 없습니다",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID를 복사했습니다",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "추가할 링크가 없습니다. 놓은 텍스트에 웹 주소가 없습니다.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "붙여넣지 못했습니다",
         "description": "Error toast when pasting bookmarks fails"
@@ -470,6 +482,18 @@
     "toast_settingsResetDescription": {
         "message": "모든 설정이 기본값으로 복원되었습니다",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "설정을 되돌렸습니다",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "모든 설정을 초기화할까요?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "모든 탭의 모든 설정이 기본값으로 돌아갑니다. 기기 간에 동기화되는 설정과 이 기기에만 저장된 설정이 모두 포함됩니다. 북마크, AI 서비스, 저장한 프롬프트, 저장한 검색은 바뀌지 않습니다. 초기화 직후에는 실행 취소할 수 있습니다.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "설정 초기화 오류",
@@ -1284,6 +1308,10 @@
     "menu_organize": {
         "message": "정리",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "사용할 수 있는 작업이 없습니다",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "이름순 정렬",
@@ -3261,6 +3289,18 @@
         "message": "설정, 프롬프트, AI 서비스, 저장한 검색을 복원했습니다. 백업에는 API 키가 없으므로, 없는 키는 설정 > AI에서 추가하세요.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "설정, 프롬프트, 기본 URL을 포함한 AI 서비스, 저장한 검색을 복원했습니다. 백업에는 포함되지 않아 복원되지 않은 항목: $1. 설정 > AI에서 다시 입력하세요. 그때까지 해당 서비스에는 \"설정 필요\"가 표시됩니다.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "\"$1\"의 $2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "설정 필요",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "밝은 테마로 전환",
         "description": "Theme toggle accessible name"
@@ -3297,6 +3337,10 @@
         "message": "폴더",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "$1단계 깊이",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "계정에 저장됨",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3308,6 +3352,10 @@
     "bookmarks_breadcrumb": {
         "message": "폴더 경로",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "경로의 폴더 $1개 더 보기",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "북마크 추가",
@@ -3416,6 +3464,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "$1개 항목을 삭제했습니다. $2초 안에 실행 취소할 수 있습니다.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "실행 취소 기록에 담기에는 너무 커서 여기의 실행 취소로만 되돌릴 수 있습니다.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "$1개 항목을 복원했습니다.",
@@ -5591,6 +5643,10 @@
         "message": "북마크를 찾을 수 없습니다.",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "잘라내기와 복사는 최대 $1개 항목까지 가능합니다. 더 적게 선택하거나 해당 항목이 들어 있는 폴더를 선택하세요.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "상위 폴더가 없어 이 항목은 복원할 수 없습니다.",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5649,7 +5705,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "사이드 패널",
@@ -5661,11 +5717,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "\"$1\" 검색 - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "옵션",
@@ -5855,6 +5911,22 @@
         "message": "브라우저가 이 단축키를 받아들이지 않았습니다. 다른 조합을 써 보세요.",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "빠른 저장에 $1 사용",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "브라우저는 $1을(를) 자체 북마크 대화상자에 쓰고 기본적으로 확장 프로그램에 넘기지 않지만, 직접 지정할 수 있습니다. 단축키 페이지를 열고 Bookmark Scout를 찾아 \"$2\" 옆의 연필을 클릭한 다음 $1을(를) 누르세요.",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "이제 $1을(를) 누르면 브라우저의 북마크 대화상자 대신 빠른 저장이 실행됩니다. 대화상자를 되돌리려면 브라우저의 단축키 페이지에서 이 단축키를 지우세요.",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "$1은(는) 브라우저가 직접 쓰므로 Bookmark Scout에 전달되지 않습니다. 다른 단축키를 고르세요.",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "빠른 저장 단축키가 설정되지 않음",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5938,6 +6010,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "$1 중 하나 이상은 항상 표시되므로 어떤 북마크나 폴더에도 메뉴에 명령이 있습니다.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI에게 묻기가 할 수 있는 일",
@@ -6050,5 +6126,19 @@
     "settings_askAiWrites": {
         "message": "북마크 변경",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "이 페이지에 대한 폴더 제안이 없습니다",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "날짜나 이름순으로 정렬되어 있어 여기서는 다른 폴더로만 옮길 수 있습니다. 순서를 바꾸려면 \"$sort$\" 정렬을 선택하세요.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

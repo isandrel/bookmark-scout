@@ -14,26 +14,18 @@ import {
   PanelRightClose,
   X,
 } from 'lucide-react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { z } from 'zod';
-
-const layout = readConfig(
-  'ui/layout',
-  z.strictObject({
-    manager: z.strictObject({
-      both_sidebars_min_width: z.number().int().positive(),
-      folders_open: z.boolean(),
-      tools_open: z.boolean(),
-    }),
-  }),
-).manager;
+import {
+  type KeyboardEvent,
+  type RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 const getBookmarkRowId = (bookmark: Bookmark) => bookmark.id;
 
-// Narrower than this, the folder and tools sidebars together leave the table too little room,
-// so opening one closes the other.
-const BOTH_SIDEBARS_QUERY = `(min-width: ${layout.both_sidebars_min_width}px)`;
-const fitsBothSidebars = () => window.matchMedia(BOTH_SIDEBARS_QUERY).matches;
 const isFolderRow = (bookmark: Bookmark) => bookmark.type === ItemTypeEnum.Folder;
 
 /** Copies the address that opens `folderId` (null: the top level) and says so in a toast. */
@@ -78,28 +70,40 @@ export default function BookmarksPage() {
   } = useBookmarkNavigation();
   const [revealRow, setRevealRow] = useState<DataTableRevealRequest | null>(null);
   const tableRef = useRef<DataTableHandle<Bookmark>>(null);
-  // Both open is narrowed to one by the effect below when the window is too small.
-  const [leftSidebarCollapsed, setLeftSidebarCollapsed] = useState(!layout.folders_open);
-  const [rightSidebarCollapsed, setRightSidebarCollapsed] = useState(!layout.tools_open);
-  const toggleLeftSidebar = () => {
-    if (leftSidebarCollapsed && !fitsBothSidebars()) setRightSidebarCollapsed(true);
-    setLeftSidebarCollapsed(!leftSidebarCollapsed);
-  };
-  const toggleRightSidebar = () => {
-    if (rightSidebarCollapsed && !fitsBothSidebars()) setLeftSidebarCollapsed(true);
-    setRightSidebarCollapsed(!rightSidebarCollapsed);
-  };
-  // Shrinking the window with both sidebars open closes the folder sidebar.
-  useEffect(() => {
-    if (leftSidebarCollapsed || rightSidebarCollapsed) return;
-    const query = window.matchMedia(BOTH_SIDEBARS_QUERY);
-    const collapseFolders = () => {
-      if (!query.matches) setLeftSidebarCollapsed(true);
+  const sidebars = useManagerSidebars();
+  const leftSidebarCollapsed = !sidebars.folders.open;
+  const rightSidebarCollapsed = !sidebars.tools.open;
+  const foldersToggleRef = useRef<HTMLButtonElement>(null);
+  const toolsToggleRef = useRef<HTMLButtonElement>(null);
+  // In a narrow window the folder drawer closes once a folder is picked.
+  const { overlay: sidebarOverlay, folders: foldersSidebar } = sidebars;
+  const selectTreeFolder = useCallback(
+    (folderId: string | null) => {
+      navigateToFolder(folderId);
+      if (sidebarOverlay) foldersSidebar.close();
+    },
+    [foldersSidebar, navigateToFolder, sidebarOverlay],
+  );
+  // A drawer takes focus when it opens, and Escape closes it, giving focus back to its button.
+  const drawerKeyDown =
+    (sidebar: ManagerSidebar, toggle: RefObject<HTMLButtonElement | null>) =>
+    (event: KeyboardEvent<HTMLElement>) => {
+      if (!sidebarOverlay || event.key !== 'Escape' || hasOpenOverlay()) return;
+      event.stopPropagation();
+      sidebar.close();
+      toggle.current?.focus();
     };
-    collapseFolders();
-    query.addEventListener('change', collapseFolders);
-    return () => query.removeEventListener('change', collapseFolders);
-  }, [leftSidebarCollapsed, rightSidebarCollapsed]);
+  const foldersAsideRef = useRef<HTMLElement>(null);
+  const toolsAsideRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!sidebarOverlay) return;
+    const aside = sidebars.folders.open
+      ? foldersAsideRef.current
+      : sidebars.tools.open
+        ? toolsAsideRef.current
+        : null;
+    aside?.querySelector<HTMLElement>('[tabindex="0"], button, input')?.focus();
+  }, [sidebarOverlay, sidebars.folders.open, sidebars.tools.open]);
   const [selectedBookmark, setSelectedBookmark] = useState<Bookmark | null>(null);
   const [editTarget, setEditTarget] = useState<BookmarkEditTarget | null>(null);
   const { value: sortOrder } = useSetting('sortOrder');
@@ -149,6 +153,17 @@ export default function BookmarksPage() {
     copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
     open: openRows,
   });
+  const allDataRef = useRef(allData);
+  allDataRef.current = allData;
+  // The folder of the tree row `target` is in: what its menu, keys, and clipboard act on.
+  const resolveTreeMenuItems = useCallback((target: EventTarget | null) => {
+    const element =
+      target instanceof Element ? target.closest<HTMLElement>('[data-folder-id]') : null;
+    const folder = element?.dataset.folderId
+      ? getManagerItemsById(allDataRef.current).get(element.dataset.folderId)
+      : undefined;
+    return folder ? [folder] : [];
+  }, []);
   const shortcuts = useManagerShortcuts({
     currentFolderId: currentFolder,
     items: allData,
@@ -161,6 +176,7 @@ export default function BookmarksPage() {
       undo: history.undo,
       redo: history.redo,
     },
+    treeFolderAt: (target) => resolveTreeMenuItems(target)[0],
     clipboard: managerCommands.clipboardEvents,
   });
   const dragDrop = useManagerDragDrop({ allData, currentFolderId: currentFolder, table: tableRef });
@@ -176,16 +192,6 @@ export default function BookmarksPage() {
     const row = target instanceof Element ? target.closest<HTMLElement>('tr[data-row-id]') : null;
     const rowId = row?.dataset.rowId;
     return rowId ? (tableRef.current?.targetRowsAt(rowId) ?? []) : [];
-  }, []);
-  const allDataRef = useRef(allData);
-  allDataRef.current = allData;
-  const resolveTreeMenuItems = useCallback((target: EventTarget | null) => {
-    const element =
-      target instanceof Element ? target.closest<HTMLElement>('[data-folder-id]') : null;
-    const folder = element?.dataset.folderId
-      ? getManagerItemsById(allDataRef.current).get(element.dataset.folderId)
-      : undefined;
-    return folder ? [folder] : [];
   }, []);
   const sortAccessors = useMemo(
     () => ({
@@ -211,9 +217,9 @@ export default function BookmarksPage() {
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const facetOptions = useMemo(() => {
-    const domains = [
-      ...new Set(allData.map(getBookmarkDomain).filter(Boolean)),
-    ].sort((left, right) => left.localeCompare(right));
+    const domains = [...new Set(allData.map(getBookmarkDomain).filter(Boolean))].sort(
+      (left, right) => left.localeCompare(right),
+    );
     return {
       parentId: buildFolderOptions(allData, t('popup_untitled')),
       domain: domains.map((domain) => ({
@@ -285,17 +291,35 @@ export default function BookmarksPage() {
 
   return (
     <div className="flex h-screen">
+      {/* In a narrow window an open sidebar is a drawer over the table; a click beside it
+          closes it (Escape does from the keyboard). */}
+      {sidebarOverlay && (sidebars.folders.open || sidebars.tools.open) && (
+        // biome-ignore lint/a11y/noStaticElementInteractions: pointer-only scrim; Escape closes the drawer from the keyboard.
+        // biome-ignore lint/a11y/useKeyWithClickEvents: see above.
+        <div
+          className="fixed inset-0 z-30 bg-black/40"
+          data-testid="sidebar-scrim"
+          onClick={() => {
+            sidebars.folders.close();
+            sidebars.tools.close();
+          }}
+        />
+      )}
       {/* Left Sidebar - Folders. Collapsed sidebars are inert so they leave the tab order. */}
       <aside
+        ref={foldersAsideRef}
         className={cn(
-          'shrink-0 border-r transition-all duration-200 overflow-hidden',
-          leftSidebarCollapsed ? 'w-0' : 'w-64'
+          'shrink-0 overflow-hidden border-r transition-all duration-200',
+          sidebarOverlay && 'fixed inset-y-0 left-0 z-40 bg-background shadow-lg',
+          leftSidebarCollapsed ? 'w-0 border-r-0' : 'w-64 max-w-[85vw]',
         )}
         inert={leftSidebarCollapsed}
         aria-hidden={leftSidebarCollapsed || undefined}
         data-testid="folder-sidebar"
+        data-overlay={sidebarOverlay || undefined}
+        onKeyDown={drawerKeyDown(sidebars.folders, foldersToggleRef)}
       >
-        <div className="w-64 h-full overflow-y-auto">
+        <div className="h-full w-64 max-w-[85vw] overflow-y-auto">
           <div className="flex h-14 items-center border-b px-4">
             <h2 className="text-sm font-semibold">{t('bookmarks_root')}</h2>
           </div>
@@ -308,7 +332,8 @@ export default function BookmarksPage() {
             <FolderTree
               items={allData}
               selectedFolderId={currentFolder}
-              onFolderSelect={navigateToFolder}
+              onFolderSelect={selectTreeFolder}
+              onFolderKey={shortcuts.handleTreeFolderKey}
             />
           </ItemContextMenu>
         </div>
@@ -317,15 +342,20 @@ export default function BookmarksPage() {
       {/* Main Content */}
       <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex h-14 shrink-0 items-center border-b px-4">
-          <div className="flex w-full items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-2">
+        {/* The path takes the room the buttons leave and scrolls or collapses inside it; the
+            buttons keep their size, so they never overlap. */}
+        <header className="flex h-14 shrink-0 items-center border-b px-2 sm:px-4">
+          <div className="flex w-full min-w-0 items-center gap-2 sm:gap-4">
+            <div className="flex min-w-0 flex-1 items-center gap-1 sm:gap-2">
               <Button
+                ref={foldersToggleRef}
                 variant="ghost"
                 size="icon"
-                onClick={toggleLeftSidebar}
+                onClick={sidebars.folders.toggle}
                 className="shrink-0"
-                title={leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')}
+                title={
+                  leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')
+                }
                 aria-label={
                   leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')
                 }
@@ -353,33 +383,38 @@ export default function BookmarksPage() {
                 <Link2 className="h-4 w-4" />
               </Button>
             </div>
-            <ManagerShortcutsHelp
-              open={shortcuts.helpOpen}
-              onOpenChange={shortcuts.setHelpOpen}
-            />
-            <OrganizeMenu host={managerCommands.folderHost} />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleRightSidebar}
-              className="shrink-0"
-              title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
-              aria-label={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
-              aria-expanded={!rightSidebarCollapsed}
-            >
-              {rightSidebarCollapsed ? (
-                <PanelRight className="h-4 w-4" />
-              ) : (
-                <PanelRightClose className="h-4 w-4" />
-              )}
-            </Button>
+            <div className="flex shrink-0 items-center gap-1" data-testid="manager-header-actions">
+              <ManagerShortcutsHelp
+                open={shortcuts.helpOpen}
+                onOpenChange={shortcuts.setHelpOpen}
+              />
+              <OrganizeMenu host={managerCommands.folderHost} />
+              <Button
+                ref={toolsToggleRef}
+                variant="ghost"
+                size="icon"
+                onClick={sidebars.tools.toggle}
+                className="shrink-0"
+                title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
+                aria-label={
+                  rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')
+                }
+                aria-expanded={!rightSidebarCollapsed}
+              >
+                {rightSidebarCollapsed ? (
+                  <PanelRight className="h-4 w-4" />
+                ) : (
+                  <PanelRightClose className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </header>
 
         {/* Content. Positioned, so absolutely positioned descendants (screen-reader-only labels)
             are laid out inside this scroll area instead of stretching the page below the
             viewport, which let the whole page scroll away to a blank screen. */}
-        <div className="relative min-w-0 flex-1 space-y-4 overflow-auto p-4">
+        <div className="relative flex min-w-0 flex-1 flex-col gap-4 overflow-auto p-4">
           {notice && (
             <div
               role="status"
@@ -431,10 +466,13 @@ export default function BookmarksPage() {
               handleRef={tableRef}
               getRowProps={dragDrop.rowProps}
               renderFrame={(frame) => (
+                // Fills the room down to the pagination, so right clicks and drops below the
+                // rows reach the folder's empty-space menu and its end.
                 <ItemContextMenu
                   resolveItems={resolveRowMenuItems}
                   itemHost={managerCommands.tableItemHost}
                   folderHost={managerCommands.folderHost}
+                  className="flex-1"
                   testId="bookmark-table-menu-area"
                   areaProps={dragDrop.frameProps}
                 >
@@ -458,19 +496,20 @@ export default function BookmarksPage() {
 
       {/* Right Sidebar - Tools */}
       <aside
+        ref={toolsAsideRef}
         className={cn(
-          'shrink-0 border-l transition-all duration-200 overflow-hidden',
-          rightSidebarCollapsed ? 'w-0' : 'w-80'
+          'shrink-0 overflow-hidden border-l transition-all duration-200',
+          sidebarOverlay && 'fixed inset-y-0 right-0 z-40 bg-background shadow-lg',
+          rightSidebarCollapsed ? 'w-0 border-l-0' : 'w-80 max-w-[85vw]',
         )}
         inert={rightSidebarCollapsed}
         aria-hidden={rightSidebarCollapsed || undefined}
         data-testid="tools-sidebar"
+        data-overlay={sidebarOverlay || undefined}
+        onKeyDown={drawerKeyDown(sidebars.tools, toolsToggleRef)}
       >
-        <div className="w-80 h-full overflow-y-auto">
-          <ToolsSidebar
-            currentFolderId={currentFolder}
-            currentFolderName={currentFolderName}
-          />
+        <div className="h-full w-80 max-w-[85vw] overflow-y-auto">
+          <ToolsSidebar currentFolderId={currentFolder} currentFolderName={currentFolderName} />
         </div>
       </aside>
 

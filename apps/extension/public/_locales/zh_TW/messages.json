@@ -309,6 +309,18 @@
         "message": "沒有可貼上的內容",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "未貼上任何內容",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "已複製 ID",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "沒有可新增的連結：拖放的文字中沒有網址。",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "無法貼上",
         "description": "Error toast when pasting bookmarks fails"
@@ -470,6 +482,18 @@
     "toast_settingsResetDescription": {
         "message": "所有設定均已還原為預設值。",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "已還原你的設定",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "重設所有設定？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "所有分頁中的每項設定都會還原為預設值，包括在你的裝置間同步的設定和只保存在此裝置上的設定。你的書籤、AI 服務、已儲存的提示詞和已儲存的搜尋不會改變。重設後可以立即復原。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "重設設定時發生錯誤",
@@ -1284,6 +1308,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "沒有可用的動作",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "依名稱排序",
@@ -3261,6 +3289,18 @@
         "message": "已還原你的設定、提示詞、AI 服務和已儲存的搜尋。備份中沒有 API 金鑰：缺少的金鑰請在「設定 > AI」中新增。",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "已還原你的設定、提示詞、AI 服務（含基礎網址）和已儲存的搜尋。備份從不包含以下內容，因此未還原：$1。請在「設定 > AI」中重新輸入；在此之前這些服務會顯示「需要設定」。",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "「$1」的$2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "需要設定",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "切換為淺色主題",
         "description": "Theme toggle accessible name"
@@ -3289,6 +3329,10 @@
         "message": "資料夾",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "第 $1 層",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "在你的帳戶中",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3300,6 +3344,10 @@
     "bookmarks_breadcrumb": {
         "message": "資料夾路徑",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "顯示路徑中的另外 $1 個資料夾",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "新增書籤",
@@ -3408,6 +3456,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "已刪除 $1 個項目。可在 $2 秒內復原。",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "內容太大，無法存入復原紀錄，只能透過這裡的「復原」還原。",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "已還原 $1 個項目。",
@@ -5407,6 +5459,10 @@
         "message": "找不到書籤。",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "剪下和複製最多可包含 $1 個項目。請少選一些，或選取包含它們的資料夾。",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "這個項目沒有上層資料夾，因此無法復原。",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5465,7 +5521,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "側邊面板",
@@ -5477,11 +5533,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "搜尋「$1」 - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "選項",
@@ -5671,6 +5727,22 @@
         "message": "瀏覽器未接受這個快捷鍵。請換一個試試。",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "用 $1 快速儲存",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "瀏覽器把 $1 留給自己的書籤對話方塊，預設不會指派給擴充功能，但你可以自行設定：開啟快捷鍵頁面，找到 Bookmark Scout，點選「$2」旁的鉛筆圖示，然後按下 $1。",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "現在按 $1 會快速儲存，而不是開啟瀏覽器的書籤對話方塊。若要恢復該對話方塊，請在瀏覽器的快捷鍵頁面清除這個快捷鍵。",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "瀏覽器自己使用 $1，它永遠不會傳到 Bookmark Scout。請換一個快捷鍵。",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "未設定快速儲存快捷鍵",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5754,6 +5826,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "選擇右鍵選單和 ⋯ 選單顯示哪些命令，以及每組中的順序。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」中至少有一項會一直顯示，讓選單對任何書籤或資料夾都有可用的指令。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "詢問 AI 可以執行的動作",
@@ -5866,5 +5942,19 @@
     "settings_askAiWrites": {
         "message": "變更書籤",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "沒有為此頁面建議的資料夾",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "清單依日期或名稱排序，因此這裡只能將項目拖入其他資料夾。如需調整順序，請選擇「$sort$」排序方式。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

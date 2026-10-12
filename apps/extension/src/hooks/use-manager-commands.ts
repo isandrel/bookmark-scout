@@ -50,6 +50,10 @@ export function useManagerCommands(options: ManagerCommandOptions) {
   }, []);
   const canOpenPrivateRef = useRef(canOpenPrivate);
   canOpenPrivateRef.current = canOpenPrivate;
+  // What Cut or Copy holds, from this tab or another; the menus read it when they open.
+  const { value: clipboard } = useStoredValue(bookmarkClipboardValue);
+  const hasClipboardRef = useRef(clipboard !== null);
+  hasClipboardRef.current = clipboard !== null;
 
   return useMemo(() => {
     const byId = () => getManagerItemsById(latest.current.allData);
@@ -74,14 +78,19 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       }
     };
 
-    const pasteInto = async (
-      target: { parentId: string; index?: number },
-      systemText?: string,
-    ) => {
+    const pasteInto = async (target: { parentId: string; index?: number }, systemText?: string) => {
       try {
         const result = await pasteBookmarks(target, systemText);
         if (!result) {
           toast({ title: t('toast_nothingToPaste') });
+          return;
+        }
+        if (result.pasted === 0) {
+          // Nothing went in: say why instead of reporting "Pasted 0 items" as a success.
+          toast({
+            title: t('toast_nothingPasted'),
+            description: t('toast_pasteSkipped', String(result.skipped)),
+          });
           return;
         }
         toast.success({
@@ -123,7 +132,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         event.clipboardData?.setData('text/plain', text);
         event.clipboardData?.setData('text/html', html);
         const ids = pruneNestedSelection(rows, latest.current.allData).map((item) => item.id);
-        void setBookmarkClipboard(mode, ids).then(
+        void setBookmarkClipboard(mode, ids, { systemText: text }).then(
           () => reportClipboard(mode, rows),
           (error: unknown) =>
             toast.error({
@@ -137,6 +146,15 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         event.preventDefault();
         pasteNextTo(rows, event.clipboardData?.getData('text/plain') ?? undefined);
       },
+      /** Paste on a folder in the tree: at the end of that folder. */
+      pasteInto: (event: ClipboardEvent, folder: Bookmark) => {
+        if (!canAddTo(folder)) return;
+        event.preventDefault();
+        void pasteInto(
+          { parentId: folder.id },
+          event.clipboardData?.getData('text/plain') ?? undefined,
+        );
+      },
     };
 
     const base = {
@@ -147,8 +165,16 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         toast.error({ title: t(titleKey), description: getErrorMessage(error) }),
       showInFolder: (bookmark: Bookmark) => latest.current.showInFolder(bookmark),
       copyFolderLink: (folderId: string) => latest.current.copyFolderLink(folderId),
-      openableUrls: (items: readonly Bookmark[]) =>
-        getOpenableUrls(items, latest.current.allData),
+      copyId: (id: string) =>
+        void navigator.clipboard.writeText(id).then(
+          () => toast.success({ title: t('toast_idCopied') }),
+          (error: unknown) =>
+            toast.error({
+              title: t('bookmarks_detailsCopyFailed'),
+              description: getErrorMessage(error),
+            }),
+        ),
+      openableUrls: (items: readonly Bookmark[]) => getOpenableUrls(items, latest.current.allData),
       open: (items: Bookmark[], target: BookmarkOpenTarget) => latest.current.open(items, target),
       cut: (items: Bookmark[]) => void setClipboard('cut', items),
       copy: (items: Bookmark[]) => void setClipboard('copy', items),
@@ -163,7 +189,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       isOutsideOpenFolder: (bookmark) =>
         !latest.current.folderItems.some((item) => item.id === bookmark.id),
       paste: (items) => pasteNextTo(items),
-      canPaste: () => hasBookmarkClipboard() && canAddTo(currentFolder()),
+      canPaste: () => hasClipboardRef.current && canAddTo(currentFolder()),
     };
 
     /** Folders in the tree: paste goes into the folder, and there is no Show in folder. */
@@ -177,7 +203,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         const [folder] = items;
         if (folder) void pasteInto({ parentId: folder.id });
       },
-      canPaste: (items) => hasBookmarkClipboard() && items.length === 1 && canAddTo(items[0]),
+      canPaste: (items) => hasClipboardRef.current && items.length === 1 && canAddTo(items[0]),
     };
 
     const folderHost: ActionFolderHost = {
@@ -188,7 +214,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         return latest.current.folderItems.length > 1 && latest.current.searchQuery === '';
       },
       get canPaste() {
-        return hasBookmarkClipboard();
+        return hasClipboardRef.current;
       },
       sort: () => {
         const folder = currentFolder();

@@ -309,6 +309,18 @@
         "message": "Nothing to paste",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "Nothing was pasted",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "Copied ID",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "No links to add: the dropped text has no web address.",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "Could not paste",
         "description": "Error toast when pasting bookmarks fails"
@@ -478,6 +490,18 @@
     "toast_settingsResetDescription": {
         "message": "All settings have been restored to defaults.",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "Your settings are back",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "Reset all settings?",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "Every setting on every tab goes back to its default: both the ones synced across your devices and the ones kept on this device only. Your bookmarks, AI services, saved prompts, and saved searches are not changed. You can undo the reset right after.",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "Error resetting settings",
@@ -1292,6 +1316,10 @@
     "menu_organize": {
         "message": "Organize",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "No actions available",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "Sort by name",
@@ -3269,6 +3297,18 @@
         "message": "Your settings, prompts, AI services, and saved searches were restored. Backups have no API keys: add any that are missing in Settings > AI.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "Your settings, prompts, AI services with their Base URLs, and saved searches were restored. Not restored, because backups never hold them: $1. Enter them again in Settings > AI; until then those services show Needs setup.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "$2 for “$1”",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "Needs setup",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "Switch to light theme",
         "description": "Theme toggle accessible name"
@@ -3305,6 +3345,10 @@
         "message": "Folders",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "$1 levels deep",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "In your account",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3316,6 +3360,10 @@
     "bookmarks_breadcrumb": {
         "message": "Folder path",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "Show $1 more folders in the path",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "Add bookmark",
@@ -3424,6 +3472,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "Deleted $1 items. Undo within $2 seconds.",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "It is too large to keep in the undo history, so only Undo here can bring it back.",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "Restored $1 items.",
@@ -5599,6 +5651,10 @@
         "message": "Bookmark not found.",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "Cut and Copy hold at most $1 items. Select fewer, or a folder that contains them.",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "This item cannot be recovered because it has no parent folder.",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5657,7 +5713,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "Side Panel",
@@ -5669,11 +5725,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "Search \"$1\" - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "Options",
@@ -5863,6 +5919,22 @@
         "message": "The browser didn't accept this shortcut. Try another one.",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "Use $1 for quick save",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "The browser keeps $1 for its own bookmark dialog and doesn’t give it to extensions by default, but you can: open the shortcut page, find Bookmark Scout, click the pencil next to “$2”, and press $1.",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "$1 now runs quick save instead of the browser’s bookmark dialog. To get the dialog back, clear this shortcut on the browser’s shortcut page.",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "The browser uses $1 itself, so it would never reach Bookmark Scout. Choose another shortcut.",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "Quick save shortcut not set",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5946,6 +6018,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Choose which commands the right-click and ⋯ menus show, and in what order within each group.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "At least one of $1 stays shown, so the menu always has a command for any bookmark or folder.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "What Ask AI may do",
@@ -6058,5 +6134,19 @@
     "settings_askAiWrites": {
         "message": "Changing bookmarks",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "No folder suggestions for this page",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "The list is sorted by date or name, so here items can only be dropped into other folders. To reorder them, choose the \"$sort$\" sort order.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

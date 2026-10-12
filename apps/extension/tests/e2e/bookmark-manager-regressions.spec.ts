@@ -290,7 +290,7 @@ test('columns hidden for lack of room keep their chosen state in the view menu',
   await expect(urlItem).toHaveAttribute('aria-checked', 'true');
 });
 
-test('edits explain a blank folder name and a URL without a scheme in the dialog', async ({
+test('edits explain a blank folder name and a URL that names no address in the dialog', async ({
   extensionId,
   extensionWorker,
   page,
@@ -314,7 +314,8 @@ test('edits explain a blank folder name and a URL without a scheme in the dialog
   await row(page, 'Checked Link').getByRole('button', { name: 'Open menu' }).click();
   await page.getByRole('menuitem', { name: 'Edit' }).click();
   dialog = page.getByRole('dialog', { name: 'Edit bookmark' });
-  await dialog.getByLabel('URL').fill('example.com/new');
+  // A host without a scheme gets https:// (as in the browser); text that names no host does not.
+  await dialog.getByLabel('URL').fill('no address here');
   await dialog.getByRole('button', { name: 'Save' }).click();
   await expect(
     dialog.getByText('Enter a complete URL, including its scheme, such as https://example.com/.', {

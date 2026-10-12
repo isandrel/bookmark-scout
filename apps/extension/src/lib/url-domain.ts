@@ -97,6 +97,36 @@ export function isScriptUrl(url: string | undefined): boolean {
   return SCRIPT_URL_SCHEMES.has(getScheme(normalizeForScheme(url)));
 }
 
+// A scheme the user typed: `https://`, or one without slashes such as `mailto:` or `data:`.
+const TYPED_SCHEME = /^[a-z][a-z\d+.-]*:\/\//i;
+const OPAQUE_SCHEMES = new Set([
+  'about',
+  'blob',
+  'data',
+  'javascript',
+  'mailto',
+  'tel',
+  'vbscript',
+]);
+
+/**
+ * A typed address with `https://` added when it names a host without a scheme, as the browser's
+ * own add dialog does: `example.com/path` becomes `https://example.com/path`. Anything else
+ * (an address with a scheme, a bookmarklet, or text that is no address) comes back unchanged.
+ */
+export function withDefaultScheme(text: string): string {
+  if (TYPED_SCHEME.test(text) || OPAQUE_SCHEMES.has(getScheme(normalizeForScheme(text)))) {
+    return text;
+  }
+  try {
+    const { hostname } = new URL(`https://${text}`);
+    const isHost = hostname.includes('.') || hostname === 'localhost' || hostname.startsWith('[');
+    return isHost && !/\s/.test(text) ? `https://${text}` : text;
+  } catch {
+    return text;
+  }
+}
+
 export type BlockedEditUrl = {
   kind: 'script' | 'data-document';
   /** What was matched, for the message, e.g. "vbscript:" or "data:text/html". */

@@ -88,6 +88,12 @@ export const STORAGE_ITEMS = {
    */
   bookmarkHistory: { area: 'session', name: 'bookmarks.history', v: 1, backup: 'exclude' },
   /**
+   * Session: what the manager's Cut or Copy holds for Paste (bookmark ids, cut or copy, and
+   * when), so another manager tab or a reload can paste it. Ids belong to this browser, and like
+   * the system clipboard it is gone when the browser closes.
+   */
+  bookmarkClipboard: { area: 'session', name: 'manager.clipboard', v: 1, backup: 'exclude' },
+  /**
    * Session: bookmark changes an AI agent proposed, waiting for the user's approval. They name
    * bookmark ids and expire within the hour, so they stay in memory until the browser closes.
    */

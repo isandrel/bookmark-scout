@@ -309,6 +309,18 @@
         "message": "没有可粘贴的内容",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "未粘贴任何内容",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "已复制 ID",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "没有可添加的链接：拖放的文本中没有网址。",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "无法粘贴",
         "description": "Error toast when pasting bookmarks fails"
@@ -470,6 +482,18 @@
     "toast_settingsResetDescription": {
         "message": "所有设置均已恢复为默认值。",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "已恢复你的设置",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "重置所有设置？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "所有标签页中的每项设置都会恢复为默认值，包括在你的设备间同步的设置和仅保存在此设备上的设置。你的书签、AI 服务、已保存的提示词和已保存的搜索不会改变。重置后可以立即撤销。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "重置设置时出错",
@@ -1284,6 +1308,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "没有可用的操作",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "按名称排序",
@@ -3261,6 +3289,18 @@
         "message": "已恢复你的设置、提示词、AI 服务和已保存的搜索。备份中没有 API 密钥：缺少的密钥请在“设置 > AI”中添加。",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "已恢复你的设置、提示词、AI 服务（含 API 地址）和已保存的搜索。备份从不包含以下内容，因此未恢复：$1。请在“设置 > AI”中重新输入；在此之前这些服务会显示“需要设置”。",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "“$1”的$2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "需要设置",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "切换到浅色主题",
         "description": "Theme toggle accessible name"
@@ -3289,6 +3329,10 @@
         "message": "文件夹",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "第 $1 层",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "在您的账号中",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3300,6 +3344,10 @@
     "bookmarks_breadcrumb": {
         "message": "文件夹路径",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "显示路径中的另外 $1 个文件夹",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "添加书签",
@@ -3408,6 +3456,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "已删除 $1 项。可在 $2 秒内撤消。",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "内容过大，无法保存在撤销历史中，只能通过此处的“撤销”恢复。",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "已恢复 $1 项。",
@@ -5407,6 +5459,10 @@
         "message": "找不到书签。",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "剪切和复制最多可容纳 $1 个项目。请少选一些，或选择包含它们的文件夹。",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "此项没有上级文件夹，因此无法恢复。",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5465,7 +5521,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "侧边栏",
@@ -5477,11 +5533,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "搜索“$1” - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "选项",
@@ -5671,6 +5727,22 @@
         "message": "浏览器未接受此快捷键。请换一个试试。",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "用 $1 快速保存",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "浏览器把 $1 留给自己的书签对话框，默认不会分配给扩展程序，但你可以自己设置：打开快捷键页面，找到 Bookmark Scout，点击“$2”旁的铅笔图标，然后按 $1。",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "现在按 $1 会快速保存，而不是打开浏览器的书签对话框。要恢复该对话框，请在浏览器的快捷键页面清除这个快捷键。",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "浏览器自己使用 $1，它永远不会传到 Bookmark Scout。请换一个快捷键。",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "未设置快速保存快捷键",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5754,6 +5826,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "选择右键菜单和 ⋯ 菜单显示哪些命令，以及每组中的顺序。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "“$1”中至少有一项始终显示，这样菜单对任何书签或文件夹都有可用的命令。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "询问 AI 可以执行的操作",
@@ -5866,5 +5942,19 @@
     "settings_askAiWrites": {
         "message": "更改书签",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "没有为此页面建议的文件夹",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "列表按日期或名称排序，因此这里只能将项目拖入其他文件夹。如需调整顺序，请选择“$sort$”排序方式。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

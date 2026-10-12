@@ -305,6 +305,18 @@
         "message": "貼り付けるものがありません",
         "description": "Toast when Paste finds nothing to paste"
     },
+    "toast_nothingPasted": {
+        "message": "何も貼り付けられませんでした",
+        "description": "Toast title when Paste found items to paste but none of them could be pasted; the description says why"
+    },
+    "toast_idCopied": {
+        "message": "ID をコピーしました",
+        "description": "Toast after the bookmark manager's Copy Bookmark ID put an item's id on the clipboard"
+    },
+    "toast_noLinksDropped": {
+        "message": "追加するリンクがありません。ドロップしたテキストに Web アドレスが含まれていません。",
+        "description": "Toast when text dropped on the bookmark manager from another app or page holds no web address to bookmark"
+    },
     "toast_pasteFailed": {
         "message": "貼り付けられませんでした",
         "description": "Error toast when pasting bookmarks fails"
@@ -466,6 +478,18 @@
     "toast_settingsResetDescription": {
         "message": "すべての設定がデフォルトに戻りました",
         "description": "Toast description for settings reset success"
+    },
+    "toast_settingsResetUndone": {
+        "message": "設定を元に戻しました",
+        "description": "Toast after the user undid Reset All: the settings they had are back"
+    },
+    "settings_resetAllTitle": {
+        "message": "すべての設定をリセットしますか？",
+        "description": "Title of the dialog that confirms Options > Reset All"
+    },
+    "settings_resetAllDescription": {
+        "message": "すべてのタブのすべての設定がデフォルトに戻ります。デバイス間で同期される設定も、このデバイスだけに保存される設定も対象です。ブックマーク、AI サービス、保存したプロンプト、保存した検索は変わりません。リセットの直後なら元に戻せます。",
+        "description": "Body of the dialog that confirms Options > Reset All: what is reset and what is not"
     },
     "toast_errorResettingSettings": {
         "message": "設定のリセットに失敗しました",
@@ -1260,6 +1284,10 @@
     "menu_organize": {
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
+    },
+    "menu_noActions": {
+        "message": "使用できる操作はありません",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
     },
     "menu_sortByName": {
         "message": "名前順に並べ替え",
@@ -3237,6 +3265,18 @@
         "message": "設定、プロンプト、AI サービス、保存した検索を復元しました。バックアップに API キーは含まれないため、足りないキーは 設定 > AI で追加してください。",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "設定、プロンプト、ベースURLを含むAIサービス、保存した検索を復元しました。バックアップに含まれないため復元されていないもの: $1。設定 > AI で入力し直してください。それまでこれらのサービスには「要設定」と表示されます。",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "「$1」の$2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "要設定",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "ライトテーマに切り替え",
         "description": "Theme toggle accessible name"
@@ -3273,6 +3313,10 @@
         "message": "フォルダ",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "$1 階層の深さ",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "アカウント内",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3284,6 +3328,10 @@
     "bookmarks_breadcrumb": {
         "message": "フォルダのパス",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "パス内のほかの $1 個のフォルダを表示",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "ブックマークを追加",
@@ -3392,6 +3440,10 @@
     "toast_deleteManyUndoWindow": {
         "message": "$1件を削除しました。$2秒以内なら元に戻せます。",
         "description": "Toast description after a multi-item deletion; $1 count, $2 seconds"
+    },
+    "toast_deleteNotInHistory": {
+        "message": "元に戻す履歴に入りきらないため、ここで「元に戻す」を押した場合にのみ復元できます。",
+        "description": "Added to the deletion toast when the deletion was too large to keep in the undo history, so only this toast's Undo can bring it back"
     },
     "toast_itemsRestoredDesc": {
         "message": "$1件を復元しました。",
@@ -5567,6 +5619,10 @@
         "message": "ブックマークが見つかりません。",
         "description": "Error when a bookmark no longer exists"
     },
+    "error_clipboardTooManyItems": {
+        "message": "切り取りとコピーは最大 $1 件までです。選択を減らすか、それらを含むフォルダを選択してください。",
+        "description": "Error when Cut or Copy in the bookmark manager names more items than it can hold. $1 is the limit."
+    },
     "error_bookmarkNoParent": {
         "message": "親フォルダがないため、この項目は復元できません。",
         "description": "Error when an item without a parent folder cannot be deleted with undo"
@@ -5625,7 +5681,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "サイドパネル",
@@ -5637,11 +5693,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "「$1」の検索 - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "オプション",
@@ -5855,6 +5911,22 @@
         "message": "ブラウザーがこのショートカットを受け付けませんでした。別の組み合わせを試してください。",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "クイック保存に $1 を使う",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "ブラウザーは $1 を自身のブックマークダイアログ用に確保しており、既定では拡張機能に割り当てません。ただし自分で設定できます。ショートカットのページを開き、Bookmark Scout を探して「$2」の横の鉛筆アイコンをクリックし、$1 を押してください。",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "$1 でブラウザーのブックマークダイアログの代わりにクイック保存が動きます。ダイアログに戻すには、ブラウザーのショートカットのページでこのショートカットを消去してください。",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "$1 はブラウザー自身が使うため、Bookmark Scout には届きません。別のショートカットを選んでください。",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "クイック保存のショートカットが未設定です",
         "description": "Popup and side panel line when a quick save command has no keys"
@@ -5938,6 +6010,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "右クリックメニューと ⋯ メニューに表示するコマンドと、各グループ内の順序を選びます。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」のうち少なくとも 1 つは常に表示されるため、どのブックマークやフォルダにもメニューのコマンドが必ずあります。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "AI に質問でできること",
@@ -6050,5 +6126,19 @@
     "settings_askAiWrites": {
         "message": "ブックマークを変更する",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "このページへのフォルダの提案はありません",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "日付または名前で並べ替えているため、ここでは別のフォルダへの移動のみできます。並び順を変えるには「$sort$」の並べ替えを選んでください。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

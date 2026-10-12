@@ -8,15 +8,34 @@
  * - One tab stop (roving tabindex). Up and Down move between visible rows, Home and End to the
  *   first and last; Right opens a folder or moves into it, Left closes it or moves to its parent;
  *   Enter or Space opens the folder in the table (a heading opens or closes).
+ * - On a folder, the page's row commands come first (`onFolderKey`): Delete, rename (F2, or Enter
+ *   on a Mac, where Cmd+O and Space open), and open in tabs or a window, as on the table's rows.
  */
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
 import { type KeyboardEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
+
+const treeConfig = readConfig(
+  'ui/manager-tree',
+  z.strictObject({
+    indent_px: z.number().int().nonnegative(),
+    max_indent_levels: z.number().int().positive(),
+  }),
+);
+
+// Room before the chevron of a top-level row.
+const ROW_START_PADDING_PX = 8;
 
 type FolderTreeProps = {
   items: Bookmark[];
   selectedFolderId: string | null;
   onFolderSelect: (folderId: string | null) => void;
+  /**
+   * A key pressed on a folder row, before the tree's own keys: the page's commands (delete,
+   * rename, open) on that folder. True when it ran one.
+   */
+  onFolderKey?: (event: globalThis.KeyboardEvent, folderId: string) => boolean;
 };
 
 const SECTION_LABELS: Record<ManagerSection, MessageKey> = {
@@ -43,6 +62,10 @@ type TreeRowProps = {
 
 function TreeRow({ row, isSelected, isTabStop, onActivate, onToggle }: TreeRowProps) {
   const isSection = row.kind === 'section';
+  // Deep folders stop indenting and show how deep they are instead.
+  const depth = row.level - 1;
+  const indentLevels = Math.min(depth, treeConfig.max_indent_levels);
+  const showsDepth = depth > treeConfig.max_indent_levels;
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: the tree's key handler moves, opens, and closes rows (handleKeyDown).
     <div
@@ -66,8 +89,19 @@ function TreeRow({ row, isSelected, isTabStop, onActivate, onToggle }: TreeRowPr
             ? 'font-medium text-muted-foreground hover:bg-muted'
             : 'text-foreground hover:bg-muted',
       )}
-      style={{ paddingLeft: `${(row.level - 1) * 12 + 8}px` }}
+      style={{ paddingLeft: `${indentLevels * treeConfig.indent_px + ROW_START_PADDING_PX}px` }}
     >
+      {showsDepth && (
+        // Screen readers have the level already (aria-level).
+        <span
+          aria-hidden="true"
+          className="shrink-0 rounded-sm bg-muted px-1 text-[10px] leading-4 tabular-nums text-muted-foreground"
+          title={t('bookmarks_treeDepth', String(depth))}
+          data-testid="tree-depth"
+        >
+          {depth}
+        </span>
+      )}
       {row.hasChildren ? (
         // Mouse only: the keyboard opens and closes rows with the arrow keys.
         // biome-ignore lint/a11y/useKeyWithClickEvents: see above.
@@ -107,6 +141,7 @@ export const FolderTree = memo(function FolderTree({
   items,
   selectedFolderId,
   onFolderSelect,
+  onFolderKey,
 }: FolderTreeProps) {
   useLanguageRevision();
   const sections = useMemo(() => buildManagerFolderSections(items), [items]);
@@ -198,6 +233,11 @@ export const FolderTree = memo(function FolderTree({
     const index = rows.findIndex((row) => row.id === element?.getAttribute(ROW_ID_ATTRIBUTE));
     const row = rows[index];
     if (!row) return;
+    if (row.kind === 'folder' && !event.repeat && onFolderKey?.(event.nativeEvent, row.id)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     const action = findShortcut(event.nativeEvent, TREE_KEY_BINDINGS);
     if (!action) return;
     switch (action) {

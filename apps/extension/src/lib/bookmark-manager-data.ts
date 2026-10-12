@@ -364,6 +364,24 @@ export function getManagerFolderAncestors(
 }
 
 /**
+ * A folder path shortened to at most `maxFolders` shown folders: the first, then the ones in
+ * between `hidden` (for a "…" menu), then the last ones, the open folder included. A path that
+ * fits is all `head`.
+ */
+export function collapseFolderPath<T>(
+  path: readonly T[],
+  maxFolders: number,
+): { head: T[]; hidden: T[]; tail: T[] } {
+  if (path.length <= maxFolders) return { head: [...path], hidden: [], tail: [] };
+  const tailLength = Math.max(1, maxFolders - 1);
+  return {
+    head: path.slice(0, 1),
+    hidden: path.slice(1, path.length - tailLength),
+    tail: path.slice(path.length - tailLength),
+  };
+}
+
+/**
  * The URLs to open for `rows`, as Chrome's manager does: a bookmark's own, and for a folder the
  * bookmarks directly inside it, in folder order. Bookmarklets are left out.
  */

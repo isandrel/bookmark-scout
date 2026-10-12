@@ -39,5 +39,5 @@ export async function recommendFolders(
   });
 
   // Never show more than the setting allows.
-  return toFolderRecommendations(object, folderList, maxRecommendations);
+  return toFolderRecommendations(object, folders, maxRecommendations);
 }

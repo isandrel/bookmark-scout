@@ -73,12 +73,12 @@ test('?q= searches every folder, and typing adds one history entry per burst', a
   await expect(row(page, 'Needle Deep')).toBeVisible();
   await expect(row(page, 'Needle Top')).toBeVisible();
   await expect(row(page, 'Haystack')).toHaveCount(0);
-  await expect(page).toHaveTitle('Search "Needle" - Bookmark Scout');
+  await expect(page).toHaveTitle('Search "Needle" - Bookmarks - Bookmark Scout');
 
   // A folder, then a search typed in one burst: one entry, and Back returns to the folder.
   await page.goto(managerUrl(extensionId, `?id=${seeded.folderId}`));
   await expect(row(page, 'Haystack')).toBeVisible();
-  await expect(page).toHaveTitle('E2E Url Search - Bookmark Scout');
+  await expect(page).toHaveTitle('E2E Url Search - Bookmarks - Bookmark Scout');
   const historyLength = () => page.evaluate(() => window.history.length);
   const start = await historyLength();
   await titleFilter(page).pressSequentially('Hay', { delay: 20 });
@@ -203,7 +203,7 @@ test('Show in folder opens the folder of a search result with the row selected',
   await expect.poll(() => search(page)).toBe(`?id=${seeded.ids['Reveal Box']}`);
   await expect(row(page, 'Zz Target')).toHaveAttribute('data-state', 'selected');
   await expect(row(page, 'Filler 00')).toHaveCount(0);
-  await expect(page).toHaveTitle('Reveal Box - Bookmark Scout');
+  await expect(page).toHaveTitle('Reveal Box - Bookmarks - Bookmark Scout');
 
   // The row menu of a row in the open folder has no Show in folder.
   await row(page, 'Filler 13').getByRole('button', { name: 'Open menu' }).click();

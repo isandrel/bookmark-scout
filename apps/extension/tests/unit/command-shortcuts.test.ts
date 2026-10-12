@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   type CommandShortcutKeyEvent,
   commandShortcutKeyCaps,
+  formatCommandShortcut,
+  isSameCommandShortcut,
   isValidCommandShortcut,
   readCommandShortcut,
 } from '@/lib/command-shortcuts';
@@ -183,5 +185,28 @@ describe('commandShortcutKeyCaps', () => {
     expect(commandShortcutKeyCaps('F5', other)).toEqual(['F5']);
     expect(commandShortcutKeyCaps('MediaPlayPause', other)).toEqual(['MediaPlayPause']);
     expect(commandShortcutKeyCaps('', other)).toEqual([]);
+  });
+});
+
+describe('formatCommandShortcut', () => {
+  it('joins keys with plus signs, or runs glyphs together on Apple platforms', () => {
+    expect(formatCommandShortcut('Ctrl+D', other)).toBe('Ctrl+D');
+    expect(formatCommandShortcut('Ctrl+D', apple)).toBe('⌘D');
+    expect(formatCommandShortcut('Alt+Shift+S', apple)).toBe('⌥⇧S');
+  });
+});
+
+describe('isSameCommandShortcut', () => {
+  it("matches the manifest's Ctrl+D to Chrome's ⌘D on macOS and Firefox's Command+D", () => {
+    expect(isSameCommandShortcut('⌘D', 'Ctrl+D', apple)).toBe(true);
+    expect(isSameCommandShortcut('Command+D', 'Ctrl+D', apple)).toBe(true);
+    expect(isSameCommandShortcut('Ctrl+D', 'Ctrl+D', other)).toBe(true);
+  });
+
+  it('tells Control from Command, other keys, and an unset shortcut apart', () => {
+    expect(isSameCommandShortcut('⌃D', 'Ctrl+D', apple)).toBe(false);
+    expect(isSameCommandShortcut('MacCtrl+D', 'Ctrl+D', apple)).toBe(false);
+    expect(isSameCommandShortcut('Ctrl+Shift+D', 'Ctrl+D', other)).toBe(false);
+    expect(isSameCommandShortcut('', '', other)).toBe(false);
   });
 });

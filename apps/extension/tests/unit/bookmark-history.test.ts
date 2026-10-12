@@ -184,7 +184,7 @@ describe('bookmark history limits', () => {
     expect(trimBookmarkHistory(large, { maxEntries: 10, maxBytes: 100 }).undo).toEqual([]);
   });
 
-  it('rewrites ids in both stacks', () => {
+  it('rewrites ids in both stacks', async () => {
     const history: BookmarkHistory = {
       undo: [
         {
@@ -202,19 +202,100 @@ describe('bookmark history limits', () => {
       ],
       redo: [],
     };
-    const remapped = remapBookmarkHistoryIds(
+    const remapped = await remapBookmarkHistoryIds(
       history,
       new Map([
         ['a', 'a2'],
         ['g', 'g2'],
       ]),
     );
-    expect(remapped.undo[0].operations[0]).toEqual({
+    const [entry] = remapped.undo;
+    if (!entry || !('operations' in entry)) throw new Error('entry not kept as it was');
+    expect(entry.operations[0]).toEqual({
       kind: 'move',
       id: 'a2',
       from: { parentId: 'f', index: 0 },
       to: { parentId: 'g2', index: 1 },
     });
+  });
+});
+
+describe('bookmark history of large changes', () => {
+  // More than the 4 MB `max_bytes` of config/bookmarks/history.toml in JSON.
+  const BIG_COUNT = 700;
+  const URL_LENGTH = 8000;
+  const randomText = (length: number) => {
+    const bytes = crypto.getRandomValues(new Uint8Array(Math.ceil((length * 3) / 4)));
+    return btoa(String.fromCharCode(...bytes))
+      .replace(/[+/=]/g, 'x')
+      .slice(0, length);
+  };
+
+  async function seedBigFolder(url: (index: number) => string) {
+    const folder = await fakeBrowser.bookmarks.create({ parentId: 'g', title: 'Big' });
+    for (let index = 0; index < BIG_COUNT; index += 1) {
+      await fakeBrowser.bookmarks.create({
+        parentId: folder.id,
+        title: `Big ${index}`,
+        url: url(index),
+      });
+    }
+    return folder.id;
+  }
+
+  it('stores a deletion larger than the limit compressed, and keeps the earlier changes', async () => {
+    const bigId = await seedBigFolder(
+      (index) => `https://big.e2e.invalid/${index}/${'u'.repeat(URL_LENGTH)}`,
+    );
+    await recordBookmarkWrites({ action: 'edit', title: 'A' }, (w) =>
+      w.update('a', { title: 'A2' }),
+    );
+    const { recorded } = await recordBookmarkWrites({ action: 'delete' }, (w) => w.remove(bigId));
+    expect(JSON.stringify(recorded?.entry).length).toBeGreaterThan(4_000_000);
+    expect(recorded?.stored).toBe(true);
+
+    const stored = (await readStoredData(STORAGE_ITEMS.bookmarkHistory)) as BookmarkHistory;
+    expect(stored.undo).toHaveLength(2);
+    expect(stored.undo[1]).toHaveProperty('packed');
+    expect(JSON.stringify(stored).length).toBeLessThan(4_000_000);
+
+    // Ctrl+Z brings the folder back whole, then the earlier rename is still undoable.
+    await expect(undoBookmarkChange()).resolves.toMatchObject({ applied: 1, skipped: 0 });
+    const [restored] = bookmarks.childIds('g').filter((id) => bookmarks.get(id)?.title === 'Big');
+    expect(bookmarks.childIds(restored)).toHaveLength(BIG_COUNT);
+    await expect(undoBookmarkChange()).resolves.toMatchObject({ applied: 1 });
+    expect(bookmarks.get('a')?.title).toBe('A');
+    // Redo goes through the compressed entry, with the recreated folder's new ids.
+    await redoBookmarkChange();
+    await expect(redoBookmarkChange()).resolves.toMatchObject({ applied: 1, skipped: 0 });
+    expect(bookmarks.childIds('g').filter((id) => bookmarks.get(id)?.title === 'Big')).toEqual([]);
+  });
+
+  it('leaves out a change too large even compressed, keeping every earlier one', async () => {
+    const bigId = await seedBigFolder(
+      (index) => `https://big.e2e.invalid/${index}/${randomText(URL_LENGTH)}`,
+    );
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    await recordBookmarkWrites({ action: 'edit', title: 'A' }, (w) =>
+      w.update('a', { title: 'A2' }),
+    );
+    await recordBookmarkWrites({ action: 'edit', title: 'B' }, (w) =>
+      w.update('b', { title: 'B2' }),
+    );
+    const { recorded } = await recordBookmarkWrites({ action: 'delete' }, (w) => w.remove(bigId));
+    if (!recorded) throw new Error('not recorded');
+    expect(recorded.stored).toBe(false);
+    expect((await bookmarkHistoryValue.get()).undo.map((entry) => entry.label.title)).toEqual([
+      'A',
+      'B',
+    ]);
+
+    // The toast's own Undo still restores it; Ctrl+Z goes on to the earlier changes.
+    await expect(undoRecordedBookmarkChange(recorded)).resolves.toMatchObject({ applied: 1 });
+    const [restored] = bookmarks.childIds('g').filter((id) => bookmarks.get(id)?.title === 'Big');
+    expect(bookmarks.childIds(restored)).toHaveLength(BIG_COUNT);
+    await undoBookmarkChange();
+    expect(bookmarks.get('b')?.title).toBe('B');
   });
 });
 

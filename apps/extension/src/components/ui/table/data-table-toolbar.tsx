@@ -77,8 +77,10 @@ export function DataTableToolbar<TData extends RowData>({
   );
 
   return (
-    <div className="flex items-start gap-2" data-testid="bookmark-table-toolbar">
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+    // The view controls go to their own line when the filters need the room, so nothing overlaps
+    // in a narrow window.
+    <div className="flex flex-wrap items-start gap-2" data-testid="bookmark-table-toolbar">
+      <div className="flex min-w-0 flex-[1_1_18rem] flex-wrap items-center gap-2">
         <Input
           placeholder={t('table_filterTitles')}
           aria-label={t('table_filterTitles')}
@@ -173,29 +175,31 @@ export function DataTableToolbar<TData extends RowData>({
           </Button>
         )}
       </div>
-      {savedSearches && (
-        <DataTableSavedSearches
-          currentQuery={savedSearches.currentQuery}
-          onApply={savedSearches.onApply}
+      <div className="flex min-w-0 flex-wrap items-center gap-2" data-testid="table-view-controls">
+        {savedSearches && (
+          <DataTableSavedSearches
+            currentQuery={savedSearches.currentQuery}
+            onApply={savedSearches.onApply}
+          />
+        )}
+        <Button
+          variant={browserOrder ? 'secondary' : 'outline'}
+          size="sm"
+          className="h-8 shrink-0"
+          aria-pressed={browserOrder}
+          title={t('table_browserOrderHelp')}
+          onClick={() => onBrowserOrderChange(!browserOrder)}
+        >
+          <ListOrdered />
+          {t('table_browserOrder')}
+        </Button>
+        <DataTableViewOptions
+          table={table}
+          onResetView={onResetView}
+          spaceHiddenColumnIds={spaceHiddenColumnIds}
+          columnVisibilityPreference={columnVisibilityPreference}
         />
-      )}
-      <Button
-        variant={browserOrder ? 'secondary' : 'outline'}
-        size="sm"
-        className="h-8 shrink-0"
-        aria-pressed={browserOrder}
-        title={t('table_browserOrderHelp')}
-        onClick={() => onBrowserOrderChange(!browserOrder)}
-      >
-        <ListOrdered />
-        {t('table_browserOrder')}
-      </Button>
-      <DataTableViewOptions
-        table={table}
-        onResetView={onResetView}
-        spaceHiddenColumnIds={spaceHiddenColumnIds}
-        columnVisibilityPreference={columnVisibilityPreference}
-      />
+      </div>
     </div>
   );
 }

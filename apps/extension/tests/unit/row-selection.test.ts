@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { ItemTypeEnum } from '@/lib/manager-bookmark';
 import { getOpenableUrls } from '@/lib/bookmark-manager-data';
-import { rowSelectionChangeFor, selectRows } from '@/lib/row-selection';
+import { ItemTypeEnum } from '@/lib/manager-bookmark';
+import { rowAfterRemoval, rowSelectionChangeFor, selectRows } from '@/lib/row-selection';
 
 const ids = ['a', 'b', 'c', 'd', 'e'];
 const none = { selected: new Set<string>(), anchorId: null };
@@ -80,5 +80,21 @@ describe('getOpenableUrls', () => {
       'https://first.example/',
       'https://second.example/',
     ]);
+  });
+});
+
+describe('rowAfterRemoval', () => {
+  it('moves focus to the next row left, else the previous one', () => {
+    expect(rowAfterRemoval(ids, ['a', 'b', 'd', 'e'], 'c')).toBe('d');
+    // Several rows deleted together: the first one after them that is left.
+    expect(rowAfterRemoval(ids, ['a', 'e'], 'b')).toBe('e');
+    expect(rowAfterRemoval(ids, ['a', 'b'], 'e')).toBe('b');
+    expect(rowAfterRemoval(ids, ['a', 'b'], 'd')).toBe('b');
+  });
+
+  it('gives nothing when no earlier row is left or the row was not listed', () => {
+    expect(rowAfterRemoval(ids, [], 'c')).toBeNull();
+    expect(rowAfterRemoval(ids, ['x', 'y'], 'c')).toBeNull();
+    expect(rowAfterRemoval(ids, ids, 'z')).toBeNull();
   });
 });

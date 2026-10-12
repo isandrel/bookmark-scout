@@ -279,7 +279,7 @@ test('manager Delete and Ctrl/Cmd+Z use the undo history in session storage', as
     .toEqual(['Undo Keep', 'Undo Gone']);
 });
 
-test('manager folder tree moves with the arrow keys and opens a folder with Enter', async ({
+test('manager folder tree moves with the arrow keys and opens a folder with Enter (Space on a Mac)', async ({
   extension,
 }) => {
   const folder = await seedFolder(extension, 'E2E Firefox Tree', [
@@ -299,10 +299,12 @@ test('manager folder tree moves with the arrow keys and opens a folder with Ente
   );
   await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
   await expect.poll(focusedTitle).toBe('Tree Second');
-  await driver.actions().sendKeys(Key.ENTER).perform();
-  await expect
-    .poll(() => driver.getCurrentUrl())
-    .toContain(`id=${folder.ids['Tree Second']}`);
+  // On a Mac, Enter renames the folder, as on the table's rows; Space opens it everywhere.
+  await driver
+    .actions()
+    .sendKeys(process.platform === 'darwin' ? Key.SPACE : Key.ENTER)
+    .perform();
+  await expect.poll(() => driver.getCurrentUrl()).toContain(`id=${folder.ids['Tree Second']}`);
 });
 
 test('manager right-click menu copies and pastes, without private windows unless allowed', async ({
@@ -463,11 +465,34 @@ test('a quick save command without keys shows the popup notice, and Options reco
     .perform();
   await expect.poll(() => shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
 
+  // Firefox's own bookmark keys are refused: Firefox would still bookmark the page with them.
+  // Chrome and Edge show how to give them to quick save instead; Firefox has no such hint.
+  expect(await extension.countVisible('[data-testid="bookmark-key-hint"]')).toBe(0);
+  const accel = process.platform === 'darwin' ? Key.META : Key.CONTROL;
+  await clickCentered(extension, recorder);
+  await extension.driver.actions().keyDown(accel).sendKeys('d').keyUp(accel).perform();
+  await extension.findByText(
+    '[data-command="ai-quick-save"]',
+    `The browser uses ${process.platform === 'darwin' ? '⌘D' : 'Ctrl+D'} itself, so it would never reach Bookmark Scout.`,
+  );
+  expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+
   // A letter on its own is explained under the field and not saved.
   await clickCentered(extension, recorder);
   await extension.driver.actions().sendKeys('j').perform();
   await extension.find('[data-command="ai-quick-save"] [aria-invalid="true"]');
   expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+  // Another row recording keys clears that explanation, which was about the keys before.
+  await clickCentered(extension, '[data-command="quick-save"] [data-slot="shortcut-recorder"]');
+  await extension.driver.actions().sendKeys(Key.F9).perform();
+  await expect.poll(() => shortcutOf(extension, 'quick-save')).toBe('F9');
+  await expect
+    .poll(() =>
+      extension.driver.executeScript<number>(
+        'return document.querySelectorAll(\'[data-command="ai-quick-save"] [aria-invalid="true"]\').length',
+      ),
+    )
+    .toBe(0);
   // Tab is not recorded: it moves on to the field's reset button.
   await clickCentered(extension, recorder);
   await extension.driver.actions().sendKeys(Key.TAB).perform();

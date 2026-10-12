@@ -69,12 +69,22 @@ export function BookmarkActionMenuItems({ items, host, sections }: BookmarkActio
     );
   };
 
-  return getItemMenuSections(items, host, sections ?? customizeItemMenu(visible)).map(
-    (section, index) => (
-      <DropdownMenuGroup key={section.join()}>
-        {index > 0 && <DropdownMenuSeparator />}
-        {section.map(renderItem)}
+  const available = getItemMenuSections(items, host, sections ?? customizeItemMenu(visible));
+  // The user's menu (Options) may hide every command that applies here; say so instead of
+  // opening an empty menu.
+  if (available.length === 0) {
+    return (
+      <DropdownMenuGroup>
+        <DropdownMenuItem disabled data-testid="no-menu-actions">
+          {t('menu_noActions')}
+        </DropdownMenuItem>
       </DropdownMenuGroup>
-    ),
-  );
+    );
+  }
+  return available.map((section, index) => (
+    <DropdownMenuGroup key={section.join()}>
+      {index > 0 && <DropdownMenuSeparator />}
+      {section.map(renderItem)}
+    </DropdownMenuGroup>
+  ));
 }
