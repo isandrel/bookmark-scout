@@ -224,7 +224,7 @@ The current coverage map lives in the `extension-feature-test` skill; keep it cu
 
 ## Maintenance and dependencies
 
-Releases, CI repair, GitHub Actions, deploys, Dependabot, and lockfile work follow the `repo-maintenance` skill (release tags: `extension-store-release`). Do not publish a release tag unless the user explicitly asks. Rules that apply to everyday changes:
+Releases, CI repair, GitHub Actions, deploys, Dependabot, and lockfile work follow the `repo-maintenance` skill (release tags: `extension-store-release`). Do not publish a release tag, bump the version, or write a release section in `CHANGELOG.md` unless the user explicitly asks for a release; "continue" is not such a request. Rules that apply to everyday changes:
 
 - Each workspace declares what it imports or runs in its own `package.json`; add a dependency with `bun add` from that app's folder. The root `package.json` holds only workspace tooling (Nx, Biome, TypeScript, Husky, lint-staged) and what the root `scripts/` and `.agents/skills/` scripts import.
 - Installs are isolated (`bunfig.toml`, `linker = "isolated"`): a workspace resolves only its declared packages, so declare a package in the importing app instead of relying on another workspace or the root.
@@ -380,7 +380,7 @@ Each app keeps its design file next to its `AGENTS.md`: `apps/extension/DESIGN.m
 
 Reusable agent workflows live in `.agents/skills/<name>/SKILL.md` (open Agent Skills layout: `SKILL.md` plus optional `scripts/`, `references/`, `assets/`). Rules go in `AGENTS.md` files and workflows in skills; never add vendor-specific instruction files such as `CLAUDE.md`, `.cursorrules`, or `GEMINI.md`. Tool-specific folders such as `.claude/` are git-ignored. To let Claude Code discover these skills, link them locally: `mkdir -p .claude && ln -s ../.agents/skills .claude/skills`.
 
-Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
+Current skills: `extension-feature-test`, `extension-live-smoke`, `extension-exploratory-qa`, `repo-maintenance`, `parallel-agent-delivery`, `extension-ui-change`, `extension-ai-feature`, `extension-bookmark-actions`, `extension-stored-data`, `extension-performance`, `mcp-bridge-change`, `website-docs-delivery`, `extension-store-release`, `extension-cws-submission`, `feature-research-planning`, `session-learnings`, `i18n-add-language`, `privacy-disclosure-sync`. Each `SKILL.md` description says when to use it.
 
 Update a skill when a session teaches a lesson that future agents would otherwise relearn.
 
