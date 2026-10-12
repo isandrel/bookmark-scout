@@ -6046,5 +6046,19 @@
     "settings_askAiWrites": {
         "message": "북마크 변경",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "이 페이지에 대한 폴더 제안이 없습니다",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "날짜나 이름순으로 정렬되어 있어 여기서는 다른 폴더로만 옮길 수 있습니다. 순서를 바꾸려면 \"$sort$\" 정렬을 선택하세요.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

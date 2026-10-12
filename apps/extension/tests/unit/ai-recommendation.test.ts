@@ -5,8 +5,12 @@ import { generateAIObject } from '@/services/ai-client';
 import {
   createRecommendedFolderBookmark,
   type FolderRecommendation,
+  folderRecommendationKey,
+  folderRecommendationsSchema,
+  normalizeConfidence,
   type RecommendedFolderError,
   resolveRecommendedFolderPath,
+  toFolderRecommendations,
 } from '@/services/ai-recommendation';
 import { recommendFolders } from '@/services/ai-recommendation-call';
 import {
@@ -59,11 +63,20 @@ beforeEach(() => {
 
 describe('[mocked provider contract] folder recommendations', () => {
   const settings = { enabled: true, provider: 'openai', model: 'm', apiKey: 'synthetic-key' };
-  const folders = folderTree([{ id: 'news', parentId: 'bar', title: 'News', children: [] }]);
+  const largest = SETTING_NUMBER_BOUNDS.aiMaxRecommendations.max + 2;
+  // One folder per suggestion: suggestions that lead to the same folder are shown once.
+  const folders = folderTree(
+    Array.from({ length: largest }, (_, index) => ({
+      id: index === 0 ? 'news' : `news-${index}`,
+      parentId: 'bar',
+      title: index === 0 ? 'News' : `News ${index}`,
+      children: [],
+    })),
+  );
   const suggestions = (count: number) =>
     Array.from({ length: count }, (_, index) => ({
       type: 'existing' as const,
-      folderPath: 'Bookmarks Bar/News',
+      folderPath: index === 0 ? 'Bookmarks Bar/News' : `Bookmarks Bar/News ${index}`,
       parentPath: '',
       confidence: 0.9 - index / 100,
       reason: `Reason ${index}`,
@@ -88,7 +101,7 @@ describe('[mocked provider contract] folder recommendations', () => {
   });
 
   it('accepts more suggestions than the largest setting and keeps the requested count', async () => {
-    const extra = SETTING_NUMBER_BOUNDS.aiMaxRecommendations.max + 2;
+    const extra = largest;
     vi.mocked(generateAIObject).mockResolvedValue({
       object: { recommendations: suggestions(extra) },
     } as never);
@@ -100,6 +113,94 @@ describe('[mocked provider contract] folder recommendations', () => {
     // A provider that ignores the count once failed the whole request.
     expect(schema.safeParse({ recommendations: suggestions(extra) }).success).toBe(true);
     expect(result.map((item) => item.reason)).toEqual(['Reason 0', 'Reason 1', 'Reason 2']);
+  });
+});
+
+describe('[mocked provider contract] normalizing a folder suggestion answer', () => {
+  const folders = folderTree([
+    {
+      id: 'dev',
+      parentId: 'bar',
+      title: 'Dev',
+      children: [{ id: 'react', parentId: 'dev', title: 'React', children: [] }],
+    },
+    { id: 'news', parentId: 'bar', title: 'News', children: [] },
+  ]);
+  const item = (fields: Partial<Record<string, unknown>>) => ({
+    type: 'existing',
+    folderPath: 'Bookmarks Bar/News',
+    parentPath: '',
+    confidence: 0.5,
+    reason: 'Fixture',
+    ...fields,
+  });
+  const normalize = (items: unknown[], max = 10) =>
+    toFolderRecommendations(
+      folderRecommendationsSchema.parse({ recommendations: items }),
+      folders,
+      max,
+    );
+
+  it('rescales percentages and clamps every confidence to 0-1', () => {
+    expect([85, 0.4, 1, 100, 250, -3].map(normalizeConfidence)).toEqual([0.85, 0.4, 1, 1, 1, 0]);
+    const result = normalize([
+      item({ confidence: 85 }),
+      item({ folderPath: 'Bookmarks Bar/Dev', confidence: -0.2 }),
+    ]);
+    expect(result.map((rec) => rec.confidence)).toEqual([0.85, 0]);
+  });
+
+  it('drops a malformed suggestion and keeps the others', () => {
+    const parsed = folderRecommendationsSchema.safeParse({
+      recommendations: [
+        item({ confidence: 'high' }),
+        item({ type: 'somewhere' }),
+        'not an object',
+        null,
+        item({ folderPath: 'Bookmarks Bar/Dev/React', reason: 'Kept' }),
+      ],
+    });
+    expect(parsed.success).toBe(true);
+    expect(parsed.data?.recommendations.map((rec) => rec.reason)).toEqual(['Kept']);
+  });
+
+  it('reads an empty list as no suggestions rather than a broken answer', () => {
+    expect(folderRecommendationsSchema.safeParse({ recommendations: [] }).success).toBe(true);
+    expect(normalize([])).toEqual([]);
+    // A suggestion without a folder name cannot be saved, so it is left out too.
+    expect(normalize([item({ type: 'new', folderPath: ' / ' })])).toEqual([]);
+  });
+
+  it('offers an "existing" folder that is not in the tree as a new folder', () => {
+    const [rec] = normalize([item({ folderPath: 'Bookmarks Bar/Dev/Vue' })]);
+    expect(rec).toMatchObject({ type: 'new', folderPath: 'Bookmarks Bar/Dev/Vue' });
+    expect(rec.folderId).toBeUndefined();
+  });
+
+  it('offers a "new" folder that already exists as that folder, with its id and real path', () => {
+    const [rec] = normalize([item({ type: 'new', folderPath: 'React', parentPath: 'dev' })]);
+    expect(rec).toMatchObject({
+      type: 'existing',
+      folderId: 'react',
+      folderPath: 'Bookmarks Bar/Dev/React',
+      parentPath: '',
+    });
+  });
+
+  it('shows suggestions that lead to the same folder once, first one kept, before the count', () => {
+    const result = normalize(
+      [
+        item({ folderPath: 'Bookmarks Bar/News', reason: 'First' }),
+        item({ type: 'new', folderPath: 'news', reason: 'Same folder' }),
+        item({ type: 'new', folderPath: 'Dev/Vue', reason: 'New one' }),
+        item({ type: 'new', folderPath: 'Bookmarks Bar/Dev/vue', reason: 'Same new one' }),
+        item({ folderPath: 'Dev/React', reason: 'Third' }),
+      ],
+      3,
+    );
+    expect(result.map((rec) => rec.reason)).toEqual(['First', 'New one', 'Third']);
+    const keys = result.map(folderRecommendationKey);
+    expect(new Set(keys).size).toBe(keys.length);
   });
 });
 

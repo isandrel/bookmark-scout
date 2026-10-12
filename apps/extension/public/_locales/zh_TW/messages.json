@@ -5862,5 +5862,19 @@
     "settings_askAiWrites": {
         "message": "變更書籤",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "沒有為此頁面建議的資料夾",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "清單依日期或名稱排序，因此這裡只能將項目拖入其他資料夾。如需調整順序，請選擇「$sort$」排序方式。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }
