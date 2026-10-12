@@ -18,6 +18,7 @@ const quickSaveConfig = readConfig(
   z.strictObject({
     alternatives: z.number().int().min(0).max(8),
     auto_dismiss_ms: z.number().int().min(1000).max(120_000),
+    visible_tolerance_px: z.number().min(0).max(64),
     badge_clear_ms: z.number().int().min(500).max(60_000),
     popup_result_max_age_ms: z.number().int().min(1000),
     badge_success_text: z.string().min(1).max(4),
@@ -62,6 +63,11 @@ const recordSchema = z.strictObject({
   status: z.enum(['saving', 'saved', 'duplicate', 'failed', 'removed']),
   at: z.number(),
   tabId: z.number().optional(),
+  /**
+   * The document in the tab that first showed this quick save's notification. Later views go only
+   * to that document; after the tab navigates, the popup shows the result instead.
+   */
+  documentToken: z.string().max(100).optional(),
   /** Where the notification goes: the page, or the popup when the page cannot show it. */
   delivery: z.enum(['page', 'popup']),
   page: z.strictObject({ title: z.string(), url: z.string() }),
@@ -153,6 +159,54 @@ const FAILURE_TITLES: Record<z.infer<typeof failureSchema>, MessageKey> = {
   saveFailed: 'quickSave_failed',
 };
 
+/**
+ * The buttons for `record`: Undo after a save; after a failed AI quick save of a page, Retry (or
+ * Open AI settings when AI is not set up) and Save without AI, which uses the Quick save setting.
+ */
+export function quickSaveActions(record: QuickSaveRecord): QuickSaveToastView['actions'] {
+  if (record.status === 'saved' && record.bookmarkId) {
+    return [{ id: 'undo', label: t('action_undo') }];
+  }
+  if (record.status !== 'failed' || record.mode !== 'ai' || !record.page.url) return [];
+  return [
+    record.failure === 'aiUnavailable'
+      ? { id: 'openAISettings', label: t('quickSave_openAISettings'), primary: true }
+      : { id: 'retry', label: t('action_retry'), primary: true },
+    { id: 'saveWithoutAI', label: t('quickSave_saveWithoutAI') },
+  ];
+}
+
+/** What every view shares: theme, language, and the notification's frame. */
+function viewFrame(settings: Settings) {
+  const lang = toLanguageTag(resolveAppLocale(settings.language));
+  return {
+    theme: settings.theme,
+    lang,
+    dir: languageDirection(lang),
+    label: t('extName'),
+    alternativesLabel: t('quickSave_moveTo'),
+    dismissLabel: t('action_dismiss'),
+    visibleTolerancePx: quickSaveConfig.visible_tolerance_px,
+  } satisfies Partial<QuickSaveToastView>;
+}
+
+/**
+ * The answer to a button in a notification whose quick save a newer one replaced: only the last
+ * quick save is kept, so this one can no longer be undone or moved from here.
+ */
+export function buildExpiredQuickSaveView(id: string, settings: Settings): QuickSaveToastView {
+  return {
+    ...viewFrame(settings),
+    id,
+    status: 'expired',
+    title: t('quickSave_replaced'),
+    note: t('quickSave_replacedNote'),
+    actions: [],
+    alternatives: [],
+    autoDismissMs: quickSaveConfig.auto_dismiss_ms,
+  };
+}
+
 /** The notification for `record`, in the language `t()` shows. */
 export function buildQuickSaveView(
   record: QuickSaveRecord,
@@ -182,24 +236,14 @@ export function buildQuickSaveView(
         : record.status === 'saved' && record.fallback === 'fixedMissing'
           ? t('quickSave_fixedMissingNote')
           : undefined);
-  const actions: QuickSaveToastView['actions'] = [];
-  if (record.status === 'saved' && record.bookmarkId) {
-    actions.push({ id: 'undo', label: t('action_undo') });
-  }
-  if (record.failure === 'aiUnavailable') {
-    actions.push({ id: 'openAISettings', label: t('quickSave_openAISettings') });
-  }
   return {
+    ...viewFrame(settings),
     id: record.id,
     status: record.status,
-    theme: settings.theme,
-    lang: toLanguageTag(resolveAppLocale(settings.language)),
-    label: t('extName'),
     title,
     ...(hasFolder ? { detail: pathText(record.path) } : {}),
     ...(note ? { note } : {}),
-    actions,
-    alternativesLabel: t('quickSave_moveTo'),
+    actions: quickSaveActions(record),
     alternatives: hasFolder
       ? record.alternatives.map((alternative, index) => ({
           index,
@@ -207,18 +251,17 @@ export function buildQuickSaveView(
           title: pathText(alternative.path),
         }))
       : [],
-    dismissLabel: t('action_dismiss'),
     autoDismissMs: record.status === 'saving' ? null : quickSaveConfig.auto_dismiss_ms,
   };
 }
 
-/** The last quick save for the popup: one its page could not show, while it is recent. */
+/**
+ * The last quick save for the popup: one its page could not show, while it is recent. A retry
+ * started from the popup shows there while it runs.
+ */
 export function isQuickSaveForPopup(record: QuickSaveRecord | null, now = Date.now()): boolean {
   return (
-    record !== null &&
-    record.delivery === 'popup' &&
-    record.status !== 'saving' &&
-    now - record.at <= QUICK_SAVE_POPUP_MAX_AGE_MS
+    record !== null && record.delivery === 'popup' && now - record.at <= QUICK_SAVE_POPUP_MAX_AGE_MS
   );
 }
 
@@ -226,23 +269,32 @@ export function isQuickSaveForPopup(record: QuickSaveRecord | null, now = Date.n
 // Showing the result
 // ---------------------------------------------------------------------------------------------
 
-/** Draws the notification in the tab; false where the browser does not let the extension in. */
-async function showInTab(tabId: number, view: QuickSaveToastView): Promise<boolean> {
+/**
+ * Draws the notification in the tab, in the page `binding` names. Resolves to the document's token
+ * when it is on screen; null where the browser does not let the extension in, the tab shows
+ * another page now, or the page hid the notification.
+ */
+async function showInTab(
+  tabId: number,
+  view: QuickSaveToastView,
+  binding: QuickSaveToastBinding,
+): Promise<string | null> {
   try {
     await browser.scripting.executeScript({ target: { tabId }, files: [QUICK_SAVE_TOAST_SCRIPT] });
     const [result] = await browser.scripting.executeScript({
       target: { tabId },
-      func: (toastView: QuickSaveToastView) => {
+      func: (toastView: QuickSaveToastView, toastBinding: QuickSaveToastBinding) => {
         const scope = globalThis as typeof globalThis & {
-          __bookmarkScoutQuickSave?: { render: (view: QuickSaveToastView) => boolean };
+          __bookmarkScoutQuickSave?: QuickSaveToastController;
         };
-        return scope.__bookmarkScoutQuickSave?.render(toastView) === true;
+        return scope.__bookmarkScoutQuickSave?.render(toastView, toastBinding) ?? null;
       },
-      args: [view],
+      args: [view, binding],
     });
-    return result?.result === true;
+    const rendered = result?.result as QuickSaveRenderResult | null | undefined;
+    return rendered?.shown === true ? rendered.document : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -280,11 +332,24 @@ async function showInToolbar(record: QuickSaveRecord): Promise<void> {
   }
 }
 
-/** Shows `record` in its page, or in the toolbar when the page cannot show it. */
+/**
+ * Shows `record` in its page, or in the toolbar when the page cannot show it, has hidden it, or
+ * the tab has moved on to another page since the quick save began.
+ */
 async function deliver(record: QuickSaveRecord, settings: Settings): Promise<QuickSaveRecord> {
   let shown = record;
   if (record.delivery === 'page' && record.tabId !== undefined) {
-    if (await showInTab(record.tabId, buildQuickSaveView(record, settings))) return record;
+    const documentToken = await showInTab(record.tabId, buildQuickSaveView(record, settings), {
+      ...(record.documentToken ? { document: record.documentToken } : {}),
+      ...(record.page.url ? { url: record.page.url } : {}),
+    });
+    if (documentToken !== null) {
+      if (documentToken === record.documentToken) return record;
+      // The first view this page showed: later ones go to this document only.
+      const bound = { ...record, documentToken };
+      await storeRecord(bound);
+      return bound;
+    }
     shown = { ...record, delivery: 'popup' };
     if (!(await storeRecord(shown))) return shown;
   }
@@ -542,18 +607,61 @@ export async function runQuickSave(
     alternatives: [],
   };
   await storeRecord(base, true);
+  return completeQuickSave(base, settings, { toolbar: true });
+}
 
+/**
+ * Saves the page `base` names its own way (`mode`), stores the result, and shows it: in the page,
+ * or, with `toolbar`, in the badge and popup when the page cannot show it.
+ */
+async function completeQuickSave(
+  base: QuickSaveRecord,
+  settings: Settings,
+  { toolbar }: { toolbar: boolean },
+): Promise<QuickSaveRecord> {
+  const page = base.page.url ? base.page : null;
   let record: QuickSaveRecord;
   try {
     if (!page) record = { ...base, status: 'failed', failure: 'noPage' };
-    else if (mode === 'ai') record = await saveWithAI(base, page, settings);
+    else if (base.mode === 'ai') record = await saveWithAI(base, page, settings);
     else record = await saveLocally(base, page, settings);
   } catch (error) {
     record = { ...base, status: 'failed', failure: 'saveFailed', error: getErrorMessage(error) };
   }
   // A newer quick save replaced this one while it ran: its notification wins.
   if (!(await storeRecord(record))) return record;
+  if (!toolbar && record.delivery === 'popup') return record;
   return deliver(record, await readSettingsInAppLanguage());
+}
+
+/**
+ * Retry and Save without AI after a failed AI quick save: the same page again, AI or the Quick
+ * save setting. It keeps the quick save's id, so the notification or popup updates in place.
+ */
+async function redoQuickSave(
+  record: QuickSaveRecord,
+  mode: QuickSaveRecord['mode'],
+  settings: Settings,
+): Promise<QuickSaveRecord> {
+  if (record.status !== 'failed' || !record.page.url) return record;
+  const base: QuickSaveRecord = {
+    id: record.id,
+    mode,
+    status: 'saving',
+    at: Date.now(),
+    ...(record.tabId !== undefined ? { tabId: record.tabId } : {}),
+    ...(record.documentToken ? { documentToken: record.documentToken } : {}),
+    delivery: record.delivery,
+    page: record.page,
+    path: [],
+    createdFolderIds: [],
+    origin: { kind: 'created' },
+    alternatives: [],
+  };
+  if (!(await storeRecord(base))) return record;
+  // The popup that asked shows the result itself; a page gets it drawn, or the badge and popup
+  // when it has moved on meanwhile.
+  return completeQuickSave(base, settings, { toolbar: record.delivery === 'page' });
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -686,12 +794,16 @@ export async function handleQuickSaveAction(
 ): Promise<QuickSaveActionResponse | null> {
   const parsed = quickSaveActionSchema.safeParse(message);
   if (!parsed.success) return null;
-  const record = await quickSaveRecordValue.get();
-  if (!record || record.id !== parsed.data.id || !maySenderAct(record, sender)) {
-    return { view: null };
-  }
-  const settings = await readSettingsInAppLanguage();
   const action = parsed.data;
+  if (sender.id !== browser.runtime.id) return { view: null };
+  const record = await quickSaveRecordValue.get();
+  if (!record || record.id !== action.id) {
+    // Only the last quick save is kept: an older notification says so instead of closing silently.
+    if (action.action === 'dismiss' || sender.tab === undefined) return { view: null };
+    return { view: buildExpiredQuickSaveView(action.id, await readSettingsInAppLanguage()) };
+  }
+  if (!maySenderAct(record, sender)) return { view: null };
+  const settings = await readSettingsInAppLanguage();
   switch (action.action) {
     case 'dismiss':
       await quickSaveRecordValue.update((current) => (current?.id === record.id ? null : current));
@@ -713,6 +825,15 @@ export async function handleQuickSaveAction(
       }
       await storeRecord(next);
       return { view: buildQuickSaveView(next, settings) };
+    }
+    case 'retry':
+    case 'saveWithoutAI': {
+      const next = await redoQuickSave(
+        record,
+        action.action === 'retry' ? 'ai' : 'local',
+        settings,
+      );
+      return { view: buildQuickSaveView(next, await readSettingsInAppLanguage()) };
     }
   }
 }

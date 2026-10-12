@@ -5807,6 +5807,18 @@
         "message": "Dernier enregistrement rapide",
         "description": "Heading of the popup panel that shows the last quick save"
     },
+    "quickSave_saveWithoutAI": {
+        "message": "Enregistrer sans IA",
+        "description": "Quick save notification button after a failed AI quick save: saves the page to the folder the Quick save setting picks, without AI"
+    },
+    "quickSave_replaced": {
+        "message": "Un enregistrement rapide plus récent a remplacé celui-ci",
+        "description": "Quick save notification title when its Undo or Move to was pressed after a newer quick save replaced it"
+    },
+    "quickSave_replacedNote": {
+        "message": "Annuler et Déplacer vers ne s’appliquent qu’au dernier enregistrement rapide. Modifiez ce favori dans le gestionnaire de favoris.",
+        "description": "Quick save notification note under quickSave_replaced: why its buttons no longer work and where to change the bookmark instead"
+    },
     "settings_sectionQuickSave": {
         "message": "Raccourcis d'enregistrement rapide",
         "description": "Options section heading for the quick save keyboard shortcuts"

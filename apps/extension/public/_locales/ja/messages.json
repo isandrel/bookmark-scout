@@ -5799,6 +5799,18 @@
         "message": "直前のクイック保存",
         "description": "Heading of the popup panel that shows the last quick save"
     },
+    "quickSave_saveWithoutAI": {
+        "message": "AI を使わずに保存",
+        "description": "Quick save notification button after a failed AI quick save: saves the page to the folder the Quick save setting picks, without AI"
+    },
+    "quickSave_replaced": {
+        "message": "新しいクイック保存に置き換えられました",
+        "description": "Quick save notification title when its Undo or Move to was pressed after a newer quick save replaced it"
+    },
+    "quickSave_replacedNote": {
+        "message": "「元に戻す」と「移動先」は最新のクイック保存にのみ使えます。このブックマークはブックマークマネージャーで変更してください。",
+        "description": "Quick save notification note under quickSave_replaced: why its buttons no longer work and where to change the bookmark instead"
+    },
     "settings_sectionQuickSave": {
         "message": "クイック保存ショートカット",
         "description": "Options section heading for the quick save keyboard shortcuts"

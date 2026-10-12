@@ -8,6 +8,10 @@ alternatives = 3
 # Milliseconds before the notification closes on its own. Hovering or focusing it pauses the
 # countdown. "Saving…" stays until the save finishes.
 auto_dismiss_ms = 8000
+# After drawing it, the notification checks it is really on screen: inside the viewport (give or
+# take this many CSS pixels, for rounding on zoomed pages) and not covered at its center. When it
+# is not, it removes itself and the badge and popup show the result instead.
+visible_tolerance_px = 2
 # On pages the extension cannot show the notification in (browser pages, the store, PDF viewer),
 # the toolbar badge shows the result for this many milliseconds, and the popup shows the last
 # quick save with Undo for this long after it happened.

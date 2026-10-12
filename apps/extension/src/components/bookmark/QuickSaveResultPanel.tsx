@@ -1,18 +1,21 @@
 /**
  * The last quick save, at the top of the popup, when the page it was made on could not show its
- * notification (browser pages, the extension store, the PDF viewer). Same content and actions as
- * the in-page notification, sent to the background the same way.
+ * notification (browser pages, the extension store, the PDF viewer, a page that hid it, or a tab
+ * that moved on to another page meanwhile). It names the page, since the popup is not on it, and
+ * has the same content and actions as the in-page notification, sent to the background the same
+ * way.
  */
 
-import { CircleAlert, CircleCheck, Folder, Info, X } from 'lucide-react';
+import { CircleAlert, CircleCheck, Folder, Info, LoaderCircle, X } from 'lucide-react';
 import { useState } from 'react';
 
 const STATUS_ICONS = {
   saved: CircleCheck,
   duplicate: Info,
   removed: Info,
+  expired: Info,
   failed: CircleAlert,
-  saving: Info,
+  saving: LoaderCircle,
 } as const;
 
 export function QuickSaveResultPanel() {
@@ -50,13 +53,24 @@ export function QuickSaveResultPanel() {
               ? 'text-success'
               : view.status === 'failed'
                 ? 'text-destructive-text'
-                : 'text-muted-foreground',
+                : view.status === 'saving'
+                  ? 'animate-spin text-primary motion-reduce:animate-none'
+                  : 'text-muted-foreground',
           )}
         />
         <div role="status" className="min-w-0 flex-1">
           <h2 id="quick-save-result-heading" className="text-xs text-muted-foreground">
             {t('quickSave_lastTitle')}
           </h2>
+          {record.page.title && (
+            <p
+              data-testid="quick-save-result-page"
+              className="truncate text-xs text-muted-foreground"
+              title={record.page.url}
+            >
+              {record.page.title}
+            </p>
+          )}
           <p className="text-sm font-medium [overflow-wrap:anywhere]">{view.title}</p>
           {view.detail && (
             <p className="text-xs text-muted-foreground [overflow-wrap:anywhere]">{view.detail}</p>
@@ -92,7 +106,7 @@ export function QuickSaveResultPanel() {
             <Button
               key={action.id}
               type="button"
-              variant="outline"
+              variant={action.primary ? 'default' : 'outline'}
               size="sm"
               disabled={busy}
               onClick={() =>

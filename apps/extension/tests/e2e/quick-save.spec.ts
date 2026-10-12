@@ -1,5 +1,3 @@
-import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import type { AddressInfo } from 'node:net';
 import type { Page, Worker } from '@playwright/test';
 import { expect, test } from './fixtures';
 import { openPopup, seedFolder, setSettings } from './popup-helpers';
@@ -8,7 +6,9 @@ import {
   clickToastButton,
   finishedRecord,
   pressShortcut,
+  type QuickSaveServer,
   readToast,
+  startQuickSaveServer,
   toastButtons,
   toastTexts,
 } from './quick-save-helpers';
@@ -20,69 +20,6 @@ import { readSettings, readStored, STORAGE_ITEMS, seedAIServices, writeStored } 
  * accessibility tree.
  */
 
-type Recommendation = { type: 'new' | 'existing'; folderPath: string; parentPath: string };
-
-type LocalServer = {
-  origin: string;
-  /** Suggestions the stub AI provider answers with, and how long it waits first. */
-  ai: { recommendations: Recommendation[]; delayMs: number; requests: number };
-  close: () => Promise<void>;
-};
-
-async function startServer(): Promise<LocalServer> {
-  const ai = { recommendations: [] as Recommendation[], delayMs: 0, requests: 0 };
-  const server: Server = createServer((req: IncomingMessage, res: ServerResponse) => {
-    const cors = {
-      'access-control-allow-origin': '*',
-      'access-control-allow-headers': '*',
-      'access-control-allow-methods': 'GET, POST, OPTIONS',
-    };
-    if (req.method === 'OPTIONS') {
-      res.writeHead(204, cors).end();
-      return;
-    }
-    if (req.url?.startsWith('/v1/')) {
-      ai.requests += 1;
-      const content = JSON.stringify({
-        recommendations: ai.recommendations.map((rec) => ({
-          confidence: 0.9,
-          reason: 'Fits',
-          ...rec,
-        })),
-      });
-      setTimeout(() => {
-        res.writeHead(200, { ...cors, 'content-type': 'application/json' }).end(
-          JSON.stringify({
-            id: 'chat-e2e',
-            object: 'chat.completion',
-            created: 0,
-            model: 'e2e-model',
-            choices: [{ index: 0, finish_reason: 'stop', message: { role: 'assistant', content } }],
-          }),
-        );
-      }, ai.delayMs);
-      return;
-    }
-    const slug = decodeURIComponent(req.url?.split('/').pop() ?? 'page');
-    const title = slug.replace(/-/g, ' ');
-    res
-      .writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
-      .end(`<!doctype html><title>${title}</title><h1>${title}</h1><p>An article.</p>`);
-  });
-  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address() as AddressInfo;
-  return {
-    origin: `http://127.0.0.1:${port}`,
-    ai,
-    // The browser keeps connections alive; drop them so close() cannot hang the hook.
-    close: () =>
-      new Promise((resolve) => {
-        server.close(() => resolve());
-        server.closeAllConnections();
-      }),
-  };
-}
-
 async function folderTitle(worker: Worker, id: string | undefined) {
   return worker.evaluate(
     async (folderId) => (await chrome.bookmarks.get(folderId))[0].title,
@@ -90,9 +27,9 @@ async function folderTitle(worker: Worker, id: string | undefined) {
   );
 }
 
-let server: LocalServer;
+let server: QuickSaveServer;
 test.beforeEach(async () => {
-  server = await startServer();
+  server = await startQuickSaveServer();
 });
 test.afterEach(async () => {
   await server.close();
