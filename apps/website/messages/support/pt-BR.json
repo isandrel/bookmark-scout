@@ -44,6 +44,20 @@
                             "Execute Atualizar ícones dos sites na barra lateral de ferramentas do gerenciador para baixar o ícone de cada site. Os ícones salvos ficam neste dispositivo. No Firefox, abra o gerenciador com Abrir gerenciador de favoritos no pop-up da barra de ferramentas."
                         ]
                     },
+                    "quickSave": {
+                        "q": "O atalho de salvamento rápido não faz nada",
+                        "a": [
+                            "Se outra extensão já usa Alt+Shift+S ou Alt+Shift+D, o navegador deixa o atalho do Bookmark Scout sem teclas, e o pop-up mostra Atalho de salvamento rápido não definido. Clique em Configurar ou abra Configurações, depois Salvar e pesquisar e depois Atalhos de teclado, e escolha outras teclas.",
+                            "Algumas páginas, como as páginas do próprio navegador e a loja de extensões, não permitem que as extensões mostrem nada nelas. Nesses casos, o ícone da barra de ferramentas mostra se a página foi salva, e o pop-up oferece Desfazer."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Minhas configurações sumiram depois de uma atualização",
+                        "a": [
+                            "Uma atualização passou os dados salvos do Bookmark Scout para um novo formato e removeu os dados antigos em vez de convertê-los. As configurações voltaram aos valores padrão, os serviços de IA e as chaves de API precisam ser adicionados de novo, e os prompts personalizados, as pesquisas salvas, as tags, os resumos e os ícones de sites salvos se perderam. Os seus favoritos não são afetados.",
+                            "Se você salvou suas configurações com Exportar no fim das Configurações antes de atualizar, use Importar ali para restaurá-las."
+                        ]
+                    },
                     "websiteAccess": {
                         "q": "Verificar links quebrados, Buscador de metadados ou Atualizar ícones dos sites não verificou nada",
                         "a": [

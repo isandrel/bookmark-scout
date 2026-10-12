@@ -21,6 +21,8 @@ export const SUPPORT_PROBLEMS = [
     "firefoxRestart",
     "firefoxManager",
     "firefoxIcons",
+    "quickSave",
+    "dataReset",
     "websiteAccess",
     "aiSetup",
 ] as const;

@@ -44,6 +44,20 @@
                             "Run Refresh Site Icons in the manager's Tools sidebar to download each site's own icon. Saved icons stay on this device. In Firefox, open the manager with Open bookmark manager in the toolbar popup."
                         ]
                     },
+                    "quickSave": {
+                        "q": "The quick save shortcut does nothing",
+                        "a": [
+                            "If another extension already uses Alt+Shift+S or Alt+Shift+D, the browser leaves Bookmark Scout's shortcut without keys, and the popup shows Quick save shortcut not set. Click Set it up, or open Settings, then Saving & Search, then Keyboard shortcuts, and choose other keys.",
+                            "Some pages, such as the browser's own pages and the extension store, do not let extensions show anything on them. There the toolbar icon shows whether the page was saved, and the popup offers Undo."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "My settings are gone after an update",
+                        "a": [
+                            "One update moved Bookmark Scout's saved data to a new format and removed the old data instead of converting it. Settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, tags, summaries, and saved site icons are gone. Your bookmarks are not touched.",
+                            "If you saved your settings with Export at the bottom of Settings before updating, use Import there to restore them."
+                        ]
+                    },
                     "websiteAccess": {
                         "q": "Check Dead Links, Metadata Fetcher, or Refresh Site Icons did not scan anything",
                         "a": [

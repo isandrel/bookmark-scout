@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Bookmark Scout – Guarda marcadores en la carpeta correcta, rápido",
-    "description": "Extensión del navegador que guarda páginas en la carpeta de marcadores correcta: escribe el nombre de una carpeta o deja que la IA sugiera una. Además, búsqueda y limpieza.",
+    "description": "Extensión del navegador que guarda páginas en la carpeta de marcadores correcta: escribe el nombre de una carpeta, pulsa un atajo o deja que la IA sugiera una. Además, búsqueda y limpieza.",
     "keywords": [
       "extensión del navegador",
       "extensión de Chrome",
@@ -9,33 +9,37 @@
       "extensión de Edge",
       "guardar marcadores en carpetas",
       "buscar carpetas de marcadores",
+      "atajo de teclado para marcadores",
       "administrador de marcadores",
       "buscar marcadores",
       "organizar marcadores",
       "limpiar marcadores",
       "marcadores duplicados",
       "enlaces rotos",
-      "herramientas de IA para marcadores"
+      "herramientas de IA para marcadores",
+      "servidor MCP para marcadores"
     ]
   },
   "structuredData": {
     "features": [
       "Guardar en una carpeta escribiendo su nombre",
+      "Atajo de guardado rápido con notificación en la página y opción de deshacer",
       "Sugerencias de carpeta con IA opcionales",
       "Búsqueda instantánea de marcadores",
       "Organización con arrastrar y soltar",
       "Panel lateral (incluido Firefox)",
       "Búsquedas guardadas",
       "Combinaciones de teclas",
-      "Eliminación con opción de deshacer",
+      "Deshacer y rehacer en el administrador de marcadores",
       "Modo oscuro",
-      "Administrador de marcadores propio",
+      "Administrador de marcadores que funciona como el de Chrome",
       "Limpieza de duplicados",
       "Limpieza de parámetros de seguimiento",
       "Detección de enlaces rotos con reparaciones revisadas",
       "Importación y exportación de marcadores",
       "Revisión de privacidad con censura opcional antes de exportar",
-      "Herramientas de IA opcionales para marcadores",
+      "Chat con IA opcional que solo cambia los marcadores después de que lo apruebes",
+      "Agentes de IA locales a través de un servidor MCP, con aprobación",
       "Varios idiomas"
     ]
   },
@@ -75,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Guarda cada página en la carpeta correcta, en segundos.",
-      "description": "Escribe parte del nombre de una carpeta y guarda la página ahí con un clic, o deja que la IA opcional sugiera la carpeta. Bookmark Scout también busca y ordena los marcadores que ya tienes, en Chrome, Edge y Firefox, sin cuenta y sin servidor propio.",
+      "description": "Escribe parte del nombre de una carpeta, o pulsa Alt+Shift+S en cualquier página, y la página se guarda en la carpeta que le corresponde. La IA opcional también puede sugerir la carpeta. Bookmark Scout también busca y ordena los marcadores que ya tienes, en Chrome, Edge y Firefox, sin cuenta y sin servidor propio.",
       "download": "Descargar desde GitHub",
       "install": "Instalar Bookmark Scout",
       "docs": "Leer la documentación",
@@ -133,25 +137,25 @@
         "points": [
           "Escribe parte del nombre de una carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado",
           "Escribe una ruta como work/react y encuentra la carpeta aunque cometas un pequeño error de escritura",
-          "Las carpetas en las que guardaste hace poco aparecen primero",
-          "Una página que ya está en esa carpeta no se guarda dos veces",
+          "Pulsa Alt+Shift+S en cualquier página para guardarla en la carpeta que mejor le corresponde; una pequeña notificación en la página ofrece Deshacer y otras carpetas",
+          "Una página que ya está en esa carpeta no se guarda dos veces, y las carpetas en las que guardaste hace poco aparecen primero",
           "Guarda enlaces en carpetas recientes desde el menú contextual",
-          "Con la IA activada, obtén sugerencias de carpeta para la página, incluida una nueva ruta de carpetas después de revisarla"
+          "Con la IA activada, obtén sugerencias de carpeta para la página, o guarda en la primera con Alt+Shift+D"
         ]
       },
       "organize": {
         "tab": "Buscar y organizar",
         "heading": "Encuentra y organiza lo que guardaste",
-        "caption": "El administrador sustituye la página Marcadores de Chrome por un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
+        "caption": "El administrador sustituye la página Marcadores de Chrome y funciona como ella, con un árbol de carpetas, una ruta de navegación y una tabla que se puede ordenar.",
         "alt": "El administrador de Bookmark Scout con la carpeta Documentación técnica en forma de tabla, con columnas de tipo, ruta de la carpeta, URL, título y fecha de creación, junto a un árbol de carpetas",
         "points": [
           "Busca en todos los marcadores mientras escribes, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares",
           "Mantén el mismo árbol y la misma búsqueda abiertos en el panel lateral del navegador (incluido Firefox)",
           "Guarda una búsqueda como vista inteligente que siempre muestra resultados actualizados",
-          "Arrastra marcadores y carpetas por el árbol de carpetas",
-          "Filtra, ordena y ajusta el ancho de las columnas en la tabla del administrador",
+          "Selecciona filas con Shift y Ctrl, haz clic con el botón derecho para cortar, copiar, pegar y abrir todo, y arrastra filas, carpetas y enlaces adonde correspondan",
+          "Deshaz y rehaz los cambios con Ctrl+Z y Ctrl+Y, incluso después de recargar",
           "Importa HTML o JSON tras una vista previa, y exporta a HTML, JSON, Markdown o CSV",
-          "Muévete por carpetas y resultados con el teclado; los atajos Ctrl y Cmd del navegador siguen funcionando"
+          "Enlaza a una carpeta o a una búsqueda, y muévete por todo con el teclado"
         ]
       },
       "cleanUp": {
@@ -165,7 +169,7 @@
           "Encuentra enlaces rotos y repáralos: elimínalos, usa la redirección, apunta a una copia archivada o edita la URL",
           "Obtén los títulos de las páginas y aplica solo los que elijas",
           "Descarga el icono propio de cada sitio para que los marcadores lo muestren, incluso en Firefox",
-          "Elimina con confirmación y deshazlo durante 10 segundos"
+          "Deshaz las eliminaciones y las limpiezas desde el mensaje que aparece a continuación"
         ]
       },
       "ai": {
@@ -174,8 +178,10 @@
         "caption": "La IA está desactivada hasta que la activas en Configuración, eliges un proveedor y añades tu propia clave de API si el proveedor la necesita.",
         "alt": "La pestaña IA de la configuración de Bookmark Scout con las funciones de IA desactivadas y los selectores de proveedor y modelo",
         "points": [
+          "Pregunta a la IA por tus marcadores: los busca, comprueba enlaces y propone movimientos, cambios de nombre y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas",
+          "Deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten los marcadores a través de un servidor MCP, y aprueba en el navegador cada cambio que pidan",
           "Sugerencias de etiquetas y resúmenes breves que revisas antes de guardar",
-          "Planes de reorganización de carpetas, con vista previa antes de mover nada",
+          "Planes de reorganización de carpetas, con vista previa antes de mover nada y opción de deshacer",
           "Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA; funciona sin IA y no envía nada"
         ],
         "providersTitle": "Proveedores compatibles",
@@ -207,6 +213,10 @@
           "name": "Los sitios web que compruebas",
           "detail": "Comprobación de enlaces rotos, obtención de títulos e iconos de sitios, después de que permitas el acceso"
         },
+        "agents": {
+          "name": "Agentes de IA locales",
+          "detail": "Solo cuando los permites, a través de un programa de tu equipo"
+        },
         "server": {
           "name": "Servidor de Bookmark Scout",
           "detail": "No existe. No se envía nada al desarrollador."
@@ -224,7 +234,7 @@
         },
         "aiOptIn": {
           "title": "La IA está desactivada hasta que la activas",
-          "body": "Entonces, las solicitudes van directamente de tu navegador al proveedor que elegiste. Con Ollama en tu propio equipo, se quedan ahí."
+          "body": "Entonces, las solicitudes van directamente de tu navegador al proveedor que elegiste. Con Ollama en tu propio equipo, se quedan ahí. Los agentes de IA locales no reciben nada hasta que los permites, y sus cambios esperan tu aprobación."
         },
         "exports": {
           "title": "Las exportaciones pasan una revisión de privacidad",
@@ -277,7 +287,7 @@
       "items": {
         "data": {
           "q": "¿Bookmark Scout envía mis marcadores a algún sitio?",
-          "a": "No. Tus marcadores se leen y se modifican dentro de tu navegador, y la extensión no envía nada al desarrollador. Los datos solo salen de tu navegador cuando usas una función opcional: las solicitudes de IA van al proveedor que elegiste, y el comprobador de enlaces rotos, el extractor de títulos y la actualización de iconos de sitios solicitan los sitios guardados en marcadores después de que permitas el acceso a los sitios web. La configuración se sincroniza con la cuenta del navegador si la sincronización del navegador está activada. Encontrarás los detalles en la <privacy>política de privacidad</privacy>."
+          "a": "No. Tus marcadores se leen y se modifican dentro de tu navegador, y la extensión no envía nada al desarrollador. Los datos solo salen de tu navegador cuando usas una función opcional: las solicitudes de IA van al proveedor que elegiste, el comprobador de enlaces rotos, el extractor de títulos y la actualización de iconos de sitios solicitan los sitios guardados en marcadores después de que permitas el acceso a los sitios web, y los agentes de IA locales que permitas reciben lo que consultan a través de un programa de tu equipo. La configuración se sincroniza con la cuenta del navegador si la sincronización del navegador está activada. Encontrarás los detalles en la <privacy>política de privacidad</privacy>."
         },
         "needAi": {
           "q": "¿Tengo que usar la IA?",
@@ -289,7 +299,7 @@
         },
         "changes": {
           "q": "¿Cambiará mis marcadores sin preguntar?",
-          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Al eliminar se pide confirmación de forma predeterminada, y las eliminaciones y las importaciones se pueden deshacer durante 10 segundos."
+          "a": "No. La limpieza de duplicados, la limpieza de URLs, la reparación de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. Preguntar a la IA y los agentes de IA locales muestran sus cambios como un plan y esperan tu aprobación. Al eliminar se pide confirmación de forma predeterminada, y el administrador de marcadores puede deshacer los cambios con Ctrl+Z."
         },
         "firefox": {
           "q": "¿Funciona en Firefox?",

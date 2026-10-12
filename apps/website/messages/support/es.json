@@ -44,6 +44,20 @@
                             "Ejecuta Actualizar iconos de sitios en la barra lateral de herramientas del administrador para descargar el icono propio de cada sitio. Los iconos guardados se quedan en este dispositivo. En Firefox, abre el administrador con Abrir el administrador de marcadores en la ventana emergente de la barra de herramientas."
                         ]
                     },
+                    "quickSave": {
+                        "q": "El atajo de guardado rápido no hace nada",
+                        "a": [
+                            "Si otra extensión ya usa Alt+Shift+S o Alt+Shift+D, el navegador deja el atajo de Bookmark Scout sin teclas, y la ventana emergente muestra Atajo de guardado rápido sin asignar. Haz clic en Configurarlo, o abre Configuración, luego Guardar y buscar y luego Atajos de teclado, y elige otras teclas.",
+                            "Algunas páginas, como las páginas propias del navegador y la tienda de extensiones, no permiten que las extensiones muestren nada en ellas. En esas páginas, el icono de la barra de herramientas indica si la página se guardó, y la ventana emergente ofrece Deshacer."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Mi configuración desapareció después de una actualización",
+                        "a": [
+                            "Una actualización pasó los datos guardados de Bookmark Scout a un formato nuevo y eliminó los datos antiguos en lugar de convertirlos. La configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se pierden los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se tocan.",
+                            "Si guardaste tu configuración con Exportar al final de Configuración antes de actualizar, usa Importar en el mismo lugar para restaurarla."
+                        ]
+                    },
                     "websiteAccess": {
                         "q": "Comprobar enlaces rotos, Extractor de metadatos o Actualizar iconos de sitios no analizó nada",
                         "a": [

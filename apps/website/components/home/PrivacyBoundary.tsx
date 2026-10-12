@@ -36,7 +36,10 @@ async function BoundaryDiagram() {
                             </div>
                         </li>
                     ))}
-                    <li className="col-span-2 mt-3 flex sm:col-span-1 sm:mt-0">
+                    {/* On narrow screens the paths sit two per row; the server box fills an odd row's empty cell. */}
+                    <li
+                        className={`${BOUNDARY_OUTBOUND.length % 2 === 0 ? "col-span-2 mt-3" : "col-span-1 mt-10"} flex sm:col-span-1 sm:mt-0`}
+                    >
                         <span aria-hidden="true" className="hidden sm:block sm:w-10 sm:shrink-0 lg:w-14" />
                         <div className="w-full rounded-xl border border-dashed border-line px-3.5 py-3 text-ink-soft">
                             <span className="block font-medium line-through decoration-1">{t("server.name")}</span>
