@@ -312,11 +312,7 @@ const readPage = defineAction({
       const parsed = parseActionRef(input.ref);
       const bookmark =
         parsed?.kind === 'bookmark' ? library.bookmarkById.get(parsed.id) : undefined;
-      if (!bookmark?.node.url) {
-        return actionError('not_found', `There is no bookmark ${input.ref}.`, {
-          hint: 'Find it with searchBookmarks.',
-        });
-      }
+      if (!bookmark?.node.url) return refProblem(library, input.ref, ['bookmark']);
       url = bookmark.node.url;
     } else {
       const tab = await context.activeTab();
@@ -476,9 +472,7 @@ const suggestFolders = defineAction({
     if (input.ref) {
       const parsed = parseActionRef(input.ref);
       current = parsed?.kind === 'bookmark' ? library.bookmarkById.get(parsed.id) : undefined;
-      if (!current) {
-        return actionError('not_found', `There is no bookmark ${input.ref}.`);
-      }
+      if (!current) return refProblem(library, input.ref, ['bookmark']);
       page = { title: current.node.title, url: current.node.url };
     }
     if (!page.title?.trim() && !page.url?.trim()) {

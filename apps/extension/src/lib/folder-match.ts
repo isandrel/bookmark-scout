@@ -118,6 +118,79 @@ export type FolderMatchOptions = {
   recentFolderIds?: readonly string[];
 };
 
+/**
+ * `next` in the order `previous` showed the same folders in, with folders `previous` did not
+ * have after them in their own order. Holds a list still while the user points at it or moves
+ * through it with the keyboard, so a row does not jump away from under the pointer.
+ */
+export function holdFolderMatchOrder(
+  previous: readonly FolderMatch[],
+  next: readonly FolderMatch[],
+): FolderMatch[] {
+  const position = new Map(previous.map((match, index) => [match.folder.id, index]));
+  const known = next.filter((match) => position.has(match.folder.id));
+  known.sort((a, b) => (position.get(a.folder.id) ?? 0) - (position.get(b.folder.id) ?? 0));
+  return [...known, ...next.filter((match) => !position.has(match.folder.id))];
+}
+
+type FolderEntryTitles = { title: string; parents: string[] };
+
+/** A recent folder chip: the folder's title, with parents only where titles repeat. */
+export type RecentFolderLabel = {
+  id: string;
+  title: string;
+  /**
+   * The closest parents that tell this folder from others with the same title, outermost first;
+   * empty when its title is unique among the chips.
+   */
+  context: string[];
+  /** Titles from the outermost folder down to this one, for its tooltip. */
+  path: string[];
+};
+
+/** Each folder's title and parents in `tree`, outermost first, without the invisible root. */
+function foldersById(tree: readonly BookmarkTreeNode[]): Map<string, FolderEntryTitles> {
+  const parentsById = new Map<string, FolderEntryTitles>();
+  const visit = (nodes: readonly BookmarkTreeNode[], parents: string[]) => {
+    for (const node of nodes) {
+      if (!node.children) continue;
+      parentsById.set(node.id, { title: node.title, parents });
+      visit(node.children, isBookmarkTreeRoot(node) ? parents : [...parents, node.title]);
+    }
+  };
+  visit(tree, []);
+  return parentsById;
+}
+
+/**
+ * Labels for the recent folder chips. Folders that share a title ("Inbox" in Work and in Home)
+ * each get the fewest closest parents that tell them apart, like folder matches show where a
+ * folder is. Titles come from `tree` when the folder is in it, so a renamed folder shows its
+ * new name.
+ */
+export function labelRecentFolders(
+  folders: readonly { id: string; title: string }[],
+  tree: readonly BookmarkTreeNode[],
+): RecentFolderLabel[] {
+  const inTree = foldersById(tree);
+  const entries = folders.map((folder) => {
+    const title = inTree.get(folder.id)?.title ?? folder.title;
+    const parents = inTree.get(folder.id)?.parents ?? [];
+    return { id: folder.id, title, parents, key: normalize(getBookmarkDisplayTitle(title)) };
+  });
+  const suffix = (parents: readonly string[], depth: number) =>
+    parents.slice(Math.max(0, parents.length - depth));
+  return entries.map(({ id, title, parents, key }) => {
+    const namesakes = entries.filter((other) => other.id !== id && other.key === key);
+    let depth = 0;
+    const sameContext = (other: (typeof entries)[number]) =>
+      suffix(other.parents, depth).map(normalize).join('\n') ===
+      suffix(parents, depth).map(normalize).join('\n');
+    while (depth < parents.length && namesakes.some(sameContext)) depth += 1;
+    return { id, title, context: suffix(parents, depth), path: [...parents, title] };
+  });
+}
+
 /** The folders that best match `query`, ranked. */
 export function findFolderMatches(
   tree: readonly BookmarkTreeNode[],

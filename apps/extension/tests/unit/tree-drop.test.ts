@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
+  acceptsTreeDrop,
   getTreeDropZone,
   resolveTreeDrop,
+  TREE_DROP_END_INDEX,
+  treeShowsBrowserOrder,
   type TreeDragSource,
   type TreeDropTarget,
 } from '@/components/bookmark/tree-drop';
@@ -80,7 +83,7 @@ describe('resolveTreeDrop', () => {
       sourceIndex: 7,
       targetId: 'f1',
       targetParentId: 'f1',
-      targetIndex: 2,
+      targetIndex: TREE_DROP_END_INDEX,
     });
   });
 
@@ -116,7 +119,7 @@ describe('resolveTreeDrop', () => {
     expect(resolveTreeDrop(draggedFolder, fixed, at(0.01))).toMatchObject({
       type: 'folder-move',
       targetParentId: 'f1',
-      targetIndex: 2,
+      targetIndex: TREE_DROP_END_INDEX,
     });
   });
 
@@ -139,11 +142,60 @@ describe('resolveTreeDrop', () => {
     expect(resolveTreeDrop(topLevel, root, at(0.5))).toMatchObject({
       type: 'folder-move',
       targetParentId: 'r1',
-      targetIndex: 0,
+      targetIndex: TREE_DROP_END_INDEX,
     });
   });
 
   it('ignores a row dropped on itself', () => {
     expect(resolveTreeDrop({ kind: 'folder', node: folderNode }, folderTarget, at(0.5))).toBeNull();
+  });
+});
+
+describe('drops in a tree sorted by date or name', () => {
+  it('reorders only in the browser order sort', () => {
+    expect(treeShowsBrowserOrder('folders')).toBe(true);
+    expect(treeShowsBrowserOrder('date')).toBe(false);
+    expect(treeShowsBrowserOrder('alphabetical')).toBe(false);
+  });
+
+  it('turns every band of a folder row into a move into it', () => {
+    for (const fraction of [0.01, 0.5, 0.99]) {
+      expect(getTreeDropZone(folderTarget, at(fraction), false)).toBe('into');
+      expect(resolveTreeDrop(draggedFolder, folderTarget, at(fraction), false)).toMatchObject({
+        type: 'folder-move',
+        targetParentId: 'f1',
+        targetIndex: TREE_DROP_END_INDEX,
+      });
+    }
+  });
+
+  it('moves a bookmark dropped on a bookmark of another folder to the end of that folder', () => {
+    expect(resolveTreeDrop(draggedBookmark, bookmarkTarget, at(0.1), false)).toMatchObject({
+      type: 'bookmark-move',
+      targetId: 'b1',
+      targetParentId: 'p1',
+      targetIndex: TREE_DROP_END_INDEX,
+    });
+  });
+
+  it('refuses drops that would only reorder the item inside its own folder', () => {
+    const sibling: TreeDragSource = {
+      kind: 'bookmark',
+      node: { id: 's3', parentId: 'p1', index: 0, title: 'Sibling', url: 'https://e.invalid/3' },
+    };
+    const child: TreeDragSource = {
+      kind: 'bookmark',
+      node: folderNode.children?.[0] as BookmarkTreeNode,
+    };
+    // Beside a bookmark of its own folder, and into the folder it is already in.
+    expect(acceptsTreeDrop(sibling, bookmarkTarget, false)).toBe(false);
+    expect(resolveTreeDrop(sibling, bookmarkTarget, at(0.9), false)).toBeNull();
+    expect(acceptsTreeDrop(child, folderTarget, false)).toBe(false);
+    // The same drops reorder while the tree shows the browser's order.
+    expect(acceptsTreeDrop(sibling, bookmarkTarget, true)).toBe(true);
+    expect(resolveTreeDrop(sibling, bookmarkTarget, at(0.9), true)).toMatchObject({
+      type: 'bookmark-reorder',
+      targetIndex: 6,
+    });
   });
 });

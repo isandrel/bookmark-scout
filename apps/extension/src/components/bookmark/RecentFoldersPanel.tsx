@@ -3,9 +3,13 @@
  * Shows recently used folders for quick bookmark saving.
  */
 
+import { useMemo } from 'react';
 import { Clock, Folder } from 'lucide-react';
+import type { BookmarkTreeNode } from '@/types';
 
 interface RecentFoldersPanelProps {
+  /** The whole tree, to name each folder's parents where two chips share a title. */
+  folders: readonly BookmarkTreeNode[];
   onAddToFolder: (folderId: string) => void;
   maxFolders: number;
   /** Folders the current page is being saved into; their chips are disabled meanwhile. */
@@ -13,14 +17,18 @@ interface RecentFoldersPanelProps {
 }
 
 export function RecentFoldersPanel({
+  folders,
   onAddToFolder,
   maxFolders,
   pendingFolderIds = [],
 }: RecentFoldersPanelProps) {
   const { recentFolders, isLoading } = useRecentFolders();
 
-  // Limit to maxFolders
-  const displayFolders = recentFolders.slice(0, maxFolders);
+  // Limit to maxFolders; folders with the same title are told apart by their parents.
+  const displayFolders = useMemo(
+    () => labelRecentFolders(recentFolders.slice(0, maxFolders), folders),
+    [folders, maxFolders, recentFolders],
+  );
 
   if (isLoading) {
     return null;
@@ -38,25 +46,41 @@ export function RecentFoldersPanel({
           {t('popup_recentFolders')}
         </span>
       </div>
-      {displayFolders.map((folder: RecentFolder) => {
+      {displayFolders.map((folder) => {
         const isPending = pendingFolderIds.includes(folder.id);
-        // The chip shows only the folder name, so the label also says what clicking does.
-        const addLabel = t('popup_addToFolderTitle', folder.title);
+        const title = getBookmarkDisplayTitle(folder.title);
+        const context = folder.context.map(getBookmarkDisplayTitle).join(FOLDER_PATH_SEPARATOR);
+        // The chip shows the name (and where it is when names repeat), so the label also says
+        // what clicking does; the tooltip always has the full path.
+        const addLabel = t(
+          'popup_addToFolderTitle',
+          context ? `${context}${FOLDER_PATH_SEPARATOR}${title}` : title,
+        );
+        const fullPath = folder.path.map(getBookmarkDisplayTitle).join(FOLDER_PATH_SEPARATOR);
         return (
           <Button
             key={folder.id}
             variant="outline"
             size="sm"
-            className="h-6 shrink-0 gap-1.5 rounded-full px-2.5 text-xs font-normal hover:bg-accent aria-disabled:pointer-events-none aria-disabled:opacity-50"
+            data-slot="recent-folder"
+            className="h-6 min-w-0 max-w-full shrink-0 gap-1.5 rounded-full px-2.5 text-xs font-normal hover:bg-accent aria-disabled:pointer-events-none aria-disabled:opacity-50"
             onClick={() => {
               if (!isPending) onAddToFolder(folder.id);
             }}
             aria-disabled={isPending || undefined}
-            title={addLabel}
+            title={t('popup_addToFolderTitle', fullPath)}
             aria-label={addLabel}
           >
-            <Folder className="h-3 w-3 text-muted-foreground" />
-            <span className="truncate max-w-[120px]">{folder.title}</span>
+            <Folder className="h-3 w-3 shrink-0 text-muted-foreground" />
+            <span className="max-w-[120px] truncate">{title}</span>
+            {context && (
+              <span
+                data-slot="recent-folder-context"
+                className="max-w-[100px] truncate text-muted-foreground"
+              >
+                {context}
+              </span>
+            )}
           </Button>
         );
       })}

@@ -100,15 +100,21 @@ export async function agentActionIds(context: ActionContext): Promise<ActionId[]
   return exposed.filter((_, index) => !blocked[index]);
 }
 
+type PreparedCall = {
+  action: ActionDefinition<unknown, unknown> & ActionCall<unknown, unknown>;
+  input: unknown;
+};
+
 /**
- * Runs one call. Input is checked against the action's schema first (a local agent's arguments
- * are not checked by anything else), then whether the action can run in this context.
+ * The checks every call passes before it runs: the action exists and may be called, this agent
+ * may use it, the input fits its schema (a local agent's arguments are not checked by anything
+ * else), and it can run in this context.
  */
-export async function runAction(
+async function prepareCall(
   id: string,
   input: unknown,
   context: ActionContext,
-): Promise<unknown> {
+): Promise<PreparedCall | ActionError> {
   if (!isActionId(id)) {
     return actionError('not_found', `There is no action named ${id}.`);
   }
@@ -124,6 +130,38 @@ export async function runAction(
   }
   const blocked = await whyUnavailable(action, context);
   if (blocked) return blocked;
+  return { action: action as PreparedCall['action'], input: parsed.data };
+}
+
+/**
+ * Why a call would be refused or fail right now, without running it: the checks `runAction`
+ * makes first, then the action's own `precheck` (a plan that no longer exists). A caller that asks
+ * the user before a call checks this first, so nobody is asked to approve a call that cannot work.
+ */
+export async function checkActionCall(
+  id: string,
+  input: unknown,
+  context: ActionContext,
+): Promise<ActionError | undefined> {
+  const prepared = await prepareCall(id, input, context);
+  if (isActionError(prepared)) return prepared;
+  try {
+    return await prepared.action.precheck?.(prepared.input, context);
+  } catch (error) {
+    return actionError('failed', getErrorMessage(error));
+  }
+}
+
+/** Runs one call, after the checks in `prepareCall`. */
+export async function runAction(
+  id: string,
+  input: unknown,
+  context: ActionContext,
+): Promise<unknown> {
+  const prepared = await prepareCall(id, input, context);
+  if (isActionError(prepared)) return prepared;
+  const { action } = prepared;
+  const parsed = { data: prepared.input };
   const started = performance.now();
   let result: unknown;
   try {

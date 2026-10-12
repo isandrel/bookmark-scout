@@ -600,6 +600,55 @@ export async function undoRecordedBookmarkChange({
   return { label: entry.label, applied: replayed.applied, skipped: replayed.skipped };
 }
 
+/** The entry `entryId` while it can still be undone, or undefined (undone already, or dropped). */
+export async function getUndoableBookmarkChange(
+  entryId: string,
+): Promise<BookmarkHistoryEntry | undefined> {
+  const stored = (await bookmarkHistoryValue.get()).undo.find((entry) => entry.id === entryId);
+  return stored ? unpackBookmarkHistoryEntry(stored) : undefined;
+}
+
+/** Items inside a recorded folder, at every depth. */
+function countRecordedItems(node: RecoverableBookmarkNode): number {
+  return (node.children ?? []).reduce((sum, child) => sum + 1 + countRecordedItems(child), 0);
+}
+
+/**
+ * What undoing `entry` would do, one line per operation in the order undo runs them, in the
+ * current language: `Move “Docs” back to Work`. Titles are read from the bookmarks as they are
+ * now, for the approval an agent's undo waits for.
+ */
+export async function describeBookmarkChangeUndo(entry: BookmarkHistoryEntry): Promise<string[]> {
+  const titleOf = async (id: string) => getBookmarkDisplayTitle((await readNode(id))?.title);
+  const lines: string[] = [];
+  for (const op of [...entry.operations].reverse()) {
+    if (op.kind === 'create' || op.kind === 'remove') {
+      const title = getBookmarkDisplayTitle(op.node.title);
+      const inside = countRecordedItems(op.node);
+      if (op.kind === 'create') {
+        lines.push(
+          inside > 0
+            ? t('history_undoRemoveFolder', [title, String(inside)])
+            : t('history_undoRemove', title),
+        );
+      } else {
+        lines.push(t('history_undoRestore', [title, await titleOf(op.at.parentId)]));
+      }
+    } else if (op.kind === 'update') {
+      const current = op.after.title ?? (await titleOf(op.id));
+      if (op.before.title !== undefined && op.before.title !== op.after.title) {
+        lines.push(t('history_undoRename', [current, getBookmarkDisplayTitle(op.before.title)]));
+      }
+      if (op.before.url !== undefined && op.before.url !== op.after.url) {
+        lines.push(t('history_undoAddress', [current, op.before.url]));
+      }
+    } else {
+      lines.push(t('history_undoMove', [await titleOf(op.id), await titleOf(op.from.parentId)]));
+    }
+  }
+  return lines;
+}
+
 /** Message for one item (its title), and for several (their count) where that can happen. */
 const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: MessageKey }> = {
   add: { one: 'history_add', many: 'history_addMany' },
@@ -613,6 +662,6 @@ const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: Messag
 /** What an entry did, in the current language: `Delete "News"`, `Move 3 items`. */
 export function describeBookmarkHistoryLabel(label: BookmarkHistoryLabel): string {
   const { one, many } = LABEL_KEYS[label.action];
-  if (many && (label.count ?? 1) > 1) return t(many, String(label.count));
+  if (many && label.count !== undefined && label.count > 1) return tPlural(many, label.count);
   return t(one, getBookmarkDisplayTitle(label.title));
 }
