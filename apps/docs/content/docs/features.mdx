@@ -12,7 +12,8 @@ A reference list of what ships now. For step-by-step instructions, follow the gu
 | Popup | The toolbar button: search, the folder tree, saving, and AI folder recommendations |
 | Side panel | The same view in the browser's side panel (the sidebar in Firefox), which stays open while you browse |
 | Bookmarks manager | Replaces the browser's bookmarks page in Chrome and Edge: folder tree, breadcrumbs, a bookmark table, and the **Tools** sidebar. In a narrow window the folder tree and **Tools** open over the table; a deep folder path folds its middle folders into a **…** menu |
-| Settings | The extension's options page, with eleven tabs. See [Settings](/settings) |
+| Settings | The extension's options page, with ten tabs. See [Settings](/settings) |
+| Any page | `Alt+Shift+S` and `Alt+Shift+D` quick save the page you are on, with a notification in the page |
 | Right-click menu | **Save bookmark to...** on any link, once you turn on **Context Menu** |
 
 ## Find
@@ -27,12 +28,17 @@ Guide: [Search and saved searches](/guides/search).
 ## Save and organize
 
 - Save the current page into any folder, never twice into the same folder, with a **Recent** panel of folders you used.
+- Type part of a folder's name, or a path such as `work/react`, and save to one of the matching folders listed above the results.
+- Quick save with `Alt+Shift+S` on any page, to the folder that matches the page best (ranked on your device), the last used folder, or a folder you choose; `Alt+Shift+D` saves to the first AI suggestion. A notification in the page offers **Undo** and other folders under **Move to**. In Chrome and Edge you can give quick save `Ctrl+D`.
 - Save links from the right-click menu into a recent folder or the Bookmarks Bar.
 - Create folders, drag and drop bookmarks and folders, and move several at once in the manager.
 - Sort by date added, natural alphabetical order, or folders first, without changing the browser's stored order.
 - Edit names and URLs, and add tags and a summary in **Bookmark Details**.
 - Delete with an optional confirmation and a 10-second undo that restores everything inside a folder.
 - In the manager, resize table columns by dragging or with the arrow keys; **Reset view** restores the layout.
+- The manager's address names the folder or search (`?id=`, `?q=`), so **Back**, **Forward**, and bookmarked links work, Chrome's own folder links open, and **Copy link to this folder** copies one.
+- When Chrome keeps bookmarks both in your Google Account and only on this device, the manager's folder tree shows them in two sections, as Chrome's does.
+- **Open links in** chooses whether clicked links open in a new tab, a background tab, or the current tab.
 
 Guide: [Save and organize](/guides/save-and-organize).
 
@@ -52,7 +58,8 @@ Guides: [Clean up duplicates and tracking URLs](/guides/clean-up) and [Find and 
 
 - Export to HTML, JSON, Markdown, or CSV, with a privacy review that can redact sensitive values from the file.
 - Import HTML or JSON after a preview of the target folder, counts, and duplicates, with undo.
-- Back up the extension's settings, custom prompts, AI services (without API keys), and saved searches to a JSON file, and restore them.
+- JSON exports keep each bookmark's tags and summary, and importing such a file restores them.
+- Back up the extension's settings, custom prompts, AI services (without API keys), saved searches, and the manager table's columns to a JSON file, and restore them.
 
 Guide: [Import and export](/guides/import-export).
 
@@ -60,18 +67,27 @@ Guide: [Import and export](/guides/import-export).
 
 Off by default. Bring your own key for OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter, or about 200 more providers from the models.dev catalog, or use Ollama, CLIProxyAPI, or any OpenAI-compatible endpoint.
 
-- Folder recommendations in the popup, including a reviewed new folder path.
-- **Auto-Tagging** and **Content Summarizer** for the current folder, saved only after you review them.
-- **AI Folder Reorganization**, previewed before anything moves.
+- Folder recommendations in the popup, including a reviewed new folder path, and the `Alt+Shift+D` quick save shortcut.
+- **Ask AI** in the popup and side panel: answers questions by searching your bookmarks, folders, tags, and summaries, finding duplicates, and checking links; saves pages and proposes moves, renames, deletions, and new folders as a plan that changes nothing until you approve it, each change undoable; and ends answers with buttons for what to do next. **What Ask AI may do** in Settings turns off any lookup or change.
+- **Auto-Tagging** and **Content Summarizer** for the current folder, saved only after you review them, with undo.
+- **AI Folder Reorganization**, previewed before anything moves, with undo.
 - **AI Context Packer**, which exports bookmarks as Markdown or XML for an AI chat and works with AI turned off.
 
-Tags and summaries stay on this device. They are not synced or searchable, but JSON bookmark exports include them. Guide: [Set up AI tools](/guides/ai-tools).
+Tags and summaries stay on this device. They are not synced or searchable in the popup, but Ask AI can look them up and JSON bookmark exports include them. Guide: [Set up AI tools](/guides/ai-tools).
+
+## Local AI agents (optional)
+
+Off by default, on each device. With **Allow local AI agents** on, AI agents on your computer, such as Claude Code, Codex, or Cursor, use Bookmark Scout's lookups through the `bookmark-scout-mcp` program, an MCP server that reaches the extension through the browser's native messaging. With **Allow changes** also on, they can save pages and propose changes, each of which waits for your approval in a Bookmark Scout window and can be undone in the manager. Private values in titles and URLs are hidden from them by default.
+
+Guide: [Use with local AI agents](/guides/local-agents).
 
 ## Keyboard and language
 
+- Quick save shortcuts on any page, which you can change in the browser's shortcut settings, or in Firefox right in Bookmark Scout's Settings.
 - Shortcuts in the popup and side panel that never use `Ctrl` or `Cmd`, and in the manager the keys of Chrome's bookmark manager (select all, undo, redo, open in tabs), with a `?` help dialog there. See [Keyboard shortcuts](/guides/keyboard-shortcuts).
+- Selection in the manager like Chrome's: click, `Ctrl`+click, `Shift`+click, and `Ctrl+A`; the arrow keys move through the table and the folder tree, which screen readers hear as a tree.
 - Undo and redo of the manager's edits, moves, and deletions with `Ctrl+Z` and `Ctrl+Y`, for the whole browser session.
-- Right-click menus on the manager's rows and folders: cut, copy, and paste, open all in tabs, a new window, or an incognito window, rename, and delete; plus **Sort by name** and **Add new bookmark** or **folder**.
+- Right-click menus on the manager's rows and folders: cut, copy, and paste, open all in tabs, a new window, or an incognito window, rename, and delete; plus **Sort by name** and **Add new bookmark** or **folder**. **Bookmark manager menus** in Settings chooses which commands they show, and in what order.
 - Drag and drop in the manager like Chrome's: onto folders in the table or tree, between rows in browser order, and links in from other pages; `Ctrl/Cmd+C`, `X`, and `V` copy, move, and paste.
 - System, light, or dark theme.
 - English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese.

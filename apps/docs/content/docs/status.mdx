@@ -9,45 +9,54 @@ This page summarizes the current repository status so roadmap docs do not drift 
 
 - Browser extension built with WXT, React, TypeScript, Zustand, shadcn/ui components on Base UI primitives, and browser bookmark APIs
 - Chrome primary target with Firefox and Edge build targets
-- Popup bookmark search, folder filtering, drag-and-drop organization, quick add, folder creation, and expand/collapse controls
+- Popup bookmark search, folder filtering, drag-and-drop organization, quick add, folder creation, and expand/collapse controls, with a virtualized tree that stays responsive on large libraries and updates from bookmark events instead of reloading
+- Saving to a folder found by typing part of its name or path, with ranked matches, one-typo tolerance, and recent folders first
+- Quick save shortcuts (`Alt+Shift+S` to the best-matching, last used, or chosen folder; `Alt+Shift+D` to the first AI suggestion) with a notification in the page that offers Undo, Move to, Retry, and Save without AI; a toolbar badge and the popup where pages cannot show it; shortcut setup in Settings, including a key recorder in Firefox, guidance for `Ctrl+D` in Chrome and Edge, and a notice when the browser left a shortcut without keys
 - Deletion from the popup, side panel, and manager with a confirmation dialog (on by default, optional in Settings) and a 10-second Undo that restores the subtree and its saved tags and summaries
 - Side panel entrypoint (the side panel in Chrome and Edge, the sidebar in Firefox)
-- Keyboard shortcuts in the popup, side panel, and manager for search, tree and table navigation, saving the current page, parent-folder navigation, opening saved searches, and a `?` help dialog; they never take Ctrl/Cmd combinations and pause while typing or while a dialog is open
-- Custom bookmarks page override with folder tree, breadcrumbs, bookmark table, and tools sidebar
+- Keyboard shortcuts in the popup and side panel for search, tree navigation, and saving the current page, which never take Ctrl/Cmd combinations; in the manager, Chrome's bookmark manager keys, including `Ctrl/Cmd` select all, copy, cut, paste, undo, redo, and open in tabs, with a `?` help dialog. They pause while typing or while a dialog is open
+- Custom bookmarks page override with folder tree, breadcrumbs, bookmark table, and tools sidebar, working like Chrome's manager: `?id=` and `?q=` addresses (including Chrome's folder links), row selection, right-click and ⋯ menus built from one bookmark action registry and customizable in Settings, cut, copy, and paste across manager tabs, open all in tabs, a new window, or an incognito window, sort by name, add bookmark or folder, drag and drop of rows, folders, and links, an ARIA folder tree with Chrome's keys and separate account and device sections, drawers in narrow windows, and an undo and redo history of the last 100 changes in session storage
 - Saved searches (smart views) in the manager that store only filters, sort, and folder scope in local storage and evaluate them against the live bookmark tree, skipping deleted folders
 - Configurable date-added, natural alphabetical, and folders-first ordering without mutating stored bookmark order
-- Options page with settings for appearance, language, search, behavior, advanced UI sizing, AI, AI tools, maintenance, metadata, security, analytics, data, and context menus
-- Settings persisted through `chrome.storage.sync`
+- Options page with ten categories (Saving & Search, Appearance, Behavior, AI, AI Tools, Maintenance, Metadata & Content, Security, Analytics, and Import & Export), a settings search, list and segment editors, and folded Advanced settings
+- Settings stored as overrides of the defaults: synced settings in `chrome.storage.sync`, device settings in local storage, stored values in a versioned envelope validated with zod, and writes from several pages serialized with Web Locks. The new format replaced older stored data without converting it
+- Settings backup file (changed settings, custom prompts, AI services without keys, saved searches, manager columns and sort) and restore
 - AI providers from config: OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, OpenRouter, Ollama, CLIProxyAPI, and custom OpenAI-compatible endpoints
 - AI folder recommendations, including reviewed creation of a suggested new folder path that saves the current page there
-- AI context packing with saved tags and summaries, tag suggestions, summaries, and folder reorganization (previewed before applying by default)
+- AI context packing with saved tags and summaries, tag suggestions, summaries, and folder reorganization (always previewed before applying), each undoable
+- Ask AI in the popup and side panel, with read tools from the bookmark action registry (search by words, folder, tag, site, or date, folders, tags and summaries, duplicates, folder suggestions, link checks, and page reading), write tools that save pages or apply a plan of moves, renames, deletions, and new folders only after approval, with undo, suggestion buttons under answers, and **What Ask AI may do** in Settings
+- Local AI agents through the `bookmark-scout-mcp` MCP server and native messaging host (`packages/mcp-bridge`): off by default per device, lookups with private values hidden, and changes only with **Allow changes**, each approved in a Bookmark Scout window
 - Bookmark maintenance tools for duplicate cleanup, URL cleanup, dead-link scanning with confirmed-dead and needs-a-manual-check results plus reviewed repairs (delete, redirect target, Wayback Machine copy, or edited URL, with undo), metadata fetching (reviewed titles are applied; descriptions are preview-only), privacy scanning, and statistics
 - Refresh Site Icons: downloads one icon per website from the bookmarked site itself (never a third-party icon service) after optional website access, saves reviewed icons in local storage with a size cap, and shows them in the popup, side panel, and manager ahead of the browser's icon cache; saved icons can be cleared
 - Privacy review with optional redaction before bookmark exports and AI context exports
 - Bookmark import from HTML or JSON, with a preview of the target folder, counts, and duplicates, a duplicate-handling choice, and undo
-- Bookmark export to HTML, JSON, Markdown, or CSV
+- Bookmark export to HTML, JSON (with each bookmark's tags and summary), Markdown, or CSV
 - Right-click context menu save flow for links
 - Extension and marketing site in English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese
 - Fumadocs documentation site
-- Unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, import/export, route-mocked and local-server network tools, and mocked-provider AI tools
-- The same Playwright suite in Microsoft Edge against the Edge build (`nx run extension:test:e2e:edge`), and a nine-test Firefox smoke suite against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, opening the manager from the popup and side panel, manager loading and filtering, a settings save, a JSON export and import round trip, and the statistics and privacy reports
+- Unit tests and unattended Chromium E2E tests for popup, manager, settings, maintenance, reports, import/export, quick save, route-mocked and local-server network tools, mocked-provider AI tools, and user journeys across surfaces
+- The same Playwright suite in Microsoft Edge against the Edge build (`nx run extension:test:e2e:edge`), and a 17-test Firefox smoke suite against the Firefox build (`nx run extension:test:e2e:firefox`): popup search and folder creation, saved site icons in the popup, the side panel page, opening the manager from the popup and side panel, manager loading, filtering, address, undo, folder tree keys, right-click menu, and drag and drop, the quick save shortcut notice and key recorder, AI data consent, a settings save, a JSON export and import round trip, and the statistics and privacy reports
+- Bridge end-to-end tests that run the compiled `bookmark-scout-mcp` binary as the test browser's native host on Linux and macOS (`nx run extension:test:e2e:bridge`)
+- Performance measurements of latency and scrolling on a large library (`nx run extension:test:perf`), run daily and on demand, and a live AI suite against a real provider (`nx run extension:test:live`), run on demand
 - A settings-to-behavior matrix (`apps/extension/tests/settings-matrix.ts`) that maps every setting to the code that reads it and a test that changes it
 
 ## Partial
 
 - Bookmark tags and summaries: editable in Bookmark Details and saved from reviewed AI suggestions, but stored only in local extension storage. They are not synced or searchable; JSON bookmark exports include them, and importing such a file restores them on the bookmarks it creates.
 - AI tool limits (tag count and style, summary length, reorganization folder limits) are sent to the provider as instructions; the output is not checked against them. Live provider compatibility is verified manually.
-- Firefox runtime coverage is a smoke suite, not the full suite. Playwright cannot open `moz-extension://` pages, so the Firefox tests drive the stock Firefox through geckodriver (Selenium) and install the build as a temporary add-on with its real add-on ID, so they test the manifest Firefox Add-ons receives. They do not cover context-menu saves (the Chromium tests dispatch `contextMenus.onClicked` from the service worker; the Firefox build uses an MV2 background page that the harness cannot script), drag and drop in the popup (the manager's is covered with scripted drag events), keyboard shortcuts other than the manager's `Delete`, undo, and folder tree keys, network tools, AI tools, or locales.
+- Firefox runtime coverage is a smoke suite, not the full suite. Playwright cannot open `moz-extension://` pages, so the Firefox tests drive the stock Firefox through geckodriver (Selenium) and install the build as a temporary add-on with its real add-on ID, so they test the manifest Firefox Add-ons receives. They do not cover context-menu saves (the Chromium tests dispatch `contextMenus.onClicked` from the service worker; the Firefox build uses an MV2 background page that the harness cannot script), drag and drop in the popup (the manager's is covered with scripted drag events), keyboard shortcuts other than the manager's `Delete`, undo, and folder tree keys, network tools, AI tools, local AI agents, or locales.
 - Firefox API differences: the browser's icon cache is unavailable because Firefox has no `_favicon` service, so bookmarks show a generic icon unless **Refresh Site Icons** saved one; the manager and Tools sidebar open from **Open bookmark manager** in the popup because Firefox cannot replace the bookmarks page; the side panel page is declared as a Firefox sidebar, and tests load that page in a tab because automation cannot open the sidebar itself.
 - Four tool scope settings are fixed: Auto-Tagging and Content Summarizer always use the current folder; Duplicate Cleaner and Privacy Scanner always scan all bookmarks.
 
 ## Planned
 
 - Broader Firefox runtime coverage: context-menu saves, drag and drop in the popup, keyboard shortcuts, network tools, AI tools, and locales
-- Store submission to Chrome Web Store, Firefox Add-ons, and Edge Add-ons. Listing material and submission checklists are in the repository's <RepoLink tree="store">`store/` folder</RepoLink>; submission is manual and needs release approval. The Firefox package has its permanent add-on ID and data collection declaration
+- Store submission to Firefox Add-ons and Edge Add-ons (the Chrome Web Store listing is live). Listing material and submission checklists are in the repository's <RepoLink tree="store">`store/` folder</RepoLink>; submission is manual and needs release approval. The Firefox package has its permanent add-on ID and data collection declaration
+- Distribution of `bookmark-scout-mcp`: binaries on GitHub releases, an npm package, and an MCP registry entry. Until then, build or run it from the repository
+- The popup rows and the quick save notification taking their commands from the bookmark action registry, as the manager's menus and AI tools do
 
 ## Documentation rules
 
 - Update docs when feature status, installation paths, browser support, privacy expectations, or configuration changes.
 - AI features are opt-in and may send bookmark data to the selected provider.
-- CI runs the extension unit tests, the Chromium end-to-end suite, the Edge suite, and the Firefox smoke suite as required checks, without manual setup. A passing build is not runtime coverage.
+- CI runs the extension unit tests, the Chromium end-to-end suite, the Edge suite, and the Firefox smoke suite as required checks, and the bridge end-to-end tests when the bridge or extension changes, without manual setup. Real AI providers are checked by the on-demand live suite, not on pull requests. A passing build is not runtime coverage.
