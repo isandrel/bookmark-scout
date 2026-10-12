@@ -44,6 +44,20 @@
                             "Führen Sie in der Tools-Leiste des Managers „Website-Symbole aktualisieren“ aus, um das Symbol jeder Website herunterzuladen. Gespeicherte Symbole bleiben auf diesem Gerät. Öffnen Sie den Manager in Firefox über „Lesezeichen-Manager öffnen“ im Pop-up der Symbolleiste."
                         ]
                     },
+                    "quickSave": {
+                        "q": "Das Tastenkürzel zum Schnellspeichern bewirkt nichts",
+                        "a": [
+                            "Wenn eine andere Erweiterung Alt+Shift+S oder Alt+Shift+D bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt „Kein Kürzel zum Schnellspeichern festgelegt“. Klicken Sie auf „Einrichten“, oder öffnen Sie die Einstellungen, dann „Speichern & Suche“, dann „Tastenkürzel“, und wählen Sie andere Tasten.",
+                            "Auf manchen Seiten, etwa den eigenen Seiten des Browsers und dem Erweiterungs-Store, dürfen Erweiterungen nichts anzeigen. Dort zeigt das Symbol in der Symbolleiste, ob die Seite gespeichert wurde, und das Pop-up bietet „Rückgängig“ an."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Meine Einstellungen sind nach einem Update verschwunden",
+                        "a": [
+                            "Ein Update hat die gespeicherten Daten von Bookmark Scout in ein neues Format überführt und die alten Daten entfernt, statt sie umzuwandeln. Die Einstellungen sind wieder auf ihren Standardwerten, KI-Dienste und API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, Tags, Zusammenfassungen und gespeicherte Website-Symbole sind verloren. Ihre Lesezeichen bleiben unberührt.",
+                            "Wenn Sie Ihre Einstellungen vor dem Update mit „Exportieren“ unten in den Einstellungen gesichert haben, stellen Sie sie dort mit „Importieren“ wieder her."
+                        ]
+                    },
                     "websiteAccess": {
                         "q": "„Defekte Links prüfen“, der Metadatenabruf oder „Website-Symbole aktualisieren“ hat nichts geprüft",
                         "a": [
