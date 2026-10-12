@@ -240,7 +240,6 @@ export const jsonImportFormat: ImportFormat = {
 
     let bookmarks: BookmarkTreeNode[];
     let metadataByUrl: Record<string, StoredBookmarkMetadata> | undefined;
-    const hasMetadata = () => Object.keys(metadataById).length > 0;
     if (Array.isArray(parsed)) {
       bookmarks = parseList(parsed);
     } else if (isPlainObject(parsed) && Array.isArray(parsed.children) && !parsed.url) {
@@ -254,7 +253,7 @@ export const jsonImportFormat: ImportFormat = {
     return {
       bookmarks,
       skipped,
-      ...(hasMetadata() ? { metadataById } : {}),
+      ...(Object.keys(metadataById).length > 0 ? { metadataById } : {}),
       ...(metadataByUrl ? { metadataByUrl } : {}),
     };
   },
