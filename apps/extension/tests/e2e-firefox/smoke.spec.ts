@@ -300,9 +300,7 @@ test('manager folder tree moves with the arrow keys and opens a folder with Ente
   await driver.actions().sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN).perform();
   await expect.poll(focusedTitle).toBe('Tree Second');
   await driver.actions().sendKeys(Key.ENTER).perform();
-  await expect
-    .poll(() => driver.getCurrentUrl())
-    .toContain(`id=${folder.ids['Tree Second']}`);
+  await expect.poll(() => driver.getCurrentUrl()).toContain(`id=${folder.ids['Tree Second']}`);
 });
 
 test('manager right-click menu copies and pastes, without private windows unless allowed', async ({
@@ -462,6 +460,18 @@ test('a quick save command without keys shows the popup notice, and Options reco
     .keyUp(Key.ALT)
     .perform();
   await expect.poll(() => shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
+
+  // Firefox's own bookmark keys are refused: Firefox would still bookmark the page with them.
+  // Chrome and Edge show how to give them to quick save instead; Firefox has no such hint.
+  expect(await extension.countVisible('[data-testid="bookmark-key-hint"]')).toBe(0);
+  const accel = process.platform === 'darwin' ? Key.META : Key.CONTROL;
+  await clickCentered(extension, recorder);
+  await extension.driver.actions().keyDown(accel).sendKeys('d').keyUp(accel).perform();
+  await extension.findByText(
+    '[data-command="ai-quick-save"]',
+    `The browser uses ${process.platform === 'darwin' ? '⌘D' : 'Ctrl+D'} itself, so it would never reach Bookmark Scout.`,
+  );
+  expect(await shortcutOf(extension, 'ai-quick-save')).toBe('Alt+Shift+K');
 
   // A letter on its own is explained under the field and not saved.
   await clickCentered(extension, recorder);

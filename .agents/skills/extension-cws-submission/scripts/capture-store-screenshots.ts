@@ -10,6 +10,7 @@ import {
   seedAIServices,
   setSettings,
   updateStored,
+  writeStored,
 } from '../../../../apps/extension/tests/e2e/storage';
 
 const SCHEMES = ['light', 'dark'] as const;
@@ -98,6 +99,8 @@ const runTool = async (page: Page, name: string) => {
 
 export default async ({ context, id, sw, shot, log }: Ctx) => {
   await sw.evaluate(seed);
+  // A store frame shows the product, not the one-time offer to give quick save Ctrl+D.
+  await writeStored(sw, STORAGE_ITEMS.dismissedNotices, ['quick-save-bookmark-key']);
   const url = (file: string) => `chrome-extension://${id}/${file}`;
 
   const icons = await context.newPage();

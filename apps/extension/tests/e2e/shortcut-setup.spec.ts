@@ -27,14 +27,120 @@ const shortcutPageUrl = (browser: ExtensionBrowser) =>
   browser === 'msedge' ? 'edge://extensions/shortcuts' : 'chrome://extensions/shortcuts';
 
 const notice = (page: Page) => page.getByTestId('quick-save-shortcut-notice');
+const missingNotice = (page: Page) => page.locator('[data-notice="quick-save-shortcut"]');
 
-test('the popup says nothing about shortcuts while every quick save command has keys', async ({
+/** The browser's bookmark keys as Chrome and the extension show them on this platform. */
+const bookmarkKeys = process.platform === 'darwin' ? '⌘D' : 'Ctrl+D';
+
+/** Makes `commands.getAll` on this page report quick save on the browser's bookmark keys. */
+async function giveQuickSaveBookmarkKeys(page: Page) {
+  await page.addInitScript((shortcut) => {
+    const getAll = chrome.commands.getAll.bind(chrome.commands);
+    Object.defineProperty(chrome.commands, 'getAll', {
+      configurable: true,
+      value: async () =>
+        (await getAll()).map((command) =>
+          command.name === 'quick-save' ? { ...command, shortcut } : command,
+        ),
+    });
+  }, bookmarkKeys);
+}
+
+test('the browser assigns the suggested keys, not its own bookmark keys', async ({
+  extensionWorker,
+}) => {
+  const commands = await extensionWorker.evaluate(() => chrome.commands.getAll());
+  const shortcuts = Object.fromEntries(
+    commands
+      .filter((command) => command.name !== '_execute_action')
+      .map((command) => [command.name, command.shortcut]),
+  );
+  expect(shortcuts).toEqual(
+    process.platform === 'darwin'
+      ? { 'quick-save': '⌥⇧S', 'ai-quick-save': '⌥⇧D' }
+      : { 'quick-save': 'Alt+Shift+S', 'ai-quick-save': 'Alt+Shift+D' },
+  );
+});
+
+test('with every command bound, the popup offers the bookmark keys for quick save', async ({
+  context,
+  extensionBrowser,
   extensionId,
   page,
 }) => {
   await openPopup(page, extensionId);
+  await expect(notice(page)).toBeVisible();
+  await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
+  await expect(notice(page)).toContainText(`Use ${bookmarkKeys} for quick save`);
+  await expect(missingNotice(page)).toHaveCount(0);
+
+  // The steps need more room than the line, so Set it up opens them in Options.
+  const [options] = await Promise.all([
+    context.waitForEvent('page'),
+    notice(page).getByRole('button', { name: 'Set it up', exact: true }).click(),
+  ]);
+  await expect(options).toHaveURL(
+    `chrome-extension://${extensionId}/options.html?category=search#quick-save-shortcuts`,
+  );
+  const hint = options.getByTestId('bookmark-key-hint');
+  await expect(hint).toContainText(
+    `click the pencil next to “Quick save the current page”, and press ${bookmarkKeys}.`,
+  );
+  const [shortcutsPage] = await Promise.all([
+    context.waitForEvent('page'),
+    hint.getByRole('button', { name: `Use ${bookmarkKeys} for quick save` }).click(),
+  ]);
+  await expect(shortcutsPage).toHaveURL(shortcutPageUrl(extensionBrowser));
+});
+
+test('once quick save has the bookmark keys, the popup is quiet and Options says how to undo it', async ({
+  extensionId,
+  page,
+}) => {
+  await giveQuickSaveBookmarkKeys(page);
+  await openPopup(page, extensionId);
   await expect(page.getByTestId('popup-hint-bar')).toBeVisible();
   // The notice would appear right after the first read of the keys; give it that chance.
+  await page.evaluate(() => chrome.commands.getAll());
+  await expect(notice(page)).toHaveCount(0);
+
+  await page.goto(`chrome-extension://${extensionId}/options.html?category=search`);
+  await expect(page.getByTestId('bookmark-key-hint')).toHaveText(
+    `${bookmarkKeys} now runs quick save instead of the browser’s bookmark dialog. To get the dialog back, clear this shortcut on the browser’s shortcut page.`,
+  );
+  await expect(page.getByTestId('bookmark-key-hint').getByRole('button')).toHaveCount(0);
+});
+
+test('setting the bookmark keys on the browser shortcut page reaches quick save', async ({
+  context,
+  extensionBrowser,
+  extensionId,
+  extensionWorker,
+  page,
+}) => {
+  // Edge draws its own shortcut page; this records into Chrome's.
+  test.skip(extensionBrowser === 'msedge', "Chrome's shortcut page only");
+  const shortcuts = await context.newPage();
+  await shortcuts.goto('chrome://extensions/shortcuts');
+  // One row per command, named by its description, as the hint tells the user to look for.
+  const quickSaveRow = shortcuts
+    .locator('extensions-keyboard-shortcuts .command-entry')
+    .filter({ hasText: 'Quick save the current page' })
+    .filter({ hasNotText: 'with AI' });
+  await quickSaveRow.locator('#edit').click();
+  await shortcuts.keyboard.press('ControlOrMeta+KeyD');
+
+  // Chrome takes a key the user records although it never assigns it as a suggested key.
+  await expect
+    .poll(async () =>
+      (await extensionWorker.evaluate(() => chrome.commands.getAll())).find(
+        (command) => command.name === 'quick-save',
+      ),
+    )
+    .toMatchObject({ shortcut: bookmarkKeys });
+
+  await openPopup(page, extensionId);
+  await expect(page.getByTestId('popup-hint-bar')).toBeVisible();
   await page.evaluate(() => chrome.commands.getAll());
   await expect(notice(page)).toHaveCount(0);
 });
@@ -100,10 +206,18 @@ test('dismissing the notice hides it for good on this device', async ({
   await leaveAIQuickSaveUnset(page);
   await openPopup(page, extensionId);
   await notice(page).getByRole('button', { name: 'Dismiss' }).click();
-  await expect(notice(page)).toHaveCount(0);
+  await expect(missingNotice(page)).toHaveCount(0);
   await expect
     .poll(() => readStored<string[]>(extensionWorker, STORAGE_ITEMS.dismissedNotices))
     .toEqual(['quick-save-shortcut']);
+
+  // The next notice takes its place, and is dismissed on its own.
+  await expect(notice(page)).toHaveAttribute('data-notice', 'quick-save-bookmark-key');
+  await notice(page).getByRole('button', { name: 'Dismiss' }).click();
+  await expect(notice(page)).toHaveCount(0);
+  await expect
+    .poll(() => readStored<string[]>(extensionWorker, STORAGE_ITEMS.dismissedNotices))
+    .toEqual(['quick-save-shortcut', 'quick-save-bookmark-key']);
 
   // Still unset after a reopen, and still dismissed.
   await openPopup(page, extensionId);
@@ -116,8 +230,8 @@ test('a key set while the popup was open shows on its return to view', async ({
   extensionId,
   page,
 }) => {
-  // Unset at first, then the user sets the key on the browser's page and comes back.
-  await page.addInitScript(() => {
+  // Unset at first, then the user sets the bookmark keys on the browser's page and comes back.
+  await page.addInitScript((keys) => {
     const getAll = chrome.commands.getAll.bind(chrome.commands);
     const state = window as unknown as { shortcutUnset: boolean };
     state.shortcutUnset = true;
@@ -125,12 +239,12 @@ test('a key set while the popup was open shows on its return to view', async ({
       configurable: true,
       value: async () =>
         (await getAll()).map((command) =>
-          state.shortcutUnset && command.name === 'quick-save'
-            ? { ...command, shortcut: '' }
+          command.name === 'quick-save'
+            ? { ...command, shortcut: state.shortcutUnset ? '' : keys }
             : command,
         ),
     });
-  });
+  }, bookmarkKeys);
   await openPopup(page, extensionId);
   await expect(notice(page)).toBeVisible();
 

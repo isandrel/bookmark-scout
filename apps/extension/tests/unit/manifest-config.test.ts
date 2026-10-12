@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Browser } from 'wxt/browser';
+import { BOOKMARK_SHORTCUT_TAKEOVER, BROWSER_KEPT_SHORTCUTS } from '@/lib/command-catalog';
 import { adaptManifestV2, createManifest, FIREFOX_ADDON_ID } from '../../manifest.config';
 
 describe('manifest config', () => {
@@ -54,6 +55,26 @@ describe('manifest config', () => {
     ]);
     expect(firefox.optional_permissions).toEqual(['tabs', 'nativeMessaging']);
   });
+
+  it.each(['chrome', 'edge', 'firefox'] as const)(
+    'suggests no key the %s build would leave unassigned or never receive',
+    (browser) => {
+      const manifest = createManifest({ browser });
+      const suggested = Object.values(manifest.commands ?? {}).map(
+        (command) => command.suggested_key?.default,
+      );
+      expect(suggested).toEqual(['Alt+Shift+S', 'Alt+Shift+D']);
+      // Chrome and Edge never auto-assign their bookmark keys, and Firefox keeps them for itself.
+      const bookmarkKeys = [
+        BOOKMARK_SHORTCUT_TAKEOVER.shortcut,
+        ...(BROWSER_KEPT_SHORTCUTS.firefox ?? []),
+      ];
+      for (const key of bookmarkKeys) expect(suggested).not.toContain(key);
+      // The command offered the bookmark keys exists, and no manifest asks to take them over.
+      expect(manifest.commands).toHaveProperty(BOOKMARK_SHORTCUT_TAKEOVER.command);
+      expect(manifest).not.toHaveProperty('chrome_ui_overrides');
+    },
+  );
 
   it('exposes no extension resources to web pages', () => {
     for (const browser of ['chrome', 'edge', 'firefox']) {

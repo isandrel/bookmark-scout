@@ -81,6 +81,22 @@ export function watchCommandShortcuts(callback: () => void): () => void {
   return () => onChanged.removeListener(listener);
 }
 
+/**
+ * The browser's own bookmark keys and the command that can take them over, where the user can do
+ * that on the browser's shortcut page (Chrome, Edge); `null` elsewhere. See `command-catalog.ts`.
+ */
+export function getBookmarkShortcutTakeover(): typeof BOOKMARK_SHORTCUT_TAKEOVER | null {
+  const browsers: readonly PermissionBrowser[] = BOOKMARK_SHORTCUT_TAKEOVER.browsers;
+  return browsers.includes(CURRENT_PERMISSION_BROWSER) ? BOOKMARK_SHORTCUT_TAKEOVER : null;
+}
+
+/** Whether this browser runs its own action for `shortcut`, so an extension never receives it. */
+export function isShortcutKeptByBrowser(shortcut: string, apple = isApplePlatform()): boolean {
+  return (BROWSER_KEPT_SHORTCUTS[CURRENT_PERMISSION_BROWSER] ?? []).some((kept) =>
+    isSameCommandShortcut(kept, shortcut, { apple }),
+  );
+}
+
 /** Whether the browser has a shortcut settings page this extension can open. */
 export function canOpenBrowserShortcutSettings(): boolean {
   return (
@@ -101,7 +117,7 @@ export async function openBrowserShortcutSettings(): Promise<void> {
 }
 
 /** Opens Options on the category that holds the shortcuts panel, scrolled to the panel. */
-async function openCommandShortcutsInOptions(): Promise<void> {
+export async function openCommandShortcutsInOptions(): Promise<void> {
   const category = Object.entries(getSettingsCategories()).find(([, meta]) =>
     meta.sections.some((section) => section.panel === 'shortcuts'),
   )?.[0];

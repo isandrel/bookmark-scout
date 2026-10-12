@@ -156,6 +156,24 @@ const KEY_CAPS: Readonly<Record<string, string>> = {
   Period: '.',
 };
 
+/** A shortcut as text, the way the browser shows it: `Alt+Shift+S`, or `⌥⇧S` on Apple platforms. */
+export function formatCommandShortcut(shortcut: string, options: { apple: boolean }): string {
+  return commandShortcutKeyCaps(shortcut, options).join(options.apple ? '' : '+');
+}
+
+/**
+ * Whether two shortcuts press the same keys, whichever way each is written: Chrome on macOS
+ * reports `⌘D` for the manifest's `Ctrl+D`, and Firefox's `Ctrl` is Command on Apple platforms.
+ */
+export function isSameCommandShortcut(
+  first: string,
+  second: string,
+  options: { apple: boolean },
+): boolean {
+  const caps = (shortcut: string) => commandShortcutKeyCaps(shortcut, options).join('\u0000');
+  return first !== '' && second !== '' && caps(first) === caps(second);
+}
+
 /**
  * The key caps of a shortcut as the browser reports it: Firefox and Chrome on Windows and Linux
  * write `Alt+Shift+S`, and Chrome on macOS writes glyphs such as `⌥⇧S`. On Apple platforms

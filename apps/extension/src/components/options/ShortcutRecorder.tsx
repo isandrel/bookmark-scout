@@ -16,11 +16,6 @@ const PROBLEM_MESSAGES: Record<CommandShortcutProblem, (apple: boolean) => strin
   unsupportedKey: () => t('settings_shortcutUnsupportedKey'),
 };
 
-/** Key caps joined the way the browser shows them: `Alt+Shift+S`, or `⌥⇧S` on Apple platforms. */
-function formatKeyCaps(keys: readonly string[], apple: boolean): string {
-  return keys.join(apple ? '' : '+');
-}
-
 type ShortcutRecorderProps = {
   name: ExtensionCommand;
   /** The command's keys now, `''` when it has none. */
@@ -51,7 +46,7 @@ export function ShortcutRecorder({
     setError(null);
     try {
       await change();
-      const keys = formatKeyCaps(commandShortcutKeyCaps(saved, { apple }), apple);
+      const keys = formatCommandShortcut(saved, { apple });
       setAnnouncement(t('settings_shortcutSet', [label, keys]));
       onChanged();
     } catch {
@@ -60,6 +55,11 @@ export function ShortcutRecorder({
   };
 
   const save = (next: string) => {
+    // Firefox lets the extension take its bookmark keys, but still bookmarks the page with them.
+    if (isShortcutKeptByBrowser(next, apple)) {
+      setError(t('settings_shortcutKeptByBrowser', formatCommandShortcut(next, { apple })));
+      return;
+    }
     const owner = (Object.keys(otherShortcuts) as ExtensionCommand[]).find(
       (other) => other !== name && otherShortcuts[other] === next,
     );
@@ -106,10 +106,7 @@ export function ShortcutRecorder({
   };
 
   // While only modifiers are held, show them with a placeholder for the key still to come.
-  const shown = formatKeyCaps(
-    commandShortcutKeyCaps(held ? [...held, '…'].join('+') : shortcut, { apple }),
-    apple,
-  );
+  const shown = formatCommandShortcut(held ? [...held, '…'].join('+') : shortcut, { apple });
 
   return (
     <span className="flex shrink-0 items-start gap-1">
