@@ -3289,6 +3289,10 @@
         "message": "フォルダ",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "$1 階層の深さ",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "アカウント内",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3300,6 +3304,10 @@
     "bookmarks_breadcrumb": {
         "message": "フォルダのパス",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "パス内のほかの $1 個のフォルダを表示",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "ブックマークを追加",
@@ -5617,7 +5625,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "サイドパネル",
@@ -5629,11 +5637,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "「$1」の検索 - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "オプション",

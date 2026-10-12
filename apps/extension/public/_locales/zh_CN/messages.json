@@ -3305,6 +3305,10 @@
         "message": "文件夹",
         "description": "Accessible name of the bookmark manager's folder tree"
     },
+    "bookmarks_treeDepth": {
+        "message": "第 $1 层",
+        "description": "Tooltip of the depth number the bookmark manager's folder tree shows on deeply nested folders, which stop indenting. $1 is how many levels below the top."
+    },
     "bookmarks_accountSection": {
         "message": "在您的账号中",
         "description": "Folder tree heading over the bookmarks stored in the signed-in browser account (shown only when the browser also keeps bookmarks only on this device)"
@@ -3316,6 +3320,10 @@
     "bookmarks_breadcrumb": {
         "message": "文件夹路径",
         "description": "Accessible name of the manager breadcrumb navigation"
+    },
+    "bookmarks_breadcrumbHidden": {
+        "message": "显示路径中的另外 $1 个文件夹",
+        "description": "Label of the … button in the bookmark manager's folder path that lists the folders left out of a deep path. $1 is how many."
     },
     "bookmarks_addBookmarkTitle": {
         "message": "添加书签",
@@ -5457,7 +5465,7 @@
     },
     "page_title": {
         "message": "$1 - $2",
-        "description": "Browser tab title of an extension page. $1 is the extension name, $2 the page name."
+        "description": "Browser tab title of an extension page. $1 is the page name, $2 the extension name, so every tab title reads most specific first."
     },
     "page_sidePanel": {
         "message": "侧边栏",
@@ -5469,11 +5477,11 @@
     },
     "page_managerFolderTitle": {
         "message": "$1 - $2",
-        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while a folder is open. $1 is the folder name, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_managerSearchTitle": {
         "message": "搜索“$1” - $2",
-        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the extension name."
+        "description": "Browser tab title of the bookmark manager while searching. $1 is the search text, $2 the manager page title (page_title with Bookmarks and the extension name)."
     },
     "page_options": {
         "message": "选项",

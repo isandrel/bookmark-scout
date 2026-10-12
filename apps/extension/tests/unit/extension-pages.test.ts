@@ -41,8 +41,8 @@ describe('extension pages', () => {
   it('titles pages with the extension name and the page name in the current language', () => {
     setLanguage('en');
     expect(getExtensionPageTitle()).toBe('Bookmark Scout');
-    expect(getExtensionPageTitle('page_options')).toBe('Bookmark Scout - Options');
+    expect(getExtensionPageTitle('page_options')).toBe('Options - Bookmark Scout');
     setLanguage('ja');
-    expect(getExtensionPageTitle('page_sidePanel')).toBe('ブックマークスカウト - サイドパネル');
+    expect(getExtensionPageTitle('page_sidePanel')).toBe('サイドパネル - ブックマークスカウト');
   });
 });

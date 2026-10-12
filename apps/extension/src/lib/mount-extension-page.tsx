@@ -10,13 +10,16 @@ import { createRoot } from 'react-dom/client';
 export const EXTENSION_ROOT_ID = 'root';
 
 export type ExtensionPageOptions = {
-  /** Locale key of the page's name, shown after the extension name; omit for the name alone. */
+  /** Locale key of the page's name, shown before the extension name; omit for the name alone. */
   titleKey?: MessageKey;
 };
 
-/** "Bookmark Scout - Options", or the extension name alone, in the current language. */
+/**
+ * "Options - Bookmark Scout", or the extension name alone, in the current language. Every tab
+ * title reads most specific first; the manager adds the folder or search in front.
+ */
 export function getExtensionPageTitle(titleKey?: MessageKey): string {
-  return titleKey ? t('page_title', [t('extName'), t(titleKey)]) : t('extName');
+  return titleKey ? t('page_title', [t(titleKey), t('extName')]) : t('extName');
 }
 
 function PageTitle({ titleKey }: { titleKey?: MessageKey }) {

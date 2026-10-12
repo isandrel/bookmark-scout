@@ -14,6 +14,18 @@
 
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react';
 import { type KeyboardEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { z } from 'zod';
+
+const treeConfig = readConfig(
+  'ui/manager-tree',
+  z.strictObject({
+    indent_px: z.number().int().nonnegative(),
+    max_indent_levels: z.number().int().positive(),
+  }),
+);
+
+// Room before the chevron of a top-level row.
+const ROW_START_PADDING_PX = 8;
 
 type FolderTreeProps = {
   items: Bookmark[];
@@ -50,6 +62,10 @@ type TreeRowProps = {
 
 function TreeRow({ row, isSelected, isTabStop, onActivate, onToggle }: TreeRowProps) {
   const isSection = row.kind === 'section';
+  // Deep folders stop indenting and show how deep they are instead.
+  const depth = row.level - 1;
+  const indentLevels = Math.min(depth, treeConfig.max_indent_levels);
+  const showsDepth = depth > treeConfig.max_indent_levels;
   return (
     // biome-ignore lint/a11y/useKeyWithClickEvents: the tree's key handler moves, opens, and closes rows (handleKeyDown).
     <div
@@ -73,8 +89,19 @@ function TreeRow({ row, isSelected, isTabStop, onActivate, onToggle }: TreeRowPr
             ? 'font-medium text-muted-foreground hover:bg-muted'
             : 'text-foreground hover:bg-muted',
       )}
-      style={{ paddingLeft: `${(row.level - 1) * 12 + 8}px` }}
+      style={{ paddingLeft: `${indentLevels * treeConfig.indent_px + ROW_START_PADDING_PX}px` }}
     >
+      {showsDepth && (
+        // Screen readers have the level already (aria-level).
+        <span
+          aria-hidden="true"
+          className="shrink-0 rounded-sm bg-muted px-1 text-[10px] leading-4 tabular-nums text-muted-foreground"
+          title={t('bookmarks_treeDepth', String(depth))}
+          data-testid="tree-depth"
+        >
+          {depth}
+        </span>
+      )}
       {row.hasChildren ? (
         // Mouse only: the keyboard opens and closes rows with the arrow keys.
         // biome-ignore lint/a11y/useKeyWithClickEvents: see above.

@@ -110,8 +110,10 @@ describe('manager links and titles', () => {
   });
 
   it('names the search, else the folder, in the tab title', () => {
-    expect(getManagerPageTitle('Work', '  react ')).toBe('Search "react" - Bookmark Scout');
-    expect(getManagerPageTitle('Work', '')).toBe('Work - Bookmark Scout');
-    expect(getManagerPageTitle(undefined, '')).toBe('Bookmark Scout - Bookmarks');
+    expect(getManagerPageTitle('Work', '  react ')).toBe(
+      'Search "react" - Bookmarks - Bookmark Scout',
+    );
+    expect(getManagerPageTitle('Work', '')).toBe('Work - Bookmarks - Bookmark Scout');
+    expect(getManagerPageTitle(undefined, '')).toBe('Bookmarks - Bookmark Scout');
   });
 });

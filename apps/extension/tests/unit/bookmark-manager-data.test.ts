@@ -5,6 +5,7 @@ import {
   buildManagerFolderSections,
   buildManagerFolderTree,
   canMoveWithinFolder,
+  collapseFolderPath,
   flattenManagerTree,
   getManagerFolderAncestors,
   getMoveTargetFolders,
@@ -230,6 +231,31 @@ describe('getBlockedEditUrl', () => {
   it('allows ordinary web URLs', () => {
     expect(getBlockedEditUrl('https://example.com/javascript:')).toBeNull();
     expect(getBlockedEditUrl('https://example.com/?u=data:text/html,x')).toBeNull();
+  });
+});
+
+describe('collapseFolderPath', () => {
+  const path = ['a', 'b', 'c', 'd', 'e', 'f'];
+
+  it('keeps a path that fits whole', () => {
+    expect(collapseFolderPath(path.slice(0, 4), 4)).toEqual({
+      head: ['a', 'b', 'c', 'd'],
+      hidden: [],
+      tail: [],
+    });
+  });
+
+  it('shows the first folder and the last ones, the rest behind the menu', () => {
+    expect(collapseFolderPath(path, 4)).toEqual({
+      head: ['a'],
+      hidden: ['b', 'c'],
+      tail: ['d', 'e', 'f'],
+    });
+    expect(collapseFolderPath(path, 2)).toEqual({
+      head: ['a'],
+      hidden: ['b', 'c', 'd', 'e'],
+      tail: ['f'],
+    });
   });
 });
 

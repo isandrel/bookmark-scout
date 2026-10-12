@@ -1,0 +1,6 @@
+# The bookmark manager's folder path in the header. Read by
+# src/components/bookmarks/BreadcrumbNav.tsx.
+
+# Folders the path shows, the open one included. A longer path shows its first folder, a "…"
+# menu with the folders in between, and its last folders
+max_folders = 4
