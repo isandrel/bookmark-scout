@@ -10,6 +10,9 @@ pages_per_topic = 13
 [run]
 # CPU slowdown applied with the DevTools protocol; 4 approximates a mid-range laptop on battery.
 cpu_throttle = 4
+# The same on CI (CI=true), whose runners are already about 2x slower: the 4x setting there failed
+# popup.scroll.longFrames at 40 frames (budget 25) while a local run on the same commit measured 4.
+ci_cpu_throttle = 2
 # Each scenario runs this many times; the report gives the median and the worst run.
 repeats = 5
 # Mouse-wheel scrolling: steps of this many pixels, one per frame.
