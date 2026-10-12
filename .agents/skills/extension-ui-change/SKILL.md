@@ -30,6 +30,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
   - A `Collapsible` that settings search must open has to be controlled.
   - Base UI `Combobox` is the searchable select.
   - `Select` values can be `null`, and `Select` renders a hidden input after its trigger, so use `gap-*` rather than `space-x-*` around it.
+  - Once a `Select` has opened, its `[role=listbox]` stays in the page inside a hidden `data-closed` popup. Code that asks "is a menu or dialog open" must use `hasOpenOverlay` (`src/lib/keyboard-shortcuts.ts`), which skips hidden, inert, and closed overlays; a plain selector count disabled every manager shortcut after Rows per page was changed (PR #641).
   - Base UI `Button` sets `role=button`; render links as a styled `<a>`.
   - A dialog scrolls to whatever it focuses when it opens. If fields are disabled while loading, focus falls to a footer button; focus the dialog itself instead.
   - Closing dialogs flashed their backdrop for one frame. The fix sets `--tw-animation-fill-mode: forwards` on `[data-closed]` (PR #518).
@@ -47,7 +48,7 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 - Counts use a −/value/+ stepper that also accepts typing, not a slider. Out-of-range values snap to the nearest allowed value on blur, and an empty field means "No limit". Sliders are only for 0–1 values.
 - Group related on/off settings into checklists. Show Verify and Refresh results inline under their buttons, not in a corner toast.
 - When making settings apply live, find every read-once site: `getSettings()` in one-shot effects, module-level constants, and background startup. Guard the hook's initial async read so it cannot overwrite a newer value the storage watcher already delivered. Panels that watch storage from another tab keep text the user is still typing. `<html lang>` follows the language.
-- A language change re-renders the page and does not remount it. Remounting closed the Tools sidebar and reset open forms. Memos that depend on `t()` carry a `biome-ignore lint/correctness/useExhaustiveDependencies` comment explaining the language dependency.
+- A language change re-renders the page and does not remount it. Remounting closed the Tools sidebar and reset open forms. Memos that depend on `t()` carry a `biome-ignore lint/correctness/useExhaustiveDependencies` comment explaining the language dependency, and a `React.memo` component that shows text calls `useLanguageRevision()` (as `FolderTree.tsx` and `ToolsSidebar.tsx` do), or it keeps the old language (CI caught it on PR #621).
 - Tests that waited for a "saved" message read storage with `expect.poll` instead.
 
 ## Visual checks
@@ -55,13 +56,25 @@ Read `apps/extension/DESIGN.md` and the UI section of `apps/extension/AGENTS.md`
 - Keep one screenshot step file per surface under `~/.cache/bookmark-scout-qa/<topic>/` (for example `popup.ts`, `manager.ts`, `options.ts`) and run them with the `extension-exploratory-qa` runner.
 - Set the theme with `setSettings(sw, { theme })` from `apps/extension/tests/e2e/storage.ts` (it writes the registry key and the `{ v, data }` envelope); capture light, dark, and a narrow width.
 - Also capture keyboard focus and a short page. Two bugs showed only there: a row-actions overlay covering the focus ring's right edge (fixed with a 2px inset), and an Options footer floating mid-screen on short pages (fixed with a full-height column).
-- The popup's width comes from settings (`src/hooks/use-popup-size.ts`), not the viewport. To see the 300px layout, set the popup size in settings; a 300px viewport alone does not.
+- The popup's width comes from settings (`src/hooks/use-popup-size.ts`), not the viewport. To see the 300px layout, set the popup size in settings; a 300px viewport alone does not. Check the short popup too: a new 28px notice line pushed the tree out of a 300px-tall popup, so optional notices hide below 400px of height. A fit check for a row must count controls that appear only once the user types (Expand all, Clear), or the row reflows mid-typing (`min_text_width_px` in `config/ui/popup-search.toml`, PR #645).
+- In the manager, seed a 15-level folder and capture 600 and 420px widths. QA found the toolbar covering the filter, header buttons overlapping, and tree names squeezed to nothing past about 12 levels; the fixes are drawers below `sidebar_overlay_below_width` (`config/ui/layout.toml`), `max_indent_levels` (`manager-tree.toml`), and `max_folders` in the breadcrumb (`manager-breadcrumb.toml`), checked with bounding boxes in `bookmark-manager-layout.spec.ts`.
+- Sticky bars must not move content under the pointer or cover focus: a selection bar that appeared on the first click shifted rows so the second click of a double click hit another row (PR #622), and focused rows need `scroll-margin-bottom` equal to the bar's height (PR #641).
+- After a confirmed destructive dialog, move focus to the next row, else the previous one (`rowAfterRemoval`); otherwise it falls to `<body>` and keyboard users lose their place.
 - When the user sends a screen recording, extract frames and build a contact sheet, then sample densely around the bug:
   ```bash
   ffmpeg -i rec.mov -vf "fps=1,scale=1280:-1" f%02d.png
   ffmpeg -i f%02d.png -vf "scale=640:-1,tile=4x6" -frames:v 1 sheet.png
   ffmpeg -ss 18.6 -t 1.4 -i rec.mov -vf fps=20 burst%02d.png
   ```
+
+## UI drawn inside web pages
+
+The quick save notification (`src/entrypoints/quick-save-toast/toast.ts`) is drawn into arbitrary sites, which style it in ways extension pages never do (PR #642):
+- Attach it to `<html>`, not `<body>`, and put it in the top layer (`popover="manual"` and `showPopover()`, chosen by feature detection). A `filter`, `transform`, `will-change`, or `contain` on `body` makes it the containing block for `position: fixed`; the notification once rendered at y = -1451.
+- After inserting, measure: the box must be inside the viewport (`visible_tolerance_px` in `config/ui/quick-save.toml`) and `elementFromPoint` at its center must hit it. If not, remove it and fall back to the badge and popup.
+- `:host { all: initial }` does not reset `direction`, and `zoom` or `filter` on `<html>` still reach the element. Reset with inline `!important`, take the direction from the app language (`languageDirection`), and undo page zoom (`counterZoom`). Firefox still applies a `filter` on `<html>` to top-layer elements; that is accepted.
+- Bind each result to the page that asked for it (a random token per document plus the URL without its fragment, `isBoundPage`), or a late AI answer lands on the next page.
+- Test pages to keep: right-to-left, `zoom: 2`, `filter: invert(1)`, a transformed `body`, and a strict CSP (checked by hand in Firefox).
 
 ## Planning a redesign from references
 

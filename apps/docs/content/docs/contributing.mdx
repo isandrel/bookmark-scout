@@ -7,7 +7,7 @@ Contributions are welcome: bug reports, fixes, translations, and docs. The full 
 
 ## The repository
 
-A Bun and Nx monorepo with three apps and a shared config package:
+A Bun and Nx monorepo with three apps and two packages:
 
 | Path | What |
 | --- | --- |
@@ -15,6 +15,7 @@ A Bun and Nx monorepo with three apps and a shared config package:
 | `apps/website` | The marketing site: Next.js, localized with `next-intl` |
 | `apps/docs` | This site: Next.js, Fumadocs, and MDX in `content/docs` |
 | `packages/config` | Project and site values read from `config/project.toml` and `config/web.toml` |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`, the MCP server and native messaging host for [local AI agents](/guides/local-agents) |
 
 ## Set up
 
@@ -54,16 +55,19 @@ This builds the Chrome target, installs Playwright's Chromium, and runs the unit
 | Change | Run |
 | --- | --- |
 | Extension source | `bunx nx run extension:lint` |
-| Sorting logic | `bun run test:unit` |
+| Services, hooks, and other logic | `bun run test:unit` |
 | Popup, settings, manager, tools, import and export | `bun run test:e2e` |
 | Edge behavior | `bunx nx run extension:test:e2e:edge` |
 | Firefox behavior | `bunx nx run extension:test:e2e:firefox` (a smoke suite) |
+| Local AI agents or `packages/mcp-bridge` | `bun test packages/mcp-bridge` and `bunx nx run extension:test:e2e:bridge` (Linux and macOS) |
+| Speed on a large library | `bunx nx run extension:test:perf`, before and after the change |
+| AI features against a real provider | `bunx nx run extension:test:live`, with the `BS_LIVE_AI_*` variables set; it is skipped without them |
 | Manifest, provider, or browser integration | `bunx nx run extension:build:chrome` plus each affected browser target |
 | Website | `bunx nx run website:build` |
 | Docs | `bunx nx run docs:build`, then `bunx nx run docs:verify` |
 | Changes across apps | `bun run lint` and `bun run build:all` |
 
-CI runs lint, the three extension builds, the unit and Chromium end-to-end tests, the Edge suite, and the Firefox smoke suite as required checks on every pull request. A passing build is not test coverage: say which tests you ran.
+CI runs lint, the three extension builds, the unit and Chromium end-to-end tests, the Edge suite, and the Firefox smoke suite as required checks on every pull request, and the bridge tests when the extension or the bridge changes. The performance suite runs daily and the live AI suite only on demand. A passing build is not test coverage: say which tests you ran.
 
 ## Work on the docs
 

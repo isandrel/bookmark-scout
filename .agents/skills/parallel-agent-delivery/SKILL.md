@@ -1,6 +1,6 @@
 ---
 name: parallel-agent-delivery
-description: Plan and run several coding subagents in parallel on the Bookmark Scout repository and land their work as auto-merged pull requests without conflicts or a broken main. Use when asked to fix many bugs, finish several backlog tasks, or "use subagents". Covers splitting work, worktrees, PR and merge mechanics, stacked PRs, and recovering stopped agents.
+description: Plan and run several coding subagents in parallel on the Bookmark Scout repository and land their work as auto-merged pull requests without conflicts or a broken main. Use when asked to fix many bugs, finish several backlog tasks, or "use subagents". Covers splitting work, worktrees, sequential PR series that wait for each merge, QA-then-fix waves, PR and merge mechanics without rebasing, a machine-wide E2E lock, and recovering agents stopped by usage limits. Bundles wait-pr, e2e-locked, and locale-merge scripts.
 ---
 
 # Parallel agent delivery
@@ -22,6 +22,8 @@ Keep shared briefs (rules, interfaces, findings) in files under `~/.cache/` that
 6. Bump dependencies before dispatching, not while agents run, and restart any shared dev server afterwards. A mid-flight Next.js bump made the dev server return 500 to running agents until it was restarted.
 7. When the user asks to wrap up ("finish what's in hand"), land only this session's in-flight work: no new agents, spin-off tasks, or follow-up PRs.
 8. For a migration or codemod, record a baseline on `origin/main` first (lint warning count, unit and E2E totals; the type check must stay at zero errors) and diff against it, so existing failures are not blamed on the change.
+9. **Dependent work is one series, one agent.** When PRs build on each other (storage registry, then settings scopes, then backup), give the whole series to one agent that opens each PR from a fresh `origin/main` only after the previous one merged, and run series that reuse each other's foundations one after another (the October 2026 round ran storage, then manager parity, then AI tools and the MCP bridge). An agent that needs another series' PR polls for its merge with `scripts/wait-pr.sh` instead of guessing its interface. Ask for every required piece in the first brief; a real-binary CI job added mid-series cost a second pass.
+10. **Find bugs, then fix them, by surface.** A read-only QA wave (one tester per surface, `extension-exploratory-qa`) returns findings; then one fix agent per report, in a worktree, which may split further with a shared brief file. A test-only agent may land specs that reveal bugs as `test.fixme`; forward each bug to the agent that owns that surface and have its fix PR remove the `fixme`.
 
 Verification for extension changes, from the repository root (in worktrees, export `NX_DAEMON=false` first):
 ```bash
@@ -51,11 +53,14 @@ bunx nx run extension:test:e2e
 - Merging a PR with `--delete-branch` **closes** (does not retarget) PRs based on that branch. Retarget dependents first with `gh pr edit <n> --base main`, or merge the base without deleting its branch.
 - After a base PR is squash-merged, update the dependent branch by merging `origin/main`.
 - If a stack goes stale while `main` moves a lot, close it with a comment and redo the change on current `main`.
-- **What worked best: keep the stack local and open one PR at a time against `main`.** Note the parent branch's tip SHA before anything moves. After the bottom PR squash-merges, run `git rebase --onto origin/main <old-parent-tip-sha>` on the next branch (it has no PR yet, so `--force-with-lease` is safe), push, open its PR with auto-merge, and wait:
+- **What worked best: keep the stack local and open one PR at a time against `main`, without rebasing.** Build the next change on a local `wip/<x>` branch while the previous PR's CI runs, and note the previous PR's tip SHA. After it squash-merges, check `git diff --stat <prev-tip> origin/main` is empty (the squash produced the same tree), then move the work onto a fresh branch as a patch:
   ```bash
-  until s=$(gh pr view N --json state --jq .state) && { [[ $s == MERGED ]] || gh pr checks N | grep -q fail; }; do sleep 45; done
+  git diff --binary <prev-tip> wip/<x> > ~/.cache/bookmark-scout-<x>/pr.patch
+  git checkout -b feat/<x> origin/main
+  git apply --index ~/.cache/bookmark-scout-<x>/pr.patch
   ```
-  Run that loop with `run_in_background` and a long timeout; a short one killed an earlier wait.
+  Push, open the PR with auto-merge, and wait with `zsh .agents/skills/parallel-agent-delivery/scripts/wait-pr.sh <n>` under `run_in_background` (exit codes in its header; an inline `until` loop is refused by the worktree command guard). Delete the `wip/*` branch once its PR merges.
+- **Do not chain PR branches by merging one into the next** to open PRs early: every move of `main` meant re-merging the chain and resolving the same conflicts again, about eight times in one series.
 
 ## Shared-resource gotchas
 
@@ -75,9 +80,12 @@ bunx nx run extension:test:e2e
 - **Shared message files:** when agents edit the same `messages/*.json`, keep the orchestrator's own edits uncommitted until they finish, then commit with explicit paths.
 - Subagents may be blocked from writing report files; have them return findings as text and save them from the orchestrating session.
 - If agents stop on a rate limit or session end, inspect each worktree (`git log origin/main..HEAD`, `git status`) and resume the same agent with a message describing its exact state, rather than starting over.
-- **One full E2E suite on the machine at a time.** Each suite already runs up to 4 browser workers; when several agents need E2E, have them run the specs they touched (`playwright test <files>`) and leave the full suite to CI, or set `PW_WORKERS=2`.
+- **One full E2E suite on the machine at a time.** Each suite already runs up to 4 browser workers; when several agents need E2E, have them run the specs they touched and leave the full suite to CI. Tell every agent to run browser tests only through `zsh .agents/skills/parallel-agent-delivery/scripts/e2e-locked.sh <abs-worktree> full|specs <files>|firefox`, which waits for one machine-wide lock and sets `NX_DAEMON=false PW_WORKERS=2 NO_COLOR=1`. The lock only helps when all agents use it: in one round three agents shared a lock while two others ran suites beside them.
+- **Coverage map conflicts.** Nearly every PR in a series edits the test coverage map. It is a bulleted list in `extension-feature-test/references/coverage.md`, one line per area, so PRs extending different areas merge cleanly; keep it that way and never fold it back into one paragraph, which conflicted on almost every merge.
+- **One owner per branch.** Before you push to an agent's branch (to resolve a conflict yourself), tell the agent to stop pushing, then merge `origin/main` into it in a separate detached worktree. After `gh pr update-branch` on a branch you are working on, `git pull --no-rebase` before your next local merge, or the push is rejected.
+- **A message to a finished agent restarts it.** Do not send acknowledgements to agents that have already reported.
 - **Set `NX_DAEMON=false` for every Nx command in a worktree.** The Nx daemon is shared across worktrees, so one agent's `nx run extension:test:e2e` can run another worktree's specs and report the wrong results.
-- **Usage limits.** Agents stop on session or weekly limits mid-task. After the reset, inspect each worktree and resume with SendMessage. If an agent reports it was stopped by the user and cannot be resumed, finish the work yourself from its worktree; fetch its remote branch first, because `gh pr update-branch` may have added a merge commit there and your push would be rejected.
+- **Usage limits.** Agents stop on session or weekly limits mid-task, often all at once. After the reset, inspect each worktree and resume with SendMessage, naming the exact state: branch, open PR number, which PRs merged meanwhile, uncommitted file count, "rerun the tests that were in flight", and "merge origin/main, never rebase". All four fix agents of one round resumed cleanly that way. If an agent reports it was stopped by the user and cannot be resumed, finish the work yourself from its worktree; fetch its remote branch first, because `gh pr update-branch` may have added a merge commit there and your push would be rejected.
 - **Stale agent notices.** A "didn't finish before the previous session ended" notice can arrive after the work already merged. Check the PR state before redoing anything.
 - If the machine has a shell hook or alias that wraps `git`, the wrapper can fail inside worktrees; call the git binary by absolute path (`/usr/bin/git` on macOS and most Linux).
 - Permission prompts mostly come from background agents. Allow rules in the agent tool's local, untracked settings (for Claude Code, `.claude/settings.local.json`) apply to them too; never commit those settings.
