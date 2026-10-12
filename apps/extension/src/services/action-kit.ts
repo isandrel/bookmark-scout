@@ -57,6 +57,22 @@ export type ActionContext = {
    * is one undo step; without it, a write action records its own entry.
    */
   writer?: BookmarkWriter;
+  /**
+   * What the conversation so far allows, read from its messages for each call (Ask AI). Without
+   * it a call is treated as coming from a conversation with unreviewed text and no known URLs.
+   */
+  conversation?: ActionConversation;
+};
+
+/** What a chat's messages tell a call about where its arguments may have come from. */
+export type ActionConversation = {
+  /** Text nobody reviewed (page text, web search results) is in the conversation. */
+  untrustedContentSeen: boolean;
+  /**
+   * URLs the user typed or a tool result named, normalized with `conversationUrlKey`. Kept in
+   * memory only: they are read again from the messages for every call.
+   */
+  knownUrls: ReadonlySet<string>;
 };
 
 export type ActionErrorCode =
