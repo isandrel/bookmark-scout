@@ -194,7 +194,13 @@ test('a local agent saves a page only after the user approves it in the approval
   await expect(request).toContainText('Save “Approved page” to');
   // Nothing is saved before the answer.
   expect(await childTitles(extensionWorker, folderId)).toEqual([]);
-  await request.getByRole('button', { name: 'Approve' }).click();
+  // The window may close itself before the click returns; the result below is the check.
+  await request
+    .getByRole('button', { name: 'Approve' })
+    .click()
+    .catch((error: unknown) => {
+      if (!approvals.isClosed()) throw error;
+    });
   await result('2.1').toMatchObject({ type: 'result', isError: false, result: { created: true } });
   expect(await childTitles(extensionWorker, folderId)).toEqual(['Approved page']);
 
