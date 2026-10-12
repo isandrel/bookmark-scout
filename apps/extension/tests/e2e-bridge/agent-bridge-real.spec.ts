@@ -92,7 +92,14 @@ async function approveNext(page: Promise<Page>, change: RegExp) {
   const request = window.getByTestId('agent-approval');
   await expect(request).toContainText('From “bridge-e2e”');
   await expect(request).toContainText(change);
-  await request.getByRole('button', { name: 'Approve' }).click();
+  // The window closes itself once its last request is answered, which can happen before the
+  // click returns (seen on macOS CI); the caller checks the outcome in the bookmark tree.
+  await request
+    .getByRole('button', { name: 'Approve' })
+    .click()
+    .catch((error: unknown) => {
+      if (!window.isClosed()) throw error;
+    });
 }
 
 test('an MCP client searches, moves a bookmark after approval in the extension, and undoes it', async ({
