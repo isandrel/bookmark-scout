@@ -15,11 +15,11 @@ Não. A pesquisa, o salvamento, a organização, a limpeza e a importação e ex
 
 ### Ele envia meus favoritos para algum lugar? [#does-it-send-my-bookmarks-anywhere]
 
-Não para o desenvolvedor: não existe servidor do Bookmark Scout. Os dados só saem do seu navegador quando você usa uma ferramenta de IA que ativou (eles vão para o seu provedor) ou executa uma verificação de links quebrados ou uma busca de títulos (os sites salvos nos favoritos são solicitados). Consulte [Privacidade](/privacy).
+Não para o desenvolvedor: não existe servidor do Bookmark Scout. Os dados só saem do seu navegador quando você usa uma ferramenta de IA que ativou (eles vão para o seu provedor), executa uma verificação de links quebrados ou uma busca de títulos (os sites salvos nos favoritos são solicitados) ou permite que agentes de IA locais consultem seus favoritos (eles recebem o que pedem por meio de um programa no seu computador). Consulte [Privacidade](/privacy).
 
 ### Ele vai alterar meus favoritos sem perguntar? [#will-it-change-my-bookmarks-without-asking]
 
-Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de qualquer alteração ser gravada. Por padrão, a exclusão pede confirmação, e as exclusões e importações podem ser desfeitas por 10 segundos.
+Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de qualquer alteração ser gravada. **Perguntar à IA** e os agentes de IA locais mostram as alterações como um plano e aguardam sua aprovação. Por padrão, a exclusão pede confirmação, as exclusões, limpezas e importações podem ser desfeitas pela notificação delas, e o gerenciador de favoritos desfaz as próprias alterações com `Ctrl+Z`.
 
 ### Em quais lojas de navegadores ele está? [#which-browser-stores-list-it]
 
@@ -75,7 +75,15 @@ Eles ficam armazenados somente no dispositivo em que você os criou e não são 
 
 ### Excluí algo por engano [#i-deleted-something-by-mistake]
 
-Clique em **Desfazer** na notificação em até 10 segundos. Isso restaura o item, tudo o que havia dentro dele e as tags e os resumos salvos dele; um item restaurado recebe uma nova data de adição. Depois que a notificação se fecha, não é mais possível desfazer a exclusão pelo Bookmark Scout.
+Clique em **Desfazer** na notificação em até 10 segundos. Isso restaura o item, tudo o que havia dentro dele e as tags e os resumos salvos dele; um item restaurado recebe uma nova data de adição. No gerenciador de favoritos, `Ctrl+Z` (`Cmd+Z` no Mac) também desfaz uma exclusão feita ali, ou por Perguntar à IA ou por um agente de IA local, até o navegador ser fechado. Consulte [Selecionar, desfazer e refazer no gerenciador](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### O atalho de salvamento rápido não faz nada [#the-quick-save-shortcut-does-nothing]
+
+Se outra extensão já usa `Alt+Shift+S` ou `Alt+Shift+D`, o navegador deixa o atalho do Bookmark Scout sem teclas, e o pop-up mostra **Atalho de salvamento rápido não definido**. Clique em **Configurar** ou abra **Atalhos de teclado** em **Salvar e pesquisar** nas [Configurações](/settings#quick-save) e escolha outras teclas. Nas páginas em que as extensões não podem mostrar nada, como as páginas do próprio navegador, o ícone da barra de ferramentas mostra o resultado em vez de uma notificação. Consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save).
+
+### Minhas configurações sumiram depois de uma atualização [#my-settings-are-gone-after-an-update]
+
+Uma atualização passou os dados salvos do Bookmark Scout para um novo formato e removeu os dados antigos em vez de convertê-los. Depois dela, as configurações voltam aos valores padrão, os serviços de IA e as chaves de API deles precisam ser adicionados de novo, e os prompts personalizados, as pesquisas salvas, as pesquisas e pastas recentes, as tags e os resumos e os ícones de sites salvos se perdem. Os seus favoritos em si não são afetados. Se você salvou suas configurações com **Exportar** no fim das [Configurações](/settings) antes de atualizar, use **Importar** com esse arquivo.
 
 ## Obter ajuda [#get-help]
 

@@ -24,6 +24,40 @@ Eine Seite, die sich bereits im Ordner befindet, wird nicht doppelt gespeichert;
 
 Das Pop-up in der Symbolleiste liest die Seite, auf der Sie es angeklickt haben, ohne nachzufragen. Die Seitenleiste bleibt geöffnet, während Sie zwischen Tabs wechseln. Wenn Sie zum ersten Mal aus ihr speichern, erklärt Bookmark Scout daher den Grund und fragt dann nach Zugriff auf Ihre Tabs. Wenn Sie ablehnen, wird nichts gespeichert.
 
+## Mit einem Tastenkürzel speichern [#quick-save]
+
+Drücken Sie auf einer beliebigen Seite `Alt+Shift+S`, um sie zu speichern, ohne Bookmark Scout zu öffnen. Eine kleine Benachrichtigung in der oberen Ecke der Seite zeigt, in welchem Ordner sie gelandet ist, mit **Rückgängig** und einigen weiteren Ordnern unter **Verschieben nach**. Sie schließt sich nach einigen Sekunden von selbst; wenn Sie den Mauszeiger darauf bewegen oder sie mit der Tabulatortaste erreichen, bleibt sie geöffnet, und `Esc` schließt sie. Sie nimmt der Seite nie die Tastatur weg.
+
+Wohin die Seite gespeichert wird, legt **Ordner für Schnellspeichern** in den [Einstellungen](/settings#quick-save) fest:
+
+- **Beste Übereinstimmung** (der Standard) vergleicht Titel, Website und Adresse der Seite mit Ihren Ordnernamen, den umgebenden Ordnern sowie den Titeln und Websites der Lesezeichen, die bereits in jedem Ordner liegen, alles auf Ihrem Gerät. Chinesische, japanische und koreanische Titel funktionieren ebenfalls. **Verschieben nach** bietet die nächstbesten Ordner an.
+- **Zuletzt verwendet** speichert in dem Ordner, in dem Sie zuletzt gespeichert haben; **Verschieben nach** bietet Ihre anderen zuletzt verwendeten Ordner an.
+- **Gewählter Ordner** speichert immer in dem Ordner, den Sie unter **Zielordner** auswählen.
+
+Wenn kein Ordner gut passt oder der gewählte Ordner gelöscht wurde, landet die Seite in Ihrem zuletzt verwendeten Ordner, andernfalls in der Lesezeichenleiste, und die Benachrichtigung weist darauf hin.
+
+Drücken Sie `Alt+Shift+D`, um die Seite stattdessen in dem Ordner zu speichern, den die KI vorschlägt. Dabei werden derselbe KI-Dienst, dasselbe Lesen von Seiten und dieselbe Anzahl von Vorschlägen verwendet wie bei den KI-Vorschlägen im Pop-up, und es werden dieselben Daten gesendet (siehe [KI-Tools einrichten](/guides/ai-tools)). Während des Wartens zeigt die Benachrichtigung **KI wählt einen Ordner...** und listet danach die übrigen Vorschläge unter **Verschieben nach** auf; ein vorgeschlagener Ordner, der noch nicht existiert, wird erstellt, und **Rückgängig** entfernt ihn wieder. Ist KI deaktiviert oder nicht eingerichtet, wird nichts gespeichert, und die Benachrichtigung bietet **KI-Einstellungen öffnen** an. Wenn die KI keinen Ordner wählen kann, bietet die Benachrichtigung **Wiederholen**, das die KI erneut fragt, und **Ohne KI speichern**, das die Seite in dem Ordner speichert, den **Ordner für Schnellspeichern** wählt. Wenn Sie die Seite verlassen, bevor die KI antwortet, erscheint das Ergebnis stattdessen im Pop-up, unter dem Titel der Seite.
+
+Eine Seite, die Sie bereits als Lesezeichen gespeichert haben, wird nicht erneut gespeichert: Die Benachrichtigung zeigt, wo sie liegt, und bietet an, sie zu verschieben.
+
+**Rückgängig** und **Verschieben nach** gelten nur für Ihr letztes Schnellspeichern. Wenn Sie in einem anderen Tab schnell speichern und dann in der Benachrichtigung des ersten Tabs auf **Rückgängig** klicken, meldet diese, dass ein neueres Schnellspeichern es ersetzt hat; ändern Sie dieses Lesezeichen stattdessen im Lesezeichen-Manager.
+
+Auf manchen Seiten dürfen Erweiterungen nichts anzeigen, etwa auf den eigenen Seiten des Browsers, im Erweiterungs-Store und im PDF-Viewer, und einige Seiten verbergen, was über ihnen gezeichnet wird. Dort zeigt das Symbol in der Symbolleiste kurz ✓ oder ✗, und das Pop-up öffnet sich (sofern der Browser es zulässt) mit dem Titel der Seite und denselben Schaltflächen.
+
+Um die Tasten zu ändern, öffnen Sie **Tastenkürzel** in den [Einstellungen](/settings#quick-save):
+
+- **Chrome und Edge** verwalten die Tasten selbst. **Kürzel ändern** öffnet `chrome://extensions/shortcuts` oder `edge://extensions/shortcuts`, wo alle Erweiterungen aufgelistet sind; suchen Sie dort Bookmark Scout.
+- **Firefox** lässt Bookmark Scout die Tasten festlegen. Klicken Sie in ein Kürzelfeld und drücken Sie die neuen Tasten: Halten Sie `Ctrl` oder `Alt` gedrückt (auf einem Mac `Command`, `Control` oder `Option`), fügen Sie bei Bedarf `Shift` hinzu, und drücken Sie einen Buchstaben, eine Ziffer, eine Funktionstaste oder eine Pfeiltaste. Funktionstasten funktionieren auch allein. `Esc` bricht ab, `Tab` springt weiter, ohne aufzunehmen, und die Schaltfläche zum Zurücksetzen neben einem Feld stellt den Standard wieder her. Eine Kombination, die Firefox nicht verwenden kann, wird unter dem Feld erklärt. **Kürzel ändern** öffnet stattdessen die Firefox-Seite **Tastenkombinationen für Erweiterungen verwalten**.
+
+Wenn eine andere Erweiterung eine Taste bereits verwendet, lässt der Browser das Tastenkürzel ohne Belegung, und die Einstellungen zeigen **Nicht festgelegt**. Pop-up und Seitenleiste zeigen dann über den Tastenhinweisen **Kein Kürzel zum Schnellspeichern festgelegt**, mit **Einrichten**, das Sie zu der oben beschriebenen Stelle bringt, an der Sie es festlegen können. Schließen Sie die Zeile mit ihrer Schaltfläche **Schließen**, wenn Sie das Tastenkürzel nicht möchten; sie bleibt auf diesem Gerät ausgeblendet.
+
+### Ctrl+D zum Schnellspeichern verwenden [#ctrl-d]
+
+`Ctrl+D` (`⌘D` auf einem Mac) öffnet den eigenen Lesezeichen-Dialog des Browsers, und kein Browser lässt eine Erweiterung diese Taste als Standardtaste übernehmen, daher beginnt das Schnellspeichern mit `Alt+Shift+S`.
+
+- **Chrome und Edge** lassen Sie die Taste dem Schnellspeichern selbst zuweisen. Unter **Tastenkürzel** in den Einstellungen öffnet **Ctrl+D zum Schnellspeichern verwenden** die Kürzel-Seite des Browsers: Suchen Sie Bookmark Scout, klicken Sie auf den Stift neben **Aktuelle Seite schnell speichern** und drücken Sie `Ctrl+D`. Ab dann speichert `Ctrl+D` per Schnellspeichern, statt den Lesezeichen- (oder Favoriten-)Dialog zu öffnen. Um den Dialog zurückzubekommen, löschen Sie dieses Tastenkürzel auf derselben Seite. Bis Sie die Zuweisung vornehmen, bieten Pop-up und Seitenleiste sie in einer Zeile an, **Ctrl+D zum Schnellspeichern verwenden**; **Einrichten** öffnet diese Schritte in den Einstellungen, und **Schließen** blendet die Zeile auf diesem Gerät aus.
+- **Firefox** verarbeitet `Ctrl+D` (Lesezeichen für diese Seite hinzufügen) und `Ctrl+Shift+D` (Lesezeichen für alle Tabs hinzufügen) immer selbst, auch wenn eine Erweiterung sie festlegt, daher lehnen die Kürzelfelder beide ab.
+
 ## Einen Link über das Rechtsklickmenü speichern [#save-a-link-with-the-right-click-menu]
 
 Aktivieren Sie zuerst **Kontextmenü** in den [Einstellungen](/settings#data); es ist standardmäßig deaktiviert. Klicken Sie dann mit der rechten Maustaste auf einen Link auf einer Seite, wählen Sie **Lesezeichen speichern in...** und anschließend einen Ihrer zuletzt verwendeten Ordner oder die Lesezeichenleiste. **Quelle für Lesezeichennamen** in den Einstellungen legt fest, ob das Lesezeichen nach dem Linktext, dem Seitentitel oder der Link-URL benannt wird. Deaktivieren Sie das Menü mit **Kontextmenü** (beide befinden sich im Tab **Daten**).
@@ -34,11 +68,13 @@ Bewegen Sie im Pop-up oder in der Seitenleiste den Mauszeiger auf einen Ordner, 
 
 ## Lesezeichen und Ordner verschieben [#move-bookmarks-and-folders]
 
-- **Drag-and-drop** im Pop-up oder in der Seitenleiste. Wenn Sie ein Element neben einem Element in einem anderen Ordner ablegen, wird es in diesen Ordner verschoben. Ein Ordner kann nicht in sich selbst oder in einen seiner Unterordner verschoben werden.
+- **Drag-and-drop** im Pop-up oder in der Seitenleiste. Wenn Sie ein Element neben einem Element in einem anderen Ordner ablegen, wird es in diesen Ordner verschoben. Das Neuanordnen innerhalb eines Ordners funktioniert nur mit der Sortierung **Ordner zuerst**; bei den anderen Sortierungen verschiebt das Ablegen das Element in einen anderen Ordner, und ein Hinweis weist beim Ziehen darauf hin. Ein Ordner kann nicht in sich selbst oder in einen seiner Unterordner verschoben werden.
+- **Drag-and-drop** im Manager, wie in Chrome: Ziehen Sie eine Zeile oder eine Auswahl von Zeilen auf eine Ordnerzeile oder einen Ordner im Ordnerbaum, um sie dorthin zu verschieben; am oberen und unteren Rand eines Ordners im Baum werden sie stattdessen daneben abgelegt. Wenn Sie beim Ziehen auf einem geschlossenen Ordner im Baum verweilen, öffnet er sich. Mit aktivierter **Browser-Reihenfolge** (siehe unten) ordnet das Ablegen zwischen Zeilen auch neu an. Jedes Ablegen ist ein Schritt für `Ctrl+Z`.
+- **Links aus anderen Seiten und Apps**: Legen Sie einen Link oder Text mit URLs auf der Tabelle des Managers oder einem Ordner in seinem Baum ab, um ihn dort als Lesezeichen zu speichern. Wenn Sie Zeilen in eine andere App oder Seite ziehen, werden ihre URLs mitgenommen.
 - **Mehrere auf einmal** im Manager: Wählen Sie Zeilen in der Tabelle aus, verwenden Sie dann **In Ordner verschieben** und wählen Sie das Ziel. Die Elemente werden am Ende dieses Ordners eingefügt.
-- **Neu anordnen** im Manager: Aktivieren Sie **Browser-Reihenfolge**, heben Sie jede Spaltensortierung auf, und verwenden Sie dann die Schaltflächen **Nach oben verschieben**, **Nach unten verschieben**, **An den Anfang verschieben** und **An das Ende verschieben** in der Zeile. Dafür muss die Tabelle genau einen Ordner zeigen, also entfernen Sie Filter oder aktivieren Sie **Nur aktueller Ordner**.
+- **Neu anordnen** im Manager: Aktivieren Sie **Browser-Reihenfolge**, heben Sie jede Spaltensortierung auf, und ziehen Sie dann Zeilen oder verwenden Sie die Schaltflächen **Nach oben verschieben**, **Nach unten verschieben**, **An den Anfang verschieben** und **An das Ende verschieben** in der Zeile. Dafür muss die Tabelle genau einen Ordner zeigen, also entfernen Sie Filter oder aktivieren Sie **Nur aktueller Ordner**.
 
-Das Neuanordnen ändert die im Browser gespeicherte Reihenfolge. Das Pop-up zeigt diese Reihenfolge nur mit der Sortierung **Ordner zuerst**; bei Sortierung nach Datum oder alphabetisch wird die Liste immer wieder neu sortiert, und die Bestätigung weist darauf hin.
+Das Neuanordnen ändert die im Browser gespeicherte Reihenfolge. Das Pop-up zeigt diese Reihenfolge nur mit der Sortierung **Ordner zuerst**; bei Sortierung nach Datum oder alphabetisch wird die Liste immer wieder neu sortiert.
 
 Pop-up und Seitenleiste aktualisieren sich von selbst, wenn sich Lesezeichen an anderer Stelle ändern, etwa im Manager oder in der Lesezeichenverwaltung des Browsers.
 
@@ -59,3 +95,28 @@ Löschen Sie ein Lesezeichen oder einen Ordner im Pop-up, in der Seitenleiste od
 - **Vor dem Löschen bestätigen** ist standardmäßig aktiviert und zeigt einen Dialog, der nennt, was entfernt wird. Deaktivieren Sie die Option im Tab **Verhalten** der Einstellungen, um sofort zu löschen.
 - Jedes Löschen zeigt 10 Sekunden lang **Rückgängig** an. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt. Ein wiederhergestelltes Element wird neu angelegt und erhält daher ein neues Hinzufügedatum.
 - Feste Ordner wie die Lesezeichenleiste können nicht bearbeitet oder gelöscht werden.
+
+## Im Manager auswählen, rückgängig machen und wiederholen [#select-undo-and-redo-in-the-manager]
+
+Die Tabelle des Managers funktioniert wie der Lesezeichen-Manager von Chrome:
+
+- Klicken Sie auf eine Zeile, um sie auszuwählen, mit `Ctrl`+Klick (`Cmd`+Klick auf einem Mac) fügen Sie eine hinzu oder entfernen sie, und mit `Shift`+Klick wählen Sie einen Bereich aus. Die Kontrollkästchen funktionieren ebenfalls. `Ctrl+A` (`Cmd+A`) wählt jede Zeile aus, die die Filter zeigen, auf jeder Seite, und `Esc` hebt die Auswahl auf.
+- Doppelklicken Sie auf einen Ordner, um ihn zu öffnen, oder auf ein Lesezeichen, um es in einem Tab zu öffnen. Ein Mittelklick auf ein Lesezeichen öffnet es in einem Hintergrund-Tab.
+- `Ctrl+Z` (`Cmd+Z`) macht die Änderungen des Managers einzeln rückgängig, die neueste zuerst: Bearbeitungen, Verschiebungen, Neuanordnungen und Löschungen. Es macht auch gespeicherte Seiten, erstellte Ordner und gezogene Elemente im Pop-up und in der Seitenleiste rückgängig sowie Änderungen, denen Sie bei „KI fragen“ oder einem lokalen KI-Agenten zugestimmt haben. `Ctrl+Y` oder `Ctrl+Shift+Z` (`Cmd+Shift+Z`) stellt sie wieder her. Mehrere gemeinsam geänderte Elemente, etwa beim Verschieben einer Auswahl, bilden einen Schritt. Eine sehr große Löschung wird komprimiert aufbewahrt; eine, die selbst dann zu groß ist, wird nicht in den Verlauf aufgenommen, wobei die früheren Änderungen erhalten bleiben, und ihre Benachrichtigung weist darauf hin, dass nur ihr **Rückgängig** sie wiederherstellen kann.
+- Rückgängig lässt alles unverändert, was seitdem auf anderem Weg geändert wurde (in der Lesezeichenverwaltung des Browsers, in einem anderen Fenster oder durch die Synchronisierung), und weist darauf hin.
+- Der Verlauf wird von allen Manager-Tabs gemeinsam genutzt, übersteht ein Neuladen der Seite und endet, wenn der Browser geschlossen wird. Er umfasst die letzten 100 Änderungen.
+
+Der Ordnerbaum links funktioniert ebenfalls wie in Chrome: Die Pfeiltasten bewegen sich durch ihn und öffnen und schließen Ordner, und `Enter` zeigt einen Ordner in der Tabelle. Wenn Chrome einige Ihrer Lesezeichen in Ihrem Google-Konto und andere nur auf diesem Gerät speichert, zeigt der Baum sie unter **In Ihrem Konto** und **Nur auf diesem Gerät**, wobei der zweite Bereich anfangs geschlossen ist.
+
+Die vollständige Liste der Tasten finden Sie unter [Tastenkombinationen](/guides/keyboard-shortcuts#bookmarks-manager).
+
+## Rechtsklickmenüs im Manager [#right-click-menus-in-the-manager]
+
+Klicken Sie mit der rechten Maustaste auf eine Zeile oder einen Ordner im Ordnerbaum, um dieselben Befehle wie im Lesezeichen-Manager von Chrome zu erhalten. Ein Rechtsklick auf eine ausgewählte Zeile wirkt auf die gesamte Auswahl; bei jeder anderen Zeile wird diese Zeile zuerst ausgewählt. Die Menütaste oder `Shift+F10` öffnet das Menü über die Tastatur. Die Schaltfläche ⋯ einer Zeile öffnet dasselbe Menü für diese Zeile.
+
+- **Bearbeiten** (ein Lesezeichen) oder **Umbenennen** (ein Ordner), **Im Ordner anzeigen** (Suchergebnisse) und **Details ansehen**.
+- **Ausschneiden**, **Kopieren** und **Einfügen**. Kopieren legt die URLs der Lesezeichen in die Zwischenablage, eine pro Zeile (und als Links für Apps, die formatierten Text annehmen), sodass sie sich auch in andere Apps einfügen lassen. Einfügen im Menü einer Zeile fügt nach dieser Zeile im angezeigten Ordner ein; im Menü eines Ordners im Baum fügt es in diesen Ordner ein. Kopierte Elemente werden als Kopien in dem Zustand eingefügt, den sie beim Einfügen haben, einschließlich allem in einem kopierten Ordner; ausgeschnittene Elemente werden beim Einfügen verschoben und bleiben bis dahin, wo sie sind. Was Sie ausschneiden oder kopieren, lässt sich in jedem Manager-Tab und nach einem Neuladen einfügen, bis der Browser geschlossen wird; inzwischen gelöschte Elemente werden übersprungen, und ausgeschnittene Elemente, die nicht verschoben werden konnten (ein Ordner, der in sich selbst eingefügt wurde), bleiben ausgeschnitten. Neues Lesezeichen hinzufügen ergänzt eine ohne Schema eingegebene Adresse wie `example.com/path` zu `https://`. `Ctrl+C`, `Ctrl+X` und `Ctrl+V` (`Cmd` auf einem Mac) tun dasselbe für die Auswahl, und `Ctrl+V` macht außerdem aus URLs, die in einer anderen App kopiert wurden, Lesezeichen.
+- **In neuem Tab öffnen**, **In neuem Fenster öffnen** und **In Inkognitofenster öffnen** (in Edge InPrivate, in Firefox ein privates Fenster, wofür die Erweiterung in privaten Fenstern erlaubt sein muss). Für mehrere Elemente oder einen Ordner lauten sie **Alle öffnen (12)** und öffnen die Lesezeichen in der Auswahl und die direkt in ihren Ordnern, nicht in Unterordnern. Bei mehr als 15 Tabs wird zuerst nachgefragt.
+- **Link zu diesem Ordner kopieren** und **Lesezeichen-ID kopieren** sowie **Löschen**.
+
+Klicken Sie mit der rechten Maustaste auf den leeren Bereich der Tabelle oder öffnen Sie **Organisieren** (⋮) in der Kopfzeile, um am Ende des angezeigten Ordners **Neues Lesezeichen hinzufügen** oder **Neuen Ordner hinzufügen** auszuwählen oder um **Einfügen** zu verwenden. **Organisieren** enthält außerdem **Nach Name sortieren**, das den Ordner im Browser selbst neu anordnet: Ordner zuerst, dann nach Name, in natürlicher Reihenfolge (`2` vor `10`). Wie jede Änderung im Manager lässt sich das mit `Ctrl+Z` rückgängig machen.

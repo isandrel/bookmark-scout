@@ -7,7 +7,7 @@ description: Bookmark Scout 모노레포를 설정하고, 소스에서 확장 �
 
 ## 저장소 구성 [#the-repository]
 
-앱 세 개와 공유 설정 패키지 하나로 이루어진 Bun 및 Nx 모노레포입니다.
+앱 세 개와 패키지 두 개로 이루어진 Bun 및 Nx 모노레포입니다.
 
 | 경로 | 내용 |
 | --- | --- |
@@ -15,6 +15,7 @@ description: Bookmark Scout 모노레포를 설정하고, 소스에서 확장 �
 | `apps/website` | 홍보 사이트: Next.js, `next-intl`로 현지화 |
 | `apps/docs` | 이 사이트: Next.js, Fumadocs, `content/docs`의 MDX |
 | `packages/config` | `config/project.toml`과 `config/web.toml`에서 읽는 프로젝트 및 사이트 값 |
+| `packages/mcp-bridge` | [로컬 AI 에이전트](/guides/local-agents)용 MCP 서버이자 네이티브 메시징 호스트인 `bookmark-scout-mcp` |
 
 ## 설정 [#set-up]
 
@@ -54,16 +55,19 @@ bun run test
 | 변경 사항 | 실행할 명령 |
 | --- | --- |
 | 확장 프로그램 소스 | `bunx nx run extension:lint` |
-| 정렬 로직 | `bun run test:unit` |
+| 서비스, 훅, 기타 로직 | `bun run test:unit` |
 | 팝업, 설정, 관리자, 도구, 가져오기와 내보내기 | `bun run test:e2e` |
 | Edge 동작 | `bunx nx run extension:test:e2e:edge` |
 | Firefox 동작 | `bunx nx run extension:test:e2e:firefox`(스모크 테스트 모음) |
+| 로컬 AI 에이전트 또는 `packages/mcp-bridge` | `bun test packages/mcp-bridge`와 `bunx nx run extension:test:e2e:bridge`(Linux 및 macOS) |
+| 큰 라이브러리에서의 속도 | 변경 전후에 `bunx nx run extension:test:perf` |
+| 실제 제공업체를 대상으로 한 AI 기능 | `BS_LIVE_AI_*` 변수를 설정한 상태에서 `bunx nx run extension:test:live`. 변수가 없으면 건너뜀 |
 | 매니페스트, 제공업체, 브라우저 통합 | `bunx nx run extension:build:chrome`과 영향을 받는 각 브라우저 대상 |
 | 웹사이트 | `bunx nx run website:build` |
 | 문서 | `bunx nx run docs:build` 후 `bunx nx run docs:verify` |
 | 여러 앱에 걸친 변경 | `bun run lint`와 `bun run build:all` |
 
-CI는 모든 풀 리퀘스트에서 린트, 세 가지 확장 프로그램 빌드, 단위 테스트와 Chromium 엔드 투 엔드 테스트, Edge 테스트 모음, Firefox 스모크 테스트 모음을 필수 검사로 실행합니다. 빌드가 통과했다고 해서 테스트가 된 것은 아니므로, 어떤 테스트를 실행했는지 밝혀 주세요.
+CI는 모든 풀 리퀘스트에서 린트, 세 가지 확장 프로그램 빌드, 단위 테스트와 Chromium 엔드 투 엔드 테스트, Edge 테스트 모음, Firefox 스모크 테스트 모음을 필수 검사로 실행하고, 확장 프로그램이나 브리지가 바뀌면 브리지 테스트도 실행합니다. 성능 테스트 모음은 매일 실행되며, 실시간 AI 테스트 모음은 필요할 때만 실행됩니다. 빌드가 통과했다고 해서 테스트가 된 것은 아니므로, 어떤 테스트를 실행했는지 밝혀 주세요.
 
 ## 문서 작업 [#work-on-the-docs]
 

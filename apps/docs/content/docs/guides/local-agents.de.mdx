@@ -1,0 +1,76 @@
+---
+title: Mit lokalen KI-Agenten verwenden
+description: Lassen Sie KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über Bookmark Scout durchsuchen und ordnen, wobei Sie jeder Änderung im Browser zustimmen.
+---
+
+KI-Agenten, die auf Ihrem Computer laufen, können über Bookmark Scout mit Ihren Lesezeichen arbeiten: Lesezeichen finden, Ordner auflisten, Links prüfen, Ordner für eine Seite vorschlagen und, wenn Sie es erlauben, Seiten speichern sowie Lesezeichen verschieben, umbenennen oder löschen. Der Agent spricht mit einem kleinen Programm, **bookmark-scout-mcp**, das die Erweiterung über Native Messaging Ihres Browsers erreicht. Nichts lauscht im Netzwerk, und Bookmark Scout hat keinen Server.
+
+<Callout type="warn" title="Was ein Agent sehen kann">
+Solange der Zugriff aktiviert ist, kann ein Agent Lesezeichentitel, URLs, Ordnernamen, gespeicherte Tags und Zusammenfassungen sowie Titel und URL der aktuellen Seite lesen; mit aktiviertem **Seiteninhalt lesen** auch Seitentext. Der Agent kann Gelesenes an seinen eigenen KI-Anbieter senden. Sensible Werte in Titeln und URLs werden standardmäßig ausgeblendet. Siehe [Datenschutz](/privacy).
+</Callout>
+
+## Einrichten [#set-it-up]
+
+<Steps>
+<Step>
+Besorgen Sie **bookmark-scout-mcp**. Binaries für Linux, macOS und Windows werden an ein <RepoLink path="/releases">GitHub-Release</RepoLink> angehängt, sobald ein Release sie enthält; legen Sie das für Ihr System passende als `bookmark-scout-mcp` in Ihren `PATH`. Bis dahin erstellen Sie es mit installiertem [Bun](https://bun.sh) aus einem Klon des Repositorys: Führen Sie `bun install` und dann `bun run --cwd packages/mcp-bridge compile` aus, was `packages/mcp-bridge/dist/bookmark-scout-mcp` schreibt.
+</Step>
+<Step>
+Melden Sie es bei Ihren Browsern an:
+
+```sh
+bookmark-scout-mcp install
+```
+
+Es schreibt für jeden gefundenen Browser (Chrome, Edge, Chromium, Brave, Vivaldi und Firefox; unter Windows zusätzlich einen Registrierungswert unter Ihrem Benutzer) ein Native-Messaging-Manifest und zeigt an, wie Sie es zu Ihrem Agenten hinzufügen. Fügen Sie `--browser chrome` hinzu, um Browser auszuwählen, oder `--dry-run`, um zu sehen, was es schreiben würde.
+</Step>
+<Step>
+Öffnen Sie in den Einstellungen von Bookmark Scout **KI** > **Lokale KI-Agenten** und aktivieren Sie **Lokale KI-Agenten zulassen**. Ihr Browser fragt, ob die Erweiterung mit dem Programm sprechen darf. Das Feld unter dem Schalter zeigt dann **Bereit**. **KI-Funktionen** müssen dafür nicht aktiviert sein.
+</Step>
+<Step>
+Fügen Sie die Brücke Ihrem Agenten hinzu (siehe unten) und fragen Sie ihn nach Ihren Lesezeichen.
+</Step>
+</Steps>
+
+## Zu Ihrem Agenten hinzufügen [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**, in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**: [Zu Cursor hinzufügen](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), oder tragen Sie Folgendes in `~/.cursor/mcp.json` ein:
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` gibt diese Einträge mit dem vollständigen Pfad des Programms aus. Sind mehrere Browser oder Profile verbunden, verwendet der Agent den zuletzt verbundenen; fügen Sie `--browser edge` oder `--profile <id>` nach `serve` hinzu, um auszuwählen.
+
+## Agenten Lesezeichen ändern lassen [#let-agents-change-bookmarks]
+
+Agenten schlagen nur nach, bis Sie zusätzlich **Änderungen erlauben** aktivieren. Dann können sie Seiten speichern, Verschiebungen, Umbenennungen, Löschungen und neue Ordner als Plan vorschlagen und ihre eigenen Änderungen rückgängig machen. **Jede Änderung wartet auf Sie**: Ein Bookmark-Scout-Fenster öffnet sich und zeigt die Änderung so, wie sie ausgeführt wird, mit dem Namen, den der Agent angegeben hat. Nichts geschieht, bevor Sie auf **Freigeben** klicken; **Ablehnen**, das Schließen des Fensters oder fünf Minuten ohne Antwort ändern nichts. Eine freigegebene Änderung können Sie im Lesezeichen-Manager mit `Ctrl+Z` (`Cmd+Z` auf einem Mac) rückgängig machen.
+
+Schalten Sie unter **Was lokale Agenten tun dürfen** jede Abfrage oder Änderung aus, die Agenten nicht verwenden sollen. **Private Werte ausblenden** (standardmäßig an) ersetzt sensible URL-Parameter, Tokens und E-Mail-Adressen in dem, was Agenten erhalten, anhand der Liste der Datenschutzprüfung.
+
+Wenn **Anfragen aufzeichnen** unter **KI-Aktivität** aktiviert ist, wird dort jeder Aufruf eines Agenten mit dem Namen des Agenten aufgeführt.
+
+## Fehlerbehebung [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` zeigt an, wo das Programm angemeldet ist, welche Browser verbunden sind, und gibt die Einträge für die Agenten aus.
+- Das Feld meldet, dass das Programm nicht installiert ist: Führen Sie `bookmark-scout-mcp install` erneut aus und klicken Sie dann auf **Erneut versuchen**. Ein Entwicklungs-Build der Erweiterung hat eine eigene ID; fügen Sie sie mit `--extension-id <id>` hinzu.
+- Der Agent meldet, dass kein Browser verbunden ist: Lassen Sie den Browser mit eingeschaltetem Schalter geöffnet; das Tool `bridgeStatus` der Brücke zeigt, was sie sieht.
+- Um zu sehen, was der Browser gestartet hat, setzen Sie `BOOKMARK_SCOUT_MCP_LOG` vor dem Start des Browsers auf einen Dateipfad; das Programm schreibt seine Meldungen dorthin.
+
+## Entfernen [#remove-it]
+
+Deaktivieren Sie **Lokale KI-Agenten zulassen**, entfernen Sie den Server aus Ihrem Agenten (`claude mcp remove bookmark-scout`), und führen Sie `bookmark-scout-mcp uninstall` aus, um die geschriebenen Manifeste und Registrierungswerte zu löschen.

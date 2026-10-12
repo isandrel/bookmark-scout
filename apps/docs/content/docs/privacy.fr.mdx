@@ -10,17 +10,17 @@ Ceci est un résumé. Seule la <SiteLink to="privacy">politique de confidentiali
 - **Ni compte, ni serveur.** Bookmark Scout fonctionne au sein de votre navigateur. Le développeur ne reçoit rien de l'extension.
 - **Aucune télémétrie.** L'extension ne comporte ni mesure d'audience, ni rapports de plantage, ni publicité.
 - **L'IA reste désactivée tant que vous ne l'activez pas**, et les requêtes vont alors directement de votre navigateur au fournisseur que vous avez choisi. Dans Firefox, l'activation demande aussi votre consentement au partage de ces données.
-- **Agents d'IA locaux seulement si vous les autorisez.** Avec **Autoriser les agents d'IA locaux** activé (désactivé par défaut), les agents d'IA de votre ordinateur, comme Claude Code, peuvent consulter vos favoris via le programme bookmark-scout-mcp ; ils ne les modifient qu'avec **Autoriser les modifications** activé, chaque modification après votre accord.
+- **Agents d'IA locaux seulement si vous les autorisez.** Avec **Autoriser les agents d'IA locaux** activé (désactivé par défaut), les agents d'IA de votre ordinateur, comme Claude Code, peuvent consulter vos favoris via le programme bookmark-scout-mcp ; ils ne les modifient qu'avec **Autoriser les modifications** activé, chaque modification après votre accord.
 - **Des autorisations uniquement lorsque vous en avez besoin.** À l'installation, l'extension ne demande que ce dont elle ne peut pas se passer ; l'accès aux onglets, le menu contextuel, le cache d'icônes du navigateur et l'accès aux sites Web sont demandés la première fois que vous utilisez la fonctionnalité concernée. Consultez [Autorisations](/permissions).
 
 ## Ce que lit l'extension [#what-the-extension-reads]
 
 - Vos favoris, pour les afficher, les rechercher, les modifier, les déplacer, les supprimer, les importer et les exporter.
-- Le titre et l'URL de l'onglet actif, lorsque vous enregistrez la page que vous consultez ou demandez une suggestion de dossier.
+- Le titre et l'URL de l'onglet actif, lorsque vous enregistrez la page que vous consultez (depuis la fenêtre pop-up, le panneau latéral ou un raccourci d'enregistrement rapide) ou demandez une suggestion de dossier.
 - Les icônes de site du cache d'icônes du navigateur, dans Chrome et Edge, une fois l'option **Utiliser le cache d'icônes du navigateur** activée.
 - Les icônes de site que vous téléchargez avec **Actualiser les icônes de site**, depuis chaque site enregistré en favori.
 
-Elle ne lit pas le contenu des pages que vous consultez.
+Elle ne lit pas le contenu des pages que vous consultez. Après un raccourci d'enregistrement rapide, elle affiche sa propre notification dans cet onglet, qui ne lit rien de la page.
 
 ## Ce qu'elle stocke [#what-it-stores]
 
@@ -28,7 +28,7 @@ Elle ne lit pas le contenu des pages que vous consultez.
 | --- | --- | --- |
 | Paramètres que vous avez modifiés par rapport à leur valeur par défaut, y compris l'activation de l'IA ; pas votre fournisseur d'IA, votre modèle ni votre clé API | Stockage synchronisé du navigateur | Oui, via votre compte de navigateur lorsque la synchronisation du navigateur est activée |
 | Paramètres propres à l'appareil : le dossier choisi pour l'enregistrement rapide, la limite de stockage des icônes, l'enregistrement de l'activité de l'IA et la recherche web de Demander à l'IA | Stockage local de cet appareil | Non |
-| Réglages des agents d'IA locaux (activé ou non, masquer les valeurs privées, consultations désactivées) et un identifiant aléatoire pour ce profil de navigateur | Stockage local de cet appareil | Non |
+| Paramètres des agents d'IA locaux (activé ou non, masquer les valeurs privées, consultations désactivées) et un identifiant aléatoire pour ce profil de navigateur | Stockage local de cet appareil | Non |
 | Prompts personnalisés (**Prompts** dans **Outils d'IA**) : le nom, la tâche et le texte de chaque prompt, et le prompt utilisé par chaque tâche ; 10 au maximum | Stockage synchronisé du navigateur | Comme les paramètres |
 | Tableau des favoris dans le gestionnaire : colonnes affichées, leur ordre et le tri | Stockage synchronisé du navigateur | Comme les paramètres |
 | Largeur des colonnes et taille de page du tableau des favoris | Stockage local de cet appareil | Non |
@@ -37,8 +37,9 @@ Elle ne lit pas le contenu des pages que vous consultez.
 | Listes de modèles récupérées auprès de vos services d'IA, conservées 7 jours | Stockage local de cet appareil | Non |
 | Activité de l'IA, uniquement tant que **Enregistrer les requêtes** est activé (désactivé par défaut, par appareil) : les dernières requêtes d'IA avec ce qui a été envoyé et ce qui est revenu, y compris des titres, des URL et des chemins de dossiers de favoris et, si **Lire le contenu des pages** est activé, le texte des pages. Les clés API et autres identifiants sont supprimés avant le stockage ; désactiver l'enregistrement l'efface | Stockage local de cet appareil | Non |
 | Étiquettes, résumés, recherches enregistrées, dossiers récents, recherches récentes | Stockage local de cet appareil | Non |
-| Icônes de site enregistrées avec **Actualiser les icônes de site**, jusqu'à 4096 Ko par défaut | Stockage local de cet appareil | Non |
+| Icônes de site enregistrées avec **Actualiser les icônes de site**, jusqu'à 4 Mo par défaut | Stockage local de cet appareil | Non |
 | Le dernier enregistrement rapide (le titre et l'URL de la page, et l'endroit où elle a été enregistrée), pour **Annuler** et **Déplacer vers** | Stockage de session de cet appareil, vidé à la fermeture du navigateur | Non |
+| L'historique d'annulation du gestionnaire (les favoris que vous y avez modifiés, avec des copies des favoris supprimés et de leurs étiquettes et résumés), pour annuler et rétablir | Stockage de session de cet appareil, vidé à la fermeture du navigateur | Non |
 
 Les résultats d'analyse de la barre latérale Outils ne sont conservés que tant que leur boîte de dialogue est ouverte. La désinstallation de l'extension supprime ce qu'elle a stocké ; vos favoris restent dans le navigateur.
 
@@ -50,12 +51,12 @@ Uniquement lorsque vous utilisez l'une de ces fonctionnalités, et uniquement ve
 
 | Fonctionnalité | Destination | Données envoyées |
 | --- | --- | --- |
-| Recommandations de dossiers par IA | Le fournisseur d'IA que vous avez configuré | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
+| Recommandations de dossiers par IA, y compris le raccourci d'enregistrement rapide avec l'IA | Le fournisseur d'IA que vous avez configuré | Le titre et l'URL de la page actuelle, ainsi que les noms de vos dossiers. Si **Lire le contenu des pages** est activé, également le texte principal de la page |
 | Étiquetage automatique, Générateur de résumés, Réorganisation des dossiers par IA | Le fournisseur d'IA que vous avez configuré | Les titres, les URL et les chemins de dossier des favoris compris dans la portée. Si **Lire le contenu des pages** est activé, l'étiquetage automatique et le générateur de résumés envoient aussi le texte principal de chaque page ; la réorganisation des dossiers par IA ne le fait jamais |
 | Demander à l'IA | Le fournisseur d'IA que vous avez configuré | Vos messages et la conversation jusqu'à présent, ainsi que ce que l'IA consulte pour répondre : les favoris correspondants (avec leur dossier, leur date d'ajout, leurs étiquettes et leur résumé), les noms des dossiers, le titre et l'URL de la page actuelle, si les liens enregistrés qu'elle vérifie fonctionnent encore et, si **Lire le contenu des pages** est activé, le texte des pages qu'elle lit. Si sa recherche sur le Web est activée, le fournisseur effectue aussi des recherches sur le Web. La conversation n'est pas enregistrée |
 | Vérifier les liens morts, Récupération des métadonnées, vérification des liens par Demander à l'IA | Chaque site enregistré en favori | Une requête pour la page, sans cookies, après que vous avez autorisé l'accès aux sites Web |
 | Actualiser les icônes de site | Chaque site enregistré en favori | Une requête pour une page enregistrée en favori par site et pour un fichier d'icône sur le domaine de ce site, sans cookies, après que vous avez autorisé l'accès aux sites Web. Aucun service d'icônes tiers n'est utilisé |
-| Agents d'IA locaux, seulement avec **Autoriser les agents d'IA locaux** activé (désactivé par défaut) | Le programme bookmark-scout-mcp de votre ordinateur et les agents d'IA que vous y exécutez | Ce qu'un agent demande : les favoris correspondants (avec leurs dossiers, dates d'ajout, étiquettes et résumés), les noms de dossiers, le titre et l'URL de la page actuelle, si les liens enregistrés fonctionnent encore (après que vous avez autorisé l'accès aux sites web) et, avec **Lire le contenu des pages** activé, le texte d'une page. Les valeurs privées des titres et URL sont masquées sauf si vous désactivez cette option. Les agents peuvent envoyer ce qu'ils lisent à leur propre fournisseur d'IA. Chaque consultation figure dans l'activité IA tant que **Enregistrer les requêtes** est activé |
+| Agents d'IA locaux, seulement avec **Autoriser les agents d'IA locaux** activé (désactivé par défaut) | Le programme bookmark-scout-mcp de votre ordinateur et les agents d'IA que vous y exécutez | Ce qu'un agent demande : les favoris correspondants (avec leurs dossiers, dates d'ajout, étiquettes et résumés), les noms de dossiers, le titre et l'URL de la page actuelle, si les liens enregistrés fonctionnent encore (après que vous avez autorisé l'accès aux sites Web) et, avec **Lire le contenu des pages** activé, le texte d'une page. Les valeurs privées des titres et URL sont masquées sauf si vous désactivez cette option. Les agents peuvent envoyer ce qu'ils lisent à leur propre fournisseur d'IA. Chaque consultation figure dans l'activité IA tant que **Enregistrer les requêtes** est activé |
 
 Un fournisseur qui s'exécute sur votre propre ordinateur, comme Ollama, garde les requêtes d'IA sur votre machine. Les exportations de favoris, les fichiers du **Préparateur de contexte IA** et la sauvegarde des paramètres sont enregistrés sous forme de fichiers sur votre ordinateur et ne sont mis en ligne nulle part. Une exportation de favoris au format JSON contient aussi les étiquettes et le résumé de chaque favori ; pour les exportations de favoris et de contexte IA, une vérification de confidentialité peut d'abord masquer les valeurs sensibles. Les données exactes envoyées par chaque outil d'IA sont détaillées dans [Configurer les outils d'IA](/guides/ai-tools#what-each-tool-sends), et chaque autorisation est expliquée dans [Autorisations](/permissions).
 

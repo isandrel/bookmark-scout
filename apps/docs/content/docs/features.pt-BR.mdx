@@ -10,9 +10,10 @@ Uma lista de referência do que já está disponível. Para instruções passo a
 | Superfície | O que é |
 | --- | --- |
 | Pop-up | O botão da barra de ferramentas: pesquisa, árvore de pastas, salvamento e recomendações de pasta com IA |
-| Painel lateral | A mesma visualização no painel lateral do navegador (inclusive no Firefox), que continua aberto enquanto você navega |
-| Gerenciador de favoritos | Substitui a página de favoritos do navegador no Chrome e no Edge: árvore de pastas, trilha de navegação, tabela de favoritos e a barra lateral **Ferramentas** |
-| Configurações | A página de opções da extensão, com onze guias. Consulte [Configurações](/settings) |
+| Painel lateral | A mesma visualização no painel lateral do navegador (a barra lateral, no Firefox), que continua aberto enquanto você navega |
+| Gerenciador de favoritos | Substitui a página de favoritos do navegador no Chrome e no Edge: árvore de pastas, trilha de navegação, tabela de favoritos e a barra lateral **Ferramentas**. Em uma janela estreita, a árvore de pastas e as **Ferramentas** se abrem sobre a tabela; um caminho de pasta longo recolhe as pastas do meio em um menu **…** |
+| Configurações | A página de opções da extensão, com dez guias. Consulte [Configurações](/settings) |
+| Qualquer página | `Alt+Shift+S` e `Alt+Shift+D` salvam rapidamente a página em que você está, com uma notificação na página |
 | Menu de clique com o botão direito | **Salvar favorito em...** em qualquer link, depois que você ativa o **Menu de contexto** |
 
 ## Encontrar [#find]
@@ -27,12 +28,17 @@ Guia: [Pesquisa e pesquisas salvas](/guides/search).
 ## Salvar e organizar [#save-and-organize]
 
 - Salve a página atual em qualquer pasta, nunca duas vezes na mesma pasta, com um painel **Recentes** das pastas que você usou.
+- Digite parte do nome de uma pasta, ou um caminho como `work/react`, e salve em uma das pastas correspondentes listadas acima dos resultados.
+- Salvamento rápido com `Alt+Shift+S` em qualquer página, na pasta que melhor corresponde à página (calculada no seu dispositivo), na última pasta usada ou em uma pasta que você escolher; `Alt+Shift+D` salva na primeira sugestão da IA. Uma notificação na página oferece **Desfazer** e outras pastas em **Mover para**. No Chrome e no Edge, você pode atribuir `Ctrl+D` ao salvamento rápido.
 - Salve links pelo menu de clique com o botão direito em uma pasta recente ou na Barra de favoritos.
 - Crie pastas, arraste e solte favoritos e pastas e mova vários itens de uma vez no gerenciador.
 - Classifique por data de adição, ordem alfabética natural ou pastas primeiro, sem alterar a ordem armazenada no navegador.
 - Edite nomes e URLs e adicione tags e um resumo em **Detalhes do favorito**.
 - Exclua com uma confirmação opcional e 10 segundos para desfazer, o que restaura tudo o que havia dentro de uma pasta.
 - No gerenciador, redimensione as colunas da tabela arrastando ou com as teclas de seta; **Redefinir visualização** restaura o layout.
+- O endereço do gerenciador indica a pasta ou a pesquisa (`?id=`, `?q=`), então **Voltar**, **Avançar** e os links salvos nos favoritos funcionam, os links de pasta do próprio Chrome se abrem e **Copiar link para esta pasta** copia um desses links.
+- Quando o Chrome guarda favoritos tanto na sua Conta do Google quanto apenas neste dispositivo, a árvore de pastas do gerenciador os mostra em duas seções, como faz a do Chrome.
+- **Abrir links em** define se os links clicados se abrem em uma nova guia, em uma guia em segundo plano ou na guia atual.
 
 Guia: [Salvar e organizar](/guides/save-and-organize).
 
@@ -52,7 +58,8 @@ Guias: [Limpar duplicatas e URLs de rastreamento](/guides/clean-up) e [Encontrar
 
 - Exporte para HTML, JSON, Markdown ou CSV, com uma revisão de privacidade que pode ocultar valores confidenciais no arquivo.
 - Importe HTML ou JSON depois de uma prévia da pasta de destino, das contagens e das duplicatas, com opção de desfazer.
-- Faça backup das configurações da extensão, dos prompts personalizados, dos serviços de IA (sem chaves de API) e das pesquisas salvas em um arquivo JSON, e restaure-os.
+- As exportações em JSON mantêm as tags e o resumo de cada favorito, e importar um arquivo desses os restaura.
+- Faça backup das configurações da extensão, dos prompts personalizados, dos serviços de IA (sem chaves de API), das pesquisas salvas e das colunas da tabela do gerenciador em um arquivo JSON, e restaure-os.
 
 Guia: [Importar e exportar](/guides/import-export).
 
@@ -60,15 +67,27 @@ Guia: [Importar e exportar](/guides/import-export).
 
 Desativadas por padrão. Use sua própria chave da OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter ou de cerca de 200 outros provedores do catálogo models.dev, ou use o Ollama, o CLIProxyAPI ou qualquer endpoint compatível com a OpenAI.
 
-- Recomendações de pasta no pop-up, incluindo um caminho de nova pasta que você revisa.
-- **Tags automáticas** e **Gerador de resumos** para a pasta atual, salvos somente depois que você os revisa.
-- **Reorganização de pastas com IA**, com prévia antes de qualquer item ser movido.
+- Recomendações de pasta no pop-up, incluindo um caminho de nova pasta que você revisa, e o atalho de salvamento rápido `Alt+Shift+D`.
+- **Perguntar à IA** no pop-up e no painel lateral: responde a perguntas pesquisando seus favoritos, pastas, tags e resumos, encontrando duplicatas e verificando links; salva páginas e propõe movimentações, renomeações, exclusões e novas pastas como um plano que não altera nada até você aprová-lo, com cada alteração podendo ser desfeita; e termina as respostas com botões para o que fazer em seguida. **O que Perguntar à IA pode fazer** nas Configurações desativa qualquer consulta ou alteração.
+- **Tags automáticas** e **Gerador de resumos** para a pasta atual, salvos somente depois que você os revisa, com opção de desfazer.
+- **Reorganização de pastas com IA**, com prévia antes de qualquer item ser movido, com opção de desfazer.
 - **Empacotador de contexto para IA**, que exporta favoritos como Markdown ou XML para uma conversa com IA e funciona com a IA desativada.
 
-As tags e os resumos ficam neste dispositivo. Eles não são sincronizados nem podem ser pesquisados, mas as exportações de favoritos em JSON os incluem. Guia: [Configurar as ferramentas de IA](/guides/ai-tools).
+As tags e os resumos ficam neste dispositivo. Eles não são sincronizados nem podem ser pesquisados no pop-up, mas Perguntar à IA pode consultá-los e as exportações de favoritos em JSON os incluem. Guia: [Configurar as ferramentas de IA](/guides/ai-tools).
+
+## Agentes de IA locais (opcionais) [#local-ai-agents-optional]
+
+Desativados por padrão, em cada dispositivo. Com **Permitir agentes de IA locais** ativado, agentes de IA do seu computador, como Claude Code, Codex ou Cursor, usam as consultas do Bookmark Scout pelo programa `bookmark-scout-mcp`, um servidor MCP que se comunica com a extensão pelas mensagens nativas do navegador. Com **Permitir alterações** também ativado, eles podem salvar páginas e propor alterações, e cada uma aguarda sua aprovação em uma janela do Bookmark Scout e pode ser desfeita no gerenciador. Por padrão, valores privados em títulos e URLs ficam ocultos para eles.
+
+Guia: [Usar com agentes de IA locais](/guides/local-agents).
 
 ## Teclado e idioma [#keyboard-and-language]
 
-- Atalhos no pop-up, no painel lateral e no gerenciador que nunca usam `Ctrl` nem `Cmd`, com uma caixa de diálogo de ajuda `?` no gerenciador. Consulte [Atalhos de teclado](/guides/keyboard-shortcuts).
+- Atalhos de salvamento rápido em qualquer página, que você pode alterar nas configurações de atalhos do navegador ou, no Firefox, diretamente nas Configurações do Bookmark Scout.
+- Atalhos no pop-up e no painel lateral que nunca usam `Ctrl` nem `Cmd` e, no gerenciador, as teclas do gerenciador de favoritos do Chrome (selecionar tudo, desfazer, refazer, abrir em guias), com uma caixa de diálogo de ajuda `?` ali. Consulte [Atalhos de teclado](/guides/keyboard-shortcuts).
+- Seleção no gerenciador como a do Chrome: clique, `Ctrl`+clique, `Shift`+clique e `Ctrl+A`; as teclas de seta percorrem a tabela e a árvore de pastas, que os leitores de tela anunciam como uma árvore.
+- Desfazer e refazer as edições, movimentações e exclusões do gerenciador com `Ctrl+Z` e `Ctrl+Y`, durante toda a sessão do navegador.
+- Menus de clique com o botão direito nas linhas e pastas do gerenciador: recortar, copiar e colar, abrir todos em guias, em uma nova janela ou em uma janela anônima, renomear e excluir; além de **Ordenar por nome** e **Adicionar novo favorito** ou **Adicionar nova pasta**. **Menus do gerenciador de favoritos** nas Configurações define quais comandos eles mostram e em que ordem.
+- Arrastar e soltar no gerenciador como no Chrome: para pastas na tabela ou na árvore, entre linhas na ordem do navegador e links vindos de outras páginas; `Ctrl/Cmd+C`, `X` e `V` copiam, movem e colam.
 - Tema do sistema, claro ou escuro.
 - Inglês, chinês simplificado, chinês tradicional, japonês, coreano, espanhol, alemão, francês e português do Brasil.

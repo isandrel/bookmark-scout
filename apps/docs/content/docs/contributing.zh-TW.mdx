@@ -7,7 +7,7 @@ description: 設定 Bookmark Scout monorepo、從原始碼建置擴充功能、�
 
 ## 存放區 [#the-repository]
 
-這是包含三個應用程式和一個共用設定套件的 Bun 與 Nx monorepo：
+這是包含三個應用程式和兩個套件的 Bun 與 Nx monorepo：
 
 | 路徑 | 內容 |
 | --- | --- |
@@ -15,6 +15,7 @@ description: 設定 Bookmark Scout monorepo、從原始碼建置擴充功能、�
 | `apps/website` | 行銷網站：Next.js，以 `next-intl` 進行在地化 |
 | `apps/docs` | 本網站：Next.js、Fumadocs，以及 `content/docs` 中的 MDX |
 | `packages/config` | 從 `config/project.toml` 和 `config/web.toml` 讀取的專案和網站設定值 |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`，供[本機 AI 代理](/guides/local-agents)使用的 MCP 伺服器和原生訊息傳遞主機 |
 
 ## 設定環境 [#set-up]
 
@@ -54,16 +55,19 @@ bun run test
 | 變更內容 | 執行 |
 | --- | --- |
 | 擴充功能原始碼 | `bunx nx run extension:lint` |
-| 排序邏輯 | `bun run test:unit` |
+| 服務、hooks 和其他邏輯 | `bun run test:unit` |
 | 彈出式視窗、設定、書籤管理員、工具、匯入和匯出 | `bun run test:e2e` |
 | Edge 行為 | `bunx nx run extension:test:e2e:edge` |
 | Firefox 行為 | `bunx nx run extension:test:e2e:firefox` (冒煙測試套件) |
+| 本機 AI 代理或 `packages/mcp-bridge` | `bun test packages/mcp-bridge` 和 `bunx nx run extension:test:e2e:bridge` (Linux 和 macOS) |
+| 大型書籤庫上的速度 | `bunx nx run extension:test:perf`，在變更前後各執行一次 |
+| 針對實際供應商的 AI 功能 | `bunx nx run extension:test:live`，需設定 `BS_LIVE_AI_*` 變數；未設定時會略過 |
 | 資訊清單、供應商或瀏覽器整合 | `bunx nx run extension:build:chrome`，以及每個受影響的瀏覽器目標 |
 | 網站 | `bunx nx run website:build` |
 | 說明文件 | `bunx nx run docs:build`，然後執行 `bunx nx run docs:verify` |
 | 跨應用程式的變更 | `bun run lint` 和 `bun run build:all` |
 
-CI 會在每個 Pull Request 上將 lint、三個擴充功能建置、單元測試和 Chromium 端對端測試、Edge 測試套件，以及 Firefox 冒煙測試套件作為必要檢查項目執行。建置成功不代表有測試涵蓋：請說明你執行了哪些測試。
+CI 會在每個 Pull Request 上將 lint、三個擴充功能建置、單元測試和 Chromium 端對端測試、Edge 測試套件，以及 Firefox 冒煙測試套件作為必要檢查項目執行，並在擴充功能或橋接程式有所變更時執行橋接測試。效能測試套件每日執行，即時 AI 測試套件則只在需要時執行。建置成功不代表有測試涵蓋：請說明你執行了哪些測試。
 
 ## 編輯說明文件 [#work-on-the-docs]
 

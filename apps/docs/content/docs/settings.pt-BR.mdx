@@ -11,7 +11,7 @@ Abra a página de configurações pela opção **Opções** da extensão, por ex
 - Cada aba é dividida em seções com título. O interruptor de cada ferramenta fica ao lado do título; enquanto está desativado, o restante das configurações fica recolhido. Configurações técnicas, como tempos limite e tamanho de nomes de arquivo, ficam em **Configurações avançadas**, que permanece fechado até você abrir ou uma pesquisa encontrar algo nele.
 - Uma configuração alterada é marcada como **Modificado**, com um botão para redefini-la para o padrão. **Redefinir tudo** redefine todas as configurações.
 - **Exportar** salva um arquivo de backup com as configurações que você alterou, os prompts personalizados, os serviços de IA (nome, provedor, modelo, **URL base** e campos específicos do provedor; nunca as chaves de API nem os **Cabeçalhos extras (JSON)**), as pesquisas salvas e as colunas e a ordenação da tabela do gerenciador. **Importar** restaura um backup, substituindo cada parte que o arquivo contém, ou mescla um arquivo simples de configurações com as suas configurações; depois de restaurar um backup, informe de novo as chaves de API e os cabeçalhos extras em [IA](#ai) para os serviços marcados com **Requer configuração**. Nenhum dos dois mexe nos seus favoritos.
-- As configurações ficam no armazenamento sincronizado do navegador, então acompanham você em outros dispositivos quando a sincronização do navegador está ativada. Algumas configurações próprias de cada dispositivo ficam nele: a pasta escolhida para o salvamento rápido, o limite de armazenamento de ícones, o registro de atividade de IA e a pesquisa na web de Perguntar à IA. Os serviços de IA, com suas chaves de API, o **URL base** e os **Cabeçalhos extras (JSON)**, também ficam neste dispositivo. Consulte [Privacidade](/privacy).
+- As configurações que você altera ficam no armazenamento sincronizado do navegador, então acompanham você em outros dispositivos quando a sincronização do navegador está ativada. Algumas configurações próprias de cada dispositivo ficam nele: a pasta escolhida para o salvamento rápido, o **Limite de armazenamento de ícones**, o registro de atividade de IA e a pesquisa na web de Perguntar à IA. Os serviços de IA, com suas chaves de API, o **URL base** e os **Cabeçalhos extras (JSON)**, também ficam neste dispositivo. Consulte [Privacidade](/privacy).
 
 ## Salvar e pesquisar [#search]
 
@@ -43,6 +43,15 @@ Consulte [Pesquisa e pesquisas salvas](/guides/search).
 | **Nome padrão da pasta** | Nova pasta | O nome inicial de uma nova pasta |
 
 Consulte [Salvar e organizar](/guides/save-and-organize).
+
+### Atalhos de salvamento rápido [#quick-save]
+
+| Configuração | Padrão | O que faz |
+| --- | --- | --- |
+| **Pasta de salvamento rápido** | Melhor correspondência | Onde `Alt+Shift+S` salva a página atual: na pasta que melhor corresponde a ela, na última pasta usada ou em uma pasta escolhida. O atalho de IA sempre usa a sugestão da IA |
+| **Pasta de destino** | Não escolhida | A pasta usada com **Pasta escolhida**. Se ela for excluída, o salvamento rápido usa a última pasta usada |
+
+Abaixo delas, **Atalhos de teclado** mostra as teclas de cada atalho no seu navegador, com **Alterar atalhos**. No Firefox, você também pode digitar novas teclas ali mesmo e redefini-las para o padrão. No Chrome e no Edge, a seção também explica como atribuir `Ctrl+D` ao salvamento rápido. Consulte [Salvar com um atalho de teclado](/guides/save-and-organize#quick-save) e [Usar Ctrl+D para o salvamento rápido](/guides/save-and-organize#ctrl-d).
 
 ### Menu de contexto [#context-menu]
 
@@ -100,7 +109,7 @@ Consulte [Salvar e organizar](/guides/save-and-organize).
 
 ### Menus do gerenciador de favoritos [#manager-menus]
 
-Escolha quais comandos os menus de clique direito e ⋯ do gerenciador mostram e mova-os para cima ou para baixo dentro de cada grupo. **Restaurar padrões** traz de volta o menu completo. Pelo menos um comando sempre fica.
+Escolha quais comandos os menus de clique direito e ⋯ do gerenciador mostram e mova-os para cima ou para baixo dentro de cada grupo. **Restaurar padrões** traz de volta o menu completo. **Ver detalhes** ou **Copiar ID do favorito** sempre fica, para que o menu tenha um comando para qualquer favorito ou pasta; quando nenhum dos comandos que você manteve se aplica, o menu mostra **Nenhuma ação disponível**.
 
 ## IA [#ai]
 
@@ -145,7 +154,7 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 | **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** 200; **Profundidade máxima** 8; **Tamanho do trecho** 240 |
 | **Tags automáticas** | **Mínimo de tags** 2; **Máximo de tags** 5; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado |
 | **Gerador de resumos** | **Tamanho do resumo** 160; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
-| **Reorganização de pastas com IA** | **Confiança mínima** 0,55 (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
+| **Reorganização de pastas com IA** | **Confiança mínima** 55% (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
 
 Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 

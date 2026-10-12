@@ -15,11 +15,11 @@ Nein. Suchen, Speichern, Ordnen, Bereinigen sowie Import und Export funktioniere
 
 ### Sendet die Erweiterung meine Lesezeichen irgendwohin? [#does-it-send-my-bookmarks-anywhere]
 
-Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen Ihren Browser nur, wenn Sie ein KI-Tool verwenden, das Sie aktiviert haben (sie gehen an Ihren Anbieter), oder eine Linkprüfung oder einen Titelabruf ausführen (die gespeicherten Websites werden angefragt). Siehe [Datenschutz](/privacy).
+Nicht an den Entwickler: Es gibt keinen Bookmark-Scout-Server. Daten verlassen Ihren Browser nur, wenn Sie ein KI-Tool verwenden, das Sie aktiviert haben (sie gehen an Ihren Anbieter), eine Linkprüfung oder einen Titelabruf ausführen (die gespeicherten Websites werden angefragt) oder lokale KI-Agenten Ihre Lesezeichen nachschlagen lassen (sie erhalten, was sie anfragen, über ein Programm auf Ihrem Computer). Siehe [Datenschutz](/privacy).
 
 ### Ändert die Erweiterung meine Lesezeichen ohne Nachfrage? [#will-it-change-my-bookmarks-without-asking]
 
-Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. Beim Löschen wird standardmäßig um Bestätigung gebeten, und Löschvorgänge und Importe lassen sich 10 Sekunden lang rückgängig machen.
+Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Prüfung an, bevor etwas geschrieben wird. **KI fragen** und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Beim Löschen wird standardmäßig um Bestätigung gebeten, Löschvorgänge, Bereinigungen und Importe lassen sich über ihre Benachrichtigung rückgängig machen, und der Lesezeichen-Manager macht seine Änderungen mit `Ctrl+Z` rückgängig.
 
 ### In welchen Browser-Stores ist die Erweiterung verfügbar? [#which-browser-stores-list-it]
 
@@ -75,7 +75,15 @@ Sie werden nur auf dem Gerät gespeichert, auf dem Sie sie angelegt haben, und n
 
 ### Ich habe versehentlich etwas gelöscht [#i-deleted-something-by-mistake]
 
-Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt; ein wiederhergestelltes Element erhält ein neues Hinzufügedatum. Nachdem die Benachrichtigung geschlossen wurde, lässt sich das Löschen in Bookmark Scout nicht mehr rückgängig machen.
+Klicken Sie innerhalb von 10 Sekunden in der Benachrichtigung auf **Rückgängig**. Damit werden das Element, alles darin und seine gespeicherten Tags und Zusammenfassungen wiederhergestellt; ein wiederhergestelltes Element erhält ein neues Hinzufügedatum. Im Lesezeichen-Manager macht `Ctrl+Z` (`Cmd+Z` auf einem Mac) außerdem ein Löschen rückgängig, das dort, durch „KI fragen“ oder durch einen lokalen KI-Agenten erfolgt ist, bis der Browser geschlossen wird. Siehe [Im Manager auswählen, rückgängig machen und wiederholen](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### Das Tastenkürzel zum Schnellspeichern bewirkt nichts [#the-quick-save-shortcut-does-nothing]
+
+Wenn eine andere Erweiterung `Alt+Shift+S` oder `Alt+Shift+D` bereits verwendet, lässt der Browser das Tastenkürzel von Bookmark Scout ohne Tasten, und das Pop-up zeigt **Kein Kürzel zum Schnellspeichern festgelegt**. Klicken Sie auf **Einrichten**, oder öffnen Sie **Tastenkürzel** unter **Speichern & Suche** in den [Einstellungen](/settings#quick-save), und wählen Sie andere Tasten. Auf Seiten, auf denen Erweiterungen nichts anzeigen können, etwa den eigenen Seiten des Browsers, zeigt das Symbol in der Symbolleiste das Ergebnis statt einer Benachrichtigung. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save).
+
+### Meine Einstellungen sind nach einem Update verschwunden [#my-settings-are-gone-after-an-update]
+
+Ein Update hat die gespeicherten Daten von Bookmark Scout in ein neues Format überführt und die alten Daten entfernt, statt sie umzuwandeln. Danach sind die Einstellungen wieder auf ihren Standardwerten, KI-Dienste und ihre API-Schlüssel müssen erneut hinzugefügt werden, und eigene Prompts, gespeicherte Suchen, letzte Suchen und Ordner, Tags und Zusammenfassungen sowie gespeicherte Website-Symbole sind verloren. Ihre Lesezeichen selbst bleiben unberührt. Wenn Sie Ihre Einstellungen vor dem Update mit **Exportieren** unten in den [Einstellungen](/settings) gesichert haben, verwenden Sie für diese Datei **Importieren**.
 
 ## Hilfe erhalten [#get-help]
 

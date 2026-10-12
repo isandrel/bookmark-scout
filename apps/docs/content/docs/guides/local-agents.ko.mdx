@@ -1,0 +1,76 @@
+---
+title: 로컬 AI 에이전트와 함께 사용
+description: Claude Code, Codex, Cursor 같은 이 컴퓨터의 AI 에이전트가 Bookmark Scout를 통해 북마크를 검색하고 정리하게 하며, 모든 변경은 브라우저에서 승인합니다.
+---
+
+이 컴퓨터에서 실행되는 AI 에이전트는 Bookmark Scout를 통해 북마크를 다룰 수 있습니다. 북마크를 찾고, 폴더 목록을 확인하고, 링크를 확인하고, 페이지에 맞는 폴더를 제안하며, 허용하면 페이지를 저장하고 북마크를 옮기거나 이름을 바꾸거나 삭제할 수도 있습니다. 에이전트는 **bookmark-scout-mcp**라는 작은 프로그램과 통신하고, 이 프로그램은 브라우저의 네이티브 메시징으로 확장 프로그램에 연결됩니다. 네트워크에서 요청을 기다리는 것은 없으며, Bookmark Scout에는 서버가 없습니다.
+
+<Callout type="warn" title="에이전트가 볼 수 있는 정보">
+접근이 켜져 있는 동안 에이전트는 북마크 제목, URL, 폴더 이름, 저장된 태그와 요약, 현재 페이지의 제목과 URL을 읽을 수 있으며, **페이지 내용 읽기**가 켜져 있으면 페이지 텍스트도 읽을 수 있습니다. 에이전트는 읽은 내용을 자체 AI 제공업체에 보낼 수 있습니다. 제목과 URL에 있는 민감한 값은 기본적으로 가려집니다. [개인정보 보호](/privacy)를 참고하세요.
+</Callout>
+
+## 설정하기 [#set-it-up]
+
+<Steps>
+<Step>
+**bookmark-scout-mcp**를 준비합니다. 릴리스에 포함되면 Linux, macOS, Windows용 바이너리가 <RepoLink path="/releases">GitHub 릴리스</RepoLink>에 첨부됩니다. 사용하는 시스템용 바이너리를 `bookmark-scout-mcp`라는 이름으로 `PATH`에 두세요. 그 전까지는 [Bun](https://bun.sh)을 설치한 상태에서 저장소를 클론해 빌드합니다. `bun install`을 실행한 다음 `bun run --cwd packages/mcp-bridge compile`을 실행하면 `packages/mcp-bridge/dist/bookmark-scout-mcp`가 만들어집니다.
+</Step>
+<Step>
+브라우저에 등록합니다.
+
+```sh
+bookmark-scout-mcp install
+```
+
+찾은 브라우저(Chrome, Edge, Chromium, Brave, Vivaldi, Firefox)마다 네이티브 메시징 매니페스트를 작성하고(Windows에서는 사용자 계정 아래에 레지스트리 값도 작성), 에이전트에 추가하는 방법을 출력합니다. 브라우저를 고르려면 `--browser chrome`을, 작성할 내용을 미리 보려면 `--dry-run`을 붙이세요.
+</Step>
+<Step>
+Bookmark Scout 설정에서 **AI** > **로컬 AI 에이전트**로 이동해 **로컬 AI 에이전트 허용**을 켭니다. 브라우저가 확장 프로그램이 그 프로그램과 통신하도록 허용할지 묻습니다. 그러면 스위치 아래 패널에 **준비되었습니다**가 표시됩니다. AI 기능은 켜지 않아도 됩니다.
+</Step>
+<Step>
+에이전트에 브리지를 추가하고(아래 참고) 북마크에 관해 물어보세요.
+</Step>
+</Steps>
+
+## 에이전트에 추가하기 [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**: `~/.codex/config.toml`에 추가합니다.
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**: [Cursor에 추가](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)하거나, `~/.cursor/mcp.json`에 다음을 넣습니다.
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install`은 프로그램의 전체 경로를 넣은 이 설정을 출력합니다. 브라우저나 프로필이 둘 이상 연결되어 있으면 에이전트는 마지막으로 연결된 것을 사용합니다. 직접 고르려면 `serve` 뒤에 `--browser edge`나 `--profile <id>`를 붙이세요.
+
+## 에이전트가 북마크를 변경하도록 허용 [#let-agents-change-bookmarks]
+
+**변경 허용**도 켜기 전까지 에이전트는 조회만 합니다. 켜면 에이전트가 페이지를 저장하고, 이동, 이름 변경, 삭제, 새 폴더를 계획으로 제안하고, 자신이 한 변경을 실행 취소할 수 있습니다. <strong>모든 변경은 승인을 기다립니다.</strong> Bookmark Scout 창이 열리고 실제로 적용될 변경을 에이전트가 밝힌 이름과 함께 보여 줍니다. **승인**을 클릭하기 전에는 아무 일도 일어나지 않으며, **거부**를 누르거나, 창을 닫거나, 5분 동안 응답하지 않으면 아무것도 바뀌지 않습니다. 승인한 변경은 북마크 관리자에서 `Ctrl+Z`(Mac에서는 `Cmd+Z`)로 실행 취소할 수 있습니다.
+
+**로컬 에이전트가 할 수 있는 일**에서 에이전트가 사용하지 않기를 원하는 조회나 변경을 끄세요. **개인 값 숨기기**(기본값: 켜짐)는 에이전트가 받는 내용에 포함된 민감한 URL 매개변수, 토큰, 이메일 주소를 개인정보 스캐너의 목록에 따라 바꿉니다.
+
+**AI 활동** 아래의 **요청 기록**이 켜져 있으면 에이전트가 하는 모든 호출이 에이전트 이름과 함께 그곳에 나열됩니다.
+
+## 문제 해결 [#troubleshooting]
+
+- `bookmark-scout-mcp doctor`는 등록된 위치, 연결된 브라우저, 에이전트용 설정 예시를 보여 줍니다.
+- 패널에 프로그램이 설치되지 않았다고 표시되면: `bookmark-scout-mcp install`을 다시 실행한 뒤 **다시 시도**를 누르세요. 확장 프로그램의 개발 빌드는 별도의 ID를 가지므로 `--extension-id <id>`로 추가하세요.
+- 에이전트가 연결된 브라우저가 없다고 하면: 스위치를 켠 상태로 브라우저를 열어 두세요. 브리지의 `bridgeStatus` 도구가 현재 보이는 상태를 알려 줍니다.
+- 브라우저가 무엇을 시작했는지 보려면 브라우저를 시작하기 전에 `BOOKMARK_SCOUT_MCP_LOG`를 파일 경로로 설정하세요. 프로그램이 그 파일에 메시지를 기록합니다.
+
+## 제거하기 [#remove-it]
+
+**로컬 AI 에이전트 허용**을 끄고, 에이전트에서 서버를 제거한 뒤(`claude mcp remove bookmark-scout`), `bookmark-scout-mcp uninstall`을 실행해 프로그램이 작성한 매니페스트와 레지스트리 값을 삭제하세요.

@@ -1,0 +1,76 @@
+---
+title: ローカル AI エージェントと使う
+description: Claude Code、Codex、Cursor など、コンピューター上の AI エージェントに Bookmark Scout を通じてブックマークを検索・整理させます。変更はすべてブラウザで承認します。
+---
+
+コンピューター上で動作する AI エージェントは、Bookmark Scout を通じてブックマークを扱えます。ブックマークの検索、フォルダの一覧表示、リンクの確認、ページの保存先フォルダの提案ができ、許可すれば、ページの保存や、ブックマークの移動、名前の変更、削除もできます。エージェントは小さなプログラム **bookmark-scout-mcp** と通信し、このプログラムがブラウザのネイティブ メッセージングを通じて拡張機能に接続します。ネットワークで待ち受けるものはなく、Bookmark Scout にはサーバーもありません。
+
+<Callout type="warn" title="エージェントが見られるもの">
+アクセスがオンの間、エージェントはブックマークのタイトル、URL、フォルダ名、保存したタグと要約、現在のページのタイトルと URL を読み取れます。**ページの内容を読む** がオンの場合は、ページのテキストも読み取れます。エージェントは、読み取った内容を自身の AI プロバイダーに送信することがあります。タイトルや URL に含まれる機密性の高い値は、初期設定で隠されます。[プライバシー](/privacy)をご覧ください。
+</Callout>
+
+## 設定する [#set-it-up]
+
+<Steps>
+<Step>
+**bookmark-scout-mcp** を入手します。Linux、macOS、Windows 用のバイナリは、リリースに含まれるようになると <RepoLink path="/releases">GitHub のリリース</RepoLink> に添付されます。使っているシステム用のものを `bookmark-scout-mcp` という名前で `PATH` に置いてください。それまでは、[Bun](https://bun.sh) をインストールした上で、リポジトリのクローンからビルドします。`bun install` を実行してから `bun run --cwd packages/mcp-bridge compile` を実行すると、`packages/mcp-bridge/dist/bookmark-scout-mcp` が作成されます。
+</Step>
+<Step>
+ブラウザに登録します。
+
+```sh
+bookmark-scout-mcp install
+```
+
+見つかったブラウザ（Chrome、Edge、Chromium、Brave、Vivaldi、Firefox）ごとにネイティブ メッセージングのマニフェストを書き込み（Windows ではユーザーのレジストリ値も書き込みます）、エージェントに追加する方法を表示します。ブラウザを選ぶには `--browser chrome` を、書き込む内容を確認するだけなら `--dry-run` を付けます。
+</Step>
+<Step>
+Bookmark Scout の設定で **AI** > **ローカル AI エージェント** を開き、**ローカル AI エージェントを許可** をオンにします。ブラウザから、拡張機能がこのプログラムと通信することを許可するよう求められます。その後、スイッチの下のパネルに **準備完了** と表示されます。**AI機能** をオンにする必要はありません。
+</Step>
+<Step>
+エージェントにブリッジを追加し（下記参照）、ブックマークについて尋ねてみます。
+</Step>
+</Steps>
+
+## エージェントに追加する [#add-it-to-your-agent]
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex** は `~/.codex/config.toml` に追加します。
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor** は [Cursor に追加](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==)するか、次の内容を `~/.cursor/mcp.json` に記述します。
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` を実行すると、これらがプログラムのフルパス付きで表示されます。複数のブラウザやプロファイルが接続されている場合、エージェントは最後に接続されたものを使います。選ぶには、`serve` の後に `--browser edge` または `--profile <id>` を付けます。
+
+## エージェントにブックマークを変更させる [#let-agents-change-bookmarks]
+
+**変更を許可** もオンにしない限り、エージェントは調べることしかできません。オンにすると、ページを保存したり、移動、名前の変更、削除、新しいフォルダを計画として提案したり、自分の変更を元に戻したりできます。**変更はすべて承認待ちになります**。Bookmark Scout のウィンドウが開き、実際に行われる内容が、エージェントが付けた名前とともに表示されます。**承認** をクリックするまで何も起こりません。**拒否** をクリックするか、ウィンドウを閉じるか、5 分間応答しなかった場合は何も変更されません。承認した変更は、ブックマークマネージャーで `Ctrl+Z`（Mac では `Cmd+Z`）を押して元に戻せます。
+
+**ローカルエージェントにできること** で、エージェントに使わせたくない検索や変更をオフにします。**非公開の値を隠す**（初期設定でオン）は、エージェントが受け取る内容に含まれる機密性の高い URL パラメーター、トークン、メールアドレスを、プライバシースキャナーのリストに従って置き換えます。
+
+**AI アクティビティ** で **リクエストを記録** をオンにすると、エージェントのすべての呼び出しがエージェント名とともにそこに一覧表示されます。
+
+## トラブルシューティング [#troubleshooting]
+
+- `bookmark-scout-mcp doctor` を実行すると、登録されている場所、接続されているブラウザ、エージェント用の設定例が表示されます。
+- パネルにインストールされていないと表示される場合: `bookmark-scout-mcp install` をもう一度実行してから、**再試行** をクリックします。拡張機能の開発版には独自の ID があるため、`--extension-id <id>` で追加します。
+- エージェントがブラウザが接続されていないと言う場合: スイッチをオンにしたままブラウザを開いておきます。ブリッジの `bridgeStatus` ツールで、ブリッジから見えている状態がわかります。
+- ブラウザが起動したものを確認するには、ブラウザを起動する前に `BOOKMARK_SCOUT_MCP_LOG` にファイルパスを設定します。プログラムはそのファイルにメッセージを書き込みます。
+
+## 削除する [#remove-it]
+
+**ローカル AI エージェントを許可** をオフにし、エージェントからサーバーを削除して（`claude mcp remove bookmark-scout`）、`bookmark-scout-mcp uninstall` を実行すると、書き込まれたマニフェストとレジストリ値が削除されます。

@@ -3,7 +3,7 @@ title: Berechtigungen
 description: Jede Browserberechtigung, die Bookmark Scout anfordert, wozu sie benötigt wird, und der optionale Zugriff auf Websites, der erst angefragt wird, wenn Sie ein Tool ausführen.
 ---
 
-Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout hat keine Content-Skripte und liest daher nie die Seiten, die Sie besuchen. Bei der Installation fragt die Erweiterung nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
+Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Bookmark Scout deklariert keine Content-Skripte und liest nie die Seiten, die Sie besuchen; nach einem Tastenkürzel zum Schnellspeichern zeigt die Erweiterung in diesem Tab nur ihre eigene Benachrichtigung an. Bei der Installation fragt sie nur nach dem, ohne das sie nicht funktioniert; alles andere wird erst angefragt, wenn Sie die Funktion aktivieren oder ausführen, die es benötigt.
 
 ## Bei der Installation gewährt [#granted-at-install]
 
@@ -11,8 +11,10 @@ Dies sind die Berechtigungen der für jeden Browser erstellten Erweiterung. Book
 | --- | --- | --- |
 | `bookmarks` | Alle | Ihre Lesezeichen anzeigen und durchsuchen sowie sie erstellen, bearbeiten, verschieben und löschen, wenn Sie im Pop-up, in der Seitenleiste, im Manager oder im Rechtsklickmenü eine Aktion ausführen |
 | `storage` | Alle | Ihre Einstellungen speichern sowie, nur auf diesem Gerät, Ihre KI-Anbietereinstellungen, Tags, Zusammenfassungen, gespeicherten Suchen, letzten Ordner, letzten Suchen und mit **Website-Symbole aktualisieren** gespeicherten Website-Symbole |
-| `activeTab` | Alle | Wenn Sie auf die Schaltfläche in der Symbolleiste oder auf das Rechtsklickmenü klicken, Titel und URL dieses Tabs lesen, damit Sie die aktuelle Seite speichern können. Keine anderen Tabs, kein Verlauf |
+| `activeTab` | Alle | Wenn Sie auf die Schaltfläche in der Symbolleiste oder auf das Rechtsklickmenü klicken oder ein Tastenkürzel zum Schnellspeichern drücken, Titel und URL dieses Tabs lesen, damit Sie die aktuelle Seite speichern können. Keine anderen Tabs, kein Verlauf |
+| `scripting` | Alle | Nach einem Tastenkürzel zum Schnellspeichern die Benachrichtigung nur in diesem Tab anzeigen. Sie liest nichts aus der Seite |
 | `sidePanel` | Chrome, Edge | Die Seitenleistenansicht bereitstellen. Firefox deklariert dieselbe Seite stattdessen als Sidebar |
+| `offscreen` | Chrome, Edge | Die Anfrage des KI-Schnellspeicherns in einer verborgenen Erweiterungsseite ausführen, die der Browser schließt, wenn sie beendet ist. In Firefox übernimmt das die Hintergrundseite selbst |
 | `contextMenus` | Firefox | Firefox erlaubt Erweiterungen nicht, diese Berechtigung später anzufordern. Das Menü erscheint trotzdem erst, nachdem Sie **Kontextmenü** aktiviert haben |
 
 In Chrome und Edge ersetzt die Erweiterung außerdem die Lesezeichenseite des Browsers durch den Bookmark-Scout-Manager. Das ist eine Seitenersetzung, keine Berechtigung. Firefox erlaubt dies nicht, daher öffnet sich der Manager dort über **Lesezeichen-Manager öffnen** im Pop-up; siehe [Browserunterstützung](/browser-support).
@@ -41,7 +43,7 @@ Um den Zugriff zu widerrufen, öffnen Sie die Seite der Erweiterung im Browser (
 
 ## Was nicht angefordert wird [#what-is-not-requested]
 
-- Kein Zugriff auf Seiteninhalte und keine Content-Skripte
+- Kein Zugriff auf Seiteninhalte und keine deklarierten Content-Skripte
 - Keine Berechtigungen für Verlauf, Downloads oder Cookies
 - Kein Host-Zugriff bei der Installation
 
