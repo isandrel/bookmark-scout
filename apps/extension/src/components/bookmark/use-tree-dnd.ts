@@ -24,6 +24,13 @@ type RowRef = (element: HTMLElement | null) => (() => void) | undefined;
 type TreeDndOptions = {
   /** Whether a row may be dragged and reordered; permanent and managed folders may not. */
   canMove?: (node: BookmarkTreeNode) => boolean;
+  /**
+   * Whether the tree shows the browser's order, so drops beside a row reorder. When false, drops
+   * only move items into other folders (`acceptsTreeDrop`).
+   */
+  canReorder?: boolean;
+  /** Called when a drag starts (with the row's id) and when it ends or is cancelled (null). */
+  onDraggingChange?: (id: string | null) => void;
 };
 
 export type TreeDnd = {
@@ -77,21 +84,29 @@ export function useTreeDnd(
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
   // Registrations outlive renders, so they read the latest callbacks through a ref.
-  const latest = useRef({ onDrop, canMove: options.canMove ?? canAlwaysMove });
+  const current = () => ({
+    onDrop,
+    canMove: options.canMove ?? canAlwaysMove,
+    canReorder: options.canReorder ?? true,
+    onDraggingChange: options.onDraggingChange,
+  });
+  const latest = useRef(current());
   useLayoutEffect(() => {
-    latest.current = { onDrop, canMove: options.canMove ?? canAlwaysMove };
+    latest.current = current();
   });
 
-  useEffect(
-    () =>
-      monitorForElements({
-        canMonitor: ({ source }) => source.data.instanceId === instanceId,
-        onDragStart: ({ source }) => setDraggingId(dragDataOf(source.data).node.id),
-        // Fires for a drop anywhere and for a cancelled drag.
-        onDrop: () => setDraggingId(null),
-      }),
-    [instanceId],
-  );
+  useEffect(() => {
+    const setDragging = (id: string | null) => {
+      setDraggingId(id);
+      latest.current.onDraggingChange?.(id);
+    };
+    return monitorForElements({
+      canMonitor: ({ source }) => source.data.instanceId === instanceId,
+      onDragStart: ({ source }) => setDragging(dragDataOf(source.data).node.id),
+      // Fires for a drop anywhere and for a cancelled drag.
+      onDrop: () => setDragging(null),
+    });
+  }, [instanceId]);
 
   // One ref per node object: a re-render keeps the registration, and a changed node (new index
   // or children after a move) gets a fresh one while React runs the old one's cleanup.
@@ -118,13 +133,24 @@ export function useTreeDnd(
             getData: () => data,
             canDrop: ({ source }) => {
               const sourceData = dragDataOf(source.data);
-              return sourceData.instanceId === instanceId && sourceData.node.id !== node.id;
+              return (
+                sourceData.instanceId === instanceId &&
+                acceptsTreeDrop(
+                  { kind: sourceData.type, node: sourceData.node },
+                  target(),
+                  latest.current.canReorder,
+                )
+              );
             },
             onDrag: ({ location }) =>
               showDropIndicator(
                 element,
                 kind,
-                getTreeDropZone(target(), pointerOver(element, location.current.input.clientY)),
+                getTreeDropZone(
+                  target(),
+                  pointerOver(element, location.current.input.clientY),
+                  latest.current.canReorder,
+                ),
               ),
             onDragLeave: () => clearDropIndicator(element, kind),
             onDrop: ({ source, location }) => {
@@ -135,6 +161,7 @@ export function useTreeDnd(
                 { kind: sourceData.type, node: sourceData.node },
                 target(),
                 pointerOver(element, location.current.input.clientY),
+                latest.current.canReorder,
               );
               if (operation) latest.current.onDrop(operation);
             },

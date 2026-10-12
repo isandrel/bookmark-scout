@@ -6038,5 +6038,19 @@
     "settings_askAiWrites": {
         "message": "ブックマークを変更する",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "このページへのフォルダの提案はありません",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "日付または名前で並べ替えているため、ここでは別のフォルダへの移動のみできます。並び順を変えるには「$sort$」の並べ替えを選んでください。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

@@ -19,9 +19,18 @@ import {
   X,
 } from 'lucide-react';
 import { type RefObject, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
+import { z } from 'zod';
+
+const searchRowConfig = readConfig(
+  'ui/popup-search',
+  z.strictObject({ min_text_width_px: z.number().int().min(16).max(400) }),
+);
 
 /** Space between the typed text and the buttons inside the search box, in CSS pixels. */
 const CONTROLS_GAP_PX = 4;
+
+/** Marks the button whose width stands in for the Expand all button before a search is typed. */
+const ROW_ACTION_SAMPLE_ATTRIBUTE = 'data-row-action-sample';
 
 /** Runs `measure` now and whenever one of `elements` changes size. */
 function observeSizes(elements: readonly (Element | null | undefined)[], measure: () => void) {
@@ -86,6 +95,61 @@ function useSearchBoxFit(
   return { reservedRight, placeholder: { full, short, none: '' }[fits] };
 }
 
+const px = (value: string) => Number.parseFloat(value) || 0;
+
+/**
+ * Whether the row's buttons go on a second line below the search box: when, beside them, the box
+ * would leave less than `min_text_width_px` for typing. It counts the buttons a search adds
+ * (Expand all beside the box, Clear inside it) even before one is typed, and leaves out the
+ * keyboard hint, which hides itself in a narrow box, so nothing moves while typing.
+ */
+function useSearchRowStacked(
+  rowRef: RefObject<HTMLDivElement | null>,
+  boxRef: RefObject<HTMLDivElement | null>,
+  optionsRef: RefObject<HTMLDivElement | null>,
+  actionsRef: RefObject<HTMLDivElement | null>,
+  inputRef: RefObject<HTMLInputElement | null> | undefined,
+  hasQuery: boolean,
+): boolean {
+  const [stacked, setStacked] = useState(false);
+  useLayoutEffect(
+    () =>
+      observeSizes([rowRef.current, optionsRef.current, actionsRef.current], () => {
+        const row = rowRef.current;
+        const box = boxRef.current;
+        const options = optionsRef.current;
+        const actions = actionsRef.current;
+        const input = inputRef?.current;
+        if (!row || !box || !options || !actions || !input) return;
+        const rowGap = px(getComputedStyle(row).columnGap);
+        const sample = actions.querySelector<HTMLElement>(`[${ROW_ACTION_SAMPLE_ATTRIBUTE}]`);
+        const expandAll = hasQuery
+          ? 0
+          : (sample?.offsetWidth ?? 0) + px(getComputedStyle(actions).columnGap);
+        const optionButton = options.firstElementChild as HTMLElement | null;
+        const clear = hasQuery
+          ? 0
+          : (optionButton?.offsetWidth ?? 0) + px(getComputedStyle(options).columnGap);
+        const inputStyle = getComputedStyle(input);
+        // Everything in the box but the text: the search icon's padding, the border, the
+        // buttons, their gap to the text, and their inset from the box's edge.
+        const optionsRight =
+          box.getBoundingClientRect().right - options.getBoundingClientRect().right;
+        const boxChrome =
+          px(inputStyle.paddingLeft) +
+          px(inputStyle.borderLeftWidth) +
+          options.offsetWidth +
+          clear +
+          CONTROLS_GAP_PX +
+          optionsRight;
+        const room = row.clientWidth - rowGap - actions.offsetWidth - expandAll - boxChrome;
+        setStacked(room < searchRowConfig.min_text_width_px);
+      }),
+    [rowRef, boxRef, optionsRef, actionsRef, inputRef, hasQuery],
+  );
+  return stacked;
+}
+
 interface BookmarkSearchProps {
   query: string;
   onQueryChange: (query: string) => void;
@@ -127,8 +191,19 @@ export function BookmarkSearch({
   onClearHistory,
 }: BookmarkSearchProps) {
   const { resolvedTheme, setTheme } = useTheme();
+  const rowRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const stacked = useSearchRowStacked(
+    rowRef,
+    containerRef,
+    optionsRef,
+    actionsRef,
+    inputRef,
+    Boolean(query),
+  );
   const historyRef = useRef<HTMLDivElement>(null);
   const historyListId = useId();
   const { reservedRight, placeholder } = useSearchBoxFit(containerRef, controlsRef, inputRef, {
@@ -214,9 +289,17 @@ export function BookmarkSearch({
 
   return (
     <div className="p-2 border-b shrink-0">
-      <div className="flex items-center gap-1">
+      <div
+        ref={rowRef}
+        data-slot="search-row"
+        data-stacked={stacked || undefined}
+        className={cn('flex items-center gap-1', stacked && 'flex-wrap')}
+      >
         {/* A size container is a stacking context, so it is lifted for the history list. */}
-        <div ref={containerRef} className="@container relative z-20 min-w-0 flex-1">
+        <div
+          ref={containerRef}
+          className={cn('@container relative z-20 min-w-0 flex-1', stacked && 'basis-full')}
+        >
           <Search
             aria-hidden="true"
             className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -325,120 +408,129 @@ export function BookmarkSearch({
                 {shortcutKeyCaps(SHORTCUT_BINDINGS.popup.focusSearch[0]).join('+')}
               </Kbd>
             )}
-            <button
-              type="button"
-              onMouseDown={keepInputFocus}
-              onClick={() => onSearchOptionsChange({ matchCase: !searchOptions.matchCase })}
-              className={optionButtonClass(searchOptions.matchCase)}
-              title={t('search_matchCase')}
-              aria-label={t('search_matchCase')}
-              aria-pressed={searchOptions.matchCase}
-            >
-              <CaseSensitive className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onMouseDown={keepInputFocus}
-              onClick={() => onSearchOptionsChange({ wholeWord: !searchOptions.wholeWord })}
-              className={optionButtonClass(searchOptions.wholeWord)}
-              title={t('search_matchWholeWord')}
-              aria-label={t('search_matchWholeWord')}
-              aria-pressed={searchOptions.wholeWord}
-            >
-              <WholeWord className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onMouseDown={keepInputFocus}
-              onClick={() => onSearchOptionsChange({ useRegex: !searchOptions.useRegex })}
-              className={optionButtonClass(searchOptions.useRegex)}
-              title={t('search_useRegex')}
-              aria-label={t('search_useRegex')}
-              aria-pressed={searchOptions.useRegex}
-            >
-              <Regex className="h-3.5 w-3.5" />
-            </button>
-            {query && (
+            <div ref={optionsRef} className="flex items-center gap-0.5">
               <button
                 type="button"
                 onMouseDown={keepInputFocus}
-                onClick={() => {
-                  onQueryChange('');
-                  inputRef?.current?.focus();
-                }}
-                className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                aria-label={t('search_clear')}
-                title={t('search_clear')}
+                onClick={() => onSearchOptionsChange({ matchCase: !searchOptions.matchCase })}
+                className={optionButtonClass(searchOptions.matchCase)}
+                title={t('search_matchCase')}
+                aria-label={t('search_matchCase')}
+                aria-pressed={searchOptions.matchCase}
               >
-                <X className="h-3.5 w-3.5" />
+                <CaseSensitive className="h-3.5 w-3.5" />
               </button>
-            )}
+              <button
+                type="button"
+                onMouseDown={keepInputFocus}
+                onClick={() => onSearchOptionsChange({ wholeWord: !searchOptions.wholeWord })}
+                className={optionButtonClass(searchOptions.wholeWord)}
+                title={t('search_matchWholeWord')}
+                aria-label={t('search_matchWholeWord')}
+                aria-pressed={searchOptions.wholeWord}
+              >
+                <WholeWord className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                onMouseDown={keepInputFocus}
+                onClick={() => onSearchOptionsChange({ useRegex: !searchOptions.useRegex })}
+                className={optionButtonClass(searchOptions.useRegex)}
+                title={t('search_useRegex')}
+                aria-label={t('search_useRegex')}
+                aria-pressed={searchOptions.useRegex}
+              >
+                <Regex className="h-3.5 w-3.5" />
+              </button>
+              {query && (
+                <button
+                  type="button"
+                  onMouseDown={keepInputFocus}
+                  onClick={() => {
+                    onQueryChange('');
+                    inputRef?.current?.focus();
+                  }}
+                  className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label={t('search_clear')}
+                  title={t('search_clear')}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
-        {query && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            onClick={onToggleExpandAll}
-            title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
-            aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
-          >
-            {allExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        )}
-        {onOpenManager && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            onClick={onOpenManager}
-            title={t('popup_openManager')}
-            aria-label={t('popup_openManager')}
-          >
-            <LibraryBig className="h-4 w-4" />
-          </Button>
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="shrink-0"
-          onClick={toggleTheme}
-          title={isDark ? t('action_lightMode') : t('action_darkMode')}
-          aria-label={isDark ? t('action_lightMode') : t('action_darkMode')}
+        <div
+          ref={actionsRef}
+          data-slot="search-row-actions"
+          className="ml-auto flex shrink-0 items-center gap-1"
         >
-          {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-        </Button>
-        {isAIEnabled && onAIRecommend && (
+          {query && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+              onClick={onToggleExpandAll}
+              title={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
+              aria-label={allExpanded ? t('popup_collapseAll') : t('popup_expandAll')}
+            >
+              {allExpanded ? (
+                <ChevronUp className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </Button>
+          )}
+          {onOpenManager && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+              onClick={onOpenManager}
+              title={t('popup_openManager')}
+              aria-label={t('popup_openManager')}
+            >
+              <LibraryBig className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"
             className="shrink-0"
-            onClick={onAIRecommend}
-            disabled={isAILoading}
-            title={t('ai_folderRecommendation')}
-            aria-label={t('ai_folderRecommendation')}
+            {...{ [ROW_ACTION_SAMPLE_ATTRIBUTE]: true }}
+            onClick={toggleTheme}
+            title={isDark ? t('action_lightMode') : t('action_darkMode')}
+            aria-label={isDark ? t('action_lightMode') : t('action_darkMode')}
           >
-            <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
+            {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
-        )}
-        {isAIEnabled && onAskAI && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            onClick={onAskAI}
-            title={t('askAI_open')}
-            aria-label={t('askAI_open')}
-          >
-            <MessageCircle className="h-4 w-4 text-ai" />
-          </Button>
-        )}
-        {isAIEnabled && onAIRecommend && <AIServiceSwitcher />}
+          {isAIEnabled && onAIRecommend && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+              onClick={onAIRecommend}
+              disabled={isAILoading}
+              title={t('ai_folderRecommendation')}
+              aria-label={t('ai_folderRecommendation')}
+            >
+              <Sparkles className={`h-4 w-4 text-ai ${isAILoading ? 'animate-pulse' : ''}`} />
+            </Button>
+          )}
+          {isAIEnabled && onAskAI && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="shrink-0"
+              onClick={onAskAI}
+              title={t('askAI_open')}
+              aria-label={t('askAI_open')}
+            >
+              <MessageCircle className="h-4 w-4 text-ai" />
+            </Button>
+          )}
+          {isAIEnabled && onAIRecommend && <AIServiceSwitcher />}
+        </div>
       </div>
       {isInvalidRegex && (
         <p role="alert" className="mt-1 px-1 text-xs text-destructive-text">

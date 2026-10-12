@@ -224,11 +224,12 @@ export const useBookmarkStore = create<BookmarkState>()(
               };
             }
 
-            const created = await createBookmark({
-              parentId: folderId,
-              title: tab.title || t('popup_untitled'),
-              url: tab.url || '',
-            });
+            // Recorded like every other change, so the manager's undo can take it back.
+            const title = tab.title || t('popup_untitled');
+            const { result: created } = await recordBookmarkWrites(
+              { action: 'add', title },
+              (writer) => writer.create({ parentId: folderId, title, url: tab.url || '' }),
+            );
             // Shown right away; its event arrives later and finds it already there.
             await treeSync.applyChanges([{ type: 'created', node: created }]);
 
@@ -251,7 +252,11 @@ export const useBookmarkStore = create<BookmarkState>()(
         runOnce(`folder\n${parentId}\n${name.trim()}`, async () => {
           try {
             const parentFolder = await getBookmark(parentId);
-            const created = await createBookmark({ parentId, title: name.trim() });
+            const title = name.trim();
+            const { result: created } = await recordBookmarkWrites(
+              { action: 'add', title },
+              (writer) => writer.create({ parentId, title }),
+            );
             await treeSync.applyChanges([{ type: 'created', node: created }]);
             return {
               success: true,
@@ -275,22 +280,33 @@ export const useBookmarkStore = create<BookmarkState>()(
 
         try {
           const before = await getBookmark(operation.sourceId);
-          // Always pass the parent: dropping beside an item in another folder moves it there.
-          const moved = await moveBookmark(operation.sourceId, {
-            parentId: operation.targetParentId,
-            index: operation.targetIndex,
-          });
-          await (moved.parentId !== undefined && moved.index !== undefined
+          // The drop names a place in the browser's order: before the item now at targetIndex,
+          // or the end of the folder past the last one.
+          const siblings = await getBookmarkChildren(operation.targetParentId);
+          const beforeId = siblings[operation.targetIndex]?.id ?? null;
+          // Dropping an item onto its own position (e.g. just below itself) changes nothing.
+          const staysInPlace =
+            before.parentId === operation.targetParentId &&
+            (beforeId === before.id ||
+              (siblings[(before.index ?? 0) + 1]?.id ?? null) === beforeId);
+          if (staysInPlace) return SILENT_RESULT;
+
+          // Recorded, so the manager's undo can move it back. Always pass the parent: dropping
+          // beside an item in another folder moves it there.
+          await recordBookmarkWrites({ action: 'move', title: before.title }, (writer) =>
+            writer.moveBefore(operation.sourceId, operation.targetParentId, beforeId),
+          );
+          const sourceItem = await getBookmark(operation.sourceId);
+          await (sourceItem.parentId !== undefined && sourceItem.index !== undefined
             ? treeSync.applyChanges([
-                { type: 'moved', id: moved.id, parentId: moved.parentId, index: moved.index },
+                {
+                  type: 'moved',
+                  id: sourceItem.id,
+                  parentId: sourceItem.parentId,
+                  index: sourceItem.index,
+                },
               ])
             : treeSync.reload());
-
-          const sourceItem = await getBookmark(operation.sourceId);
-          // Dropping an item onto its own position (e.g. just below itself) changes nothing.
-          if (sourceItem.parentId === before.parentId && sourceItem.index === before.index) {
-            return SILENT_RESULT;
-          }
           const targetFolder = operation.targetParentId
             ? await getBookmark(operation.targetParentId)
             : null;
