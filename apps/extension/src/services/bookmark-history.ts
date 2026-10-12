@@ -604,7 +604,8 @@ export async function undoRecordedBookmarkChange({
 export async function getUndoableBookmarkChange(
   entryId: string,
 ): Promise<BookmarkHistoryEntry | undefined> {
-  return (await bookmarkHistoryValue.get()).undo.find((entry) => entry.id === entryId);
+  const stored = (await bookmarkHistoryValue.get()).undo.find((entry) => entry.id === entryId);
+  return stored ? unpackBookmarkHistoryEntry(stored) : undefined;
 }
 
 /** Items inside a recorded folder, at every depth. */
