@@ -47,7 +47,7 @@ test('dropping beside a bookmark in another folder moves it there', async ({
   await expect(toastRegion(page)).toContainText('"Example tracked" moved to "E2E Recipes"');
 });
 
-test('reordering under date sort explains why the list does not change', async ({
+test('under date sort a drag says it only moves into folders, and a reorder drop does nothing', async ({
   extensionId,
   extensionWorker,
   page,
@@ -55,18 +55,46 @@ test('reordering under date sort explains why the list does not change', async (
   const seeded = await seedFolder(extensionWorker, 'E2E Reorder', [
     { title: 'Reorder First', url: 'https://e2e.invalid/first' },
     { title: 'Reorder Second', url: 'https://e2e.invalid/second' },
+    { title: 'Reorder Into', children: [] },
   ]);
 
   await openPopup(page, extensionId);
   await page.getByPlaceholder('Search bookmarks...').fill('Reorder');
+  const source = bookmarkRow(page, 'Reorder First').locator('a');
+  const sibling = bookmarkRow(page, 'Reorder Second').locator('a');
+  await expect(source).toBeVisible();
+  await expect(sibling).toBeVisible();
+  const from = await source.boundingBox();
+  const to = await sibling.boundingBox();
+  if (!from || !to) throw new Error('Rows are not visible');
+  await page.mouse.move(from.x + from.width / 2, from.y + from.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from.x + from.width / 2 + 6, from.y + from.height / 2 + 6, { steps: 3 });
+  await page.mouse.move(to.x + to.width / 2, to.y + to.height - 3, { steps: 12 });
+
+  // Mid-drag: the hint explains the sorted list, and a sibling takes no drop.
+  await expect(page.getByTestId('tree-drag-hint')).toHaveText(
+    'The list is sorted by date or name, so here items can only be dropped into other folders. To reorder them, choose the "Folders First" sort order.',
+  );
+  await expect(page.locator('.drop-target, .drop-indicator')).toHaveCount(0);
+  await page.mouse.up();
+  await expect(page.getByTestId('tree-drag-hint')).toHaveCount(0);
+  expect(await childTitles(extensionWorker, seeded.folderId)).toEqual([
+    'Reorder First',
+    'Reorder Second',
+    'Reorder Into',
+  ]);
+  await expect(toastRegion(page).getByText(/moved|reordered/)).toHaveCount(0);
+
+  // A drop into another folder still works.
   await dropOnLowerEdge(
-    bookmarkRow(page, 'Reorder First').locator('a'),
-    bookmarkRow(page, 'Reorder Second').locator('a'),
+    source,
+    folderRow(page, 'Reorder Into').locator('[data-slot="drag-handle"]'),
   );
   await expect
-    .poll(() => childTitles(extensionWorker, seeded.folderId))
-    .toEqual(['Reorder Second', 'Reorder First']);
-  await expect(toastRegion(page)).toContainText('sorted by date or name');
+    .poll(() => childTitles(extensionWorker, seeded.ids['Reorder Into']))
+    .toEqual(['Reorder First']);
+  await expect(toastRegion(page)).toContainText('"Reorder First" moved to "Reorder Into"');
 });
 
 test('dropping a folder into its own subfolder explains why it failed', async ({

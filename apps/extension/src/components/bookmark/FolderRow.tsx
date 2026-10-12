@@ -89,6 +89,8 @@ export function FolderRow({
           [POPUP_TREE_ROW_ATTRIBUTE]: 'folder',
           [POPUP_TREE_CAN_SAVE_ATTRIBUTE]: canAddChildren || undefined,
         }}
+        // Long names are cut off, so hovering shows the whole name.
+        title={getBookmarkDisplayTitle(node.title)}
         onClick={onToggle}
         className="group/trigger flex h-8 min-w-0 flex-1 cursor-pointer items-center gap-1 rounded-md px-2 py-1 text-sm font-medium focus-visible:outline-none"
       >
@@ -116,6 +118,7 @@ export function FolderRow({
           />
           {node.title.trim() ? (
             <HighlightedText
+              showTitle={false}
               className="truncate text-sm"
               text={node.title}
               ranges={node.searchMatchRanges}

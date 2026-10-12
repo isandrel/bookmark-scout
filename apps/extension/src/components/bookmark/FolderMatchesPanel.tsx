@@ -1,8 +1,10 @@
-import type { KeyboardEvent } from 'react';
+import { type KeyboardEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { BookmarkPlus, Folder, LoaderCircle } from 'lucide-react';
 
 type FolderMatchesPanelProps = {
   matches: readonly FolderMatch[];
+  /** The typed search; any change to it shows the current order at once. */
+  query: string;
   /** Title of the bookmarks bar, left out of the paths because most folders live there. */
   barTitle: string | undefined;
   truncateLength: number;
@@ -13,26 +15,65 @@ type FolderMatchesPanelProps = {
 };
 
 /**
+ * The matches in the order last shown while `hold` is on and the query is the same, so a save
+ * that makes a folder recent does not reorder the rows under the pointer or the focused row.
+ */
+function useHeldMatchOrder(
+  matches: readonly FolderMatch[],
+  query: string,
+  hold: boolean,
+): readonly FolderMatch[] {
+  const shown = useRef<{ query: string; matches: readonly FolderMatch[] } | null>(null);
+  const last = shown.current;
+  const result =
+    hold && last?.query === query ? holdFolderMatchOrder(last.matches, matches) : matches;
+  useLayoutEffect(() => {
+    shown.current = { query, matches: result };
+  });
+  return result;
+}
+
+/**
  * "Save to folder": the folders matching the search, best first, above the bookmark results.
  * Each row is a tree row for the keyboard, so ArrowDown from the search box lands on the best
  * match and Enter saves the current page there.
  */
 export function FolderMatchesPanel({
-  matches,
+  matches: rankedMatches,
+  query,
   barTitle,
   truncateLength,
   pendingFolderIds,
   onSave,
   onKeyDown,
 }: FolderMatchesPanelProps) {
+  const [pointerInside, setPointerInside] = useState(false);
+  const [focusInside, setFocusInside] = useState(false);
+  // Typing moves attention to the search box: a pointer resting on the list holds it again only
+  // once it moves.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: runs for each change of the query.
+  useEffect(() => setPointerInside(false), [query]);
+  const matches = useHeldMatchOrder(rankedMatches, query, pointerInside || focusInside);
   return (
     <section
+      onPointerMove={() => {
+        if (!pointerInside) setPointerInside(true);
+      }}
+      onPointerLeave={() => setPointerInside(false)}
+      onFocus={() => setFocusInside(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setFocusInside(false);
+      }}
       aria-labelledby="folder-matches-title"
       data-testid="folder-matches"
       className="flex shrink-0 flex-col border-b px-2 pb-1.5 pt-1"
       style={{ maxHeight: `${FOLDER_MATCH_MAX_HEIGHT_FRACTION * 100}%` }}
     >
-      <h2 id="folder-matches-title" className="px-2 pb-0.5 text-xs font-medium text-muted-foreground">
+      <h2
+        id="folder-matches-title"
+        className="px-2 pb-0.5 text-xs font-medium text-muted-foreground"
+      >
         {t('popup_folderMatchesTitle')}
       </h2>
       <ul onKeyDown={onKeyDown} className="min-h-0 overflow-y-auto">

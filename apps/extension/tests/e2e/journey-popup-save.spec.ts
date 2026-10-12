@@ -55,12 +55,7 @@ test('a popup save by folder name appears at its path in the manager', async ({
   expect(await childTitles(extensionWorker, notesId)).toEqual([title]);
 });
 
-// Bug: a save from the popup's folder rows and folder matches (`addBookmarkToFolder` in
-// `src/stores/bookmark-store.ts`) creates the bookmark directly instead of through
-// `recordBookmarkWrites`, so it never enters the undo history and the manager's Ctrl/Cmd+Z says
-// "Nothing to undo". A save from an Ask AI button in the same popup is undone there
-// (`ask-ai-journey.spec.ts`). Remove `fixme` once popup saves are recorded.
-test.fixme('the manager undoes and redoes a save made in the popup', async ({
+test('the manager undoes and redoes a save made in the popup', async ({
   context,
   extensionId,
   extensionWorker,
