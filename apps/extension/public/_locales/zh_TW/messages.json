@@ -5715,6 +5715,22 @@
         "message": "瀏覽器未接受這個快捷鍵。請換一個試試。",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "用 $1 快速儲存",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "瀏覽器把 $1 留給自己的書籤對話方塊，預設不會指派給擴充功能，但你可以自行設定：開啟快捷鍵頁面，找到 Bookmark Scout，點選「$2」旁的鉛筆圖示，然後按下 $1。",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "現在按 $1 會快速儲存，而不是開啟瀏覽器的書籤對話方塊。若要恢復該對話方塊，請在瀏覽器的快捷鍵頁面清除這個快捷鍵。",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "瀏覽器自己使用 $1，它永遠不會傳到 Bookmark Scout。請換一個快捷鍵。",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "未設定快速儲存快捷鍵",
         "description": "Popup and side panel line when a quick save command has no keys"

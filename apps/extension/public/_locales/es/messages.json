@@ -5907,6 +5907,22 @@
         "message": "El navegador no aceptó este atajo. Prueba con otro.",
         "description": "Error when the browser refused to save the shortcut"
     },
+    "settings_shortcutUseBookmarkKey": {
+        "message": "Usar $1 para el guardado rápido",
+        "description": "Button in Options and line in the popup and side panel (Chrome and Edge) about giving quick save the browser's own bookmark shortcut; $1 is the keys (Ctrl+D, or ⌘D on macOS)"
+    },
+    "settings_shortcutBookmarkKeyHint": {
+        "message": "El navegador reserva $1 para su propio diálogo de marcadores y no se lo da a las extensiones por defecto, pero tú puedes hacerlo: abre la página de atajos, busca Bookmark Scout, haz clic en el lápiz junto a «$2» y pulsa $1.",
+        "description": "Options text in Chrome and Edge on how to give quick save the browser's bookmark shortcut on the browser's shortcut page; $1 is the keys (Ctrl+D or ⌘D), $2 the quick save command's name as that page lists it"
+    },
+    "settings_shortcutBookmarkKeyActive": {
+        "message": "Ahora $1 hace un guardado rápido en lugar de abrir el diálogo de marcadores del navegador. Para recuperar el diálogo, borra este atajo en la página de atajos del navegador.",
+        "description": "Options text in Chrome and Edge once quick save has the browser's bookmark shortcut; $1 is the keys (Ctrl+D or ⌘D)"
+    },
+    "settings_shortcutKeptByBrowser": {
+        "message": "El navegador usa $1, así que nunca llegaría a Bookmark Scout. Elige otro atajo.",
+        "description": "Error when the pressed keys belong to the browser itself (such as its bookmark shortcut in Firefox); $1 is the keys"
+    },
     "popup_shortcutNotSet": {
         "message": "Atajo de guardado rápido sin asignar",
         "description": "Popup and side panel line when a quick save command has no keys"

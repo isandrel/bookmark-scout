@@ -6,6 +6,8 @@
 export const DISMISSIBLE_NOTICES = [
   /** The popup and side panel line saying a quick save command has no shortcut. */
   'quick-save-shortcut',
+  /** The same line in Chrome and Edge offering the browser's bookmark keys for quick save. */
+  'quick-save-bookmark-key',
 ] as const;
 
 export type DismissibleNotice = (typeof DISMISSIBLE_NOTICES)[number];
