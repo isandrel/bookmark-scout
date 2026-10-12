@@ -6058,5 +6058,19 @@
     "settings_askAiWrites": {
         "message": "Changing bookmarks",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "No folder suggestions for this page",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "The list is sorted by date or name, so here items can only be dropped into other folders. To reorder them, choose the \"$sort$\" sort order.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }
