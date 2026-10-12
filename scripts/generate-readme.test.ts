@@ -10,6 +10,7 @@ import {
 	releaseLine,
 	render,
 	storeBadges,
+	storeLinks,
 } from "./generate-readme";
 import { site } from "@bookmark-scout/config";
 
@@ -18,6 +19,7 @@ const context = {
 	version: (name: string) => ({ react: "19.3.0", wxt: "0.21.4" })[name] ?? "1.0.0",
 	browserBadges: (label: string) => `<badges ${label}>`,
 	storeBadges: (label: string) => `<stores ${label}>`,
+	storeLinks: (label: string) => `<links ${label}>`,
 };
 
 describe("render", () => {
@@ -67,6 +69,16 @@ test("storeBadges links only live store listings", () => {
 	expect(storeBadges("Install", { ...site, stores: [] })).toBe("");
 });
 
+test("storeLinks lists every browser, with its live store or the latest release", () => {
+	const lines = storeLinks("Releases").split("\n");
+	expect(lines).toHaveLength(site.browsers.supported.length);
+	site.browsers.supported.forEach((browser, index) => {
+		const store = site.store(browser);
+		expect(lines[index]).toStartWith(`- **${site.browsers.name(browser)}**: `);
+		expect(lines[index]).toEndWith(store.live ? `[${store.name}](${store.url})` : `[Releases](${site.repo.releasesLatest})`);
+	});
+});
+
 test("badgeText escapes shields.io separators", () => {
 	expect(badgeText("AGPL-3.0")).toBe("AGPL--3.0");
 	expect(badgeText("Not Supported")).toBe("Not%20Supported");
@@ -79,6 +91,7 @@ test("every template renders with the repository config and installed packages",
 		version: (name: string, workspace?: string) => installedVersion(name, undefined, workspace),
 		browserBadges: (label: string) => browserBadges(label),
 		storeBadges: (label: string) => storeBadges(label),
+		storeLinks: (label: string) => storeLinks(label),
 	};
 	for (const file of readdirSync(templatesDir).filter((name) => name.endsWith(".md"))) {
 		const output = render(readFileSync(join(templatesDir, file), "utf8"), real, file);

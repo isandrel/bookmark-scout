@@ -177,6 +177,14 @@
 
 ## 📦 インストール
 
+### ブラウザのストアから
+
+ブラウザのストアからインストールすると、自動で最新の状態に保たれます：
+
+{{STORE_LINKS:GitHub リリース}}
+
+ストアにまだ掲載されていないブラウザでは、下記の GitHub リリースのビルドをインストールしてください。ブラウザごとの手順は[インストールガイド]({{DOCS_URL}}/ja/installation)にあります。
+
 ### GitHubリリースから
 
 [GitHubリリース](https://github.com/{{GITHUB_REPO}}/releases)から最新版をダウンロード：
@@ -196,7 +204,9 @@ unzip bookmark-scout-*-chrome.zip -d bookmark-scout
 - `bookmark-scout-*-firefox.zip` — Firefoxの一時的なアドオン読み込み用
 - `bookmark-scout-*-edge.zip` — Edgeの未パッケージ拡張機能用
 
-### ソースから
+### ソースからビルド（開発者向け）
+
+Bookmark Scout の開発に参加する場合は、自分でビルドします。詳しいセットアップは [CONTRIBUTING.md](../CONTRIBUTING.md) を参照してください。
 
 ```bash
 # リポジトリをクローン
@@ -210,7 +220,7 @@ bun install
 bun run build
 ```
 
-### Chromeにロード
+### パッケージ化されていないビルドを Chrome に読み込む
 
 1. `chrome://extensions/` を開く
 2. **デベロッパーモード**を有効化（右上）

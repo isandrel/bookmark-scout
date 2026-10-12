@@ -50,6 +50,8 @@ Looking for something to work on? Check issues labeled:
 
 ## 💻 Development Setup
 
+To use Bookmark Scout, install it from your browser's store or a GitHub release, as the [README](README.md) describes. The steps below build it from source, for working on it.
+
 ### Prerequisites
 
 - [Bun](https://bun.sh) (latest version)

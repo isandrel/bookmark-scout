@@ -177,6 +177,14 @@
 
 ## 📦 설치
 
+### 브라우저 스토어에서
+
+브라우저 스토어에서 설치하면 자동으로 최신 상태가 유지됩니다:
+
+{{STORE_LINKS:GitHub 릴리스}}
+
+아직 스토어에 등록되지 않은 브라우저에서는 아래 GitHub 릴리스의 빌드를 설치하세요. 브라우저별 단계는 [설치 가이드]({{DOCS_URL}}/ko/installation)에 있습니다.
+
 ### GitHub 릴리스에서
 
 [GitHub 릴리스](https://github.com/{{GITHUB_REPO}}/releases)에서 최신 버전 다운로드:
@@ -196,7 +204,9 @@ unzip bookmark-scout-*-chrome.zip -d bookmark-scout
 - `bookmark-scout-*-firefox.zip` — Firefox 임시 애드온 설치용
 - `bookmark-scout-*-edge.zip` — Edge 압축해제 설치용
 
-### 소스에서
+### 소스에서 빌드(개발자용)
+
+Bookmark Scout 개발에 참여하려면 직접 빌드하세요. 전체 설정은 [CONTRIBUTING.md](../CONTRIBUTING.md)를 참고하세요.
 
 ```bash
 # 저장소 클론
@@ -210,7 +220,7 @@ bun install
 bun run build
 ```
 
-### Chrome에 로드
+### 압축 해제된 빌드를 Chrome에 로드
 
 1. `chrome://extensions/` 열기
 2. **개발자 모드** 활성화 (오른쪽 상단)

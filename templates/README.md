@@ -189,6 +189,14 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 
 ## 📦 Installation
 
+### From your browser's store
+
+Install Bookmark Scout from your browser's store, which keeps it up to date:
+
+{{STORE_LINKS:GitHub Releases}}
+
+Where a browser's store does not list it yet, install the build from GitHub Releases, below. Step-by-step instructions for each browser are in the [installation guide]({{DOCS_URL}}/installation).
+
 ### From GitHub Releases
 
 Download the latest release from [GitHub Releases](https://github.com/{{GITHUB_REPO}}/releases):
@@ -208,7 +216,9 @@ Release assets are published per browser:
 - `bookmark-scout-*-firefox.zip` for Firefox temporary add-on installation
 - `bookmark-scout-*-edge.zip` for Edge unpacked installation
 
-### From Source
+### Build from source (for developers)
+
+To work on Bookmark Scout, build it yourself; [CONTRIBUTING.md](CONTRIBUTING.md) has the full setup.
 
 ```bash
 # Clone the repository
@@ -222,7 +232,7 @@ bun install
 bun run build
 ```
 
-### Load in Chrome
+### Load an unpacked build in Chrome
 
 1. Open `chrome://extensions/`
 2. Enable **Developer mode** (top right)
