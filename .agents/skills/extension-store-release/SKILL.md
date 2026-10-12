@@ -1,6 +1,6 @@
 ---
 name: extension-store-release
-description: Get the Bookmark Scout extension ready for the Chrome Web Store, Firefox Add-ons (AMO), and Microsoft Edge Add-ons - manifests, per-browser build warnings, addons-linter, data-collection declarations, the sources ZIP for reviewers, release tags and assets, listing copy, and store screenshots - without submitting anything. Use whenever the user mentions a store, marketplace, listing, AMO, add-on ID, release tag, release ZIP, reviewer notes, or "ready to publish", even if they only ask what is missing.
+description: Get the Bookmark Scout extension ready for the Chrome Web Store, Firefox Add-ons (AMO), and Microsoft Edge Add-ons - manifests, default keyboard shortcuts (why Ctrl+D cannot be one), per-browser build warnings, addons-linter, data-collection declarations, the sources ZIP for reviewers, release tags and assets, listing copy, and store screenshots - without submitting anything. Use whenever the user mentions a store, marketplace, listing, AMO, add-on ID, release tag, release ZIP, reviewer notes, or "ready to publish", even if they only ask what is missing.
 ---
 
 # Extension store release
@@ -19,6 +19,11 @@ Start from `store/README.md` (surface table per browser, asset list, how screens
 - Reviewers flag broad `web_accessible_resources`. An entry such as `_favicon/*` for `<all_urls>` is only needed by content scripts; scope or remove it, with a favicon test.
 - Keep unused large files out of every package (an unreferenced 5 MB source icon in `public/` was the biggest file in each ZIP).
 - A new TypeScript file at the root of `apps/extension` must be added to the lint paths in `package.json`, `project.json`, and `biome.json`, or it is silently not linted.
+
+## Keyboard shortcuts (`commands`)
+
+- **Ctrl+D (⌘D) cannot be a default in any browser** (researched for PR #646, when the maintainer asked for it). Chrome and Edge never assign a suggested key that is one of the browser's own shortcuts, and say nothing (`CommandService::CanAutoAssign`); the old `chrome_ui_overrides.bookmarks_ui` exception was removed in Chrome 83 and the key is now ignored silently. Firefox accepts and reports Ctrl+D but handles it itself first, and its shortcut page refuses it. What does work: a key the user records at `chrome://extensions/shortcuts` (or Edge's) overrides the browser's own, so the extension offers a button and steps for that. The data is in `BOOKMARK_SHORTCUT_TAKEOVER` and `BROWSER_KEPT_SHORTCUTS` (`src/lib/command-catalog.ts`). Do not add `chrome_ui_overrides` to the manifest.
+- **Choosing default keys:** Chrome allows at most four suggested keys. Avoid keys the browsers use (Ctrl+Shift+D bookmarks all tabs in Chrome and Firefox; Chrome uses Alt+Shift+A, I, N, and T; Edge Alt+Shift+B, I, and T; ChromeOS Alt+Shift+S, so Chrome leaves that key unset there). Suggested keys apply only at the first install of an extension id, so a profile that removed and re-added the same unpacked build shows "Not set" (`extension-live-smoke`).
 
 ## Lint the Firefox package
 
@@ -49,6 +54,7 @@ Summarize the JSON with a short script; the table output truncates columns. Targ
 
 ## Release
 
+- Prepare a release only when the maintainer explicitly asks for one: no version bump, no release section in `CHANGELOG.md`, no release PR, and no tag otherwise. "Continue" or "finish the tasks" is not a release request; an agent that read it as one had to back out a version bump. Changes go under Unreleased until then.
 - Tag `vX.Y.Z` only when the maintainer explicitly asks for a release. Before pushing the tag, confirm:
   - `main` is clean and synced: `git status --short --branch`
   - no PRs are open: `gh pr list --state open`

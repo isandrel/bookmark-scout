@@ -16,6 +16,10 @@ description: Inspect an installed browser extension with Computer Use when expli
 
 Usually the build is stale, not the code. The browser loads `apps/extension/dist/chrome-mv3` exactly as last built (once a day older than the merged code), and `dist/chrome-mv3-dev` only updates while `bun run dev` runs. Also check which branch the main checkout is on: another agent session once switched it to a docs branch, so a rebuild there would show the wrong code. Fix, with the user's go-ahead: in the main checkout, `git branch --show-current` (switch to `main` if needed), `git pull --ff-only`, `bun install --frozen-lockfile && bunx nx run extension:build:chrome`, reload the extension in `chrome://extensions`, then reopen the popup and any open extension pages.
 
+## "The shortcut does nothing"
+
+Check `chrome://extensions/shortcuts` first: the command most likely shows "Not set". Chrome assigns an extension's suggested keys only at the first install of that extension id, and skips any key the browser or another extension already uses, so a profile that removed and re-added the same unpacked build gets none. Fresh profiles and upgrades from a build without commands both got the defaults. The fix is to set the key on that page; it is not a code bug.
+
 ## Known tool limits
 
 - **Computer Use grants browsers read-only access.** Browsers (Chrome, Chrome for Testing, Safari, Firefox) are granted at a read tier: screenshots only, no clicks or typing. Do not work around it.
