@@ -5295,13 +5295,17 @@
         "message": "在管理器中顯示「$1」",
         "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
     },
-    "askAI_savedTo": {
-        "message": "已儲存到 $1",
-        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    "askAI_savePage": {
+        "message": "$2 · 「$1」",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
     },
-    "askAI_alreadySaved": {
-        "message": "已儲存在 $1 中",
-        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    "askAI_savedPageTo": {
+        "message": "已將「$1」儲存到 $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "「$1」已在 $2 中",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
     },
     "askAI_saveFailed": {
         "message": "無法儲存該網頁",
@@ -5346,6 +5350,34 @@
     "askAI_planMissing": {
         "message": "此計畫已過期或已套用。再次提出要求即可重新產生。",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "此變更已復原或已不在復原記錄中，沒有可復原的內容。",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "刪除「$1」",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "刪除資料夾「$1」及其中所有內容（$2 項）",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "將「$1」放回 $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "將「$1」改回「$2」",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "將「$1」的網址改回 $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "將「$1」移回 $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
     },
     "askAI_approve": {
         "message": "核准",

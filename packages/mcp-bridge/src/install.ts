@@ -139,19 +139,29 @@ export type InstallOptions = {
   manifestDir?: string;
 };
 
+/**
+ * The browser targets, or with `manifestDir` the same targets with their manifest in that folder
+ * and no registry value (install, uninstall, and doctor all honor the override).
+ */
+export function resolveTargets(
+  environment: InstallEnvironment,
+  manifestDir?: string,
+): BrowserTarget[] {
+  const targets = browserTargets(environment);
+  if (manifestDir === undefined) return targets;
+  return targets.map((target) => ({
+    ...target,
+    manifestPath: join(manifestDir, `${NATIVE_HOST_NAME}.json`),
+    registryKey: undefined,
+  }));
+}
+
 export function planInstall(environment: InstallEnvironment, options: InstallOptions): InstallPlan {
-  const detected = browserTargets(environment);
   const { manifestDir } = options;
   if (manifestDir !== undefined && options.browsers.length !== 1) {
     throw new Error("--manifest-dir needs exactly one --browser.");
   }
-  const available = manifestDir
-    ? detected.map((target) => ({
-        ...target,
-        manifestPath: join(manifestDir, `${NATIVE_HOST_NAME}.json`),
-        registryKey: undefined,
-      }))
-    : detected;
+  const available = resolveTargets(environment, manifestDir);
   for (const id of options.browsers) {
     if (!available.some((target) => target.id === id)) {
       const known = available.map((target) => target.id).join(", ");
@@ -217,13 +227,18 @@ export function applyInstall(plan: InstallPlan, dryRun: boolean): string[] {
 
 export type UninstallPlan = { files: string[]; registry: string[] };
 
-/** Everything `install` may have written for this user, on any browser. */
-export function planUninstall(environment: InstallEnvironment): UninstallPlan {
-  const targets = browserTargets(environment);
+/**
+ * Everything `install` may have written for this user, on any browser; with `manifestDir`, the
+ * launcher and the manifest an `install --manifest-dir` wrote into that folder, nothing else.
+ */
+export function planUninstall(
+  environment: InstallEnvironment,
+  options: { manifestDir?: string } = {},
+): UninstallPlan {
+  const targets = resolveTargets(environment, options.manifestDir);
+  const manifests = [...new Set(targets.map((target) => target.manifestPath))];
   return {
-    files: [launcherPath(environment), ...targets.map((target) => target.manifestPath)].filter(
-      (path) => existsSync(path),
-    ),
+    files: [launcherPath(environment), ...manifests].filter((path) => existsSync(path)),
     registry: targets.flatMap((target) => (target.registryKey ? [target.registryKey] : [])),
   };
 }

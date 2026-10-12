@@ -40,31 +40,60 @@ function directLines(toolName: string, input: Record<string, unknown>): string[]
     const folder = [input.folder, input.newFolder].filter(Boolean).join(AI_FOLDER_PATH_SEPARATOR);
     return [t('askAI_approvalSave', [String(input.title || input.url || ''), folder])];
   }
-  if (toolName === 'undoChange') return [t('askAI_approvalUndo')];
   return [describeActionCall(toolName, input) ?? toolName];
+}
+
+/**
+ * What the request is about, read from storage: the stored plan an apply names, or the history
+ * entry an undo names, as the lines the user approves. undefined while it loads, null when it is
+ * gone (expired, applied, or undone already), and none for a call that needs neither.
+ */
+function useStoredChangeLines(toolName: string, args: Record<string, unknown>) {
+  const planId = toolName === 'applyChanges' && typeof args.planId === 'string' ? args.planId : '';
+  const changeId = toolName === 'undoChange' && typeof args.change === 'string' ? args.change : '';
+  const [loaded, setLoaded] = useState<{ lines: string[]; summary?: string } | null | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    if (!planId && !changeId) return;
+    let active = true;
+    const load = async () => {
+      if (planId) {
+        const plan = await getActionPlan(planId);
+        return plan ? { lines: planLines(plan), summary: plan.summary } : null;
+      }
+      const entry = await getUndoableBookmarkChange(changeId);
+      return entry
+        ? { lines: await describeBookmarkChangeUndo(entry), summary: t('askAI_approvalUndo') }
+        : null;
+    };
+    void load()
+      .catch(() => null)
+      .then((found) => {
+        if (active) setLoaded(found);
+      });
+    return () => {
+      active = false;
+    };
+  }, [planId, changeId]);
+
+  if (!planId && !changeId) return undefined;
+  const missingKey: MessageKey = planId ? 'askAI_planMissing' : 'askAI_undoMissing';
+  return { loaded, missingKey };
 }
 
 export function ActionApprovalRequest({ toolName, input, reason, onRespond }: ApprovalProps) {
   const headingId = useId();
   const args = isPlainObject(input) ? input : {};
-  const planId = toolName === 'applyChanges' && typeof args.planId === 'string' ? args.planId : '';
-  // undefined while the plan loads, null when it expired or was applied.
-  const [plan, setPlan] = useState<ActionPlan | null | undefined>(undefined);
+  const stored = useStoredChangeLines(toolName, args);
   const [answered, setAnswered] = useState(false);
 
-  useEffect(() => {
-    if (!planId) return;
-    let active = true;
-    void getActionPlan(planId).then((found) => {
-      if (active) setPlan(found ?? null);
-    });
-    return () => {
-      active = false;
-    };
-  }, [planId]);
-
-  const lines = planId ? (plan ? planLines(plan) : []) : directLines(toolName, args);
-  const missing = Boolean(planId) && plan === null;
+  const lines = stored ? (stored.loaded?.lines ?? []) : directLines(toolName, args);
+  const summary = stored?.loaded?.summary;
+  const missing = stored?.loaded === null;
+  // A save names the exact address too, which a title can hide.
+  const url = toolName === 'saveBookmark' && typeof args.url === 'string' ? args.url : '';
   const respond = (approved: boolean) => {
     setAnswered(true);
     onRespond(approved);
@@ -80,14 +109,14 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
         <ShieldAlert aria-hidden="true" className="h-4 w-4 shrink-0 text-ai" />
         {t('askAI_approvalTitle')}
       </p>
-      {plan?.summary && (
-        <p className="text-muted-foreground [overflow-wrap:anywhere]">{plan.summary}</p>
-      )}
+      {summary && <p className="text-muted-foreground [overflow-wrap:anywhere]">{summary}</p>}
       {reason === 'untrusted' && (
         <p className="text-xs text-muted-foreground">{t('askAI_approvalUntrusted')}</p>
       )}
       {missing ? (
-        <p className="text-xs text-muted-foreground">{t('askAI_planMissing')}</p>
+        <p className="text-xs text-muted-foreground">
+          {t(stored?.missingKey ?? 'askAI_planMissing')}
+        </p>
       ) : (
         <ul className="list-disc space-y-0.5 pl-5 [overflow-wrap:anywhere]">
           {lines.map((line) => (
@@ -95,10 +124,15 @@ export function ActionApprovalRequest({ toolName, input, reason, onRespond }: Ap
           ))}
         </ul>
       )}
+      {url && (
+        <p data-slot="approval-url" className="break-all font-mono text-xs text-muted-foreground">
+          {url}
+        </p>
+      )}
       <div className="flex gap-2">
         <Button
           size="sm"
-          disabled={answered || missing || (Boolean(planId) && plan === undefined)}
+          disabled={answered || missing || (stored !== undefined && stored.loaded === undefined)}
           onClick={() => respond(true)}
         >
           {t('askAI_approve')}

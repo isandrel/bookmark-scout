@@ -5487,13 +5487,17 @@
         "message": "Mostrar \"$1\" no gerenciador",
         "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
     },
-    "askAI_savedTo": {
-        "message": "Salvo em $1",
-        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    "askAI_savePage": {
+        "message": "$2 · \"$1\"",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
     },
-    "askAI_alreadySaved": {
-        "message": "Já está salvo em $1",
-        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    "askAI_savedPageTo": {
+        "message": "\"$1\" salvo em $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "\"$1\" já está em $2",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
     },
     "askAI_saveFailed": {
         "message": "Não foi possível salvar a página",
@@ -5538,6 +5542,34 @@
     "askAI_planMissing": {
         "message": "Este plano expirou ou já foi aplicado. Peça de novo para criá-lo outra vez.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "Esta alteração já foi desfeita ou não está mais no histórico, então não há nada para desfazer.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Remover \"$1\"",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Remover a pasta \"$1\" e tudo o que ela contém ($2 itens)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Devolver \"$1\" para $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Renomear \"$1\" de volta para \"$2\"",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Voltar o endereço de \"$1\" para $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Mover \"$1\" de volta para $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
     },
     "askAI_approve": {
         "message": "Aprovar",
