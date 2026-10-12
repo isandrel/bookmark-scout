@@ -31,6 +31,7 @@ const perfConfigSchema = z.strictObject({
   }),
   run: z.strictObject({
     cpu_throttle: z.number().min(1),
+    ci_cpu_throttle: z.number().min(1),
     repeats: z.number().int().positive(),
     scroll_steps: z.number().int().positive(),
     scroll_step_px: z.number().int().positive(),
@@ -43,6 +44,14 @@ const perfConfigSchema = z.strictObject({
 export const perfConfig = perfConfigSchema.parse(
   parse(readFileSync(path.join(directory, 'perf.toml'), 'utf8')),
 );
+
+/**
+ * CI runners are already slower than the laptop the budgets were set on, so they get a lighter
+ * slowdown; the budgets then mean about the same on both.
+ */
+export const CPU_THROTTLE = process.env.CI
+  ? perfConfig.run.ci_cpu_throttle
+  : perfConfig.run.cpu_throttle;
 
 /** Folder and page titles of the synthetic library, so scenarios can search for known names. */
 export const libraryNames = {
@@ -214,7 +223,7 @@ export async function openMeasured(
   await page.addInitScript(installProbe, watch);
   const cdp = await context.newCDPSession(page);
   sessions.set(page, cdp);
-  await cdp.send('Emulation.setCPUThrottlingRate', { rate: perfConfig.run.cpu_throttle });
+  await cdp.send('Emulation.setCPUThrottlingRate', { rate: CPU_THROTTLE });
   await page.goto(url);
   await page.waitForFunction(
     (selectors) => {
