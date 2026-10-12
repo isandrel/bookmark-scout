@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Bookmark Scout – Save bookmarks to the right folder, fast",
-    "description": "Browser extension that saves pages to the right bookmark folder: type a folder name or let AI suggest one. Plus search and cleanup tools.",
+    "description": "Browser extension that saves pages to the right bookmark folder: type a folder name, press a shortcut, or let AI suggest one. Plus search and cleanup.",
     "keywords": [
       "browser extension",
       "chrome extension",
@@ -9,33 +9,37 @@
       "edge extension",
       "save bookmarks to folder",
       "bookmark folder search",
+      "bookmark keyboard shortcut",
       "bookmark manager",
       "bookmark search",
       "bookmark organizer",
       "bookmark cleanup",
       "duplicate bookmarks",
       "dead links",
-      "AI bookmark tools"
+      "AI bookmark tools",
+      "MCP server for bookmarks"
     ]
   },
   "structuredData": {
     "features": [
       "Save to a folder by typing its name",
+      "Quick save shortcut with an in-page notification and undo",
       "Opt-in AI folder suggestions",
       "Instant bookmark search",
       "Drag and drop organization",
       "Side panel support (the sidebar in Firefox)",
       "Saved searches",
       "Keyboard shortcuts",
-      "Delete with undo",
+      "Undo and redo in the bookmarks manager",
       "Dark mode",
-      "Custom bookmarks manager",
+      "Bookmarks manager that works like Chrome's",
       "Duplicate cleanup",
       "Tracking parameter cleanup",
       "Dead link scanning with reviewed repairs",
       "Bookmark import and export",
       "Privacy review with optional redaction before exports",
-      "Opt-in AI bookmark tools",
+      "Opt-in AI chat that changes bookmarks only after you approve",
+      "Local AI agents through an MCP server, with approvals",
       "Multi-language support"
     ]
   },
@@ -75,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Save every page to the right folder, in seconds.",
-      "description": "Type part of a folder's name and save the page there in one click, or let opt-in AI suggest the folder. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
+      "description": "Type part of a folder's name, or press Alt+Shift+S on any page, and the page is saved to the folder it belongs in. Opt-in AI can suggest the folder too. Bookmark Scout also searches and tidies the bookmarks you already have, in Chrome, Edge, and Firefox, with no account and no server of its own.",
       "download": "Download from GitHub",
       "install": "Install Bookmark Scout",
       "docs": "Read the docs",
@@ -133,25 +137,25 @@
         "points": [
           "Type part of a folder's name, even one nested deep in the tree, and save the current page there without leaving the keyboard",
           "Type a path such as work/react, and still find the folder with a small typo",
-          "Folders you saved to recently come first",
-          "A page already in that folder is not saved twice",
+          "Press Alt+Shift+S on any page to save it to the folder that matches it best; a small notification in the page offers Undo and other folders",
+          "A page already in that folder is not saved twice, and folders you saved to recently come first",
           "Save links from the right-click menu into recent folders",
-          "With AI turned on, get folder suggestions for the page, including a new folder path after you review it"
+          "With AI turned on, get folder suggestions for the page, or save to the first one with Alt+Shift+D"
         ]
       },
       "organize": {
         "tab": "Find & organize",
         "heading": "Find and organize what you saved",
-        "caption": "The manager replaces Chrome's Bookmarks page with a folder tree, breadcrumbs, and a sortable table.",
+        "caption": "The manager replaces Chrome's Bookmarks page and works like it, with a folder tree, breadcrumbs, and a sortable table.",
         "alt": "The Bookmark Scout manager showing the Dev Docs folder as a table with type, folder path, URL, title, and date added columns next to a folder tree",
         "points": [
           "Search every bookmark as you type, with match case, whole word, and regular expression options",
           "Keep the same tree and search open in the browser's side panel (the sidebar in Firefox)",
           "Save a search as a smart view that always shows current results",
-          "Drag bookmarks and folders around the folder tree",
-          "Filter, sort, and resize columns in the manager's table",
+          "Select rows with Shift and Ctrl, right-click for cut, copy, paste, and open all, and drag rows, folders, and links where they belong",
+          "Undo and redo changes with Ctrl+Z and Ctrl+Y, even after a reload",
           "Import HTML or JSON after a preview, and export HTML, JSON, Markdown, or CSV",
-          "Move through folders and results with the keyboard; browser Ctrl and Cmd shortcuts keep working"
+          "Link to a folder or a search, and move through it all with the keyboard"
         ]
       },
       "cleanUp": {
@@ -165,7 +169,7 @@
           "Find dead links and repair them: delete, use the redirect, point to an archived copy, or edit the URL",
           "Fetch page titles and apply only the ones you pick",
           "Download each site's own icon, so bookmarks show it even in Firefox",
-          "Delete with a confirmation, and undo it for 10 seconds"
+          "Undo deletions and cleanups from the message that follows"
         ]
       },
       "ai": {
@@ -174,8 +178,10 @@
         "caption": "AI is off until you turn it on in Settings, choose a provider, and add your own API key where the provider needs one.",
         "alt": "The AI tab of the Bookmark Scout settings page with AI features turned off, and provider and model selectors",
         "points": [
+          "Ask AI about your bookmarks: it searches them, checks links, and proposes moves, renames, and new folders as a plan that changes nothing until you approve it",
+          "Let AI agents on your computer, such as Claude Code, Codex, or Cursor, look up bookmarks through an MCP server, and approve each change they ask for in the browser",
           "Tag suggestions and short summaries that you review before saving",
-          "Folder reorganization plans, previewed before anything moves",
+          "Folder reorganization plans, previewed before anything moves, with undo",
           "Export selected bookmarks as Markdown or XML context for an AI chat; this works without AI and sends nothing"
         ],
         "providersTitle": "Supported providers",
@@ -207,6 +213,10 @@
           "name": "Websites you check",
           "detail": "Dead link checks, title fetching, and site icons, after you allow access"
         },
+        "agents": {
+          "name": "Local AI agents",
+          "detail": "Only when you allow them, through a program on your computer"
+        },
         "server": {
           "name": "Bookmark Scout server",
           "detail": "There is none. Nothing goes to the developer."
@@ -224,7 +234,7 @@
         },
         "aiOptIn": {
           "title": "AI is off until you turn it on",
-          "body": "Requests then go straight from your browser to the provider you chose. With Ollama on your own computer, they stay there."
+          "body": "Requests then go straight from your browser to the provider you chose. With Ollama on your own computer, they stay there. Local AI agents get nothing until you allow them, and their changes wait for your approval."
         },
         "exports": {
           "title": "Exports get a privacy review",
@@ -277,7 +287,7 @@
       "items": {
         "data": {
           "q": "Does Bookmark Scout send my bookmarks anywhere?",
-          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the provider you chose, and the dead link checker, title fetcher, and site icon refresh request the bookmarked sites after you allow website access. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
+          "a": "No. Your bookmarks are read and changed inside your browser, and the extension sends nothing to the developer. Data leaves your browser only when you use an optional feature: AI requests go to the provider you chose, the dead link checker, title fetcher, and site icon refresh request the bookmarked sites after you allow website access, and local AI agents you allow get what they look up through a program on your computer. Settings sync through your browser account if browser sync is on. The <privacy>privacy policy</privacy> has the details."
         },
         "needAi": {
           "q": "Do I need to use AI?",
@@ -289,7 +299,7 @@
         },
         "changes": {
           "q": "Will it change my bookmarks without asking?",
-          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Deleting asks for confirmation by default, and deletions and imports can be undone for 10 seconds."
+          "a": "No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Ask AI and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, and the bookmarks manager can undo changes with Ctrl+Z."
         },
         "firefox": {
           "q": "Does it work in Firefox?",

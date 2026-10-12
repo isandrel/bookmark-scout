@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Bookmark Scout – Lesezeichen schnell im richtigen Ordner speichern",
-    "description": "Browsererweiterung, die Seiten im richtigen Lesezeichenordner speichert: Ordnernamen eingeben oder von KI vorschlagen lassen. Dazu Such- und Bereinigungstools.",
+    "description": "Browsererweiterung, die Seiten im richtigen Lesezeichenordner speichert: Ordnernamen eingeben, Tastenkürzel drücken oder von KI vorschlagen lassen. Dazu Suche und Bereinigung.",
     "keywords": [
       "Browsererweiterung",
       "Chrome-Erweiterung",
@@ -9,33 +9,37 @@
       "Edge-Erweiterung",
       "Lesezeichen in Ordner speichern",
       "Lesezeichenordner suchen",
+      "Tastenkürzel für Lesezeichen",
       "Lesezeichen-Manager",
       "Lesezeichen suchen",
       "Lesezeichen ordnen",
       "Lesezeichen bereinigen",
       "doppelte Lesezeichen",
       "defekte Links",
-      "KI-Lesezeichen-Tools"
+      "KI-Lesezeichen-Tools",
+      "MCP-Server für Lesezeichen"
     ]
   },
   "structuredData": {
     "features": [
       "In Ordner speichern durch Eingabe des Ordnernamens",
+      "Tastenkürzel zum Schnellspeichern mit Benachrichtigung auf der Seite und Rückgängig",
       "Optionale KI-Ordnervorschläge",
       "Sofortsuche in Lesezeichen",
       "Ordnen per Drag-and-drop",
       "Seitenleiste (in Firefox die Sidebar)",
       "Gespeicherte Suchen",
       "Tastenkombinationen",
-      "Löschen mit Rückgängig",
+      "Rückgängig und Wiederholen im Lesezeichen-Manager",
       "Dunkler Modus",
-      "Eigener Lesezeichen-Manager",
+      "Lesezeichen-Manager, der wie der von Chrome funktioniert",
       "Duplikatbereinigung",
       "Entfernen von Tracking-Parametern",
       "Linkprüfung mit geprüften Reparaturen",
       "Import und Export von Lesezeichen",
       "Datenschutzprüfung mit optionaler Schwärzung vor dem Export",
-      "Optionale KI-Tools für Lesezeichen",
+      "Optionaler KI-Chat, der Lesezeichen erst nach Ihrer Zustimmung ändert",
+      "Lokale KI-Agenten über einen MCP-Server, mit Zustimmung zu jeder Änderung",
       "Mehrsprachige Oberfläche"
     ]
   },
@@ -75,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Jede Seite in Sekunden im richtigen Ordner speichern.",
-      "description": "Geben Sie einen Teil eines Ordnernamens ein und speichern Sie die Seite mit einem Klick dort, oder lassen Sie sich den Ordner von optionaler KI vorschlagen. Bookmark Scout durchsucht außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, in Chrome, Edge und Firefox, ohne Konto und ohne eigenen Server.",
+      "description": "Geben Sie einen Teil eines Ordnernamens ein oder drücken Sie auf einer beliebigen Seite Alt+Shift+S, und die Seite wird in dem Ordner gespeichert, in den sie gehört. Optionale KI kann den Ordner ebenfalls vorschlagen. Bookmark Scout durchsucht außerdem Ihre vorhandenen Lesezeichen und räumt sie auf, in Chrome, Edge und Firefox, ohne Konto und ohne eigenen Server.",
       "download": "Von GitHub herunterladen",
       "install": "Bookmark Scout installieren",
       "docs": "Dokumentation lesen",
@@ -133,25 +137,25 @@
         "points": [
           "Einen Teil eines Ordnernamens eingeben, auch eines tief im Baum verschachtelten Ordners, und die aktuelle Seite dort speichern, ohne die Tastatur zu verlassen",
           "Einen Pfad wie work/react eingeben; der Ordner wird auch mit einem kleinen Tippfehler gefunden",
-          "Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
-          "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert",
+          "Auf einer beliebigen Seite Alt+Shift+S drücken, um sie im am besten passenden Ordner zu speichern; eine kleine Benachrichtigung auf der Seite bietet Rückgängig und weitere Ordner an",
+          "Eine Seite, die bereits in diesem Ordner liegt, wird nicht doppelt gespeichert, und Ordner, in denen Sie zuletzt gespeichert haben, stehen oben",
           "Links über das Rechtsklickmenü in zuletzt verwendeten Ordnern speichern",
-          "Mit aktivierter KI Ordnervorschläge für die Seite erhalten, einschließlich eines neuen Ordnerpfads nach Ihrer Prüfung"
+          "Mit aktivierter KI Ordnervorschläge für die Seite erhalten oder mit Alt+Shift+D im ersten Vorschlag speichern"
         ]
       },
       "organize": {
         "tab": "Finden und ordnen",
         "heading": "Gespeichertes finden und ordnen",
-        "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome durch einen Ordnerbaum, eine Pfadnavigation und eine sortierbare Tabelle.",
+        "caption": "Der Manager ersetzt die Lesezeichenseite von Chrome und funktioniert wie sie, mit einem Ordnerbaum, einer Pfadnavigation und einer sortierbaren Tabelle.",
         "alt": "Der Bookmark-Scout-Manager zeigt den Ordner Dev Docs als Tabelle mit den Spalten Typ, Ordnerpfad, URL, Titel und Hinzugefügt am neben einem Ordnerbaum",
         "points": [
           "Alle Lesezeichen schon beim Tippen durchsuchen, mit den Optionen Groß-/Kleinschreibung, ganzes Wort und reguläre Ausdrücke",
           "Denselben Ordnerbaum und dieselbe Suche in der Seitenleiste des Browsers (in Firefox in der Sidebar) geöffnet lassen",
           "Eine Suche als intelligente Ansicht speichern, die immer aktuelle Ergebnisse zeigt",
-          "Lesezeichen und Ordner im Ordnerbaum verschieben",
-          "Spalten in der Tabelle des Managers filtern, sortieren und in der Breite anpassen",
+          "Zeilen mit Shift und Ctrl auswählen, per Rechtsklick ausschneiden, kopieren, einfügen und alle öffnen, und Zeilen, Ordner und Links dorthin ziehen, wo sie hingehören",
+          "Änderungen mit Ctrl+Z und Ctrl+Y rückgängig machen und wiederholen, auch nach einem Neuladen",
           "HTML oder JSON nach einer Vorschau importieren und als HTML, JSON, Markdown oder CSV exportieren",
-          "Mit der Tastatur durch Ordner und Ergebnisse navigieren; die Strg- und Cmd-Tastenkombinationen des Browsers funktionieren weiter"
+          "Auf einen Ordner oder eine Suche verlinken und sich mit der Tastatur durch alles bewegen"
         ]
       },
       "cleanUp": {
@@ -165,7 +169,7 @@
           "Defekte Links finden und reparieren: löschen, Weiterleitung verwenden, auf eine Archivkopie verweisen oder URL bearbeiten",
           "Seitentitel abrufen und nur die ausgewählten übernehmen",
           "Das Symbol jeder Website herunterladen, damit Lesezeichen es anzeigen, auch in Firefox",
-          "Löschen mit Bestätigung und 10 Sekunden lang rückgängig machen"
+          "Löschungen und Bereinigungen über die anschließende Benachrichtigung rückgängig machen"
         ]
       },
       "ai": {
@@ -174,8 +178,10 @@
         "caption": "KI bleibt deaktiviert, bis Sie sie in den Einstellungen aktivieren, einen Anbieter wählen und, falls nötig, Ihren eigenen API-Schlüssel hinzufügen.",
         "alt": "Der Tab KI der Bookmark-Scout-Einstellungen mit deaktivierten KI-Funktionen sowie Auswahlfeldern für Anbieter und Modell",
         "points": [
+          "„KI fragen“ zu Ihren Lesezeichen: durchsucht sie, prüft Links und schlägt Verschiebungen, Umbenennungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen",
+          "KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Lesezeichen über einen MCP-Server nachschlagen lassen und jeder Änderung, die sie anfordern, im Browser zustimmen",
           "Tag-Vorschläge und kurze Zusammenfassungen, die Sie vor dem Speichern prüfen",
-          "Pläne zur Neuordnung von Ordnern, mit Vorschau, bevor etwas verschoben wird",
+          "Pläne zur Neuordnung von Ordnern, mit Vorschau, bevor etwas verschoben wird, und mit Rückgängig",
           "Ausgewählte Lesezeichen als Markdown- oder XML-Kontext für einen KI-Chat exportieren; das funktioniert ohne KI und sendet nichts"
         ],
         "providersTitle": "Unterstützte Anbieter",
@@ -207,6 +213,10 @@
           "name": "Geprüfte Websites",
           "detail": "Linkprüfung, Titelabruf und Website-Symbole, nachdem Sie den Zugriff erlaubt haben"
         },
+        "agents": {
+          "name": "Lokale KI-Agenten",
+          "detail": "Nur wenn Sie sie zulassen, über ein Programm auf Ihrem Computer"
+        },
         "server": {
           "name": "Bookmark-Scout-Server",
           "detail": "Gibt es nicht. Nichts geht an den Entwickler."
@@ -224,7 +234,7 @@
         },
         "aiOptIn": {
           "title": "KI bleibt aus, bis Sie sie aktivieren",
-          "body": "Anfragen gehen dann direkt von Ihrem Browser an den von Ihnen gewählten Anbieter. Mit Ollama auf Ihrem eigenen Computer bleiben sie dort."
+          "body": "Anfragen gehen dann direkt von Ihrem Browser an den von Ihnen gewählten Anbieter. Mit Ollama auf Ihrem eigenen Computer bleiben sie dort. Lokale KI-Agenten erhalten nichts, bis Sie sie zulassen, und ihre Änderungen warten auf Ihre Zustimmung."
         },
         "exports": {
           "title": "Exporte werden auf Datenschutz geprüft",
@@ -277,7 +287,7 @@
       "items": {
         "data": {
           "q": "Sendet Bookmark Scout meine Lesezeichen irgendwohin?",
-          "a": "Nein. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert, und die Erweiterung sendet nichts an den Entwickler. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden: KI-Anfragen gehen an den von Ihnen gewählten Anbieter, und Linkprüfung, Titelabruf und das Aktualisieren von Website-Symbolen rufen die gespeicherten Websites ab, nachdem Sie den Zugriff auf Websites erlaubt haben. Einstellungen werden über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiv ist. Details finden Sie in der <privacy>Datenschutzerklärung</privacy>."
+          "a": "Nein. Ihre Lesezeichen werden in Ihrem Browser gelesen und geändert, und die Erweiterung sendet nichts an den Entwickler. Daten verlassen Ihren Browser nur, wenn Sie eine optionale Funktion verwenden: KI-Anfragen gehen an den von Ihnen gewählten Anbieter, Linkprüfung, Titelabruf und das Aktualisieren von Website-Symbolen rufen die gespeicherten Websites ab, nachdem Sie den Zugriff auf Websites erlaubt haben, und lokale KI-Agenten, die Sie zulassen, erhalten das, was sie nachschlagen, über ein Programm auf Ihrem Computer. Einstellungen werden über Ihr Browserkonto synchronisiert, wenn die Browsersynchronisierung aktiv ist. Details finden Sie in der <privacy>Datenschutzerklärung</privacy>."
         },
         "needAi": {
           "q": "Muss ich KI verwenden?",
@@ -289,7 +299,7 @@
         },
         "changes": {
           "q": "Ändert die Erweiterung meine Lesezeichen ohne Nachfrage?",
-          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. Vor dem Löschen wird standardmäßig nachgefragt, und Löschvorgänge und Importe lassen sich 10 Sekunden lang rückgängig machen."
+          "a": "Nein. Duplikatbereinigung, URL-Bereinigung, Reparaturen defekter Links, abgerufene Titel, KI-Neuordnung und Importe zeigen alle eine Vorschau, bevor etwas geschrieben wird. „KI fragen“ und lokale KI-Agenten zeigen ihre Änderungen als Plan und warten auf Ihre Zustimmung. Vor dem Löschen wird standardmäßig nachgefragt, und der Lesezeichen-Manager kann Änderungen mit Ctrl+Z rückgängig machen."
         },
         "firefox": {
           "q": "Funktioniert sie in Firefox?",

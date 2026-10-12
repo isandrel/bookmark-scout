@@ -44,6 +44,20 @@
                             "Lancez Actualiser les icônes de site dans la barre latérale Outils du gestionnaire pour télécharger l'icône propre à chaque site. Les icônes enregistrées restent sur cet appareil. Dans Firefox, ouvrez le gestionnaire avec Ouvrir le gestionnaire de favoris dans la fenêtre pop-up de la barre d'outils."
                         ]
                     },
+                    "quickSave": {
+                        "q": "Le raccourci d'enregistrement rapide ne fait rien",
+                        "a": [
+                            "Si une autre extension utilise déjà Alt+Shift+S ou Alt+Shift+D, le navigateur laisse le raccourci de Bookmark Scout sans touches, et la fenêtre pop-up affiche Raccourci d’enregistrement rapide non défini. Cliquez sur Le définir, ou ouvrez Paramètres, puis Enregistrement et recherche, puis Raccourcis clavier, et choisissez d'autres touches.",
+                            "Certaines pages, comme les pages propres au navigateur et la boutique d'extensions, ne permettent pas aux extensions d'y afficher quoi que ce soit. Sur ces pages, l'icône de la barre d'outils indique si la page a été enregistrée, et la fenêtre pop-up propose Annuler."
+                        ]
+                    },
+                    "dataReset": {
+                        "q": "Mes paramètres ont disparu après une mise à jour",
+                        "a": [
+                            "Une mise à jour a déplacé les données enregistrées de Bookmark Scout vers un nouveau format et a supprimé les anciennes données au lieu de les convertir. Les paramètres sont revenus à leurs valeurs par défaut, les services d'IA et les clés API doivent être ajoutés de nouveau, et les prompts personnalisés, les recherches enregistrées, les étiquettes, les résumés et les icônes de site enregistrées ont disparu. Vos favoris ne sont pas touchés.",
+                            "Si vous avez sauvegardé vos paramètres avec Exporter en bas des Paramètres avant la mise à jour, utilisez Importer au même endroit pour les restaurer."
+                        ]
+                    },
                     "websiteAccess": {
                         "q": "Vérifier les liens morts, Récupération des métadonnées ou Actualiser les icônes de site n'a rien analysé",
                         "a": [

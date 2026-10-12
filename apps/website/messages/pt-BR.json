@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Bookmark Scout – Salve favoritos na pasta certa, rápido",
-    "description": "Extensão de navegador que salva páginas na pasta de favoritos certa: digite o nome de uma pasta ou deixe a IA sugerir uma. Além disso, ferramentas de pesquisa e limpeza.",
+    "description": "Extensão de navegador que salva páginas na pasta de favoritos certa: digite o nome de uma pasta, pressione um atalho ou deixe a IA sugerir uma. Além disso, pesquisa e limpeza.",
     "keywords": [
       "extensão de navegador",
       "extensão do Chrome",
@@ -9,33 +9,37 @@
       "extensão do Edge",
       "salvar favoritos em pasta",
       "pesquisar pastas de favoritos",
+      "atalho de teclado para favoritos",
       "gerenciador de favoritos",
       "pesquisa de favoritos",
       "organizador de favoritos",
       "limpeza de favoritos",
       "favoritos duplicados",
       "links quebrados",
-      "ferramentas de IA para favoritos"
+      "ferramentas de IA para favoritos",
+      "servidor MCP para favoritos"
     ]
   },
   "structuredData": {
     "features": [
       "Salvar em uma pasta digitando o nome dela",
+      "Atalho de salvamento rápido com notificação na página e opção de desfazer",
       "Sugestões de pasta com IA opcional",
       "Pesquisa instantânea nos favoritos",
       "Organização com arrastar e soltar",
       "Suporte ao painel lateral (inclusive no Firefox)",
       "Pesquisas salvas",
       "Atalhos de teclado",
-      "Exclusão com opção de desfazer",
+      "Desfazer e refazer no gerenciador de favoritos",
       "Modo escuro",
-      "Gerenciador de favoritos próprio",
+      "Gerenciador de favoritos que funciona como o do Chrome",
       "Limpeza de duplicatas",
       "Remoção de parâmetros de rastreamento",
       "Verificação de links quebrados com correções revisadas",
       "Importação e exportação de favoritos",
       "Revisão de privacidade com ocultação opcional antes das exportações",
-      "Ferramentas de IA opcionais para favoritos",
+      "Conversa com IA opcional que só altera os favoritos depois da sua aprovação",
+      "Agentes de IA locais por meio de um servidor MCP, com aprovações",
       "Suporte a vários idiomas"
     ]
   },
@@ -75,7 +79,7 @@
   "home": {
     "hero": {
       "title": "Salve cada página na pasta certa, em segundos.",
-      "description": "Digite parte do nome de uma pasta e salve a página nela com um clique, ou deixe a IA opcional sugerir a pasta. O Bookmark Scout também pesquisa e arruma os favoritos que você já tem, no Chrome, no Edge e no Firefox, sem conta e sem servidor próprio.",
+      "description": "Digite parte do nome de uma pasta, ou pressione Alt+Shift+S em qualquer página, e a página é salva na pasta a que pertence. A IA opcional também pode sugerir a pasta. O Bookmark Scout também pesquisa e arruma os favoritos que você já tem, no Chrome, no Edge e no Firefox, sem conta e sem servidor próprio.",
       "download": "Baixar do GitHub",
       "install": "Instalar o Bookmark Scout",
       "docs": "Ler a documentação",
@@ -133,25 +137,25 @@
         "points": [
           "Digite parte do nome de uma pasta, mesmo uma que esteja bem no fundo da árvore, e salve a página atual nela sem tirar as mãos do teclado",
           "Digite um caminho como work/react e encontre a pasta mesmo com um pequeno erro de digitação",
-          "As pastas em que você salvou recentemente aparecem primeiro",
-          "Uma página que já está nessa pasta não é salva duas vezes",
+          "Pressione Alt+Shift+S em qualquer página para salvá-la na pasta que melhor corresponde a ela; uma pequena notificação na página oferece Desfazer e outras pastas",
+          "Uma página que já está nessa pasta não é salva duas vezes, e as pastas em que você salvou recentemente aparecem primeiro",
           "Salve links em pastas recentes pelo menu de clique com o botão direito",
-          "Com a IA ativada, receba sugestões de pasta para a página, incluindo um novo caminho de pastas depois que você o revisar"
+          "Com a IA ativada, receba sugestões de pasta para a página ou salve na primeira delas com Alt+Shift+D"
         ]
       },
       "organize": {
         "tab": "Encontrar e organizar",
         "heading": "Encontre e organize o que você salvou",
-        "caption": "O gerenciador substitui a página de favoritos do Chrome por uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
+        "caption": "O gerenciador substitui a página de favoritos do Chrome e funciona como ela, com uma árvore de pastas, uma trilha de navegação e uma tabela classificável.",
         "alt": "O gerenciador do Bookmark Scout mostrando a pasta Docs de desenvolvimento como tabela, com as colunas tipo, caminho da pasta, URL, título e data de adição, ao lado de uma árvore de pastas",
         "points": [
           "Pesquise em todos os favoritos enquanto digita, com opções para diferenciar maiúsculas e minúsculas, palavra inteira e expressão regular",
           "Mantenha a mesma árvore e a mesma pesquisa abertas no painel lateral do navegador (inclusive no Firefox)",
           "Salve uma pesquisa como visualização inteligente que sempre mostra resultados atualizados",
-          "Arraste favoritos e pastas pela árvore de pastas",
-          "Filtre, classifique e redimensione colunas na tabela do gerenciador",
+          "Selecione linhas com Shift e Ctrl, clique com o botão direito para recortar, copiar, colar e abrir todos, e arraste linhas, pastas e links para onde eles devem ficar",
+          "Desfaça e refaça alterações com Ctrl+Z e Ctrl+Y, mesmo depois de recarregar a página",
           "Importe HTML ou JSON depois de uma prévia e exporte para HTML, JSON, Markdown ou CSV",
-          "Navegue pelas pastas e pelos resultados com o teclado; os atalhos Ctrl e Cmd do navegador continuam funcionando"
+          "Crie um link para uma pasta ou uma pesquisa e navegue por tudo com o teclado"
         ]
       },
       "cleanUp": {
@@ -165,7 +169,7 @@
           "Encontre links quebrados e corrija-os: exclua, use o redirecionamento, aponte para uma cópia arquivada ou edite o URL",
           "Busque títulos de página e aplique só os que você escolher",
           "Baixe o ícone de cada site para que os favoritos o mostrem, inclusive no Firefox",
-          "Exclua com confirmação e desfaça em até 10 segundos"
+          "Desfaça exclusões e limpezas pela notificação que aparece em seguida"
         ]
       },
       "ai": {
@@ -174,8 +178,10 @@
         "caption": "A IA fica desativada até você ativá-la nas Configurações, escolher um provedor e adicionar sua própria chave de API quando o provedor exigir uma.",
         "alt": "A guia IA da página de configurações do Bookmark Scout com os recursos de IA desativados e os seletores de provedor e modelo",
         "points": [
+          "Pergunte à IA sobre seus favoritos: ela os pesquisa, verifica links e propõe movimentações, renomeações e novas pastas como um plano que não altera nada até você aprová-lo",
+          "Permita que agentes de IA do seu computador, como Claude Code, Codex ou Cursor, consultem os favoritos por meio de um servidor MCP, e aprove no navegador cada alteração que eles pedirem",
           "Sugestões de tags e resumos curtos que você revisa antes de salvar",
-          "Planos de reorganização de pastas, com prévia antes de qualquer movimentação",
+          "Planos de reorganização de pastas, com prévia antes de qualquer movimentação e opção de desfazer",
           "Exporte os favoritos selecionados como contexto em Markdown ou XML para uma conversa com IA; isso funciona sem IA e não envia nada"
         ],
         "providersTitle": "Provedores compatíveis",
@@ -207,6 +213,10 @@
           "name": "Sites que você verifica",
           "detail": "Verificação de links quebrados, busca de títulos e ícones dos sites, depois que você permitir o acesso"
         },
+        "agents": {
+          "name": "Agentes de IA locais",
+          "detail": "Somente quando você permite, por meio de um programa no seu computador"
+        },
         "server": {
           "name": "Servidor do Bookmark Scout",
           "detail": "Não existe. Nada vai para o desenvolvedor."
@@ -224,7 +234,7 @@
         },
         "aiOptIn": {
           "title": "A IA fica desativada até você ativá-la",
-          "body": "Depois disso, as solicitações vão direto do seu navegador para o provedor que você escolheu. Com o Ollama no seu próprio computador, elas ficam nele."
+          "body": "Depois disso, as solicitações vão direto do seu navegador para o provedor que você escolheu. Com o Ollama no seu próprio computador, elas ficam nele. Os agentes de IA locais não recebem nada até você permitir, e as alterações deles aguardam sua aprovação."
         },
         "exports": {
           "title": "As exportações passam por uma revisão de privacidade",
@@ -277,7 +287,7 @@
       "items": {
         "data": {
           "q": "O Bookmark Scout envia meus favoritos para algum lugar?",
-          "a": "Não. Seus favoritos são lidos e alterados dentro do seu navegador, e a extensão não envia nada ao desenvolvedor. Os dados só saem do navegador quando você usa um recurso opcional: as solicitações de IA vão para o provedor que você escolheu, e o verificador de links quebrados, o buscador de títulos e a atualização de ícones dos sites acessam os sites salvos nos favoritos depois que você permite o acesso aos sites. As configurações são sincronizadas pela conta do navegador, se a sincronização do navegador estiver ativada. A <privacy>política de privacidade</privacy> tem os detalhes."
+          "a": "Não. Seus favoritos são lidos e alterados dentro do seu navegador, e a extensão não envia nada ao desenvolvedor. Os dados só saem do navegador quando você usa um recurso opcional: as solicitações de IA vão para o provedor que você escolheu, o verificador de links quebrados, o buscador de títulos e a atualização de ícones dos sites acessam os sites salvos nos favoritos depois que você permite o acesso aos sites, e os agentes de IA locais que você permitir recebem o que consultam por meio de um programa no seu computador. As configurações são sincronizadas pela conta do navegador, se a sincronização do navegador estiver ativada. A <privacy>política de privacidade</privacy> tem os detalhes."
         },
         "needAi": {
           "q": "Preciso usar IA?",
@@ -289,7 +299,7 @@
         },
         "changes": {
           "q": "Ele altera meus favoritos sem perguntar?",
-          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Por padrão, a exclusão pede confirmação, e exclusões e importações podem ser desfeitas por 10 segundos."
+          "a": "Não. A limpeza de duplicatas, a limpeza de URLs, as correções de links quebrados, os títulos buscados, a reorganização com IA e as importações mostram uma revisão antes de gravar qualquer coisa. Perguntar à IA e os agentes de IA locais mostram as alterações como um plano e aguardam sua aprovação. Por padrão, a exclusão pede confirmação, e o gerenciador de favoritos pode desfazer alterações com Ctrl+Z."
         },
         "firefox": {
           "q": "Funciona no Firefox?",
