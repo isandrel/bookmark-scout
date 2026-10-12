@@ -1,6 +1,6 @@
 ---
 name: privacy-disclosure-sync
-description: Keep every Bookmark Scout privacy disclosure true and in step with the code - the privacy policy (repository, website in every language), store data declarations (Chrome Data usage, Firefox data_collection_permissions, Edge privacy fields), permission justifications, docs privacy and permissions pages, store listings, and the in-product consent text - whenever what leaves the device changes. Use when a change adds or alters a network request, AI context, provider, permission, synced storage key, or page reading; when a store review flags undisclosed data or a policy issue; before a release; or when the user asks whether the privacy policy, store answers, or consent prompts are still accurate, even if they only say "check privacy" or "do we need to disclose this".
+description: Keep every Bookmark Scout privacy disclosure true and in step with the code - the privacy policy (repository, website in every language), store data declarations (Chrome Data usage, Firefox data_collection_permissions, Edge privacy fields), permission justifications, docs privacy and permissions pages, store listings, and the in-product consent text - whenever what leaves the device changes. Use when a change adds or alters a network request, AI context, provider, permission, synced or session storage key, backup or export contents, local agent access, or page reading; when a store review flags undisclosed data or a policy issue; before a release; or when the user asks whether the privacy policy, store answers, or consent prompts are still accurate, even if they only say "check privacy" or "do we need to disclose this".
 ---
 
 # Privacy disclosure sync (Bookmark Scout)
@@ -64,6 +64,9 @@ Update them in this order, because each one is derived from the one before:
 - **Optional permissions are requested at first use**, from a user gesture, with an explanation where the browser's prompt alone is alarming (`PERMISSION_FEATURES` in `permission-catalog.ts`).
 - **The Chrome Data usage answers are the maintainer's decision.** `store/privacy-disclosures.md` records the decision and why. If a change makes "the developer collects nothing" untrue, raise it with the maintainer before release.
 - **Never commit real keys or user data** in examples, tests, or screenshots for these pages.
+- **What is stored counts too, not only what is sent.** A change to what syncs, what is kept locally or in session storage, or what the backup file or JSON export holds updates the policy's storage and "Exports and backups" sections and the inventory in `store/privacy-disclosures.md`. PR #644 changed only backup contents and still needed the policy, the website in every language, and the docs privacy and settings pages. The inventory script does not see backup policies (`backup:` in `src/lib/storage/registry.ts`, `BACKUP_ITEMS` in `src/services/backup.ts`); check those by hand.
+- **Only over-disclosure may lag.** In a PR series, disclosures may catch up in a later PR only when the interim text says more than the code does (settings stopped syncing the provider and model one PR before the policy said so). Anything newly sent or stored ships with its disclosure in the same PR. When older store versions sent more, say so with the version.
+- **Edit the Unreleased CHANGELOG bullets** a series already wrote rather than adding a later bullet that contradicts them.
 
 ## 3. Check before opening the PR
 

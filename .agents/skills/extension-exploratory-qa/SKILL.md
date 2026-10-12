@@ -15,11 +15,12 @@ Drive the real built extension like a user, in a throwaway profile, and report c
 
 ## Setup
 
-1. Build Chromium output for the commit under test from the repository root:
+1. Build the commit under test in its own detached worktree, never in the main checkout: the maintainer's browser loads the main checkout's `apps/extension/dist/chrome-mv3` unpacked, and parallel testers rebuilding one `dist` test each other's code.
    ```bash
-   bunx nx run extension:build:chrome
+   git worktree add --detach ~/.cache/bookmark-scout-qa/wt-<area> origin/main
+   cd ~/.cache/bookmark-scout-qa/wt-<area> && bun install --frozen-lockfile && bunx nx run extension:build:chrome
    ```
-   Output: `apps/extension/dist/chrome-mv3`. To test another commit without touching the current checkout, build in a detached worktree and point `EXT` at its `dist/chrome-mv3`.
+   Point `EXT` at that worktree's `apps/extension/dist/chrome-mv3` and run the runner from that worktree (its `node_modules` provide Playwright). Keep step files and helpers outside it, in your QA folder, so they survive `git worktree remove --force` at the end.
 2. Run steps with the bundled runner from the repository root. Keep QA output outside the repository in a durable folder such as `~/.cache/bookmark-scout-qa/`. Session scratch folders can be wiped mid-run and take the reports with them:
    ```bash
    QA_DIR=~/.cache/bookmark-scout-qa RUN=qa-popup \
@@ -46,6 +47,12 @@ Extension pages: `popup.html` (420×600), `sidepanel.html` (400×900), `bookmark
 - **Network edge cases:** on the local server, add a stalled body, a never-ending non-HTML response, HEAD answered with 403 or 405, a redirect loop, and a refused port.
 - **User-reported UI bugs:** reproduce on current `main` before fixing. A user's screenshot once came from an installed build a version behind. Save before and after screenshots (popup and side panel, light and dark) under `~/.cache/bookmark-scout-qa/<topic>/`. For visual reviews of a UI change, see the `extension-ui-change` skill.
 - **Combined main:** after a batch of fix PRs lands, re-run the affected surfaces on the combined `main`. PRs that each pass CI can regress together (for example an empty templated toast).
+- **Permissions:** the runner cannot answer permission prompts. Make a copy of the build per grant set, with the optional permissions moved into `permissions` in the copy's `manifest.json`, the way the `grantedBuild` fixture in `tests/e2e/fixtures.ts` does (quick save needed three: `tabs`, `tabs` plus website access, and none for the fallback). Fire keyboard commands the way `pressShortcut` in `tests/e2e/quick-save-helpers.ts` does.
+- **Go past configured limits.** Read the bounds in `apps/extension/config/**/*.toml` and exceed each one. One deletion larger than the undo history's byte limit silently dropped that entry and every earlier one (PR #647).
+- **Leftover overlays.** After closing each menu, dialog, or select, count `[role=dialog]`, `[role=menu]`, and `[role=listbox]` that are still visible, then press a shortcut. That is how dead manager shortcuts after a Select were pinned down (PR #641).
+- **Edges of the page.** Click controls a few pixels above their bottom edge at the narrowest width; an empty toast area once covered the bottom 24 px of every page and swallowed clicks (PR #643).
+- **Update cleanup:** to see what an update does to stored data, copy the build, seed keys in a persistent profile, raise `version` in the copy's `manifest.json`, and relaunch the same `RUN`.
+- **Firefox:** Playwright cannot open `moz-extension://` pages. Put a temporary `tests/e2e-firefox/zz-qa-*.spec.ts` in your QA worktree and use its Selenium fixtures; delete it with the worktree.
 
 ## Store and marketing screenshots
 
@@ -57,7 +64,7 @@ The procedure lives in `store/README.md` ("How they were made"). Traps:
 
 ## Scaling out
 
-For a full pass, run one tester per surface in parallel, each with its own `RUN`: popup and side panel, manager, Tools, options and background. Subagents may be unable to write report files; have each return findings as text and save them to `$QA_DIR/$RUN/FINDINGS.md` from the orchestrating session. See the `parallel-agent-delivery` skill for turning findings into fixes.
+For a full pass, run one tester per surface in parallel: popup, side panel, and quick save; manager; Tools; options, storage, and the MCP bridge. Give each its own build worktree and its own subfolder, `$QA_DIR/<area>/`, for step files, helper scripts, and runs; never write to the `QA_DIR` root. A separate `RUN` keeps only profiles and screenshots apart, and one tester overwrote another's shared `run.sh` mid-run. Subagents may be unable to write report files; have each return findings as text and save them to `$QA_DIR/<area>/FINDINGS.md` from the orchestrating session. One such pass found 3 Medium and 11 Low bugs the suites missed, including a prompt-injection save path; see the `parallel-agent-delivery` skill for turning findings into fixes.
 
 ## Report format
 
