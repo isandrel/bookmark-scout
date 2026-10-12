@@ -30,7 +30,11 @@ const WEB_SEARCH_TOOLS: Record<
   xai: async () => (await import('@ai-sdk/xai')).xai.tools.webSearch({}),
 };
 
-/** The registry actions AI may call in this context, as AI SDK tools that run `runAction`. */
+/**
+ * The registry actions AI may call in this context, as AI SDK tools that run `runAction`. Each
+ * call gets what the conversation so far allows (`readConversation`), read from the messages
+ * that led to it.
+ */
 export async function createAgentToolSet(context: ActionContext): Promise<ToolSet> {
   const names = await agentActionIds(context);
   return Object.fromEntries(
@@ -43,12 +47,45 @@ export async function createAgentToolSet(context: ActionContext): Promise<ToolSe
           tool({
             description: agent.description,
             inputSchema: input,
-            execute: (args: unknown) => runAction(name, args, context),
+            execute: (args: unknown, { messages }: { messages: ModelMessage[] }) =>
+              runAction(name, args, { ...context, conversation: readConversation(messages) }),
           }),
         ],
       ];
     }),
   );
+}
+
+/** The text of a user message. */
+function userText(message: Extract<ModelMessage, { role: 'user' }>): string {
+  return typeof message.content === 'string'
+    ? message.content
+    : message.content.flatMap((part) => (part.type === 'text' ? [part.text] : [])).join('\n');
+}
+
+/**
+ * What a chat's messages allow a call: whether unreviewed text is in them, and the URLs the user
+ * typed or a tool result named. Nothing is kept between calls; the messages are the conversation.
+ */
+export function readConversation(messages: readonly ModelMessage[]): ActionConversation {
+  const urls = messages.flatMap((message) => {
+    if (message.role === 'user') return webUrlsInMessage(userText(message));
+    if (
+      (message.role === 'tool' || message.role === 'assistant') &&
+      Array.isArray(message.content)
+    ) {
+      return message.content.flatMap((part) =>
+        part.type === 'tool-result' && part.output.type === 'json'
+          ? urlsInToolResult(part.output.value)
+          : [],
+      );
+    }
+    return [];
+  });
+  return {
+    untrustedContentSeen: hasUntrustedContent(messages),
+    knownUrls: new Set(urls.map(conversationUrlKey)),
+  };
 }
 
 /** Whether a tool that brings in unreviewed text (page text, a web search) ran in `messages`. */

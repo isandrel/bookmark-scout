@@ -5,7 +5,9 @@ import {
   type BookmarkHistory,
   type BookmarkHistoryEntry,
   bookmarkHistoryValue,
+  describeBookmarkChangeUndo,
   describeBookmarkHistoryLabel,
+  getUndoableBookmarkChange,
   recordBookmarkWrites,
   redoBookmarkChange,
   remapBookmarkHistoryIds,
@@ -224,5 +226,27 @@ describe('bookmark history labels', () => {
     expect(describeBookmarkHistoryLabel({ action: 'delete', title: 'News' })).toBe('Delete "News"');
     expect(describeBookmarkHistoryLabel({ action: 'move', count: 3 })).toBe('Move 3 items');
     expect(describeBookmarkHistoryLabel({ action: 'sort', title: 'Work' })).toBe('Sort "Work"');
+  });
+
+  it('lists what undoing an entry restores, item by item, in the order undo runs', async () => {
+    const { recorded } = await recordBookmarkWrites({ action: 'change' }, async (w) => {
+      await w.update('a', { title: 'A2' });
+      await w.update('c', { url: 'https://e2e.invalid/c2' });
+      await w.move('b', { parentId: 'g' });
+      await w.remove('s');
+      await w.create({ parentId: 'g', title: 'New', url: 'https://e2e.invalid/new' });
+    });
+    const entry = recorded?.entry;
+    if (!entry) throw new Error('nothing recorded');
+    expect(await getUndoableBookmarkChange(entry.id)).toEqual(entry);
+    expect(await describeBookmarkChangeUndo(entry)).toEqual([
+      'Remove “New”',
+      'Put “Sub” back in Folder',
+      'Move “B” back to Folder',
+      'Change the address of “C” back to https://e2e.invalid/c',
+      'Rename “A2” back to “A”',
+    ]);
+    await undoBookmarkChange(entry.id);
+    expect(await getUndoableBookmarkChange(entry.id)).toBeUndefined();
   });
 });

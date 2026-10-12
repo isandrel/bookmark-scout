@@ -4,14 +4,61 @@
  * this action only checks it against the library (no side effects) and returns the buttons as
  * they will work, and the chat draws them (`ChatSuggestions.lazy.tsx`). A click is the user's
  * choice: a question or option is sent as their next message, and a save runs the
- * `saveBookmark` action, with its undo, without another approval.
+ * `saveBookmark` action, with its undo, without another approval unless `approval` says so.
  *
  * Folders are named by ref or path and resolved against the real tree; a suggestion whose folder
  * or bookmark does not exist is left out and counted in `dropped`, so a button never points
  * somewhere else than it says. Button text from the model is plain text, cut to a configured
  * length (`config/ai/agent.toml`), and save, open, and show buttons are labeled by the extension.
+ *
+ * A save may only name a page the conversation already knows: the current page, a URL a tool
+ * result named (`url` fields of search results, page reads, the current page), or one the user
+ * typed (`ActionContext.conversation`). Any other URL, such as one that appears only in page
+ * text or in the model's own words, is left out, so injected text cannot turn into a save button.
+ * In a conversation with unreviewed text, a save button asks the user to confirm first
+ * (`approval`), the same rule `actionApproval` applies to the model's own saves.
  */
 import { z } from 'zod';
+
+/** The field of a tool result whose value names a page the conversation has seen. */
+const TOOL_RESULT_URL_FIELD = 'url';
+
+/** A URL as conversations compare them: parsed and serialized, or trimmed when it is invalid. */
+export function conversationUrlKey(url: string): string {
+  const trimmed = url.trim();
+  return safeNormalizeUrl(trimmed) ?? trimmed;
+}
+
+/**
+ * http and https URLs written in a chat message, without the punctuation that may follow them.
+ * Unlike `urlsInText` (pasted lists of links), a URL here may sit inside a sentence.
+ */
+export function webUrlsInMessage(text: string): string[] {
+  return (text.match(/https?:\/\/[!-~]+/gi) ?? []).flatMap((match) => {
+    const url = match.replace(/[.,;:!?'"`)\]}>]+$/, '');
+    return isWebUrl(url) ? [url] : [];
+  });
+}
+
+/** Every `url` field in a tool result, at any depth; text fields are never searched. */
+export function urlsInToolResult(value: unknown): string[] {
+  if (Array.isArray(value)) return value.flatMap(urlsInToolResult);
+  if (!isPlainObject(value)) return [];
+  return Object.entries(value).flatMap(([key, field]) =>
+    key === TOOL_RESULT_URL_FIELD && typeof field === 'string' ? [field] : urlsInToolResult(field),
+  );
+}
+
+/** Whether a save of `url` may be offered: the current page, or a URL the conversation knows. */
+function isKnownPage(
+  url: string,
+  current: ActionPage | undefined,
+  conversation: ActionConversation | undefined,
+): boolean {
+  const key = conversationUrlKey(url);
+  if (current && conversationUrlKey(current.url) === key) return true;
+  return conversation?.knownUrls.has(key) ?? false;
+}
 
 const label = z.string().trim().min(1).describe("Short button text in the user's language");
 const text = z.string().trim().min(1).describe('The message sent when the user clicks it');
@@ -24,7 +71,13 @@ const suggestionInput = z.discriminatedUnion('kind', [
   z
     .object({
       kind: z.literal('save'),
-      url: z.string().optional().describe('The page to save; the current page when left out'),
+      url: z
+        .string()
+        .optional()
+        .describe(
+          'The page to save, the current page when left out: a URL the user typed or a tool ' +
+            'result gave, never one only seen in page text',
+        ),
       title: z.string().trim().optional(),
       folder: z.string().min(1).describe('An existing folder: its ref (f:<id>) or full path'),
       newFolder: z.string().trim().min(1).optional().describe('A new folder to create inside it'),
@@ -46,6 +99,8 @@ const suggestionOutput = z.discriminatedUnion('kind', [
     folderRef: z.string(),
     folderPath: z.string(),
     newFolder: z.string().optional(),
+    /** Set when the click must be confirmed first (`actionApproval` of `saveBookmark`). */
+    approval: z.enum(['always', 'untrusted']).optional(),
   }),
   z.object({ kind: z.literal('open'), ref: z.string(), title: z.string(), url: z.string() }),
   z.object({
@@ -77,13 +132,29 @@ async function resolveSuggestion(
         text: cut(suggestion.text, textChars),
       };
     case 'save': {
+      const current = await context.activeTab();
       const page = suggestion.url
-        ? { url: suggestion.url, title: suggestion.title ?? '' }
-        : await context.activeTab();
+        ? {
+            url: suggestion.url,
+            title:
+              current && conversationUrlKey(current.url) === conversationUrlKey(suggestion.url)
+                ? current.title
+                : '',
+          }
+        : current;
       if (!page || !isWebUrl(page.url)) return 'There is no web page to save.';
+      if (!isKnownPage(page.url, current, context.conversation)) {
+        return (
+          `Left out saving ${page.url}: offer to save only the current page, a URL from a tool ` +
+          'result, or one the user typed.'
+        );
+      }
       const folder = resolveActionFolder(library, suggestion.folder);
       if (isActionError(folder)) return folder.error.message;
       if (folder.node.unmodifiable) return `${folder.path} is managed by the browser.`;
+      const approval = actionApproval('saveBookmark', {
+        untrustedContentSeen: context.conversation?.untrustedContentSeen ?? true,
+      });
       return {
         kind: 'save',
         url: page.url,
@@ -91,6 +162,7 @@ async function resolveSuggestion(
         folderRef: toFolderRef(folder.node.id),
         folderPath: folder.path,
         ...(suggestion.newFolder ? { newFolder: cut(suggestion.newFolder, labelChars) } : {}),
+        ...(approval === 'none' ? {} : { approval }),
       };
     }
     case 'open': {
@@ -132,7 +204,8 @@ const suggestActions = defineAction({
     description:
       'Offer the user buttons under your answer, at most ' +
       `${ASK_AI_CONFIG.max_suggestions}: next questions they may ask, saving a page to a ` +
-      'folder (the current page unless you give a URL), a few options or ideas to choose from, ' +
+      'folder (the current page, or a URL the user typed or a tool result gave), a few options ' +
+      'or ideas to choose from, ' +
       'or opening or showing a bookmark. Nothing happens until the user clicks one. Call it ' +
       'once, at the end of an answer, only when the buttons help; label them in the language ' +
       'the user writes in.',

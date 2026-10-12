@@ -244,6 +244,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 **`mask-icon`** (`MaskIcon`): a one-color image, such as a provider logo, drawn as a CSS mask in the current text color.
 
+**`chat-suggestions`** (`ChatSuggestions.lazy.tsx`): the buttons under an Ask AI answer, `sm` `outline` buttons that wrap, each with a 14px lucide icon (question, lightbulb, bookmark-plus, external-link, folder-search). Questions and options show the model's words as plain text; every other label is built by the extension. A **Save to** button has two lines: "Save to <folder path>", then the page as `host · “title”` in meta type and `ink-soft`, truncated at the end so the site stays visible, with the full URL as its native tooltip (`title`). After the chat has read page text or web results, a save click shows the `ask-ai-approval` card under the buttons (the same card Ask AI uses for its own changes: the untrusted-content note, "Save “title” to <folder>", the full URL in mono meta type, **Approve** and **Decline**); the buttons wait until it is answered, and **Decline** leaves the button usable again. A used button stays disabled.
+
 ## Do's and don'ts
 
 ### Do
