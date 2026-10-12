@@ -246,7 +246,8 @@ async function showInTab(tabId: number, view: QuickSaveToastView): Promise<boole
   }
 }
 
-function toolbarAction() {
+/** The toolbar button's API, for its badge. */
+export function toolbarAction() {
   // Firefox's Manifest V2 build has browserAction instead of action.
   return browser.action ?? browser.browserAction;
 }
@@ -472,8 +473,10 @@ async function saveWithAI(
 
   let recommendations: FolderRecommendation[];
   try {
-    recommendations = await withAIHost(ai.settings, resolveAppLocale(settings.language), (host) =>
-      recommendFoldersVia(host, page, tree, settings.aiMaxRecommendations, readPage),
+    recommendations = await withAIHost(
+      ai.settings,
+      { locale: resolveAppLocale(settings.language), source: 'folderRecommendation' },
+      (host) => recommendFoldersVia(host, page, tree, settings.aiMaxRecommendations, readPage),
     );
   } catch (error) {
     return { ...saving, status: 'failed', failure: 'aiFailed', error: getErrorMessage(error) };
@@ -557,17 +560,6 @@ export async function runQuickSave(
 // Undo and move
 // ---------------------------------------------------------------------------------------------
 
-/** Removes folders a quick save created that are still empty, innermost first. */
-async function removeEmptyCreatedFolders(folderIds: readonly string[]): Promise<void> {
-  for (const folderId of [...folderIds].reverse()) {
-    try {
-      if ((await getBookmarkChildren(folderId)).length === 0) await deleteBookmark(folderId);
-    } catch {
-      // Already gone, or the user put something in it: keep it.
-    }
-  }
-}
-
 /** The bookmark's current folder as a choice, to offer it back after it moves. */
 function currentAsAlternative(record: QuickSaveRecord): QuickSaveAlternative | null {
   const removed =
@@ -589,7 +581,7 @@ export async function undoQuickSave(record: QuickSaveRecord): Promise<QuickSaveR
     } catch {
       // Already removed elsewhere; the folders below are still cleaned up.
     }
-    await removeEmptyCreatedFolders(record.createdFolderIds);
+    await removeEmptyFolders(record.createdFolderIds);
     return {
       ...record,
       status: 'removed',
@@ -607,7 +599,7 @@ export async function undoQuickSave(record: QuickSaveRecord): Promise<QuickSaveR
     await moveBookmark(record.bookmarkId, { parentId });
   }
   const current = currentAsAlternative(record);
-  await removeEmptyCreatedFolders(record.createdFolderIds);
+  await removeEmptyFolders(record.createdFolderIds);
   return {
     ...record,
     status: 'duplicate',
@@ -658,7 +650,7 @@ export async function moveQuickSave(
 
   await moveBookmark(record.bookmarkId, { parentId: target.folderId });
   const current = currentAsAlternative(record);
-  await removeEmptyCreatedFolders(record.createdFolderIds);
+  await removeEmptyFolders(record.createdFolderIds);
   await trackRecentFolder(target.folderId, target.path);
   return {
     ...record,

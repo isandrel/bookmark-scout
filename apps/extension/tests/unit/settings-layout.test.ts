@@ -11,7 +11,14 @@ import {
 
 // Device settings changed where they apply: the AI activity panel's recording switch and Ask AI's
 // web search button.
-const EDITED_ELSEWHERE = new Set(['aiActivityRecording', 'askAiWebSearch']);
+const EDITED_ELSEWHERE = new Set([
+  'aiActivityRecording',
+  'askAiWebSearch',
+  // Edited in their Options panels (ManagerMenusPanel, AskAIActionsPanel).
+  'askAiDisabledActions',
+  'agentBridgeDisabledActions',
+  'managerMenuActions',
+]);
 
 describe('Options layout', () => {
   const categories = Object.values(getSettingsCategories());

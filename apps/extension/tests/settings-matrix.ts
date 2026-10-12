@@ -243,6 +243,32 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
       '[mocked provider contract] AI activity records a request with its key and extra headers redacted, only while on',
     ),
   ], 'A device setting: it never syncs.'),
+  askAiDisabledActions: tested('services/actions.ts', [
+    unit('actions.test.ts', 'leaves out and refuses the actions the user turned off for Ask AI'),
+    e2e('ask-ai.spec.ts', '[mocked provider contract] Ask AI is not offered the actions turned off in Options'),
+  ], 'Edited in Options > AI > What Ask AI may do (AskAIActionsPanel).'),
+  agentBridgeEnabled: tested('services/agent-bridge.ts', [
+    unit('agent-bridge.test.ts', 'answers a call through the action registry and refuses one while access is off'),
+    unit('agent-bridge.test.ts', 'connects through native messaging, announces the tools, and answers calls'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ], 'A device setting; turning it on asks for native messaging.'),
+  agentBridgeWrites: tested('services/actions.ts', [
+    unit('agent-approvals.test.ts', 'refuses changes without asking while changes are not allowed'),
+    unit('agent-approvals.test.ts', 'asks before a local agent saves a page, and saves nothing when declined'),
+    e2e('agent-bridge.spec.ts', 'a local agent saves a page only after the user approves it in the approval window'),
+  ], 'A device setting; every change still waits for approval.'),
+  agentBridgeRedactUrls: tested('services/agent-bridge.ts', [
+    unit('agent-bridge.test.ts', 'hides private values in the titles and URLs agents receive'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ]),
+  agentBridgeDisabledActions: tested('services/actions.ts', [
+    unit('agent-bridge.test.ts', 'leaves out and refuses the actions the user turned off for local agents'),
+    e2e('agent-bridge.spec.ts', 'Options turns on access for local AI agents, which look up bookmarks through the bridge'),
+  ], 'Edited in Options > AI > Local AI agents (AgentBridgeActionsPanel).'),
+  managerMenuActions: tested('components/ui/table/bookmark-row-menu.tsx', [
+    unit('action-menus.test.ts', 'hide and reorder item-menu actions as the user arranged them'),
+    e2e('bookmark-manager-menus.spec.ts', 'Options hides and reorders the manager menu items'),
+  ], 'Edited in Options > Behavior > Bookmark manager menus (ManagerMenusPanel).'),
   askAiWebSearch: tested('services/ai-agent.ts', [
     unit('ai-agent.test.ts', "adds the provider's web search only while the setting is on"),
   ], 'A device setting, switched with the globe button in Ask AI.'),
@@ -352,10 +378,6 @@ export const settingsMatrix: Record<keyof Settings, SettingCoverage> = {
   // Reorganization
   reorganizationEnabled: tested(TOOL_TABLE, [toolFlags]),
   reorganizationDefaultScope: tested(TOOL_TABLE, [duplicateSettings]),
-  reorganizationDryRunFirst: tested(TOOL_TABLE, [
-    toolFlags,
-    unit('ai-reorganization.test.ts', 'allows apply without preview confirmation when dry-run-first is disabled'),
-  ]),
   reorganizationMinConfidence: tested(TOOL_OPTIONS, [reorgSafety]),
   reorganizationBatchSize: tested(TOOL_OPTIONS, [reorgSafety]),
 

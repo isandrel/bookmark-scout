@@ -1,0 +1,83 @@
+name: MCP bridge binaries
+
+# Builds the bookmark-scout-mcp program (packages/mcp-bridge) as a standalone binary for each
+# platform, plus the npm package's dist/cli.js, and keeps them as workflow artifacts. It publishes
+# nothing: attaching binaries to a release, `npm publish`, and the MCP registry entry are the
+# maintainer's steps (packages/mcp-bridge/README.md). Run it by hand from the Actions tab.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  binaries:
+    name: Build ${{ matrix.target }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        # Bun cross-compiles every target from Linux.
+        target:
+          - bun-linux-x64
+          - bun-linux-arm64
+          - bun-darwin-x64
+          - bun-darwin-arm64
+          - bun-windows-x64
+          - bun-windows-arm64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Test the bridge
+        run: bun test packages/mcp-bridge
+
+      - name: Compile for ${{ matrix.target }}
+        working-directory: packages/mcp-bridge
+        run: |
+          suffix=""
+          case "${{ matrix.target }}" in bun-windows-*) suffix=".exe" ;; esac
+          name="bookmark-scout-mcp-${{ matrix.target }}"
+          name="${name#bun-}${suffix}"
+          bun build src/cli.ts --compile --target=${{ matrix.target }} --outfile "dist/${name}"
+          echo "BINARY=packages/mcp-bridge/dist/${name}" >> "$GITHUB_ENV"
+
+      - name: Keep the binary
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.target }}
+          path: ${{ env.BINARY }}
+          if-no-files-found: error
+
+  npm-package:
+    name: Build the npm package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Build dist/cli.js and pack it
+        working-directory: packages/mcp-bridge
+        run: |
+          bun run build:npm
+          node dist/cli.js --version
+          bun pm pack --destination dist
+
+      - name: Keep the package
+        uses: actions/upload-artifact@v7
+        with:
+          name: npm-package
+          path: packages/mcp-bridge/dist/*.tgz
+          if-no-files-found: error

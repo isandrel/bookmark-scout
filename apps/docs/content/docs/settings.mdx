@@ -107,6 +107,10 @@ Below them, **Keyboard shortcuts** shows the keys each shortcut has in your brow
 | --- | --- | --- |
 | **Confirm Before Delete** | On | Ask before deleting. Every deletion can be undone for 10 seconds either way |
 
+### Bookmark manager menus [#manager-menus]
+
+Choose which commands the manager's right-click and ⋯ menus show, and move them up or down within each group. **Restore defaults** brings back the full menu. At least one command always stays.
+
 ## AI [#ai]
 
 AI is off by default. These settings matter only after you turn on **AI Features**.
@@ -131,6 +135,16 @@ Below these, the provider panel holds **API Key**, **Base URL**, **Custom Model*
 | --- | --- | --- |
 | **Read page content** | Off | Send the main text of each page, not only its title and URL, to folder recommendations, Auto-Tagging, and Content Summarizer. Asks for website access when turned on |
 
+### What Ask AI may do [#ask-ai-actions]
+
+Every lookup and change Ask AI can make is listed here, and all are on by default. Turn one off and Ask AI is not offered it at all. Applying a plan of changes always asks you first, whatever you choose here.
+
+### Local AI agents [#agent-bridge]
+
+**Allow local AI agents** (off by default, for this device only) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program, which you install and register with `bookmark-scout-mcp install`. Turning it on asks your browser to let the extension talk to that program. **Allow changes** (off by default) also lets them save pages and propose moves, renames, deletions, and new folders; each change opens a Bookmark Scout window where you approve or decline it, and you can undo it in the bookmark manager. The panel below the switch shows whether the program is running.
+
+**Hide private values** (on by default) replaces sensitive URL parameters, tokens, and email addresses in the titles and URLs agents receive, using the Privacy Scanner's list. **What local agents may do** lists every lookup, all on by default; one you turn off is not offered to agents at all.
+
 ## AI Tools [#ai-tools]
 
 Each tool has an **Enable** switch (on by default). Turning one off hides it from the manager's **Tools** sidebar.
@@ -140,7 +154,7 @@ Each tool has an **Enable** switch (on by default). Turning one off hides it fro
 | **AI Context Packer** | **Output Format** Markdown; **Include Folder Paths**, **Include Dates**, **Include Saved Tags**, and **Include Saved Summaries** on; **Max Items** 200; **Max Depth** 8; **Excerpt Length** 240 |
 | **Auto-Tagging** | **Minimum Tags** 2; **Maximum Tags** 5; **Tag Style** kebab-case; **Merge Mode** Append; **Remove Duplicate Tags** on |
 | **Content Summarizer** | **Summary Length** 160; **Include Domain Hint** on; **Merge Mode** Replace |
-| **AI Folder Reorganization** | **Always Preview First** on; **Minimum Confidence** 0.55 (moves below it are dropped); **Batch Size** 100 bookmarks per request |
+| **AI Folder Reorganization** | **Minimum Confidence** 0.55 (moves below it are dropped); **Batch Size** 100 bookmarks per request |
 
 Auto-Tagging and Content Summarizer always work on the current folder.
 

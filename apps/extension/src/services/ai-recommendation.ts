@@ -126,7 +126,11 @@ export function toFolderRecommendations(
 export async function recommendFoldersVia(
   run: {
     readPage: (url: string) => Promise<{ title?: string; text: string } | null>;
-    generate: (request: { system: string; prompt: string }) => Promise<FolderRecommendationsObject>;
+    generate: (request: {
+      schema: 'folderRecommendations';
+      system: string;
+      prompt: string;
+    }) => Promise<FolderRecommendationsObject>;
   },
   bookmark: { title: string; url: string },
   folders: BookmarkTreeNode[],
@@ -141,7 +145,8 @@ export async function recommendFoldersVia(
     folderList.map((f) => f.path),
     maxRecommendations,
   );
-  return toFolderRecommendations(await run.generate(request), folderList, maxRecommendations);
+  const answer = await run.generate({ schema: 'folderRecommendations', ...request });
+  return toFolderRecommendations(answer, folderList, maxRecommendations);
 }
 
 /**
@@ -261,21 +266,10 @@ export async function createRecommendedFolderPath(
       folderId = created.id;
     }
   } catch (error) {
-    await removeCreatedFolders(createdFolderIds);
+    await removeEmptyFolders(createdFolderIds);
     throw error;
   }
   return { folderId, folderTitles: [...existingTitles, ...newTitles], createdFolderIds };
-}
-
-/** Removes folders a save created, innermost first, best effort. */
-async function removeCreatedFolders(createdFolderIds: readonly string[]): Promise<void> {
-  for (const folderId of [...createdFolderIds].reverse()) {
-    try {
-      await deleteBookmark(folderId);
-    } catch {
-      // Continue best-effort rollback for the remaining folders created by this transaction.
-    }
-  }
 }
 
 export async function createRecommendedFolderBookmark(
@@ -317,7 +311,7 @@ export async function createRecommendedFolderBookmark(
       createdFolderIds,
     };
   } catch (error) {
-    await removeCreatedFolders(createdFolderIds);
+    await removeEmptyFolders(createdFolderIds);
     throw error;
   }
 }

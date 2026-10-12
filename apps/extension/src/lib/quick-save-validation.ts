@@ -38,7 +38,7 @@ export const quickSaveHostRequestSchema = z.discriminatedUnion('type', [
     settings: z.record(z.string(), z.unknown()),
     source: z.string().min(1).max(50),
     locale: z.string().min(2).max(10),
-    schema: z.literal('folderRecommendations'),
+    schema: z.enum(AI_HOST_SCHEMA_NAMES),
     system: z.string(),
     prompt: z.string(),
   }),

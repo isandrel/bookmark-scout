@@ -4,6 +4,7 @@ import {
   applyBookmarkChanges,
   BOOKMARK_DELETION_UNDO_WINDOW_MS,
   type BookmarkChange,
+  removeEmptyFolders,
 } from '@/services/bookmarks';
 import { type FakeBookmarks, installFakeBookmarks } from '../fake-bookmarks';
 
@@ -124,5 +125,24 @@ describe('applyBookmarkChanges', () => {
     const result = await applyBookmarkChanges([remove('a')], now);
     expect(result.expiresAt).toBe(now + BOOKMARK_DELETION_UNDO_WINDOW_MS);
     expect(result.deletions[0].expiresAt).toBe(result.expiresAt);
+  });
+});
+
+describe('removeEmptyFolders', () => {
+  it('removes created folders innermost first and keeps one something was put in', async () => {
+    bookmarks = installFakeBookmarks([
+      { id: 'f', title: 'Folder' },
+      { id: 'new', parentId: 'f', title: 'New' },
+      { id: 'inner', parentId: 'new', title: 'Inner' },
+      { id: 'kept', parentId: 'f', title: 'Kept' },
+      { id: 'mine', parentId: 'kept', title: 'Mine', url: 'https://e2e.invalid/mine' },
+    ]);
+
+    await removeEmptyFolders(['new', 'inner', 'kept', 'missing']);
+
+    expect(bookmarks.get('new')).toBeUndefined();
+    expect(bookmarks.get('inner')).toBeUndefined();
+    expect(bookmarks.get('kept')?.title).toBe('Kept');
+    expect(bookmarks.get('mine')?.title).toBe('Mine');
   });
 });

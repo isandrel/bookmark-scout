@@ -10,6 +10,7 @@ import {
   DirectChatTransport,
   getToolName,
   isToolUIPart,
+  lastAssistantMessageIsCompleteWithApprovalResponses,
   type UIMessage,
 } from 'ai';
 import {
@@ -25,6 +26,8 @@ import {
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { ActionApprovalRequest } from './ActionApproval.lazy';
+import { ChatSuggestions } from './ChatSuggestions.lazy';
 
 /** Builds the agent per message, so the current service and settings always apply. */
 class AskAITransport implements ChatTransport<UIMessage> {
@@ -55,24 +58,27 @@ function hostOf(url: unknown): string {
 
 /** What a tool call did, in words, from its name and input. */
 function describeTool(name: string, input: unknown): string {
-  const args = isPlainObject(input) ? input : {};
   if (ASK_AI_WEB_SEARCH_TOOL_NAMES.has(name)) return t('askAI_toolWebSearch');
-  switch (name) {
-    case ASK_AI_TOOL_NAMES.searchBookmarks:
-      return t('askAI_toolSearchBookmarks', String(args.query ?? ''));
-    case ASK_AI_TOOL_NAMES.listFolders:
-      return t('askAI_toolListFolders');
-    case ASK_AI_TOOL_NAMES.getCurrentPage:
-      return t('askAI_toolCurrentPage');
-    case ASK_AI_TOOL_NAMES.readPage:
-      return t('askAI_toolReadPage', hostOf(args.url));
-    default:
-      // A provider's own tool; its internal name means nothing to the user.
-      return t('askAI_toolOther');
-  }
+  // A provider's own tool has no description; its internal name means nothing to the user.
+  return describeActionCall(name, input) ?? t('askAI_toolOther');
 }
 
-function MessageView({ message }: { message: UIMessage }) {
+type ApprovalResponder = (response: { id: string; approved: boolean }) => void;
+
+function MessageView({
+  message,
+  respond,
+  busy,
+  send,
+}: {
+  message: UIMessage;
+  /** Answers a tool call that waits for the user's approval. */
+  respond: ApprovalResponder;
+  /** The chat is answering; suggestion buttons wait. */
+  busy: boolean;
+  /** Sends a suggested question or option as the user's next message. */
+  send: (text: string) => void;
+}) {
   if (message.role === 'user') {
     const text = message.parts
       .flatMap((part) => (part.type === 'text' ? [part.text] : []))
@@ -112,6 +118,31 @@ function MessageView({ message }: { message: UIMessage }) {
           );
         }
         if (isToolUIPart(part)) {
+          if (getToolName(part) === SUGGEST_ACTIONS_ID && part.state === 'output-available') {
+            return (
+              <ChatSuggestions
+                key={key}
+                suggestions={readChatSuggestions(part.output)}
+                busy={busy}
+                send={send}
+              />
+            );
+          }
+          if (part.state === 'approval-requested' && !part.approval.isAutomatic) {
+            const { id } = part.approval;
+            return (
+              <ActionApprovalRequest
+                key={key}
+                toolName={getToolName(part)}
+                input={part.input}
+                reason={part.approval.requestReason}
+                onRespond={(approved) => respond({ id, approved })}
+              />
+            );
+          }
+          const denied =
+            part.state === 'output-denied' ||
+            (part.state === 'approval-responded' && !part.approval.approved);
           const running = part.state === 'input-streaming' || part.state === 'input-available';
           return (
             <p
@@ -125,6 +156,10 @@ function MessageView({ message }: { message: UIMessage }) {
                 <Sparkles aria-hidden="true" className="h-3 w-3 text-ai" />
               )}
               <span className="truncate">{describeTool(getToolName(part), part.input)}</span>
+              {denied && <span className="shrink-0">({t('askAI_denied')})</span>}
+              {part.state === 'output-error' && (
+                <span className="shrink-0">({t('askAI_failed')})</span>
+              )}
             </p>
           );
         }
@@ -162,8 +197,21 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
   const canSearchWeb = provider ? supportsWebSearch(provider) : false;
   const { value: webSearch, setValue: setWebSearch } = useSetting('askAiWebSearch');
   const [transport] = useState(() => new AskAITransport());
-  const { messages, sendMessage, status, stop, error, regenerate, setMessages, clearError } =
-    useChat({ transport });
+  const {
+    messages,
+    sendMessage,
+    status,
+    stop,
+    error,
+    regenerate,
+    setMessages,
+    clearError,
+    addToolApprovalResponse,
+  } = useChat({
+    transport,
+    // An approved or declined change goes straight back to the agent to carry on.
+    sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithApprovalResponses,
+  });
   const [draft, setDraft] = useState('');
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -262,7 +310,15 @@ export function AskAIChat({ onClose }: AskAIPanelProps) {
             )}
           </div>
         ) : (
-          messages.map((message) => <MessageView key={message.id} message={message} />)
+          messages.map((message) => (
+            <MessageView
+              key={message.id}
+              message={message}
+              respond={(response) => void addToolApprovalResponse(response)}
+              busy={busy}
+              send={send}
+            />
+          ))
         )}
         {status === 'submitted' && (
           <p className="flex items-center gap-1.5 text-xs text-muted-foreground" role="status">

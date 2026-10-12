@@ -241,6 +241,14 @@
         "message": "排序「$1」",
         "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
     },
+    "history_change": {
+        "message": "變更：$1",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is the plan's short summary."
+    },
+    "history_changeMany": {
+        "message": "$1 項變更",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is how many."
+    },
     "toast_undone": {
         "message": "已復原：$1",
         "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
@@ -1721,6 +1729,18 @@
         "message": "已移回：$1。無法移回：$2。",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "已復原變更",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "部分變更未復原",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "已還原：$1。無法還原：$2。",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "匯入失敗：$1",
         "description": "Error message for failed bookmark import"
@@ -2296,14 +2316,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "AI 資料夾重組使用的預設範圍",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "一律先預覽",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "套用變更前先顯示提議的重組計畫",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "最低信賴度",
@@ -3815,6 +3827,22 @@
         "message": "Bookmark Scout 不會收到網頁內容。區域網路中的網頁一律不會讀取。關閉此設定即可隨時停止。",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "允許本機 AI 代理",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "你在這台電腦上執行的 AI 代理（例如 Claude Code、Codex 或 Cursor）之後可以透過你安裝的 bookmark-scout-mcp 程式查詢你的書籤：書籤標題、網址和資料夾名稱，目前網頁的標題和網址，以及在「讀取網頁內容」開啟時的網頁文字。瀏覽器會請你允許擴充功能與該程式通訊。",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "只有你同時開啟「允許變更」，代理才能變更你的書籤，而且每次變更都要等你核准。Bookmark Scout 不會收到這些資料，但代理可能會把讀取到的內容傳送給它自己的 AI 服務商。隨時關閉此設定即可停止。",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "本機 AI 代理的存取保持關閉。開啟時，瀏覽器會請你允許擴充功能與 bookmark-scout-mcp 程式通訊。",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "未傳送任何資料。擴充功能將 API 金鑰分享給供應商之前，瀏覽器會先詢問。",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5163,9 +5191,17 @@
         "message": "已在書籤中搜尋「$1」",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "已查看書籤",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "已列出資料夾",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "已查看書籤詳細資料",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "已查看目前網頁",
@@ -5174,6 +5210,178 @@
     "askAI_toolReadPage": {
         "message": "已讀取 $1",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "已讀取一個已加入書籤的網頁",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "已尋找重複的書籤",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "已檢查書籤連結",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "已尋找相符的資料夾",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
+    },
+    "askAI_toolMove": {
+        "message": "移動書籤",
+        "description": "Ask AI step or button: moving bookmarks to another folder"
+    },
+    "askAI_toolRename": {
+        "message": "重新命名為「$1」",
+        "description": "Ask AI step or button: renaming a bookmark or folder. $1 is the new title."
+    },
+    "askAI_toolDelete": {
+        "message": "刪除書籤",
+        "description": "Ask AI step or button: deleting bookmarks"
+    },
+    "askAI_toolCreateFolder": {
+        "message": "建立資料夾「$1」",
+        "description": "Ask AI step or button: creating a folder. $1 is its name."
+    },
+    "askAI_toolSave": {
+        "message": "已儲存「$1」",
+        "description": "Ask AI step: the agent saved a page as a bookmark. $1 is the page title or URL."
+    },
+    "askAI_toolUndo": {
+        "message": "已復原一項變更",
+        "description": "Ask AI step: the agent undid one of its changes"
+    },
+    "askAI_toolPropose": {
+        "message": "已準備待你核准的變更",
+        "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
+    },
+    "askAI_toolApply": {
+        "message": "已套用核准的變更",
+        "description": "Ask AI step: the agent applied changes the user approved"
+    },
+    "askAI_toolSuggest": {
+        "message": "已建議後續步驟",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "建議",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "儲存到 $1",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "儲存到新資料夾 $1",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "開啟「$1」",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "在管理器中顯示「$1」",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savePage": {
+        "message": "$2 · 「$1」",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
+    },
+    "askAI_savedPageTo": {
+        "message": "已將「$1」儲存到 $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "「$1」已在 $2 中",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "無法儲存該網頁",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
+    "askAI_approvalTitle": {
+        "message": "要核准這項變更嗎？",
+        "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
+    },
+    "askAI_approvalUntrusted": {
+        "message": "此對話讀取過網頁內容，其中可能含有針對 AI 的指示。請確認這是你要求的操作。",
+        "description": "Ask AI: note on an approval card when the chat has read page text or web search results, which could have steered the AI"
+    },
+    "askAI_approvalSave": {
+        "message": "將「$1」儲存到 $2",
+        "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalUndo": {
+        "message": "復原先前的一項變更",
+        "description": "Ask AI approval line: undoing a change made earlier"
+    },
+    "askAI_planMove": {
+        "message": "將「$1」從 $2 移到 $3",
+        "description": "Ask AI approval line for a planned move. $1 is the title, $2 the folder it is in, $3 the folder it goes to."
+    },
+    "askAI_planRename": {
+        "message": "將「$1」重新命名為「$2」",
+        "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planDelete": {
+        "message": "從 $2 刪除「$1」",
+        "description": "Ask AI approval line for a planned deletion of a bookmark. $1 is its title, $2 its folder."
+    },
+    "askAI_planDeleteFolder": {
+        "message": "從 $2 刪除資料夾「$1」及其中的 $3 個書籤",
+        "description": "Ask AI approval line for a planned deletion of a folder. $1 is its title, $2 the folder it is in, $3 how many bookmarks it holds."
+    },
+    "askAI_planCreateFolder": {
+        "message": "在 $2 中建立資料夾「$1」",
+        "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
+    },
+    "askAI_planMissing": {
+        "message": "此計畫已過期或已套用。再次提出要求即可重新產生。",
+        "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "此變更已復原或已不在復原記錄中，沒有可復原的內容。",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "刪除「$1」",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "刪除資料夾「$1」及其中所有內容（$2 項）",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "將「$1」放回 $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "將「$1」改回「$2」",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "將「$1」的網址改回 $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "將「$1」移回 $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
+    "askAI_approve": {
+        "message": "核准",
+        "description": "Ask AI approval card: button that approves the change"
+    },
+    "askAI_deny": {
+        "message": "拒絕",
+        "description": "Ask AI approval card: button that declines the change"
+    },
+    "askAI_denied": {
+        "message": "已拒絕",
+        "description": "Ask AI: marks a step the user declined"
+    },
+    "askAI_failed": {
+        "message": "失敗",
+        "description": "Ask AI: marks a step that failed, such as a tool call the extension rejected"
     },
     "askAI_toolWebSearch": {
         "message": "已搜尋網路",
@@ -5458,5 +5666,193 @@
     "popup_shortcutSetUp": {
         "message": "前往設定",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "actionName_searchBookmarks": {
+        "message": "搜尋書籤",
+        "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
+    },
+    "actionName_listFolders": {
+        "message": "列出資料夾",
+        "description": "Name of the bookmark action that lists folders"
+    },
+    "actionName_getBookmarks": {
+        "message": "查看書籤詳細資料",
+        "description": "Name of the bookmark action that looks up details of bookmarks"
+    },
+    "actionName_getCurrentPage": {
+        "message": "查看目前網頁",
+        "description": "Name of the bookmark action that checks the page in the active tab"
+    },
+    "actionName_readPage": {
+        "message": "讀取網頁",
+        "description": "Name of the bookmark action that reads page text (only with Read page content on)"
+    },
+    "actionName_findDuplicates": {
+        "message": "尋找重複項目",
+        "description": "Name of the bookmark action that finds duplicate bookmarks"
+    },
+    "actionName_checkLinks": {
+        "message": "檢查連結",
+        "description": "Name of the bookmark action that checks whether links still work"
+    },
+    "actionName_suggestFolders": {
+        "message": "建議資料夾",
+        "description": "Name of the bookmark action that suggests folders for a page"
+    },
+    "actionName_moveBookmarks": {
+        "message": "移動書籤和資料夾",
+        "description": "Name of the bookmark action that moves bookmarks and folders"
+    },
+    "actionName_renameBookmark": {
+        "message": "重新命名書籤和資料夾",
+        "description": "Name of the bookmark action that renames bookmarks and folders"
+    },
+    "actionName_deleteBookmarks": {
+        "message": "刪除書籤和資料夾",
+        "description": "Name of the bookmark action that deletes bookmarks and folders"
+    },
+    "actionName_createFolder": {
+        "message": "建立資料夾",
+        "description": "Name of the bookmark action that creates folders"
+    },
+    "actionName_saveBookmark": {
+        "message": "儲存網頁",
+        "description": "Name of the bookmark action that saves a page as a bookmark"
+    },
+    "actionName_undoChange": {
+        "message": "復原自己的變更",
+        "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_proposeChanges": {
+        "message": "提出待核准的變更",
+        "description": "Name of the bookmark action that proposes a plan of changes for the user to approve"
+    },
+    "actionName_applyChanges": {
+        "message": "套用已核准的變更",
+        "description": "Name of the bookmark action that applies a plan the user approved"
+    },
+    "actionName_suggestActions": {
+        "message": "以按鈕形式建議後續步驟",
+        "description": "Name of the bookmark action that offers suggestion buttons under an answer"
+    },
+    "settings_managerMenuActions": {
+        "message": "書籤管理器選單",
+        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+    },
+    "settings_managerMenuActionsDesc": {
+        "message": "選擇右鍵選單和 ⋯ 選單顯示哪些命令，以及每組中的順序。",
+        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_askAiDisabledActions": {
+        "message": "詢問 AI 可以執行的動作",
+        "description": "Options > AI: panel title for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledActionsDesc": {
+        "message": "關閉你不希望 AI 執行的動作；關閉後它將完全不會提供給 AI。套用變更計畫前一律會先徵求你的同意。",
+        "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "本機 AI 代理",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "允許本機 AI 代理",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "讓這台電腦上的 AI 代理（例如 Claude Code、Codex 或 Cursor）透過 bookmark-scout-mcp 程式查詢你的書籤。僅限此裝置。",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeWrites": {
+        "message": "允許變更",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "讓代理也可以儲存網頁，並提議移動、重新命名、刪除和新增資料夾。每次變更都會開啟 Bookmark Scout 視窗，由你核准或拒絕，你也可以在書籤管理器中復原。",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "隱藏隱私值",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "依照隱私掃描工具的清單，替換代理收到的標題和網址中的敏感網址參數、權杖和電子郵件地址。",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "本機代理可以執行的動作",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "關閉你不希望代理執行的動作，它將完全不會提供給代理。變更還需要開啟「允許變更」，而且每次都要等你核准。",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "橋接程式",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "在這台電腦上安裝 bookmark-scout-mcp 程式，並執行一次「$1」。它會在你的瀏覽器中註冊自己，並顯示如何將它加入 Claude Code、Codex 或 Cursor。",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "未執行。請開啟上方的開關，並在瀏覽器詢問時允許存取。",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "正在啟動橋接程式…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "已就緒。這台電腦上的 AI 代理可以存取此瀏覽器設定檔。",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "橋接程式尚未安裝，或尚未在此瀏覽器中註冊。",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "橋接程式無法啟動或已停止。Bookmark Scout 會自動重試。",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "重試",
+        "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "核准變更",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "這台電腦上的一個 AI 代理請求變更你的書籤。在你核准之前不會有任何變更，已核准的變更也可以在書籤管理器中復原。",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "來自「$1」（代理自稱的名稱）",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "沒有等待你核准的內容。",
+        "description": "Approval window when no request is waiting"
+    },
+    "settings_actionMoveUp": {
+        "message": "上移 $1",
+        "description": "Button that moves a menu item up within its group. $1 is the item name."
+    },
+    "settings_actionMoveDown": {
+        "message": "下移 $1",
+        "description": "Button that moves a menu item down within its group. $1 is the item name."
+    },
+    "settings_actionsReset": {
+        "message": "還原預設值",
+        "description": "Button that restores the default bookmark manager menu or AI actions"
+    },
+    "settings_askAiReads": {
+        "message": "查詢資訊",
+        "description": "Options > AI: group heading for the read-only Ask AI actions"
+    },
+    "settings_askAiWrites": {
+        "message": "變更書籤",
+        "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
     }
 }

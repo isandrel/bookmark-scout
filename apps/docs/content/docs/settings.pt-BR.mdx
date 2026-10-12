@@ -98,6 +98,10 @@ Consulte [Salvar e organizar](/guides/save-and-organize).
 | --- | --- | --- |
 | **Confirmar antes de excluir** | Ativado | Pergunta antes de excluir. De qualquer forma, toda exclusão pode ser desfeita por 10 segundos |
 
+### Menus do gerenciador de favoritos [#manager-menus]
+
+Escolha quais comandos os menus de clique direito e ⋯ do gerenciador mostram e mova-os para cima ou para baixo dentro de cada grupo. **Restaurar padrões** traz de volta o menu completo. Pelo menos um comando sempre fica.
+
 ## IA [#ai]
 
 A IA vem desativada por padrão. Estas configurações só fazem diferença depois que você ativa **Recursos de IA**.
@@ -122,6 +126,16 @@ Abaixo delas, o painel do provedor contém **Chave de API**, **URL base**, **Mod
 | --- | --- | --- |
 | **Ler conteúdo da página** | Desativado | Envia o texto principal de cada página, e não só o título e o URL, para as recomendações de pasta, Tags automáticas e Gerador de resumos. Ao ativar, é pedido acesso aos sites |
 
+### O que Perguntar à IA pode fazer [#ask-ai-actions]
+
+Tudo o que Perguntar à IA pode consultar e alterar aparece aqui, e tudo vem ativado por padrão. Se você desativar algo, isso nem é oferecido à IA. Aplicar um plano de alterações sempre pede sua confirmação antes, seja qual for a sua escolha aqui.
+
+### Agentes de IA locais [#agent-bridge]
+
+**Permitir agentes de IA locais** (desativado por padrão, somente neste dispositivo) deixa que agentes de IA do seu computador, como Claude Code, Codex ou Cursor, consultem seus favoritos pelo programa bookmark-scout-mcp, que você instala e registra com `bookmark-scout-mcp install`. Ao ativar, o navegador pede permissão para a extensão se comunicar com esse programa. **Permitir alterações** (desativado por padrão) também os deixa salvar páginas e propor movimentações, renomeações, exclusões e novas pastas; cada alteração abre uma janela do Bookmark Scout onde você aprova ou recusa, e é possível desfazê-la no gerenciador de favoritos. O painel abaixo da chave mostra se o programa está em execução.
+
+**Ocultar valores privados** (ativado por padrão) substitui parâmetros de URL sensíveis, tokens e endereços de e-mail nos títulos e URLs que os agentes recebem, usando a lista do Verificador de privacidade. **O que os agentes locais podem fazer** lista cada consulta, todas ativadas por padrão; a que você desativar nem é oferecida a eles.
+
 ## Ferramentas de IA [#ai-tools]
 
 Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma delas, ela some da barra lateral **Ferramentas** do gerenciador.
@@ -131,7 +145,7 @@ Cada ferramenta tem uma chave **Ativar** (ativada por padrão). Ao desativar uma
 | **Empacotador de contexto para IA** | **Formato de saída** Markdown; **Incluir caminhos das pastas**, **Incluir datas**, **Incluir tags salvas** e **Incluir resumos salvos** ativados; **Máximo de itens** 200; **Profundidade máxima** 8; **Tamanho do trecho** 240 |
 | **Tags automáticas** | **Mínimo de tags** 2; **Máximo de tags** 5; **Estilo das tags** kebab-case; **Modo de mesclagem** Acrescentar; **Remover tags duplicadas** ativado |
 | **Gerador de resumos** | **Tamanho do resumo** 160; **Incluir domínio como dica** ativado; **Modo de mesclagem** Substituir |
-| **Reorganização de pastas com IA** | **Sempre mostrar prévia** ativado; **Confiança mínima** 0,55 (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
+| **Reorganização de pastas com IA** | **Confiança mínima** 0,55 (as movimentações abaixo desse valor são descartadas); **Tamanho do lote** 100 favoritos por solicitação |
 
 Tags automáticas e Gerador de resumos sempre trabalham na pasta atual.
 

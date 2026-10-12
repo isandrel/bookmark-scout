@@ -15,6 +15,7 @@ export const AI_ACTIVITY_SOURCES = {
   reorganization: 'tools_aiReorganize',
   folderRecommendation: 'ai_folderRecommendation',
   askAI: 'askAI_title',
+  agentBridge: 'settings_agentBridge',
 } as const satisfies Record<string, MessageKey>;
 
 export type AIActivitySource = keyof typeof AI_ACTIVITY_SOURCES;
@@ -32,6 +33,7 @@ const AI_ACTIVITY_PERMISSIONS: Record<AIActivitySource, PermissionFeature> = {
   reorganization: 'ai',
   folderRecommendation: 'ai',
   askAI: 'ai',
+  agentBridge: 'agentBridge',
 };
 
 export type AIActivityContext = {
@@ -120,3 +122,45 @@ export function createLoggingFetch(context: AIActivityContext): typeof fetch {
     }
   };
 }
+
+/** The method an agent action is logged with, in place of an HTTP method. */
+export const AI_ACTIVITY_ACTION_METHOD = 'ACTION';
+
+/**
+ * Logs one bookmark action an agent ran (a change, or any call from a local agent) in the AI
+ * activity log while recording is on: its name, input, and result or error. Like provider calls,
+ * it never breaks the action.
+ */
+export async function recordActionActivity(entry: {
+  source: AIActivitySource;
+  /** The local agent that made the call, as it named itself. */
+  client?: string;
+  action: string;
+  input: unknown;
+  result: unknown;
+  durationMs: number;
+}): Promise<void> {
+  try {
+    if (!(await getSettings()).aiActivityRecording) return;
+    const request = truncateBody(JSON.stringify(entry.input));
+    const response = truncateBody(JSON.stringify(entry.result));
+    const failed = isPlainObject(entry.result) && isPlainObject(entry.result.error);
+    await recordAIActivity({
+      at: Date.now(),
+      source: entry.source,
+      ...(entry.client ? { client: entry.client } : {}),
+      method: AI_ACTIVITY_ACTION_METHOD,
+      url: `action:${entry.action}`,
+      durationMs: entry.durationMs,
+      requestHeaders: {},
+      requestBody: request.body,
+      requestBodyOmitted: request.omitted,
+      responseBody: response.body,
+      responseBodyOmitted: response.omitted,
+      ...(failed ? { error: String((entry.result as { error: { message?: unknown } }).error.message) } : {}),
+    });
+  } catch {
+    // Logging never breaks the action.
+  }
+}
+

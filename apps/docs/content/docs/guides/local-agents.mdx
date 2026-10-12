@@ -1,0 +1,76 @@
+---
+title: Use with local AI agents
+description: Let AI agents on your computer, such as Claude Code, Codex, or Cursor, search and organize your bookmarks through Bookmark Scout, with every change approved in the browser.
+---
+
+AI agents that run on your computer can work with your bookmarks through Bookmark Scout: find bookmarks, list folders, check links, suggest folders for a page, and, if you allow it, save pages and move, rename, or delete bookmarks. The agent talks to a small program, **bookmark-scout-mcp**, which reaches the extension through your browser's native messaging. Nothing listens on the network, and Bookmark Scout has no server.
+
+<Callout type="warn" title="What an agent can see">
+While access is on, an agent can read bookmark titles, URLs, folder names, saved tags and summaries, and the current page's title and URL; with **Read page content** on, also page text. The agent may send what it reads to its own AI provider. Sensitive values in titles and URLs are hidden by default. See [Privacy](/privacy).
+</Callout>
+
+## Set it up
+
+<Steps>
+<Step>
+Get **bookmark-scout-mcp**: download the binary for your system from the [releases](https://github.com/isandrel/bookmark-scout/releases) and put it on your `PATH`, or, with [Bun](https://bun.sh) installed, run it from a clone of the repository: `bun packages/mcp-bridge/src/cli.ts`.
+</Step>
+<Step>
+Register it with your browsers:
+
+```sh
+bookmark-scout-mcp install
+```
+
+It writes a native messaging manifest for each browser it finds (Chrome, Edge, Chromium, Brave, Vivaldi, and Firefox; on Windows also a registry value under your user), and prints how to add it to your agent. Add `--browser chrome` to pick browsers, or `--dry-run` to see what it would write.
+</Step>
+<Step>
+In Bookmark Scout's settings, go to **AI** > **Local AI agents** and turn on **Allow local AI agents**. Your browser asks to let the extension talk to the program. The panel below the switch then says **Ready**. AI Features do not need to be on.
+</Step>
+<Step>
+Add the bridge to your agent (below), and ask it about your bookmarks.
+</Step>
+</Steps>
+
+## Add it to your agent
+
+**Claude Code**
+
+```sh
+claude mcp add --scope user bookmark-scout -- bookmark-scout-mcp serve
+```
+
+**Codex**, in `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.bookmark-scout]
+command = "bookmark-scout-mcp"
+args = ["serve"]
+```
+
+**Cursor**: [add it to Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=bookmark-scout&config=eyJjb21tYW5kIjoiYm9va21hcmstc2NvdXQtbWNwIiwiYXJncyI6WyJzZXJ2ZSJdfQ==), or put this in `~/.cursor/mcp.json`:
+
+```json
+{ "mcpServers": { "bookmark-scout": { "command": "bookmark-scout-mcp", "args": ["serve"] } } }
+```
+
+`bookmark-scout-mcp install` prints these with the full path of the program. With more than one browser or profile connected, the agent uses the one connected last; add `--browser edge` or `--profile <id>` after `serve` to choose.
+
+## Let agents change bookmarks
+
+Agents only look things up until you also turn on **Allow changes**. Then they can save pages, propose moves, renames, deletions, and new folders as a plan, and undo their own changes. **Every change waits for you**: a Bookmark Scout window opens and shows the change as it will be made, with the name the agent gave. Nothing happens until you click **Approve**; **Decline**, closing the window, or five minutes without an answer changes nothing. An approved change can be undone in the bookmark manager with `Ctrl+Z` (`Cmd+Z` on a Mac).
+
+Under **What local agents may do**, turn off any lookup or change you do not want agents to use. **Hide private values** (on by default) replaces sensitive URL parameters, tokens, and email addresses in what agents receive, using the Privacy Scanner's list.
+
+With **Record requests** on under **AI activity**, every call an agent makes is listed there with the agent's name.
+
+## Troubleshooting
+
+- `bookmark-scout-mcp doctor` lists where it is registered, which browsers are connected, and the agent snippets.
+- **Not installed** in the panel: run `bookmark-scout-mcp install` again, then **Try again**. A development build of the extension has its own id; add it with `--extension-id <id>`.
+- The agent says no browser is connected: keep the browser open with the switch on; the bridge's `bridgeStatus` tool says what it sees.
+- To look at what the browser started, set `BOOKMARK_SCOUT_MCP_LOG` to a file path before starting the browser; the program writes its messages there.
+
+## Remove it
+
+Turn off **Allow local AI agents**, remove the server from your agent (`claude mcp remove bookmark-scout`), and run `bookmark-scout-mcp uninstall` to delete the manifests and registry values it wrote.

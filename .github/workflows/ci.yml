@@ -74,7 +74,10 @@ jobs:
       - name: Type-check the extension
         run: bunx nx run extension:typecheck
 
-      - name: Test the workspace config and scripts
+      - name: Type-check the MCP bridge
+        run: bun run --cwd packages/mcp-bridge typecheck
+
+      - name: Test the workspace config, scripts, and MCP bridge
         run: bun test packages scripts apps/website/lib
 
       - name: Check generated READMEs match templates
@@ -161,6 +164,37 @@ jobs:
         with:
           app: extension
           name: playwright-failures-chromium-${{ matrix.shard }}
+
+  # The local AI agent bridge for real: the compiled bookmark-scout-mcp binary registered as
+  # Chromium's native host in the test profile, the extension starting it, and an MCP client
+  # driving `serve` (apps/extension/tests/e2e-bridge). Linux and macOS only: on Windows, Chromium
+  # finds native hosts through the registry, not the profile folder.
+  e2e-bridge:
+    name: Bridge E2E (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    needs: changes
+    if: ${{ !cancelled() && fromJSON(needs.changes.outputs.scopes).bridge }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up workspace
+        uses: ./.github/actions/setup-workspace
+
+      - name: Run the bridge end to end
+        run: bunx nx run extension:test:e2e:bridge
+
+      - name: Upload browser test diagnostics
+        if: failure()
+        uses: ./.github/actions/upload-playwright-failures
+        with:
+          app: extension
+          name: playwright-failures-bridge-${{ matrix.os }}
 
   # Required check: the unit tests and every Chromium shard.
   test:

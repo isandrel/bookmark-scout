@@ -241,6 +241,14 @@
         "message": "Sort \"$1\"",
         "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
     },
+    "history_change": {
+        "message": "Change: $1",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is the plan's short summary."
+    },
+    "history_changeMany": {
+        "message": "$1 changes",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is how many."
+    },
     "toast_undone": {
         "message": "Undone: $1",
         "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
@@ -1729,6 +1737,18 @@
         "message": "Moved back: $1. Could not move back: $2.",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "Changes undone",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "Some changes were not undone",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "Restored: $1. Could not restore: $2.",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "Import failed: $1",
         "description": "Error message for failed bookmark import"
@@ -2304,14 +2324,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "Default scope used for AI folder reorganization",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "Always Preview First",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "Show the proposed reorganization plan before applying changes",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "Minimum Confidence",
@@ -3915,6 +3927,22 @@
         "message": "Bookmark Scout never receives page content. Pages on your local network are never read. Turn the setting off to stop at any time.",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "Allow local AI agents",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "AI agents you run on this computer, such as Claude Code, Codex, or Cursor, can then look up your bookmarks through the bookmark-scout-mcp program you install: bookmark titles, URLs, and folder names, the current page's title and URL, and page text while Read page content is on. Your browser asks to let the extension communicate with that program.",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "Agents can change your bookmarks only if you also turn on Allow changes, and then each change waits for your approval. Bookmark Scout never receives this data, but an agent may send what it reads to its own AI provider. Turn the setting off to stop at any time.",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "Access for local AI agents stays off. Turning it on asks your browser to let the extension communicate with the bookmark-scout-mcp program.",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "Nothing was sent. Your browser asks before the extension shares your API key with the provider.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5355,9 +5383,17 @@
         "message": "Searched your bookmarks for “$1”",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "Looked through your bookmarks",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "Listed your folders",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "Looked up bookmark details",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "Checked the current page",
@@ -5366,6 +5402,178 @@
     "askAI_toolReadPage": {
         "message": "Read $1",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "Read a bookmarked page",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "Looked for duplicate bookmarks",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "Checked bookmarked links",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "Looked for matching folders",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
+    },
+    "askAI_toolMove": {
+        "message": "Move bookmarks",
+        "description": "Ask AI step or button: moving bookmarks to another folder"
+    },
+    "askAI_toolRename": {
+        "message": "Rename to “$1”",
+        "description": "Ask AI step or button: renaming a bookmark or folder. $1 is the new title."
+    },
+    "askAI_toolDelete": {
+        "message": "Delete bookmarks",
+        "description": "Ask AI step or button: deleting bookmarks"
+    },
+    "askAI_toolCreateFolder": {
+        "message": "Create the folder “$1”",
+        "description": "Ask AI step or button: creating a folder. $1 is its name."
+    },
+    "askAI_toolSave": {
+        "message": "Saved “$1”",
+        "description": "Ask AI step: the agent saved a page as a bookmark. $1 is the page title or URL."
+    },
+    "askAI_toolUndo": {
+        "message": "Undid a change",
+        "description": "Ask AI step: the agent undid one of its changes"
+    },
+    "askAI_toolPropose": {
+        "message": "Prepared changes for your approval",
+        "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
+    },
+    "askAI_toolApply": {
+        "message": "Applied the approved changes",
+        "description": "Ask AI step: the agent applied changes the user approved"
+    },
+    "askAI_toolSuggest": {
+        "message": "Suggested next steps",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "Suggestions",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "Save to $1",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "Save to new folder $1",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "Open “$1”",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "Show “$1” in the manager",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savePage": {
+        "message": "$2 · “$1”",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
+    },
+    "askAI_savedPageTo": {
+        "message": "Saved “$1” to $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "“$1” is already in $2",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "Could not save the page",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
+    "askAI_approvalTitle": {
+        "message": "Approve this change?",
+        "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
+    },
+    "askAI_approvalUntrusted": {
+        "message": "This chat has read web content, which can contain instructions meant for the AI. Check that this is what you asked for.",
+        "description": "Ask AI: note on an approval card when the chat has read page text or web search results, which could have steered the AI"
+    },
+    "askAI_approvalSave": {
+        "message": "Save “$1” to $2",
+        "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalUndo": {
+        "message": "Undo a change made earlier",
+        "description": "Ask AI approval line: undoing a change made earlier"
+    },
+    "askAI_planMove": {
+        "message": "Move “$1” from $2 to $3",
+        "description": "Ask AI approval line for a planned move. $1 is the title, $2 the folder it is in, $3 the folder it goes to."
+    },
+    "askAI_planRename": {
+        "message": "Rename “$1” to “$2”",
+        "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planDelete": {
+        "message": "Delete “$1” from $2",
+        "description": "Ask AI approval line for a planned deletion of a bookmark. $1 is its title, $2 its folder."
+    },
+    "askAI_planDeleteFolder": {
+        "message": "Delete the folder “$1” from $2, with the $3 bookmarks in it",
+        "description": "Ask AI approval line for a planned deletion of a folder. $1 is its title, $2 the folder it is in, $3 how many bookmarks it holds."
+    },
+    "askAI_planCreateFolder": {
+        "message": "Create the folder “$1” in $2",
+        "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
+    },
+    "askAI_planMissing": {
+        "message": "This plan has expired or was already applied. Ask again to make it once more.",
+        "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "This change was already undone or is no longer in the undo history, so there is nothing to undo.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Remove “$1”",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Remove the folder “$1” and everything in it ($2 items)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Put “$1” back in $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Rename “$1” back to “$2”",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Change the address of “$1” back to $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Move “$1” back to $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
+    "askAI_approve": {
+        "message": "Approve",
+        "description": "Ask AI approval card: button that approves the change"
+    },
+    "askAI_deny": {
+        "message": "Decline",
+        "description": "Ask AI approval card: button that declines the change"
+    },
+    "askAI_denied": {
+        "message": "declined",
+        "description": "Ask AI: marks a step the user declined"
+    },
+    "askAI_failed": {
+        "message": "failed",
+        "description": "Ask AI: marks a step that failed, such as a tool call the extension rejected"
     },
     "askAI_toolWebSearch": {
         "message": "Searched the web",
@@ -5650,5 +5858,193 @@
     "popup_shortcutSetUp": {
         "message": "Set it up",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "actionName_searchBookmarks": {
+        "message": "Search bookmarks",
+        "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
+    },
+    "actionName_listFolders": {
+        "message": "List folders",
+        "description": "Name of the bookmark action that lists folders"
+    },
+    "actionName_getBookmarks": {
+        "message": "Look up bookmark details",
+        "description": "Name of the bookmark action that looks up details of bookmarks"
+    },
+    "actionName_getCurrentPage": {
+        "message": "Check the current page",
+        "description": "Name of the bookmark action that checks the page in the active tab"
+    },
+    "actionName_readPage": {
+        "message": "Read pages",
+        "description": "Name of the bookmark action that reads page text (only with Read page content on)"
+    },
+    "actionName_findDuplicates": {
+        "message": "Find duplicates",
+        "description": "Name of the bookmark action that finds duplicate bookmarks"
+    },
+    "actionName_checkLinks": {
+        "message": "Check links",
+        "description": "Name of the bookmark action that checks whether links still work"
+    },
+    "actionName_suggestFolders": {
+        "message": "Suggest folders",
+        "description": "Name of the bookmark action that suggests folders for a page"
+    },
+    "actionName_moveBookmarks": {
+        "message": "Move bookmarks and folders",
+        "description": "Name of the bookmark action that moves bookmarks and folders"
+    },
+    "actionName_renameBookmark": {
+        "message": "Rename bookmarks and folders",
+        "description": "Name of the bookmark action that renames bookmarks and folders"
+    },
+    "actionName_deleteBookmarks": {
+        "message": "Delete bookmarks and folders",
+        "description": "Name of the bookmark action that deletes bookmarks and folders"
+    },
+    "actionName_createFolder": {
+        "message": "Create folders",
+        "description": "Name of the bookmark action that creates folders"
+    },
+    "actionName_saveBookmark": {
+        "message": "Save pages",
+        "description": "Name of the bookmark action that saves a page as a bookmark"
+    },
+    "actionName_undoChange": {
+        "message": "Undo its changes",
+        "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_proposeChanges": {
+        "message": "Propose changes for approval",
+        "description": "Name of the bookmark action that proposes a plan of changes for the user to approve"
+    },
+    "actionName_applyChanges": {
+        "message": "Apply approved changes",
+        "description": "Name of the bookmark action that applies a plan the user approved"
+    },
+    "actionName_suggestActions": {
+        "message": "Suggest next steps as buttons",
+        "description": "Name of the bookmark action that offers suggestion buttons under an answer"
+    },
+    "settings_managerMenuActions": {
+        "message": "Bookmark manager menus",
+        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+    },
+    "settings_managerMenuActionsDesc": {
+        "message": "Choose which commands the right-click and ⋯ menus show, and in what order within each group.",
+        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_askAiDisabledActions": {
+        "message": "What Ask AI may do",
+        "description": "Options > AI: panel title for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledActionsDesc": {
+        "message": "Turn off what you do not want the AI to do; it is then not offered to it at all. Applying a plan of changes always asks you first.",
+        "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "Local AI agents",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "Allow local AI agents",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "Let AI agents on this computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the bookmark-scout-mcp program. For this device only.",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeWrites": {
+        "message": "Allow changes",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "Let agents also save pages and propose moves, renames, deletions, and new folders. Each change opens a Bookmark Scout window where you approve or decline it, and you can undo it in the bookmark manager.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "Hide private values",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "Replace sensitive URL parameters, tokens, and email addresses in the titles and URLs agents receive, using the Privacy Scanner's list.",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "What local agents may do",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "Turn off what you do not want agents to do; it is then not offered to them at all. Changes also need Allow changes, and each one waits for your approval.",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "Bridge program",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "Install the bookmark-scout-mcp program on this computer and run “$1” once. It registers itself with your browsers and prints how to add it to Claude Code, Codex, or Cursor.",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "Not running. Turn on the switch above and allow access when your browser asks.",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "Starting the bridge program…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "Ready. AI agents on this computer can reach this browser profile.",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "The bridge program is not installed, or not registered with this browser yet.",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "The bridge program could not start or stopped. Bookmark Scout tries again by itself.",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "Try again",
+        "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "Approve changes",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "An AI agent on this computer asks to change your bookmarks. Nothing changes until you approve, and you can undo an approved change in the bookmark manager.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "From “$1” (the name the agent gave)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "Nothing is waiting for your approval.",
+        "description": "Approval window when no request is waiting"
+    },
+    "settings_actionMoveUp": {
+        "message": "Move $1 up",
+        "description": "Button that moves a menu item up within its group. $1 is the item name."
+    },
+    "settings_actionMoveDown": {
+        "message": "Move $1 down",
+        "description": "Button that moves a menu item down within its group. $1 is the item name."
+    },
+    "settings_actionsReset": {
+        "message": "Restore defaults",
+        "description": "Button that restores the default bookmark manager menu or AI actions"
+    },
+    "settings_askAiReads": {
+        "message": "Looking things up",
+        "description": "Options > AI: group heading for the read-only Ask AI actions"
+    },
+    "settings_askAiWrites": {
+        "message": "Changing bookmarks",
+        "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
     }
 }

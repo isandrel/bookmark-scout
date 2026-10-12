@@ -111,6 +111,25 @@
                 "cwd": "apps/extension"
             }
         },
+        "test:live": {
+            "command": "playwright install --no-shell chromium && playwright test --config playwright.config.ts --project=live --reporter=./tests/live/redacting-reporter.ts",
+            "dependsOn": [
+                "build:chrome"
+            ],
+            "cache": false,
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
+        "test:e2e:bridge": {
+            "command": "bun run --cwd ../../packages/mcp-bridge compile && playwright install --with-deps --no-shell chromium && playwright test --config playwright.config.ts --project=bridge",
+            "dependsOn": [
+                "build:chrome"
+            ],
+            "options": {
+                "cwd": "apps/extension"
+            }
+        },
         "test:e2e:firefox": {
             "command": "playwright test --config playwright.config.ts --project=firefox",
             "dependsOn": [

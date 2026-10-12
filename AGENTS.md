@@ -65,6 +65,7 @@ Key root files and directories:
 - `bunfig.toml`: Bun install settings (isolated linker)
 - `nx.json`: Nx workspace configuration
 - `packages/config`: shared configuration package used by multiple apps
+- `packages/mcp-bridge`: `bookmark-scout-mcp`, the local MCP server and native messaging host that let local AI agents use the extension's bookmark actions (settings in its `config/bridge.toml`; the message shapes the extension shares are `src/protocol.ts`)
 - `scripts/generate-readme.ts`: repository utility script
 - `README.md`: public project overview and setup
 - `CONTRIBUTING.md`: contribution workflow and coding expectations
@@ -193,6 +194,14 @@ Run Chromium and Firefox end-to-end tests locally. Edge (`nx run extension:test:
 - `nx run docs:lint` (Biome format and lint; CI fails on unformatted docs code, such as `src/lib/copy*.ts`)
 - `nx run docs:build`, then `bun run --cwd apps/docs verify`
 
+### MCP bridge changes
+
+- `bun run --cwd packages/mcp-bridge typecheck`
+- `bun test packages/mcp-bridge` (the integration tests start `native-host` and `serve` as real processes, with the test playing the extension and the MCP client)
+- `nx run extension:test:e2e:bridge` when the bridge or the extension's side of it changes: the compiled binary as Chromium's native host and an MCP client driving `serve` (the `Bridge E2E` CI job; on macOS, set `BOOKMARK_SCOUT_MCP_BIN` to a copy of the binary outside `~/Documents`, which the browser cannot run from without a privacy prompt)
+- distribution (npm `dist/cli.js` built by `build:npm`, `server.json` for the MCP registry, `claude-plugin/`, and the manual **MCP bridge binaries** workflow) is prepared in the repository and published only by the maintainer (`packages/mcp-bridge/README.md`); `src/distribution.test.ts` keeps the versions, names, and URLs in step
+- when the message shapes in `src/protocol.ts` change, the extension side too (`PROTOCOL_VERSION` goes up when old and new ends could no longer talk)
+
 ### Shared or cross-app changes
 
 - `bun run lint`
@@ -217,7 +226,7 @@ Releases, CI repair, GitHub Actions, deploys, Dependabot, and lockfile work foll
 
 - Each workspace declares what it imports or runs in its own `package.json`; add a dependency with `bun add` from that app's folder. The root `package.json` holds only workspace tooling (Nx, Biome, TypeScript, Husky, lint-staged) and what the root `scripts/` and `.agents/skills/` scripts import.
 - Installs are isolated (`bunfig.toml`, `linker = "isolated"`): a workspace resolves only its declared packages, so declare a package in the importing app instead of relying on another workspace or the root.
-- TypeScript is split by what each workspace runs: the extension and docs use TypeScript 7 (native `tsc`); the root, website, and `packages/config` stay on 6 because Nx and typescript-eslint need the programmatic API. `scripts/typescript-versions.test.ts` pins each major.
+- TypeScript is split by what each workspace runs: the extension, docs, and `packages/mcp-bridge` use TypeScript 7 (native `tsc`); the root, website, and `packages/config` stay on 6 because Nx and typescript-eslint need the programmatic API. `scripts/typescript-versions.test.ts` pins each major.
 - Declaring `react` in a workspace turns on Biome's React rules there, such as `noArrayIndexKey` (key list items by a value from the data) and `noChildrenProp` (tests that render components are `.test.tsx`).
 - `bun.lock` is the single workspace lockfile and must stay at `"lockfileVersion": 1`; `scripts/lockfile.test.ts` enforces it.
 

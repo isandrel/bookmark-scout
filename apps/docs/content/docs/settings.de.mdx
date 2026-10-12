@@ -98,6 +98,10 @@ Siehe [Speichern und ordnen](/guides/save-and-organize).
 | --- | --- | --- |
 | **Vor dem Löschen bestätigen** | An | Vor dem Löschen nachfragen. Jedes Löschen lässt sich in beiden Fällen 10 Sekunden lang rückgängig machen |
 
+### Menüs der Lesezeichenverwaltung [#manager-menus]
+
+Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeigen, und verschieben Sie sie innerhalb jeder Gruppe nach oben oder unten. **Standard wiederherstellen** bringt das vollständige Menü zurück. Mindestens ein Befehl bleibt immer.
+
 ## KI [#ai]
 
 KI ist standardmäßig deaktiviert. Diese Einstellungen wirken erst, nachdem Sie **KI-Funktionen** aktiviert haben.
@@ -122,6 +126,16 @@ Darunter enthält der Anbieterbereich **API-Schlüssel**, **Basis-URL**, **Eigen
 | --- | --- | --- |
 | **Seiteninhalt lesen** | Aus | Den Haupttext jeder Seite, nicht nur Titel und URL, an Ordnervorschläge, Automatische Tags und Inhaltszusammenfassung senden. Fragt beim Aktivieren nach Zugriff auf Websites |
 
+### Was „KI fragen“ tun darf [#ask-ai-actions]
+
+Hier steht alles, was „KI fragen“ nachschlagen und ändern kann; standardmäßig ist alles aktiviert. Schalten Sie etwas aus, wird es der KI gar nicht angeboten. Vor dem Übernehmen eines Änderungsplans werden Sie immer gefragt, egal was Sie hier wählen.
+
+### Lokale KI-Agenten [#agent-bridge]
+
+**Lokale KI-Agenten zulassen** (standardmäßig aus, nur für dieses Gerät) lässt KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, Ihre Lesezeichen über das Programm bookmark-scout-mcp nachschlagen, das Sie installieren und mit `bookmark-scout-mcp install` anmelden. Beim Einschalten fragt Ihr Browser, ob die Erweiterung mit diesem Programm sprechen darf. **Änderungen erlauben** (standardmäßig aus) lässt sie außerdem Seiten speichern und Verschiebungen, Umbenennungen, Löschungen und neue Ordner vorschlagen; jede Änderung öffnet ein Bookmark-Scout-Fenster, in dem Sie zustimmen oder ablehnen, und Sie können sie in der Lesezeichenverwaltung rückgängig machen. Das Feld unter dem Schalter zeigt, ob das Programm läuft.
+
+**Private Werte ausblenden** (standardmäßig an) ersetzt sensible URL-Parameter, Tokens und E-Mail-Adressen in den Titeln und URLs, die Agenten erhalten, anhand der Liste der Datenschutzprüfung. **Was lokale Agenten tun dürfen** listet jede Abfrage auf, standardmäßig alle aktiviert; was Sie ausschalten, wird Agenten gar nicht angeboten.
+
 ## KI-Tools [#ai-tools]
 
 Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags aktivieren** (standardmäßig an). Ein deaktiviertes Tool wird in der **Tools**-Leiste des Managers ausgeblendet.
@@ -131,7 +145,7 @@ Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags a
 | **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** 200; **Max. Tiefe** 8; **Auszugslänge** 240 |
 | **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an |
 | **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
-| **KI-Ordnerneuordnung** | **Immer zuerst Vorschau anzeigen** an; **Mindestkonfidenz** 0,55 (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
+| **KI-Ordnerneuordnung** | **Mindestkonfidenz** 0,55 (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
 
 Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner.
 

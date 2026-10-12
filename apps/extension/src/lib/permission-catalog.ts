@@ -33,6 +33,8 @@ export const API_PERMISSIONS = {
   tabs: { chrome: 'optional', edge: 'optional', firefox: 'optional' },
   favicon: { chrome: 'optional', edge: 'optional' },
   contextMenus: { chrome: 'optional', edge: 'optional', firefox: 'required' },
+  // "Communicate with cooperating native applications": only for access for local AI agents.
+  nativeMessaging: { chrome: 'optional', edge: 'optional', firefox: 'optional' },
 } as const satisfies Record<string, Partial<Record<PermissionBrowser, PermissionGrant>>>;
 
 export type ApiPermission = keyof typeof API_PERMISSIONS;
@@ -132,6 +134,21 @@ export const PERMISSION_FEATURES = {
       detailKey: 'permission_aiDetail',
     },
     denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_aiDenied' },
+  },
+  /**
+   * Access for local AI agents: the bridge program the user installed (`packages/mcp-bridge`)
+   * passes bookmark titles, URLs, and folder paths, the current page's URL, and page text (when
+   * Read page content is on) to the AI agents the user runs on this computer.
+   */
+  agentBridge: {
+    permissions: ['nativeMessaging'],
+    dataCollection: ['bookmarksInfo', 'browsingActivity', 'websiteContent'],
+    explanation: {
+      titleKey: 'permission_agentBridgeTitle',
+      descriptionKey: 'permission_agentBridgeDesc',
+      detailKey: 'permission_agentBridgeDetail',
+    },
+    denied: { titleKey: 'permission_deniedTitle', descriptionKey: 'permission_agentBridgeDenied' },
   },
   /** Verify Service and Refresh Models send only the API key to the provider. */
   aiProviderCheck: {

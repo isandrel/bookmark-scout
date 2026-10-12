@@ -57,6 +57,13 @@ export default defineConfig<ExtensionProjectOptions>({
       use: { extensionBrowser: 'msedge', extensionBuild: 'edge-mv3' },
     },
     {
+      // The local AI agent bridge end to end, with the compiled bookmark-scout-mcp binary as the
+      // browser's native host (tests/e2e-bridge). Its own CI job; `nx run extension:test:e2e:bridge`.
+      name: 'bridge',
+      testDir: './tests/e2e-bridge',
+      use: { extensionBrowser: 'chromium', extensionBuild: 'chrome-mv3' },
+    },
+    {
       // Latency and scrolling measurements on a large library (tests/perf/README.md). Not part of
       // the E2E suites: one worker, so measurements do not compete for the CPU, and no retries,
       // so a slow run is reported rather than retried away.
@@ -71,6 +78,24 @@ export default defineConfig<ExtensionProjectOptions>({
         extensionBuild: 'chrome-mv3',
         screenshot: 'off',
         trace: 'off',
+      },
+    },
+    {
+      // Real AI features against a real provider (tests/live/README.md). Opt-in: every test skips
+      // without the BS_LIVE_AI_* variables, and no pull request check runs it. One worker, so
+      // calls do not compete for the provider's rate limit, and no retries, so a real failure is
+      // reported. Nothing that could hold the API key is saved: no traces, screenshots, or video.
+      name: 'live',
+      testDir: './tests/live',
+      fullyParallel: false,
+      workers: 1,
+      retries: 0,
+      use: {
+        extensionBrowser: 'chromium',
+        extensionBuild: 'chrome-mv3',
+        screenshot: 'off',
+        trace: 'off',
+        video: 'off',
       },
     },
     {

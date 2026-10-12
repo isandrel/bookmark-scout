@@ -15,6 +15,11 @@ const hostSettingsSchema = z.looseObject({
   apiKey: z.string(),
 });
 
+/** The schema for each answer shape the background may ask for (`AI_HOST_SCHEMA_NAMES`). */
+const AI_HOST_SCHEMAS = {
+  folderRecommendations: folderRecommendationsSchema,
+} satisfies { [Name in AIHostSchemaName]: z.ZodType<AIHostSchemaOutputs[Name]> };
+
 const NULL_BODY_STATUSES: ReadonlySet<number> = new Set([101, 204, 205, 304]);
 
 /** A fetch that hands each request to the background and rebuilds its response. */
@@ -76,7 +81,7 @@ export async function handleAIHostRequest(
     const { object } = await generateAIObject({
       settings: settings.data as AISettings,
       source: request.source,
-      schema: folderRecommendationsSchema,
+      schema: AI_HOST_SCHEMAS[request.schema],
       system: request.system,
       prompt: request.prompt,
       transport: createAIHostTransport(request.token),

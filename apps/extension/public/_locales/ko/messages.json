@@ -241,6 +241,14 @@
         "message": "\"$1\" 정렬",
         "description": "Undo history label for sorting a folder by name. $1 is the folder's title."
     },
+    "history_change": {
+        "message": "변경: $1",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is the plan's short summary."
+    },
+    "history_changeMany": {
+        "message": "변경 $1건",
+        "description": "Undo history label for several kinds of change made together, such as an approved AI plan. $1 is how many."
+    },
     "toast_undone": {
         "message": "실행 취소함: $1",
         "description": "Toast after undoing a change in the bookmark manager. $1 is the change, such as Delete \"News\"."
@@ -1721,6 +1729,18 @@
         "message": "되돌림: $1개. 되돌리지 못함: $2개.",
         "description": "Reorganization undo result: moved back ($1), could not move back because the bookmark was moved again or removed ($2)"
     },
+    "toast_changesUndone": {
+        "message": "변경 사항을 되돌렸습니다",
+        "description": "Toast title after undoing a reviewed batch of changes from a tool (URL Cleaner, Metadata Fetcher, Auto-Tagging, Summarizer)"
+    },
+    "toast_changesUndonePartial": {
+        "message": "일부 변경 사항을 되돌리지 못했습니다",
+        "description": "Toast title when undoing a tool's reviewed changes left some of them in place, because those items changed since"
+    },
+    "toast_changesUndoneDesc": {
+        "message": "되돌림: $1개. 되돌리지 못함: $2개.",
+        "description": "Toast detail after undoing a tool's reviewed changes. $1 is how many were restored, $2 how many could not be restored because they changed since."
+    },
     "error_importFailed": {
         "message": "가져오기 실패: $1",
         "description": "Error message for failed bookmark import"
@@ -2296,14 +2316,6 @@
     "settings_reorganizationDefaultScopeDesc": {
         "message": "AI 폴더 재구성에 사용할 기본 범위",
         "description": "Reorganization default scope description"
-    },
-    "settings_reorganizationDryRunFirst": {
-        "message": "항상 먼저 미리 보기",
-        "description": "Reorganization dry run label"
-    },
-    "settings_reorganizationDryRunFirstDesc": {
-        "message": "변경 사항을 적용하기 전에 제안된 재구성 계획을 표시합니다",
-        "description": "Reorganization dry run description"
     },
     "settings_reorganizationMinConfidence": {
         "message": "최소 신뢰도",
@@ -3907,6 +3919,22 @@
         "message": "Bookmark Scout는 페이지 내용을 받지 않습니다. 로컬 네트워크의 페이지는 읽지 않습니다. 설정을 끄면 언제든지 중단할 수 있습니다.",
         "description": "Privacy note in the dialog shown before turning on Read page content"
     },
+    "permission_agentBridgeTitle": {
+        "message": "로컬 AI 에이전트 허용",
+        "description": "Title of the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDesc": {
+        "message": "이 컴퓨터에서 실행하는 AI 에이전트(Claude Code, Codex, Cursor 등)가 설치한 bookmark-scout-mcp 프로그램을 통해 북마크를 조회할 수 있게 됩니다. 북마크 제목, URL, 폴더 이름, 현재 페이지의 제목과 URL, 그리고 페이지 내용 읽기가 켜져 있는 동안에는 페이지 텍스트가 대상입니다. 브라우저가 확장 프로그램이 그 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "What turning on access for local AI agents does, in the dialog shown before the browser asks to allow communicating with native applications"
+    },
+    "permission_agentBridgeDetail": {
+        "message": "에이전트는 변경 허용도 켠 경우에만 북마크를 변경할 수 있으며, 그때도 각 변경은 승인을 기다립니다. Bookmark Scout는 이 데이터를 받지 않지만, 에이전트는 읽은 내용을 자체 AI 제공자에게 보낼 수 있습니다. 설정을 끄면 언제든지 중지할 수 있습니다.",
+        "description": "Privacy note in the dialog shown before turning on access for local AI agents"
+    },
+    "permission_agentBridgeDenied": {
+        "message": "로컬 AI 에이전트 접근은 꺼진 상태로 유지됩니다. 켜면 브라우저가 확장 프로그램이 bookmark-scout-mcp 프로그램과 통신하도록 허용할지 묻습니다.",
+        "description": "Toast text when the native messaging permission for local AI agents is declined"
+    },
     "permission_aiProviderCheckDenied": {
         "message": "아무것도 전송되지 않았습니다. 확장 프로그램이 API 키를 제공자와 공유하기 전에 브라우저가 확인합니다.",
         "description": "Toast or error text when consent to send the API key to the provider is declined or missing"
@@ -5347,9 +5375,17 @@
         "message": "북마크에서 “$1” 검색함",
         "description": "Ask AI tool step; $1 is the search query"
     },
+    "askAI_toolFilterBookmarks": {
+        "message": "북마크를 살펴봄",
+        "description": "Ask AI tool step: the agent looked through the bookmarks by folder, tag, site, or date, without search words"
+    },
     "askAI_toolListFolders": {
         "message": "폴더 목록을 확인함",
         "description": "Ask AI tool step"
+    },
+    "askAI_toolGetBookmarks": {
+        "message": "북마크 세부 정보를 확인함",
+        "description": "Ask AI tool step: the agent looked up details (tags, summaries, counts) of specific bookmarks or folders"
     },
     "askAI_toolCurrentPage": {
         "message": "현재 페이지를 확인함",
@@ -5358,6 +5394,178 @@
     "askAI_toolReadPage": {
         "message": "$1 읽음",
         "description": "Ask AI tool step; $1 is the site host"
+    },
+    "askAI_toolReadBookmark": {
+        "message": "북마크한 페이지를 읽음",
+        "description": "Ask AI tool step: the agent read the text of a bookmarked page"
+    },
+    "askAI_toolFindDuplicates": {
+        "message": "중복 북마크를 찾음",
+        "description": "Ask AI tool step: the agent looked for bookmarks saved more than once"
+    },
+    "askAI_toolCheckLinks": {
+        "message": "북마크 링크를 확인함",
+        "description": "Ask AI tool step: the agent checked whether bookmarked links still work"
+    },
+    "askAI_toolSuggestFolders": {
+        "message": "알맞은 폴더를 찾음",
+        "description": "Ask AI tool step: the agent looked for existing folders that match a page or bookmark"
+    },
+    "askAI_toolMove": {
+        "message": "북마크 이동",
+        "description": "Ask AI step or button: moving bookmarks to another folder"
+    },
+    "askAI_toolRename": {
+        "message": "\"$1\"(으)로 이름 바꾸기",
+        "description": "Ask AI step or button: renaming a bookmark or folder. $1 is the new title."
+    },
+    "askAI_toolDelete": {
+        "message": "북마크 삭제",
+        "description": "Ask AI step or button: deleting bookmarks"
+    },
+    "askAI_toolCreateFolder": {
+        "message": "\"$1\" 폴더 만들기",
+        "description": "Ask AI step or button: creating a folder. $1 is its name."
+    },
+    "askAI_toolSave": {
+        "message": "\"$1\" 저장함",
+        "description": "Ask AI step: the agent saved a page as a bookmark. $1 is the page title or URL."
+    },
+    "askAI_toolUndo": {
+        "message": "변경을 되돌림",
+        "description": "Ask AI step: the agent undid one of its changes"
+    },
+    "askAI_toolPropose": {
+        "message": "승인할 변경 사항을 준비함",
+        "description": "Ask AI step: the agent prepared bookmark changes for the user to approve"
+    },
+    "askAI_toolApply": {
+        "message": "승인된 변경 사항을 적용함",
+        "description": "Ask AI step: the agent applied changes the user approved"
+    },
+    "askAI_toolSuggest": {
+        "message": "다음 단계를 제안함",
+        "description": "Ask AI step: the AI offered suggestion buttons (shown while they load)"
+    },
+    "askAI_suggestions": {
+        "message": "제안",
+        "description": "Ask AI: accessible name of the list of suggestion buttons under an answer"
+    },
+    "askAI_suggestSave": {
+        "message": "$1에 저장",
+        "description": "Ask AI suggestion button that saves the page. $1 is the folder path."
+    },
+    "askAI_suggestSaveNew": {
+        "message": "새 폴더 $1에 저장",
+        "description": "Ask AI suggestion button that saves the page into a folder it creates. $1 is the new folder's path."
+    },
+    "askAI_suggestOpen": {
+        "message": "\"$1\" 열기",
+        "description": "Ask AI suggestion button that opens a bookmark. $1 is its title."
+    },
+    "askAI_suggestShow": {
+        "message": "관리자에서 \"$1\" 보기",
+        "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
+    },
+    "askAI_savePage": {
+        "message": "$2 · \"$1\"",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
+    },
+    "askAI_savedPageTo": {
+        "message": "\"$1\"을(를) $2에 저장했습니다",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "\"$1\"은(는) 이미 $2에 있습니다",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_saveFailed": {
+        "message": "페이지를 저장하지 못했습니다",
+        "description": "Error toast when a suggestion button could not save the page"
+    },
+    "askAI_approvalTitle": {
+        "message": "이 변경을 승인할까요?",
+        "description": "Ask AI: heading of the card that asks the user to approve a bookmark change the AI wants to make"
+    },
+    "askAI_approvalUntrusted": {
+        "message": "이 채팅은 웹 콘텐츠를 읽었으며, 여기에는 AI를 겨냥한 지시가 들어 있을 수 있습니다. 요청한 내용이 맞는지 확인하세요.",
+        "description": "Ask AI: note on an approval card when the chat has read page text or web search results, which could have steered the AI"
+    },
+    "askAI_approvalSave": {
+        "message": "\"$1\"을(를) $2에 저장",
+        "description": "Ask AI approval line: saving a page as a bookmark. $1 is the page title or URL, $2 the folder path."
+    },
+    "askAI_approvalUndo": {
+        "message": "이전 변경 되돌리기",
+        "description": "Ask AI approval line: undoing a change made earlier"
+    },
+    "askAI_planMove": {
+        "message": "\"$1\"을(를) $2에서 $3(으)로 이동",
+        "description": "Ask AI approval line for a planned move. $1 is the title, $2 the folder it is in, $3 the folder it goes to."
+    },
+    "askAI_planRename": {
+        "message": "\"$1\"의 이름을 \"$2\"(으)로 변경",
+        "description": "Ask AI approval line for a planned rename. $1 is the current title, $2 the new one."
+    },
+    "askAI_planDelete": {
+        "message": "$2에서 \"$1\" 삭제",
+        "description": "Ask AI approval line for a planned deletion of a bookmark. $1 is its title, $2 its folder."
+    },
+    "askAI_planDeleteFolder": {
+        "message": "$2에서 \"$1\" 폴더와 그 안의 북마크 $3개 삭제",
+        "description": "Ask AI approval line for a planned deletion of a folder. $1 is its title, $2 the folder it is in, $3 how many bookmarks it holds."
+    },
+    "askAI_planCreateFolder": {
+        "message": "$2에 \"$1\" 폴더 만들기",
+        "description": "Ask AI approval line for a planned new folder. $1 is its name, $2 the folder it is created in."
+    },
+    "askAI_planMissing": {
+        "message": "이 계획은 만료되었거나 이미 적용되었습니다. 다시 요청하면 새로 만듭니다.",
+        "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "이 변경은 이미 실행 취소되었거나 기록에 더 이상 없어 실행 취소할 내용이 없습니다.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "\"$1\" 삭제",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "폴더 \"$1\"과(와) 그 안의 모든 항목 삭제($2개)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "\"$1\"을(를) $2에 복원",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "\"$1\"의 이름을 \"$2\"(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "\"$1\"의 주소를 $2(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "\"$1\"을(를) $2(으)로 되돌리기",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
+    },
+    "askAI_approve": {
+        "message": "승인",
+        "description": "Ask AI approval card: button that approves the change"
+    },
+    "askAI_deny": {
+        "message": "거부",
+        "description": "Ask AI approval card: button that declines the change"
+    },
+    "askAI_denied": {
+        "message": "거부됨",
+        "description": "Ask AI: marks a step the user declined"
+    },
+    "askAI_failed": {
+        "message": "실패",
+        "description": "Ask AI: marks a step that failed, such as a tool call the extension rejected"
     },
     "askAI_toolWebSearch": {
         "message": "웹을 검색함",
@@ -5642,5 +5850,193 @@
     "popup_shortcutSetUp": {
         "message": "설정하기",
         "description": "Button in that line that opens where the shortcut can be set"
+    },
+    "actionName_searchBookmarks": {
+        "message": "북마크 검색",
+        "description": "Name of the bookmark action that searches bookmarks (Options list of what Ask AI may do)"
+    },
+    "actionName_listFolders": {
+        "message": "폴더 목록 보기",
+        "description": "Name of the bookmark action that lists folders"
+    },
+    "actionName_getBookmarks": {
+        "message": "북마크 세부 정보 조회",
+        "description": "Name of the bookmark action that looks up details of bookmarks"
+    },
+    "actionName_getCurrentPage": {
+        "message": "현재 페이지 확인",
+        "description": "Name of the bookmark action that checks the page in the active tab"
+    },
+    "actionName_readPage": {
+        "message": "페이지 읽기",
+        "description": "Name of the bookmark action that reads page text (only with Read page content on)"
+    },
+    "actionName_findDuplicates": {
+        "message": "중복 찾기",
+        "description": "Name of the bookmark action that finds duplicate bookmarks"
+    },
+    "actionName_checkLinks": {
+        "message": "링크 확인",
+        "description": "Name of the bookmark action that checks whether links still work"
+    },
+    "actionName_suggestFolders": {
+        "message": "폴더 제안",
+        "description": "Name of the bookmark action that suggests folders for a page"
+    },
+    "actionName_moveBookmarks": {
+        "message": "북마크와 폴더 이동",
+        "description": "Name of the bookmark action that moves bookmarks and folders"
+    },
+    "actionName_renameBookmark": {
+        "message": "북마크와 폴더 이름 바꾸기",
+        "description": "Name of the bookmark action that renames bookmarks and folders"
+    },
+    "actionName_deleteBookmarks": {
+        "message": "북마크와 폴더 삭제",
+        "description": "Name of the bookmark action that deletes bookmarks and folders"
+    },
+    "actionName_createFolder": {
+        "message": "폴더 만들기",
+        "description": "Name of the bookmark action that creates folders"
+    },
+    "actionName_saveBookmark": {
+        "message": "페이지 저장",
+        "description": "Name of the bookmark action that saves a page as a bookmark"
+    },
+    "actionName_undoChange": {
+        "message": "자신의 변경 되돌리기",
+        "description": "Name of the bookmark action that undoes a change the AI made"
+    },
+    "actionName_proposeChanges": {
+        "message": "승인할 변경 제안",
+        "description": "Name of the bookmark action that proposes a plan of changes for the user to approve"
+    },
+    "actionName_applyChanges": {
+        "message": "승인된 변경 적용",
+        "description": "Name of the bookmark action that applies a plan the user approved"
+    },
+    "actionName_suggestActions": {
+        "message": "다음 단계를 버튼으로 제안",
+        "description": "Name of the bookmark action that offers suggestion buttons under an answer"
+    },
+    "settings_managerMenuActions": {
+        "message": "북마크 관리자 메뉴",
+        "description": "Options > Behavior: panel title for choosing the bookmark manager menu items"
+    },
+    "settings_managerMenuActionsDesc": {
+        "message": "오른쪽 클릭 메뉴와 ⋯ 메뉴에 표시할 명령과 각 그룹 안의 순서를 고릅니다.",
+        "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_askAiDisabledActions": {
+        "message": "AI에게 묻기가 할 수 있는 일",
+        "description": "Options > AI: panel title for choosing what Ask AI may do"
+    },
+    "settings_askAiDisabledActionsDesc": {
+        "message": "AI가 하지 않았으면 하는 일은 끄세요. 끈 작업은 AI에 아예 제공되지 않습니다. 변경 계획을 적용할 때는 항상 먼저 확인합니다.",
+        "description": "Options > AI: description of the panel for choosing what Ask AI may do"
+    },
+    "settings_agentBridge": {
+        "message": "로컬 AI 에이전트",
+        "description": "Options > AI: section heading for access for local AI agents (Claude Code, Codex, Cursor); also names them in the AI activity log"
+    },
+    "settings_agentBridgeEnabled": {
+        "message": "로컬 AI 에이전트 허용",
+        "description": "Setting name: let AI agents on this computer use Bookmark Scout"
+    },
+    "settings_agentBridgeEnabledDesc": {
+        "message": "이 컴퓨터의 AI 에이전트(Claude Code, Codex, Cursor 등)가 bookmark-scout-mcp 프로그램을 통해 북마크를 조회할 수 있게 합니다. 이 기기에만 적용됩니다.",
+        "description": "Setting description: let AI agents on this computer look up bookmarks through the bridge program"
+    },
+    "settings_agentBridgeWrites": {
+        "message": "변경 허용",
+        "description": "Setting name: let local AI agents change bookmarks, each change after the user's approval"
+    },
+    "settings_agentBridgeWritesDesc": {
+        "message": "에이전트가 페이지를 저장하고 이동, 이름 변경, 삭제, 새 폴더를 제안하는 것도 허용합니다. 각 변경마다 Bookmark Scout 창이 열려 승인하거나 거절할 수 있으며, 북마크 관리자에서 실행 취소할 수 있습니다.",
+        "description": "Setting description: local AI agents may save, move, rename, delete, and undo, each after approval"
+    },
+    "settings_agentBridgeRedactUrls": {
+        "message": "개인 값 숨기기",
+        "description": "Setting name: hide private values in the titles and URLs local AI agents receive"
+    },
+    "settings_agentBridgeRedactUrlsDesc": {
+        "message": "에이전트가 받는 제목과 URL에 포함된 민감한 URL 매개변수, 토큰, 이메일 주소를 개인정보 스캐너의 목록에 따라 바꿉니다.",
+        "description": "Setting description: what hiding private values for local AI agents replaces"
+    },
+    "settings_agentBridgeDisabledActions": {
+        "message": "로컬 에이전트가 할 수 있는 일",
+        "description": "Options > AI: panel title for choosing what local AI agents may do"
+    },
+    "settings_agentBridgeDisabledActionsDesc": {
+        "message": "에이전트가 하지 않기를 원하는 작업을 끄면 에이전트에 아예 제공되지 않습니다. 변경에는 변경 허용도 필요하며, 각 변경은 승인을 기다립니다.",
+        "description": "Options > AI: description of the panel for choosing what local AI agents may do"
+    },
+    "agentBridge_statusTitle": {
+        "message": "브리지 프로그램",
+        "description": "Options > AI > Local AI agents: panel title for the bridge program's status and setup"
+    },
+    "agentBridge_setup": {
+        "message": "이 컴퓨터에 bookmark-scout-mcp 프로그램을 설치하고 “$1”을 한 번 실행하세요. 브라우저에 등록되고 Claude Code, Codex, Cursor에 추가하는 방법이 표시됩니다.",
+        "description": "Options > AI > Local AI agents: how to set up the bridge program. $1 is the install command, shown as is."
+    },
+    "agentBridge_statusOff": {
+        "message": "실행 중이 아닙니다. 위의 스위치를 켜고 브라우저가 물으면 접근을 허용하세요.",
+        "description": "Bridge status: not running because the setting is off or the permission is missing"
+    },
+    "agentBridge_statusConnecting": {
+        "message": "브리지 프로그램을 시작하는 중…",
+        "description": "Bridge status: the browser is starting the bridge program"
+    },
+    "agentBridge_statusReady": {
+        "message": "준비되었습니다. 이 컴퓨터의 AI 에이전트가 이 브라우저 프로필에 접근할 수 있습니다.",
+        "description": "Bridge status: running, so AI agents on this computer can reach this browser profile"
+    },
+    "agentBridge_statusNotInstalled": {
+        "message": "브리지 프로그램이 설치되지 않았거나 아직 이 브라우저에 등록되지 않았습니다.",
+        "description": "Bridge status: the browser could not find the bridge program"
+    },
+    "agentBridge_statusFailed": {
+        "message": "브리지 프로그램을 시작하지 못했거나 중지되었습니다. Bookmark Scout가 자동으로 다시 시도합니다.",
+        "description": "Bridge status: the bridge program could not start or stopped; the browser's reason is shown below it"
+    },
+    "agentBridge_retry": {
+        "message": "다시 시도",
+        "description": "Button: try to start the bridge program again now"
+    },
+    "agentApproval_title": {
+        "message": "변경 승인",
+        "description": "Title of the window where the user approves changes local AI agents asked for"
+    },
+    "agentApproval_desc": {
+        "message": "이 컴퓨터의 AI 에이전트가 북마크 변경을 요청합니다. 승인하기 전에는 아무것도 바뀌지 않으며, 승인한 변경은 북마크 관리자에서 실행 취소할 수 있습니다.",
+        "description": "Explanation at the top of the approval window for local AI agents"
+    },
+    "agentApproval_from": {
+        "message": "“$1”에서 요청(에이전트가 밝힌 이름)",
+        "description": "Which local AI agent asks, by the name it gave itself (not verified). $1 is that name."
+    },
+    "agentApproval_none": {
+        "message": "승인을 기다리는 항목이 없습니다.",
+        "description": "Approval window when no request is waiting"
+    },
+    "settings_actionMoveUp": {
+        "message": "$1 위로 이동",
+        "description": "Button that moves a menu item up within its group. $1 is the item name."
+    },
+    "settings_actionMoveDown": {
+        "message": "$1 아래로 이동",
+        "description": "Button that moves a menu item down within its group. $1 is the item name."
+    },
+    "settings_actionsReset": {
+        "message": "기본값 복원",
+        "description": "Button that restores the default bookmark manager menu or AI actions"
+    },
+    "settings_askAiReads": {
+        "message": "조회",
+        "description": "Options > AI: group heading for the read-only Ask AI actions"
+    },
+    "settings_askAiWrites": {
+        "message": "북마크 변경",
+        "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
     }
 }

@@ -24,3 +24,19 @@ recording = false
 # Ask AI adds the provider's web search, where the provider has one. Chosen in the Ask AI panel,
 # for this device only.
 web_search = false
+# Actions Ask AI may not use, as action ids; empty lets it use all of them. Edited in Options > AI.
+disabled_actions = { default = [], max_items = 16, max_length = 20 }
+
+[agent_bridge]
+# Let AI agents on this computer (Claude Code, Codex, Cursor) look up bookmarks through the
+# bookmark-scout-mcp bridge the user installs. Needs native messaging, asked for when turned on.
+# Device settings: the bridge is installed on one computer.
+enabled = false
+# Let agents also save pages, propose changes, and undo them. Each change waits for the user's
+# approval in a Bookmark Scout window, whatever this says.
+writes = false
+# Hide private values (sensitive query parameters, tokens, email addresses) in the titles and URLs
+# agents receive, by the Privacy Scanner's rules.
+redact_urls = true
+# Actions local agents may not use, as action ids; empty lets them use all they are offered.
+disabled_actions = { default = [], max_items = 16, max_length = 20 }

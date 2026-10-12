@@ -1,7 +1,8 @@
 /**
- * The bookmark manager's commands for its menus, after Chrome's command manager: the item-action
- * context for rows and for folders in the tree, and the folder actions (sort by name, add, paste)
- * for the folder shown. Each context reads the page's latest state through a ref, so the objects
+ * The bookmark manager's commands for its menus, after Chrome's command manager: what the item
+ * menus' actions may ask the page for rows and for folders in the tree, and what the folder menus'
+ * actions (sort by name, add, paste) may ask for the folder shown. The actions themselves are the
+ * registry's (`services/actions.ts`). Each context reads the page's latest state through a ref, so the objects
  * stay the same between renders and the table's columns are not rebuilt.
  */
 
@@ -146,14 +147,15 @@ export function useManagerCommands(options: ManagerCommandOptions) {
         toast.error({ title: t(titleKey), description: getErrorMessage(error) }),
       showInFolder: (bookmark: Bookmark) => latest.current.showInFolder(bookmark),
       copyFolderLink: (folderId: string) => latest.current.copyFolderLink(folderId),
-      openableUrls: (items: Bookmark[]) => getOpenableUrls(items, latest.current.allData),
+      openableUrls: (items: readonly Bookmark[]) =>
+        getOpenableUrls(items, latest.current.allData),
       open: (items: Bookmark[], target: BookmarkOpenTarget) => latest.current.open(items, target),
       cut: (items: Bookmark[]) => void setClipboard('cut', items),
       copy: (items: Bookmark[]) => void setClipboard('copy', items),
     };
 
     /** Rows of the table and their ⋯ menus. */
-    const tableItemContext: BookmarkRowActionContext = {
+    const tableItemHost: ActionItemHost = {
       ...base,
       get privateWindowsAllowed() {
         return canOpenPrivateRef.current;
@@ -165,7 +167,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
     };
 
     /** Folders in the tree: paste goes into the folder, and there is no Show in folder. */
-    const treeItemContext: BookmarkRowActionContext = {
+    const treeItemHost: ActionItemHost = {
       ...base,
       get privateWindowsAllowed() {
         return canOpenPrivateRef.current;
@@ -178,7 +180,7 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       canPaste: (items) => hasBookmarkClipboard() && items.length === 1 && canAddTo(items[0]),
     };
 
-    const folderContext: FolderActionContext = {
+    const folderHost: ActionFolderHost = {
       get canChangeFolder() {
         return canAddTo(currentFolder());
       },
@@ -208,6 +210,6 @@ export function useManagerCommands(options: ManagerCommandOptions) {
       paste: () => pasteNextTo([]),
     };
 
-    return { tableItemContext, treeItemContext, folderContext, clipboardEvents };
+    return { tableItemHost, treeItemHost, folderHost, clipboardEvents };
   }, []);
 }

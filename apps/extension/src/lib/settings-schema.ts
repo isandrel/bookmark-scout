@@ -40,7 +40,14 @@ export type SettingsFieldMeta = {
 };
 
 /** Options content that is not synced settings, drawn by its own component. */
-export type SettingsPanelId = 'aiServices' | 'aiActivity' | 'promptLibrary' | 'shortcuts';
+export type SettingsPanelId =
+  | 'aiServices'
+  | 'aiActivity'
+  | 'promptLibrary'
+  | 'shortcuts'
+  | 'managerMenus'
+  | 'askAiActions'
+  | 'agentBridge';
 
 /** A titled group of settings inside a category: the Options page's second level. */
 export type SettingsSectionMeta = {
@@ -369,6 +376,30 @@ export function isQueryParamName(name: string): boolean {
   return QUERY_PARAM_NAME_PATTERN.test(name);
 }
 
+/** Bookmark action ids (`services/actions.ts`): letters only, so a stored list stays small. */
+const ACTION_ID_PATTERN = /^[A-Za-z]+$/;
+
+/** A list of action ids, each at most `max_length` long, at most `max_items` of them. */
+function actionIdListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
+  const config = configValue(path, listSettingSchema);
+  const maxLength = config.max_length;
+  if (maxLength === undefined) throw new Error(`settings.${path} needs max_length`);
+  const schema = z
+    .array(z.string().max(maxLength).regex(ACTION_ID_PATTERN))
+    .max(config.max_items);
+  return {
+    section: sectionOf(path),
+    schema: schema.default(schema.parse(config.default)),
+    meta: () => ({
+      ...fieldLabels(stem),
+      type: 'text',
+      list: 'string',
+      maxItems: config.max_items,
+      maxLength,
+    }),
+  };
+}
+
 /** A list of query parameter names, each at most `max_length` long, at most `max_items` of them. */
 function nameListField(path: string, stem: string): FieldDefinition<z.ZodType<string[]>> {
   const config = configValue(path, listSettingSchema);
@@ -582,6 +613,15 @@ const fields = {
   aiReadPageContent: switchField('ai.page_reading.read_page_content', 'aiReadPageContent'),
   aiActivityRecording: switchField('ai.activity.recording', 'aiActivityRecording'),
   askAiWebSearch: switchField('ai.ask_ai.web_search', 'askAiWebSearch'),
+  askAiDisabledActions: actionIdListField('ai.ask_ai.disabled_actions', 'askAiDisabledActions'),
+  agentBridgeEnabled: switchField('ai.agent_bridge.enabled', 'agentBridgeEnabled'),
+  agentBridgeWrites: switchField('ai.agent_bridge.writes', 'agentBridgeWrites'),
+  agentBridgeRedactUrls: switchField('ai.agent_bridge.redact_urls', 'agentBridgeRedactUrls'),
+  agentBridgeDisabledActions: actionIdListField(
+    'ai.agent_bridge.disabled_actions',
+    'agentBridgeDisabledActions',
+  ),
+  managerMenuActions: actionIdListField('behavior.manager_menus.actions', 'managerMenuActions'),
   aiMaxCategories: numberField('ai_tools.reorganization.max_categories', 'aiMaxCategories'),
   aiMinItemsPerFolder: numberField(
     'ai_tools.reorganization.min_items_per_folder',
@@ -726,10 +766,6 @@ const fields = {
     'ai_tools.reorganization',
     'reorganizationDefaultScope',
     TOOL_SCOPE_CAPABILITIES.reorganization,
-  ),
-  reorganizationDryRunFirst: switchField(
-    'ai_tools.reorganization.dry_run_first',
-    'reorganizationDryRunFirst',
   ),
   reorganizationMinConfidence: numberField(
     'ai_tools.reorganization.min_confidence',
@@ -1095,6 +1131,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
       { id: 'tree', labelKey: 'settings_sectionTree', fields: ['sortOrder', 'groupByFolders'] },
       { id: 'links', labelKey: 'settings_sectionLinks', fields: ['linkOpenTarget'] },
       { id: 'deleting', labelKey: 'settings_sectionDeleting', fields: ['confirmBeforeDelete'] },
+      { id: 'managerMenus', fields: [], panel: 'managerMenus' },
     ]),
     ai: category('settings_ai', 'settings_aiDesc', [
       // The switch comes first, then the services it turns on (provider and model live there,
@@ -1109,6 +1146,15 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'pageReading',
         labelKey: 'settings_aiReadPageContent',
         fields: ['aiReadPageContent'],
+      },
+      { id: 'askAiActions', fields: [], panel: 'askAiActions' },
+      // Local agents bring their own model, so this works with AI off.
+      {
+        id: 'agentBridge',
+        labelKey: 'settings_agentBridge',
+        toggle: 'agentBridgeEnabled',
+        fields: ['agentBridgeWrites', 'agentBridgeRedactUrls'],
+        panel: 'agentBridge',
       },
       { id: 'activity', fields: [], panel: 'aiActivity' },
     ]),
@@ -1160,7 +1206,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
         id: 'reorganization',
         labelKey: 'tools_aiReorganize',
         toggle: 'reorganizationEnabled',
-        fields: ['reorganizationDefaultScope', 'reorganizationDryRunFirst'],
+        fields: ['reorganizationDefaultScope'],
         advanced: [
           'reorganizationMinConfidence',
           'reorganizationBatchSize',
@@ -1291,6 +1337,7 @@ function buildCategories(): Record<string, SettingsCategoryMeta> {
 export const SETTING_PERMISSIONS = {
   aiEnabled: 'ai',
   aiReadPageContent: 'pageReading',
+  agentBridgeEnabled: 'agentBridge',
   browserIconCache: 'browserIcons',
   contextMenuEnabled: 'contextMenu',
 } as const satisfies Partial<Record<keyof Settings, PermissionFeature>>;

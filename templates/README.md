@@ -111,6 +111,7 @@ Visit **[{{SITE_URL}}]({{SITE_URL}})** for the landing page and download links.
 - [x] 📊 **Bookmark Statistics** — Summarize domains, folders, protocols, duplicates, and depth
 - [x] 📤 **Import/Export** — Export HTML, JSON, Markdown, or CSV and import HTML or JSON. Imports open a preview of the target folder, counts, and duplicates, let you skip duplicates or import everything, and can be undone. Exports and AI context exports that contain sensitive values open a privacy review where you can download the original, a redacted copy, or nothing
 - [x] 🧠 **AI Tools** — Pack bookmarks for LLM context (including your saved tags and summaries when enabled), suggest tags, summarize bookmarks, and plan folder reorganizations that are previewed before applying by default
+- [x] 🔌 **Local AI Agents (MCP)** — Let Claude Code, Codex, Cursor, and other MCP clients on your computer search and organize your bookmarks through the `bookmark-scout-mcp` program (`packages/mcp-bridge`), which reaches the extension through native messaging and never opens a network port. Off by default; changes need **Allow changes**, and each one waits for your approval in the browser. See [Use with local AI agents]({{DOCS_URL}}/guides/local-agents)
 - [x] 🖱️ **Context Menu Save** — Save links from the right-click menu into recent or default folders, after turning on Context Menu in Settings
 - [x] 🌍 **i18n** — English, Simplified Chinese, Traditional Chinese, Japanese, Korean, Spanish, German, French, and Brazilian Portuguese in the extension, website, and docs
 - [x] 🔄 **Bookmark Sync** — Cross-device bookmark sync via browser's built-in sync
@@ -265,7 +266,8 @@ bookmark-scout/
 │   └── docs/               # Fumadocs documentation site
 │       └── content/docs/
 ├── packages/
-│   └── config/             # Shared configuration
+│   ├── config/             # Shared configuration
+│   └── mcp-bridge/         # bookmark-scout-mcp: MCP server and native messaging host
 ├── config/
 │   ├── project.toml        # Project identity shared by every app
 │   └── web.toml            # Website and docs hosting
@@ -290,6 +292,7 @@ Bookmark Scout asks at install only for what it cannot work without. Everything 
 | `contextMenus` | Turning on Context Menu (install in Firefox) | Save links from the right-click menu |
 | `favicon`      | Turning on Use the browser's icon cache (Chrome, Edge) | Display icons from the browser's cache |
 | Website access | Running Check Dead Links, Metadata Fetcher, or Refresh Site Icons, or turning on Read page content | Request bookmarked pages without cookies |
+| `nativeMessaging` | Turning on Allow local AI agents | Talk to the `bookmark-scout-mcp` program on your computer |
 
 Optional host access (`http://*/*`, `https://*/*`) is never granted at install. When you click **Verify Service** or **Refresh Models** in Settings → AI, the browser asks for access to that one provider origin only. In Firefox, turning on AI first asks for your consent to share the data your AI provider needs.
 

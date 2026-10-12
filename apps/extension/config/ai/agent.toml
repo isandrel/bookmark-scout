@@ -1,12 +1,13 @@
-# Ask AI chat in the popup and side panel. Read by src/services/ai-agent.ts.
+# Ask AI chat in the popup and side panel. Read by src/lib/ask-ai-config.ts. The tools' own
+# limits are in actions.toml.
 
 # Model calls in one answer at most, counting each round of tool use
 max_steps = 8
-# Bookmarks returned by one bookmark search
-max_bookmark_results = 20
-# Bookmark search score per query word found in the title
-search_title_weight = 2
-# Bookmark search score per query word found in the URL, folder path, saved tags, or summary
-search_text_weight = 1
 # Web searches per answer at most, where the provider lets the limit be set (Anthropic)
 web_search_max_uses = 3
+# Suggestion buttons under one answer at most (next questions, saves, options, open or show)
+max_suggestions = 6
+# Characters a suggestion's button text may have; longer text is cut
+suggestion_label_chars = 60
+# Characters of the message a question or option button sends
+suggestion_text_chars = 300

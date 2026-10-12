@@ -25,6 +25,7 @@ description: Bookmark Scout 请求的每项浏览器权限、需要它的原因�
 | `contextMenus` | Chrome、Edge | 你在[设置](/settings#data)中开启**右键菜单**时。此项默认关闭，Chrome 授予此权限时不会弹出提示 |
 | `favicon` | Chrome、Edge | 你在[设置](/settings#appearance)中开启**使用浏览器的图标缓存**以显示浏览器已保存的图标时 |
 | 数据共享同意 | Firefox | 你开启 **AI 功能**或**读取网页内容**，或点击**验证服务**时。在扩展程序向你的 AI 服务商发送任何内容之前，Firefox 会先征求你的同意 |
+| `nativeMessaging` | 全部 | 你在[设置](/settings#agent-bridge)中开启**允许本地 AI 智能体**时，让扩展可以与你电脑上的 bookmark-scout-mcp 程序通信。会先显示简短说明；在 Firefox 中，同一提示还会请你同意与该程序共享书签数据 |
 
 如果你拒绝，该功能会保持关闭，也不会发送任何内容。如果你之后在浏览器的扩展程序设置中撤回某项权限，相应功能会关闭；再次开启时会重新请求权限。
 

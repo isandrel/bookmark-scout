@@ -100,7 +100,6 @@ function planWithOperations(operations: MoveBookmarkOp[]): ReorganizationPlan {
     summary: 'Synthetic plan',
     createdAt: 1,
     safety: {
-      dryRunFirst: true,
       minConfidence: 0.6,
       batchSize: 2,
       batchCount: 1,
@@ -146,7 +145,6 @@ describe('AI reorganization safety settings', () => {
       });
 
     const plan = await generateReorganizationPlan(bookmarkTree, aiSettings, {
-      dryRunFirst: true,
       minConfidence: 0.6,
       batchSize: 2,
     });
@@ -158,7 +156,6 @@ describe('AI reorganization safety settings', () => {
     expect(requestSizes).toEqual([2, 1]);
     expect(plan.operations.map((operation) => operation.bookmarkId)).toEqual(['b2', 'b3']);
     expect(plan.safety).toMatchObject({
-      dryRunFirst: true,
       minConfidence: 0.6,
       batchSize: 2,
       batchCount: 2,
@@ -167,7 +164,7 @@ describe('AI reorganization safety settings', () => {
     expect(bookmarks.writes).toEqual([]);
   });
 
-  it('blocks mutation when preview confirmation is required but absent', async () => {
+  it('blocks mutation when the preview was not confirmed', async () => {
     const bookmarks = installFakeBookmarks([]);
     const result = await applyReorganizationPlan(planWithOperations([moveOperation('b1', 0.9)]));
 
@@ -273,16 +270,6 @@ describe('applying a reorganization plan', () => {
         url: `https://${id}.example`,
       })),
     ]);
-  });
-
-  it('allows apply without preview confirmation when dry-run-first is disabled', async () => {
-    const plan = planWithOperations([moveOperation('b1', 0.9)]);
-    plan.safety.dryRunFirst = false;
-
-    const result = await applyReorganizationPlan(plan);
-
-    expect(result).toMatchObject({ status: 'applied', applied: 1, skipped: 0, failed: 0 });
-    expect(titlesIn('20')).toEqual(['Bookmark b1']);
   });
 
   it('skips low-confidence moves and continues after a failed move', async () => {

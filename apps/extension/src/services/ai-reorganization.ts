@@ -45,7 +45,6 @@ export interface ReorganizationPlan {
   summary: string;
   createdAt: number;
   safety: {
-    dryRunFirst: boolean;
     minConfidence: number;
     batchSize: number;
     batchCount: number;
@@ -63,17 +62,17 @@ export interface ReorganizationConfig {
   maxCategories: number;
   minItemsPerFolder: number;
   maxItemsPerFolder: number;
-  dryRunFirst: boolean;
   minConfidence: number;
   batchSize: number;
 }
 
 export type ApplyReorganizationOptions = {
+  /** The user reviewed the plan; an AI plan is never applied without that. */
   previewConfirmed?: boolean;
 };
 
 /**
- * What applying a plan did: `blocked` when the preview had to be confirmed first, otherwise the
+ * What applying a plan did: `blocked` when the preview was not confirmed, otherwise the
  * moves' counts, issues, and single-use undo from `applyBookmarkChanges`.
  */
 export type ApplyReorganizationResult =
@@ -86,7 +85,6 @@ function getReorgConfig(): ReorganizationConfig {
     maxCategories: defaultSettings.aiMaxCategories,
     minItemsPerFolder: defaultSettings.aiMinItemsPerFolder,
     maxItemsPerFolder: defaultSettings.aiMaxItemsPerFolder,
-    dryRunFirst: defaultSettings.reorganizationDryRunFirst,
     minConfidence: defaultSettings.reorganizationMinConfidence,
     batchSize: defaultSettings.reorganizationBatchSize,
   };
@@ -385,7 +383,6 @@ export async function generateReorganizationPlan(
       .join(' '),
     createdAt: Date.now(),
     safety: {
-      dryRunFirst: cfg.dryRunFirst,
       minConfidence: cfg.minConfidence,
       batchSize: cfg.batchSize,
       batchCount: batchResults.length,
@@ -410,11 +407,8 @@ export async function applyReorganizationPlan(
   options: ApplyReorganizationOptions = {},
 ): Promise<ApplyReorganizationResult> {
   const { previewConfirmed = false } = options;
-  const config = resolveReorgConfig({
-    dryRunFirst: plan.safety.dryRunFirst,
-    minConfidence: plan.safety.minConfidence,
-  });
-  if (config.dryRunFirst && !previewConfirmed) {
+  const config = resolveReorgConfig({ minConfidence: plan.safety.minConfidence });
+  if (!previewConfirmed) {
     return { status: 'blocked', error: t('ai_reorgPreviewRequired') };
   }
 

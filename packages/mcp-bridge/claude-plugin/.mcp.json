@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bookmark-scout": {
+      "command": "bookmark-scout-mcp",
+      "args": ["serve"]
+    }
+  }
+}

@@ -11,6 +11,11 @@ group_by_folders = true
 # "current_tab" (replace the page). Middle-click and Ctrl/Cmd-click keep the browser's behavior.
 open_target = "new_tab"
 
+[manager_menus]
+# The bookmark manager's item menu (right-click and ⋯): the actions shown, in order, as action ids
+# from config/ui/actions.toml. Empty means that file's menu. Edited in Options > Behavior.
+actions = { default = [], max_items = 16, max_length = 20 }
+
 [deleting]
 # Show confirmation dialog before deleting items
 confirm = true

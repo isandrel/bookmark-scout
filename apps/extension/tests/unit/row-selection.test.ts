@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ItemTypeEnum } from '@/components/ui/table/columns';
+import { ItemTypeEnum } from '@/lib/manager-bookmark';
 import { getOpenableUrls } from '@/lib/bookmark-manager-data';
 import { rowSelectionChangeFor, selectRows } from '@/lib/row-selection';
 

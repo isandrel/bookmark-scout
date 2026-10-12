@@ -1,0 +1,52 @@
+{
+  "name": "@bookmark-scout/mcp-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lets local AI agents (Claude Code, Codex, Cursor) use Bookmark Scout's bookmark actions through the browser's native messaging.",
+  "mcpName": "io.github.isandrel/bookmark-scout",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "bookmarks",
+    "browser-extension",
+    "native-messaging"
+  ],
+  "homepage": "https://docs.bookmark-scout.com/guides/local-agents",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isandrel/bookmark-scout",
+    "directory": "packages/mcp-bridge"
+  },
+  "license": "AGPL-3.0",
+  "type": "module",
+  "bin": {
+    "bookmark-scout-mcp": "./dist/cli.js"
+  },
+  "files": [
+    "dist/cli.js",
+    "README.md",
+    "server.json"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    "./protocol": {
+      "types": "./src/protocol.ts",
+      "import": "./src/protocol.ts"
+    }
+  },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc -p .",
+    "compile": "bun build src/cli.ts --compile --outfile dist/bookmark-scout-mcp",
+    "build:npm": "bun scripts/build-npm.ts",
+    "prepublishOnly": "bun run build:npm"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/server": "2.3.1",
+    "@types/bun": "1.4.2",
+    "typescript": "^7.0.2",
+    "zod": "^4.6.5"
+  }
+}

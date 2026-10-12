@@ -98,6 +98,10 @@ Consulta [Guardar y organizar](/guides/save-and-organize).
 | --- | --- | --- |
 | **Confirmar antes de eliminar** | Activado | Pregunta antes de eliminar. En cualquier caso, toda eliminación se puede deshacer durante 10 segundos |
 
+### Menús del administrador de marcadores [#manager-menus]
+
+Elige qué comandos muestran los menús contextuales y ⋯ del administrador, y súbelos o bájalos dentro de cada grupo. **Restablecer valores predeterminados** recupera el menú completo. Siempre queda al menos un comando.
+
 ## IA [#ai]
 
 La IA está desactivada de forma predeterminada. Estos ajustes solo importan después de activar **Funciones de IA**.
@@ -122,6 +126,16 @@ Debajo de estos, el panel del proveedor contiene **Clave de API**, **URL base**,
 | --- | --- | --- |
 | **Leer el contenido de la página** | Desactivado | Envía el texto principal de cada página, no solo su título y su URL, a las recomendaciones de carpetas, al Etiquetado automático y al Generador de resúmenes. Al activarlo, se pide acceso a los sitios web |
 
+### Qué puede hacer Preguntar a la IA [#ask-ai-actions]
+
+Aquí aparece todo lo que Preguntar a la IA puede consultar y cambiar, y todo está activado de forma predeterminada. Si desactivas algo, no se le ofrece en absoluto. Aplicar un plan de cambios siempre te pide permiso primero, elijas lo que elijas aquí.
+
+### Agentes de IA locales [#agent-bridge]
+
+**Permitir agentes de IA locales** (desactivado de forma predeterminada, solo en este dispositivo) deja que los agentes de IA de tu equipo, como Claude Code, Codex o Cursor, consulten tus marcadores a través del programa bookmark-scout-mcp, que instalas y registras con `bookmark-scout-mcp install`. Al activarlo, tu navegador pide permiso para que la extensión se comunique con ese programa. **Permitir cambios** (desactivado de forma predeterminada) les deja además guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas; cada cambio abre una ventana de Bookmark Scout donde lo apruebas o lo rechazas, y puedes deshacerlo en el administrador de marcadores. El panel bajo el interruptor muestra si el programa está en ejecución.
+
+**Ocultar valores privados** (activado de forma predeterminada) reemplaza los parámetros de URL sensibles, los tokens y las direcciones de correo en los títulos y URL que reciben los agentes, según la lista del Escáner de privacidad. **Qué pueden hacer los agentes locales** muestra cada consulta, todas activadas de forma predeterminada; la que desactives no se les ofrece en absoluto.
+
 ## Herramientas de IA [#ai-tools]
 
 Cada herramienta tiene un interruptor **Activar** (activado de forma predeterminada). Al desactivar una, se oculta de la barra lateral **Herramientas** del administrador.
@@ -131,7 +145,7 @@ Cada herramienta tiene un interruptor **Activar** (activado de forma predetermin
 | **Empaquetador de contexto para IA** | **Formato de salida** Markdown; **Incluir rutas de carpeta**, **Incluir fechas**, **Incluir etiquetas guardadas** e **Incluir resúmenes guardados** activados; **Máximo de elementos** 200; **Profundidad máxima** 8; **Longitud del extracto** 240 |
 | **Etiquetado automático** | **Mínimo de etiquetas** 2; **Máximo de etiquetas** 5; **Estilo de etiquetas** kebab-case; **Modo de combinación** Añadir; **Quitar etiquetas duplicadas** activado |
 | **Generador de resúmenes** | **Longitud del resumen** 160; **Incluir el dominio como pista** activado; **Modo de combinación** Reemplazar |
-| **Reorganización de carpetas con IA** | **Mostrar siempre una vista previa** activado; **Confianza mínima** 0.55 (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
+| **Reorganización de carpetas con IA** | **Confianza mínima** 0.55 (los movimientos por debajo se descartan); **Tamaño del lote** 100 marcadores por solicitud |
 
 El Etiquetado automático y el Generador de resúmenes siempre trabajan con la carpeta actual.
 

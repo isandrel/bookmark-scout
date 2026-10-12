@@ -20,6 +20,19 @@
 - The bookmark manager's folder tree works like Chrome's: it is one `Tab` stop, the arrow keys move through it and open and close folders, `Home` and `End` go to the first and last folder, and `Enter` or `Space` shows a folder in the table; screen readers hear it as a tree with each folder's level and position. When Chrome keeps bookmarks both in your Google Account and only on this device, the tree shows them under **In your account** and **Only on this device**, the second closed at first, as Chrome's own manager does.
 - URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
 
+- Ask AI can do more to answer: search bookmarks by folder, tag, site, or date added as well as by words, look up tags and summaries, find duplicates, suggest folders for a page (ranked on your device), and, once website access is allowed for Check Dead Links, check whether bookmarked links still work. Long lists come a page at a time, and a folder name that fits several folders makes it ask which one. It reads only bookmarked pages and the page you are on, never another address it was given. Each step still shows in the chat.
+
+- Ask AI can change bookmarks when you ask: it saves pages, and it proposes moves, renames, deletions, and new folders as a plan shown in the chat, which changes nothing until you approve it. Once it has read a web page or searched the web, it asks before saving too. The root, the browser's permanent folders, and managed folders are never changed, and every change is one step you can undo, also with Ctrl+Z in the bookmark manager.
+
+- Ask AI can end an answer with buttons: a follow-up question, a few options or ideas to pick from, saving the page to a suggested folder (with Undo), or opening or showing a bookmark. Nothing happens until you click, and each button works once.
+
+- Options > Behavior > **Bookmark manager menus** chooses which commands the manager's right-click and ⋯ menus show and their order within each group, and Options > AI > **What Ask AI may do** turns off lookups or changes you do not want Ask AI to make; it is then not offered them at all. Applying a plan of changes always asks first.
+- Local AI agents: Options > AI > **Local AI agents** (off by default, per device) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the new `bookmark-scout-mcp` program (`packages/mcp-bridge`), an MCP server that talks to the extension through the browser's native messaging. Turning it on asks for the `nativeMessaging` permission (and in Firefox, consent to share bookmark data with that program). Agents get the same lookups as Ask AI, as tools with JSON Schemas; they cannot change bookmarks; private values in titles and URLs are hidden unless you turn that off; you can turn off each lookup; and every call is in AI activity, with the name the agent gave, while recording is on. Newly sent: bookmark titles, URLs, folder paths, the current page's title and URL, and with Read page content, page text, to that program on your computer and the agents you run there.
+
+- Local AI agents can also change bookmarks once you turn on **Allow changes** (off by default): save pages, propose moves, renames, deletions, and new folders, and undo their changes. Each change opens a Bookmark Scout window that shows it as it will be made, with the agent's name, and waits for your approval; declining, closing the window, or not answering within 5 minutes changes nothing, and an approved change can be undone in the bookmark manager.
+
+- New docs guide, [Use with local AI agents](https://docs.bookmark-scout.com/guides/local-agents): installing `bookmark-scout-mcp`, adding it to Claude Code, Codex, or Cursor (with a Cursor install link), approvals, and troubleshooting with `bookmark-scout-mcp doctor`. The program can also run under Node from an npm package, and a manual workflow builds it for Linux, macOS, and Windows on x64 and arm64.
+
 ### Stored data
 
 - **This update resets your saved data.** Bookmark Scout stores its data in a new format and removes what older versions stored instead of converting it. After updating, your settings are back to their defaults, AI services and API keys need to be added again, and custom prompts, saved searches, recent searches, recent folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. To keep your settings, click **Export** at the bottom of Settings before updating, and **Import** the file afterwards.
@@ -36,6 +49,7 @@
 
 ### Permissions and privacy
 
+- Ask AI now also sends your AI provider the date each bookmark it finds was added and, when it checks links, whether they still work; those checks request the bookmarked pages from your browser without cookies, as Check Dead Links does. The privacy policy, docs, and store disclosures say so in every language.
 - New install-time permissions without a warning: `scripting` in every browser (shows the quick save notification in the tab where the shortcut was pressed) and `offscreen` in Chrome and Edge (runs AI quick save's request in a hidden extension page). The AI quick save shortcut sends the same data as AI folder suggestions in the popup, to the AI provider you set up.
 - The privacy policy (website, store, and docs, in every language) now covers what this version stores: only changed settings sync, and no longer the AI provider and model, which stay on the device with your AI services; custom prompts sync through your browser account; the opt-in AI activity log stays on the device, with keys removed; the manager's column widths and page size stay on the device; and what the backup file and JSON bookmark exports hold. Nothing new is sent anywhere.
 
@@ -52,6 +66,7 @@
 
 ### Fixes
 
+- AI Folder Reorganization always shows its plan for review before it moves anything; the **Always Preview First** setting, which let it apply straight away, is gone. URL Cleaner, Metadata Fetcher, Auto-Tagging, and Content Summarizer now offer **Undo** after applying, which skips anything changed since. Folders an AI folder suggestion created are removed again after a failed save only while still empty.
 - Setting sliders follow a mouse drag again; before, only the arrow keys moved them.
 - The Firefox popup no longer clips its rounded corners and edges.
 - The manifest summary describes the extension in full.

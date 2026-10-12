@@ -6,29 +6,8 @@
  */
 import type { Locator, Page } from '@playwright/test';
 import { expect, test, toastRegion } from './fixtures';
+import { dragOnto, managerUrl, managerRow as row, treeFolder } from './manager-helpers';
 import { childTitles, seedFolder, setSettings } from './popup-helpers';
-
-function managerUrl(extensionId: string, folderId: string) {
-  return `chrome-extension://${extensionId}/bookmarks.html?id=${folderId}`;
-}
-
-function row(page: Page, title: string) {
-  return page.locator('tbody tr').filter({ hasText: title });
-}
-
-function treeFolder(page: Page, title: string) {
-  return page.getByTestId('folder-tree').getByRole('treeitem', { name: title, exact: true });
-}
-
-/** Drags `source` onto `target` at `fraction` of the target's height. */
-async function dragOnto(source: Locator, target: Locator, fraction: number) {
-  const box = await target.boundingBox();
-  if (!box) throw new Error('Drop target is not visible');
-  await source.dragTo(target, {
-    sourcePosition: { x: 200, y: 10 },
-    targetPosition: { x: Math.min(200, box.width / 2), y: box.height * fraction },
-  });
-}
 
 /** Moves a mouse drag over `target` in small steps, so the page sees dragover events. */
 async function dragOver(page: Page, target: Locator) {
@@ -229,7 +208,9 @@ test('Ctrl/Cmd+C, X, and V copy URLs, move items, and paste links', async ({
     .toEqual(['Keys Box', 'Keys One', 'Keys Two', 'Keys One', 'Keys Two']);
 
   // Cut one, open the box, paste: the item moves.
-  await row(page, 'Keys One').first().click({ position: { x: 200, y: 10 } });
+  await row(page, 'Keys One')
+    .first()
+    .click({ position: { x: 200, y: 10 } });
   await page.keyboard.press('ControlOrMeta+x');
   await expect(toastRegion(page).getByText('Cut Keys One')).toBeVisible();
   await treeFolder(page, 'Keys Box').click();

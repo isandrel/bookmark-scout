@@ -104,6 +104,10 @@ describe('settings config layout', () => {
     // Changed where they apply: the AI activity panel and Ask AI's web search button.
     shownIn.set('aiActivityRecording', 'ai.activity');
     shownIn.set('askAiWebSearch', 'ai.ask_ai');
+    // Edited in their own Options panels.
+    shownIn.set('askAiDisabledActions', 'ai.ask_ai');
+    shownIn.set('agentBridgeDisabledActions', 'ai.agent_bridge');
+    shownIn.set('managerMenuActions', 'behavior.manager_menus');
     // A tool limited to one scope has no setting to show and no default in its config.
     const fixedScopes = Object.entries(TOOL_SCOPE_CAPABILITIES)
       .filter(([, capability]) => capability !== 'both')

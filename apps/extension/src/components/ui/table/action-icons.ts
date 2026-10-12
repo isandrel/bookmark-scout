@@ -1,0 +1,40 @@
+/**
+ * The icon for each `ActionIconName` an action names. Actions live in services, which never
+ * import React, so they name their icon and the menus look the component up here.
+ */
+import {
+  AppWindow,
+  ArrowDownAZ,
+  BookmarkPlus,
+  ClipboardPaste,
+  Copy,
+  ExternalLink,
+  FolderPlus,
+  FolderSearch,
+  Hash,
+  Info,
+  Link2,
+  type LucideIcon,
+  Pencil,
+  Scissors,
+  Trash2,
+  VenetianMask,
+} from 'lucide-react';
+
+export const ACTION_ICONS = {
+  appWindow: AppWindow,
+  bookmarkPlus: BookmarkPlus,
+  clipboardPaste: ClipboardPaste,
+  copy: Copy,
+  externalLink: ExternalLink,
+  folderPlus: FolderPlus,
+  folderSearch: FolderSearch,
+  hash: Hash,
+  info: Info,
+  link: Link2,
+  pencil: Pencil,
+  scissors: Scissors,
+  sortAZ: ArrowDownAZ,
+  trash: Trash2,
+  venetianMask: VenetianMask,
+} as const satisfies Record<ActionIconName, LucideIcon>;
