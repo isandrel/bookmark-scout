@@ -15,11 +15,11 @@ No. Search, saving, organizing, cleanup, and import and export all work without 
 
 ### Does it send my bookmarks anywhere?
 
-Not to the developer: there is no Bookmark Scout server. Data leaves your browser only when you use an AI tool you turned on (it goes to your provider) or run a dead link check or title fetch (the bookmarked websites are requested). See [Privacy](/privacy).
+Not to the developer: there is no Bookmark Scout server. Data leaves your browser only when you use an AI tool you turned on (it goes to your provider), run a dead link check or title fetch (the bookmarked websites are requested), or let local AI agents look up your bookmarks (they get what they ask for through a program on your computer). See [Privacy](/privacy).
 
 ### Will it change my bookmarks without asking?
 
-No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. Deleting asks for confirmation by default, and deletions and imports can be undone for 10 seconds.
+No. Duplicate cleanup, URL cleanup, dead link repairs, fetched titles, AI reorganization, and imports all show a review before anything is written. **Ask AI** and local AI agents show their changes as a plan and wait for your approval. Deleting asks for confirmation by default, deletions, cleanups, and imports can be undone from their message, and the bookmarks manager undoes its changes with `Ctrl+Z`.
 
 ### Which browser stores list it?
 
@@ -75,7 +75,15 @@ They are stored only on the device where you made them and are not synced. To mo
 
 ### I deleted something by mistake
 
-Click **Undo** in the message within 10 seconds. It restores the item, everything inside it, and its saved tags and summaries; a restored item gets a new date added. After the message closes, the deletion cannot be undone from Bookmark Scout.
+Click **Undo** in the message within 10 seconds. It restores the item, everything inside it, and its saved tags and summaries; a restored item gets a new date added. In the bookmarks manager, `Ctrl+Z` (`Cmd+Z` on a Mac) also undoes a deletion made there, or by Ask AI or a local AI agent, until the browser closes. See [Select, undo, and redo in the manager](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### The quick save shortcut does nothing
+
+If another extension already uses `Alt+Shift+S` or `Alt+Shift+D`, the browser leaves Bookmark Scout's shortcut without keys, and the popup shows **Quick save shortcut not set**. Click **Set it up**, or open **Keyboard shortcuts** under **Saving & Search** in [Settings](/settings#quick-save), and choose other keys. On pages where extensions cannot show anything, such as the browser's own pages, the toolbar icon shows the result instead of a notification. See [Save with a keyboard shortcut](/guides/save-and-organize#quick-save).
+
+### My settings are gone after an update
+
+One update moved Bookmark Scout's saved data to a new format and removed the old data instead of converting it. After it, settings are back to their defaults, AI services and their API keys need to be added again, and custom prompts, saved searches, recent searches and folders, tags and summaries, and saved site icons are gone. Your bookmarks themselves are not touched. If you saved your settings with **Export** at the bottom of [Settings](/settings) before updating, **Import** that file.
 
 ## Get help
 

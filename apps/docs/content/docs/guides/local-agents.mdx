@@ -13,7 +13,7 @@ While access is on, an agent can read bookmark titles, URLs, folder names, saved
 
 <Steps>
 <Step>
-Get **bookmark-scout-mcp**: download the binary for your system from the [releases](https://github.com/isandrel/bookmark-scout/releases) and put it on your `PATH`, or, with [Bun](https://bun.sh) installed, run it from a clone of the repository: `bun packages/mcp-bridge/src/cli.ts`.
+Get **bookmark-scout-mcp**. Binaries for Linux, macOS, and Windows are attached to a <RepoLink path="/releases">GitHub release</RepoLink> once a release includes them; put the one for your system on your `PATH` as `bookmark-scout-mcp`. Until then, with [Bun](https://bun.sh) installed, build it from a clone of the repository: run `bun install`, then `bun run --cwd packages/mcp-bridge compile`, which writes `packages/mcp-bridge/dist/bookmark-scout-mcp`.
 </Step>
 <Step>
 Register it with your browsers:
