@@ -3273,6 +3273,18 @@
         "message": "已還原你的設定、提示詞、AI 服務和已儲存的搜尋。備份中沒有 API 金鑰：缺少的金鑰請在「設定 > AI」中新增。",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "已還原你的設定、提示詞、AI 服務（含基礎網址）和已儲存的搜尋。備份從不包含以下內容，因此未還原：$1。請在「設定 > AI」中重新輸入；在此之前這些服務會顯示「需要設定」。",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "「$1」的$2",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "需要設定",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "切換為淺色主題",
         "description": "Theme toggle accessible name"

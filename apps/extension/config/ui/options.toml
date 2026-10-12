@@ -9,6 +9,10 @@ import_change_preview_limit = 5
 # Category shown when the page opens; a key of the settings categories in lib/settings-schema.ts.
 default_category = "search"
 
-# File name of a backup (Export): settings, prompts, AI services without their keys, and saved
-# searches.
+# File name of a backup (Export): settings, prompts, AI services with their endpoints but without
+# their API keys and extra headers, and saved searches.
 backup_filename = "bookmark-scout-backup.json"
+
+# Milliseconds the notice after restoring a backup stays up when it lists AI services whose API
+# keys or extra headers must be entered again; it is longer than a usual notice.
+restore_notice_duration_ms = 15000

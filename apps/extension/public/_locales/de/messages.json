@@ -3281,6 +3281,18 @@
         "message": "Ihre Einstellungen, Prompts, KI-Dienste und gespeicherten Suchen wurden wiederhergestellt. Sicherungen enthalten keine API-Schlüssel: Fügen Sie fehlende unter Einstellungen > KI hinzu.",
         "description": "Toast description after a backup was restored; API keys are not in backups"
     },
+    "toast_backupRestoredNeedsSetup": {
+        "message": "Ihre Einstellungen, Prompts, KI-Dienste mit ihren Basis-URLs und gespeicherten Suchen wurden wiederhergestellt. Nicht wiederhergestellt, weil Sicherungen sie nie enthalten: $1. Geben Sie sie unter Einstellungen > KI erneut ein; bis dahin zeigen diese Dienste „Einrichtung nötig“.",
+        "description": "Toast description after a backup was restored and some AI services still need secrets entered again. $1 lists them, such as: API Key for “Work”."
+    },
+    "toast_backupServiceNeeds": {
+        "message": "$2 für „$1“",
+        "description": "One entry of the list in toast_backupRestoredNeedsSetup. $1 is the AI service name, $2 the fields it needs, such as API Key."
+    },
+    "options_aiServiceNeedsSetup": {
+        "message": "Einrichtung nötig",
+        "description": "Badge on an AI service whose API key or extra headers were not restored from a backup and must be entered again"
+    },
     "action_switchToLight": {
         "message": "Zum hellen Design wechseln",
         "description": "Theme toggle accessible name"

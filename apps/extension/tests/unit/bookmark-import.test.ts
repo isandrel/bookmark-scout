@@ -317,7 +317,7 @@ describe('applying an import plan', () => {
     expect(outcome.createdRootIds).toEqual(bookmarks.childIds('target'));
   });
 
-  it('gives created bookmarks the tags and summaries a JSON export holds for their URL', async () => {
+  it('gives each created bookmark its own tags and summary from a JSON export, also when URLs repeat', async () => {
     const exported = jsonFormat.serialize(
       buildExportRoot([
         {
@@ -326,37 +326,81 @@ describe('applying an import plan', () => {
           children: [
             { id: 'a', parentId: 'f', title: 'Tagged', url: 'https://e2e.invalid/tagged' },
             { id: 'b', parentId: 'f', title: 'Plain', url: 'https://e2e.invalid/plain' },
-            { id: 'c', parentId: 'f', title: 'Dup', url: 'https://e2e.invalid/a' },
+            // Two bookmarks of one URL, each with its own tags and summary.
+            { id: 'd1', parentId: 'f', title: 'Same page, work', url: 'https://e2e.invalid/same' },
+            { id: 'd2', parentId: 'f', title: 'Same page, home', url: 'https://e2e.invalid/same' },
           ],
         },
       ]),
       {
         metadata: {
           a: { tags: ['docs'], summary: 'A guide' },
-          c: { tags: ['skipped'] },
+          d1: { tags: ['work'], summary: 'For work' },
+          d2: { tags: ['home'] },
           other: { tags: ['not exported'] },
         },
       },
     );
-    expect(JSON.parse(exported).metadata).toEqual({
-      'https://e2e.invalid/tagged': { tags: ['docs'], summary: 'A guide' },
-      'https://e2e.invalid/a': { tags: ['skipped'] },
-    });
+    const file = JSON.parse(exported);
+    expect(file.metadata).toBeUndefined();
+    expect(file.children[0].children).toEqual([
+      {
+        title: 'Tagged',
+        url: 'https://e2e.invalid/tagged',
+        tags: ['docs'],
+        summary: 'A guide',
+      },
+      { title: 'Plain', url: 'https://e2e.invalid/plain' },
+      {
+        title: 'Same page, work',
+        url: 'https://e2e.invalid/same',
+        tags: ['work'],
+        summary: 'For work',
+      },
+      { title: 'Same page, home', url: 'https://e2e.invalid/same', tags: ['home'] },
+    ]);
 
     const plan = planImport(
       parseBookmarks(exported, jsonImportFormat),
       browserTree(),
       'target',
-      'skip-anywhere',
+      'import-all',
     );
     await applyImportPlan(plan);
     const [folderId] = bookmarks.childIds('target');
-    const [tagged, plain] = bookmarks.childIds(folderId);
+    const [tagged, plain, work, home] = bookmarks.childIds(folderId);
+    expect(plain).toBeDefined();
+    expect(await bookmarkMetadataValue.get()).toEqual({
+      [tagged]: { tags: ['docs'], summary: 'A guide' },
+      [work]: { tags: ['work'], summary: 'For work' },
+      [home]: { tags: ['home'] },
+    });
+  });
+
+  it('still reads tags and summaries by URL from an export made before they were per bookmark', async () => {
+    const older = JSON.stringify({
+      title: 'Bookmarks',
+      children: [
+        { title: 'Tagged', url: 'https://e2e.invalid/tagged' },
+        { title: 'Dup', url: 'https://e2e.invalid/a' },
+      ],
+      metadata: {
+        'https://e2e.invalid/tagged': { tags: ['docs'], summary: 'A guide' },
+        'https://e2e.invalid/a': { tags: ['skipped'] },
+      },
+    });
+    const plan = planImport(
+      parseBookmarks(older, jsonImportFormat),
+      browserTree(),
+      'target',
+      'skip-anywhere',
+    );
+    await applyImportPlan(plan);
+    const [tagged] = bookmarks.childIds('target');
     // The duplicate was skipped, so its tags have no bookmark to go to.
     expect(await bookmarkMetadataValue.get()).toEqual({
       [tagged]: { tags: ['docs'], summary: 'A guide' },
     });
-    expect(plain).toBeDefined();
   });
 
   it('undo removes created items but keeps an imported folder the user added to', async () => {
