@@ -15,11 +15,11 @@ No. La búsqueda, el guardado, la organización, la limpieza y la importación y
 
 ### ¿Envía mis marcadores a algún sitio? [#does-it-send-my-bookmarks-anywhere]
 
-Al desarrollador no: no existe ningún servidor de Bookmark Scout. Los datos solo salen de tu navegador cuando usas una herramienta de IA que activaste (van a tu proveedor) o cuando ejecutas una comprobación de enlaces rotos o una obtención de títulos (se solicitan los sitios web guardados en marcadores). Consulta [Privacidad](/privacy).
+Al desarrollador no: no existe ningún servidor de Bookmark Scout. Los datos solo salen de tu navegador cuando usas una herramienta de IA que activaste (van a tu proveedor), cuando ejecutas una comprobación de enlaces rotos o una obtención de títulos (se solicitan los sitios web guardados en marcadores) o cuando dejas que los agentes de IA locales consulten tus marcadores (reciben lo que piden a través de un programa de tu equipo). Consulta [Privacidad](/privacy).
 
 ### ¿Cambiará mis marcadores sin preguntar? [#will-it-change-my-bookmarks-without-asking]
 
-No. La limpieza de duplicados, la limpieza de URLs, las reparaciones de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. De forma predeterminada, eliminar pide confirmación, y las eliminaciones y las importaciones se pueden deshacer durante 10 segundos.
+No. La limpieza de duplicados, la limpieza de URLs, las reparaciones de enlaces rotos, los títulos obtenidos, la reorganización con IA y las importaciones muestran una revisión antes de escribir nada. **Preguntar a la IA** y los agentes de IA locales muestran sus cambios como un plan y esperan tu aprobación. De forma predeterminada, eliminar pide confirmación; las eliminaciones, las limpiezas y las importaciones se pueden deshacer desde su mensaje, y el administrador de marcadores deshace sus cambios con `Ctrl+Z`.
 
 ### ¿En qué tiendas de navegadores está? [#which-browser-stores-list-it]
 
@@ -75,7 +75,15 @@ Solo se guardan en el dispositivo donde los creaste y no se sincronizan. Para ll
 
 ### Eliminé algo por error [#i-deleted-something-by-mistake]
 
-Haz clic en **Deshacer** en el mensaje antes de que pasen 10 segundos. Se restauran el elemento, todo lo que contiene y sus etiquetas y resúmenes guardados; un elemento restaurado recibe una nueva fecha de creación. Una vez que se cierra el mensaje, la eliminación ya no se puede deshacer desde Bookmark Scout.
+Haz clic en **Deshacer** en el mensaje antes de que pasen 10 segundos. Se restauran el elemento, todo lo que contiene y sus etiquetas y resúmenes guardados; un elemento restaurado recibe una nueva fecha de creación. En el administrador de marcadores, `Ctrl+Z` (`Cmd+Z` en un Mac) también deshace una eliminación hecha allí, o por Preguntar a la IA o un agente de IA local, hasta que se cierra el navegador. Consulta [Seleccionar, deshacer y rehacer en el administrador](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### El atajo de guardado rápido no hace nada [#the-quick-save-shortcut-does-nothing]
+
+Si otra extensión ya usa `Alt+Shift+S` o `Alt+Shift+D`, el navegador deja el atajo de Bookmark Scout sin teclas, y la ventana emergente muestra **Atajo de guardado rápido sin asignar**. Haz clic en **Configurarlo**, o abre **Atajos de teclado** en **Guardar y buscar** en [Configuración](/settings#quick-save), y elige otras teclas. En las páginas donde las extensiones no pueden mostrar nada, como las páginas propias del navegador, el icono de la barra de herramientas muestra el resultado en lugar de una notificación. Consulta [Guardar con un atajo de teclado](/guides/save-and-organize#quick-save).
+
+### Mi configuración desapareció después de una actualización [#my-settings-are-gone-after-an-update]
+
+Una actualización pasó los datos guardados de Bookmark Scout a un formato nuevo y eliminó los datos antiguos en lugar de convertirlos. Después de ella, la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y sus claves de API, y se pierden los prompts personalizados, las búsquedas guardadas, las búsquedas y carpetas recientes, las etiquetas y los resúmenes, y los iconos de sitios guardados. Tus marcadores no se tocan. Si guardaste tu configuración con **Exportar** al final de [Configuración](/settings) antes de actualizar, usa **Importar** con ese archivo.
 
 ## Obtener ayuda [#get-help]
 

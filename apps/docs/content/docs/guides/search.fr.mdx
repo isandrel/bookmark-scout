@@ -7,7 +7,7 @@ description: Trouvez n'importe quel favori par titre ou par URL depuis la fenêt
 
 <Steps>
 <Step>
-Cliquez sur l'icône de Bookmark Scout dans la barre d'outils. Vous pouvez aussi ouvrir Bookmark Scout dans le panneau latéral du navigateur (Firefox compris), qui reste ouvert pendant votre navigation.
+Cliquez sur l'icône de Bookmark Scout dans la barre d'outils. Vous pouvez aussi ouvrir Bookmark Scout dans le panneau latéral du navigateur (la barre latérale dans Firefox), qui reste ouvert pendant votre navigation.
 </Step>
 <Step>
 Saisissez votre recherche dans **Rechercher dans les favoris…** (ou appuyez sur `/` pour y accéder directement). Les résultats s'affichent pendant la saisie, dans leurs dossiers, avec chaque correspondance mise en surbrillance.
@@ -37,6 +37,16 @@ Le tableau du gestionnaire offre des filtres plus précis. Dans Chrome, ouvrez l
 - **Type**, **ID du parent**, **Domaine** et **Date d'ajout** restreignent encore les lignes.
 - **Dossier actuel uniquement** limite les filtres au dossier dans lequel vous vous trouvez. Lorsque cette option est désactivée, les filtres portent sur tous les favoris.
 - Triez sur n'importe quelle colonne depuis son en-tête.
+- Dans une recherche portant sur plusieurs dossiers, le menu d'une ligne propose **Afficher dans le dossier** : cette commande efface les filtres et ouvre le dossier qui contient l'élément, avec l'élément sélectionné.
+
+## Créer un lien vers un dossier ou une recherche [#link-to-a-folder-or-a-search]
+
+L'adresse du gestionnaire suit ce que vous affichez : les boutons **Précédent** et **Suivant** du navigateur parcourent ainsi les dossiers et les recherches, et vous pouvez enregistrer une vue en favori ou la partager.
+
+- `?id=` désigne le dossier ouvert, comme dans le gestionnaire de Chrome : `chrome://bookmarks/?id=12` ouvre le dossier 12 dans Chrome, et `edge://favorites/?id=12` dans Edge. Les liens de Chrome 154 à 156, qui désignaient la Barre de favoris, Autres favoris et Favoris sur mobile par un long identifiant, ouvrent aussi ces dossiers.
+- `?q=` correspond au filtre des titres : `chrome://bookmarks/?q=react` ouvre le gestionnaire avec une recherche de « react » dans les titres. Pendant que vous saisissez du texte dans **Filtrer les titres…**, l'adresse suit, et une même série de frappes correspond à une seule étape **Précédent**. Une recherche l'emporte sur le dossier ; le dossier s'applique toutefois lorsque **Dossier actuel uniquement** est coché.
+- **Copier le lien vers ce dossier**, à côté du chemin du dossier dans l'en-tête et dans le menu d'une ligne de dossier, copie cette adresse. Dans Firefox, la commande copie l'adresse propre de la page du gestionnaire. Chrome et Edge continuent d'afficher l'adresse avec laquelle vous avez ouvert le gestionnaire, même lorsque vous passez d'un dossier à l'autre.
+- Le titre de l'onglet indique le dossier, ou la recherche pendant que vous recherchez.
 
 ## Enregistrer une recherche [#save-a-search]
 

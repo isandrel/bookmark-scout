@@ -11,7 +11,7 @@ description: Jede Einstellung auf der Einstellungsseite von Bookmark Scout, Tab 
 - Jeder Tab ist in Abschnitte mit Überschriften gegliedert. Der Ein-/Aus-Schalter eines Tools steht neben seiner Überschrift; solange er aus ist, sind die übrigen Einstellungen eingeklappt. Technische Einstellungen wie Zeitlimits und Dateinamenlängen stehen unter **Erweiterte Einstellungen**, die geschlossen bleiben, bis Sie sie öffnen oder eine Suche darin etwas findet.
 - Eine geänderte Einstellung ist als **Geändert** markiert und hat eine Schaltfläche, um sie auf den Standardwert zurückzusetzen. **Alle zurücksetzen** setzt alle Einstellungen zurück.
 - **Exportieren** speichert eine Sicherungsdatei mit den Einstellungen, die Sie geändert haben, eigenen Prompts, KI-Diensten (Name, Anbieter, Modell, **Basis-URL** und anbieterspezifische Felder, nie API-Schlüssel oder **Zusätzliche Header (JSON)**), gespeicherten Suchen sowie den Spalten und der Sortierung der Manager-Tabelle. **Importieren** stellt eine Sicherung wieder her und ersetzt dabei jeden Teil, den die Datei enthält, oder führt eine einfache Einstellungsdatei mit Ihren Einstellungen zusammen; tragen Sie nach dem Wiederherstellen einer Sicherung API-Schlüssel und zusätzliche Header unter [KI](#ai) für die Dienste erneut ein, die mit **Einrichtung nötig** markiert sind. Beides lässt Ihre Lesezeichen unberührt.
-- Einstellungen werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Einige Einstellungen, die zu einem Gerät gehören, bleiben dort: der für das Schnellspeichern gewählte Ordner, das Speicherlimit für Symbole, die Aufzeichnung der KI-Aktivität und die Websuche von „KI fragen“. Auch KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
+- Einstellungen, die Sie ändern, werden im Synchronisierungsspeicher des Browsers abgelegt und folgen Ihnen daher auf andere Geräte, wenn die Browsersynchronisierung aktiviert ist. Einige Einstellungen, die zu einem Gerät gehören, bleiben dort: der für das Schnellspeichern gewählte Ordner, **Speicherbegrenzung für Symbole**, die Aufzeichnung der KI-Aktivität und die Websuche von „KI fragen“. Auch KI-Dienste mit ihren API-Schlüsseln, **Basis-URL** und **Zusätzliche Header (JSON)** bleiben auf diesem Gerät. Siehe [Datenschutz](/privacy).
 
 ## Speichern & Suche [#search]
 
@@ -43,6 +43,15 @@ Siehe [Suche und gespeicherte Suchen](/guides/search).
 | **Standardname für Ordner** | Neuer Ordner | Der Name, mit dem ein neuer Ordner beginnt |
 
 Siehe [Speichern und ordnen](/guides/save-and-organize).
+
+### Tastenkürzel zum Schnellspeichern [#quick-save]
+
+| Einstellung | Standard | Wirkung |
+| --- | --- | --- |
+| **Ordner für Schnellspeichern** | Beste Übereinstimmung | Wo `Alt+Shift+S` die aktuelle Seite speichert: im am besten passenden Ordner, im zuletzt verwendeten Ordner oder in einem gewählten Ordner. Das KI-Kürzel verwendet immer den KI-Vorschlag |
+| **Zielordner** | Nicht gewählt | Der Ordner für **Gewählter Ordner**. Wird er gelöscht, verwendet das Schnellspeichern den zuletzt verwendeten Ordner |
+
+Darunter zeigt **Tastenkürzel** die Tasten, die jedes Tastenkürzel in Ihrem Browser hat, mit **Kürzel ändern**. In Firefox können Sie dort auch direkt neue Tasten eingeben und sie auf den Standard zurücksetzen. In Chrome und Edge wird dort außerdem erklärt, wie Sie dem Schnellspeichern `Ctrl+D` zuweisen. Siehe [Mit einem Tastenkürzel speichern](/guides/save-and-organize#quick-save) und [Ctrl+D zum Schnellspeichern verwenden](/guides/save-and-organize#ctrl-d).
 
 ### Kontextmenü [#context-menu]
 
@@ -100,7 +109,7 @@ Siehe [Speichern und ordnen](/guides/save-and-organize).
 
 ### Menüs der Lesezeichenverwaltung [#manager-menus]
 
-Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeigen, und verschieben Sie sie innerhalb jeder Gruppe nach oben oder unten. **Standard wiederherstellen** bringt das vollständige Menü zurück. Mindestens ein Befehl bleibt immer.
+Wählen Sie, welche Befehle die Rechtsklick- und ⋯-Menüs der Verwaltung zeigen, und verschieben Sie sie innerhalb jeder Gruppe nach oben oder unten. **Standard wiederherstellen** bringt das vollständige Menü zurück. **Details ansehen** oder **Lesezeichen-ID kopieren** bleibt immer erhalten, damit das Menü für jedes Lesezeichen und jeden Ordner einen Befehl hat; wo keiner der behaltenen Befehle passt, zeigt das Menü **Keine Aktionen verfügbar**.
 
 ## KI [#ai]
 
@@ -138,14 +147,14 @@ Hier steht alles, was „KI fragen“ nachschlagen und ändern kann; standardmä
 
 ## KI-Tools [#ai-tools]
 
-Jedes Tool hat einen eigenen Schalter zum Aktivieren, etwa **Automatische Tags aktivieren** (standardmäßig an). Ein deaktiviertes Tool wird in der **Tools**-Leiste des Managers ausgeblendet.
+Jedes Tool hat einen Schalter zum Aktivieren (standardmäßig an), etwa **Automatische Tags aktivieren**. Wenn Sie einen ausschalten, wird das Tool in der **Tools**-Leiste des Managers ausgeblendet.
 
 | Tool | Einstellungen und Standardwerte |
 | --- | --- |
 | **KI-Kontextpaket** | **Ausgabeformat** Markdown; **Ordnerpfade einschließen**, **Datum einschließen**, **Gespeicherte Tags einschließen** und **Gespeicherte Zusammenfassungen einschließen** an; **Max. Elemente** 200; **Max. Tiefe** 8; **Auszugslänge** 240 |
 | **Automatische Tags** | **Min. Tags** 2; **Max. Tags** 5; **Tag-Stil** kebab-case; **Zusammenführung** Anhängen; **Doppelte Tags entfernen** an |
 | **Inhaltszusammenfassung** | **Länge der Zusammenfassung** 160; **Domain als Hinweis einschließen** an; **Zusammenführung** Ersetzen |
-| **KI-Ordnerneuordnung** | **Mindestkonfidenz** 0,55 (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
+| **KI-Ordnerneuordnung** | **Mindestkonfidenz** 55 % (Verschiebungen darunter werden verworfen); **Batchgröße** 100 Lesezeichen pro Anfrage |
 
 Automatische Tags und Inhaltszusammenfassung arbeiten immer mit dem aktuellen Ordner.
 

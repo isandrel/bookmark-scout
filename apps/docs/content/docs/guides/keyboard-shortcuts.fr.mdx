@@ -3,7 +3,18 @@ title: Raccourcis clavier
 description: Recherchez, parcourez les dossiers, enregistrez la page actuelle et utilisez le tableau du gestionnaire sans souris.
 ---
 
-Les raccourcis de Bookmark Scout n'utilisent jamais `Ctrl` ni `Cmd` : les raccourcis du navigateur tels que `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` et `D` continuent donc de fonctionner. Ils sont suspendus pendant que vous saisissez du texte dans un champ (à l'exception de `Esc` dans le champ de recherche), pendant qu'un éditeur de méthode de saisie compose du texte, et lorsqu'une boîte de dialogue ou un menu est ouvert.
+Les raccourcis de la fenêtre pop-up et du panneau latéral n'utilisent jamais `Ctrl` ni `Cmd` : les raccourcis du navigateur tels que `Ctrl/Cmd+L`, `T`, `W`, `N`, `R` et `D` continuent donc de fonctionner. Le gestionnaire de favoris remplace celui du navigateur : il reprend donc aussi les raccourcis `Ctrl` de ce gestionnaire (`Cmd` sur Mac) pour tout sélectionner, copier, couper, coller, annuler, rétablir et ouvrir dans de nouveaux onglets. Les raccourcis sont suspendus pendant que vous saisissez du texte dans un champ (à l'exception de `Esc` dans le champ de recherche), pendant qu'un éditeur de méthode de saisie compose du texte, et lorsqu'une boîte de dialogue ou un menu est ouvert.
+
+## Sur n'importe quelle page [#on-any-page]
+
+Ces raccourcis fonctionnent sans qu'aucune fenêtre Bookmark Scout soit ouverte. Ils appartiennent à votre navigateur : vous pouvez donc les modifier ou les supprimer dans ses paramètres de raccourcis ; consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save). Dans Chrome et Edge, vous pouvez aussi attribuer à l'enregistrement rapide la touche de favori du navigateur, `Ctrl+D` (`⌘D` sur Mac) ; consultez [Utiliser Ctrl+D pour l'enregistrement rapide](/guides/save-and-organize#ctrl-d).
+
+| Touche | Action |
+| --- | --- |
+| `Alt+Shift+S` (`⌥⇧S` sur Mac) | Enregistrer rapidement la page actuelle dans le dossier défini par **Dossier d'enregistrement rapide** |
+| `Alt+Shift+D` (`⌥⇧D` sur Mac) | Enregistrer rapidement la page actuelle dans le dossier suggéré par l'IA |
+
+Dans la notification qui s'affiche ensuite, `Tab` atteint **Annuler** et les autres dossiers, et `Esc` la ferme.
 
 ## Fenêtre pop-up et panneau latéral [#popup-and-side-panel]
 
@@ -23,18 +34,43 @@ Survolez le champ de recherche pour afficher un aide-mémoire.
 
 ## Gestionnaire de favoris [#bookmarks-manager]
 
-Appuyez sur `?`, ou cliquez sur le bouton en forme de clavier dans l'en-tête, pour afficher cette liste dans le gestionnaire.
+Appuyez sur `?`, ou cliquez sur le bouton en forme de clavier dans l'en-tête, pour afficher cette liste dans le gestionnaire. Les touches suivent celles du gestionnaire de favoris de Chrome ; lorsqu'une touche diffère sur Mac, elle est indiquée en second.
 
 | Touche | Action |
 | --- | --- |
 | `/` | Placer le curseur dans le filtre des titres |
 | `Backspace` ou `Alt+↑` | Accéder au dossier parent |
-| `j` / `k` | Passer à la ligne suivante ou précédente du tableau (une ligne de dossier, ou le menu d'actions d'une ligne de favori) |
-| `Enter` sur une ligne de dossier | Ouvrir le dossier |
+| `↓` / `↑`, `Home` / `End` | Se déplacer entre les lignes et sélectionner la ligne ; avec `Shift`, étendre la sélection ; avec `Ctrl` (`Cmd`), se déplacer sans sélectionner |
+| `j` / `k` | Passer à la ligne suivante ou précédente |
+| `Space` | Sélectionner ou désélectionner la ligne active |
+| `Ctrl+A` / `Cmd+A` | Sélectionner toutes les lignes affichées par les filtres, sur toutes les pages |
+| `Esc` | Effacer la sélection, ou fermer une boîte de dialogue ou un menu |
+| `Enter` / `Cmd+O` | Ouvrir le dossier sélectionné, ou les favoris sélectionnés dans des onglets |
+| `Ctrl+Enter` / `Cmd+Enter` | Ouvrir la sélection dans de nouveaux onglets en arrière-plan |
+| `Shift+Enter` | Ouvrir la sélection dans une nouvelle fenêtre |
+| `F2` / `Enter` | Modifier le favori sélectionné, ou renommer le dossier |
+| `Delete` / `Delete` ou `Cmd+Backspace` | Supprimer la sélection |
+| `Ctrl+Z` / `Cmd+Z` | Annuler la dernière modification |
+| `Ctrl+Y` ou `Ctrl+Shift+Z` / `Cmd+Shift+Z` | Rétablir |
+| `Ctrl+C` / `Cmd+C` | Copier la sélection ; ses URL sont placées dans le presse-papiers |
+| `Ctrl+X` / `Cmd+X` | Couper la sélection, pour la déplacer en la collant |
+| `Ctrl+V` / `Cmd+V` | Coller après la sélection, ou à la fin du dossier ; les URL copiées dans une autre application deviennent des favoris |
 | `s` | Ouvrir les recherches enregistrées |
 | `?` | Afficher les raccourcis clavier |
-| `Esc` | Fermer une boîte de dialogue ou un menu |
+| Touche Menu ou `Shift+F10` | Ouvrir le menu contextuel de la ligne ou du dossier actif |
 
-Dans le tableau, placez le curseur sur le bord d'un en-tête de colonne et appuyez sur `←` ou `→` pour redimensionner cette colonne.
+Dans l'arborescence des dossiers, à gauche, qui constitue elle aussi un seul arrêt de `Tab` :
+
+| Touche | Action |
+| --- | --- |
+| `↓` / `↑`, `Home` / `End` | Se déplacer entre les dossiers affichés |
+| `→` / `←` | Ouvrir ou fermer un dossier ; sur un dossier ouvert, `→` accède à son premier sous-dossier, et sur un dossier fermé, `←` accède au dossier parent |
+| `Enter` ou `Space` / `Cmd+O` ou `Space` | Afficher le dossier dans le tableau |
+| `F2` / `Enter` | Renommer le dossier |
+| `Delete` / `Delete` ou `Cmd+Backspace` | Supprimer le dossier |
+| `Ctrl+C`, `Ctrl+X` / `Cmd+C`, `Cmd+X` | Copier ou couper le dossier |
+| `Ctrl+V` / `Cmd+V` | Coller dans le dossier |
+
+Le tableau constitue un seul arrêt lorsque vous appuyez sur `Tab` ; les touches fléchées parcourent ses lignes. Ouvrir plus de 15 onglets à la fois demande d'abord une confirmation ; un dossier ouvre les favoris qui se trouvent directement à l'intérieur. Dans le tableau, placez le curseur sur le bord d'un en-tête de colonne et appuyez sur `←` ou `→` pour redimensionner cette colonne.
 
 Les raccourcis clavier sont couverts par les tests automatisés Chromium et Edge, mais pas par ceux de Firefox.

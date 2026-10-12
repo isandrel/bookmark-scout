@@ -15,13 +15,13 @@ Non. La recherche, l'enregistrement, l'organisation, le nettoyage, l'importation
 
 ### Mes favoris sont-ils envoyés quelque part ? [#does-it-send-my-bookmarks-anywhere]
 
-Pas au développeur : il n'existe aucun serveur Bookmark Scout. Les données ne quittent votre navigateur que lorsque vous utilisez un outil d'IA que vous avez activé (elles vont à votre fournisseur), ou lorsque vous lancez une vérification des liens morts ou une récupération des titres (les sites enregistrés en favoris sont alors interrogés). Consultez [Confidentialité](/privacy).
+Pas au développeur : il n'existe aucun serveur Bookmark Scout. Les données ne quittent votre navigateur que lorsque vous utilisez un outil d'IA que vous avez activé (elles vont à votre fournisseur), lorsque vous lancez une vérification des liens morts ou une récupération des titres (les sites enregistrés en favoris sont alors interrogés), ou lorsque vous laissez des agents d'IA locaux consulter vos favoris (ils reçoivent ce qu'ils demandent par l'intermédiaire d'un programme installé sur votre ordinateur). Consultez [Confidentialité](/privacy).
 
 ### Va-t-il modifier mes favoris sans me demander ? [#will-it-change-my-bookmarks-without-asking]
 
-Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. La suppression demande une confirmation par défaut, et les suppressions comme les importations peuvent être annulées pendant 10 secondes.
+Non. Le nettoyage des doublons, le nettoyage des URL, la réparation des liens morts, les titres récupérés, la réorganisation par IA et les importations affichent tous une vérification avant toute écriture. **Demander à l'IA** et les agents d'IA locaux présentent leurs modifications sous forme de plan et attendent votre accord. La suppression demande une confirmation par défaut, les suppressions, les nettoyages et les importations peuvent être annulés depuis leur notification, et le gestionnaire de favoris annule ses modifications avec `Ctrl+Z`.
 
-### Dans quelles boutiques de navigateurs est-il disponible ? [#which-browser-stores-list-it]
+### Dans quelles boutiques de navigateurs est-il disponible ? [#which-browser-stores-list-it]
 
 <StoreAvailability />
 
@@ -75,7 +75,15 @@ Ils sont stockés uniquement sur l'appareil où vous les avez créés, et ne son
 
 ### J'ai supprimé quelque chose par erreur [#i-deleted-something-by-mistake]
 
-Cliquez sur **Annuler** dans la notification dans les 10 secondes. Cela restaure l'élément, tout son contenu, ainsi que ses étiquettes et résumés enregistrés ; un élément restauré reçoit une nouvelle date d'ajout. Une fois la notification fermée, la suppression ne peut plus être annulée depuis Bookmark Scout.
+Cliquez sur **Annuler** dans la notification dans les 10 secondes. Cela restaure l'élément, tout son contenu, ainsi que ses étiquettes et résumés enregistrés ; un élément restauré reçoit une nouvelle date d'ajout. Dans le gestionnaire de favoris, `Ctrl+Z` (`Cmd+Z` sur Mac) annule aussi une suppression effectuée dans le gestionnaire, ou par Demander à l'IA ou un agent d'IA local, jusqu'à la fermeture du navigateur. Consultez [Sélectionner, annuler et rétablir dans le gestionnaire](/guides/save-and-organize#select-undo-and-redo-in-the-manager).
+
+### Le raccourci d'enregistrement rapide ne fait rien [#the-quick-save-shortcut-does-nothing]
+
+Si une autre extension utilise déjà `Alt+Shift+S` ou `Alt+Shift+D`, le navigateur laisse le raccourci de Bookmark Scout sans touches, et la fenêtre pop-up affiche **Raccourci d’enregistrement rapide non défini**. Cliquez sur **Le définir**, ou ouvrez **Raccourcis clavier** sous **Enregistrement et recherche** dans les [Paramètres](/settings#quick-save), puis choisissez d'autres touches. Sur les pages où les extensions ne peuvent rien afficher, comme les pages propres au navigateur, l'icône de la barre d'outils affiche le résultat à la place d'une notification. Consultez [Enregistrer avec un raccourci clavier](/guides/save-and-organize#quick-save).
+
+### Mes paramètres ont disparu après une mise à jour [#my-settings-are-gone-after-an-update]
+
+Une mise à jour a déplacé les données enregistrées de Bookmark Scout vers un nouveau format et a supprimé les anciennes données au lieu de les convertir. Après cette mise à jour, les paramètres reviennent à leurs valeurs par défaut, les services d'IA et leurs clés API doivent être ajoutés de nouveau, et les prompts personnalisés, les recherches enregistrées, les recherches et dossiers récents, les étiquettes et résumés, ainsi que les icônes de site enregistrées ont disparu. Vos favoris eux-mêmes ne sont pas touchés. Si vous avez sauvegardé vos paramètres avec **Exporter** en bas des [Paramètres](/settings) avant la mise à jour, utilisez **Importer** avec ce fichier.
 
 ## Obtenir de l'aide [#get-help]
 

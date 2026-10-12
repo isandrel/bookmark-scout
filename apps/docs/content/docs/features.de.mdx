@@ -11,8 +11,9 @@ Eine Referenzliste dessen, was jetzt verfügbar ist. Schritt-für-Schritt-Anleit
 | --- | --- |
 | Pop-up | Die Schaltfläche in der Symbolleiste: Suche, Ordnerbaum, Speichern und KI-Ordnervorschläge |
 | Seitenleiste | Dieselbe Ansicht in der Seitenleiste des Browsers (in Firefox in der Sidebar), die beim Surfen geöffnet bleibt |
-| Lesezeichen-Manager | Ersetzt in Chrome und Edge die Lesezeichenseite des Browsers: Ordnerbaum, Pfadnavigation, eine Lesezeichentabelle und die **Tools**-Leiste |
-| Einstellungen | Die Optionsseite der Erweiterung mit elf Tabs. Siehe [Einstellungen](/settings) |
+| Lesezeichen-Manager | Ersetzt in Chrome und Edge die Lesezeichenseite des Browsers: Ordnerbaum, Pfadnavigation, eine Lesezeichentabelle und die **Tools**-Leiste. In einem schmalen Fenster öffnen sich der Ordnerbaum und **Tools** über der Tabelle; bei einem tiefen Ordnerpfad werden die mittleren Ordner in ein Menü **…** eingeklappt |
+| Einstellungen | Die Optionsseite der Erweiterung mit zehn Tabs. Siehe [Einstellungen](/settings) |
+| Jede Seite | `Alt+Shift+S` und `Alt+Shift+D` speichern die aktuelle Seite schnell, mit einer Benachrichtigung auf der Seite |
 | Rechtsklickmenü | **Lesezeichen speichern in...** bei jedem Link, sobald Sie **Kontextmenü** aktivieren |
 
 ## Finden [#find]
@@ -27,12 +28,17 @@ Anleitung: [Suche und gespeicherte Suchen](/guides/search).
 ## Speichern und ordnen [#save-and-organize]
 
 - Die aktuelle Seite in einem beliebigen Ordner speichern, nie zweimal im selben Ordner, mit einem Bereich **Zuletzt verwendet**, der die zuletzt genutzten Ordner zeigt.
+- Einen Teil eines Ordnernamens oder einen Pfad wie `work/react` eingeben und in einem der passenden Ordner speichern, die über den Ergebnissen aufgelistet sind.
+- Mit `Alt+Shift+S` auf jeder Seite schnell speichern, und zwar im Ordner, der am besten zur Seite passt (auf Ihrem Gerät ermittelt), im zuletzt verwendeten Ordner oder in einem Ordner Ihrer Wahl; `Alt+Shift+D` speichert im ersten KI-Vorschlag. Eine Benachrichtigung auf der Seite bietet **Rückgängig** und unter **Verschieben nach** weitere Ordner an. In Chrome und Edge können Sie dem Schnellspeichern `Ctrl+D` zuweisen.
 - Links über das Rechtsklickmenü in einem zuletzt verwendeten Ordner oder in der Lesezeichenleiste speichern.
 - Ordner erstellen, Lesezeichen und Ordner per Drag-and-drop verschieben und im Manager mehrere auf einmal verschieben.
 - Nach Hinzufügedatum, natürlicher alphabetischer Reihenfolge oder mit Ordnern zuerst sortieren, ohne die im Browser gespeicherte Reihenfolge zu ändern.
 - Namen und URLs bearbeiten sowie in **Lesezeichendetails** Tags und eine Zusammenfassung hinzufügen.
 - Löschen mit optionaler Bestätigung und 10 Sekunden Zeit zum Rückgängigmachen, wobei alles innerhalb eines Ordners wiederhergestellt wird.
 - Im Manager die Breite von Tabellenspalten durch Ziehen oder mit den Pfeiltasten ändern; **Ansicht zurücksetzen** stellt das Layout wieder her.
+- Die Adresse des Managers benennt den Ordner oder die Suche (`?id=`, `?q=`), sodass **Zurück**, **Vorwärts** und als Lesezeichen gespeicherte Links funktionieren, die eigenen Ordnerlinks von Chrome sich öffnen und **Link zu diesem Ordner kopieren** einen solchen Link kopiert.
+- Wenn Chrome Lesezeichen sowohl in Ihrem Google-Konto als auch nur auf diesem Gerät speichert, zeigt der Ordnerbaum des Managers sie wie der von Chrome in zwei Bereichen.
+- **Links öffnen in** legt fest, ob angeklickte Links in einem neuen Tab, einem Hintergrund-Tab oder dem aktuellen Tab geöffnet werden.
 
 Anleitung: [Speichern und ordnen](/guides/save-and-organize).
 
@@ -52,7 +58,8 @@ Anleitungen: [Duplikate und Tracking-URLs bereinigen](/guides/clean-up) und [Def
 
 - Export nach HTML, JSON, Markdown oder CSV, mit einer Datenschutzprüfung, die sensible Werte in der Datei schwärzen kann.
 - Import von HTML oder JSON nach einer Vorschau von Zielordner, Anzahlen und Duplikaten, mit Rückgängig.
-- Sicherung und Wiederherstellung der Einstellungen der Erweiterung, eigener Prompts, KI-Dienste (ohne API-Schlüssel) und gespeicherter Suchen als JSON-Datei.
+- JSON-Exporte behalten die Tags und die Zusammenfassung jedes Lesezeichens, und der Import einer solchen Datei stellt sie wieder her.
+- Sicherung und Wiederherstellung der Einstellungen der Erweiterung, eigener Prompts, KI-Dienste (ohne API-Schlüssel), gespeicherter Suchen und der Spalten der Managertabelle als JSON-Datei.
 
 Anleitung: [Import und Export](/guides/import-export).
 
@@ -60,15 +67,27 @@ Anleitung: [Import und Export](/guides/import-export).
 
 Standardmäßig deaktiviert. Verwenden Sie Ihren eigenen Schlüssel für OpenAI, Anthropic, Google, Groq, Mistral AI, DeepSeek, xAI, Azure OpenAI, OpenRouter oder rund 200 weitere Anbieter aus dem models.dev-Katalog, oder nutzen Sie Ollama, CLIProxyAPI oder einen beliebigen OpenAI-kompatiblen Endpunkt.
 
-- Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads.
-- **Automatische Tags** und **Inhaltszusammenfassung** für den aktuellen Ordner, erst nach Ihrer Prüfung gespeichert.
-- **KI-Ordnerneuordnung**, mit Vorschau, bevor etwas verschoben wird.
+- Ordnervorschläge im Pop-up, einschließlich eines geprüften neuen Ordnerpfads, und das Tastenkürzel `Alt+Shift+D` zum Schnellspeichern.
+- **KI fragen** im Pop-up und in der Seitenleiste: beantwortet Fragen, indem es Ihre Lesezeichen, Ordner, Tags und Zusammenfassungen durchsucht, Duplikate findet und Links prüft; speichert Seiten und schlägt Verschiebungen, Umbenennungen, Löschungen und neue Ordner als Plan vor, der nichts ändert, bis Sie zustimmen, wobei sich jede Änderung rückgängig machen lässt; und beendet Antworten mit Schaltflächen für die nächsten Schritte. **Was „KI fragen“ tun darf** in den Einstellungen schaltet jede Abfrage oder Änderung einzeln ab.
+- **Automatische Tags** und **Inhaltszusammenfassung** für den aktuellen Ordner, erst nach Ihrer Prüfung gespeichert, mit Rückgängig.
+- **KI-Ordnerneuordnung**, mit Vorschau, bevor etwas verschoben wird, mit Rückgängig.
 - **KI-Kontextpaket**, das Lesezeichen als Markdown oder XML für einen KI-Chat exportiert und auch bei deaktivierter KI funktioniert.
 
-Tags und Zusammenfassungen bleiben auf diesem Gerät. Sie werden nicht synchronisiert und sind nicht durchsuchbar, aber JSON-Exporte von Lesezeichen enthalten sie. Anleitung: [KI-Tools einrichten](/guides/ai-tools).
+Tags und Zusammenfassungen bleiben auf diesem Gerät. Sie werden nicht synchronisiert und sind im Pop-up nicht durchsuchbar, aber „KI fragen“ kann sie nachschlagen, und JSON-Exporte von Lesezeichen enthalten sie. Anleitung: [KI-Tools einrichten](/guides/ai-tools).
+
+## Lokale KI-Agenten (optional) [#local-ai-agents-optional]
+
+Standardmäßig deaktiviert, auf jedem Gerät. Wenn **Lokale KI-Agenten zulassen** aktiviert ist, nutzen KI-Agenten auf Ihrem Computer, etwa Claude Code, Codex oder Cursor, die Abfragen von Bookmark Scout über das Programm `bookmark-scout-mcp`, einen MCP-Server, der die Erweiterung über Native Messaging des Browsers erreicht. Wenn zusätzlich **Änderungen erlauben** aktiviert ist, können sie Seiten speichern und Änderungen vorschlagen, von denen jede in einem Bookmark-Scout-Fenster auf Ihre Zustimmung wartet und sich im Manager rückgängig machen lässt. Private Werte in Titeln und URLs werden standardmäßig vor ihnen verborgen.
+
+Anleitung: [Mit lokalen KI-Agenten verwenden](/guides/local-agents).
 
 ## Tastatur und Sprache [#keyboard-and-language]
 
-- Tastenkombinationen im Pop-up, in der Seitenleiste und im Manager, die nie `Ctrl` oder `Cmd` verwenden, mit einem Hilfedialog unter `?` im Manager. Siehe [Tastenkombinationen](/guides/keyboard-shortcuts).
+- Tastenkürzel zum Schnellspeichern auf jeder Seite, die Sie in den Tastenkürzel-Einstellungen des Browsers ändern können, in Firefox direkt in den Einstellungen von Bookmark Scout.
+- Tastenkombinationen im Pop-up und in der Seitenleiste, die nie `Ctrl` oder `Cmd` verwenden, und im Manager die Tasten des Chrome-Lesezeichen-Managers (alles auswählen, rückgängig machen, wiederholen, in Tabs öffnen), dort mit einem Hilfedialog unter `?`. Siehe [Tastenkombinationen](/guides/keyboard-shortcuts).
+- Auswahl im Manager wie in Chrome: Klick, `Ctrl`+Klick, `Shift`+Klick und `Ctrl+A`; die Pfeiltasten bewegen sich durch die Tabelle und den Ordnerbaum, den Screenreader als Baum vorlesen.
+- Rückgängigmachen und Wiederholen von Bearbeitungen, Verschiebungen und Löschungen im Manager mit `Ctrl+Z` und `Ctrl+Y`, für die gesamte Browsersitzung.
+- Rechtsklickmenüs für die Zeilen und Ordner des Managers: Ausschneiden, Kopieren und Einfügen, alle in Tabs, einem neuen Fenster oder einem Inkognitofenster öffnen, Umbenennen und Löschen; dazu **Nach Name sortieren** sowie **Neues Lesezeichen hinzufügen** oder **Neuen Ordner hinzufügen**. **Menüs der Lesezeichenverwaltung** in den Einstellungen legt fest, welche Befehle sie zeigen und in welcher Reihenfolge.
+- Drag-and-drop im Manager wie in Chrome: auf Ordner in der Tabelle oder im Baum, zwischen Zeilen in der Browserreihenfolge und Links aus anderen Seiten hinein; `Ctrl/Cmd+C`, `X` und `V` kopieren, verschieben und fügen ein.
 - Design System, Hell oder Dunkel.
 - Englisch, vereinfachtes Chinesisch, traditionelles Chinesisch, Japanisch, Koreanisch, Spanisch, Deutsch, Französisch und brasilianisches Portugiesisch.

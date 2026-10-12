@@ -7,7 +7,7 @@ description: Bookmark Scout のモノレポをセットアップし、ソース�
 
 ## リポジトリ [#the-repository]
 
-Bun と Nx のモノレポで、3 つのアプリと共有の設定パッケージで構成されています。
+Bun と Nx のモノレポで、3 つのアプリと 2 つのパッケージで構成されています。
 
 | パス | 内容 |
 | --- | --- |
@@ -15,6 +15,7 @@ Bun と Nx のモノレポで、3 つのアプリと共有の設定パッケー�
 | `apps/website` | マーケティングサイト: Next.js、`next-intl` で多言語化 |
 | `apps/docs` | このサイト: Next.js、Fumadocs、`content/docs` の MDX |
 | `packages/config` | `config/project.toml` と `config/web.toml` から読み込むプロジェクトとサイトの値 |
+| `packages/mcp-bridge` | `bookmark-scout-mcp`: [ローカル AI エージェント](/guides/local-agents)用の MCP サーバーとネイティブ メッセージング ホスト |
 
 ## セットアップ [#set-up]
 
@@ -54,16 +55,19 @@ bun run test
 | 変更内容 | 実行するもの |
 | --- | --- |
 | 拡張機能のソース | `bunx nx run extension:lint` |
-| 並べ替えのロジック | `bun run test:unit` |
+| サービス、フック、その他のロジック | `bun run test:unit` |
 | ポップアップ、設定、マネージャー、ツール、インポートとエクスポート | `bun run test:e2e` |
 | Edge での動作 | `bunx nx run extension:test:e2e:edge` |
 | Firefox での動作 | `bunx nx run extension:test:e2e:firefox`（スモークテスト） |
+| ローカル AI エージェントまたは `packages/mcp-bridge` | `bun test packages/mcp-bridge` と `bunx nx run extension:test:e2e:bridge`（Linux と macOS） |
+| 大きなライブラリでの速度 | 変更の前後に `bunx nx run extension:test:perf` |
+| 実際のプロバイダーに対する AI 機能 | `BS_LIVE_AI_*` 変数を設定して `bunx nx run extension:test:live`。変数がない場合はスキップされます |
 | マニフェスト、プロバイダー、ブラウザとの連携 | `bunx nx run extension:build:chrome` と、影響を受ける各ブラウザのターゲット |
 | ウェブサイト | `bunx nx run website:build` |
 | ドキュメント | `bunx nx run docs:build` の後に `bunx nx run docs:verify` |
 | 複数のアプリにまたがる変更 | `bun run lint` と `bun run build:all` |
 
-CI は、すべてのプルリクエストで、lint、3 つの拡張機能のビルド、ユニットテストと Chromium のエンドツーエンドテスト、Edge のテスト、Firefox のスモークテストを必須チェックとして実行します。ビルドが通ってもテストで確認されたことにはならないため、実行したテストを明記してください。
+CI は、すべてのプルリクエストで、lint、3 つの拡張機能のビルド、ユニットテストと Chromium のエンドツーエンドテスト、Edge のテスト、Firefox のスモークテストを必須チェックとして実行し、拡張機能やブリッジが変更された場合はブリッジのテストも実行します。性能テストは毎日、ライブ AI テストは必要なときだけ実行します。ビルドが通ってもテストで確認されたことにはならないため、実行したテストを明記してください。
 
 ## ドキュメントの作業 [#work-on-the-docs]
 
