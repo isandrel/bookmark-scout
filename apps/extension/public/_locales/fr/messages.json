@@ -1305,6 +1305,10 @@
         "message": "Organiser",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
     },
+    "menu_noActions": {
+        "message": "Aucune action disponible",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
+    },
     "menu_sortByName": {
         "message": "Trier par nom",
         "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
@@ -5958,6 +5962,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "Choisissez les commandes affichées par les menus contextuels et ⋯, et leur ordre dans chaque groupe.",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "Au moins une de ces commandes reste affichée : $1. Ainsi, le menu propose toujours une commande pour tout favori ou dossier.",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "Ce que Demander à l'IA peut faire",

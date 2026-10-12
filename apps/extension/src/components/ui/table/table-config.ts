@@ -20,6 +20,7 @@ const managerTableConfig = readConfig(
       page_sizes: z.array(pixels).min(1),
       default_page_size: pixels,
       column_sizing_save_delay_ms: z.number().int().nonnegative(),
+      removed_row_focus_wait_ms: z.number().int().nonnegative(),
       date_filter_months: z.number().int().min(1).max(12),
       facet_badges_max: z.number().int().nonnegative(),
       columns: z.record(z.string(), columnLayoutSchema),
@@ -41,6 +42,12 @@ export const managerPageSizeSchema = z
 
 /** How long column resizing must pause before the widths are saved, in milliseconds. */
 export const COLUMN_SIZING_SAVE_DELAY_MS = managerTableConfig.column_sizing_save_delay_ms;
+
+/**
+ * How long, in milliseconds, the table waits for focus to come back (from a closing confirmation)
+ * before it gives up moving focus from a removed row to the next one.
+ */
+export const REMOVED_ROW_FOCUS_WAIT_MS = managerTableConfig.removed_row_focus_wait_ms;
 
 /** Months the Date Added filter shows side by side. */
 export const DATE_FILTER_MONTHS = managerTableConfig.date_filter_months;

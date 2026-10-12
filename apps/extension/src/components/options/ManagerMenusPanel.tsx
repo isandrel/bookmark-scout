@@ -21,12 +21,24 @@ export function ManagerMenusPanel() {
   const save = (next: ActionId[][]) => {
     void setValue(next.flat().filter((id) => shownIds.has(id))).catch(() => undefined);
   };
+  // One command that works on any single item stays, so the menu never has nothing to offer.
+  const isKept = (id: ActionId) =>
+    shownIds.has(id) &&
+    ITEM_MENU_KEEP_ONE_OF.includes(id) &&
+    !ITEM_MENU_KEEP_ONE_OF.some((other) => other !== id && shownIds.has(other));
   const toggle = (id: ActionId, checked: boolean) => {
+    if (!checked && isKept(id)) return;
     const visible = groups.flat().filter((other) => (other === id ? checked : shownIds.has(other)));
-    // At least one command stays, so the menu never disappears.
+    // An empty list would mean the default menu; at least one command stays.
     if (visible.length === 0) return;
     void setValue(visible).catch(() => undefined);
   };
+  const keptLabels = formatList(
+    ITEM_MENU_KEEP_ONE_OF.map((id) => {
+      const action = getAction(id);
+      return action.labelKey ? t(action.labelKey) : id;
+    }),
+  );
   const move = (groupIndex: number, index: number, by: -1 | 1) => {
     const next = groups.map((group) => [...group]);
     const group = next[groupIndex];
@@ -39,7 +51,7 @@ export function ManagerMenusPanel() {
       id={PANEL_ID}
       data-testid="manager-menus"
       title={t('settings_managerMenuActions')}
-      description={t('settings_managerMenuActionsDesc')}
+      description={`${t('settings_managerMenuActionsDesc')} ${t('settings_managerMenuActionsKeep', keptLabels)}`}
       actions={
         <Button
           type="button"
@@ -64,6 +76,8 @@ export function ManagerMenusPanel() {
                 <Checkbox
                   id={`${PANEL_ID}-${id}`}
                   checked={visible}
+                  // The last command that works on any one item stays (see the description).
+                  disabled={isKept(id)}
                   onCheckedChange={(checked) => toggle(id, checked === true)}
                 />
                 <label

@@ -1297,6 +1297,10 @@
         "message": "整理",
         "description": "Name of the bookmark manager header menu with Sort by name and Add new bookmark or folder"
     },
+    "menu_noActions": {
+        "message": "沒有可用的動作",
+        "description": "Disabled item of a bookmark manager right-click or ⋯ menu when the commands chosen in Options do not apply to what was clicked"
+    },
     "menu_sortByName": {
         "message": "依名稱排序",
         "description": "Menu item that sorts the folder shown by name (folders first), changing the browser's order"
@@ -5766,6 +5770,10 @@
     "settings_managerMenuActionsDesc": {
         "message": "選擇右鍵選單和 ⋯ 選單顯示哪些命令，以及每組中的順序。",
         "description": "Options > Behavior: description of the bookmark manager menu items panel"
+    },
+    "settings_managerMenuActionsKeep": {
+        "message": "「$1」中至少有一項會一直顯示，讓選單對任何書籤或資料夾都有可用的指令。",
+        "description": "Options > Behavior: after the bookmark manager menu panel description. $1 is a list of commands, such as 'View Details and Copy Bookmark ID'; at least one of them must stay shown."
     },
     "settings_askAiDisabledActions": {
         "message": "詢問 AI 可以執行的動作",

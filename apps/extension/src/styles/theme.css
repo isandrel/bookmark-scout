@@ -309,6 +309,14 @@ tr[data-drop-zone='into'] > td {
   box-shadow: inset 0 0 0 2px hsl(var(--primary));
 }
 
+[data-folder-id][data-drop-zone='before'] {
+  box-shadow: inset 0 2px 0 hsl(var(--primary));
+}
+
+[data-folder-id][data-drop-zone='after'] {
+  box-shadow: inset 0 -2px 0 hsl(var(--primary));
+}
+
 /* Ask AI answers: Markdown from the model, rendered without raw HTML. */
 .ask-ai-markdown {
   & > * + * {

@@ -34,6 +34,12 @@ const stickyColumnClass = cn(
 // column keeps exactly the width it was given.
 const FILLER_CELL_CLASS = 'w-auto p-0';
 
+// The selection bar's height, kept up to date on the table's root for the rows' scroll margin.
+const SELECTION_BAR_HEIGHT_PROPERTY = '--selection-bar-height';
+
+/** Marks the frame around the grid, which takes focus when no row is left to focus. */
+export const GRID_FRAME_ATTRIBUTE = 'data-grid-frame';
+
 const IDLE_COLUMN_RESIZING: columnResizingState = {
   columnSizingStart: [],
   deltaOffset: null,
@@ -546,8 +552,9 @@ export function DataTable<TData extends RowData>({
     );
     if (!row) return;
     pendingFocusRowIdRef.current = null;
+    // Rows keep a scroll margin the height of the selection bar, so it never covers this one.
     row.scrollIntoView({ block: 'nearest' });
-    row.focus();
+    row.focus({ preventScroll: true });
   });
 
   // Selection is keyed by bookmark ID and belongs to the rows the table can show: the current
@@ -640,6 +647,48 @@ export function DataTable<TData extends RowData>({
     pendingFocusRowIdRef.current = rowId;
     return rowId;
   }, []);
+
+  // When the focused row leaves the list (deleted, or moved out of the folder), focus goes to the
+  // next row, else the previous one, else the grid, as in Chrome's manager. Only once focus is
+  // lost: a confirmation dialog gives it back as it closes, which can be after the row is gone,
+  // and focus the user put somewhere else (the filter, the tree) stays there.
+  const previousRowsRef = React.useRef({ ids: shownRowIdsInOrder, resetKey });
+  const focusWaitFrameRef = React.useRef(0);
+  React.useEffect(() => () => cancelAnimationFrame(focusWaitFrameRef.current), []);
+  React.useEffect(() => {
+    const { ids: previous, resetKey: previousResetKey } = previousRowsRef.current;
+    previousRowsRef.current = { ids: shownRowIdsInOrder, resetKey };
+    // Another folder: focus goes to its rows as navigation decides (`pendingRowFocusRef`).
+    if (previousResetKey !== resetKey || pendingRowFocusRef.current || pendingRevealRef.current) {
+      return;
+    }
+    const removed = latestRef.current.focusedRowId;
+    if (!removed || shownRowIdsInOrder.includes(removed) || !previous.includes(removed)) return;
+    const replacement = rowAfterRemoval(previous, shownRowIdsInOrder, removed);
+    setFocusedRowId(replacement);
+    const deadline = performance.now() + REMOVED_ROW_FOCUS_WAIT_MS;
+    const moveFocus = () => {
+      const active = document.activeElement;
+      if (active && active !== document.body) {
+        // Still in a closing dialog or menu: wait for it to give focus back.
+        if (active.closest(KEYBOARD_OVERLAY_SELECTOR) && performance.now() < deadline) {
+          focusWaitFrameRef.current = requestAnimationFrame(moveFocus);
+        }
+        return;
+      }
+      const { shownRowIdsInOrder: ids } = latestRef.current;
+      const element = replacement
+        ? tableFrameRef.current?.querySelector<HTMLElement>(
+            `tbody tr[data-row-id="${CSS.escape(replacement)}"]`,
+          )
+        : null;
+      if (element) element.focus();
+      else if (replacement && ids.includes(replacement)) focusRowAt(ids.indexOf(replacement));
+      else tableFrameRef.current?.focus();
+    };
+    cancelAnimationFrame(focusWaitFrameRef.current);
+    moveFocus();
+  }, [focusRowAt, resetKey, shownRowIdsInOrder]);
 
   /** Arrow keys, Home, and End: move focus, and select as Chrome's list does. */
   const moveRowFocus = React.useCallback(
@@ -745,6 +794,36 @@ export function DataTable<TData extends RowData>({
     }
   };
 
+  // The sticky selection bar covers the bottom of the scroll area; rows scrolled into view keep
+  // its height as their bottom scroll margin (`--selection-bar-height`).
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const selectionBarRef = React.useRef<HTMLDivElement>(null);
+  const hasSelectionBar = selectedRows.length > 0;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: the bar mounts and unmounts with `hasSelectionBar`, which re-reads its ref.
+  React.useEffect(() => {
+    const root = rootRef.current;
+    const bar = selectionBarRef.current;
+    if (!root) return;
+    if (!bar) {
+      root.style.setProperty(SELECTION_BAR_HEIGHT_PROPERTY, '0px');
+      return;
+    }
+    // The bar sticks inside the scroll area's bottom padding, so that is covered too.
+    let scroller = root.parentElement;
+    while (scroller && !/auto|scroll/.test(getComputedStyle(scroller).overflowY)) {
+      scroller = scroller.parentElement;
+    }
+    const padding = scroller ? Number.parseFloat(getComputedStyle(scroller).paddingBottom) : 0;
+    const setHeight = () => {
+      const height = bar.getBoundingClientRect().height + (padding || 0);
+      root.style.setProperty(SELECTION_BAR_HEIGHT_PROPERTY, `${Math.ceil(height)}px`);
+    };
+    setHeight();
+    const observer = new ResizeObserver(setHeight);
+    observer.observe(bar);
+    return () => observer.disconnect();
+  }, [hasSelectionBar]);
+
   const wrapFrame = renderFrame ?? ((frame: React.ReactElement) => frame);
 
   // The row that takes Tab focus: the focused row while it is on this page, else the first row.
@@ -754,7 +833,9 @@ export function DataTable<TData extends RowData>({
     : pageRows[0]?.id;
 
   return (
-    <div className="min-w-0 space-y-4">
+    // A column that fills the scroll area, so the frame's wrapper (the empty-space menu and drop
+    // area) reaches down to the pagination even when the folder has few rows.
+    <div ref={rootRef} className="flex min-w-0 flex-1 flex-col gap-4">
       <DataTableToolbar
         table={table}
         applyToCurrentFolder={applyToCurrentFolder}
@@ -773,7 +854,13 @@ export function DataTable<TData extends RowData>({
         }
       />
       {wrapFrame(
-        <div ref={tableFrameRef} className="rounded-md border bg-card">
+        // Focusable from script only: focus lands here when the last focused row is removed.
+        <div
+          ref={tableFrameRef}
+          tabIndex={-1}
+          {...{ [GRID_FRAME_ATTRIBUTE]: '' }}
+          className="rounded-md border bg-card outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
           <MoveDisabledReasonContext.Provider value={moveDisabledReason}>
             {/* Fixed layout applies the column sizes as given; the table only grows past the frame
               (and scrolls) when the columns need more room than it has. */}
@@ -827,7 +914,7 @@ export function DataTable<TData extends RowData>({
                         // The header row is 1; rows count across pages.
                         aria-rowindex={pagination.pageIndex * pagination.pageSize + rowIndex + 2}
                         className={cn(
-                          'focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
+                          'scroll-mb-(--selection-bar-height) focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring',
                           rowClassName?.(row.original),
                         )}
                         tabIndex={row.id === tabStopRowId ? 0 : -1}
@@ -886,8 +973,8 @@ export function DataTable<TData extends RowData>({
       <DataTablePagination table={table} />
       {/* After the rows, so selecting never moves them (a double click's second click would
           land on another row), and sticky, so it stays in view at the bottom of a long page. */}
-      {selectedRows.length > 0 && (
-        <div className="sticky bottom-0 z-20 bg-background pb-1">
+      {hasSelectionBar && (
+        <div ref={selectionBarRef} className="sticky bottom-0 z-20 bg-background pb-1">
           {renderSelectionActions?.(visibleSelectedRows, hiddenSelectedCount, clearSelection)}
         </div>
       )}

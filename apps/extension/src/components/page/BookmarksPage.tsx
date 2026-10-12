@@ -149,6 +149,17 @@ export default function BookmarksPage() {
     copyFolderLink: (folderId) => void copyManagerFolderLink(folderId),
     open: openRows,
   });
+  const allDataRef = useRef(allData);
+  allDataRef.current = allData;
+  // The folder of the tree row `target` is in: what its menu, keys, and clipboard act on.
+  const resolveTreeMenuItems = useCallback((target: EventTarget | null) => {
+    const element =
+      target instanceof Element ? target.closest<HTMLElement>('[data-folder-id]') : null;
+    const folder = element?.dataset.folderId
+      ? getManagerItemsById(allDataRef.current).get(element.dataset.folderId)
+      : undefined;
+    return folder ? [folder] : [];
+  }, []);
   const shortcuts = useManagerShortcuts({
     currentFolderId: currentFolder,
     items: allData,
@@ -161,6 +172,7 @@ export default function BookmarksPage() {
       undo: history.undo,
       redo: history.redo,
     },
+    treeFolderAt: (target) => resolveTreeMenuItems(target)[0],
     clipboard: managerCommands.clipboardEvents,
   });
   const dragDrop = useManagerDragDrop({ allData, currentFolderId: currentFolder, table: tableRef });
@@ -176,16 +188,6 @@ export default function BookmarksPage() {
     const row = target instanceof Element ? target.closest<HTMLElement>('tr[data-row-id]') : null;
     const rowId = row?.dataset.rowId;
     return rowId ? (tableRef.current?.targetRowsAt(rowId) ?? []) : [];
-  }, []);
-  const allDataRef = useRef(allData);
-  allDataRef.current = allData;
-  const resolveTreeMenuItems = useCallback((target: EventTarget | null) => {
-    const element =
-      target instanceof Element ? target.closest<HTMLElement>('[data-folder-id]') : null;
-    const folder = element?.dataset.folderId
-      ? getManagerItemsById(allDataRef.current).get(element.dataset.folderId)
-      : undefined;
-    return folder ? [folder] : [];
   }, []);
   const sortAccessors = useMemo(
     () => ({
@@ -211,9 +213,9 @@ export default function BookmarksPage() {
   );
   // biome-ignore lint/correctness/useExhaustiveDependencies: t() inside reads the language, which must rebuild the labels.
   const facetOptions = useMemo(() => {
-    const domains = [
-      ...new Set(allData.map(getBookmarkDomain).filter(Boolean)),
-    ].sort((left, right) => left.localeCompare(right));
+    const domains = [...new Set(allData.map(getBookmarkDomain).filter(Boolean))].sort(
+      (left, right) => left.localeCompare(right),
+    );
     return {
       parentId: buildFolderOptions(allData, t('popup_untitled')),
       domain: domains.map((domain) => ({
@@ -289,7 +291,7 @@ export default function BookmarksPage() {
       <aside
         className={cn(
           'shrink-0 border-r transition-all duration-200 overflow-hidden',
-          leftSidebarCollapsed ? 'w-0' : 'w-64'
+          leftSidebarCollapsed ? 'w-0' : 'w-64',
         )}
         inert={leftSidebarCollapsed}
         aria-hidden={leftSidebarCollapsed || undefined}
@@ -309,6 +311,7 @@ export default function BookmarksPage() {
               items={allData}
               selectedFolderId={currentFolder}
               onFolderSelect={navigateToFolder}
+              onFolderKey={shortcuts.handleTreeFolderKey}
             />
           </ItemContextMenu>
         </div>
@@ -325,7 +328,9 @@ export default function BookmarksPage() {
                 size="icon"
                 onClick={toggleLeftSidebar}
                 className="shrink-0"
-                title={leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')}
+                title={
+                  leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')
+                }
                 aria-label={
                   leftSidebarCollapsed ? t('bookmarks_showFolders') : t('bookmarks_hideFolders')
                 }
@@ -353,10 +358,7 @@ export default function BookmarksPage() {
                 <Link2 className="h-4 w-4" />
               </Button>
             </div>
-            <ManagerShortcutsHelp
-              open={shortcuts.helpOpen}
-              onOpenChange={shortcuts.setHelpOpen}
-            />
+            <ManagerShortcutsHelp open={shortcuts.helpOpen} onOpenChange={shortcuts.setHelpOpen} />
             <OrganizeMenu host={managerCommands.folderHost} />
             <Button
               variant="ghost"
@@ -364,7 +366,9 @@ export default function BookmarksPage() {
               onClick={toggleRightSidebar}
               className="shrink-0"
               title={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
-              aria-label={rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')}
+              aria-label={
+                rightSidebarCollapsed ? t('bookmarks_showTools') : t('bookmarks_hideTools')
+              }
               aria-expanded={!rightSidebarCollapsed}
             >
               {rightSidebarCollapsed ? (
@@ -379,7 +383,7 @@ export default function BookmarksPage() {
         {/* Content. Positioned, so absolutely positioned descendants (screen-reader-only labels)
             are laid out inside this scroll area instead of stretching the page below the
             viewport, which let the whole page scroll away to a blank screen. */}
-        <div className="relative min-w-0 flex-1 space-y-4 overflow-auto p-4">
+        <div className="relative flex min-w-0 flex-1 flex-col gap-4 overflow-auto p-4">
           {notice && (
             <div
               role="status"
@@ -431,10 +435,13 @@ export default function BookmarksPage() {
               handleRef={tableRef}
               getRowProps={dragDrop.rowProps}
               renderFrame={(frame) => (
+                // Fills the room down to the pagination, so right clicks and drops below the
+                // rows reach the folder's empty-space menu and its end.
                 <ItemContextMenu
                   resolveItems={resolveRowMenuItems}
                   itemHost={managerCommands.tableItemHost}
                   folderHost={managerCommands.folderHost}
+                  className="flex-1"
                   testId="bookmark-table-menu-area"
                   areaProps={dragDrop.frameProps}
                 >
@@ -460,17 +467,14 @@ export default function BookmarksPage() {
       <aside
         className={cn(
           'shrink-0 border-l transition-all duration-200 overflow-hidden',
-          rightSidebarCollapsed ? 'w-0' : 'w-80'
+          rightSidebarCollapsed ? 'w-0' : 'w-80',
         )}
         inert={rightSidebarCollapsed}
         aria-hidden={rightSidebarCollapsed || undefined}
         data-testid="tools-sidebar"
       >
         <div className="w-80 h-full overflow-y-auto">
-          <ToolsSidebar
-            currentFolderId={currentFolder}
-            currentFolderName={currentFolderName}
-          />
+          <ToolsSidebar currentFolderId={currentFolder} currentFolderName={currentFolderName} />
         </div>
       </aside>
 
