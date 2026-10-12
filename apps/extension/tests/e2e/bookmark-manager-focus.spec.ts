@@ -5,7 +5,7 @@
  * a folder in the tree answers the row keys and takes drops beside it.
  */
 import type { Locator, Page } from '@playwright/test';
-import { expect, test } from './fixtures';
+import { expect, test, toastRegion } from './fixtures';
 import { managerUrl, managerRow as row, treeFolder, waitForNoOverlay } from './manager-helpers';
 import { DELETE_KEY, RENAME_KEY } from './manager-keys';
 import { childTitles, seedFolder, setSettings } from './popup-helpers';
@@ -187,6 +187,7 @@ test('a folder in the tree answers Delete, rename, and the clipboard keys', asyn
   // Copy on a tree folder copies that folder, and paste on another goes into it.
   await treeFolder(page, 'Tree Source').focus();
   await page.keyboard.press('ControlOrMeta+c');
+  await expect(toastRegion(page).getByText(/^✓ Copied .?Tree Source.?$/)).toBeVisible();
   await treeFolder(page, 'Tree Target').focus();
   await page.keyboard.press('ControlOrMeta+v');
   await expect

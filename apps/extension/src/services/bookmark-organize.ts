@@ -191,6 +191,9 @@ async function writeSystemClipboard({ text, html }: { text: string; html: string
   await navigator.clipboard.writeText(text);
 }
 
+// The Cut or Copy this page is still storing, if any.
+let pendingClipboardWrite: Promise<unknown> = Promise.resolve();
+
 /** Thrown when one Cut or Copy names more items than `max_items`. */
 export class BookmarkClipboardLimitError extends Error {
   constructor(readonly limit: number) {
@@ -205,10 +208,21 @@ export class BookmarkClipboardLimitError extends Error {
  * menu command); a copy or cut event writes it into the event instead and passes that text as
  * `systemText`, so Paste knows it from text another app copies later.
  */
-export async function setBookmarkClipboard(
+export function setBookmarkClipboard(
   mode: 'cut' | 'copy',
   ids: readonly string[],
-  { toSystem = false, systemText }: { toSystem?: boolean; systemText?: string } = {},
+  options: { toSystem?: boolean; systemText?: string } = {},
+): Promise<{ text: string; html: string }> {
+  const write = storeBookmarkClipboard(mode, ids, options);
+  // A paste right after (Ctrl+C, then Ctrl+V) waits for this write instead of reading the old one.
+  pendingClipboardWrite = write.catch(() => undefined);
+  return write;
+}
+
+async function storeBookmarkClipboard(
+  mode: 'cut' | 'copy',
+  ids: readonly string[],
+  { toSystem = false, systemText }: { toSystem?: boolean; systemText?: string },
 ): Promise<{ text: string; html: string }> {
   if (ids.length > clipboardConfig.max_items) {
     throw new BookmarkClipboardLimitError(clipboardConfig.max_items);
@@ -257,6 +271,7 @@ export async function pasteBookmarks(
   target: { parentId: string; index?: number },
   systemText?: string,
 ): Promise<BookmarkPasteResult | null> {
+  await pendingClipboardWrite;
   const content = await bookmarkClipboardValue.get();
   const fromSystem =
     systemText !== undefined &&
