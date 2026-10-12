@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { areAllSubfoldersExpanded, flattenVisibleTree } from '@/lib/popup-tree-rows';
+import {
+  areAllSubfoldersExpanded,
+  bookmarkRowTooltip,
+  flattenVisibleTree,
+} from '@/lib/popup-tree-rows';
+import { getBookmarkDisplayTitle } from '@/lib/bookmark-tree';
 import type { BookmarkTreeNode } from '@/types';
 
 const link = (id: string, parentId: string): BookmarkTreeNode => ({
@@ -99,5 +104,20 @@ describe('areAllSubfoldersExpanded', () => {
   it('is false for a folder without subfolders', () => {
     expect(areAllSubfoldersExpanded(tree[1], new Set())).toBe(false);
     expect(areAllSubfoldersExpanded(folder('x', '0', [link('l', 'x')]), new Set())).toBe(false);
+  });
+});
+
+describe('bookmarkRowTooltip', () => {
+  it('shows the whole title and then the address', () => {
+    const title = 'A very long bookmark title that the row cuts off long before its end';
+    expect(bookmarkRowTooltip({ title, url: 'https://example.com/a' })).toBe(
+      `${title}\nhttps://example.com/a`,
+    );
+  });
+
+  it('names an untitled bookmark like its row does', () => {
+    expect(bookmarkRowTooltip({ title: ' ', url: 'https://example.com/b' })).toBe(
+      `${getBookmarkDisplayTitle(' ')}\nhttps://example.com/b`,
+    );
   });
 });

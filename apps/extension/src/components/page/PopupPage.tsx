@@ -178,6 +178,8 @@ function PopupPage() {
       );
 
       setAIRecommendations(recommendations);
+      // An answer without a usable suggestion is not an error, but the click needs an answer.
+      if (recommendations.length === 0) toast({ title: t('popup_aiNoSuggestions') });
     } catch (error) {
       if (error instanceof PermissionRequiredError) throw error;
       toast.error({ title: t('ai_recommendationFailed'), description: describeAIError(error) });
@@ -480,19 +482,15 @@ function PopupPage() {
     restoreFocusAfterRender();
   }, [restoreFocusAfterRender, setCreatingFolderId, setNewFolderName]);
 
+  // Date and name sorting re-sort the list, so the tree then only moves items between folders
+  // and says so while a drag runs.
+  const canReorder = treeShowsBrowserOrder(sortOrder);
+  const [draggingId, setDraggingId] = useState<string | null>(null);
   const handleDropWithToast = useCallback(
     async (operation: DragOperation) => {
-      // Date and title sorting re-sort the list, so a saved reorder can look like it did nothing.
-      const reorderHiddenBySort =
-        operation.sourceParentId === operation.targetParentId && sortOrder !== 'folders';
-      await withToast(
-        () => handleDrop(operation),
-        t('toast_itemMoved'),
-        t('toast_errorMovingItem'),
-        () => (reorderHiddenBySort ? t('toast_reorderHiddenBySort') : undefined),
-      );
+      await withToast(() => handleDrop(operation), t('toast_itemMoved'), t('toast_errorMovingItem'));
     },
-    [handleDrop, sortOrder, withToast],
+    [handleDrop, withToast],
   );
 
   const { requestDeletion } = deletion;
@@ -612,6 +610,7 @@ function PopupPage() {
         {/* Recent Folders Panel */}
         {!recentFoldersLoading && recentFoldersEnabled && (
           <RecentFoldersPanel
+            folders={folders}
             maxFolders={recentFoldersMax}
             pendingFolderIds={addingToFolderIds}
             onAddToFolder={saveCurrentPage}
@@ -633,6 +632,7 @@ function PopupPage() {
         {!isLoading && folderMatches.length > 0 && (
           <FolderMatchesPanel
             matches={folderMatches}
+            query={query}
             barTitle={barTitle}
             truncateLength={truncateLength}
             pendingFolderIds={addingToFolderIds}
@@ -705,6 +705,8 @@ function PopupPage() {
                 onCancelCreateFolder={handleCancelCreateFolder}
                 onNewFolderNameChange={setNewFolderName}
                 onToggleExpandAllChildren={toggleExpandAllChildren}
+                canReorder={canReorder}
+                onDraggingChange={setDraggingId}
               >
                 <PopupTree
                   roots={displayFolders}
@@ -719,7 +721,18 @@ function PopupPage() {
           )}
         </div>
         <QuickSaveShortcutNotice />
-        {!isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />}
+        {draggingId && !canReorder ? (
+          // In place of the key hints, below the tree, so no row moves or hides under the drag.
+          <p
+            role="status"
+            data-testid="tree-drag-hint"
+            className="shrink-0 border-t bg-muted px-3 py-1.5 text-xs text-muted-foreground"
+          >
+            {t('popup_dragSortedHint', t('settings_sortFolders'))}
+          </p>
+        ) : (
+          !isLoading && (displayFolders.length > 0 || folderMatches.length > 0) && <PopupHintBar />
+        )}
       </div>
       <BookmarkDeleteDialog
         deletion={deletion}

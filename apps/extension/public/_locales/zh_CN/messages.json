@@ -5303,13 +5303,17 @@
         "message": "在管理器中显示“$1”",
         "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
     },
-    "askAI_savedTo": {
-        "message": "已保存到 $1",
-        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    "askAI_savePage": {
+        "message": "$2 · “$1”",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
     },
-    "askAI_alreadySaved": {
-        "message": "已保存在 $1 中",
-        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    "askAI_savedPageTo": {
+        "message": "已将“$1”保存到 $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "“$1”已在 $2 中",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
     },
     "askAI_saveFailed": {
         "message": "无法保存该网页",
@@ -5354,6 +5358,34 @@
     "askAI_planMissing": {
         "message": "此方案已过期或已应用。再次提出请求即可重新生成。",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "此更改已撤销或已不在撤销历史中，没有可撤销的内容。",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "删除“$1”",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "删除文件夹“$1”及其中所有内容（$2 项）",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "将“$1”放回 $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "将“$1”改回“$2”",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "将“$1”的网址改回 $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "将“$1”移回 $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
     },
     "askAI_approve": {
         "message": "批准",
@@ -5850,5 +5882,19 @@
     "settings_askAiWrites": {
         "message": "更改书签",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "没有为此页面建议的文件夹",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "列表按日期或名称排序，因此这里只能将项目拖入其他文件夹。如需调整顺序，请选择“$sort$”排序方式。",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

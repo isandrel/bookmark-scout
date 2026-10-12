@@ -5495,13 +5495,17 @@
         "message": "Show “$1” in the manager",
         "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
     },
-    "askAI_savedTo": {
-        "message": "Saved to $1",
-        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    "askAI_savePage": {
+        "message": "$2 · “$1”",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
     },
-    "askAI_alreadySaved": {
-        "message": "Already saved in $1",
-        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    "askAI_savedPageTo": {
+        "message": "Saved “$1” to $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "“$1” is already in $2",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
     },
     "askAI_saveFailed": {
         "message": "Could not save the page",
@@ -5546,6 +5550,34 @@
     "askAI_planMissing": {
         "message": "This plan has expired or was already applied. Ask again to make it once more.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "This change was already undone or is no longer in the undo history, so there is nothing to undo.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Remove “$1”",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Remove the folder “$1” and everything in it ($2 items)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Put “$1” back in $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Rename “$1” back to “$2”",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Change the address of “$1” back to $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Move “$1” back to $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
     },
     "askAI_approve": {
         "message": "Approve",
@@ -6042,5 +6074,19 @@
     "settings_askAiWrites": {
         "message": "Changing bookmarks",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "No folder suggestions for this page",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "The list is sorted by date or name, so here items can only be dropped into other folders. To reorder them, choose the \"$sort$\" sort order.",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

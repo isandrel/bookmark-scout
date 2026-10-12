@@ -5495,13 +5495,17 @@
         "message": "Afficher « $1 » dans le gestionnaire",
         "description": "Ask AI suggestion button that shows a bookmark or folder in the bookmark manager. $1 is its title."
     },
-    "askAI_savedTo": {
-        "message": "Enregistré dans $1",
-        "description": "Toast after a suggestion button saved the page. $1 is the folder path."
+    "askAI_savePage": {
+        "message": "$2 · « $1 »",
+        "description": "Ask AI suggestion button, second line: the page a save button saves. $1 is the page title, $2 its site (host name), shown first so it stays visible when the title is cut off."
     },
-    "askAI_alreadySaved": {
-        "message": "Déjà enregistré dans $1",
-        "description": "Toast when a suggestion button's folder already has the page. $1 is the folder path."
+    "askAI_savedPageTo": {
+        "message": "« $1 » enregistré dans $2",
+        "description": "Toast after a suggestion button saved a page. $1 is the page title, $2 the folder path."
+    },
+    "askAI_alreadySavedPage": {
+        "message": "« $1 » est déjà dans $2",
+        "description": "Toast when a suggestion button's folder already has the page. $1 is the page title, $2 the folder path."
     },
     "askAI_saveFailed": {
         "message": "Impossible d'enregistrer la page",
@@ -5546,6 +5550,34 @@
     "askAI_planMissing": {
         "message": "Ce plan a expiré ou a déjà été appliqué. Redemandez-le pour le recréer.",
         "description": "Ask AI approval card when the plan it refers to expired or was already applied"
+    },
+    "askAI_undoMissing": {
+        "message": "Cette modification a déjà été annulée ou n’est plus dans l’historique : il n’y a rien à annuler.",
+        "description": "Approval card for an AI agent's undo when the change it names was already undone or is no longer in the undo history"
+    },
+    "history_undoRemove": {
+        "message": "Retirer « $1 »",
+        "description": "Approval line for undoing a change: the bookmark it added is removed. $1 is its title."
+    },
+    "history_undoRemoveFolder": {
+        "message": "Retirer le dossier « $1 » et tout son contenu ($2 éléments)",
+        "description": "Approval line for undoing a change: the folder it added is removed with what it holds. $1 is the folder title, $2 how many items it holds."
+    },
+    "history_undoRestore": {
+        "message": "Remettre « $1 » dans $2",
+        "description": "Approval line for undoing a change: an item it deleted is put back. $1 is its title, $2 the folder it goes back into."
+    },
+    "history_undoRename": {
+        "message": "Renommer « $1 » à nouveau en « $2 »",
+        "description": "Approval line for undoing a change: a renamed item gets its old title back. $1 is its title now, $2 the title it had."
+    },
+    "history_undoAddress": {
+        "message": "Rétablir l’adresse de « $1 » à $2",
+        "description": "Approval line for undoing a change: a bookmark gets its old address back. $1 is its title, $2 the address it had."
+    },
+    "history_undoMove": {
+        "message": "Replacer « $1 » dans $2",
+        "description": "Approval line for undoing a change: a moved item goes back. $1 is its title, $2 the folder it goes back to."
     },
     "askAI_approve": {
         "message": "Approuver",
@@ -6042,5 +6074,19 @@
     "settings_askAiWrites": {
         "message": "Modifier les favoris",
         "description": "Options > AI: group heading for the Ask AI actions that change bookmarks"
+    },
+    "popup_aiNoSuggestions": {
+        "message": "Aucun dossier suggéré pour cette page",
+        "description": "Popup toast after asking AI for folder suggestions when the answer had no usable folder"
+    },
+    "popup_dragSortedHint": {
+        "message": "La liste est triée par date ou par nom : ici, vous pouvez seulement déposer des éléments dans d’autres dossiers. Pour les réordonner, choisissez le tri « $sort$ ».",
+        "description": "Popup and side panel note shown while dragging a row when the tree is sorted by date or name, so drops only move items into other folders. $sort$ is the name of the \"Folders First\" sort order option.",
+        "placeholders": {
+            "sort": {
+                "content": "$1",
+                "example": "Folders First"
+            }
+        }
     }
 }

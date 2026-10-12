@@ -316,7 +316,7 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   await page.getByRole('button', { name: 'Ask AI about your bookmarks or this page' }).click();
   const chat = page.getByTestId('ask-ai');
   const box = chat.getByRole('textbox', { name: /Ask about your bookmarks/ });
-  await box.fill('Tell me about my Rust bookmarks');
+  await box.fill('Tell me about my Rust bookmarks and https://rust.e2e.invalid/borrowing');
   await box.press('Enter');
   await expect(chat.getByText('Here are some next steps.')).toBeVisible();
 
@@ -325,14 +325,14 @@ test('[mocked provider contract] Ask AI suggestion buttons ask, save, open, and 
   await expect(buttons.getByRole('button')).toHaveText([
     'More on ownership?',
     'A Reading folder',
-    /^Save to .+\/Rust$/,
+    /^Save to .+\/Rustrust\.e2e\.invalid · “Borrowing”$/,
     'Open “Ownership guide”',
     'Show “Ownership guide” in the manager',
   ]);
 
   // Save: the click is the approval; the page lands in the folder, with Undo in the toast.
   await buttons.getByRole('button', { name: /^Save to / }).click();
-  await expect(toastRegion(page)).toContainText(/Saved to .+\/Rust/);
+  await expect(toastRegion(page)).toContainText(/Saved “Borrowing” to .+\/Rust/);
   await expect
     .poll(() =>
       extensionWorker.evaluate(
