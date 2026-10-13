@@ -1,6 +1,6 @@
 # bookmark-scout
 
-## Unreleased
+## 0.3.3
 
 ### Features
 
@@ -20,19 +20,22 @@
 - Drag and drop in the bookmark manager, as in Chrome's: drag rows (or the selection) onto a folder row or a folder in the folder tree to move them, and between rows to reorder while **Browser order** is on. A closed folder in the tree opens while a drag hovers it. Links dropped from other pages or apps become bookmarks where they land, and rows dragged out carry their URLs. `Ctrl+C`, `Ctrl+X`, and `Ctrl+V` (`Cmd` on a Mac) copy the selection's URLs, cut, and paste, and pasting URLs copied in another app adds them as bookmarks. Each drop or paste is one undo step.
 - The bookmark manager's folder tree works like Chrome's: it is one `Tab` stop, the arrow keys move through it and open and close folders, `Home` and `End` go to the first and last folder, and `Enter` or `Space` shows a folder in the table; screen readers hear it as a tree with each folder's level and position. When Chrome keeps bookmarks both in your Google Account and only on this device, the tree shows them under **In your account** and **Only on this device**, the second closed at first, as Chrome's own manager does.
 - URLs shown in the manager table, tool results, import and export reviews, dead-link repair, folder suggestions, and bookmark details are now links. A new setting, Settings > Behavior > **Open links in**, chooses whether a click opens a new tab (the default), a background tab, or the current tab; it also applies to bookmarks clicked in the popup and side panel. Middle-click and Ctrl/Cmd-click keep the browser's behavior.
-
 - Ask AI can do more to answer: search bookmarks by folder, tag, site, or date added as well as by words, look up tags and summaries, find duplicates, suggest folders for a page (ranked on your device), and, once website access is allowed for Check Dead Links, check whether bookmarked links still work. Long lists come a page at a time, and a folder name that fits several folders makes it ask which one. It reads only bookmarked pages and the page you are on, never another address it was given. Each step still shows in the chat.
 
 - Ask AI can change bookmarks when you ask: it saves pages, and it proposes moves, renames, deletions, and new folders as a plan shown in the chat, which changes nothing until you approve it. Once it has read a web page or searched the web, it asks before saving too. The root, the browser's permanent folders, and managed folders are never changed, and every change is one step you can undo, also with Ctrl+Z in the bookmark manager.
-
 - Ask AI can end an answer with buttons: a follow-up question, a few options or ideas to pick from, saving the page to a suggested folder (with Undo), or opening or showing a bookmark. Nothing happens until you click, and each button works once.
 
 - Options > Behavior > **Bookmark manager menus** chooses which commands the manager's right-click and ⋯ menus show and their order within each group, and Options > AI > **What Ask AI may do** turns off lookups or changes you do not want Ask AI to make; it is then not offered them at all. Applying a plan of changes always asks first.
 - Local AI agents: Options > AI > **Local AI agents** (off by default, per device) lets AI agents on your computer, such as Claude Code, Codex, or Cursor, look up your bookmarks through the new `bookmark-scout-mcp` program (`packages/mcp-bridge`), an MCP server that talks to the extension through the browser's native messaging. Turning it on asks for the `nativeMessaging` permission (and in Firefox, consent to share bookmark data with that program). Agents get the same lookups as Ask AI, as tools with JSON Schemas; they cannot change bookmarks; private values in titles and URLs are hidden unless you turn that off; you can turn off each lookup; and every call is in AI activity, with the name the agent gave, while recording is on. Newly sent: bookmark titles, URLs, folder paths, the current page's title and URL, and with Read page content, page text, to that program on your computer and the agents you run there.
-
 - Local AI agents can also change bookmarks once you turn on **Allow changes** (off by default): save pages, propose moves, renames, deletions, and new folders, and undo their changes. Each change opens a Bookmark Scout window that shows it as it will be made, with the agent's name, and waits for your approval; declining, closing the window, or not answering within 5 minutes changes nothing, and an approved change can be undone in the bookmark manager.
 
 - New docs guide, [Use with local AI agents](https://docs.bookmark-scout.com/guides/local-agents): installing `bookmark-scout-mcp`, adding it to Claude Code, Codex, or Cursor (with a Cursor install link), approvals, and troubleshooting with `bookmark-scout-mcp doctor`. The program can also run under Node from an npm package, and a manual workflow builds it for Linux, macOS, and Windows on x64 and arm64.
+
+### Performance
+
+- Large libraries stay responsive: the popup and side panel draw only the rows on screen, so expanding every folder no longer freezes them and scrolling stays smooth.
+- Changes made elsewhere (another window, the browser’s own manager, sync) show up in the manager, popup, and side panel within a moment instead of reloading every bookmark, and saving in the popup updates the tree at once.
+- Extension pages and the background load less code at start: page reading loads the first time it is used, and the background no longer includes the interface library.
 
 ### Stored data
 
