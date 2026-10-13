@@ -31,7 +31,7 @@ Follow the release runbook in the root `AGENTS.md`.
 
 ## 2. Manual smoke test in Firefox
 
-The required `Firefox E2E smoke` CI check covers popup search and folder creation, saved site icons, the side panel page, opening the manager from the popup and side panel, manager loading, a settings save, JSON export and import, and the statistics and privacy reports. It does not cover context menus, drag and drop, network and AI tools, or the real sidebar, so every other claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
+The required `Firefox E2E smoke` CI check covers popup search and folder creation, saved site icons, the side panel page, opening the manager from the popup and side panel, manager loading, a settings save, JSON export and import, and the statistics and privacy reports. It also covers the manager's right-click menu, drag and drop, undo, and folder tree keys, and recording quick save keys in Options. It does not cover the link context menu, pressing the quick save shortcuts, network and AI tools, or the real sidebar, so every other claim in the Firefox description needs a manual check in a fresh Firefox profile with synthetic bookmarks (`about:debugging` → Load Temporary Add-on):
 
 - [ ] Popup: instant search with match case, whole word, and regex.
 - [ ] Folder tree: drag and drop, expand and collapse all, new folder.
@@ -41,6 +41,8 @@ The required `Firefox E2E smoke` CI check covers popup search and folder creatio
 - [ ] Turning on AI asks Firefox's data collection consent; declining leaves AI off. Withdrawing it in `about:addons` → Permissions turns AI off.
 - [ ] Saving the current page from the sidebar asks for tab access ("Access browser tabs"); the popup saves without asking.
 - [ ] Keyboard shortcuts in the popup.
+- [ ] Quick save: Alt+Shift+S on a web page saves it and shows the in-page notification; Undo and Move work. With AI on and a test provider, Alt+Shift+D saves to the first suggestion.
+- [ ] Settings > Export saves a backup, and Import restores it.
 - [ ] **Open bookmark manager** in the popup opens the manager in a new tab. Before the description claims the manager tools, run Duplicate Cleaner, Check Dead Links (allow website access when asked), and an import there.
 - [ ] Delete with confirmation and Undo.
 - [ ] Options: themes, language, AI off by default.

@@ -1,13 +1,14 @@
 # Spanish Listing Copy (Español)
 
-Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-10 and count Unicode characters.
+Translation of [`en.md`](en.md). The structure, store limits, and verification notes in the English file apply here too. Character counts were measured on 2026-10-12 and count Unicode characters.
 
 | Block | Characters |
 | --- | --- |
-| Optional manifest description | 131 |
-| Firefox Add-ons summary | 247 |
-| Full description, Chrome and Edge | 5,166 |
-| Full description, Firefox | 2,603 |
+| Manifest description | 131 |
+| Firefox Add-ons summary | 246 |
+| Full description, Chrome and Edge | 8,908 |
+| Full description, Firefox | 4,745 |
+| What's new in 0.3.3 | 1,198 |
 
 ## Name
 
@@ -21,7 +22,7 @@ Read from `extName` in `apps/extension/public/_locales/es/messages.json`.
 
 ### Chrome Web Store and Edge Add-ons (manifest description, 132 characters maximum)
 
-Packaged as `extDescription`; changing it needs a new version. Ships with the next version after 0.3.2 (131 characters):
+Packaged as `extDescription`; changing it needs a new version. Ships with 0.3.3 (131 characters):
 
 ```text
 Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre o deja que la IA sugiera una. Y busca y limpia marcadores.
@@ -30,7 +31,7 @@ Guarda páginas rápido en la carpeta correcta: escribe parte de su nombre o dej
 ### Firefox Add-ons summary (250 characters maximum)
 
 ```text
-Guarda páginas rápido en la carpeta de marcadores correcta: escribe parte de su nombre, aunque esté anidada, y guarda con el teclado, o deja que la IA opcional sugiera una. Con búsqueda instantánea y árbol de carpetas, también en el panel lateral.
+Guarda páginas rápido en la carpeta de marcadores correcta: escribe parte de su nombre, pulsa Alt+Shift+S para guardar en la más adecuada o deja que la IA opcional sugiera una. Con búsqueda instantánea, árbol de carpetas y administrador completo.
 ```
 
 ## Search terms (Edge Add-ons)
@@ -50,7 +51,7 @@ marcadores con IA
 The same Edge condition as in `en.md` applies.
 
 ```text
-Bookmark Scout guarda cada página en la carpeta correcta en segundos y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador.
+Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador.
 
 GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado
@@ -59,15 +60,26 @@ GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • La IA opcional sugiere la mejor carpeta para la página, o una nueva ruta de carpetas que revisas antes de que se cree
 • Menú contextual opcional (activa Menú contextual en Configuración) para guardar enlaces en carpetas recientes
 
+ATAJOS DE GUARDADO RÁPIDO
+• Pulsa Alt+Shift+S en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
+• Una pequeña notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla
+• Con la IA activada, Alt+Shift+D guarda la página en la primera carpeta que sugiere la IA
+• Cambia las teclas en la página de combinaciones de teclas del navegador. Ahí también puedes asignar Ctrl+D (⌘D en Mac) al guardado rápido para que sustituya al cuadro de diálogo de marcadores del navegador; Configuración explica cómo
+
 BUSCA DESDE LA BARRA DE HERRAMIENTAS
 • Búsqueda instantánea en todos los marcadores, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
 • Panel lateral con el mismo árbol, la misma búsqueda y las carpetas coincidentes
-• Combinaciones de teclas que nunca sustituyen a los atajos Ctrl/Cmd del navegador
 • Eliminación con cuadro de diálogo de confirmación (activado de forma predeterminada) y opción de deshacer durante 10 segundos
 
 ADMINISTRADOR DE MARCADORES
-Bookmark Scout sustituye la página Marcadores del navegador por un administrador con árbol de carpetas, ruta de navegación, una tabla que se puede ordenar y filtrar, columnas de ancho ajustable y búsquedas guardadas (vistas inteligentes que solo guardan tus filtros y siempre muestran resultados actualizados).
+Bookmark Scout sustituye la página Marcadores del navegador por un administrador que funciona como el del propio navegador y añade ruta de navegación, una tabla que se puede ordenar y filtrar, columnas de ancho ajustable y búsquedas guardadas (vistas inteligentes que solo guardan tus filtros y siempre muestran resultados actualizados).
+• Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir en pestañas o ventanas nuevas, mostrar en la carpeta y eliminar
+• Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
+• Selecciona varias filas con Ctrl+clic y Mayús+clic, y usa las combinaciones de teclas del propio administrador del navegador (Cmd en Mac): Ctrl+A, Ctrl+C, Ctrl+X, Ctrl+V, Delete, Ctrl+Z para deshacer y Ctrl+Y para rehacer
+• Deshacer y rehacer abarcan ediciones, movimientos, ordenaciones y eliminaciones, incluidos los cambios que hace Preguntar a la IA
+• La dirección conserva la búsqueda y la carpeta, así que un enlace puede abrir el administrador ya buscando (?q=react) o en una carpeta, y Atrás y Adelante restauran ambas
+• Elige qué comandos muestran los menús contextuales y ⋯, y en qué orden (Configuración > Comportamiento)
 
 HERRAMIENTAS DE MANTENIMIENTO
 • Limpiador de duplicados: revisa los grupos de duplicados antes de quitar las copias sobrantes
@@ -80,7 +92,11 @@ HERRAMIENTAS DE MANTENIMIENTO
 • Importación desde HTML o JSON con vista previa, gestión de duplicados y opción de deshacer
 • Exportación a HTML, JSON, Markdown o CSV, con una revisión de privacidad opcional que puede censurar valores sensibles
 
-El Comprobador de enlaces rotos, el Extractor de metadatos, Actualizar iconos de sitios y el ajuste de IA Leer el contenido de la página piden acceso opcional a los sitios web la primera vez que los usas. Ese acceso nunca se concede al instalar, las solicitudes se envían sin cookies y, si lo rechazas, simplemente se desactiva esa función.
+El Comprobador de enlaces rotos, el Extractor de metadatos, Actualizar iconos de sitios y el ajuste de IA Leer el contenido de la página piden acceso opcional a los sitios web la primera vez que los usas; una vez concedido, Preguntar a la IA también puede comprobar si los enlaces de tus marcadores siguen funcionando. Ese acceso nunca se concede al instalar, las solicitudes se envían sin cookies y, si lo rechazas, simplemente se desactiva esa función.
+
+CONFIGURACIÓN Y COPIA DE SEGURIDAD
+• Exportar, al final de Configuración, guarda una copia de seguridad: la configuración que cambiaste, los prompts personalizados, los servicios de IA (nunca sus claves de API), las búsquedas guardadas y las columnas del administrador. Importar la restaura
+• Solo se guarda la configuración que cambias, así que las mejoras de los valores predeterminados en versiones posteriores te siguen llegando
 
 HERRAMIENTAS DE IA OPCIONALES (DESACTIVADAS DE FORMA PREDETERMINADA)
 Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con tu propia clave de API si el proveedor la exige.
@@ -88,17 +104,23 @@ Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier 
 • Sugerencias de etiquetas y resúmenes breves que revisas antes de guardar
 • Planes de reorganización de carpetas, siempre con vista previa antes de cambiar nada
 • Exporta los marcadores seleccionados como contexto en Markdown o XML para un chat de IA (funciona sin IA y no envía nada)
-• Preguntar a la IA: chatea sobre tus marcadores; la IA puede buscar marcadores coincidentes, los nombres de tus carpetas y la página actual
+• Preguntar a la IA: chatea sobre tus marcadores. La IA puede buscarlos por palabras, carpeta, etiqueta, sitio o fecha en que se añadieron, encontrar duplicados, sugerir carpetas y consultar la página actual
+• Preguntar a la IA solo hace cambios cuando se lo pides: guarda páginas y propone movimientos, cambios de nombre, eliminaciones y carpetas nuevas como un plan que no cambia nada hasta que lo apruebas. Todos los cambios se pueden deshacer
+• Las respuestas pueden terminar con botones: una pregunta de seguimiento, opciones para elegir, guardar la página en una carpeta sugerida o abrir un marcador. No pasa nada hasta que haces clic
+• Elige qué puede consultar o cambiar Preguntar a la IA (Configuración > IA)
 • Leer el contenido de la página (desactivado de forma predeterminada): envía el texto legible de cada página, no solo su título y URL, para obtener mejores sugerencias
-• Agentes de IA locales (desactivado de forma predeterminada): los agentes de IA de tu equipo, como Claude Code, consultan tus marcadores a través del programa de código abierto bookmark-scout-mcp, que se instala aparte; cada cambio que pidan espera tu aprobación
+• Agentes de IA locales (desactivado de forma predeterminada): permite que los agentes de IA de tu equipo, como Claude Code, consulten tus marcadores a través del programa de código abierto bookmark-scout-mcp, que se instala aparte. Si además activas Permitir cambios, pueden guardar y reorganizar marcadores, y cada cambio espera tu aprobación en una ventana de Bookmark Scout
 
-Cuando usas una función de IA, los datos que necesita se envían directamente desde tu navegador al proveedor que elegiste, según las condiciones de ese proveedor: títulos de marcadores, URLs, nombres de carpetas, y etiquetas y resúmenes guardados; el título y la URL de la página actual; tus mensajes de Preguntar a la IA; y, solo con Leer el contenido de la página activado, el texto de las páginas implicadas. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. El uso del proveedor puede ser de pago.
+Cuando usas una función de IA, los datos que necesita se envían directamente desde tu navegador al proveedor que elegiste, según las condiciones de ese proveedor: títulos de marcadores, URLs, nombres de carpetas, las fechas en que se añadieron los marcadores, y etiquetas y resúmenes guardados; el título y la URL de la página actual; tus mensajes de Preguntar a la IA; si los enlaces que comprueba Preguntar a la IA siguen funcionando; y, solo con Leer el contenido de la página activado, el texto de las páginas implicadas. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. El uso del proveedor puede ser de pago.
 
 PRIVACIDAD
 • Sin cuenta, sin analíticas, sin seguimiento y sin anuncios
 • Los marcadores se quedan en tu navegador; las etiquetas, los resúmenes y las búsquedas guardadas se quedan en el almacenamiento local de la extensión
-• La configuración se sincroniza a través de la cuenta del navegador cuando el navegador lo admite
+• La configuración que cambias y tus prompts personalizados se sincronizan a través de la cuenta del navegador cuando el navegador lo admite
 • Código abierto con licencia AGPL-3.0: https://github.com/isandrel/bookmark-scout
+
+ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
+La versión 0.3.3 guarda sus datos en un formato nuevo y no convierte los datos anteriores: la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se borran los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se modifican.
 
 Disponible en 9 idiomas. Temas claro, oscuro y del sistema.
 
@@ -108,7 +130,7 @@ Documentación: https://docs.bookmark-scout.com
 ## Full description: Firefox Add-ons
 
 ```text
-Bookmark Scout guarda cada página en la carpeta correcta en segundos y luego te ayuda a encontrar tus marcadores sin salir del navegador.
+Bookmark Scout guarda cada página en la carpeta correcta en segundos, desde la barra de herramientas o con una sola combinación de teclas, y luego te ayuda a encontrar y ordenar tus marcadores sin salir del navegador.
 
 GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • Escribe parte del nombre de cualquier carpeta, aunque esté muy dentro del árbol, y guarda ahí la página actual sin soltar el teclado
@@ -117,27 +139,56 @@ GUARDA EN LA CARPETA CORRECTA EN SEGUNDOS
 • La IA opcional sugiere la mejor carpeta para la página, o una nueva ruta de carpetas que revisas antes de que se cree
 • Guarda enlaces en carpetas recientes desde el menú contextual
 
+ATAJOS DE GUARDADO RÁPIDO
+• Pulsa Alt+Shift+S en cualquier página para guardarla sin abrir Bookmark Scout: de forma predeterminada, en la carpeta que mejor coincide con la página (calculada en tu dispositivo), o en la última carpeta que usaste o en una que elijas
+• Una pequeña notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla
+• Con la IA activada, Alt+Shift+D guarda la página en la primera carpeta que sugiere la IA
+• Cambia las teclas en Configuración > Guardar y buscar > Atajos de teclado
+
 BUSCA DESDE LA BARRA DE HERRAMIENTAS
 • Búsqueda instantánea en todos los marcadores, con opciones para distinguir mayúsculas y minúsculas, buscar palabras completas y usar expresiones regulares
 • Árbol de carpetas con arrastrar y soltar, desplegar y contraer todo, y creación de carpetas
-• El mismo árbol, la misma búsqueda y las carpetas coincidentes en el panel lateral de Firefox, que sigue abierto mientras navegas
-• Combinaciones de teclas que nunca sustituyen a los atajos Ctrl/Cmd del navegador
+• El mismo árbol, la misma búsqueda y las carpetas coincidentes en la barra lateral de Firefox, que sigue abierta mientras navegas
 • Eliminación con cuadro de diálogo de confirmación (activado de forma predeterminada) y opción de deshacer durante 10 segundos
 
-SUGERENCIAS DE CARPETA CON IA OPCIONALES (DESACTIVADAS DE FORMA PREDETERMINADA)
-Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con tu propia clave de API si el proveedor la exige. Después, Bookmark Scout sugiere carpetas para la página actual y puede crear una nueva ruta de carpetas cuando la hayas revisado.
+ADMINISTRADOR DE MARCADORES
+Abrir el administrador de marcadores, en la ventana emergente de la barra de herramientas o en la barra lateral, abre un administrador completo en una pestaña nueva, con árbol de carpetas y una tabla que se puede ordenar y filtrar.
+• Menús contextuales en marcadores, carpetas y espacios vacíos: editar, cambiar nombre, cortar, copiar, pegar, abrir, mostrar en la carpeta y eliminar
+• Arrastra y suelta para mover marcadores a carpetas o cambiar su orden; los enlaces que sueltas desde otras páginas se convierten en marcadores
+• Selecciona varias filas con Ctrl+clic y Mayús+clic (Cmd en Mac), copia, corta y pega con las teclas habituales, y deshaz y rehaz tus cambios con Ctrl+Z y Ctrl+Y
 
-Cuando pides sugerencias, el título y la URL de la página actual y los nombres de tus carpetas se envían directamente desde tu navegador al proveedor que elegiste, según las condiciones de ese proveedor. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. El uso del proveedor puede ser de pago.
+CONFIGURACIÓN Y COPIA DE SEGURIDAD
+• Exportar, al final de Configuración, guarda una copia de seguridad: la configuración que cambiaste, los prompts personalizados, los servicios de IA (nunca sus claves de API) y las búsquedas guardadas. Importar la restaura
+• Solo se guarda la configuración que cambias, así que las mejoras de los valores predeterminados en versiones posteriores te siguen llegando
+
+SUGERENCIAS DE CARPETA CON IA OPCIONALES (DESACTIVADAS DE FORMA PREDETERMINADA)
+Activa la IA en Configuración y elige un proveedor de IA en la nube, cualquier punto de conexión compatible con OpenAI o un servidor de modelos en tu propio equipo, con tu propia clave de API si el proveedor la exige. Después, Bookmark Scout sugiere carpetas para la página actual, en la ventana emergente o con el atajo de guardado rápido con IA, y puede crear una nueva ruta de carpetas cuando la hayas revisado.
+
+Cuando pides sugerencias, el título y la URL de la página actual y los nombres de tus carpetas se envían directamente desde tu navegador al proveedor que elegiste, según las condiciones de ese proveedor, y, solo si activas Leer el contenido de la página, el texto de la página. No se envía nada a Bookmark Scout. Tu clave de API se guarda en el almacenamiento local de extensiones de este navegador y no se sincroniza. El uso del proveedor puede ser de pago.
 
 PRIVACIDAD
 • Sin cuenta, sin analíticas, sin seguimiento y sin anuncios
 • Los marcadores se quedan en tu navegador
-• La configuración se sincroniza con Firefox Sync si está activado
+• La configuración que cambias y tus prompts personalizados se sincronizan con Firefox Sync si está activado
 • Código abierto con licencia AGPL-3.0: https://github.com/isandrel/bookmark-scout
 
-Disponible en 9 idiomas. Temas claro, oscuro y del sistema.
+ACTUALIZACIÓN DESDE UNA VERSIÓN ANTERIOR
+La versión 0.3.3 guarda sus datos en un formato nuevo y no convierte los datos anteriores: la configuración vuelve a sus valores predeterminados, hay que volver a añadir los servicios de IA y las claves de API, y se borran los prompts personalizados, las búsquedas guardadas, las etiquetas, los resúmenes y los iconos de sitios guardados. Tus marcadores no se modifican.
 
-El administrador de marcadores se abre en una pestaña nueva desde la ventana emergente de la barra de herramientas.
+Disponible en 9 idiomas. Temas claro, oscuro y del sistema.
+```
+
+## What's new in 0.3.3
+
+Translation of the English release notes; paste into AMO's release notes for 0.3.3.
+
+```text
+• Guardado rápido: pulsa Alt+Shift+S en cualquier página para guardarla en la carpeta que mejor coincide con ella. Una notificación en la página indica dónde se guardó, con Deshacer y otras carpetas a las que moverla. Con la IA activada, Alt+Shift+D guarda en la primera sugerencia de la IA
+• Administrador de marcadores: menús contextuales, arrastrar y soltar, cortar, copiar y pegar, selección de varias filas, y deshacer y rehacer
+• Preguntar a la IA puede guardar páginas y proponer movimientos, cambios de nombre, eliminaciones y carpetas nuevas que no cambian nada hasta que los apruebas, y todos los cambios se pueden deshacer. Las respuestas pueden terminar con botones en los que puedes hacer clic
+• Elige qué comandos muestran los menús del administrador y qué puede hacer Preguntar a la IA
+• Exportar, en Configuración, ahora guarda una copia de seguridad que puedes importar
+• Esta actualización restablece los datos guardados de Bookmark Scout: la configuración vuelve a sus valores predeterminados, y hay que volver a configurar los servicios de IA y las claves de API, los prompts personalizados, las búsquedas guardadas, las etiquetas y los resúmenes. Tus marcadores no se modifican
 ```
 
 ## Category
