@@ -30,7 +30,7 @@
     "devDependencies": {
         "@biomejs/biome": "^2.5.15",
         "@bookmark-scout/config": "workspace:*",
-        "@playwright/test": "^1.62.1",
+        "@playwright/test": "^1.64.0",
         "@tailwindcss/postcss": "^4.3.3",
         "@types/node": "^26.6.4",
         "@types/react": "^19.3.0",
