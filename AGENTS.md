@@ -118,6 +118,7 @@ Important subareas:
 - Avoid mixing unrelated app changes in one task unless the request clearly spans multiple surfaces.
 - If a task affects shared behavior or documentation across apps, update each affected app intentionally rather than applying root-level changes that only partially solve the problem.
 - Prefer app-local commands and verification before workspace-wide commands.
+- In replaceable environments, keep source checkouts/worktrees and Git backups in the declared persistent workspace; temporary-directory logs alone do not preserve unpushed commits (see `parallel-agent-delivery`).
 - Avoid broad refactors across the monorepo unless the user explicitly asks for them.
 
 ## Setup and common commands
