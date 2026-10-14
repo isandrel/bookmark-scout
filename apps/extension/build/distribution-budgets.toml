@@ -1,0 +1,26 @@
+# Actual WXT ZIP limits in bytes; these are independent from startup-budgets.toml.
+# Baseline: 2026-10-14, Bun 1.4.2 / WXT 0.21.4 / origin/main 58097ad.
+# Chrome / Edge / Firefox ZIP: 1,847,959 / 1,847,974 / 1,848,077 B; raw: ~6,493,900 B.
+# Initial total ceilings allow about 3% above the measured baseline. Lower them alongside verified
+# size improvements; raising a limit requires measured artifacts and a dated reason in the PR.
+# ZIP payload and overhead are reported separately; category limits measure uncompressed bytes.
+
+[targets.chrome]
+zip_bytes = 1_900_000
+raw_bytes = 6_650_000
+
+[targets.edge]
+zip_bytes = 1_900_000
+raw_bytes = 6_650_000
+
+[targets.firefox]
+zip_bytes = 1_900_000
+raw_bytes = 6_650_000
+
+[categories]
+javascript = 3_630_000
+css = 81_000
+fonts = 162_000
+locales = 2_441_000
+images = 356_000
+other = 25_000

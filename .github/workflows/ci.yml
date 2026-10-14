@@ -113,9 +113,13 @@ jobs:
         if: env.RUN == 'true'
         uses: ./.github/actions/setup-workspace
 
-      - name: Build for ${{ matrix.target }}
+      - name: Package for ${{ matrix.target }}
         if: env.RUN == 'true'
-        run: bunx nx run extension:build:${{ matrix.target }}
+        run: bunx nx run extension:zip:${{ matrix.target }}
+
+      - name: Check distribution size for ${{ matrix.target }}
+        if: env.RUN == 'true'
+        run: bun run --cwd apps/extension size:check ${{ matrix.target }}
 
   # The browser suites do not wait for Lint: it is a required check of its own, and starting them
   # at once takes Lint off the critical path.
