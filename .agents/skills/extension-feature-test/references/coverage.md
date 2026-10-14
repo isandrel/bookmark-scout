@@ -32,6 +32,8 @@ The same Playwright suite runs in Microsoft Edge against the Edge build (`Edge E
 
 `tests/e2e-firefox/` against the Firefox build: popup search and folder creation, saved site icons in the popup, side panel page, opening the manager from the popup and side panel, manager, the manager's `?q=` address and Copy link to this folder copying the extension page's address, the manager's Delete key and Ctrl/Cmd+Z through the session-storage undo history, the manager's right-click menu (Copy and Paste, and no private window for a temporary add-on), the manager's drag and drop from scripted drag events (a move down within a folder, where Firefox's move index differs from Chrome's, and a `text/x-moz-url` link dropped on a tree folder), the manager's folder tree keys (arrow keys and Enter), settings save, JSON export and import, statistics and privacy reports, and the quick save shortcut recorder in Options with the real `commands.update` and `commands.reset` (recording a combination, rejecting a bare key and Firefox's own Ctrl+D, Tab leaving the field, and the popup notice for a cleared shortcut).
 
+The shortcut workflow preserves the application's smooth scrolling: `clickCentered` waits for stable, visible, hit-tested bounds before each native WebDriver click, while the assertions still read the browser's actual command assignments.
+
 Not covered in Firefox: context-menu saves, the quick save action itself, drag and drop in the popup and real mouse drags, network and AI tools, and the browser favicon cache. The quick save notification's rendering under a strict CSP was checked by hand.
 
 ## Unit only
