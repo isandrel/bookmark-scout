@@ -1,7 +1,7 @@
 /** Read the actual WXT archive, never recompress modules to estimate a distribution's size. */
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { crc32, inflateRawSync } from 'node:zlib';
+import { inflateRawSync } from 'node:zlib';
 
 export const DISTRIBUTION_TARGETS = { chrome: 3, edge: 3, firefox: 2 } as const;
 export type DistributionTarget = keyof typeof DISTRIBUTION_TARGETS;
@@ -38,6 +38,20 @@ const ZIP = {
   maxCommentLength: 0xffff,
   zip64Size: 0xffffffff,
 } as const;
+
+// Node's native crc32 requires 22.15+, while Vite 8 also supports Node 20.19 and 22.12.
+// This build-only checksum keeps the ZIP guard portable without another dependency.
+const CRC32_TABLE = Uint32Array.from({ length: 256 }, (_, byte) => {
+  let value = byte;
+  for (let bit = 0; bit < 8; bit++) value = (value >>> 1) ^ (value & 1 ? 0xedb88320 : 0);
+  return value >>> 0;
+});
+
+function crc32(bytes: Buffer): number {
+  let value = 0xffffffff;
+  for (const byte of bytes) value = (value >>> 8) ^ CRC32_TABLE[(value ^ byte) & 0xff];
+  return (value ^ 0xffffffff) >>> 0;
+}
 
 function invalidZip(reason: string): never {
   throw new Error(`Invalid distribution ZIP: ${reason}`);
