@@ -156,8 +156,8 @@ All text pairs meet WCAG AA in both themes: teal on surface is 5.1:1 in light an
 
 ## Typography
 
-- Instrument Sans for all UI text. JetBrains Mono for URLs, keycaps, and code. Bricolage Grotesque only for the `page-title` on the manager and options pages; the popup has no display type.
-- Fonts are bundled as local woff2 subsets (Latin and Latin Extended), because the extension makes no remote font requests. Other scripts use system fonts. Japanese, Korean, Simplified Chinese, and Traditional Chinese each list their own system fonts first (`:root:lang(...)` in `src/styles/theme.css`), because Han characters take each language's glyph shapes from the font. Add a stack there for a new language whose script needs one; Vietnamese does, because Instrument Sans has no Vietnamese subset.
+- Instrument Sans for all UI text. JetBrains Mono for URLs, keycaps, and code. Bricolage Grotesque only for the fixed, translated Options `page-title` (`settings_title`); the manager and popup have no display type. `tests/unit/font-coverage.test.ts` guards the display consumer and every locale's title: review font coverage before adding another display heading or user-controlled display text.
+- Fonts are bundled as local woff2 subsets, because the extension makes no remote font requests. Instrument Sans and JetBrains Mono retain Latin and Latin Extended for arbitrary bookmark text and URLs; Bricolage Grotesque needs only Latin for the current translated title. Other scripts use system fonts. Japanese, Korean, Simplified Chinese, and Traditional Chinese each list their own system fonts first (`:root:lang(...)` in `src/styles/theme.css`), because Han characters take each language's glyph shapes from the font. Add a stack there for a new language whose script needs one; Vietnamese does, because Instrument Sans has no Vietnamese subset.
 - Body and row titles are 14px; metadata, counts, and URLs are 12px. Avoid sizes below 11px.
 - Sentence case everywhere. No uppercase labels, letter-spaced eyebrows, colored headings, or gradient text.
 
