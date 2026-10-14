@@ -5,6 +5,10 @@
   },
   "include": [
     "build/**/*.ts",
-    "scripts/check-distribution-size.ts"
+    "scripts/check-distribution-size.ts",
+    "wxt.config.ts",
+    "vitest.config.ts",
+    "src/types/**/*.d.ts",
+    ".wxt/wxt.d.ts"
   ]
 }
