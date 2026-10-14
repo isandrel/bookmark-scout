@@ -1,3 +1,4 @@
+import providerLogoAliases from 'virtual:provider-logo-aliases';
 import {
   type AI_PROVIDER_EXTRA_FIELDS,
   type AI_PROVIDER_KINDS,
@@ -178,13 +179,16 @@ let logoIds: Set<string> | undefined;
 
 /**
  * URL of the provider's bundled one-color logo, if the catalog has one. Provider files name their
- * logo with `logo`; catalog providers use their own id.
+ * logo with `logo`; catalog providers use their own id. Byte-identical logos share a generated
+ * canonical URL, so the package needs only one copy while the catalog keeps every provider id.
  */
 export function getProviderLogoUrl(provider: AIProvider): string | undefined {
   const providerConfig = getProviderConfig(provider);
   const id = providerConfig?.source === 'featured' ? providerConfig.logo : provider;
   logoIds ??= new Set(getCatalog().logos);
-  return id !== undefined && logoIds.has(id) ? `/provider-logos/${id}.svg` : undefined;
+  if (id === undefined || !logoIds.has(id)) return undefined;
+  const file = Object.hasOwn(providerLogoAliases, id) ? providerLogoAliases[id] : id;
+  return `/provider-logos/${file}.svg`;
 }
 
 export function getProviderGroup(provider: AIProvider): AIProviderGroup {

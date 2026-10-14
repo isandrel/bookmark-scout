@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
+import providerLogoAliases from 'virtual:provider-logo-aliases';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setLanguage } from '@/hooks/use-i18n';
@@ -7,10 +8,11 @@ import { saveStoredAIProviderConfig } from '@/lib/ai-provider-storage';
 import { createAIModel } from '@/services/ai-client.lazy';
 import {
   getAvailableProviders,
-  getProviderGroup,
-  getProviderLogoUrl,
   getProviderBaseUrl,
+  getProviderConfig,
+  getProviderGroup,
   getProviderKind,
+  getProviderLogoUrl,
   getProviderModelListStyle,
   isAvailableProvider,
   isCatalogProvider,
@@ -97,6 +99,26 @@ describe('bundled models.dev provider catalog', () => {
     expect(getProviderLogoUrl('ollama')).toBe('/provider-logos/ollama-cloud.svg');
     expect(getProviderLogoUrl('togetherai')).toBe('/provider-logos/togetherai.svg');
     expect(getProviderLogoUrl('custom')).toBeUndefined();
+  });
+
+  it('resolves every provider logo to an identical canonical public SVG', () => {
+    const logos = new Set(providerCatalog.logos);
+    for (const provider of getAvailableProviders()) {
+      const config = getProviderConfig(provider.id);
+      const originalId = config?.source === 'featured' ? config.logo : provider.id;
+      const url = getProviderLogoUrl(provider.id);
+      if (!originalId || !logos.has(originalId)) {
+        expect(url, provider.id).toBeUndefined();
+        continue;
+      }
+      expect(url, provider.id).toBeDefined();
+      const resolvedId = path.basename(url as string, '.svg');
+      expect(Object.hasOwn(providerLogoAliases, resolvedId), provider.id).toBe(false);
+      const publicDir = path.resolve(import.meta.dirname, '../../public');
+      const original = readFileSync(path.join(publicDir, 'provider-logos', `${originalId}.svg`));
+      const resolved = readFileSync(path.join(publicDir, 'provider-logos', `${resolvedId}.svg`));
+      expect(original.equals(resolved), provider.id).toBe(true);
+    }
   });
 });
 
