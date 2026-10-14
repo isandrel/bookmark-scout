@@ -60,11 +60,15 @@ export default defineConfig({
             '.gitignore',
             'package.json',
             'bun.lock',
+            // Preserve the locked workspace's isolated dependency resolution for reviewers.
+            'bunfig.toml',
             'tsconfig.base.json',
             'apps/*/package.json',
             'packages/*/package.json',
             // wxt.config.ts reads the project slug and default locale through packages/config.
             'packages/config/src/**',
+            // The background imports the shared native messaging protocol, not the native host.
+            'packages/mcp-bridge/src/protocol.ts',
             'config/project.toml',
             'config/web.toml',
             'apps/extension/**',
