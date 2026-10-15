@@ -19,6 +19,7 @@ const managerTableConfig = readConfig(
     .strictObject({
       page_sizes: z.array(pixels).min(1),
       default_page_size: pixels,
+      default_columns: z.array(z.string().min(1)).min(1),
       column_sizing_save_delay_ms: z.number().int().nonnegative(),
       removed_row_focus_wait_ms: z.number().int().nonnegative(),
       date_filter_months: z.number().int().min(1).max(12),
@@ -34,6 +35,9 @@ const managerTableConfig = readConfig(
 export const MANAGER_PAGE_SIZES: readonly number[] = managerTableConfig.page_sizes;
 
 export const DEFAULT_MANAGER_PAGE_SIZE = managerTableConfig.default_page_size;
+
+/** Column ids a new table view shows, in order; the saved view's defaults are built from them. */
+export const DEFAULT_MANAGER_COLUMN_IDS: readonly string[] = managerTableConfig.default_columns;
 
 /** A page size the table offers, for validating a saved view. */
 export const managerPageSizeSchema = z

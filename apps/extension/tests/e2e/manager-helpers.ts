@@ -10,6 +10,29 @@ export function managerUrl(extensionId: string, folderId?: string) {
   return folderId ? `${base}?id=${folderId}` : base;
 }
 
+/** The manager's search box, which matches titles and addresses. */
+export function managerSearch(page: Page) {
+  return page.getByRole('textbox', { name: 'Search titles and addresses' });
+}
+
+/** The address filter behind "More filters", which this opens first when it is closed. */
+export async function addressFilter(page: Page): Promise<Locator> {
+  const input = page.getByPlaceholder('Filter URLs...');
+  if (!(await input.isVisible())) await page.getByTestId('more-filters').click();
+  await expect(input).toBeVisible();
+  return input;
+}
+
+/**
+ * Shows the folder in the browser's order with the toolbar button, for specs that set another
+ * Sort Order first (with the default, Browser order, the table already is and the button is off).
+ */
+export async function showBrowserOrder(page: Page) {
+  const button = page.getByRole('button', { name: 'Browser order' });
+  await button.click();
+  await expect(button).toHaveAttribute('aria-pressed', 'true');
+}
+
 /** The table row whose text includes `title`. */
 export function managerRow(page: Page, title: string) {
   return page.locator('tbody tr').filter({ hasText: title });

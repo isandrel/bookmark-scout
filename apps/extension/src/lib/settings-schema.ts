@@ -210,8 +210,18 @@ function assertEverySettingsKeyRead(node: Record<string, unknown>, prefix = ''):
 export const themeSchema = z.enum(['system', 'light', 'dark']);
 export type Theme = z.infer<typeof themeSchema>;
 
-export const sortOrderSchema = z.enum(['date', 'alphabetical', 'folders']);
+export const sortOrderSchema = z.enum(['browser', 'date', 'alphabetical', 'folders']);
 export type SortOrder = z.infer<typeof sortOrderSchema>;
+
+/** Name of each sort order, in Options and where the manager says which order its table is in. */
+export function getSortOrderLabel(order: SortOrder): string {
+  return {
+    browser: t('table_browserOrder'),
+    date: t('settings_sortDate'),
+    alphabetical: t('settings_sortAlphabetical'),
+    folders: t('settings_sortFolders'),
+  }[order];
+}
 
 export const linkOpenTargetSchema = z.enum(['new_tab', 'background_tab', 'current_tab']);
 export type LinkOpenTarget = z.infer<typeof linkOpenTargetSchema>;
@@ -589,12 +599,7 @@ const fields = {
     'behavior.tree.sort_order',
     'sortOrder',
     sortOrderSchema,
-    (value) =>
-      ({
-        date: t('settings_sortDate'),
-        alphabetical: t('settings_sortAlphabetical'),
-        folders: t('settings_sortFolders'),
-      })[value],
+    getSortOrderLabel,
   ),
   groupByFolders: switchField('behavior.tree.group_by_folders', 'groupByFolders'),
   linkOpenTarget: enumField(

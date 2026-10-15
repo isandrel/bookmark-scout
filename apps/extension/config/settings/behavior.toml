@@ -1,8 +1,9 @@
 # Defaults for Options > Behavior, one table per section.
 
 [tree]
-# Default sort order: "date", "alphabetical", or "folders"
-sort_order = "date"
+# Default sort order: "browser" (the order the browser keeps, as on the bookmarks bar), "date"
+# (newest first), "alphabetical", or "folders" (folders first, then the browser's order)
+sort_order = "browser"
 # Organize bookmarks by folder structure
 group_by_folders = true
 

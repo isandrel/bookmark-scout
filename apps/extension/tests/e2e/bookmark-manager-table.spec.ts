@@ -74,8 +74,8 @@ test('manager toolbar stays compact and actions stay reachable with tools open',
   // Wait for the sidebar width transition to settle.
   await page.waitForTimeout(400);
 
-  const urlFilter = page.getByPlaceholder('Filter URLs...');
-  expect((await urlFilter.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(120);
+  const search = page.getByPlaceholder('Search titles and addresses');
+  expect((await search.boundingBox())?.width ?? 0).toBeGreaterThanOrEqual(120);
 
   const menuButton = row(page, 'Layout Link').getByRole('button', { name: 'Open menu' });
   const menuBox = await menuButton.boundingBox();

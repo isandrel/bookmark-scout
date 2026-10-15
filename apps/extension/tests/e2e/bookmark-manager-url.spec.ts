@@ -27,7 +27,10 @@ async function seedFolder(worker: Worker, title: string, items: SeedItem[]) {
           if (entry.children) await create(created.id, entry.children);
         }
       };
-      const folder = await chrome.bookmarks.create({ parentId: writableRoot.id, title: folderTitle });
+      const folder = await chrome.bookmarks.create({
+        parentId: writableRoot.id,
+        title: folderTitle,
+      });
       await create(folder.id, entries);
       return { folderId: folder.id, rootId: writableRoot.id, ids };
     },
@@ -44,7 +47,7 @@ function row(page: Page, title: string) {
 }
 
 function titleFilter(page: Page) {
-  return page.getByRole('textbox', { name: 'Filter titles' });
+  return page.getByRole('textbox', { name: 'Search titles and addresses' });
 }
 
 function breadcrumbCurrent(page: Page) {

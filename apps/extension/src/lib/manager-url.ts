@@ -7,11 +7,13 @@
  * - `id` is the open folder, an opaque bookmark id (numeric in Chrome and Edge, a GUID such as
  *   `toolbar_____` in Firefox). Chrome 154 to 156 wrote folder UUIDs there instead; the four fixed
  *   folders' UUIDs and Chrome's `account_heading` / `local_heading` still open the matching
- *   folder (`resolveManagerFolderAlias`), any other UUID shows the missing-folder notice.
- * - `q` is the title search, the manager's "Filter titles" box (the URL filter has its own box and
- *   is not in the address). A search wins over the folder: the table shows the matches from every
- *   folder unless "Current folder only" is checked, and `id` keeps the folder for that box and the
- *   tree.
+ *   folder (`resolveManagerFolderAlias`), any other UUID shows the missing-folder notice. Without
+ *   `id`, a freshly opened page shows the bookmarks bar and writes its id here; the top level is a
+ *   history entry without `id` that the page wrote itself (`use-bookmarks-page.tsx`).
+ * - `q` is the search, the manager's search box, which matches titles and addresses (the "More
+ *   filters" address filter is not in the address). A search wins over the folder: the table
+ *   shows the matches from every folder unless "Current folder only" is checked, and `id` keeps
+ *   the folder for that box and the tree.
  *
  * History entries use relative addresses, so they resolve against whichever address the page is
  * shown under.

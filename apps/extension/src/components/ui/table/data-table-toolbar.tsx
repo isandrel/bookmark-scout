@@ -1,9 +1,24 @@
 import type { Column, ReactTable, RowData } from '@tanstack/react-table';
-import { CircleHelp, ListOrdered, X } from 'lucide-react';
-import { useMemo } from 'react';
+import { ChevronDown, CircleHelp, ListOrdered, X } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import type { DateRange } from 'react-day-picker';
 
 type FacetOption = { value: string; label: string };
+
+/** Marks the search box, which the manager's search shortcut focuses. */
+export const MANAGER_SEARCH_ATTRIBUTE = 'data-manager-search';
+
+const MORE_FILTERS_ID = 'bookmark-table-more-filters';
+
+/** The order the table shows, for the order control beside the View menu. */
+export type DataTableOrderState = {
+  /** The rows are in the browser's own order (no column sort). */
+  browserOrder: boolean;
+  /** The browser's order is also the Sort Order setting, so there is no other order to go back to. */
+  browserOrderIsDefault: boolean;
+  /** The order in plain words while it is not the browser's, such as "Title, sorted ascending". */
+  description: string | null;
+};
 
 export type DataTableFacetOptions = {
   parentId: FacetOption[];
@@ -18,7 +33,8 @@ interface DataTableToolbarProps<TData extends RowData> {
   facetOptions: DataTableFacetOptions;
   /** Rows the filters apply to; facet counts always use this scope. */
   facetScope: TData[];
-  browserOrder: boolean;
+  /** The order the table shows. */
+  order: DataTableOrderState;
   onBrowserOrderChange: (enabled: boolean) => void;
   /** Columns hidden because the table is too narrow. */
   spaceHiddenColumnIds?: string[];
@@ -52,7 +68,7 @@ export function DataTableToolbar<TData extends RowData>({
   onResetView,
   facetOptions,
   facetScope,
-  browserOrder,
+  order,
   onBrowserOrderChange,
   spaceHiddenColumnIds,
   columnVisibilityPreference,
@@ -66,6 +82,14 @@ export function DataTableToolbar<TData extends RowData>({
   const dateColumn = table.getColumn('dateAdded');
   const urlFilterValue = urlColumn?.getFilterValue();
   const currentFolderHelp = t('table_currentFolderOnlyHelp');
+  // The folder and address filters wait behind "More filters"; they stay out while one is in use
+  // (typed, or applied by a saved search), so a filter in effect is never hidden.
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const moreFiltersInUse =
+    (typeof urlFilterValue === 'string' && urlFilterValue !== '') ||
+    parentColumn?.getIsFiltered() === true;
+  const showMoreFilters = moreFiltersOpen || moreFiltersInUse;
+  const browserOrderLocked = order.browserOrder && order.browserOrderIsDefault;
 
   const counts = useMemo(
     () => ({
@@ -82,23 +106,15 @@ export function DataTableToolbar<TData extends RowData>({
     <div className="flex flex-wrap items-start gap-2" data-testid="bookmark-table-toolbar">
       <div className="flex min-w-0 flex-[1_1_18rem] flex-wrap items-center gap-2">
         <Input
-          placeholder={t('table_filterTitles')}
-          aria-label={t('table_filterTitles')}
+          placeholder={t('managerDefaults_search')}
+          aria-label={t('managerDefaults_search')}
+          {...{ [MANAGER_SEARCH_ATTRIBUTE]: '' }}
           value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn('title')?.setFilterValue(event.target.value || undefined)
           }
-          className="h-8 w-40 min-w-32 lg:w-56"
+          className="h-8 w-56 min-w-40 lg:w-72"
         />
-        {urlColumn && (
-          <Input
-            placeholder={t('table_filterUrls')}
-            aria-label={t('table_filterUrls')}
-            value={typeof urlFilterValue === 'string' ? urlFilterValue : ''}
-            onChange={(event) => urlColumn.setFilterValue(event.target.value || undefined)}
-            className="h-8 w-40 min-w-32 lg:w-56"
-          />
-        )}
         <div className="flex h-8 items-center gap-1.5 whitespace-nowrap">
           <Checkbox
             id="applyToCurrentFolder"
@@ -137,14 +153,6 @@ export function DataTableToolbar<TData extends RowData>({
             counts={counts.type}
           />
         )}
-        {parentColumn && (
-          <DataTableFacetedFilter
-            column={parentColumn}
-            title={getBookmarkColumnLabel('parentId')}
-            options={facetOptions.parentId}
-            counts={counts.parentId}
-          />
-        )}
         {domainColumn && (
           <DataTableFacetedFilter
             column={domainColumn}
@@ -160,6 +168,44 @@ export function DataTableToolbar<TData extends RowData>({
             value={dateColumn.getFilterValue() as DateRange | undefined}
             onChange={(value) => dateColumn.setFilterValue(value)}
           />
+        )}
+        {(urlColumn || parentColumn) && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 shrink-0"
+            aria-expanded={showMoreFilters}
+            aria-controls={showMoreFilters ? MORE_FILTERS_ID : undefined}
+            disabled={moreFiltersInUse}
+            focusableWhenDisabled
+            title={moreFiltersInUse ? t('managerDefaults_moreFiltersInUse') : undefined}
+            onClick={() => setMoreFiltersOpen(!showMoreFilters)}
+            data-testid="more-filters"
+          >
+            {t('managerDefaults_moreFilters')}
+            <ChevronDown className={cn('transition-transform', showMoreFilters && 'rotate-180')} />
+          </Button>
+        )}
+        {showMoreFilters && (
+          <div id={MORE_FILTERS_ID} className="contents">
+            {urlColumn && (
+              <Input
+                placeholder={t('table_filterUrls')}
+                aria-label={t('table_filterUrls')}
+                value={typeof urlFilterValue === 'string' ? urlFilterValue : ''}
+                onChange={(event) => urlColumn.setFilterValue(event.target.value || undefined)}
+                className="h-8 w-40 min-w-32 lg:w-56"
+              />
+            )}
+            {parentColumn && (
+              <DataTableFacetedFilter
+                column={parentColumn}
+                title={t('managerDefaults_folderFilter')}
+                options={facetOptions.parentId}
+                counts={counts.parentId}
+              />
+            )}
+          </div>
         )}
         {isFiltered && (
           <Button
@@ -182,13 +228,29 @@ export function DataTableToolbar<TData extends RowData>({
             onApply={savedSearches.onApply}
           />
         )}
+        {/* What order the rows are in, in plain words, unless it is the browser's own. */}
+        {order.description && (
+          <span
+            className="whitespace-nowrap text-sm text-muted-foreground"
+            data-testid="table-order-status"
+          >
+            {order.description}
+          </span>
+        )}
         <Button
-          variant={browserOrder ? 'secondary' : 'outline'}
+          variant={order.browserOrder ? 'secondary' : 'outline'}
           size="sm"
           className="h-8 shrink-0"
-          aria-pressed={browserOrder}
-          title={t('table_browserOrderHelp')}
-          onClick={() => onBrowserOrderChange(!browserOrder)}
+          aria-pressed={order.browserOrder}
+          // Pressed with nothing else to go back to: the Sort Order setting is the browser's order.
+          disabled={browserOrderLocked}
+          focusableWhenDisabled
+          title={
+            browserOrderLocked
+              ? t('managerDefaults_browserOrderActive')
+              : t('table_browserOrderHelp')
+          }
+          onClick={() => onBrowserOrderChange(!order.browserOrder)}
         >
           <ListOrdered />
           {t('table_browserOrder')}

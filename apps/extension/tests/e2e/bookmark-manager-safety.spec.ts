@@ -80,7 +80,7 @@ test('bulk delete and move only touch selected rows visible under the filters', 
 
   await page.getByRole('checkbox', { name: 'Select all' }).check();
   await expect(bulk).toContainText('5 selected');
-  await page.getByPlaceholder('Filter titles...').fill('Target X');
+  await page.getByPlaceholder('Search titles and addresses').fill('Target X');
   await expect(page.locator('tbody tr')).toHaveCount(1);
 
   // Toolbar, footer, and the confirmation all count the one visible row.
@@ -88,7 +88,7 @@ test('bulk delete and move only touch selected rows visible under the filters', 
   await expect(page.getByTestId('bulk-hidden-selection')).toHaveText(
     '(4 more hidden by filters, not included)',
   );
-  await expect(page.getByText('1 of 1 row(s) selected.', { exact: true })).toBeVisible();
+  await expect(page.getByText('1 of 1 selected', { exact: true })).toBeVisible();
   await bulk.getByRole('button', { name: 'Delete' }).click();
   const confirm = page.getByRole('dialog');
   await expect(confirm).toContainText('Delete bookmark');
@@ -100,10 +100,10 @@ test('bulk delete and move only touch selected rows visible under the filters', 
   await expect(bulk).toHaveCount(0);
 
   // Bulk move behaves the same way: only the visible selected row moves.
-  await page.getByPlaceholder('Filter titles...').fill('');
+  await page.getByPlaceholder('Search titles and addresses').fill('');
   await page.getByRole('checkbox', { name: 'Select "Keep me"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Target Y"' }).check();
-  await page.getByPlaceholder('Filter titles...').fill('Target Y');
+  await page.getByPlaceholder('Search titles and addresses').fill('Target Y');
   await expect(bulk).toContainText('1 selected');
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
   const moveDialog = page.getByRole('dialog', { name: /^Move 1 item/ });
@@ -205,7 +205,11 @@ test('every default column fits at 1400 wide and move buttons do not reserve wid
   expect(layout.actionsWidth).toBeLessThan(80);
 
   // Hover still reveals the move buttons as an overlay.
-  await page.getByRole('button', { name: 'Browser order' }).click();
+  // The default Sort Order is the browser's, so the table already offers moves.
+  await expect(page.getByRole('button', { name: 'Browser order' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   const shortRow = row(page, 'Short');
   await shortRow.hover();
   await expect(shortRow.getByRole('button', { name: 'Move up' })).toBeVisible();
@@ -222,7 +226,11 @@ test('move buttons are disabled at the ends of the folder', async ({
     { title: 'Edge Last', url: 'https://example.com/last' },
   ]);
   await page.goto(managerUrl(extensionId, seeded.folderId));
-  await page.getByRole('button', { name: 'Browser order' }).click();
+  // The default Sort Order is the browser's, so the table already offers moves.
+  await expect(page.getByRole('button', { name: 'Browser order' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
 
   const first = row(page, 'Edge First');
   await first.hover();
@@ -366,7 +374,7 @@ test('bulk move explains nested items, names them, and skips their current folde
   const bulk = page.getByTestId('bulk-actions');
 
   // A folder and an item inside it: only the folder moves, and the dialog says why.
-  await page.getByPlaceholder('Filter titles...').fill('Wording');
+  await page.getByPlaceholder('Search titles and addresses').fill('Wording');
   await page.getByRole('checkbox', { name: 'Select "Wording Parent"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Wording Child"' }).check();
   await expect(bulk).toContainText('2 selected');
@@ -392,7 +400,7 @@ test('bulk move explains nested items, names them, and skips their current folde
     'Wording Child',
   ]);
 
-  await page.getByPlaceholder('Filter titles...').fill('');
+  await page.getByPlaceholder('Search titles and addresses').fill('');
   await page.getByRole('checkbox', { name: 'Select "Wording Link"' }).check();
   await page.getByRole('checkbox', { name: 'Select "Wording Target"' }).check();
   await bulk.getByRole('button', { name: 'Move to folder' }).click();
