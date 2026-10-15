@@ -6308,7 +6308,7 @@
         "description": "Options > AI built-in AI service: note under the download progress"
     },
     "qaOptions_builtinDownloadBackground": {
-        "message": "即使關閉此頁面，Chrome 也會在背景繼續下載。",
+        "message": "關閉此頁面後，下載仍會在背景繼續。",
         "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
     },
     "builtinAi_statusDownloadable": {
@@ -6336,7 +6336,7 @@
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "qaOptions_builtinScopeOther": {
-        "message": "它只推薦資料夾。$1 會使用你的其他 AI 服務。",
+        "message": "它只推薦資料夾。$1 使用你的其他 AI 服務。",
         "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "builtinAi_languages": {

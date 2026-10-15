@@ -214,12 +214,12 @@ test('Options names the model, shows a download started elsewhere, and says whic
   const progress = page.getByTestId('builtin-ai-progress');
   await expect(progress).toBeVisible();
   await expect(progress).not.toHaveAttribute('aria-valuenow');
-  await expect(status).toContainText('Chrome keeps downloading it in the background');
+  await expect(status).toContainText('Chrome keeps downloading in the background');
 
   const scope = page.getByTestId('builtin-ai-scope');
   await expect(scope).toContainText('use another AI service when you add one');
   await seedAIServices(extensionWorker, [builtin, { provider: 'deepseek', name: 'DeepSeek' }]);
-  await expect(scope).toContainText('use one of your other AI services');
+  await expect(scope).toContainText('use your other AI services');
   await expect(scope).not.toContainText('when you add one');
 });
 

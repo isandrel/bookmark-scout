@@ -6514,7 +6514,7 @@
         "description": "Options > AI built-in AI service: note under the download progress"
     },
     "qaOptions_builtinDownloadBackground": {
-        "message": "O Chrome continua o download em segundo plano, mesmo se você fechar esta página.",
+        "message": "O download continua mesmo se você fechar esta página.",
         "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
     },
     "builtinAi_statusDownloadable": {
@@ -6542,7 +6542,7 @@
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "qaOptions_builtinScopeOther": {
-        "message": "Ela só sugere pastas. $1 usam outro dos seus serviços de IA.",
+        "message": "Ela só sugere pastas. $1 usam seus outros serviços de IA.",
         "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "builtinAi_languages": {

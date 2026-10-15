@@ -6506,7 +6506,7 @@
         "description": "Options > AI built-in AI service: note under the download progress"
     },
     "qaOptions_builtinDownloadBackground": {
-        "message": "이 페이지를 닫아도 Chrome이 백그라운드에서 계속 다운로드합니다.",
+        "message": "이 페이지를 닫아도 다운로드는 계속됩니다.",
         "description": "Settings > AI built-in AI service: under the progress bar while the model downloads and the download was started earlier or elsewhere, so its progress is unknown"
     },
     "builtinAi_statusDownloadable": {
@@ -6534,7 +6534,7 @@
         "description": "Options > AI built-in AI service: what it does. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "qaOptions_builtinScopeOther": {
-        "message": "폴더 추천만 합니다. $1에는 다른 AI 서비스가 사용됩니다.",
+        "message": "폴더 추천만 합니다. $1에는 다른 AI 서비스를 씁니다.",
         "description": "Settings > AI built-in AI service: what it does, shown when the user already has another AI service turned on. $1 is a list of AI tool names (Ask AI, Auto-Tagging, ...)"
     },
     "builtinAi_languages": {
