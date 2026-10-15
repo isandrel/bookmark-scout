@@ -4,7 +4,7 @@ import { openTools, seedFolder, setSettings, toolCard } from './tool-helpers';
 // Obviously synthetic token shape; not a real credential.
 const FAKE_GITHUB_TOKEN = `ghp_${'a'.repeat(36)}`;
 
-test('privacy scanner rates credentials and tokens high and ignores asset names and SPA routes', async ({
+test('privacy scanner rates credentials and tokens high and ignores anchors, asset names, and SPA routes', async ({
   extensionId,
   extensionWorker,
   page,
@@ -14,6 +14,7 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
     { title: 'Fragment Token', url: 'https://e2e.invalid/cb#access_token=abc' },
     { title: 'Token Value', url: `https://e2e.invalid/x?q=${FAKE_GITHUB_TOKEN}` },
     { title: 'Anchor', url: 'https://e2e.invalid/docs#install' },
+    { title: 'Mail Inbox', url: 'https://mail.e2e.invalid/mail/u/0/#inbox' },
     { title: 'Retina Logo', url: 'https://e2e.invalid/img/logo@2x.png' },
     { title: 'SPA Route', url: 'https://e2e.invalid/#/settings' },
     { title: 'SK Slug', url: 'https://e2e.invalid/ir/sk-telecom-annual-report-2024' },
@@ -35,7 +36,9 @@ test('privacy scanner rates credentials and tokens high and ignores asset names 
     'Sensitive value in URL fragment: access_token',
   );
   await expect(row('Token Value')).toContainText('Value looks like an API or access token');
-  await expect(row('Anchor')).toContainText('Low');
+  // Plain anchors and app routes are ordinary parts of an address, not private data.
+  await expect(dialog.getByText('Anchor', { exact: true })).toHaveCount(0);
+  await expect(dialog.getByText('Mail Inbox', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('Retina Logo', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SPA Route', { exact: true })).toHaveCount(0);
   await expect(dialog.getByText('SK Slug', { exact: true })).toHaveCount(0);

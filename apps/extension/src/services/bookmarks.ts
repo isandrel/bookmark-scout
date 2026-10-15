@@ -848,6 +848,12 @@ export async function openBookmarkManager(): Promise<void> {
   await browser.tabs.create({ url: browser.runtime.getURL(BOOKMARK_MANAGER_PATH), active: true });
 }
 
+/**
+ * Hash that opens the manager's Tools sidebar on its Export Bookmarks card, the target of the
+ * Options footer's Export Bookmarks button.
+ */
+export const MANAGER_EXPORT_HASH = 'export-bookmarks';
+
 /** Opens the manager with the Tools sidebar on its Export Bookmarks card (`MANAGER_EXPORT_HASH`). */
 export async function openBookmarkExport(): Promise<void> {
   await browser.tabs.create({

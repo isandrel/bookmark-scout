@@ -31,12 +31,6 @@ export const MANAGER_FOLDER_PARAM = 'id';
 /** Query parameter of the title search. */
 export const MANAGER_SEARCH_PARAM = 'q';
 
-/**
- * Hash that opens the Tools sidebar on its Export Bookmarks card, the target of Options' Export
- * bookmarks button (`openBookmarkExport`).
- */
-export const MANAGER_EXPORT_HASH = 'export-bookmarks';
-
 /** What the address holds: the folder (null is the top level) and the title search. */
 export type ManagerLocation = { folderId: string | null; query: string };
 
