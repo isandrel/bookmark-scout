@@ -4083,10 +4083,6 @@
             }
         }
     },
-    "perm_deadLinkRedirectElsewhere": {
-        "message": "Redireciona para outro site ao qual esta verificação não tinha acesso; abra para confirmar",
-        "description": "Dead link detail: a redirect to a site the scan had no access to, so not confirmed dead"
-    },
     "tools_hostAccessDenied": {
         "message": "Acesso aos sites não concedido",
         "description": "Toast title when website access is declined"
@@ -6537,11 +6533,11 @@
         "message": "A IA integrada não escolheu nenhuma pasta.",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     },
-    "qaManager_historyEditMany": {
+    "qaManager_editMany": {
         "message": "Editar $1 itens",
         "description": "Undo history label for editing several items at once, such as a Tools sidebar batch. $1 is how many."
     },
-    "qaManager_historyByTool": {
+    "qaManager_byTool": {
         "message": "$1 ($2)",
         "description": "Undo history label for a change a Tools sidebar tool made. $1 is what it did (such as 'Delete 3 items'), $2 is the tool's name."
     },
@@ -6549,35 +6545,31 @@
         "message": "Já desfeito",
         "description": "Toast title when a tool's Undo is pressed after the same change was already undone from the undo history"
     },
-    "qaManager_alreadyUndoneDesc": {
-        "message": "Esta alteração já foi desfeita pelo histórico de desfazer, então nada mais mudou.",
-        "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
-    },
-    "qaManager_metadataPageTitle": {
+    "qaManager_pageTitle": {
         "message": "Título da página: $1",
         "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
     },
-    "qaManager_metadataTitleKept": {
+    "qaManager_titleKept": {
         "message": "Mantém o título: \"$1\" está desativado nas Configurações",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     },
-    "qaManager_deadLinkRedirectUnfollowed": {
+    "qaManager_redirectUnfollowed": {
         "message": "Redireciona para um destino que esta verificação não conseguiu seguir; abra para confirmar",
         "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
     },
-    "qaManager_deadLinkRedirectsSameSite": {
+    "qaManager_redirectSameSite": {
         "message": "Redireciona para $1, no mesmo site",
         "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     },
-    "qaManager_deadLinkRepairIssueDeleted": {
+    "qaManager_repairDeleted": {
         "message": "$1: excluído depois da verificação; nada a reparar",
         "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
     },
-    "qaManager_reorgIssueDeleted": {
+    "qaManager_reorgDeleted": {
         "message": "$1: excluído depois da prévia; nada a mover",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
     },
-    "qaManager_breadcrumbAllFolders": {
+    "qaManager_allFolders": {
         "message": "Resultados de todas as pastas",
         "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }

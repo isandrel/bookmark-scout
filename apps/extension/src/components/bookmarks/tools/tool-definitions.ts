@@ -180,7 +180,7 @@ function isComplete(counts: ChangeCounts): boolean {
 
 /** The note under a partial reorganization for a move left out, by why. */
 const REORGANIZE_ISSUE_KEYS = {
-  deleted: 'qaManager_reorgIssueDeleted',
+  deleted: 'qaManager_reorgDeleted',
   changed: 'ai_reorgIssueChanged',
   failed: 'ai_reorgIssueFailed',
 } as const satisfies Record<BookmarkChangeIssue['reason'], string>;
@@ -190,7 +190,7 @@ const REORGANIZE_ISSUE_KEYS = {
  * undo history entry.
  */
 export function alreadyUndoneOutcome(): ToolOutcome {
-  return { title: t('qaManager_alreadyUndone'), description: t('qaManager_alreadyUndoneDesc') };
+  return { title: t('qaManager_alreadyUndone') };
 }
 
 /** What reverting a batch of reviewed changes reports. */

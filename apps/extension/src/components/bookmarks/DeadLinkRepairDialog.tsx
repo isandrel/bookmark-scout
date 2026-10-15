@@ -26,7 +26,7 @@ const CHOICE_LABEL_KEYS = {
 
 /** The line a partial apply lists for a repair left out, by why. */
 const ISSUE_KEYS = {
-  deleted: 'qaManager_deadLinkRepairIssueDeleted',
+  deleted: 'qaManager_repairDeleted',
   changed: 'tools_deadLinkRepairIssueChanged',
   failed: 'tools_deadLinkRepairIssueFailed',
 } as const satisfies Record<DeadLinkRepairIssue['reason'], string>;

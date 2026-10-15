@@ -33,7 +33,7 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
     case 'redirect':
       if (!item.redirectUrl) return t('tools_deadLinkRedirected');
       return isSameSite(item.url, item.redirectUrl)
-        ? t('qaManager_deadLinkRedirectsSameSite', item.redirectUrl)
+        ? t('qaManager_redirectSameSite', item.redirectUrl)
         : t('tools_deadLinkRedirectsTo', item.redirectUrl);
     case 'timeout':
       return t('tools_deadLinkTimedOut');
@@ -49,7 +49,7 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
       }
       // Granted only this bookmark's site, the scan cannot see where the redirect goes: another
       // site, or a loop on the same one.
-      if (item.category === 'redirectElsewhere') return t('qaManager_deadLinkRedirectUnfollowed');
+      if (item.category === 'redirectElsewhere') return t('qaManager_redirectUnfollowed');
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     }
   }
@@ -70,7 +70,7 @@ function describeMetadata(item: MetadataFetchResultItem): string {
     default:
       if (item.changed) return t('tools_metadataAvailable');
       return hasOtherPageTitle(item)
-        ? t('qaManager_metadataTitleKept', t('settings_metadataFetcherOverwriteTitles'))
+        ? t('qaManager_titleKept', t('settings_metadataFetcherOverwriteTitles'))
         : t('tools_metadataNoChange');
   }
 }
@@ -475,7 +475,7 @@ export function MetadataResultsView({
               ) : null}
               {item.status === 'ok' && hasOtherPageTitle(item) ? (
                 <div className="text-sm text-muted-foreground">
-                  {t('qaManager_metadataPageTitle', item.suggestedTitle)}
+                  {t('qaManager_pageTitle', item.suggestedTitle)}
                 </div>
               ) : null}
               {item.status === 'ok' && item.description ? (

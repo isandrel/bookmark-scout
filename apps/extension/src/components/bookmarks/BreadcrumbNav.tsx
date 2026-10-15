@@ -112,7 +112,7 @@ export function BreadcrumbNav({
             aria-current="page"
             data-testid="breadcrumb-all-folders"
           >
-            {t('qaManager_breadcrumbAllFolders')}
+            {t('qaManager_allFolders')}
           </span>
         </Segment>
       ) : null}

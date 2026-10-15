@@ -660,7 +660,7 @@ export async function describeBookmarkChangeUndo(entry: BookmarkHistoryEntry): P
 /** Message for one item (its title), and for several (their count) where that can happen. */
 const LABEL_KEYS: Record<BookmarkHistoryAction, { one: MessageKey; many?: MessageKey }> = {
   add: { one: 'history_add', many: 'history_addMany' },
-  edit: { one: 'history_edit', many: 'qaManager_historyEditMany' },
+  edit: { one: 'history_edit', many: 'qaManager_editMany' },
   move: { one: 'history_move', many: 'history_moveMany' },
   delete: { one: 'history_delete', many: 'history_deleteMany' },
   sort: { one: 'history_sort' },
@@ -677,5 +677,5 @@ export function describeBookmarkHistoryLabel(label: BookmarkHistoryLabel): strin
     many && label.count !== undefined && label.count > 1
       ? tPlural(many, label.count)
       : t(one, getBookmarkDisplayTitle(label.title));
-  return label.tool ? t('qaManager_historyByTool', [what, t(label.tool)]) : what;
+  return label.tool ? t('qaManager_byTool', [what, t(label.tool)]) : what;
 }

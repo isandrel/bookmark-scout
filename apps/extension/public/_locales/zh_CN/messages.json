@@ -3969,10 +3969,6 @@
             }
         }
     },
-    "perm_deadLinkRedirectElsewhere": {
-        "message": "重定向到本次检查无权访问的其他网站；请打开确认",
-        "description": "Dead link detail: a redirect to a site the scan had no access to, so not confirmed dead"
-    },
     "tools_hostAccessDenied": {
         "message": "未授予网站访问权限",
         "description": "Toast title when website access is declined"
@@ -6331,11 +6327,11 @@
         "message": "内置 AI 没有选择任何文件夹。",
         "description": "AI activity log and internal error: the built-in AI model answered without choosing any folder from the list it was given (the page is then saved by plain word matching)"
     },
-    "qaManager_historyEditMany": {
+    "qaManager_editMany": {
         "message": "编辑 $1 项",
         "description": "Undo history label for editing several items at once, such as a Tools sidebar batch. $1 is how many."
     },
-    "qaManager_historyByTool": {
+    "qaManager_byTool": {
         "message": "$1（$2）",
         "description": "Undo history label for a change a Tools sidebar tool made. $1 is what it did (such as 'Delete 3 items'), $2 is the tool's name."
     },
@@ -6343,35 +6339,31 @@
         "message": "已撤消",
         "description": "Toast title when a tool's Undo is pressed after the same change was already undone from the undo history"
     },
-    "qaManager_alreadyUndoneDesc": {
-        "message": "此更改已通过撤消历史撤消，因此没有其他变化。",
-        "description": "Toast detail when a tool's Undo is pressed after the same change was already undone from the undo history"
-    },
-    "qaManager_metadataPageTitle": {
+    "qaManager_pageTitle": {
         "message": "网页标题：$1",
         "description": "Metadata Fetcher result: the title of the bookmarked page, shown for information when it will not replace the bookmark's own title. $1 is the page title."
     },
-    "qaManager_metadataTitleKept": {
+    "qaManager_titleKept": {
         "message": "保留原标题：设置中的“$1”已关闭",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
     },
-    "qaManager_deadLinkRedirectUnfollowed": {
+    "qaManager_redirectUnfollowed": {
         "message": "重定向到本次检查无法跟踪的位置；请打开确认",
         "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
     },
-    "qaManager_deadLinkRedirectsSameSite": {
+    "qaManager_redirectSameSite": {
         "message": "重定向到同一网站的 $1",
         "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     },
-    "qaManager_deadLinkRepairIssueDeleted": {
+    "qaManager_repairDeleted": {
         "message": "$1：扫描后已被删除，无需修复",
         "description": "Dead-link repair issue: the bookmark was deleted after the scan, so there was nothing to repair. $1 is the bookmark title."
     },
-    "qaManager_reorgIssueDeleted": {
+    "qaManager_reorgDeleted": {
         "message": "$1：预览后已被删除，无需移动",
         "description": "A reorganization move skipped because its bookmark was deleted after the preview. $1 is its title."
     },
-    "qaManager_breadcrumbAllFolders": {
+    "qaManager_allFolders": {
         "message": "所有文件夹中的结果",
         "description": "Bookmark manager breadcrumb while a search or filter lists matches from every folder instead of the folder shown"
     }

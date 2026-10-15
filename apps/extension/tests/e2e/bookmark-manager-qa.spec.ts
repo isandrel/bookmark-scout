@@ -459,7 +459,7 @@ test('a search across folders names each match’s folder and says the results s
   );
 
   // Limited to the folder shown, the breadcrumb is the folder again and rows need no path.
-  await page.getByLabel('Current folder only').check();
+  await page.getByRole('checkbox', { name: 'Current folder only' }).check();
   await expect(matches).toHaveCount(1);
   await expect(breadcrumbCurrent(page)).toHaveText('Work');
   await expect(paths).toHaveCount(0);
