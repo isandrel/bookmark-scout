@@ -6552,5 +6552,13 @@
     "qaManager_metadataTitleKept": {
         "message": "제목 유지: 설정에서 '$1'이(가) 꺼져 있습니다",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
+    },
+    "qaManager_deadLinkRedirectUnfollowed": {
+        "message": "이 검사에서 따라갈 수 없는 곳으로 리디렉션됩니다. 직접 열어 확인하세요",
+        "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
+    },
+    "qaManager_deadLinkRedirectsSameSite": {
+        "message": "같은 사이트의 $1(으)로 리디렉션됩니다",
+        "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     }
 }

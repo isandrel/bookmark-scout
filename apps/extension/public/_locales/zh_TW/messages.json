@@ -6354,5 +6354,13 @@
     "qaManager_metadataTitleKept": {
         "message": "保留原標題：設定中的「$1」已關閉",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
+    },
+    "qaManager_deadLinkRedirectUnfollowed": {
+        "message": "重新導向至本次檢查無法追蹤的位置；請開啟確認",
+        "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
+    },
+    "qaManager_deadLinkRedirectsSameSite": {
+        "message": "重新導向至同一網站的 $1",
+        "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     }
 }

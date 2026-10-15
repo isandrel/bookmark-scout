@@ -6560,5 +6560,13 @@
     "qaManager_metadataTitleKept": {
         "message": "Mantém o título: \"$1\" está desativado nas Configurações",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
+    },
+    "qaManager_deadLinkRedirectUnfollowed": {
+        "message": "Redireciona para um destino que esta verificação não conseguiu seguir; abra para confirmar",
+        "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
+    },
+    "qaManager_deadLinkRedirectsSameSite": {
+        "message": "Redireciona para $1, no mesmo site",
+        "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     }
 }

@@ -20,14 +20,21 @@ export function DeadLinkCategoryBadge({ item }: { item: DeadLinkResultItem }) {
   );
 }
 
+/** Whether both URLs are on the same site (`getUrlSite`: the registrable domain). */
+function isSameSite(url: string, otherUrl: string): boolean {
+  const site = getUrlSite(url);
+  return site !== null && site === getUrlSite(otherUrl);
+}
+
 export function describeDeadLink(item: DeadLinkResultItem): string {
   switch (item.status) {
     case 'ok':
       return t('tools_deadLinkReachable');
     case 'redirect':
-      return item.redirectUrl
-        ? t('tools_deadLinkRedirectsTo', item.redirectUrl)
-        : t('tools_deadLinkRedirected');
+      if (!item.redirectUrl) return t('tools_deadLinkRedirected');
+      return isSameSite(item.url, item.redirectUrl)
+        ? t('qaManager_deadLinkRedirectsSameSite', item.redirectUrl)
+        : t('tools_deadLinkRedirectsTo', item.redirectUrl);
     case 'timeout':
       return t('tools_deadLinkTimedOut');
     case 'invalid':
@@ -40,7 +47,9 @@ export function describeDeadLink(item: DeadLinkResultItem): string {
         const labelKey = item.category ? HTTP_FAILURE_LABEL_KEYS[item.category] : undefined;
         return labelKey ? t('tools_deadLinkHttpDetail', [status, t(labelKey)]) : status;
       }
-      if (item.category === 'redirectElsewhere') return t('perm_deadLinkRedirectElsewhere');
+      // Granted only this bookmark's site, the scan cannot see where the redirect goes: another
+      // site, or a loop on the same one.
+      if (item.category === 'redirectElsewhere') return t('qaManager_deadLinkRedirectUnfollowed');
       return item.errorKind === 'redirect' ? t('tools_redirectFailed') : t('tools_networkFailed');
     }
   }

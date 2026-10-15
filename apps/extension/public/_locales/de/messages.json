@@ -6560,5 +6560,13 @@
     "qaManager_metadataTitleKept": {
         "message": "Titel bleibt: „$1“ ist in den Einstellungen aus",
         "description": "Metadata Fetcher result when the page has a different title but the bookmark keeps its own because the setting is off. $1 is the setting's name (Overwrite Titles)."
+    },
+    "qaManager_deadLinkRedirectUnfollowed": {
+        "message": "Leitet an ein Ziel um, dem diese Prüfung nicht folgen konnte; zur Kontrolle öffnen",
+        "description": "Dead link detail: the link redirects, but with access to only the bookmark's own site the check cannot see where to (another site, or a loop on the same one), so it is not confirmed dead"
+    },
+    "qaManager_deadLinkRedirectsSameSite": {
+        "message": "Weiterleitung zu $1 auf derselben Website",
+        "description": "Dead link detail: the link redirects to another page on the same site. $1 is the redirect target URL."
     }
 }
